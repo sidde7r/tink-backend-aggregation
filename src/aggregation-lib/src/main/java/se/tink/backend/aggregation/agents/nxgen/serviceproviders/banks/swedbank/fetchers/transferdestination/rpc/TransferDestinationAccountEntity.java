@@ -39,7 +39,7 @@ public class TransferDestinationAccountEntity extends AbstractAccountEntity impl
 
     @Override
     public AccountIdentifier generalGetAccountIdentifier() {
-        return new SwedishIdentifier(this.accountNumber);
+        return new SwedishIdentifier(this.fullyFormattedNumber);
     }
 
     @Override

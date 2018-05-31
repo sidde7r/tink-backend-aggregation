@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.core.Amount;
 import se.tink.backend.utils.StringUtils;
+import se.tink.libraries.account.identifiers.SwedishIdentifier;
 
 @JsonObject
 public abstract class AccountEntity extends AbstractAccountEntity {
@@ -73,6 +74,7 @@ public abstract class AccountEntity extends AbstractAccountEntity {
                         .setName(name)
                         .setBankIdentifier(id)
                         .setUniqueIdentifier(fullyFormattedNumber)
+                        .addIdentifier(new SwedishIdentifier(fullyFormattedNumber))
                         .addToTemporaryStorage(SwedbankBaseConstants.StorageKey.NEXT_LINK,
                                 links != null ? links.getNext() : null)
                         .build());
