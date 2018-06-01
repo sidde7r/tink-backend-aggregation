@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.core.AccountFlag;
 import se.tink.backend.core.Amount;
 import se.tink.libraries.account.AccountIdentifier;
 
@@ -12,8 +13,8 @@ public class SavingsAccount extends TransactionalAccount {
 
     private SavingsAccount(String name, String accountNumber, Amount balance, List<AccountIdentifier> identifiers,
             String tinkId, String bankIdentifier, Double interestRate, HolderName holderName,
-            Map<String, String> temporaryStorage) {
-        super(name, accountNumber, balance, identifiers, tinkId, bankIdentifier, holderName, temporaryStorage);
+            Map<String, String> temporaryStorage, List<AccountFlag> flags) {
+        super(name, accountNumber, balance, identifiers, tinkId, bankIdentifier, holderName, temporaryStorage, flags);
         this.interestRate = interestRate;
     }
 
@@ -77,9 +78,19 @@ public class SavingsAccount extends TransactionalAccount {
         }
 
         @Override
+        public List<AccountFlag> getFlags() {
+            return super.getFlags();
+        }
+
+        @Override
+        public Account.Builder addFlag(AccountFlag flag) {
+            return (Builder) super.addFlag(flag);
+        }
+
+        @Override
         public SavingsAccount build() {
             return new SavingsAccount(getName(), getAccountNumber(), getBalance(), getIdentifiers(), getUniqueIdentifier(),
-                    getBankIdentifier(), getInterestRate(), getHolderName(), getTemporaryStorage());
+                    getBankIdentifier(), getInterestRate(), getHolderName(), getTemporaryStorage(), getFlags());
         }
     }
 }

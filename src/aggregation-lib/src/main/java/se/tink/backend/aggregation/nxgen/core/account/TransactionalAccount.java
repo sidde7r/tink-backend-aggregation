@@ -1,14 +1,18 @@
 package se.tink.backend.aggregation.nxgen.core.account;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Map;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.core.AccountFlag;
 import se.tink.backend.core.Amount;
 import se.tink.libraries.account.AccountIdentifier;
 
 public class TransactionalAccount extends Account {
+    private final List<AccountFlag> flags;
+
     public static final ImmutableList<AccountTypes> ALLOWED_ACCOUNT_TYPES = ImmutableList.<AccountTypes>builder()
             .add(AccountTypes.SAVINGS)
             .add(AccountTypes.CHECKING)
@@ -17,8 +21,17 @@ public class TransactionalAccount extends Account {
 
     TransactionalAccount(String name, String accountNumber, Amount balance,
             List<AccountIdentifier> identifiers, String tinkId, String bankIdentifier, HolderName holderName,
-            Map<String, String> temporaryStorage) {
+            Map<String, String> temporaryStorage, List<AccountFlag> flags) {
         super(name, accountNumber, balance, identifiers, tinkId, bankIdentifier, holderName, temporaryStorage);
+        this.flags = flags;
+    }
+
+    @Override
+    public se.tink.backend.aggregation.rpc.Account toSystemAccount() {
+        se.tink.backend.aggregation.rpc.Account account = super.toSystemAccount();
+        account.setFlags(this.flags);
+
+        return account;
     }
 
     public static Builder builder(AccountTypes type, String accountNumber, Amount balance) {
@@ -34,8 +47,11 @@ public class TransactionalAccount extends Account {
     }
 
     public static abstract class Builder extends Account.Builder {
+        private final List<AccountFlag> flags;
+
         Builder(String accountNumber, Amount balance) {
             super(accountNumber, balance);
+            this.flags = Lists.newArrayList();
         }
 
         @Override
@@ -71,6 +87,15 @@ public class TransactionalAccount extends Account {
         @Override
         public <T> Builder addToTemporaryStorage(String key, T value) {
             return (Builder) super.addToTemporaryStorage(key, value);
+        }
+
+        public List<AccountFlag> getFlags() {
+            return this.flags;
+        }
+
+        public Account.Builder addFlag(AccountFlag flag) {
+            this.flags.add(flag);
+            return this;
         }
 
         @Override
