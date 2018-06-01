@@ -1,10 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.Strings;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -67,6 +70,7 @@ public class BelfiusTransaction {
                 .setPending(isPending())
                 .setAmount(amount.get())
                 .setDescription(getDescription())
+                .setRawDetails(getRawDetails())
                 .setDate(this.date)
                 .build();
     }
@@ -100,6 +104,30 @@ public class BelfiusTransaction {
 
         return trimmedDescriptionWithNewLinesRemoved;
     }
+
+    @JsonIgnore
+    private RawDetails getRawDetails() {
+        if (Strings.isNullOrEmpty(this.nameOppositeSide) && Strings.isNullOrEmpty(this.description)) {
+            return null;
+        }
+
+        return new RawDetails(this.nameOppositeSide, this.description);
+    }
+
+    @JsonObject
+    public class RawDetails {
+        private List<String> recipientAccount;
+        private List<String> details;
+
+        public RawDetails(String recipientAccount, String details) {
+            // be kind no nulls
+            this.recipientAccount = !Strings.isNullOrEmpty(recipientAccount) ?
+                    Collections.singletonList(recipientAccount) : Collections.emptyList();
+            this.details = !Strings.isNullOrEmpty(details) ?
+                    Collections.singletonList(details) : Collections.emptyList();
+        }
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this)
