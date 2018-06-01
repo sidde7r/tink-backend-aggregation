@@ -3,8 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transa
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.google.common.base.Strings;
 import java.util.Date;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.serializer.BelfiusDateDeserializer;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.serializer.BelfiusStringDeserializer;
@@ -15,6 +18,10 @@ import se.tink.backend.core.Amount;
 
 @JsonObject
 public class BelfiusTransaction {
+    // Will match "MAESTRO-BETALING 19/02-MERCHANT NAME BE 15,00   EUR KAART NR 1234 1234 1234 1234 - LASTNAME FIRSTNAME   REF. : 123456789 VAL. 20-02
+    // Capturing "MERCHANT NAME" in one group, allowing us to parse it out.
+    private static Pattern MAESTRO_PURCHASE_FIRST_PART = Pattern.compile(
+            "^(MAESTRO-BETALING\\s*\\d\\d/\\d\\d-)(([\\w*\\s])*)(\\s\\w\\w\\s\\d\\d.*$)");
 
     @JsonProperty("lb_Date")
     @JsonFormat(pattern = "dd/MM/yyyy")
@@ -58,12 +65,41 @@ public class BelfiusTransaction {
 
         return Transaction.builder()
                 .setPending(isPending())
-                .setDescription(this.description)
                 .setAmount(amount.get())
+                .setDescription(getDescription())
                 .setDate(this.date)
                 .build();
     }
 
+    private String getDescription() {
+        if (!Strings.isNullOrEmpty(this.nameOppositeSide)) {
+            return this.nameOppositeSide;
+        }
+
+        if (!Strings.isNullOrEmpty(this.communication)) {
+            return this.communication;
+        }
+
+        if (!Strings.isNullOrEmpty(this.description)) {
+            return getFormattedDescription();
+        }
+
+        return null;
+    }
+
+    private String getFormattedDescription() {
+        // So far only seen Maestro purchases with an empty nameOppositeSide field, which is preferred
+        // as description since it's the merchant name without noise. For Maestro purchases we have to parse
+        // out the merchant name.
+        String trimmedDescriptionWithNewLinesRemoved = this.description.replaceAll("\\n", "");
+        Matcher matcher = MAESTRO_PURCHASE_FIRST_PART.matcher(trimmedDescriptionWithNewLinesRemoved.toUpperCase());
+
+        if (matcher.matches()) {
+            return matcher.group(2);
+        }
+
+        return trimmedDescriptionWithNewLinesRemoved;
+    }
     @Override
     public String toString() {
         return new ToStringBuilder(this)
