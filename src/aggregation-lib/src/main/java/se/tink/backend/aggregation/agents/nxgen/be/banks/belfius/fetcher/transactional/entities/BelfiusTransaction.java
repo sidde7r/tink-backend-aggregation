@@ -49,20 +49,17 @@ public class BelfiusTransaction {
         return "Y".equalsIgnoreCase(this.pending);
     }
 
-    public Amount getAmount() {
-        Optional<Amount> amount = BelfiusStringUtils.parseStringToAmount(this.amount);
-        return amount.get() == null ? null : amount.get();
-    }
-
     public Transaction toTinkTransaction() {
-        Amount amount = getAmount();
-        if (amount == null) {
+        Optional<Amount> amount = BelfiusStringUtils.parseStringToAmount(this.amount);
+
+        if (!amount.isPresent()) {
             return null;
         }
+
         return Transaction.builder()
                 .setPending(isPending())
-                .setAmount(getAmount())
                 .setDescription(this.description)
+                .setAmount(amount.get())
                 .setDate(this.date)
                 .build();
     }
