@@ -606,7 +606,6 @@ java_library(
         "@tink_backend_encryption//:encryption-api",
         ":firehose-v1-java-pb",
         ":firehose-v1-lib",
-        ":gdpr-export-lib",
         ":main-api",
         ":queue-lib",
         ":system-api",

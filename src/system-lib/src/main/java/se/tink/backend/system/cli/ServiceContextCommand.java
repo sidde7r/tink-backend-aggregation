@@ -18,7 +18,6 @@ import se.tink.backend.guice.configuration.CommonModule;
 import se.tink.backend.guice.configuration.ConfigurationModule;
 import se.tink.backend.guice.configuration.EmailModule;
 import se.tink.backend.guice.configuration.EventTrackerModule;
-import se.tink.backend.export.configuration.ExportUserDataModule;
 import se.tink.backend.utils.LogUtils;
 import se.tink.libraries.discovery.CoordinationModule;
 
@@ -44,7 +43,6 @@ public abstract class ServiceContextCommand<T extends ServiceConfiguration> exte
                 new AllRepositoryModule(configuration.getDatabase(), configuration.getDistributedDatabase()),
                 new EmailModule(configuration.getEmail()));
         modules.add(new ClientServiceFactoryModule());
-        modules.add(new ExportUserDataModule());
 
         Injector injector = Guice.createInjector(modules);
 
