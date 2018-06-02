@@ -1,0 +1,8 @@
+{ 
+    "categorizationUnit": {
+	    "_all" : {"enabled" : false},
+	    "properties": {
+			"categorizationUnit.prettyDescription" : { "type" : "string"}
+        }
+    }
+}

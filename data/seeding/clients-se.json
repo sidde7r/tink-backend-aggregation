@@ -1,0 +1,1796 @@
+[
+  {
+    "id": "6f8453c998894d288398bed8efe8fd98",
+    "description": "Tink iOS B1",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i TestFlight."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "04db5d511ab7455880047d72cbf669f3",
+    "description": "Tink iOS B2",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i TestFlight."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "88361e2b86fa45719314183e9f5f7a60",
+    "description": "Tink iOS B3",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i TestFlight."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "c3563d62ed274e42a9018a24353a3dee",
+    "description": "Tink iOS B4",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i TestFlight."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "d60d024e5ca843b7bd5bb3dda2d4c466",
+    "description": "Tink iOS 0.9.44-vip",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i AppStore."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "1dc35c18784d49c886b05542a03398fc",
+    "description": "Tink iOS 1.0.1",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "5bce361cafd14ef781b5cf4e7774091b",
+    "description": "Tink iOS 1.0.2",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "76651a8b1cc843c1a7e573d4ed4a156d",
+    "description": "Tink iOS 1.0.6",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "51ace65ac29848879687eb21fce0462f",
+    "description": "Tink iOS 1.0.7",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "8b35c41e5f5042c3bd70ebeb89c97ceb",
+    "description": "Tink iOS 1.0.9",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "bcfec845c86e41d78d7a3f2adbee707e",
+    "description": "Tink iOS 1.0.1",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "57c1dcfd8c8c46719f0bdbc10f09c7de",
+    "description": "Tink iOS 1.0.1",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "3dc61bb8cc4c422e912e66a802cecd07",
+    "description": "Tink iOS 1.2.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "ff90e189e83e4cd9b382b4e9b986ea1c",
+    "description": "Tink iOS 1.2.1",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "63a4b77b61aa4a29972f9e8b294e0948",
+    "description": "Tink iOS 1.2.2",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "1b875269f53e4e4ca353e03558b78aeb",
+    "description": "Tink iOS 1.2.3",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "a971af4ef6464be3b17186eabcedde65",
+    "description": "Tink iOS 1.2.4",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "8394ec69ebca4c179b2fc889115f7899",
+    "description": "Tink iOS 1.3.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "9bb2eca91da9447586670266b13f2102",
+    "description": "Tink iOS 1.4.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "05a0f6bedfd64cd6abf88ed57c1e331a",
+    "description": "Tink iOS 1.4.1",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "8e3b65c7749a4035a5d93772c93b29e0",
+    "description": "Tink iOS 1.5.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "f99459ef6c9b4afea45a3024a4b3c5de",
+    "description": "Tink iOS 1.5.1",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "0c290da660a44bc0a9b6be3629ca5d7d",
+    "description": "Tink iOS 1.6.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "56de81d57de44228a91c15066f8b1cbd",
+    "description": "Tink iOS 1.6.1",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "25889fc1814840fc8d298b90a279f9c2",
+    "description": "Tink iOS 1.7.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "c84d160d72bf4f0cb6bcd6fc4c6b7300",
+    "description": "Tink iOS 1.8.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "c028267eaf144039af6359616dddcd06",
+    "description": "Tink iOS 1.8.1",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "b52969b0e9d441dd828aa84f5978d65e",
+    "description": "Tink iOS 1.9.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "445b6fdb8b77466c9d7a08bcc8f07262",
+    "description": "Tink iOS 1.9.1",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "99d41c2f1f50462ea0becfc5f47ea194",
+    "description": "Tink iOS 1.9.2",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "311b1ec7911b4a749890385707c30fc8",
+    "description": "Tink iOS 2.0.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "0387ea88cab44eb0b31046141a565087",
+    "description": "Tink iOS 2.0.1",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "91165b7e1a704514875a2b7cc3256a1e",
+    "description": "Tink iOS 2.0.2",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "e8f6147aa5c844faa69884b0402fbd38",
+    "description": "Tink iOS 2.1.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "999748d544a24dd082c7d95df49df6bb",
+    "description": "Tink iOS 2.2.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "4645e647fef34ec387bdc353d8287780",
+    "description": "Tink iOS 2.3.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "03a84cc6b0234cc696febaca57f48454",
+    "description": "Tink iOS 2.4.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i App Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "a048a5b69a644e8eb3beb2ccbc52135c",
+    "description": "Tink iOS 2.4.3",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "52e4559e09d1492bbad42ab420b22ec7",
+    "description": "Tink iOS 2.5.0",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "e632a79baab14ff59cfd8e7caa2bdb76",
+    "description": "Tink iOS 2.5.0",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "ce9b4282af0b80d3e35913dc93d20ccf",
+    "description": "Tink iOS 2.5.0",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "ebe1422569574c4b95ff1a5180bf688e",
+    "description": "Tink iOS 2.5.0",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "5a82dbb2dc2f6860d5e2f879ca1c89e0",
+    "description": "Tink iOS 2.5.0",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "dc6bc95f054a3906e125391d1e3f2b73",
+    "description": "Tink iOS 2.5.1",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "df33091e7a79b14178947b7cafc60fd4",
+    "description": "Tink iOS 2.5.4",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "9d93d8c0a730100d52471f1746ace440",
+    "description": "Tink iOS 2.5.5",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "bccc1c009018d109ce3b9c5fa4ff3c09",
+    "description": "Tink iOS 2.5.6",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "ea2a9eb2b034e8b711ed199d0fac0393",
+    "description": "Tink iOS 2.5.7",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "980a36de1df14626876e30ab26d84044",
+    "description": "Tink iOS 2.5.9",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "b3ead4d07355351e5e546200ef094db1",
+    "description": "Tink iOS 2.5.10",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "7a165c2fca0f843c231902315bdb7fe9",
+    "description": "Tink iOS 2.5.11",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "36d08e6c7bd2d0fc4848dd3c91db4c3a",
+    "description": "Tink iOS 2.5.12",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "02db80993730dfe902d516ddf895aeac",
+    "description": "Tink iOS 2.5.13",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "8a078bcba97800b60048d0ff75ba17db",
+    "description": "Tink iOS 2.5.14",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "7699c43d43bbdfe01e1b6bb04da8eb96",
+    "description": "Tink iOS 2.5.15",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "7a8eb0c53b92533b8c99c74f00d96fa0",
+    "description": "Tink iOS 2.5.16",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "01896841a28d45f5ae4a2b48af380ea3",
+    "description": "Tink iOS 2.5.17",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "b9bea74c2006f5ba6d2142d29c52da7e",
+    "description": "Tink iOS 2.5.18",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "64ca66add0a2cfcd38816cbf0840c3e6",
+    "description": "Tink iOS 2.5.19",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "a9baa4b54f56e5a81fcbec54300024d9",
+    "description": "Tink iOS 2.5.20",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "f725b1b45f48f653880605172165bbee",
+    "description": "Tink iOS 2.5.21",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "2e9a2e92bea73347b15364f9b38e9be8",
+    "description": "Tink iOS 2.5.22",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "04a042aba744198c75531c496e2188e3",
+    "description": "Tink iOS 2.5.23",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "cb931cd95c0b093062e89a627f0ae50f",
+    "description": "Tink iOS 2.5.24",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "a46a3b33768a0a9c0ca312beac7341e1",
+    "description": "Tink iOS 2.5.25",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "f603e322cc0d00dd4b2f63088a6f776a",
+    "description": "Tink iOS 2.5.26",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "8c1a9d9cb90a4a399361fd501c6b15e5",
+    "description": "Tink iOS 4.0.0",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "6135426c0bcb478e84a5283db3b3cc47",
+    "description": "Tink iOS 4.0.1",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "d1d662c059934d199298c045a17d8558",
+    "description": "Tink iOS 4.0.2",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "797e85c7a56a428ca124a9a8526b1ca1",
+    "description": "Tink iOS 4.0.3",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "dad55b1a62104496857a2e6fea96445f",
+    "description": "Tink iOS 4.0.4",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "6ec09f5985484fbe8174eb5f591c6faf",
+    "description": "Tink iOS 4.0.5",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "be5fb5c2b9e38890a27190d67228429b",
+    "description": "Tink iOS 4.0.6",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "d55b836ab8661dcdf8f539bc0dfd0504",
+    "description": "Tink iOS 4.0.7",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "6fc88784be36078a644bcdfea83bcce1",
+    "description": "Tink iOS 4.0.8",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "5120c94aff80ec1c06c9825b3bb84abb",
+    "description": "Tink iOS 4.0.9",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "3ce714988bfd229e154a146cc7902b9e",
+    "description": "Tink iOS 4.0.10",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "c832bd094e2643feb88ba244b5c92a3e",
+    "description": "Tink Android 1.0.10",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "045ec14f9cc540618d4f15dfae00f919",
+    "description": "Tink Android 1.0.13",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "f0bad603432b437abf6f900ca238d65b",
+    "description": "Tink Android 1.1.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "bc785e79d2a14f6bba0f54ff8b1d7758",
+    "description": "Tink Android 1.0.14",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "0f1171c2c45c4f4eb6b317cd6e719fb7",
+    "description": "Tink Android 1.2.3",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "30efe48edd424e25b66c1f131667cc84",
+    "description": "Tink Android 1.2.4",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "5d394d311e8d4b0ea13ee7083e56b3f7",
+    "description": "Tink Android 1.2.5",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "3fbd95255c674c999d6968ac895f9cae",
+    "description": "Tink Android 1.2.6",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "bf1b4482d73348f1b11eebe2f040824c",
+    "description": "Tink Android 1.2.7",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "41ecf9516dfc4c9dab05c9f233d523c9",
+    "description": "Tink Android 1.2.8",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "048f22e8c5794e0abc4e2e3d80ae21d9",
+    "description": "Tink Android 1.2.9",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "6fd6a84713ff4605869c284b2beec2aa",
+    "description": "Tink Android 1.2.10",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "d69e4b1efe1f431fbf2be193109c7499",
+    "description": "Tink Android 1.2.11",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "18e265a053c74d82a399ffc8635e3c13",
+    "description": "Tink Android 1.2.12",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "99a2f6365cc44f768144fa71334f4372",
+    "description": "Tink Android 1.3.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "c1b82c7b36d54a51976c45e9a43e881a",
+    "description": "Tink Android 1.3.1",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "6a8389779d3b4c3f8e21753f9e451532",
+    "description": "Tink Android 1.4.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "30d2dbaafcc446769a399f9496b2d1a7",
+    "description": "Tink Android 1.4.1",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "334dbcd224fe4311a592b6149a0a0f7c",
+    "description": "Tink Android 1.5.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "2cc8152fe74843269c16104aa871b042",
+    "description": "Tink Android 1.6.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "ec462df4c30a45dbb2e9a069a63cd52f",
+    "description": "Tink Android 1.6.1",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "76c936791be74009a7c0b57316b3f84b",
+    "description": "Tink Android 1.6.2",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "333622af272740f49b0874f5dede39d8",
+    "description": "Tink Android 1.7.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "a9cab7b63a3c4c388d8842f85cb89ff7",
+    "description": "Tink Android 1.7.2",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "b3227afa387f403795af1c51751ca48b",
+    "description": "Tink Android 1.7.3",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "c3091f2b71884039bbdb43d181a2e432",
+    "description": "Tink Android 1.7.4",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "a1ad081c23244ebfa18abfd553cd4257",
+    "description": "Tink Android 1.7.5",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "04dc4dbad3b948bfa5f5e19682247c0f",
+    "description": "Tink Android 1.7.6",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "26658862ef2e4992a3705b983b929453",
+    "description": "Tink Android 1.7.7",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "587dbbd0954349b8a4a0f54bcf71fe1f",
+    "description": "Tink Android 1.7.8",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "491e0a8bb3974c709eb514d39831d7f7",
+    "description": "Tink Android 1.7.9",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "3239ae94990643ffa617f3134f915343",
+    "description": "Tink Android 1.7.10",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "78f9170274544695b401a00e72c534ba",
+    "description": "Tink Android 1.8.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "be020cbb916d42f7bc3c7291db031ba1",
+    "description": "Tink Android 1.8.1",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "c3ff3dadcc034a0f8a394c936a430ef6",
+    "description": "Tink Android 1.8.2",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "ce43f0a42bff46e3975815892249fd40",
+    "description": "Tink Android 1.8.3",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "f78926cdab7f4afa9f4aeef3e08b81fa",
+    "description": "Tink Android 1.8.4",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "a1440b19599b4dfeaa360e291908a3c6",
+    "description": "Tink Android 1.8.6",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "158f3a7696d446cbb3386808e48159fb",
+    "description": "Tink Android 1.8.7",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "161aa3a1078746d4a5d837362d0625c9",
+    "description": "Tink Android 1.9.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "62077afa4f6d447d802b4c734759d66e",
+    "description": "Tink Android 1.9.1",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "7695991c6e0a4a4fb01397e0e542eda4",
+    "description": "Tink Android 1.9.2",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "3cf8967c12c44020a2a42d05b3e04a52",
+    "description": "Tink Android 1.9.3",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "1bd5e5fddedf490cb59b8e478c511493",
+    "description": "Tink Android 1.9.4",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "a8fbbafaf4134bfc8e935b37b6da5b81",
+    "description": "Tink Android 1.9.5",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "aa7d96d193fc4f55be2eff72ef6718f5",
+    "description": "Tink Android 2.0.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "7a656ab17f8d421193e05ddb8d685188",
+    "description": "Tink Android 2.0.3",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "0a1382c11510401fa00ebc372632ff61",
+    "description": "Tink Android 2.0.4",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "ad14b38302c648979568602d5eaf4063",
+    "description": "Tink Android 2.0.5",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "30fa1d2fbbd24046b7293f5c675178c4",
+    "description": "Tink Android 2.0.6",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "b24000e6723643599aea11b6293d3943",
+    "description": "Tink Android 2.0.7",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "6f80b55dfdcd492b8e95ad6607929ef4",
+    "description": "Tink Android 2.0.8",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "e0201789c5fe4b1d9bcb07c0754f75f6",
+    "description": "Tink Android 2.0.9",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "29c5281fd2494720be3b7d893e29699b",
+    "description": "Tink Android 2.0.10",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "624ad7e386cf4817965cd4c698be56f5",
+    "description": "Tink Android 2.0.11",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "d265637c5d5841338c389519d6d4a27c",
+    "description": "Tink Android 2.1.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "a0a74d91cac045b9ab9c72b42598395c",
+    "description": "Tink Android 2.1.1",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "d3589e1c8cf0492fbb458fe69786c32c",
+    "description": "Tink Android 2.1.2",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "a16df10ae78d42aa8452cc402cc089db",
+    "description": "Tink Android 2.2.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "b01e28eaf06f496bb17231175bd43723",
+    "description": "Tink Android 2.2.2",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "1e752d5654e04540bcddc18fca7e8efa",
+    "description": "Tink Android 2.2.3",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "d5cc756920b647388fb07d08aa0a69ed",
+    "description": "Tink Android 2.2.4",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "6e2ac342549a40afb3a31cdba1a68b2d",
+    "description": "Tink Android 2.2.5",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "e4fedc4f7eab4441bef47673228be53a",
+    "description": "Tink Android 2.2.6",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "7ded0228cca14b1aa17735ace1f3f265",
+    "description": "Tink Android 2.2.7",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "49b3830fd2ea4084b3a82b1d7412c0ec",
+    "description": "Tink Android 2.2.8",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "e01bd63937f142a8aa9875f12a66e6d2",
+    "description": "Tink Android 2.2.9",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "8a442bdf8a254d1b8c03197747371e74",
+    "description": "Tink Android 2.2.10",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "4973d67b7aed414e9b481b8dd46383cb",
+    "description": "Tink Android 2.2.11",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "13360788cf5f4635a251c84a5e8af7ca",
+    "description": "Tink Android 2.2.12",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "Du använder en gammal version. Vänligen uppdatera appen i Play Store."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "ceab90bb60bd41538f04f656730b9a42",
+    "description": "Tink Android 2.5.0",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "e977b4b79eb4488c9017916d37aa8669",
+    "description": "Tink Android 2.5.2",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "6a41518c06c94e5a87e1bf9bbe491bbf",
+    "description": "Tink Android 2.5.3",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "a676e348071e42f2849519d5c7e70ad6",
+    "description": "Tink Android 2.5.4",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "55a7aa84a69843e583cf7cc994b7ad9f",
+    "description": "Tink Android 3.0.0",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "375022475d19485cbc2aa06aee2b5d66",
+    "description": "Tink Android 3.0.1",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "d2a358d4b29c4efda66ae99fabf10245",
+    "description": "Tink Android 3.0.3",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "2fa8559e35a545b0a3bb5e22cf171600",
+    "description": "Tink Android 3.0.4",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "4d374a465e384a25627238343a763923",
+    "description": "Tink Android 3.0.7",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "6cb0745708a942128d6f0aad250e2044",
+    "description": "Tink Android 3.0.9",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "50556d2e2c2a306c5d4e467b566f3c50",
+    "description": "Tink Android 3.0.10",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "416d537e342771342768307c6f2b276f",
+    "description": "Tink Android 3.0.11",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "7c2d375a58684d3b2d4e2674766d6962",
+    "description": "Tink Android 3.0.12",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "4479557b3a40716227277a4a2b2b3e33",
+    "description": "Tink Android 3.0.13",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "2f42492127472d3a384c6d523a5d6134",
+    "description": "Tink Android 3.0.17",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "4e3f415468794f4f43502a2c61625d44",
+    "description": "Tink Android 3.0.20",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "403639325d40795837715524313e2768",
+    "description": "Tink Android 3.0.21",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "02343898d42c11e79296cec278b6b50a",
+    "description": "Tink Android 3.0.26",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "02343ec4d42c11e79296cec278b6b50a",
+    "description": "Tink Android 3.0.27",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "02343ff0d42c11e79296cec278b6b50a",
+    "description": "Tink Android 3.0.28",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "023440d6d42c11e79296cec278b6b50a",
+    "description": "Tink Android 4.0.0",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "023441a8d42c11e79296cec278b6b50a",
+    "description": "Tink Android 4.0.1",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "5f35433a7fcd4b4cb630230a2c7bd7dc",
+    "description": "Tink Android 4.0.4",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "11a5695b9c934dd3b862af811f3481c0",
+    "description": "Tink Android 4.0.5",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "6b2467c773754ed3a9f86a3932b8effe",
+    "description": "Tink Android 4.0.6",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "de21051c7bdf4a6db6924d0fd2836add",
+    "description": "Tink Android 4.0.7",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "fc79afabbd4346fe8116c25c912cd919",
+    "description": "Tink Android 4.0.8",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "705981f190b8468e905ca66bb771cb04",
+    "description": "Tink Android 4.0.9",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "6ba1078188904be79e6d5b7ba8910445",
+    "description": "Tink Android 4.0.10",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "ba0387c8777648189578f5c9e6a50513",
+    "description": "Tink Android 4.0.11",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "33da949020f04d5b9d654a49918353f9",
+    "description": "Tink Android 4.0.12",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "cc8bea9afbb14a7b8b4f8e212ee5b91a",
+    "description": "Tink Android 4.0.13",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "ed60382f142249629677ef8c423f58ee",
+    "description": "Tink Android 4.0.14",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "75118845e557491b977fc078362e6e16",
+    "description": "Tink Android 4.0.15",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "d064f471860749c8b37e94431abd3090",
+    "description": "Tink Money iOS 0.9.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "This version is no longer available. Please visit tinkapp.com to learn more."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "bf557b721a044ab28ee205d91148bf2b",
+    "description": "Tink Money Android 0.9.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "sv_SE",
+        "message": "This version is no longer available. Please visit tinkapp.com to learn more."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "40a42f16252d40539b1fdf6bd7375634",
+    "description": "Tink Link 0.1.0",
+    "allowed": "true",
+    "sessionType": "LINK"
+  },
+  {
+    "id": "3af82463d57d4e53a937b00a8fe75034",
+    "description": "Tink Link 0.1.x",
+    "allowed": "true",
+    "sessionType": "LINK"
+  },
+  {
+    "id": "0ddef9bdefa94b76acd1901c5262d04a",
+    "description": "Tink Link 0.2",
+    "allowed": "true",
+    "sessionType": "LINK"
+  },
+  {
+    "id": "b5fd5586b32d4e7da6590238c3fb7308",
+    "description": "Tink Link 0.4",
+    "allowed": "true",
+    "sessionType": "LINK"
+  },
+  {
+    "id": "1f3187a189344afda06074fd4c336da5",
+    "description": "Tink 2.0 development",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "65a1dfa81d6e11e8b4670ed5f89f718b",
+    "description": "Tink End To End Tests",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "3dad3b05503e4832b005e01e42003c53",
+    "description": "Tink Account 1.0",
+    "allowed": "true",
+    "sessionType": "WEB"
+  }
+]

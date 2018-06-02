@@ -1,0 +1,95 @@
+package se.tink.backend.aggregation.agents.nxgen.fi.banks.danskebank;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import java.util.List;
+import java.util.Map;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
+import se.tink.backend.system.rpc.Loan;
+
+public class DanskeBankFIConfiguration implements DanskeBankConfiguration {
+    private static final String APP_CULTURE = "fi_FI";
+    private static final String APP_NAME = "com.danskebank.mobilebank3fi";
+    private static final String APP_REFERER = "MobileBanking3 FI";
+    private static final String APP_VERSION = "0.36.2";
+    private static final String BRAND = "SAM";
+    private static final String LANGUAGE_CODE = "FI";
+    private static final String MARKET_CODE = "FI";
+    private static final String DEVICE_SERIAL_NO_KEY = "x-device-serial-no";
+    private static final String STEP_UP_TOKEN_KEY = "x-stepup-token";
+
+    @Override
+    public String getAppCulture() {
+        return APP_CULTURE;
+    }
+
+    @Override
+    public String getAppName() {
+        return APP_NAME;
+    }
+
+    @Override
+    public String getAppReferer() {
+        return APP_REFERER;
+    }
+
+    @Override
+    public String getAppVersion() {
+        return APP_VERSION;
+    }
+
+    @Override
+    public String getBrand() {
+        return BRAND;
+    }
+
+    @Override
+    public String getLanguageCode() {
+        return LANGUAGE_CODE;
+    }
+
+    @Override
+    public String getMarketCode() {
+        return MARKET_CODE;
+    }
+
+    @Override
+    public List<String> getCheckingAccountTypes() {
+        return ImmutableList.<String>builder()
+                .add("7BC")
+                .add("80X")
+                .add("76P")
+                .add("72R")
+                .add("80D").build();
+    }
+
+    @Override
+    public List<String> getSavingsAccountTypes() {
+        return ImmutableList.<String>builder()
+                .add("70M")
+                .add("76S")
+                .add("76V")
+                .add("71P")
+                .add("79U").build();
+    }
+
+    @Override
+    public Map<String, Loan.Type> getLoanAccountTypes() {
+        return ImmutableMap.<String, Loan.Type>builder()
+                .put("7BE", Loan.Type.BLANCO)
+                .put("68A", Loan.Type.BLANCO)
+                .put("68P", Loan.Type.BLANCO)
+                .put("79G", Loan.Type.MORTGAGE)
+                .put("77P", Loan.Type.MORTGAGE)
+                .put("77S", Loan.Type.STUDENT)
+                .put("73D", Loan.Type.STUDENT).build();
+    }
+
+    public String getDeviceSerialNumberKey() {
+        return DEVICE_SERIAL_NO_KEY;
+    }
+
+    public String getStepUpTokenKey() {
+        return STEP_UP_TOKEN_KEY;
+    }
+}

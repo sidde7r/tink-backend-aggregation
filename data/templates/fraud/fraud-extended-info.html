@@ -1,0 +1,182 @@
+@import se.tink.backend.core.FraudCompanyContent
+@import se.tink.backend.core.FraudCompanyDirector
+@import se.tink.backend.core.KVPair
+@args() {
+	String defaultStyle
+    String idControlGroupName
+    String idControlTypeName
+	String whatIfFraudulentTitle
+	String whatIfFraudulentDescription
+	String sourceTitle
+	String sourceDescription
+	String sourceLabel
+	String sourceTypeSource
+	FraudCompanyContent company
+	List<KVPair<String, String>> companyIdentity
+	List<KVPair<String, String>> companyOptions
+	List<KVPair<String, String>> companyFinancialOptions
+	String companyMemberLabel
+	boolean idControlPlusButton
+	String idControlPlusButtonLabelBoldPart
+	String idControlPlusButtonLabelLightPart
+	String idControlPlusButtonHref
+}
+<html>
+<head>
+	<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+	<style>
+		a.phonenumber { font-family: ProximaNovaA-Semibold, proxima-semibold; color: #00BDBD; white-space:nowrap; text-decoration: none; }
+		a.mail { font-family: ProximaNovaA-Semibold, proxima-semibold; color: #00BDBD; white-space:nowrap; text-decoration: none; }
+		div.company-section { border-top: solid 1px #fff; padding: 15px 0; }
+		div.expandable-section { border-top: solid 1px #D9D8D8; padding: 20px 0; line-height: 19px;}
+		.company-section .row { margin-bottom: 5px; }
+		.company-section .member-row { margin-bottom: 15px; }
+		.company-section .row .label {float: left; width: 45%; }
+		.company-section .row .value {float: left; width: 55%; }
+		.label {font-family: ProximaNovaA-Light, proxima-light; text-transform: uppercase; color: #4A4A4A; font-size: 12px; line-height: 14px;}
+		.value {font-family: ProximaNovaA-Regular, proxima; color: #5C5C5C; font-size: 14px; line-height: 14px;}
+
+		.fade-in { opacity:0; -webkit-animation:fadeIn ease-in 1; animation:fadeIn ease-in 1; -webkit-animation-fill-mode:forwards; animation-fill-mode:forwards; -webkit-animation-duration:0.4s; animation-duration:0.4s; }
+        @@-webkit-keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+        @@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+	</style>
+	@escape("RAW") { @defaultStyle }
+</head>
+<body class="fade-in">
+	<div style="padding: 0 12px 12px 12px;">
+		@if(company != null) {
+			<div id="extended-company-container" style="text-align: left; margin-bottom:40px; background: #EEEEEE; border-radius: 8px; padding: 0 10px;">
+				<div class="clearfix" style="padding: 10px 0;">
+					<span style="font-family: ProximaNovaA-Regular, proxima; font-size: 22px; float:left; width: 75%;">@company.getName()</span>
+					<div style="float: right; width: 25%; text-align: right;">
+						<div style="margin-bottom: 5px;">@idControlGroupName</div>
+                        <span class="bold" style="background: #000; border-radius: 10px; color:#fff; padding:3px; font-size: 9px; text-transform: uppercase;">@idControlTypeName</span>
+					</div>
+				</div>
+				
+				<div class="company-section">
+					@for(KVPair<String, String> pair : companyIdentity) {
+
+						<div class="row clearfix">
+							<div class="label">@pair.getKey()</div>
+							<div class="value">@escape("RAW") { @pair.getValue() }</div>
+						</div>
+					}
+				</div>
+
+				<div class="company-section">
+					@for(KVPair<String, String> pair : companyOptions) {
+
+						<div class="row clearfix">
+							<div class="label">@pair.getKey()</div>
+							<div class="value">@escape("RAW") { @pair.getValue() }</div>
+						</div>
+					}
+				</div>
+				<div class="company-section">
+					@for(KVPair<String, String> pair : companyFinancialOptions) {
+
+						<div class="row clearfix">
+							<div class="label">@pair.getKey()</div>
+							<div class="value">@escape("RAW") { @pair.getValue() }</div>
+						</div>
+					}
+				</div>
+				<div class="company-section">
+					<div class="label">@companyMemberLabel</div>
+
+					@for(FraudCompanyDirector member : company.getDirectors()) {
+						<div class="member-row value" @if (member_isFirst) {style="margin-top:10px;"} else if(member_isLast) {style="margin-bottom:0px;"} >@member.getName(), @member.getRole()</div>
+					}
+				</div>
+			</div>
+		}
+
+		<div id="what-if-fraudulent" class="expandable-section">
+			<div style="text-align: left;">
+				<div id="what-if-fraudulent-caption" class="clearfix" >
+					<div style="width: 95%; font-family: ProximaNovaA-Light, proxima-light; font-size: 14px; float:left;">@whatIfFraudulentTitle</div>
+					<div style="float:right; text-align: center; font-family: Tink Symbols, tink-symbols; padding-top: 2px; color:#888888">
+						<span class="down" style="display:none;">&#57392;</span><span class="up" style="display:none;">&#57393;</span>
+					</div>
+				</div>
+				<div id="what-if-fraudulent-body">
+					<div style="margin-top:10px; font-family: ProximaNovaA-Light, proxima-light; font-size: 12px; line-height: 18px;">@escape("RAW") { @whatIfFraudulentDescription }</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="from-where-container" class="expandable-section" style="border-bottom: solid 1px #D9D8D8;">
+			<div style="text-align: left;">
+				<div id="from-where-caption" class="clearfix" >
+					<div style="width: 95%; font-family: ProximaNovaA-Light, proxima-light; font-size: 14px; float:left;">@sourceTitle</div>
+					<div style="float:right; text-align: center; font-family: Tink Symbols, tink-symbols; padding-top: 2px; color:#888888">
+						<span class="down" style="display:none;">&#57392;</span><span class="up" style="display:none;">&#57393;</span>
+					</div>
+				</div>
+				<div id="from-where-body">
+					<div style="margin-top:10px; font-family: ProximaNovaA-Light, proxima-light; font-size: 12px; line-height: 18px;">@escape("RAW") { @sourceDescription }</div>
+					<div style="margin-top:10px; margin-bottom:10px; font-family: ProximaNovaA-Light, proxima-light; font-size: 11px;">@sourceLabel @sourceTypeSource</div>
+				</div>
+			</div>
+		</div>
+
+		@if(idControlPlusButton) { 
+			<div id="id-control-plus-button" class="clearfix" style="display: table; margin-top: 20px; background: #313140; color: #fff; border-radius: 5px; padding: 12px 10px 12px 10px; box-sizing: border-box; width: 100%;">
+				<div style="display: table-cell; margin: 0 10px 0 10px; font-family: Tink Symbols, tink-symbols; font-size: 20px; vertical-align:middle; width: 30px;">&#xe145;</div>
+				<div style="display: table-cell; text-align:center; vertical-align:middle; padding-right: 30px;"><span style="font-family: ProximaNovaA-Semibold, proxima-semibold;">@idControlPlusButtonLabelBoldPart</span>&nbsp;<span style="font-family: ProximaNovaA-Light, proxima-light;">@idControlPlusButtonLabelLightPart</span></div>
+			</div>
+		}
+	</div>
+
+	<iframe id="js-bridge-caller" style="height:0; width:0; border:none;"></iframe>
+
+	<script>
+	    function callJsBridge(fragment) {
+	        var url = "tink-js-bridge://fraud-details-status#" + fragment;
+	        callUrl(url);
+	    }
+
+	    function callUrl(url) {
+			$("#js-bridge-caller").attr("src", url);
+	    }
+
+		function showWhatIfFraudulent() {
+			$("#what-if-fraudulent-body").show();
+			callJsBridge("what-if-fraudulent-shown");
+		}
+		function hideWhatIfFraudulent() {
+			$("#what-if-fraudulent-body").hide();
+			callJsBridge("what-if-fraudulent-hidden");
+		}
+		function enableInteractiveHtml() {
+			$("#from-where-caption").click(function() {
+				$("#from-where-body").toggle();
+				$("#from-where-caption span.up").toggle();
+				$("#from-where-caption span.down").toggle();
+				callJsBridge("from-where-toggled");
+			});
+
+			$("#what-if-fraudulent-caption").click(function() {
+				$("#what-if-fraudulent-body").toggle();
+				$("#what-if-fraudulent-caption span.up").toggle();
+				$("#what-if-fraudulent-caption span.down").toggle();
+				callJsBridge("what-if-fraudulent-toggled");
+			});
+
+			$("#from-where-caption span.down").show();
+			$("#what-if-fraudulent-caption span.down").show();
+			$("#from-where-body").hide();
+			$("#what-if-fraudulent-body").hide();
+		}
+
+		$("#id-control-plus-button").click(function() {
+			callUrl( "@idControlPlusButtonHref" );
+		});
+
+		$(document).ready(function() {
+		    callJsBridge("document-ready");
+		});
+	</script>
+</body>
+</html>

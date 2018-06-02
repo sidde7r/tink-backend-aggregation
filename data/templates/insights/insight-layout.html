@@ -1,0 +1,28 @@
+@// declare the arguments used in this template
+<!--@args String activityClass, String iconString, String titleMessage, String bodyMessage, String buttonOneClass, String buttonOneMessage, String buttonOneDeeplink, String buttonTwoClass, String buttonTwoMessage, String buttonTwoDeeplink-->
+@args se.tink.backend.insights.renderer.data.RenderData renderData
+
+<div class="@renderData.getActivityClass()">
+  <div class="image"></div>
+  <div class="icon @renderData.getIcon().getColorType()">&#@renderData.getIcon().getHtmlChar()</div>
+  <div class="content">
+    <div class="title">@renderData.getTitleMessage()</div>
+    <div class="body">@renderData.getBodyMessage()</div>
+  </div>
+  <div class="buttons">
+        @for(se.tink.backend.insights.renderer.data.Button button: renderData.getButtons()){
+
+            @if(button.getDeepLink()){
+                <div class="@button.getDivClass()" onclick="
+                    function onclickButton@button_index () {
+                        @if(button.getDeepLink())
+                            {
+                                window.location.href =  '@button.getDeepLink()';
+                            }
+                    } onclickButton@button_index ();
+                "> @button.getMessage() </div>
+        }
+      }
+
+  </div>
+</div>

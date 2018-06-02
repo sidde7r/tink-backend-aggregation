@@ -1,0 +1,29 @@
+package se.tink.backend.product.execution.unit.agents.exceptions.errors;
+
+import se.tink.backend.product.execution.unit.agents.exceptions.SessionException;
+import se.tink.libraries.i18n.LocalizableKey;
+
+public enum SessionError implements AgentError {
+    SESSION_EXPIRED(new LocalizableKey("For safety reasons you have been logged out. Please login again to continue."));
+
+    private LocalizableKey userMessage;
+
+    SessionError(LocalizableKey userMessage) {
+        this.userMessage = userMessage;
+    }
+
+    @Override
+    public SessionException exception() {
+        return new SessionException(this);
+    }
+
+    @Override
+    public LocalizableKey userMessage() {
+        return userMessage;
+    }
+
+    @Override
+    public SessionException exception(LocalizableKey userMessage) {
+        return new SessionException(this, userMessage);
+    }
+}

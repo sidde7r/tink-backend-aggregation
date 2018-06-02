@@ -1,0 +1,134 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-export
+  namespace: data-export
+  labels:
+    app: data-export-service
+spec:
+  replicas: {{ default "2" .Values.replicas }}
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: data-export-service
+  template:
+    metadata:
+      labels:
+        app: data-export-service
+      annotations:
+        # Force rollout of new pods if the config has changed
+        checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
+        prometheus.io/port: '9130'
+        prometheus.io/scrape: 'true'
+    spec:
+      initContainers:
+      # Script to replace placeholder passwords with the real passwords
+      - name: add-secrets-to-config
+        command:
+          - "bash"
+          - "-c"
+          - "cp /mnt/config-volume/* /mnt/altered-config-volume && \
+             sed -i \"s/KEYSTORE_PASSWORD/$KEYSTORE_PWD/g\" /mnt/altered-config-volume/data-export-server.yml && \
+             sed -i \"s/CASSANDRA_PASSWORD/$CASSANDRA_PWD/g\" /mnt/altered-config-volume/data-export-server.yml && \
+             sed -i \"s/MYSQL_PASSWORD/$MYSQL_PWD/g\" /mnt/altered-config-volume/data-export-server.yml"
+        image: gcr.io/tink-containers/debian:stretch
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: config-volume
+          mountPath: /mnt/config-volume
+        - name: altered-config-volume
+          mountPath: /mnt/altered-config-volume
+        env:
+        - name: CASSANDRA_PWD
+          valueFrom:
+            secretKeyRef:
+              name: data-export-secrets
+              key: cassandra-password
+        - name: MYSQL_PWD
+          valueFrom:
+            secretKeyRef:
+              name: data-export-secrets
+              key: maindb-password
+        - name: KEYSTORE_PWD
+          valueFrom:
+            secretKeyRef:
+              name: data-export-secrets
+              key: keystore-password
+      containers:
+      - name: tink-backend-data-export
+        image: gcr.io/tink-containers/tink-backend-data-export:{{ .Files.Get "tink-versions/tink-backend-data-export.txt" | default "latest" }}
+        imagePullPolicy: IfNotPresent
+
+        command:
+        - "java"
+        - "-jar"
+        - "-Xmx{{ default "256m" .Values.heapSize }}"
+        - "-XX:-OmitStackTraceInFastThrow"
+        - "-Dnetworkaddress.cache.ttl=60"
+        - "-XX:+ExitOnOutOfMemoryError"
+        - "/usr/share/tink-backend-data-export/data-export-service.jar"
+        - "server"
+        - "/etc/tink/data-export-server.yml"
+
+        resources:
+          requests:
+            memory: {{ default "700Mi" .Values.podMemoryRequest }}
+            cpu: {{ default "100m" .Values.podCpuRequest }}
+          limits:
+            memory: {{ default "1Gi" .Values.podMemoryLimit }}
+            cpu: {{ default "500m" .Values.podCpuLimit }}
+
+        ports:
+        - name: https-api
+          containerPort: 443
+        {{- if .Values.insecureHttpServer }}
+        - name: http-api
+          containerPort: 80
+        {{- end }}
+        - name: metrics
+          containerPort: 9130
+
+        # The pod will be killed if the livenessProbe is failing
+        livenessProbe:
+          httpGet:
+            path: /gdpr/export/monitor/ping
+            port: 80
+          periodSeconds: 10
+          failureThreshold: 10
+          timeoutSeconds: 1
+          initialDelaySeconds: 300
+
+        # The pod will only receive traffic if the readinessProbe is succeeding,
+        # it's also used when rolling out a new version, to know if the new version
+        # is working or not
+        readinessProbe:
+          httpGet:
+            path: /gdpr/export/monitor/ping
+            port: 80
+          periodSeconds: 3
+          failureThreshold: 3
+          timeoutSeconds: 1
+          initialDelaySeconds: 60
+
+        volumeMounts:
+        - name: altered-config-volume
+          mountPath: /etc/tink
+      volumes:
+      - name: config-volume
+        configMap:
+          name: data-export-configuration
+      # ConfigMaps are mounted as a read-only filesystem.
+      # Before we can edit the config in rumtime we need to copy the files
+      # to a fs with read-write permissions.
+      - name: altered-config-volume
+        emptyDir: {}
+      imagePullSecrets:
+        - name: tink-containers
+
+{{- if eq "local" .Values.Cluster }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: data-export
+{{ end }}

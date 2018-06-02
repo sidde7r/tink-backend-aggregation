@@ -1,0 +1,482 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: VERSION\n"
+"POT-Creation-Date: 2018-04-06 15:11+0000\n"
+"PO-Revision-Date: 2018-04-06 15:11+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#, java-format
+msgid "Updating {0}..."
+msgstr "Mise à jour de {0}..."
+
+#, java-format
+msgid "You use the same credentials as you use at {0}. For more information about the required credentials, please see [their website]({1}). If you have any questions or problems connecting {0}, please contact [support@tinkapp.com](mailto:support@tinkapp.com)."
+msgstr "Vos informations de connexion sont les mêmes que pour {0}. Pour plus d'informations au sujet des informations requises, consultez [leur site Internet]({1}). Si vous avez des questions ou rencontrez des problèmes de connexion {0}, veuillez contacter [support@tinkapp.com](mailto:support@tinkapp.com)."
+
+msgid "Error from"
+msgstr "Erreur de"
+
+msgid "Low balance"
+msgstr "Solde bas"
+
+msgid "Large expenses"
+msgstr "Grosses dépenses"
+
+msgid "over"
+msgstr "plus de"
+
+msgid "under"
+msgstr "moins de"
+
+msgid "around"
+msgstr "environ"
+
+msgid "weekdays"
+msgstr "semaine"
+
+msgid "weekends"
+msgstr "weekend"
+
+msgid "today"
+msgstr "aujourd'hui"
+
+msgid "yesterday"
+msgstr "hier"
+
+msgid "this week"
+msgstr "cette semaine"
+
+msgid "last week"
+msgstr "la semaine dernière"
+
+msgid "this month"
+msgstr "ce mois-ci"
+
+msgid "last month"
+msgstr "le mois dernier"
+
+msgid "this year"
+msgstr "cette année"
+
+msgid "last year"
+msgstr "l'année dernière"
+
+#, java-format
+msgid "week {0}"
+msgstr "semaine {0}"
+
+msgid "and"
+msgstr "et"
+
+#, java-format
+msgid "{0} account"
+msgid_plural "{0} accounts"
+msgstr[0] "{0} compte"
+msgstr[1] "{0} comptes"
+
+#, java-format
+msgid "{0} transaction"
+msgid_plural "{0} transactions"
+msgstr[0] "{0} transaction"
+msgstr[1] "{0} transactions"
+
+msgid "High balance"
+msgstr "Solde élevé"
+
+#, java-format
+msgid "You have an unusually high balance on {0}"
+msgstr "Votre solde est anormalement élevé sur {0}"
+
+msgid "Double charge"
+msgstr "Double paiement"
+
+#, java-format
+msgid "You were double-charged by {0} for {1}."
+msgstr "{0} a prélevé de l'argent deux fois pour {1}."
+
+#, java-format
+msgid "You have exceeded your goal for {0} this month."
+msgstr "Vous avez dépassé votre objectif de {0} ce mois-ci."
+
+#, java-format
+msgid "You are close to exceeding your goal for {0} this month."
+msgstr "Vous êtes sur le point de dépasser votre objectif de {0} ce mois-ci."
+
+msgid "Missed goal"
+msgstr "Objectif manqué"
+
+msgid "Close to goal"
+msgstr "Objectif proche"
+
+#, java-format
+msgid "You have a low balance on {0}"
+msgstr "Votre solde est bas sur {0}"
+
+msgid "Income"
+msgstr "Revenu"
+
+#, java-format
+msgid "You received income from {0}"
+msgstr "Vous avez reçu de l'argent de {0}"
+
+msgid "Large expense"
+msgstr "Grosse dépense"
+
+#, java-format
+msgid "You were charged some unusually large expenses by {0}"
+msgstr "Vous avez effectué des dépenses anormalement élevées payées à {0}"
+
+msgid "You are above average spending at this time of month"
+msgstr "Vous avez dépassé la moyenne des dépenses pour cette période du mois."
+
+msgid "You are still above average spending at this time of month"
+msgstr "Vous êtes toujours au-dessus de la moyenne des dépenses pour cette période du mois."
+
+msgid "You are below average spending at this time of month"
+msgstr "Vous êtes en dessous de la moyenne des dépenses pour cette période du mois."
+
+msgid "You are still below average spending at this time of month"
+msgstr "Vous êtes toujours en dessous de la moyenne des dépenses pour cette période du mois."
+
+msgid "Left to Spend"
+msgstr "Restant à dépenser"
+
+msgid "Great job!"
+msgstr "Beau travail !"
+
+msgid "Good job!"
+msgstr "Bien joué !"
+
+msgid "Come on!"
+msgstr "Allez !"
+
+#, java-format
+msgid "You kept your goal in {0}. Great job!"
+msgid_plural "You kept all your goals in {0}. Great job!"
+msgstr[0] "Vous avez atteint votre objectif en {0}. Bon travail !"
+msgstr[1] "Vous avez atteint vos objectifs en {0}. Bon travail !"
+
+#, java-format
+msgid "You did not keep your goal in {0}. Better luck next month."
+msgid_plural "You did not keep a single goal in {0}. Better luck next month."
+msgstr[0] "Vous n'avez pas atteint votre objectif en {0}. Bonne chance pour le mois prochain."
+msgstr[1] "Vous n'avez pas atteint vos objectifs en {0}. Bonne chance pour le mois prochain."
+
+#, java-format
+msgid "You kept {0} of your goals in {1}."
+msgstr "Il vous reste {0} sur vos objectifs en {1}."
+
+#, java-format
+msgid "{0} was a great month! You made {1} more than you spent."
+msgstr "{0} a été un super mois ! Vous avez gagné {1} de plus que ce que vous avez dépensé."
+
+#, java-format
+msgid "{0} was a not a great month. You spent {1} more than you made."
+msgstr "{0} n'a pas été un bon mois. Vous avez dépensé {1} de plus que ce que vous avez gagné."
+
+#, java-format
+msgid "You have saved {0} in {1} months!"
+msgstr "Vous avez économisé {0} en {1} mois !"
+
+msgid "Add account"
+msgstr "Ajouter un compte"
+
+msgid "Expense"
+msgstr "Dépense"
+
+msgid "Expenses"
+msgstr "Dépenses"
+
+#, java-format
+msgid "You had an expense charged by {0}"
+msgstr "Vous avez effectué une dépense payée à {0}"
+
+msgid "Transfer"
+msgstr "Transfert"
+
+#, java-format
+msgid "You transferred {0} from {1} to {2}"
+msgstr "Vous avez transféré {0} de {1} à {2}"
+
+#, java-format
+msgid "You have spent less than usual on {0} this month."
+msgstr "Vous avez dépensé moins que d'habitude en {0} ce mois-ci."
+
+#, java-format
+msgid "You have spent more than usual on {0} this month."
+msgstr "Vous avez dépensé plus que d'habitude en {0} ce mois-ci."
+
+msgid "men"
+msgstr "hommes"
+
+msgid "women"
+msgstr "femmes"
+
+#, java-format
+msgid "Week {0}"
+msgstr "Semaine {0}"
+
+msgid "Weekly Summary"
+msgstr "Sommaire de la semaine"
+
+msgid "You are good with your goals. Great job!"
+msgid_plural "You are good on all your goals. Great job!"
+msgstr[0] "Vous êtes en bonne voie pour vos objectifs. Beau travail !"
+msgstr[1] "Vous êtes en bonne voie pour tous vos objectifs. Beau travail !"
+
+msgid "You have already blown your goal. Better luck next month."
+msgid_plural "You have already blown all of your goals. Better luck next month."
+msgstr[0] "Vous avez déjà dépassé votre objectif. Réessayez le mois prochain."
+msgstr[1] "Vous avez déjà dépassé vos objectifs. Réessayez le mois prochain."
+
+#, java-format
+msgid "You are good on {0} of your {1} goals."
+msgstr "Vous êtes en bonne voie pour {0} objectifs sur {1}."
+
+#, java-format
+msgid "You have spent {0} during last week."
+msgstr "Vous avez dépensé {0} la semaine dernière"
+
+msgid "New events"
+msgstr "Nouveaux événements"
+
+msgid "You have new events in your feed"
+msgstr "Vous avez de nouveaux événements"
+
+msgid "Updated."
+msgstr "À jour"
+
+#, java-format
+msgid "Analyzed {0}."
+msgstr "{0} analysé."
+
+msgid "Lunch"
+msgstr "Déjeuner"
+
+msgid "Restaurants"
+msgstr "Restaurants"
+
+msgid "Weekly groceries"
+msgstr "Épicerie hebdomadaire"
+
+msgid "Groceries"
+msgstr "Courses"
+
+msgid "Small things"
+msgstr "Petites dépenses"
+
+msgid "Bars"
+msgstr "Bars"
+
+msgid "Withdrawals"
+msgstr "Retraits"
+
+msgid "Going out"
+msgstr "Sorties"
+
+msgid "Morning regrets"
+msgstr "Regrets le matin"
+
+#, java-format
+msgid "Tagged with {0}"
+msgstr "Taggé avec {0}"
+
+msgid "Apps"
+msgstr "Applis"
+
+msgid "Transfers"
+msgstr "Virements"
+
+msgid "Home"
+msgstr "Maison"
+
+msgid "Rent"
+msgstr "Location"
+
+msgid "Mortgage"
+msgstr "Prêt immobilier"
+
+msgid "Communications"
+msgstr "Communications"
+
+msgid "Utilities"
+msgstr "Charges"
+
+msgid "Insurance & Fees"
+msgstr "Assurance et frais"
+
+msgid "Services"
+msgstr "Services"
+
+msgid "Home Other"
+msgstr "Maison autre"
+
+msgid "House & Garden"
+msgstr "Maison et jardin"
+
+msgid "Repairs"
+msgstr "Réparations"
+
+msgid "Fitment"
+msgstr "Mobilier"
+
+msgid "Garden"
+msgstr "Jardin"
+
+msgid "House & Garden Other"
+msgstr "Maison et jardin autre"
+
+msgid "Food & Drinks"
+msgstr "Alimentation et boissons"
+
+msgid "Alcohol & Tobacco"
+msgstr "Alcool et tabac"
+
+msgid "Food & Drinks Other"
+msgstr "Alimentation et boissons autre"
+
+msgid "Transport"
+msgstr "Transport"
+
+msgid "Car"
+msgstr "Voiture"
+
+msgid "Public Transport"
+msgstr "Transports en commun"
+
+msgid "Airfare"
+msgstr "Prix aériens"
+
+msgid "Taxi"
+msgstr "Taxi"
+
+msgid "Transport Other"
+msgstr "Transport autre"
+
+msgid "Shopping"
+msgstr "Shopping"
+
+msgid "Clothes & Accessories"
+msgstr "Vêtements et accessoires"
+
+msgid "Electronics"
+msgstr "Électronique"
+
+msgid "Gifts"
+msgstr "Cadeaux"
+
+msgid "Shopping Other"
+msgstr "Shopping autre"
+
+msgid "Leisure"
+msgstr "Loisirs"
+
+msgid "Leisure Other"
+msgstr "Loisirs autre"
+
+msgid "Health & Beauty"
+msgstr "Santé et beauté"
+
+msgid "Eyecare"
+msgstr "Ophtalmologie"
+
+msgid "Beauty"
+msgstr "Beauté"
+
+msgid "Health & Beauty Other"
+msgstr "Santé et beauté autre"
+
+msgid "Other"
+msgstr "Autre"
+
+msgid "Outlays"
+msgstr "Dépenses"
+
+msgid "Kids"
+msgstr "Enfants"
+
+msgid "Pets"
+msgstr "Animaux"
+
+msgid "Charity"
+msgstr "Associations caritatives"
+
+msgid "Education"
+msgstr "Èducation"
+
+msgid "Uncategorized"
+msgstr "Sans catégorie"
+
+msgid "Salary"
+msgstr "Salaire"
+
+msgid "Pension"
+msgstr "Pension"
+
+msgid "Reimbursements"
+msgstr "Remboursements"
+
+msgid "Benefits"
+msgstr "Allocations"
+
+msgid "Financial"
+msgstr "Financier"
+
+msgid "Other Income"
+msgstr "Autres revenus"
+
+msgid "Savings"
+msgstr "Épargne"
+
+msgid "Exclude"
+msgstr "Exclure"
+
+msgid "Coffee"
+msgstr "Café"
+
+msgid "Hobby & Sports Equipment"
+msgstr "Équipement de sports et hobbys"
+
+msgid "Books & Games"
+msgstr "Livres et jeux"
+
+msgid "Culture & Entertainment"
+msgstr "Culture et divertissement"
+
+msgid "Hobby"
+msgstr "Hobbys"
+
+msgid "Sports & Fitness"
+msgstr "Sports et fitness"
+
+msgid "Vacation"
+msgstr "Vacances"
+
+msgid "Healthcare"
+msgstr "Santé"
+
+msgid "Pharmacy"
+msgstr "Pharmacie"
+
+msgid "Updating..."
+msgstr "Mise à jour..."
+
+msgid "Authentication error. Please check your credentials."
+msgstr "Erreur d'authentification. Veuillez vérifier vos infos de connexion."
+
+msgid "Temporary error. Please try again later."
+msgstr "Erreur temporaire. Veuillez réessayer plus tard."
+
+msgid "(missing description)"
+msgstr "(description manquante)"
+
+#, java-format
+msgid "Analyzed {0} of {1} transactions..."
+msgstr "{0} transactions sur {1} analysées..."
+

@@ -1,0 +1,17 @@
+# coordination-0
+coordinationHosts: 10.21.55.255:2181
+
+bigdb:
+  username: tink-data-export
+  hosts:
+    # bigdb-0
+    - 10.21.49.194
+
+maindb:
+  host: main-009de0c51df0d79f3ad4fbb92a.cg8cufpacgbf.eu-west-1.rds.amazonaws.com
+
+cacheHosts: main.ndaaga.0001.euw1.cache.amazonaws.com:11211
+
+searchHosts: 10.21.50.247:9300
+
+applicationCluster: TINK

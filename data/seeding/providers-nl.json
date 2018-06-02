@@ -1,0 +1,144 @@
+{
+  "currency": "EUR",
+  "market": "NL",
+  "providers": [
+    {
+      "credentialsType": "PASSWORD",
+      "displayName": "ABN AMRO",
+      "fields": [
+        {
+          "description": "Customer number",
+          "exposted": true,
+          "masked": false,
+          "name": "bcNumber",
+          "numeric": true,
+          "immutable": true,
+          "optional": false
+        }
+      ],
+      "groupDisplayName": null,
+      "name": "nl-abnamro-abstract",
+      "popular": false,
+      "status": "DISABLED",
+      "transactional": true,
+      "tutorialUrl": null,
+      "type": "BANK"
+    },
+    {
+      "className": "abnamro.ics.IcsAgent",
+      "credentialsType": "PASSWORD",
+      "displayName": "ABN AMRO Credit Card",
+      "name": "nl-abnamro-ics-abstract",
+      "fields": [
+        {
+          "description": "Customer number",
+          "exposed": true,
+          "numeric": true,
+          "immutable": true,
+          "name": "bcNumber"
+        },
+        {
+          "description": "Contracts",
+          "exposed": true,
+          "immutable": true,
+          "name": "contracts",
+          "numeric": true
+        }
+      ],
+      "groupDisplayName": null,
+      "popular": false,
+      "refreshSchedule": {
+        "from": "00:00",
+        "to": "07:00"
+      },
+      "status": "ENABLED",
+      "transactional": true,
+      "tutorialUrl": null,
+      "type": "CREDIT_CARD"
+    },
+    {
+      "className": "demo.DemoAgent",
+      "credentialsType": "PASSWORD",
+      "displayName": "Bunq",
+      "fields": [
+        {
+          "name": "username",
+          "description": "Login name",
+          "exposed": true,
+          "immutable": true
+        },
+        {
+          "sensitive": true,
+          "name": "password",
+          "description": "Password",
+          "exposed": true,
+          "masked": true
+        }
+      ],
+      "multiFactor": false,
+      "name": "nl-bunq",
+      "popular": true,
+      "status": "ENABLED",
+      "transactional": "true",
+      "type": "BANK"
+    },
+    {
+      "className": "abnamro.AbnAmroAgent",
+      "credentialsType": "PASSWORD",
+      "displayName": "ABN AMRO",
+      "fields": [],
+      "groupDisplayName": null,
+      "name": "nl-abnamro",
+      "popular": true,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "BANK",
+      "refreshFrequency": 1,
+      "refreshFrequencyFactor": 1
+    },
+    {
+      "className": "nxgen.nl.banks.bunq.BunqAgent",
+      "credentialsType": "PASSWORD",
+      "displayName": "bunq",
+      "fields":[
+        {
+          "description": "API Key",
+          "masked": true,
+          "sensitive": true,
+          "name": "password"
+        }
+      ],
+      "name": "nl-bunq-apikey",
+      "passwordHelpText": "You get the API key from your bunq app by going to Profile > Security.",
+      "popular": true,
+      "status": "ENABLED",
+      "transactional": true,
+      "payload": "https://api.bunq.com",
+      "type": "BANK",
+      "refreshFrequency": 1,
+      "refreshFrequencyFactor": 1
+    },
+    {
+      "className": "nxgen.nl.banks.bunq.BunqAgent",
+      "credentialsType": "PASSWORD",
+      "displayName": "bunq - sandbox",
+      "fields":[
+        {
+          "description": "API Key",
+          "masked": true,
+          "sensitive": true,
+          "name": "password"
+        }
+      ],
+      "name": "nl-bunq-sandbox-apikey",
+      "passwordHelpText": "You get the API key from your bunq app by going to Profile > Security.",
+      "popular": true,
+      "status": "ENABLED",
+      "transactional": true,
+      "payload": "https://sandbox.public.api.bunq.com",
+      "type": "BANK",
+      "refreshFrequency": 1,
+      "refreshFrequencyFactor": 1
+    }
+  ]
+}

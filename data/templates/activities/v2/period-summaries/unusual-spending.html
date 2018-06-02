@@ -1,0 +1,19 @@
+@args String title, String average, String svg
+
+<div class="unusual-spending-summary v2">
+	<div class="divider-wrapper">	
+		<div class="divider"></div>
+	</div>
+
+	<div class="title-container">
+		<div class="left"></div>
+		<div class="activity-description-text">@title</div> 
+
+		<div class="average">@average
+			<span class="average-right-margin"></span>
+		</div>
+	</div>
+	<div class="charts">
+		<div>@escape("RAW") {@svg}</div>
+	</div>			
+</div>

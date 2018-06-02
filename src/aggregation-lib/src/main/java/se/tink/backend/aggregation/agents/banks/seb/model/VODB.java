@@ -1,0 +1,235 @@
+package se.tink.backend.aggregation.agents.banks.seb.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Objects;
+import com.google.common.base.Predicates;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import se.tink.backend.core.enums.TransferType;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class VODB {
+    @JsonProperty("DBZV160")
+    public String[] DBZV160 = new String[0];
+    @JsonProperty("DEVID01")
+    public DEVID01 DEVID01 = new DEVID01();
+    @JsonProperty("HWINFO01")
+    public HWINFO01 HWINFO01 = new HWINFO01();
+    @JsonProperty("CBEW501")
+    public String[] CBEW501 = new String[0];
+    @JsonProperty("DBZV170")
+    public String[] DBZV170 = new String[0];
+    @JsonProperty("CBEW502")
+    public String[] CBEW502 = new String[0];
+
+    //User info returned after activation, also sent as null now and then
+    @JsonProperty("USRINF01")
+    public USRINF01 USRINF01;
+
+    //Query for a single accounts transactions
+    @JsonProperty("PCBW4341")
+    public PCBW4341 PCBW4341;
+    
+    //Query for a single accounts protected transactions
+    @JsonProperty("PCBW431Z")
+    public PCBW431Z PCBW431Z;
+
+    // This is accounts
+    @JsonProperty("PCBW4211")
+    public List<AccountEntity> accountEntities = Lists.newArrayList();
+
+    // This is probably account transactions
+    @JsonProperty("PCBW4342")
+    public List<SebTransaction> PCBW4342 = new ArrayList<SebTransaction>();
+
+    // This is probably pending account transactions
+    @JsonProperty("PCBW4311")
+    public List<SebTransaction> PCBW4311 = new ArrayList<SebTransaction>();
+
+    // This is mortgage information
+    @JsonProperty("PCBW2581")
+    public List<PCBW2581> PCBW2581 = new ArrayList<PCBW2581>();
+
+    // This is blanco loan information
+    @JsonProperty("PCBW2582")
+    public List<PCBW2582> PCBW2582 = Lists.newArrayList();
+
+    // Credit card
+    
+    // This is probably credit card accounts
+    @JsonProperty("PCBW3201")
+    public List<SebCreditCardAccount> PCBW3201 = new ArrayList<SebCreditCardAccount>();
+    
+    // Credit card transactions (not yet billed)
+    @JsonProperty("PCBW3241")
+    public List<SebCreditCardTransaction> PCBW3241 = new ArrayList<SebCreditCardTransaction>();
+    
+    // Credit cards
+    @JsonProperty("PCBW3242")
+    public List<SebCreditCard> PCBW3242 = new ArrayList<SebCreditCard>();
+    
+    // Credit card transactions (billed)
+    @JsonProperty("PCBW3243")
+    public List<SebBilledCreditCardTransaction> PCBW3243 = new ArrayList<SebBilledCreditCardTransaction>();
+
+    // Transfer and payment related entities
+
+    // Transfer request for invoices
+    @JsonProperty("PCBW5211")
+    public SebTransferRequestEntity InvoiceTransfer;
+
+    // Transfer request between accounts
+    @JsonProperty("PCBW1221")
+    public SebTransferRequestEntity BankTransfer;
+
+    // External accounts
+    @JsonProperty("PCBW189")
+    public List<ExternalAccount> ExternalAccounts = Lists.newArrayList();
+
+    // External transfer verification
+    @JsonProperty("PCBW024")
+    public SebTransferVerification TransferVerification;
+
+    // Response with payments (einvoices and bills)
+    @JsonProperty("PCBW1241")
+    public List<InvoiceTransferListEntity> InvoiceTransfers = Lists.newArrayList();
+
+    // Response with bank transfers
+    @JsonProperty("PCBW1242")
+    public List<BankTransferListEntity> BankTransfers = Lists.newArrayList();
+
+    @JsonProperty("PCBW3041")
+    public List<GiroEntity> FindBGResult = Lists.newArrayList();
+
+    @JsonProperty("PCBW096")
+    public List<GiroEntity> FindPGResult = Lists.newArrayList();
+
+    @JsonProperty("PCBW1361")
+    public List<UpcomingTransactionEntity> UpcomingTransactions = Lists.newArrayList();
+
+    @JsonProperty("PCBW203")
+    public List<EInvoiceListEntity> EInvoices = Lists.newArrayList();
+
+    @JsonProperty("PCBW083")
+    public List<HoldingEntity> holdingEntities = Lists.newArrayList();
+
+    @JsonProperty("PCBW080")
+    public List<DepotEntity> depotEntities = Lists.newArrayList();
+
+    @JsonProperty("PCBWF041")
+    public List<InsuranceEntity> insuranceEntities = Lists.newArrayList();
+
+    @JsonProperty("PCBWF061")
+    public List<InsuranceAccountEntity> insuranceAccountEntities = Lists.newArrayList();
+
+    // Not certain of the object name: PensionInsuranceHoldingEntity
+    @JsonProperty("PCBW173")
+    public List<PensionInsuranceHoldingEntity> pensionInsuranceHoldingEntities = Lists.newArrayList();
+
+    // Not certain of the object name: IpsHoldingEntity
+    @JsonProperty("PCBW174")
+    public List<IpsHoldingEntity> ipsHoldingEntities = Lists.newArrayList();
+
+    @JsonProperty("PCBW030")
+    public List<FundAccountEntity> fundAccounts = Lists.newArrayList();
+
+    @JsonProperty("PCBW8801")
+    public List<PortfolioAccountMapperEntity> portfolioAccountMappers = Lists.newArrayList();
+
+    @JsonProperty("RESULTO01")
+    public RESULTO01 RESULTO01;
+
+    @JsonIgnore
+    public List<TransferListEntity> getTransfers() {
+        List<TransferListEntity> allTransfers = Lists.newArrayList();
+
+        if (InvoiceTransfers != null) {
+            allTransfers.addAll(InvoiceTransfers);
+        }
+        if (BankTransfers != null) {
+            allTransfers.addAll(BankTransfers);
+        }
+
+        return FluentIterable
+                .from(allTransfers)
+                .filter(Predicates.notNull())
+                .toList();
+    }
+
+    @JsonIgnore
+    public <T extends TransferListEntity> List<T> getTransfers(Class<T> ofType) {
+        List<TransferListEntity> transfers = getTransfers();
+        return FluentIterable
+                .from(transfers)
+                .filter(ofType)
+                .toList();
+    }
+
+    @JsonIgnore
+    public List<EInvoiceListEntity> getEInvoices() {
+        if (EInvoices == null) {
+            return Lists.newArrayList();
+        }
+
+        return Lists.newArrayList(FluentIterable
+                        .from(EInvoices)
+                        .filter(Predicates.not(EInvoiceListEntity.IS_EMPTY)));
+    }
+
+    @JsonIgnore
+    public void setTransfer(TransferType transferType, SebTransferRequestEntity transfer)
+            throws IllegalArgumentException {
+        if (Objects.equal(transferType, TransferType.BANK_TRANSFER)) {
+            this.BankTransfer = transfer;
+            this.InvoiceTransfer = null;
+        } else if (Objects.equal(transferType, TransferType.PAYMENT)) {
+            this.BankTransfer = null;
+            this.InvoiceTransfer = transfer;
+        } else {
+            throw new IllegalArgumentException("Transfer type not supported");
+        }
+    }
+
+    @JsonIgnore
+    public List<HoldingEntity> getHoldings() {
+        return holdingEntities == null ? Collections.emptyList() : holdingEntities;
+    }
+
+    @JsonIgnore
+    public List<DepotEntity> getDepots() {
+        return depotEntities == null ? Collections.emptyList() : depotEntities;
+    }
+
+    public List<InsuranceEntity> getInsuranceEntities() {
+        return insuranceEntities == null ? Collections.emptyList() : insuranceEntities;
+    }
+
+    public List<InsuranceAccountEntity> getInsuranceAccountEntities() {
+        return insuranceAccountEntities == null ? Collections.emptyList() : insuranceAccountEntities;
+    }
+
+    public List<PensionInsuranceHoldingEntity> getPensionInsuranceHoldingEntities() {
+        return pensionInsuranceHoldingEntities == null ? Collections.emptyList() : pensionInsuranceHoldingEntities;
+    }
+
+    public List<IpsHoldingEntity> getIpsHoldingEntities() {
+        return ipsHoldingEntities == null ? Collections.emptyList() : ipsHoldingEntities;
+    }
+
+    public List<FundAccountEntity> getFundAccounts() {
+        return fundAccounts == null ? Collections.emptyList() : fundAccounts;
+    }
+
+    public List<AccountEntity> getAccountEntities() {
+        return accountEntities == null ? Collections.emptyList() : accountEntities;
+    }
+
+    public List<PortfolioAccountMapperEntity> getPortfolioAccountMappers() {
+        return portfolioAccountMappers == null ? Collections.emptyList() : portfolioAccountMappers;
+    }
+}

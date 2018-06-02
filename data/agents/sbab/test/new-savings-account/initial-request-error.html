@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>This is a simplified example of an SBAB response</title>
+</head>
+<body>
+
+
+<form id="oppnaSparkontoForm" name="oppnaSparkontoForm" action="X" method="post">
+    <input type="hidden" name="struts.token.name" value="token"/>
+    <input type="hidden" name="token" value="X"/>
+
+    <fieldset>
+        <legend class="form-section">Dina konto- och kontaktuppgifter</legend>
+
+        <div class="form-row form-row-noedit">
+            <label>Personnummer</label>
+            201212121212
+        </div>
+
+        <div class="form-row form-row-noedit">
+            <label for>Namn</label>
+            Tolvan Tolvansson
+        </div>
+
+        <div class="form-row form-row-noedit">
+
+            <label>Adress</label>
+            <div id="adress-container" class="multiple">
+                       <span>
+
+                              Stadsgatan 1
+                              <br/>
+
+
+
+                              11111
+                              STOCKHOLM
+                              <br/>
+
+                              SVERIGE
+                              <br/>
+
+                        </span>
+            </div>
+
+        </div>
+
+        <div class="form-row">
+
+            <label>E-post</label>
+            <input type="text" name="kunddata.uppdateradEpost" value="test@mail.com" id="kontaktuppgifter.epost"
+                   style="max-width: 250px;"/>
+
+            <div class="info-grey-right-container">
+                <div class="info-grey-content">
+                    <div class="centered-area">
+                        <span class="smaller-text">E-post: Vi vill gärna skicka tips och marknadsföring till din e-postadress. Du kan välja om du inte vill ha våra utskick.</span>
+                        <br><br>
+                        <span class="smaller-text">Kontots namn: Du kan döpa sparkontot till ett valfritt namn, max 30 tecken.</span>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" value="false" name="__checkbox_kunddata.uppdateradEpostsparr">
+        <div class="form-row no-label single-checkbox">
+            <label class="checkbox"><input type="checkbox" name="kunddata.uppdateradEpostsparr" value="true" checked>
+                Nej tack till tips och marknadsföring till min e-post</label>
+        </div>
+
+        <div class="form-row">
+
+            <div class="label">Telefonnummer</div>
+            <div class="multiple inner-form">
+                <div class="spacerDown">
+
+                    <div class="error"
+                         style="margin: 10px 0;">
+                        <span>Du måste skriva 7 - 20 tecken.</span>
+                    </div>
+
+                    <label for="mobilTelNummer" class="not-inner-label">Mobilnummer</label>
+                    <input type="text" name="kunddata.uppdateradMobilTelefonnummer" maxlength="20" value="X"
+                           id="mobilTelNummer" class="floatRight numeric"/>
+
+                </div>
+                <div>
+
+                    <label for="altTelNummer" class="not-inner-label">Annat telefonnummer</label>
+                    <input type="text" name="kunddata.uppdateradAnnatTelefonnummer" maxlength="20" value=""
+                           id="altTelNummer" class="floatRight numeric"/>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+
+            <label>
+                Kontots namn
+            </label>
+            <div class="edit-form-row">
+                <div class="form-row-formline">
+                   <span>
+                     <input type="text" name="kunddata.kontoNamn" value="Tink sparkonto" id="kontouppgifter.kontoNamn"
+                            style="max-width: 250px;"/>
+
+                   </span>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend class="form-section"></legend>
+        <div class="form-row no-label">
+            <fieldset class="checkboxes">
+                <label class="checkbox">
+                    <input type="checkbox" name="kunddata.medsokandeToggle" value="true"
+                           id="oppnaSparkontoForm_kunddata_medsokandeToggle" title="Flera kontohavare"
+                           onclick="expandCollapse('toogleshow', 'tooglehidden');" styleId="spara"/>
+                    <input type="hidden" id="__checkbox_oppnaSparkontoForm_kunddata_medsokandeToggle"
+                           name="__checkbox_kunddata.medsokandeToggle" value="true"/>
+                    Jag vill öppna sparkontot med fler kontohavare (max 3 stycken)
+                </label>
+            </fieldset>
+        </div>
+
+        <div id="toogleshow"></div>
+        <div id="tooglehidden"
+             style="display:none" class="margin_top_11 clearfix">
+
+            <div class="form-row">
+
+
+                <label class="personnummer"> Medkontohavares personnummer </label>
+                <input type="text" name="personnummerSelected" value="1212121212"
+                       id="oppnaSparkontoForm_personnummerSelected" title="personnummer" placeholder="ååååmmdd-nnnn"
+                       property="personnummer"/>
+
+                <input type="submit" id="oppnaSparkontoForm_add" name="action:OppnaSparkontoNyMedsokande"
+                       value="L&auml;gg till" class="btn btn-secondary"/>
+
+            </div>
+
+            <div class="form-row">
+                <label>Tillagda personnummer</label>
+                <div class="multiple">
+
+                    <span>Ingen</span>
+
+
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="struts.token.name" value="token"/>
+        <input type="hidden" name="token" value="X"/>
+    </fieldset>
+
+    <fieldset>
+        <div class="actions">
+            <input id="submitOppnaSparkontoForm" type="submit" class="btn btn-primary" value="Nästa">
+        </div>
+    </fieldset>
+</form>
+
+</body>
+</html>

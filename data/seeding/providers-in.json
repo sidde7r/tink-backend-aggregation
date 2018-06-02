@@ -1,0 +1,269 @@
+{
+    "market": "IN",
+    "currency": "INR",
+    "providers":
+    [
+        {
+            "name":"in-state-bank-freedom",
+            "displayName":"State Bank Freedom",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"demo.DemoAgent",
+            "passwordHelpText":"In order to use State Bank with Tink, please authenticate yourself using the same credentials you normally use in State Bank's mobile banking app.",
+            "transactional":true,
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"User ID",
+                    "immutable":true
+                },
+                {
+                    "name":"password",
+                    "description":"MPIN",
+                    "immutable":true
+                }
+            ]
+        },
+        {
+            "name":"in-state-bank-anywhere",
+            "displayName":"State Bank Anywhere",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"demo.DemoAgent",
+            "passwordHelpText":"In order to use State Bank with Tink, please authenticate yourself using the same credentials you normally use in State Bank's mobile banking app.",
+            "transactional":true,
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"Internet banking username",
+                    "immutable":true
+                },
+                {
+                    "name":"password",
+                    "description":"Internet banking password",
+                    "immutable":true
+                }
+            ]
+        },
+        {
+            "name":"in-axis-bank",
+            "displayName":"Axis Bank",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"demo.DemoAgent",
+            "passwordHelpText":"In order to use Axis Bank with Tink, please authenticate yourself using the same credentials you normally use in Axis Bank's internet banking.",
+            "transactional":true,
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"Login ID",
+                    "immutable":true
+                },
+                {
+                    "name":"password",
+                    "description":"Password",
+                    "immutable":true
+                }
+            ]
+        },
+        {
+            "name":"in-kotak-bank",
+            "displayName":"Kotak Mahindra Bank",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"demo.DemoAgent",
+            "passwordHelpText":"In order to use Kotak Mahindra Bank with Tink, please authenticate yourself using the same credentials you normally use in Kotak Mahindra Bank's internet banking.",
+            "transactional":true,
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"CRN",
+                    "immutable":true,
+                    "numeric":true
+                },
+                {
+                    "name":"password",
+                    "description":"MPIN",
+                    "immutable":true,
+                    "numeric":true
+                }
+            ]
+        },
+        {
+            "name":"in-icici-bank",
+            "displayName":"ICICI Bank",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"demo.DemoAgent",
+            "passwordHelpText":"In order to use ICICI Bank with Tink, please authenticate yourself using the same credentials you normally use in ICICI Bank's internet banking or Pockets mobile app.",
+            "transactional":true,
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"User ID",
+                    "immutable":true
+                },
+                {
+                    "name":"password",
+                    "description":"Password",
+                    "immutable":true
+                }
+            ]
+        },
+        {
+            "name":"in-citibank",
+            "displayName":"Citibank",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"demo.DemoAgent",
+            "passwordHelpText":"In order to use Citibank with Tink, please authenticate yourself using the same credentials you normally use in Citibank's mobile app.",
+            "transactional":true,
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"User ID",
+                    "immutable":true
+                },
+                {
+                    "name":"password",
+                    "description":"Password IPIN",
+                    "immutable":true
+                }
+            ]
+        },
+        {
+            "name":"in-hdfc-bank",
+            "displayName":"HDFC Bank",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"demo.DemoAgent",
+            "passwordHelpText":"In order to use HDFC Bank with Tink, please authenticate yourself using the same credentials you normally use in HDFC Bank's mobile banking app.",
+            "transactional":true,
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"Customer ID",
+                    "immutable":true
+                },
+                {
+                    "name":"password",
+                    "description":"Password IPIN",
+                    "immutable":true
+                }
+            ]
+        },
+        {
+            "name":"in-pnb",
+            "displayName":"Punjab National Bank",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"demo.DemoAgent",
+            "passwordHelpText":"In order to use Punjab National Bank with Tink, please authenticate yourself using the same credentials you normally use in Punjab National Bank's mobile banking app.",
+            "transactional":true,
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"User ID",
+                    "immutable":true
+                },
+                {
+                    "name":"password",
+                    "description":"Password",
+                    "masked":true
+                }
+            ]
+        },
+        {
+            "name":"in-canara-bank",
+            "displayName":"Canara Bank",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"demo.DemoAgent",
+            "passwordHelpText":"In order to use Canara Bank with Tink, please authenticate yourself using the same credentials you normally use in CanaraBank's mobile banking app.",
+            "transactional":true,
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"User ID",
+                    "immutable":true
+                },
+                {
+                    "name":"password",
+                    "description":"MPIN",
+                    "masked":true
+                }
+            ]
+        },
+        {
+            "name":"in-americanexpress",
+            "displayName":"American Express",
+            "popular":false,
+            "type":"CREDIT_CARD",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"demo.DemoAgent",
+            "passwordHelpText":"In order to use American Express with Tink, please authenticate yourself using the same credentials you normally use in American Express's mobile banking app.",
+            "transactional":true,
+            "payload":"en_IN",
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"User ID",
+                    "immutable":true
+                },
+                {
+                    "name":"password",
+                    "description":"Password",
+                    "masked":true
+                }
+            ]
+        }
+    ]
+}

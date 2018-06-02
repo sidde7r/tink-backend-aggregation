@@ -1,0 +1,40 @@
+# Compiled source #
+###################
+*.pyc
+
+# Logs and databases #
+######################
+*.log
+data/version.json
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+
+# Temporary swap files #
+#####################
+*~
+.#*
+*.swp
+*.swo
+
+# Bazel #
+#####################
+/bazel-bin
+/bazel-genfiles
+/bazel-out
+/bazel-testlogs
+/bazel-tink-backend
+.bazelrc
+
+# Editors
+.idea
+.vscode
+.project

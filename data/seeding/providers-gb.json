@@ -1,0 +1,104 @@
+{
+	"market": "GB",
+	"currency": "GBP",
+	"providers":
+	[
+		{
+			"name":"gb-danskebank",
+			"displayName":"Danske Bank",
+			"popular":true,
+			"type":"BANK",
+			"status":"ENABLED",
+			"credentialsType":"PASSWORD",
+			"multiFactor":false,
+			"className":"banks.danskebank.v2.DanskeBankV2Agent",
+			"passwordHelpText":"In order to use Danske Bank with Tink, please authenticate yourself using the same credentials you normally use in Danske Bank's mobile banking app.",
+			"transactional":"true",
+			"payload":"UK",
+			"tutorialUrl":null,
+			"fields":[
+				{"description":"User-ID",
+					"name":"username",
+					"numeric":true,
+					"immutable":true},
+
+				{"description":"Passcode",
+					"hint":"NNNN",
+					"maxLength":4,
+					"minLength":4,
+					"masked":true,
+					"name":"password",
+					"pattern":"([0-9]{4})",
+					"patternError":"Please enter 4 digits",
+					"numeric":true}
+			]
+		},
+		{
+			"name":"gb-americanexpress",
+			"displayName":"American Express",
+			"popular":false,
+			"type":"CREDIT_CARD",
+			"status":"ENABLED",
+			"credentialsType":"PASSWORD",
+			"className":"creditcards.americanexpress.v3.AmericanExpressV3Agent",
+			"passwordHelpText":"In order to use American Express with Tink, please authenticate yourself using the same credentials you normally use in American Express' mobile app or at their website.",
+			"transactional":true,
+			"payload":"GB",
+			"fields":[
+				{"description":"User ID",
+					"name":"username",
+					"immutable":true},
+
+				{"description":"Password",
+					"masked":true,
+					"name":"password"}
+			]
+		},
+		{
+			"name": "gb-citibank",
+			"displayName": "Citibank",
+			"popular": false,
+			"type": "BANK",
+			"status": "ENABLED",
+			"credentialsType": "PASSWORD",
+			"className": "banks.citibank.v11.CitibankV11Agent",
+			"passwordHelpText": "In order to use Citibank with Tink, please authenticate yourself using the same credentials you normally use in Citibank's mobile banking app.",
+			"transactional": true,
+			"fields": [
+				{
+					"description": "User Name",
+					"immutable": true,
+					"name": "username"
+				},
+				{
+					"description": "Password",
+					"masked": true,
+					"name": "password"
+				}
+			]
+		},
+		{
+			"className": "demo.DemoAgent",
+			"credentialsType": "PASSWORD",
+			"displayName": "Demo",
+			"fields": [
+				{
+					"description": "Användarnamn",
+					"immutable": true,
+					"name": "username"
+				},
+				{
+					"description": "Lösenord",
+					"masked": true,
+					"name": "password"
+				}
+			],
+			"name": "gb-demo",
+			"passwordHelpText": "",
+			"popular": false,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "TEST"
+		}
+	]
+}

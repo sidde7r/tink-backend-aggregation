@@ -1,0 +1,119 @@
+server:
+  shutdownGracePeriod: 5s
+  applicationConnectors:
+    - type: http
+      port: 9095
+    - type: https
+      port: 9105
+      keyStorePath: data/security/developer.keystore
+      keyStorePassword: changeme
+      certAlias: developer.internal.tink.se
+      trustStorePath: data/security/TinkCA.truststore
+      trustStorePassword: changeme
+      # Validation disabled since Dropwizard/Jetty tries to check revocation of our homebrewed certs, which fails.
+      validateCerts: false
+  adminConnectors:
+    - type: http
+      port: 8095
+
+endpoints:
+  main:
+    url: http://localhost:9090/
+    pinnedCertificates:
+      - "CERTSHA256:C050C78642605EE54DDBF2B38F7700EFAC77D19DC5388B807550D325574220E7"
+  system:
+    url: http://localhost:9091/
+    accessToken: devtoken
+    pinnedCertificates:
+      - "CERTSHA256:C050C78642605EE54DDBF2B38F7700EFAC77D19DC5388B807550D325574220E7"
+  aggregation:
+    url: http://localhost:9095/
+    accessToken: devtoken
+    pinnedCertificates:
+      - "CERTSHA256:C050C78642605EE54DDBF2B38F7700EFAC77D19DC5388B807550D325574220E7"
+  analytics:
+    url: http://localhost:9093/
+  encryption:
+    url: http://localhost:9094/
+    pinnedCertificates:
+      - "CERTSHA256:C050C78642605EE54DDBF2B38F7700EFAC77D19DC5388B807550D325574220E7"
+  connector:
+    url: http://localhost:9095/
+    pinnedCertificates:
+      - "CERTSHA256:C050C78642605EE54DDBF2B38F7700EFAC77D19DC5388B807550D325574220E7"
+
+cluster: CORNWALL
+
+taskQueue:
+  workers: 1
+  mode: enabled
+  hosts:
+    - 172.16.42.2:9092
+  firehoseEnabled: false
+
+administrativeMode: []
+
+requireInjection: false
+
+developmentMode: true
+
+distributedDatabase:
+  seeds:
+    - 172.16.42.2
+  enabled: true
+
+database:
+  driverClass: com.mysql.jdbc.Driver
+  username: tink
+  password: tink
+  url: jdbc:mysql://172.16.42.2/tink?useLocalSessionState=true&rewriteBatchedStatements=true&useSSL=true&verifyServerCertificate=false
+  showSql: false
+  persistenceUnitName: tink-main-api
+  generateDdl: true
+
+scheduler:
+  enabled: false
+
+coordination:
+  hosts: 172.16.42.2:2181
+
+cache:
+  enabled: false
+
+search:
+  enabled: false
+
+analytics:
+  intercom:
+    enabled: false
+
+logging:
+  level: INFO
+  loggers:
+    se.tink: DEBUG
+    se.tink.org.eclipse: INFO
+    org.hibernate: WARN
+  appenders:
+    - type: console
+      threshold: ALL
+      timeZone: Europe/Stockholm
+      logFormat: '%magenta(%date{"yyyy-MM-dd HH:mm:ss,SSSXXX"}) %highlight(%level) [%thread] R:%X{requestId} %blue(%logger) %message%n%xException'
+    - type: file
+      threshold: INFO
+      currentLogFilename: /usr/share/tink-backend-connector/log/tink-backend-connector.log
+      archive: true
+      archivedLogFilenamePattern: /usr/share/tink-backend-connector/log/tink-backend-connector-%d.log.gz
+      archivedFileCount: 5
+      timeZone: Europe/Stockholm
+      logFormat: '%date{"yyyy-MM-dd HH:mm:ss,SSSXXX"} %level [%thread] R:%X{requestId} %logger %message%n%xException'
+
+connector:
+  clients:
+    SEB:
+      - 00000000000000000000000000000000
+
+template:
+  enabled: false
+
+transaction:
+  enforceRemovalOfPendingAfterExpired: true

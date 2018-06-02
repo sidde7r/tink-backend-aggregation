@@ -1,0 +1,52 @@
+<div id="inner-viewport" style="width: 500px; height: 420px; padding: 10px;">
+  <div style="width: 500px; height: 210px;">
+    <div id='map' style="height: 100%%; width: 100%%;" class="skip-all"></div>
+  </div>
+  <div style="position: absolute; top: 170px; left: 210px; padding: 15px; border: solid;" class="icon-circle">%s</div>
+  <div style="width: 500px; height: 120px; margin: 50px 0px 0px 0px;">  
+    <div style="width: 500px; text-align: center; font-size: 42px; font-family: ProximaNovaA-Semibold, proxima-semibold; margin-bottom: 20px;">%s</div>
+    <div style="width: 320px; background: #CCCCCC; height: 1px; margin: 0 auto;" class="skip-height skip-margin"></div>
+    <div style="width: 480px; text-align: center; font-size: 26px; margin-top: 20px; padding: 0px 10px 0px 10px;">%s</div>
+  </div>
+</div>
+<script>
+L.mapbox.accessToken = 'pk.eyJ1IjoiYW5sdW5kIiwiYSI6IjctY25yWGsifQ.pI9Cw22sPt9OvRmKEpybRg';
+
+var addressPoints = [%s];
+
+var cfg = {
+
+  /** 
+    https://github.com/dpiccone/leaflet-div-heatmap
+    OPTIONS
+    clickable: true or false, // divHeatmapLayer.on('click',function() {...});
+    radius: 100,
+    gradient: true or false, // Make solid blobs
+    color: '255,0,0' or '#FF0000'
+    -->
+  */
+
+  "radius": 15,
+  "gradient": true, 
+  "color": '#009DDE',
+};
+
+$(document).ready(function() {
+  var heatmap = new L.DivHeatmapLayer(cfg);
+            
+  heatmap.setData(addressPoints);
+
+  var map = L.mapbox.map('map', 'anlund.403b23cc', 
+      {
+          zoomControl: false,
+          attributionControl: false,
+          layers: [heatmap]
+      }
+      ).setView([%s], 12);
+
+  map.dragging.disable();
+  map.touchZoom.disable();
+  map.doubleClickZoom.disable();
+  map.scrollWheelZoom.disable();
+});
+</script>

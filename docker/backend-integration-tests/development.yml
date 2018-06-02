@@ -1,0 +1,232 @@
+server:
+  shutdownGracePeriod: 20s
+  applicationConnectors:
+    - type: http
+      port: 9090
+    - type: https
+      port: 9091
+      keyStorePath: data/security/developer.keystore
+      keyStorePassword: changeme
+      certAlias: developer.internal.tink.se
+      trustStorePath: data/security/TinkCA.truststore
+      trustStorePassword: changeme
+      # Validation disabled since Dropwizard/Jetty tries to check revocation of our homebrewed certs, which fails.
+      validateCerts: false
+  adminConnectors:
+    - type: http
+      port: 8090
+
+grpc:
+  port: 9998
+
+endpoints:
+  api:
+    url: http://www.staging.tink.se/api/v1
+  main:
+    url: http://localhost:9090/
+  system:
+    url: http://localhost:9090/
+    accessToken: devtoken
+  aggregation:
+    url: http://localhost:9090/
+    accessToken: devtoken
+  analytics:
+    url: http://localhost:9090/
+  encryption:
+    url: http://localhost:9090/
+    accessToken: devtoken
+  connector:
+    url: http://localhost:9090/
+  fasttext:
+    url: http://localhost:9090/
+
+taskQueue:
+  workers: 1
+  hosts:
+    - kafka:9092
+  firehoseEnabled: false
+
+cluster: TINK
+
+flags:
+  register:
+    SE:
+      FRAUD_PROTECTION: 1
+      TINK_EMPLOYEE: 1
+      APPLICATIONS: 1
+    NL:
+      ABN: 1
+    ALL:
+      WRITE_CASSANDRA_STATISTICS: 1
+      READ_CASSANDRA_STATISTICS: 1
+      WRITE_NEW_TRANSACTIONS: 1
+      READ_NEW_TRANSACTIONS: 1
+      READ_PERIODS: 1
+  dynamicInheritance:
+    APPLICATIONS:
+        - TRANSFERS
+        - BILLPAY
+        - SHOW_BANK_LOGO
+        - APPLICATIONS_INTERCOM_CHAT
+        - RESIDENCE_TAB
+        - IOS_MORTGAGE_TAKE_OVER
+    IOS_BETA:
+        - RESIDENCE_VALUATION
+    TINK_EMPLOYEE:
+        - RESIDENCE_VALUATION
+
+administrativeMode: ["ccccccelgiev", "ccccccflgngc"]
+
+developmentMode: true
+
+distributedDatabase:
+  seeds:
+    - cassandra
+  enabled: true
+  datacenter: TestDatacenter
+
+database:
+  driverClass: com.mysql.jdbc.Driver
+  username: tink
+  password: tink
+  url: jdbc:mysql://mysql/tink?useLocalSessionState=true&rewriteBatchedStatements=true&useSSL=true&verifyServerCertificate=false
+  showSql: false
+  persistenceUnitName: tink-combined-api
+  generateDdl: true
+  maxPoolSize: 40
+
+cache:
+  hosts: memcached:11211
+  enabled: true
+
+creditsafe:
+  username: TINKTESTIN
+  password: cU7356rwx
+
+idcontrol:
+  dryRunDataRefresh: true
+  daysToFetchChangesFor: 2
+
+scheduler:
+  enabled: true
+
+coordination:
+  hosts: zookeeper:2181
+
+search:
+  clusterName: elasticsearch
+  hosts: elasticsearch:9300
+  enabled: true
+
+facebook:
+  appId: 1482993025252778
+  appSecret: 6f7ba2566960534e999ee20d775a5235
+
+twilio:
+  accountSid: ASK_FH
+  authToken: ASK_FH
+  enabled: false
+
+notifications:
+  startHourOfDay: 9
+  endHourOfDay: 22
+  applications:
+    se.tink.frontend.mobile:
+      apple:
+        topic: se.tink.iphone
+        keystore:
+          filename: enterprise.p12
+          password: AgtZfUBuvQhF9Cr9nHsbqx]RBLfat2CH
+      google:
+        apiKey: AIzaSyBbD-9t5m3EnL9U8vxD-3qrg9OKUrVZ92g
+
+analytics:
+  intercom:
+    enabled: true
+    appId: iy6mejjz
+    apiKey: b495db27945dcb3cb8a16819d2f156655b268e17
+
+aggregationWorker:
+  collectorSubscriptionKey: ASK_JOHANNES
+
+integrations:
+  seb:
+    mortgage:
+      https: false
+      targetHost: 10.1.18.10:10090
+      apiVersion: v1.0
+      httpHeaders:
+        Authorization: "Bearer ASK_JOHANNES"
+        Host: tink-api.seb.se:10443
+  sbab:
+    signBaseUrl: https://secure.sbab.se
+    mortgage:
+      https: false
+      targetHost: 10.10.1.120:10080
+      username: sys_tink
+      password: bytkod
+      signBaseUrl: https://testsign.sbab.se
+  booli:
+    callerId: tink_app
+    privateKey: PRIVATE_KEY_PLACEHOLDER
+
+reprocessTransactions:
+  categoryCodes: ["expenses:misc.uncategorized", "income:other.other"]
+  description:
+  includeModifiedByUser: false
+
+transfers:
+  enabled: true
+  duplicateTime: 1
+  aggregationTime: 5
+  bankTransferThreshold: 1000
+  paymentThreshold: 20000
+
+logging:
+  level: INFO
+  loggers:
+    se.tink: DEBUG
+    se.tink.org.eclipse: INFO
+    org.hibernate: WARN
+    org.apache.hadoop: INFO
+    org.apache.http.client.protocol.ResponseProcessCookies: ERROR
+  appenders:
+    - type: console
+      threshold: ALL
+      timeZone: Europe/Stockholm
+
+connector:
+  clients:
+    ABN_AMRO:
+      - 00000000000000000000000000000000
+    SEB:
+      - 00000000000000000000000000000000
+
+abnAmro:
+  rateLimitPermits:
+    0: 5
+    1: 30
+    2: 15
+  trustStore:
+    path: data/security/abnamro.truststore
+    password: changeme
+  internetBanking:
+    host: www.abnamro.nl
+
+seb:
+  rateLimitPermits:
+    REAL_TIME: 5
+    HISTORICAL: 30
+
+template:
+  enabled: false
+
+authentication:
+  methods:
+    - BASIC
+    - FACEBOOK
+    - BEARER
+    - SESSION
+
+categorization:
+  usePatchedFastText: true

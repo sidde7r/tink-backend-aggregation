@@ -1,0 +1,198 @@
+package se.tink.backend.aggregation.agents;
+
+import com.google.common.base.Preconditions;
+import se.tink.backend.core.transfer.SignableOperationStatuses;
+import se.tink.libraries.i18n.LocalizableEnum;
+import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n.LocalizableParametrizedEnum;
+import se.tink.libraries.i18n.LocalizableParametrizedKey;
+
+/**
+ * An exception thrown that bundles an friendly error message that can be presented to the end-user.
+ */
+public class TransferExecutionException extends RuntimeException {
+
+    public static class Builder {
+
+        private String endUserMessage;
+        private Throwable exception;
+        private String message;
+        private SignableOperationStatuses status;
+
+        private Builder(SignableOperationStatuses status) {
+            this.status = status;
+        }
+
+        public TransferExecutionException build() {
+            TransferExecutionException e;
+            if (message != null && exception != null) {
+                e = new TransferExecutionException(message, exception);
+            } else if (message != null) {
+                e = new TransferExecutionException(message);
+            } else if (exception != null) {
+                e = new TransferExecutionException(exception);
+            } else {
+                e = new TransferExecutionException();
+            }
+            e.setSignableOperationStatus(status);
+            if (endUserMessage != null) {
+                e.setUserMessage(endUserMessage);
+            }
+            return e;
+        }
+
+        public Builder setEndUserMessage(String endUserMessage) {
+            this.endUserMessage = Preconditions.checkNotNull(endUserMessage);
+            return this;
+        }
+
+        public Builder setException(Throwable exception) {
+            this.exception = exception;
+            return this;
+        }
+
+        public Builder setMessage(String message) {
+            this.message = message;
+            return this;
+        }
+    }
+
+    private static final long serialVersionUID = 3654108329798528461L;
+
+    public static Builder builder(SignableOperationStatuses status) {
+        return new Builder(status);
+    }
+
+    private String endUserMessage;
+    private SignableOperationStatuses status;
+
+    protected TransferExecutionException() {
+        super();
+    }
+
+    protected TransferExecutionException(String message) {
+        super(message);
+    }
+
+    private TransferExecutionException(String message, Throwable e) {
+        super(message, e);
+    }
+
+    private TransferExecutionException(Throwable exception) {
+        super(exception);
+    }
+
+    public String getUserMessage() {
+        return endUserMessage;
+    }
+
+    public SignableOperationStatuses getSignableOperationStatus() {
+        return status;
+    }
+
+    protected void setSignableOperationStatus(SignableOperationStatuses status) {
+        this.status = status;
+    }
+
+    protected void setUserMessage(String userMessage) {
+        this.endUserMessage = userMessage;
+    }
+
+    /**
+     * This is a place where we can add shared common strings that we use (or can use) for transfer errors
+     */
+    public enum EndUserMessage implements LocalizableEnum {
+        BANKID_NO_RESPONSE(new LocalizableKey("No response from Mobile BankID. Have you opened the app?")),
+        BANKID_ANOTHER_IN_PROGRESS(new LocalizableKey("You have another BankID session in progress. Please try again.")),
+        BANKID_CANCELLED(new LocalizableKey("You cancelled the BankID process. Please try again.")),
+        BANKID_FAILED(new LocalizableKey("The BankID authentication failed")),
+        BANKID_TRANSFER_FAILED(new LocalizableKey("Failed to sign transfer with BankID")),
+        SIGN_TRANSFER_FAILED(new LocalizableKey("Failed to sign transfer")),
+        CHALLENGE_NO_RESPONSE(new LocalizableKey("Transfer or payment was not signed with security token device")),
+        EINVOICE_MODIFY_FAILED(new LocalizableKey("Not able to update this e-invoice")),
+        EINVOICE_VALIDATE_FAILED(new LocalizableKey("Could not validate e-invoice")),
+        EINVOICE_NO_MATCHES(new LocalizableKey("The e-invoice could not be found at your bank")),
+        EINVOICE_SIGN_FAILED(new LocalizableKey("Could not sign the e-invoice")),
+        EINVOICE_MULTIPLE_MATCHES(new LocalizableKey("Found more than one eInvoices that exactly matches the transfer")),
+        EXISTING_UNSIGNED_TRANSFERS(new LocalizableKey(
+                "You have existing unsigned transfers, please sign these in your bank's app before executing a new transfer")),
+        EXCESS_AMOUNT(new LocalizableKey("The transfer amount is larger than what is available on the account.")),
+        INVALID_DESTINATION(new LocalizableKey("Invalid destination account")),
+        INVALID_DUEDATE_NOT_BUSINESSDAY(new LocalizableKey("The payment date is not a business day")),
+        INVALID_DESTINATION_MESSAGE(new LocalizableKey("The destination message is not valid")),
+        INVALID_OCR(new LocalizableKey("The destination message is not a valid OCR reference")),
+        INVALID_MESSAGE(new LocalizableKey("The message given is not valid")),
+        INVALID_SOURCE(new LocalizableKey("Invalid source account")),
+        INVALID_SOURCE_NO_ENTITIES(new LocalizableKey("Could not retrieve source accounts")),
+        SOURCE_NOT_FOUND(new LocalizableKey("Could not find source account")),
+        NEW_RECIPIENT_FAILED(new LocalizableKey("Unable to create new recipient account")),
+        NEW_RECIPIENT_NAME_ABSENT(new LocalizableKey("You must specify a recipient name")),
+        TRANSFER_MODIFY_AMOUNT(new LocalizableKey("It's not possible to modify the amount of this transfer")),
+        TRANSFER_MODIFY_DESTINATION(new LocalizableKey("It's not possible to modify the destination of this transfer")),
+        TRANSFER_MODIFY_DUEDATE(new LocalizableKey("It's not possible to modify the payment date of this transfer")),
+        TRANSFER_MODIFY_MESSAGE(new LocalizableKey("It's not possible to modify OCR/message of this transfer")),
+        TRANSFER_MODIFY_NOT_ALLOWED(new LocalizableKey("It's not possible to modify this transfer")),
+        TRANSFER_MODIFY_SOURCE_OR_DESTINATION(new LocalizableKey(
+                "It's not possible to modify the source or destination account of this transfer")),
+        TRANSFER_EXECUTE_FAILED(new LocalizableKey("Could not execute transfer")),
+        TRANSFER_DELETE_FAILED(new LocalizableKey("Could not delete transfer")),
+        TRANSFER_CONFIRM_FAILED(new LocalizableKey("An error occurred when confirming the transfer")),
+        EINVOICE_MODIFY_AMOUNT(new LocalizableKey("It's not possible to modify the amount of this e-invoice")),
+        EINVOICE_MODIFY_DUEDATE(new LocalizableKey("It's not possible to modify the payment date of this e-invoice")),
+        EINVOICE_MODIFY_DESTINATION(new LocalizableKey(
+                "It's not possible to modify the destination account of this e-invoice")),
+        EINVOICE_MODIFY_SOURCE_MESSAGE(new LocalizableKey(
+                "It's not possible to modify the source message of this e-invoice")),
+        EINVOICE_MODIFY_DESTINATION_MESSAGE(new LocalizableKey(
+                "It's not possible to modify the destination message of this e-invoice")),
+        EINVOICE_MODIFY_SOURCE(new LocalizableKey("It's not possible to modify the source account of this e-invoice")),
+        EINVOICE_MODIFY_NOT_ALLOWED(new LocalizableKey("It's not possible to modify this e-invoice")),
+        PAYMENT_NO_MATCHES(new LocalizableKey("The payment could not be found at your bank")),
+        PAYMENT_CREATE_FAILED(new LocalizableKey("Could not create payment")),
+        PAYMENT_UPDATE_FAILED(new LocalizableKey("Could not update payment")),
+        MISSING_MESSAGE_TYPE(new LocalizableKey("Missing message type")),
+        INVALID_STRUCTURED_MESSAGE(new LocalizableKey("The entered structured message is invalid"));
+
+        private final LocalizableKey key;
+
+        EndUserMessage(LocalizableKey key) {
+            Preconditions.checkNotNull(key);
+            this.key = key;
+        }
+
+        @Override
+        public LocalizableKey getKey() {
+            return key;
+        }
+    }
+
+    public enum EndUserMessageParametrized implements LocalizableParametrizedEnum {
+        INVALID_MESSAGE_WHEN_MAX_LENGTH(new LocalizableParametrizedKey("The message length exceeds maximum of {0} letters."));
+
+        private final LocalizableParametrizedKey key;
+
+        EndUserMessageParametrized(LocalizableParametrizedKey key) {
+            Preconditions.checkNotNull(key);
+            this.key = key;
+        }
+
+        @Override
+        public LocalizableParametrizedKey getKey() {
+            return key;
+        }
+
+        @Override
+        public LocalizableParametrizedKey cloneWith(Object... parameters) {
+            return key.cloneWith(parameters);
+        }
+    }
+
+    public static void throwIf(boolean condition) {
+        if (condition) {
+            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                    .setMessage("Not implemented")
+                    .setEndUserMessage("Not implemented")
+                    .build();
+        }
+    }
+}

@@ -1,0 +1,53 @@
+<div id="inner-viewport" style="width: 500px; height: 500px; padding: 0px;">
+  <div style="width: 500px; height: 500px;" >
+    <div id='map' style="height: 100%%; width: 100%%;" class="skip-all"></div>
+  </div>
+
+  <div style="position: absolute; top: 0px; left: 0px; height: 200px; width: 500px; background: -webkit-gradient(linear, left top, left bottom, color-stop(65%%,rgba(255,255,255,1)), color-stop(100%%,rgba(255,255,255,0)));"></div>
+  <div style="position: absolute; top: 10px; left: 220px; width: 30px; height: 30px; line-height: 30px; font-size: 24px; padding: 10px; border: solid;" class="icon-circle">%s</div>
+  <div style="position: absolute; top: 65px; left: 75px; width: 350px; padding: 5px; text-align: center; font-size: 28px; font-family: ProximaNovaA-Semibold, proxima-semibold;">%s</div>
+  <div style="position: absolute; top: 90px; left: 75px; width: 350px;  padding 5px; text-align: center; font-size: 18px; margin-top: 20px;">%s</div>
+  <img style="width: 100px; position: absolute; top: 440px; left: 400px;" src="https://s3-eu-west-1.amazonaws.com/tink-web/activities/assets/logo_normal.svg" />
+</div>
+
+<script>
+L.mapbox.accessToken = 'pk.eyJ1IjoiYW5sdW5kIiwiYSI6IjctY25yWGsifQ.pI9Cw22sPt9OvRmKEpybRg';
+
+var addressPoints = [%s];
+
+var cfg = {
+
+  /** 
+    https://github.com/dpiccone/leaflet-div-heatmap
+    OPTIONS
+    clickable: true or false, // divHeatmapLayer.on('click',function() {...});
+    radius: 100,
+    gradient: true or false, // Make solid blobs
+    color: '255,0,0' or '#FF0000'
+    -->
+  */
+
+  "radius": 20,
+  "gradient": true, 
+  "color": '#009DDE',
+};
+
+$(document).ready(function() {
+  var heatmap = new L.DivHeatmapLayer(cfg);
+            
+  heatmap.setData(addressPoints);
+
+  var map = L.mapbox.map('map', 'anlund.403b23cc', 
+      {
+          zoomControl: false,
+          attributionControl: false,
+          layers: [heatmap]
+      }
+      ).setView([%s], 12);
+
+  map.doubleClickZoom.disable();
+  map.scrollWheelZoom.disable();
+
+  new L.Control.Zoom({ position: 'bottomleft' }).addTo(map);
+});
+</script>

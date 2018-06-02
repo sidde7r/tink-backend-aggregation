@@ -1,0 +1,204 @@
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink;
+
+import com.google.common.base.Strings;
+import java.util.List;
+import java.util.Optional;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.authenticator.rpc.LoginRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.authenticator.rpc.LoginResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.authenticator.rpc.RegisterDeviceRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.authenticator.rpc.RegisterDeviceResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.entities.Links;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.fetcher.creditcard.entities.CreditCard;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.fetcher.creditcard.rpc.CardDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.fetcher.creditcard.rpc.CreditCardTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.fetcher.creditcard.rpc.CreditCardsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.fetcher.loan.entities.LoanDetailsEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.fetcher.loan.rpc.LoansResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.fetcher.transactionalaccount.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.fetcher.transactionalaccount.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.fetcher.transactionalaccount.rpc.TransactionDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.rpc.LinksResponse;
+import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.URL;
+
+public class SamlinkApiClient {
+    private final TinkHttpClient httpClient;
+    private final SamlinkSessionStorage sessionStorage;
+    private final SamlinkConfiguration agentConfiguration;
+
+    private Links cachedApiEndpoints;
+
+    public SamlinkApiClient(TinkHttpClient httpClient, SamlinkSessionStorage sessionStorage,
+            SamlinkConfiguration agentConfiguration) {
+        this.httpClient = httpClient;
+        this.sessionStorage = sessionStorage;
+        this.agentConfiguration = agentConfiguration;
+    }
+
+    public LoginResponse login(String username, String password, String deviceId, String deviceToken) {
+        Links links = getApiEndpoints();
+
+        LoginRequest loginRequest = new LoginRequest()
+                .setUsername(username)
+                .setPassword(password);
+
+        if (!Strings.isNullOrEmpty(deviceId) && !Strings.isNullOrEmpty(deviceToken)) {
+            loginRequest.setDeviceId(deviceId).setDeviceToken(deviceToken);
+        }
+
+        LoginResponse loginResponse = buildRequest(links.getLinkPath(SamlinkConstants.LinkRel.IDENTIFICATION))
+                .post(LoginResponse.class, loginRequest);
+
+        sessionStorage.storeAccessToken(loginResponse.getTokenType(), loginResponse.getAccessToken());
+
+        // get the services endpoints and store it in sessionStorage
+        Links serviceLinks = fetchServicesEndpoints(loginResponse.getLinks());
+        sessionStorage.storeServicesEndpoints(serviceLinks);
+
+        return loginResponse;
+    }
+
+    public LoginResponse login(String username, String password) {
+        // A new device/user will not have a deviceId or deviceToken yet.
+        return login(username, password, null, null);
+    }
+
+    public RegisterDeviceResponse registerDevice(Links loginLinks, String codeCardValue, String deviceId) {
+        URL authenticationUrl = agentConfiguration
+                .build(loginLinks.getLinkPath(SamlinkConstants.LinkRel.AUTHENTICATION));
+
+        RegisterDeviceRequest registerDeviceRequest = new RegisterDeviceRequest();
+        registerDeviceRequest.setCodeCardValue(codeCardValue).setDeviceId(deviceId);
+
+        RegisterDeviceResponse registerDeviceResponse = buildRequest(authenticationUrl)
+                .post(RegisterDeviceResponse.class, registerDeviceRequest);
+
+        // update session token
+        sessionStorage.storeAccessToken(registerDeviceResponse.getTokenType(), registerDeviceResponse.getAccessToken());
+
+        // get the services endpoints and store it in sessionStorage
+        Links serviceLinks = fetchServicesEndpoints(registerDeviceResponse.getLinks());
+        sessionStorage.storeServicesEndpoints(serviceLinks);
+
+        return registerDeviceResponse;
+    }
+
+    public List<AccountEntity> getAccounts() {
+        return buildAccountRequest(SamlinkConstants.LinkRel.ACCOUNTS).get(AccountsResponse.class).getAccounts();
+    }
+
+    public Optional<TransactionsResponse> getTransactions(TransactionalAccount account) {
+        return Optional.ofNullable(account)
+                .map(TransactionalAccount::getBankIdentifier)
+                .map(link -> fetchTransactions(link, 0));
+    }
+
+    public Optional<TransactionsResponse> getTransactions(TransactionsResponse transactions, int offset) {
+        return transactions.getNext().map(link -> fetchTransactions(link.getHref(), offset));
+    }
+
+    private TransactionsResponse fetchTransactions(String path, int offset) {
+        return buildRequestWithLimitAndOffset(path, offset).get(TransactionsResponse.class);
+    }
+
+    private RequestBuilder buildRequestWithLimitAndOffset(String path, int offset) {
+        return buildRequest(
+                agentConfiguration.build(path)
+                .queryParam(SamlinkConstants.QueryParams.QUERY_PARAM_LIMIT,
+                        SamlinkConstants.QueryParams.QUERY_PARAM_LIMIT_TX_DEFAULT)
+                .queryParam(SamlinkConstants.QueryParams.QUERY_PARAM_OFFSET, String.valueOf(offset))
+        );
+    }
+
+    public TransactionDetailsResponse getTransactionDetails(Links transactionLinks) {
+        return buildRequest(transactionLinks.getLinkPath(SamlinkConstants.LinkRel.DETAILS))
+                .get(TransactionDetailsResponse.class);
+    }
+
+    public CreditCardsResponse getCreditCards() {
+        return buildAccountRequest(SamlinkConstants.LinkRel.CARDS).get(CreditCardsResponse.class);
+    }
+
+    // The app requests 999 accounts, I don't see a need to page these
+    private RequestBuilder buildAccountRequest(String relKey) {
+        URL creditCardsUrl = agentConfiguration
+                .build(sessionStorage.getServicesEndpoint(relKey))
+                .queryParam(SamlinkConstants.QueryParams.QUERY_PARAM_LIMIT,
+                        SamlinkConstants.QueryParams.QUERY_PARAM_LIMIT_ACCOUNT_DEFAULT)
+                .queryParam(SamlinkConstants.QueryParams.QUERY_PARAM_OFFSET,
+                        SamlinkConstants.QueryParams.QUERY_PARAM_OFFSET_DEFAULT);
+
+        return buildRequest(creditCardsUrl);
+    }
+
+    public LoansResponse getLoans() {
+        return buildRequest(sessionStorage.getServicesEndpoint(SamlinkConstants.LinkRel.LOANS))
+                .get(LoansResponse.class);
+    }
+
+    public Optional<CardDetailsResponse> getCardDetails(CreditCard creditCard) {
+        return creditCard.getDetailsLink()
+                .map(link ->
+                        buildRequest(agentConfiguration.build(link.getHref())).get(CardDetailsResponse.class)
+                );
+    }
+
+    public LoanDetailsEntity getLoanDetails(String detailsLink) {
+        return buildRequest(agentConfiguration.build(detailsLink)).get(LoanDetailsEntity.class);
+    }
+
+    private RequestBuilder buildRequest(String path) {
+        return buildRequest(agentConfiguration.build(path));
+    }
+
+    private RequestBuilder buildRequest(URL url) {
+        RequestBuilder requestBuilder = httpClient.request(url)
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .accept(SamlinkConstants.Header.VALUE_ACCEPT)
+                .header(SamlinkConstants.Header.CLIENT_VERSION, SamlinkConstants.Header.VALUE_CLIENT_VERSION);
+
+        if (sessionStorage.hasAccessToken()) {
+            return requestBuilder.header(HttpHeaders.AUTHORIZATION,
+                    sessionStorage.getAccessToken());
+        }
+        return requestBuilder;
+    }
+
+    private Links getApiEndpoints() {
+        if (cachedApiEndpoints != null) {
+            return cachedApiEndpoints;
+        }
+
+        LinksResponse linksResponse = buildRequest(SamlinkConstants.Url.BASE_PATH)
+                .get(LinksResponse.class);
+        cachedApiEndpoints = linksResponse.getLinks();
+
+        return cachedApiEndpoints;
+    }
+
+    private Links fetchServicesEndpoints(Links loginLinks) {
+        return buildRequest(loginLinks.getLinkPath(SamlinkConstants.LinkRel.SERVICES)).get(LinksResponse.class)
+                .getLinks();
+    }
+
+    public Optional<CreditCardTransactionsResponse> getTransactions(CreditCardAccount account) {
+        return Optional.ofNullable(account)
+                .map(CreditCardAccount::getBankIdentifier)
+                .map(link -> fetchCreditCardTransactions(0, link));
+    }
+
+    public Optional<CreditCardTransactionsResponse> getTransactions(
+            CreditCardTransactionsResponse creditCardTransactions, int offset) {
+        return creditCardTransactions.getNext().map(link -> fetchCreditCardTransactions(offset, link.getHref()));
+    }
+
+    private CreditCardTransactionsResponse fetchCreditCardTransactions(int offset, String link) {
+        return buildRequestWithLimitAndOffset(link, offset).get(CreditCardTransactionsResponse.class);
+    }
+}

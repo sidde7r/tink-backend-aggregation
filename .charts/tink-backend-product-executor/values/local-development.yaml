@@ -1,0 +1,10 @@
+insecureHttpServer: True
+createDevelopmentSecrets: True
+doNotCreateLoadBalancerService: True
+replicas: 1
+
+coordinationHosts: coordination.default.svc.cluster.local:2181
+
+cacheHosts: cache.default.svc.cluster.local:11211
+
+applicationCluster: TINK

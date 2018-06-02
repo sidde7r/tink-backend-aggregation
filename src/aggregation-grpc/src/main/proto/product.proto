@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "se.tink.aggregation.grpc";
+option java_outer_classname = "ProductProto";
+import "src/aggregation-grpc/src/main/proto/common.proto";
+
+package product;
+
+service ProductService {
+    rpc CreateProduct (CreateProductRequest) returns (CreateProductResponse) {
+    }
+    rpc FetchProduct (FetchProductRequest) returns (FetchProductResponse) {
+    }
+    rpc RefreshApplication (RefreshApplicationRequest) returns (RefreshApplicationResponse) {
+    }
+}
+
+message CreateProductRequest {
+    common.SignableOperation signableOperation = 1;
+    Application application = 2;
+}
+
+message Application {
+}
+
+message CreateProductResponse {
+}
+
+message FetchProductRequest {
+}
+
+message FetchProductResponse {
+}
+
+message RefreshApplicationRequest {
+}
+
+message RefreshApplicationResponse {
+}

@@ -1,0 +1,106 @@
+server:
+  shutdownGracePeriod: 5s
+  applicationConnectors:
+    - type: http
+      port: 9096
+    - type: https
+      port: 9106
+      keyStorePath: data/security/developer.keystore
+      keyStorePassword: changeme
+      certAlias: developer.internal.tink.se
+      trustStorePath: data/security/TinkCA.truststore
+      trustStorePassword: changeme
+      # Validation disabled since Dropwizard/Jetty tries to check revocation of our homebrewed certs, which fails.
+      validateCerts: false
+  adminConnectors:
+    - type: http
+      port: 8096
+
+endpoints:
+  main:
+    url: http://localhost:9090/
+    pinnedCertificates:
+      - "CERTSHA256:C050C78642605EE54DDBF2B38F7700EFAC77D19DC5388B807550D325574220E7"
+  system:
+    url: http://localhost:9091/
+    accessToken: devtoken
+    pinnedCertificates:
+      - "CERTSHA256:C050C78642605EE54DDBF2B38F7700EFAC77D19DC5388B807550D325574220E7"
+  aggregation:
+    url: http://localhost:9092/
+    accessToken: devtoken
+    pinnedCertificates:
+      - "CERTSHA256:C050C78642605EE54DDBF2B38F7700EFAC77D19DC5388B807550D325574220E7"
+  analytics:
+    url: http://localhost:9093/
+  encryption:
+    url: http://localhost:9094/
+    pinnedCertificates:
+      - "CERTSHA256:C050C78642605EE54DDBF2B38F7700EFAC77D19DC5388B807550D325574220E7"
+  connector:
+    url: http://localhost:9096/
+    pinnedCertificates:
+      - "CERTSHA256:C050C78642605EE54DDBF2B38F7700EFAC77D19DC5388B807550D325574220E7"
+  categorization:
+    url: http://localhost:8080/
+    pinnedCertificates:
+      - "CERTSHA256:C050C78642605EE54DDBF2B38F7700EFAC77D19DC5388B807550D325574220E7"
+
+cluster: ABNAMRO
+
+administrativeMode: ["ccccccelgiev", "ccccccflgngc"]
+
+developmentMode: true
+
+distributedDatabase:
+  enabled: false
+
+database:
+  driverClass: com.mysql.jdbc.Driver
+  username: tink
+  password: tink
+  url: jdbc:mysql://172.16.42.2/tink?useLocalSessionState=true&rewriteBatchedStatements=true&useSSL=true&verifyServerCertificate=false
+  showSql: false
+  persistenceUnitName: tink-main-api
+  generateDdl: true
+
+taskQueue:
+  mode: ENABLED
+  hosts:
+    - 172.16.42.2:9092
+
+cache:
+  hosts: 172.16.42.2:11211
+  enabled: true
+
+coordination:
+  hosts: 172.16.42.2:2181
+
+analytics:
+  intercom:
+    enabled: false
+
+logging:
+  level: INFO
+  loggers:
+    se.tink: DEBUG
+    se.tink.org.eclipse: INFO
+    org.hibernate: WARN
+  appenders:
+    - type: console
+      threshold: ALL
+      timeZone: Europe/Stockholm
+      logFormat: '%magenta(%date{"yyyy-MM-dd HH:mm:ss,SSSXXX"}) %highlight(%level) [%thread] R:%X{requestId} %blue(%logger) %message%n%xException'
+
+connector:
+  clients:
+    ABN_AMRO:
+      - "00000000000000000000000000000000"
+    CATEGORIZATION:
+      - "00000000000000000000000000000005"
+
+abnAmro:
+  rateLimitPermits:
+    0: 5
+    1: 30
+    2: 15

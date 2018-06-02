@@ -1,0 +1,12 @@
+This library implements a white-box AES encryption for the use in the
+KBC agent. The key has been "encoded"/transformed into multiple tables,
+kbc_XXX.c, which is used in the encryption.
+
+The original source code was taken from https://github.com/jeffsaremi/wbaes
+
+The library depends on m4ri which can be installed with:
+# apt-get install libm4ri-dev
+
+or with brew for macOS:
+# brew tap brewsci/homebrew-science
+# brew install brewsci/science/m4ri

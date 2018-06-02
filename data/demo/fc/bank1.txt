@@ -1,0 +1,661 @@
+date	description	amount	type	pending
+8/5/13	Salary	24300		
+8/4/13	Transfer	-40000		
+8/4/13	Zink Grill	-715		
+8/3/13	Coffee corner	-79		
+8/3/13	Espresso House	-88		
+8/3/13	AT&T	-220		
+8/3/13	Pontus Restaurant	-115		
+8/2/13	Bistro Jarl Pub	-62		
+8/2/13	Bistro Jarl Pub	-62		
+8/2/13	Travelcity	-645		
+8/1/13	Travelcity	-523		
+8/1/13	Travelcity	-615		
+7/30/13	Travelcity	-595		
+8/1/13	7-Eleven	-43		
+7/30/13	H&M	-324		
+7/30/13	H&M	-284		
+7/30/13	H&M	-313		
+7/29/13	Pressbyrån	-51		
+7/29/13	Heart Pharmacy	-324		
+7/29/13	Heart Pharmacy	-299		
+7/28/13	Pressbyrån	-33		
+7/27/13	Taxi Stockholm	-281		
+7/26/13	Riche Restaurant	-144		
+7/26/13	Pascha Deli	-70		
+7/25/13	Pontus' Restaurant	-189		
+7/25/13	Pontus' Restaurant	-199		
+7/24/13	Zara Woman	-345		
+7/24/13	Zara Woman	-325		
+7/24/13	Zara Woman	-318		
+7/24/13	Pascha Deli	-190		
+7/24/13	Taxi Stockholm	-188		
+7/23/13	Taxi Stockholm	-168		
+7/23/13	H&M	-100		
+7/23/13	Zocalo K25	-79		
+7/23/13	Lisapaveg	-115		
+7/23/13	Espresso House	-88		
+7/23/13	Tele2	-60		
+7/22/13	Pong	-145		
+7/22/13	Lisapaveg	-85		
+7/22/13	7-Eleven	-43		
+7/21/13	Nytorget 6	-789.04		
+7/21/13	Ekholmsnäs Gård	-150		
+7/19/13	Zocalo K25	-164		
+7/19/13	Lisapaveg	-95		
+7/18/13	Pontus!	-89		
+7/18/13	Stockholms Stads Bostadsf	-225		
+7/17/13	Pascha Deli	-95		
+7/16/13	Mandira Indi	-79		
+7/15/13	Tures Compan	-193		
+7/14/13	Pascha Deli	-95		
+7/13/13	Taxi Stockholm	-360		
+7/13/13	MAX	-95		
+7/13/13	Statoil	-49		
+7/12/13	Rest The Bul	-222		
+7/12/13	Panini	-75		
+7/12/13	T-jarlen Sto	-48.13		
+7/11/13	Inside	-400		
+7/11/13	Caliente Tap	-337		
+7/11/13	Bantorget Se	-120		
+7/11/13	Handlarn Hot	-65		
+7/9/13	Texas Burger	-110		
+7/9/13	Sandys Sture	-84		
+7/8/13	ICA	-249.06		
+7/8/13	Apoteket	-142.5		
+7/8/13	Pascha Deli	-70		
+7/7/13	Taxi Stockholm	-355		
+7/6/13	Ekholmsnäs Gård	-150		
+7/6/13	Pressbyrån	-51		
+7/6/13	Pressbyrån	-33		
+7/5/13	Taxi Kurir S	-200		
+7/5/13	Riche	-144		
+7/5/13	Pascha Deli	-70		
+7/5/13	Salary	38985		
+7/4/13	Curry Spice	-84		
+7/3/13	Vigårda Barbeque	-115		
+7/3/13	Pascha Deli	-70		
+7/3/13	Vau De Ville	-62		
+7/2/13	Panini	-75		
+7/1/13	Travelcity	-945		
+7/1/13	ICA	-169.5		
+7/1/13	Elgiganten	-98		
+7/1/13	Wiggo	-95		
+6/30/13	Berns	-411		
+6/30/13	Berns	-220		
+6/30/13	Taxi Stockho	-166		
+6/30/13	Spotify	-99		
+6/29/13	Systembolage	-394.6		
+6/29/13	Prisextra	-142.13		
+6/28/13	House mortgage	-1130		
+6/28/13	Lån 354238	-900		
+6/28/13	Heart Pharmacy	-624		
+6/28/13	Pontus	-400		
+6/28/13	Story Hotel	-216		
+6/28/13	Story Hotel	-144		
+6/28/13	Euroaccident	-122		
+6/28/13	Vigårda Barbeque	-70		
+6/28/13	Folktandvård	-55		
+6/27/13	Seb Kort Bank	-2480.09		
+6/27/13	Sthlm properties	-2003		
+6/27/13	Egmont Tidskrifter	-375		
+6/27/13	Sveriges Ingenjörer	-135		
+6/27/13	Panini	-75		
+6/27/13	Enkla Vardag	-25		
+6/26/13	Sl Hotorget	-790		
+6/26/13	Icha Icha	-99		
+6/25/13	Panini	-99		
+6/24/13	Hemköp	-244.89		
+6/24/13	Curry Spice	-79		
+6/23/13	Mello Yello	-554		
+6/23/13	SJ Ombord	-171		
+6/23/13	Sj Ab Ombord	-62		
+6/23/13	Skanetrafike	-45		
+6/22/13	Pressbyrån	-51		
+6/22/13	Skanetrafike	-45		
+6/20/13	Elmela Taxi	-102		
+6/20/13	Pontus	-99		
+6/20/13	Pressbyrån 4	-71		
+6/19/13	Pascha Deli	-160		
+6/19/13	Beijing 8	-85		
+6/18/13	Midsommar	-300		
+6/18/13	Fab Stockhol	-297		
+6/18/13	Riche	-125		
+6/18/13	Vau De Ville	-124		
+6/18/13	Zocalo K25	-79		
+6/17/13	ICA	-157.86		
+6/17/13	Clas Ohlson	-127		
+6/17/13	Mandira Indi	-84		
+6/16/13	Casino Cosmo	-2000		
+6/16/13	Mat & Destil	-1100		
+6/16/13	Casino Cosmo	-384		
+6/13/13	Forex Skavsta	-2197		
+6/13/13	Fac Flygbuss	-159		
+6/13/13	Hms Host Ska	-142		
+6/13/13	Pressbyrån	-51		
+6/12/13	Sparkonto	-30000		
+6/12/13	Tures Companiet	-302		
+6/12/13	Happy	-65		
+6/12/13	Happy	-65		
+6/11/13	Pontus	-99		
+6/10/13	Curry Spice	-84		
+6/9/13	Taxi 020	-345		
+6/9/13	Le Cafe	-250		
+6/9/13	Taxi Kurir S	-184		
+6/9/13	Operakallare	-180		
+6/8/13	Pressbyrån	-182		
+6/7/13	Pontus	-99		
+6/6/13	Humlan	-264		
+6/6/13	Taxi Stockho	-175		
+6/5/13	Albert Jac	-120		
+6/5/13	Bistro Napol	-72		
+6/5/13	Espresso House	-55		
+6/5/13	Salary	38985		
+6/4/13	Pascha Deli	-55		
+6/3/13	Apoteket	-583.9		
+6/3/13	ICA	-174.2		
+6/3/13	Mia	-150		
+6/1/13	Taxi 020	-292		
+6/1/13	Systembolage	-279		
+6/1/13	Travelcity	-745		
+6/1/13	Taxi Kurir S	-101		
+5/31/13	Systembolage	-140.7		
+5/31/13	Zocalo K25	-85		
+5/31/13	Vau De Ville	-62		
+5/31/13	Vau De Ville	-62		
+5/31/13	Folktandvård	-55		
+5/31/13	Hemköp	-44.95		
+5/30/13	Bostadsrättsföreningen H	-2003		
+5/30/13	Spotify	-99		
+5/30/13	Thai Take Aw	-79		
+5/30/13	7-Eleven	-59		
+5/30/13	Enkla Vardag	-25		
+5/29/13	Sl Hotorget	-790		
+5/29/13	ICA	-99.5		
+5/29/13	Heart Pharmacy	-624		
+5/29/13	Pontus	-99		
+5/29/13	McDonalds	-33		
+5/28/13	Interest - home	-1130		
+5/28/13	Interest - car	-900		
+5/28/13	Vau De Ville	-124		
+5/28/13	Euroaccident	-118		
+5/28/13	Pascha Deli	-55		
+5/27/13	Tures Compan	-186		
+5/26/13	Knistad	-3154		
+5/26/13	McDonalds	-40		
+5/25/13	Gl Dje Resta	-335		
+5/25/13	Anders & Ken	-284		
+5/25/13	Gl Dje Resta	-56		
+5/24/13	Systembolage	-289		
+5/24/13	Pressbyrån	-81		
+5/23/13	Pascha Deli	-95		
+5/22/13	Inside	-549		
+5/22/13	ICA	-161.36		
+5/22/13	Beijing 8	-113		
+5/21/13	Tink	-100		
+5/20/13	Vigårda Barbeque	-90		
+5/19/13	Taxi Stockho	-188		
+5/17/13	Fab Stockhol	-349		
+5/17/13	McDonalds	-103		
+5/17/13	Fab Stockhol	-64		
+5/16/13	Pontus	-138		
+5/16/13	Martin S Grö	-95		
+5/15/13	ICA	-151.99		
+5/14/13	Beijing 8	-85		
+5/13/13	Apoteket	-148.5		
+5/13/13	Curry Spice	-84		
+5/11/13	Story Hotel	-272		
+5/11/13	Story Hotel	-136		
+5/11/13	Story Hotel	-28		
+5/10/13	Fab Stockhol	-252		
+5/10/13	Pontus	-198		
+5/10/13	Vau De Ville	-186		
+5/10/13	Wagamama	-177		
+5/8/13	Pontus	-89		
+5/7/13	Zocalo K25	-85		
+5/6/13	Espresso House	-252		
+5/6/13	Pascha Deli	-59		
+5/5/13	Prisextra	-231.44		
+5/5/13	Prisextra	-179		
+5/5/13	Salary	38985		
+5/4/13	Österåkers Gård	-340		
+5/4/13	Coop	-78.9		
+5/4/13	McDonalds	-71		
+5/4/13	Statoil	-40		
+5/3/13	Pong	-69		
+5/2/13	Pong	-75		
+5/1/13	Taxi Stockho	-388		
+5/1/13	Travelcity	-445		
+5/1/13	ICA	-152.29		
+4/30/13	Spotify	-99		
+4/30/13	Folktandvård	-55		
+4/30/13	Pressbyrån	-51		
+4/29/13	Seb Kort Bank	-10519.4		
+4/29/13	Bostadsrättsföreningen H	-2003		
+4/29/13	Systembolage	-292		
+4/29/13	Euroaccident	-122		
+4/29/13	Heart Pharmacy	-624		
+4/29/13	Mandira Indi	-79		
+4/29/13	Enkla Vardag	-25		
+4/28/13	Sl S T Eriks	-790		
+4/28/13	Taxi Stockho	-104		
+4/27/13	Fab Stockhol	-700		
+4/27/13	Coop	-208.84		
+4/27/13	Fab Stockhol	-57		
+4/26/13	Lån 354246	-1130		
+4/26/13	Lån 354238	-887		
+4/26/13	Texas Longhorn	-300		
+4/26/13	Berns	-135		
+4/26/13	Beijing 8	-85		
+4/26/13	Berns	-52		
+4/25/13	Skatteverket	-1489		
+4/25/13	Yoi	-84		
+4/24/13	Prisextra	-679.38		
+4/24/13	Pong	-95		
+4/23/13	Pascha Deli	-142		
+4/23/13	Riche	-72		
+4/22/13	Mandira Indi	-79		
+4/21/13	Mat & Destillat	-1000		
+4/21/13	Fac Flygbuss	-109		
+4/21/13	Hmshost Swed	-92		
+4/21/13	Coop	-88.85		
+4/20/13	Seno- Taxi	-117		
+4/19/13	Arlanda Express	-490		
+4/19/13	Fac Flygbuss	-109		
+4/19/13	Sl-center St	-75		
+4/19/13	McDonalds	-63		
+4/19/13	Pressbyrån	-51		
+4/18/13	Pong	-75		
+4/17/13	Ekholmsnäs Golf	-450		
+4/17/13	Pascha Deli	-95		
+4/16/13	Drottning Ke	-84		
+4/15/13	Mandira Indi	-79		
+4/15/13	ICA	-45.8		
+4/14/13	Taxi Kurir S	-168		
+4/13/13	Systembolage	-884.7		
+4/13/13	Prisextra	-142.4		
+4/12/13	Vapiano	-332		
+4/12/13	7-Eleven	-51		
+4/11/13	Apoteket	-197.5		
+4/11/13	Pong	-75		
+4/11/13	ICA	-26.9		
+4/10/13	Inside	-400		
+4/10/13	Pascha Deli	-55		
+4/9/13	Hollister Co	-590		
+4/9/13	Hemköp	-577.95		
+4/9/13	MQ Stockholm	-199		
+4/9/13	Butterick S	-99		
+4/9/13	Akademibokhandeln	-79		
+4/9/13	Pong	-75		
+4/8/13	Avanza	-20000		
+4/8/13	Curry Spice	-84		
+4/5/13	Cafe Tabac	-85		
+4/5/13	Salary	38985		
+4/5/13	Salary	38985		
+4/4/13	Martin S Grö	-95		
+4/3/13	Eat	-100		
+4/2/13	Apoteket	-143		
+4/2/13	Pascha Deli	-55		
+4/1/13	Travelcity	-645		
+4/1/13	ICA	-131.6		
+3/31/13	Norwegian	-1147.99		
+3/30/13	Spotify	-99		
+3/29/13	Sl Ostermalm	-790		
+3/29/13	ICA	-89.1		
+3/29/13	Brasserie Go	-64		
+3/28/13	Lån 354246	-1130		
+3/28/13	Lån 354238	-942		
+3/28/13	Heart Pharmacy	-624		
+3/28/13	O'Leary's	-544		
+3/28/13	Brasserie Go	-134		
+3/28/13	Euroaccident	-118		
+3/28/13	Mandira Indi	-99		
+3/28/13	Folktandvård	-55		
+3/27/13	Bostadsrättsföreningen H	-2003		
+3/27/13	Mensa Sverige	-345		
+3/27/13	Seb Kort Bank	-192		
+3/27/13	Eat	-100		
+3/27/13	Enkla Vardag	-25		
+3/26/13	Niklas	-155		
+3/25/13	ICA	-180.74		
+3/25/13	Panini	-75		
+3/24/13	Frederiksber	-171.42		
+3/24/13	Kastrup	-113.9		
+3/24/13	Info Arlanda	-75		
+3/24/13	Frederiksber	-41.42		
+3/23/13	Koebenhavn K	-517.72		
+3/22/13	7-Eleven	-122		
+3/22/13	Frederiksber	-103.54		
+3/22/13	Martin S Grö	-100		
+3/22/13	Apoteket	-88.5		
+3/22/13	Sl-center St	-75		
+3/19/13	ICA	-181		
+3/19/13	Texas Burger	-111		
+3/17/13	Berns	-480		
+3/17/13	Taxi Stockho	-187		
+3/16/13	Berns	-270		
+3/16/13	Brother Tuck	-228		
+3/15/13	Prisextra	-572.16		
+3/15/13	Martin S Grö	-95		
+3/14/13	McDonalds	-63		
+3/13/13	Norwegian	-1522		
+3/13/13	Pong	-95		
+3/12/13	Vapiano	-180		
+3/12/13	Pascha Deli	-55		
+3/12/13	Pressbyrån	-51		
+3/11/13	Pontus	-89		
+3/9/13	Restaurang S	-268		
+3/9/13	Taxi 020	-158		
+3/9/13	Restaurang S	-134		
+3/9/13	Restaurang S	-134		
+3/9/13	McDonalds	-69		
+6/1/13	Travelcity	-700		
+3/8/13	Vapiano	-230		
+3/8/13	Burger King	-78		
+3/7/13	Pressklubben	-163		
+3/7/13	Pressbyrån	-51		
+3/5/13	Salary	38985		
+3/4/13	Panini	-75		
+3/2/13	MAX	-90		
+3/1/13	Prisextra	-543.51		
+3/1/13	Duvel Cafe	-380		
+3/1/13	Spotify	-99		
+2/28/13	Lån 354246	-1130		
+2/28/13	Lån 354238	-942		
+2/28/13	Euroaccident	-122		
+2/28/13	Serrano Kung	-85		
+2/28/13	Folktandvård	-55		
+2/27/13	Bostadsrättsföreningen H	-2003		
+2/27/13	Saifon	-80		
+2/27/13	Heart Pharmacy	-624		
+2/27/13	Espresso House	-25		
+2/26/13	Sl Hotorget	-790		
+2/26/13	Panini	-69		
+2/25/13	Panini	-69		
+2/23/13	Hotellet	-378		
+2/23/13	Hotellet	-244		
+2/23/13	Taxi Stockho	-192		
+2/22/13	Brasserie Godot	-384		
+2/22/13	Story Hotel	-204		
+2/22/13	Burger King	-65		
+2/22/13	Berns	-62		
+2/21/13	ICA	-40.8		
+2/21/13	OKQ8	-35		
+2/20/13	F & P Transp	-94		
+2/19/13	Panini	-69		
+2/19/13	Preem	-41		
+2/18/13	Saifon	-80		
+2/17/13	Oxid Spitfire	-612		
+2/17/13	Le Cafe	-250		
+2/17/13	SF	-200		
+2/17/13	Oxid Spitfir	-184		
+2/17/13	Le Cafe	-166		
+2/17/13	McDonalds	-76		
+2/17/13	Sf Bio Film	-59		
+2/16/13	Systembolage	-278.2		
+2/16/13	Hemköp	-171.76		
+2/15/13	P/S Apotek	-549		
+2/15/13	Berns	-457		
+2/15/13	Wagamama	-323		
+2/15/13	Niklas	-214		
+2/15/13	ICA	-131.5		
+2/15/13	Panini	-69		
+2/15/13	Riche	-68		
+2/15/13	Vigårda Barbeque	-30		
+2/14/13	Inside	-400		
+2/13/13	MQ Stockholm	-948		
+2/13/13	Clas Ohlson	-240		
+2/12/13	ICA	-255.54		
+2/12/13	Panini	-69		
+2/11/13	Avanza	-20000		
+2/11/13	Riche	-136		
+2/11/13	Panini	-69		
+2/11/13	Riche	-68		
+2/8/13	Burger King	-83		
+2/8/13	Apoteket	-80.9		
+2/7/13	Elektriker	-2500		
+2/7/13	Vapiano	-100		
+2/6/13	Duvel Cafe	-115		
+2/5/13	Kjell & Comp	-99		
+2/5/13	Serrano Kung	-85		
+2/5/13	Salary	38985		
+2/4/13	Panini	-69		
+2/3/13	Prisextra	-301.83		
+2/1/13	Travelcity	-225		
+2/1/13	ICA	-207.26		
+1/31/13	Panini	-69		
+1/31/13	Folktandvård	-55		
+1/30/13	Seb Kort Bank	-8880		
+1/30/13	Bostadsrättsföreningen H	-2003		
+1/30/13	Spotify	-99		
+1/30/13	Serrano Kung	-79		
+1/30/13	Enkla Vardag	-25		
+1/29/13	Vapiano	-110		
+1/28/13	Lån 354246	-1130		
+1/28/13	Lån 354238	-896		
+1/28/13	Euroaccident	-110		
+1/28/13	Panini	-69		
+1/26/13	SL Hotorget	-560		
+1/25/13	Vigårda Barbeque	-90		
+1/25/13	Vapiano	-65		
+1/25/13	Burger King	-65		
+1/25/13	SF	-54		
+1/25/13	Vigårda Barbeque	-30		
+1/19/13	Prisextra	-645.02		
+1/16/13	ICA	-235.73		
+1/16/13	Serrano Kung	-96		
+1/14/13	Cafe Egoiste	-165		
+1/14/13	Panini	-69		
+1/13/13	Sirap	-168		
+1/12/13	Travelcity	-588		
+1/12/13	Taxi Kurir S	-174		
+1/12/13	Hotellet	-132		
+1/11/13	Restaurang 1	-252		
+1/11/13	Wagamama	-250		
+1/11/13	Vassa Eggen	-232		
+1/11/13	Serrano Kung	-96		
+1/11/13	Restaurang 1	-75		
+1/10/13	Fattoush	-95		
+1/9/13	Clas Ohlson	-235		
+1/9/13	ICA	-67.7		
+1/9/13	Panini	-65		
+1/8/13	Kreatima	-569		
+1/8/13	Panini	-69		
+1/7/13	Kjell & Comp	-168.9		
+1/5/13	Salary	38985		
+1/3/13	ICA	-317.42		
+1/2/13	Bostadsrättsföreningen H	-2003		
+1/2/13	Egmont Tidskrifter	-293		
+1/2/13	Nyår	-170		
+1/2/13	Burger King	-61		
+1/1/13	Fac Flygbuss	-109		
+12/30/12	Strandtransp	-319		
+12/30/12	Spotify	-99		
+12/29/12	Kontantuttag	-1000		
+12/29/12	Cc Casino Re	-174		
+12/29/12	Halong	-70		
+12/29/12	Cc Casino Re	-30		
+12/28/12	Lån 354246	-1130		
+12/28/12	Lån 354238	-1080		
+12/28/12	Systembolage	-337.4		
+12/28/12	Holmgrens	-200		
+12/28/12	Euroaccident	-122		
+12/28/12	Folktandvård	-55		
+12/27/12	Vapiano	-91		
+12/27/12	Espresso House	-70		
+12/27/12	Enkla Vardag	-25		
+12/26/12	Malmo Aviati	-567		
+12/25/12	Taxi Lund Ja	-116		
+12/23/12	Cervera	-1123.2		
+12/23/12	Stadium	-658		
+12/23/12	Spirit	-600		
+12/23/12	Akademibokhandeln	-438		
+12/23/12	Vero Moda	-359.95		
+12/23/12	ICA groceries	-256		
+12/23/12	Lekia	-249		
+12/23/12	The Body Sho	-175		
+12/23/12	Apoteket	-78		
+12/22/12	Systembolage	-189.7		
+12/22/12	Stortorget U	-132		
+12/22/12	Stortorget U	-132		
+12/22/12	Akademibokha	-99		
+12/22/12	Zara	-99		
+12/22/12	Seno- Taxi	-97		
+12/22/12	7-Eleven	-12		
+12/21/12	Panini	-65		
+12/20/12	Hemtex	-497		
+12/20/12	Hemköp	-168.75		
+12/20/12	Panini	-65		
+12/18/12	David	-250		
+12/18/12	Salt-men	-129		
+12/17/12	Inside	-200		
+12/17/12	ICA	-199.26		
+12/17/12	Panini	-69		
+12/15/12	Taxi 020	-137		
+12/14/12	Serrano Kist	-90		
+12/13/12	Ming Palace	-274		
+12/13/12	Rest Hong Ko	-190		
+12/13/12	Pressbyrån	-51		
+12/12/12	Steffo	-900		
+12/12/12	Panini	-65		
+12/11/12	Travelcity	-530		
+12/11/12	SJ	-630		
+12/11/12	Panini	-69		
+12/10/12	Pressbyrån	-125		
+12/10/12	Panini	-69		
+12/8/12	Levi's NK	-2198		
+12/8/12	Le Rouge	-378		
+12/8/12	Fotografiska	-300		
+12/8/12	7-Eleven	-51		
+12/7/12	ICA	-149.8		
+12/7/12	Clas Ohlson	-59		
+12/6/12	Burger King	-61		
+12/5/12	ICA	-95.5		
+12/5/12	Panini	-69		
+12/5/12	Salary	38985		
+12/4/12	Sushi Thai	-70		
+12/3/12	Feriduns Sko	-95		
+12/3/12	Burger King	-61		
+12/2/12	3 Hi3g Access	-542		
+11/30/12	Spotify	-99		
+11/30/12	Scandinavian	-72		
+11/30/12	Folktandvård	-55		
+11/30/12	Pressbyrån	-51		
+11/29/12	Bostadsrättsföreningen H	-2003		
+11/29/12	Serrano Kist	-96		
+11/29/12	Enkla Vardag	-25		
+11/28/12	Lån 354246	-1130		
+11/28/12	Lån 354238	-1080		
+11/28/12	Clas Ohlson	-281		
+11/28/12	ICA	-124.04		
+11/28/12	Euroaccident	-122		
+11/28/12	Panini	-69		
+11/27/12	Serrano Kist	-79		
+11/27/12	Pressbyrån	-47		
+11/26/12	ICA	-175.1		
+11/26/12	Euro Acc Health & Care I	-122		
+11/26/12	Panini	-69		
+11/25/12	Restaurang B	-190		
+11/25/12	Storstad	-116		
+11/25/12	McDonalds	-63		
+11/23/12	Scandic Hote	-304		
+11/23/12	ICA	-174.2		
+11/23/12	Sushi Thai	-80		
+11/23/12	Scandic Hote	-59		
+11/22/12	Tgi Friday S	-112		
+11/22/12	McDonalds	-61		
+11/22/12	Pressbyrån	-51		
+11/20/12	Raw	-124		
+11/19/12	Kreatima	-63		
+11/19/12	Panini	-55		
+11/18/12	Taxi 020	-301		
+11/18/12	Statoil	-25		
+11/16/12	Åhlens	-595		
+11/16/12	Kreatima	-388		
+11/16/12	ICA	-96.5		
+11/16/12	Burger King	-85		
+11/15/12	Travelcity	-666		
+11/15/12	Clas Ohlson	-437		
+11/15/12	Inside	-400		
+11/14/12	Serrano Kist	-96		
+11/13/12	Kreatima	-490		
+11/13/12	Panini	-65		
+11/12/12	Ticknet	-1840		
+11/12/12	SJ	-1391		
+11/12/12	ICA	-179.92		
+11/12/12	Panini	-89		
+11/10/12	SF	-200		
+11/10/12	Sf Bio Film	-99		
+11/9/12	McDonalds	-66		
+11/8/12	Serrano Kist	-85		
+11/7/12	Apoteket	-578		
+11/7/12	Hemköp	-253.15		
+11/7/12	Vapiano	-99		
+11/6/12	Entercard Sverige	-6597.76		
+11/6/12	Panini	-45		
+11/6/12	P/s Apotek	-38		
+11/5/12	Salary	38985		
+11/4/12	Taxi Stockho	-217		
+11/3/12	SF	-390		
+11/3/12	Limerick	-132		
+11/1/12	Duvel Caf	-150		
+11/1/12	Tjabba Thai	-85		
+11/1/12	Verona Spel	-43		
+10/31/12	Viktor	-250		
+10/31/12	Hårcenter	-169		
+10/31/12	P/s Apotek	-59		
+10/31/12	Folktandvård	-55		
+10/31/12	Panini	-45		
+10/30/12	Bostadsrättsföreningen H	-2003		
+10/30/12	Vapiano	-112		
+10/30/12	Spotify	-99		
+10/30/12	Enkla Vardag	-25		
+10/29/12	SL Hotorget	-1540		
+10/29/12	Cloud Nine F	-110		
+10/28/12	Oxid Spitfire	-462		
+10/27/12	Taxi 020	-254		
+10/26/12	Lån 354246	-2184		
+10/26/12	Lån 354238	-2160		
+10/26/12	Systembolaget	-362.1		
+10/26/12	Burger King	-55		
+10/25/12	Prisextra	-720.08		
+10/25/12	Clas Ohlson	-599		
+10/25/12	Scandic Hote	-125		
+10/24/12	Panini	-75		
+10/23/12	Panini	-99		
+10/22/12	Sveriges Ingenjörer	-180		
+10/22/12	Vapiano	-94		
+10/21/12	Kontantuttag	-1000		
+10/21/12	Apartment No	-100		
+10/21/12	Fac Flygbuss	-79		
+10/21/12	7-Eleven	-65		
+10/21/12	Selectalandv	-20		
+10/19/12	Hard Rock Ca	-271		
+10/19/12	Pressbyrån	-71		
+10/19/12	Fattoush	-64		
+10/18/12	Euro Acc Health & Care I	-118		
+10/18/12	Serrano Kung	-85		
+10/17/12	Little India	-95		
+10/16/12	Scandic Hote	-125		
+10/15/12	Malmo Aviati	-1111		
+10/15/12	New Peking C	-180		
+10/14/12	Taxi 020	-121		
+10/13/12	Taxi Stockho	-278		
+10/13/12	Burger King	-181		
+10/13/12	Travelcity	-720		
+10/13/12	Butterick S	-149		
+10/13/12	Taxi Kurir S	-127		
+10/13/12	Pressbyrån	-81		
+10/13/12	Apoteket	-78.7		
+10/12/12	Inside	-400		
+10/12/12	Systembolage	-286.1		
+10/12/12	Vapiano	-109		
+10/11/12	Akademibokhandeln	-229		
+10/11/12	Panini	-75		
+10/5/12	Olivia	-100		
+10/5/12	Salary	38985		
+10/4/12	Entercard Sverige	-7667		
+9/27/12	Bostadsrättsföreningen H	-2003		
+9/27/12	Enkla Vardag	-25		
+9/25/12	Kontantuttag	-100		
+9/5/12	Salary	38985		

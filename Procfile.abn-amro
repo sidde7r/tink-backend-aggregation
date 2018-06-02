@@ -1,0 +1,5 @@
+connector: bazel run :connector --jvmopt=-Djava.net.preferIPv4Stack=true server etc/abn/development-connector-server.yml
+encryption: bash -c "cd ../tink-backend-encryption && bazel run :encryption --jvmopt=-Djava.net.preferIPv4Stack=true server etc/abn/development-encryption-server.yml"
+aggregation: bazel run :aggregation --jvmopt=-Djava.net.preferIPv4Stack=true server etc/abn/development-aggregation-server.yml
+system: bazel run :system --jvmopt=-Djava.net.preferIPv4Stack=true server etc/abn/development-system-server.yml
+main: bazel run :main server etc/abn/development-main-server.yml

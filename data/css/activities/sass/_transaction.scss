@@ -1,0 +1,112 @@
+.transaction-plural
+{ 
+  .expanded-group 
+  {
+    max-height: 0px;
+    overflow: hidden;
+  }
+
+  padding: 0;
+
+	.from-to
+    {
+	  	.arrow
+	    {
+	        font-family: tink-symbols, 'Tink Symbols';
+	        font-size: 9px;
+	        margin: 0 6px;
+		}
+		.from, .to
+		{
+			font-family: $font-light, 'proxima-light', ProximaNovaA-Light, sans-serif;
+			font-weight: $weight-light;
+		}
+	}
+}
+
+.transactions
+{
+	margin: $padding -$padding 0;
+
+	.divider-wrapper
+	{
+		margin-top: 0;
+		margin-bottom: 0;
+
+		.divider
+		{
+			margin: 0 0 0;
+		}
+	}
+
+	.transactions-container
+	{
+		padding: 0px;
+	}
+
+	.expanded-transaction
+	{
+		margin: 0 0 0 0;
+		padding: 3px $padding 6px;
+	}
+
+	.left-header-group
+	{
+		margin: 4px 0px 0 -34px;
+
+		.header
+		{
+			font-family: $font-regular, ProximaNovaA-Regular, proxima, sans-serif;
+			font-weight: $weight-regular;
+			font-size: 15px;
+			line-height: 21px;
+			height: 18px;
+		}
+
+		.subtext
+		{
+			line-height: 12px;
+			margin-top: 0px;
+		}	
+	}
+
+	.right-header-group
+	{
+		margin: 6px 0 0 0 ;
+
+		.header
+		{
+			font-family: $font-light, ProximaNovaA-Light, proxima-light, sans-serif;
+			font-weight: $weight-light;
+			font-size: 15px;
+			line-height: 15px;
+			text-align: right;
+		}
+
+		.subtext
+		{
+			margin-top: 0px;
+			line-height: 12px;
+		}
+	}
+
+	.subtext
+	{
+		font-family: $font-light, 'proxima-light', ProximaNovaA-Light, sans-serif;
+		font-weight: $weight-light;
+		font-size: 12px;
+		color: $text-color;
+	}
+
+	.icon-circle 
+	{
+		margin: 7px 7px 0 3px;
+		height:24px;
+		width:24px;
+		line-height: 24px;
+		font-size: 12px;
+		color: white;
+		border-radius: 100%;
+		text-align: center;
+	}
+}

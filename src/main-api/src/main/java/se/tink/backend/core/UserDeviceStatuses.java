@@ -1,0 +1,5 @@
+package se.tink.backend.core;
+
+public enum UserDeviceStatuses {
+    UNAUTHORIZED, AUTHORIZED, AWAITING_BANKID_AUTHENTICATION, AWAITING_SUPPLEMENTAL_INFORAMTION;
+}

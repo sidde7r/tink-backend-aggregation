@@ -1,0 +1,3 @@
+bankId	name	type	currency	balance
+Bank1	Lonekonto	CHECKING	SEK	"9,457.33"
+Bank2	Rakningar	CHECKING	SEK	"5,979.27"

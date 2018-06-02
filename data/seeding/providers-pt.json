@@ -1,0 +1,158 @@
+{
+    "market": "PT",
+    "currency": "EUR",
+    "providers":
+    [
+        {
+            "name":"pt-banco-portugues-de-investimento",
+            "displayName":"Banco Português de Investimento",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"demo.DemoAgent",
+            "passwordHelpText":null,
+            "transactional":"true",
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"Username or access number",
+                    "immutable":true
+                },
+                {
+                    "name":"password",
+                    "description":"Secret code",
+                    "masked":true
+                }
+            ]
+        },
+        {
+            "name":"pt-bbva",
+            "displayName":"BBVA",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"demo.DemoAgent",
+            "passwordHelpText":null,
+            "transactional":"true",
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"User code",
+                    "immutable":true
+                },
+                {
+                    "name":"password",
+                    "description":"PIN",
+                    "masked":true,
+                    "numeric":true,
+                    "pattern":"([0-9]+)",
+                    "patternError":"Please enter digits only."
+                }
+            ]
+        },
+        {
+            "name":"pt-credito-agricola",
+            "displayName":"Crédito Agrícola",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"demo.DemoAgent",
+            "passwordHelpText":null,
+            "transactional":"true",
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"Access number",
+                    "immutable":true,
+                    "numeric":true,
+                    "minLength":8,
+                    "maxLength":8,
+                    "hint":"NNNNNNNN",
+                    "pattern":"([0-9]{8})",
+                    "patternError":"Please enter 8 digits."
+                },
+                {
+                    "name":"password",
+                    "description":"Multi-channel key",
+                    "masked":true,
+                    "numeric":true,
+                    "pattern":"([0-9]+)",
+                    "patternError":"Please enter digits only."
+                }
+            ]
+        },
+        {
+            "name":"pt-novo-banco",
+            "displayName":"Novo Banco",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"banks.pt.novabanco.NovoBancoAgent",
+            "passwordHelpText":null,
+            "transactional":"true",
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"User ID",
+                    "immutable":true
+                },
+                {
+                    "name":"password",
+                    "description":"PIN",
+                    "masked":true,
+                    "numeric":true
+                }
+            ]
+        },
+        {
+            "name":"pt-santander-totta",
+            "displayName":"Santander Totta",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"demo.DemoAgent",
+            "passwordHelpText":null,
+            "transactional":"true",
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"Username",
+                    "immutable":true
+                },
+                {
+                    "name":"accesscode",
+                    "description":"Access code",
+                    "masked":true
+                },
+                {
+                    "name":"pin",
+                    "description":"PIN",
+                    "masked":true,
+                    "numeric":true,
+                    "pattern":"([0-9]+)",
+                    "patternError":"Please enter digits only."
+                }
+            ]
+        }
+    ]
+}

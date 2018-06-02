@@ -1,0 +1,3935 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: VERSION\n"
+"POT-Creation-Date: 2018-05-03 11:50+0000\n"
+"PO-Revision-Date: 2018-05-03 11:50+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Failed to sign using BankID"
+msgstr "Misslyckades med att signera med BankID"
+
+msgid "Transfer doesn't exist."
+msgstr "Överföringen finns inte."
+
+msgid "Couldn't find giro account."
+msgstr "Kunde inte hitta giro-konto."
+
+msgid "Not a valid giro number."
+msgstr "Inte ett giltigt giro-nummer."
+
+msgid "Transfer destination already exists."
+msgstr "Mottagaren finns redan."
+
+msgid "The stream is aborted by the client."
+msgstr "Strömmen stängdes av klienten."
+
+msgid "Application was not found."
+msgstr "Ansökan kunde inte hittas."
+
+msgid "Failed to get application."
+msgstr "Ansökan kunde inte hämtas."
+
+msgid "Failed to submit form."
+msgstr "Kunde inte skicka in formulär."
+
+msgid "The application is already signed and cannot be modified"
+msgstr "Ansökan har redan signerats och kan inte ändras."
+
+msgid "Unable to invoke application signing."
+msgstr "Kunde inte öppna signering av ansökan."
+
+msgid "Could not process application"
+msgstr "Ansökan kunde inte bearbetas."
+
+msgid "Application hasn't been completed yet."
+msgstr "Ansökan har inte slutförts än."
+
+msgid "Permission denied."
+msgstr "Du har inte rätt att genomföra åtgärden."
+
+msgid "Property not found."
+msgstr "Fastighet kunde inte hittas."
+
+msgid "Illegal argument"
+msgstr "Felaktigt argument"
+
+msgid "Follow item already exist"
+msgstr "Budgeten finns redan"
+
+msgid "Follow item was not found"
+msgstr "Budgeten kunde inte hittas"
+
+#, java-format
+msgid "{0} large expense"
+msgstr "{0} stor utgift"
+
+#, java-format
+msgid "Updating {0}..."
+msgstr "Uppdaterar {0}..."
+
+msgid "Your account is blocked. Please unblock your account using the ABN AMRO app."
+msgstr "Ditt konto är spärrat. Vänligen använd din ABN AMRO-app för att lyfta spärren."
+
+msgid "Failed to sign transfer with BankID"
+msgstr "Det gick inte att signa överföringen med BankID"
+
+msgid "Could not find source account"
+msgstr "Kunde inte hitta frånkonto"
+
+msgid "No response from Mobile BankID. Have you opened the app?"
+msgstr "Inget svar från Mobilt BankID. Har du öppnat appen?"
+
+msgid "The key number was incorrect, please try again."
+msgstr "Felaktigt nyckeltal, vänligen försök igen."
+
+msgid "Could not login, please try again."
+msgstr "Kunde inte logga in, vänligen försök igen."
+
+msgid "You need to activate the connection with your key number list."
+msgstr "Du behöver aktivera anslutningen med din nyckeltalslista."
+
+msgid "The format of the given credentials are incorrect."
+msgstr "Dina användaruppgifter har ett felaktigt format."
+
+msgid "The user id or password you entered is incorrect."
+msgstr "Fel användarkod eller lösenord."
+
+msgid "Could not login. This can happen when having the OP app installed on several devices. You can resolve this by removing one of them in the Settings view of your OP app or when logged in on OP's web site."
+msgstr "Kunde inte logga in. Detta kan hända när du har installerat OP-appen på flera enheter. Du kan lösa problemet genom att ta bort en av dem i inställningarna i OP-appen eller på OP:s hemsida när du är inloggad."
+
+msgid "The bank's number"
+msgstr "Bankens tal"
+
+msgid "Find the number on your number list that corresponds to the bank's number and enter it in the field below. You find the key number to the right of the bank's number on your key list."
+msgstr "Sök upp det tal på din nyckeltalslista som motsvarar bankens tal och skriv in det i fältet nedan. Nyckeltalet finns till höger om bankens tal på din lista."
+
+msgid "Key number"
+msgstr "Nyckeltal"
+
+msgid "Product not available."
+msgstr "Produkten är inte tillgänglig"
+
+msgid "The destination message is not a valid OCR reference"
+msgstr "Meddelandet till mottagaren är inte en giltig OCR-referens"
+
+msgid "The destination message is not valid"
+msgstr "Meddelandet till mottagaren är ogiltigt"
+
+msgid "Transfer amount is too small"
+msgstr "Överföringsbeloppet är för litet"
+
+msgid "Destination account is not valid"
+msgstr "Till-konto är inte korrekt"
+
+msgid "Source account not found"
+msgstr "Från-konto finns inte"
+
+msgid "BankID session already in progress, please try again."
+msgstr "Mobilt BankID är upptaget, vänta någon minut och testa igen."
+
+msgid "Failed to sign payment using BankID"
+msgstr "Signering av betalning med BankID misslyckades"
+
+msgid "Could not find bank for destination account"
+msgstr "Kunde inte hitta banken för mottagskontot"
+
+msgid "Invalid destination account"
+msgstr "Mottagarkontot är inte giltigt"
+
+msgid "Invalid source account"
+msgstr "Från-kontot är inte giltigt"
+
+msgid "Wrong user name or password, please try again."
+msgstr "Fel användarenamn eller lösenord, vänligen försök igen."
+
+msgid "Could not find destination account"
+msgstr "Mottagarkontot kunde inte hittas"
+
+msgid "Unsupported transfer type"
+msgstr "Överföringstypen stöds inte"
+
+msgid "The message length exceeds maximum of 100 letters."
+msgstr "Meddelandets längd är länge än det maximala, 100 tecken."
+
+msgid "Wrong BankID signature. Did you log in with the wrong personnummer?"
+msgstr "Felaktig BankID-signatur. Loggade du in med fel personnummer?"
+
+msgid "Unable to create new recipient account"
+msgstr "Det gick inte att skapa det nya mottagarkontot"
+
+msgid "Recipient name"
+msgstr "Mottagarnamn"
+
+msgid "Because this is the first time you transfer money to this account, you'll need to register a name for it."
+msgstr "Eftersom det är första gången du överför pengar till detta konto måste du registrera ett namn för det"
+
+msgid "person"
+msgstr "person"
+
+msgid "protected identity"
+msgstr "skyddad identitet"
+
+msgid "locked identity"
+msgstr "spärrad identitet"
+
+msgid "deceased"
+msgstr "avliden"
+
+msgid "removed from register"
+msgstr "bortagen från register"
+
+msgid "emigrated"
+msgstr "emigrerad"
+
+msgid "changed person number"
+msgstr "har ändrat personnummer"
+
+#, java-format
+msgid "You use the same credentials as you use at {0}. For more information about the required credentials, please see [their website]({1}). If you have any questions or problems connecting {0}, please contact [support@tinkapp.com](mailto:support@tinkapp.com)."
+msgstr "Du använder samma inloggningsuppgifter som hos {0}. För mer information om de uppgifter som krävs, vänligen se deras [hemsida]({1}). Har du några frågor eller problem att ansluta {0}, vänligen kontakta [support@tink.se](mailto:support@tink.se)."
+
+#, java-format
+msgid "For the selected source, the destination message cannot be longer than {0} characters. Please adjust the message and try again."
+msgstr "För valt avsändarkonto kan meddelandet till mottagaren inte vara längre än {0} tecken. Justera meddelandet och försök igen."
+
+msgid "Error from"
+msgstr "Fel från"
+
+msgid "Something went wrong."
+msgstr "Något gick fel."
+
+msgid "BankID authentication failed. Please verify your Mobil BankID is OK."
+msgstr "BankID autentisering misslyckades. Verifiera att din BankID är OK."
+
+msgid "MMMMM yyyy"
+msgstr "MMMMM yyyy"
+
+msgid "Largest expenses"
+msgstr "Största utgifter"
+
+msgid "compared with previous month"
+msgstr "jämfört med föregående månad"
+
+msgid "Percentage points"
+msgstr "Procentenheter"
+
+msgid "Important Events"
+msgstr "Viktiga händelser"
+
+msgid "Low balance"
+msgstr "Lågt saldo"
+
+msgid "Large expenses"
+msgstr "Stor utgift"
+
+msgid "More than usual"
+msgstr "Mer än vanligt"
+
+msgid "Budgets"
+msgstr "Budget"
+
+msgid "ID Control"
+msgstr "ID-Koll"
+
+msgid "Activate ID Control to safeguard your identity and bank accounts"
+msgstr "Aktivera ID-Koll för att få koll på din identitet och misstänkta bedrägerier"
+
+msgid "Handle warnings"
+msgstr "Hantera varningar"
+
+msgid "Activate ID Control"
+msgstr "Aktivera ID-Koll"
+
+msgid "You have"
+msgstr "Du har"
+
+msgid "You handled"
+msgstr "Du hanterade"
+
+msgid "No warnings to handle"
+msgstr "Inga varningar att hantera"
+
+msgid "%s warning to handle"
+msgid_plural "%s warnings to handle"
+msgstr[0] "%s varning att hantera"
+msgstr[1] "%s varningar att hantera"
+
+msgid "Event latest month"
+msgid_plural "Events latest month"
+msgstr[0] "Händelse senaste månaden"
+msgstr[1] "Händelser senaste månaden"
+
+msgid "Open Tink"
+msgstr "Öppna Tink"
+
+msgid "d MMMMM"
+msgstr "d MMMMM"
+
+#, java-format
+msgid "{0} to {1}"
+msgstr "{0} till {1}"
+
+#, java-format
+msgid "Tink has automatically categorized {0} transaction the past salary period."
+msgid_plural "Tink has automatically categorized {0} transactions the past salary period."
+msgstr[0] "Tink har automatiskt kategoriserat {0} transaktion förra löneperioden."
+msgstr[1] "Tink har automatiskt kategoriserat {0} transaktioner förra löneperioden."
+
+#, java-format
+msgid "Tink has automatically categorized {0} transaction the past month."
+msgid_plural "Tink has automatically categorized {0} transactions the past month."
+msgstr[0] "Tink har automatiskt kategoriserat {0} transaktion förra månaden."
+msgstr[1] "Tink har automatiskt kategoriserat {0} transaktioner förra månaden."
+
+msgid "If you no longer want to receive these emails, please click <a href=\"%s\">here</a>."
+msgstr "Om du inte längre vill ta emot e-post, klicka <a href=\"%s\">här</a>."
+
+msgid "You kept your goal. Great job!"
+msgid_plural "You kept all your goals. Great job!"
+msgstr[0] "Du höll ditt mål. Grymt jobbat!"
+msgstr[1] "Du höll alla dina mål. Grymt jobbat!"
+
+msgid "You did not keep your goal. Better luck next month."
+msgid_plural "You did not keep a single goal. Better luck next month."
+msgstr[0] "Du höll inte ditt mål. Bättre lycka nästa månad."
+msgstr[1] "Du höll inte ett enda mål. Bättre lycka nästa månad."
+
+#, java-format
+msgid "You kept {0} of your goals."
+msgstr "Du höll {0} av dina mål."
+
+msgid "You have a new monthly summary for %s"
+msgstr "Du har en ny månadssammanfattning för %s"
+
+msgid "Update your bank connections in Tink to view it!"
+msgstr "Uppdatera dina bankkopplingar i Tink för att se den!"
+
+msgid "place_id"
+msgstr "place_id"
+
+msgid "description"
+msgstr "description"
+
+msgid "name"
+msgstr "name"
+
+msgid "formatted_address"
+msgstr "formatted_address"
+
+msgid "vicinity"
+msgstr "vicinity"
+
+msgid "website"
+msgstr "website"
+
+msgid "formatted_phone_number"
+msgstr "formatted_phone_number"
+
+msgid "photo_reference"
+msgstr "photo_reference"
+
+msgid "long_name"
+msgstr "long_name"
+
+msgid "over"
+msgstr "över"
+
+msgid "more than"
+msgstr "mer än"
+
+msgid "less than"
+msgstr "mindre än"
+
+msgid "under"
+msgstr "under"
+
+msgid "around"
+msgstr "runt,typ,cirka,ca,ungefär"
+
+msgid "weekdays"
+msgstr "vardagar"
+
+msgid "weekends"
+msgstr "helger"
+
+msgid "today"
+msgstr "idag"
+
+msgid "yesterday"
+msgstr "igår"
+
+msgid "this week"
+msgstr "denna vecka"
+
+msgid "last week"
+msgstr "förra veckan"
+
+msgid "this month"
+msgstr "denna månad"
+
+msgid "last month"
+msgstr "förra månaden"
+
+msgid "this year"
+msgstr "i år"
+
+msgid "last year"
+msgstr "förra året"
+
+#, java-format
+msgid "week {0}"
+msgstr "vecka {0}"
+
+msgid "month"
+msgstr "månad"
+
+msgid "week"
+msgstr "vecka"
+
+msgid "day"
+msgstr "dag"
+
+msgid "and"
+msgstr "och"
+
+#, java-format
+msgid "{0} account"
+msgid_plural "{0} accounts"
+msgstr[0] "{0} konto"
+msgstr[1] "{0} konton"
+
+#, java-format
+msgid "{0} transaction"
+msgid_plural "{0} transactions"
+msgstr[0] "{0} transaktion"
+msgstr[1] "{0} transaktioner"
+
+msgid "zero"
+msgstr "noll"
+
+msgid "one"
+msgstr "ett"
+
+msgid "two"
+msgstr "två"
+
+msgid "three"
+msgstr "tre"
+
+msgid "four"
+msgstr "fyra"
+
+msgid "five"
+msgstr "fem"
+
+msgid "six"
+msgstr "sex"
+
+msgid "seven"
+msgstr "sju"
+
+msgid "eight"
+msgstr "åtta"
+
+msgid "nine"
+msgstr "nio"
+
+msgid "MMM"
+msgstr "MMM"
+
+msgid "MMM d"
+msgstr "d MMM"
+
+msgid "M/d"
+msgstr "d/M"
+
+#, java-format
+msgid "last {0}"
+msgstr "i {0}s"
+
+msgid "MMMM d"
+msgstr "d MMMM"
+
+msgid "tomorrow"
+msgstr "i morgon"
+
+#, java-format
+msgid "on {0}"
+msgstr "på {0}"
+
+msgid "MMM d YYYY"
+msgstr "d MMM"
+
+msgid "High balance"
+msgstr "Högt saldo"
+
+msgid "You have an unusually high balance on one account."
+msgstr "Du har ett ovanligt högt saldo på ett konto."
+
+#, java-format
+msgid "You have an unusually high balance on {0}"
+msgstr "Du har ovanligt högt saldo på {0}"
+
+msgid "You have an unusually low balance on one account."
+msgstr "Du har ett ovanligt lågt saldo på ett konto."
+
+#, java-format
+msgid "You have an unusually low balance on {0}"
+msgstr "Du har ett ovanligt lågt saldo på {0}"
+
+msgid "Bank Fee"
+msgstr "Bankavgift"
+
+#, java-format
+msgid "You spent {0} less than {1} on {2} {3}."
+msgstr "Du spenderade {0} mindre än {1} på {2} {3}."
+
+#, java-format
+msgid "You spent {0} more than {1} on {2} {3}."
+msgstr "Du spenderade {0} mer än {1} på {2} {3}."
+
+msgid "Add a budget now"
+msgstr "Lägg till en budget nu"
+
+msgid "Tip: start with budgetting"
+msgstr "Tips: kom igång med budget"
+
+msgid "For example, set a maximum amount per month on groceries or clothes and Grip will track it for you."
+msgstr "Till exempel, sätt ett mål för livsmedel eller kläder, och Grip håller koll på det åt dig."
+
+msgid "Double charge"
+msgstr "Dubbeldragning"
+
+msgid "You were double-charged."
+msgstr "Det har gjorts en dubbeldragning."
+
+#, java-format
+msgid "You were double-charged by {0} for {1}."
+msgstr "Du har en dubbeldragning av {0} för {1}."
+
+#, java-format
+msgid "You have exceeded your goal for {0} this month."
+msgstr "Du har överskridit ditt mål för {0} den här månaden."
+
+#, java-format
+msgid "You are close to exceeding your goal for {0} this month."
+msgstr "Du är nära att överskrida ditt mål för {0} den här månaden."
+
+#, java-format
+msgid "You exceeded your goal for {0} on {1}"
+msgstr "Du gick över ditt mål för {0} den {1}"
+
+#, java-format
+msgid "You were close to exceeding your goal for {0} on {1}"
+msgstr "Du var nära att gå över ditt mål för {0} den {1}"
+
+msgid "Missed goal"
+msgstr "Missat mål"
+
+msgid "Close to goal"
+msgstr "Nära mål"
+
+msgid "Handle warning"
+msgid_plural "Handle warnings"
+msgstr[0] "Hantera händelse"
+msgstr[1] "Hantera händelser"
+
+msgid "There is %s new warning that needs your attention."
+msgid_plural "There are %s new warnings that need your attention."
+msgstr[0] "Det finns %s ny händelse att kolla upp."
+msgstr[1] "Det finns %s nya händelser att kolla upp."
+
+msgid "Show map"
+msgstr "Visa karta"
+
+msgid "Eating out map"
+msgstr "Matkartan"
+
+msgid "This is where you eat out."
+msgstr "Här kan du se var du oftast äter ute, tar en drink eller fikar."
+
+#, java-format
+msgid "You have a low balance on {0}"
+msgstr "Du har lågt saldo på {0}"
+
+msgid "Income"
+msgstr "Inkomst"
+
+msgid "You received an income."
+msgstr "Du har mottagit en inkomst."
+
+#, java-format
+msgid "You received income from {0}"
+msgstr "Du har en inkomst från {0}"
+
+#, java-format
+msgid "You received {0} incomes."
+msgstr "Du har mottagit {0} inkomster."
+
+msgid "Large expense"
+msgstr "Stor utgift"
+
+msgid "You were charged an unusually large expense."
+msgstr "Det har dragits en ovanligt stor utgift."
+
+#, java-format
+msgid "You were charged an unusually large expense by {0}"
+msgstr "Det har dragits en ovanligt stor utgift av {0}"
+
+#, java-format
+msgid "You were charged {0} unusually large expenses."
+msgstr "Det har dragits {0} ovanligt stora utgifter."
+
+#, java-format
+msgid "You were charged some unusually large expenses by {0}"
+msgstr "Det har dragits ett par ovanligt stora utgifter av {0}"
+
+msgid "You are above average spending at this time of month"
+msgstr "Du har spenderat mer än vanligt vid den här tiden av månaden"
+
+msgid "You are still above average spending at this time of month"
+msgstr "Du har fortfarande spenderat mer än vanligt vid den här tiden av månaden"
+
+msgid "You are below average spending at this time of month"
+msgstr "Du har spenderat mindre än vanligt vid den här tiden av månaden"
+
+msgid "You are still below average spending at this time of month"
+msgstr "Du har fortfarande spenderat mindre än vanligt vid den här tiden av månaden"
+
+msgid "Left to Spend"
+msgstr "Kvar av lön"
+
+msgid "1 year ago"
+msgstr "1 år sedan"
+
+msgid "Look back"
+msgstr "Titta tillbaka"
+
+#, java-format
+msgid "1 year ago: {0} - via @tink"
+msgstr "1 år sedan: {0} - via @tink"
+
+#, java-format
+msgid "in {0}"
+msgstr "under {0}"
+
+msgid "top 5 %"
+msgstr "mest"
+
+#, java-format
+msgid "You are one of the {0} spenders at {1}."
+msgstr "Du är en av de som spenderat {0} på {1}."
+
+#, java-format
+msgid "Of the customers at {2}, you spent {0} more than {1} {3}."
+msgstr "Av kunderna på {2}, spenderade du {0} mer än {1} {3}."
+
+#, java-format
+msgid "Of the customers at {2}, you spent {0} less than {1} {3}."
+msgstr "Av kunderna på {2}, spenderade du {0} mindre än {1} {3}."
+
+msgid "Great job!"
+msgstr "Grymt jobbat!"
+
+msgid "Good job!"
+msgstr "Bra jobbat!"
+
+msgid "Come on!"
+msgstr "Kom igen!"
+
+#, java-format
+msgid "You kept your goal in {0}. Great job!"
+msgid_plural "You kept all your goals in {0}. Great job!"
+msgstr[0] "Du höll ditt mål i {0}. Grymt jobbat!"
+msgstr[1] "Du höll alla dina mål i {0}. Grymt jobbat!"
+
+#, java-format
+msgid "You did not keep your goal in {0}. Better luck next month."
+msgid_plural "You did not keep a single goal in {0}. Better luck next month."
+msgstr[0] "Du höll inte ditt mål i {0}. Bättre lycka nästa månad."
+msgstr[1] "Du höll inte ett enda mål i {0}. Bättre lycka nästa månad."
+
+#, java-format
+msgid "You kept {0} of your goals in {1}."
+msgstr "Du höll {0} av dina mål i {1}."
+
+msgid "Check out your monthly summary!"
+msgstr "Kolla in din månadssammanfattning!"
+
+#, java-format
+msgid "{0} was a great month! You made {1} more than you spent."
+msgstr "{0} var en bra månad! Du tjänade {1} mer än du gjorde av med."
+
+#, java-format
+msgid "{0} was a not a great month. You spent {1} more than you made."
+msgstr "{0} var ingen toppen-månad. Du gjorde av med {1} mer än du tjänade."
+
+#, java-format
+msgid "You have saved {0} in {1} months!"
+msgstr "Du har sparat {0} under {1} månader!"
+
+msgid "Add account"
+msgstr "Lägg till konto"
+
+msgid "Connect to Tink and get an even better overview"
+msgstr "Anslut till Tink och få ännu bättre koll på din ekonomi"
+
+#, java-format
+msgid "It seems like you have an account at {0} that you haven't connected to Tink."
+msgstr "Det verkar som du har ett konto hos {0} som du inte har länkat till Tink."
+
+#, java-format
+msgid "Pick a location for another {1} merchants and see {0}% on the eating out map."
+msgstr "Sätt plats på ytterligare {1} ställen och se {0}% av alla köp på matkartan."
+
+#, java-format
+msgid "Pick a location for another {1} merchants to reach {0}% merchantized."
+msgstr "Sätt plats på ytterligare {1} ställen och nå {0}% mappat."
+
+msgid "Expense"
+msgstr "Utgift"
+
+msgid "Expenses"
+msgstr "Utgifter"
+
+msgid "You've made a purchase."
+msgstr "Du har gjort ett köp."
+
+#, java-format
+msgid "You had an expense charged by {0}"
+msgstr "Det har dragits en utgift av {0}"
+
+#, java-format
+msgid "You spent {0} more yesterday than the average tab at {1}."
+msgstr "Du spenderade {0} mer igår än den genomsnittliga notan på {1}."
+
+msgid "Transfer"
+msgstr "Överföring"
+
+#, java-format
+msgid "You transferred {0} from {1} to {2}"
+msgstr "Du har överfört {0} från {1} till {2}"
+
+msgid "Less than usual"
+msgstr "Mindre än vanligt"
+
+#, java-format
+msgid "You have spent less than usual on {0} this month."
+msgstr "Du har gjort av med mindre än vanligt på {0} den här månaden."
+
+#, java-format
+msgid "You have spent more than usual on {0} this month."
+msgstr "Du har gjort av med mer än vanligt på {0} den här månaden."
+
+msgid "others"
+msgstr "andra"
+
+msgid "other"
+msgstr "andra"
+
+#, java-format
+msgid "{0} year old"
+msgstr "{0}-åriga"
+
+#, java-format
+msgid "{0} year olds"
+msgstr "{0}-åringar"
+
+msgid "men"
+msgstr "män"
+
+msgid "women"
+msgstr "kvinnor"
+
+#, java-format
+msgid "Week {0}"
+msgstr "Vecka {0}"
+
+msgid "Weekly Summary"
+msgstr "Veckosammanfattning"
+
+msgid "You are good with your goals. Great job!"
+msgid_plural "You are good on all your goals. Great job!"
+msgstr[0] "Du är på banan med ditt mål. Grymt jobbat!"
+msgstr[1] "Du är på banan med alla dina mål. Grymt jobbat!"
+
+msgid "You have already blown your goal. Better luck next month."
+msgid_plural "You have already blown all of your goals. Better luck next month."
+msgstr[0] "Du har redan missat ditt mål. Bättre lycka nästa månad. "
+msgstr[1] "Du har redan missat alla dina mål. Bättre lycka nästa månad. "
+
+#, java-format
+msgid "You are good on {0} of your {1} goals."
+msgstr "Du är på banan med {0} av dina {1} mål."
+
+msgid "Check it out!"
+msgstr "Kolla in den!"
+
+#, java-format
+msgid "You have spent {0} during last week."
+msgstr "Du gjorde av med {0} förra veckan."
+
+msgid "Card fees"
+msgstr "Kortavgifter"
+
+msgid "Cash withdrawal fees"
+msgstr "Uttagsavgifter"
+
+msgid "Administration fees"
+msgstr "Administrationsavgifter"
+
+#, java-format
+msgid "You have payed at least {0} in bank fees so far this year. That is equal to the average Tink user."
+msgstr "Du har betalat minst {0} i bankavgifter hittills i år. Det är lika mycket som den genomsnittliga Tink-användaren."
+
+#, java-format
+msgid "You have payed at least {0} in bank fees so far this year. That is {1} more than the average Tink user."
+msgstr "Du har betalat minst {0} i bankavgifter hittills i år. Det är {1} mer än den genomsnittliga Tink-användaren."
+
+#, java-format
+msgid "You have payed at least {0} in bank fees so far this year. That is {1} less than the average Tink user."
+msgstr "Du har betalat minst {0} i bankavgifter hittills i år. Det är {1} mindre än den genomsnittliga Tink-användaren."
+
+msgid "Approve"
+msgstr "Godkänn"
+
+#, java-format
+msgid "To be payed {0}"
+msgstr "Betalas senast {0}"
+
+msgid "Immediate"
+msgstr "Omgående"
+
+#, java-format
+msgid "{0} overspent"
+msgstr "{0} över budget"
+
+#, java-format
+msgid "{0} left"
+msgstr "{0} kvar"
+
+#, java-format
+msgid "of {0}"
+msgstr "av {0}"
+
+#, java-format
+msgid "{0} above avg."
+msgstr "{0} över snittet"
+
+#, java-format
+msgid "{0} below avg."
+msgstr "{0} under snittet"
+
+msgid "Biggest purchase"
+msgstr "Största inköp"
+
+msgid "Total expenses"
+msgstr "Totala utgifter"
+
+#, java-format
+msgid "{0} over avg."
+msgstr "{0} över snittet"
+
+msgid "Unusual spending"
+msgstr "Avvikande utgifter"
+
+msgid "normally"
+msgstr "snitt"
+
+msgid "Start wizard now"
+msgstr "Starta guiden nu"
+
+msgid "Improve categorization"
+msgstr "Förbättra kategoriseringen"
+
+#, java-format
+msgid "You can reach {0}% by categorizing one additional transaction."
+msgid_plural "You can reach {0}% by categorizing {1} additional transactions."
+msgstr[0] "Du kan nå {0} % genom att kategorisera ytterligare en transaktion."
+msgstr[1] "Du kan nå {0} % genom att kategorisera ytterligare {1} transaktioner."
+
+#, java-format
+msgid "{0} incomes"
+msgstr "{0} inkomster"
+
+#, java-format
+msgid "{0} expenses"
+msgstr "{0} utgifter"
+
+#, java-format
+msgid "{0} large expenses"
+msgstr "{0} stora utgifter"
+
+#, java-format
+msgid "{0} bank fees"
+msgstr "{0} bankavgifter"
+
+msgid "Weekly summary"
+msgstr "Veckosammanfattning"
+
+msgid "Expenses this week"
+msgstr "Utgifter den här veckan"
+
+msgid "average"
+msgstr "snitt"
+
+msgid "You have no registered address"
+msgstr "Du har ingen registrerad folkbokföringsadress"
+
+msgid "You have no registered company engagements"
+msgstr "Du har inga registrerade bolagsengagemang"
+
+msgid "You have no registered debts at the Kronofogden"
+msgstr "Du har inga registrerade skulder hos Kronofogden"
+
+msgid "You have no detected double charges"
+msgstr "Du har inga detekterade dubbeldragningar"
+
+msgid "You have no registered personal data"
+msgstr "Du har inga registrerade personuppgifter"
+
+msgid "You have no credit inquiries to show"
+msgstr "Du har inga upplysningskopior att visa"
+
+msgid "You have no detected unusual large expenses"
+msgstr "Du har inga detekterade ovanligt stora köp"
+
+msgid "You have no registered non-payments"
+msgstr "Du har inga registrerade betalningsanmärkningar"
+
+msgid "You have no registered real estate"
+msgstr "Du har inga registrerade fastighetsinnehav"
+
+msgid "You have no estimated credit score"
+msgstr "Du har ingen beräknad kreditscore"
+
+msgid "You have no detected unusual large withdrawals"
+msgstr "Du har inga detekterade ovanligt stora kontantuttag"
+
+msgid "You have no extra frequent activity on any of your accounts"
+msgstr "Du har inte haft ovanligt mycket aktivitet på något av dina konton"
+
+msgid "You have no detected off-location purchases."
+msgstr "Du har inga noterade främmande transaktioner"
+
+msgid "You have no detected fraudulent merchant purchases"
+msgstr "Du har inga detekterade köp på något varningslistat ställe"
+
+msgid "You have no tax return registered"
+msgstr "Du har ingen deklaration registrerad"
+
+msgid "Your registered address is"
+msgstr "Din folkbokföringsadress är"
+
+msgid ", "
+msgstr ", "
+
+msgid "You have the role of %s in"
+msgid_plural "You have the roles %s in"
+msgstr[0] "Du har rollen %s i"
+msgstr[1] "Du har rollerna %s i"
+
+msgid "You no longer have the role %s in"
+msgid_plural "You no longer have the roles %s in"
+msgstr[0] "Du har inte längre rollen %s i"
+msgstr[1] "Du har inte längre rollerna %s i"
+
+msgid "Your personal data is"
+msgstr "Dina personuppgifter är"
+
+msgid "You are registered owner of"
+msgstr "Du är registrerad ägare av"
+
+msgid "You have %s debt with a balance of"
+msgid_plural "You have %s debts with total balance of"
+msgstr[0] "Du har %s skuldsaldo på"
+msgstr[1] "Du har %s skuldsaldon på totalt"
+
+msgid "You have a non-payment at"
+msgstr "Du har en betalningsanmärkning hos"
+
+msgid "%s with amount %s"
+msgstr "%s med belopp %s"
+
+msgid "No credit scoring"
+msgstr "Ingen scoringberäkning"
+
+msgid "You have a credit score of"
+msgstr "Du har en kreditscore på"
+
+msgid "%s out of %s with description: %s"
+msgstr "%s av %s med beskrivningen: %s"
+
+msgid "You have a possible double charge from"
+msgstr "Du har en möjlig dubbeldragning från"
+
+msgid "This day you have an extra frequent activity on you account"
+msgstr "Den här dagen har du ovanligt mycket aktivitet på ditt konto"
+
+msgid "%s with %s transactions"
+msgstr "%s med %s transaktioner"
+
+msgid "You have an unusual large expense from"
+msgstr "Du har en ovanligt stor utgift till"
+
+msgid "A credit inquiry was taken for you from"
+msgstr "Det har tagits en kreditupplysning på dig från"
+
+msgid "You have an unusual large withdrawal with amount"
+msgstr "Du har gjort ett ovanligt stort kontantuttag på"
+
+msgid "You made a purchase at"
+msgstr "Du har gjort ett köp på"
+
+msgid "You made a purchase at an untrusted listed merchant"
+msgstr "Du har gjort ett köp på en varningslistad handlare"
+
+#, java-format
+msgid "Your tax return from Skatteverket, total income is {0}"
+msgstr "Din deklaration från Skatteverket, total inkomst är {0}"
+
+msgid "Tax return"
+msgstr "Deklaration"
+
+#, java-format
+msgid "Your tax return from Skatteverket for income year {0}, total income is {1}"
+msgstr "Din deklaration från Skatteverket för inkomstår {0}, total inkomst är {1}"
+
+#, java-format
+msgid "Income year {0}"
+msgstr "Inkomstår {0}"
+
+#, java-format
+msgid "Employment: {0}\nCapital: {1}\nTax: {2}"
+msgstr "Tjänst: {0}\nKapital: {1}\nSkatt: {2}"
+
+msgid "Registered address"
+msgstr "Folkbokföring"
+
+msgid "Company engagement"
+msgstr "Bolagsengagemang"
+
+msgid "Debt balance"
+msgstr "Skuldsaldo"
+
+msgid "Account activity"
+msgstr "Kontoaktivitet"
+
+msgid "Identity"
+msgstr "Personuppgifter"
+
+msgid "Credit inquiry"
+msgstr "Kreditupplysning"
+
+msgid "Nonpayment"
+msgstr "Betalningsanmärkning"
+
+msgid "Real estate holding"
+msgstr "Fastighetsinnehav"
+
+msgid "Credit score"
+msgstr "Kreditscoring"
+
+msgid "Large withdrawal"
+msgstr "Stort kontantuttag"
+
+msgid "Off location purchase"
+msgstr "Främmande transaktion"
+
+msgid "Fraudulent merchant"
+msgstr "Varningslistad handlare"
+
+msgid "Non-payments"
+msgstr "Anmärkningar"
+
+msgid "Identity & engagements"
+msgstr "Identitiet & ägande"
+
+msgid "Credit reviews"
+msgstr "Kreditvärdighet"
+
+msgid "Account activities"
+msgstr "Kontohändelser"
+
+msgid "The information is fetched from Statens personadressregister. SPAR includes all persons who are registered as resident in Sweden. The data in SPAR is updated each day with data from the Swedish Population Register."
+msgstr "Uppgifterna är hämtade från SPAR. Statens personadressregister, SPAR, är ett offentligt register som omfattar alla personer som är folkbokförda i Sverige, både svenska och utländska medborgare. Uppgifterna i SPAR uppdateras varje dygn med uppgifter från folkbokföringsregistret."
+
+msgid "The information is fetched from Bolagsverket and Skatteveket. Bolagsverket is a public authority whose main purpose is to register new companies and handle changes in register for existing companies, such as changes in address and changes of board and accountants. Skatteverket handled F-tax and moms."
+msgstr "Uppgifterna är hämtade från Bolagsverket och Skatteverket. Bolagsverket är en statlig myndighet som huvudsakligen hanterar registreringen av nya företag och registerändringar för befintliga företag, såsom ändring av adress och byte av styrelse och revisorer. Skatteverket sköter registrering av F-skatt och moms."
+
+msgid "The information is fetched from Lantmäteriet. Lantmäteriet is the authority that handles geographical information, appoints district names and is responsible for real estate classification."
+msgstr "Uppgifterna är hämtade från Lantmäteriet. Lantmäteriet är den myndighet som har till uppgift att tillhandahålla geografisk information, fastställa ortnamn och ansvara för fastighetsindelningen i Sverige."
+
+msgid "The information is fetched from Kronofogden. Kronofogden is a neutral administrative authority. The assignment is to create a balance between the one paying and the one who is payed. It is the duty of Kronofogden to help the one not getting payed, but also supporting the one who cannot pay a debt."
+msgstr "Uppgifterna är hämtade från Kronofogden. Kronofogden är en myndighet med en opartisk roll. Uppdraget är att skapa balans mellan den som ska ha betalt och den som ska betala. Det är Kronofogdens uppgifter att hjälpa den som inte fått betalt men också se till att den som har en skuld får stöd och vägledning för att reda ut sin situation."
+
+msgid "The information is fetched from Kronofogden. A non-payment is a sign of you not being able to handle your payments. The effect could for example be that your are not getting a mortgage, apartment, job or phone subscription."
+msgstr "Uppgifterna är hämtade från Kronofogden. En betalningsanmärkning är ett tecken på att du inte har skött dina betalningar. Betalningsanmärkningar kan exempelvis leda till att du inte får lån, lägenhet, arbete eller telefonabonnemang."
+
+msgid "The information is fetched from Skatteverket when your tax return has been approved."
+msgstr "Den här informationen hämtas från Skatteverket när din deklaration är godkänd."
+
+msgid "Creditsafe scoring is a tool to determine the solvency level for a person. The scoring is done by a number of generic credit scoring models and is mainly based on income, assets, age, company engagements, civil status and non-payments. The scoring is a scale from 1 to 100 where 1-19 means low solvency, 20-39 medium solvency, 40-69 high solvency and 70-100 very high solvency."
+msgstr "Creditsafe scoring är ett verktyg för att prognostisera privatpersoners betalningsförmåga. Scoringen beräknas genom ett antal generiska kreditscoremodeller som framförallt baseras på inkomst, tillgångar, ålder, näringsverksamhet, civilstånd och betalningsanmärkningar.  Scoringen är en skala från 1 till 100 där 1-19 betyder låg betalningsförmåga, 20-39 medium betalningsförmåga, 40-69 hög betalningsförmåga och 70-100 mycket hög betalningsförmåga."
+
+msgid "Every day Tink scans all of your transactions to find things that differ from you normal behaviour and things we want to keep you extra alerted on. In this case we have notices there were two transactions deducted from your account the same day with the same amount and description. It could be someone with bad intentions that has charged you twice but it could of course also been you buying the same thing twice the same day."
+msgstr "Tink analyserar varje dag alla transaktioner för att hitta saker som skiljer sig från det normala och som Tink vill hålla dig extra uppmärksam på. I det här fallet har vi noterat att två transaktioner har gjorts med samma summa på samma kort samma dag. Det kan vara någon som i oärligt syfte dragit ditt kort dubbelt men det kan också vara du som gjort två köp med samma belopp."
+
+msgid "Every day Tink scans all of your transactions to find things that differ from you normal behaviour and things we want to keep you extra alerted on. In this case we have notices there was an unusual large expense on your account."
+msgstr "Tink analyserar varje dag alla transaktioner för att hitta saker som skiljer sig från det normala och som vi vill hålla dig extra uppmärksam på. Den här händelsen varnar dig om att ett ovanligt stort belopp har dragits från ditt konto."
+
+msgid "Every day Tink scans all of your transactions to find things that differ from you normal behaviour and things we want to keep you extra alerted on. In this case we have notices there was an unusual large cash withdrawal on your account."
+msgstr "Tink analyserar varje dag alla transaktioner för att hitta saker som skiljer sig från det normala och som vi vill hålla dig extra uppmärksam på. Den här händelsen varnar dig om att ett ovanligt stort kontantuttag har gjorts på ditt konto."
+
+msgid "Every day Tink scans all of your transactions to find things that differ from you normal behaviour and things we want to keep you extra alerted on. In this case we have notices there was an unusual high activity on one of you accounts with more transactions than usual."
+msgstr "Tink analyserar varje dag alla transaktioner för att hitta saker som skiljer sig från det normala och som vi vill hålla dig extra uppmärksam på. Den här händelsen varnar dig om att ovanligt många transaktioner har skett under samma dag på ett av dina konton. Det kan vara någon som handlar på ditt kort, men det kan också vara du som bara gjort ovanligt många köp just den här dagen."
+
+msgid "Every day Tink scans all of your transactions to find things that differ from you normal behaviour and things we want to keep you extra alerted on. In this case we have notices there was a purchase made on a location where we think you havnt't been."
+msgstr "Tink analyserar varje dag alla transaktioner för att hitta saker som skiljer sig från det normala och som vi vill hålla dig extra uppmärksam på. Den här händelsen varnar dig om att ett köp har gjorts på en plats där vi tror att du inte har varit."
+
+msgid "Every day Tink scans all of your transactions to find things that differ from you normal behaviour and things we want to keep you extra alerted on. In this case we have notices there was a purchase made at a merchant that has been flagged by trade organizations as fraudulent."
+msgstr "Tink analyserar varje dag alla transaktioner för att hitta saker som skiljer sig från det normala och som vi vill hålla dig extra uppmärksam på. Den här händelsen varnar dig om att ett köp har gjorts hos ett företag som finns med på branschorganisationers varningslistor."
+
+msgid "If any of the information is incorrect, please contact Skatteverket on %s."
+msgstr "Om någon av uppgifterna inte stämmer, ta kontakt med Skatteverket på %s."
+
+#, java-format
+msgid "If any of the information is incorrect, please contact Bolagsverket on {0} or Skatteverket on {1}."
+msgstr "Om någon av uppgifterna inte stämmer, ta kontakt med Bolagsverket på {0} eller Skatteverket på {1}."
+
+msgid "If any of the information is incorrect, please contact Lantmäteriet on %s."
+msgstr "Om någon av uppgifterna inte stämmer, ta kontakt med Lantmäteriet på %s."
+
+msgid "If any of the information is incorrect, please contact Kronofogden on %s."
+msgstr "Om någon av uppgifterna inte stämmer, ta kontakt med Kronofogden på %s."
+
+msgid "If you have any questions about you credit score, please contact Creditsafe on %s."
+msgstr "Om du har några frågor angående ditt kreditscore, vänligen kontakta Creditsafe på %s."
+
+msgid "If you don’t recognise the transactions, please contact your bank and let them check who registered the transactions."
+msgstr "Om du inte känner igen transaktionerna, ta kontakt med din bank och be dem kolla vem som registrerat köpen."
+
+msgid "If you don’t recognise the transaction, please contact your bank and let them check who registered the purchase."
+msgstr "Om du inte känner igen transaktionen, ta kontakt med din bank och be dem kolla vem som registrerat köpet."
+
+msgid "If you don’t recognise the transaction or there are problems in delivery of the purchased products, please contact the company and if necessary the police."
+msgstr "Om du inte känner igen transaktionen eller får problem med leveransen av varorna, ta kontakt med företaget du köpte av, och om du behöver även polisen."
+
+msgid "foreclosure attempt"
+msgstr "utmätningsförsök"
+
+msgid "dept balance"
+msgstr "skuldsaldo"
+
+msgid "personal bankruptcy"
+msgstr "personlig konkurs"
+
+msgid "under 18, non valid person number or no income"
+msgstr "under 18, ogiltigt personnummer eller ingen inkomst"
+
+msgid "debt restructuring"
+msgstr "skuldsanering"
+
+msgid "put under trusteeship"
+msgstr "satt under förvaltarskap"
+
+msgid "deceased person"
+msgstr "person avliden"
+
+msgid "blocked person"
+msgstr "spärrad person"
+
+msgid "emigrant"
+msgstr "utvandrad"
+
+msgid "technical deregistered"
+msgstr "tekniskt avregistrerad"
+
+msgid "protected person"
+msgstr "skyddad person"
+
+msgid "under 18 years old"
+msgstr "under 18 år"
+
+msgid "person missing"
+msgstr "person saknas"
+
+msgid "error in score calculation"
+msgstr "fel i scoringberäkningen"
+
+msgid "low solvency"
+msgstr "låg betalningsförmåga"
+
+msgid "medium solvency"
+msgstr "medel betalningsförmåga"
+
+msgid "high solvency"
+msgstr "hög betalningsförmåga"
+
+msgid "very high solvency"
+msgstr "mycket hög betalningsförmåga"
+
+msgid "Is this correct?"
+msgstr "Stämmer det här?"
+
+msgid "Was this you?"
+msgstr "Var detta du?"
+
+msgid "Is this OK?"
+msgstr "Är detta OK?"
+
+msgid "Yes"
+msgstr "Ja"
+
+msgid "No"
+msgstr "Nej"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Org. number"
+msgstr "Org. nummer"
+
+msgid "Name"
+msgstr "Namn"
+
+msgid "Address"
+msgstr "Adress"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "F-tax"
+msgstr "F-skatt"
+
+msgid "Vat"
+msgstr "Moms"
+
+msgid "Registrerat namn"
+msgstr "Registrerat namn"
+
+msgid "Type"
+msgstr "Typ"
+
+msgid "Role"
+msgstr "Roll"
+
+msgid "Credit rating"
+msgstr "Kreditscoring"
+
+msgid "Nbr employees"
+msgstr "Antal anställda"
+
+msgid "Revenue"
+msgstr "Omsättning"
+
+msgid "Profit after tax"
+msgstr "Res. e. finansnetto"
+
+msgid "Net profit"
+msgstr "Årets resultat"
+
+msgid "Total capital"
+msgstr "Summa tillgångar"
+
+msgid "Gross Profit Margin"
+msgstr "Vinstmarginal"
+
+msgid "Quick ratio"
+msgstr "Kassalikviditet"
+
+msgid "Solidity"
+msgstr "Soliditet"
+
+msgid "New events"
+msgstr "Nya händelser"
+
+msgid "You have new events in your feed"
+msgstr "Du har nya händelser i din feed."
+
+msgid "Updated."
+msgstr "Uppdaterat."
+
+#, java-format
+msgid "Analyzed {0}."
+msgstr "Analyserat {0}."
+
+#, java-format
+msgid "Loaded one transaction"
+msgid_plural "Loaded {0} transactions"
+msgstr[0] "Laddade en transaktion"
+msgstr[1] "Laddade {0} transaktioner"
+
+msgid "You're using a version of the app that is too old. Please update to the latest version in order to login to your Tink account."
+msgstr "Du använder en för gammal version av appen. Uppdatera till den senaste versionen för att logga in på ditt Tink-konto."
+
+msgid "Unable to fetch accounts."
+msgstr "Kunde inte hämta konton."
+
+msgid "Unable to subscribe to accounts."
+msgstr "Kunde inte ansluta konton."
+
+msgid "accounts"
+msgstr "konton"
+
+msgid "transactions"
+msgstr "transaktioner"
+
+msgid "amount spent in each category"
+msgstr "hur mycket du spenderat i de olika kategorierna"
+
+msgid "number of purchases in each category"
+msgstr "antal köp i de olika kategorierna"
+
+msgid "amount spent at each merchant"
+msgstr "hur mycket du spenderat hos respektive inköpsställe"
+
+msgid "number of purchases at each merchant"
+msgstr "antal köp hos respektive inköpsställe"
+
+msgid "bank connections"
+msgstr "bankanslutningar"
+
+msgid "user profile"
+msgstr "användarprofil"
+
+msgid "budgets and savings goals"
+msgstr "budgetar och sparmål"
+
+msgid "documents"
+msgstr "dokument"
+
+msgid "payment options"
+msgstr "betalningsalternativ"
+
+msgid "statistics"
+msgstr "statistik"
+
+#, java-format
+msgid "View your {0}"
+msgstr "Se dina {0}"
+
+#, java-format
+msgid "Update your {0}"
+msgstr "Uppdatera dina {0}"
+
+msgid "Lunch"
+msgstr "Lunch"
+
+msgid "Restaurants"
+msgstr "Restaurang"
+
+msgid "Weekly groceries"
+msgstr "Veckohandling"
+
+msgid "Groceries"
+msgstr "Livsmedel"
+
+msgid "Small things"
+msgstr "Småsaker"
+
+msgid "What a night"
+msgstr "Viken utekväll"
+
+msgid "Bars"
+msgstr "Bar"
+
+msgid "Cash from the wall"
+msgstr "Pengar från väggen"
+
+msgid "Withdrawals"
+msgstr "Kontantuttag"
+
+msgid "Going out"
+msgstr "Utgång"
+
+msgid "Morning regrets"
+msgstr "Morgonångest"
+
+#, java-format
+msgid "Tagged with {0}"
+msgstr "Taggade med {0}"
+
+msgid "Apps"
+msgstr "Appar"
+
+msgid "Source"
+msgstr "Källa"
+
+msgid "Where does this information come from?"
+msgstr "Var kommer den här informationen ifrån?"
+
+msgid "What can I do if this looks weird?"
+msgstr "Vad kan jag göra om informationen inte stämmer?"
+
+msgid "What can I do if this is not correct?"
+msgstr "Vad kan jag göra om detta inte stämmer?"
+
+msgid "No thanks, I'd prefer to not get any e-mails from Tink."
+msgstr "Nej tack, jag vill inte ha några mejl från Tink."
+
+msgid "Monthly e-mail summarizing the last month's activity on my account."
+msgstr "Månadsmejl med en sammanställning av min ekonomi."
+
+msgid "When there are issues with my bank or credit card connection."
+msgstr "När min bank- eller kreditkortskoppling inte fungerar."
+
+msgid "When Tink has new and exciting product updates."
+msgstr "När Tink har nya och spännande produktuppdateringar."
+
+msgid "Follow the money"
+msgstr "Följ pengarna"
+
+msgid "Manage your Tink subscriptions"
+msgstr "Välj vilka mejl du vill ha från Tink"
+
+msgid "Save"
+msgstr "Spara"
+
+msgid "Settings saved."
+msgstr "Inställningar sparade."
+
+msgid "We are sad to see you go but maybe you are not the email type of person? Follow us on <a href=\"https://twitter.com/tink\" target=\"_blank\">Twitter</a> and <a href=\"https://www.facebook.com/tink.se\" target=\"_blank\">Facebook</a> instead."
+msgstr "Tråkigt att du lämnar oss men du kanske inte är mejltypen? Följ oss på <a href=\"https://twitter.com/tink\" target=\"_blank\">Twitter</a> och <a href=\"https://www.facebook.com/tink.se\" target=\"_blank\">Facebook</a> istället."
+
+msgid "Source account doesn't exist."
+msgstr "Från-konto existerar inte."
+
+msgid "Destination account doesn't exist."
+msgstr "Till-konto existerar inte."
+
+msgid "Destination account is not valid from source account."
+msgstr "Du kan inte skicka pengar mellan de här kontona."
+
+#, java-format
+msgid "Unfortunately the maximum tansfer amount is {0}."
+msgstr "Tyvärr är maximalt belopp för överföringar {0}."
+
+#, java-format
+msgid "Unfortunately the maximum payment amount is {0}."
+msgstr "Tyvärr är maximalt belopp för betalningar {0}."
+
+msgid "You just made a transfer just like this one. Make sure it's not a duplicate."
+msgstr "Du gjorde precis en exakt likadan överföring. Om du vill göra samma igen, vänta en stund och testa igen."
+
+msgid "Transfers has temporarily been disabled. Please try again later."
+msgstr "Överföringar är för tillfället avstängt. Testa gärna om en stund igen."
+
+msgid "Transfer cannot be null"
+msgstr "Transfer kan inte vara null"
+
+msgid "Amount cannot be null"
+msgstr "Belopp saknas"
+
+msgid "Destination account is invalid"
+msgstr "Till-konto är inte korrekt"
+
+msgid "Source account is invalid"
+msgstr "Från-konto är inte korrekt"
+
+msgid "You are not allowed to modify destination account."
+msgstr "Till-konto kan inte ändras."
+
+msgid "Due date not set"
+msgstr "Betaldatum inte angivet"
+
+msgid "Due date is set before today"
+msgstr "Betaldatum är angivet till ett datum före idag"
+
+msgid "Due date must be set to a business day"
+msgstr "Betaldatum är inte angivet till en bankdag"
+
+msgid "You need to specify a message/ocr when making a payment."
+msgstr "Du måste ange ett meddelande/ocr när du gör en betalning."
+
+msgid "Transfers"
+msgstr "Överföringar"
+
+msgid "Home"
+msgstr "Boende & Hushåll"
+
+msgid "Rent"
+msgstr "Hyra"
+
+msgid "Mortgage"
+msgstr "Ränta & Amortering"
+
+msgid "Communications"
+msgstr "Media, Tele & IT"
+
+msgid "Utilities"
+msgstr "Drift"
+
+msgid "Insurance & Fees"
+msgstr "Försäkring & Avgifter"
+
+msgid "Services"
+msgstr "Tjänster"
+
+msgid "Taxes"
+msgstr "Skatt"
+
+msgid "Home Other"
+msgstr "Boende & Hushåll övrigt"
+
+msgid "House & Garden"
+msgstr "Hem & Trädgård"
+
+msgid "Repairs"
+msgstr "Renovering & Bygg"
+
+msgid "Fitment"
+msgstr "Inredning & Möbler"
+
+msgid "Garden"
+msgstr "Trädgård & Blommor"
+
+msgid "House & Garden Other"
+msgstr "Hem & Trädgård övrigt"
+
+msgid "Food & Drinks"
+msgstr "Mat & Dryck"
+
+msgid "Coffee & Lunch"
+msgstr "Fika & Lunch"
+
+msgid "Alcohol & Tobacco"
+msgstr "Alkohol & Tobak"
+
+msgid "Food & Drinks Other"
+msgstr "Mat & Dryck övrigt"
+
+msgid "Transport"
+msgstr "Transport"
+
+msgid "Car"
+msgstr "Bil & Bränsle"
+
+msgid "Public Transport"
+msgstr "Tåg & Buss"
+
+msgid "Airfare"
+msgstr "Flyg"
+
+msgid "Taxi"
+msgstr "Taxi"
+
+msgid "Transport Other"
+msgstr "Transport övrigt"
+
+msgid "Shopping"
+msgstr "Shopping"
+
+msgid "Clothes & Accessories"
+msgstr "Kläder & Accessoarer"
+
+msgid "Electronics"
+msgstr "Hemelektronik"
+
+msgid "Books & Newspapers"
+msgstr "Böcker & Tidningar"
+
+msgid "Gifts"
+msgstr "Presenter"
+
+msgid "Shopping Other"
+msgstr "Shopping övrigt"
+
+msgid "Leisure"
+msgstr "Fritid"
+
+msgid "Outings"
+msgstr "Utflykter"
+
+msgid "Hobby & Sports"
+msgstr "Hobby & Sport"
+
+msgid "Accommodation"
+msgstr "Hotell & Övernattning"
+
+msgid "Lotteries"
+msgstr "Lotteri"
+
+msgid "Leisure Other"
+msgstr "Fritid övrigt"
+
+msgid "Health & Beauty"
+msgstr "Hälsa & Skönhet"
+
+msgid "Healthcare & Pharmacy"
+msgstr "Sjukvård & Apotek"
+
+msgid "Daily Care"
+msgstr "Daglig kroppsvård"
+
+msgid "Eyecare"
+msgstr "Optik"
+
+msgid "Beauty"
+msgstr "Skönhet"
+
+msgid "Health & Beauty Other"
+msgstr "Hälsa & Skönhet övrigt"
+
+msgid "Other"
+msgstr "Övrigt"
+
+msgid "Outlays"
+msgstr "Utlägg"
+
+msgid "Kids"
+msgstr "Barn"
+
+msgid "Pets"
+msgstr "Husdjur"
+
+msgid "Charity"
+msgstr "Välgörenhet"
+
+msgid "Education"
+msgstr "Utbildning"
+
+msgid "Uncategorized"
+msgstr "Okategoriserat"
+
+msgid "Salary"
+msgstr "Lön"
+
+msgid "Pension"
+msgstr "Pension"
+
+msgid "Reimbursements"
+msgstr "Återbetalningar"
+
+msgid "Benefits"
+msgstr "Stöd & Bidrag"
+
+msgid "Financial"
+msgstr "Sparränta & Utdelning"
+
+msgid "Other Income"
+msgstr "Övriga Inkomster"
+
+msgid "Savings"
+msgstr "Sparande"
+
+msgid "Exclude"
+msgstr "Exkludera"
+
+msgid "Coffee"
+msgstr "Fika & Snacks"
+
+msgid "Hobby & Sports Equipment"
+msgstr "Sport- & Fritidsartiklar"
+
+msgid "Books & Games"
+msgstr "Böcker & Spel"
+
+msgid "Culture & Entertainment"
+msgstr "Kultur & Nöje"
+
+msgid "Hobby"
+msgstr "Hobby"
+
+msgid "Sports & Fitness"
+msgstr "Sport & Träning"
+
+msgid "Vacation"
+msgstr "Semester"
+
+msgid "Healthcare"
+msgstr "Vård & Omsorg"
+
+msgid "Pharmacy"
+msgstr "Apotek"
+
+#, java-format
+msgid "{0} new event from {1}"
+msgid_plural "{0} new events from i.a. {1}"
+msgstr[0] "{0} ny händelse från {1}"
+msgstr[1] "{0} nya händelser från bl.a. {1}"
+
+msgid "You have a new event that needs your attention."
+msgid_plural "You have new events that need your attention."
+msgstr[0] "Du har en ny händelse som behöver kollas upp."
+msgstr[1] "Du har nya händelser som behöver kollas upp."
+
+msgid "Updating..."
+msgstr "Uppdaterar..."
+
+msgid "Authentication error. Please check your credentials."
+msgstr "Inloggningsfel. Vänligen kontrollera ditt användarnamn och lösenord."
+
+msgid "Temporary error. Please try again later."
+msgstr "Tillfälligt fel. Vänligen försök igen senare."
+
+msgid "The transfer has been sent to your bank."
+msgstr "Överföringen har skickats till din bank."
+
+msgid "The payment has been sent to your bank"
+msgstr "Betalningen har skickats till din bank"
+
+#, java-format
+msgid "paid {0}."
+msgstr "betalas {0}"
+
+msgid "You need to update your credentials."
+msgstr "Du behöver uppdatera dina användaruppgifter."
+
+msgid "You haven't refreshed your transactions in a while."
+msgstr "Du har inte uppdaterat dina transaktioner på ett tag."
+
+msgid "Payday!"
+msgstr "Lönedag!"
+
+msgid "Have you gotten your salary today?"
+msgstr "Har du fått lön idag?"
+
+msgid "hello@tinkapp.com"
+msgstr "hello@tink.se"
+
+msgid "(missing description)"
+msgstr "(beskrivning saknas)"
+
+#, java-format
+msgid "Analyzed {0} of {1} transactions..."
+msgstr "Analyserat {0} av {1} transaktioner..."
+
+msgid "One time code must be provided."
+msgstr "Engångskoden måste anges."
+
+msgid "The password must be provided."
+msgstr "Lösenord måste anges."
+
+msgid "Invalid password."
+msgstr "Ogiltigt lösenord."
+
+msgid "Invalid password, please contact Ålandsbanken at: 0771-415 415."
+msgstr "Ogiltigt lösenord, vänligen kontakta Ålandsbanken på: 0771-415 415."
+
+msgid "Your password is blocked, please contact Ålandsbanken at: 0771-415 415."
+msgstr "Lösenordet är spärrat, vänligen kontakta Ålandsbanken på 0771-415 415."
+
+msgid "Authorization failed, please contact Ålandsbanken at: 0771-415 415."
+msgstr "Inloggningen misslyckades, vänligen kontakta Ålandsbanken på: 0771-415 415."
+
+msgid "You have unconfirmed agreements, please login to Ålandsbankens online bank using a browser."
+msgstr "Du har avtal att godkänna, vänligen logga in på Ålandsbankens internetbank via en webbläsare för att godkänna avtalen."
+
+msgid "Wrong user id or password."
+msgstr "Ogiltigt användar-ID eller lösenord."
+
+msgid "Invalid user id."
+msgstr "Ogiltigt användar-ID."
+
+msgid "All disposable codes have been used, please contact Ålandsbanken at: 0771-415 415."
+msgstr "Du har använt alla engångskoder, vänligen kontakta Ålandsbanken på: 0771-415 415"
+
+msgid "The one time code was not complete, please try again."
+msgstr "Engångskoden är inte fullständig, vänligen försök igen."
+
+msgid "Invalid one time code, please try again."
+msgstr "Ogiltig engångskod, vänligen försök igen."
+
+msgid "Bank id authentication failed."
+msgstr "Inloggningen med mobilt BankID misslyckades, vänligen försök igen."
+
+msgid "Bank id authentication canceled."
+msgstr "Inloggning med mobilt BankID avslutades."
+
+msgid "Bank id can't be accessed at the moment, please try again later."
+msgstr "BankID är inte tillgängligt för tillfället, vänligen försök igen senare."
+
+msgid "Bank id are already in progress."
+msgstr "Inloggning med mobilt BankID är redan påbörjad."
+
+msgid "Encountered a problem with the BankID app, please make sure you have the latest version of BankID installed."
+msgstr "Problem att öppna BankID appen, kontrollera att senaste versionen av BankID är installerad."
+
+msgid "Encountered a problem while opening the BankID app."
+msgstr "Problem med BankID appen."
+
+msgid "The time limit for authenticating with BankID expired."
+msgstr "Inloggningen med mobilt BankID tog för lång tid, vänligen försök igen."
+
+msgid "Encountered a technical error, please try again later"
+msgstr "Ett tekniskt fel har uppstått, vänligen försök igen senare."
+
+msgid "Not able to update this e-invoice"
+msgstr "Kan inte ändra den här e-fakturan"
+
+msgid "Source account not available"
+msgstr "Från-kontot är inte tillgängligt"
+
+msgid "Cannot find e-invoice in list from bank"
+msgstr "Kunde inte hitta e-faktura hos banken"
+
+msgid "E-invoice cannot be signed on bank"
+msgstr "Kunde inte signera e-fakturan hos banken"
+
+msgid "Something went wrong when signing e-invoice"
+msgstr "Något gick fel vid signering av e-faktura"
+
+msgid "New e-invoice to approve"
+msgstr "Ny e-faktura att godkänna"
+
+msgid "Found more than one eInvoices that exactly matches the transfer"
+msgstr "Fler än en e-faktura hittades som stämmer överens med överföringen"
+
+msgid "The message given is not valid"
+msgstr "Meddelandet är inte giltigt"
+
+msgid "It's not possible to modify the amount of this transfer"
+msgstr "Det är inte möjligt att ändra beloppet på denna överföring"
+
+msgid "It's not possible to modify OCR/message of this transfer"
+msgstr "Det är inte möjligt att ändra OCR/meddelande på denna överföring"
+
+msgid "It's not possible to modify this transfer"
+msgstr "Det är inte möjligt att ändra denna överföring"
+
+msgid "It's not possible to modify the source or destination account of this transfer"
+msgstr "Det är inte möjligt att ändra från- eller tillkonto på denna överföring"
+
+#, java-format
+msgid "The message length exceeds maximum of {0} letters."
+msgstr "Meddelandets längd är längre än det maximala, {0} tecken."
+
+msgid "Same as previous month"
+msgstr "Samma som förra månaden"
+
+#, java-format
+msgid "{0} less than previous month"
+msgstr "{0} mindre än förra månaden"
+
+#, java-format
+msgid "{0} more than previous month"
+msgstr "{0} mer än förra månaden"
+
+#, java-format
+msgid "{0} expense"
+msgstr "{0} utgift"
+
+#, java-format
+msgid "{0} income"
+msgstr "{0} inkomst"
+
+msgid "It's not possible to modify the destination of this transfer"
+msgstr "Det är inte möjligt att ändra mottagare på denna överföring"
+
+msgid "It's not possible to modify the amount of this e-invoice"
+msgstr "Det är inte möjligt att ändra beloppet på denna e-faktura"
+
+msgid "It's not possible to modify the destination account of this e-invoice"
+msgstr "Det är inte möjligt att ändra mottagare på denna e-faktura"
+
+msgid "It's not possible to modify the source message of this e-invoice"
+msgstr "Det är inte möjligt att ändra eget meddelande på denna e-faktura"
+
+msgid "It's not possible to modify the destination message of this e-invoice"
+msgstr "Det är inte möjligt att ändra OCR/meddelande på denna e-faktura"
+
+msgid "This week"
+msgstr "Denna vecka"
+
+msgid "E-invoice to approve"
+msgid_plural "E-invoices to approve"
+msgstr[0] "E-faktura att godkänna"
+msgstr[1] "E-fakturor att godkänna"
+
+msgid "Could not validate e-invoice"
+msgstr "Det gick inte att validera e-fakturan"
+
+msgid "Could not execute transfer"
+msgstr "Överföringen kunde inte genomföras"
+
+msgid "Could not delete transfer"
+msgstr "Det gick inte att ta bort överföringen"
+
+msgid "An error occurred when confirming the transfer"
+msgstr "Ett fel uppstod när överföringen skulle bekräftas"
+
+msgid "Could not create payment"
+msgstr "Det gick inte att skapa betalningen"
+
+msgid "Could not update payment"
+msgstr "Det gick inte att uppdatera betalningen"
+
+msgid "Transfer or payment was not signed with security token device"
+msgstr "Överföringen eller betalningen signerades inte med kodboxen"
+
+msgid "You have another BankID session in progress. Please try again."
+msgstr "Du har en pågående inloggning via BankID. Vänligen försök igen."
+
+msgid "You cancelled the BankID process. Please try again."
+msgstr "Du avbröt BankID. Vänligen försök igen."
+
+msgid "You have existing unsigned transfers, please sign these in your bank's app before executing a new transfer"
+msgstr "Du har osignerade överföringar sedan tidigare. Var god signera dessa i din bank-app innan du utför en ny överföring."
+
+msgid "An unexpected error occurred at your bank. Please try again later."
+msgstr "Ett oväntat fel uppstod hos din bank. Var god försök igen senare."
+
+msgid "Payment date has to be within one year from now"
+msgstr "Betalningsdatumet måste vara inom ett år från idag"
+
+msgid "The payment date is not a business day"
+msgstr "Betalningsdatumet är inte en bankdag"
+
+msgid "It's not possible to modify the payment date of this transfer"
+msgstr "Det är inte möjligt att ändra betalningsdatumet på denna överföring"
+
+msgid "It's not possible to modify the payment date of this e-invoice"
+msgstr "Det är inte möjligt att ändra betalningsdatumet på denna e-faktura"
+
+msgid "It's not possible to modify the source account of this e-invoice"
+msgstr "Det är inte möjligt att ändra från-konto på denna e-faktura"
+
+msgid "It's not possible to modify this e-invoice"
+msgstr "Det är inte möjligt att ändra denna e-faktura"
+
+msgid "The BankID authentication failed"
+msgstr "Autentiseringen med BankID misslyckades"
+
+msgid "You can only make transfers to Swedish accounts"
+msgstr "Du kan endast göra överföringar till svenska konton"
+
+msgid "You can only make payments to Swedish destinations"
+msgstr "Du kan endast göra betalningar till svenska mottagare"
+
+msgid "You do not have any accounts at Swedbank. Use Sparbankerna (Mobile BankID) instead."
+msgstr "Du har inga konton hos Swedbank. Använd Sparbankerna (Mobilt BankID) istället."
+
+msgid "You do not have any accounts at Sparbankerna. Use Swedbank (Mobile BankID) instead."
+msgstr "Du har inga konton hos Sparbankerna. Använd Swedbank (Mobilt BankID) istället."
+
+msgid "You do not have a valid profile"
+msgstr "Du har ingen giltig profil"
+
+msgid "The e-invoice could not be found at your bank"
+msgstr "E-fakturan hittades inte hos din bank"
+
+msgid "You must specify a recipient name"
+msgstr "Du måste ange ett namn för mottagaren"
+
+msgid "The payment could not be found at your bank"
+msgstr "Betalningen hittades inte hos din bank"
+
+msgid "Could not find a bank for the given destination account. Check the account number and try again."
+msgstr "Ingen bank kunde hittas för det angivna mottagarkontot. Kontrollera kontonumret och försök igen."
+
+msgid "The login must be signed with a code box"
+msgstr "Anslutningen måste bekräftas med säkerhetsdosa"
+
+msgid "Could not sign the e-invoice"
+msgstr "Signeringen av e-fakturan misslyckades"
+
+msgid "Move your mortgage"
+msgstr "Flytta ditt bolån"
+
+msgid "The application is not yet started"
+msgstr "Ansökan är inte påbörjad"
+
+msgid "The application is started but not complete"
+msgstr "Ansökan är påbörjad men inte komplett"
+
+msgid "The application is complete"
+msgstr "Ansökan är komplett"
+
+msgid "The form is not yet started"
+msgstr "Formuläret är inte påbörjat"
+
+msgid "The form is started but not complete"
+msgstr "Formuläret är påbörjat men inte komplett"
+
+msgid "The form is validated and complete"
+msgstr "Formuläret är komplett och giltigt"
+
+msgid "Postal code"
+msgstr "Postnummer"
+
+msgid "The postal code"
+msgstr "Postnumret"
+
+msgid "Apartment"
+msgstr "Bostadsrätt"
+
+msgid "Real Estate"
+msgstr "Fastighet"
+
+#, java-format
+msgid "Currency {0} not available."
+msgstr "Tink stödjer tyvärr inte valutan {0} för tillfället"
+
+msgid "Please choose a source account."
+msgstr "Inget avsändarkonto angivet"
+
+msgid "Please choose a destination account."
+msgstr "Inget mottagarkonto angivet"
+
+msgid "Please choose a payment date."
+msgstr "Betaldatum måste anges"
+
+msgid "Amount cannot be empty."
+msgstr "Belopp kan inte vara tomt."
+
+msgid "Payment date have to be a business day."
+msgstr "Betaldatumet måste vara en arbetsdag"
+
+msgid "Amount has to be a positive value."
+msgstr "Beloppet måste vara positivt"
+
+msgid "Access denied."
+msgstr "Åtkomst nekad"
+
+msgid "The possibility to make transfers and pay invoices has temporarily been disabled. Please try again later."
+msgstr "Betaltjänsten är temporärt inaktiverad, vänligen försök igen senare"
+
+msgid "Couldn't execute transfer."
+msgstr "Överföringen misslyckades"
+
+msgid "Couldn't update transfer."
+msgstr "Betalningen kunde inte uppdateras"
+
+msgid "Please choose an amount"
+msgstr "Vänligen ange belopp"
+
+msgid "Please choose a currency"
+msgstr "Vänligen ange valuta"
+
+msgid "Invalid source account."
+msgstr "Felaktigt avsändarkonto"
+
+msgid "Please verify your bank connection before making a transfer."
+msgstr "Vänligen verifiera anslutningen till din bank innan du utför en betalning"
+
+msgid "You need to confirm your BankID to Skandiabanken. You do it by logging in with the Skandiabanken app once and confirm that your BankID is yours. You can then continue using Tink with BankID."
+msgstr "Du behöver bekräfta för Skandiabanken att ditt BankID är säkert. Du gör det genom att logga in med Skandiabankens app en gång och bekräfta att ditt BankID är just ditt. Du kan sen fortsätta använda Tink som vanligt."
+
+#, java-format
+msgid "The maximum transfer amount is {0}."
+msgstr "Maxgränsen för överföringar är {0}."
+
+#, java-format
+msgid "The maximum payment amount is {0}."
+msgstr "Maxgränsen för betalningar är {0}."
+
+msgid "There is a limit on how much you can transfer every 5 minutes. Please wait a while and try again."
+msgstr "Du har passerat gränsen för hur mycket du kan överföra per 5 minuter. Vänta en stund så kan du överföra igen."
+
+msgid "You need to activate your BankID in the Handelsbanken app."
+msgstr "Du behöver aktivera ditt BankID i Handelsbankens app."
+
+msgid "Open savings account"
+msgstr "Öppna sparkonto"
+
+msgid "The application has been signed"
+msgstr "Ansökan har signerats"
+
+msgid "Alimony amount per month"
+msgstr "Barnunderhåll per månad"
+
+msgid "Did you bail someone loan?"
+msgstr "Har du gått i borgen för någons lån?"
+
+msgid "Bail Amount"
+msgstr "Borgensbelopp"
+
+msgid "Number of children receiving alimony"
+msgstr "Antal barn som erhåller underhåll"
+
+msgid "Does your co-applicant live at the same address as you"
+msgstr "Bor din medsökande på samma adress som du?"
+
+msgid "Alimony amount per month for your co-applicant"
+msgstr "Barnunderhåll per månad som din medsökande betalar"
+
+msgid "Does you co-applicant have a csn loan?"
+msgstr "Har din medsökande någon studieskuld?"
+
+msgid "Amount for CSN loan"
+msgstr "Belopp för studieskuld"
+
+msgid "Does your co-applicant have children which whom is paying alimony for?"
+msgstr "Har din medsökande några barn som han eller hon betalar underhåll för?"
+
+msgid "Town"
+msgstr "Ort"
+
+msgid "Does your co-applicant live on the same address as you?"
+msgstr "Bor din medsökande på samma adress som du?"
+
+msgid "Account for money withdrawal"
+msgstr "Uttagskonto"
+
+msgid "How much are you planning to deposit when opening the account?"
+msgstr "Hur mycket planerar du att sätta in på kontot i samband med att du öppnar det?"
+
+msgid "How often will you withdrawal money from the account?"
+msgstr "Hur ofta kommer pengar tas ut från kontot?"
+
+msgid "I confirm that I have read and accept the Collector Save Agreement."
+msgstr "Jag bekräftar att jag har läst och godkänner Collector Save-avtalet."
+
+msgid "How often will you deposit money to the account?"
+msgstr "Hur ofta kommer pengar sättas in på kontot?"
+
+msgid "What is the purpose of your savings?"
+msgstr "Vad är syftet med ditt sparande?"
+
+msgid "From where does the money originate?"
+msgstr "Var kommer pengarna ifrån?"
+
+msgid "Where does the money that will be deposited into the account come from?"
+msgstr "Varifrån kommer pengarna som ska sättas in på kontot?"
+
+msgid "Current loans"
+msgstr "Nuvarande lån"
+
+msgid "Mark all the loans that belongs to the property at "
+msgstr "Markera alla lån som tillhör fastigheten"
+
+msgid "Street address"
+msgstr "Gatuadress"
+
+msgid "Deferred amount"
+msgstr "Uppskovsbelopp"
+
+msgid "Do you have deferred capital gains tax?"
+msgstr "Har du uppskjuten reavinstskatt?"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Employee since"
+msgstr "Anställd sedan"
+
+msgid "Employer or Company name"
+msgstr "Arbetsgivare eller företagsnamn"
+
+msgid "Employment type"
+msgstr "Anställningsform"
+
+msgid "What is the market value for your property?"
+msgstr "Vad är marknadsvärdet av din fastighet?"
+
+msgid "Do you get alimony?"
+msgstr "Tar du emot något barnunderhåll?"
+
+msgid "Do you have a co-applicant for your mortgage?"
+msgstr "Har du någon medsökande till ditt bolån?"
+
+msgid "Do you have a student loan from CSN?"
+msgstr "Har du ett studielån från CSN?"
+
+msgid "Are there anymore adults (over 18 years) in the household?"
+msgstr "Finns det några andra vuxna (över 18 år) i hushållet?"
+
+msgid "Number of adults in the household"
+msgstr "Antal vuxna i hushållet"
+
+msgid "Is there someone in your household that bailed a loan for someone else?"
+msgstr "Finns det någon i hushållet som har gått i borgen för någon annan?"
+
+msgid "Total bail amount"
+msgstr "Totalt borgensbelopp"
+
+msgid "Are there any children in the household?"
+msgstr "Finns det några barn i hushållet?"
+
+msgid "Number of children"
+msgstr "Antal barn"
+
+msgid "Number of children you get alimony for"
+msgstr "Antal barn du/ni erhåller underhåll för"
+
+msgid "Did someone in your household requested deferral of capital gains tax?"
+msgstr "Har någon i hushållet begärt uppskov med reavinstskatt?"
+
+msgid "Total amount of deferral capital gain tax"
+msgstr "Totalt uppskovsbelopp"
+
+msgid "Is there someone in your household that has other loans?"
+msgstr "Har någon annan i hushållet andra lån?"
+
+msgid "Total amount of all loans"
+msgstr "Totalt belopp för alla lån"
+
+msgid "Housing community name"
+msgstr "Bostadsrättsföreningsnamn"
+
+msgid "Do you have a mortgage on the property at "
+msgstr "Har du ett bolån för fastigheten på"
+
+msgid "Are you, a family member or a close associate in a political exposed position?"
+msgstr "Är du, en familjemedlem eller nära medarbetare i politiskt utsatt ställning?"
+
+msgid "Living area (m²)"
+msgstr "Boyta (m²)"
+
+msgid "Amount"
+msgstr "Belopp"
+
+msgid "Lender"
+msgstr "Långivare"
+
+msgid "Monthly fee (SEK)"
+msgstr "Månadsavgift (SEK)"
+
+msgid "Monthly income (SEK)"
+msgstr "Månadsinkomst (SEK)"
+
+msgid "Choose bank to switch your mortgage to"
+msgstr "Välj bank att byta ditt bolån till"
+
+msgid "Number of rooms"
+msgstr "Antal rum"
+
+msgid "+ Add loan"
+msgstr "+ Lägg till lån"
+
+msgid "Market value"
+msgstr "Marknadsvärde"
+
+msgid "Loan amount"
+msgstr "Lånebelopp"
+
+msgid "Monthly cost"
+msgstr "Månadskostnad"
+
+msgid "Assessed value"
+msgstr "Taxeringsvärde"
+
+msgid "Ground rent"
+msgstr "Tomträttsavgäld"
+
+msgid "Are you paying alimony?"
+msgstr "Betalar du underhåll för barn?"
+
+msgid "Social security number"
+msgstr "Personnummer"
+
+msgid "Phone number"
+msgstr "Telefonnummer"
+
+msgid "Property type"
+msgstr "Fastighetstyp"
+
+msgid "For how much did you buy the apartment for?"
+msgstr "Hur mycket köpte du lägenheten för?"
+
+msgid "Relationship status"
+msgstr "Civilstatus"
+
+msgid "Product"
+msgstr "Produkt"
+
+msgid "Add citizenship in other county"
+msgstr "Lägg till medborgarskap i annat land"
+
+msgid "Citizenship in other country"
+msgstr "Medborgarskap i annat land"
+
+msgid "Who is depositing money to the account?"
+msgstr "Vem sätter in pengar på kontot?"
+
+msgid "Savings amount per month"
+msgstr "Sparbelopp per månad"
+
+msgid "I confirm that I have read and accept the Terms and Conditions, that I have read the information sheet about Deposit insurance and Information concerning the processing of personal data."
+msgstr "Jag bekräftar att jag tagit del av och godkänner Allmänna Villkor, och därmed tagit det av informationen om insättningsgarantin och informationen om behandling av personuppgifter."
+
+msgid "Monthly income"
+msgstr "Månadsinkomst"
+
+msgid "Where does the money come from that will be deposited into this account?"
+msgstr "Varifrån kommer pengarna som ska sättas in på kontot?"
+
+msgid "Taxpayer identification number"
+msgstr "Skatteregistreringsnummer (TIN)"
+
+msgid "Street adress"
+msgstr "Gatuadress"
+
+msgid "Are you a Swedish citizen?"
+msgstr "Är du svensk medborgare?"
+
+msgid "Add taxable country"
+msgstr "Lägg till land där du är skatteskyldig"
+
+msgid "Are you paying tax in any other country?"
+msgstr "Betalar du skatt i något annat land?"
+
+msgid "Are you paying tax in Sweden?"
+msgstr "Betalar du skatt i Sverige?"
+
+msgid "Taxable in USA"
+msgstr "Skatteskyldig i USA"
+
+msgid "If you for example help a family member with taking a loan."
+msgstr "Om du t.ex. hjälper en familjemedlem med att ta ett lån."
+
+msgid "Do not include loans for other properties."
+msgstr "Inkludera inte lån för övriga fastigheter"
+
+msgid "Try to make the best estimate of the market value as possible to get more precise interest rate proposals."
+msgstr "Försök att göra en så bra uppskattning av marknadsvärdet som möjligt, för att få ett mer precist ränteförslag."
+
+msgid "For example, if you and your partner took a loan together."
+msgstr "Till exempel, om du och din parter tog ett lån ihop."
+
+msgid "For example, adult children that still lives at home."
+msgstr "Till exempel, vuxna barn som fortfarande bor hemma."
+
+msgid "This question also applies to your co-applicant if you live together."
+msgstr "Frågan inkluderar även din medsökande om ni bor tillsammans."
+
+msgid "Square meters"
+msgstr "Kvadratmeter"
+
+msgid "In Swedish kronor"
+msgstr "I svenska kronor"
+
+msgid "From a foreign bank"
+msgstr "Från utländsk bank"
+
+msgid "Between 10000 and 20000"
+msgstr "Mellan 10000 och 20000"
+
+msgid "Between 10000 and 25000"
+msgstr "Mellan 10000 och 25000"
+
+msgid "Between 20000 and 30000"
+msgstr "Mellan 20000 och 30000"
+
+msgid "Between 20000 and 35000"
+msgstr "Mellan 20000 och 35000"
+
+msgid "Between 25000 and 50000"
+msgstr "Mellan 25000 och 50000"
+
+msgid "Between 30000 and 40000"
+msgstr "Mellan 30000 och 40000"
+
+msgid "Between 35000 and 50000"
+msgstr "Mellan 35000 och 50000"
+
+msgid "Between 50000 and 70000"
+msgstr "Mellan 50000 och 70000"
+
+msgid "Between 50000 and 150000"
+msgstr "Mellan 50000 och 150000"
+
+msgid "Between 150000 and 250000"
+msgstr "Mellan 150000 och 250000"
+
+msgid "Between 250000 and 350000"
+msgstr "Mellan 250000 och 350000"
+
+msgid "Cohabitant"
+msgstr "Sambo"
+
+msgid "Employed"
+msgstr "Anställd"
+
+msgid "False"
+msgstr "Falskt"
+
+msgid "Five to ten times a month"
+msgstr "Fem till tio gånger per månad"
+
+msgid "Gift or inheritance"
+msgstr "Gåva eller arv"
+
+msgid "House"
+msgstr "Villa"
+
+msgid "Less than 10000"
+msgstr "Mindre än 10000"
+
+msgid "Less than 20000"
+msgstr "Mindre än 20000"
+
+msgid "Less than 50000"
+msgstr "Mindre än 50000"
+
+msgid "Less than once a month"
+msgstr "Mindre än en gång per månad"
+
+msgid "Lottery or gambling"
+msgstr "Lotteri eller spel"
+
+msgid "Married"
+msgstr "Gift"
+
+msgid "More than 350000"
+msgstr "Mer än 350000"
+
+msgid "More than 40000"
+msgstr "Mer än 40000"
+
+msgid "More than 50000"
+msgstr "Mer än 50000"
+
+msgid "More than 70000"
+msgstr "Mer än 70000"
+
+msgid "More than five times a month"
+msgstr "Mer än fem gånger per månad"
+
+msgid "More than ten times a month"
+msgstr "Mer än tio gånger per månad"
+
+msgid "From my account in a swedish bank"
+msgstr "Från mitt konto i svensk bank"
+
+msgid "No other properties"
+msgstr "Inga övriga fastigheter"
+
+msgid "One to five times a month"
+msgstr "En till fem gånger per månad"
+
+msgid "Other savings (funds or stocks etc.)"
+msgstr "Annat sparande (ex. fonder eller aktier)"
+
+msgid "Other way"
+msgstr "Annat sätt"
+
+msgid "From someone else´s account in a swedish bank"
+msgstr "Från någon annans konto i svensk bank"
+
+msgid "Own business (e.g salary or dividend)"
+msgstr "Egen rörelse (ex. lön eller utdelning)"
+
+msgid "Part time employee"
+msgstr "Deltidsanställd"
+
+msgid "Me and someone else"
+msgstr "Jag och någon annan"
+
+msgid "Me or account holder"
+msgstr "Jag eller kontoinnehavare"
+
+msgid "Someone else"
+msgstr "Någon annan"
+
+msgid "Financial buffer"
+msgstr "Ekonomisk buffert"
+
+msgid "Future tax payments"
+msgstr "Framtida skattebetalningar"
+
+msgid "Investment of surplus liquidity"
+msgstr "Placering av överskottslikviditet"
+
+msgid "Long term investments"
+msgstr "Långsiktiga investeringar"
+
+msgid "Ongoing expenses"
+msgstr "Löpande utgifter"
+
+msgid "Operating costs of property"
+msgstr "Driftskostnader för fastigheten"
+
+msgid "Payments of loan"
+msgstr "Betalning av lån"
+
+msgid "Private consumption"
+msgstr "Privatkonsumtion"
+
+msgid "Saving for relative (e.g. children)"
+msgstr "Sparande till närstående (ex. barn)"
+
+msgid "Salary or pension"
+msgstr "Lön eller pension"
+
+msgid "Sale of assets (e.g. house, car, boat, company)"
+msgstr "Försäljning av tillgångar (ex. hus, bil eller företag)"
+
+msgid "Sale of capital goods"
+msgstr "Försäljning av kapitalvaror"
+
+msgid "Sales of company"
+msgstr "Försäljning av företag"
+
+msgid "Sales of property"
+msgstr "Försäljning av fastighet"
+
+msgid "Self employed"
+msgstr "Egenföretagare"
+
+msgid "Retired"
+msgstr "Pensionerad"
+
+msgid "Securities trading"
+msgstr "Värdepappershandel"
+
+msgid "Single"
+msgstr "Ensamstående"
+
+msgid "Six to ten times a month"
+msgstr "Sex till tio gånger per månad"
+
+msgid "Student"
+msgstr "Student"
+
+msgid "Surplus liquidity"
+msgstr "Överskottslikviditet"
+
+msgid "Switch of bank or savings form"
+msgstr "Byte av bank eller sparandeform"
+
+msgid "Tax refund"
+msgstr "Skatteåterbäring"
+
+msgid "Tenancy"
+msgstr "Hyresrätt"
+
+msgid "True"
+msgstr "Sant"
+
+msgid "Unemployed"
+msgstr "Arbetslös"
+
+msgid "Vacation house"
+msgstr "Fritidshus"
+
+msgid "Does your co-applicant live at the same address as you?"
+msgstr "Bor din medsökande på samma adress som du?"
+
+msgid "What is your co applicants employment?"
+msgstr "Vad är din medsökandes sysselsättning?"
+
+msgid "About you co-applicant"
+msgstr "Om din medsökande"
+
+msgid "-"
+msgstr "-"
+
+msgid "Nice work!"
+msgstr "Snyggt jobbat!"
+
+msgid "Do you have more loans?"
+msgstr "Har du fler lån?"
+
+msgid "Did you requested deferral of capital gains tax?"
+msgstr "Har du begärt uppskov av reavinstskatt?"
+
+msgid "What is your employment?"
+msgstr "Vad är din sysselsättning?"
+
+msgid "About you household"
+msgstr "Om ditt hushåll"
+
+msgid "Are you or a family member in a political exposed position, or are you a known associate of such a person (PEP)?"
+msgstr "Är du eller någon familjemedlem i en politiskt utsatt ställning (PEP), eller är du en känd medarbeta till en sådan?"
+
+msgid "Our suggestions"
+msgstr "Våra förslag"
+
+msgid "Tink thinks"
+msgstr "Tink tänker"
+
+msgid "Do you have a mortgage on the property at"
+msgstr "Har du ett bolån för fastigheten på"
+
+msgid "Property Details"
+msgstr "Fastighetsdetaljer"
+
+msgid "About your apartment"
+msgstr "Om din lägenhet"
+
+msgid "Some more questions"
+msgstr "Några fler frågor"
+
+msgid "Just some more questions..."
+msgstr "Bara några fler frågor..."
+
+msgid "Do you have citizenship in other country than Sweden?"
+msgstr "Är du medborgare i något annat land än Sverige?"
+
+msgid "Are you or someone in your family in a political exposed position?"
+msgstr "Är du, en familjemedlem eller nära medarbetare i politiskt utsatt ställning?"
+
+msgid "Are you taxable in other country than Sweden?"
+msgstr "Har du skatterättslig hemvist i något annat land än Sverige?"
+
+msgid "About selected account"
+msgstr "Om valt konto"
+
+msgid "Compare savings rates"
+msgstr "Jämför sparräntor"
+
+msgid "Do you have other properties?"
+msgstr "Har du andra bostäder?"
+
+msgid "Nice work"
+msgstr "Snyggt jobbat"
+
+msgid "Questions from the bank"
+msgstr "Frågor från banken"
+
+msgid "Are you taxable in other country?"
+msgstr "Har du skatterättslig hemvist i något ytterligare land?"
+
+msgid "Are you taxable in Sweden?"
+msgstr "Har du skatterättslig hemvist i Sverige?"
+
+msgid "Are you taxable in USA?"
+msgstr "Har du skatterättslig hemvist i USA?"
+
+msgid "Complete your profile"
+msgstr "Komplettera din profil"
+
+msgid "It may be helpful if you have the person nearby in case you do not have answers to all the questions"
+msgstr "Det kan vara bra om du har personen i närheten, i fall att du behöver hjälp med att besvara vissa frågor."
+
+msgid "You are now ready to submit your application to the bank. The move of your mortgage is not binding until you have written on the debt securities from the bank."
+msgstr "Du är nu redo att skicka din ansökan till banken. Flytten av ditt bolån är inte bindande förrän du har skrivit på skuldebrevet från banken."
+
+msgid "Remember that credit cards are seen as a loan, whether you use your credit or not."
+msgstr "Kom ihåg att kreditkort räknas som lån, oavsett om du använder krediten eller ej."
+
+msgid "If you for example sold an apartment and delayed paying of taxes."
+msgstr "Om du t.ex. har sålt en lägenhet och skjutit upp betalningen av skatten."
+
+msgid "If they for example helped a family member applying for a loan."
+msgstr "Om de t.ex. hjälpte en familjemedlem att ansöka för ett lån."
+
+msgid "For example, work as prime minister, commander in cheif or judges of the Supreme Court."
+msgstr "T.ex. jobbar som statsminister, överbefälhavare eller domare i Högsta domstolen."
+
+msgid "This is the best floating interest rates from our partners based on your data."
+msgstr "Detta är den bästa rörliga räntan från våra partners utifrån din profil."
+
+msgid "Calculating on your finances"
+msgstr "Räknar på din ekonomi"
+
+msgid "And some more details"
+msgstr "Och lite fler detaljer"
+
+msgid "For the Bank to be able to do a valuation they need to know more about your apartment."
+msgstr "För att banken ska kunna göra en värdering, behöver de veta mer om din lägenhet."
+
+msgid "We need some information about your new savings account."
+msgstr "Vi behöver lite mer information om ditt nya sparkonto."
+
+msgid "The bank need to ask some questions to be sure that you are not doing something fishy."
+msgstr "Banken behöver ställa några frågor för att säkerställa att du inte håller på med något skumt."
+
+msgid "Details about your new savings account."
+msgstr "Detaljer om ditt nya sparkonto."
+
+msgid "Here are some options for your savings account!"
+msgstr "Här är några alternativ för ditt sparkonto!"
+
+msgid "Sign with BankID, you can start using your account right away! You also get a confirmation sent home."
+msgstr "Signera med BankID så kan du börja använda ditt konto direkt! Du får också en bekräftelse hemskickad."
+
+msgid "The bank needs more information to give you a final interest rate proposals and ask a few questions to follow the law."
+msgstr "Banken behöver mer information för att ge dig ett slutgiltigt ränteförslag, samt ställa ett par frågor som måste ställas enligt lag."
+
+msgid "You can submit the application to move your mortgage directly in Tink. The application is not binding until you have signed the banks contract."
+msgstr "Du kan skicka in din ansökan att flytta ditt bolån direkt i Tink. Ansökan är inte bindande förrän du har signerar bankens kontrakt."
+
+msgid "Your tax residence is the country where you pay your taxes, usually the country where you live or work. Remember that if you are a US citizen or have a Green card, your tax residence is the United States."
+msgstr "Du är skatteskyldig i det land där du betalar skatt, normalt sett landet där du bor och jobbar. Kom ihåg att om du är amerikansk medborgare eller har arbetstillstånd (green card), är du skatteskydlig i USA."
+
+msgid "For example, if you are an american citizen, have a green card or other relations to USA."
+msgstr "Till exempel, om du är amerikansk medborgare, har ett arbetstillstånd (green card) eller andra förbindelser till USA."
+
+msgid "We need some more information about you for your application. This will take about 10-15 minutes."
+msgstr "Vi behöver mer information om dig till sin ansökan. Detta tar 10-15 minuter."
+
+msgid "Household & Services"
+msgstr "Hushåll & tjänster"
+
+msgid "Provisions"
+msgstr "Livsmedel"
+
+msgid "Provisions Other"
+msgstr "Livsmedel övrigt"
+
+msgid "Food"
+msgstr "Äta ute"
+
+msgid "Collector Save Agreement"
+msgstr "Collector Save-avtalet"
+
+msgid "How will the money generally be deposited?"
+msgstr "Hur kommer pengarna huvudsakligen sättas in?"
+
+msgid "Do you have a citizenship in other country?"
+msgstr "Har du ett medborgarskap i något annat land?"
+
+msgid "How much do you intend to save each month?"
+msgstr "Hur mycket avser du spara i månaden?"
+
+msgid "Are you taxable in any other country than Sweden and USA?"
+msgstr "Har du skatterättslig hemvist i något annat land än Sverige och USA?"
+
+msgid "Me"
+msgstr "Jag"
+
+msgid "Long term investment"
+msgstr "Långsiktig placering"
+
+msgid "Household & Services Other"
+msgstr "Hushåll & tjänster övrigt"
+
+msgid "Food Other"
+msgstr "Äta ute övrigt"
+
+msgid "How much do you amortize per month?"
+msgstr "Hur mycket amorterar du/ni i månaden?"
+
+msgid "Apartment number"
+msgstr "Lägenhetsnummer"
+
+msgid "Monthly cost for student loan"
+msgstr "Månadskostnad för studielån"
+
+msgid "First name"
+msgstr "Förnamn"
+
+msgid "Do you or someone in your household have children (under 18 years old)?"
+msgstr "Har du eller någon i ditt hushåll barn (under 18 år)?"
+
+msgid "Does someone in your household have a student CSN loan?"
+msgstr "Har någon i ditt hushåll ett studielån?"
+
+msgid "Number of children you pay alimony for"
+msgstr "Antal barn du/ni betalar underhåll för"
+
+msgid "Number of children you get child benefits from"
+msgstr "Antal barn du/ni får barnbidrag för"
+
+msgid "Last name"
+msgstr "Efternamn"
+
+msgid "House label"
+msgstr "Fastighetsbeteckning"
+
+msgid "Municipality"
+msgstr "Kommun"
+
+msgid "Operating cost"
+msgstr "Driftskostnad"
+
+msgid "Ownership share"
+msgstr "Ägarandel"
+
+msgid "Do you have a citizenship in another country?"
+msgstr "Har du ett medborgarskap i ett annat land?"
+
+msgid "I confirm that I have read and accept SBAB's Terms and Conditions and thus received the information about the deposit insurance and information concerning the processing of personal data."
+msgstr "Jag bekräftar att jag tagit del av och godkänner SBAB:s Allmänna Villkor samt att jag tagit del av informationsbladet om insättningsgaranti och information om behandling av personuppgifter."
+
+msgid "Are you taxable in any other country?"
+msgstr "Har du skatterättslig hemvist i något ytterligare land?"
+
+msgid "Are you taxable in yet another country?"
+msgstr "Har du ytterligare skatterättslig hemvist i något annat land?"
+
+msgid "For example, work as prime minister, commander in chief or judge of the Supreme Court."
+msgstr "T.ex. jobbar som statsminister, överbefälhavare eller domare i Högsta domstolen."
+
+msgid "Besides Sweden, USA and the previous choice."
+msgstr "Utöver Sverige, USA och föregående val."
+
+msgid "Besides Sweden and USA."
+msgstr "Utöver Sverige och USA."
+
+msgid "Besides Sweden and the previous choice."
+msgstr "Utöver Sverige och föregående val."
+
+msgid "Besides Sweden."
+msgstr "Utöver Sverige."
+
+msgid "You have to supply information for this field."
+msgstr "Du måste fylla i information för det här fältet."
+
+msgid "You have to select at least one option."
+msgstr "Du måste välja minst ett alternativ."
+
+msgid "You have to select one option."
+msgstr "Du måste välja ett alternativ."
+
+msgid "Invalid option selected."
+msgstr "Felaktigt alternativ valt."
+
+msgid "Invalid input format."
+msgstr "Felaktigt format."
+
+msgid "Are you taxable in another country?"
+msgstr "Har du skatterättslig hemvist i något ytterligare land?"
+
+msgid "For people in a politically exposed position (PEP), extra information is required which Tink currently doesn't support."
+msgstr "För personer i politiskt utsatt ställning (PEP), krävs extra uppgifter som Tink inte har stöd för idag."
+
+#, java-format
+msgid "{0} chosen"
+msgstr "{0} valt"
+
+msgid "Tink profile 100% done"
+msgstr "Tink-profil 100 % klar"
+
+msgid "Mail from the bank to sign and return"
+msgstr "Brev från banken att skriva på och skicka tillbaka"
+
+msgid "Mortgage moved"
+msgstr "Bolån flyttat"
+
+msgid "Complete your Tink profile"
+msgstr "Komplettera din Tink-profil"
+
+msgid "If you already have a Collector account, the existing withdrawal account will override your selection below."
+msgstr "Om du redan har ett Collector-konto, kommer det existerande uttagskontot att gälla istället för ditt val nedan."
+
+msgid "SBAB's Terms and Conditions"
+msgstr "SBAB:s allmänna internetvillkor"
+
+msgid "For example, if you are an American citizen, have a green card or other relations to USA."
+msgstr "Till exempel, om du är amerikansk medborgare, har ett arbetstillstånd (green card) eller andra förbindelser till USA."
+
+msgid "What is the main purpose of your savings?"
+msgstr "Vad är det huvudsakliga syftet med ditt sparande?"
+
+msgid "Where does the money that will be deposited into the account mainly come from?"
+msgstr "Varifrån kommer huvudsakligen pengarna som ska sättas in på kontot?"
+
+msgid "Please contact Collector Bank directly to open an account. Visit them at collector.se or call 010-161 00 00."
+msgstr "Vänligen kontakta Collector Bank direkt istället för att öppna ett konto. Besök dem på collector.se eller ring 010-161 00 00."
+
+msgid "Collector Bank doesn't allow people that are taxable in the USA to open savings accounts (due to reporting requirements)."
+msgstr "Collector Bank tillåter inte personer som är skatteskyldiga i USA att öppna sparkonto (på grund av rapporteringskrav)."
+
+msgid "Have you been employed there for more than 12 months?"
+msgstr "Har du varit anställd där i mer än 12 månader?"
+
+msgid "What is your occupation?"
+msgstr "Vad är din sysselsättning?"
+
+msgid "Have you taken the loan together with someone else?"
+msgstr "Har du tagit lånet tillsammans med någon annan?"
+
+msgid "Living area"
+msgstr "Boyta"
+
+msgid "Loan debt / used credit"
+msgstr "Låneskuld / nyttjad kredit"
+
+msgid "Bank / credit institution"
+msgstr "Bank / kreditinstitut"
+
+msgid "Monthly fee"
+msgstr "Månadsavgift"
+
+msgid "How much did you buy the apartment for?"
+msgstr "Hur mycket köpte du lägenheten för?"
+
+msgid "Residence property type"
+msgstr "Boendeform"
+
+msgid "Do you have citizenship in yet another country?"
+msgstr "Har du medborgarskap i ytterligare något annat land?"
+
+msgid "For example, if you and your partner took the loan together."
+msgstr "T.ex. om du och din sambo tagit lånet tillsammans."
+
+msgid "Even children over 18 that still stay at home counts."
+msgstr "Även barn över 18 som bor hemma räknas."
+
+msgid "Permanent employment"
+msgstr "Fast anställning"
+
+msgid "Temporary employment"
+msgstr "Visstidsanställning"
+
+msgid "Your profile"
+msgstr "Din profil"
+
+msgid "Do you have a mortgage at"
+msgstr "Har du ett bolån på"
+
+msgid "What is the market value of your property?"
+msgstr "Vad är marknadsvärdet på din bostad?"
+
+msgid "Remember that used credit on a credit card also counts as debt."
+msgstr "Kom ihåg att nyttjad kredit på ett kreditkort också räknas som skuld."
+
+msgid "Do not include loans for other properties, such as vacation home. You have to move the whole mortgage."
+msgstr "Inkludera inte lån för andra fastigheter, såsom sommarstuga. Du måste flytta hela bolånet."
+
+msgid "Here are the best floating interest rates from our partners based on your data."
+msgstr "Här är de bästa rörliga räntorna från våra partners baserat på dina uppgifter."
+
+msgid "For the bank to be able to do a valuation they need to know more about your apartment."
+msgstr "För att banken ska kunna göra en värdering så behöver de veta mer om din lägenhet."
+
+msgid "Try to make the estimate as fair as possible to get more correct interest rate proposals."
+msgstr "Försök göra en så rättvis uppskattning som möjligt för att få mer exakta ränteförslag."
+
+msgid "You're done soon, but the bank needs to ask a few questions about your residence and family situation."
+msgstr "Du är snart klar, men banken behöver först ställa några frågor om din bostad och familjesituation."
+
+msgid "We need some more information about you for your application. This will take about 5-10 minutes."
+msgstr "Vi behöver lite mer information om dig till din ansökan. Det kommer ta ca 5-10 min."
+
+msgid "During the testing period of this feature, we only allow switching mortgages on the apartment where you're registered. We apoligize for that we can't help you at the moment."
+msgstr "Under testperioden för den här funktionen, tillåter vi bara att byta bolån för lägenheten som är ens folkbokföringsadress. Vi ber om ursäkt för detta."
+
+#, java-format
+msgid "Mark all loans that belong to {0}."
+msgstr "Markera alla lån som tillhör {0}."
+
+msgid "Lowest interest rate"
+msgstr "Lägst ränta"
+
+msgid "Low interest rate"
+msgstr "Låg ränta"
+
+msgid "Other alternatives"
+msgstr "Andra alternativ"
+
+#, java-format
+msgid "You save {0} per year"
+msgstr "Du sparar {0} per år"
+
+#, java-format
+msgid "{0} interest rate"
+msgstr "{0} ränta"
+
+#, java-format
+msgid "{0}/month"
+msgstr "{0}/mån"
+
+#, java-format
+msgid "You save {0} per month"
+msgstr "Du sparar {0} per månad"
+
+msgid "The interest rate is preliminary. The final rate is set when the bank has processed your application."
+msgstr "Räntan är preliminär. En definitiv ränta får du efter att banken behandlat din ansökan."
+
+msgid "SBAB's terms"
+msgstr "SBAB:s villkor"
+
+msgid "SBAB does a credit check"
+msgstr "SBAB tar en kreditupplysning"
+
+msgid "Information about processing of personal data (PUL)"
+msgstr "Information om behandling av personuppgifter (PUL)"
+
+msgid "SEB's terms"
+msgstr "SEB:s villkor"
+
+msgid "Terms of SEB's Internet Bank"
+msgstr "Villkor för SEBs internetbank"
+
+msgid "SEB does a credit check"
+msgstr "SEB tar en kreditupplysning"
+
+msgid "I confirm that I have read and accept SBAB´s Terms and Conditions"
+msgstr "Jag bekräftar att jag har läst och accepterar SBAB:s Allmänna Villkor"
+
+msgid "I confirm that I have read and accept SEB´s Terms and Conditions"
+msgstr "Jag bekräftar att jag har läst och  accepterar SEB:s villkor"
+
+#, java-format
+msgid "Your interest rate at {0} is {1}."
+msgstr "Din ränta hos {0} är {1}."
+
+msgid "How did we select our partners?"
+msgstr "Hur har vi valt våra partners?"
+
+msgid "Example calculation"
+msgstr "Räkneexempel"
+
+msgid "If you already have a Collector Bank account, the existing withdrawal account will override your selection below."
+msgstr "Om du redan har ett Collector Bank-konto, kommer det existerande uttagskontot att gälla istället för ditt val nedan."
+
+msgid "You can only withdraw money from your Collector Bank account to the selected account. You'll be able to change this later by contacting Collector Bank."
+msgstr "Du kan endast ta ut pengar från ditt Collector Bank-konto till det valda kontot. Du kan ändra detta senare genom att kontakta Collector Bank."
+
+msgid "In order to add new recipients you need to activate Mobile BankID for extended use. This is done in the Internet bank on the page BankID (found in the tab Tillval)."
+msgstr "För att lägga till mottagare behöver du aktivera Mobilt BankID för utökad användning. Detta gör du i internetbanken på sidan BankID (under fliken Tillval)."
+
+msgid "Just a couple of questions..."
+msgstr "Ett par frågor bara..."
+
+msgid "Our proposals"
+msgstr "Våra förslag"
+
+msgid "Confirm the Terms and Conditions and sign with BankID, and you can start using the account immediately!"
+msgstr "Bekräfta villkoren och signera med BankID, så kan du börja använda ditt konto direkt!"
+
+msgid "Here are the best savings interest rates from our partners."
+msgstr "Här är de bästa sparräntorna från våra partners."
+
+#, java-format
+msgid "{0} needs to ask some questions to make sure that you are't planning to launder money or something else fishy."
+msgstr "{0} behöver ställa lite frågor för att vara säkra på att du inte tänkt tvätta pengar eller göra något annat skumt."
+
+msgid "savings account"
+msgstr "sparkonto"
+
+msgid "checking account"
+msgstr "transaktionskonto"
+
+msgid "account"
+msgstr "konto"
+
+#, java-format
+msgid "Your current {0} at {1} has an interest rate of {2}."
+msgstr "Ditt nuvarande {0} hos {1} har en ränta på {2}."
+
+msgid "Please contact SBAB directly to open an account. Visit them at sbab.se or call 0771-45 30 00."
+msgstr "Vänligen kontakta SBAB direkt istället för att öppna ett konto. Besök dem på sbab.se eller ring 0771-45 30 00."
+
+msgid "Besides the previous choice."
+msgstr "Utöver föregående val."
+
+msgid "To be able to refresh your accounts in Tink you need to updated your customer info in the ICA bank app."
+msgstr "För att kunna uppdatera dina konton i Tink behöver du förnya dina kunduppgifter i ICA-bankens app."
+
+msgid "Have you requested deferral of capital gains tax?"
+msgstr "Har du begärt uppskov för reavinstskatt?"
+
+msgid "Name of the housing community"
+msgstr "Bostadsrättsföreningens namn"
+
+msgid "If you have sold e.g. an apartment or house and deferred to pay the tax."
+msgstr "Om du sålt t.ex. en lägenhet eller ett hus och skjutit upp att betala skatten."
+
+msgid "How much alimony do you pay in total per month?"
+msgstr "Hur mycket betalar du totalt i underhåll varje månad?"
+
+msgid "How much alimony does your co-applicant pay in total per month?"
+msgstr "Hur mycket betalar din medsökande totalt i underhåll varje månad?"
+
+msgid "Enter your co-applicant's postal address."
+msgstr "Fyll i din medsökandes postadress."
+
+msgid "You can find your deferred amount by logging in with BankID at skatteverket.se."
+msgstr "Du kan hitta ditt uppskovsbelopp genom att logga in med BankID på skatteverket.se."
+
+msgid "How many adults in total are you in the household?"
+msgstr "Hur många vuxna är ni totalt i hushållet?"
+
+msgid "Enter your American taxpayer identification number. If you don't have any, please contact the bank and they'll help you."
+msgstr "Ange ditt amerikanska skatteregistreringsnummer. Om du inte har något, så kontakta banken så hjälper de dig."
+
+msgid "Co-applicant"
+msgstr "Medsökande"
+
+msgid "Apartment details"
+msgstr "Lägenhetsdetaljer"
+
+msgid "How much is your residence worth?"
+msgstr "Hur mycket är din bostad värd?"
+
+msgid "Calculating on your finances..."
+msgstr "Räknar på din ekonomi..."
+
+msgid "You can submit an application to switch your mortgage through Tink. The application is not binding until you've signed the bank's contract."
+msgstr "Du kan skicka en ansökan om att flytta ditt lån via Tink. Ansökan är inte bindande förrän du har skrivit på bankens kontrakt."
+
+msgid "How we have calculated"
+msgstr "Hur vi räknat"
+
+#, java-format
+msgid "You payed {0} in interest last month.\n\nWith an interest rate of {1}, you'd pay {2}, which is {3} {4}.\n\nAfter interest tax deduction, it would be {5} per month, or {6} per year. We haven't included potential amortization."
+msgstr "Du betalade {0} i ränta förra månaden.\n\nMed en ränta på {1}, skulle du betala {2}, vilket är {3} {4}.\n\nEfter ränteavdrag, skulle det bli {5} per månad, eller {6} per år. Vi har inte räknat in eventuell amortering."
+
+msgid "more"
+msgstr "mer"
+
+msgid "less"
+msgstr "mindre"
+
+msgid "Terms and Conditions for SEB's internet bank"
+msgstr "Villkor för SEB:s internetbank"
+
+msgid "information about processing of personal data"
+msgstr "information om behandling av personuppgifter"
+
+msgid "I confirm that I have read and accept SBAB's Terms and Conditions"
+msgstr "Jag bekräftar att jag tagit del av och godkänner SBAB:s Allmänna Villkor"
+
+msgid "I confirm that I have read and accept the Terms and Conditions for SEB's internet bank and that SEB does a credit check, and that I have read the information about processing of personal data."
+msgstr "Jag bekräftar att jag tagit del av och godkänner villkoren för SEB:s internetbank och att SEB tar en kreditupplysning, samt att jag tagit del av information om behandling av personuppgifter."
+
+msgid "Example calculation with effective interest"
+msgstr "Räkneexempel med effektiv ränta"
+
+msgid "Amount per month"
+msgstr "Belopp per månad"
+
+msgid "Company name"
+msgstr "Företagsnamn"
+
+msgid "Employee since (YY/MM)"
+msgstr "Anställd sedan (ÅÅ/MM)"
+
+msgid "Employer name"
+msgstr "Arbetsgivarens namn"
+
+msgid "Is there someone else in your household that bailed a loan for someone?"
+msgstr "Finns det någon annan i hushållet som gått i borgen för någons lån?"
+
+msgid "Did someone else in your household requested deferral of capital gains tax?"
+msgstr "Finns det någon annan i hushållet som begärt uppskov för reavinstskatt?"
+
+msgid "Do you have any children that you pay alimony for?"
+msgstr "Har du barn som du betalar underhåll för?"
+
+msgid "Self-employed since (YY/MM)"
+msgstr "Egenföretagare sedan (ÅÅ/MM)"
+
+msgid "Is Sweden your residence for tax purposes?"
+msgstr "Har du skatterättslig hemvist i Sverige?"
+
+msgid "If you for example helped a family member with taking a loan."
+msgstr "Om du t.ex. hjälpt en familjemedlem att ta ett lån."
+
+msgid "Your residence for tax purposes is the country where you pay tax. Normally in the country where you live or work."
+msgstr "Din skatterättsliga hemvist är det land där du betalar din skatt. Vanligtvis det land där du bor eller arbetar."
+
+msgid "Other occupation"
+msgstr "Annat"
+
+msgid "Your tax residence is the country where you pay your taxes, usually the country where you live or work."
+msgstr "Din skatterättsliga hemvist är det land där du betalar skatt i, vanligtvis det land där du bor eller arbetar."
+
+msgid "Your taxpayer identification number is usually on your ID documents or tax report. If the country doesn't issue TIN, enter instead 'Missing'."
+msgstr "Ditt skatteregistreringsnummer brukar finnas på ID-handlingar eller skattebesked. Om landet inte utfärdar TIN, så skriv istället 'Saknas'."
+
+msgid "Employee since (YYYY-MM)"
+msgstr "Anställd sedan (ÅÅÅÅ-MM)"
+
+msgid "What is your main occupation?"
+msgstr "Vad är din huvudsakliga sysselsättning?"
+
+msgid "Monthly rent"
+msgstr "Månadshyra"
+
+msgid "Self-employed since (YYYY-MM)"
+msgstr "Egenföretagare sedan (ÅÅÅÅ-MM)"
+
+msgid "Include your cohabitant and grown-up children who are living at home."
+msgstr "Räkna med din sambo och vuxna barn som bor hemma."
+
+msgid "You're considered to be this if you are an American citizen, have a Green card or is a US resident during a certain period."
+msgstr "Det anses du ha om du är amerikansk medborgare, har ett så kallat Green card eller är bosatt i USA under viss tid."
+
+msgid "For example blanco loans, car loans or used credit on a credit card. Don't include other mortgages or student loans."
+msgstr "Till exempel blancolån, billån eller en nyttjad kredit på ett kreditkort. Räkna inte med andra bolån eller studielån."
+
+msgid "Ground rent (quarterly)"
+msgstr "Tomträttsavgäld (kvartalsvis)"
+
+msgid "Does your co-applicant have other loans?"
+msgstr "Har din medsökande andra lån?"
+
+msgid "What approximate amount is deposited in association to opening the account?"
+msgstr "Vilket ungefärligt belopp sätts in i samband med öppnandet av sparkontot?"
+
+msgid "Who will be depositing money?"
+msgstr "Vem kommer att sätta in pengar?"
+
+msgid "What's the total amount that will be deposited per month?"
+msgstr "Vilket totalbelopp kommer att sättas in per månad?"
+
+msgid "How often will deposits be made?"
+msgstr "Hur ofta kommer insättningar att göras?"
+
+msgid "What's your monthly income, before taxes?"
+msgstr "Hur mycket har du i månatlig inkomst, före skatt?"
+
+msgid "What is the purpose of the savings account?"
+msgstr "Vad är syftet med sparkontot?"
+
+msgid "How will money mainly be deposited?"
+msgstr "Hur kommer pengarna huvudsakligen sättas in?"
+
+msgid "Where does the money come from?"
+msgstr "Varifrån kommer pengarna?"
+
+msgid "Enter your American taxpayer identification number."
+msgstr "Ange ditt amerikanska skatteregistreringsnummer."
+
+msgid "Our partners' savings accounts are of course covered by the state deposit insurance, are totally free of charge and without binding period."
+msgstr "Våra partners sparkonton omfattas självklart av statlig insättningsgaranti, är helt kostnadsfria och utan bindningstid."
+
+msgid "We need to ask some questions to make sure that you are't planning to launder money or something else fishy."
+msgstr "Vi behöver ställa lite frågor för att vara säkra på att du inte tänkt tvätta pengar eller göra något annat skumt."
+
+#, java-format
+msgid "{0} with {1} interest"
+msgstr "{0} med {1} ränta"
+
+msgid "Open a savings account in Tink"
+msgstr "Öppna sparkonto i Tink"
+
+msgid "Start saving on a savings account with interest."
+msgstr "Kom igång med ditt sparande på ett sparkonto med ränta."
+
+msgid "Better interest rate on your mortgage"
+msgstr "Få bättre ränta på ditt bolån"
+
+msgid "See what interest rate you can get and move your mortgage directly in Tink."
+msgstr "Se hur bra ränta du kan få och flytta ditt bolån direkt i Tink."
+
+msgid "Show alternatives"
+msgstr "Visa alternativ"
+
+msgid "Choose a savings account you like"
+msgstr "Välj ett sparkonto du gillar"
+
+msgid "Answer a few simple questions"
+msgstr "Svara på några enkla frågor"
+
+msgid "The account is opened"
+msgstr "Kontot öppnas direkt"
+
+msgid "Start wizard"
+msgstr "Starta guiden"
+
+msgid "Answer 4 simple questions"
+msgstr "Svara på 4 enkla frågor"
+
+msgid "See what interest you can get"
+msgstr "Se vilken ränta du kan få"
+
+msgid "Move your mortgage in the app"
+msgstr "Flytta ditt bolån direkt i appen"
+
+msgid "See your year in numbers!"
+msgstr "Se ditt år i siffror!"
+
+#, java-format
+msgid "Expenses Week {0}"
+msgstr "Utgifter vecka {0}"
+
+#, java-format
+msgid "To {0}"
+msgstr "Till {0}"
+
+#, java-format
+msgid "From {0}"
+msgstr "Från {0}"
+
+msgid "Total loan amount"
+msgstr "Totalt lånebelopp"
+
+msgid "Who is someone else?"
+msgstr "Vem är den andra?"
+
+msgid "Specify purpose"
+msgstr "Specificera syftet"
+
+msgid "From my account in a Swedish bank"
+msgstr "Från mitt konto i svensk bank"
+
+msgid "Name of other bank"
+msgstr "Bankens namn"
+
+msgid "Specify other way"
+msgstr "Specificera annat sätt"
+
+msgid "Registration number"
+msgstr "Organisationsnummer"
+
+msgid "Specify industry"
+msgstr "Specificera branch"
+
+msgid "Specify source"
+msgstr "Specificera källa"
+
+msgid "From someone else´s account in a Swedish bank"
+msgstr "Från någon annans konto i svensk bank"
+
+#, java-format
+msgid "You lose {0} per year"
+msgstr "Du förlorar {0} per år"
+
+#, java-format
+msgid "{0} more expensive per year"
+msgstr "{0} dyrare per år"
+
+#, java-format
+msgid "{0} more expensive per month"
+msgstr "{0} dyrare per månad"
+
+msgid "SEB does a credit check and can request complementary information"
+msgstr "SEB tar en kreditupplysning och kan begära kompletteringar"
+
+msgid "Answer questions and submit application"
+msgstr "Svara på frågor och skicka in ansökan"
+
+msgid "Second mortgage, car loans or used credit on a credit card. Don't include mortgages on other properties, for example the vacation house."
+msgstr "Topplån på boendet, billån eller nyttjad kredit på ett kreditkort. Räkna inte med lån som du har på andra boenden, till exempel sommarstugan."
+
+msgid "You add second mortgage later on. Do not include loans for other properties, such as vacation home. You have to move the whole mortgage."
+msgstr "Topplån lägger du till senare. Inkludera inte lån för andra fastigheter, såsom sommarstuga. Du måste flytta hela bolånet."
+
+msgid "Have your co-applicant bailed someones loan?"
+msgstr "Har din medsökande gått i borgen för någons lån?"
+
+msgid "Have your co-applicant requested deferral of capital gains tax?"
+msgstr "Har din medsökande begärt uppskov för reavinstskatt?"
+
+msgid "Does your co-applicant have any other loans?"
+msgstr "Har din medsökande andra lån?"
+
+msgid "If your co-applicant e.g. has helped a family member to take a loan."
+msgstr "Om din medsökande t.ex. har hjälpt en familjemedlem med att ta ett lån."
+
+msgid "If your co-applicant e.g. has sold an apartment or a house and deferred paying capital gains tax."
+msgstr "Om din medsökande sålt t.ex. en lägenhet eller ett hus och skjutit upp att betala skatten."
+
+msgid "Like second mortgage, blanco loans or used credit not already stated. Don't include mortgages on other properties, for example the vacation house."
+msgstr "Som topplån, blancolån eller nyttjade krediter som du inte redan uppgett. Räkna inte med lån på andra boenden, till exempel sommarstugan."
+
+msgid "Congratulations! You already have a good interest rate!"
+msgstr "Grattis! Din ränta är redan bra!"
+
+msgid "In comparison with other banks, you already have a good interest rate. But check on a regular basis to see if the interest rates change."
+msgstr "I jämförelse med andra banker så har du en bra ränta. Men kolla med jämna mellanrum för att se om räntan förändras."
+
+msgid "Are there other adults in the household?"
+msgstr "Finns det en till vuxen i hushållet?"
+
+msgid "E.g. a cohabitant who is not included in the loan."
+msgstr "Som en sambo som inte står med på lånet."
+
+msgid "Challenge your rate"
+msgstr "Utmana räntan"
+
+msgid "See an example with effective rate further down on the page."
+msgstr "Se ett räkneexempel med effektiv ränta längre ner på sidan."
+
+msgid "Is there another adult in the household?"
+msgstr "Finns det en till vuxen i hushållet?"
+
+msgid "As a cohabitant who is not included in the loan."
+msgstr "Som en sambo som inte står med på lånet."
+
+msgid "Challenge rate"
+msgstr "Utmana räntan"
+
+msgid "See an example with effective rate further down in the page."
+msgstr "Se ett räkneexempel med effektiv ränta längre ner på sidan."
+
+msgid "Does your co-applicant receive alimony for any children?"
+msgstr "Tar din medsökande emot underhåll för barn?"
+
+msgid "Profession"
+msgstr "Yrkesroll"
+
+msgid "Not yet connected banks"
+msgstr "Banker inte anslutna än"
+
+msgid "Do you have any children that you receive alimony for?"
+msgstr "Tar du emot underhåll för barn?"
+
+msgid "Applies to children not living with you."
+msgstr "Gäller barn som inte bor hos dig."
+
+msgid "How many children do you pay alimony for?"
+msgstr "Hur många barn betalar du underhåll för?"
+
+msgid "How many children does your co-applicant pay alimony for?"
+msgstr "Hur många barn betalar din medsökande underhåll för?"
+
+msgid "How many children does your co-applicant receive alimony for?"
+msgstr "Hur många barn tar din medsökande emot underhåll för?"
+
+msgid "What's the total alimony amount paid each month?"
+msgstr "Vad är det totala underhållsbeloppet som betalas per månad?"
+
+msgid "How many children do you receive alimony for?"
+msgstr "Hur många barn tar du emot underhåll för?"
+
+msgid "Are you receiving alimony?"
+msgstr "Tar du emot underhåll för barn?"
+
+msgid "Is your co-applicant paying alimony?"
+msgstr "Betalar din medsökande underhåll för barn?"
+
+msgid "Questions about you"
+msgstr "Frågor om dig"
+
+msgid "According to the law on measures against money laundering and terrorist financing and international tax law, the bank must have good knowledge of all its customers."
+msgstr "Enligt lagen om åtgärder mot penningtvätt och finansiering av terrorism samt internationell skattelagstiftning måste banken ha god kännedom om alla sina kunder."
+
+msgid "Cadastral"
+msgstr "Fastighetsbeteckning"
+
+msgid "How much did you purchase the house for?"
+msgstr "Hur mycket köpte du huset för?"
+
+msgid "Monthly operating cost"
+msgstr "Driftkostnad per månad"
+
+msgid "Enter the address and property type of the residence that you want to move your mortgage for."
+msgstr "Fyll i adressen och bostadstypen för den bostad du vill flytta ditt bolån för."
+
+msgid "House details"
+msgstr "Husdetaljer"
+
+msgid "About your house"
+msgstr "Om ditt hus"
+
+msgid "For the bank to be able to do a valuation they need to know more about your house."
+msgstr "För att banken ska kunna göra en värdering så behöver de veta mer om ditt hus."
+
+msgid "This is how it works"
+msgstr "Så här går det till"
+
+msgid "Questions about you, your co-applicant and your household"
+msgstr "Frågor om dig, din medsökande och ditt boende"
+
+msgid "Sign the application with BankID"
+msgstr "Signera ansökan med BankID"
+
+msgid "The bank will contact you and tell what you need to submit by mail"
+msgstr "Banken hör av sig och berättar vad du behöver skicka in via post"
+
+msgid "Total CSN amount"
+msgstr "Total studieskuld"
+
+msgid "If your second mortgage is absent, you can add it later on. Do not include loans for other properties, such as vacation home. You have to move the whole mortgage."
+msgstr "Om ditt topplån inte finns med, så kan du lägga till det senare. Inkludera inte lån för andra fastigheter, såsom sommarstuga. Du måste flytta hela bolånet."
+
+msgid "Operating costs of my residence"
+msgstr "Driftkostnader för min bostad"
+
+msgid "Payments of loan at SBAB"
+msgstr "Utbetalning av lån hos SBAB"
+
+msgid "Sales (e.g. house, car, boat, company)"
+msgstr "Försäljning (t.ex. hus, bil, båt eller bolag)"
+
+msgid "information sheet about Deposit insurance"
+msgstr "informationsbladet om insättningsgaranti"
+
+msgid "Questions about you and your household"
+msgstr "Frågor om dig och ditt boende"
+
+msgid "Social security number (YYYYMMDD-NNNN)"
+msgstr "Personnummer (YYYYMMDD-NNNN)"
+
+msgid "Social security number (YYYYMMDDNNNN)"
+msgstr "Personnummer (ÅÅÅÅMMDDNNNN)"
+
+#, java-format
+msgid "Could not find any engagements in {0}. Use {1} (Mobile BankID) instead."
+msgstr "Hittade inget engagemang hos {0}. Lägg till {1} (Mobilt BankID) istället."
+
+msgid "Year of construction"
+msgstr "Byggår"
+
+msgid "Additional area"
+msgstr "Biarea"
+
+msgid "Plot area"
+msgstr "Tomtarea"
+
+msgid "Kitchen condition"
+msgstr "Skick i kök"
+
+msgid "Bathroom condition"
+msgstr "Skick i badrum"
+
+msgid "Tiled stove / Fireplace"
+msgstr "Kakelugn / Öppen spis"
+
+msgid "Vista"
+msgstr "Utsikt"
+
+msgid "Ceiling height (cm)"
+msgstr "Takhöjd (cm)"
+
+msgid "Elevator"
+msgstr "Hiss"
+
+msgid "Balcony"
+msgstr "Balkong"
+
+msgid "Patio"
+msgstr "Uteplats"
+
+msgid "Basement"
+msgstr "Källare"
+
+msgid "Parking options"
+msgstr "Parkeringsmöjligheter"
+
+msgid "Last ground drainage"
+msgstr "Senaste dränering"
+
+msgid "Roof renovation"
+msgstr "Takrenovering"
+
+msgid "Chain terrace house"
+msgstr "Kedjehus"
+
+msgid "Semi-detached house"
+msgstr "Parhus"
+
+msgid "Terrace house"
+msgstr "Radhus"
+
+msgid "Sea view"
+msgstr "Havsutsikt"
+
+msgid "Lake view"
+msgstr "Sjöutsikt"
+
+msgid "Rooftops"
+msgstr "Takåsar"
+
+msgid "Courtyard"
+msgstr "Innergård"
+
+msgid "Nothing special"
+msgstr "Inget särskilt"
+
+msgid "Traditional"
+msgstr "Ja, traditionell"
+
+msgid "French"
+msgstr "Fransk"
+
+msgid "Double traditional"
+msgstr "Ja, två eller fler"
+
+msgid "Terrace"
+msgstr "Terass"
+
+msgid "Royal balcony"
+msgstr "Kungsbalkong"
+
+msgid "Functional"
+msgstr "Ja, går att elda i"
+
+msgid "Non-functional"
+msgstr "Ja, men går ej att elda i"
+
+msgid "0 to 15 years ago"
+msgstr "0 till 15 år sedan"
+
+msgid "15 to 30 years ago"
+msgstr "15 till 30 år sedan"
+
+msgid "30 years ago or more"
+msgstr "30+ år sedan"
+
+msgid "Garage"
+msgstr "Garage"
+
+msgid "Double garage"
+msgstr "Dubbelgarage"
+
+msgid "Driveway"
+msgstr "Uppfart"
+
+msgid "Street"
+msgstr "Gatan"
+
+msgid "Bad"
+msgstr "Dåligt"
+
+msgid "Pretty bad"
+msgstr "Ganska dåligt"
+
+msgid "Ok"
+msgstr "Helt OK"
+
+msgid "Good"
+msgstr "Bra"
+
+msgid "Excellent"
+msgstr "Toppklass"
+
+msgid "What kind of residence is it?"
+msgstr "Vad är det för typ av bostad?"
+
+msgid "How big is your residence?"
+msgstr "Hur stor är din bostad?"
+
+msgid "Optional data"
+msgstr "Frivilliga uppgifter"
+
+msgid "The more data you add, the more precise will your valuation be."
+msgstr "Desto fler uppgifter du fyller i desto mer exakt blir din värdering."
+
+msgid "Calculating the value of your residence..."
+msgstr "Räknar fram värdet på din bostad..."
+
+msgid "I confirm that I have read and accept the Collector Save Agreement and that I have received information about state-provided guarantee of deposits."
+msgstr "Jag bekräftar att jag har läst och godkänner Collector Save-avtalet och att jag mottagit information om statlig insättningsgaranti."
+
+msgid "state-provided guarantee of deposits"
+msgstr "statlig insättningsgaranti"
+
+msgid "Additional area (m²)"
+msgstr "Biarea (m²)"
+
+msgid "Plot area (m²)"
+msgstr "Tomtarea (m²)"
+
+msgid "You have enter incorrect service code to many times. For safety reasons the service code is now blocked. You may unlock your safety in Hembanken, in Mobila tjänster."
+msgstr "Du har fyllt i en felaktig servicekod för många gånger. Av säkerhetsskäl har din servicekod nu spärrats. Du kan låsa upp den i Hembanken, i Mobila tjänster."
+
+msgid "To use the mobile services you need to sign an agreement for Service code. Log in at Hembanken and and look in Mobila tjänster - Se och ändra servicekod."
+msgstr "För att använda mobiltjänsten behöver du godkänna villkoret för servicekod. Logga in på Hembanken och gå till Mobila tjänster - Se och ändra servicekod."
+
+msgid "Wrong personal number or service code. Please try again or control your service code in Hembanken, in Mobila tjänster."
+msgstr "Felaktigt personnummer eller servicekod. Var god försök igen eller kontrollera din servicekod i Hembanken, under Mobila tjänster."
+
+msgid "Your personal code has been locked. Contact Nordea customer services (0771-42 15 16) to order a new code, or contact your local Nordea office."
+msgstr "Din pesonliga kod har spärrats. Kontakta Nordea kundservice (0771-42 15 16) för att beställa en ny kod, eller ta kontakt med ditt lokala Nordea-kontor."
+
+msgid "You're missing a valid Mobilt BankID. Download the BankID app and login to Internetbanken to order and connect to Mobil BankID."
+msgstr "Du saknar ett godkänt Mobilt BankID. Ladda ner BankID-appen och logga in på Internetbanken för att beställa och koppla dig till Mobilt BankID."
+
+msgid "We could not find a valid internet banking agreement. If you login to Nordea's internetbank with e-code (card reader) you may sign an agreement for internet and telephone banking"
+msgstr "Vi kunde inte hitta något godkänt avtal för internetbanken. Om du loggar in till Nordeas internetbank med e-kod (kortläsare) så kan du godkänna avtalet för internet- och telefonbanken."
+
+msgid "Your password has expired."
+msgstr "Ditt lösenord har gått ut."
+
+msgid "The first time you use your mobile BankId you have to verify it with your Digipass. Login to the SEB-app with your mobile BankID to do this."
+msgstr "Första gången du loggar in med ditt mobila BankID måste du godkänna det med ditt Digipass. Logga in i SEB-appen med ditt mobila BankID för att göra detta."
+
+msgid "Could not find any engagements in Swedbank. Use Swedbank Ung (Mobile BankID) instead."
+msgstr "Kunde inte hitta några engagemang i Swedbank. Använd Swedbank Ung (Mobilt BankID) istället."
+
+msgid "Could not find any engagements in Swedbank Ung. Use Swedbank (Mobile BankID) instead."
+msgstr "Kunde inte hitta några engagemang i Swedbank Ung. Använd Swedbank (Mobilt BankID) istället."
+
+msgid "Could not find any engagements in Sparbankerna. Use Sparbankerna Ung (Mobile BankID) instead."
+msgstr "Kunde inte hitta några engagemang i Sparbankerna. Använd Sparbankerna Ung (Mobilt BankID) istället."
+
+msgid "Could not find any engagements in Sparbankerna Ung. Use Sparbankerna (Mobile BankID) instead."
+msgstr "Kunde inte hitta några engagemang i Sparbankerna Ung. Använd Sparbankerna (Mobilt BankID) istället."
+
+msgid "You are not authorized to use this service."
+msgstr "Du har inte behörighet att använda denna tjänst."
+
+msgid "You do not have a valid profile."
+msgstr "Du har ingen giltig profil."
+
+msgid "Move the loan directly"
+msgstr "Flytta lånet direkt"
+
+msgid "Banks not connected"
+msgstr "Ej anslutna banker"
+
+msgid "3 months list rate / average rate"
+msgstr "3 mån listränta / snittränta"
+
+msgid "Interest rates for you"
+msgstr "Räntor för dig"
+
+msgid "The interest rates are based on your information, your finances and loan size."
+msgstr "Räntorna baseras på dina uppgifter, din ekonomi och lånestorlek."
+
+msgid "The source and destination accounts cannot be the same."
+msgstr "Från- och tillkonto kan inte vara samma konto."
+
+msgid "Handelsbanken är inte längre aktiv för angiven användare. Det kan bero på att Handelsbankens app inte använts på den här enheten på 90 dagar. För att logga in behöver du aktivera appen på nytt."
+msgstr "Handelsbanken är inte längre aktiv för angiven användare. Det kan bero på att Handelsbankens app inte använts på den här enheten på 90 dagar. För att logga in behöver du aktivera appen på nytt."
+
+msgid "You must be over the age of 16 to use Mobilt BankID."
+msgstr "Du måste vara över 16 år för att använda Mobilt BankID."
+
+msgid "Could not login to Skandiabanken. Unfortunately we don't support Skandiabanken for customers under the age of 18 years."
+msgstr "Kunde inte logga in till Skandiabanken. Tyvärr stöds inte Skandiabanken för kunder under 18 år."
+
+msgid "Your identity could not be validated. Please try again."
+msgstr "Din identitet kunde inte bekräftas. Försök igen."
+
+msgid "Your BankID is not authorized for this service."
+msgstr "Ditt BankID har inte behörighet för denna tjänst."
+
+msgid "It looks like you have SEB Ung. Unfortunately we currently only support SEB's standard login."
+msgstr "Det ser ut som att du använder SEB Ung. Tyvärr stödjer vi idag endast SEBs ordinarie app."
+
+#, java-format
+msgid "We are currently having technical issues with {0}. Please try again later."
+msgstr "Vi har för närvarande tekniska problem med {0}. Vänligen försök igen senare."
+
+msgid "See your summer spendings"
+msgstr "Se hur du spenderade i somras"
+
+msgid "I confirm that I have read and accepted the terms of service for direct debit."
+msgstr "Jag bekräftar att jag tagit del av och godkänner villkoren för autogiro."
+
+msgid "Account for direct debit"
+msgstr "Konto för autogiro"
+
+msgid "With direct debit your payment is debited every month from the account of your choice."
+msgstr "Med autogiro dras din betalning automatiskt varje månad från ett konto du bestämmer."
+
+msgid "Signature"
+msgstr "Underskrift"
+
+msgid "Your signature"
+msgstr "Din underskrift"
+
+msgid "Do you have an income in another currency than Swedish crowns?"
+msgstr "Har du inkomst i annan valuta än svenska kronor?"
+
+msgid "We ask because changes in the exchange rate can affect your finances."
+msgstr "Vi frågar eftersom förändringar i valutakursen kan påverka din ekonomi."
+
+msgid "You spend the most money on this the last month."
+msgstr "Det här la du mest pengar på förra månaden."
+
+msgid "In Tink you get on top of where you spend your money. Do you need to reduce any expenses? or spend more on something that’s important to you?"
+msgstr "I Tink får du koll på var du spenderar dina pengar. Behöver du dra ner på något? Eller spendera mer på något som är viktigt för dig?"
+
+msgid "Do you have savings that you want to transfer to SEB?"
+msgstr "Har du ett sparande som du vill flytta över till SEB?"
+
+msgid "Are you interested in other services from SEB in addition to mortgages?"
+msgstr "Är du intresserad av andra tjänster från SEB utöver bolån?"
+
+msgid "Was your mortgage granted, extended, or otherwise changed after the 1st of June 2016?"
+msgstr "Var ditt bolån beviljat, utökat, eller på annat sätt ändrat efter den 1 juni 2016?"
+
+msgid "This is not a requirement and you do not need to make a decision now."
+msgstr "Det är inget krav och du behöver inte bestämma dig nu."
+
+msgid "Insurance payout"
+msgstr "Försäkringsutbetalning"
+
+msgid "Dividends from small business"
+msgstr "Utdelning i fåmansbolag"
+
+msgid "Capital management"
+msgstr "Placering"
+
+msgid "Cards"
+msgstr "Kort"
+
+msgid "Pension insurance"
+msgstr "Pensionsförsäkring"
+
+msgid "Investing"
+msgstr "Investering"
+
+msgid "Where is the money that you plan on transfering originating from?"
+msgstr "Varifrån kommer pengarna som du planerar att föra över?"
+
+msgid "What kind of services are you interested in?"
+msgstr "Vilken typ av tjänster är du intresserad av?"
+
+msgid "Nice job! Your application is complete."
+msgstr "Snyggt jobbat! Din ansökan är klar."
+
+msgid "You are ready to apply! Here is everything you need to know about your new mortgage."
+msgstr "Du är redo att skicka in! Här har du allt du behöver veta om ditt nya lån."
+
+msgid "Your mortgage interest rate is lower than most others."
+msgstr "Din boränta är lägre än de flesta andras."
+
+msgid "In Tink you get help to keep track on your interest rate and the value of the residence. You can also lower your interest rate directly in the app!"
+msgstr "I Tink får du hjälp att hålla koll på din boränta och på bostadens värde. Du kan dessutom sänka din boränta direkt i appen!"
+
+#, java-format
+msgid "You spend on average {0} per day."
+msgstr "Du spenderar i snitt {0} per dag."
+
+#, java-format
+msgid "You’re spending the most on {0}, on which you spend on average {1}."
+msgstr "Mest spenderar du på {0}, då gör du av med {1} i snitt."
+
+msgid "You normally have a bunch of money left of your salary."
+msgstr "Du brukar ha en hel del pengar kvar av din lön."
+
+msgid "Deposit the surplus every month into a savings account where it grows over time. Open a savings account with interest rate directly in Tink."
+msgstr "Sätt in det som blir över varje månad på ett sparkonto där dina pengar växer över tid. Starta ett sparkonto med ränta direkt i Tink."
+
+msgid "Your mortgage interest rate is lower than most others, but there's room for improvement."
+msgstr "Din boränta är lägre än de flesta andras, men det finns förbättringspotential."
+
+msgid "Your mortgage interest rate is higher than most others."
+msgstr "Din boränta är högre än de flesta andras."
+
+msgid "Do you like Tink?"
+msgstr "Tycker du om Tink?"
+
+msgid "Rate the app and leave a comment in the App Store!"
+msgstr "Lämna ditt betyg och en kommentar om oss i App Store!"
+
+msgid "Rate the app and leave a comment in the Play Store!"
+msgstr "Lämna ditt betyg och en kommentar om oss i Play Store!"
+
+msgid "No, thanks"
+msgstr "Nej, tack"
+
+msgid "Sure!"
+msgstr "Ja, gärna!"
+
+msgid "Name of asset"
+msgstr "Tillgångens namn"
+
+msgid "Value of asset"
+msgstr "Tillgångens värde"
+
+msgid "Sale of property"
+msgstr "Försäljning av bostad"
+
+msgid "Do you have other assets?"
+msgstr "Har du fler tillgångar?"
+
+msgid "Those could be mutual funds, stocks, other securities, and savings. Do not include pension savings."
+msgstr "Det kan vara fonder, aktier, värdepapper eller sparpengar. Räkna inte med pensionssparande."
+
+msgid "You need to activate the connection with your Handelsbanken card reader."
+msgstr "Du behöver aktivera anslutningen med din kortläsare."
+
+msgid "Are you trying to use your charge card to login? Please use your login card for BankID. The response should be 9 figures."
+msgstr "Försöker du använda ditt betalkort för att logga in? Testa att använda inloggningskortet istället. Svarskoden borde då bli 9 siffror."
+
+msgid "You need to activate your personal code for telephone and mobile services on the internet bank."
+msgstr "Du måste aktivera din personliga kod för telefon- och mobiltjänster på internetbanken."
+
+msgid "Handelsbanken is no longer active for the specified user. This could be due to that the Handelsbanken app for this device has not been active in 90 days. To login again you need to activate the app again."
+msgstr "Handelsbanken är inte längre aktiv för angiven användare. Det kan bero på att Handelsbankens app inte använts på den här enheten på 90 dagar. För att logga in behöver du aktivera appen på nytt."
+
+msgid "Incorrect answer code. The challenge code is only active for four minutes. Press OK to restart."
+msgstr "Felaktig svarskod. Tänk på att kontrollkoden endast är giltig i fyra minuter. Tryck OK för att börja om."
+
+msgid "The card you are using is blocked. Please contact Handelsbanken technical support or visit your local bank office to order a new login card."
+msgstr "Kortet är spärrat. Kontakta Teknisk support eller ditt bankkontor för att beställa ett nytt inloggningskort."
+
+msgid "Too many incorrect tries. The card has been locked for 60 minutes for signing with the card reader without a cord. Contact Handelsbanken technical support for more information."
+msgstr "För många felaktiga försök. Kortet är låst i 60 min för signering med kortläsaren utan sladd. Kontakta Teknisk support för mer information."
+
+msgid "The activation could not be completed. It is not possible to activate more than ten apps."
+msgstr "Aktiveringen kunde inte genomföras. Det är inte möjligt att aktivera fler än 10 appar."
+
+msgid "Tink helps you keep track of all you accounts. You can create a new account with a good savings rate and setup savings goals to help you get started!"
+msgstr "Tink hjälper dig att ha koll på alla dina konton. Du kan öppna ett nytt konto med en bra sparränta och sätta upp sparmål för att komma igång!"
+
+msgid "The social security number has been updated, please try again"
+msgstr "Personnumret har uppdaterats, vänligen försök igen"
+
+msgid "Mondays"
+msgstr "måndagar"
+
+msgid "Tuesdays"
+msgstr "tisdagar"
+
+msgid "Wednesdays"
+msgstr "onsdagar"
+
+msgid "Thursdays"
+msgstr "torsdagar"
+
+msgid "Fridays"
+msgstr "fredagar"
+
+msgid "Saturdays"
+msgstr "lördagar"
+
+msgid "Sundays"
+msgstr "söndagar"
+
+msgid "Your mortgage interest rate is decent, but there's room for improvement."
+msgstr "Din bolåneränta är hyfsad, men det finns utrymme för förbättring!"
+
+msgid "Your mortgage interest rate is quite high. Maybe we can help?"
+msgstr "Din bolåneränta är ganska hög. Kanske kan vi hjälpa till?"
+
+#, java-format
+msgid "The last few months, you’re spending the most on {0}, on which you spend on average {1}."
+msgstr "De senaste månaderna har du spenderat mest på {0}, då du i snitt gör av med {1}."
+
+#, java-format
+msgid "Congratulation! You have a good amount saved. You belong to the top {0}!"
+msgstr "Grattis! Du har ett bra belopp sparat. Du tillhör topp {0}!"
+
+#, java-format
+msgid "You have a good savings buffer! More than {0} over average. Keep up the good job!"
+msgstr "Du har en bra sparbuffert! Mer än {0} över snittet. Fortsätt så!"
+
+msgid "Your savings buffer is a little bit lower than average. Let us help you improve!"
+msgstr "Din sparbuffert är lite lägre än snittet. Låt oss hjälpa dig förbättra det!"
+
+msgid "Are you filling out the application on your own behalf?"
+msgstr "Fyller du i ansökan för egen räkning?"
+
+msgid "The question is asked for the control of the true principal, to ensure that you do not act on somebody else's behalf. Any potential co-applicant is not concerned."
+msgstr "Frågan ställs för kontroll av verklig huvudman, för att säkerställa att du inte agerar för någon annans räkning. Eventuella medsökande avses inte."
+
+msgid "Incomes"
+msgstr "Inkomster"
+
+msgid "Left to spend"
+msgstr "Kvar av lön"
+
+msgid "Unusual account activity"
+msgstr "Ovanlig kontoaktivitet"
+
+msgid "ID Control event"
+msgstr "ID-Koll händelser"
+
+msgid "Weekly"
+msgstr "Vecka"
+
+msgid "Monthly"
+msgstr "Månad"
+
+msgid "E-invoices"
+msgstr "E-fakturor"
+
+msgid "Expenses over goal"
+msgstr "Utgifter över mål"
+
+msgid "Income & Expenses"
+msgstr "Inkomster & Utgifter"
+
+msgid "Irregularities"
+msgstr "Avvikelser"
+
+msgid "Summaries"
+msgstr "Sammanfattningar"
+
+msgid "I confirm that I have read and accept SBAB's Terms and Conditions and Terms and Conditions for savings accounts and thus received the information about the deposit insurance and information concerning the processing of personal data."
+msgstr "Jag bekräftar att jag tagit del av och godkänner SBAB:s allmänna internetvillkor, SBAB:s villkor för sparkonto samt att jag tagit del av informationsbladet om insättningsgaranti och information om behandling av personuppgifter."
+
+msgid "Terms and Conditions for savings accounts"
+msgstr "SBAB:s villkor för sparkonto"
+
+msgid "Your mortgage rate is lower than most others."
+msgstr "Din boränta är lägre än de flesta andras."
+
+msgid "Your mortgage rate is decent, but can be better."
+msgstr "Din boränta är hyfsad, men kan vara bättre."
+
+msgid "Your mortgage rate is quite high. Maybe we can help?"
+msgstr "Din boränta är ganska hög. Kanske kan vi hjälpa till?"
+
+#, java-format
+msgid "You have a very good amount saved. You belong to the top {0}!"
+msgstr "Du har ett mycket bra belopp sparat. Du tillhör topp {0}!"
+
+#, java-format
+msgid "You have a good savings buffer! More than {0} over average."
+msgstr "Du har en bra sparbuffert! Mer än {0} över snittet."
+
+msgid "Your savings buffer is slightly lower than average. We can help!"
+msgstr "Din sparbuffert är lite lägre än snittet. Vi kan hjälpa till!"
+

@@ -1,0 +1,4 @@
+bankId	name	type	currency	balance
+Bank1	Konto SHB	CHECKING	SEK	36410
+Bank2	Lonekonto Nordea	CHECKING	SEK	56139
+Bank3	SAS mastercard	CREDIT_CARD	SEK	-5784

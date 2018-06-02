@@ -1,0 +1,50 @@
+.shareable-frame
+{
+	.lookback
+	{	
+		.bottom-button, .divider-wrapper
+		{
+			display: none;
+		} 
+
+		.header
+		{
+			margin-top: 30%;
+			font-size: 13px;
+		}
+
+		.activity-description-text
+		{
+			font-size: 18px;
+		}
+	}
+}
+
+.lookback
+{
+	.header
+	{
+		display: table;
+		text-align: center;
+		margin: 4px auto 0 auto;
+		background: $lookback-header-background-color;
+		color: #f7f4f2;
+		padding: 7px 12px 4px 12px;
+		font-size: 10px; 
+		text-transform: uppercase;
+		letter-spacing: 3px;
+		border-radius: 10000px; 
+		font-family: $font-bold, proxima-semibold, ProximaNovaA-Semibold, sans-serif;
+		font-weight: $weight-bold;
+	}
+
+	.activity-description-text
+	{
+		margin: 20px $padding;
+	}
+
+	.bottom-button
+	{
+		margin: 18px 0 2px 0;
+	}
+}

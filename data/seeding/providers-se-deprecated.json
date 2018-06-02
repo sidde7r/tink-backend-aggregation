@@ -1,0 +1,1639 @@
+{
+	"market": "SE",
+	"currency": "SEK",
+	"providers":
+	[
+		{
+			"className": "nxgen.se.banks.sdcse.SdcSeAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayName": "Sparbanken Syd",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"groupDisplayName": "Swedbank och Sparbankerna",
+			"multiFactor": true,
+			"name": "sparbankensyd-bankid",
+			"passwordHelpText": "För att ansluta din bank behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som i Sparbanken Syds mobilapp. Du kommer tillbaka till Tink när du har legitimerat dig. Läs mer hos [Sparbanken Syd](https://internetbanken.sparbankensyd.se/BankIDLogin/Sidor/login.aspx).",
+			"payload": "9570",
+			"popular": false,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "BANK"
+		},
+		{
+			"capabilities": [
+				"TRANSFERS",
+				"MORTGAGE_AGGREGATION"
+			],
+			"className": "banks.handelsbanken.v6.HandelsbankenV6Agent",
+			"credentialsType": "PASSWORD",
+			"displayDescription": "Personlig kod",
+			"displayName": "Handelsbanken",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				},
+				{
+					"description": "Personlig kod",
+					"hint": "NNNN",
+					"masked": true,
+					"maxLength": 4,
+					"minLength": 4,
+					"name": "password",
+					"numeric": true,
+					"pattern": "([0-9]{4})",
+					"patternError": "Vänligen ange fyra siffror."
+				}
+			],
+			"groupDisplayName": "Handelsbanken",
+			"name": "handelsbanken",
+			"passwordHelpText": "Du använder din kortläsare och personliga kod på samma sätt som för Handelsbankens mobilapp. Mer info hittar du hos [Handelsbanken](http://www.handelsbanken.se/shb/INeT/IStartSv.nsf/FrameSet?OpenView&amp;iddef=&amp;navid=A_Sjalvbetjaning_-_Effektivisera&amp;sa=/SHB/Inet/ICentSv.nsf/Default/q6C11BD80287CAC54C125772A0028E9E8).",
+			"popular": true,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "BANK",
+			"refreshFrequency": 1,
+			"refreshFrequencyFactor": 1
+		},
+		{
+			"capabilities": [
+				"TRANSFERS",
+				"MORTGAGE_AGGREGATION"
+			],
+			"className": "banks.handelsbanken.v6.HandelsbankenV6Agent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayDescription": "Mobilt BankID",
+			"displayName": "Handelsbanken",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"groupDisplayName": "Handelsbanken",
+			"multiFactor": true,
+			"name": "handelsbanken-bankid",
+			"passwordHelpText": "För att ansluta din bank behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som i Handelsbankens mobilapp. Mer info hittar du hos [Handelsbanken](http://www.handelsbanken.se/shb/INeT/IStartSv.nsf/FrameSet?OpenView&amp;iddef=&amp;navid=A_Sjalvbetjaning_-_Effektivisera&amp;sa=/Shb/Inet/ICentSv.nsf/Default/q6C11BD80287CAC54C125772A0028E9E8).",
+			"popular": true,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "BANK"
+		},
+		{
+			"capabilities": [
+				"TRANSFERS",
+				"MORTGAGE_AGGREGATION"
+			],
+			"className": "banks.seb.SEBApiAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayName": "SEB",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"groupDisplayName": "SEB",
+			"multiFactor": true,
+			"name": "seb-bankid",
+			"passwordHelpText": "För att ansluta din bank behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som i SEBs mobilapp. Du kommer tillbaka till Tink när du har legitimerat dig. Mer info hittar du hos [SEB](http://www.seb.se).",
+			"popular": true,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "BANK"
+		},
+		{
+			"capabilities": [
+				"TRANSFERS",
+				"MORTGAGE_AGGREGATION"
+			],
+			"className": "banks.swedbank.SwedbankAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayName": "Swedbank",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"groupDisplayName": "Swedbank och Sparbankerna",
+			"multiFactor": true,
+			"name": "swedbank-bankid",
+			"passwordHelpText": "Du använder Mobilt BankID på samma sätt som i Swedbanks mobilapp. Om du har en personlig kod för förenklad inloggning så rekommenderar vi att du använder den istället för Mobilt BankID. Backa då tillbaka ett steg och välj Swedbank och Sparbankerna. På så sätt kan du få automatiskta varningar och notiser utan att behöva använda Mobilt BankID för att logga in i Tink varje gång.",
+			"payload": "swedbank",
+			"popular": true,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "BANK"
+		},
+		{
+			"capabilities": [
+				"TRANSFERS",
+				"MORTGAGE_AGGREGATION"
+			],
+			"className": "banks.swedbank.SwedbankAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayName": "Sparbankerna",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"groupDisplayName": "Swedbank och Sparbankerna",
+			"multiFactor": true,
+			"name": "savingsbank-bankid",
+			"passwordHelpText": "Du använder Mobilt BankID på samma sätt som i Sparbankernas mobilapp. Om du har en personlig kod för förenklad inloggning så rekommenderar vi att du använder den istället för Mobilt BankID. Backa då tillbaka ett steg och välj Swedbank och Sparbankerna. På så sätt kan du få automatiskta varningar och notiser utan att behöva använda Mobilt BankID för att logga in i Tink varje gång.",
+			"payload": "savingsbank",
+			"popular": true,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "BANK"
+		},
+		{
+			"capabilities": [
+				"TRANSFERS",
+				"MORTGAGE_AGGREGATION"
+			],
+			"className": "banks.swedbank.SwedbankAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayName": "Swedbank Ung",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"groupDisplayName": "Swedbank och Sparbankerna",
+			"multiFactor": true,
+			"name": "swedbank-bankid-youth",
+			"passwordHelpText": "Du använder Mobilt BankID på samma sätt som i Swedbanks mobilapp. Om du har en personlig kod för förenklad inloggning så rekommenderar vi att du använder den istället för Mobilt BankID. Backa då tillbaka ett steg och välj Swedbank Ung. På så sätt kan du få automatiskta varningar och notiser utan att behöva använda Mobilt BankID för att logga in i Tink varje gång.",
+			"payload": "swedbank-youth",
+			"popular": true,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "BANK"
+		},
+		{
+			"capabilities": [
+				"TRANSFERS",
+				"MORTGAGE_AGGREGATION"
+			],
+			"className": "banks.swedbank.SwedbankAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayName": "Sparbankerna Ung",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"groupDisplayName": "Swedbank och Sparbankerna",
+			"multiFactor": true,
+			"name": "savingsbank-bankid-youth",
+			"passwordHelpText": "Du använder Mobilt BankID på samma sätt som i Sparbankernas mobilapp. Om du har en personlig kod för förenklad inloggning så rekommenderar vi att du använder den istället för Mobilt BankID. Backa då tillbaka ett steg och välj Swedbank Ung. På så sätt kan du få automatiskta varningar och notiser utan att behöva använda Mobilt BankID för att logga in i Tink varje gång.",
+			"payload": "savingsbank-youth",
+			"popular": true,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "BANK"
+		},
+		{
+			"capabilities": [
+				"TRANSFERS",
+				"MORTGAGE_AGGREGATION"
+			],
+			"className": "banks.nordea.NordeaAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayName": "Nordea",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"groupDisplayName": "Nordea",
+			"multiFactor": true,
+			"name": "nordea-bankid",
+			"passwordHelpText": "Du loggar in med Mobilt BankID på samma sätt som i Nordeas mobilapp. Läs mer hos [Nordea](http://www.nordea.se/privat/vardagstjanster/internet-mobil-telefon/mobilbanken.html).",
+			"popular": true,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "BANK"
+		},
+		{
+			"capabilities": [
+				"TRANSFERS",
+				"MORTGAGE_AGGREGATION"
+			],
+			"className": "banks.danskebank.v2.DanskeBankV2Agent",
+			"credentialsType": "PASSWORD",
+			"displayDescription": "Kodbox",
+			"displayName": "Danske Bank",
+			"groupDisplayName": "Danske Bank",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				},
+				{
+					"description": "Servicekod",
+					"hint": "NNNN",
+					"masked": true,
+					"maxLength": 4,
+					"minLength": 4,
+					"name": "password",
+					"numeric": true,
+					"pattern": "([0-9]{4})",
+					"patternError": "Vänligen ange fyra siffror."
+				}
+			],
+			"multiFactor": true,
+			"name": "danskebank",
+			"passwordHelpText": "Du använder samma 4-siffriga servicekod som för Danske Banks mobilapp. Du behöver dessutom tillgång till din kodbox för att skapa en skärmkod. Läs mer hos [Danske Bank](http://www.danskebank.se/sv-se/privat/Onlinetjanster/mobila-tjanster/Pages/mobilbank.aspx).",
+			"payload": "SE",
+			"popular": true,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "BANK"
+		},
+		{
+			"capabilities": [
+				"TRANSFERS",
+				"MORTGAGE_AGGREGATION"
+			],
+			"className": "banks.danskebank.v2.DanskeBankV2Agent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayDescription": "Mobilt BankID",
+			"displayName": "Danske Bank",
+			"groupDisplayName": "Danske Bank",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"multiFactor": true,
+			"name": "danskebank-bankid",
+			"passwordHelpText": "Du använder Mobilt BankID på samma sätt som i Danske Banks mobilapp. Du kan beställa Mobilt BankID i internetbanken.",
+			"payload": "SE",
+			"popular": true,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "BANK"
+		},
+		{
+			"capabilities": [
+				"TRANSFERS",
+				"MORTGAGE_AGGREGATION"
+			],
+			"className": "banks.se.icabanken.ICABankenAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayDescription": "Mobilt BankID",
+			"displayName": "ICAbanken",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"groupDisplayName": "ICAbanken",
+			"name": "icabanken-bankid",
+			"passwordHelpText": "Du använder Mobilt BankID på samma sätt som i ICAbankens mobilapp. Du kan beställa Mobilt BankID på internetbanken.",
+			"popular": true,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "BANK"
+		},
+		{
+			"className": "banks.SkandiabankenAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayName": "Skandiabanken",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"name": "skandiabanken-ssn-bankid",
+			"passwordHelpText": "Du använder Mobilt BankID på samma sätt som i Skandiabankens mobilapp. Du kan beställa Mobilt BankID på internetbanken. Läs mer hos [Skandiabanken](http://www.skandiabanken.se/hem/Konton/Mobila-planboken/Fakta/Mobila-planboken/Sa-har-ansluter-du-dig/).",
+			"popular": true,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "BANK"
+		},
+		{
+			"className": "banks.SkandiabankenAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayName": "Skandiabanken",
+			"fields": [],
+			"name": "skandiabanken-bankid",
+			"passwordHelpText": "Du använder Mobilt BankID på samma sätt som i Skandiabankens mobilapp. Du kan beställa Mobilt BankID på internetbanken. Läs mer hos [Skandiabanken](http://www.skandiabanken.se/hem/Konton/Mobila-planboken/Fakta/Mobila-planboken/Sa-har-ansluter-du-dig/).",
+			"popular": true,
+			"status": "OBSOLETE",
+			"transactional": "true",
+			"type": "BANK"
+		},
+		{
+			"capabilities": [
+				"TRANSFERS",
+				"MORTGAGE_AGGREGATION"
+			],
+			"className": "banks.LansforsakringarAgent",
+			"credentialsType": "PASSWORD",
+			"displayDescription": "PIN-kod",
+			"displayName": "Länsförsäkringar Bank",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				},
+				{
+					"description": "PIN-kod",
+					"hint": "NNNN",
+					"masked": true,
+					"maxLength": 4,
+					"minLength": 4,
+					"name": "password",
+					"numeric": true,
+					"pattern": "([0-9]{4})",
+					"patternError": "Vänligen ange fyra siffror."
+				}
+			],
+			"groupDisplayName": "Länsförsäkringar Bank",
+			"name": "lansforsakringar",
+			"passwordHelpText": "Du använder samma PIN-kod som för Länsförsäkringars internettjänst eller mobilapp. Om du inte har någon PIN-kod kan du beställa en via Länsförsäkringars kundtjänst (telefon 0771-666 555 och dröj kvar för personlig service).",
+			"popular": true,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "BANK"
+		},
+		{
+			"capabilities": [
+				"TRANSFERS",
+				"MORTGAGE_AGGREGATION"
+			],
+			"className": "banks.LansforsakringarAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayDescription": "Mobilt BankID",
+			"displayName": "Länsförsäkringar Bank",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"groupDisplayName": "Länsförsäkringar Bank",
+			"name": "lansforsakringar-bankid",
+			"passwordHelpText": "Du använder Mobilt BankID på samma sätt som för Länsförsäkringars internettjänst eller mobilapp.",
+			"popular": true,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "BANK"
+		},
+		{
+			"className": "creditcards.americanexpress.v3.AmericanExpressV3Agent",
+			"credentialsType": "PASSWORD",
+			"displayName": "American Express",
+			"fields": [
+				{
+					"description": "Användarnamn",
+					"immutable": true,
+					"name": "username"
+				},
+				{
+					"description": "Lösenord",
+					"masked": true,
+					"name": "password"
+				}
+			],
+			"groupDisplayName": "American Express",
+			"name": "americanexpress",
+			"passwordHelpText": "Du använder samma lösenord som när du loggar in på americanexpress.se. Du kan beställa ett nytt användarnamn och lösenord hos [American Express](https://global.americanexpress.com/myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=sv_SE).",
+			"payload": "SE",
+			"popular": true,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "CREDIT_CARD"
+		},
+		{
+			"className": "creditcards.americanexpress.v3.AmericanExpressV3Agent",
+			"credentialsType": "PASSWORD",
+			"displayName": "SAS EuroBonus American Express",
+			"fields": [
+				{
+					"description": "Användarnamn",
+					"immutable": true,
+					"name": "username"
+				},
+				{
+					"description": "Lösenord",
+					"masked": true,
+					"name": "password"
+				}
+			],
+			"groupDisplayName": "American Express",
+			"name": "saseurobonusamericanexpress",
+			"passwordHelpText": "Du använder samma lösenord som när du loggar in på americanexpress.se. Du kan beställa ett nytt användarnamn och lösenord hos [American Express](https://global.americanexpress.com/myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=sv_SE).",
+			"payload": "sv_SE",
+			"popular": true,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "CREDIT_CARD"
+		},
+		{
+			"className": "creditcards.sebkort.SEBKortAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayName": "Eurocard",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"multiFactor": true,
+			"name": "eurocard-bankid",
+			"passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som när du loggar in på Eurocards hemsida. Du kommer tillbaka till Tink när du har legitimerat dig.",
+			"payload": "ecse:0005",
+			"popular": true,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "CREDIT_CARD"
+		},
+		{
+			"className": "creditcards.sebkort.SEBKortAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayName": "SAS EuroBonus MasterCard",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"multiFactor": true,
+			"name": "saseurobonusmastercard-bankid",
+			"passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som när du loggar in på SAS Eurobonus MasterCards hemsida. Du kommer tillbaka till Tink när du har legitimerat dig.",
+			"payload": "sase:0102",
+			"popular": true,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "CREDIT_CARD"
+		},
+		{
+			"className": "creditcards.sebkort.SEBKortAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayName": "SJ Prio MasterCard",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"multiFactor": true,
+			"name": "sjpriomastercard-bankid",
+			"passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som som när du loggar in på SJ Prio MasterCards hemsida. Du kommer tillbaka till Tink när du har legitimerat dig.",
+			"payload": "sjse:0104",
+			"popular": false,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "CREDIT_CARD"
+		},
+		{
+			"className": "creditcards.sebkort.SEBKortAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayName": "NK Nyckeln MasterCard",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"multiFactor": true,
+			"name": "nknyckelnmastercard-bankid",
+			"passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som när du loggar in på NK Nyckeln MasterCards hemsida.",
+			"payload": "nkse:0007",
+			"popular": false,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "CREDIT_CARD"
+		},
+		{
+			"className": "creditcards.sebkort.SEBKortAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayName": "JET MasterCard",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"multiFactor": true,
+			"name": "jetmastercard-bankid",
+			"passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som när du loggar in på JET MasterCards hemsida.",
+			"payload": "jese:0032",
+			"popular": false,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "CREDIT_CARD"
+		},
+		{
+			"className": "creditcards.sebkort.SEBKortAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayName": "Chevrolet Big Plus Card",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"multiFactor": true,
+			"name": "chevroletmastercard-bankid",
+			"passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som som när du loggar in på Chevrolet Big Plus Cards hemsida.",
+			"payload": "chse:0086",
+			"popular": false,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "CREDIT_CARD"
+		},
+		{
+			"className": "creditcards.sebkort.SEBKortAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayName": "SAAB MasterCard",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"multiFactor": true,
+			"name": "saabmastercard-bankid",
+			"passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som när du loggar in på SAAB MasterCards hemsida.",
+			"payload": "sbse:0106",
+			"popular": false,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "CREDIT_CARD"
+		},
+		{
+			"className": "creditcards.sebkort.SEBKortAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayName": "Opel MasterCard",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"multiFactor": true,
+			"name": "opelmastercard-bankid",
+			"passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som när du loggar in på Opel MasterCards hemsida.",
+			"payload": "opse:0107",
+			"popular": false,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "CREDIT_CARD"
+		},
+		{
+			"className": "creditcards.sebkort.SEBKortAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayName": "Nordic Choice Club MasterCard",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"multiFactor": true,
+			"name": "choicemastercard-bankid",
+			"passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som när du loggar in på Nordic Choice Club MasterCards hemsida.",
+			"payload": "cose:0108",
+			"popular": false,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "CREDIT_CARD"
+		},
+		{
+			"className": "creditcards.sebkort.SEBKortAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayName": "Djurgårdskortet MasterCard",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"multiFactor": true,
+			"name": "djurgardskortetmastercard-bankid",
+			"passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som när du loggar in på Djurgårdskortet MasterCards hemsida.",
+			"payload": "djse:0116",
+			"popular": false,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "CREDIT_CARD"
+		},
+		{
+			"className": "creditcards.sebkort.SEBKortAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayName": "Statoil MasterCard",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"multiFactor": true,
+			"name": "statoilmastercard-bankid",
+			"passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som när du loggar in på Statoil MasterCards hemsida.",
+			"payload": "stse:0122",
+			"popular": false,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "CREDIT_CARD"
+		},
+		{
+			"className": "creditcards.sebkort.SEBKortAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayName": "Finnair Plus MasterCard",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"multiFactor": true,
+			"name": "finnairmastercard-bankid",
+			"passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt somm när du loggar in på Finnair Plus MasterCards hemsida.",
+			"payload": "fase:0129",
+			"popular": false,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "CREDIT_CARD"
+		},
+		{
+			"className": "creditcards.sebkort.SEBKortAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayName": "SEB Wallet MasterCard",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"multiFactor": true,
+			"name": "sebwalletmastercard-bankid",
+			"passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som när du loggar in på SEB Wallet MasterCards hemsida.",
+			"payload": "wase:0121",
+			"popular": false,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "CREDIT_CARD"
+		},
+		{
+			"className": "brokers.avanza.AvanzaV2Agent",
+			"credentialsType": "PASSWORD",
+			"displayDescription": "Lösenord",
+			"displayName": "Avanza Bank",
+			"fields": [
+				{
+					"description": "Användarnamn",
+					"immutable": true,
+					"name": "username"
+				},
+				{
+					"description": "Lösenord",
+					"masked": true,
+					"name": "password"
+				}
+			],
+			"groupDisplayName": "Avanza Bank",
+			"multiFactor": false,
+			"name": "avanza",
+			"passwordHelpText": "Du använder samma användarnamn och lösenord som när du loggar in på avanza.se. Du kan beställa ett nytt användarnamn och lösenord hos [Avanza](https://www.avanza.se/aza/login/forgotten.jsp).",
+			"popular": true,
+			"status": "ENABLED",
+			"transactional": "false",
+			"type": "BROKER"
+		},
+		{
+			"className": "brokers.avanza.AvanzaV2Agent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayDescription": "Mobilt BankID",
+			"displayName": "Avanza Bank",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"groupDisplayName": "Avanza Bank",
+			"multiFactor": true,
+			"name": "avanza-bankid",
+			"passwordHelpText": "Du använder Mobilt Bankid för att bekräfta din identitet på samma sätt som i Avanzas app.",
+			"popular": true,
+			"status": "ENABLED",
+			"transactional": "false",
+			"type": "BROKER"
+		},
+		{
+			"className": "brokers.NordnetAgent",
+			"credentialsType": "PASSWORD",
+			"displayDescription": "Lösenord",
+			"displayName": "Nordnet",
+			"fields": [
+				{
+					"description": "Användarnamn",
+					"immutable": true,
+					"name": "username"
+				},
+				{
+					"description": "Lösenord",
+					"masked": true,
+					"name": "password"
+				}
+			],
+			"groupDisplayName": "Nordnet",
+			"name": "nordnet",
+			"passwordHelpText": "Du använder samma användarnamn och lösenord som när du loggar in på nordnet.se. Du kan beställa ett nytt användarnamn och lösenord hos [Nordnet](https://www.nordnet.se/mux/login/NewPsw.html?a3=NNSE&a4=sv&usePhrase=0).",
+			"popular": true,
+			"status": "ENABLED",
+			"transactional": false,
+			"type": "BROKER"
+		},
+		{
+			"className": "brokers.NordnetAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayDescription": "Mobilt BankID",
+			"displayName": "Nordnet",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"groupDisplayName": "Nordnet",
+			"multiFactor": true,
+			"name": "nordnet-bankid",
+			"passwordHelpText": "Du använder Mobilt Bankid för att bekräfta din identitet på samma sätt som i Nordnets mobil app.",
+			"popular": true,
+			"status": "ENABLED",
+			"transactional": false,
+			"type": "BROKER"
+		},
+		{
+			"className": "other.CSNAgent",
+			"credentialsType": "PASSWORD",
+			"displayName": "CSN",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				},
+				{
+					"description": "PIN-kod",
+					"hint": "NNNN",
+					"masked": true,
+					"maxLength": 4,
+					"minLength": 4,
+					"name": "password",
+					"pattern": "([0-9]{4})",
+					"patternError": "Vänligen ange fyra siffror."
+				}
+			],
+			"name": "csn",
+			"passwordHelpText": "Du använder samma 4-siffriga PIN kod som när du loggar in på csn.se. Du kan beställa en ny kod hos [CSN](https://www.csn.se/bas/ekund/personligKod.do).",
+			"popular": true,
+			"status": "ENABLED",
+			"transactional": "false",
+			"type": "OTHER"
+		},
+		{
+			"className": "creditcards.rikskortet.RikskortetAgent",
+			"credentialsType": "PASSWORD",
+			"displayName": "Ticket Rikskortet",
+			"fields": [
+				{
+					"description": "Användarnamn",
+					"immutable": true,
+					"name": "username"
+				},
+				{
+					"description": "Lösenord",
+					"masked": true,
+					"name": "password"
+				}
+			],
+			"name": "rikskortet",
+			"passwordHelpText": "Du använder samma användarnamn och lösenord som när du använder Rikskortets app eller loggar in på hemsidan. Du kan beställa en ny kod på [hemsidan](https://www.edenred.se/sv/System/Glomt-losenord/).",
+			"popular": false,
+			"status": "ENABLED",
+			"transactional": "false",
+			"type": "CREDIT_CARD"
+		},
+		{
+			"className": "creditcards.ikano.IkanoCardAgent",
+			"credentialsType": "PASSWORD",
+			"displayName": "IKANO Kort",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"exposed": true,
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"masked": false,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username"
+				},
+				{
+					"description": "PIN-kod",
+					"exposed": true,
+					"hint": "NNN",
+					"masked": true,
+					"maxLength": 3,
+					"minLength": 3,
+					"name": "password",
+					"numeric": true,
+					"pattern": "([0-9]{3})",
+					"patternError": "Vänligen ange tre siffror."
+				}
+			],
+			"name": "ikanokort",
+			"passwordHelpText": "Du använder samma självbetjäningskod som när du loggar in på IKANO Korts hemsida. Självbetjäningskoden är din talsvarskod, som finns på din faktura.",
+			"payload": "https://partner.ikanobank.se/web/Logga_in",
+			"popular": false,
+			"status": "ENABLED",
+			"transactional": true,
+			"type": "CREDIT_CARD"
+		},
+		{
+			"className": "creditcards.ikano.api.IkanoApiAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayName": "Preem",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"exposed": true,
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"masked": false,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"multifactor": true,
+			"name": "preem-bankid",
+			"passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som när du loggar in på Preems hemsida.",
+			"payload": "PREEM",
+			"popular": false,
+			"status": "ENABLED",
+			"transactional": true,
+			"type": "CREDIT_CARD"
+		},
+		{
+			"className": "creditcards.ikano.IkanoCardAgent",
+			"credentialsType": "PASSWORD",
+			"displayName": "Shell MasterCard",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"exposed": true,
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"masked": false,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username"
+				},
+				{
+					"description": "PIN-kod",
+					"exposed": true,
+					"hint": "NNN",
+					"masked": true,
+					"maxLength": 3,
+					"minLength": 3,
+					"name": "password",
+					"numeric": true,
+					"pattern": "([0-9]{3})",
+					"patternError": "Vänligen ange tre siffror."
+				}
+			],
+			"name": "shellmastercard",
+			"passwordHelpText": "Du använder samma självbetjäningskod som när du loggar in på Shell MasterCards hemsida. Självbetjäningskoden är din talsvarskod, som finns på ditt kontoutdrag.",
+			"payload": "https://partner.ikanobank.se/web/shellcustomerlogin",
+			"popular": false,
+			"status": "ENABLED",
+			"transactional": true,
+			"type": "CREDIT_CARD"
+		},
+		{
+			"className": "creditcards.ikano.IkanoCardAgent",
+			"credentialsType": "PASSWORD",
+			"displayName": "Volkswagen Kortet",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"exposed": true,
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"masked": false,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username"
+				},
+				{
+					"description": "PIN-kod",
+					"exposed": true,
+					"hint": "NNN",
+					"masked": true,
+					"maxLength": 3,
+					"minLength": 3,
+					"name": "password",
+					"numeric": true,
+					"pattern": "([0-9]{3})",
+					"patternError": "Vänligen ange tre siffror."
+				}
+			],
+			"name": "volkswagenkortet",
+			"passwordHelpText": "Du använder samma självbetjäningskod som när du loggar in på Volkswagen Mitt Konto. Självbetjäningskoden är din talsvarskod, som finns på ditt kontoutdrag.",
+			"payload": "https://partner.ikanobank.se/web/volkcustomerlogin",
+			"popular": false,
+			"status": "ENABLED",
+			"transactional": true,
+			"type": "CREDIT_CARD"
+		},
+		{
+			"className": "creditcards.ikano.IkanoCardAgent",
+			"credentialsType": "PASSWORD",
+			"displayName": "SEAT Kortet",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"exposed": true,
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"masked": false,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username"
+				},
+				{
+					"description": "PIN-kod",
+					"exposed": true,
+					"hint": "NNN",
+					"masked": true,
+					"maxLength": 3,
+					"minLength": 3,
+					"name": "password",
+					"numeric": true,
+					"pattern": "([0-9]{3})",
+					"patternError": "Vänligen ange tre siffror."
+				}
+			],
+			"name": "seatkortet",
+			"passwordHelpText": "Du använder samma självbetjäningskod som när du loggar in på SEAT Mitt Konto. Självbetjäningskoden är din talsvarskod, som finns på ditt kontoutdrag.",
+			"payload": "https://partner.ikanobank.se/web/seatcustomerlogin",
+			"popular": false,
+			"status": "ENABLED",
+			"transactional": true,
+			"type": "CREDIT_CARD"
+		},
+		{
+			"className": "creditcards.ikano.IkanoCardAgent",
+			"credentialsType": "PASSWORD",
+			"displayName": "Skoda Kortet",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"exposed": true,
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"masked": false,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username"
+				},
+				{
+					"description": "PIN-kod",
+					"exposed": true,
+					"hint": "NNN",
+					"masked": true,
+					"maxLength": 3,
+					"minLength": 3,
+					"name": "password",
+					"numeric": true,
+					"pattern": "([0-9]{3})",
+					"patternError": "Vänligen ange tre siffror."
+				}
+			],
+			"name": "skodakortet",
+			"passwordHelpText": "Du använder samma självbetjäningskod som när du loggar in på Skoda Mitt Konto. Självbetjäningskoden är din talsvarskod, som finns på ditt kontoutdrag.",
+			"payload": "https://partner.ikanobank.se/web/Skodacustomerlogin",
+			"popular": false,
+			"status": "ENABLED",
+			"transactional": true,
+			"type": "CREDIT_CARD"
+		},
+		{
+			"className": "demo.DemoAgent",
+			"credentialsType": "PASSWORD",
+			"displayName": "Demo",
+			"fields": [
+				{
+					"description": "Användarnamn",
+					"immutable": true,
+					"name": "username"
+				},
+				{
+					"description": "Lösenord",
+					"masked": true,
+					"name": "password"
+				}
+			],
+			"name": "demo",
+			"passwordHelpText": "",
+			"popular": false,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "TEST"
+		},
+		{
+			"className": "creditcards.okq8.OKQ8BankAgent",
+			"credentialsType": "PASSWORD",
+			"displayName": "OKQ8 Bank",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"exposed": true,
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"masked": false,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true,
+					"optional": false
+				},
+				{
+					"description": "Lösenord",
+					"exposed": true,
+					"helpText": null,
+					"hint": null,
+					"immutable": false,
+					"masked": true,
+					"maxLength": 0,
+					"minLength": 0,
+					"name": "password",
+					"numeric": false,
+					"optional": false,
+					"pattern": null
+				}
+			],
+			"name": "okq8bank",
+			"passwordHelpText": "Du använder samma lösenord som när du loggar in på OKQ8 Banks hemsida. Med ditt första kontoutdrag finns ett lösenord som du använder första gången du loggar in. ",
+			"popular": false,
+			"status": "ENABLED",
+			"transactional": true,
+			"type": "CREDIT_CARD"
+		},
+		{
+			"capabilities": [
+				"TRANSFERS"
+			],
+			"className": "banks.se.collector.CollectorAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayDescription": "Mobilt BankID",
+			"displayName": "Collector Bank",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"multiFactor": true,
+			"name": "collector-bankid",
+			"passwordHelpText": "För att ansluta din bank behöver du legitimera dig med Mobilt BankID. Du använder Mobilt BankID på samma sätt som i Collector Banks webbsida.",
+			"popular": false,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "BANK"
+		},
+		{
+			"className": "creditcards.coop.CoopAgent",
+			"credentialsType": "PASSWORD",
+			"displayName": "Coop MedMera",
+			"fields": [
+				{
+					"description": "Användarnamn",
+					"immutable": true,
+					"name": "username"
+				},
+				{
+					"description": "Lösenord",
+					"masked": true,
+					"name": "password"
+				}
+			],
+			"name": "coop",
+			"passwordHelpText": "Du använder samma användarnamn och lösenord som när du loggar in på Coops hemsida eller mobilapp.",
+			"popular": false,
+			"status": "ENABLED",
+			"transactional": true,
+			"type": "CREDIT_CARD"
+		},
+		{
+			"className": "fraud.CreditSafeAgent",
+			"credentialsType": "FRAUD",
+			"displayName": "ID-Koll",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"groupDisplayName": "Fraud",
+			"name": "creditsafe",
+			"passwordHelpText": "Ange personnummer",
+			"popular": true,
+			"status": "OBSOLETE",
+			"transactional": "false",
+			"type": "FRAUD"
+		},
+		{
+			"className": "demo.DemoAgent",
+			"credentialsType": "PASSWORD",
+			"currency": "SEK",
+			"displayName": "Forex Bank",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"exposed": true,
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"masked": false,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true,
+					"optional": false
+				}
+			],
+			"market": "SE",
+			"multifactor": false,
+			"name": "forex",
+			"passwordHelpText": "Du använder ditt personnummer och PIN-kod på samma sätt som när du loggar in i Forex Banks mobilapp.",
+			"popular": false,
+			"refreshFrequency": 0,
+			"status": "ENABLED",
+			"transactional": true,
+			"type": "BANK"
+		},
+		{
+			"className": "banks.se.alandsbanken.AlandsBankenAgent",
+			"credentialsType": "PASSWORD",
+			"currency": "SEK",
+			"displayName": "Ålandsbanken",
+			"fields": [
+				{
+					"description": "Användar-ID",
+					"immutable": true,
+					"masked": false,
+					"name": "username",
+					"optional": false
+				},
+				{
+					"description": "Lösenord",
+					"exposed": true,
+					"immutable": false,
+					"masked": true,
+					"maxLength": 0,
+					"minLength": 0,
+					"name": "password",
+					"numeric": false,
+					"optional": false
+				}
+			],
+			"market": "SE",
+			"multifactor": true,
+			"name": "alandsbanken",
+			"passwordHelpText": "Du använder ditt svenska användar ID och lösenord på samma sätt som när du loggar in i Ålandsbankens mobilapp.",
+			"popular": false,
+			"refreshFrequency": 0,
+			"status": "ENABLED",
+			"transactional": true,
+			"type": "BANK"
+		},
+		{
+			"className": "creditcards.supremecard.v2.SupremeCardAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"currency": "SEK",
+			"displayName": "Supreme Card",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"market": "SE",
+			"multifactor": true,
+			"name": "supremecard-bankid",
+			"passwordHelpText": "Du använder samma lösenord som när du loggar in på Supreme Cards hemsida. Om du inte kommer ihåg ditt lösenord, kan du nollställa detta genom att ringa kundservice: 077-440 44 77.",
+			"popular": false,
+			"refreshFrequency": 1,
+			"status": "ENABLED",
+			"transactional": true,
+			"type": "CREDIT_CARD"
+		},
+		{
+			"className": "banks.norwegian.NorwegianAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayName": "Norwegian Bank",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"multiFactor": true,
+			"name": "norwegian-bankid",
+			"passwordHelpText": "För att ansluta din bank behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som på Norwegian's hemsida. Mer info hittar du hos [Norwegian](https://www.banknorwegian.se/Kundservice/e-legitimation/mobilt-bankid).",
+			"popular": false,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "BANK"
+		},
+		{
+			"credentialsType": "PASSWORD",
+			"displayName": "SEB Abstract",
+			"groupDisplayName": null,
+			"name": "se-seb-abstract",
+			"popular": false,
+			"status": "DISABLED",
+			"transactional": true,
+			"type": "BANK"
+		},
+		{
+			"credentialsType": "PASSWORD",
+			"displayName": "TEST_PARTNER Abstract",
+			"groupDisplayName": null,
+			"name": "se-testpartner-abstract",
+			"popular": false,
+			"status": "DISABLED",
+			"transactional": true,
+			"type": "BANK"
+		},
+		{
+			"credentialsType": "PASSWORD",
+			"displayName": "KIRKBY Abstract",
+			"groupDisplayName": null,
+			"name": "se-kirkby-abstract",
+			"popular": false,
+			"status": "DISABLED",
+			"transactional": true,
+			"type": "BANK"
+		},
+		{
+			"credentialsType": "PASSWORD",
+			"displayName": "NEWPORT Abstract",
+			"groupDisplayName": null,
+			"name": "se-newport-abstract",
+			"popular": false,
+			"status": "DISABLED",
+			"transactional": true,
+			"type": "BANK"
+		},
+                {
+                        "credentialsType": "PASSWORD",
+                        "displayName": "OXFORD Abstract",
+                        "groupDisplayName": null,
+                        "name": "se-oxford-abstract",
+                        "popular": false,
+                        "status": "DISABLED",
+                        "transactional": true,
+                        "type": "BANK"
+                },
+		{
+			"capabilities": [
+				"TRANSFERS",
+				"MORTGAGE_AGGREGATION"
+			],
+			"className": "banks.sbab.SBABAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayDescription": "Mobilt BankID",
+			"displayName": "SBAB",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"groupDisplayName": "SBAB",
+			"multiFactor": false,
+			"name": "sbab-bankid",
+			"passwordHelpText": "För att ansluta din bank behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som på SBAB:s hemsida. Mer info hittar du hos [SBAB](http://www.sbab.se).",
+			"popular": false,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "BANK"
+		},
+		{
+			"className": "brokers.lysa.LysaAgent",
+			"credentialsType": "MOBILE_BANKID",
+			"displayDescription": "Mobilt BankID",
+			"displayName": "Lysa",
+			"fields": [
+				{
+					"description": "Personnummer",
+					"pattern": "(19|20)[0-9]{10}",
+					"patternError": "Vänligen ange ett befintligt personnummer.",
+					"hint": "ÅÅÅÅMMDDNNNN",
+					"immutable": true,
+					"maxLength": 12,
+					"minLength": 12,
+					"name": "username",
+					"numeric": true
+				}
+			],
+			"multiFactor": true,
+			"name": "lysa",
+			"passwordHelpText": "För att ansluta Lysa behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som på Lysa:s hemsida.",
+			"popular": false,
+			"status": "ENABLED",
+			"transactional": "true",
+			"type": "BROKER"
+		}
+	]
+}

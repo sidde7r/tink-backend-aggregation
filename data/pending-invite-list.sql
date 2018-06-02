@@ -1,0 +1,1 @@
+select s.email,s.datetime from invite_signup s left join invite_codes c on s.id = c.signupid left join users u on s.email = u.username where u.id IS NULL and c.code IS NULL order by s.datetime

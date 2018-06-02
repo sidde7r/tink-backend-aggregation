@@ -1,0 +1,6 @@
+[submodule "src/main-grpc-v1-api/src/main/proto"]
+	path = proto
+	url = git@github.com:tink-ab/tink-grpc.git
+[submodule "tink-oauth-grpc"]
+	path = tink-oauth-grpc
+	url = git@github.com:tink-ab/tink-oauth-grpc

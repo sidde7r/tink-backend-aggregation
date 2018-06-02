@@ -1,0 +1,267 @@
+{
+    "market": "ES",
+    "currency": "EUR",
+    "providers":
+    [
+        {
+            "name":"es-banco-de-sabadell",
+            "displayName":"Banco de Sabadell",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"banks.es.sabadell.SabadellAgent",
+            "passwordHelpText":null,
+            "transactional":true,
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"User ID",
+                    "immutable":true
+                },
+                {
+                    "name":"password",
+                    "description":"Access Code",
+                    "masked":true,
+                    "numeric":true
+                }
+            ]
+        },
+        {
+            "name":"es-banco-popular",
+            "displayName":"Banco Popular",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"demo.DemoAgent",
+            "passwordHelpText":null,
+            "transactional":true,
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"Username",
+                    "immutable":true
+                },
+                {
+                    "name":"password",
+                    "description":"PIN",
+                    "masked":true,
+                    "numeric":true,
+                    "minLength":4,
+                    "maxLength":4,
+                    "hint":"NNNN",
+                    "pattern":"([0-9]{4})",
+                    "patternError":"Please enter 4 digits."
+                }
+            ]
+        },
+        {
+            "name":"es-banco-santander",
+            "displayName":"Banco Santander",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"demo.DemoAgent",
+            "passwordHelpText":null,
+            "transactional":true,
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"Username",
+                    "immutable":true
+                },
+                {
+                    "name":"password",
+                    "description":"Access key",
+                    "masked":true
+                }
+            ]
+        },
+        {
+            "name":"es-bankia",
+            "displayName":"Bankia",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"banks.es.bankia.BankiaAgent",
+            "passwordHelpText":null,
+            "transactional":true,
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"Document number",
+                    "helpText":"ID, passport or residence card",
+                    "immutable":true
+                },
+                {
+                    "name":"password",
+                    "description":"Password",
+                    "numeric":true,
+                    "masked":true
+                }
+            ]
+        },
+        {
+            "name":"es-bbva",
+            "displayName":"BBVA",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"demo.DemoAgent",
+            "passwordHelpText":null,
+            "transactional":true,
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"Username",
+                    "immutable":true
+                },
+                {
+                    "name":"password",
+                    "description":"Password",
+                    "masked":true
+                }
+            ]
+        },
+        {
+            "name":"es-evo-banco",
+            "displayName":"EVO Banco",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"demo.DemoAgent",
+            "passwordHelpText":null,
+            "transactional":true,
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"Card number",
+                    "immutable":true,
+                    "numeric":true,
+                    "minLength":10,
+                    "maxLength":10,
+                    "hint":"NNNNNNNNNN",
+                    "pattern":"([0-9]{10})",
+                    "patternError":"Please enter 10 digits."
+                },
+                {
+                    "name":"password",
+                    "description":"PIN",
+                    "masked":true,
+                    "numeric":true,
+                    "minLength":4,
+                    "maxLength":4,
+                    "hint":"NNNN",
+                    "pattern":"([0-9]{4})",
+                    "patternError":"Please enter 4 digits."
+                }
+            ]
+        },
+        {
+            "name":"es-ing-direct",
+            "displayName":"ING DIRECT",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"demo.DemoAgent",
+            "passwordHelpText":null,
+            "transactional":true,
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"Número de documento",
+                    "hint": "DNI o Tarjeta de Residencia",
+                    "immutable":true
+                },
+                {
+                    "name":"dateofbirth",
+                    "description":"Fecha de nacimiento",
+                    "hint":"DDMMAAAA",
+                    "numeric":true,
+                    "immutable":true,
+                    "minLength":8,
+                    "maxLength":8,
+                    "pattern":"([0-9]{8})",
+                    "patternError":"Please enter 8 digits."
+                }
+            ]
+        },
+        {
+            "name":"es-la-caixa",
+            "displayName":"La Caixa",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"banks.es.lacaixa.LaCaixaAgent",
+            "passwordHelpText":null,
+            "transactional":true,
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"ID number",
+                    "immutable":true,
+                    "numeric":true
+                },
+                {
+                    "name":"password",
+                    "description":"PIN",
+                    "numeric":true,
+                    "masked":true
+                }
+            ]
+        },
+        {
+            "name":"es-americanexpress",
+            "displayName":"American Express",
+            "groupDisplayName":"American Express",
+            "popular":true,
+            "type":"CREDIT_CARD",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "className":"creditcards.americanexpress.AmericanExpressV1Agent",
+            "passwordHelpText":"You use the same username and password as you use on americanexpress.com in order to verify your identity.",
+            "transactional":true,
+            "payload":"es_ES",
+            "fields":[
+                {"description":"Username",
+                    "name":"username",
+                    "immutable":true},
+
+                {"description":"Password",
+                    "masked":true,
+                    "name":"password"}
+            ]
+        }
+    ]
+}

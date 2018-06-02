@@ -1,0 +1,31 @@
+@args String title, List<se.tink.backend.common.workers.activity.renderers.models.BudgetSummaryData> budgets, int pieMargin
+
+<div class="budget-summary v2">
+	<div class="divider-wrapper">
+		<div class="divider"></div>
+	</div>
+	<div class="activity-description-text">@title</div>
+
+	<div class="pie-charts">
+		<span class="pie" onclick="onclick@budgets.get(0).getDeeplinkMethodName() ()">
+			@escape("RAW") {@budgets.get(0).getPieChart()}
+		</span>
+
+		@for (int i = 1; i < budgets.size(); i++) {
+			<span class="pie" onclick="onclick@budgets.get(i).getDeeplinkMethodName() ()" style="margin-left: @(pieMargin)px;">
+				@escape("RAW") {@budgets.get(i).getPieChart()}
+			</span>
+		}
+
+		<script>
+		@for (se.tink.backend.common.workers.activity.renderers.models.BudgetSummaryData budget : budgets) {
+			function onclick@budget.getDeeplinkMethodName() () {
+			  @if(budget.getDeeplink() != null)
+			  {
+				window.location.href = "@budget.getDeeplink()";
+			  }
+			}
+		}
+		</script>
+	</div>
+</div>

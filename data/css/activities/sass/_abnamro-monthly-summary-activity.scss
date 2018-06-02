@@ -1,0 +1,92 @@
+.abnamro-monthly-summary-activity
+{
+  margin-left: -$padding;
+  margin-right: -$padding;
+  margin-bottom: -$vertical-activity-padding;
+
+  .period-summary-part
+  {
+    margin: 0;
+    padding: 0;
+
+    .group
+    {
+      padding: 2 * $padding $padding;
+
+      .content
+      {
+        float: left;
+        margin-left: -30px; /* the width of the icon */
+        width: 100%;
+
+        .text
+        {
+          padding-left: 38px; /* the width of the icon plus margin */
+        }
+
+        .title
+        {
+          float: left;
+          width: 60%;
+          height: 20px;
+          line-height: 22px;
+          overflow: hidden;
+          
+          font-family: ProximaNovaA-Regular, proxima;
+          font-size: 18px;
+          color: $header-color;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .amount
+        {
+          float: right;
+          width: 40%;
+          height: 20px;
+          line-height: 22px;
+          overflow: hidden;
+
+          font-family: 'proxima-light', ProximaNovaA-Light;
+          font-size: 20px;
+          color: $header-color;
+          text-align: right;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .description
+        {
+          clear: both;
+          line-height: 16px;
+          overflow: hidden;
+          margin-bottom: -2px;
+
+          font-family: 'proxima-light', ProximaNovaA-Light;
+          font-size: 12px;
+          color: $text-color;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+    }     
+  }
+
+  .divider-wrapper
+  {
+    margin: 0;
+
+    .divider
+    {
+      margin: 0;
+    }
+  }
+
+  .left-to-spend
+  {
+    .chart
+    {
+      height: 120px;
+    }
+  }
+}

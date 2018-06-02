@@ -1,0 +1,218 @@
+@args(){
+String cdn,
+String title,
+String subTitle,
+String openButtonCaption,
+String footer,
+String userId,
+String backgroundImage
+}
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style type="text/css">
+
+        body, p, span {
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 300;
+            letter-spacing: 0.5pt;
+        }
+
+        body {
+            background: #f7f4f2;
+        }
+
+        table td {
+            border-collapse: collapse;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .separator {
+            width: 10px;
+            height: 25px;
+            background: #e6e6e6;
+        }
+
+        .separator-start {
+            background: -webkit-linear-gradient(#f7f4f2, #e6e6e6); /* For Safari 5.1 to 6.0 */
+            background: -o-linear-gradient(#f7f4f2, #e6e6e6); /* For Opera 11.1 to 12.0 */
+            background: -moz-linear-gradient(#f7f4f2, #e6e6e6); /* For Firefox 3.6 to 15 */
+            background: linear-gradient(#f7f4f2, #e6e6e6); /* Standard syntax */
+            height: 50px;
+        }
+
+        .separator-end {
+            background: -webkit-linear-gradient(#e6e6e6, #f7f4f2); /* For Safari 5.1 to 6.0 */
+            background: -o-linear-gradient(#e6e6e6, #f7f4f2); /* For Opera 11.1 to 12.0 */
+            background: -moz-linear-gradient(#e6e6e6, #f7f4f2); /* For Firefox 3.6 to 15 */
+            background: linear-gradient(#e6e6e6, #f7f4f2); /* Standard syntax */
+            height: 50px;
+        }
+
+        .entry {
+            background: #ffffff;
+            border: 1px solid #e6e6e6;
+            border-radius: 6px;
+            background-clip: padding-box;
+        }
+
+        .entry-title {
+            font-size: 24px;
+            text-align: center;
+            color: black;
+            padding-top: 30px;
+        }
+
+        .entry-sub-title {
+            font-size: 16px;
+            padding-bottom: 20px;
+            text-align: center;
+            color: #989898;
+        }
+
+        .btn {
+            border-radius: 7px;
+            padding: 20px;
+            color: #ffffff;
+            text-align: center;
+            font-size: 20px;
+            border-left: 1px solid;
+            border-right: 1px solid;
+            background: #00bdbd;
+        }
+
+        .footer {
+            color: #959594;
+            text-align: center;
+            padding: 10px 0 10px 0;
+            font-size: 12px;
+        }
+
+        .image-container {
+            vertical-align: bottom;
+        }
+
+        .phone-image {
+            max-height: 375px;
+            max-width: 395px;
+            vertical-align: bottom;
+        }
+
+    </style>
+</head>
+<body  leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0" style="font-family: Arial, Helvetica, sans-serif;font-weight: 300;letter-spacing: 0.5pt;background: #f7f4f2;">
+<center>
+    <table border="0" cellpadding="20" cellspacing="0" height="100%" width="100%" bgcolor="#f7f4f2">
+        <tr>
+            <td align="center" style="border-collapse: collapse;">
+                <table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%">
+                    <tr>
+                        <td align="center" valign="top" style="border-collapse: collapse;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="400">
+                                <tr>
+                                    <td align="center" valign="top" style="border-collapse: collapse;">
+                                        <table border="0" cellpadding="0" cellspacing="0" height="50" width="100%">
+                                            <tr>
+                                                <td align="left" style="border-collapse: collapse;">
+                                                    <img style="width: 100px;" src="@cdn/logo_normal.png">
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr><tr>
+                                <td align="center" valign="top" style="border-collapse: collapse;">
+                                    <table border="0" cellpadding="0" cellspacing="0" height="50" width="100%">
+                                        <tr>
+                                            <td align="center" style="border-collapse: collapse;">
+                                                <div class="separator separator-start" style="width: 10px;height: 50px;background: linear-gradient(#f7f4f2, #e6e6e6);"></div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            </table>
+                            <table border="0" cellpadding="0" cellspacing="0" width="400" class="entry" style="background: #ffffff;border: 1px solid #e6e6e6;border-radius: 6px;background-clip: padding-box;">
+                                <tr>
+                                    <td align="center" valign="top" style="border-collapse: collapse;">
+
+                                        <table border="0" cellpadding="0" cellspacing="0" width="400">
+                                            <tr>
+                                                <td valign="top" style="border-collapse: collapse;">
+
+                                                    <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                                                        <tr>
+                                                            <td valign="top" class="entry-title" style="border-collapse: collapse;font-size: 24px;text-align: center;color: black;padding-top: 30px;">
+                                                                @title
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td valign="top" class="entry-sub-title" style="border-collapse: collapse;font-size: 16px;padding-bottom: 20px;text-align: center;color: #989898;">
+                                                                @subTitle
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td align="right" valign="bottom" class="image-container" style="border-collapse: collapse;vertical-align: bottom;">
+                                                    <a href="https://www.tink.se/api/v1/user/open/?userId=@userId" style="text-decoration: none;">
+                                                        <img src="@cdn/misc/@backgroundImage" class="phone-image" style="max-height: 375px;max-width: 395px;vertical-align: bottom;">
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table border="0" cellpadding="0" cellspacing="0" width="400">
+                                <tr>
+                                    <td align="center" style="border-collapse: collapse;">
+                                        <div class="separator" style="width: 10px;height: 25px;background: #e6e6e6;"></div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table border="0" cellpadding="0" cellspacing="0" width="400">
+                                <tr>
+                                    <td align="center" valign="top" style="border-collapse: collapse;">
+                                        <a href="https://www.tink.se/api/v1/user/open/?userId=@userId" style="text-decoration: none;">
+                                            <div class="btn" style="border-radius: 7px;padding: 20px;color: #ffffff;text-align: center;font-size: 20px;border-left: 1px solid;border-right: 1px solid;background: #00bdbd;">@openButtonCaption</div>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                <tr>
+                                    <td align="center" valign="top" style="border-collapse: collapse;">
+                                        <div class="separator separator-end" style="width: 10px;height: 50px;background: linear-gradient(#e6e6e6, #f7f4f2);"></div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                <tr>
+                                    <td align="center" valign="top" style="border-collapse: collapse;">
+                                        <div class="footer" style="color: #959594;text-align: center;padding: 10px 0 10px 0;font-size: 12px;">
+                                            @escape("raw") {
+                                            @footer
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</center>
+</body>
+</html>

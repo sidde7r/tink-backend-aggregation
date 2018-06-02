@@ -1,0 +1,118 @@
+/*
+ * Base colors (only used within the scope of this file)
+ */
+
+$black: #222222;
+
+
+/*
+ * Color mapping
+ */
+
+// General: Text
+$header-color: #262626;
+$text-color: #808080;
+$timestamp-text-color: $black;
+$font-regular: 'Brown Regular';
+$weight-regular: normal;
+$font-bold: 'Brown Bold';
+$weight-bold: normal;
+$font-light: 'Brown Regular';
+$weight-light: normal;
+
+// General: Types
+$income-color: #3BD29E;
+$expense-color: #5A50C7;
+$expense-comparison-color: #E7E5F7;
+$left-to-spend-color: #10A8C8;
+$transfers-color: #777777;
+$uncategorized-color: #2AAEE4;
+$critical-color: #F58923;
+$info-color: #3BD29E;
+$warning-color: #F58923;
+$positive-color: $income-color;
+
+// General: Feed
+$feed-background-color: linear-gradient(#fffff, #f6f7fc);
+$timeline-color: transparent;
+
+// General: Activities
+$activity-border-color: rgba($black, 0.2);
+$activity-divider-color: rgba($black, 0.1);
+$activity-divider-light-color: #CCCCCC; // Should be defined in terms of hierarchy instead of "light"
+$activity-divider-lightest-color: #E5E5E5; // Should be defined in terms of hierarchy instead of "lightest"
+$activity-touch-state-background-color: #E5E5E5;
+$activity-border-style: none;
+
+$centered-activity-title-line-height: 22px;
+
+$activity-icon-size: 18px;
+
+// General: Buttons
+$button-text-color: #ffffff;
+$approve-e-invoice-color: #ffffff;
+$button-background-color: #271D94;
+
+// Lookback
+$lookback-header-background-color: $info-color;
+
+// Merchant
+$merchant-map-icon-background-color: $expense-color;
+
+// Badge
+$badge-category-icon-symbol-color: rgba($black, 0.2);
+
+// Bank fee selfie
+$bank-fee-selfie-background-color: none; // Not used
+$bank-fee-selfie-icon-background-color: none; // Not used
+$bank-fee-selfie-border-color: none; // Not used
+
+// Year in numbers
+$year-in-numbers-background-color: none; // Not used
+
+// Summer in numbers
+$summer-in-numbers-background-color: none; // Not used
+
+// Rate this app
+$rate-this-app-button-color: $button-background-color;
+$rate-this-app-button-text-color: $button-text-color;
+
+/*
+ * Dimensions
+ */
+
+$padding: 8px;
+$vertical-activity-padding: 12px;
+$divider-thickness: .5px;
+$activity-outline-thickness: 0px;
+$border-radius : 4px;
+$ios-activity-border-radius: 4px;
+$ios-activity-shadow: 0px 4px 16px 0px rgba(0, 0, 0, .08);
+
+/*
+ * Custom summary code
+ */
+
+$period-activity-total-bottom-padding: 10%;
+
+.period-activity
+{
+    .total-expenses
+    {
+        padding-bottom: $period-activity-total-bottom-padding;
+    }
+
+    .biggest-purchase
+    {
+        padding-bottom: $period-activity-total-bottom-padding;
+    }
+}
+
+$right-subtext-top-margin: 1px;
+$left-subtext-top-margin: 0px;
+
+$top-summaries-amount-bottom-padding: unset;
+
+$android-activity-shadow: 0 1px 2px 0 rgba(#000000, 0.3);
+$android-activity-border-radius: 2px;
+

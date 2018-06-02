@@ -1,0 +1,1862 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://www.businesscheck.se/Services/DataImport2" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://www.businesscheck.se/Services/DataImport2" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Methods for Business Check's DataImport2 services.</wsdl:documentation>
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://www.businesscheck.se/Services/DataImport2">
+      <s:element name="DataImport2Person">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Language" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="PackageName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="PersonNumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2PersonResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DataImport2PersonResult" type="tns:DataImport2Result" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DataImport2Result">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Number" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Blocks" type="tns:ArrayOfBlock" />
+          <s:element minOccurs="0" maxOccurs="1" name="Error" type="tns:Error" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfBlock">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Block" nillable="true" type="tns:Block" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Block">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Code" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Segment" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Fields" type="tns:ArrayOfField" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfField">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Field" nillable="true" type="tns:Field" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Field">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Code" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Value" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Error">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ErrorCode" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="ErrorMessage" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DataImport2PersonKopiaInfo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Language" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="PackageName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="PersonNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerPopularName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerClientName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OmfragadEmail" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OmfragadMobileNumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2PersonKopiaInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DataImport2PersonKopiaInfoResult" type="tns:DataImport2Result" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2PersonBroker">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Language" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerPersonNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerFirstName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerLastName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerOrganizationNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerCompanyName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerAddress" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerZipCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerCity" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="PackageName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="PersonNumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2PersonBrokerResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DataImport2PersonBrokerResult" type="tns:DataImport2Result" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2PersonBrokerKopiaInfo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Language" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerPersonNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerFirstName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerLastName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerOrganizationNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerCompanyName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerAddress" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerZipCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerCity" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="PackageName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="PersonNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerPopularName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerClientName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OmfragadEmail" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OmfragadMobileNumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2PersonBrokerKopiaInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DataImport2PersonBrokerKopiaInfoResult" type="tns:DataImport2Result" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2PersonKopia">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Language" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerPersonNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerFirstName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerLastName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerOrganizationNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerCompanyName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerAddress" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerZipCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerCity" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="PackageName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="PersonNumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2PersonKopiaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DataImport2PersonKopiaResult" type="tns:DataImport2Result" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2Company">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Language" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="PackageName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OrganizationNumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2CompanyResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DataImport2CompanyResult" type="tns:DataImport2Result" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2CompanyKopiaInfo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Language" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="PackageName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OrganizationNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerPopularName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerClientName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OmfragadEmail" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OmfragadMobileNumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2CompanyKopiaInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DataImport2CompanyKopiaInfoResult" type="tns:DataImport2Result" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2CompanyBroker">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Language" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerPersonNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerFirstName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerLastName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerOrganizationNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerCompanyName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerAddress" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerZipCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerCity" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="PackageName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OrganizationNumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2CompanyBrokerResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DataImport2CompanyBrokerResult" type="tns:DataImport2Result" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2CompanyBrokerKopiaInfo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Language" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerPersonNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerFirstName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerLastName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerOrganizationNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerCompanyName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerAddress" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerZipCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerCity" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="PackageName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OrganizationNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerPopularName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerClientName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OmfragadEmail" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OmfragadMobileNumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2CompanyBrokerKopiaInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DataImport2CompanyBrokerKopiaInfoResult" type="tns:DataImport2Result" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2CompanyKopia">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Language" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerPersonNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerFirstName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerLastName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerOrganizationNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerCompanyName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerAddress" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerZipCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerCity" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="PackageName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OrganizationNumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2CompanyKopiaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DataImport2CompanyKopiaResult" type="tns:DataImport2Result" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2CompanyBatch">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Language" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="PackageName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OrganizationNumbers" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2CompanyBatchResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DataImport2CompanyBatchResult" type="tns:DataImport2Result" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2RealEstate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Language" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="PackageName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="FNr" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DescriptionOfProperty" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Municipality" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2RealEstateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DataImport2RealEstateResult" type="tns:DataImport2Result" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2RealEstateOwner">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Language" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Key" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2RealEstateOwnerResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DataImport2RealEstateOwnerResult" type="tns:DataImport2Result" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2RealEstateOwnerKopiaInfo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Language" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Key" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerPopularName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerClientName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OmfragadEmail" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OmfragadMobileNumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2RealEstateOwnerKopiaInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DataImport2RealEstateOwnerKopiaInfoResult" type="tns:DataImport2Result" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2RealEstateOwnerBroker">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Language" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerPersonNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerFirstName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerLastName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerOrganizationNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerCompanyName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerAddress" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerZipCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerCity" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Key" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2RealEstateOwnerBrokerResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DataImport2RealEstateOwnerBrokerResult" type="tns:DataImport2Result" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2RealEstateOwnerBrokerKopiaInfo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserLoginName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Language" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerPersonNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerFirstName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerLastName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerOrganizationNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerCompanyName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerAddress" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerZipCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CallerCity" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Key" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerPopularName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerClientName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OmfragadEmail" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OmfragadMobileNumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2RealEstateOwnerBrokerKopiaInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DataImport2RealEstateOwnerBrokerKopiaInfoResult" type="tns:DataImport2Result" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataImport2Result" nillable="true" type="tns:DataImport2Result" />
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="DataImport2PersonSoapIn">
+    <wsdl:part name="parameters" element="tns:DataImport2Person" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2PersonSoapOut">
+    <wsdl:part name="parameters" element="tns:DataImport2PersonResponse" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2PersonKopiaInfoSoapIn">
+    <wsdl:part name="parameters" element="tns:DataImport2PersonKopiaInfo" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2PersonKopiaInfoSoapOut">
+    <wsdl:part name="parameters" element="tns:DataImport2PersonKopiaInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2PersonBrokerSoapIn">
+    <wsdl:part name="parameters" element="tns:DataImport2PersonBroker" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2PersonBrokerSoapOut">
+    <wsdl:part name="parameters" element="tns:DataImport2PersonBrokerResponse" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2PersonBrokerKopiaInfoSoapIn">
+    <wsdl:part name="parameters" element="tns:DataImport2PersonBrokerKopiaInfo" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2PersonBrokerKopiaInfoSoapOut">
+    <wsdl:part name="parameters" element="tns:DataImport2PersonBrokerKopiaInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2PersonKopiaSoapIn">
+    <wsdl:part name="parameters" element="tns:DataImport2PersonKopia" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2PersonKopiaSoapOut">
+    <wsdl:part name="parameters" element="tns:DataImport2PersonKopiaResponse" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanySoapIn">
+    <wsdl:part name="parameters" element="tns:DataImport2Company" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanySoapOut">
+    <wsdl:part name="parameters" element="tns:DataImport2CompanyResponse" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyKopiaInfoSoapIn">
+    <wsdl:part name="parameters" element="tns:DataImport2CompanyKopiaInfo" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyKopiaInfoSoapOut">
+    <wsdl:part name="parameters" element="tns:DataImport2CompanyKopiaInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyBrokerSoapIn">
+    <wsdl:part name="parameters" element="tns:DataImport2CompanyBroker" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyBrokerSoapOut">
+    <wsdl:part name="parameters" element="tns:DataImport2CompanyBrokerResponse" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyBrokerKopiaInfoSoapIn">
+    <wsdl:part name="parameters" element="tns:DataImport2CompanyBrokerKopiaInfo" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyBrokerKopiaInfoSoapOut">
+    <wsdl:part name="parameters" element="tns:DataImport2CompanyBrokerKopiaInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyKopiaSoapIn">
+    <wsdl:part name="parameters" element="tns:DataImport2CompanyKopia" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyKopiaSoapOut">
+    <wsdl:part name="parameters" element="tns:DataImport2CompanyKopiaResponse" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyBatchSoapIn">
+    <wsdl:part name="parameters" element="tns:DataImport2CompanyBatch" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyBatchSoapOut">
+    <wsdl:part name="parameters" element="tns:DataImport2CompanyBatchResponse" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2RealEstateSoapIn">
+    <wsdl:part name="parameters" element="tns:DataImport2RealEstate" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2RealEstateSoapOut">
+    <wsdl:part name="parameters" element="tns:DataImport2RealEstateResponse" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2RealEstateOwnerSoapIn">
+    <wsdl:part name="parameters" element="tns:DataImport2RealEstateOwner" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2RealEstateOwnerSoapOut">
+    <wsdl:part name="parameters" element="tns:DataImport2RealEstateOwnerResponse" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2RealEstateOwnerKopiaInfoSoapIn">
+    <wsdl:part name="parameters" element="tns:DataImport2RealEstateOwnerKopiaInfo" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2RealEstateOwnerKopiaInfoSoapOut">
+    <wsdl:part name="parameters" element="tns:DataImport2RealEstateOwnerKopiaInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2RealEstateOwnerBrokerSoapIn">
+    <wsdl:part name="parameters" element="tns:DataImport2RealEstateOwnerBroker" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2RealEstateOwnerBrokerSoapOut">
+    <wsdl:part name="parameters" element="tns:DataImport2RealEstateOwnerBrokerResponse" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2RealEstateOwnerBrokerKopiaInfoSoapIn">
+    <wsdl:part name="parameters" element="tns:DataImport2RealEstateOwnerBrokerKopiaInfo" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2RealEstateOwnerBrokerKopiaInfoSoapOut">
+    <wsdl:part name="parameters" element="tns:DataImport2RealEstateOwnerBrokerKopiaInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2PersonHttpGetIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="PackageName" type="s:string" />
+    <wsdl:part name="PersonNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2PersonHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2PersonKopiaInfoHttpGetIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="PackageName" type="s:string" />
+    <wsdl:part name="PersonNumber" type="s:string" />
+    <wsdl:part name="CustomerPopularName" type="s:string" />
+    <wsdl:part name="CustomerClientName" type="s:string" />
+    <wsdl:part name="OmfragadEmail" type="s:string" />
+    <wsdl:part name="OmfragadMobileNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2PersonKopiaInfoHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2PersonBrokerHttpGetIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="CallerPersonNumber" type="s:string" />
+    <wsdl:part name="CallerFirstName" type="s:string" />
+    <wsdl:part name="CallerLastName" type="s:string" />
+    <wsdl:part name="CallerOrganizationNumber" type="s:string" />
+    <wsdl:part name="CallerCompanyName" type="s:string" />
+    <wsdl:part name="CallerAddress" type="s:string" />
+    <wsdl:part name="CallerZipCode" type="s:string" />
+    <wsdl:part name="CallerCity" type="s:string" />
+    <wsdl:part name="PackageName" type="s:string" />
+    <wsdl:part name="PersonNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2PersonBrokerHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2PersonBrokerKopiaInfoHttpGetIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="CallerPersonNumber" type="s:string" />
+    <wsdl:part name="CallerFirstName" type="s:string" />
+    <wsdl:part name="CallerLastName" type="s:string" />
+    <wsdl:part name="CallerOrganizationNumber" type="s:string" />
+    <wsdl:part name="CallerCompanyName" type="s:string" />
+    <wsdl:part name="CallerAddress" type="s:string" />
+    <wsdl:part name="CallerZipCode" type="s:string" />
+    <wsdl:part name="CallerCity" type="s:string" />
+    <wsdl:part name="PackageName" type="s:string" />
+    <wsdl:part name="PersonNumber" type="s:string" />
+    <wsdl:part name="CustomerPopularName" type="s:string" />
+    <wsdl:part name="CustomerClientName" type="s:string" />
+    <wsdl:part name="OmfragadEmail" type="s:string" />
+    <wsdl:part name="OmfragadMobileNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2PersonBrokerKopiaInfoHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2PersonKopiaHttpGetIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="CallerPersonNumber" type="s:string" />
+    <wsdl:part name="CallerFirstName" type="s:string" />
+    <wsdl:part name="CallerLastName" type="s:string" />
+    <wsdl:part name="CallerOrganizationNumber" type="s:string" />
+    <wsdl:part name="CallerCompanyName" type="s:string" />
+    <wsdl:part name="CallerAddress" type="s:string" />
+    <wsdl:part name="CallerZipCode" type="s:string" />
+    <wsdl:part name="CallerCity" type="s:string" />
+    <wsdl:part name="PackageName" type="s:string" />
+    <wsdl:part name="PersonNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2PersonKopiaHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyHttpGetIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="PackageName" type="s:string" />
+    <wsdl:part name="OrganizationNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyKopiaInfoHttpGetIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="PackageName" type="s:string" />
+    <wsdl:part name="OrganizationNumber" type="s:string" />
+    <wsdl:part name="CustomerPopularName" type="s:string" />
+    <wsdl:part name="CustomerClientName" type="s:string" />
+    <wsdl:part name="OmfragadEmail" type="s:string" />
+    <wsdl:part name="OmfragadMobileNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyKopiaInfoHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyBrokerHttpGetIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="CallerPersonNumber" type="s:string" />
+    <wsdl:part name="CallerFirstName" type="s:string" />
+    <wsdl:part name="CallerLastName" type="s:string" />
+    <wsdl:part name="CallerOrganizationNumber" type="s:string" />
+    <wsdl:part name="CallerCompanyName" type="s:string" />
+    <wsdl:part name="CallerAddress" type="s:string" />
+    <wsdl:part name="CallerZipCode" type="s:string" />
+    <wsdl:part name="CallerCity" type="s:string" />
+    <wsdl:part name="PackageName" type="s:string" />
+    <wsdl:part name="OrganizationNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyBrokerHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyBrokerKopiaInfoHttpGetIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="CallerPersonNumber" type="s:string" />
+    <wsdl:part name="CallerFirstName" type="s:string" />
+    <wsdl:part name="CallerLastName" type="s:string" />
+    <wsdl:part name="CallerOrganizationNumber" type="s:string" />
+    <wsdl:part name="CallerCompanyName" type="s:string" />
+    <wsdl:part name="CallerAddress" type="s:string" />
+    <wsdl:part name="CallerZipCode" type="s:string" />
+    <wsdl:part name="CallerCity" type="s:string" />
+    <wsdl:part name="PackageName" type="s:string" />
+    <wsdl:part name="OrganizationNumber" type="s:string" />
+    <wsdl:part name="CustomerPopularName" type="s:string" />
+    <wsdl:part name="CustomerClientName" type="s:string" />
+    <wsdl:part name="OmfragadEmail" type="s:string" />
+    <wsdl:part name="OmfragadMobileNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyBrokerKopiaInfoHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyKopiaHttpGetIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="CallerPersonNumber" type="s:string" />
+    <wsdl:part name="CallerFirstName" type="s:string" />
+    <wsdl:part name="CallerLastName" type="s:string" />
+    <wsdl:part name="CallerOrganizationNumber" type="s:string" />
+    <wsdl:part name="CallerCompanyName" type="s:string" />
+    <wsdl:part name="CallerAddress" type="s:string" />
+    <wsdl:part name="CallerZipCode" type="s:string" />
+    <wsdl:part name="CallerCity" type="s:string" />
+    <wsdl:part name="PackageName" type="s:string" />
+    <wsdl:part name="OrganizationNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyKopiaHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyBatchHttpGetIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="PackageName" type="s:string" />
+    <wsdl:part name="OrganizationNumbers" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyBatchHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2RealEstateHttpGetIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="PackageName" type="s:string" />
+    <wsdl:part name="FNr" type="s:string" />
+    <wsdl:part name="DescriptionOfProperty" type="s:string" />
+    <wsdl:part name="Municipality" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2RealEstateHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2RealEstateOwnerHttpGetIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="Key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2RealEstateOwnerHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2RealEstateOwnerKopiaInfoHttpGetIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="Key" type="s:string" />
+    <wsdl:part name="CustomerPopularName" type="s:string" />
+    <wsdl:part name="CustomerClientName" type="s:string" />
+    <wsdl:part name="OmfragadEmail" type="s:string" />
+    <wsdl:part name="OmfragadMobileNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2RealEstateOwnerKopiaInfoHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2RealEstateOwnerBrokerHttpGetIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="CallerPersonNumber" type="s:string" />
+    <wsdl:part name="CallerFirstName" type="s:string" />
+    <wsdl:part name="CallerLastName" type="s:string" />
+    <wsdl:part name="CallerOrganizationNumber" type="s:string" />
+    <wsdl:part name="CallerCompanyName" type="s:string" />
+    <wsdl:part name="CallerAddress" type="s:string" />
+    <wsdl:part name="CallerZipCode" type="s:string" />
+    <wsdl:part name="CallerCity" type="s:string" />
+    <wsdl:part name="Key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2RealEstateOwnerBrokerHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2RealEstateOwnerBrokerKopiaInfoHttpGetIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="CallerPersonNumber" type="s:string" />
+    <wsdl:part name="CallerFirstName" type="s:string" />
+    <wsdl:part name="CallerLastName" type="s:string" />
+    <wsdl:part name="CallerOrganizationNumber" type="s:string" />
+    <wsdl:part name="CallerCompanyName" type="s:string" />
+    <wsdl:part name="CallerAddress" type="s:string" />
+    <wsdl:part name="CallerZipCode" type="s:string" />
+    <wsdl:part name="CallerCity" type="s:string" />
+    <wsdl:part name="Key" type="s:string" />
+    <wsdl:part name="CustomerPopularName" type="s:string" />
+    <wsdl:part name="CustomerClientName" type="s:string" />
+    <wsdl:part name="OmfragadEmail" type="s:string" />
+    <wsdl:part name="OmfragadMobileNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2RealEstateOwnerBrokerKopiaInfoHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2PersonHttpPostIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="PackageName" type="s:string" />
+    <wsdl:part name="PersonNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2PersonHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2PersonKopiaInfoHttpPostIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="PackageName" type="s:string" />
+    <wsdl:part name="PersonNumber" type="s:string" />
+    <wsdl:part name="CustomerPopularName" type="s:string" />
+    <wsdl:part name="CustomerClientName" type="s:string" />
+    <wsdl:part name="OmfragadEmail" type="s:string" />
+    <wsdl:part name="OmfragadMobileNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2PersonKopiaInfoHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2PersonBrokerHttpPostIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="CallerPersonNumber" type="s:string" />
+    <wsdl:part name="CallerFirstName" type="s:string" />
+    <wsdl:part name="CallerLastName" type="s:string" />
+    <wsdl:part name="CallerOrganizationNumber" type="s:string" />
+    <wsdl:part name="CallerCompanyName" type="s:string" />
+    <wsdl:part name="CallerAddress" type="s:string" />
+    <wsdl:part name="CallerZipCode" type="s:string" />
+    <wsdl:part name="CallerCity" type="s:string" />
+    <wsdl:part name="PackageName" type="s:string" />
+    <wsdl:part name="PersonNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2PersonBrokerHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2PersonBrokerKopiaInfoHttpPostIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="CallerPersonNumber" type="s:string" />
+    <wsdl:part name="CallerFirstName" type="s:string" />
+    <wsdl:part name="CallerLastName" type="s:string" />
+    <wsdl:part name="CallerOrganizationNumber" type="s:string" />
+    <wsdl:part name="CallerCompanyName" type="s:string" />
+    <wsdl:part name="CallerAddress" type="s:string" />
+    <wsdl:part name="CallerZipCode" type="s:string" />
+    <wsdl:part name="CallerCity" type="s:string" />
+    <wsdl:part name="PackageName" type="s:string" />
+    <wsdl:part name="PersonNumber" type="s:string" />
+    <wsdl:part name="CustomerPopularName" type="s:string" />
+    <wsdl:part name="CustomerClientName" type="s:string" />
+    <wsdl:part name="OmfragadEmail" type="s:string" />
+    <wsdl:part name="OmfragadMobileNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2PersonBrokerKopiaInfoHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2PersonKopiaHttpPostIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="CallerPersonNumber" type="s:string" />
+    <wsdl:part name="CallerFirstName" type="s:string" />
+    <wsdl:part name="CallerLastName" type="s:string" />
+    <wsdl:part name="CallerOrganizationNumber" type="s:string" />
+    <wsdl:part name="CallerCompanyName" type="s:string" />
+    <wsdl:part name="CallerAddress" type="s:string" />
+    <wsdl:part name="CallerZipCode" type="s:string" />
+    <wsdl:part name="CallerCity" type="s:string" />
+    <wsdl:part name="PackageName" type="s:string" />
+    <wsdl:part name="PersonNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2PersonKopiaHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyHttpPostIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="PackageName" type="s:string" />
+    <wsdl:part name="OrganizationNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyKopiaInfoHttpPostIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="PackageName" type="s:string" />
+    <wsdl:part name="OrganizationNumber" type="s:string" />
+    <wsdl:part name="CustomerPopularName" type="s:string" />
+    <wsdl:part name="CustomerClientName" type="s:string" />
+    <wsdl:part name="OmfragadEmail" type="s:string" />
+    <wsdl:part name="OmfragadMobileNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyKopiaInfoHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyBrokerHttpPostIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="CallerPersonNumber" type="s:string" />
+    <wsdl:part name="CallerFirstName" type="s:string" />
+    <wsdl:part name="CallerLastName" type="s:string" />
+    <wsdl:part name="CallerOrganizationNumber" type="s:string" />
+    <wsdl:part name="CallerCompanyName" type="s:string" />
+    <wsdl:part name="CallerAddress" type="s:string" />
+    <wsdl:part name="CallerZipCode" type="s:string" />
+    <wsdl:part name="CallerCity" type="s:string" />
+    <wsdl:part name="PackageName" type="s:string" />
+    <wsdl:part name="OrganizationNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyBrokerHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyBrokerKopiaInfoHttpPostIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="CallerPersonNumber" type="s:string" />
+    <wsdl:part name="CallerFirstName" type="s:string" />
+    <wsdl:part name="CallerLastName" type="s:string" />
+    <wsdl:part name="CallerOrganizationNumber" type="s:string" />
+    <wsdl:part name="CallerCompanyName" type="s:string" />
+    <wsdl:part name="CallerAddress" type="s:string" />
+    <wsdl:part name="CallerZipCode" type="s:string" />
+    <wsdl:part name="CallerCity" type="s:string" />
+    <wsdl:part name="PackageName" type="s:string" />
+    <wsdl:part name="OrganizationNumber" type="s:string" />
+    <wsdl:part name="CustomerPopularName" type="s:string" />
+    <wsdl:part name="CustomerClientName" type="s:string" />
+    <wsdl:part name="OmfragadEmail" type="s:string" />
+    <wsdl:part name="OmfragadMobileNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyBrokerKopiaInfoHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyKopiaHttpPostIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="CallerPersonNumber" type="s:string" />
+    <wsdl:part name="CallerFirstName" type="s:string" />
+    <wsdl:part name="CallerLastName" type="s:string" />
+    <wsdl:part name="CallerOrganizationNumber" type="s:string" />
+    <wsdl:part name="CallerCompanyName" type="s:string" />
+    <wsdl:part name="CallerAddress" type="s:string" />
+    <wsdl:part name="CallerZipCode" type="s:string" />
+    <wsdl:part name="CallerCity" type="s:string" />
+    <wsdl:part name="PackageName" type="s:string" />
+    <wsdl:part name="OrganizationNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyKopiaHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyBatchHttpPostIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="PackageName" type="s:string" />
+    <wsdl:part name="OrganizationNumbers" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2CompanyBatchHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2RealEstateHttpPostIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="PackageName" type="s:string" />
+    <wsdl:part name="FNr" type="s:string" />
+    <wsdl:part name="DescriptionOfProperty" type="s:string" />
+    <wsdl:part name="Municipality" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2RealEstateHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2RealEstateOwnerHttpPostIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="Key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2RealEstateOwnerHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2RealEstateOwnerKopiaInfoHttpPostIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="Key" type="s:string" />
+    <wsdl:part name="CustomerPopularName" type="s:string" />
+    <wsdl:part name="CustomerClientName" type="s:string" />
+    <wsdl:part name="OmfragadEmail" type="s:string" />
+    <wsdl:part name="OmfragadMobileNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2RealEstateOwnerKopiaInfoHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2RealEstateOwnerBrokerHttpPostIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="CallerPersonNumber" type="s:string" />
+    <wsdl:part name="CallerFirstName" type="s:string" />
+    <wsdl:part name="CallerLastName" type="s:string" />
+    <wsdl:part name="CallerOrganizationNumber" type="s:string" />
+    <wsdl:part name="CallerCompanyName" type="s:string" />
+    <wsdl:part name="CallerAddress" type="s:string" />
+    <wsdl:part name="CallerZipCode" type="s:string" />
+    <wsdl:part name="CallerCity" type="s:string" />
+    <wsdl:part name="Key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2RealEstateOwnerBrokerHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2RealEstateOwnerBrokerKopiaInfoHttpPostIn">
+    <wsdl:part name="CustomerLoginName" type="s:string" />
+    <wsdl:part name="UserLoginName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Language" type="s:string" />
+    <wsdl:part name="CallerPersonNumber" type="s:string" />
+    <wsdl:part name="CallerFirstName" type="s:string" />
+    <wsdl:part name="CallerLastName" type="s:string" />
+    <wsdl:part name="CallerOrganizationNumber" type="s:string" />
+    <wsdl:part name="CallerCompanyName" type="s:string" />
+    <wsdl:part name="CallerAddress" type="s:string" />
+    <wsdl:part name="CallerZipCode" type="s:string" />
+    <wsdl:part name="CallerCity" type="s:string" />
+    <wsdl:part name="Key" type="s:string" />
+    <wsdl:part name="CustomerPopularName" type="s:string" />
+    <wsdl:part name="CustomerClientName" type="s:string" />
+    <wsdl:part name="OmfragadEmail" type="s:string" />
+    <wsdl:part name="OmfragadMobileNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DataImport2RealEstateOwnerBrokerKopiaInfoHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataImport2Result" />
+  </wsdl:message>
+  <wsdl:portType name="DataImport2Soap">
+    <wsdl:operation name="DataImport2Person">
+      <wsdl:input message="tns:DataImport2PersonSoapIn" />
+      <wsdl:output message="tns:DataImport2PersonSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2PersonKopiaInfo">
+      <wsdl:input message="tns:DataImport2PersonKopiaInfoSoapIn" />
+      <wsdl:output message="tns:DataImport2PersonKopiaInfoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2PersonBroker">
+      <wsdl:input message="tns:DataImport2PersonBrokerSoapIn" />
+      <wsdl:output message="tns:DataImport2PersonBrokerSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2PersonBrokerKopiaInfo">
+      <wsdl:input message="tns:DataImport2PersonBrokerKopiaInfoSoapIn" />
+      <wsdl:output message="tns:DataImport2PersonBrokerKopiaInfoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2PersonKopia">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Renamed to DataImport2PersonBroker</wsdl:documentation>
+      <wsdl:input message="tns:DataImport2PersonKopiaSoapIn" />
+      <wsdl:output message="tns:DataImport2PersonKopiaSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2Company">
+      <wsdl:input message="tns:DataImport2CompanySoapIn" />
+      <wsdl:output message="tns:DataImport2CompanySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyKopiaInfo">
+      <wsdl:input message="tns:DataImport2CompanyKopiaInfoSoapIn" />
+      <wsdl:output message="tns:DataImport2CompanyKopiaInfoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyBroker">
+      <wsdl:input message="tns:DataImport2CompanyBrokerSoapIn" />
+      <wsdl:output message="tns:DataImport2CompanyBrokerSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyBrokerKopiaInfo">
+      <wsdl:input message="tns:DataImport2CompanyBrokerKopiaInfoSoapIn" />
+      <wsdl:output message="tns:DataImport2CompanyBrokerKopiaInfoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyKopia">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Renamed to DataImport2CompanyBroker</wsdl:documentation>
+      <wsdl:input message="tns:DataImport2CompanyKopiaSoapIn" />
+      <wsdl:output message="tns:DataImport2CompanyKopiaSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyBatch">
+      <wsdl:input message="tns:DataImport2CompanyBatchSoapIn" />
+      <wsdl:output message="tns:DataImport2CompanyBatchSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstate">
+      <wsdl:input message="tns:DataImport2RealEstateSoapIn" />
+      <wsdl:output message="tns:DataImport2RealEstateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstateOwner">
+      <wsdl:input message="tns:DataImport2RealEstateOwnerSoapIn" />
+      <wsdl:output message="tns:DataImport2RealEstateOwnerSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstateOwnerKopiaInfo">
+      <wsdl:input message="tns:DataImport2RealEstateOwnerKopiaInfoSoapIn" />
+      <wsdl:output message="tns:DataImport2RealEstateOwnerKopiaInfoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstateOwnerBroker">
+      <wsdl:input message="tns:DataImport2RealEstateOwnerBrokerSoapIn" />
+      <wsdl:output message="tns:DataImport2RealEstateOwnerBrokerSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstateOwnerBrokerKopiaInfo">
+      <wsdl:input message="tns:DataImport2RealEstateOwnerBrokerKopiaInfoSoapIn" />
+      <wsdl:output message="tns:DataImport2RealEstateOwnerBrokerKopiaInfoSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="DataImport2HttpGet">
+    <wsdl:operation name="DataImport2Person">
+      <wsdl:input message="tns:DataImport2PersonHttpGetIn" />
+      <wsdl:output message="tns:DataImport2PersonHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2PersonKopiaInfo">
+      <wsdl:input message="tns:DataImport2PersonKopiaInfoHttpGetIn" />
+      <wsdl:output message="tns:DataImport2PersonKopiaInfoHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2PersonBroker">
+      <wsdl:input message="tns:DataImport2PersonBrokerHttpGetIn" />
+      <wsdl:output message="tns:DataImport2PersonBrokerHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2PersonBrokerKopiaInfo">
+      <wsdl:input message="tns:DataImport2PersonBrokerKopiaInfoHttpGetIn" />
+      <wsdl:output message="tns:DataImport2PersonBrokerKopiaInfoHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2PersonKopia">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Renamed to DataImport2PersonBroker</wsdl:documentation>
+      <wsdl:input message="tns:DataImport2PersonKopiaHttpGetIn" />
+      <wsdl:output message="tns:DataImport2PersonKopiaHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2Company">
+      <wsdl:input message="tns:DataImport2CompanyHttpGetIn" />
+      <wsdl:output message="tns:DataImport2CompanyHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyKopiaInfo">
+      <wsdl:input message="tns:DataImport2CompanyKopiaInfoHttpGetIn" />
+      <wsdl:output message="tns:DataImport2CompanyKopiaInfoHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyBroker">
+      <wsdl:input message="tns:DataImport2CompanyBrokerHttpGetIn" />
+      <wsdl:output message="tns:DataImport2CompanyBrokerHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyBrokerKopiaInfo">
+      <wsdl:input message="tns:DataImport2CompanyBrokerKopiaInfoHttpGetIn" />
+      <wsdl:output message="tns:DataImport2CompanyBrokerKopiaInfoHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyKopia">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Renamed to DataImport2CompanyBroker</wsdl:documentation>
+      <wsdl:input message="tns:DataImport2CompanyKopiaHttpGetIn" />
+      <wsdl:output message="tns:DataImport2CompanyKopiaHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyBatch">
+      <wsdl:input message="tns:DataImport2CompanyBatchHttpGetIn" />
+      <wsdl:output message="tns:DataImport2CompanyBatchHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstate">
+      <wsdl:input message="tns:DataImport2RealEstateHttpGetIn" />
+      <wsdl:output message="tns:DataImport2RealEstateHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstateOwner">
+      <wsdl:input message="tns:DataImport2RealEstateOwnerHttpGetIn" />
+      <wsdl:output message="tns:DataImport2RealEstateOwnerHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstateOwnerKopiaInfo">
+      <wsdl:input message="tns:DataImport2RealEstateOwnerKopiaInfoHttpGetIn" />
+      <wsdl:output message="tns:DataImport2RealEstateOwnerKopiaInfoHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstateOwnerBroker">
+      <wsdl:input message="tns:DataImport2RealEstateOwnerBrokerHttpGetIn" />
+      <wsdl:output message="tns:DataImport2RealEstateOwnerBrokerHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstateOwnerBrokerKopiaInfo">
+      <wsdl:input message="tns:DataImport2RealEstateOwnerBrokerKopiaInfoHttpGetIn" />
+      <wsdl:output message="tns:DataImport2RealEstateOwnerBrokerKopiaInfoHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="DataImport2HttpPost">
+    <wsdl:operation name="DataImport2Person">
+      <wsdl:input message="tns:DataImport2PersonHttpPostIn" />
+      <wsdl:output message="tns:DataImport2PersonHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2PersonKopiaInfo">
+      <wsdl:input message="tns:DataImport2PersonKopiaInfoHttpPostIn" />
+      <wsdl:output message="tns:DataImport2PersonKopiaInfoHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2PersonBroker">
+      <wsdl:input message="tns:DataImport2PersonBrokerHttpPostIn" />
+      <wsdl:output message="tns:DataImport2PersonBrokerHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2PersonBrokerKopiaInfo">
+      <wsdl:input message="tns:DataImport2PersonBrokerKopiaInfoHttpPostIn" />
+      <wsdl:output message="tns:DataImport2PersonBrokerKopiaInfoHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2PersonKopia">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Renamed to DataImport2PersonBroker</wsdl:documentation>
+      <wsdl:input message="tns:DataImport2PersonKopiaHttpPostIn" />
+      <wsdl:output message="tns:DataImport2PersonKopiaHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2Company">
+      <wsdl:input message="tns:DataImport2CompanyHttpPostIn" />
+      <wsdl:output message="tns:DataImport2CompanyHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyKopiaInfo">
+      <wsdl:input message="tns:DataImport2CompanyKopiaInfoHttpPostIn" />
+      <wsdl:output message="tns:DataImport2CompanyKopiaInfoHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyBroker">
+      <wsdl:input message="tns:DataImport2CompanyBrokerHttpPostIn" />
+      <wsdl:output message="tns:DataImport2CompanyBrokerHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyBrokerKopiaInfo">
+      <wsdl:input message="tns:DataImport2CompanyBrokerKopiaInfoHttpPostIn" />
+      <wsdl:output message="tns:DataImport2CompanyBrokerKopiaInfoHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyKopia">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Renamed to DataImport2CompanyBroker</wsdl:documentation>
+      <wsdl:input message="tns:DataImport2CompanyKopiaHttpPostIn" />
+      <wsdl:output message="tns:DataImport2CompanyKopiaHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyBatch">
+      <wsdl:input message="tns:DataImport2CompanyBatchHttpPostIn" />
+      <wsdl:output message="tns:DataImport2CompanyBatchHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstate">
+      <wsdl:input message="tns:DataImport2RealEstateHttpPostIn" />
+      <wsdl:output message="tns:DataImport2RealEstateHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstateOwner">
+      <wsdl:input message="tns:DataImport2RealEstateOwnerHttpPostIn" />
+      <wsdl:output message="tns:DataImport2RealEstateOwnerHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstateOwnerKopiaInfo">
+      <wsdl:input message="tns:DataImport2RealEstateOwnerKopiaInfoHttpPostIn" />
+      <wsdl:output message="tns:DataImport2RealEstateOwnerKopiaInfoHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstateOwnerBroker">
+      <wsdl:input message="tns:DataImport2RealEstateOwnerBrokerHttpPostIn" />
+      <wsdl:output message="tns:DataImport2RealEstateOwnerBrokerHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstateOwnerBrokerKopiaInfo">
+      <wsdl:input message="tns:DataImport2RealEstateOwnerBrokerKopiaInfoHttpPostIn" />
+      <wsdl:output message="tns:DataImport2RealEstateOwnerBrokerKopiaInfoHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="DataImport2Soap" type="tns:DataImport2Soap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="DataImport2Person">
+      <soap:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2Person" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2PersonKopiaInfo">
+      <soap:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2PersonKopiaInfo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2PersonBroker">
+      <soap:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2PersonBroker" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2PersonBrokerKopiaInfo">
+      <soap:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2PersonBrokerKopiaInfo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2PersonKopia">
+      <soap:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2PersonKopia" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2Company">
+      <soap:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2Company" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyKopiaInfo">
+      <soap:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2CompanyKopiaInfo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyBroker">
+      <soap:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2CompanyBroker" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyBrokerKopiaInfo">
+      <soap:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2CompanyBrokerKopiaInfo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyKopia">
+      <soap:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2CompanyKopia" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyBatch">
+      <soap:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2CompanyBatch" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstate">
+      <soap:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2RealEstate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstateOwner">
+      <soap:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2RealEstateOwner" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstateOwnerKopiaInfo">
+      <soap:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2RealEstateOwnerKopiaInfo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstateOwnerBroker">
+      <soap:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2RealEstateOwnerBroker" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstateOwnerBrokerKopiaInfo">
+      <soap:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2RealEstateOwnerBrokerKopiaInfo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="DataImport2Soap12" type="tns:DataImport2Soap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="DataImport2Person">
+      <soap12:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2Person" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2PersonKopiaInfo">
+      <soap12:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2PersonKopiaInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2PersonBroker">
+      <soap12:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2PersonBroker" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2PersonBrokerKopiaInfo">
+      <soap12:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2PersonBrokerKopiaInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2PersonKopia">
+      <soap12:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2PersonKopia" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2Company">
+      <soap12:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2Company" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyKopiaInfo">
+      <soap12:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2CompanyKopiaInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyBroker">
+      <soap12:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2CompanyBroker" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyBrokerKopiaInfo">
+      <soap12:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2CompanyBrokerKopiaInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyKopia">
+      <soap12:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2CompanyKopia" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyBatch">
+      <soap12:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2CompanyBatch" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstate">
+      <soap12:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2RealEstate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstateOwner">
+      <soap12:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2RealEstateOwner" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstateOwnerKopiaInfo">
+      <soap12:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2RealEstateOwnerKopiaInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstateOwnerBroker">
+      <soap12:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2RealEstateOwnerBroker" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstateOwnerBrokerKopiaInfo">
+      <soap12:operation soapAction="http://www.businesscheck.se/Services/DataImport2/DataImport2RealEstateOwnerBrokerKopiaInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="DataImport2HttpGet" type="tns:DataImport2HttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="DataImport2Person">
+      <http:operation location="/DataImport2Person" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2PersonKopiaInfo">
+      <http:operation location="/DataImport2PersonKopiaInfo" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2PersonBroker">
+      <http:operation location="/DataImport2PersonBroker" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2PersonBrokerKopiaInfo">
+      <http:operation location="/DataImport2PersonBrokerKopiaInfo" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2PersonKopia">
+      <http:operation location="/DataImport2PersonKopia" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2Company">
+      <http:operation location="/DataImport2Company" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyKopiaInfo">
+      <http:operation location="/DataImport2CompanyKopiaInfo" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyBroker">
+      <http:operation location="/DataImport2CompanyBroker" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyBrokerKopiaInfo">
+      <http:operation location="/DataImport2CompanyBrokerKopiaInfo" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyKopia">
+      <http:operation location="/DataImport2CompanyKopia" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyBatch">
+      <http:operation location="/DataImport2CompanyBatch" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstate">
+      <http:operation location="/DataImport2RealEstate" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstateOwner">
+      <http:operation location="/DataImport2RealEstateOwner" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstateOwnerKopiaInfo">
+      <http:operation location="/DataImport2RealEstateOwnerKopiaInfo" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstateOwnerBroker">
+      <http:operation location="/DataImport2RealEstateOwnerBroker" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstateOwnerBrokerKopiaInfo">
+      <http:operation location="/DataImport2RealEstateOwnerBrokerKopiaInfo" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="DataImport2HttpPost" type="tns:DataImport2HttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="DataImport2Person">
+      <http:operation location="/DataImport2Person" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2PersonKopiaInfo">
+      <http:operation location="/DataImport2PersonKopiaInfo" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2PersonBroker">
+      <http:operation location="/DataImport2PersonBroker" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2PersonBrokerKopiaInfo">
+      <http:operation location="/DataImport2PersonBrokerKopiaInfo" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2PersonKopia">
+      <http:operation location="/DataImport2PersonKopia" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2Company">
+      <http:operation location="/DataImport2Company" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyKopiaInfo">
+      <http:operation location="/DataImport2CompanyKopiaInfo" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyBroker">
+      <http:operation location="/DataImport2CompanyBroker" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyBrokerKopiaInfo">
+      <http:operation location="/DataImport2CompanyBrokerKopiaInfo" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyKopia">
+      <http:operation location="/DataImport2CompanyKopia" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2CompanyBatch">
+      <http:operation location="/DataImport2CompanyBatch" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstate">
+      <http:operation location="/DataImport2RealEstate" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstateOwner">
+      <http:operation location="/DataImport2RealEstateOwner" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstateOwnerKopiaInfo">
+      <http:operation location="/DataImport2RealEstateOwnerKopiaInfo" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstateOwnerBroker">
+      <http:operation location="/DataImport2RealEstateOwnerBroker" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DataImport2RealEstateOwnerBrokerKopiaInfo">
+      <http:operation location="/DataImport2RealEstateOwnerBrokerKopiaInfo" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="DataImport2">
+    <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Methods for Business Check's DataImport2 services.</wsdl:documentation>
+    <wsdl:port name="DataImport2Soap" binding="tns:DataImport2Soap">
+      <soap:address location="https://www.businesscheck.se/service/dataimport2.asmx" />
+    </wsdl:port>
+    <wsdl:port name="DataImport2Soap12" binding="tns:DataImport2Soap12">
+      <soap12:address location="https://www.businesscheck.se/service/dataimport2.asmx" />
+    </wsdl:port>
+    <wsdl:port name="DataImport2HttpGet" binding="tns:DataImport2HttpGet">
+      <http:address location="http://www.businesscheck.se/service/dataimport2.asmx" />
+    </wsdl:port>
+    <wsdl:port name="DataImport2HttpPost" binding="tns:DataImport2HttpPost">
+      <http:address location="http://www.businesscheck.se/service/dataimport2.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

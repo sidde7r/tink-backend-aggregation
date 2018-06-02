@@ -1,0 +1,25 @@
+package se.tink.backend.aggregation.nxgen.controllers.metrics;
+
+import java.util.Collections;
+import java.util.List;
+import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.aggregation.rpc.CredentialsRequestType;
+import se.tink.backend.aggregation.rpc.Provider;
+import se.tink.libraries.metrics.MetricId;
+import se.tink.libraries.metrics.MetricRegistry;
+
+public class MetricRefreshController extends MetricController {
+    public MetricRefreshController(MetricRegistry registry, Provider provider, Credentials credentials, boolean isManual,
+            CredentialsRequestType requestType) {
+        super(registry, provider, credentials, isManual, requestType);
+    }
+
+    @Override
+    public MetricRefreshAction buildAction(MetricId metricId) {
+        return buildAction(metricId, Collections.emptyList());
+    }
+
+    public MetricRefreshAction buildAction(MetricId metricId, List<? extends Number> counterBuckets) {
+        return new MetricRefreshAction(credentials, registry, metricId.label(defaultLabels), counterBuckets);
+    }
+}

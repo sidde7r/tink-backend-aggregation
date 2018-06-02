@@ -1,0 +1,30 @@
+[Unit]
+Description=tink-backend-insights
+
+[Service]
+User=tink-backend-insights
+Group=tink-backend-insights
+KillSignal=SIGINT
+TimeoutStopSec=20
+Restart=on-failure
+RestartSec=10
+Environment=MAX_HEAP_SIZE=256m
+EnvironmentFile=-/etc/default/tink-backend-insights
+WorkingDirectory=/usr/share/tink-backend-insights
+
+ExecStart=/usr/bin/java \
+          -Xmx${MAX_HEAP_SIZE} \
+          -Xloggc:/var/log/tink/insights/gc.log \
+          -XX:+UseGCLogFileRotation \
+          -XX:NumberOfGCLogFiles=5 \
+          -XX:GCLogFileSize=512K \
+          -Dnetworkaddress.cache.ttl=60 \
+          -XX:-OmitStackTraceInFastThrow \
+          -XX:+HeapDumpOnOutOfMemoryError \
+          -XX:HeapDumpPath=/var/tmp/tink/heapdumps/tink-backend-insights \
+          -XX:+ExitOnOutOfMemoryError \
+          -jar /usr/share/tink-backend-insights/insights-service.jar \
+          server /etc/tink/insights-server.yml
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,3 @@
+#name	description	interest	fixedRate	minAmount	numMonthsBound	termsUrl
+Collector Sparkonto	Fria insättningar och obegränsade uttag.	0.01	false	0	0	https://spara.collector.se/produktvillkor/
+Landshypotek Sparkonto Trygghet	Fria insättningar och obegränsade uttag.	0.0075	false	0	0	http://www.landshypotek.se/globalassets/dokument/allmanna-villkor/allmanna-villkor-sparkonto-130401.pdf

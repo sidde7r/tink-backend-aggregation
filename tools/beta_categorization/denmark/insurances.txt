@@ -1,0 +1,434 @@
+__label__expenses:home.incurences-fees ihi bupa
+__label__expenses:home.incurences-fees findportalen
+__label__expenses:home.incurences-fees carstens guesthouse
+__label__expenses:home.incurences-fees apc forsikringsmæglere
+__label__expenses:home.incurences-fees transurance
+__label__expenses:home.incurences-fees bg garanti forsikringsselskab
+__label__expenses:home.incurences-fees byggeriets forsikringsservice
+__label__expenses:home.incurences-fees jh assurance agentur
+__label__expenses:home.incurences-fees jh assurance consult forsikringsmæglerselskab
+__label__expenses:home.incurences-fees s.b. aktuar-rådgivning
+__label__expenses:home.incurences-fees s.b. aktuar-rådgivning
+__label__expenses:home.incurences-fees fcs finans
+__label__expenses:home.incurences-fees divoy company s.a. s.m.b.a
+__label__expenses:home.incurences-fees k. rerup & co.
+__label__expenses:home.incurences-fees edb forsikring.dk
+__label__expenses:home.incurences-fees axa colonia
+__label__expenses:home.incurences-fees first marine
+__label__expenses:home.incurences-fees dispachørerne jens middelboe & vibeke kofoed
+__label__expenses:home.incurences-fees middelboe, kofoed og voigt larsen
+__label__expenses:home.incurences-fees first marine
+__label__expenses:home.incurences-fees ace european group,
+__label__expenses:home.incurences-fees crawford & company denmark filial af crawford & company ab
+__label__expenses:home.incurences-fees crawford danmark
+__label__expenses:home.incurences-fees patientforsikringsforeningen
+__label__expenses:home.incurences-fees patientforsikringen
+__label__expenses:home.incurences-fees patientforsikringen
+__label__expenses:home.incurences-fees nordic insurance brokers
+__label__expenses:home.incurences-fees ace insurance s.a. - n.v
+__label__expenses:home.incurences-fees dansk jagtforsikring
+__label__expenses:home.incurences-fees chaucer underwriting
+__label__expenses:home.incurences-fees de sydlige farvandes gensidige forsikring for fiskefartøjer
+__label__expenses:home.incurences-fees ihi danmark
+__label__expenses:home.incurences-fees industriens pensionsforsikring
+__label__expenses:home.incurences-fees industriens pension service
+__label__expenses:home.incurences-fees industripension holding
+__label__expenses:home.incurences-fees runa forsikring
+__label__expenses:home.incurences-fees lærerstandens brandforsikring g/s
+__label__expenses:home.incurences-fees securelife
+__label__expenses:home.incurences-fees securelife
+__label__expenses:home.incurences-fees eagle star insurance company ltd.. generalagenturet for danmark.
+__label__expenses:home.incurences-fees eagle star insurance
+__label__expenses:home.incurences-fees danica pension, livsforsikringsaktieselskab
+__label__expenses:home.incurences-fees gi-assurance
+__label__expenses:home.incurences-fees navigators
+__label__expenses:home.incurences-fees 1988 insurance brokers
+__label__expenses:home.incurences-fees ace europe life,danmark,filial af ace europe life limited,
+__label__expenses:home.incurences-fees fair forsikring
+__label__expenses:home.incurences-fees shb liv forsikringsaktieselskab
+__label__expenses:home.incurences-fees danske civil-og akademiingeniørers pensionskasse
+__label__expenses:home.incurences-fees provinzial
+__label__expenses:home.incurences-fees cardif forsikring, filial af cardif försäkring ab, sverige
+__label__expenses:home.incurences-fees arch re accident & health
+__label__expenses:home.incurences-fees foreningen af gensidige forsikrings
+__label__expenses:home.incurences-fees gaia insurance
+__label__expenses:home.incurences-fees alpha sales group
+__label__expenses:home.incurences-fees gjensidige forsikring
+__label__expenses:home.incurences-fees qbe nordic aviation insurance
+__label__expenses:home.incurences-fees nordisk flyforsikringsgruppe
+__label__expenses:home.incurences-fees qbe insurance europe limited, england, dansk filial
+__label__expenses:home.incurences-fees nordisk flyforsikringsgruppe
+__label__expenses:home.incurences-fees lars krogius hecksher
+__label__expenses:home.incurences-fees forsikringsmæglerforeningen i
+__label__expenses:home.incurences-fees sigma re
+__label__expenses:home.incurences-fees fto, forsikringsselskabernes taksat
+__label__expenses:home.incurences-fees riskpoint
+__label__expenses:home.incurences-fees arch insurance company europe ltd, filial af arch insurance
+__label__expenses:home.incurences-fees riskpoint
+__label__expenses:home.incurences-fees cna insurance, filial af cna insurance company limited england
+__label__expenses:home.incurences-fees bloemers assurance
+__label__expenses:home.incurences-fees dupi copenhagen
+__label__expenses:home.incurences-fees jan hansen
+__label__expenses:home.incurences-fees nürnberger allgemeine versicherungs-ag
+__label__expenses:home.incurences-fees coface
+__label__expenses:home.incurences-fees ankenævnet for forsikring
+__label__expenses:home.incurences-fees catlin insurance
+__label__expenses:home.incurences-fees købstædernes forsikring, gensidig
+__label__expenses:home.incurences-fees ge frankona reinsurance
+__label__expenses:home.incurences-fees domestic & general insurance plc england
+__label__expenses:home.incurences-fees accent forsikring
+__label__expenses:home.incurences-fees axa forsikring, filial af axa versicherung aktiengesellschaft,
+__label__expenses:home.incurences-fees forsikringsrådgivning unsc
+__label__expenses:home.incurences-fees aon denmark
+__label__expenses:home.incurences-fees aon denmark insurance services
+__label__expenses:home.incurences-fees aon private consulting forsikringsmæglere a
+__label__expenses:home.incurences-fees aon denmark
+__label__expenses:home.incurences-fees aon private consulting forsikringsmæglere
+__label__expenses:home.incurences-fees dispachør niels l christensen
+__label__expenses:home.incurences-fees securerisk
+__label__expenses:home.incurences-fees p&i scandinavia
+__label__expenses:home.incurences-fees north sea and baltic group
+__label__expenses:home.incurences-fees p & i management
+__label__expenses:home.incurences-fees assurandør-og forsikringskredsen
+__label__expenses:home.incurences-fees kbhvn.s politis begravelsesforening
+__label__expenses:home.incurences-fees danske forsikringsfunktionærers landsforening
+__label__expenses:home.incurences-fees forsikringsmæglervirksomheden copenhagen media consulting
+__label__expenses:home.incurences-fees hamburg-mannheimer forsikringservice
+__label__expenses:home.incurences-fees seb pensionsforsikring
+__label__expenses:home.incurences-fees forsikringsselskabet seb liv iii
+__label__expenses:home.incurences-fees forsikringsselskabet seb link
+__label__expenses:home.incurences-fees codan forsikring a/s
+__label__expenses:home.incurences-fees abim
+__label__expenses:home.incurences-fees arno bøttger insurance management abim
+__label__expenses:home.incurences-fees danske forsikring
+__label__expenses:home.incurences-fees groupama transports
+__label__expenses:home.incurences-fees s reg.
+__label__expenses:home.incurences-fees nassau forsikring
+__label__expenses:home.incurences-fees danske rejseagenters sikkerhedsfond
+__label__expenses:home.incurences-fees poster
+__label__expenses:home.incurences-fees euro-center holding
+__label__expenses:home.incurences-fees euro-alarm
+__label__expenses:home.incurences-fees electric insurance ireland limited
+__label__expenses:home.incurences-fees aspen insurance
+__label__expenses:home.incurences-fees covéa risks
+__label__expenses:home.incurences-fees forsikringskompagniet
+__label__expenses:home.incurences-fees nordic insurance investigations consultancy
+__label__expenses:home.incurences-fees arendal assurance
+__label__expenses:home.incurences-fees euler hermes kreditforsikring
+__label__expenses:home.incurences-fees hamburg-mannheimer forsikring servi
+__label__expenses:home.incurences-fees ejendomsaktieselskabet idrætsparken
+__label__expenses:home.incurences-fees a/s det kjobenhavnske reassurance-compagni
+__label__expenses:home.incurences-fees ritzau 2nd opinion
+__label__expenses:home.incurences-fees eksport kredit finansiering
+__label__expenses:home.incurences-fees hamburg-mannheimer
+__label__expenses:home.incurences-fees xl insurance
+__label__expenses:home.incurences-fees gittergruppen
+__label__expenses:home.incurences-fees livsforsikringsselskabet
+__label__expenses:home.incurences-fees forsikringsmæglerne poul sarring & partnere
+__label__expenses:home.incurences-fees ap pension livsforsikringsaktieselskab
+__label__expenses:home.incurences-fees ap pension
+__label__expenses:home.incurences-fees ap pensionsservice
+__label__expenses:home.incurences-fees theo koch & co
+__label__expenses:home.incurences-fees ai assurance formidling
+__label__expenses:home.incurences-fees provinzial danmark
+__label__expenses:home.incurences-fees nordic international assistance
+__label__expenses:home.incurences-fees forenede gruppeliv
+__label__expenses:home.incurences-fees lærernes pension, forsikringsakties
+__label__expenses:home.incurences-fees larernes pension, forsikringsaktieselskab
+__label__expenses:home.incurences-fees letpension, livs-og pensionsforsikringsselskab
+__label__expenses:home.incurences-fees gouda rejseforsikring
+__label__expenses:home.incurences-fees nordisk forsikringsservice
+__label__expenses:home.incurences-fees go safe
+__label__expenses:home.incurences-fees arbejdsskadestyrelsen
+__label__expenses:home.incurences-fees forsikringsselskabet alm. brand liv og pension
+__label__expenses:home.incurences-fees unsc -
+__label__expenses:home.incurences-fees bayerische versicherungverband versicherung ag
+__label__expenses:home.incurences-fees alterra insurance europe limited
+__label__expenses:home.incurences-fees multi risk benefits limited
+__label__expenses:home.incurences-fees skibskonsulent john kristensen
+__label__expenses:home.incurences-fees prsp assurance forsikringsmægler
+__label__expenses:home.incurences-fees allianz global corporate & specialty ag
+__label__expenses:home.incurences-fees multi risk indemnity company ltd.
+__label__expenses:home.incurences-fees forsikrings & pensionsrådgiverne a
+__label__expenses:home.incurences-fees allianz global corporate & specialty france
+__label__expenses:home.incurences-fees allianz versicherungs ag
+__label__expenses:home.incurences-fees topdanmark forsikring
+__label__expenses:home.incurences-fees vektor finans
+__label__expenses:home.incurences-fees the british & foreign marine insurance company limited
+__label__expenses:home.incurences-fees trekroner forsikring
+__label__expenses:home.incurences-fees prsp assurance forsikringsmægler
+__label__expenses:home.incurences-fees forsikrings-aktieselskabet
+__label__expenses:home.incurences-fees belis bar
+__label__expenses:home.incurences-fees europæiske erv
+__label__expenses:home.incurences-fees bauta forsikring
+__label__expenses:home.incurences-fees dansk hesteforsikring
+__label__expenses:home.incurences-fees borealis insurance
+__label__expenses:home.incurences-fees usg-danmark
+__label__expenses:home.incurences-fees dansk erhvervs administrationsselskab
+__label__expenses:home.incurences-fees besigtelses kontoret af 1914
+__label__expenses:home.incurences-fees forsikringsselskabet privatsikring
+__label__expenses:home.incurences-fees coface
+__label__expenses:home.incurences-fees provinzial danmark, tom vogel
+__label__expenses:home.incurences-fees danske fiskeres forsikring
+__label__expenses:home.incurences-fees forsikringsmæglerselskabet assurance partner
+__label__expenses:home.incurences-fees dansk system assurance forsikringsmæglerselskab
+__label__expenses:home.incurences-fees dansk system assurance
+__label__expenses:home.incurences-fees city avisen
+__label__expenses:home.incurences-fees nordisk forsikrings agentur
+__label__expenses:home.incurences-fees euro-alarm
+__label__expenses:home.incurences-fees sos international
+__label__expenses:home.incurences-fees taksator bent bøje nielsen
+__label__expenses:home.incurences-fees topdanmark forsikring
+__label__expenses:home.incurences-fees byggeriets forsikringsservice
+__label__expenses:home.incurences-fees groupama nord-est
+__label__expenses:home.incurences-fees forsikringsselskabet seb link
+__label__expenses:home.incurences-fees trekroner forsikring
+__label__expenses:home.incurences-fees codan forsikring
+__label__expenses:home.incurences-fees partner
+__label__expenses:home.incurences-fees willis
+__label__expenses:home.incurences-fees if forsikringscenter horsens
+__label__expenses:home.incurences-fees gf-tele it
+__label__expenses:home.incurences-fees pfa pension, forsikringsaktieselskab.
+__label__expenses:home.incurences-fees møbel+interiør brancheforeningens forsikringsmægleraktieselskab
+__label__expenses:home.incurences-fees forsikringsklubben hospital og sundhed
+__label__expenses:home.incurences-fees pensam liv forsikringsaktieselskab
+__label__expenses:home.incurences-fees danica pension, livsforsikringsaktieselskab
+__label__expenses:home.incurences-fees forsikringsmæglerne larsen & co
+__label__expenses:home.incurences-fees nordea liv & pension, livsforsikringsselskab
+__label__expenses:home.incurences-fees nordea liv & pension, livsforsikringsselskab
+__label__expenses:home.incurences-fees dahlberg assurance brokers aarhus
+__label__expenses:home.incurences-fees topdanmark forsikring
+__label__expenses:home.incurences-fees the body shop
+__label__expenses:home.incurences-fees pensionskonsulent gunner sørensen
+__label__expenses:home.incurences-fees gf-århus
+__label__expenses:home.incurences-fees gf tele it
+__label__expenses:home.incurences-fees forsikringsmægler gunner b. sørensen
+__label__expenses:home.incurences-fees apsis holding
+__label__expenses:home.incurences-fees høgsberg assurance service
+__label__expenses:home.incurences-fees if... forsikringscenter
+__label__expenses:home.incurences-fees insura , forsikringsmæglerselskab
+__label__expenses:home.incurences-fees taksatorcentral århus
+__label__expenses:home.incurences-fees taksatorringen
+__label__expenses:home.incurences-fees optica insurance brokers
+__label__expenses:home.incurences-fees optica
+__label__expenses:home.incurences-fees optica insurance agency
+__label__expenses:home.incurences-fees optica forsikringsrådgivning
+__label__expenses:home.incurences-fees 4sikring
+__label__expenses:home.incurences-fees prosam
+__label__expenses:home.incurences-fees if forsikringscenter
+__label__expenses:home.incurences-fees assurance forum
+__label__expenses:home.incurences-fees søren nielsen agentur
+__label__expenses:home.incurences-fees ip assurance
+__label__expenses:home.incurences-fees dafor
+__label__expenses:home.incurences-fees aros forsikring - gensidigt forsikringsselskab
+__label__expenses:home.incurences-fees købstædernes forsikring
+__label__expenses:home.incurences-fees if skadeforsikring, filial af if skadeförsäkring ab publ
+__label__expenses:home.incurences-fees danske kirkers forsikringsservice
+__label__expenses:home.incurences-fees kristoffer pedersen
+__label__expenses:home.incurences-fees jj assurance
+__label__expenses:home.incurences-fees b.j.s.
+__label__expenses:home.incurences-fees yacht-entreprise århus
+__label__expenses:home.incurences-fees forsikringsmælgerne bhm-vest
+__label__expenses:home.incurences-fees fuglsang consulting
+__label__expenses:home.incurences-fees konsulent johnny jepsen
+__label__expenses:home.incurences-fees gf hospital og sundhed
+__label__expenses:home.incurences-fees fa assurandør
+__label__expenses:home.incurences-fees fa forsikring
+__label__expenses:home.incurences-fees dansø assurance forsikringsmæglere
+__label__expenses:home.incurences-fees erik hausted
+__label__expenses:home.incurences-fees ship-consult
+__label__expenses:home.incurences-fees aros forsikring g/s
+__label__expenses:home.incurences-fees dahlberg assurance brokers
+__label__expenses:home.incurences-fees dahlberg assurance brokers odense
+__label__expenses:home.incurences-fees plus forsikring
+__label__expenses:home.incurences-fees henrik sørensen forsikringsmægler
+__label__expenses:home.incurences-fees pensam odense
+__label__expenses:home.incurences-fees danica pension
+__label__expenses:home.incurences-fees nordea liv & pension, livsforsikringsselskab
+__label__expenses:home.incurences-fees dahlberg assurance brokers odense a
+__label__expenses:home.incurences-fees sygeforsikringen
+__label__expenses:home.incurences-fees first brokers
+__label__expenses:home.incurences-fees gf - thorslund
+__label__expenses:home.incurences-fees gf - fyn
+__label__expenses:home.incurences-fees concordia forsikring
+__label__expenses:home.incurences-fees figaro
+__label__expenses:home.incurences-fees topdanmark forsikring
+__label__expenses:home.incurences-fees if forsikringscenter odense
+__label__expenses:home.incurences-fees city-assurandørerne
+__label__expenses:home.incurences-fees konggaard ejendomme
+__label__expenses:home.incurences-fees popermo forsikring g/s
+__label__expenses:home.incurences-fees forsikring fyn
+__label__expenses:home.incurences-fees taksatorringen
+__label__expenses:home.incurences-fees willis
+__label__expenses:home.incurences-fees forsikringsselskabet seb link
+__label__expenses:home.incurences-fees odense survey bureau
+__label__expenses:home.incurences-fees hma pensionsmægler danmark
+__label__expenses:home.incurences-fees kennet
+__label__expenses:home.incurences-fees hans john serve
+__label__expenses:home.incurences-fees gf ejendomsselskab
+__label__expenses:home.incurences-fees gf forsikring
+__label__expenses:home.incurences-fees fokus forsikring
+__label__expenses:home.incurences-fees v-r assurance 2
+__label__expenses:home.incurences-fees opal danmark pensionsforsikringsmæglere
+__label__expenses:home.incurences-fees forsikringsklubben post-fyn
+__label__expenses:home.incurences-fees gf - lind
+__label__expenses:home.incurences-fees gf abb
+__label__expenses:home.incurences-fees gf region & kommune
+__label__expenses:home.incurences-fees de frie forsikringsmæglere
+__label__expenses:home.incurences-fees gf-forsikringsklub-lindøværftet
+__label__expenses:home.incurences-fees olsen & partner
+__label__expenses:home.incurences-fees forsikringsmæglerfirmaet olsen & p artner, forsikringsrevision
+__label__expenses:home.incurences-fees mæglerfirmaet s.aa.j. assurance/ svend aage jørgensen
+__label__expenses:home.incurences-fees mæglercenter odense
+__label__expenses:home.incurences-fees popermo forsikring g/s
+__label__expenses:home.incurences-fees leif tingkær
+__label__expenses:home.incurences-fees v-r gruppen forsikringsagentur 11
+__label__expenses:home.incurences-fees ipsen og nørregaard
+__label__expenses:home.incurences-fees v-r gruppen forsikringsagenturer
+__label__expenses:home.incurences-fees v-r gruppen forsikringsmæglere
+__label__expenses:home.incurences-fees forsikringsmægler renee raim
+__label__expenses:home.incurences-fees d danske lærerst begravelsesks
+__label__expenses:home.incurences-fees opal skade forsikringsmæglere
+__label__expenses:home.incurences-fees if erhverv
+__label__expenses:home.incurences-fees topdanmark forsikring
+__label__expenses:home.incurences-fees aros forsikring
+__label__expenses:home.incurences-fees pensam liv forsikringsaktieselskab
+__label__expenses:home.incurences-fees if skadeforsikring, filial af if skadeförsäkring ab publ
+__label__expenses:home.incurences-fees if erhverv salg-aalborg
+__label__expenses:home.incurences-fees himmerland salg & service
+__label__expenses:home.incurences-fees himmerland forsikring gs
+__label__expenses:home.incurences-fees taksatorringen
+__label__expenses:home.incurences-fees bpcc
+__label__expenses:home.incurences-fees forsikringsmæglergruppen
+__label__expenses:home.incurences-fees købstædernes forsikring, aalborg kontoret
+__label__expenses:home.incurences-fees danica pension, livsforsikringsaktieselskab
+__label__expenses:home.incurences-fees willis
+__label__expenses:home.incurences-fees aalborg kommunes gruppeliv
+__label__expenses:home.incurences-fees aalborg besigtigelseskontor
+__label__expenses:home.incurences-fees dansø assurance forsikringsmæglere
+__label__expenses:home.incurences-fees forsikringsmægler peter asmussen
+__label__expenses:home.incurences-fees nordea liv & pension, livsforsikringsselskab
+__label__expenses:home.incurences-fees topdanmark landbrug
+__label__expenses:home.incurences-fees dansø assurance forsikringsmæglere
+__label__expenses:home.incurences-fees dansø assurance - john visborg
+__label__expenses:home.incurences-fees willis
+__label__expenses:home.incurences-fees alm. brand forsikring
+__label__expenses:home.incurences-fees gf-aalborg
+__label__expenses:home.incurences-fees viborg assurance
+__label__expenses:home.incurences-fees bækmark & kvist forsikringsrådgivning
+__label__expenses:home.incurences-fees forsikringsmæglerselskabet bækmark og kvist pension
+__label__expenses:home.incurences-fees den danske forsikringsmægler
+__label__expenses:home.incurences-fees maj consulting
+__label__expenses:home.incurences-fees lund forsikringsformidling
+__label__expenses:home.incurences-fees lærerstandens brandforsikring
+__label__expenses:home.incurences-fees frederiksen assurance i/s forsikringsmæglerfirmaet
+__label__expenses:home.incurences-fees jensen & frederiksen
+__label__expenses:home.incurences-fees de frie forsikringsmæglere
+__label__expenses:home.incurences-fees taksatorringen
+__label__expenses:home.incurences-fees anticimex försäkringar, filial af anticimex försäkringar ab,
+__label__expenses:home.incurences-fees aie insurance brokers partnerselskab
+__label__expenses:home.incurences-fees pensam liv forsikringsaktieselskab
+__label__expenses:home.incurences-fees gf-sydvest
+__label__expenses:home.incurences-fees gf-ribe amt
+__label__expenses:home.incurences-fees antik
+__label__expenses:home.incurences-fees pen-sam liv landsdelskontor
+__label__expenses:home.incurences-fees aros forsikring
+__label__expenses:home.incurences-fees de frie forsikringsmæglere
+__label__expenses:home.incurences-fees insurance consultants denmark
+__label__expenses:home.incurences-fees factor insurance brokers jylland
+__label__expenses:home.incurences-fees topdanmark forsikring
+__label__expenses:home.incurences-fees esbjerg besigt
+__label__expenses:home.incurences-fees alm. brand bank
+__label__expenses:home.incurences-fees insurance consultants denmark
+__label__expenses:home.incurences-fees dahlberg assurance brokers esbjerg
+__label__expenses:home.incurences-fees danica pension, livsforsikringsaktieselskab
+__label__expenses:home.incurences-fees jocib
+__label__expenses:home.incurences-fees dahlberg assurance brokers esbjerg
+__label__expenses:home.incurences-fees jens jørn bertelsen forsikringsagentur
+__label__expenses:home.incurences-fees vestjylland forsikring
+__label__expenses:home.incurences-fees vestjylland forsikring
+__label__expenses:home.incurences-fees varde fitness
+__label__expenses:home.incurences-fees aros forsikring
+__label__expenses:home.incurences-fees aktiv forsikringsrådgivning
+__label__expenses:home.incurences-fees gf kronjylland
+__label__expenses:home.incurences-fees michelsen assurance/agentur
+__label__expenses:home.incurences-fees larsen finans
+__label__expenses:home.incurences-fees aktiv forsikringsrådgivning
+__label__expenses:home.incurences-fees krifa forsikring
+__label__expenses:home.incurences-fees køreteknisk anlæg
+__label__expenses:home.incurences-fees taksatorringen
+__label__expenses:home.incurences-fees danish crown insurance galt
+__label__expenses:home.incurences-fees randers begravelseskasse af 1862
+__label__expenses:home.incurences-fees jysk forsikrings-service
+__label__expenses:home.incurences-fees forsikringsmægler jørgen mortensen
+__label__expenses:home.incurences-fees peter ole rud hansen
+__label__expenses:home.incurences-fees jysk forsikrings-service
+__label__expenses:home.incurences-fees if-forsikringscenter
+__label__expenses:home.incurences-fees forsikringsmægler aps noisen
+__label__expenses:home.incurences-fees konsulent johnny jepsen
+__label__expenses:home.incurences-fees ok taksation & vurdering
+__label__expenses:home.incurences-fees gf hospital og sundhed
+__label__expenses:home.incurences-fees codan - ole andersen
+__label__expenses:home.incurences-fees forsikringsselskabet fyn
+__label__expenses:home.incurences-fees topdanmark forsikring
+__label__expenses:home.incurences-fees alm. brand forsikring
+__label__expenses:home.incurences-fees forsikringscentret, assurance agent
+__label__expenses:home.incurences-fees tandlæge erik nielsen
+__label__expenses:home.incurences-fees nordea liv & pension, livsforsikringsselskab
+__label__expenses:home.incurences-fees forsikringscentret, assurance agentur
+__label__expenses:home.incurences-fees codan forsikring
+__label__expenses:home.incurences-fees sønderjysk forsikring
+__label__expenses:home.incurences-fees ulla højland jensen
+__label__expenses:home.incurences-fees forsikringscentret, assurance agentur
+__label__expenses:home.incurences-fees købstædernes forsikringsagentur
+__label__expenses:home.incurences-fees forsikrings-aktieselskabet alka
+__label__expenses:home.incurences-fees alka forsikring
+__label__expenses:home.incurences-fees jm trykluft
+__label__expenses:home.incurences-fees taksatorringen
+__label__expenses:home.incurences-fees tryg
+__label__expenses:home.incurences-fees aon denmark
+__label__expenses:home.incurences-fees hansson & partners forsikringsmæglerselskab
+__label__expenses:home.incurences-fees jacobsen invest
+__label__expenses:home.incurences-fees anker olesen surveyors
+__label__expenses:home.incurences-fees købstædernes forsikringsagentur i horsens
+__label__expenses:home.incurences-fees købstædernes forsikring
+__label__expenses:home.incurences-fees gf-horsens
+__label__expenses:home.incurences-fees gf - akka
+__label__expenses:home.incurences-fees forsikringsklubben post jylland
+__label__expenses:home.incurences-fees gf - horsens
+__label__expenses:home.incurences-fees topdanmark forsikring
+__label__expenses:home.incurences-fees rådgivningsfirma knud munkhøj
+__label__expenses:home.incurences-fees forsikringsagenturet cbp
+__label__expenses:home.incurences-fees gf brand, redning og vagt f.m.b.a
+__label__expenses:home.incurences-fees lars juliussen holding
+__label__expenses:home.incurences-fees skantaks
+__label__expenses:home.incurences-fees aistrup allan forsikringsmægler
+__label__expenses:home.incurences-fees topdanmark butik
+__label__expenses:home.incurences-fees fyns forsikrings revision
+__label__expenses:home.incurences-fees bhm assurance
+__label__expenses:home.incurences-fees alm. brand vejle
+__label__expenses:home.incurences-fees forsikringsselskabet vejle brand af 1841 g/s
+__label__expenses:home.incurences-fees topdanmark forsikring
+__label__expenses:home.incurences-fees topdanmark butik
+__label__expenses:home.incurences-fees jan juul pedersen
+__label__expenses:home.incurences-fees karin de rode vesterholt jensen
+__label__expenses:home.incurences-fees forsikringsmægler allan aistrup
+__label__expenses:home.incurences-fees aistrup allan forsikringsmægler
+__label__expenses:home.incurences-fees de frie forsikringsmæglere
+__label__expenses:home.incurences-fees ml forsikringsagentur
+__label__expenses:home.incurences-fees forsikringsmæglerne bhmvest
+__label__expenses:home.incurences-fees jelers
+__label__expenses:home.incurences-fees if forsikringscenter vejle
+__label__expenses:home.incurences-fees claus skau pedersen
+__label__expenses:home.incurences-fees forsikringsmægleren
+__label__expenses:home.incurences-fees tryg
+__label__expenses:home.incurences-fees tvm insurance service
+__label__expenses:home.incurences-fees b c marketing
+__label__expenses:home.incurences-fees de frie forsikringsmæglere
+__label__expenses:home.incurences-fees de frie forsikringsmæglere
+__label__expenses:home.incurences-fees danox assurance
+__label__expenses:home.incurences-fees jysk forsikrings-service
+__label__expenses:home.incurences-fees jysk forsikrings-service trekantsområdet
+__label__expenses:home.incurences-fees lars juliussen holding
+__label__expenses:home.incurences-fees fyns forsikrings revision
+__label__expenses:home.incurences-fees middelfart sparekasse

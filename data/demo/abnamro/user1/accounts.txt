@@ -1,0 +1,3 @@
+bankId	name	type	currency	balance
+account1	Privérekening	CHECKING	EUR	2624.33
+account2	"Direct Sparen"	SAVINGS	EUR	824.33

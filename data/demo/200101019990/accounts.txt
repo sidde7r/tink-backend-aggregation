@@ -1,0 +1,3 @@
+bankId	name	type	currency	balance
+bank1	Checking Account	CHECKING	SEK	"16245.33"
+bank2	Buffer Account	SAVINGS	SEK	"8245.33"

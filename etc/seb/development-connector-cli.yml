@@ -1,0 +1,84 @@
+server:
+  applicationConnectors:
+    - type: http
+      port: 8095
+  adminConnectors:
+    - type: http
+      port: 9095
+
+endpoints:
+  main:
+    url: http://localhost:9090/
+    pinnedCertificates:
+      - "CERTSHA256:C050C78642605EE54DDBF2B38F7700EFAC77D19DC5388B807550D325574220E7"
+  system:
+    url: http://localhost:9091/
+    accessToken: devtoken
+    pinnedCertificates:
+      - "CERTSHA256:C050C78642605EE54DDBF2B38F7700EFAC77D19DC5388B807550D325574220E7"
+  aggregation:
+    url: http://localhost:9095/
+    accessToken: devtoken
+    pinnedCertificates:
+      - "CERTSHA256:C050C78642605EE54DDBF2B38F7700EFAC77D19DC5388B807550D325574220E7"
+  analytics:
+    url: http://localhost:9093/
+  encryption:
+    url: http://localhost:9094/
+    pinnedCertificates:
+      - "CERTSHA256:C050C78642605EE54DDBF2B38F7700EFAC77D19DC5388B807550D325574220E7"
+  connector:
+    url: http://localhost:9095/
+    pinnedCertificates:
+      - "CERTSHA256:C050C78642605EE54DDBF2B38F7700EFAC77D19DC5388B807550D325574220E7"
+
+cluster: CORNWALL
+
+requireInjection: true
+
+developmentMode: true
+
+distributedDatabase:
+  seeds:
+    - 172.16.42.2
+  enabled: true
+
+database:
+  driverClass: com.mysql.jdbc.Driver
+  username: tink
+  password: tink
+  url: jdbc:mysql://172.16.42.2/tink?useLocalSessionState=true&rewriteBatchedStatements=true&useSSL=true&verifyServerCertificate=false
+  showSql: false
+  persistenceUnitName: tink-main-api
+  generateDdl: true
+
+scheduler:
+  enabled: false
+
+coordination:
+  hosts: 172.16.42.2:2181
+
+cache:
+  enabled: false
+
+search:
+  enabled: false
+
+analytics:
+  intercom:
+    enabled: false
+
+logging:
+  level: INFO
+  loggers:
+    se.tink: DEBUG
+    se.tink.org.eclipse: INFO
+    org.hibernate: WARN
+  appenders:
+    - type: console
+      threshold: ALL
+      timeZone: Europe/Stockholm
+      logFormat: '%magenta(%date{"yyyy-MM-dd HH:mm:ss,SSSXXX"}) %highlight(%level) [%thread] R:%X{requestId} %blue(%logger) %message%n%xException'
+
+template:
+  enabled: false

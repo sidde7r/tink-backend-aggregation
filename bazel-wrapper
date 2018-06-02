@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# This script wraps `bazel` and makes sure that it exits if tests fail.
+
+set -e
+TEMPFILE=$(mktemp)
+
+set +e
+bazel $@ 2>&1 | tee "$TEMPFILE"
+STATUS=$?
+if [ $STATUS -ne 0 ]; then
+    rm "$TEMPFILE"
+    exit $STATUS
+fi
+
+! grep -qE 'ERROR|FAILED|NO STATUS' "$TEMPFILE"
+STATUS=$?
+rm "$TEMPFILE"
+exit $STATUS

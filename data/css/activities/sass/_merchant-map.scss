@@ -1,0 +1,138 @@
+.shareable-frame
+{
+	.merchant-map
+	{
+		margin: 0;
+		.absolute, .map-wrapper, .map-container, #map
+		{
+			padding-bottom: 62%;
+		}
+
+		.divider-wrapper
+		{
+			padding-bottom: 62%;
+		}
+
+		.bottom-text
+		{
+			position: fixed;
+			
+			text-align: center;
+			font-size: 20px;
+			top: 89px;
+			padding-top: 62%;
+
+			padding-bottom: 70px;
+			left: 8%;
+			width: 84%;
+		}
+		.circle-wrapper
+		{
+			position: fixed;
+			margin-top: 62%;
+			top: 28px;
+		}
+
+		.circle
+		{
+			position: fixed;
+			top: 14px;
+			margin-top: 62%;
+			left: 50%;
+			margin-left: -33px;
+		}
+
+		.icon-circle
+		{
+			margin-top: 62%;
+			position: fixed;
+			top: 17px;
+		}
+
+		.centered-activity-title
+		{
+			padding-top: 4px;
+		}
+	}
+}
+
+.merchant-map
+{
+	position: relative;
+
+	.centered-activity-title
+	{
+		margin-top: 4px;
+	}
+
+	.circle-wrapper
+	{
+		position: absolute;
+		margin-left: 50%;
+	}
+
+	.circle
+	{
+		position: absolute;
+		float: center;
+		text-align: center;
+		background-color: white;
+		border-radius: 100%;
+		width: 66px;
+		height: 66px;
+		padding: 0px;
+		top: 175px;
+		left: -41px;
+		margin: 0 auto 0;
+		z-index: 1000000;
+	}
+
+	.icon-circle
+	{
+		background-color: $merchant-map-icon-background-color;
+		margin: 3px 0 0 3px;
+		height: 60px;
+		width: 60px;
+		line-height: 60px;
+		font-size: 36px;
+	}
+
+	.absolute
+	{
+		margin: 0px -$padding 0 -$padding;
+		padding: 0 8px;
+	}
+
+	.map-wrapper
+	{
+		margin-left: -$padding;
+		margin-right: -$padding;
+	}
+
+	.map-container
+	{
+		height: 220px;
+		width: 100%;
+	}
+
+	.map-touch-saver
+	{
+		margin: 0px -$padding 0 -$padding;
+		position: absolute;
+		height: 220px;
+		width: 100%;
+	}
+ 
+	#map
+	{
+		height: 100%;
+		width: 100%;
+	}
+
+	.bottom-part
+	{
+		padding-top: 180px;
+		text-align: center;
+		margin: 72px 0 10px+$padding;
+	}
+}

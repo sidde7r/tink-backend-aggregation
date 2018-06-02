@@ -1,0 +1,46 @@
+#!/usr/bin/env python
+
+#
+# PLACE THIS FILE IN .git/hooks/
+# It'll automatically trigger and reject any badly formatted git commits
+#
+
+import sys, os, re
+from subprocess import check_output
+
+# Length of first line and tags allowed
+maxFirstLineLength = 72
+allowedTags = "doc|fea|fix|log|per|ref|sty|tes"
+
+# Message format
+re_tag = "({0})".format(allowedTags)
+re_category = "\(.+\)"
+re_space = "\s"
+re_description = ".+"
+
+re_messagePattern = "{0}{1}{2}{3}".format(re_tag, re_category, re_space, re_description)
+
+def printMessageFormatMessage():
+	print "```"
+	print "tag(Category) Short message on line within {0} chars".format(maxFirstLineLength)
+	print ""
+	print "Further description useful when digging into this commit at later point."
+	print "```"
+	print "Allowed tags: %s" % allowedTags
+
+# Collect the parameters
+commit_msg_filepath = sys.argv[1]
+
+with open(commit_msg_filepath, 'r') as f:
+	firstLine = f.read().splitlines()[0]
+
+	firstLineLength = len(firstLine)
+	if firstLineLength > maxFirstLineLength:
+		print "[ERROR] commit-msg: Too long first line ({0} chars). Commit messages must be structured like: ".format(firstLineLength)
+		printMessageFormatMessage()
+		sys.exit(1)
+
+	if not re.match(re_messagePattern, firstLine):
+		print "[ERROR] commit-msg: Incorrect message format. Commit messages must be structured like: "
+		printMessageFormatMessage()
+		sys.exit(1)

@@ -1,0 +1,32 @@
+[Unit]
+Description=tink-backend-main
+
+[Service]
+User=tink-backend-main
+Group=tink-backend-main
+KillSignal=SIGINT
+TimeoutStopSec=40
+Restart=on-failure
+RestartSec=10
+Environment=MAX_HEAP_SIZE=2560m
+EnvironmentFile=-/etc/default/tink-backend-main
+WorkingDirectory=/usr/share/tink-backend-main
+
+ExecStart=/usr/bin/java \
+          -Xmx${MAX_HEAP_SIZE} \
+          -XX:-OmitStackTraceInFastThrow \
+          -Xloggc:/var/log/tink/main/gc.log \
+          -XX:+UseGCLogFileRotation \
+          -XX:NumberOfGCLogFiles=5 \
+          -XX:GCLogFileSize=512K \
+          -XX:+PrintGCDetails \
+          -XX:+PrintGCDateStamps \
+          -Dnetworkaddress.cache.ttl=60 \
+          -XX:+HeapDumpOnOutOfMemoryError \
+          -XX:HeapDumpPath=/var/tmp/tink/heapdumps/tink-backend-main \
+          -XX:+ExitOnOutOfMemoryError \
+          -jar /usr/share/tink-backend-main/main-service.jar \
+          server /etc/tink/main-server.yml
+
+[Install]
+WantedBy=multi-user.target

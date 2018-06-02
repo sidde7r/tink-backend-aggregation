@@ -1,0 +1,54 @@
+.rate-this-app {
+
+  .activity-description-text {
+    margin: 20px 50px 20px 50px;
+  }
+
+  .text-area {
+    border-radius: 3px 3px 0 0;
+
+    .title {
+      text-align: center;
+      font-size: 18px;
+      margin-top: 10px;
+    }
+  }
+
+  .action-right-button,
+  .action-left-button {
+    display: inline-block;
+    width: 50%;
+    box-sizing: border-box;
+    background-color: $rate-this-app-button-color;
+    font-size: 15px;
+    text-align: center;
+    font-family: $font-bold, 'proxima-semibold', 'ProximaNovaA-Semibold', sans-serif;
+    color: $rate-this-app-button-text-color;
+  }
+
+  .action-right-button {
+    border-radius: 0px 0px 3px 0px;
+    padding: 6px 6px 6px 0;
+
+    .inner {
+        padding: 6px 6px 6px 0;
+        border-left: 0.25px rgba(255, 255, 255, 0.6) solid;
+    }
+  }
+
+  .action-left-button {
+    border-radius: 0px 0px 0px 3px;
+    padding: 6px 0 6px 6px;
+
+    .inner {
+    	padding: 6px 0 6px 6px;
+    	border-right: 0.25px rgba(255, 255, 255, 0.6) solid;
+    }
+  }
+}
+
+.activity-frame.rate-this-app {
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+}

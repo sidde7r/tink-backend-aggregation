@@ -1,0 +1,360 @@
+__label__expenses:home.communications 3player
+__label__expenses:home.communications 56.com
+__label__expenses:home.communications 9now
+__label__expenses:home.communications abc iview
+__label__expenses:home.communications academic earth
+__label__expenses:home.communications acetrax
+__label__expenses:home.communications acorn dvd
+__label__expenses:home.communications afrinolly
+__label__expenses:home.communications aj+
+__label__expenses:home.communications akimbo
+__label__expenses:home.communications alfa omega
+__label__expenses:home.communications all 4
+__label__expenses:home.communications alltele
+__label__expenses:home.communications altbalaji
+__label__expenses:home.communications amazon dynamodb
+__label__expenses:home.communications amazon elastic block store
+__label__expenses:home.communications amazon elasticache
+__label__expenses:home.communications amazon glacier
+__label__expenses:home.communications amazon instant video uk
+__label__expenses:home.communications amazon s3
+__label__expenses:home.communications amazon video
+__label__expenses:home.communications ameibo
+__label__expenses:home.communications amplify
+__label__expenses:home.communications animax germany
+__label__expenses:home.communications anime strike
+__label__expenses:home.communications aol on
+__label__expenses:home.communications apple music
+__label__expenses:home.communications apple tv
+__label__expenses:home.communications archival disc
+__label__expenses:home.communications artbabble
+__label__expenses:home.communications astro iptv
+__label__expenses:home.communications axcient
+__label__expenses:home.communications backblaze
+__label__expenses:home.communications bahnhof
+__label__expenses:home.communications baidu wangpan
+__label__expenses:home.communications bbc iplayer
+__label__expenses:home.communications bbc redux
+__label__expenses:home.communications bbc store
+__label__expenses:home.communications big big channel
+__label__expenses:home.communications bitcasa
+__label__expenses:home.communications blacktv247
+__label__expenses:home.communications blastro
+__label__expenses:home.communications blastro networks
+__label__expenses:home.communications blim
+__label__expenses:home.communications blip
+__label__expenses:home.communications block-level storage
+__label__expenses:home.communications bloggingheads.tv
+__label__expenses:home.communications bosh
+__label__expenses:home.communications boxtv.com
+__label__expenses:home.communications bredband2
+__label__expenses:home.communications bredbandsbolaget
+__label__expenses:home.communications brightcove
+__label__expenses:home.communications britbox
+__label__expenses:home.communications bt tv
+__label__expenses:home.communications btv247, inc
+__label__expenses:home.communications c-span video library
+__label__expenses:home.communications canal digital
+__label__expenses:home.communications carbonite
+__label__expenses:home.communications cartika
+__label__expenses:home.communications cbs all access
+__label__expenses:home.communications cbs innertube
+__label__expenses:home.communications cbsn
+__label__expenses:home.communications cctv+
+__label__expenses:home.communications cellip
+__label__expenses:home.communications chomikuj.pl
+__label__expenses:home.communications cht mod
+__label__expenses:home.communications cinemoz
+__label__expenses:home.communications cirtas
+__label__expenses:home.communications citytv.com.co
+__label__expenses:home.communications clearvision
+__label__expenses:home.communications client-side encryption
+__label__expenses:home.communications cloud data management interface
+__label__expenses:home.communications cloud foundry
+__label__expenses:home.communications cloud storage
+__label__expenses:home.communications cloud storage gateway
+__label__expenses:home.communications cloudbees
+__label__expenses:home.communications cloudbyte
+__label__expenses:home.communications cloudme
+__label__expenses:home.communications cloudup
+__label__expenses:home.communications com hem
+__label__expenses:home.communications comedy.com
+__label__expenses:home.communications computaris
+__label__expenses:home.communications comviq
+__label__expenses:home.communications content delivery network
+__label__expenses:home.communications contv
+__label__expenses:home.communications cooperative storage cloud
+__label__expenses:home.communications crackle
+__label__expenses:home.communications cravetv
+__label__expenses:home.communications creativity
+__label__expenses:home.communications crunchyroll
+__label__expenses:home.communications ctera networks
+__label__expenses:home.communications ctrls
+__label__expenses:home.communications curiositystream
+__label__expenses:home.communications cyberduck
+__label__expenses:home.communications dailymotion
+__label__expenses:home.communications daisuki
+__label__expenses:home.communications data center
+__label__expenses:home.communications dataphone
+__label__expenses:home.communications dazn
+__label__expenses:home.communications delight
+__label__expenses:home.communications devicom
+__label__expenses:home.communications digitalcurriculum
+__label__expenses:home.communications digitalocean
+__label__expenses:home.communications diino
+__label__expenses:home.communications directv cinema
+__label__expenses:home.communications dittotv
+__label__expenses:home.communications documentcloud
+__label__expenses:home.communications docurama
+__label__expenses:home.communications dove channel
+__label__expenses:home.communications dramafever
+__label__expenses:home.communications drivehq
+__label__expenses:home.communications drop.io
+__label__expenses:home.communications dropbox
+__label__expenses:home.communications east asia tv
+__label__expenses:home.communications egnyte
+__label__expenses:home.communications elephantdrive
+__label__expenses:home.communications emc atmos
+__label__expenses:home.communications emerald program
+__label__expenses:home.communications enstratius
+__label__expenses:home.communications eros now
+__label__expenses:home.communications essex tv
+__label__expenses:home.communications etherdrive
+__label__expenses:home.communications eurocinema
+__label__expenses:home.communications europarltv
+__label__expenses:home.communications evernote
+__label__expenses:home.communications exercisetv
+__label__expenses:home.communications fabchannel.com
+__label__expenses:home.communications facebook watch
+__label__expenses:home.communications fandango
+__label__expenses:home.communications feeln
+__label__expenses:home.communications fello
+__label__expenses:home.communications filemobile
+__label__expenses:home.communications filesanywhere
+__label__expenses:home.communications filipino on demand
+__label__expenses:home.communications film4od
+__label__expenses:home.communications filmdoo
+__label__expenses:home.communications filmflex
+__label__expenses:home.communications filmklik
+__label__expenses:home.communications filmon
+__label__expenses:home.communications filmstruck
+__label__expenses:home.communications flix premiere
+__label__expenses:home.communications flowvella
+__label__expenses:home.communications fluidinfo
+__label__expenses:home.communications fora.tv
+__label__expenses:home.communications foxtel now
+__label__expenses:home.communications foxtel on
+__label__expenses:home.communications free haven project
+__label__expenses:home.communications freecast
+__label__expenses:home.communications funny or die
+__label__expenses:home.communications girlfriends films
+__label__expenses:home.communications gladinet
+__label__expenses:home.communications global wrestling network
+__label__expenses:home.communications glocalnet
+__label__expenses:home.communications gluster
+__label__expenses:home.communications gmailfs
+__label__expenses:home.communications go90
+__label__expenses:home.communications godigital
+__label__expenses:home.communications godigital media group
+__label__expenses:home.communications gomedia
+__label__expenses:home.communications google cloud datastore
+__label__expenses:home.communications google drive
+__label__expenses:home.communications google storage
+__label__expenses:home.communications gravitas ventures
+__label__expenses:home.communications greatamericans.com
+__label__expenses:home.communications greenbutton
+__label__expenses:home.communications guidedoc
+__label__expenses:home.communications halebop
+__label__expenses:home.communications hallon
+__label__expenses:home.communications hbo go
+__label__expenses:home.communications hbo now
+__label__expenses:home.communications hd share
+__label__expenses:home.communications heroku
+__label__expenses:home.communications hibari
+__label__expenses:home.communications hitbliss
+__label__expenses:home.communications hoopla
+__label__expenses:home.communications hooq
+__label__expenses:home.communications hotmovies
+__label__expenses:home.communications hotstar
+__label__expenses:home.communications hp cloud
+__label__expenses:home.communications hulu
+__label__expenses:home.communications humyo
+__label__expenses:home.communications hunter tv
+__label__expenses:home.communications i want tv
+__label__expenses:home.communications i-drive
+__label__expenses:home.communications iaso backup
+__label__expenses:home.communications ibakatv
+__label__expenses:home.communications icentrex
+__label__expenses:home.communications icflix
+__label__expenses:home.communications icloud
+__label__expenses:home.communications icloud leaks of celebrity photos
+__label__expenses:home.communications iflix
+__label__expenses:home.communications iland
+__label__expenses:home.communications imeem
+__label__expenses:home.communications in2tv
+__label__expenses:home.communications infomaniak
+__label__expenses:home.communications internet television
+__label__expenses:home.communications inview technology
+__label__expenses:home.communications iptv
+__label__expenses:home.communications iqiyi
+__label__expenses:home.communications irokotv
+__label__expenses:home.communications iron mountain
+__label__expenses:home.communications itunes store
+__label__expenses:home.communications itv hub
+__label__expenses:home.communications ivi.ru
+__label__expenses:home.communications jaman
+__label__expenses:home.communications jelastic
+__label__expenses:home.communications jellytelly
+__label__expenses:home.communications jungle disk
+__label__expenses:home.communications kaltura
+__label__expenses:home.communications kangaroo
+__label__expenses:home.communications kaonmedia
+__label__expenses:home.communications keepvault
+__label__expenses:home.communications kewego
+__label__expenses:home.communications kinomap
+__label__expenses:home.communications kortv
+__label__expenses:home.communications kubity
+__label__expenses:home.communications le.com
+__label__expenses:home.communications libox
+__label__expenses:home.communications lightbox
+__label__expenses:home.communications list of internet television providers
+__label__expenses:home.communications liveleak
+__label__expenses:home.communications love nature
+__label__expenses:home.communications lovefilm
+__label__expenses:home.communications lycamobile
+__label__expenses:home.communications mag rack
+__label__expenses:home.communications mainstreaming
+__label__expenses:home.communications mango tv
+__label__expenses:home.communications mayomo
+__label__expenses:home.communications mega
+__label__expenses:home.communications memonic
+__label__expenses:home.communications memopal
+__label__expenses:home.communications metacafe
+__label__expenses:home.communications microsoft movies & tv
+__label__expenses:home.communications mimedia
+__label__expenses:home.communications minio
+__label__expenses:home.communications mobile cloud storage
+__label__expenses:home.communications mobileme
+__label__expenses:home.communications mobstor
+__label__expenses:home.communications moozone
+__label__expenses:home.communications moviebeam
+__label__expenses:home.communications movieclips
+__label__expenses:home.communications movieland
+__label__expenses:home.communications movielink
+__label__expenses:home.communications movies anywhere
+__label__expenses:home.communications mozy
+__label__expenses:home.communications msn soapbox
+__label__expenses:home.communications msn video player
+__label__expenses:home.communications mubi
+__label__expenses:home.communications muchtv
+__label__expenses:home.communications music choice
+__label__expenses:home.communications muziic
+__label__expenses:home.communications muzu.tv
+__label__expenses:home.communications mx1 ltd
+__label__expenses:home.communications my5
+__label__expenses:home.communications myoutdoortv.com
+__label__expenses:home.communications mytoons
+__label__expenses:home.communications mytv
+__label__expenses:home.communications nash tv
+__label__expenses:home.communications nasuni
+__label__expenses:home.communications net1
+__label__expenses:home.communications netatonce
+__label__expenses:home.communications netd.com
+__label__expenses:home.communications netflix
+__label__expenses:home.communications new japan pro wrestling world
+__label__expenses:home.communications nextcloud
+__label__expenses:home.communications nfb.ca
+__label__expenses:home.communications night flight
+__label__expenses:home.communications ninjavideo
+__label__expenses:home.communications nirvanix
+__label__expenses:home.communications norton zone
+__label__expenses:home.communications now tv
+__label__expenses:home.communications nutanix
+__label__expenses:home.communications nyootv
+__label__expenses:home.communications object storage
+__label__expenses:home.communications on demand
+__label__expenses:home.communications ondemand
+__label__expenses:home.communications onedrive
+__label__expenses:home.communications oneworldtv
+__label__expenses:home.communications open compute project
+__label__expenses:home.communications openautonomy
+__label__expenses:home.communications openfilm
+__label__expenses:home.communications openio
+__label__expenses:home.communications openshift
+__label__expenses:home.communications ora tv
+__label__expenses:home.communications ovguide
+__label__expenses:home.communications ovi
+__label__expenses:home.communications owncloud
+__label__expenses:home.communications oystor
+__label__expenses:home.communications oznoz
+__label__expenses:home.communications pandora
+__label__expenses:home.communications pandora tv
+__label__expenses:home.communications panzura
+__label__expenses:home.communications pbs distribution
+__label__expenses:home.communications pdfvue
+__label__expenses:home.communications peer-to-peer assisted streaming solution
+__label__expenses:home.communications phonera
+__label__expenses:home.communications picturebox films
+__label__expenses:home.communications playstation video
+__label__expenses:home.communications playster
+__label__expenses:home.communications pluto tv
+__label__expenses:home.communications popcorn time
+__label__expenses:home.communications popcornflix
+__label__expenses:home.communications priority matrix
+__label__expenses:home.communications prq
+__label__expenses:home.communications pydio
+__label__expenses:home.communications rackspace cloud
+__label__expenses:home.communications recovery as a service
+__label__expenses:home.communications remote backup service
+__label__expenses:home.communications riak
+__label__expenses:home.communications rushtera
+__label__expenses:home.communications sappa
+__label__expenses:home.communications scality
+__label__expenses:home.communications scan-optics
+__label__expenses:home.communications securesafe
+__label__expenses:home.communications serious tubes networks
+__label__expenses:home.communications sliderocket
+__label__expenses:home.communications software-defined storage
+__label__expenses:home.communications soundcloud
+__label__expenses:home.communications spideroak
+__label__expenses:home.communications spotify
+__label__expenses:home.communications storsimple
+__label__expenses:home.communications stratoscale
+__label__expenses:home.communications streaming media
+__label__expenses:home.communications sun cloud
+__label__expenses:home.communications swisscom
+__label__expenses:home.communications swissdisk
+__label__expenses:home.communications sync.com
+__label__expenses:home.communications syncdocs
+__label__expenses:home.communications syncplicity
+__label__expenses:home.communications tahoe-lafs
+__label__expenses:home.communications tarsnap
+__label__expenses:home.communications tdc
+__label__expenses:home.communications tele2
+__label__expenses:home.communications tele2vision
+__label__expenses:home.communications tele4u
+__label__expenses:home.communications telenor
+__label__expenses:home.communications telenordia
+__label__expenses:home.communications telia
+__label__expenses:home.communications telia company
+__label__expenses:home.communications the linkup
+__label__expenses:home.communications the newsmarket
+__label__expenses:home.communications the online network
+__label__expenses:home.communications tidal
+__label__expenses:home.communications tre
+__label__expenses:home.communications tresorit
+__label__expenses:home.communications ubuntu one
+__label__expenses:home.communications universal telecom
+__label__expenses:home.communications vectone
+__label__expenses:home.communications video spokesperson
+__label__expenses:home.communications vimla
+__label__expenses:home.communications vodafone
+__label__expenses:home.communications wetransfer
+__label__expenses:home.communications windows live devices
+__label__expenses:home.communications windows live mesh
+__label__expenses:home.communications xeround
+__label__expenses:home.communications yahoo! briefcase
+__label__expenses:home.communications zadara storage
+__label__expenses:home.communications zettabox
+__label__expenses:home.communications zmanda cloud backup
+__label__expenses:home.communications zumodrive

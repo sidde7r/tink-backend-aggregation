@@ -1,0 +1,7 @@
+/services.swagger.json
+*.pb.gw.go
+*.pb.go
+
+# Editors
+.idea
+.vscode

@@ -1,0 +1,100 @@
+/*
+ * Base colors (only used within the scope of this file)
+ */
+
+$black: #222222;
+
+
+/*
+ * Color mapping
+ */
+
+// General: Text
+$header-color: $black;
+$text-color: #777777;
+$timestamp-text-color: $black;
+$font-regular: 'ProximaNovaA-Regular';
+$weight-regular: normal;
+$font-bold: 'ProximaNovaA-Semibold';
+$weight-bold: normal;
+$font-light: 'ProximaNovaA-Light';
+$weight-light: normal;
+
+// General: Types
+$income-color: #94C23C;
+$expense-color: #009286;
+$expense-comparison-color: #7AC6C0;
+$left-to-spend-color: #0D93AF;
+$transfers-color: #777777;
+$uncategorized-color: #2AAEE4;
+$critical-color: #FF6600;
+$info-color: #2AAEE4;
+$warning-color: #FF6600;
+$positive-color: $income-color;
+
+// General: Feed
+$feed-background-color: #F9F9F9;
+$timeline-color: #DDDDDD;
+
+// General: Activities
+$activity-border-color: rgba($black, 0.2);
+$activity-divider-color: rgba($black, 0.1);
+$activity-divider-light-color: #CCCCCC; // Should be defined in terms of hierarchy instead of "light"
+$activity-divider-lightest-color: #E5E5E5; // Should be defined in terms of hierarchy instead of "lightest"
+$activity-touch-state-background-color: #E5E5E5;
+$activity-border-style: solid;
+
+$centered-activity-title-line-height: unset;
+
+$activity-icon-size: 18px;
+
+// General: Buttons
+$button-text-color: $black;
+$approve-e-invoice-color: $black;
+$button-background-color: #F3C000;
+
+// Lookback
+$lookback-header-background-color: $info-color;
+
+// Merchant
+$merchant-map-icon-background-color: $expense-color;
+
+// Badge
+$badge-category-icon-symbol-color: rgba($black, 0.2);
+
+// Bank fee selfie
+$bank-fee-selfie-background-color: none; // Not used
+$bank-fee-selfie-icon-background-color: none; // Not used
+$bank-fee-selfie-border-color: none; // Not used
+
+// Year in numbers
+$year-in-numbers-background-color: none; // Not used
+
+// Summer in numbers
+$summer-in-numbers-background-color: none; // Not used
+
+// Rate this app
+$rate-this-app-button-color: $button-background-color;
+$rate-this-app-button-text-color: $button-text-color;
+
+/*
+ * Dimensions
+ */
+
+$padding: 8px;
+$vertical-activity-padding: 12px;
+$divider-thickness: .5px;
+$activity-outline-thickness: .5px;
+$border-radius : 4px;
+$ios-activity-border-radius: 4px;
+$ios-activity-shadow: unset;
+
+$right-subtext-top-margin: 1px;
+$left-subtext-top-margin: 0px;
+
+$top-summaries-amount-bottom-padding: unset;
+
+$android-activity-shadow: 0 1.5px 1px -2px rgba(#000000, .34);
+$android-activity-border-radius: 4px;
+
+

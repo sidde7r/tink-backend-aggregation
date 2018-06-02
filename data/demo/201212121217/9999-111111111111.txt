@@ -1,0 +1,1674 @@
+2016-12-23	Salary	4000
+2016-12-25	Pret A Manger - Lower R 	-3.15
+2016-12-25	Hix 	-58.0
+2016-12-26	Rent	-1000
+2016-12-26	Eon	-50
+2016-12-26	Vodafone	-20
+2016-12-26	Spotify	-9.99
+2016-12-26	Sainsbury's Stockwell S 	-2.0
+2016-12-26	+1-920-634-3150 HOTWIRE	-86.91
+2016-12-27	Netflix.com	-7.99
+2016-12-27	Itunes.com/bill 	-42.98
+2016-12-27	UBER UBER 	-5.95
+2016-12-28	Swap Bars Limited Southend-on-sea	-12.9
+2016-12-28	Dalla Terra Wine Bar Lt 	-49.5
+2016-12-29	Pret A Manger - Lower R 	-7.5
+2016-12-29	UBER UBER 	-12.42
+2016-12-30	Swissotel Geneve Geneve 3	-731.61
+2016-12-30	Tesco Stores 3093 	-8.28
+2016-12-31	Pret A Manger-crown Pas 	-7.5
+2016-12-31	Uber *gb Aug12 	-5.0
+2017-01-01	Lyle & Scott 	-21.0
+2017-01-01	Sainsbury's Supermarket 	-4.05
+2017-01-02	My Essentials 08000224355	-16.99
+2017-01-02	Costa  Stockwell 	-4.5
+2017-01-03	Boots The Chemist 	-34.25
+2017-01-03	Boots The Chemist 	-34.25
+2017-01-03	Uber *fr Jul09	-6.97
+2017-01-04	Pret A Manger-russell S 	-6.65
+2017-01-04	Wahaca 66 Chandos Plac 	-20.0
+2017-01-05	Uber *gb Aug25 	-5.83
+2017-01-05	Uber *gb Aug25 	-5.83
+2017-01-05	Odeon Bfi Imax Box - Manchester	-3.2
+2017-01-06	Tfl Travel Charge Tfl.gov.uk/cp	-1.7
+2017-01-06	Sainsbury's Stockwell-c 	-5.5
+2017-01-07	PRET A MANGER-TOTTENHAM 	-4.25
+2017-01-07	Pret A Manger - Lower R 	-9.7
+2017-01-08	Glassblower 	-27.95
+2017-01-08	The Third Space 	-4.5
+2017-01-09	Amazon Svcs Europe,sar Amazon.co.uk	-10.99
+2017-01-09	Uber Uber 	-5.0
+2017-01-10	WELCOME BREAK GROUP LTD BISHOPS STORTFO	-6.7
+2017-01-10	Pret A Manger - Lower R 	-4.9
+2017-01-11	Ba.com Switzerland	-80.21
+2017-01-11	Sainsbury's Stockwell S 	-3.05
+2017-01-12	Haz Restaurant 	-31.8
+2017-01-12	Haz Restaurant 	-31.8
+2017-01-12	Boots The Chemist 	-12.87
+2017-01-13	Roodlane Medical Ltd 	-75.0
+2017-01-13	Iron Duke 	-7.1
+2017-01-14	Pret A Manger - Lower R 	-5.99
+2017-01-14	Eat Ltd St James' 	-1.65
+2017-01-15	JOHN LEWIS READING READING	-30.95
+2017-01-15	Parcel Yard 	-17.0
+2017-01-16	Virgin Money Giving Ah Norwich	-20.0
+2017-01-16	Portobello - Oddbins 	-7.25
+2017-01-17	Lul Ticket Machine-ladb 	-124.5
+2017-01-17	Ny-lon 	-70.2
+2017-01-18	Costa  Stockwell 	-2.5
+2017-01-18	Itunes.com/bill 	-39.99
+2017-01-19	Sainsbury's Local Porto 	-7.5
+2017-01-19	Tesco Stores 3093 	-8.28
+2017-01-20	Shelleys 	-8.4
+2017-01-20	BUPA DENTAL - WEST END 	-60.0
+2017-01-21	Amazon Uk Retail Amazon.co.uk	-13.0
+2017-01-21	Duke's Head 	-10.1
+2017-01-22	Duke's Head 	-21.45
+2017-01-22	Soho Rehab 	-33.5
+2017-01-23	Pret A Manger - Lower R 	-10.64
+2017-01-23	Railway Tavern 	-10.6
+2017-01-24	Pointspurchase Hyatt Points.com	-17.03
+2017-01-24	Eat Limited 	-1.0
+2017-01-25	Salary	4000
+2017-01-25	Uber *gb Nov08 Help.uber.com	-34.06
+2017-01-25	Pret A Manger - Lower R 	-21.49
+2017-01-26	Rent	-1000
+2017-01-26	Eon	-50
+2017-01-26	Vodafone	-20
+2017-01-26	Spotify	-9.99
+2017-01-26	Amazon Uk Retail Amazon.co.uk	-16.75
+2017-01-26	Costa  Stockwell 	-2.25
+2017-01-27	Netflix.com	-7.99
+2017-01-27	John Lewis Peter Jones 	-126.05
+2017-01-27	Pret A Manger - Lower R 	-7.94
+2017-01-28	Pret A Manger - Lower R 	-8.38
+2017-01-28	Costa  Stockwell 	-8.3
+2017-01-29	APPLE ITUNES STORE GBP 	-25.97
+2017-01-29	Co-op Petrol Clapham 	-42.31
+2017-01-30	Amazon Uk Marketplace	-11.99
+2017-01-30	Clapham - Oddbins 	-44.25
+2017-01-31	Uber *es Sep03	-4.36
+2017-01-31	Uber *es Sep03	-4.36
+2017-01-31	Tesco Stores 3093 	-6.46
+2017-02-01	Amazon Uk Marketplace	-5.99
+2017-02-01	STRATFORD CITY CAR PARK 	-2.5
+2017-02-01	STRATFORD CITY CAR PARK 	-2.5
+2017-02-02	+1-920-634-3150 HOTWIRE	-556.04
+2017-02-02	Hotel Vier Jahreszeiten Muenchen	-22.81
+2017-02-03	Uber Uber 	-13.5
+2017-02-03	Uber *gb Aug03 	-5.17
+2017-02-04	AXA TRAVEL INSURANCE AX IRELAND	-45.45
+2017-02-04	Amazon Uk Retail Amazon.co.uk	-13.43
+2017-02-05	Costa  Stockwell 	-2.9
+2017-02-05	Uber *nl Oct09 Help.uber.com	-58.69
+2017-02-06	Brasserie Zedel 	-19.97
+2017-02-06	Pimenta de Abreu & Dos Genève	-23.54
+2017-02-07	VIRGIN AMERICA 9000001 SAN FRANCISCO	-158.26
+2017-02-07	T M Lewin & Sons Ltd 	-10.0
+2017-02-08	Amazon Digital Dwnlds	-6.64
+2017-02-08	Sainsbury's Stockwell-c 	-8.0
+2017-02-09	HEATHROW AIRPORT HOUNSLOW	-50.1
+2017-02-09	Uber *ch Nov08 Help.uber.com	-21.62
+2017-02-10	Uber *nl Oct09 Help.uber.com	-8.67
+2017-02-10	Boots The Chemist 	-3.19
+2017-02-11	Pret A Manger - Lower R 	-4.75
+2017-02-11	Pret A Manger - Lower R 	-3.65
+2017-02-12	Marks & Spencer -green 	-18.1
+2017-02-12	Uber *gb Aug25 	-10.36
+2017-02-13	Chartered Inst For Secu 	-270.3
+2017-02-13	Ship 	-11.85
+2017-02-14	Uber *gb Sep23 Help.uber.com	-6.8
+2017-02-14	The Haymarket Hotel Foo 	-24.75
+2017-02-15	Pret A Manger - Lower R 	-6.1
+2017-02-15	Amazon Uk Marketplace	-25.62
+2017-02-16	Uber Uber 	-11.86
+2017-02-16	Sainsbury's Stckwll Clp 	-6.3
+2017-02-17	Duke Of Wellington 	-23.95
+2017-02-17	Apple Itunes Store Gbp* 	-3.99
+2017-02-18	Uber *gb Oct27 Help.uber.com	-7.84
+2017-02-18	Berry Bros & Rudd 	-81.95
+2017-02-19	Wahaca Waterloo 119 Wat 	-25.58
+2017-02-19	Liberty Retail Limited. 	-50.0
+2017-02-20	Virginmilesbypoints Points.com	-30.0
+2017-02-20	Eat Ltd St James' 	-6.48
+2017-02-21	Pret A Manger - Lower R 	-3.0
+2017-02-21	Marks & Spencer Clapha 	-7.6
+2017-02-22	Pret A Manger-piccadill 	-7.5
+2017-02-22	Event Merchandising Ltd 	-25.0
+2017-02-23	Wm Morrisons Stores Beccles	-94.22
+2017-02-23	Wm Morrisons Stores Beccles	-94.22
+2017-02-23	Abercrombie.com 	-61.6
+2017-02-24	El Ganso 	-60.0
+2017-02-24	Haz Restaurant 	-13.45
+2017-02-24	Salary	4000
+2017-02-25	Hmv 363 Oxford Street 	-33.05
+2017-02-25	Pret A Manger - Lower R 	-9.65
+2017-02-26	Rent	-1000
+2017-02-26	Eon	-50
+2017-02-26	Vodafone	-20
+2017-02-26	Spotify	-9.99
+2017-02-26	Uber *gb Sep30 Help.uber.com	-5.83
+2017-02-26	PRET A MANGER-TOTTENHAM 	-7.19
+2017-02-27	Netflix.com	-7.99
+2017-02-27	Tfl Travel Charge Tfl.gov.uk/cp	-4.8
+2017-02-27	Boots The Chemist 	-14.0
+2017-02-28	Uber *gb Sep04 	-9.5
+2017-02-28	Red Lion Mayfair 	-8.3
+2017-03-01	Norwegian Air Shuttle A Fornebu	-478.1
+2017-03-01	SAINSBURY'S STCKWLL CLP 	-5.7
+2017-03-01	SAINSBURY'S STCKWLL CLP 	-5.7
+2017-03-02	L'escargot 	-170.61
+2017-03-02	UBER UBER 	-11.84
+2017-03-03	Sainsbury's Stockwell-c 	-6.95
+2017-03-03	Number Sixteen 	-46.13
+2017-03-04	El Ganso 	-140.0
+2017-03-04	Tfl Travel Charge Tfl.gov.uk/cp	-26.3
+2017-03-05	Uber *de Nov13 Help.uber.com	-28.04
+2017-03-05	Starbucks Card Reloa 8452703310	-10.0
+2017-03-06	Uber *gb Oct22 Help.uber.com	-9.04
+2017-03-06	Gold Fish Restaurant 	-105.9
+2017-03-07	BORROWMYDOGGY.COM 	-9.99
+2017-03-07	Berry Bros & Rudd 	-50.45
+2017-03-08	The Haymarket Hotel Foo 	-25.6
+2017-03-08	Lola S Cupcakes Limited 	-21.25
+2017-03-09	Apple Itunes Store Gbp* 	-14.99
+2017-03-09	Iceland Stockwell 	-10.54
+2017-03-10	Fresh & Wild 	-18.79
+2017-03-10	Tfl Travel Charge Tfl.gov.uk/cp	-22.2
+2017-03-11	Pylones 	-5.9
+2017-03-11	The Soho Hotel Restaura 	-125.15
+2017-03-12	STARBUCKS COFFEE 	-5.59
+2017-03-12	Pylones 	-6.93
+2017-03-13	Pret A Manger - Lower R 	-2.75
+2017-03-13	Kiehls Since 1851	-83.5
+2017-03-14	Uber *gb Aug17 	-5.0
+2017-03-14	APPLE ITUNES STORE GBP 	-2.99
+2017-03-15	Costa  Stockwell 	-2.6
+2017-03-15	Sainsbury's Stockwell-c 	-2.1
+2017-03-16	Hix 	-40.5
+2017-03-16	Sixt Rent A Car Chesterfield	-124.97
+2017-03-17	Pret A Manger - Lower R 	-5.74
+2017-03-17	Oaka At The Mansion Hou 	-43.9
+2017-03-18	Uber *gb Sep28 Help.uber.com	-7.19
+2017-03-18	Pret A Manger - Lower R 	-9.5
+2017-03-19	Waterstone's 	-33.07
+2017-03-19	Red Lion Mayfair 	-16.3
+2017-03-20	Uber *gb Aug27 	-5.0
+2017-03-20	Borough Kitchen 1b - 1c 	-13.5
+2017-03-21	Waitrose 616 Clapham Co Clapham Common	-20.36
+2017-03-21	Uber *gb Nov14 Help.uber.com	-5.0
+2017-03-22	Vertigo Roux Fine Dinin 	-187.31
+2017-03-22	The Ritz  	-93.5
+2017-03-23	Pret A Manger-crown Pas 	-5.45
+2017-03-23	Amazon Co Uk Retail	-15.23
+2017-03-24	Sainsbury's Stckwll Clp 	-5.2
+2017-03-24	UBER UBER 	-6.57
+2017-03-24	Salary	4000
+2017-03-25	Costa  Stockwell 	-5.2
+2017-03-25	Eat Ltd St James' 	-5.13
+2017-03-26	Rent	-1000
+2017-03-26	Eon	-50
+2017-03-26	Vodafone	-20
+2017-03-26	Spotify	-9.99
+2017-03-26	Tesco Stores 5130 	-5.11
+2017-03-26	Red Lion Mayfair 	-9.15
+2017-03-27	Netflix.com	-7.99
+2017-03-27	Wm Morrisons Petrol Maidstone	-34.59
+2017-03-27	Amazon Uk Retail Amazon.co.uk	-12.79
+2017-03-28	Fjellskaal Fisketorget Bergen	-18.04
+2017-03-28	Lola S Cupcakes Limited 	-19.2
+2017-03-29	Ye Olde Windmill Inn 	-47.9
+2017-03-29	Heathrow Express Operat Hounsalow, Midd	-22.0
+2017-03-30	WWW.BABBEL.COM BERLIN	-17.85
+2017-03-30	Uber *gb Oct01 Help.uber.com	-17.49
+2017-03-31	Boots The Chemist 	-2.1
+2017-03-31	Pret A Manger - Lower R 	-7.24
+2017-04-01	Uber *de Nov13 Help.uber.com	-42.26
+2017-04-01	Portobello - Oddbins 	-23.5
+2017-04-02	Uber *gb Aug03 	-5.79
+2017-04-02	Oaka At The Mansion Hou 	-66.88
+2017-04-03	Oaka At The Mansion Hou 	-40.16
+2017-04-03	*marslanding 35314369001	-200.0
+2017-04-04	Uber *gb Oct02 Help.uber.com	-7.46
+2017-04-04	City Bar & Grill 	-22.7
+2017-04-05	Renfe Web Madrid	-112.55
+2017-04-05	Uber *ch Oct06 Help.uber.com	-17.77
+2017-04-06	Interest Charge	-82.32
+2017-04-06	Interest Charge	-82.32
+2017-04-06	 American Hote 	-23.45
+2017-04-07	El Ganso 	-65.0
+2017-04-07	Blue Posts Greater 	-10.0
+2017-04-08	Trainline.com Ltd 	-18.21
+2017-04-08	PRET A MANGER - EUSTON 	-8.74
+2017-04-09	Uber *gb Aug13 	-9.82
+2017-04-09	Uber Uber 	-5.75
+2017-04-10	HAZ RESTAURANT 	-50.0
+2017-04-10	Lyle & Scott 	-17.5
+2017-04-11	Superdry Gatwick South Horley	-58.31
+2017-04-11	John Lewis Peter Jones 	-47.0
+2017-04-12	Sainsbury's Supermarket 	-4.89
+2017-04-12	Pret A Manger . Regent 	-0.99
+2017-04-13	Sainsbury's Stckwll Clp 	-3.0
+2017-04-13	Starbucks Coffee Compan 	-5.79
+2017-04-14	Abercrombie.com 	-51.2
+2017-04-14	Lush-south Molton St 	-14.16
+2017-04-15	Uber *gb Oct04 Help.uber.com	-36.27
+2017-04-15	Costa  Stockwell 	-3.95
+2017-04-16	The White Hart 	-8.5
+2017-04-16	Sainsbury's Petrol Fill 	-5.22
+2017-04-17	BA.COM UK WEST DRAYTON	-17.5
+2017-04-17	Apple Itunes Store Gbp* 	-39.99
+2017-04-18	Leon Carnaby 	-5.15
+2017-04-18	Sainsbury's Stockwell-c 	-9.5
+2017-04-19	Mbuk Trading Limited 	-24.0
+2017-04-19	Waitrose 616 Clapham Co Clapham Common	-22.81
+2017-04-20	Uber *gb Oct19 Help.uber.com	-7.56
+2017-04-20	Haz Restaurant 	-26.13
+2017-04-21	Pret A Manger - Lower R 	-1.7
+2017-04-21	EASYJET AIRLINES EPF MISC	-285.42
+2017-04-22	Tesco Stores 5130 	-5.11
+2017-04-22	Hotel Becquer Unknown	-63.3
+2017-04-23	Pret A Manger - Lower R 	-8.49
+2017-04-23	Uber *gb Oct01 Help.uber.com	-9.41
+2017-04-24	Fortnum & Mason Plc 	-90.0
+2017-04-24	Railway Tavern 	-12.15
+2017-04-25	Salary	4000
+2017-04-25	Restaurant San Remo Genève	-4.98
+2017-04-25	Plume Of Feathers Loughton	-3.9
+2017-04-26	Rent	-1000
+2017-04-26	Eon	-50
+2017-04-26	Vodafone	-20
+2017-04-26	Spotify	-9.99
+2017-04-26	PRET A MANGER-ISLINGTON 	-4.85
+2017-04-26	Boots The Chemist Hounslow	-0.9
+2017-04-27	Netflix.com	-7.99
+2017-04-27	Tesco Stores 3093 	-8.28
+2017-04-27	Pret A Manger-crown Pas 	-7.1
+2017-04-28	Http://www.fitchlearnin United Kingdom	-744.0
+2017-04-28	Boots The Chemist 	-1.75
+2017-04-29	Boots The Chemist 	-11.8
+2017-04-29	Interest Charge	-117.27
+2017-04-30	Wm Morrisons Petrol Upt Maidstone	-40.02
+2017-04-30	Multisafepay*van Gogh M 	-31.9
+2017-05-01	Tesco Stores 5130 	-5.11
+2017-05-01	STARBUCKS COFFEE COMPAN 	-2.99
+2017-05-02	Uber *gb Oct16 Help.uber.com	-5.62
+2017-05-02	Momo Restaurant 	-23.73
+2017-05-03	Pret A Manger - Lower R 	-5.8
+2017-05-03	Red Lion Mayfair 	-19.05
+2017-05-03	Red Lion Mayfair 	-19.05
+2017-05-04	Uber *gb Sep10 Help.uber.com	-11.5
+2017-05-04	SMITHS OF BOURNE BOURNE	-38.05
+2017-05-05	Swissotel Geneve Geneve 3	-710.07
+2017-05-05	Pret A Manger-piccadill 	-7.0
+2017-05-06	Tesco Stores 5130 	-5.11
+2017-05-06	Sainsbury's Stockwell-c 	-7.5
+2017-05-07	The Cock Inn Maidstone	-10.0
+2017-05-07	The Haymarket Hotel Foo 	-42.75
+2017-05-08	Sainsbury's Stockwell-c 	-11.15
+2017-05-08	The Third Space 	-7.9
+2017-05-09	Uber *gb Nov15 Help.uber.com	-5.0
+2017-05-09	Pret A Manger - Lower R 	-7.89
+2017-05-10	Uber *ch Oct04 Help.uber.com	-20.63
+2017-05-10	Uber *gb Oct21 Help.uber.com	-11.14
+2017-05-11	Itunes.com/bill 	-2.49
+2017-05-11	Amazon Uk Marketplace	-31.8
+2017-05-12	Railway Tavern 	-18.9
+2017-05-12	Red Lion Mayfair 	-19.6
+2017-05-13	STARBUCKS COFFEE COMPAN 	-5.3
+2017-05-13	Tesco Self Service 	-15.0
+2017-05-14	SAINSBURY'S STCKWLL CLP 	-14.25
+2017-05-14	Riverside 	-12.2
+2017-05-15	Amazon Uk Retail Amazon.co.uk	-5.99
+2017-05-15	WAITROSE 616 CLAPHAM CO CLAPHAM COMMON	-28.4
+2017-05-16	Uber Uber 	-5.65
+2017-05-16	Pulse Pharmacy 	-3.94
+2017-05-17	Wm Morrisons Petrol Maidstone	-56.02
+2017-05-17	Uber Uber 	-5.66
+2017-05-18	Paul Uk Piccadilly 	-13.85
+2017-05-18	Pimenta de Abreu & Dos Genève	-36.36
+2017-05-19	JOHN LEWIS READING READING	-80.0
+2017-05-19	Pret A Manger-long Acre	-2.49
+2017-05-20	Boots The Chemist 	-2.7
+2017-05-20	Tesco Stores 3093 	-6.46
+2017-05-21	Uber *gb Jul16 	-12.04
+2017-05-21	Uber *gb Jul17 	-5.39
+2017-05-22	UBER UBER 	-15.34
+2017-05-22	BIRMINGHAM NEW STREET S BIRMINGHAM	-18.05
+2017-05-23	Boots Uk Ltd 	-31.23
+2017-05-23	Haymarket Hotel 	-200.0
+2017-05-24	Pret A Manger - Lower R 	-7.35
+2017-05-24	Sainsbury's Stckwll Clp 	-3.05
+2017-05-25	Salary	4000
+2017-05-25	Tesco Stores 5130 	-5.11
+2017-05-25	Uber *gb Sep17 Help.uber.com	-7.04
+2017-05-26	Rent	-1000
+2017-05-26	Eon	-50
+2017-05-26	Vodafone	-20
+2017-05-26	Spotify	-9.99
+2017-05-26	Kaefer Autowelt Parsdorf	-22.81
+2017-05-26	Heathrow Express Operat 	-19.8
+2017-05-27	Netflix.com	-7.99
+2017-05-27	Sainsbury's Stockwell-c 	-6.24
+2017-05-27	AMERICAN AIRLINES VACAT HOUNSLOW	-130.6
+2017-05-28	Pret A Manger - Lower R 	-8.74
+2017-05-28	Lillywhites 	-31.04
+2017-05-29	Ba.com Uk West Drayton	-35.0
+2017-05-29	Ba.com Uk West Drayton	-203.51
+2017-05-30	Heal And Son 	-28.0
+2017-05-30	Three Crowns 	-5.5
+2017-05-31	Sainsbury's Stockwell-c 	-10.3
+2017-05-31	Pret A Manger-crown Pas 	-2.5
+2017-06-01	Uber Uber 	-10.3
+2017-06-01	Hotel Urban Madrid	-397.92
+2017-06-02	Tesco Stores 5130 	-5.11
+2017-06-02	Amazon Uk Retail Amazon.co.uk	-9.0
+2017-06-03	Apple Itunes Store Gbp* 	-42.98
+2017-06-03	Uber Uber 	-7.27
+2017-06-04	Tfl Travel Charge Tfl.gov.uk/cp	-1.5
+2017-06-04	The Shard 	-28.73
+2017-06-05	HMV READING - ORACLE READING,	-30.0
+2017-06-05	STARBUCKS CARD RELOA 8452703310	-20.0
+2017-06-06	Starbucks Coffee Compan 	-2.99
+2017-06-06	Pret A Manger - Lower R 	-5.25
+2017-06-07	Pret A Manger - Lower R 	-6.59
+2017-06-07	Pret A Manger - Lower R 	-7.9
+2017-06-08	Oaka At The Mansion Hou 	-45.95
+2017-06-08	Uber *gb Jun30 	-16.58
+2017-06-09	Lul Ticket Machine-clap 	-37.4
+2017-06-09	Pret A Manger - Lower R 	-10.35
+2017-06-10	Tesco Stores 3093 	-6.46
+2017-06-10	Uber *ch Nov10 Help.uber.com	-20.99
+2017-06-11	Uber *es Sep03	-4.36
+2017-06-11	Uber *gb Oct01 Help.uber.com	-6.14
+2017-06-12	Sainsbury's Stockwell-c 	-6.34
+2017-06-12	Sainsbury's Stockwell-c 	-6.34
+2017-06-12	Uber	-8.27
+2017-06-13	Uber *gb Aug08 	-12.21
+2017-06-13	Glassblower 	-11.5
+2017-06-14	Andrews Garage Greater 	-41.85
+2017-06-14	The Third Space 	-7.5
+2017-06-15	Old Bridge Hotel Holmfirth	-43.8
+2017-06-15	MY ESSENTIALS 8000224355	-12.99
+2017-06-16	Caffe Nero Portobello 	-2.5
+2017-06-16	Argos 	-69.99
+2017-06-17	Fitzrovia 	-28.63
+2017-06-17	Sainsbury's Stockwell S 	-2.95
+2017-06-18	The Chequers 	-9.3
+2017-06-18	UBER UBER 	-6.46
+2017-06-19	Easyjet*easyjet Eqszgz5 Luton	-117.1
+2017-06-19	The Abbeville 	-10.8
+2017-06-20	Photobox Limited 	-85.25
+2017-06-20	Uber *gb Jul24 	-5.79
+2017-06-21	The Curtains Up 	-18.1
+2017-06-21	Pizza Express 	-53.65
+2017-06-22	Yauatcha Soho 	-24.17
+2017-06-22	Starbucks Coffee Compan 	-3.6
+2017-06-23	Blue Posts Greater 	-3.98
+2017-06-23	Uber *gb Oct19 Help.uber.com	-6.62
+2017-06-24	The Soho Hotel Restaura 	-102.9
+2017-06-24	Sainsbury's Stockwell-c 	-9.4
+2017-06-23	Salary	4000
+2017-06-25	Uber Uber 	-6.42
+2017-06-25	Amazon Uk Marketplace	-5.25
+2017-06-26	Rent	-1000
+2017-06-26	Eon	-50
+2017-06-26	Vodafone	-20
+2017-06-26	Spotify	-9.99
+2017-06-26	AMAZON UK RETAIL AMAZON.CO.UK	-8.9
+2017-06-26	AMAZON UK MARKETPLACE	-17.9
+2017-06-27	Netflix.com	-7.99
+2017-06-27	Starbucks Coffee Co 	-5.3
+2017-06-27	VIRGIN ATLANTIC CC CRAWLEY	-365.16
+2017-06-28	Brasserie Zedel 	-51.9
+2017-06-28	Redbubble.com 	-27.08
+2017-06-29	Apple Itunes Store Gbp* 	-2.49
+2017-06-29	Duke Of Wellington 	-9.9
+2017-06-30	Red Lion Mayfair 	-10.3
+2017-06-30	Fortnum & Mason Plc 	-25.68
+2017-07-01	Starbucks Hooley Preston	-5.95
+2017-07-01	John Lewis Direct 	-17.6
+2017-07-02	Uber *gb Oct02 Help.uber.com	-5.0
+2017-07-02	WAITROSE 616 CLAPHAM CO CLAPHAM COMMON	-24.19
+2017-07-03	Pizza Express 	-18.35
+2017-07-03	Restaurant San Remo Genève	-17.78
+2017-07-04	Pret A Manger-crown Pas 	-5.8
+2017-07-04	Tfl Travel Charge Tfl.gov.uk/cp	-5.3
+2017-07-05	The Soho Hotel Restaura 	-88.3
+2017-07-05	Ba.com Uk West Drayton	-38.72
+2017-07-06	Crosse Keyes 	-4.55
+2017-07-06	Tesco Stores 3093 	-6.46
+2017-07-07	Uber *gb Aug09 	-18.3
+2017-07-07	Heathrow Airport Hounslow	-32.9
+2017-07-08	Boots The Chemist 	-2.19
+2017-07-08	M & S - Tottenham Court 	-3.6
+2017-07-09	Peyotito Restaurant 	-16.4
+2017-07-09	Fortnum & Mason Plc 	-22.94
+2017-07-10	Amazon Uk Marketplace	-3.01
+2017-07-10	BA.COM UK WEST DRAYTON	-42.5
+2017-07-11	UBER UBER 	-32.0
+2017-07-11	TESCO PETROL FILLING ST BOURNE	-4.0
+2017-07-12	Eat Ltd St James' 	-3.2
+2017-07-12	BYRON HAMBURGER LTD 	-8.5
+2017-07-13	Sainsbury's Stockwell-c 	-6.77
+2017-07-13	National Theatre Inter 	-98.0
+2017-07-14	Liberty Retail Limited. 	-4.95
+2017-07-14	Golden Lion 	-12.9
+2017-07-15	Costa Coffee 	-4.4
+2017-07-15	Sainsbury's Stockwell-c 	-8.8
+2017-07-16	Amazon Uk Marketplace	-14.36
+2017-07-16	Caffe Nero 495 Ladbroke 	-4.1
+2017-07-17	Bazaar Madrid	-55.66
+2017-07-17	Sadlers Wells Front Of 	-10.0
+2017-07-18	KONDITOR AND COOK LTD 	-16.0
+2017-07-18	Red Lion Mayfair 	-19.85
+2017-07-19	Uber *gb Aug14 	-5.45
+2017-07-19	Lillywhites 	-10.99
+2017-07-20	Marks & Spencer -green 	-4.74
+2017-07-20	Tfl Travel Charge Tfl.gov.uk/cp	-2.4
+2017-07-21	HEADOUT.COM NEW YORK CITY	-66.43
+2017-07-21	HEADOUT.COM NEW YORK CITY	-66.43
+2017-07-21	Lul Ticket Machine-stoc 	-124.5
+2017-07-22	Uber *gb Aug22 	-5.0
+2017-07-22	Church Hill Service Sta Essex	-55.99
+2017-07-23	Apple Itunes Store Gbp* 	-17.98
+2017-07-23	Amazon Prime 080-04962454	-79.0
+2017-07-24	Uber *gb Oct20 Help.uber.com	-6.21
+2017-07-24	Villandry 12 Waterloo P 	-66.38
+2017-07-25	Salary	4000
+2017-07-25	Uber *gb Jul12 	-23.67
+2017-07-25	Pret A Manger - Lower R 	-5.64
+2017-07-26	Rent	-1000
+2017-07-26	Eon	-50
+2017-07-26	Vodafone	-20
+2017-07-26	Spotify	-9.99
+2017-07-26	Ba.com Uk West Drayton	-957.0
+2017-07-26	Boots The Chemist 	-2.84
+2017-07-27	Netflix.com	-7.99
+2017-07-27	Morleys Brixton Ltd 	-22.5
+2017-07-27	Pizzaexpress Restaurant 	-21.4
+2017-07-28	Deliveroo.co.uk 	-11.45
+2017-07-28	Apple Itunes Store Gbp* 	-11.77
+2017-07-29	Next Retail Slough	-44.5
+2017-07-29	Lillywhites 	-6.5
+2017-07-30	Sainsbury's Stockwell S 	-1.1
+2017-07-30	The Covent Garden Hotel 	-30.38
+2017-07-31	Pret A Manger-crown Pas 	-5.64
+2017-07-31	Pret A Manger - Lower R 	-1.98
+2017-07-31	Pret A Manger - Lower R 	-1.98
+2017-08-01	HAZ RESTAURANT 	-32.79
+2017-08-01	Borrowmydoggy.com 	-9.99
+2017-08-02	Uber *gb Aug14 	-10.72
+2017-08-02	Wm Morrisons Petrol Maidstone	-6.83
+2017-08-03	Amazon Uk Retail Amazon.co.uk	-23.0
+2017-08-03	Uber *gb Aug06 	-9.72
+2017-08-04	Pret A Manger - Lower R 	-9.39
+2017-08-04	Ocado Ltd. 08453991122	-98.77
+2017-08-05	Bupa Dental - West End 	-140.0
+2017-08-05	Pret A Manger - Lower R 	-7.74
+2017-08-06	Eme Catedral Hotel Sevilla	-744.48
+2017-08-06	Sainsbury's Local Stock 	-3.94
+2017-08-07	WAITROSE 616 CLAPHAM CO CLAPHAM COMMON	-35.81
+2017-08-07	WAITROSE 	-2.75
+2017-08-08	Tesco Stores 3093 	-8.28
+2017-08-08	Rosetta Stone Harrisonburg	-32.67
+2017-08-09	Red Lion Mayfair 	-23.7
+2017-08-09	Ba.com Uk West Drayton	-10.0
+2017-08-10	Glassblower 	-5.85
+2017-08-10	Fortnum & Mason Plc 	-55.36
+2017-08-11	*smallsell 07966881085	-100.0
+2017-08-11	Red Lion Mayfair 	-4.5
+2017-08-12	HISTORIC ROYAL PALACES EAST MOLESEY	-37.99
+2017-08-12	Gatwick Exprss Web 	-35.6
+2017-08-13	Uber Uber 	-19.12
+2017-08-13	Amazon Svcs Europe,sar Amazon.co.uk	-14.8
+2017-08-14	SAINSBURY'S STCKWLL CLP 	-14.05
+2017-08-14	Costa  Stockwell 	-4.4
+2017-08-14	Costa  Stockwell 	-4.4
+2017-08-15	Cafe Royal Hotel 	-25.88
+2017-08-15	Sainsbury's Stockwell-c 	-6.75
+2017-08-16	Duke Of Wellington 	-14.85
+2017-08-16	Sainsbury's Stockwell-c 	-10.8
+2017-08-17	APPLE ITUNES STORE GBP 	-65.76
+2017-08-17	The Soho Hotel Restaura 	-117.25
+2017-08-18	Uber Uber 	-14.56
+2017-08-18	Pret A Manger - Lower R 	-6.44
+2017-08-19	Uber *gb Nov13 Help.uber.com	-18.2
+2017-08-19	Waitrose Fashion & Home 	-47.05
+2017-08-20	Sainsbury's Stockwell S 	-3.35
+2017-08-20	Railway Tavern 	-31.0
+2017-08-21	Wahaca Waterloo 119 Wat 	-15.0
+2017-08-21	Rijksmuseum  	-25.5
+2017-08-22	Ye Olde Windmill Inn 	-13.2
+2017-08-22	STARBUCKS CARD RELOA 8452703310	-10.0
+2017-08-23	Interest Charge	-79.49
+2017-08-23	East Coast - Web Sales York	-23.0
+2017-08-24	Red Lion Mayfair 	-6.05
+2017-08-24	Halfords - Chiswick 	-35.77
+2017-08-25	Salary	4000
+2017-08-25	EAST COAST CATERING COLCHESTER	-6.35
+2017-08-25	Oaka At The Mansion Hou 	-41.17
+2017-08-26	Rent	-1000
+2017-08-26	Eon	-50
+2017-08-26	Vodafone	-20
+2017-08-26	Spotify	-9.99
+2017-08-26	No.1 Gatwick lounge - S 	-4.0
+2017-08-26	John Lewis Oxford Stree 	-264.0
+2017-08-27	Netflix.com	-7.99
+2017-08-27	Uber *gb Aug24 	-21.45
+2017-08-27	Hotel Metropole Geneve Geneve	-592.22
+2017-08-28	All Bar One O2 Arena Greenwich	-11.1
+2017-08-28	Uber *gb Aug27 	-7.93
+2017-08-29	Chartered Inst For Secu 	-220.32
+2017-08-29	Wahaca Canary Wharf The 	-14.19
+2017-08-30	Tesco Stores 3093 	-6.46
+2017-08-30	EXPEDIA*19223691779 EXPEDIA.CO.UK	-5.0
+2017-08-31	UBER UBER 	-5.0
+2017-08-31	Pret A Manger-crown Pas 	-1.7
+2017-09-01	Renfe Web Madrid	-122.42
+2017-09-01	Fresh & Wild 	-8.0
+2017-09-02	The Covent Garden Hotel 	-25.31
+2017-09-02	SAINSBURY'S BIGGLESWADE BIGGLESWADE	-36.91
+2017-09-03	WWW.BABBEL.COM BERLIN	-29.7
+2017-09-03	Uber Uber 	-16.95
+2017-09-04	EXPEDIA*19223869062 EXPEDIA.CO.UK	-324.23
+2017-09-04	Eat Ltd Duke Of York S 	-5.25
+2017-09-05	Expedia Expedia.co.uk	-260.0
+2017-09-05	Pret A Manger-russell S 	-5.0
+2017-09-06	World Duty Free T5 Arr Hounslow	-42.99
+2017-09-06	World Duty Free T5 Arr Hounslow	-42.99
+2017-09-06	Eat Ltd Duke Of York S 	-5.48
+2017-09-07	Geo F Trumper Of Jermyn 	-87.5
+2017-09-07	Blue Posts Greater 	-9.75
+2017-09-07	Blue Posts Greater 	-9.75
+2017-09-08	SOFITEL ST JAMES  	-32.63
+2017-09-08	Uber *de Nov12 Help.uber.com	-5.67
+2017-09-09	Sofitel  Gatwick West Sussex	-46.69
+2017-09-09	Arong 	-20.55
+2017-09-10	Waitrose 637 Highbury Islington	-6.26
+2017-09-10	Uber Uber 	-6.0
+2017-09-11	Pret A Manger-russell S 	-4.3
+2017-09-11	UBER UBER 	-5.64
+2017-09-12	Eat Ltd St James' 	-4.54
+2017-09-12	Uber *gb Aug03 	-6.68
+2017-09-13	Charles Tyrwhitt 	-100.0
+2017-09-13	Marks & Spencer Clapha 	-10.53
+2017-09-13	Marks & Spencer Clapha 	-10.53
+2017-09-14	Starbucks Coffee Compan 	-2.7
+2017-09-14	Uber *gb Oct12 Help.uber.com	-6.85
+2017-09-15	UBER UBER 	-8.51
+2017-09-15	Amazon Uk Marketplace	-2.82
+2017-09-16	Uber *gb Jul14 	-9.67
+2017-09-16	Uber *gb Aug11 	-5.0
+2017-09-17	Sainsbury's Stockwell-c 	-12.64
+2017-09-17	Amazon Uk Marketplace	-3.99
+2017-09-18	JOHN LEWIS AT HOME 	-102.5
+2017-09-18	STARBUCKS BAKER STREET 	-2.6
+2017-09-19	Virgintrains.co.uk 0344 	-84.0
+2017-09-19	www.babbel.com berlin	-29.7
+2017-09-20	Tfl Travel Charge Tfl.gov.uk/cp	-2.9
+2017-09-20	Brasserie Zedel 	-34.75
+2017-09-21	Uber *es Sep04	-18.24
+2017-09-21	Amazon Uk Retail Amazon.co.uk	-6.19
+2017-09-22	Amazon Uk Retail Amazon.co.uk	-4.74
+2017-09-22	Blue Posts Greater 	-19.3
+2017-09-23	Pret A Manger-russell S 	-4.2
+2017-09-23	Corney & Barrow Monumen 	-13.44
+2017-09-24	Railway Tavern 	-10.2
+2017-09-24	SAINSBURY'S STCKWLL CLP 	-14.74
+2017-09-25	Salary	4000
+2017-09-25	Lul Ticket Machine-stoc 	-32.4
+2017-09-25	Berry Bros & Rudd 	-56.45
+2017-09-26	Rent	-1000
+2017-09-26	Eon	-50
+2017-09-26	Vodafone	-20
+2017-09-26	Spotify	-9.99
+2017-09-26	Rosetta Stone Harrisonburg	-65.34
+2017-09-26	Rosetta Stone Harrisonburg	-65.34
+2017-09-26	Byron Hamburgers Ltd 	-35.9
+2017-09-27	Netflix.com	-7.99
+2017-09-27	Pret A Manger-crown Pas 	-10.2
+2017-09-27	Mcdonalds Warren Street 	-0.99
+2017-09-28	BA.COM UK WEST DRAYTON	-35.0
+2017-09-28	Oaka At The Mansion Hou 	-25.76
+2017-09-29	Barrica 	-47.81
+2017-09-29	Pret A Manger - Lower R 	-12.0
+2017-09-30	The Kennington 	-16.95
+2017-09-30	APPLE ITUNES STORE GBP 	-3.99
+2017-10-01	The Magpie 	-22.55
+2017-10-01	UNITED AIRLINES VACATIO HOUNSLOW	-59.6
+2017-10-02	Rising Sun 	-4.8
+2017-10-02	Pret A Manger-crown Pas 	-5.35
+2017-10-03	NO. 32 THE OLD TOWN 	-15.29
+2017-10-03	Mcdonalds 291 Oxford St 	-2.99
+2017-10-04	Boots The Chemist 	-4.34
+2017-10-04	Boots The Chemist 	-4.34
+2017-10-04	Bloc Hotel Operations L Crawley	-84.55
+2017-10-05	Uber *gb Oct25 Help.uber.com	-8.92
+2017-10-05	Interest Charge	-74.23
+2017-10-06	Costa  Stockwell 	-5.6
+2017-10-06	Sainsbury's Stockwell-c 	-22.95
+2017-10-07	Apple Itunes Store Gbp* 	-54.98
+2017-10-07	Amazon Uk Marketplace	-2.98
+2017-10-07	Amazon Uk Marketplace	-2.98
+2017-10-08	Eat Ltd St James' 	-6.64
+2017-10-08	Boots Heathrow T5 Land Hounslow	-1.25
+2017-10-09	Sainsbury's Stockwell-c 	-18.5
+2017-10-09	Apple Itunes Store Gbp* 	-4.77
+2017-10-10	Pret A Manger - Lower R 	-7.1
+2017-10-10	Ping Pong South Bank 	-14.12
+2017-10-11	Norwegian Air Shuttle A Fornebu	-306.3
+2017-10-11	Three Crowns 	-11.3
+2017-10-12	Red Lion Mayfair 	-9.75
+2017-10-12	Red Lion Mayfair 	-20.45
+2017-10-12	Red Lion Mayfair 	-20.45
+2017-10-13	Amazon Uk Marketplace	-15.99
+2017-10-13	Pret A Manger East 	-10.1
+2017-10-14	Waterstones Unknown	-20.03
+2017-10-14	APPLE ITUNES STORE GBP 	-2.99
+2017-10-15	Abercrombie.com 	-60.4
+2017-10-15	Uber Uber 	-14.17
+2017-10-16	Sainsbury's Stockwell-c 	-13.15
+2017-10-16	Pret A Manger - Lower R 	-9.85
+2017-10-17	Tfl Travel Charge Tfl.gov.uk/cp	-2.0
+2017-10-17	Itunes.com/bill 	-44.99
+2017-10-18	Amazon Uk Marketplace	-60.98
+2017-10-18	Membership Fee	-195.0
+2017-10-19	Pret A Manger - Lower R 	-6.94
+2017-10-19	Fitzrovia 	-40.17
+2017-10-20	Church Hill Service Sta Essex	-4.99
+2017-10-20	Tfl Travel Charge Tfl.gov.uk/cp	-6.5
+2017-10-20	Tfl Travel Charge Tfl.gov.uk/cp	-6.5
+2017-10-21	The Running Horse 	-8.0
+2017-10-21	Apple Itunes Store Gbp* 	-2.99
+2017-10-22	Ba.com Uk West Drayton	-139.0
+2017-10-22	Amazon Uk Retail Amazon.co.uk	-2.25
+2017-10-23	Sainsbury's Stockwell-c 	-16.53
+2017-10-23	Leon Restaurants Totte 	-5.15
+2017-10-24	Iron Duke 	-4.36
+2017-10-24	STARBUCKS - 11051452 	-5.9
+2017-10-24	STARBUCKS - 11051452 	-5.9
+2017-10-25	Salary	4000
+2017-10-25	Interest Charge	-90.11
+2017-10-25	Ba.com Uk West Drayton	-108.01
+2017-10-26	Rent	-1000
+2017-10-26	Eon	-50
+2017-10-26	Vodafone	-20
+2017-10-26	Spotify	-9.99
+2017-10-26	BIRMINGHAM NEW STREET S BIRMINGHAM	-2.0
+2017-10-26	Brasserie Zedel 	-42.19
+2017-10-27	Netflix.com	-7.99
+2017-10-27	Iceland Stockwell 	-6.0
+2017-10-27	Pret A Manger - Lower R 	-7.05
+2017-10-28	Eat Ltd 239 High Holbo 	-3.29
+2017-10-28	Tesco Stores 3093 	-8.28
+2017-10-29	Pret A Manger - Lower R 	-7.69
+2017-10-29	Eat Ltd Duke Of York S 	-2.99
+2017-10-30	Travel Reservation Gbr	-1.0
+2017-10-30	Flask 	-17.0
+2017-10-31	Arong 	-22.45
+2017-10-31	The Soho Hotel Restaura 	-58.38
+2017-11-01	Oaka At The Mansion Hou 	-29.0
+2017-11-01	Rosetta Stone Harrisonburg	-32.65
+2017-11-02	The Soho Hotel Restaura 	-55.7
+2017-11-02	Pret A Manger - Lower R 	-6.34
+2017-11-03	Uber	-1.0
+2017-11-03	Uber *gb Nov06 Help.uber.com	-11.51
+2017-11-04	Luxottica Retail Uk Ltd 	-25.0
+2017-11-04	Uber *gb Aug17 	-19.51
+2017-11-05	Amazon Uk Retail Amazon.co.uk	-9.99
+2017-11-05	John Lewis Direct 	-26.4
+2017-11-06	INTEREST CHARGE	-60.2
+2017-11-06	The Haymarket Hotel Foo 	-20.25
+2017-11-07	Red Lion Mayfair 	-10.45
+2017-11-07	Uber *gb Jul06 	-5.85
+2017-11-08	Hotel Urban Madrid	-217.73
+2017-11-08	Chartered Inst For Secu 	-20.4
+2017-11-09	Amazon Uk Marketplace	-11.97
+2017-11-09	Sainsbury's Supermarket 	-7.7
+2017-11-10	Pret A Manger - Lower R 	-3.49
+2017-11-10	Kennington - Oddbins 	-51.05
+2017-11-11	Pret A Manger - Lower R 	-10.0
+2017-11-11	Sainsbury's Stockwell-c 	-9.6
+2017-11-12	Exmouth Market 	-15.0
+2017-11-12	Tesco Stores 3093 	-6.46
+2017-11-13	Waterstone's 	-19.48
+2017-11-13	Uber *gb Sep30 Help.uber.com	-10.16
+2017-11-13	Uber *gb Sep30 Help.uber.com	-10.16
+2017-11-14	Crabtree & Evelyn Winds Windsor	-12.0
+2017-11-14	Red Lion Mayfair 	-11.4
+2017-11-15	Uber *gb Aug12 	-5.63
+2017-11-15	Tesco Stores 5130 	-5.11
+2017-11-16	APPLE ITUNES STORE GBP 	-9.99
+2017-11-16	Costa  Stockwell 	-5.4
+2017-11-17	NICOLAS UK LTD 	-10.85
+2017-11-17	Dehesa 25 Ganton Stree 	-65.0
+2017-11-18	Egon Kjoettbasaren Bergen	-17.83
+2017-11-18	THE CAVENDISH HOTEL 	-33.75
+2017-11-19	Glassblower 	-11.7
+2017-11-19	Wahaca Islington 68/69 	-30.25
+2017-11-20	Tfl Travel Charge Tfl.gov.uk/cp	-3.9
+2017-11-20	Lillywhites 	-21.49
+2017-11-21	Sadlers Wells Front Of 	-20.4
+2017-11-21	El Ganso 	-431.0
+2017-11-21	El Ganso 	-431.0
+2017-11-22	Pret A Manger - Lower R 	-5.15
+2017-11-22	Pret A Manger - Lower R 	-5.15
+2017-11-22	STARBUCKS COFFEE CO 	-5.59
+2017-11-23	Deliveroo.co.uk 	-12.9
+2017-11-23	Lush-maidstone Maidstone	-17.5
+2017-11-24	The Haymarket Hotel Foo 	-115.88
+2017-11-24	J Floris Ltd 	-26.0
+2017-11-24	Salary	4000
+2017-11-25	Amazon Uk Marketplace	-9.74
+2017-11-25	PRET A MANGER-TOTTENHAM 	-3.44
+2017-11-26	Rent	-1000
+2017-11-26	Eon	-50
+2017-11-26	Vodafone	-20
+2017-11-26	Spotify	-9.99
+2017-11-26	Uber Uber 	-23.61
+2017-11-26	The Haymarket Hotel Foo 	-30.38
+2017-11-27	Netflix.com	-7.99
+2017-11-27	The Enterprise 	-124.2
+2017-11-27	Marks & Spencer - Green 	-25.1
+2017-11-28	DEAN STREET TOWNHOUSE 	-21.94
+2017-11-28	Albert Embankment Servi 	-29.45
+2017-11-29	Sainsbury's Stockwell-c 	-11.95
+2017-11-29	UBER UBER 	-7.28
+2017-11-30	Oaka At The Mansion Hou 	-28.2
+2017-11-30	Heathrow Express Operat 	-36.0
+2017-12-01	Uber Uber 	-8.34
+2017-12-01	Sainsbury's Stockwell-c 	-8.4
+2017-12-02	El Ganso 	-28.0
+2017-12-02	Railway Tavern 	-10.75
+2017-12-03	Bupa Dental - West End 	-396.0
+2017-12-03	Apple Itunes Store Gbp* 	-29.98
+2017-12-04	Pret A Manger - Lower R 	-6.64
+2017-12-04	UBER UBER 	-9.48
+2017-12-05	Pret A Manger - Lower R 	-8.1
+2017-12-05	Exmouth Market 	-11.0
+2017-12-06	Starbucks  Gbr	-8.45
+2017-12-06	MALMAISON BIRMINGHAM CO BIRMINGHAM	-2.57
+2017-12-07	Brasserie Zedel 	-20.25
+2017-12-07	Sainsbury's Stockwell-c 	-5.99
+2017-12-08	Shelleys 	-9.2
+2017-12-08	Pret A Manger - Lower R 	-7.0
+2017-12-09	Iceland Stockwell 	-11.74
+2017-12-09	Sainsbury's Stockwell-c 	-28.45
+2017-12-10	Uber *gb Aug14 	-6.67
+2017-12-10	Sixt Rent A Car Chesterfield	-165.77
+2017-12-11	Lillywhites 	-7.99
+2017-12-11	Panopolis 	-5.75
+2017-12-12	Pret A Manger - Lower R 	-7.39
+2017-12-12	Lul Ticket Machine-gree 	-124.5
+2017-12-13	Paul Gloucester Rd 	-3.8
+2017-12-13	Pret A Manger - Lower R 	-8.14
+2017-12-14	Kiehls Since 1851 	-57.5
+2017-12-14	Railway Tavern 	-15.5
+2017-12-15	Asda George Com Leeds	-26.22
+2017-12-15	Pret A Manger - Lower R 	-10.99
+2017-12-16	SOFITEL ST JAMES  	-36.0
+2017-12-16	Tfl Travel Charge Tfl.gov.uk/cp	-44.4
+2017-12-17	Marks & Spencer -green 	-10.6
+2017-12-17	Uber *gb Oct27 Help.uber.com	-7.3
+2017-12-18	Sainsbury's Stockwell-c 	-15.85
+2017-12-18	UBER UBER 	-6.06
+2017-12-19	The Third Space 	-3.95
+2017-12-19	Uber *gb Nov02 Help.uber.com	-10.52
+2017-12-20	Sainsbury's Stockwell-c 	-9.45
+2017-12-20	SIXT GMBH&CO AUTOVERMIE PULLACH	-368.9
+2017-12-21	HAZ RESTAURANT 	-16.65
+2017-12-21	Pitcher And Piano 	-13.85
+2017-12-22	Boots  W11	-2.54
+2017-12-22	Upper Crust 	-5.8
+2017-12-23	Sainsbury's Supermarket 	-4.58
+2017-12-23	Zetland Arms 	-24.75
+2017-12-24	Pret A Manger - Lower R 	-8.4
+2017-12-24	Amazon Digital Dwnlds	-8.99
+2017-12-22	Salary	4000
+2017-12-25	LUSH-VICTORIA 	-9.01
+2017-12-25	Uber *gb Jul26 	-8.75
+2017-12-26	Rent	-1000
+2017-12-26	Eon	-50
+2017-12-26	Vodafone	-20
+2017-12-26	Spotify	-9.99
+2017-12-26	Admiral Duncan 	-17.1
+2017-12-26	APPLE ITUNES STORE GBP 	-7.99
+2017-12-27	Netflix.com	-7.99
+2017-12-27	Tesco Stores 3093 	-6.46
+2017-12-27	Tesco Stores 3093 	-8.28
+2017-12-28	Mcdonald's Kings Cross 	-1.98
+2017-12-28	Sainsbury's Supermarket 	-5.32
+2017-12-29	Pret A Manger - Lower R 	-8.89
+2017-12-29	AMAZON UK MARKETPLACE	-7.96
+2017-12-30	APPLE ITUNES STORE GBP 	-6.78
+2017-12-30	Costa  Stockwell 	-4.05
+2017-12-31	Uber *gb Oct01 Help.uber.com	-13.37
+2017-12-31	Sainsbury's Stckwll Clp 	-1.95
+2018-01-01	Lyle & Scott 	-21.0
+2018-01-01	Sainsbury's Supermarket 	-4.05
+2018-01-02	My Essentials 08000224355	-16.99
+2018-01-02	Costa  Stockwell 	-4.5
+2018-01-03	Boots The Chemist 	-34.25
+2018-01-03	Boots The Chemist 	-34.25
+2018-01-03	Uber *fr Jul09	-6.97
+2018-01-04	Pret A Manger-russell S 	-6.65
+2018-01-04	Wahaca 66 Chandos Plac 	-20.0
+2018-01-05	Uber *gb Aug25 	-5.83
+2018-01-05	Uber *gb Aug25 	-5.83
+2018-01-05	Odeon Bfi Imax Box - Manchester	-3.2
+2018-01-06	Tfl Travel Charge Tfl.gov.uk/cp	-1.7
+2018-01-06	Sainsbury's Stockwell-c 	-5.5
+2018-01-07	PRET A MANGER-TOTTENHAM 	-4.25
+2018-01-07	Pret A Manger - Lower R 	-9.7
+2018-01-08	Glassblower 	-27.95
+2018-01-08	The Third Space 	-4.5
+2018-01-09	Amazon Svcs Europe,sar Amazon.co.uk	-10.99
+2018-01-09	Uber Uber 	-5.0
+2018-01-10	WELCOME BREAK GROUP LTD BISHOPS STORTFO	-6.7
+2018-01-10	Pret A Manger - Lower R 	-4.9
+2018-01-11	Ba.com Switzerland	-80.21
+2018-01-11	Sainsbury's Stockwell S 	-3.05
+2018-01-12	Haz Restaurant 	-31.8
+2018-01-12	Haz Restaurant 	-31.8
+2018-01-12	Boots The Chemist 	-12.87
+2018-01-13	Roodlane Medical Ltd 	-75.0
+2018-01-13	Iron Duke 	-7.1
+2018-01-14	Pret A Manger - Lower R 	-5.99
+2018-01-14	Eat Ltd St James' 	-1.65
+2018-01-15	JOHN LEWIS READING READING	-30.95
+2018-01-15	Parcel Yard 	-17.0
+2018-01-16	Virgin Money Giving Ah Norwich	-20.0
+2018-01-16	Portobello - Oddbins 	-7.25
+2018-01-17	Lul Ticket Machine-ladb 	-124.5
+2018-01-17	Ny-lon 	-70.2
+2018-01-18	Costa  Stockwell 	-2.5
+2018-01-18	Itunes.com/bill 	-39.99
+2018-01-19	Sainsbury's Local Porto 	-7.5
+2018-01-19	Tesco Stores 3093 	-8.28
+2018-01-20	Shelleys 	-8.4
+2018-01-20	BUPA DENTAL - WEST END 	-60.0
+2018-01-21	Amazon Uk Retail Amazon.co.uk	-13.0
+2018-01-21	Duke's Head 	-10.1
+2018-01-22	Duke's Head 	-21.45
+2018-01-22	Soho Rehab 	-33.5
+2018-01-23	Pret A Manger - Lower R 	-10.64
+2018-01-23	Railway Tavern 	-10.6
+2018-01-24	Pointspurchase Hyatt Points.com	-17.03
+2018-01-24	Eat Limited 	-1.0
+2018-01-25	Salary	4000
+2018-01-25	Uber *gb Nov08 Help.uber.com	-34.06
+2018-01-25	Pret A Manger - Lower R 	-21.49
+2018-01-26	Rent	-1000
+2018-01-26	Eon	-50
+2018-01-26	Vodafone	-20
+2018-01-26	Spotify	-9.99
+2018-01-26	Amazon Uk Retail Amazon.co.uk	-16.75
+2018-01-26	Costa  Stockwell 	-2.25
+2018-01-27	Netflix.com	-7.99
+2018-01-27	John Lewis Peter Jones 	-126.05
+2018-01-27	Pret A Manger - Lower R 	-7.94
+2018-01-28	Pret A Manger - Lower R 	-8.38
+2018-01-28	Costa  Stockwell 	-8.3
+2018-01-29	APPLE ITUNES STORE GBP 	-25.97
+2018-01-29	Co-op Petrol Clapham 	-42.31
+2018-01-30	Amazon Uk Marketplace	-11.99
+2018-01-30	Clapham - Oddbins 	-44.25
+2018-01-31	Uber *es Sep03	-4.36
+2018-01-31	Uber *es Sep03	-4.36
+2018-01-31	Tesco Stores 3093 	-6.46
+2018-02-01	Amazon Uk Marketplace	-5.99
+2018-02-01	STRATFORD CITY CAR PARK 	-2.5
+2018-02-01	STRATFORD CITY CAR PARK 	-2.5
+2018-02-02	+1-920-634-3150 HOTWIRE	-556.04
+2018-02-02	Hotel Vier Jahreszeiten Muenchen	-22.81
+2018-02-03	Uber Uber 	-13.5
+2018-02-03	Uber *gb Aug03 	-5.17
+2018-02-04	AXA TRAVEL INSURANCE AX IRELAND	-45.45
+2018-02-04	Amazon Uk Retail Amazon.co.uk	-13.43
+2018-02-05	Costa  Stockwell 	-2.9
+2018-02-05	Uber *nl Oct09 Help.uber.com	-58.69
+2018-02-06	Brasserie Zedel 	-19.97
+2018-02-06	Pimenta de Abreu & Dos Genève	-23.54
+2018-02-07	VIRGIN AMERICA 9000001 SAN FRANCISCO	-158.26
+2018-02-07	T M Lewin & Sons Ltd 	-10.0
+2018-02-08	Amazon Digital Dwnlds	-6.64
+2018-02-08	Sainsbury's Stockwell-c 	-8.0
+2018-02-09	HEATHROW AIRPORT HOUNSLOW	-50.1
+2018-02-09	Uber *ch Nov08 Help.uber.com	-21.62
+2018-02-10	Uber *nl Oct09 Help.uber.com	-8.67
+2018-02-10	Boots The Chemist 	-3.19
+2018-02-11	Pret A Manger - Lower R 	-4.75
+2018-02-11	Pret A Manger - Lower R 	-3.65
+2018-02-12	Marks & Spencer -green 	-18.1
+2018-02-12	Uber *gb Aug25 	-10.36
+2018-02-13	Chartered Inst For Secu 	-270.3
+2018-02-13	Ship 	-11.85
+2018-02-14	Uber *gb Sep23 Help.uber.com	-6.8
+2018-02-14	The Haymarket Hotel Foo 	-24.75
+2018-02-15	Pret A Manger - Lower R 	-6.1
+2018-02-15	Amazon Uk Marketplace	-25.62
+2018-02-16	Uber Uber 	-11.86
+2018-02-16	Sainsbury's Stckwll Clp 	-6.3
+2018-02-17	Duke Of Wellington 	-23.95
+2018-02-17	Apple Itunes Store Gbp* 	-3.99
+2018-02-18	Uber *gb Oct27 Help.uber.com	-7.84
+2018-02-18	Berry Bros & Rudd 	-81.95
+2018-02-19	Wahaca Waterloo 119 Wat 	-25.58
+2018-02-19	Liberty Retail Limited. 	-50.0
+2018-02-20	Virginmilesbypoints Points.com	-30.0
+2018-02-20	Eat Ltd St James' 	-6.48
+2018-02-21	Pret A Manger - Lower R 	-3.0
+2018-02-21	Marks & Spencer Clapha 	-7.6
+2018-02-22	Pret A Manger-piccadill 	-7.5
+2018-02-22	Event Merchandising Ltd 	-25.0
+2018-02-23	Wm Morrisons Stores Beccles	-94.22
+2018-02-23	Wm Morrisons Stores Beccles	-94.22
+2018-02-23	Abercrombie.com 	-61.6
+2018-02-24	El Ganso 	-60.0
+2018-02-24	Haz Restaurant 	-13.45
+2018-02-24	Salary	4000
+2018-02-25	Hmv 363 Oxford Street 	-33.05
+2018-02-25	Pret A Manger - Lower R 	-9.65
+2018-02-26	Rent	-1000
+2018-02-26	Eon	-50
+2018-02-26	Vodafone	-20
+2018-02-26	Spotify	-9.99
+2018-02-26	Uber *gb Sep30 Help.uber.com	-5.83
+2018-02-26	PRET A MANGER-TOTTENHAM 	-7.19
+2018-02-27	Netflix.com	-7.99
+2018-02-27	Tfl Travel Charge Tfl.gov.uk/cp	-4.8
+2018-02-27	Boots The Chemist 	-14.0
+2018-02-28	Uber *gb Sep04 	-9.5
+2018-02-28	Red Lion Mayfair 	-8.3
+2018-03-01	Norwegian Air Shuttle A Fornebu	-478.1
+2018-03-01	SAINSBURY'S STCKWLL CLP 	-5.7
+2018-03-01	SAINSBURY'S STCKWLL CLP 	-5.7
+2018-03-02	L'escargot 	-170.61
+2018-03-02	UBER UBER 	-11.84
+2018-03-03	Sainsbury's Stockwell-c 	-6.95
+2018-03-03	Number Sixteen 	-46.13
+2018-03-04	El Ganso 	-140.0
+2018-03-04	Tfl Travel Charge Tfl.gov.uk/cp	-26.3
+2018-03-05	Uber *de Nov13 Help.uber.com	-28.04
+2018-03-05	Starbucks Card Reloa 8452703310	-10.0
+2018-03-06	Uber *gb Oct22 Help.uber.com	-9.04
+2018-03-06	Gold Fish Restaurant 	-105.9
+2018-03-07	BORROWMYDOGGY.COM 	-9.99
+2018-03-07	Berry Bros & Rudd 	-50.45
+2018-03-08	The Haymarket Hotel Foo 	-25.6
+2018-03-08	Lola S Cupcakes Limited 	-21.25
+2018-03-09	Apple Itunes Store Gbp* 	-14.99
+2018-03-09	Iceland Stockwell 	-10.54
+2018-03-10	Fresh & Wild 	-18.79
+2018-03-10	Tfl Travel Charge Tfl.gov.uk/cp	-22.2
+2018-03-11	Pylones 	-5.9
+2018-03-11	The Soho Hotel Restaura 	-125.15
+2018-03-12	STARBUCKS COFFEE 	-5.59
+2018-03-12	Pylones 	-6.93
+2018-03-13	Pret A Manger - Lower R 	-2.75
+2018-03-13	Kiehls Since 1851	-83.5
+2018-03-14	Uber *gb Aug17 	-5.0
+2018-03-14	APPLE ITUNES STORE GBP 	-2.99
+2018-03-15	Costa  Stockwell 	-2.6
+2018-03-15	Sainsbury's Stockwell-c 	-2.1
+2018-03-16	Hix 	-40.5
+2018-03-16	Sixt Rent A Car Chesterfield	-124.97
+2018-03-17	Pret A Manger - Lower R 	-5.74
+2018-03-17	Oaka At The Mansion Hou 	-43.9
+2018-03-18	Uber *gb Sep28 Help.uber.com	-7.19
+2018-03-18	Pret A Manger - Lower R 	-9.5
+2018-03-19	Waterstone's 	-33.07
+2018-03-19	Red Lion Mayfair 	-16.3
+2018-03-20	Uber *gb Aug27 	-5.0
+2018-03-20	Borough Kitchen 1b - 1c 	-13.5
+2018-03-21	Waitrose 616 Clapham Co Clapham Common	-20.36
+2018-03-21	Uber *gb Nov14 Help.uber.com	-5.0
+2018-03-22	Vertigo Roux Fine Dinin 	-187.31
+2018-03-22	The Ritz  	-93.5
+2018-03-23	Pret A Manger-crown Pas 	-5.45
+2018-03-23	Amazon Co Uk Retail	-15.23
+2018-03-24	Sainsbury's Stckwll Clp 	-5.2
+2018-03-24	UBER UBER 	-6.57
+2018-03-24	Salary	4000
+2018-03-25	Costa  Stockwell 	-5.2
+2018-03-25	Eat Ltd St James' 	-5.13
+2018-03-26	Rent	-1000
+2018-03-26	Eon	-50
+2018-03-26	Vodafone	-20
+2018-03-26	Spotify	-9.99
+2018-03-26	Tesco Stores 5130 	-5.11
+2018-03-26	Red Lion Mayfair 	-9.15
+2018-03-27	Netflix.com	-7.99
+2018-03-27	Wm Morrisons Petrol Maidstone	-34.59
+2018-03-27	Amazon Uk Retail Amazon.co.uk	-12.79
+2018-03-28	Fjellskaal Fisketorget Bergen	-18.04
+2018-03-28	Lola S Cupcakes Limited 	-19.2
+2018-03-29	Ye Olde Windmill Inn 	-47.9
+2018-03-29	Heathrow Express Operat Hounsalow, Midd	-22.0
+2018-03-30	WWW.BABBEL.COM BERLIN	-17.85
+2018-03-30	Uber *gb Oct01 Help.uber.com	-17.49
+2018-03-31	Boots The Chemist 	-2.1
+2018-03-31	Pret A Manger - Lower R 	-7.24
+2018-04-01	Uber *de Nov13 Help.uber.com	-42.26
+2018-04-01	Portobello - Oddbins 	-23.5
+2018-04-02	Uber *gb Aug03 	-5.79
+2018-04-02	Oaka At The Mansion Hou 	-66.88
+2018-04-03	Oaka At The Mansion Hou 	-40.16
+2018-04-03	*marslanding 35314369001	-200.0
+2018-04-04	Uber *gb Oct02 Help.uber.com	-7.46
+2018-04-04	City Bar & Grill 	-22.7
+2018-04-05	Renfe Web Madrid	-112.55
+2018-04-05	Uber *ch Oct06 Help.uber.com	-17.77
+2018-04-06	Interest Charge	-82.32
+2018-04-06	Interest Charge	-82.32
+2018-04-06	 American Hote 	-23.45
+2018-04-07	El Ganso 	-65.0
+2018-04-07	Blue Posts Greater 	-10.0
+2018-04-08	Trainline.com Ltd 	-18.21
+2018-04-08	PRET A MANGER - EUSTON 	-8.74
+2018-04-09	Uber *gb Aug13 	-9.82
+2018-04-09	Uber Uber 	-5.75
+2018-04-10	HAZ RESTAURANT 	-50.0
+2018-04-10	Lyle & Scott 	-17.5
+2018-04-11	Superdry Gatwick South Horley	-58.31
+2018-04-11	John Lewis Peter Jones 	-47.0
+2018-04-12	Sainsbury's Supermarket 	-4.89
+2018-04-12	Pret A Manger . Regent 	-0.99
+2018-04-13	Sainsbury's Stckwll Clp 	-3.0
+2018-04-13	Starbucks Coffee Compan 	-5.79
+2018-04-14	Abercrombie.com 	-51.2
+2018-04-14	Lush-south Molton St 	-14.16
+2018-04-15	Uber *gb Oct04 Help.uber.com	-36.27
+2018-04-15	Costa  Stockwell 	-3.95
+2018-04-16	The White Hart 	-8.5
+2018-04-16	Sainsbury's Petrol Fill 	-5.22
+2018-04-17	BA.COM UK WEST DRAYTON	-17.5
+2018-04-17	Apple Itunes Store Gbp* 	-39.99
+2018-04-18	Leon Carnaby 	-5.15
+2018-04-18	Sainsbury's Stockwell-c 	-9.5
+2018-04-19	Mbuk Trading Limited 	-24.0
+2018-04-19	Waitrose 616 Clapham Co Clapham Common	-22.81
+2018-04-20	Uber *gb Oct19 Help.uber.com	-7.56
+2018-04-20	Haz Restaurant 	-26.13
+2018-04-21	Pret A Manger - Lower R 	-1.7
+2018-04-21	EASYJET AIRLINES EPF MISC	-285.42
+2018-04-22	Tesco Stores 5130 	-5.11
+2018-04-22	Hotel Becquer Unknown	-63.3
+2018-04-23	Pret A Manger - Lower R 	-8.49
+2018-04-23	Uber *gb Oct01 Help.uber.com	-9.41
+2018-04-24	Fortnum & Mason Plc 	-90.0
+2018-04-24	Railway Tavern 	-12.15
+2018-04-25	Salary	4000
+2018-04-25	Restaurant San Remo Genève	-4.98
+2018-04-25	Plume Of Feathers Loughton	-3.9
+2018-04-26	Rent	-1000
+2018-04-26	Eon	-50
+2018-04-26	Vodafone	-20
+2018-04-26	Spotify	-9.99
+2018-04-26	PRET A MANGER-ISLINGTON 	-4.85
+2018-04-26	Boots The Chemist Hounslow	-0.9
+2018-04-27	Netflix.com	-7.99
+2018-04-27	Tesco Stores 3093 	-8.28
+2018-04-27	Pret A Manger-crown Pas 	-7.1
+2018-04-28	Http://www.fitchlearnin United Kingdom	-744.0
+2018-04-28	Boots The Chemist 	-1.75
+2018-04-29	Boots The Chemist 	-11.8
+2018-04-29	Interest Charge	-117.27
+2018-04-30	Wm Morrisons Petrol Upt Maidstone	-40.02
+2018-04-30	Multisafepay*van Gogh M 	-31.9
+2018-05-01	Tesco Stores 5130 	-5.11
+2018-05-01	STARBUCKS COFFEE COMPAN 	-2.99
+2018-05-02	Uber *gb Oct16 Help.uber.com	-5.62
+2018-05-02	Momo Restaurant 	-23.73
+2018-05-03	Pret A Manger - Lower R 	-5.8
+2018-05-03	Red Lion Mayfair 	-19.05
+2018-05-03	Red Lion Mayfair 	-19.05
+2018-05-04	Uber *gb Sep10 Help.uber.com	-11.5
+2018-05-04	SMITHS OF BOURNE BOURNE	-38.05
+2018-05-05	Swissotel Geneve Geneve 3	-710.07
+2018-05-05	Pret A Manger-piccadill 	-7.0
+2018-05-06	Tesco Stores 5130 	-5.11
+2018-05-06	Sainsbury's Stockwell-c 	-7.5
+2018-05-07	The Cock Inn Maidstone	-10.0
+2018-05-07	The Haymarket Hotel Foo 	-42.75
+2018-05-08	Sainsbury's Stockwell-c 	-11.15
+2018-05-08	The Third Space 	-7.9
+2018-05-09	Uber *gb Nov15 Help.uber.com	-5.0
+2018-05-09	Pret A Manger - Lower R 	-7.89
+2018-05-10	Uber *ch Oct04 Help.uber.com	-20.63
+2018-05-10	Uber *gb Oct21 Help.uber.com	-11.14
+2018-05-11	Itunes.com/bill 	-2.49
+2018-05-11	Amazon Uk Marketplace	-31.8
+2018-05-12	Railway Tavern 	-18.9
+2018-05-12	Red Lion Mayfair 	-19.6
+2018-05-13	STARBUCKS COFFEE COMPAN 	-5.3
+2018-05-13	Tesco Self Service 	-15.0
+2018-05-14	SAINSBURY'S STCKWLL CLP 	-14.25
+2018-05-14	Riverside 	-12.2
+2018-05-15	Amazon Uk Retail Amazon.co.uk	-5.99
+2018-05-15	WAITROSE 616 CLAPHAM CO CLAPHAM COMMON	-28.4
+2018-05-16	Uber Uber 	-5.65
+2018-05-16	Pulse Pharmacy 	-3.94
+2018-05-17	Wm Morrisons Petrol Maidstone	-56.02
+2018-05-17	Uber Uber 	-5.66
+2018-05-18	Paul Uk Piccadilly 	-13.85
+2018-05-18	Pimenta de Abreu & Dos Genève	-36.36
+2018-05-19	JOHN LEWIS READING READING	-80.0
+2018-05-19	Pret A Manger-long Acre	-2.49
+2018-05-20	Boots The Chemist 	-2.7
+2018-05-20	Tesco Stores 3093 	-6.46
+2018-05-21	Uber *gb Jul16 	-12.04
+2018-05-21	Uber *gb Jul17 	-5.39
+2018-05-22	UBER UBER 	-15.34
+2018-05-22	BIRMINGHAM NEW STREET S BIRMINGHAM	-18.05
+2018-05-23	Boots Uk Ltd 	-31.23
+2018-05-23	Haymarket Hotel 	-200.0
+2018-05-24	Pret A Manger - Lower R 	-7.35
+2018-05-24	Sainsbury's Stckwll Clp 	-3.05
+2018-05-25	Salary	4000
+2018-05-25	Tesco Stores 5130 	-5.11
+2018-05-25	Uber *gb Sep17 Help.uber.com	-7.04
+2018-05-26	Rent	-1000
+2018-05-26	Eon	-50
+2018-05-26	Vodafone	-20
+2018-05-26	Spotify	-9.99
+2018-05-26	Kaefer Autowelt Parsdorf	-22.81
+2018-05-26	Heathrow Express Operat 	-19.8
+2018-05-27	Netflix.com	-7.99
+2018-05-27	Sainsbury's Stockwell-c 	-6.24
+2018-05-27	AMERICAN AIRLINES VACAT HOUNSLOW	-130.6
+2018-05-28	Pret A Manger - Lower R 	-8.74
+2018-05-28	Lillywhites 	-31.04
+2018-05-29	Ba.com Uk West Drayton	-35.0
+2018-05-29	Ba.com Uk West Drayton	-203.51
+2018-05-30	Heal And Son 	-28.0
+2018-05-30	Three Crowns 	-5.5
+2018-05-31	Sainsbury's Stockwell-c 	-10.3
+2018-05-31	Pret A Manger-crown Pas 	-2.5
+2018-06-01	Uber Uber 	-10.3
+2018-06-01	Hotel Urban Madrid	-397.92
+2018-06-02	Tesco Stores 5130 	-5.11
+2018-06-02	Amazon Uk Retail Amazon.co.uk	-9.0
+2018-06-03	Apple Itunes Store Gbp* 	-42.98
+2018-06-03	Uber Uber 	-7.27
+2018-06-04	Tfl Travel Charge Tfl.gov.uk/cp	-1.5
+2018-06-04	The Shard 	-28.73
+2018-06-05	HMV READING - ORACLE READING,	-30.0
+2018-06-05	STARBUCKS CARD RELOA 8452703310	-20.0
+2018-06-06	Starbucks Coffee Compan 	-2.99
+2018-06-06	Pret A Manger - Lower R 	-5.25
+2018-06-07	Pret A Manger - Lower R 	-6.59
+2018-06-07	Pret A Manger - Lower R 	-7.9
+2018-06-08	Oaka At The Mansion Hou 	-45.95
+2018-06-08	Uber *gb Jun30 	-16.58
+2018-06-09	Lul Ticket Machine-clap 	-37.4
+2018-06-09	Pret A Manger - Lower R 	-10.35
+2018-06-10	Tesco Stores 3093 	-6.46
+2018-06-10	Uber *ch Nov10 Help.uber.com	-20.99
+2018-06-11	Uber *es Sep03	-4.36
+2018-06-11	Uber *gb Oct01 Help.uber.com	-6.14
+2018-06-12	Sainsbury's Stockwell-c 	-6.34
+2018-06-12	Sainsbury's Stockwell-c 	-6.34
+2018-06-12	Uber	-8.27
+2018-06-13	Uber *gb Aug08 	-12.21
+2018-06-13	Glassblower 	-11.5
+2018-06-14	Andrews Garage Greater 	-41.85
+2018-06-14	The Third Space 	-7.5
+2018-06-15	Old Bridge Hotel Holmfirth	-43.8
+2018-06-15	MY ESSENTIALS 8000224355	-12.99
+2018-06-16	Caffe Nero Portobello 	-2.5
+2018-06-16	Argos 	-69.99
+2018-06-17	Fitzrovia 	-28.63
+2018-06-17	Sainsbury's Stockwell S 	-2.95
+2018-06-18	The Chequers 	-9.3
+2018-06-18	UBER UBER 	-6.46
+2018-06-19	Easyjet*easyjet Eqszgz5 Luton	-117.1
+2018-06-19	The Abbeville 	-10.8
+2018-06-20	Photobox Limited 	-85.25
+2018-06-20	Uber *gb Jul24 	-5.79
+2018-06-21	The Curtains Up 	-18.1
+2018-06-21	Pizza Express 	-53.65
+2018-06-22	Yauatcha Soho 	-24.17
+2018-06-22	Starbucks Coffee Compan 	-3.6
+2018-06-23	Blue Posts Greater 	-3.98
+2018-06-23	Uber *gb Oct19 Help.uber.com	-6.62
+2018-06-24	The Soho Hotel Restaura 	-102.9
+2018-06-24	Sainsbury's Stockwell-c 	-9.4
+2018-06-23	Salary	4000
+2018-06-25	Uber Uber 	-6.42
+2018-06-25	Amazon Uk Marketplace	-5.25
+2018-06-26	Rent	-1000
+2018-06-26	Eon	-50
+2018-06-26	Vodafone	-20
+2018-06-26	Spotify	-9.99
+2018-06-26	AMAZON UK RETAIL AMAZON.CO.UK	-8.9
+2018-06-26	AMAZON UK MARKETPLACE	-17.9
+2018-06-27	Netflix.com	-7.99
+2018-06-27	Starbucks Coffee Co 	-5.3
+2018-06-27	VIRGIN ATLANTIC CC CRAWLEY	-365.16
+2018-06-28	Brasserie Zedel 	-51.9
+2018-06-28	Redbubble.com 	-27.08
+2018-06-29	Apple Itunes Store Gbp* 	-2.49
+2018-06-29	Duke Of Wellington 	-9.9
+2018-06-30	Red Lion Mayfair 	-10.3
+2018-06-30	Fortnum & Mason Plc 	-25.68
+2018-07-01	Starbucks Hooley Preston	-5.95
+2018-07-01	John Lewis Direct 	-17.6
+2018-07-02	Uber *gb Oct02 Help.uber.com	-5.0
+2018-07-02	WAITROSE 616 CLAPHAM CO CLAPHAM COMMON	-24.19
+2018-07-03	Pizza Express 	-18.35
+2018-07-03	Restaurant San Remo Genève	-17.78
+2018-07-04	Pret A Manger-crown Pas 	-5.8
+2018-07-04	Tfl Travel Charge Tfl.gov.uk/cp	-5.3
+2018-07-05	The Soho Hotel Restaura 	-88.3
+2018-07-05	Ba.com Uk West Drayton	-38.72
+2018-07-06	Crosse Keyes 	-4.55
+2018-07-06	Tesco Stores 3093 	-6.46
+2018-07-07	Uber *gb Aug09 	-18.3
+2018-07-07	Heathrow Airport Hounslow	-32.9
+2018-07-08	Boots The Chemist 	-2.19
+2018-07-08	M & S - Tottenham Court 	-3.6
+2018-07-09	Peyotito Restaurant 	-16.4
+2018-07-09	Fortnum & Mason Plc 	-22.94
+2018-07-10	Amazon Uk Marketplace	-3.01
+2018-07-10	BA.COM UK WEST DRAYTON	-42.5
+2018-07-11	UBER UBER 	-32.0
+2018-07-11	TESCO PETROL FILLING ST BOURNE	-4.0
+2018-07-12	Eat Ltd St James' 	-3.2
+2018-07-12	BYRON HAMBURGER LTD 	-8.5
+2018-07-13	Sainsbury's Stockwell-c 	-6.77
+2018-07-13	National Theatre Inter 	-98.0
+2018-07-14	Liberty Retail Limited. 	-4.95
+2018-07-14	Golden Lion 	-12.9
+2018-07-15	Costa Coffee 	-4.4
+2018-07-15	Sainsbury's Stockwell-c 	-8.8
+2018-07-16	Amazon Uk Marketplace	-14.36
+2018-07-16	Caffe Nero 495 Ladbroke 	-4.1
+2018-07-17	Bazaar Madrid	-55.66
+2018-07-17	Sadlers Wells Front Of 	-10.0
+2018-07-18	KONDITOR AND COOK LTD 	-16.0
+2018-07-18	Red Lion Mayfair 	-19.85
+2018-07-19	Uber *gb Aug14 	-5.45
+2018-07-19	Lillywhites 	-10.99
+2018-07-20	Marks & Spencer -green 	-4.74
+2018-07-20	Tfl Travel Charge Tfl.gov.uk/cp	-2.4
+2018-07-21	HEADOUT.COM NEW YORK CITY	-66.43
+2018-07-21	HEADOUT.COM NEW YORK CITY	-66.43
+2018-07-21	Lul Ticket Machine-stoc 	-124.5
+2018-07-22	Uber *gb Aug22 	-5.0
+2018-07-22	Church Hill Service Sta Essex	-55.99
+2018-07-23	Apple Itunes Store Gbp* 	-17.98
+2018-07-23	Amazon Prime 080-04962454	-79.0
+2018-07-24	Uber *gb Oct20 Help.uber.com	-6.21
+2018-07-24	Villandry 12 Waterloo P 	-66.38
+2018-07-25	Salary	4000
+2018-07-25	Uber *gb Jul12 	-23.67
+2018-07-25	Pret A Manger - Lower R 	-5.64
+2018-07-26	Rent	-1000
+2018-07-26	Eon	-50
+2018-07-26	Vodafone	-20
+2018-07-26	Spotify	-9.99
+2018-07-26	Ba.com Uk West Drayton	-957.0
+2018-07-26	Boots The Chemist 	-2.84
+2018-07-27	Netflix.com	-7.99
+2018-07-27	Morleys Brixton Ltd 	-22.5
+2018-07-27	Pizzaexpress Restaurant 	-21.4
+2018-07-28	Deliveroo.co.uk 	-11.45
+2018-07-28	Apple Itunes Store Gbp* 	-11.77
+2018-07-29	Next Retail Slough	-44.5
+2018-07-29	Lillywhites 	-6.5
+2018-07-30	Sainsbury's Stockwell S 	-1.1
+2018-07-30	The Covent Garden Hotel 	-30.38
+2018-07-31	Pret A Manger-crown Pas 	-5.64
+2018-07-31	Pret A Manger - Lower R 	-1.98
+2018-07-31	Pret A Manger - Lower R 	-1.98
+2018-08-01	HAZ RESTAURANT 	-32.79
+2018-08-01	Borrowmydoggy.com 	-9.99
+2018-08-02	Uber *gb Aug14 	-10.72
+2018-08-02	Wm Morrisons Petrol Maidstone	-6.83
+2018-08-03	Amazon Uk Retail Amazon.co.uk	-23.0
+2018-08-03	Uber *gb Aug06 	-9.72
+2018-08-04	Pret A Manger - Lower R 	-9.39
+2018-08-04	Ocado Ltd. 08453991122	-98.77
+2018-08-05	Bupa Dental - West End 	-140.0
+2018-08-05	Pret A Manger - Lower R 	-7.74
+2018-08-06	Eme Catedral Hotel Sevilla	-744.48
+2018-08-06	Sainsbury's Local Stock 	-3.94
+2018-08-07	WAITROSE 616 CLAPHAM CO CLAPHAM COMMON	-35.81
+2018-08-07	WAITROSE 	-2.75
+2018-08-08	Tesco Stores 3093 	-8.28
+2018-08-08	Rosetta Stone Harrisonburg	-32.67
+2018-08-09	Red Lion Mayfair 	-23.7
+2018-08-09	Ba.com Uk West Drayton	-10.0
+2018-08-10	Glassblower 	-5.85
+2018-08-10	Fortnum & Mason Plc 	-55.36
+2018-08-11	*smallsell 07966881085	-100.0
+2018-08-11	Red Lion Mayfair 	-4.5
+2018-08-12	HISTORIC ROYAL PALACES EAST MOLESEY	-37.99
+2018-08-12	Gatwick Exprss Web 	-35.6
+2018-08-13	Uber Uber 	-19.12
+2018-08-13	Amazon Svcs Europe,sar Amazon.co.uk	-14.8
+2018-08-14	SAINSBURY'S STCKWLL CLP 	-14.05
+2018-08-14	Costa  Stockwell 	-4.4
+2018-08-14	Costa  Stockwell 	-4.4
+2018-08-15	Cafe Royal Hotel 	-25.88
+2018-08-15	Sainsbury's Stockwell-c 	-6.75
+2018-08-16	Duke Of Wellington 	-14.85
+2018-08-16	Sainsbury's Stockwell-c 	-10.8
+2018-08-17	APPLE ITUNES STORE GBP 	-65.76
+2018-08-17	The Soho Hotel Restaura 	-117.25
+2018-08-18	Uber Uber 	-14.56
+2018-08-18	Pret A Manger - Lower R 	-6.44
+2018-08-19	Uber *gb Nov13 Help.uber.com	-18.2
+2018-08-19	Waitrose Fashion & Home 	-47.05
+2018-08-20	Sainsbury's Stockwell S 	-3.35
+2018-08-20	Railway Tavern 	-31.0
+2018-08-21	Wahaca Waterloo 119 Wat 	-15.0
+2018-08-21	Rijksmuseum  	-25.5
+2018-08-22	Ye Olde Windmill Inn 	-13.2
+2018-08-22	STARBUCKS CARD RELOA 8452703310	-10.0
+2018-08-23	Interest Charge	-79.49
+2018-08-23	East Coast - Web Sales York	-23.0
+2018-08-24	Red Lion Mayfair 	-6.05
+2018-08-24	Halfords - Chiswick 	-35.77
+2018-08-25	Salary	4000
+2018-08-25	EAST COAST CATERING COLCHESTER	-6.35
+2018-08-25	Oaka At The Mansion Hou 	-41.17
+2018-08-26	Rent	-1000
+2018-08-26	Eon	-50
+2018-08-26	Vodafone	-20
+2018-08-26	Spotify	-9.99
+2018-08-26	No.1 Gatwick lounge - S 	-4.0
+2018-08-26	John Lewis Oxford Stree 	-264.0
+2018-08-27	Netflix.com	-7.99
+2018-08-27	Uber *gb Aug24 	-21.45
+2018-08-27	Hotel Metropole Geneve Geneve	-592.22
+2018-08-28	All Bar One O2 Arena Greenwich	-11.1
+2018-08-28	Uber *gb Aug27 	-7.93
+2018-08-29	Chartered Inst For Secu 	-220.32
+2018-08-29	Wahaca Canary Wharf The 	-14.19
+2018-08-30	Tesco Stores 3093 	-6.46
+2018-08-30	EXPEDIA*19223691779 EXPEDIA.CO.UK	-5.0
+2018-08-31	UBER UBER 	-5.0
+2018-08-31	Pret A Manger-crown Pas 	-1.7
+2018-09-01	Renfe Web Madrid	-122.42
+2018-09-01	Fresh & Wild 	-8.0
+2018-09-02	The Covent Garden Hotel 	-25.31
+2018-09-02	SAINSBURY'S BIGGLESWADE BIGGLESWADE	-36.91
+2018-09-03	WWW.BABBEL.COM BERLIN	-29.7
+2018-09-03	Uber Uber 	-16.95
+2018-09-04	EXPEDIA*19223869062 EXPEDIA.CO.UK	-324.23
+2018-09-04	Eat Ltd Duke Of York S 	-5.25
+2018-09-05	Expedia Expedia.co.uk	-260.0
+2018-09-05	Pret A Manger-russell S 	-5.0
+2018-09-06	World Duty Free T5 Arr Hounslow	-42.99
+2018-09-06	World Duty Free T5 Arr Hounslow	-42.99
+2018-09-06	Eat Ltd Duke Of York S 	-5.48
+2018-09-07	Geo F Trumper Of Jermyn 	-87.5
+2018-09-07	Blue Posts Greater 	-9.75
+2018-09-07	Blue Posts Greater 	-9.75
+2018-09-08	SOFITEL ST JAMES  	-32.63
+2018-09-08	Uber *de Nov12 Help.uber.com	-5.67
+2018-09-09	Sofitel  Gatwick West Sussex	-46.69
+2018-09-09	Arong 	-20.55
+2018-09-10	Waitrose 637 Highbury Islington	-6.26
+2018-09-10	Uber Uber 	-6.0
+2018-09-11	Pret A Manger-russell S 	-4.3
+2018-09-11	UBER UBER 	-5.64
+2018-09-12	Eat Ltd St James' 	-4.54
+2018-09-12	Uber *gb Aug03 	-6.68
+2018-09-13	Charles Tyrwhitt 	-100.0
+2018-09-13	Marks & Spencer Clapha 	-10.53
+2018-09-13	Marks & Spencer Clapha 	-10.53
+2018-09-14	Starbucks Coffee Compan 	-2.7
+2018-09-14	Uber *gb Oct12 Help.uber.com	-6.85
+2018-09-15	UBER UBER 	-8.51
+2018-09-15	Amazon Uk Marketplace	-2.82
+2018-09-16	Uber *gb Jul14 	-9.67
+2018-09-16	Uber *gb Aug11 	-5.0
+2018-09-17	Sainsbury's Stockwell-c 	-12.64
+2018-09-17	Amazon Uk Marketplace	-3.99
+2018-09-18	JOHN LEWIS AT HOME 	-102.5
+2018-09-18	STARBUCKS BAKER STREET 	-2.6
+2018-09-19	Virgintrains.co.uk 0344 	-84.0
+2018-09-19	www.babbel.com berlin	-29.7
+2018-09-20	Tfl Travel Charge Tfl.gov.uk/cp	-2.9
+2018-09-20	Brasserie Zedel 	-34.75
+2018-09-21	Uber *es Sep04	-18.24
+2018-09-21	Amazon Uk Retail Amazon.co.uk	-6.19
+2018-09-22	Amazon Uk Retail Amazon.co.uk	-4.74
+2018-09-22	Blue Posts Greater 	-19.3
+2018-09-23	Pret A Manger-russell S 	-4.2
+2018-09-23	Corney & Barrow Monumen 	-13.44
+2018-09-24	Railway Tavern 	-10.2
+2018-09-24	SAINSBURY'S STCKWLL CLP 	-14.74
+2018-09-25	Salary	4000
+2018-09-25	Lul Ticket Machine-stoc 	-32.4
+2018-09-25	Berry Bros & Rudd 	-56.45
+2018-09-26	Rent	-1000
+2018-09-26	Eon	-50
+2018-09-26	Vodafone	-20
+2018-09-26	Spotify	-9.99
+2018-09-26	Rosetta Stone Harrisonburg	-65.34
+2018-09-26	Rosetta Stone Harrisonburg	-65.34
+2018-09-26	Byron Hamburgers Ltd 	-35.9
+2018-09-27	Netflix.com	-7.99
+2018-09-27	Pret A Manger-crown Pas 	-10.2
+2018-09-27	Mcdonalds Warren Street 	-0.99
+2018-09-28	BA.COM UK WEST DRAYTON	-35.0
+2018-09-28	Oaka At The Mansion Hou 	-25.76
+2018-09-29	Barrica 	-47.81
+2018-09-29	Pret A Manger - Lower R 	-12.0
+2018-09-30	The Kennington 	-16.95
+2018-09-30	APPLE ITUNES STORE GBP 	-3.99
+2018-10-01	The Magpie 	-22.55
+2018-10-01	UNITED AIRLINES VACATIO HOUNSLOW	-59.6
+2018-10-02	Rising Sun 	-4.8
+2018-10-02	Pret A Manger-crown Pas 	-5.35
+2018-10-03	NO. 32 THE OLD TOWN 	-15.29
+2018-10-03	Mcdonalds 291 Oxford St 	-2.99
+2018-10-04	Boots The Chemist 	-4.34
+2018-10-04	Boots The Chemist 	-4.34
+2018-10-04	Bloc Hotel Operations L Crawley	-84.55
+2018-10-05	Uber *gb Oct25 Help.uber.com	-8.92
+2018-10-05	Interest Charge	-74.23
+2018-10-06	Costa  Stockwell 	-5.6
+2018-10-06	Sainsbury's Stockwell-c 	-22.95
+2018-10-07	Apple Itunes Store Gbp* 	-54.98
+2018-10-07	Amazon Uk Marketplace	-2.98
+2018-10-07	Amazon Uk Marketplace	-2.98
+2018-10-08	Eat Ltd St James' 	-6.64
+2018-10-08	Boots Heathrow T5 Land Hounslow	-1.25
+2018-10-09	Sainsbury's Stockwell-c 	-18.5
+2018-10-09	Apple Itunes Store Gbp* 	-4.77
+2018-10-10	Pret A Manger - Lower R 	-7.1
+2018-10-10	Ping Pong South Bank 	-14.12
+2018-10-11	Norwegian Air Shuttle A Fornebu	-306.3
+2018-10-11	Three Crowns 	-11.3
+2018-10-12	Red Lion Mayfair 	-9.75
+2018-10-12	Red Lion Mayfair 	-20.45
+2018-10-12	Red Lion Mayfair 	-20.45
+2018-10-13	Amazon Uk Marketplace	-15.99
+2018-10-13	Pret A Manger East 	-10.1
+2018-10-14	Waterstones Unknown	-20.03
+2018-10-14	APPLE ITUNES STORE GBP 	-2.99
+2018-10-15	Abercrombie.com 	-60.4
+2018-10-15	Uber Uber 	-14.17
+2018-10-16	Sainsbury's Stockwell-c 	-13.15
+2018-10-16	Pret A Manger - Lower R 	-9.85
+2018-10-17	Tfl Travel Charge Tfl.gov.uk/cp	-2.0
+2018-10-17	Itunes.com/bill 	-44.99
+2018-10-18	Amazon Uk Marketplace	-60.98
+2018-10-18	Membership Fee	-195.0
+2018-10-19	Pret A Manger - Lower R 	-6.94
+2018-10-19	Fitzrovia 	-40.17
+2018-10-20	Church Hill Service Sta Essex	-4.99
+2018-10-20	Tfl Travel Charge Tfl.gov.uk/cp	-6.5
+2018-10-20	Tfl Travel Charge Tfl.gov.uk/cp	-6.5
+2018-10-21	The Running Horse 	-8.0
+2018-10-21	Apple Itunes Store Gbp* 	-2.99
+2018-10-22	Ba.com Uk West Drayton	-139.0
+2018-10-22	Amazon Uk Retail Amazon.co.uk	-2.25
+2018-10-23	Sainsbury's Stockwell-c 	-16.53
+2018-10-23	Leon Restaurants Totte 	-5.15
+2018-10-24	Iron Duke 	-4.36
+2018-10-24	STARBUCKS - 11051452 	-5.9
+2018-10-24	STARBUCKS - 11051452 	-5.9
+2018-10-25	Salary	4000
+2018-10-25	Interest Charge	-90.11
+2018-10-25	Ba.com Uk West Drayton	-108.01
+2018-10-26	Rent	-1000
+2018-10-26	Eon	-50
+2018-10-26	Vodafone	-20
+2018-10-26	Spotify	-9.99
+2018-10-26	BIRMINGHAM NEW STREET S BIRMINGHAM	-2.0
+2018-10-26	Brasserie Zedel 	-42.19
+2018-10-27	Netflix.com	-7.99
+2018-10-27	Iceland Stockwell 	-6.0
+2018-10-27	Pret A Manger - Lower R 	-7.05
+2018-10-28	Eat Ltd 239 High Holbo 	-3.29
+2018-10-28	Tesco Stores 3093 	-8.28
+2018-10-29	Pret A Manger - Lower R 	-7.69
+2018-10-29	Eat Ltd Duke Of York S 	-2.99
+2018-10-30	Travel Reservation Gbr	-1.0
+2018-10-30	Flask 	-17.0
+2018-10-31	Arong 	-22.45
+2018-10-31	The Soho Hotel Restaura 	-58.38
+2018-11-01	Oaka At The Mansion Hou 	-29.0
+2018-11-01	Rosetta Stone Harrisonburg	-32.65
+2018-11-02	The Soho Hotel Restaura 	-55.7
+2018-11-02	Pret A Manger - Lower R 	-6.34
+2018-11-03	Uber	-1.0
+2018-11-03	Uber *gb Nov06 Help.uber.com	-11.51
+2018-11-04	Luxottica Retail Uk Ltd 	-25.0
+2018-11-04	Uber *gb Aug17 	-19.51
+2018-11-05	Amazon Uk Retail Amazon.co.uk	-9.99
+2018-11-05	John Lewis Direct 	-26.4
+2018-11-06	INTEREST CHARGE	-60.2
+2018-11-06	The Haymarket Hotel Foo 	-20.25
+2018-11-07	Red Lion Mayfair 	-10.45
+2018-11-07	Uber *gb Jul06 	-5.85
+2018-11-08	Hotel Urban Madrid	-217.73
+2018-11-08	Chartered Inst For Secu 	-20.4
+2018-11-09	Amazon Uk Marketplace	-11.97
+2018-11-09	Sainsbury's Supermarket 	-7.7
+2018-11-10	Pret A Manger - Lower R 	-3.49
+2018-11-10	Kennington - Oddbins 	-51.05
+2018-11-11	Pret A Manger - Lower R 	-10.0
+2018-11-11	Sainsbury's Stockwell-c 	-9.6
+2018-11-12	Exmouth Market 	-15.0
+2018-11-12	Tesco Stores 3093 	-6.46
+2018-11-13	Waterstone's 	-19.48
+2018-11-13	Uber *gb Sep30 Help.uber.com	-10.16
+2018-11-13	Uber *gb Sep30 Help.uber.com	-10.16
+2018-11-14	Crabtree & Evelyn Winds Windsor	-12.0
+2018-11-14	Red Lion Mayfair 	-11.4
+2018-11-15	Uber *gb Aug12 	-5.63
+2018-11-15	Tesco Stores 5130 	-5.11
+2018-11-16	APPLE ITUNES STORE GBP 	-9.99
+2018-11-16	Costa  Stockwell 	-5.4
+2018-11-17	NICOLAS UK LTD 	-10.85
+2018-11-17	Dehesa 25 Ganton Stree 	-65.0
+2018-11-18	Egon Kjoettbasaren Bergen	-17.83
+2018-11-18	THE CAVENDISH HOTEL 	-33.75
+2018-11-19	Glassblower 	-11.7
+2018-11-19	Wahaca Islington 68/69 	-30.25
+2018-11-20	Tfl Travel Charge Tfl.gov.uk/cp	-3.9
+2018-11-20	Lillywhites 	-21.49
+2018-11-21	Sadlers Wells Front Of 	-20.4
+2018-11-21	El Ganso 	-431.0
+2018-11-21	El Ganso 	-431.0
+2018-11-22	Pret A Manger - Lower R 	-5.15
+2018-11-22	Pret A Manger - Lower R 	-5.15
+2018-11-22	STARBUCKS COFFEE CO 	-5.59
+2018-11-23	Deliveroo.co.uk 	-12.9
+2018-11-23	Lush-maidstone Maidstone	-17.5
+2018-11-24	The Haymarket Hotel Foo 	-115.88
+2018-11-24	J Floris Ltd 	-26.0
+2018-11-24	Salary	4000
+2018-11-25	Amazon Uk Marketplace	-9.74
+2018-11-25	PRET A MANGER-TOTTENHAM 	-3.44
+2018-11-26	Rent	-1000
+2018-11-26	Eon	-50
+2018-11-26	Vodafone	-20
+2018-11-26	Spotify	-9.99
+2018-11-26	Uber Uber 	-23.61
+2018-11-26	The Haymarket Hotel Foo 	-30.38
+2018-11-27	Netflix.com	-7.99
+2018-11-27	The Enterprise 	-124.2
+2018-11-27	Marks & Spencer - Green 	-25.1
+2018-11-28	DEAN STREET TOWNHOUSE 	-21.94
+2018-11-28	Albert Embankment Servi 	-29.45
+2018-11-29	Sainsbury's Stockwell-c 	-11.95
+2018-11-29	UBER UBER 	-7.28
+2018-11-30	Oaka At The Mansion Hou 	-28.2
+2018-11-30	Heathrow Express Operat 	-36.0
+2018-12-01	Uber Uber 	-8.34
+2018-12-01	Sainsbury's Stockwell-c 	-8.4
+2018-12-02	El Ganso 	-28.0
+2018-12-02	Railway Tavern 	-10.75
+2018-12-03	Bupa Dental - West End 	-396.0
+2018-12-03	Apple Itunes Store Gbp* 	-29.98
+2018-12-04	Pret A Manger - Lower R 	-6.64
+2018-12-04	UBER UBER 	-9.48
+2018-12-05	Pret A Manger - Lower R 	-8.1
+2018-12-05	Exmouth Market 	-11.0
+2018-12-06	Starbucks  Gbr	-8.45
+2018-12-06	MALMAISON BIRMINGHAM CO BIRMINGHAM	-2.57
+2018-12-07	Brasserie Zedel 	-20.25
+2018-12-07	Sainsbury's Stockwell-c 	-5.99
+2018-12-08	Shelleys 	-9.2
+2018-12-08	Pret A Manger - Lower R 	-7.0
+2018-12-09	Iceland Stockwell 	-11.74
+2018-12-09	Sainsbury's Stockwell-c 	-28.45
+2018-12-10	Uber *gb Aug14 	-6.67
+2018-12-10	Sixt Rent A Car Chesterfield	-165.77
+2018-12-11	Lillywhites 	-7.99
+2018-12-11	Panopolis 	-5.75
+2018-12-12	Pret A Manger - Lower R 	-7.39
+2018-12-12	Lul Ticket Machine-gree 	-124.5
+2018-12-13	Paul Gloucester Rd 	-3.8
+2018-12-13	Pret A Manger - Lower R 	-8.14
+2018-12-14	Kiehls Since 1851 	-57.5
+2018-12-14	Railway Tavern 	-15.5
+2018-12-15	Asda George Com Leeds	-26.22
+2018-12-15	Pret A Manger - Lower R 	-10.99
+2018-12-16	SOFITEL ST JAMES  	-36.0
+2018-12-16	Tfl Travel Charge Tfl.gov.uk/cp	-44.4
+2018-12-17	Marks & Spencer -green 	-10.6
+2018-12-17	Uber *gb Oct27 Help.uber.com	-7.3
+2018-12-18	Sainsbury's Stockwell-c 	-15.85
+2018-12-18	UBER UBER 	-6.06
+2018-12-19	The Third Space 	-3.95
+2018-12-19	Uber *gb Nov02 Help.uber.com	-10.52
+2018-12-20	Sainsbury's Stockwell-c 	-9.45
+2018-12-20	SIXT GMBH&CO AUTOVERMIE PULLACH	-368.9
+2018-12-21	HAZ RESTAURANT 	-16.65
+2018-12-21	Pitcher And Piano 	-13.85
+2018-12-22	Boots  W11	-2.54
+2018-12-22	Upper Crust 	-5.8
+2018-12-23	Sainsbury's Supermarket 	-4.58
+2018-12-23	Zetland Arms 	-24.75
+2018-12-24	Pret A Manger - Lower R 	-8.4
+2018-12-24	Amazon Digital Dwnlds	-8.99
+2018-12-22	Salary	4000
+2018-12-25	LUSH-VICTORIA 	-9.01
+2018-12-25	Uber *gb Jul26 	-8.75
+2018-12-26	Rent	-1000
+2018-12-26	Eon	-50
+2018-12-26	Vodafone	-20
+2018-12-26	Spotify	-9.99
+2018-12-26	Admiral Duncan 	-17.1
+2018-12-26	APPLE ITUNES STORE GBP 	-7.99
+2018-12-27	Netflix.com	-7.99
+2018-12-27	Tesco Stores 3093 	-6.46
+2018-12-27	Tesco Stores 3093 	-8.28
+2018-12-28	Mcdonald's Kings Cross 	-1.98
+2018-12-28	Sainsbury's Supermarket 	-5.32
+2018-12-29	Pret A Manger - Lower R 	-8.89
+2018-12-29	AMAZON UK MARKETPLACE	-7.96
+2018-12-30	APPLE ITUNES STORE GBP 	-6.78
+2018-12-30	Costa  Stockwell 	-4.05
+2018-12-31	Uber *gb Oct01 Help.uber.com	-13.37
+2018-12-31	Sainsbury's Stckwll Clp 	-1.95

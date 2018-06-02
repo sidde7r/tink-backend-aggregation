@@ -1,0 +1,113 @@
+syntax = "proto3";
+
+option java_package = "se.tink.oauth.grpc";
+option java_generic_services = true;
+option java_multiple_files = true;
+
+package api;
+
+// Ping.
+
+message PingResponse {
+    string response = 1;
+}
+
+message PingRequest {}
+
+// Client.
+
+message ClientRequest {
+    string id = 1;
+}
+
+message ClientsRequest {}
+
+message Client {
+    string id = 1;
+    string created = 2;
+    string updated = 3;
+    string iconUrl = 4;
+    string name = 5;
+    string payload = 6;
+    repeated string redirectUris = 7;
+    repeated string scope = 8;
+    string secret = 9;
+    string url = 10;
+}
+
+message ClientsResponse {
+    repeated Client clients = 1;
+}
+
+// Authorization.
+
+message Authorization {
+    string id = 1;
+    string created = 2;
+    string updated = 3;
+    string accessToken = 4;
+    string clientId = 5;
+    string refreshToken = 6;
+    repeated string scope = 7;
+    string userId = 8;
+}
+
+message AuthorizationsRequest {
+    string clientId = 1;
+}
+
+message AuthorizationsResponse {
+    repeated Authorization authorizations = 1;
+}
+
+// Authorization request.
+
+message AuthorizationRequest {
+    string code = 1;
+    string created = 2;
+    string updated = 3;
+    string clientId = 4;
+    repeated string scope = 5;
+    string userId = 6;
+}
+
+message AuthorizationRequestsRequest {
+    string clientId = 1;
+}
+
+message AuthorizationRequestsResponse {
+    repeated AuthorizationRequest authorizationRequests = 1;
+}
+
+// Webhook.
+
+message Webhook {
+    string id = 1;
+    string created = 2;
+    string updated = 3;
+    string clientId = 4;
+    string events = 5;
+    string global = 6;
+    string secret = 7;
+    string url = 8;
+    string userId = 9;
+}
+
+message WebhooksRequest {
+    string clientId = 1;
+}
+
+message WebhooksResponse {
+    repeated Webhook webhooks = 1;
+}
+
+// Service.
+
+service OAuth {
+    rpc Ping (PingRequest) returns (PingResponse) {}
+    rpc GetClient (ClientRequest) returns (Client) {}
+    rpc GetClients (ClientsRequest) returns (ClientsResponse) {}
+    rpc GetAuthorizations (AuthorizationsRequest) returns (AuthorizationsResponse) {}
+    rpc GetAuthorizationRequests (AuthorizationRequestsRequest) returns (AuthorizationRequestsResponse) {}
+    rpc GetWebhooks (WebhooksRequest) returns (WebhooksResponse) {}
+}

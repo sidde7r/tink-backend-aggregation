@@ -1,0 +1,5 @@
+Date	Description	Amount	Type	
+01/01/16	LÖN	5000	CREDIT_CARD	false
+01/01/16	LN	5000	CREDIT_CARD	false
+01/01/16	L&N	5000	CREDIT_CARD	false
+01/01/16	LON	5000	CREDIT_CARD	false

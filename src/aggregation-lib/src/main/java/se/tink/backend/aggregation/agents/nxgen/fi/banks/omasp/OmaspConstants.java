@@ -1,0 +1,80 @@
+package se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp;
+
+import com.google.common.collect.ImmutableMap;
+import java.time.format.DateTimeFormatter;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.core.account.LoanDetails;
+import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.libraries.i18n.LocalizableEnum;
+import se.tink.libraries.i18n.LocalizableKey;
+
+public class OmaspConstants {
+    public static final class Storage {
+        public static final String ACCESS_TOKEN = "access_token";
+        public static final String DEVICE_ID = "device_id";
+    }
+
+    public static final class LogTags {
+        public static final LogTag LOG_TAG_AUTHENTICATION = LogTag.from("#omasp_authentication");
+        public static final LogTag LOG_TAG_ACCOUNTS = LogTag.from("#omasp_accounts");
+        public static final LogTag LOG_TAG_CONTINUATIONKEY = LogTag.from("#omasp_continuationkey");
+        public static final LogTag LOG_TAG_LOAN_DETAILS = LogTag.from("#omasp_loan_details");
+    }
+
+    public static final class Url {
+        private static final String BASE = "https://gateway.omasp.fi/omasp/api";
+
+        static final URL LOGIN = new URL(BASE + "/auth/login");
+        static final URL REGISTER_DEVICE = new URL(BASE + "/auth/devices");
+        static final URL ACCOUNTS = new URL(BASE + "/accounts");
+        static final URL TRANSACTIONS = new URL(BASE + "/accounts/transactions");
+        static final URL TRANSACTION_DETAILS = new URL(BASE + "/accounts/transactions/{transactionId}");
+        static final URL CREDITCARDS = new URL(BASE + "/cards");
+        static final URL CREDITCARD_DETAILS = new URL(BASE + "/cards/{cardId}");
+        static final URL LOANS = new URL(BASE + "/loans");
+        static final URL LOAN_DETAILS = new URL(BASE + "/loans/details");
+    }
+
+    public static final ImmutableMap<String, AccountTypes> ACCOUNT_TYPES = ImmutableMap.<String, AccountTypes>builder()
+            .put("käyttötili", AccountTypes.CHECKING) // "current account"
+            .put("säästötalletus", AccountTypes.SAVINGS) // "saving deposit"
+            .put("asuntosäästöpalkkiotili", AccountTypes.SAVINGS) // "HOUSING SAVINGS PREMIUM ACCOUNT"
+            .put("yritystili", AccountTypes.CHECKING) // "company account"
+            .build();
+
+    public static final ImmutableMap<String, LoanDetails.Type> LOAN_TYPES = ImmutableMap.<String, LoanDetails.Type>builder()
+            .put("other_loan", LoanDetails.Type.OTHER)
+            .put("student_loan", LoanDetails.Type.STUDENT)
+            .put("restructuring_loan", LoanDetails.Type.OTHER) // "debt settlement loan"
+            .put("home_loan", LoanDetails.Type.MORTGAGE)
+            .build();
+
+    public static final class Error {
+        public static final String LOGIN_WARNING = "login_warning";
+        public static final String AUTHENTICATION_FAILED = "authentication_failed";
+        public static final String SECURITY_KEY_FAILED = "security_key_failed";
+        public static final String OTHER_BANK_CUSTOMER = "other_bank_customer";
+    }
+
+    public static final class ErrorMessage {
+        public static final String LOGIN_BLOCKED = "sisäänkirjautuminen on estetty";
+    }
+
+    public static final String HMAC_KEY = "d8Ve963x8rVkffpUzdMe9mTxEqTL9SRV";
+    public static final DateTimeFormatter TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm'Z'");
+
+    public enum UserMessage implements LocalizableEnum {
+        LOGIN_BLOCKED(new LocalizableKey("Login is blocked. Contact your bank's customer service."));
+
+        private LocalizableKey userMessage;
+
+        UserMessage(LocalizableKey userMessage) {
+            this.userMessage = userMessage;
+        }
+        @Override
+        public LocalizableKey getKey() {
+            return userMessage;
+        }
+    }
+}

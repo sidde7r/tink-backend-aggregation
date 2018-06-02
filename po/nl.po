@@ -1,0 +1,1411 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: VERSION\n"
+"POT-Creation-Date: 2018-05-03 11:50+0000\n"
+"PO-Revision-Date: 2018-05-03 11:50+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#, java-format
+msgid "{0} large expense"
+msgstr "{0} grote uitgave"
+
+#, java-format
+msgid "Updating {0}..."
+msgstr "Bijwerken {0} ..."
+
+msgid "Your account is blocked. Please unblock your account using the ABN AMRO app."
+msgstr "Uw account is geblokkeerd. Deblokkeer uw account in de ABN AMRO Mobiel Bankieren app"
+
+msgid "No response from Mobile BankID. Have you opened the app?"
+msgstr "Geen respons van Mobiel Bankieren. Heeft u de app geopend?"
+
+msgid "BankID session already in progress, please try again."
+msgstr "De sessie is al in gebruik, probeer het opnieuw."
+
+msgid "Transfer completed"
+msgstr "Overboeking gelukt"
+
+msgid "Waiting on Mobile Bank Id"
+msgstr "Wachten op mobiele BankID-app"
+
+msgid "No response from Mobile BankID"
+msgstr "Geen respons van BankID"
+
+msgid "Transfer failed"
+msgstr "Transactie mislukt"
+
+msgid "Payment was not signed"
+msgstr "Betaling was niet ondertekend"
+
+msgid "Wrong user name or password, please try again."
+msgstr "Verkeerde gebruikersnaam of paswoord, probeer het opnieuw."
+
+msgid "Selected user has been blocked. Please contact your bank or reset the password in netbank."
+msgstr "Geselecteerde gebruiker is geblokkeerd. Neem contact op met ABN AMRO."
+
+msgid "Selected user is inactive. Please contact your bank."
+msgstr "Geselecteerde gebruiker is inactief. Neem contact op met ABN AMRO."
+
+msgid "User is not enrolled Mobilbank"
+msgstr "Gebruiker heeft geen Mobiel Bankieren"
+
+msgid "You have no netbank agreement"
+msgstr "Gebruiker heeft geen Internet Bankieren overeenkomst"
+
+msgid "Recipient name"
+msgstr "Naam van ontvanger"
+
+msgid "The transaction was cancelled by the user."
+msgstr "De transactie is geannuleerd door de gebruiker."
+
+msgid "person"
+msgstr "persoon"
+
+msgid "protected identity"
+msgstr "beveiligde identiteit"
+
+msgid "locked identity"
+msgstr "afgesloten gebruiker"
+
+msgid "deceased"
+msgstr "overleden"
+
+msgid "removed from register"
+msgstr "verwijderd uit lijst"
+
+msgid "emigrated"
+msgstr "geëmigreerd"
+
+msgid "changed person number"
+msgstr "aangepast identiteitsnummer"
+
+#, java-format
+msgid "You use the same credentials as you use at {0}. For more information about the required credentials, please see [their website]({1}). If you have any questions or problems connecting {0}, please contact [support@tinkapp.com](mailto:support@tinkapp.com)."
+msgstr "U gebruikt dezelfde inloggegevens als bij {0}. Kijk op [de website]({1}) voor meer informatie. Heeft u vragen of problemen om verbinding te maken met {0}? Neem dan contact op met ABN AMRO."
+
+msgid "Error from"
+msgstr "Fout met betrekking tot"
+
+msgid "BankID authentication failed. Please verify your Mobil BankID is OK."
+msgstr "Authenticatie mislukt. Controleer de ingevoerde gegevens nogmaals en probeer het opnieuw."
+
+msgid "MMMMM yyyy"
+msgstr "MMMMM yyyy"
+
+msgid "Largest expenses"
+msgstr "Grootste uitgaven"
+
+msgid "compared with previous month"
+msgstr "vergeleken met vorige maand"
+
+msgid "Percentage points"
+msgstr "Procent"
+
+msgid "Important Events"
+msgstr "Belangrijke gebeurtenissen"
+
+msgid "Low balance"
+msgstr "Laag saldo"
+
+msgid "Large expenses"
+msgstr "Grote uitgaven"
+
+msgid "More than usual"
+msgstr "Meer dan normaal"
+
+msgid "Budgets"
+msgstr "Budgetten"
+
+msgid "ID Control"
+msgstr "ID Control"
+
+msgid "Activate ID Control to safeguard your identity and bank accounts"
+msgstr "Activeer ID Control om jouw identiteit en bankgegevens in de gaten te houden."
+
+msgid "Handle warnings"
+msgstr "Behandel waarschuwingen"
+
+msgid "Activate ID Control"
+msgstr "Activeer ID Control"
+
+msgid "You have"
+msgstr "U heeft"
+
+msgid "You handled"
+msgstr "U heeft behandeld"
+
+msgid "No warnings to handle"
+msgstr "Geen waarschuwingen om te behandelen"
+
+msgid "%s warning to handle"
+msgid_plural "%s warnings to handle"
+msgstr[0] "%s waarschuwing te behandelen"
+msgstr[1] "%s waarschuwingen te behandelen"
+
+msgid "Event latest month"
+msgid_plural "Events latest month"
+msgstr[0] "Gebeurtenis afgelopen maand"
+msgstr[1] "Gebeurtenissen afgelopen maand"
+
+msgid "Open Tink"
+msgstr "Open de app"
+
+msgid "d MMMMM"
+msgstr "d MMMMM"
+
+#, java-format
+msgid "{0} to {1}"
+msgstr "{0} tot {1}"
+
+#, java-format
+msgid "Tink has automatically categorized {0} transaction the past month."
+msgid_plural "Tink has automatically categorized {0} transactions the past month."
+msgstr[0] "Grip heeft de afgelopen maand {0} uitgaven automatisch gecategoriseerd."
+msgstr[1] "Grip heeft de afgelopen maand {0} uitgaven automatisch gecategoriseerd."
+
+msgid "If you no longer want to receive these emails, please click <a href=\"%s\">here</a>."
+msgstr "Wilt u deze e-mails niet langer ontvangen? Klik  <a href=\"%s\">hier</a>."
+
+msgid "You kept your goal. Great job!"
+msgid_plural "You kept all your goals. Great job!"
+msgstr[0] "U bent binnen budget gebleven. Goed gedaan!"
+msgstr[1] "U bent binnen al uw budgetten gebleven. Goed gedaan!"
+
+msgid "You did not keep your goal. Better luck next month."
+msgid_plural "You did not keep a single goal. Better luck next month."
+msgstr[0] "U bent niet binnen budget gebleven. Volgende keer beter."
+msgstr[1] "U bent niet binnen uw budgetten gebleven. Volgende keer beter."
+
+#, java-format
+msgid "You kept {0} of your goals."
+msgstr "U bent binnen {0} budgetten gebleven."
+
+msgid "place_id"
+msgstr "place_id"
+
+msgid "description"
+msgstr "omschrijving"
+
+msgid "name"
+msgstr "naam"
+
+msgid "formatted_address"
+msgstr "formatted_address"
+
+msgid "vicinity"
+msgstr "omgeving"
+
+msgid "website"
+msgstr "website"
+
+msgid "formatted_phone_number"
+msgstr "formatted_phone_number"
+
+msgid "photo_reference"
+msgstr "photo_reference"
+
+msgid "long_name"
+msgstr "long_name"
+
+msgid "over"
+msgstr "boven"
+
+msgid "more than"
+msgstr "boven"
+
+msgid "less than"
+msgstr "minder dan"
+
+msgid "under"
+msgstr "onder"
+
+msgid "around"
+msgstr "ongeveer"
+
+msgid "weekdays"
+msgstr "weekdagen"
+
+msgid "weekends"
+msgstr "weekenden"
+
+msgid "today"
+msgstr "vandaag"
+
+msgid "yesterday"
+msgstr "gisteren"
+
+msgid "this week"
+msgstr "deze week"
+
+msgid "last week"
+msgstr "vorige week"
+
+msgid "this month"
+msgstr "deze maand"
+
+msgid "last month"
+msgstr "vorige maand"
+
+msgid "this year"
+msgstr "dit jaar"
+
+msgid "last year"
+msgstr "vorig jaar"
+
+#, java-format
+msgid "week {0}"
+msgstr "week {0}"
+
+msgid "month"
+msgstr "maand"
+
+msgid "week"
+msgstr "week"
+
+msgid "day"
+msgstr "dag"
+
+msgid "and"
+msgstr "en"
+
+#, java-format
+msgid "{0} account"
+msgid_plural "{0} accounts"
+msgstr[0] "{0} rekening"
+msgstr[1] "{0} rekeningen"
+
+#, java-format
+msgid "{0} transaction"
+msgid_plural "{0} transactions"
+msgstr[0] "{0} uitgave"
+msgstr[1] "{0} uitgaven"
+
+msgid "zero"
+msgstr "nul"
+
+msgid "one"
+msgstr "een"
+
+msgid "two"
+msgstr "twee"
+
+msgid "three"
+msgstr "drie"
+
+msgid "four"
+msgstr "vier"
+
+msgid "five"
+msgstr "vijf"
+
+msgid "six"
+msgstr "zes"
+
+msgid "seven"
+msgstr "zeven"
+
+msgid "eight"
+msgstr "acht"
+
+msgid "nine"
+msgstr "negen"
+
+msgid "MMM"
+msgstr "MMM"
+
+msgid "MMM d"
+msgstr "d-MMM"
+
+msgid "M/d"
+msgstr "d-M"
+
+#, java-format
+msgid "last {0}"
+msgstr "afgelopen {0}"
+
+msgid "MMMM d"
+msgstr "MMMM d"
+
+msgid "tomorrow"
+msgstr "morgen"
+
+#, java-format
+msgid "on {0}"
+msgstr "op {0}"
+
+msgid "MMM d YYYY"
+msgstr "MMM d YYYY"
+
+msgid "High balance"
+msgstr "Hoog saldo"
+
+msgid "You have an unusually high balance on one account."
+msgstr "U heeft een ongebruikelijk hoog saldo op een rekening."
+
+#, java-format
+msgid "You have an unusually high balance on {0}"
+msgstr "U heeft een ongebruikelijk hoog saldo op {0}"
+
+msgid "You have an unusually low balance on one account."
+msgstr "U heeft een ongebruikelijk laag saldo op een rekening."
+
+#, java-format
+msgid "You have an unusually low balance on {0}"
+msgstr "U heeft een ongebruikelijk laag saldo op uw {0}"
+
+msgid "Bank Fee"
+msgstr "Kosten in rekening gebracht door de bank"
+
+#, java-format
+msgid "You were charged by {0}"
+msgstr "U heeft een rekening gekregen van {0}"
+
+msgid "Bank fee selfie"
+msgstr "Bankkosten selfie"
+
+#, java-format
+msgid "You spent {0} less than {1} on {2} {3}."
+msgstr "U heeft {0} minder uitgegeven dan {1} aan {2} {3}."
+
+#, java-format
+msgid "You spent {0} more than {1} on {2} {3}."
+msgstr "U heeft {0} meer uitgegeven dan {1} aan {2} {3}."
+
+msgid "Add a budget now"
+msgstr "Voeg nu een budget toe"
+
+msgid "Tip: start with budgetting"
+msgstr "Tip: start met budgetten"
+
+msgid "For example, set a maximum amount per month on groceries or clothes and Grip will track it for you."
+msgstr "Stel bijvoorbeeld in wat u per maand maximaal aan boodschappen of kleding wilt uitgeven en houd de voortgang in de gaten."
+
+msgid "Double charge"
+msgstr "Dubbele afschrijving"
+
+msgid "You were double-charged."
+msgstr "Er is een bedrag dubbel afgeschreven."
+
+#, java-format
+msgid "You were double-charged by {0} for {1}."
+msgstr "U heeft een dubbele afschrijving van {0} ter waarde van {1}."
+
+#, java-format
+msgid "You have exceeded your goal for {0} this month."
+msgstr "U heeft deze maand uw budget voor {0} overschreden."
+
+#, java-format
+msgid "You are close to exceeding your goal for {0} this month."
+msgstr "U heeft deze maand uw budget voor {0} bijna overschreden."
+
+#, java-format
+msgid "You exceeded your goal for {0} on {1}"
+msgstr "U heeft uw budget voor {0} overschreden op {1}"
+
+#, java-format
+msgid "You were close to exceeding your goal for {0} on {1}"
+msgstr "Op {1} was je {0} budget bijna op."
+
+msgid "Missed goal"
+msgstr "Budget overschreden"
+
+msgid "Close to goal"
+msgstr "Budget bijna op"
+
+msgid "Handle warning"
+msgid_plural "Handle warnings"
+msgstr[0] "Behandel waarschuwing"
+msgstr[1] "Behandel waarschuwingen"
+
+msgid "There is %s new warning that needs your attention."
+msgid_plural "There are %s new warnings that need your attention."
+msgstr[0] "U heeft %s nieuwe waarschuwing."
+msgstr[1] "U heeft %s nieuwe waarschuwingen."
+
+msgid "Show map"
+msgstr "Toon kaart"
+
+msgid "Eating out map"
+msgstr "Restaurant kaart"
+
+msgid "This is where you eat out."
+msgstr "Dit is waar u vaak eet."
+
+#, java-format
+msgid "You have a low balance on {0}"
+msgstr "U heeft een laag saldo op uw {0}."
+
+msgid "Income"
+msgstr "Inkomsten"
+
+msgid "You received an income."
+msgstr "U heeft geld ontvangen."
+
+#, java-format
+msgid "You received income from {0}"
+msgstr "U heeft geld ontvangen van {0}"
+
+#, java-format
+msgid "You received {0} incomes."
+msgstr "U heeft {0} bijschrijvingen ontvangen."
+
+msgid "Large expense"
+msgstr "Grote uitgave"
+
+msgid "You were charged an unusually large expense."
+msgstr "U heeft een ongebruikelijk hoge uitgave."
+
+#, java-format
+msgid "You were charged an unusually large expense by {0}"
+msgstr "U heeft ongebruikelijk veel uitgegeven bij {0}"
+
+#, java-format
+msgid "You were charged {0} unusually large expenses."
+msgstr "U heeft {0} ongebruikelijk hoge uitgaven."
+
+#, java-format
+msgid "You were charged some unusually large expenses by {0}"
+msgstr "U heeft ongebruikelijk veel uitgegeven bij {0}"
+
+msgid "You are above average spending at this time of month"
+msgstr "Gemiddeld geeft u deze maand meer uit dan normaal"
+
+msgid "You are still above average spending at this time of month"
+msgstr "Gemiddeld geeft u deze maand nog steeds meer uit dan normaal"
+
+msgid "You are below average spending at this time of month"
+msgstr "Gemiddeld geeft u deze maand minder uit dan normaal"
+
+msgid "You are still below average spending at this time of month"
+msgstr "Gemiddeld geeft u deze maand nog steeds minder uit dan normaal"
+
+msgid "Left to Spend"
+msgstr "Over van inkomsten"
+
+msgid "1 year ago"
+msgstr "een jaar geleden"
+
+msgid "Look back on it"
+msgstr "Kijk terug"
+
+msgid "Look back"
+msgstr "Kijk terug"
+
+#, java-format
+msgid "1 year ago: {0} - via @tink"
+msgstr "1 jaar geleden: {0} - via @xxx"
+
+#, java-format
+msgid "in {0}"
+msgstr "in {0}"
+
+msgid "top 5 %"
+msgstr "top 5%"
+
+#, java-format
+msgid "You are one of the {0} spenders at {1}."
+msgstr "U bent één van de {0} klanten bij {1}"
+
+#, java-format
+msgid "Of the customers at {2}, you spent {0} more than {1} {3}."
+msgstr "Vergeleken met andere klanten van {2}, heeft u {0} meer uitgegeven dan {1} {3}."
+
+#, java-format
+msgid "Of the customers at {2}, you spent {0} less than {1} {3}."
+msgstr "Vergeleken met andere klanten van {2}, heeft u {0} minder uitgegeven dan {1} {3}."
+
+msgid "Great job!"
+msgstr "Geweldig gedaan!"
+
+msgid "Good job!"
+msgstr "Goed gedaan!"
+
+msgid "Come on!"
+msgstr "Zet 'm op!"
+
+#, java-format
+msgid "You kept your goal in {0}. Great job!"
+msgid_plural "You kept all your goals in {0}. Great job!"
+msgstr[0] "U bent binnen uw budget voor {0} gebleven. Goed gedaan!"
+msgstr[1] "U bent binnen al uw budgetten voor {0} gebleven. Goed gedaan!"
+
+#, java-format
+msgid "You did not keep your goal in {0}. Better luck next month."
+msgid_plural "You did not keep a single goal in {0}. Better luck next month."
+msgstr[0] "In {0} bent u niet binnen uw budget gebleven. Volgende keer beter."
+msgstr[1] "In {0} bent u niet binnen uw budgetten gebleven. Volgende keer beter."
+
+#, java-format
+msgid "You kept {0} of your goals in {1}."
+msgstr "In {1} bent u binnen {0} van uw budgetten gebleven."
+
+msgid "Check out your monthly summary!"
+msgstr "Bekijk uw maandoverzicht!"
+
+#, java-format
+msgid "{0} was a great month! You made {1} more than you spent."
+msgstr "{0} was een geweldige maand! U heeft {1} meer  ontvangen dan uitgegeven."
+
+#, java-format
+msgid "{0} was a not a great month. You spent {1} more than you made."
+msgstr "{0} was geen geweldige maand. U heeft {1} meer uitgegeven dan ontvangen."
+
+#, java-format
+msgid "You have saved {0} in {1} months!"
+msgstr "U heeft {0} gespaard in {1} maanden!"
+
+msgid "Add account"
+msgstr "Voeg rekening toe"
+
+#, java-format
+msgid "It seems like you have an account at {0} that you haven't connected to Tink."
+msgstr "Het lijkt erop dat uw account bij {0} nog niet is gekoppeld aan Grip."
+
+#, java-format
+msgid "Pick a location for another {1} merchants and see {0}% on the eating out map."
+msgstr "Kies de locatie voor {1} andere restaurants en zie het {0}% op de restaurant kaart."
+
+msgid "Expense"
+msgstr "Uitgave"
+
+msgid "Expenses"
+msgstr "Uitgaven"
+
+msgid "You've made a purchase."
+msgstr "U heeft iets gekocht."
+
+#, java-format
+msgid "You had an expense charged by {0}"
+msgstr "Er is een afschrijving geweest van {0}"
+
+#, java-format
+msgid "You spent {0} more yesterday than the average tab at {1}."
+msgstr "U heeft gisteren {0} meer uitgegeven dan gemiddeld bij {1}."
+
+msgid "Transfer"
+msgstr "Transfer"
+
+#, java-format
+msgid "You transferred {0} from {1} to {2}"
+msgstr "U heeft {0} overgeboekt van {1} naar {2}"
+
+msgid "Less than usual"
+msgstr "Minder dan normaal"
+
+#, java-format
+msgid "You have spent less than usual on {0} this month."
+msgstr "U heeft deze maand minder geld dan normaal uitgegeven aan {0}."
+
+#, java-format
+msgid "You have spent more than usual on {0} this month."
+msgstr "U heeft deze maand meer geld dan normaal uitgegeven aan {0}."
+
+msgid "others"
+msgstr "anderen"
+
+msgid "other"
+msgstr "ander"
+
+#, java-format
+msgid "{0} year old"
+msgstr "{0} jaar oud"
+
+#, java-format
+msgid "{0} year olds"
+msgstr "{0} jaar oud"
+
+msgid "men"
+msgstr "mannen"
+
+msgid "women"
+msgstr "vrouwen"
+
+#, java-format
+msgid "Week {0}"
+msgstr "Week {0}"
+
+msgid "Weekly Summary"
+msgstr "Weekoverzicht"
+
+msgid "You are good with your goals. Great job!"
+msgid_plural "You are good on all your goals. Great job!"
+msgstr[0] "U zit nog binnen uw budgetten. Goed bezig!"
+msgstr[1] "U zit nog binnen al uw budgetten. Goed bezig!"
+
+msgid "You have already blown your goal. Better luck next month."
+msgid_plural "You have already blown all of your goals. Better luck next month."
+msgstr[0] "U bent niet binnen uw budget gebleven. Volgende keer beter."
+msgstr[1] "U bent niet binnen uw budgetten gebleven. Volgende keer beter."
+
+#, java-format
+msgid "You are good on {0} of your {1} goals."
+msgstr "U bent binnen {0} van de {1} budgetten gebleven."
+
+msgid "Check it out!"
+msgstr "Bekijk het nu!"
+
+#, java-format
+msgid "You have spent {0} during last week."
+msgstr "U heeft de afgelopen week {0} uitgegeven."
+
+msgid "Share me"
+msgstr "Deel mij"
+
+msgid "Card fees"
+msgstr "Kosten voor pasgebruik"
+
+msgid "Cash withdrawal fees"
+msgstr "Kosten voor geldopname"
+
+msgid "Administration fees"
+msgstr "Kosten voor administratie"
+
+#, java-format
+msgid "You have payed at least {0} in bank fees so far this year. That is equal to the average Tink user."
+msgstr "U heeft dit jaar tot nu toe minimaal {0} aan bankkosten betaald. Dat is gelijk aan wat anderen betaalden."
+
+#, java-format
+msgid "You have payed at least {0} in bank fees so far this year. That is {1} more than the average Tink user."
+msgstr "U heeft dit jaar tot nu toe minimaal {0} aan bankkosten betaald. Dat is {1} meer dan wat anderen betaalden."
+
+#, java-format
+msgid "You have payed at least {0} in bank fees so far this year. That is {1} less than the average Tink user."
+msgstr "U heeft dit jaar tot nu toe minimaal {0} aan bankkosten betaald. Dat is {1} minder dan wat anderen betaalden."
+
+#, java-format
+msgid "{0} overspent"
+msgstr "{0} teveel uitgegeven"
+
+#, java-format
+msgid "{0} left"
+msgstr "{0} over"
+
+#, java-format
+msgid "of {0}"
+msgstr "van {0}"
+
+#, java-format
+msgid "{0} above avg."
+msgstr "{0} meer dan normaal"
+
+#, java-format
+msgid "{0} below avg."
+msgstr "{0} minder dan normaal"
+
+msgid "Biggest purchase"
+msgstr "Grootste uitgave"
+
+msgid "Total expenses"
+msgstr "Totale uitgaven"
+
+#, java-format
+msgid "{0} over avg."
+msgstr "{0} meer dan normaal"
+
+msgid "Unusual spending"
+msgstr "Ongebruikelijke uitgaven"
+
+msgid "normally"
+msgstr "normaal"
+
+msgid "Start wizard now"
+msgstr "Start de wizard nu"
+
+msgid "Improve categorization"
+msgstr "Verbeter categorisatie"
+
+#, java-format
+msgid "You can reach {0}% by categorizing one additional transaction."
+msgid_plural "You can reach {0}% by categorizing {1} additional transactions."
+msgstr[0] "Als u nog 1 transactie categoriseert, bereikt u {0}%."
+msgstr[1] "Als u nog {1} transacties meer categoriseert, bereikt u {0}%."
+
+#, java-format
+msgid "{0} incomes"
+msgstr "{0} inkomsten"
+
+#, java-format
+msgid "{0} expenses"
+msgstr "{0} uitgaven"
+
+#, java-format
+msgid "{0} large expenses"
+msgstr "{0} grote uitgaven"
+
+#, java-format
+msgid "{0} bank fees"
+msgstr "{0} bankkosten"
+
+msgid "Weekly summary"
+msgstr "Weekoverzicht"
+
+msgid "Expenses this week"
+msgstr "Uitgaven deze week"
+
+msgid "average"
+msgstr "gemiddeld"
+
+msgid "You have no registered address"
+msgstr "U heeft geen geregistreerd adres"
+
+msgid "You have no detected double charges"
+msgstr "Wij hebben geen dubbel afschrijvingen gevonden"
+
+msgid "You have no registered personal data"
+msgstr "U heeft geen geregistreerde persoonlijke gegevens"
+
+msgid "You have no extra frequent activity on any of your accounts"
+msgstr "Vandaag gebruikt u uw rekeningen niet meer dan gebruikelijk."
+
+msgid "Your registered address is"
+msgstr "Uw geregistreerde adres is"
+
+msgid ", "
+msgstr ", "
+
+msgid "Your personal data is"
+msgstr "Uw persoonlijke gegevens zijn"
+
+msgid "You have a possible double charge from"
+msgstr "U heeft mogelijk een dubbele afschrijving van"
+
+msgid "This day you have an extra frequent activity on you account"
+msgstr "Vandaag gebruikt u uw rekening veel"
+
+msgid "%s with %s transactions"
+msgstr "%s met %s uitgaven"
+
+msgid "You have an unusual large expense from"
+msgstr "U heeft een ongebruikelijk grote uitgave van"
+
+msgid "You have an unusual large withdrawal with amount"
+msgstr "U heeft een ongebruikelijke hoeveelheid geld opgenomen"
+
+msgid "You made a purchase at"
+msgstr "U heeft iets gekocht bij"
+
+msgid "Tax return"
+msgstr "Belasting terruggave"
+
+#, java-format
+msgid "Income year {0}"
+msgstr "Inkomsten jaar {0}"
+
+msgid "Registered address"
+msgstr "Geregistreerd adres"
+
+msgid "Account activity"
+msgstr "Account activiteit"
+
+msgid "Identity"
+msgstr "Identiteit"
+
+msgid "Large withdrawal"
+msgstr "Grote geldopname"
+
+msgid "Fraudulent merchant"
+msgstr "Frauduleus bedrijf"
+
+msgid "Every day Tink scans all of your transactions to find things that differ from you normal behaviour and things we want to keep you extra alerted on. In this case we have notices there was an unusual large expense on your account."
+msgstr "Elke dag scant ABN AMRO uw uitgaven om te kijken of er dingen gebeuren die niet passen bij uw gebruik. Hierdoor kunnen we u waarschuwen als er afwijkende betalingen plaatsvinden. In dit geval hebben we een ongebruikelijk grote uitgave gezien op uw rekening."
+
+msgid "Every day Tink scans all of your transactions to find things that differ from you normal behaviour and things we want to keep you extra alerted on. In this case we have notices there was an unusual large cash withdrawal on your account."
+msgstr "Elke dag scant ABN AMRO uw transacties om te kijken of er dingen gebeuren die niet passen bij uw gebruik. Hierdoor kunnen we u waarschuwen als er afwijkende transacties plaatsvinden. In dit geval hebben we een ongebruikelijke grote geldopname gezien op uw rekening."
+
+msgid "under 18 years old"
+msgstr "Onder de 18 jaar oud"
+
+msgid "low solvency"
+msgstr "Lage kredietwaardigheid"
+
+msgid "medium solvency"
+msgstr "Gemiddelde kredietwaardigheid"
+
+msgid "high solvency"
+msgstr "Hoge kredietwaardigheid"
+
+msgid "very high solvency"
+msgstr "Uitstekende kredietwaardigheid"
+
+msgid "Is this correct?"
+msgstr "Is dit correct?"
+
+msgid "Was this you?"
+msgstr "Was u dit?"
+
+msgid "Is this OK?"
+msgstr "Is dit oké?"
+
+msgid "Yes"
+msgstr "Ja"
+
+msgid "No"
+msgstr "Nee"
+
+msgid "OK"
+msgstr "Oké"
+
+msgid "Name"
+msgstr "Naam"
+
+msgid "Address"
+msgstr "Adres"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Vat"
+msgstr "Btw"
+
+msgid "Type"
+msgstr "Type"
+
+msgid "Nbr employees"
+msgstr "Aantal werknemers"
+
+msgid "Profit after tax"
+msgstr "Winst na Belasting"
+
+msgid "Net profit"
+msgstr "Netto winst"
+
+msgid "Total capital"
+msgstr "Totale kapitaal"
+
+msgid "Gross Profit Margin"
+msgstr "Brutowinstmarge"
+
+msgid "Solidity"
+msgstr "Betrouwbaarheid"
+
+msgid "Director"
+msgstr "Directeur"
+
+msgid "New events"
+msgstr "Nieuwe gebeurtenissen"
+
+msgid "You have new events in your feed"
+msgstr "U heeft nieuwe gebeurtenissen in uw tijdlijn"
+
+msgid "Updated."
+msgstr "Bijgewerkt."
+
+#, java-format
+msgid "Analyzed {0}."
+msgstr "Geanalyseerd {0}."
+
+#, java-format
+msgid "Loaded one transaction"
+msgid_plural "Loaded {0} transactions"
+msgstr[0] "{0} transactie geladen"
+msgstr[1] "{0} transacties geladen"
+
+msgid "You're using a version of the app that is too old. Please update to the latest version in order to login to your Tink account."
+msgstr "U gebruikt een versie van de app die te oud is. Download de nieuwste versie van de app om in te loggen."
+
+msgid "Unable to fetch accounts."
+msgstr "Er kunnen geen rekeningen opgehaald worden."
+
+msgid "accounts"
+msgstr "rekeningen"
+
+msgid "transactions"
+msgstr "Betalingen"
+
+msgid "amount spent in each category"
+msgstr "bedrag uitgegeven in elke categorie"
+
+msgid "number of purchases in each category"
+msgstr "aantal aankopen in elke categorie"
+
+msgid "amount spent at each merchant"
+msgstr "bedrag uitgegeven bij elke winkel"
+
+msgid "number of purchases at each merchant"
+msgstr "aantal aankopen bij elke winkel"
+
+msgid "bank connections"
+msgstr "bank connecties"
+
+msgid "user profile"
+msgstr "gebruikersprofiel"
+
+msgid "budgets and savings goals"
+msgstr "budgetten en spaardoelen"
+
+msgid "documents"
+msgstr "documenten"
+
+msgid "payment options"
+msgstr "betaalopties"
+
+msgid "statistics"
+msgstr "statistieken"
+
+#, java-format
+msgid "View your {0}"
+msgstr "Bekijk uw {0}"
+
+#, java-format
+msgid "Update your {0}"
+msgstr "Werk jouw {0} bij"
+
+msgid "Lunch"
+msgstr "Lunch"
+
+msgid "Restaurants"
+msgstr "Restaurants"
+
+msgid "Weekly groceries"
+msgstr "Wekelijkse boodschappen"
+
+msgid "Groceries"
+msgstr "Boodschappen"
+
+msgid "Small things"
+msgstr "Kleine dingen"
+
+msgid "What a night"
+msgstr "Wat een nacht"
+
+msgid "Bars"
+msgstr "Bars"
+
+msgid "Cash from the wall"
+msgstr "Geld uit de muur"
+
+msgid "Withdrawals"
+msgstr "Geldopnames"
+
+msgid "Going out"
+msgstr "Uitgaan"
+
+msgid "Morning regrets"
+msgstr "Wat een avond"
+
+#, java-format
+msgid "Tagged with {0}"
+msgstr "Getagd met {0}"
+
+msgid "Apps"
+msgstr "Apps"
+
+msgid "Source"
+msgstr "Bron"
+
+msgid "Where does this information come from?"
+msgstr "Waar komt deze informatie vandaan?"
+
+msgid "What can I do if this looks weird?"
+msgstr "Wat kan ik doen als dit er gek uitziet?"
+
+msgid "No thanks, I'd prefer to not get any e-mails from Tink."
+msgstr "Nee bedankt, ik ontvang liever geen e-mail van Grip."
+
+msgid "Monthly e-mail summarizing the last month's activity on my account."
+msgstr "Maandelijkse e-mail met inzicht in het gebruik van mijn rekening"
+
+msgid "When there are issues with my bank or credit card connection."
+msgstr "Wanneer er problemen zijn met de verbinding met de bank."
+
+msgid "When Tink has new and exciting product updates."
+msgstr "Wanneer xxx nieuwe updates heeft."
+
+msgid "Follow the money"
+msgstr "Volg het geld"
+
+msgid "Manage your Tink subscriptions"
+msgstr "Beheer uw Grip aanmeldingen"
+
+msgid "Save"
+msgstr "Sla op"
+
+msgid "Settings saved."
+msgstr "Instellingen opgeslagen."
+
+msgid "Transfers"
+msgstr "Transfers"
+
+msgid "Home"
+msgstr "Wonen"
+
+msgid "Rent"
+msgstr "Huur"
+
+msgid "Mortgage"
+msgstr "Hypotheek"
+
+msgid "Communications"
+msgstr "TV, Internet & Telefonie"
+
+msgid "Utilities"
+msgstr "Energie & Water"
+
+msgid "Insurance & Fees"
+msgstr "Verzekeringen"
+
+msgid "Services"
+msgstr "Services"
+
+msgid "Taxes"
+msgstr "Belastingen"
+
+msgid "Home Other"
+msgstr "Wonen overig"
+
+msgid "House & Garden"
+msgstr "Huis & Tuin"
+
+msgid "Repairs"
+msgstr "Onderhoud"
+
+msgid "Fitment"
+msgstr "Inrichting"
+
+msgid "Garden"
+msgstr "Tuin"
+
+msgid "House & Garden Other"
+msgstr "Huis & Tuin overig"
+
+msgid "Food & Drinks"
+msgstr "Eten & Drinken"
+
+msgid "Coffee & Lunch"
+msgstr "Koffie & Lunch"
+
+msgid "Alcohol & Tobacco"
+msgstr "Alcohol & Tabak"
+
+msgid "Food & Drinks Other"
+msgstr "Eten & Drinken overig"
+
+msgid "Transport"
+msgstr "Vervoer"
+
+msgid "Car"
+msgstr "Auto & Brandstof"
+
+msgid "Public Transport"
+msgstr "Openbaar Vervoer"
+
+msgid "Airfare"
+msgstr "Vliegtickets"
+
+msgid "Taxi"
+msgstr "Taxi"
+
+msgid "Transport Other"
+msgstr "Vervoer overig"
+
+msgid "Shopping"
+msgstr "Winkelen"
+
+msgid "Clothes & Accessories"
+msgstr "Kleding & Accessoires"
+
+msgid "Electronics"
+msgstr "Electronica"
+
+msgid "Books & Newspapers"
+msgstr "Boeken & Kranten"
+
+msgid "Gifts"
+msgstr "Cadeaus"
+
+msgid "Shopping Other"
+msgstr "Winkelen overig"
+
+msgid "Leisure"
+msgstr "Vrije tijd"
+
+msgid "Outings"
+msgstr "Uitjes"
+
+msgid "Hobby & Sports"
+msgstr "Hobby & Sport"
+
+msgid "Accommodation"
+msgstr "Overnachtingen"
+
+msgid "Lotteries"
+msgstr "Kansspelen"
+
+msgid "Leisure Other"
+msgstr "Vrije tijd overig"
+
+msgid "Health & Beauty"
+msgstr "Health & Beauty"
+
+msgid "Healthcare & Pharmacy"
+msgstr "Zorg & Apotheek"
+
+msgid "Daily Care"
+msgstr "Dagelijkse verzorging"
+
+msgid "Eyecare"
+msgstr "Oogverzorging"
+
+msgid "Beauty"
+msgstr "Beauty"
+
+msgid "Health & Beauty Other"
+msgstr "Health & Beauty overig"
+
+msgid "Other"
+msgstr "Overig"
+
+msgid "Outlays"
+msgstr "Voorschot"
+
+msgid "Kids"
+msgstr "Kinderen"
+
+msgid "Pets"
+msgstr "Dieren"
+
+msgid "Charity"
+msgstr "Goede doelen"
+
+msgid "Education"
+msgstr "Educatie"
+
+msgid "Uncategorized"
+msgstr "Geen categorie"
+
+msgid "Salary"
+msgstr "Salaris"
+
+msgid "Pension"
+msgstr "Pensioen"
+
+msgid "Reimbursements"
+msgstr "Terugbetalingen"
+
+msgid "Benefits"
+msgstr "Uitkeringen & Toeslagen"
+
+msgid "Financial"
+msgstr "Uit vermogen"
+
+msgid "Other Income"
+msgstr "Overig inkomen"
+
+msgid "Savings"
+msgstr "Sparen"
+
+msgid "Exclude"
+msgstr "Sluit uit"
+
+msgid "Coffee"
+msgstr "Koffie"
+
+msgid "Hobby & Sports Equipment"
+msgstr "Hobby & Sport"
+
+msgid "Books & Games"
+msgstr "Boeken & Spellen"
+
+msgid "Culture & Entertainment"
+msgstr "Cultuur & Entertainment"
+
+msgid "Hobby"
+msgstr "Hobby"
+
+msgid "Sports & Fitness"
+msgstr "Sport & Fitness"
+
+msgid "Vacation"
+msgstr "Vakantie"
+
+msgid "Healthcare"
+msgstr "Zorg & Verzorging"
+
+msgid "Pharmacy"
+msgstr "Apotheek"
+
+#, java-format
+msgid "{0} new event from {1}"
+msgid_plural "{0} new events from i.a. {1}"
+msgstr[0] "{0} nieuwe gebeurtenis van {1}"
+msgstr[1] "{0} nieuwe gebeurtenissen van o.a. {1}"
+
+msgid "You have a new event that needs your attention."
+msgid_plural "You have new events that need your attention."
+msgstr[0] "U heeft een nieuwe gebeurtenis"
+msgstr[1] "U heeft nieuwe gebeurtenissen"
+
+msgid "Updating..."
+msgstr "Bijwerken ..."
+
+msgid "Authentication error. Please check your credentials."
+msgstr "Authenticatie fout. Controleer jouw gegevens."
+
+msgid "Temporary error. Please try again later."
+msgstr "Tijdelijke fout. Probeer het later opnieuw."
+
+msgid "You need to update your credentials."
+msgstr "Werk uw inloggegevens bij"
+
+msgid "You haven't refreshed your transactions in a while."
+msgstr "U heeft uw betalingen al een tijd niet bijgewerkt"
+
+msgid "Payday!"
+msgstr "Betaaldag!"
+
+msgid "Have you gotten your salary today?"
+msgstr "Heeft u vandaag uw salaris ontvangen?"
+
+msgid "hello@tinkapp.com"
+msgstr "hello@tinkapp.com"
+
+msgid "(missing description)"
+msgstr "(ontbrekende omschrijving)"
+
+#, java-format
+msgid "Analyzed {0} of {1} transactions..."
+msgstr "{0} van de {1} uitgaven geanalyseerd..."
+
+msgid "Same as previous month"
+msgstr "Gelijk aan vorige maand"
+
+#, java-format
+msgid "{0} less than previous month"
+msgstr "{0} minder dan vorige maand"
+
+#, java-format
+msgid "{0} more than previous month"
+msgstr "{0} meer dan vorige maand"
+
+#, java-format
+msgid "{0} expense"
+msgstr "{0} uitgave"
+
+#, java-format
+msgid "{0} income"
+msgstr "{0} inkomen"
+
+#, java-format
+msgid "{0} overview"
+msgstr "{0} overzicht"
+
+msgid "This week"
+msgstr "Deze week"
+
+#, java-format
+msgid "No transactions are available for credit card {0}. Please go to ‘Settings’ > ‘Accounts’ in the Mobile Banking app to add this credit card. If your credit card transactions are displayed in Mobile Banking, they will also be available for Grip."
+msgid_plural "No transactions are available for credit cards {0}. Please go to ‘Settings’ > ‘Accounts’ in the Mobile Banking app to add these credit cards. If your credit cards transactions are displayed in Mobile Banking, they will also be available for Grip."
+msgstr[0] "Transacties voor creditcard {0} kunnen niet getoond worden. Ga in de Mobiel Bankieren app naar 'Beheer' > 'Rekeningen' om deze creditcard toe te voegen. Daarna ziet u ook in Grip de transacties van deze creditcard."
+msgstr[1] "Transacties voor creditcards {0} kunnen niet getoond worden. Ga in de Mobiel Bankieren app naar 'Beheer' > 'Rekeningen' om deze creditcard toe te voegen. Daarna ziet u ook in Grip de transacties van deze creditcards."
+
+#, java-format
+msgid "A temporary error occurred in the communication between ABN and ICS for the credit card {0}. We will automatically refresh data as soon as the connection is available."
+msgid_plural "A temporary error occurred in the communication between ABN and ICS for the credit cards {0}. We will automatically refresh data as soon as the connection is available."
+msgstr[0] "Voor creditcard {0} kunnen transacties tijdelijk niet worden bijgewerkt. Uw ABN AMRO Credit Card transacties worden automatisch bijgewerkt, zodra de verbinding is hersteld."
+msgstr[1] "Voor creditcards {0} kunnen transacties tijdelijk niet worden bijgewerkt. Uw ABN AMRO Credit Card transacties worden automatisch bijgewerkt, zodra de verbinding is hersteld."
+
+#, java-format
+msgid "Expenses Week {0}"
+msgstr "Uitgaven week {0}"
+
+#, java-format
+msgid "You spend on average {0} per day."
+msgstr "Je geeft gemiddeld {0} per dag uit."
+
+msgid "Do you like Tink?"
+msgstr "Wat fijn dat u Grip gebruikt!"
+
+msgid "Rate the app and leave a comment in the App Store!"
+msgstr "We zijn benieuwd wat u van de app vindt. Wilt u een beoordeling geven?"
+
+msgid "Rate the app and leave a comment in the Play Store!"
+msgstr "We zijn benieuwd wat u van de app vindt. Wilt u een beoordeling geven?"
+
+msgid "No, thanks"
+msgstr "Nee, bedankt"
+
+msgid "Sure!"
+msgstr "Ja, graag"
+
+msgid "We are curious to know what you think about the app. Would you like to rate it?"
+msgstr "We zijn benieuwd wat u van de app vindt. Wilt u een beoordeling geven?"
+
+msgid "Do you like Grip?"
+msgstr "Wat fijn dat u Grip gebruikt!"
+
+msgid "Your verification code is"
+msgstr "Je verificatiecode is"
+
+msgid "Mondays"
+msgstr "maandag"
+
+msgid "Tuesdays"
+msgstr "dinsdag"
+
+msgid "Wednesdays"
+msgstr "woensdag"
+
+msgid "Thursdays"
+msgstr "donderdag"
+
+msgid "Fridays"
+msgstr "vrijdag"
+
+msgid "Saturdays"
+msgstr "zaterdag"
+
+msgid "Sundays"
+msgstr "zondag"
+
+msgid "Incomes"
+msgstr "Inkomsten"
+
+msgid "Left to spend"
+msgstr "Over van inkomsten"
+
+msgid "Unusual account activity"
+msgstr "Ongewone rekening activiteit"
+
+msgid "Weekly"
+msgstr "Wekelijks"
+
+msgid "Monthly"
+msgstr "Maandelijks"
+
+msgid "Expenses over goal"
+msgstr "Uitgaven over budget"
+
+msgid "Income & Expenses"
+msgstr "Inkomsten & Uitgaven"
+
+msgid "Irregularities"
+msgstr "Onregelmatigheden"
+
+msgid "Summaries"
+msgstr "Samenvatting"
+
+msgid "Phone number is not valid."
+msgstr "Telefoonnummer niet geldig"
+
+msgid "The last month you have spent the most money on this."
+msgstr "De laatste maand heb je hieraan het meeste geld uitgegeven."
+
+msgid "Would you like to spend less or more in these categories? By settings budgets you get more insights and control."
+msgstr "Wil je minder of juist meer geld uitgeven in deze categorieën? Door budgetten in te stellen krijg je meer inzicht en controle."
+
+#, java-format
+msgid "The last months you have spend the most on {0}: {1}."
+msgstr "De laatste maanden gaf je op {0} het meeste uit: {1}."
+
+msgid "You have each month a nice amount left."
+msgstr "Je houdt elke maand een mooi bedrag over."
+
+msgid "Maybe it is a good idea to transfer this amount to a savings account. In this way you save easily money for vacation or unexpected expenses."
+msgstr "Misschien een idee om dit bedrag op een spaarrekening te zetten. Zo spaar je eenvoudig voor bijvoorbeeld vakantie of onverwachte uitgaven."
+

@@ -1,0 +1,111 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: insights
+  namespace: insights
+  labels:
+    app: insights-service
+spec:
+  replicas: {{ default "2" .Values.replicas }}
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: insights-service
+  template:
+    metadata:
+      labels:
+        app: insights-service
+      annotations:
+        # Force rollout of new pods if the config has changed
+        checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
+        prometheus.io/port: '9130'
+        prometheus.io/scrape: 'true'
+    spec:
+      initContainers:
+      # Script to replace placeholder passwords with the real passwords
+      - name: add-secrets-to-config
+        command:
+          - "bash"
+          - "-c"
+          - "cp /mnt/config-volume/* /mnt/altered-config-volume && \
+             sed -i \"s/KEYSTORE_PASSWORD/$KEYSTORE_PWD/g\" /mnt/altered-config-volume/insights-server.yml && \
+             sed -i \"s/CASSANDRA_PASSWORD/$CASSANDRA_PWD/g\" /mnt/altered-config-volume/insights-server.yml && \
+             sed -i \"s/MYSQL_PASSWORD/$MYSQL_PWD/g\" /mnt/altered-config-volume/insights-server.yml"
+        image: gcr.io/tink-containers/debian:stretch
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: config-volume
+          mountPath: /mnt/config-volume
+        - name: altered-config-volume
+          mountPath: /mnt/altered-config-volume
+        env:
+        - name: CASSANDRA_PWD
+          valueFrom:
+            secretKeyRef:
+              name: insights-secrets
+              key: cassandra-password
+        - name: MYSQL_PWD
+          valueFrom:
+            secretKeyRef:
+              name: insights-secrets
+              key: maindb-password
+        - name: KEYSTORE_PWD
+          valueFrom:
+            secretKeyRef:
+              name: insights-secrets
+              key: keystore-password
+      containers:
+      - name: tink-backend-insights
+        image: gcr.io/tink-containers/tink-backend-insights:{{ .Files.Get "tink-versions/tink-backend-insights.txt" | default "latest" }}
+        imagePullPolicy: IfNotPresent
+
+        command:
+        - "java"
+        - "-jar"
+        - "-Xmx{{ default "256m" .Values.heapSize }}"
+        - "-XX:-OmitStackTraceInFastThrow"
+        - "-Dnetworkaddress.cache.ttl=60"
+        - "-XX:+ExitOnOutOfMemoryError"
+        - "/usr/share/tink-backend-insights/insights-service.jar"
+        - "server"
+        - "/etc/tink/insights-server.yml"
+
+        resources:
+          requests:
+            memory: {{ default "700Mi" .Values.podMemoryRequest }}
+            cpu: {{ default "1000m" .Values.podCpuRequest }}
+          limits:
+            memory: {{ default "1Gi" .Values.podMemoryLimit }}
+            cpu: {{ default "1500m" .Values.podCpuLimit }}
+
+        ports:
+        - name: https-api
+          containerPort: 443
+        {{- if .Values.insecureHttpServer }}
+        - name: http-api
+          containerPort: 80
+        {{- end }}
+        - name: metrics
+          containerPort: 9130
+        livenessProbe:
+          httpGet:
+            path: /insights/monitor/ping
+            port: 80
+          periodSeconds: 3
+          failureThreshold: 3
+          timeoutSeconds: 1
+          initialDelaySeconds: 120
+        volumeMounts:
+        - name: altered-config-volume
+          mountPath: /etc/tink
+      volumes:
+      - name: config-volume
+        configMap:
+          name: insights-configuration
+      # ConfigMaps are mounted as a read-only filesystem.
+      # Before we can edit the config in rumtime we need to copy the files
+      # to a fs with read-write permissions.
+      - name: altered-config-volume
+        emptyDir: {}
+      imagePullSecrets:
+        - name: tink-containers

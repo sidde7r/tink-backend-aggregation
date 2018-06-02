@@ -1,0 +1,215 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "se.tink.backend.firehose.v1.models";
+option java_outer_classname = "Protos";
+
+message Credential {
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        STATUS_CREATED = 1;
+        STATUS_AUTHENTICATING = 2;
+        STATUS_UPDATING = 3;
+        STATUS_UPDATED = 4;
+        STATUS_TEMPORARY_ERROR = 5;
+        STATUS_AUTHENTICATION_ERROR = 6;
+        STATUS_PERMANENT_ERROR = 7;
+        STATUS_AWAITING_MOBILE_BANKID_AUTHENTICATION = 8;
+        STATUS_AWAITING_SUPPLEMENTAL_INFORMATION = 9;
+        STATUS_AWAITING_THIRD_PARTY_APP_AUTHENTICATION = 10;
+        STATUS_DISABLED = 11;
+    }
+
+    enum Type {
+        TYPE_UNKNOWN = 0;
+        TYPE_PASSWORD = 1;
+        TYPE_MOBILE_BANKID = 2;
+        TYPE_KEYFOB = 3;
+        TYPE_FRAUD = 4;
+    }
+
+    string id = 1;
+    string user_id = 2;
+    string provider_name = 3;
+    Type type = 4;
+    Status status = 5;
+    string status_payload = 6;
+    int64 status_updated = 7;
+    int64 updated = 8;
+    map<string, string> fields = 9;
+    string supplemental_information = 10;
+}
+
+message Account {
+    enum Type {
+        TYPE_UNKNOWN = 0;
+        TYPE_CHECKING = 1;
+        TYPE_SAVINGS = 2;
+        TYPE_INVESTMENT = 3;
+        TYPE_MORTGAGE = 4;
+        TYPE_CREDIT_CARD = 5;
+        TYPE_LOAN = 6;
+        TYPE_DUMMY = 7;
+        TYPE_PENSION = 8;
+        TYPE_OTHER = 9;
+        TYPE_EXTERNAL = 10;
+    }
+
+    string id = 1;
+    string user_id = 2;
+    double balance = 3;
+    string account_number = 4;
+    string credentials_id = 5;
+    bool excluded = 6;
+    bool favored = 7;
+    string name = 8;
+    double ownership = 9;
+    Type type = 10;
+    bool user_modified_excluded = 11;
+    bool user_modified_name = 12;
+    bool user_modified_type = 13;
+    string icon_url = 14;
+    string banner_url = 15;
+    bool closed = 16;
+    repeated string identifiers = 17;
+}
+
+message FollowItem {
+    enum Type {
+        TYPE_UNKNOWN = 0;
+        TYPE_EXPENSES = 1;
+        TYPE_SEARCH = 2;
+        TYPE_SAVINGS = 3;
+    }
+    string id = 1;
+    Type type = 2;
+    string name = 3;
+    string criteria = 4;
+    int64 created_date = 5;
+}
+
+message Period {
+    bool clean = 1;
+    string name = 2;
+    Resolution.Type resolution = 3;
+    int64 start_date = 4;
+    int64 end_date = 5;
+}
+
+message Resolution {
+    enum Type {
+        TYPE_UNKNOWN = 0;
+        TYPE_DAILY = 1;
+        TYPE_MONTHLY = 2;
+        TYPE_MONTHLY_ADJUSTED = 3;
+        TYPE_YEARLY = 4;
+        TYPE_WEEKLY = 5;
+        TYPE_ALL = 6;
+    }
+}
+
+message Statistic {
+    string description = 1;
+    string payload = 2;
+    string period = 3;
+    Resolution.Type resolution = 4;
+    string type = 5;
+    string user_id = 6;
+    double value = 7;
+}
+
+message Transaction {
+    enum Type {
+        TYPE_UNKNOWN = 0;
+        TYPE_DEFAULT = 1;
+        TYPE_CREDIT_CARD = 2;
+        TYPE_TRANSFER = 3;
+        TYPE_PAYMENT = 4;
+        TYPE_WITHDRAWAL = 5;
+        TYPE_TRAINING = 6;
+    }
+
+    string account_id = 1;
+    double amount = 2;
+    string category_id = 3;
+    Category.Type category_type = 4;
+    string credentials_id = 5;
+    int64 date = 6;
+    string description = 7;
+    string formatted_description = 8;
+    string id = 9;
+    int64 last_modified = 10;
+    double original_amount = 11;
+    string notes = 12;
+    int64 original_date = 13;
+    string original_description = 14;
+    string payload_serialized = 15;
+    bool pending = 16;
+    int64 timestamp = 17;
+    Type type = 18;
+    string user_id = 19;
+    string merchant_id = 20;
+    bool upcoming = 21;
+}
+
+message Category {
+    enum Type {
+        TYPE_UNKNOWN = 0;
+        TYPE_INCOME = 1;
+        TYPE_EXPENSES = 2;
+        TYPE_TRANSFERS = 3;
+    }
+}
+
+message SignableOperation {
+    enum Type {
+        TYPE_UNKNOWN = 0;
+        TYPE_TRANSFER = 1;
+        TYPE_ACCOUNT_CREATE = 2;
+        TYPE_APPLICATION = 3;
+    }
+
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        STATUS_CREATED = 1;
+        STATUS_EXECUTING = 2;
+        STATUS_AWAITING_CREDENTIALS = 3;
+        STATUS_CANCELLED = 4;
+        STATUS_FAILED = 5;
+        STATUS_EXECUTED = 6;
+    }
+
+    int64 created = 1;
+    string id = 2;
+    Status status = 3;
+    string status_message = 4;
+    Type type = 5;
+    string underlying_id = 6;
+    int64 updated = 7;
+    string user_id = 8;
+    string credentials_id = 9;
+}
+
+message UserConfiguration {
+    repeated string flags = 1;
+    I18NConfiguration i18n_configuration = 2;
+
+    message I18NConfiguration {
+        string currency_code = 1;
+        string locale_code = 2;
+        string market_code = 3;
+        string timezone_code = 4;
+    }
+}
+
+message Activity {
+    int64 date = 2;
+    string id = 3;
+    double importance = 4;
+    string key = 5;
+    string message = 6;
+    string title = 7;
+    string type = 8;
+    string user_id = 9;
+    string content = 15;
+}

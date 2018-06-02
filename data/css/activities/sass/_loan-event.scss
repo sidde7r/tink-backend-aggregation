@@ -1,0 +1,192 @@
+.loan-event-plural
+{
+  padding: 0;
+
+  .loan-event-plural-header-only {
+    text-align: left;
+
+    .header {
+      padding: 5px 0 0 0;
+    }
+
+    .left-header-group
+    {
+      float: left;
+      overflow-wrap: normal;
+      width: 75%;
+    }
+
+    .right-header-group
+    {
+      float: right;
+      overflow-wrap: normal;
+      width: 25%;
+    }
+
+    .icon-circle {
+      &.critical {
+        transform: rotate(90deg)
+      }
+      &.positive {
+        transform: rotate(-90deg)
+      }
+    }
+  }
+
+  .header,
+  .subtext {
+    padding: 0;
+    margin: 0;
+  }
+
+  .expanded-group
+  {
+    max-height: 0px;
+    overflow: hidden;
+  }
+
+  .from-to
+  {
+    .arrow
+    {
+      font-family: tink-symbols, 'Tink Symbols';
+      font-size: 9px;
+      margin: 0 6px;
+    }
+
+    .from, .to
+    {
+      font-family: $font-light, 'proxima-light', ProximaNovaA-Light, sans-serif;
+      font-weight: $weight-light;
+    }
+  }
+}
+
+.loan-event {
+
+  .icon-circle {
+    &.critical {
+      transform: rotate(90deg)
+    }
+    &.positive {
+      transform: rotate(-90deg)
+    }
+  }
+}
+
+.loan-events {
+
+  .divider-wrapper
+  {
+    margin-top: 0;
+    margin-bottom: 0;
+
+    .divider
+    {
+      margin: 0 0 0;
+    }
+  }
+
+  .loan-events-container
+  {
+    padding: 0px;
+  }
+
+  .expanded-loan-event
+  {
+    position: relative;
+    margin: 0 0 0 0;
+    padding: 13px $padding 16px;
+    border-top: solid .5px rgba(black, 0.1);
+  }
+
+  .expanded-button
+  {
+    position: relative;
+    margin: 0 0 0 0;
+    padding: 11px $padding 2px;
+    border-top: solid .5px rgba(black, 0.1);
+  }
+
+  .left-header-group
+  {
+    float: left;
+    margin: 0px 0 0 -30px;
+    width: 70%;
+
+    .left-header-margin
+    {
+      padding-right: 38px;
+      padding-bottom: 30px;
+      float: left;
+    }
+
+    .header
+    {
+      font-family: $font-regular, ProximaNovaA-Regular, proxima, sans-serif;
+      font-weight: $weight-regular;
+      font-size: 15px;
+      line-height: 18px;
+      height: 18px;
+      padding-left: 40px;
+    }
+
+    .subtext
+    {
+      line-height: 12px;
+      margin-top: 0px;
+      padding-left: 40px;
+      float: left;
+    }
+  }
+
+  .right-header-group
+  {
+    margin: 0;
+    width: 30%;
+    float: right;
+
+    .header
+    {
+      font-family: $font-light, ProximaNovaA-Light, proxima-light, sans-serif;
+      font-weight: $weight-light;
+      font-size: 15px;
+      line-height: 15px;
+      text-align: right;
+    }
+
+    .subtext
+    {
+      margin-top: 0px;
+      line-height: 12px;
+    }
+  }
+
+  .subtext
+  {
+    font-family: $font-light, 'proxima-light', ProximaNovaA-Light, sans-serif;
+    font-weight: $weight-light;
+    font-size: 12px;
+    color: $text-color;
+  }
+
+  .icon-circle
+  {
+    &.critical {
+      transform: rotate(90deg)
+    }
+    &.positive {
+      transform: rotate(-90deg)
+    }
+    margin: 3px 7px 0 3px;
+    height:24px;
+    width:24px;
+    line-height: 24px;
+    font-size: 12px;
+    color: white;
+    border-radius: 100%;
+    text-align: center;
+  }
+
+
+}

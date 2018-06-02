@@ -1,0 +1,3 @@
+#name	description	interest	fixedRate	minAmount	numMonthsBound	termsUrl
+SBAB Bolån		0.0136	false	0	0	https://www.sbab.se/download/18.9183f62150a371e1a18e7/1447418526793/Allma%CC%88nna+la%CC%8Anevillkor_konsument_151112.pdf
+Landshypotek Bolån		0.015	false	0	0	http://www.landshypotek.se/globalassets/dokument/allmanna-villkor/allmanna-villkor-medlemskonto_140502.pdf

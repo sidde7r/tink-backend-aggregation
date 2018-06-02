@@ -1,0 +1,8 @@
+# coordination-0
+coordinationHosts: 10.21.55.255:2181
+
+cacheHosts: main.ndaaga.0001.euw1.cache.amazonaws.com:11211
+
+searchHosts: 10.21.50.247:9300
+
+applicationCluster: TINK

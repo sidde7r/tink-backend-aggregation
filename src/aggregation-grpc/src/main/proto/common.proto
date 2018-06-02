@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "se.tink.aggregation.grpc";
+
+package common;
+
+message Credential {
+    string id = 1;
+}
+
+message SignableOperation {
+}
+
+message Empty {
+}

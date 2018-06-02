@@ -1,0 +1,326 @@
+[
+  {
+    "id": "6780ad67c4704fd9a1d189a2edcd9a19",
+    "description": "ABN AMRO Grip iOS 0.9.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "nl_NL",
+        "message": "Er is een nieuwe update van de Grip-app beschikbaar. Om Grip te kunnen blijven gebruiken, ga naar de App Store en download de nieuwste versie."
+      },
+      {
+        "locale": "en_US",
+        "message": "There is a new update of the Grip app available. To keep using Grip, go to App Store and download the latest version."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "21fe3bdbede047acbe42956597fb0488",
+    "description": "ABN AMRO Grip iOS 1.0.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "nl_NL",
+        "message": "Er is een nieuwe update van de Grip-app beschikbaar. Om Grip te kunnen blijven gebruiken, ga naar de App Store en download de nieuwste versie."
+      },
+      {
+        "locale": "en_US",
+        "message": "There is a new update of the Grip app available. To keep using Grip, go to App Store and download the latest version."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "1fdd297607b0ca30b6a094bbdaabcd8f",
+    "description": "ABN AMRO Grip iOS 1.1.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "nl_NL",
+        "message": "Er is een nieuwe update van de Grip-app beschikbaar. Om Grip te kunnen blijven gebruiken, ga naar de App Store en download de nieuwste versie."
+      },
+      {
+        "locale": "en_US",
+        "message": "There is a new update of the Grip app available. To keep using Grip, go to App Store and download the latest version."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "450819f61c6243478648eb6a4b75c145",
+    "description": "ABN AMRO Grip iOS 1.1.1",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "nl_NL",
+        "message": "Er is een nieuwe update van de Grip-app beschikbaar. Om Grip te kunnen blijven gebruiken, ga naar de App Store en download de nieuwste versie."
+      },
+      {
+        "locale": "en_US",
+        "message": "There is a new update of the Grip app available. To keep using Grip, go to App Store and download the latest version."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "8c6f5023d68849d5aef3e3af90a2171b",
+    "description": "ABN AMRO Grip iOS 1.2.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "nl_NL",
+        "message": "Er is een nieuwe update van de Grip-app beschikbaar. Om Grip te kunnen blijven gebruiken, ga naar de App Store en download de nieuwste versie."
+      },
+      {
+        "locale": "en_US",
+        "message": "There is a new update of the Grip app available. To keep using Grip, go to App Store and download the latest version."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "5c7bec4d2b554218b2d5ff840e0a3706",
+    "description": "ABN AMRO Grip iOS 1.3.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "nl_NL",
+        "message": "Er is een nieuwe update van de Grip-app beschikbaar. Om Grip te kunnen blijven gebruiken, ga naar de App Store en download de nieuwste versie."
+      },
+      {
+        "locale": "en_US",
+        "message": "There is a new update of the Grip app available. To keep using Grip, go to App Store and download the latest version."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "55cf57e47258404f9bfabcfcd1ae1c7a",
+    "description": "ABN AMRO Grip iOS 1.4.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "nl_NL",
+        "message": "Er is een nieuwe update van de Grip-app beschikbaar. Om Grip te kunnen blijven gebruiken, ga naar de App Store en download de nieuwste versie."
+      },
+      {
+        "locale": "en_US",
+        "message": "There is a new update of the Grip app available. To keep using Grip, go to App Store and download the latest version."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "4c7d590a6b64407ca5180a86e6e56334",
+    "description": "ABN AMRO Grip iOS 1.5.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "nl_NL",
+        "message": "Er is een nieuwe update van de Grip-app beschikbaar. Om Grip te kunnen blijven gebruiken, ga naar de App Store en download de nieuwste versie."
+      },
+      {
+        "locale": "en_US",
+        "message": "There is a new update of the Grip app available. To keep using Grip, go to App Store and download the latest version."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "a5a39774f15e4a0f9db4ed1b95ec9521",
+    "description": "ABN AMRO Grip iOS 1.6.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "nl_NL",
+        "message": "Er is een nieuwe update van de Grip-app beschikbaar. Om Grip te kunnen blijven gebruiken, ga naar de App Store en download de nieuwste versie."
+      },
+      {
+        "locale": "en_US",
+        "message": "There is a new update of the Grip app available. To keep using Grip, go to App Store and download the latest version."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "766b9e36353d46afa29452d2c112c43e",
+    "description": "ABN AMRO Grip iOS 1.7.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "nl_NL",
+        "message": "Er is een nieuwe update van de Grip-app beschikbaar. Om Grip te kunnen blijven gebruiken, ga naar de App Store en download de nieuwste versie."
+      },
+      {
+        "locale": "en_US",
+        "message": "There is a new update of the Grip app available. To keep using Grip, go to App Store and download the latest version."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "377e173f3b5d45da9288bd1b49fe6769",
+    "description": "ABN AMRO Grip iOS 1.8.0",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "ab4dbc7c10b74e2ebdad1c46f053766b",
+    "description": "ABN AMRO Grip iOS 1.8.1",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "88a24b9f506d47e4925680a2bb96bbf0",
+    "description": "ABN AMRO Grip iOS 2.0.0",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "f7584d85beb54e4e9150c70ee03fba67",
+    "description": "ABN AMRO Grip iOS 2.0.1",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "f99468d534ee4afcbca6d63bf83ecf23",
+    "description": "ABN AMRO Grip iOS 2.0.2",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "b8192aab275840f3a56a8ceb725556b1",
+    "description": "ABN AMRO Grip iOS 4.0.0",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "cc40aaf1b7b84a35893a6b8152b897c3",
+    "description": "ABN AMRO Grip Android 1.0.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "nl_NL",
+        "message": "Er is een nieuwe update van de Grip-app beschikbaar. Om Grip te kunnen blijven gebruiken, ga naar de Google Play Store en download de nieuwste versie."
+      },
+      {
+        "locale": "en_US",
+        "message": "There is a new update of the Grip app available. To keep using Grip, go to Google Play Store and download the latest version."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "b58633590e5440909c2ab627a6fd1c6f",
+    "description": "ABN AMRO Grip Android 1.0.1",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "nl_NL",
+        "message": "Er is een nieuwe update van de Grip-app beschikbaar. Om Grip te kunnen blijven gebruiken, ga naar de Google Play Store en download de nieuwste versie."
+      },
+      {
+        "locale": "en_US",
+        "message": "There is a new update of the Grip app available. To keep using Grip, go to Google Play Store and download the latest version."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "f935a6c90b124620a0a7f8465b4e2c56",
+    "description": "ABN AMRO Grip Android 1.0.2",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "nl_NL",
+        "message": "Er is een nieuwe update van de Grip-app beschikbaar. Om Grip te kunnen blijven gebruiken, ga naar de Google Play Store en download de nieuwste versie."
+      },
+      {
+        "locale": "en_US",
+        "message": "There is a new update of the Grip app available. To keep using Grip, go to Google Play Store and download the latest version."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "5d8250488f194c38a70e1fd58c59d444",
+    "description": "ABN AMRO Grip Android 1.1.0",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "nl_NL",
+        "message": "Er is een nieuwe update van de Grip-app beschikbaar. Om Grip te kunnen blijven gebruiken, ga naar de Google Play Store en download de nieuwste versie."
+      },
+      {
+        "locale": "en_US",
+        "message": "There is a new update of the Grip app available. To keep using Grip, go to Google Play Store and download the latest version."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "01457ffd97ab4fd79199218eb01cf6db",
+    "description": "ABN AMRO Grip Android 1.1.1",
+    "allowed": "false",
+    "messages": [
+      {
+        "locale": "nl_NL",
+        "message": "Er is een nieuwe update van de Grip-app beschikbaar. Om Grip te kunnen blijven gebruiken, ga naar de Google Play Store en download de nieuwste versie."
+      },
+      {
+        "locale": "en_US",
+        "message": "There is a new update of the Grip app available. To keep using Grip, go to Google Play Store and download the latest version."
+      }
+    ],
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "c5cf75ab45634aafac10c7b0f4b12bc0",
+    "description": "ABN AMRO Grip Android 1.2.0",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "67760159717e45689c1f16829b33f710",
+    "description": "ABN AMRO Grip Android 1.3.0",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "746f565920ce4e7cab4572de36530560",
+    "description": "ABN AMRO Grip Android 1.4.0",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "4d36c6a5b37a49acb613f34d7bc6ae52",
+    "description": "ABN AMRO Grip Android 1.4.1",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "c9df00f103f24b6a8eb037d8edbed162",
+    "description": "ABN AMRO Grip Android 1.4.2",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "3c8016726da948b898be0e379e22ecff",
+    "description": "ABN AMRO Grip Android 1.4.3",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "077a703ae16a411eb4bdf0cb3f64a67b",
+    "description": "ABN AMRO Grip Android 1.4.4",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  },
+  {
+    "id": "a0af525ef1e344cdade2d094c1df6bc6",
+    "description": "ABN AMRO Grip Android 4.0.0",
+    "allowed": "true",
+    "sessionType": "MOBILE"
+  }
+]

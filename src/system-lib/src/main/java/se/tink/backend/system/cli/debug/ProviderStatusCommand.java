@@ -1,0 +1,81 @@
+package se.tink.backend.system.cli.debug;
+
+import com.google.common.base.Strings;
+import com.google.inject.Injector;
+import io.dropwizard.setup.Bootstrap;
+import net.sourceforge.argparse4j.inf.Namespace;
+import net.sourceforge.argparse4j.inf.Subparser;
+import net.sourceforge.argparse4j.inf.Subparsers;
+import se.tink.backend.common.ServiceContext;
+import se.tink.backend.common.config.ServiceConfiguration;
+import se.tink.backend.common.repository.mysql.main.ProviderRepository;
+import se.tink.backend.core.ProviderStatuses;
+import se.tink.backend.system.cli.CliPrintUtils;
+import se.tink.backend.system.cli.ServiceContextCommand;
+import se.tink.backend.system.cli.debug.provider.ProviderStatusUpdater;
+import se.tink.backend.system.cli.debug.provider.ProviderStatusesFetcher;
+
+public class ProviderStatusCommand extends ServiceContextCommand<ServiceConfiguration> {
+
+    private static final String STATUS_FIELD = "providerStatus";
+    private static final String NAME_FIELD = "providerName";
+    private static final String SHOW_FIELD = "showList";
+    private static final String MARKET_FIELD = "market";
+
+    public ProviderStatusCommand() {
+        super("provider-status",
+                "Change status for a providers or list all current statuses.");
+    }
+
+    @Override
+    public void configure(Subparser subparser) {
+        super.configure(subparser);
+
+        Subparsers subparsers = subparser.addSubparsers();
+
+        Subparser listProviders = subparsers.addParser("list")
+                .description("List provider statuses")
+                .setDefault(SHOW_FIELD, true);
+        listProviders.addArgument("-m", "--market")
+                .dest(MARKET_FIELD)
+                .type(String.class)
+                .required(false)
+                .help("Market to list provider for");
+
+        Subparser updateProvider = subparsers.addParser("update")
+                .description("Update provider status by name")
+                .setDefault(SHOW_FIELD, false);// need to set default otherwise it's a null pointer
+        updateProvider.addArgument("-n", "--name")
+                .dest(NAME_FIELD)
+                .type(String.class)
+                .required(true)
+                .help("Provider name to change status of");
+
+        updateProvider.addArgument("-s", "--status")
+                .dest(STATUS_FIELD)
+                .type(ProviderStatuses.class)
+                .required(true)
+                .help("Status to change provider to");
+    }
+
+    @Override
+    protected void run(Bootstrap<ServiceConfiguration> bootstrap, Namespace namespace,
+            ServiceConfiguration configuration, Injector injector, ServiceContext serviceContext) throws Exception {
+
+        ProviderStatuses providerStatus = namespace.get(STATUS_FIELD);
+        String providerName = namespace.getString(NAME_FIELD);
+        String market = namespace.get(MARKET_FIELD);
+
+        boolean updateProviderStatus = !Strings.isNullOrEmpty(providerName) && providerStatus != null;
+
+        ProviderRepository providerRepository = injector.getInstance(ProviderRepository.class);
+        if (updateProviderStatus) {
+            new ProviderStatusUpdater(providerRepository).update(providerName, providerStatus);
+        }
+        if (namespace.getBoolean(SHOW_FIELD)){
+            new ProviderStatusesFetcher(providerRepository, market).fetch(CliPrintUtils::printTable);
+        }
+
+    }
+
+}

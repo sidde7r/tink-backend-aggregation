@@ -1,0 +1,81 @@
+package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1;
+
+import se.tink.backend.aggregation.nxgen.http.URL;
+
+public class Sparebank1Constants {
+
+    public static final String CID = "cid";
+    public static final String CID_VALUE = "1";
+    public static final String BASE = "https://mobilbank-pm.sparebank1.no/";
+    public static final String BASE_LOGIN = "https://login.sparebank1.no/";
+
+    public static final String APPLICATION_JSON_CHARSET_UTF8 = "application/json; charset=utf-8";
+    public static final String TEXT_HTML_APPLICATION_XHTML_XML =
+            "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+    public static final String REFERER_FOR_FINISH_AGREEMENT_SESSION =
+            "/nettbank-privat/avtale/velg-avtale?goto=https://mobilbank-pm.sparebank1.no/personal/activation/continue-activation";
+    public static final String X_SB1_REST_VERSION = "1.0.0";
+
+    // Device values
+    public static final String DEVICE_DESCRIPTION = "Mobilbank: Tink";
+    public static final String DEVICE_MANUFACTURER = "Apple";
+    public static final String DEVICE_MODEL = "iPhone7,2";
+
+    // Account types
+    public static final String CURRENT_ACCOUNT = "currentaccount";
+    public static final String SAVINGS_ACCOUNT = "savingsaccount";
+    public static final String DISPOSABLE_ACCOUNT = "disposableaccount";
+
+    // Transaction types
+    public static final String TRANSACTION_TYPE_EINVOICE = "e-faktura";
+    public static final String TRANSACTION_TYPE_NETTGIRO = "nettgiro";
+    public static final String TRANSACTION_TYPE_TRANSFER = "nettbank overførsel";
+    public static final String TRANSACTION_TYPE_PAYMENT = "innbetalinger";
+
+    // Keys
+    public static final String LOGOUT_KEY = "logout";
+    public static final String KEEP_ALIVE_KEY = "keepAlive";
+    public static final String CHALLENGE_KEY = "challenge";
+    public static final String LOGIN_KEY = "login";
+    public static final String ACTIVATION_KEY = "activation";
+    public static final String ACCOUNTS_KEY = "accountsRest";
+    public static final String TRANSACTIONS_KEY = "transactions";
+    public static final String ACCOUNT_TRANSACTION_URLS_KEY = "accountTransactionUrls";
+    public static final String REST_ROOT_KEY = "restRoot";
+    public static final String MORE_TRANSACTIONS_KEY = "moreTransactions";
+    public static final String PORTFOLIO_HOLDINGS_KEY = "portfolioHoldings";
+
+    // Log tags
+    public static final String LOG_BANKID_POLL_UNKNOWN_STATUS_TAG = "#bankid-polling";
+    public static final String LOG_UNKNOWN_ACCOUNT_TYPE_TAG = "#account-fetching - Sparebank1 - Unknown account type";
+
+    public static class Urls {
+        public static final URL CMS = new URL(BASE + "personal/rest/cms");
+        public static final URL GET_LOGIN_DISPATCHER = new URL(BASE_LOGIN + "auth/pages/loginDispatcher.xhtml");
+        public static final URL INIT_LOGIN = new URL(BASE_LOGIN + "auth/pages/loginDispatcher.xhtml");
+        public static final URL SELECT_MARKET_AND_AUTH_TYPE = new URL(
+                BASE_LOGIN + "auth/pages/selectMarketAndAuthType.xhtml");
+        public static final URL POLL_BANKID = new URL(BASE_LOGIN + "auth/api/bim/poll");
+        public static final URL LOGIN_DONE = new URL(BASE_LOGIN + "auth/pages/loginDone.xhtml");
+        public static final URL CONTINUE_ACTIVATION = new URL(BASE + "personal/activation/continue-activation");
+        public static final URL AGREEMENTS = new URL(BASE + "{bankName}/nettbank-privat/avtale/rest/avtale");
+
+        public static final URL ACCOUNTS = new URL(BASE + "{bankName}/nettbank-privat/rest/accounts");
+        public static final URL CREDITCARDS = new URL(BASE + "{bankName}/nettbank-privat/kort/rest/cards/credit");
+        public static final URL LOANS = new URL(BASE + "{bankName}/nettbank-privat/rest/loans");
+        public static final URL LOAN_DETAILS = new URL(BASE + "{bankName}/nettbank-privat/rest/loans/{accountId}");
+        public static final URL CREDITCARD_TRANSACTIONS = new URL(
+                BASE + "{bankName}/nettbank-privat/kort/rest/cards/credit/{accountId}/transactions");
+        public static final URL PORTFOLIOS = new URL(BASE + "{bankName}/nettbank-privat/sparing/rest/fond/portefoeljer");
+    }
+
+    public static class UrlParameter {
+        public static final String BANK_NAME = "bankName";
+        public static final String ACCOUNT_ID = "accountId";
+    }
+
+    public static class BankIdErrorCodes {
+        public static final String C161 = "bid-c161";
+        public static final String C167 = "bid-c167";
+    }
+}

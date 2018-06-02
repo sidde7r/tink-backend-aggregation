@@ -1,0 +1,30 @@
+date	description	amount													
+2014-12-15	7-ELEVEN 161	-345.00													
+2014-12-16	TELE2 SVE AB	-115.00													
+2014-12-17	COOP KONSUM 	-366.00													
+2014-12-18	TELE2 SVE AB	-195.00													
+2014-12-19	TELE2 jshdjfhSVE AB	-129.72													
+2014-12-20	COOP KONSUM 	-169.00													
+2014-12-21	PRESSBYRAN 9	-107.00													
+2014-12-22	PRESSBYRAN 8	-59.00													
+2014-12-23	7-ELEVEN 543	-333.00													
+2014-12-24	TELE2 SVE AB	"-4,517.00"													
+2014-12-25	COOP KONSUM 	"-11,788.00"													
+2014-12-26	PRESSBYRAN 8	-480.00													
+2014-12-27	TELE2 SVE AB	-184.90													
+2014-12-28	COOP KONSUM 	"-3,245.28"													
+2014-12-29	PRESSBYRAN 10	"-10,000.00"													
+2014-12-30	PRESSBYRAN 8	"38,141.00"													
+2014-12-31	7-ELEVEN 161	-89.00													
+2015-01-01	7-ELEVEN 162	-300.00													
+2015-01-02	TELE2 SVE AB	-218.98													
+2015-01-03	7-ELEVEN 161	-40.00													
+2015-01-04	TELE2 SVE AB	-95.00													
+2015-01-05	COOP KONSUM 	-20.00													
+2015-01-06	PRESSBYRAN 8	-12.00													
+2015-01-07	TELE2 SVE AB	-58.00													
+2015-01-08	7-ELEVEN 161	-80.00													
+2015-03-05	PRESSBYRAN 10	-1000													
+2015-03-05	PRESSBYRAN 10	-1000													
+2015-01-09	TELE2 SVE AB	-199.00													
+2015-01-10	COOP KONSUM 	-64.56													

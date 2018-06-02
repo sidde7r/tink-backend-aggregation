@@ -1,0 +1,6 @@
+connector: bazel run :connector --jvmopt=-Djava.net.preferIPv4Stack=true server etc/kirkby/development-connector-server.yml
+system: bazel run :system --jvmopt=-Djava.net.preferIPv4Stack=true server etc/kirkby/development-system-server.yml
+main: bazel run :main --jvmopt=-Djava.net.preferIPv4Stack=true server etc/kirkby/development-main-server.yml
+encryption: bash -c "cd ../tink-backend-encryption && bazel run :encryption --jvmopt=-Djava.net.preferIPv4Stack=true server etc/kirkby/development-encryption-server.yml"
+aggregation: bazel run :aggregation --jvmopt=-Djava.net.preferIPv4Stack=true server etc/kirkby/development-aggregation-server.yml
+webhook: bazel run :webhook --jvmopt=-Djava.net.preferIPv4Stack=true server etc/development-webhook-server.yml

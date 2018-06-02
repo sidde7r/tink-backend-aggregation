@@ -1,0 +1,109 @@
+{{ $bigdb := .Values.bigdb | default dict }}
+{{ $maindb := .Values.maindb | default dict }}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: data-export-configuration
+  namespace: data-export
+data:
+  data-export-server.yml: |
+    server:
+      shutdownGracePeriod: 10s
+      applicationConnectors:
+        - type: http
+          port: 80
+        - type: https
+          port: 443
+          {{- if eq "local" .Values.Cluster }}
+          keyStorePath: data/security/developer.keystore
+          certAlias: developer.internal.tink.se
+          {{- else }}
+          keyStorePath: data/security/production.keystore
+          certAlias: container.internal.tink.se
+          {{- end }}
+          keyStorePassword: KEYSTORE_PASSWORD # replaced from secrets
+          trustStorePath: data/security/TinkCA.truststore
+          trustStorePassword: changeme
+          # Validation disabled since Dropwizard/Jetty tries to check revocation of our homebrewed certs, which fails.
+          validateCerts: false
+      adminConnectors:
+        - type: http
+          port: 8099
+    endpoints:
+      api:
+        url: http://www.staging.tink.se/api/v1
+        pinnedCertificates:
+          {{- if eq "local" .Values.Cluster }}
+          - "CERTSHA256:C050C78642605EE54DDBF2B38F7700EFAC77D19DC5388B807550D325574220E7"
+          {{- else }}
+          - "CERTSHA256:9B7F4D67F6FA395C07B9B22EBC39CED8C0B99B854275B1AD1298551F0A632DE0"
+          {{- end }}
+
+    cluster: {{ .Values.applicationCluster | default "TINK" }}
+    developmentMode: false
+
+    distributedDatabase:
+      # No username needed by default (local development)
+      {{- if $bigdb.username }}
+      username: {{ $bigdb.username }}
+      password: CASSANDRA_PASSWORD # Is added via Kubernetes Secrets
+      {{- end }}
+      seeds:
+        {{- if gt (len ($bigdb.hosts | default list)) 0 }}
+        {{- range $bigdb.hosts }}
+        - "{{ . }}"
+        {{- end }}
+        {{- else }}
+        - "bigdb.data-export.svc.cluster.local"
+        {{- end }}
+      enabled: true
+      createKeyspaceOnStart: false
+      datacenter: {{ default "Cassandra" $bigdb.datacenter }}
+
+    database:
+      driverClass: com.mysql.jdbc.Driver
+      username: {{ default "tink-data-export" $maindb.username }}
+      password: MYSQL_PASSWORD # Is added via Kubernetes Secrets
+      url: jdbc:mysql://{{ default "maindb.data-export.svc.cluster.local" $maindb.host }}/tink?useLocalSessionState=true&rewriteBatchedStatements=true&useSSL=true&verifyServerCertificate=false
+      showSql: false
+      persistenceUnitName: tink-main-api
+      generateDdl: true
+
+    coordination:
+      hosts: {{ default "coordination.data-export.svc.cluster.local:2181" .Values.coordinationHosts }}
+
+    cache:
+      hosts: {{ default "cache.data-export.svc.cluster.local:11211" .Values.cacheHosts }}
+      enabled: true
+
+    logging:
+      level: INFO
+      loggers:
+        se.tink: INFO
+        se.tink.org.eclipse: INFO
+      appenders:
+        - type: console
+          threshold: ALL
+          timeZone: Europe/Stockholm
+          logFormat: '%date{"yyyy-MM-dd HH:mm:ss,SSSXXX"} %level [%thread] R:%X{requestId} %logger %replace(%m){"\n", "\\n"}\\n%replace(%ex){"[\r\n]+", "\\n"}%nopex%n'
+
+    prometheus:
+      port: 9130
+
+{{ if .Values.createDevelopmentSecrets }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: data-export-secrets
+  namespace: data-export
+type: Opaque
+data:
+  # Both are set to "tink" in the development setup
+  # This Secret object has to be created manually for Kubernetes in production
+  maindb-password: dGluaw==
+  cassandra-password: dGluaw==
+  # Is set to changeme for the development keystore
+  keystore-password: Y2hhbmdlbWU=
+{{ end }}

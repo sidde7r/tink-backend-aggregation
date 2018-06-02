@@ -1,0 +1,41 @@
+@// declare the arguments used in this template
+@args se.tink.backend.core.Activity activity, String title, String description, String buttonLabel, String deeplink, List<String> items
+
+<div class="timeline"></div>
+<div class="activity-frame clear @activity.getFeedActivityIdentifier()" id="@activity.getId()"onclick="onclick@activity.getId() ()">
+  <div class="product-suggestion switch-mortgage-provider">
+
+    <div class="header">@title</div>
+
+    <div class="text-container">
+      <div class="subtext">@description</div>
+    </div>
+
+    <div class="divider-wrapper">
+      <div class="divider"></div>
+    </div>
+
+    <div class="list-container">
+      @for (String item : items)
+      {
+        <div class="list-item">
+          @if(!item_isLast) {
+            <div class="list-line"></div>
+          }
+          <div class="list-number">@item_index</div>
+          <div class="list-text">@item</div>
+        </div>
+      }
+    </div>
+
+    <div class="bottom-button">@buttonLabel</div>
+  </div>
+</div>
+
+<script>
+function onclick@activity.getId() () {
+  @if(deeplink) {
+    window.location.href = "@deeplink";
+  }
+}
+</script>

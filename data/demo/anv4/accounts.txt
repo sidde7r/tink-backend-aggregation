@@ -1,0 +1,3 @@
+bankId	name	type	currency	balance
+Bank1	Lonekonto	CHECKING	SEK	"19,847"
+Bank2	American Express	CREDIT_CARD	SEK	"-11,415"

@@ -1,0 +1,59 @@
+{
+    "market": "SK",
+    "currency": "EUR",
+    "providers":
+    [
+        {
+            "name":"sk-slovenska-sporitelna",
+            "displayName":"Slovenska sporitelna",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"banks.sk.slovenskasporitelna.SlovenskaSporitelnaAgent",
+            "passwordHelpText":null,
+            "transactional":"true",
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"Username",
+                    "immutable":true
+                },
+                {
+                    "name":"password",
+                    "description":"Password",
+                    "masked":true
+                }
+            ]
+        },
+        {
+            "name":"sk-zuno-bank",
+            "displayName":"ZUNO BANK",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"demo.DemoAgent",
+            "passwordHelpText":null,
+            "transactional":"true",
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"Username",
+                    "immutable":true
+                },
+                {
+                    "name":"password",
+                    "description":"Password",
+                    "masked":true
+                }
+            ]
+        }
+    ]
+}

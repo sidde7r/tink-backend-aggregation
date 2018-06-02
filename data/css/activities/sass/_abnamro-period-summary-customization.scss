@@ -1,0 +1,23 @@
+.abnamro-monthly-summary-activity,
+.period-activity
+{
+  .period-summary-part,
+  .period-summary-part-no-deeplink
+  {
+    .budget-summary
+    {
+      padding-bottom: $padding;
+
+      .activity-description-text
+      {
+        margin: $padding 2 * $padding;
+      }
+
+      .pie-charts
+      {
+        margin: 0 auto;
+        text-align: center;
+      }
+    }
+  }
+}

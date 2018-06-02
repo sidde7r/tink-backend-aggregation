@@ -1,0 +1,181 @@
+server:
+  shutdownGracePeriod: 10s
+  applicationConnectors:
+    - type: http
+      port: 9090
+    - type: https
+      port: 9100
+      keyStorePath: data/security/developer.keystore
+      keyStorePassword: changeme
+      certAlias: developer.internal.tink.se
+      trustStorePath: data/security/TinkCA.truststore
+      trustStorePassword: changeme
+      # Validation disabled since Dropwizard/Jetty tries to check revocation of our homebrewed certs, which fails.
+      validateCerts: false
+  adminConnectors:
+    - type: http
+      port: 8090
+
+grpc:
+  port: 9998
+  enabled: true
+
+endpoints:
+  api:
+    url: http://www.staging.tink.se/api/v1
+    pinnedCertificates:
+      - "CERTSHA256:C050C78642605EE54DDBF2B38F7700EFAC77D19DC5388B807550D325574220E7"
+  main:
+    url: http://localhost:9090/
+    pinnedCertificates:
+      - "CERTSHA256:C050C78642605EE54DDBF2B38F7700EFAC77D19DC5388B807550D325574220E7"
+  system:
+    url: http://localhost:9091/
+    accessToken: devtoken
+    pinnedCertificates:
+      - "CERTSHA256:C050C78642605EE54DDBF2B38F7700EFAC77D19DC5388B807550D325574220E7"
+  aggregation:
+    url: http://localhost:9095/
+    accessToken: devtoken
+    pinnedCertificates:
+      - "CERTSHA256:C050C78642605EE54DDBF2B38F7700EFAC77D19DC5388B807550D325574220E7"
+  encryption:
+    url: http://localhost:9094/
+    accessToken: devtoken
+    pinnedCertificates:
+      - "CERTSHA256:C050C78642605EE54DDBF2B38F7700EFAC77D19DC5388B807550D325574220E7"
+  connector:
+    url: http://localhost:9096/
+    pinnedCertificates:
+      - "CERTSHA256:C050C78642605EE54DDBF2B38F7700EFAC77D19DC5388B807550D325574220E7"
+
+cluster: ABNAMRO
+
+administrativeMode: ["ccccccelgiev", "ccccccflgngc"]
+
+developmentMode: true
+
+flags:
+  register:
+    NL:
+      ABN_AMRO: 1
+    ALL:
+      WRITE_CASSANDRA_STATISTICS: 1
+      READ_CASSANDRA_STATISTICS: 1
+      WRITE_NEW_TRANSACTIONS: 1
+      READ_NEW_TRANSACTIONS: 1
+      READ_PERIODS: 1
+
+taskQueue:
+  workers: 1
+  mode: ENABLED
+  hosts:
+    - 172.16.42.2:9092
+  firehoseEnabled: true
+
+distributedDatabase:
+  seeds:
+    - 172.16.42.2
+  enabled: true
+
+database:
+  driverClass: com.mysql.jdbc.Driver
+  username: tink
+  password: tink
+  url: jdbc:mysql://172.16.42.2/tink?useLocalSessionState=true&rewriteBatchedStatements=true&useSSL=true&verifyServerCertificate=false
+  showSql: false
+  persistenceUnitName: tink-main-api
+  generateDdl: true
+
+scheduler:
+  enabled: false
+
+coordination:
+  hosts: 172.16.42.2:2181
+
+cache:
+  hosts: 172.16.42.2:11211
+  enabled: true
+
+search:
+  clusterName: elasticsearch
+  hosts: 172.16.42.2:9300
+  enabled: true
+
+analytics:
+  intercom:
+    enabled: false
+
+transfers:
+  enabled: false
+
+logging:
+  level: INFO
+  loggers:
+    se.tink: DEBUG
+    se.tink.org.eclipse: INFO
+    org.hibernate: WARN
+  appenders:
+    - type: console
+      threshold: ALL
+      timeZone: Europe/Stockholm
+      logFormat: '%magenta(%date{"yyyy-MM-dd HH:mm:ss,SSSXXX"}) %highlight(%level) [%thread] R:%X{requestId} %blue(%logger) %message%n%xException'
+
+abnAmro:
+  trustStore:
+    path: data/security/abnamro.truststore
+    password: changeme
+  internetBanking:
+    host: www-et2.abnamro.nl
+    authorizationToken: xxc6w3n3xzzcygzmir98pntfxswetqhq
+    accountUpdates:
+      enabled: true
+      stalenessInMinutes: 0
+    products:
+      savings:
+        ids:
+          - 5
+          - 8
+        groups:
+          - SAVINGS_ACCOUNTS
+      payments:
+        ids:
+          - 13
+          - 25
+        groups:
+          - PAYMENT_ACCOUNTS
+      creditCards:
+        ids:
+          - 129
+        groups:
+          - CREDIT_CARDS_PRIVATE_AND_RETAIL
+          - PAYMENT_SERVICES
+
+authentication:
+  authenticationErrorThreshold: 4
+  userPasswordHashAlgorithm: BCRYPT
+  methods:
+    - BASIC
+    - SESSION
+  marketRegisterMethods:
+    NL:
+      - SMS_OTP_AND_PIN6
+  marketLoginMethods:
+    NL:
+      - PHONE_NUMBER_AND_PIN6
+      - SMS_OTP_AND_PIN6
+      - ABN_AMRO_PIN5
+      - CHALLENGE_RESPONSE
+sms:
+  otp:
+    enabled: true
+    dummyMode: true
+    otpLength: 5
+    sender: Grip
+    timeToLive: PT15M # 15 minute duration
+    rateLimit:
+      limit: 100
+      duration: PT24H
+
+  cmTelecom:
+    apiKey: "change-me" # Replace with API key from "Google Drive => Products => Projects => ABN AMRO => Api Keys"

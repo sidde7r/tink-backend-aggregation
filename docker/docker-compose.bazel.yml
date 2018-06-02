@@ -1,0 +1,24 @@
+version: '2'
+services:
+  app:
+    image: "gcr.io/tink-containers/bazel:0.13"
+    privileged: true
+    working_dir: /tink-backend
+    volumes:
+      - "${SSH_AUTH_SOCK}:${SSH_AUTH_SOCK}"
+      - ..:/tink-backend
+      - $HOME/agent-cache/$BUILDKITE_AGENT_NAME/bazel-cache:/root/.cache/bazel
+      - /usr/bin/buildkite-agent:/usr/bin/buildkite-agent:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker:ro
+      - /usr/local/bin/google-cloud-sdk:/usr/local/bin/google-cloud-sdk:ro
+    environment:
+      - SSH_AUTH_SOCK
+      - VERSION
+      - BUILDKITE_JOB_ID
+      - BUILDKITE_BUILD_ID
+      - BUILDKITE_BRANCH
+      - BUILDKITE_AGENT_ACCESS_TOKEN
+      - TINK_REPO_UPLOAD_ACCESS_KEY_ID
+      - TINK_REPO_UPLOAD_SECRET_ACCESS_KEY
+      - GOOGLE_CLOUD_ACCOUNT_JSON

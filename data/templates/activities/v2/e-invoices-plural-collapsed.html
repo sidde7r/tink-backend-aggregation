@@ -1,0 +1,42 @@
+@// declare the arguments used in this template
+@args se.tink.backend.core.Activity activity, se.tink.backend.common.workers.activity.renderers.models.ActivityHeader headerData, String svgIcon
+
+<div class="e-invoices-plural-collapsed-container">
+<div class="timeline"></div>
+
+<div class="activity-frame clear transfer-plural @activity.getFeedActivityIdentifier() v2" id="@activity.getId()" >
+	<div class="transfer-plural-header-only" onclick="onclick@activity.getId() ()">
+		<div style="position: relative;">
+			<div style="position: absolute; color: #808080;" class="icon-circle @headerData.getIcon().getColorType()">
+				&#@headerData.getIcon().getHtmlChar()
+			</div>
+			<div style="width: 70%; margin: 0 auto; ">
+				<div class="header" style="height: 25px; overflow: hidden; text-overflow: ellipsis;">@headerData.getLeftHeader()</div>
+				<div class="subtext" style="height: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">@headerData.getLeftSubtext()</div>
+			</div>
+			<div style="clear: both;"></div>
+		</div>
+	</div>
+	@invoke("e-invoices-plural")
+</div>
+</div>
+<script>
+	function onclick@activity.getId() ()
+	{
+		var currentMaxHeight = $("#@activity.getId() .expanded-group").height();
+
+		if(currentMaxHeight > 0)
+		{
+			$("#@activity.getId() .expanded-group").animate({ "max-height": 0 + "px" }, 200, "swing");
+			$("#@activity.getId()").removeClass("expanded");
+		}
+		else
+		{
+			var expandedTransfers = $("#@activity.getId() .expanded-transfer");
+			var first = expandedTransfers.first();
+			var expandedTransfersHeight = expandedTransfers.length * first.outerHeight(true) + 8;
+			$("#@activity.getId() .expanded-group").animate({ "max-height": expandedTransfersHeight + "px" }, 200, "swing");
+			$("#@activity.getId()").addClass("expanded");
+		}
+	}
+</script>

@@ -1,0 +1,37 @@
+@// declare the arguments used in this template
+@args se.tink.backend.core.Activity activity, se.tink.backend.core.BadgeActivityContent content, String deeplink
+
+<div class="timeline"></div>
+<div class="activity-frame clear @activity.getFeedActivityIdentifier()" id="@activity.getId()" onclick="onclick@activity.getId() ()">
+	<div class="badge-activity" >
+		<div class="wrapper">
+			<div style="background: url(https://s3-eu-west-1.amazonaws.com/tink-web/activities/badges/@content.getImage()); background-repeat: no-repeat; background-size: cover; background-position: center;"
+			class="image">
+				<div class="badge-wrapper">
+					<div class="badge" style="
+			background: url(https://s3-eu-west-1.amazonaws.com/tink-web/activities/badges/@content.getBadgeImage());">
+						<div class="category-icon top">@content.getCategoryIcon()</div>
+						<div class="badge-number">@content.getFormattedValue()</div>
+						<div class="category-icon bottom">@content.getCategoryIcon()</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="text-container">
+			<p class="title">@content.getTitle()</p>
+	    	<p class="divider skip-height skip-margin"></p>
+			<p class="activity-description-text">@content.getDescription()</p>
+		</div>
+	</div>
+</div>
+
+<script>
+function onclick@activity.getId() () {
+    @if(deeplink)
+    {
+    	window.location.href = "@deeplink";
+	}
+}
+</script>

@@ -1,0 +1,4 @@
+bankId	name	type	currency	balance
+9999-111111111111	Transaktionskonto	CHECKING	EUR	"2624.33"
+9999-222222222222	Sparkonto	SAVINGS	EUR	"824.33"
+9999-333333333333	Bolån	LOAN	EUR	"-230000"

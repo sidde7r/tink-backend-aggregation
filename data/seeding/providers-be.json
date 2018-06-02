@@ -1,0 +1,122 @@
+{
+  "market": "BE",
+  "currency": "EUR",
+  "providers": [
+    {
+      "className": "nxgen.be.banks.kbc.KbcAgent",
+      "credentialsType": "PASSWORD",
+      "displayName": "KBC",
+      "capabilities": [
+        "TRANSFERS"
+      ],
+      "fields": [
+        {
+          "description": "Card number",
+          "name": "username",
+          "numeric": true,
+          "minLength": 1,
+          "maxLength": 17
+        }
+      ],
+      "multiFactor": true,
+      "name": "be-kbc-cardreader",
+      "passwordHelpText": "In order to authenticate yourself you will need your KBC card reader.",
+      "popular": false,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
+      "className": "nxgen.be.banks.ing.IngAgent",
+      "credentialsType": "PASSWORD",
+      "displayName": "ING",
+      "capabilities": [
+        "TRANSFERS"
+      ],
+      "fields": [
+        {
+          "description": "ING ID",
+          "name": "username",
+          "immutable": true,
+          "numeric": true,
+          "minLength": 1
+        },
+        {
+          "description": "Card ID",
+          "name": "cardId",
+          "numeric": true,
+          "minLength": 1,
+          "helpText": "Insert your ING bank card into the ING card reader and press IDENTIFY. Enter your PIN and press OK. Enter the response code in the response code field"
+        },
+        {
+          "description": "Response code",
+          "name": "otp",
+          "numeric": true,
+          "minLength": 1,
+          "sensitive": true
+        }
+      ],
+      "multiFactor": true,
+      "name": "be-ing-cardreader",
+      "passwordHelpText": "By connecting to this bank, you confirm that you have accepted the bank’s [terms and conditions](https://www.ing.be/static/legacy/SiteCollectionDocuments/GeneralRegulationsNewEN.pdf).",
+      "popular": false,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
+      "className": "nxgen.be.banks.belfius.BelfiusAgent",
+      "credentialsType": "PASSWORD",
+      "displayName": "Belfius",
+      "capabilities": [
+        "TRANSFERS"
+      ],
+      "fields": [
+        {
+          "description": "Card number",
+          "name": "username",
+          "numeric": true,
+          "minLength": 1
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "sensitive": true,
+          "name": "password",
+          "minLength": 1
+        }
+      ],
+      "multiFactor": true,
+      "name": "be-belfius-cardreader",
+      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app. You will also need your Belfius card reader to finish the authentication.",
+      "popular": false,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
+      "className": "demo.DemoAgent",
+      "credentialsType": "PASSWORD",
+      "displayName": "Demo",
+      "fields": [
+        {
+          "description": "Username",
+          "immutable": true,
+          "name": "username"
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "sensitive": true,
+          "name": "password"
+        }
+      ],
+      "name": "be-demo",
+      "passwordHelpText": "",
+      "popular": false,
+      "status": "ENABLED",
+      "transactional": "true",
+      "type": "TEST"
+    }
+  ]
+}

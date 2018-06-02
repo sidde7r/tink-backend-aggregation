@@ -1,0 +1,15 @@
+{
+  "merchants": {
+    "_all": {"enabled": false},
+    "properties": {
+      "name": {
+        "type": "string",
+        "analyzer": "simple"
+      },
+      "coordinates": {
+        "type": "geo_point",
+        "lat_lon": true
+      }
+    }
+  }
+}

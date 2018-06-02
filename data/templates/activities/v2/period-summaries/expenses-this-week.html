@@ -1,0 +1,15 @@
+@args String title, String average, String svg
+
+<div class="expenses-this-week v2">
+	<div class="title-container">
+		<div class="left"></div>
+		<div class="activity-description-text">@title</div> 
+
+		<div class="average">@average
+			<span class="average-right-margin"></span>
+		</div>
+	</div>
+	<div class="charts">
+		<div>@escape("RAW") {@svg}</div>
+	</div>
+</div>

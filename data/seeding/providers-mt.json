@@ -1,0 +1,54 @@
+{
+    "market": "MT",
+    "currency": "EUR",
+    "providers":
+    [
+        {
+            "name":"mt-bov",
+            "displayName":"Bank of Valletta (BOV)",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"demo.DemoAgent",
+            "passwordHelpText":null,
+            "transactional":"true",
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"Username",
+                    "immutable":true
+                },
+                {
+                    "name":"password",
+                    "description":"Password",
+                    "masked":true
+                }
+            ]
+        },
+        {
+            "name":"mt-hsbc-bank",
+            "displayName":"HSBC Bank",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"demo.DemoAgent",
+            "passwordHelpText":null,
+            "transactional":"true",
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"Username",
+                    "immutable":true
+                }
+            ]
+        }
+    ]
+}

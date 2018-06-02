@@ -1,0 +1,2 @@
+date	description	amount	type	pending
+2012-09-25	Kontantuttag	-10.0		

@@ -1,0 +1,38 @@
+@// declare the arguments used in this template
+@args se.tink.backend.core.Activity activity, String title, String description, String subDescription, String buttonLabel, String deeplink, se.tink.backend.common.workers.activity.renderers.models.Icon icon, String transferId
+
+<div class="e-invoices-single-container @transferId">
+<div class="timeline"></div>
+<div class="activity-frame clear @activity.getFeedActivityIdentifier()" id="@activity.getId()" onclick="onclick@activity.getId() ()">
+	<div class="transfer-singular">
+		<div class="centered-activity-title">
+			@title
+		</div>
+		<div class="divider-wrapper">
+			<div class="divider"></div>
+		</div>
+
+		<div class="icon-wrapper">
+			<div class="icon-circle @icon.getColorType()">
+				&#@icon.getHtmlChar()
+			</div>
+		</div>
+
+		<div class="header center-within">@description</div>
+		<div class="subtext center-within">@subDescription</div>
+
+		<div class="divider-wrapper" style="margin-top: 10px;">
+			<div class="divider"></div>
+		</div>
+		<div class="bottom-button">@buttonLabel</div>
+	</div>
+</div>
+</div>
+
+<script>
+function onclick@activity.getId() () {
+    @if(deeplink) {
+    	window.location.href = "@deeplink" ;
+	}
+}
+</script>

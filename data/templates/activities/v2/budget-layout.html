@@ -1,0 +1,36 @@
+@// declare the arguments used in this template
+@args se.tink.backend.core.Activity activity, se.tink.backend.common.workers.activity.renderers.models.ActivityHeader headerData, String svgIcon, String message
+
+<div class="timeline"></div>
+<div class="activity-frame clear @activity.getFeedActivityIdentifier() v2 budget" id="@activity.getId()" onclick="onclick@activity.getId() ()">
+	<div class="left-header-group">
+		<div class="header">@headerData.getLeftHeader()</div>
+		<div class="subtext">@headerData.getLeftSubtext()</div>
+	</div>
+	<div class="right-header-group">
+		<div class="header">@headerData.getRightHeader()</div>
+		<div class="subtext">@headerData.getRightSubtext()</div>
+	</div>
+	<div style="clear: both;"></div>
+	<div class="budget-graphics">
+
+	    @invoke("inner-line-chart")
+
+	    <div class="budget-pie">
+			@escape("RAW") { @svgIcon }
+		</div>
+		<div class="message activity-description-text">
+			@message
+		</div>
+	</div>
+</div>
+
+<script>
+
+function onclick@activity.getId() () {
+  @if(headerData.getDeepLink() != null)
+  {
+    window.location.href = "@headerData.getDeepLink()" ;
+  }
+}
+</script>

@@ -1,0 +1,7 @@
+version: '2'
+services:
+  app:
+    image: gcr.io/tink-containers/kubernetes-generator:latest
+    working_dir: /tink-backend
+    volumes:
+      - ..:/tink-backend

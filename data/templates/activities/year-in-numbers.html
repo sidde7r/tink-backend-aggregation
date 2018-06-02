@@ -1,0 +1,28 @@
+@// declare the arguments used in this template
+@args se.tink.backend.core.Activity activity, String imageUrl, String deeplink, String title
+
+<div class="timeline"></div>
+<div class="activity-frame year-in-numbers-frame clear @activity.getFeedActivityIdentifier()" id="@activity.getId()"
+     onclick="onclick@activity.getId() ()">
+    <div class="year-in-numbers-activity">
+        <div class="wrapper">
+            <div style="height: 300px; background: url(@imageUrl); background-repeat: no-repeat; background-size: cover; background-position: center;"
+                 class="image">
+            </div>
+        </div>
+
+        <div>
+            <div class="title">@title</div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function onclick@activity.getId() () {
+    @if(deeplink)
+        {
+            window.location.href = "@deeplink";
+        }
+    }
+</script>

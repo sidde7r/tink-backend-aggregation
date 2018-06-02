@@ -1,0 +1,60 @@
+__label__expenses:transport.car ace rent a car
+__label__expenses:transport.car advantage rent a car
+__label__expenses:transport.car alamo rent a car
+__label__expenses:transport.car argus car hire
+__label__expenses:transport.car arnold clark vehicle management
+__label__expenses:transport.car auto europe
+__label__expenses:transport.car avis budget group
+__label__expenses:transport.car avis europe
+__label__expenses:transport.car avis rent a car
+__label__expenses:transport.car avis southern africa
+__label__expenses:transport.car bookcab
+__label__expenses:transport.car breeze
+__label__expenses:transport.car breeze (company)
+__label__expenses:transport.car budget rent a car
+__label__expenses:transport.car bunk campers
+__label__expenses:transport.car canadream
+__label__expenses:transport.car car2go
+__label__expenses:transport.car carzonrent
+__label__expenses:transport.car citer sa
+__label__expenses:transport.car cruise america
+__label__expenses:transport.car daimler hire
+__label__expenses:transport.car do you spain
+__label__expenses:transport.car dollar rent a car
+__label__expenses:transport.car dollar thrifty automotive group
+__label__expenses:transport.car drivezy
+__label__expenses:transport.car enterprise rent-a-car
+__label__expenses:transport.car europcar
+__label__expenses:transport.car firefly
+__label__expenses:transport.car firefly (car rental)
+__label__expenses:transport.car first car rental
+__label__expenses:transport.car flexicar
+__label__expenses:transport.car flexicar (carsharing)
+__label__expenses:transport.car holiday autos
+__label__expenses:transport.car irish car rentals
+__label__expenses:transport.car justshareit
+__label__expenses:transport.car kemwel
+__label__expenses:transport.car leaseplan uk
+__label__expenses:transport.car lex autolease
+__label__expenses:transport.car localiza
+__label__expenses:transport.car maven
+__label__expenses:transport.car meru cabs
+__label__expenses:transport.car mylescar
+__label__expenses:transport.car national car rental
+__label__expenses:transport.car payless car rental
+__label__expenses:transport.car redspot car rentals
+__label__expenses:transport.car rent-a-wreck
+__label__expenses:transport.car rentalcars
+__label__expenses:transport.car rīgas satiksme
+__label__expenses:transport.car shlomo group
+__label__expenses:transport.car sixt
+__label__expenses:transport.car the hertz corporation
+__label__expenses:transport.car thrifty car rental
+__label__expenses:transport.car tilden rent-a-car
+__label__expenses:transport.car tourism holdings limited
+__label__expenses:transport.car uhaul car share
+__label__expenses:transport.car volercars
+__label__expenses:transport.car wicked campers
+__label__expenses:transport.car zest car rental
+__label__expenses:transport.car zipcar
+__label__expenses:transport.car zoomcar

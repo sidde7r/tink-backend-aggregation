@@ -1,0 +1,51 @@
+package se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants;
+import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.core.Amount;
+import se.tink.backend.system.rpc.Instrument;
+
+@JsonObject
+public class OpBankInstrumentsEntity {
+    private String name;
+    private String instrumentId;
+    private String tradingCode;
+    private String isin;
+    private String market;
+    private boolean tradable;
+    private String type;
+    private OpBankWinLoseEntity winLose;
+    private OpBankHoldingsEntity holdings;
+
+    @JsonIgnore
+    public Instrument toTinkInstrument(Instrument.Type instrumentType) {
+        Amount marketValue = holdings.getMarketValue().getPriceEur().getTinkAmount();
+
+        Instrument instrument = new Instrument();
+        instrument.setUniqueIdentifier(instrumentId);
+        instrument.setIsin(isin);
+        instrument.setRawType(type);
+        instrument.setName(name);
+        instrument.setType(instrumentType);
+        instrument.setMarketPlace(market);
+        instrument.setMarketValue(marketValue.getValue());
+        instrument.setCurrency(marketValue.getCurrency());
+
+        instrument.setQuantity(holdings.getOwnedPcs());
+        if (OpBankConstants.Fetcher.INSTRUMENT_TYPE_BOND.equalsIgnoreCase(type) && instrument.getQuantity() == 0) {
+            instrument.setQuantity(1D);
+        }
+
+        if (winLose != null) {
+            instrument.setProfit(winLose.getWinLoseAmount().getAmount());
+        }
+
+        if (holdings.getMarketPrice() != null) {
+            Amount marketPrice = holdings.getMarketPrice().getPriceEur().getTinkAmount();
+            instrument.setPrice(marketPrice.getValue());
+        }
+
+        return instrument;
+    }
+}

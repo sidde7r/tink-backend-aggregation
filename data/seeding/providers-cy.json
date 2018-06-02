@@ -1,0 +1,91 @@
+{
+    "market": "CY",
+    "currency": "EUR",
+    "providers":
+    [
+        {
+            "name":"cy-bank-of-cyprus",
+            "displayName":"Bank of Cyprus",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"demo.DemoAgent",
+            "passwordHelpText":null,
+            "transactional":"true",
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"User ID",
+                    "immutable":true
+                },
+                {
+                    "name":"password",
+                    "description":"Passcode",
+                    "masked":true
+                }
+            ]
+        },
+        {
+            "name":"cy-eurobank-ergasias",
+            "displayName":"Eurobank Ergasias",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"demo.DemoAgent",
+            "passwordHelpText":null,
+            "transactional":"true",
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"User ID",
+                    "immutable":true
+                },
+                {
+                    "name":"password",
+                    "description":"Password",
+                    "masked":true
+                }
+            ]
+        },
+        {
+            "name":"cy-piraeus-bank",
+            "displayName":"Piraeus Bank",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"demo.DemoAgent",
+            "passwordHelpText":null,
+            "transactional":"true",
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"Username",
+                    "immutable":true
+                },
+                {
+                    "name":"password",
+                    "description":"Password",
+                    "masked":true
+                },
+                {
+                    "name":"extrapin",
+                    "description":"extraPIN",
+                    "masked":true,
+                    "numeric":true
+                }
+            ]
+        }
+    ]
+}

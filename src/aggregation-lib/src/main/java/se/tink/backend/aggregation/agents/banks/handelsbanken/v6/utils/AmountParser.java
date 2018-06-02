@@ -1,0 +1,24 @@
+package se.tink.backend.aggregation.agents.banks.handelsbanken.v6.utils;
+
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import se.tink.backend.utils.StringUtils;
+
+public class AmountParser {
+
+    private static final Pattern AMOUNT_FINDER = Pattern.compile(".*?(?<amount>\\d+[,.]\\d+).*");
+
+    private final String text;
+
+    public AmountParser(String text) {
+        this.text = text;
+    }
+
+    public Optional<Double> parse() {
+        return Optional.ofNullable(text)
+                .map(AMOUNT_FINDER::matcher)
+                .filter(Matcher::matches)
+                .map(matcher -> StringUtils.parseAmount(matcher.group("amount")));
+    }
+}

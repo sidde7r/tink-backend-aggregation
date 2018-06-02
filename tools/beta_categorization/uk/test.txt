@@ -1,0 +1,367 @@
+__label__expenses:entertainment.vacation  american hote
+__label__expenses:entertainment.vacation *marslanding 35314369001
+__label__expenses:shopping.electronics *smallsell 07966881085
+__label__expenses:entertainment.vacation +1-920-634-3150 hotwire
+__label__expenses:transport.taxi addison lee ltd addison
+__label__expenses:entertainment.culture amazon prime 080-04962454
+__label__expenses:shopping.books amazon uk marketplace
+__label__expenses:shopping.books amazon uk retail amazon.co.uk
+__label__expenses:transport.flights american airlines vacat hounslow
+__label__expenses:entertainment.culture apple itunes store gbp luxembourg
+__label__expenses:entertainment.culture apple itunes store gbp luxemburg
+__label__expenses:entertainment.vacation axa travel insurance ax ireland
+__label__expenses:shopping.clothes abercrombie.com
+__label__expenses:food.restaurants admiral duncan
+__label__expenses:food.restaurants albert embankment servi
+__label__expenses:food.bars all bar one o2 arena greenwich
+__label__expenses:shopping.hobby amazon co uk retail
+__label__expenses:entertainment.culture amazon digital dwnlds
+__label__expenses:entertainment.culture amazon digital video amazon.co.uk/
+__label__expenses:entertainment.culture amazon prime 080-04962454
+__label__expenses:shopping.books amazon svcs europe,sar amazon.co.uk
+__label__expenses:shopping.books amazon uk marketplace
+__label__expenses:shopping.books amazon uk retail amazon.co.uk
+__label__expenses:entertainment.culture amz uk digital dwnload amazon.co.uk
+__label__expenses:transport.car andrews garage greater
+__label__expenses:entertainment.culture apple itunes store gbp* luxembourg
+__label__expenses:shopping.clothes argos
+__label__expenses:food.groceries asda george com leeds
+__label__expenses:transport.flights ba.com uk west drayton
+__label__expenses:shopping.clothes birmingham new street s birmingham
+__label__expenses:wellness.pharmacy boots uk ltd
+__label__expenses:misc.pets borrowmydoggy.com
+__label__expenses:wellness.healthcare bupa dental - west end
+__label__expenses:food.restaurants byron hamburger ltd
+__label__expenses:transport.flights ba.com switzerland
+__label__expenses:transport.flights ba.com uk west drayton
+__label__expenses:food.restaurants balans soho
+__label__expenses:food.restaurants barrica
+__label__expenses:food.restaurants barrow boy & banker
+__label__expenses:food.coffee berry bros & rudd
+__label__expenses:food.restaurants blue posts greater
+__label__expenses:shopping.books book network int ltd plymouth
+__label__expenses:wellness.pharmacy boots heathrow t5 land hounslow
+__label__expenses:wellness.pharmacy boots the chemist
+__label__expenses:wellness.pharmacy boots the chemist hounslow
+__label__expenses:wellness.pharmacy boots uk ltd
+__label__expenses:food.restaurants borough kitchen 1b - 1c
+__label__expenses:misc.pets borrowmydoggy.com
+__label__expenses:transport.car brampton service statio chesterfield
+__label__expenses:food.restaurants brasserie zedel
+__label__expenses:wellness.healthcare bupa dental - west end
+__label__expenses:food.restaurants byron hamburgers ltd
+__label__expenses:food.coffee cafe royal hotel
+__label__expenses:food.coffee caffe concerto piccadil
+__label__expenses:food.coffee caffe nero 495 ladbroke
+__label__expenses:food.coffee caffe nero portobello
+__label__expenses:food.bars charles tyrwhitt
+__label__expenses:home.incurences-fees chartered inst for secu
+__label__expenses:food.restaurants chicago rib shack leeds
+__label__expenses:transport.car church hill service sta essex
+__label__expenses:food.restaurants city bar & grill
+__label__expenses:shopping.clothes clapham - oddbins
+__label__expenses:food.groceries co-op north end road
+__label__expenses:transport.car co-op petrol clapham
+__label__expenses:entertainment.vacation conservatorium hotel
+__label__expenses:food.restaurants corney & barrow monumen
+__label__expenses:food.coffee costa  stockwell
+__label__expenses:food.coffee costa coffee
+__label__expenses:food.restaurants crabtree & evelyn winds windsor
+__label__expenses:food.bars crosse keyes
+__label__expenses:entertainment.vacation dean street townhouse
+__label__expenses:food.bars dalla terra wine bar lt
+__label__expenses:food.bars dehesa 25 ganton stree
+__label__expenses:food.groceries deliveroo.co.uk
+__label__expenses:entertainment.vacation duke of wellington
+__label__expenses:food.bars duke's head
+__label__expenses:transport.flights easyjet airlines epf misc
+__label__expenses:transport.car esso braywick sstn 11 w maidenhead
+__label__expenses:entertainment.vacation expedia*19208953182 expedia.co.uk
+__label__expenses:entertainment.vacation expedia*19223691779 expedia.co.uk
+__label__expenses:entertainment.vacation expedia*19223869062 expedia.co.uk
+__label__expenses:transport.car east coast - web sales york
+__label__expenses:transport.flights easyjet*easyjet eqszgz5 luton
+__label__expenses:food.restaurants eat limited
+__label__expenses:food.restaurants eat ltd 239 high holbo
+__label__expenses:food.coffee eat ltd duke of york s
+__label__expenses:food.coffee eat ltd st james'
+__label__expenses:food.restaurants egon kjoettbasaren bergen
+__label__expenses:food.restaurants el ganso
+__label__expenses:home.utilities eon
+__label__expenses:shopping.other event merchandising ltd
+__label__expenses:food.groceries exmouth market
+__label__expenses:entertainment.vacation expedia expedia.co.uk
+__label__expenses:food.restaurants fitzrovia
+__label__expenses:food.bars flask
+__label__expenses:shopping.clothes fortnum & mason plc
+__label__expenses:food.groceries fresh & wild
+__label__expenses:transport.publictransport gatwick exprss web
+__label__expenses:food.restaurants geo f trumper of jermyn
+__label__expenses:food.bars glassblower
+__label__expenses:food.bars golden lion
+__label__expenses:food.restaurants haz restaurant
+__label__expenses:food.restaurants headout.com new york city
+__label__expenses:entertainment.vacation heathrow airport hounslow
+__label__expenses:entertainment.culture historic royal palaces east molesey
+__label__expenses:food.restaurants halfords - chiswick
+__label__expenses:entertainment.vacation haymarket hotel
+__label__expenses:food.restaurants haz restaurant
+__label__expenses:shopping.clothes heal and son
+__label__expenses:food.restaurants heathrow airport hounslow
+__label__expenses:transport.publictransport heathrow express operat
+__label__expenses:transport.publictransport heathrow express operat hounsalow, midd
+__label__expenses:shopping.clothes hix
+__label__expenses:entertainment.vacation hotel ambassadeur juan les pins
+__label__expenses:entertainment.vacation hotel becquer unknown
+__label__expenses:entertainment.vacation hotel metropole geneve geneve
+__label__expenses:entertainment.vacation hotel urban madrid
+__label__expenses:entertainment.vacation hotel vier jahreszeiten muenchen
+__label__expenses:wellness.other http://www.fitchlearnin united kingdom
+__label__expenses:home.incurences-fees interest charge
+__label__expenses:food.groceries iceland stockwell
+__label__expenses:home.incurences-fees interest charge
+__label__expenses:food.bars iron duke
+__label__expenses:entertainment.culture itunes.com/bill luxembourg
+__label__expenses:shopping.gifts j floris ltd
+__label__expenses:home.services john lewis at home
+__label__expenses:shopping.clothes john lewis reading reading
+__label__expenses:shopping.clothes john lewis direct
+__label__expenses:shopping.clothes john lewis oxford stree
+__label__expenses:shopping.clothes john lewis peter jones
+__label__expenses:food.coffee konditor and cook ltd
+__label__expenses:food.alcohol-tobacco kennington - oddbins
+__label__expenses:food.bars kiehl's since 1851 windsor
+__label__expenses:food.bars kiehls since 1851
+__label__expenses:food.bars kiehls since 1851
+__label__expenses:food.restaurants l'escargot
+__label__expenses:food.restaurants latium
+__label__expenses:wellness.beauty lush-victoria
+__label__expenses:food.restaurants leon restaurants totte
+__label__expenses:shopping.clothes levi store
+__label__expenses:shopping.clothes liberty retail limited.
+__label__expenses:shopping.gifts lillywhites
+__label__expenses:food.coffee lola s cupcakes limited
+__label__expenses:food.coffee lolas cupcakes limited
+__label__expenses:transport.publictransport lul ticket machine-clap
+__label__expenses:transport.publictransport lul ticket machine-gree
+__label__expenses:transport.publictransport lul ticket machine-ladb
+__label__expenses:transport.publictransport lul ticket machine-stoc
+__label__expenses:wellness.beauty lush-maidstone maidstone
+__label__expenses:shopping.clothes luxottica retail uk ltd
+__label__expenses:shopping.clothes lyle & scott
+__label__expenses:shopping.clothes m & s - tottenham court
+__label__expenses:shopping.clothes malmaison birmingham co birmingham
+__label__expenses:wellness.beauty my essentials 8000224355
+__label__expenses:shopping.clothes marks & spencer - claph
+__label__expenses:shopping.clothes marks & spencer - green
+__label__expenses:shopping.clothes marks & spencer -green
+__label__expenses:shopping.clothes marks & spencer clapha
+__label__expenses:shopping.clothes mbuk trading limited
+__label__expenses:food.restaurants mcdonald's kings cross
+__label__expenses:food.restaurants mcdonalds 291 oxford st
+__label__expenses:food.restaurants mcdonalds warren street
+__label__expenses:home.incurences-fees membership fee
+__label__expenses:food.restaurants momo restaurant
+__label__expenses:food.bars morleys brixton ltd
+__label__expenses:entertainment.culture multisafepay*van gogh m
+__label__expenses:wellness.beauty my essentials 08000224355
+__label__expenses:shopping.clothes nicolas uk ltd
+__label__expenses:food.restaurants no. 32 the old town
+__label__expenses:entertainment.culture national theatre inter
+__label__expenses:entertainment.culture netflix.com
+__label__expenses:shopping.clothes next retail slough
+__label__expenses:food.groceries no.1 gatwick lounge - s
+__label__expenses:transport.flights norwegian air shuttle a fornebu
+__label__expenses:food.restaurants number sixteen
+__label__expenses:shopping.clothes ny-lon
+__label__expenses:food.restaurants oaka at the mansion hou
+__label__expenses:food.groceries ocado ltd. 08453991122
+__label__expenses:entertainment.culture odeon bfi imax bookit manchester
+__label__expenses:entertainment.culture odeon bfi imax box - manchester
+__label__expenses:entertainment.vacation old bridge hotel holmfirth
+__label__expenses:food.coffee pret a manger-islington
+__label__expenses:food.coffee pret a manger-tottenham
+__label__expenses:food.restaurants panopolis
+__label__expenses:shopping.other parcel yard
+__label__expenses:food.coffee paul gloucester rd
+__label__expenses:food.coffee paul uk piccadilly
+__label__expenses:food.restaurants pimenta de abreu & dos genève
+__label__expenses:food.restaurants ping pong south bank
+__label__expenses:food.bars pitcher and piano
+__label__expenses:food.restaurants pizza express
+__label__expenses:food.restaurants pizzaexpress restaurant
+__label__expenses:food.bars plume of feathers loughton
+__label__expenses:entertainment.vacation pointspurchase hyatt points.com
+__label__expenses:food.restaurants portobello - oddbins
+__label__expenses:food.coffee pret a manger - lower r
+__label__expenses:food.coffee pret a manger . regent
+__label__expenses:food.coffee pret a manger east
+__label__expenses:food.coffee pret a manger-crown pas
+__label__expenses:food.coffee pret a manger-piccadill
+__label__expenses:food.coffee pret a manger-russell s
+__label__expenses:wellness.pharmacy pulse pharmacy
+__label__expenses:food.restaurants pylones
+__label__expenses:entertainment.culture royal collection - onli
+__label__expenses:food.coffee rah r and b c/o rhubarb
+__label__expenses:food.restaurants railway tavern
+__label__expenses:food.bars red lion mayfair
+__label__expenses:shopping.gifts redbubble.com
+__label__expenses:food.restaurants renfe web madrid
+__label__expenses:home.rent rent
+__label__expenses:food.restaurants restaurant san remo genève
+__label__expenses:food.restaurants restaurant des armures genève
+__label__expenses:entertainment.culture rijksmuseum
+__label__expenses:food.restaurants rising sun
+__label__expenses:food.restaurants riverside
+__label__expenses:wellness.healthcare roodlane medical ltd
+__label__expenses:entertainment.culture rosetta stone harrisonburg
+__label__expenses:food.groceries sainsbury's biggleswade biggleswade
+__label__expenses:food.groceries sainsbury's stckwll clp
+__label__expenses:transport.car sixt gmbh&co autovermie pullach
+__label__expenses:food.restaurants smiths of bourne bourne
+__label__expenses:entertainment.vacation sofitel st james
+__label__expenses:food.coffee starbucks - 11051452
+__label__expenses:food.coffee starbucks baker street
+__label__expenses:food.coffee starbucks card reloa 8452703310
+__label__expenses:food.coffee starbucks coffee
+__label__expenses:food.coffee starbucks coffee co
+__label__expenses:food.coffee starbucks coffee compan
+__label__expenses:transport.car stratford city car park
+__label__expenses:shopping.clothes sadlers wells front of
+__label__expenses:food.groceries sainsbury's local porto
+__label__expenses:transport.car sainsbury's petrol fill
+__label__expenses:food.groceries sainsbury's stckwll clp
+__label__expenses:food.groceries sainsbury's stockwell s
+__label__expenses:food.groceries sainsbury's stockwell-c
+__label__expenses:food.groceries sainsbury's supermarket
+__label__expenses:transport.car shell 050824 shell birc bishop st.
+__label__expenses:entertainment.vacation shelleys
+__label__expenses:transport.other ship
+__label__expenses:transport.car sixt rent a car chesterfield
+__label__expenses:entertainment.vacation sofitel  gatwick west sussex
+__label__expenses:food.restaurants soho rehab
+__label__expenses:entertainment.culture spotify
+__label__expenses:food.coffee starbucks  gbr
+__label__expenses:food.coffee starbucks card reloa 8452703310
+__label__expenses:food.coffee starbucks coffee co
+__label__expenses:food.coffee starbucks coffee compan
+__label__expenses:food.bars swap bars limited southend-on-sea
+__label__expenses:entertainment.vacation swissotel geneve geneve 3
+__label__expenses:shopping.clothes t m lewin & sons ltd
+__label__expenses:transport.car tesco petrol filling st bourne
+__label__expenses:entertainment.vacation the cavendish hotel
+__label__expenses:transport.car tesco self service
+__label__expenses:food.groceries tesco stores 3093
+__label__expenses:food.groceries tesco stores 5130
+__label__expenses:transport.publictransport tfl travel charge tfl.gov.uk/cp
+__label__expenses:food.restaurants the abbeville
+__label__expenses:food.restaurants the albany
+__label__expenses:food.restaurants the chequers
+__label__expenses:food.bars the cock inn maidstone
+__label__expenses:entertainment.vacation the covent garden hotel
+__label__expenses:food.restaurants the curtains up
+__label__expenses:food.restaurants the enterprise
+__label__expenses:entertainment.vacation the haymarket hotel foo
+__label__expenses:food.restaurants the kennington
+__label__expenses:food.restaurants the magpie
+__label__expenses:entertainment.vacation the ritz
+__label__expenses:food.bars the running horse
+__label__expenses:food.restaurants the shard
+__label__expenses:entertainment.vacation the soho hotel restaura
+__label__expenses:food.restaurants the third space
+__label__expenses:food.restaurants the white hart
+__label__expenses:food.bars three crowns
+__label__expenses:transport.publictransport trainline.com ltd
+__label__expenses:entertainment.vacation travel reservation gbr
+__label__expenses:transport.taxi uber uber
+__label__expenses:transport.flights united airlines vacatio hounslow
+__label__expenses:transport.taxi uber
+__label__expenses:transport.taxi uber *ch nov08 v3he3 help.uber.com
+__label__expenses:transport.taxi uber *ch nov10 6yepi help.uber.com
+__label__expenses:transport.taxi uber *ch oct04 bf44j help.uber.com
+__label__expenses:transport.taxi uber *ch oct06 azncu help.uber.com
+__label__expenses:transport.taxi uber *de nov12 fbabc help.uber.com
+__label__expenses:transport.taxi uber *de nov13 p7ro4 help.uber.com
+__label__expenses:transport.taxi uber *es sep03
+__label__expenses:transport.taxi uber *es sep04
+__label__expenses:transport.taxi uber *fr jul09
+__label__expenses:transport.taxi uber *gb aug03
+__label__expenses:transport.taxi uber *gb aug06
+__label__expenses:transport.taxi uber *gb aug07
+__label__expenses:transport.taxi uber *gb aug08
+__label__expenses:transport.taxi uber *gb aug11
+__label__expenses:transport.taxi uber *gb aug12
+__label__expenses:transport.taxi uber *gb aug13
+__label__expenses:transport.taxi uber *gb aug14
+__label__expenses:transport.taxi uber *gb aug17
+__label__expenses:transport.taxi uber *gb aug24
+__label__expenses:transport.taxi uber *gb aug25
+__label__expenses:transport.taxi uber *gb jul06
+__label__expenses:transport.taxi uber *gb jul12
+__label__expenses:transport.taxi uber *gb jul16
+__label__expenses:transport.taxi uber *gb jul17
+__label__expenses:transport.taxi uber *gb jul24
+__label__expenses:transport.taxi uber *gb jul26
+__label__expenses:transport.taxi uber *gb jul27
+__label__expenses:transport.taxi uber *gb jun30
+__label__expenses:transport.taxi uber *gb nov02 j4u37 help.uber.com
+__label__expenses:transport.taxi uber *gb nov08 nxtcp help.uber.com
+__label__expenses:transport.taxi uber *gb nov13 xl2xv help.uber.com
+__label__expenses:transport.taxi uber *gb nov14 yn33n help.uber.com
+__label__expenses:transport.taxi uber *gb nov15 4ioh2 help.uber.com
+__label__expenses:transport.taxi uber *gb oct01 6fepf help.uber.com
+__label__expenses:transport.taxi uber *gb oct01 gswe4 help.uber.com
+__label__expenses:transport.taxi uber *gb oct01 ywew3 help.uber.com
+__label__expenses:transport.taxi uber *gb oct02 glp7j help.uber.com
+__label__expenses:transport.taxi uber *gb oct02 rewvj help.uber.com
+__label__expenses:transport.taxi uber *gb oct04 woqzi help.uber.com
+__label__expenses:transport.taxi uber *gb oct09 anc34 help.uber.com
+__label__expenses:transport.taxi uber *gb oct12 ff3bt help.uber.com
+__label__expenses:transport.taxi uber *gb oct16 nlpng help.uber.com
+__label__expenses:transport.taxi uber *gb oct19 fcl6b help.uber.com
+__label__expenses:transport.taxi uber *gb oct19 hhlys help.uber.com
+__label__expenses:transport.taxi uber *gb oct20 tt6io help.uber.com
+__label__expenses:transport.taxi uber *gb oct20 wydlp help.uber.com
+__label__expenses:transport.taxi uber *gb oct21 xrm2n help.uber.com
+__label__expenses:transport.taxi uber *gb oct22 dj7hc help.uber.com
+__label__expenses:transport.taxi uber *gb oct25 mxdrx help.uber.com
+__label__expenses:transport.taxi uber *gb oct27 2hkp5 help.uber.com
+__label__expenses:transport.taxi uber *gb oct27 ifa2c help.uber.com
+__label__expenses:transport.taxi uber *gb oct30 dhcwn help.uber.com
+__label__expenses:transport.taxi uber *gb sep04
+__label__expenses:transport.taxi uber *gb sep10 js6e6 help.uber.com
+__label__expenses:transport.taxi uber *gb sep17 7jgat help.uber.com
+__label__expenses:transport.taxi uber *gb sep23 ytayf help.uber.com
+__label__expenses:transport.taxi uber *gb sep30 hz5zw help.uber.com
+__label__expenses:transport.taxi uber *gb sep30 tzv7p help.uber.com
+__label__expenses:transport.taxi uber *nl oct09 rtp2e help.uber.com
+__label__expenses:transport.taxi uber *nl oct09 ta57q help.uber.com
+__label__expenses:transport.taxi uber bv help.uber.com
+__label__expenses:transport.taxi uber uber
+__label__expenses:transport.flights virgin america 9000001 san francisco
+__label__expenses:transport.flights virgin atlantic cc crawley
+__label__expenses:transport.flights virgin atlantic.com crawley
+__label__expenses:food.restaurants vertigo roux fine dinin
+__label__expenses:food.restaurants villandry 12 waterloo p
+__label__expenses:misc.charity virgin money giving ah norwich
+__label__expenses:transport.flights virginmilesbypoints points.com
+__label__expenses:home.communications vodafone
+__label__expenses:shopping.books w & g foyle ltd
+__label__expenses:shopping.gifts waitrose
+__label__expenses:shopping.gifts waitrose 616 clapham co clapham common
+__label__expenses:entertainment.vacation welcome break group ltd bishops stortfo
+__label__expenses:entertainment.vacation www.babbel.com berlin
+__label__expenses:food.restaurants wahaca 66 chandos plac
+__label__expenses:food.restaurants wahaca canary wharf the
+__label__expenses:food.restaurants wahaca islington 68/69
+__label__expenses:food.restaurants wahaca waterloo 119 wat
+__label__expenses:shopping.gifts waitrose 616 clapham co clapham common
+__label__expenses:food.restaurants waterstone's
+__label__expenses:food.restaurants waterstones unknown
+__label__expenses:transport.car wm morrisons petrol maidstone
+__label__expenses:transport.car wm morrisons petrol upt maidstone
+__label__expenses:food.groceries wm morrisons stores beccles
+__label__expenses:shopping.gifts world duty free t5 arr hounslow
+__label__expenses:food.restaurants yauatcha soho
+__label__expenses:food.bars ye olde windmill inn
+__label__expenses:food.bars zetland arms

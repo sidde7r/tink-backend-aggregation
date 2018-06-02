@@ -1,0 +1,27 @@
+package se.tink.backend.aggregation.agents.banks.seb.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.libraries.account.AccountIdentifier;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class BankTransferListEntity extends TransferListEntity {
+    @JsonProperty("BANK_PREFIX")
+    public String BankPrefix;
+
+    @JsonProperty("OVERF_DAT")
+    public String TransferDate;
+
+    @Override
+    @JsonIgnore(true)
+    public String getTransferDateString() {
+        return TransferDate;
+    }
+
+    @Override
+    @JsonIgnore(true)
+    public AccountIdentifier.Type getDestinationType() {
+        return AccountIdentifier.Type.SE;
+    }
+}

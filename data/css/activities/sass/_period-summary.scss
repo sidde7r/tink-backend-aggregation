@@ -1,0 +1,224 @@
+$top-part-cell-height: 72px;
+
+.period-activity
+{
+	.top-summaries
+	{
+		margin-left: -$padding;
+		margin-right: -$padding;
+	}
+
+	.top-summaries-part
+	{
+
+		float: left;
+		width: 50%;
+		text-align: center;
+		margin-top: -$padding;
+		padding: $padding 0;
+		height: $top-part-cell-height;
+	}
+
+	.horizontal-divider
+	{
+		height: $top-part-cell-height;
+		padding-top: $padding;
+		padding-bottom: $padding;
+		margin-top: -$padding;
+		margin-bottom: –$padding;
+		float: left;
+		background: rgba($activity-divider-light-color, 0.5);
+	}
+
+	.total-expenses
+	{
+		text-align: center;
+		margin-right: -1px;
+	}
+
+	.biggest-purchase
+	{
+
+		max-width: 50%;
+		margin-right: -$padding;
+
+		.top-summaries-bottom
+		{
+			color: $expense-color;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+	}
+
+	.divider-wrapper
+	{
+		.second
+		{
+			margin: -8px 0 8px;
+		}
+	}
+
+	.additional-sections
+	{
+		margin-left: -$padding;
+		margin-right: -$padding;
+		.divider-wrapper
+		{
+			margin-left: $padding;
+			margin-right: $padding;
+		}
+
+		.divider
+		{
+			margin: 0 0 $padding;
+			background-color: $activity-divider-lightest-color;
+		}
+
+	}
+
+	.left-to-spend-chart
+	{
+		padding: 0;
+		padding-top: $padding;
+		margin-top: -$padding;
+		margin-bottom: -$padding;
+		margin-right: -$padding;
+	}
+
+	.top-summaries-title
+	{
+		margin-top: $padding;
+		color: $text-color;
+		font-family: $font-regular, 'proxima', ProximaNovaA-Regular, sans-serif;
+		font-weight: $weight-regular;
+		font-size: 10px;
+		letter-spacing: 1.5px;
+	}
+
+	.top-summaries-amount
+	{
+		margin-top: 4px;
+		font-size: 30px;
+		font-family: $font-light, proxima-light, ProximaNovaA-Light, sans-serif;
+		font-weight: $weight-light;
+		margin-bottom: $top-summaries-amount-bottom-padding;
+	}
+
+	.top-summaries-bottom
+	{
+		margin: 2px $padding 0;
+		font-family: $font-bold, proxima-semibold, ProximaNovaA-Semibold, sans-serif;
+		font-weight: $weight-bold;
+		font-size: 12px;
+	}
+
+	.unusual-spending-summary
+	{
+		margin-top: 0;
+
+		margin-bottom: -$padding;
+		padding-bottom: $padding;
+
+		.divider-wrapper
+		{
+			margin-left: 0;
+			margin-right: 0;
+		}
+
+		.charts
+		{
+			padding: $padding $padding;
+			max-width: 100%;
+
+			svg
+			{
+				margin-bottom: -20px; // This removes the white space which is inside the svg image.
+			}
+
+		}
+
+		.chart
+		{
+			max-width: 100%;
+		}
+
+		.average-right-margin
+		{
+			padding-right: $padding;
+		}
+	}
+
+	.budget-summary
+	{
+		margin-top: $padding;
+		margin-bottom: -$vertical-activity-padding;
+		margin-left: -$padding;
+		margin-right: -$padding;
+		padding-bottom: $padding;
+
+
+		.divider
+		{
+			background-color: $activity-divider-lightest-color;
+		}
+
+
+		.activity-description-text
+		{
+			margin: 16px 2 * $padding  24px;
+		}
+
+		.pie-charts
+		{
+			margin: 0 auto; 
+			text-align: center;
+			margin-bottom: 16px;
+		}
+	}
+
+	.expenses-this-week
+	{
+		margin-top: -$padding;
+		margin-bottom: -$padding;
+		padding: $padding;
+		padding-bottom: -$padding;
+		.charts
+		{
+			margin-bottom: -20px;
+		}
+	}
+
+	.title-container
+	{
+		padding: 4px 0 4px 0px;
+		text-align: center;
+
+		.left
+		{
+			width: 25%;
+			float: left;
+			padding-bottom: 1px;
+		}
+
+		.activity-description-text
+		{
+			font-family: $font-regular, 'proxima', ProximaNovaA-Regular, sans-serif;
+			font-weight: $weight-regular;
+			font-size: 10px;
+			letter-spacing: 1.5px;		
+			float: left;
+			width: 50%;
+			color: $text-color;
+		}
+
+		.average
+		{
+			text-align: right;
+			float: right;
+			font-size: 12px;
+			font-family: $font-regular, proxima, ProximaNovaA-Regular, sans-serif;
+			color: $expense-comparison-color;
+		}
+	}
+}

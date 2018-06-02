@@ -1,0 +1,824 @@
+@import se.tink.backend.common.mail.monthly.summary.model.*
+@import se.tink.backend.common.mail.monthly.summary.utils.*
+@args(){
+String title_main
+String title_date_description,
+String title_categorization_count,
+String categories_title,
+String categories_sub_title,
+String categories_caption_percent_units,
+String budgets_title,
+String budgets_sub_title,
+IconsUtil categories_icon_util,
+Boolean fraud_enabled_on_user_market,
+Boolean fraud_activated,
+int fraud_unhandled_count,
+int fraud_handled_count,
+String fraud_caption_name,
+String fraud_caption_right_now,
+String fraud_caption_you_handled,
+String fraud_caption_nothing_to_handle,
+String fraud_caption_event,
+String fraud_caption_handle_warnings,
+String fraud_caption_event_to_handle,
+String fraud_caption_activate_description,
+String fraud_caption_activate,
+String userId,
+String activities_title,
+int activities_low_balance_count,
+int activities_large_expense_count
+int activities_more_than_usual_count
+String activities_low_balance_caption
+String activities_large_expense_caption
+String activities_more_than_usual_caption
+String openButtonCaption
+String footer_description
+List<CategoryData> categories,
+List<BudgetData> budgets,
+String cdn
+        }
+        <html>
+        <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+            <style type="text/css">
+
+                body {
+                    margin: 0;
+                    padding: 0;
+                    min-width: 100% !important;
+                    padding: 50px 20px 50px 20px;
+                    background: #f7f4f2;
+                }
+
+                body, p, span {
+                    font-family: Arial, Helvetica, sans-serif;
+                    font-weight: 300;
+                    letter-spacing: 0.5pt;
+                }
+
+                a {
+                    text-decoration: none;
+                }
+
+                td {
+                    vertical-align: top;
+                }
+
+                .title {
+                    text-align: center;
+                    padding: 0 0 0 0;
+                    font-size: 46px;
+                }
+
+                .datetitle {
+                    color: #959594;
+                    text-align: center;
+                    padding: 12px 0 0 0;
+                    font-size: 16px;
+                }
+
+                .subtitle {
+                    color: #959594;
+                    text-align: center;
+                    font-size: 24px;
+                    padding: 20px 0 10px 0;
+                    line-height: 150%;
+                }
+
+                .footer {
+                    color: #959594;
+                    text-align: center;
+                    padding: 10px 0px 50px 0px;
+                    line-height: 150%;
+                }
+
+                .separator {
+                    width: 10px;
+                    height: 25px;
+                    background: #e6e6e6;
+                }
+
+                .separator-start {
+                    background: -webkit-linear-gradient(#f7f4f2, #e6e6e6); /* For Safari 5.1 to 6.0 */
+                    background: -o-linear-gradient(#f7f4f2, #e6e6e6); /* For Opera 11.1 to 12.0 */
+                    background: -moz-linear-gradient(#f7f4f2, #e6e6e6); /* For Firefox 3.6 to 15 */
+                    background: linear-gradient(#f7f4f2, #e6e6e6); /* Standard syntax */
+                    height: 50px;
+                }
+
+                .separator-end {
+                    background: -webkit-linear-gradient(#e6e6e6, #f7f4f2); /* For Safari 5.1 to 6.0 */
+                    background: -o-linear-gradient(#e6e6e6, #f7f4f2); /* For Opera 11.1 to 12.0 */
+                    background: -moz-linear-gradient(#e6e6e6, #f7f4f2); /* For Firefox 3.6 to 15 */
+                    background: linear-gradient(#e6e6e6, #f7f4f2); /* Standard syntax */
+                    height: 50px;
+                }
+
+                .entry {
+                    background: #ffffff;
+                    border: 1px solid #e6e6e6;
+                    padding: 20px;
+                    border-radius: 8px;
+                }
+
+                .entry-id-control {
+                    background-color: #00BDBD;
+                    color: #ffffff;
+                }
+
+                .entry-id-control .entry-title {
+                    color: #ffffff;
+                }
+
+                .entry .entry-title {
+                    font-size: 28px;
+                    text-align: center;
+                    padding: 0;
+                }
+
+                .entry .entry-sub-title {
+                    font-size: 15px;
+                    padding-bottom: 20px;
+                    text-align: center;
+                    color: #989898;
+                }
+
+                .entry .entry-footer {
+                    text-align: right;
+                    padding-top: 10px;
+                    color: #989898;
+                    font-size: 9px;
+                }
+
+                .unsafe {
+                    background-color: #E63F49;
+                }
+
+                .safe {
+                    background-color: #00BDBD;
+                }
+
+                .btn {
+                    border-radius: 5px;
+                    padding: 20px;
+                    color: #ffffff;
+                    text-align: center;
+                    font-size: 24px;
+                    border-left: 1px solid;
+                    border-right: 1px solid;
+                }
+
+                .btn-default {
+                    background: #00bdbd;
+                }
+
+                .btn-danger {
+                    background: #E63F49;
+                }
+
+                .no-top-radius {
+                    border-top-left-radius: 0px;
+                    border-top-right-radius: 0px;
+                }
+
+                .no-bottom-radius {
+                    border-bottom-left-radius: 0px;
+                    border-bottom-right-radius: 0px;
+                }
+
+                .events-table {
+                    border-spacing: 0;
+                    width: 100%;
+                    text-align: center;
+                    color: #959594;
+                    height: 100px;
+                }
+
+                .expenses-table {
+                    border-spacing: 0;
+                    text-align: left;
+                    color: #959594;
+                    font-size: 20px;
+                }
+
+                tr.border-bottom td {
+                    border-bottom: 1px solid #F5F5F5;
+                }
+
+                .expenses-table .expenses-icon-column {
+                    width: 30px;
+                }
+
+                .expenses-table .expenses-icon-column img {
+                    height: 40px;
+                    width: 40px;
+                }
+
+                .expenses-table .expenses-pct-column {
+                    text-align: right;
+                    color: #00BDBE;
+                    font-size: 18px;
+                    min-width: 40px
+                }
+
+                .expenses-table .expenses-arrow-column {
+                    text-align: right;
+                    padding-left: 20px;
+                }
+
+                .expenses-table .expenses-pct-column-good {
+                    text-align: left;
+                    color: #FFBB00;
+                    width: 40px;
+                    font-size: 16px;
+                    padding-left: 0;
+                }
+
+                .expenses-table .expenses-pct-column-bad {
+                    text-align: left;
+                    color: #009AE2;
+                    width: 40px;
+                    font-size: 16px;
+                    padding-left: 0;
+                }
+
+                .expenses-table td {
+                    padding: 4px 5px;
+                    vertical-align: middle;
+                }
+
+                .budgets-table {
+                    text-align: center;
+                    color: #959594;
+                    width: 100%;
+                }
+
+                .budgets-title {
+                    font-size: 18px;
+                    /*margin-top: 8px;*/
+                    /*margin-bottom: 0;*/
+                }
+
+                .budgets-table td {
+                    width: 25%;
+                    padding-bottom: 10px;
+                }
+
+                .budgets-table .icon-container {
+                    height: 70px;
+                    width: 70px;
+                    /*margin: 0px auto;*/
+                    background-size: 70px 70px;
+                }
+
+                .budgets-table .icon {
+                    height: 60px;
+                    width: 60px;
+                    padding: 3px;
+                }
+
+                .events-table td {
+                    width: 33%;
+                    padding: 20px 10px 20px 10px;
+                    border-left: solid 1px #e6e6e6;
+                    border-top: solid 1px #e6e6e6;
+                    font-size: 18px;
+                }
+
+                .events-table td.left {
+                    border-left: none;
+                }
+
+                .events-table td.top {
+                    border-top: none;
+                }
+
+                .events-table .number img {
+                    height: 38px;
+                    padding: 0 7px 0 0;
+                }
+
+                .events-table .number {
+                    font-size: 50px;
+                    padding-right: 7px;
+                }
+
+                .events-table tr td p {
+                    padding-top: 5px;
+                }
+
+                .id-control-table {
+                    text-align: center;
+                    color: #FFFFFF;
+                    width: 100%;
+                    font-size: 16px;
+                }
+
+                .id-control-table td {
+                    width: 50%;
+                    padding-bottom: 20px;
+                }
+
+                .numberCircle {
+                    -webkit-border-radius: 50%;
+                    -moz-border-radius: 50%;
+                    border-radius: 50%;
+                    width: 75px;
+                    padding: 8px;
+                    font-size: 46px;
+                    border: 5px solid #FFFFFF;
+                    line-height: 1em;
+                    position: relative;
+                    font-weight: bolder;
+                    text-align: center;
+                    height: 79px;
+                }
+
+                .numberCircle .content {
+                    height: 100%;
+                    width: 100%;
+                    text-align: center;
+                    padding-top: 16px;
+                }
+
+                .spacer {
+                    height: 10px;
+                }
+
+            </style>
+        </head>
+        <body>
+
+
+        <table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" bgcolor="#f7f4f2">
+            <tr>
+                <td align="center">
+
+                    <table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%">
+                        <tr>
+                            <td align="center" valign="top">
+                                <table border="0" cellpadding="0" cellspacing="0" width="458">
+                                    <tr>
+                                        <td align="center" valign="top">
+                                            <table border="0" cellpadding="0" cellspacing="0" height="50" width="100%">
+                                                <tr>
+                                                    <td align="left">
+                                                        <img style="width: 100px;" src="@cdn/logo_normal.png"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    <tr>
+                                        <td align="center" valign="top" class="title">
+                                            @title_main
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center" valign="top" class="datetitle">
+                                            @title_date_description
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center" valign="top" class="subtitle">
+                                            @title_categorization_count
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center" valign="top">
+                                            <table border="0" cellpadding="0" cellspacing="0" height="50" width="100%">
+                                                <tr>
+                                                    <td align="center">
+                                                        <div class="separator separator-start"></div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+
+                                </table>
+
+                                @if (categories.size() > 0){
+                                <table border="0" cellpadding="0" cellspacing="0" width="458" class="entry">
+                                    <tr>
+                                        <td align="center" valign="top">
+
+                                            <table border="0" cellpadding="0" cellspacing="0" width="458">
+                                                <tr>
+                                                    <td valign="top">
+
+                                                        <table border="0" cellpadding="10" cellspacing="0" width="458">
+                                                            <tr>
+
+                                                                <td valign="top" class="entry-title">
+                                                                    @categories_title
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td valign="top" class="entry-sub-title">
+                                                                    @categories_sub_title
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <table class="expenses-table" width="458">
+
+                                                                    @for(CategoryData c : categories ){
+
+                                                                    @if(c_isLast){
+                                                                    <tr>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                    <tr class="border-bottom">
+                                                                        }
+                                                                        <td class="expenses-icon-column">
+                                                                            <img src="@cdn/categories/@(categories_icon_util.getIcon(c.getCategory().getCode()))"/>
+                                                                        </td>
+                                                                        <td class="expenses-text-column">
+                                                                            <span>@(c.getCategory().getPrimaryName())</span>
+                                                                        </td>
+                                                                        <td class="expenses-pct-column">
+                                                                            @c.getCurrentPeriodShareInPercent()%
+                                                                        </td>
+                                                                        @if(c.getDifferenceInPercentUnits() > 0) {
+                                                                        <td class="expenses-arrow-column">
+                                                                            <img src="@cdn/misc/up_arrow.png"
+                                                                                 width="16px" height="16px"/>
+                                                                        </td>
+                                                                        <td class="expenses-pct-column-good">
+                                                                            @c.getAbsoluteDifferenceInPercentUnits()%
+                                                                        </td>
+                                                                        }else{
+                                                                        <td class="expenses-arrow-column">
+                                                                            <img src="@cdn/misc/down_arrow.png"
+                                                                                 width="16px" height="16px"/>
+                                                                        </td>
+                                                                        <td class="expenses-pct-column-bad">
+                                                                            @c.getAbsoluteDifferenceInPercentUnits()%
+                                                                        </td>
+                                                                        }
+
+                                                                    </tr>
+
+                                                                    }
+
+                                                                </table>
+                                                            </tr>
+                                                            <tr>
+                                                                <td valign="top" class="entry-footer">
+                                                                    (@categories_caption_percent_units)
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table border="0" cellpadding="0" cellspacing="0" width="458">
+                            <tr>
+                                <td align="center">
+                                    <div class="separator"></div>
+                                </td>
+                            </tr>
+                                </table>
+                        }
+
+                                @if (budgets.size() > 0){
+                                <table border="0" cellpadding="0" cellspacing="0" width="458" class="entry">
+                                    <tr>
+                                        <td align="center" valign="top">
+
+                                            <table border="0" cellpadding="0" cellspacing="0" width="458">
+                                                <tr>
+                                                    <td valign="top">
+
+                                                        <table border="0" cellpadding="10" cellspacing="0" width="458">
+                                                            <tr>
+
+                                                                <td valign="top" class="entry-title">
+                                                                    @budgets_title
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td valign="top" class="entry-sub-title">
+                                                                    @budgets_sub_title
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+
+                                                            </tr>
+                                                        </table>
+
+                                                        <table class="budgets-table">
+                                                            <tr>
+                                                                @for (BudgetData budget : budgets)
+                                                                {
+                                                                <td align="center">
+                                                                    <div class="icon-container" style="background-image: url('@raw(){@cdn}/budgets/@budget.getBackgroundIcon()');">
+                                                                        <img src="@cdn/categories-white/@budget.getIcon()" class="icon"/>
+                                                                    </div>
+                                                                    <p class="budgets-title">@budget.getName()</p>
+                                                                </td>
+
+                                                                @if (budget_index % 4 == 0){
+                                                            <tr>
+                                                            <tr class="spacer"></tr>
+                                                            <tr></tr>
+                                                            }
+                                                            }
+                                                            </tr>
+
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <table border="0" cellpadding="0" cellspacing="0" width="458">
+                                    <tr>
+                                        <td align="center">
+                                            <div class="separator"></div>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                }
+
+
+
+                                @if(fraud_enabled_on_user_market)
+                                {
+                                @if (fraud_activated && fraud_unhandled_count == 0){
+                                <table border="0" cellpadding="0" cellspacing="0" width="458" class="entry entry-id-control safe">
+                                    <tr>
+                                        <td align="center" valign="top">
+
+                                            <table border="0" cellpadding="0" cellspacing="0" width="458">
+                                                <tr>
+                                                    <td valign="top">
+
+                                                        <table border="0" cellpadding="10" cellspacing="0" width="458">
+                                                            <tr>
+                                                                <td valign="top" class="entry-title">
+                                                                    @fraud_caption_name
+                                                                </td>
+                                                            </tr>
+                                                            <tr></tr>
+                                                        </table>
+
+                                                        <table class="id-control-table">
+                                                            <tr>
+                                                                <td align="center">@fraud_caption_right_now</td>
+                                                                <td align="center">@fraud_caption_you_handled</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="center">
+                                                                    <img src="@cdn/fraud/shield_green.png"/>
+                                                                </td>
+                                                                <td align="center">
+                                                                    <div class="numberCircle">
+                                                                        <div class="content">@fraud_handled_count</div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="center">
+                                                                    @fraud_caption_nothing_to_handle
+                                                                </td>
+                                                                <td align="center">
+                                                                    @fraud_caption_event
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                        </td>
+                                    </tr>
+                                </table>
+                                }
+
+                                @if (fraud_activated && fraud_unhandled_count != 0){
+                                <table border="0" cellpadding="0" cellspacing="0" width="458"
+                                       class="entry entry-id-control unsafe no-bottom-radius">
+                                    <tr>
+                                        <td align="center" valign="top">
+
+                                            <table border="0" cellpadding="0" cellspacing="0" width="458">
+                                                <tr>
+                                                    <td valign="top">
+
+                                                        <table border="0" cellpadding="10" cellspacing="0" width="458">
+                                                            <tr>
+                                                                <td valign="top" class="entry-title">
+                                                                    @fraud_caption_name
+                                                                </td>
+                                                            </tr>
+                                                            <tr></tr>
+                                                        </table>
+
+                                                        <table class="id-control-table">
+                                                            <tr>
+                                                                <td align="center">@fraud_caption_right_now</td>
+                                                                <td align="center">@fraud_caption_you_handled</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="center">
+                                                                    <img src="@cdn/fraud/shield_red.png"/>
+                                                                </td>
+                                                                <td align="center">
+                                                                    <div class="numberCircle">
+                                                                        <div class="content">@fraud_handled_count</div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="center">
+                                                                    @fraud_caption_event_to_handle
+                                                                </td>
+                                                                <td align="center">
+                                                                    @fraud_caption_event
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table border="0" cellpadding="0" cellspacing="0" width="500">
+                                    <tr>
+                                        <td align="center" valign="top" style="border-collapse: collapse;">
+                                            <a href="https://www.tink.se/api/v1/user/open/fraud/?userId=@userId">
+                                                <div class="btn btn-danger no-top-radius">
+                                                    @fraud_caption_handle_warnings
+                                                </div>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                                }
+
+                                @if(!fraud_activated){
+
+                                <table border="0" cellpadding="0" cellspacing="0" width="458"
+                                       class="entry entry-id-control unsafe no-bottom-radius">
+                                    <tr>
+                                        <td align="center" valign="top">
+
+                                            <table border="0" cellpadding="0" cellspacing="0" width="458">
+                                                <tr>
+                                                    <td valign="top">
+
+                                                        <table border="0" cellpadding="10" cellspacing="0" width="458">
+                                                            <tr>
+                                                                <td valign="top" class="entry-title">
+                                                                    @fraud_caption_name
+                                                                </td>
+                                                            </tr>
+                                                            <tr></tr>
+                                                        </table>
+
+                                                        <table class="id-control-table">
+                                                            <tr>
+                                                                <td>
+                                                                    <img src="@cdn/fraud/shield_red.png"/>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    @fraud_caption_activate_description
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <table border="0" cellpadding="0" cellspacing="0" width="500">
+                                    <tr>
+                                        <td align="center" valign="top" style="border-collapse: collapse;">
+                                            <a href="https://www.tink.se/api/v1/user/open/fraud/?userId=@userId">
+                                                <div class="btn btn-danger no-top-radius">@fraud_caption_activate</div>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                                }
+                                }
+
+                                <table border="0" cellpadding="0" cellspacing="0" width="458">
+                                    <tr>
+                                        <td align="center">
+                                            <div class="separator"></div>
+                                        </td>
+                                    </tr>
+                                </table>
+
+
+                                <table border="0" cellpadding="0" cellspacing="0" width="458" class="entry">
+                                    <tr>
+                                        <td align="center" valign="top">
+
+                                            <table border="0" cellpadding="0" cellspacing="0" width="458">
+                                                <tr>
+                                                    <td valign="top">
+
+                                                        <table border="0" cellpadding="10" cellspacing="0" width="458">
+                                                            <tr>
+                                                                <td valign="top" class="entry-title">
+                                                                    @activities_title
+                                                                </td>
+                                                            </tr>
+                                                            <tr></tr>
+                                                        </table>
+
+                                                        <table class="events-table">
+                                                            <tr>
+                                                                <td class="left top">
+                                                                    <div class="number" style="color: #00BDBD;">
+                                                                        <img src="@cdn/events/low_balance_icon.png" height="38px"/>@activities_low_balance_count
+                                                                    </div>
+                                                                    <p>@activities_low_balance_caption</p>
+                                                                </td>
+                                                                <td class="top">
+                                                                    <div class="number" style="color: #009DDE;">
+                                                                        <img src="@cdn/events/large_expense_icon.png" height="38px"/>@activities_large_expense_count
+                                                                    </div>
+                                                                    <p>@activities_large_expense_caption</p>
+                                                                </td>
+                                                                <td class="top">
+                                                                    <div class="number" style="color: #FCB827;"><img
+                                                                            src="@cdn/events/more_then_usual_icon.png" height="38px"/>@activities_more_than_usual_count
+                                                                    </div>
+                                                                    <p>@activities_more_than_usual_caption</p>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+
+
+                                <table border="0" cellpadding="0" cellspacing="0" width="458">
+                                    <tr>
+                                        <td align="center">
+                                            <div class="separator"></div>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <table border="0" cellpadding="0" cellspacing="0" width="500">
+                                    <tr>
+                                        <td align="center" valign="top" style="border-collapse: collapse;">
+                                            <a href="https://www.tink.se/api/v1/user/open/?userId=@userId">
+                                                <div class="btn btn-default">@openButtonCaption</div>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <table border="0" cellpadding="0" cellspacing="0" width="458">
+                                    <tr>
+                                        <td align="center">
+                                            <div class="separator separator-end"></div>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                    <tr>
+                                        <td align="center" valign="top">
+                                            <div class="footer">
+                                                @escape("raw") {
+                                                @footer_description
+                                                }
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </td>
+                        </tr>
+
+                    </table>
+
+                </td>
+            </tr>
+        </table>
+        </body>
+        </html>

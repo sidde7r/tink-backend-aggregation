@@ -1,0 +1,11 @@
+date	description	amount	type	pending
+2017-12-29	Nytorget 6 Bar	-789
+2017-12-16	Pascha Deli	-70
+2017-11-26	Pontus!	-99
+2017-11-07	Taxi Kurir Stockholm	-101
+2017-10-20	Ekholmsnäs Golf	-150
+2017-10-10	Caliente Tapas	-337
+2017-10-10	ICA Supermarket Baronen	-65
+2017-09-19	Beijing 8 Sushi	-85
+2017-09-09	Taxi 022	-345
+2017-09-08	Taxi 022	-145
