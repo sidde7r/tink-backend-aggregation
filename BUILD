@@ -364,7 +364,6 @@ java_library(
         "//src/categorization-api",
         "//src/consent-lib",
         "//src/sms-otp-lib",
-        "//src/sms-gateway-lib",
         ":common-utilities",
         ":connector-api",
         "@tink_backend_encryption//:encryption-api",
