@@ -31,7 +31,7 @@ Thumbs.db
 /bazel-genfiles
 /bazel-out
 /bazel-testlogs
-/bazel-tink-backend
+/bazel-tink-backend-aggregation
 .bazelrc
 
 # Editors
