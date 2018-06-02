@@ -1162,60 +1162,6 @@ filegroup(
     ]),
 )
 
-java_library(
-    name = "main-grpc-v1-lib",
-    srcs = glob(["src/main-grpc-v1-lib/src/main/**/*.java"]),
-    visibility = ["//visibility:public"],
-    runtime_deps = [
-        "//third_party:io_grpc_grpc_auth",
-        "//third_party:io_netty_netty_tcnative_boringssl_static",
-
-    ],
-    deps = [
-        "//src/categorization-api",
-        "//src/consent-lib",
-        "//src/sms-otp-lib",
-        "//src/sms-gateway-lib",
-        "//src/libraries/auth:auth",
-        ":common-lib",
-        ':common-utilities',
-        ":firehose-v1-java-pb",
-        ":firehose-v1-java-pb_compile_imports",
-        ":firehose-v1-lib",
-        ":main-api",
-        ":main-lib",
-        ":insights-api",
-        ":queue-lib",
-        ":tink-grpc-v1-api-java",
-
-        "//src/api-headers",
-
-        "//src/libraries/abnamro:abn_amro",
-        "//src/libraries/uuid:uuid",
-        "//src/libraries/serialization_utils:serialization-utils",
-        "//src/libraries/metrics:metrics",
-        "//src/libraries/date:date",
-        "//src/libraries/cluster:cluster",
-        "//src/libraries/account_identifier:account-identifier",
-        "//src/libraries/request_tracing:request-tracing",
-        "//src/libraries/access_logging:access_logging",
-        "//src/libraries/phone_number_utils:phone_number_utils",
-        "//src/libraries/i18n",
-        "//src/libraries/generic_application:generic-application",
-        "//src/libraries/identity:identity",
-
-        "//third_party:com_google_http_client_google_http_client",
-        "//third_party:com_google_inject_guice",
-        "//third_party:io_grpc_grpc_context",
-        "//third_party:io_grpc_grpc_core",
-        "//third_party:io_grpc_grpc_stub",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
-        "//third_party:org_slf4j_slf4j_api",
-        "//third_party:com_google_inject_extensions_guice_multibindings",
-        "//third_party:org_modelmapper_modelmapper",
-    ],
-)
-
 junit_test(
     name = "aggregation-api-test",
     srcs = glob(["src/aggregation-api/src/test/**/*.java"]) + [
