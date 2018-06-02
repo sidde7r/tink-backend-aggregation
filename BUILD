@@ -676,47 +676,6 @@ java_library(
 )
 
 java_library(
-    name = "insights-lib",
-    srcs = glob(["src/insights-lib/src/main/**/*.java"]),
-    data = [
-        "etc/development-insights-server.yml",
-        "//data",
-    ],
-    deps = [
-        ":common-lib",
-        ":insights-api",
-        ":main-lib",
-        ":main-api",
-        ":common-utilities",
-        "//src/categorization-api",
-        "//src/libraries/auth",
-        "//src/libraries/cluster:cluster",
-        "//src/libraries/date:date",
-        "//third_party:joda_time_joda_time",
-        "//src/libraries/discovery",
-        "//src/libraries/endpoint_configuration:endpoint_configuration",
-        "//src/libraries/jersey_guice:jersey-guice",
-        "//src/libraries/log",
-        "//src/libraries/metrics",
-        "//src/libraries/serialization_utils:serialization-utils",
-        "//src/libraries/uuid",
-        "//src/libraries/identity",
-        "//third_party:com_google_guava_guava",
-        "//third_party:com_google_inject_extensions_guice_multibindings",
-        "//third_party:com_google_inject_guice",
-        "//third_party:com_mandrillapp_wrapper_lutung_lutung",
-        "//third_party:io_dropwizard_dropwizard_core",
-        "//third_party:org_apache_commons_commons_math",
-        "//third_party:net_spy_spymemcached",
-        "//third_party:org_hibernate_hibernate_core",
-        "//third_party:org_rythmengine_rythm_engine",
-        "//src/libraries/protobuf_serialization_utils:protobuf-serialization-utils",
-    ],
-)
-
-
-
-java_library(
     name = "main-lib",
     srcs = glob(["src/main-lib/src/main/**/*.java"]),
     runtime_deps = [
