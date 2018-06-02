@@ -421,7 +421,6 @@ java_library(
         ":main-api",
         ":system-api",
         ":insights-api",
-        ":gdpr-export-api",
         ":product-executor-api",
 
         "//src/libraries/http:http-annotations",
