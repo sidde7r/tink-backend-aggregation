@@ -218,39 +218,6 @@ java_library(
 )
 
 java_library(
-    name = "gdpr-export-lib",
-    srcs = glob(["src/gdpr-export-lib/src/main/**/*.java"]),
-    deps = [
-        ":common-lib",
-        ":main-api",
-        ":gdpr-export-api",
-        "//src/api-annotations",
-        "//src/categorization-api",
-        "//src/consent-lib",
-        "//src/libraries/auth",
-        "//src/libraries/cluster",
-        "//src/libraries/date",
-        "//src/libraries/discovery",
-        "//src/libraries/endpoint_configuration",
-        "//src/libraries/jersey_guice:jersey-guice",
-        "//src/libraries/metrics",
-        "//src/libraries/serialization_utils:serialization-utils",
-        "//src/libraries/uuid",
-        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
-        "//third_party:com_google_guava_guava",
-        "//third_party:com_google_inject_guice",
-        "//third_party:io_dropwizard_dropwizard_core",
-        "//third_party:joda_time_joda_time",
-        "//third_party:org_assertj_assertj_core",
-        "//third_party:org_freemarker",
-        "//third_party:org_springframework_data_spring_data_commons",
-        "//third_party:org_springframework_spring_tx",
-    ],
-)
-
-
-
-java_library(
     name = "product-executor-lib",
     srcs = glob(["src/fs-product-execution-lib/src/main/**/*.java"]),
     data = [
@@ -454,7 +421,6 @@ java_library(
         ":main-api",
         ":system-api",
         ":insights-api",
-        ":gdpr-export-api",
         ":product-executor-api",
 
         "//src/libraries/http:http-annotations",
@@ -606,7 +572,6 @@ java_library(
         "@tink_backend_encryption//:encryption-api",
         ":firehose-v1-java-pb",
         ":firehose-v1-lib",
-        ":gdpr-export-lib",
         ":main-api",
         ":queue-lib",
         ":system-api",
