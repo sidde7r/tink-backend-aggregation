@@ -34,17 +34,6 @@ java_library(
     visibility = ["//visibility:public"],
 )
 
-junit_test(
-    name = "common-utilities-test",
-    srcs = glob(["src/common-utilities/src/test/**/*.java"]),
-    deps = [
-        ":common-utilities",
-        "//third_party:com_sun_jersey_jersey_server",
-        "//third_party:io_dropwizard_dropwizard_jersey",
-        "//third_party:org_mockito_mockito_core",
-        "//third_party:org_slf4j_slf4j_api",
-    ],
-)
 
 java_library(
     name = "main-api-testlib",
@@ -84,20 +73,6 @@ java_library(
     ],
 )
 
-junit_test(
-    name = "connector-api-test",
-    srcs = glob(["src/connector-api/src/test/**/*Test.java"]),
-    deps = [
-        ":connector-api",
-        ":main-api",
-
-        "//src/api-annotations-testlib",
-
-        "//third_party:com_google_guava_guava",
-        "//third_party:org_assertj_assertj_core",
-        "//third_party:javax_validation_validation_api",
-    ],
-)
 
 java_library(
     name = "connector-lib",
@@ -147,32 +122,6 @@ java_library(
     ],
 )
 
-junit_test(
-    name = "connector-lib-test",
-    srcs = glob(["src/connector-lib/src/test/**/*Test.java"]),
-    runtime_deps = [
-        "//third_party:net_bytebuddy_byte_buddy",
-        "//third_party:org_objenesis_objenesis",
-    ],
-    deps = [
-        ":connector-api",
-        ":connector-lib",
-        ":common-lib",
-        ":main-api",
-        ":system-api",
-
-        "//src/categorization-api",
-        "//src/libraries/auth:auth",
-        "//src/libraries/serialization_utils:serialization-utils",
-        "//src/libraries/metrics:metrics",
-
-        "//third_party:org_assertj_assertj_core",
-        "//third_party:org_modelmapper_modelmapper",
-        "//third_party:org_mockito_mockito_core",
-        "//third_party:com_google_guava_guava",
-        "//third_party:javax_validation_validation_api"
-    ],
-)
 
 java_library(
     name = "aggregation-api",
@@ -300,16 +249,6 @@ java_library(
     ],
 )
 
-junit_test(
-    name = "gdpr-export-testlib",
-    srcs = glob(["src/gdpr-export-lib/src/test/**/*.java"]),
-    runtime_deps = [
-    ],
-    deps = [
-        ":gdpr-export-lib",
-        "//third_party:org_assertj_assertj_core",
-    ],
-)
 
 
 java_library(
@@ -359,55 +298,6 @@ java_library(
     ],
 )
 
-junit_test(
-    name = "product-executor-lib-test",
-    srcs = glob(["src/fs-product-execution-lib/src/test/**/unit/**/*Test.java"]),
-    deps = [
-        ":product-executor-lib",
-
-        "//third_party:org_assertj_assertj_core",
-        "//third_party:org_mockito_mockito_core",
-        "//third_party:com_google_inject_guice",
-    ],
-)
-
-junit_test(
-    name = "product-executor-integration-test",
-    srcs = glob(["src/fs-product-execution-lib/src/test/**/integration/**/*.java"]),
-    data = [
-        "etc/development-product-executor-server.yml",
-    ],
-
-    tags = [
-        "external",
-        "manual",
-    ],
-
-    runtime_deps = [
-            "//third_party:net_bytebuddy_byte_buddy",
-            "//third_party:org_objenesis_objenesis",
-    ],
-
-    deps = [
-        ":product-executor-lib",
-        ":main-api",
-        ":common-lib",
-        ":common-utilities",
-        ":system-api",
-        ":product-executor-api",
-        "//src/libraries/metrics",
-        "//src/libraries/generic_application:generic-application",
-        "//src/libraries/uuid:uuid",
-
-        "//third_party:com_google_guava_guava",
-        "//third_party:org_mockito_mockito_core",
-        "//third_party:io_dropwizard_dropwizard_jersey",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
-        "//third_party:com_google_inject_guice",
-        "//third_party:io_dropwizard_dropwizard_configuration",
-        "//third_party:javax_validation_validation_api",
-    ],
-)
 
 java_library(
     name = "product-executor-api",
@@ -546,24 +436,6 @@ java_library(
         "//third_party:org_apache_kafka_kafka_clients",
         "//third_party:org_slf4j_slf4j_api",
         "//third_party:com_sproutsocial_nsqj_j",
-    ],
-)
-
-junit_test(
-    name = "queue-lib-test",
-    srcs = glob(["src/queue-lib/src/test/**/*.java"]),
-    deps = [
-        ":common-lib",
-        ":queue-lib",
-
-        "//src/libraries/metrics:metrics",
-
-        "//third_party:com_google_guava_guava",
-        "//third_party:com_google_inject_guice",
-        "//third_party:com_google_protobuf_protobuf_java",
-        "//third_party:org_apache_kafka_kafka_clients",
-        "//third_party:org_slf4j_slf4j_api",
-        "//third_party:org_assertj_assertj_core",
     ],
 )
 
@@ -719,67 +591,6 @@ java_library(
     ],
 )
 
-junit_test(
-    name = "common-lib-test",
-    srcs = glob(["src/common-lib/src/test/**/*Test.java"]),
-    data = glob([
-        "src/**",  # Needed for EnsureNoDebuggingHttpClientsTest
-    ]) + [
-        "//data:common-lib-test",
-    ],
-    runtime_deps = [
-        "//third_party:net_bytebuddy_byte_buddy",
-        "//third_party:org_apache_httpcomponents_httpcore",
-        "//third_party:org_objenesis_objenesis",
-    ],
-    deps = [
-        "//src/categorization-api",
-        ":aggregation-api",
-        ":common-lib",
-        ":common-lib-testlib",
-        ":common-utilities",
-        ":main-api",
-        ":main-api-testlib",
-
-        "//src/libraries/uuid:uuid",
-        "//src/libraries/serialization_utils:serialization-utils",
-        "//src/libraries/metrics:metrics",
-        "//src/libraries/http_client:http-client",
-        "//src/libraries/date:date",
-        "//src/libraries/cluster:cluster",
-        "//src/libraries/giro_validation:giro-validation",
-        "//src/libraries/account_identifier:account-identifier",
-        "//src/libraries/generic_application:generic-application",
-        "//src/libraries/i18n",
-        "//src/libraries/abnamro:abn_amro",
-        "//src/libraries/protobuf_serialization_utils:protobuf-serialization-utils",
-
-        "//third_party:com_codahale_metrics_metrics_healthchecks",
-        "//third_party:com_datastax_cassandra_cassandra_driver_core",
-        "//third_party:com_github_rholder_guava_retrying",
-        "//third_party:com_github_tomakehurst_wiremock",
-        "//third_party:com_google_guava_guava",
-        "//third_party:com_google_http_client_google_http_client",
-        "//third_party:com_google_inject_guice",
-        "//third_party:com_sun_jersey_jersey_client",
-        "//third_party:com_sun_jersey_jersey_core",
-        "//third_party:commons_io_commons_io",
-        "//third_party:commons_lang_commons_lang",
-        "//third_party:io_prometheus_simpleclient",
-        "//third_party:io_prometheus_simpleclient_common",
-        "//third_party:io_reactivex_rxjava",
-        "//third_party:joda_time_joda_time",
-        "//third_party:org_apache_commons_commons_math3",
-        "//third_party:org_apache_curator_curator_framework",
-        "//third_party:org_apache_curator_curator_recipes",
-        "//third_party:org_apache_kafka_kafka_clients",
-        "//third_party:org_assertj_assertj_core",
-        "//third_party:org_elasticsearch_elasticsearch",
-        "//third_party:org_mockito_mockito_core",
-        "//third_party:org_modelmapper_modelmapper",
-        "//third_party:pl_pragmatists_junitparams",
-    ],
-)
 
 java_library(
     name = "system-lib",
@@ -987,59 +798,6 @@ java_library(
     ],
 )
 
-junit_test(
-    name = "main-lib-test",
-    srcs = glob(["src/main-lib/src/test/**/*.java"]),
-    data = ["//data:main-lib-test"],
-    runtime_deps = [
-        "//third_party:net_bytebuddy_byte_buddy",
-        "//third_party:org_objenesis_objenesis",
-    ],
-    deps = [
-        "//src/categorization-api",
-        "//src/categorization-lib",
-        "//src/sms-otp-lib",
-        ":common-lib",
-        ":common-lib-testlib",
-        ":common-utilities",
-        ":main-api",
-        ":main-api-testlib",
-        ":main-lib",
-        ":queue-lib",
-        ":system-api",
-        "firehose-v1-lib",
-
-        "//src/libraries/uuid:uuid",
-        "//src/libraries/serialization_utils:serialization-utils",
-        "//src/libraries/auth:auth",
-        "//src/libraries/metrics:metrics",
-        "//src/libraries/date:date",
-        "//src/libraries/cluster:cluster",
-        "//src/libraries/account_identifier:account-identifier",
-        "//src/libraries/generic_application:generic-application",
-        "//src/libraries/i18n",
-        "//src/libraries/abnamro:abn_amro",
-        "//src/libraries/phone_number_utils:phone_number_utils",
-        "//src/api-annotations-testlib",
-        "//src/libraries/endpoint_configuration:endpoint_configuration",
-        "//src/libraries/cryptography:cryptography",
-
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
-        "//third_party:com_google_guava_guava",
-        "//third_party:com_google_http_client_google_http_client",
-        "//third_party:com_google_inject_guice",
-        "//third_party:com_sun_jersey_jersey_client",
-        "//third_party:com_sun_jersey_jersey_core",
-        "//third_party:joda_time_joda_time",
-        "//third_party:net_sf_uadetector_uadetector_core",
-        "//third_party:net_sf_uadetector_uadetector_resources",
-        "//third_party:org_assertj_assertj_core",
-        "//third_party:org_mockito_mockito_core",
-        "//third_party:pl_pragmatists_junitparams",
-        "//third_party:org_elasticsearch_elasticsearch",
-        "//third_party:com_datastax_cassandra_cassandra_driver_core",
-    ],
-)
 
 
 java_library(
@@ -1534,283 +1292,6 @@ junit_test(
     ],
 )
 
-junit_test(
-    name = "main-api-test",
-    srcs = glob(["src/main-api/src/test/**/*.java"]),
-    data = [
-        "//data:main-api-test",
-        "//data:tink-ca",
-    ],
-    runtime_deps = [
-        "//third_party:ch_qos_logback_logback_classic",
-        "//third_party:com_fasterxml_jackson_core_jackson_core",
-        "//third_party:io_protostuff_protostuff_collectionschema",
-        "//third_party:net_bytebuddy_byte_buddy",
-        "//third_party:org_javassist_javassist",
-        "//third_party:org_objenesis_objenesis",
-    ],
-    deps = [
-        ":common-utilities",
-        ":main-api",
-        ":aggregation-api",
-
-        "//src/api-annotations-testlib",
-
-        "//src/libraries/uuid:uuid",
-        "//src/libraries/serialization_utils:serialization-utils",
-        "//src/libraries/auth:auth",
-        "//src/libraries/jersey_utils:jersey-utils",
-        "//src/libraries/auth:auth",
-        "//src/libraries/http_client:http-client",
-        "//src/libraries/date:date",
-        "//src/libraries/account_identifier:account-identifier",
-        "//src/libraries/generic_application:generic-application",
-        "//src/libraries/phone_number_utils:phone_number_utils",
-
-        "//third_party:com_datastax_cassandra_cassandra_driver_core",
-        "//third_party:com_fasterxml_jackson_core_jackson_core",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
-        "//third_party:com_github_tomakehurst_wiremock",
-        "//third_party:com_google_guava_guava",
-        "//third_party:com_sun_jersey_jersey_client",
-        "//third_party:com_sun_jersey_jersey_core",
-        "//third_party:commons_lang_commons_lang",
-        "//third_party:io_protostuff_protostuff_api",
-        "//third_party:io_protostuff_protostuff_core",
-        "//third_party:io_protostuff_protostuff_runtime",
-        "//third_party:joda_time_joda_time",
-        "//third_party:org_assertj_assertj_core",
-        "//third_party:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
-        "//third_party:org_mockito_mockito_core",
-        "//third_party:org_pojava_pojava",
-        "//third_party:org_reflections_reflections",
-        "//third_party:org_springframework_data_spring_data_cassandra",
-        "//third_party:pl_pragmatists_junitparams",
-        "//third_party:org_modelmapper_modelmapper",
-        "//third_party:com_lambdaworks_scrypt",
-    ],
-)
-
-junit_test(
-    name = "main-grpc-v1-lib-test",
-    srcs = glob(["src/main-grpc-v1-lib/src/test/**/*.java"]),
-    runtime_deps = [
-        "//third_party:ch_qos_logback_logback_classic",
-        "//third_party:io_grpc_grpc_netty",
-        "//third_party:net_bytebuddy_byte_buddy",
-        "//third_party:org_objenesis_objenesis",
-    ],
-    deps = [
-        "//src/categorization-api",
-        ":common-lib",
-        ":common-lib-testlib",
-        ":firehose-v1-java-pb",
-        ":firehose-v1-java-pb_compile_imports",
-        ":main-api",
-        ":main-api-testlib",
-        ":main-grpc-v1-lib",
-        ":main-lib",
-        ":tink-grpc-v1-api-java",
-
-        "//src/libraries/date:date",
-        "//src/libraries/i18n",
-        "//src/libraries/uuid",
-        "//src/libraries/identity",
-        "//src/libraries/account_identifier:account-identifier",
-        "//src/libraries/metrics",
-
-        "//third_party:io_grpc_grpc_context",
-        "//third_party:io_grpc_grpc_core",
-        "//third_party:io_grpc_grpc_stub",
-        "//third_party:io_grpc_grpc_netty",
-        "//third_party:io_grpc_grpc_protobuf",
-        "//third_party:io_grpc_grpc_protobuf_lite",
-        "//third_party:org_assertj_assertj_core",
-        "//third_party:org_mockito_mockito_core",
-        "//third_party:pl_pragmatists_junitparams",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
-        "//third_party:com_google_inject_guice",
-    ],
-)
-
-junit_test(
-    name = "system-api-test",
-    srcs = glob(["src/system-api/src/test/**/*.java"]),
-    data = ["//data:tink-ca"],
-    runtime_deps = [
-        "//third_party:ch_qos_logback_logback_classic",
-    ],
-    deps = [
-        ":main-api",
-        ":system-api",
-
-        "//src/api-annotations-testlib",
-
-        "//third_party:com_fasterxml_jackson_core_jackson_core",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
-        "//third_party:com_google_guava_guava",
-        "//third_party:com_sun_jersey_jersey_client",
-        "//third_party:org_assertj_assertj_core",
-    ],
-)
-
-junit_test(
-    name = "system-lib-test",
-    srcs = glob(["src/system-lib/src/test/**/*.java"]),
-    data = [
-      "//data:system-lib-test",
-    ],
-    runtime_deps = [
-        "//third_party:ch_qos_logback_logback_classic",
-        "//third_party:net_bytebuddy_byte_buddy",
-        "//third_party:org_objenesis_objenesis",
-    ],
-    deps = [
-        ":aggregation-api",
-        "//src/categorization-api",
-        "//src/categorization-lib",
-        ":common-lib",
-        ":common-lib-testlib",
-        ":common-utilities",
-        ":connector-api",
-        ":firehose-v1-java-pb",
-        ":main-api",
-        ":system-api",
-        ":system-lib",
-        ":firehose-v1-lib",
-        ":webhook-lib",
-
-        "//src/libraries/uuid:uuid",
-        "//src/libraries/metrics:metrics",
-        "//src/libraries/serialization_utils:serialization-utils",
-        "//src/libraries/date:date",
-        "//src/libraries/cluster:cluster",
-        "//src/libraries/account_identifier:account-identifier",
-        "//src/libraries/abnamro:abn_amro",
-
-        "//third_party:com_github_rholder_guava_retrying",
-        "//third_party:com_google_guava_guava",
-        "//third_party:com_google_http_client_google_http_client",
-        "//third_party:com_google_inject_guice",
-        "//third_party:com_sun_jersey_jersey_client",
-        "//third_party:de_grundid_opendatalab_geojson_jackson",
-        "//third_party:io_reactivex_rxjava",
-        "//third_party:joda_time_joda_time",
-        "//third_party:org_apache_commons_commons_collections4",
-        "//third_party:org_assertj_assertj_core",
-        "//third_party:org_mockito_mockito_core",
-        "//third_party:org_modelmapper_modelmapper",
-        "//third_party:org_quartz_scheduler_quartz",
-        "//third_party:pl_pragmatists_junitparams",
-        "//third_party:org_elasticsearch_elasticsearch",
-        "//src/libraries/i18n",
-    ],
-)
-
-junit_test(
-    name = "integration-test",
-    size = "large",
-    srcs = glob(["src/integration-tests/src/test/**/*.java"]),
-    data = [
-        "etc/development.yml",
-        "etc/seb/development-connector-server.yml",
-        "etc/testpartner/development-connector-server.yml",
-        "etc/kirkby/development-connector-server.yml",
-        "//data:integration-test",
-        "@fasttext//:fasttext",
-        "//tools:phantomjs_mac",
-        "//tools:libkbc_wbaes_linux",
-        "//tools:libkbc_wbaes_mac",
-    ],
-    tags = [
-        "external",
-        "manual",
-    ],
-    runtime_deps = [
-        "//third_party:io_netty_netty_tcnative_boringssl_static",
-        "//third_party:mysql_mysql_connector_java",
-        "//third_party:net_bytebuddy_byte_buddy",
-        "//third_party:org_objenesis_objenesis",
-        "//third_party:pl_pragmatists_junitparams",
-    ],
-    resources = [
-      "//src/categorization-lib:minimal_model.bin",
-    ],
-    deps = [
-        ":aggregation-api",
-        ":aggregation-lib",
-        "//src/categorization-api",
-        "//src/categorization-lib",
-        ":common-lib",
-        ":common-lib-testlib",
-        ":common-utilities",
-        ":connector-api",
-        ":connector-lib",
-        ":gdpr-export-api",
-        ":insights-api",
-        "@tink_backend_encryption//:encryption-api",
-        "@tink_backend_encryption//:encryption-lib",
-        ":main-api",
-        ":main-api-testlib",
-        ":main-lib",
-        ":system-api",
-        ":system-lib",
-        ":firehose-v1-lib",
-        ":product-executor-api",
-
-        "//src/libraries/abnamro:abn_amro",
-        "//src/libraries/uuid:uuid",
-        "//src/libraries/serialization_utils:serialization-utils",
-        "//src/libraries/auth:auth",
-        "//src/libraries/discovery:discovery",
-        "//src/libraries/metrics:metrics",
-        "//src/libraries/jersey_utils:jersey-utils",
-        "//src/libraries/auth:auth",
-        "//src/libraries/discovery:discovery",
-        "//src/libraries/metrics:metrics",
-        "//src/libraries/http_client:http-client",
-        "//src/libraries/date:date",
-        "//src/libraries/cluster:cluster",
-        "//src/libraries/account_identifier:account-identifier",
-        "//src/libraries/generic_application:generic-application",
-        "//src/libraries/demo_credentials:demo-credentials",
-        "//src/libraries/net",
-        "//src/libraries/i18n",
-        "//src/libraries/strings:strings",
-        "//src/libraries/dropwizard_utils:dropwizard-utils",
-
-        "//third_party:com_datastax_cassandra_cassandra_driver_core",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
-        "//third_party:com_github_tomakehurst_wiremock",
-        "//third_party:com_google_guava_guava",
-        "//third_party:com_google_http_client_google_http_client",
-        "//third_party:com_google_inject_guice",
-        "//third_party:com_netflix_governator",
-        "//third_party:com_sun_jersey_jersey_client",
-        "//third_party:commons_io_commons_io",
-        "//third_party:io_dropwizard_dropwizard_configuration",
-        "//third_party:io_dropwizard_dropwizard_core",
-        "//third_party:io_dropwizard_dropwizard_jackson",
-        "//third_party:javax_mail_mail",
-        "//third_party:javax_validation_validation_api",
-        "//third_party:joda_time_joda_time",
-        "//third_party:junit_junit",
-        "//third_party:org_apache_commons_commons_lang3",
-        "//third_party:org_apache_commons_commons_math3",
-        "//third_party:org_apache_curator_curator_framework",
-        "//third_party:org_apache_httpcomponents_httpclient",
-        "//third_party:org_assertj_assertj_core",
-        "//third_party:org_bouncycastle_bcpkix_jdk15on",
-        "//third_party:org_elasticsearch_elasticsearch",
-        "//third_party:org_hamcrest_hamcrest_core",
-        "//third_party:org_mockito_mockito_core",
-        "//third_party:org_springframework_data_spring_data_cassandra",
-        "//third_party:org_springframework_spring_orm",
-        "//third_party:pl_pragmatists_junitparams",
-        "//third_party:org_pojava_pojava",
-        "//third_party:org_apache_pdfbox_pdfbox",
-    ],
-)
 
 junit_test(
     name = "aggregation-test",
@@ -1857,67 +1338,5 @@ junit_test(
         "//third_party:org_mockito_mockito_core",
         "//third_party:net_bytebuddy_byte_buddy",
         "//third_party:org_objenesis_objenesis",
-    ],
-)
-
-junit_test(
-    name = "webhook-lib-test",
-    srcs = glob(["src/webhook-lib/src/test/**/*.java"]),
-    data = [
-        "//data",
-    ],
-    runtime_deps = [
-        "//third_party:net_bytebuddy_byte_buddy",
-        "//third_party:org_objenesis_objenesis",
-    ],
-    deps = [
-        ":common-lib",
-        ":common-lib-testlib",
-        ":common-utilities",
-        ":firehose-v1-java-pb",
-        ":firehose-v1-lib",
-        ":main-api",
-        ":queue-lib",
-        ":system-api",
-        ":system-lib",
-        ":webhook-lib",
-
-        "//src/libraries/date:date",
-        "//src/libraries/dropwizard_utils:dropwizard-utils",
-        "//src/libraries/metrics",
-        "//src/libraries/serialization_utils:serialization-utils",
-        "//src/libraries/uuid:uuid",
-        "//src/libraries/net",
-
-        "//third_party:com_github_rholder_guava_retrying",
-        "//third_party:com_github_tomakehurst_wiremock",
-        "//third_party:com_google_guava_guava",
-        "//third_party:com_google_inject_guice",
-        "//third_party:com_netflix_governator",
-        "//third_party:com_sun_jersey_jersey_client",
-        "//third_party:org_mockito_mockito_core",
-        "//third_party:org_modelmapper_modelmapper",
-    ],
-)
-
-junit_test(
-    name = "insights-api-test",
-    srcs = glob(["src/insights-api/src/test/**/*.java"]),
-    deps = [
-        ":insights-api",
-        ":insights-lib",
-
-        "//src/libraries/date:date",
-    ],
-)
-
-junit_test(
-    name = "insights-lib-test",
-    srcs = glob(["src/insights-lib/src/test/**/*.java"]),
-    deps = [
-        ":insights-lib",
-        "//src/libraries/date",
-        "//third_party:com_google_guava_guava",
-        "//third_party:org_assertj_assertj_core",
     ],
 )
