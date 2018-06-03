@@ -383,67 +383,9 @@ java_library(
     ],
 )
 
-java_proto_library(
-    name = "aggregation-grpc",
-    protos = glob(["src/aggregation-grpc/src/main/proto/**/*.proto"]),
-    with_grpc = True,
-)
-
-java_library(
-    name = "aggregation-grpc-client",
-    srcs = glob(["src/aggregation-grpc-client/src/main/**/*.java"]),
-    runtime_deps = [
-        "//third_party:com_google_instrumentation_instrumentation_api",
-        "//third_party:io_grpc_grpc_context",
-        "//third_party:io_grpc_grpc_core",
-        "//third_party:io_grpc_grpc_netty",
-        "//third_party:io_netty_netty_codec_http2",
-        "//third_party:io_netty_netty_handler",
-        "//third_party:io_netty_netty_handler_proxy",
-        "//third_party:io_netty_netty_transport",
-    ],
-    deps = [
-        ":aggregation-grpc",
-        ":aggregation-grpc_compile_imports",
-        ":main-api",
-        "//third_party:com_github_rholder_guava_retrying",
-        "//third_party:org_apache_curator_curator_framework",
-        "//third_party:org_apache_curator_curator_x_discovery",
-        # Neede solely to avoid compilation warning about not found class
-        # probably caused by the dependency on :main-api
-        "//third_party:org_codehaus_jackson_jackson_core_asl",
-    ],
-)
-
-junit_test(
-    name = "aggregation-grpc-client-test",
-    srcs = glob(["src/aggregation-grpc-client/src/test/**/*.java"]),
-    runtime_deps = [
-        "//third_party:net_bytebuddy_byte_buddy",
-        "//third_party:org_objenesis_objenesis",
-    ],
-    deps = [
-        ":aggregation-grpc",
-        ":aggregation-grpc-client",
-        ":aggregation-grpc_compile_imports",
-        ":aggregation-lib",
-        ":main-api",
-        "//third_party:junit_junit",
-        "//third_party:org_apache_curator_curator_x_discovery",
-        "//third_party:org_codehaus_jackson_jackson_core_asl",
-        "//third_party:org_mockito_mockito_core",
-    ],
-)
-
 java_library(
     name = "aggregation-lib",
     srcs = glob(["src/aggregation-lib/src/main/**/*.java"]),
-    runtime_deps = [
-        # gRPC
-        "//third_party:io_grpc_grpc_netty",
-        "//third_party:io_grpc_grpc_context",
-        "//third_party:com_google_instrumentation_instrumentation_api",
-    ],
     data = [
         "//tools:phantomjs_mac",
         "//tools:libkbc_wbaes_linux",
@@ -451,8 +393,6 @@ java_library(
     ],
     deps = [
         ":aggregation-api",
-        ":aggregation-grpc",
-        ":aggregation-grpc_compile_imports",
         ":common-lib",
         "@tink_backend_encryption//:encryption-api",
         ":main-api",
@@ -610,8 +550,6 @@ junit_test(
     ],
     deps = [
         ":aggregation-api",
-        ":aggregation-grpc",
-        ":aggregation-grpc_compile_imports",
         ":aggregation-lib",
         ":common-lib",
         ":common-lib-testlib",
