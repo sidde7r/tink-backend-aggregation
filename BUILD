@@ -497,21 +497,6 @@ genrule(
     visibility = ["//visibility:public"],
 )
 
-java_proto_library(
-    name = "tink-grpc-v1-api-java",
-    protos = [":tink-grpc-v1-api"],
-    visibility = ["//visibility:public"],
-    with_grpc = True,
-)
-
-filegroup(
-    name = "tink-grpc-v1-api",
-    srcs = glob([
-        "proto/*.proto",
-        "google/**/*.proto",
-    ]),
-)
-
 junit_test(
     name = "aggregation-api-test",
     srcs = glob(["src/aggregation-api/src/test/**/*.java"]) + [
