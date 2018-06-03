@@ -1,6 +1,2 @@
 encryption: bash -c "cd ../tink-backend-encryption && bazel run :encryption --jvmopt=-Djava.net.preferIPv4Stack=true server etc/development-minikube-encryption-server.yml"
 aggregation: bazel run :aggregation --jvmopt=-Djava.net.preferIPv4Stack=true server etc/development-minikube-aggregation-server.yml
-system: bazel run :system --jvmopt=-Djava.net.preferIPv4Stack=true server etc/development-minikube-system-server.yml
-main: bazel run :main --jvmopt=-Djava.net.preferIPv4Stack=true server etc/development-minikube-main-server.yml
-webhook: bazel run :webhook --jvmopt=-Djava.net.preferIPv4Stack=true server etc/development-minikube-webhook-server.yml
-aggregation-controller: bazel run :aggregation-controller --jvmopt=-Djava.net.preferIPv4Stack=true server etc/development-minikube-aggregation-controller-server.yml
