@@ -130,9 +130,6 @@ public class ServiceConfiguration extends Configuration {
     private TransactionProcessorConfiguration transactionProcessor = new TransactionProcessorConfiguration();
 
     @JsonProperty
-    private SmsConfiguration sms = new SmsConfiguration();
-
-    @JsonProperty
     private StatisticConfiguration statistics = new StatisticConfiguration();
 
     @JsonProperty
@@ -359,10 +356,6 @@ public class ServiceConfiguration extends Configuration {
 
     public CategorizationConfiguration getCategorization() {
         return categorization;
-    }
-
-    public SmsConfiguration getSms() {
-        return sms;
     }
 
     public TransactionConfiguration getTransaction() {

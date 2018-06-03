@@ -259,7 +259,6 @@ java_library(
         ":firehose-v1-java-pb",
 
         "//src/consent-lib",
-        "//src/sms-otp-lib",
 
         "//src/libraries/strings:strings",
         "//src/libraries/uuid:uuid",
@@ -346,8 +345,6 @@ java_library(
         ":aggregation-api",
         "//src/categorization-api",
         "//src/consent-lib",
-        "//src/sms-otp-lib",
-        "//src/sms-gateway-lib",
         ":common-utilities",
         ":connector-api",
         "@tink_backend_encryption//:encryption-api",

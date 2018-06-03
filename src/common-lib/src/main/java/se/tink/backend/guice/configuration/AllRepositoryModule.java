@@ -132,9 +132,6 @@ import se.tink.backend.core.Category;
 import se.tink.backend.core.ClusterCategories;
 import se.tink.backend.core.Currency;
 import se.tink.backend.core.Provider;
-import se.tink.backend.sms.otp.dao.SmsOtpDao;
-import se.tink.backend.sms.otp.repository.cassandra.SmsOtpEventRepository;
-import se.tink.backend.sms.otp.repository.cassandra.SmsOtpRepository;
 import se.tink.backend.utils.ClearingNumberBankToProviderMapImpl;
 import se.tink.backend.utils.ProviderImageMap;
 
@@ -162,7 +159,6 @@ public class AllRepositoryModule extends RepositoryModule {
         bind(ApplicationDAO.class).in(Scopes.SINGLETON);
         bind(InvestmentDao.class).in(Scopes.SINGLETON);
         bind(ConsentDAO.class).in(Scopes.SINGLETON);
-        bind(SmsOtpDao.class).in(Scopes.SINGLETON);
         bind(LoanDAO.class).in(Scopes.SINGLETON);
         bind(NotificationDao.class).in(Scopes.SINGLETON);
         bind(ProductDAO.class).in(Scopes.SINGLETON);
@@ -244,8 +240,6 @@ public class AllRepositoryModule extends RepositoryModule {
         bindSpringBean(ProviderImageRepository.class);
         bindSpringBean(ProviderRepository.class);
         bindSpringBean(SignableOperationRepository.class);
-        bindSpringBean(SmsOtpRepository.class);
-        bindSpringBean(SmsOtpEventRepository.class);
         bindSpringBean(StatisticRepository.class);
         bindSpringBean(SubscriptionRepository.class);
         bindSpringBean(SubscriptionTokenRepository.class);
