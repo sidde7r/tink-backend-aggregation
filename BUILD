@@ -254,7 +254,6 @@ java_library(
         "@tink_backend_encryption//:encryption-api",
         ":main-api",
         ":system-api",
-        ":insights-api",
         ":product-executor-api",
 
         "//src/libraries/http:http-annotations",
