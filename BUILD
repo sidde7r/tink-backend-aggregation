@@ -73,55 +73,6 @@ java_library(
     ],
 )
 
-
-java_library(
-    name = "connector-lib",
-    srcs = glob(["src/connector-lib/src/main/**/*.java"]),
-    deps = [
-        ":aggregation-api",
-        ":common-lib",
-        ":common-utilities",
-        ":connector-api",
-        "@tink_backend_encryption//:encryption-api",
-        ":main-api",
-        ":system-api",
-        "//src/categorization-api",
-
-        "//src/libraries/http:http-annotations",
-        "//src/libraries/http:http-utils",
-        "//src/libraries/serialization_utils:serialization-utils",
-        "//src/libraries/auth:auth",
-        "//src/libraries/discovery:discovery",
-        "//src/libraries/metrics:metrics",
-        "//src/libraries/jersey_guice:jersey-guice",
-        "//src/libraries/jersey_utils:jersey-utils",
-        "//src/libraries/jersey_log:jersey-log",
-        "//src/libraries/http_client:http-client",
-        "//src/libraries/date:date",
-        "//src/libraries/cluster:cluster",
-        "//src/libraries/uuid",
-        "//src/libraries/i18n",
-        "//src/libraries/abnamro:abn_amro",
-        "//src/api-annotations",
-
-        "//third_party:com_google_guava_guava",
-        "//third_party:com_google_inject_guice",
-        "//third_party:com_lambdaworks_scrypt",
-        "//third_party:com_netflix_governator",
-        "//third_party:com_sun_jersey_jersey_client",
-        "//third_party:io_dropwizard_dropwizard_core",
-        "//third_party:io_reactivex_rxjava",
-        "//third_party:io_swagger_swagger_annotations",
-        "//third_party:org_apache_commons_commons_collections4",
-        "//third_party:org_apache_curator_curator_framework",
-        "//third_party:org_apache_curator_curator_recipes",
-        "//third_party:org_modelmapper_modelmapper",
-        "//third_party:org_assertj_assertj_core",
-        "//third_party:com_sun_jersey_contribs_jersey_apache_client4"
-    ],
-)
-
-
 java_library(
     name = "aggregation-api",
     srcs = glob(["src/aggregation-api/src/main/**/*.java"]),
