@@ -581,25 +581,6 @@ java_proto_library(
 )
 
 java_library(
-    name = "oauth-grpc-client",
-    srcs = glob(["src/oauth-grpc-client/src/main/**/*.java"]),
-    runtime_deps = [
-        "//third_party:io_grpc_grpc_core",
-    ],
-    deps = [
-        ":tink-oauth-grpc",
-        ":tink-oauth-grpc_compile_imports",
-        ":common-lib",
-
-        "//third_party:com_google_inject_guice",
-        "//third_party:io_dropwizard_dropwizard_lifecycle",
-
-        "//src/libraries/log:log",
-        "//src/libraries/endpoint_configuration:endpoint_configuration",
-    ]
-)
-
-java_library(
     name = "aggregation-grpc-client",
     srcs = glob(["src/aggregation-grpc-client/src/main/**/*.java"]),
     runtime_deps = [
