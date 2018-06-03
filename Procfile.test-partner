@@ -1,3 +1,0 @@
-connector: bazel run :connector --jvmopt=-Djava.net.preferIPv4Stack=true server etc/testpartner/development-connector-server.yml
-system: bazel run :system --jvmopt=-Djava.net.preferIPv4Stack=true server etc/testpartner/development-system-server.yml
-main: bazel run :main server etc/testpartner/development-main-server.yml
