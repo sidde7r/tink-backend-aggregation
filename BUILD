@@ -671,37 +671,6 @@ java_library(
     ],
 )
 
-java_library(
-    name = "webhook-lib",
-    srcs = glob(["src/webhook-lib/src/main/**/*.java"]),
-    data = [
-        "etc/development-webhook-server.yml",
-        "//data",
-    ],
-    deps = [
-        ":common-lib",
-        ":firehose-v1-java-pb",
-        ":firehose-v1-lib",
-        ":main-api",
-        ":queue-lib",
-
-        "//src/libraries/dropwizard_utils:dropwizard-utils",
-        "//src/libraries/http:http-annotations",
-        "//src/libraries/jersey_guice:jersey-guice",
-        "//src/libraries/metrics:metrics",
-        "//src/libraries/net",
-        "//src/libraries/serialization_utils:serialization-utils",
-        "//src/api-annotations",
-
-        "//third_party:com_github_rholder_guava_retrying",
-        "//third_party:com_google_guava_guava",
-        "//third_party:com_google_inject_guice",
-        "//third_party:com_netflix_governator",
-        "//third_party:com_sun_jersey_jersey_client",
-        "//third_party:io_dropwizard_dropwizard_core",
-    ],
-)
-
 java_proto_library(
     name = "aggregation-grpc",
     protos = glob(["src/aggregation-grpc/src/main/proto/**/*.proto"]),
