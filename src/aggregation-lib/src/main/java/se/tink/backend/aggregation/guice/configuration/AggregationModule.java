@@ -4,7 +4,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
-import com.google.inject.util.Providers;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
 import io.grpc.BindableService;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
@@ -12,8 +11,8 @@ import se.tink.backend.aggregation.api.ProviderService;
 import se.tink.backend.aggregation.client.AggregationServiceFactory;
 import se.tink.backend.aggregation.client.InProcessAggregationServiceFactory;
 import se.tink.backend.aggregation.controllers.ProviderServiceController;
-import se.tink.backend.aggregation.grpc.GrpcServer;
 import se.tink.backend.aggregation.grpc.CredentialGrpcTransport;
+import se.tink.backend.aggregation.grpc.GrpcServer;
 import se.tink.backend.aggregation.grpc.KeepAliveGrpcTransport;
 import se.tink.backend.aggregation.grpc.ProductGrpcTransport;
 import se.tink.backend.aggregation.grpc.RefreshGrpcTransport;
@@ -25,14 +24,12 @@ import se.tink.backend.common.ServiceContext;
 import se.tink.backend.common.client.EncryptionServiceFactoryProvider;
 import se.tink.backend.common.client.ServiceFactoryProvider;
 import se.tink.backend.common.client.SystemServiceFactoryProvider;
-import se.tink.libraries.jersey.logging.AccessLoggingFilter;
-import se.tink.libraries.jersey.logging.ResourceTimerFilterFactory;
-import se.tink.backend.common.mail.MailSender;
-import se.tink.backend.common.template.PooledRythmProxy;
 import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.backend.encryption.client.EncryptionServiceFactory;
-import se.tink.libraries.jersey.guice.JerseyResourceRegistrar;
 import se.tink.backend.system.client.SystemServiceFactory;
+import se.tink.libraries.jersey.guice.JerseyResourceRegistrar;
+import se.tink.libraries.jersey.logging.AccessLoggingFilter;
+import se.tink.libraries.jersey.logging.ResourceTimerFilterFactory;
 
 public class AggregationModule extends AbstractModule {
     private final JerseyEnvironment jersey;
@@ -68,8 +65,6 @@ public class AggregationModule extends AbstractModule {
 
         // TODO Remove these lines after getting rid of dependencies on ServiceContext
         bind(ServiceContext.class).in(Scopes.SINGLETON);
-        bind(MailSender.class).toProvider(Providers.of(null));
-        bind(PooledRythmProxy.class).toProvider(Providers.of(null));
 
         JerseyResourceRegistrar.build()
                 .binder(binder())
