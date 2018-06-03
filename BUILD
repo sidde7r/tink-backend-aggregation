@@ -121,36 +121,6 @@ java_library(
     ],
 )
 
-java_proto_library(
-    name = "firehose-v1-java-pb",
-    protos = [":firehose-v1-pb"],
-)
-
-filegroup(
-    name = "firehose-v1-pb",
-    srcs = glob(["src/firehose-v1-lib/src/main/proto/*.proto"]),
-)
-
-java_library(
-    name = "firehose-v1-lib",
-    srcs = glob(["src/firehose-v1-lib/src/main/**/*.java"]),
-    deps = [
-        ":main-api",
-        ":queue-lib",
-        ":common-lib",
-        ":common-utilities",
-        ":firehose-v1-java-pb",
-
-        "//src/libraries/uuid:uuid",
-        "//src/libraries/date:date",
-        "//src/libraries/serialization_utils:serialization-utils",
-
-        "//third_party:com_google_guava_guava",
-        "//third_party:com_google_inject_guice",
-        "//third_party:org_modelmapper_modelmapper",
-    ],
-)
-
 java_library(
     name = "product-executor-lib",
     srcs = glob(["src/fs-product-execution-lib/src/main/**/*.java"]),
@@ -256,7 +226,6 @@ java_library(
         ":common-utilities",
         ":tink-oauth-grpc",
         ":tink-oauth-grpc_compile_imports",
-        ":firehose-v1-java-pb",
 
         "//src/consent-lib",
 
@@ -348,7 +317,6 @@ java_library(
         ":common-utilities",
         ":connector-api",
         "@tink_backend_encryption//:encryption-api",
-        ":firehose-v1-java-pb",
         ":main-api",
         ":system-api",
         ":insights-api",
@@ -500,7 +468,6 @@ java_library(
          "@tink_backend_encryption//:encryption-lib",
          ":main-api",
          ":system-api",
-         ":firehose-v1-lib",
 
           "//src/libraries/auth:auth",
           "//src/libraries/discovery:discovery",
@@ -526,7 +493,6 @@ java_library(
         ":common-lib",
         ":aggregation-api",
         ":main-api",
-        ":firehose-v1-java-pb",
 
         "//src/libraries/http:http-annotations",
         "//src/api-annotations",
