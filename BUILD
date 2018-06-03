@@ -68,9 +68,6 @@ java_library(
     srcs = glob(["src/main-api/src/main/**/*.java"]),
     resources = glob(["src/main-api/src/main/resources/**"]),
     deps = [
-        ":tink-oauth-grpc",
-        ":tink-oauth-grpc_compile_imports",
-
         "//src/libraries/strings:strings",
         "//src/libraries/uuid:uuid",
         "//src/libraries/http:http-annotations",
@@ -389,12 +386,6 @@ java_library(
 java_proto_library(
     name = "aggregation-grpc",
     protos = glob(["src/aggregation-grpc/src/main/proto/**/*.proto"]),
-    with_grpc = True,
-)
-
-java_proto_library(
-    name = "tink-oauth-grpc",
-    protos = glob(["tink-oauth-grpc/*.proto"]),
     with_grpc = True,
 )
 
