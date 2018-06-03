@@ -5,40 +5,9 @@ load("@org_pubref_rules_protobuf//java:rules.bzl", "java_proto_library")
 # have been merged to suitable components.
 
 java_library(
-    name = "common-utilities",
-    srcs = glob(["src/common-utilities/src/main/**/*.java"]),
-    deps = [
-        # Log
-        "//src/libraries/log:log",
-
-        # Public UUID
-        "//src/libraries/uuid:uuid",
-
-        # Request tracing
-        "//third_party:com_google_guava_guava",
-        "//third_party:com_sun_jersey_jersey_server",
-        "//third_party:commons_codec_commons_codec",
-        "//third_party:org_slf4j_slf4j_api",
-
-        # Serialization utils
-        "//third_party:com_fasterxml_jackson_core_jackson_core",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
-        "//third_party:com_fasterxml_jackson_dataformat_jackson_dataformat_smile",
-
-        # UUID utils
-        "//third_party:com_datastax_cassandra_cassandra_driver_core",
-
-        # Dependency injection
-        "//third_party:com_google_inject_guice",
-    ],
-    visibility = ["//visibility:public"],
-)
-
-java_library(
     name = "connector-api",
     srcs = glob(["src/connector-api/src/main/**/*.java"]),
     deps = [
-        ":common-utilities",
         "@tink_backend_encryption//:encryption-api",
         ":main-api",
 
@@ -121,7 +90,6 @@ java_library(
     srcs = glob(["src/main-api/src/main/**/*.java"]),
     resources = glob(["src/main-api/src/main/resources/**"]),
     deps = [
-        ":common-utilities",
         ":tink-oauth-grpc",
         ":tink-oauth-grpc_compile_imports",
 
@@ -140,6 +108,7 @@ java_library(
         "//src/libraries/generic_application:generic-application",
         "//src/libraries/demo_credentials:demo-credentials",
         "//src/libraries/i18n",
+        "//src/libraries/log",
         "//src/libraries/math",
         "//src/libraries/phone_number_utils:phone_number_utils",
         "//src/libraries/oauth",
@@ -191,7 +160,6 @@ java_library(
     srcs = glob(["src/common-lib/src/main/**/*.java"]),
     deps = [
         ":aggregation-api",
-        ":common-utilities",
         ":connector-api",
         "@tink_backend_encryption//:encryption-api",
         ":main-api",
@@ -301,14 +269,12 @@ java_library(
         exclude = ["src/common-lib/src/test/**/*Test.java"],
     ),
     runtime_deps = [
-        ":common-utilities",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:pl_pragmatists_junitparams",
     ],
     deps = [
         ":common-lib",
-        ":common-utilities",
         ":main-api",
 
         "//src/libraries/uuid:uuid",
@@ -520,7 +486,6 @@ java_library(
         ":aggregation-grpc",
         ":aggregation-grpc_compile_imports",
         ":common-lib",
-        ":common-utilities",
         "@tink_backend_encryption//:encryption-api",
         ":main-api",
         ":system-api",
@@ -682,7 +647,6 @@ junit_test(
         ":aggregation-lib",
         ":common-lib",
         ":common-lib-testlib",
-        ":common-utilities",
         ":main-api",
         ":system-api",
 

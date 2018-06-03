@@ -20,20 +20,15 @@ import se.tink.backend.common.dao.ApplicationDAO;
 import se.tink.backend.common.dao.AuthenticationTokenDao;
 import se.tink.backend.common.dao.BankIdAuthenticationDao;
 import se.tink.backend.common.dao.DataExportsDao;
-import se.tink.backend.common.dao.DeviceConfigurationDao;
 import se.tink.backend.common.dao.InvestmentDao;
 import se.tink.backend.common.dao.NotificationDao;
 import se.tink.backend.common.dao.ProductDAO;
 import se.tink.backend.common.dao.ProviderDao;
-import se.tink.backend.common.dao.StatisticDao;
-import se.tink.backend.common.dao.transactions.TransactionRepository;
-import se.tink.backend.common.dao.transactions.TransactionRepositoryImpl;
 import se.tink.backend.common.repository.cassandra.AccountBalanceHistoryRepository;
 import se.tink.backend.common.repository.cassandra.ApplicationArchiveRepository;
 import se.tink.backend.common.repository.cassandra.ApplicationEventRepository;
 import se.tink.backend.common.repository.cassandra.ApplicationFormEventRepository;
 import se.tink.backend.common.repository.cassandra.CassandraPeriodByUserIdRepository;
-import se.tink.backend.common.repository.cassandra.CassandraStatisticRepository;
 import se.tink.backend.common.repository.cassandra.CassandraTransactionByUserIdAndPeriodRepository;
 import se.tink.backend.common.repository.cassandra.CassandraTransactionDeletedRepository;
 import se.tink.backend.common.repository.cassandra.CategoryChangeRecordRepository;
@@ -142,9 +137,7 @@ public class AllRepositoryModule extends RepositoryModule {
     @Override
     protected void bindCentralizedDaos() {
         bind(ActivityDao.class).in(Scopes.SINGLETON);
-        bind(DeviceConfigurationDao.class).in(Scopes.SINGLETON);
         bind(ProviderDao.class).in(Scopes.SINGLETON);
-        bind(StatisticDao.class).in(Scopes.SINGLETON);
     }
 
     @Override
@@ -158,7 +151,6 @@ public class AllRepositoryModule extends RepositoryModule {
         bind(NotificationDao.class).in(Scopes.SINGLETON);
         bind(ProductDAO.class).in(Scopes.SINGLETON);
         bind(DataExportsDao.class).in(Scopes.SINGLETON);
-        bind(TransactionRepository.class).to(TransactionRepositoryImpl.class);
     }
 
     @Override
@@ -189,7 +181,6 @@ public class AllRepositoryModule extends RepositoryModule {
         bindSpringBean(CassandraTransactionByUserIdAndPeriodRepository.class);
         bindSpringBean(CategoryRepository.class);
         bindSpringBean(CategoryChangeRecordRepository.class);
-        bindSpringBean(CassandraStatisticRepository.class);
         bindSpringBean(CheckpointRepository.class);
         bindSpringBean(ConsentRepository.class);
         bindSpringBean(CredentialsEventRepository.class);

@@ -4,15 +4,16 @@ import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import javax.annotation.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.data.cassandra.repository.CassandraRepository;
 import se.tink.backend.common.ServiceContext;
-import se.tink.backend.common.utils.LogUtils;
 import se.tink.backend.guice.annotations.Centralized;
 import se.tink.backend.guice.annotations.Distributed;
 
 public class SpringIntegrationProvider<T> implements Provider<T> {
-    private final static LogUtils log = new LogUtils(SpringIntegrationProvider.class);
+    private final static Logger log = LoggerFactory.getLogger(SpringIntegrationProvider.class);
     private AnnotationConfigApplicationContext applicationContext;
     private AnnotationConfigApplicationContext distributedApplicationContext;
     private final Class<T> cls;
