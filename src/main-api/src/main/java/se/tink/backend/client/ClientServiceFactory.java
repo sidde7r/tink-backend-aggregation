@@ -11,7 +11,6 @@ import se.tink.backend.api.CategoryService;
 import se.tink.backend.api.CredentialsService;
 import se.tink.backend.api.DeviceService;
 import se.tink.backend.api.DocumentService;
-import se.tink.backend.api.UserDataControlService;
 import se.tink.backend.api.FollowService;
 import se.tink.backend.api.FraudService;
 import se.tink.backend.api.MerchantService;
@@ -25,9 +24,9 @@ import se.tink.backend.api.StatisticsService;
 import se.tink.backend.api.TrackingService;
 import se.tink.backend.api.TransactionService;
 import se.tink.backend.api.TransferService;
+import se.tink.backend.api.UserDataControlService;
 import se.tink.backend.api.UserService;
 import se.tink.backend.api.VersionService;
-import se.tink.backend.api.ConsentService;
 import se.tink.libraries.http.client.ServiceClassBuilder;
 
 public class ClientServiceFactory implements ServiceFactory {
@@ -138,11 +137,6 @@ public class ClientServiceFactory implements ServiceFactory {
     @Override
     public PropertyService getPropertyService() {
         return builder.build(PropertyService.class);
-    }
-
-    @Override
-    public ConsentService getConsentService() {
-        return builder.build(ConsentService.class);
     }
 
     @Override

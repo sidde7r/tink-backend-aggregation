@@ -25,8 +25,6 @@ import se.tink.backend.common.config.TasksQueueConfiguration;
 import se.tink.backend.common.config.TemplateConfiguration;
 import se.tink.backend.common.config.TransfersConfiguration;
 import se.tink.backend.common.config.UserSessionConfiguration;
-import se.tink.backend.consent.config.ConsentCacheConfiguration;
-import se.tink.backend.consent.config.ConsentConfiguration;
 import se.tink.backend.guice.annotations.AggregationConfiguration;
 import se.tink.backend.guice.annotations.AggregationControllerConfiguration;
 import se.tink.backend.guice.annotations.ConnectorConfiguration;
@@ -121,20 +119,12 @@ public class ConfigurationModule extends AbstractModule {
         bind(FlagsConfiguration.class).toInstance(configuration.getFlags());
         bind(BackOfficeConfiguration.class).toInstance(configuration.getBackOffice());
         bind(StatisticConfiguration.class).toInstance(configuration.getStatistics());
-        bind(ConsentConfiguration.class).toInstance(configuration.getConsentConfiguration());
         bind(GrpcConfiguration.class).toInstance(configuration.getGrpc());
         bind(FirehoseConfiguration.class).toInstance(configuration.getFirehose());
         // Tink public library configurations
         bind(CoordinationConfiguration.class).toProvider(Providers.of(configuration.getCoordination()));
         bind(PrometheusConfiguration.class).toInstance(configuration.getPrometheus());
         bind(IntercomConfiguration.class).toInstance(configuration.getAnalytics().getIntercom());
-
-        // Disable caches in development mode
-        if (configuration.isDevelopmentMode()) {
-            bind(ConsentCacheConfiguration.class).toInstance(ConsentCacheConfiguration.NoCache());
-        } else {
-            bind(ConsentCacheConfiguration.class).toInstance(ConsentCacheConfiguration.Default());
-        }
     }
 
 }

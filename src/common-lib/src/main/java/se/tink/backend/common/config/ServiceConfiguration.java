@@ -4,9 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.Lists;
 import io.dropwizard.Configuration;
 import java.util.List;
-import se.tink.backend.consent.config.ConsentConfiguration;
-import se.tink.libraries.cluster.Cluster;
 import se.tink.libraries.abnamro.config.AbnAmroConfiguration;
+import se.tink.libraries.cluster.Cluster;
 import se.tink.libraries.endpoints.EndpointsConfiguration;
 
 public class ServiceConfiguration extends Configuration {
@@ -133,9 +132,6 @@ public class ServiceConfiguration extends Configuration {
     private StatisticConfiguration statistics = new StatisticConfiguration();
 
     @JsonProperty
-    private ConsentConfiguration consents = new ConsentConfiguration();
-
-    @JsonProperty
     private InsightsConfiguration insights = new InsightsConfiguration();
 
 
@@ -183,10 +179,6 @@ public class ServiceConfiguration extends Configuration {
 
     public CacheConfiguration getCacheConfiguration() {
         return cache;
-    }
-
-    public ConsentConfiguration getConsentConfiguration() {
-        return consents;
     }
 
     public Cluster getCluster() {
