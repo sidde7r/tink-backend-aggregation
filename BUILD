@@ -179,8 +179,6 @@ java_library(
         ":tink-oauth-grpc",
         ":tink-oauth-grpc_compile_imports",
 
-        "//src/consent-lib",
-
         "//src/libraries/strings:strings",
         "//src/libraries/uuid:uuid",
         "//src/libraries/http:http-annotations",
@@ -248,7 +246,6 @@ java_library(
     deps = [
         ":aggregation-api",
         "//src/categorization-api",
-        "//src/consent-lib",
         ":common-utilities",
         ":connector-api",
         "@tink_backend_encryption//:encryption-api",
