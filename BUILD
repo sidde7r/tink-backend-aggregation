@@ -322,23 +322,6 @@ java_library(
 )
 
 java_library(
-    name = "queue-lib",
-    srcs = glob(["src/queue-lib/src/main/**/*.java"]),
-    deps = [
-        ":common-lib",
-
-        "//src/libraries/metrics:metrics",
-
-        "//third_party:com_google_guava_guava",
-        "//third_party:com_google_inject_guice",
-        "//third_party:com_google_protobuf_protobuf_java",
-        "//third_party:org_apache_kafka_kafka_clients",
-        "//third_party:org_slf4j_slf4j_api",
-        "//third_party:com_sproutsocial_nsqj_j",
-    ],
-)
-
-java_library(
     name = "common-lib",
     srcs = glob(["src/common-lib/src/main/**/*.java"]),
     deps = [
