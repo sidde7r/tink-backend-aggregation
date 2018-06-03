@@ -122,54 +122,6 @@ java_library(
 )
 
 java_library(
-    name = "product-executor-lib",
-    srcs = glob(["src/fs-product-execution-lib/src/main/**/*.java"]),
-    data = [
-    ],
-    deps = [
-        "//:main-api",
-        ":common-lib",
-        ":system-api",
-        ":product-executor-api",
-        "//src/categorization-api",
-        "//src/libraries/auth",
-        "//src/libraries/cluster:cluster",
-        "//src/libraries/date:date",
-        "//third_party:joda_time_joda_time",
-        "//src/libraries/discovery",
-        "//src/libraries/endpoint_configuration:endpoint_configuration",
-        "//src/libraries/jersey_guice:jersey-guice",
-        "//src/libraries/log",
-        "//src/libraries/metrics",
-        "//src/libraries/serialization_utils:serialization-utils",
-        "//src/libraries/uuid",
-        "//src/libraries/identity",
-        "//third_party:com_google_guava_guava",
-        "//third_party:com_google_inject_guice",
-        "//third_party:io_dropwizard_dropwizard_core",
-        "//third_party:org_apache_commons_commons_math",
-        "//third_party:net_spy_spymemcached",
-        "//third_party:org_hibernate_hibernate_core",
-        "//third_party:org_rythmengine_rythm_engine",
-        "//src/libraries/protobuf_serialization_utils:protobuf-serialization-utils",
-
-        "//src/libraries/net",
-        "//src/libraries/i18n",
-        "//third_party:org_bouncycastle_bcprov_jdk15on",
-        "//third_party:com_sun_jersey_contribs_jersey_apache_client4",
-        "//third_party:org_apache_httpcomponents_httpcore",
-        "//src/libraries/generic_application:generic-application",
-        "//third_party:com_sun_jersey_jersey_client",
-        "//src/libraries/dropwizard_utils:dropwizard-utils",
-        "//third_party:com_google_http_client_google_http_client",
-        "//third_party:org_jsoup_jsoup",
-        "//third_party:org_apache_commons_commons_lang3",
-        "//third_party:org_mockito_mockito_core",
-    ],
-)
-
-
-java_library(
     name = "product-executor-api",
     srcs = glob(["src/fs-product-execution-api/src/main/**/*.java"]),
     deps = [
