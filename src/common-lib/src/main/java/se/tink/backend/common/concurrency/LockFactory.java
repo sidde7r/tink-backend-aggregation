@@ -10,8 +10,4 @@ public class LockFactory {
     public LockFactory(CuratorFramework coordinationClient) {
         this.coordinationClient = coordinationClient;
     }
-
-    public StatisticsActivitiesLock getStatisticsAndActivitiesLock(String userId) {
-        return new StatisticsActivitiesLock(coordinationClient, userId);
-    }
 }

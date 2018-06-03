@@ -5,75 +5,6 @@ load("@org_pubref_rules_protobuf//java:rules.bzl", "java_proto_library")
 # have been merged to suitable components.
 
 java_library(
-    name = "common-utilities",
-    srcs = glob(["src/common-utilities/src/main/**/*.java"]),
-    deps = [
-        # Log
-        "//src/libraries/log:log",
-
-        # Public UUID
-        "//src/libraries/uuid:uuid",
-
-        # Request tracing
-        "//third_party:com_google_guava_guava",
-        "//third_party:com_sun_jersey_jersey_server",
-        "//third_party:commons_codec_commons_codec",
-        "//third_party:org_slf4j_slf4j_api",
-
-        # Serialization utils
-        "//third_party:com_fasterxml_jackson_core_jackson_core",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
-        "//third_party:com_fasterxml_jackson_dataformat_jackson_dataformat_smile",
-
-        # UUID utils
-        "//third_party:com_datastax_cassandra_cassandra_driver_core",
-
-        # Dependency injection
-        "//third_party:com_google_inject_guice",
-    ],
-    visibility = ["//visibility:public"],
-)
-
-
-java_library(
-    name = "main-api-testlib",
-    srcs = glob(["src/main-api-testlib/src/main/**/*.java"]),
-    deps = [
-        ":main-api",
-        ":common-utilities",
-
-        "//src/libraries/uuid:uuid",
-        "//src/libraries/date:date",
-
-        "//third_party:com_google_guava_guava",
-    ],
-    visibility = ["//visibility:public"],
-)
-
-java_library(
-    name = "connector-api",
-    srcs = glob(["src/connector-api/src/main/**/*.java"]),
-    deps = [
-        ":common-utilities",
-        "@tink_backend_encryption//:encryption-api",
-        ":main-api",
-
-        "//src/libraries/http:http-annotations",
-        "//src/libraries/i18n",
-        "//src/libraries/serialization_utils:serialization-utils",
-        "//src/libraries/http_client:http-client",
-        "//src/api-annotations",
-
-        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
-        "//third_party:com_google_guava_guava",
-        "//third_party:com_sun_jersey_jersey_client",
-        "//third_party:eu_geekplace_javapinning_java_pinning_jar",
-        "//third_party:io_swagger_swagger_annotations",
-        "//third_party:javax_validation_validation_api",
-    ],
-)
-
-java_library(
     name = "aggregation-api",
     srcs = glob(["src/aggregation-api/src/main/**/*.java"]),
     deps = [
@@ -137,10 +68,6 @@ java_library(
     srcs = glob(["src/main-api/src/main/**/*.java"]),
     resources = glob(["src/main-api/src/main/resources/**"]),
     deps = [
-        ":common-utilities",
-        ":tink-oauth-grpc",
-        ":tink-oauth-grpc_compile_imports",
-
         "//src/libraries/strings:strings",
         "//src/libraries/uuid:uuid",
         "//src/libraries/http:http-annotations",
@@ -156,6 +83,7 @@ java_library(
         "//src/libraries/generic_application:generic-application",
         "//src/libraries/demo_credentials:demo-credentials",
         "//src/libraries/i18n",
+        "//src/libraries/log",
         "//src/libraries/math",
         "//src/libraries/phone_number_utils:phone_number_utils",
         "//src/libraries/oauth",
@@ -207,8 +135,6 @@ java_library(
     srcs = glob(["src/common-lib/src/main/**/*.java"]),
     deps = [
         ":aggregation-api",
-        ":common-utilities",
-        ":connector-api",
         "@tink_backend_encryption//:encryption-api",
         ":main-api",
         ":system-api",
@@ -317,14 +243,12 @@ java_library(
         exclude = ["src/common-lib/src/test/**/*Test.java"],
     ),
     runtime_deps = [
-        ":common-utilities",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:pl_pragmatists_junitparams",
     ],
     deps = [
         ":common-lib",
-        ":common-utilities",
         ":main-api",
 
         "//src/libraries/uuid:uuid",
@@ -459,73 +383,9 @@ java_library(
     ],
 )
 
-java_proto_library(
-    name = "aggregation-grpc",
-    protos = glob(["src/aggregation-grpc/src/main/proto/**/*.proto"]),
-    with_grpc = True,
-)
-
-java_proto_library(
-    name = "tink-oauth-grpc",
-    protos = glob(["tink-oauth-grpc/*.proto"]),
-    with_grpc = True,
-)
-
-java_library(
-    name = "aggregation-grpc-client",
-    srcs = glob(["src/aggregation-grpc-client/src/main/**/*.java"]),
-    runtime_deps = [
-        "//third_party:com_google_instrumentation_instrumentation_api",
-        "//third_party:io_grpc_grpc_context",
-        "//third_party:io_grpc_grpc_core",
-        "//third_party:io_grpc_grpc_netty",
-        "//third_party:io_netty_netty_codec_http2",
-        "//third_party:io_netty_netty_handler",
-        "//third_party:io_netty_netty_handler_proxy",
-        "//third_party:io_netty_netty_transport",
-    ],
-    deps = [
-        ":aggregation-grpc",
-        ":aggregation-grpc_compile_imports",
-        ":main-api",
-        "//third_party:com_github_rholder_guava_retrying",
-        "//third_party:org_apache_curator_curator_framework",
-        "//third_party:org_apache_curator_curator_x_discovery",
-        # Neede solely to avoid compilation warning about not found class
-        # probably caused by the dependency on :main-api
-        "//third_party:org_codehaus_jackson_jackson_core_asl",
-    ],
-)
-
-junit_test(
-    name = "aggregation-grpc-client-test",
-    srcs = glob(["src/aggregation-grpc-client/src/test/**/*.java"]),
-    runtime_deps = [
-        "//third_party:net_bytebuddy_byte_buddy",
-        "//third_party:org_objenesis_objenesis",
-    ],
-    deps = [
-        ":aggregation-grpc",
-        ":aggregation-grpc-client",
-        ":aggregation-grpc_compile_imports",
-        ":aggregation-lib",
-        ":main-api",
-        "//third_party:junit_junit",
-        "//third_party:org_apache_curator_curator_x_discovery",
-        "//third_party:org_codehaus_jackson_jackson_core_asl",
-        "//third_party:org_mockito_mockito_core",
-    ],
-)
-
 java_library(
     name = "aggregation-lib",
     srcs = glob(["src/aggregation-lib/src/main/**/*.java"]),
-    runtime_deps = [
-        # gRPC
-        "//third_party:io_grpc_grpc_netty",
-        "//third_party:io_grpc_grpc_context",
-        "//third_party:com_google_instrumentation_instrumentation_api",
-    ],
     data = [
         "//tools:phantomjs_mac",
         "//tools:libkbc_wbaes_linux",
@@ -533,10 +393,7 @@ java_library(
     ],
     deps = [
         ":aggregation-api",
-        ":aggregation-grpc",
-        ":aggregation-grpc_compile_imports",
         ":common-lib",
-        ":common-utilities",
         "@tink_backend_encryption//:encryption-api",
         ":main-api",
         ":system-api",
@@ -640,21 +497,6 @@ genrule(
     visibility = ["//visibility:public"],
 )
 
-java_proto_library(
-    name = "tink-grpc-v1-api-java",
-    protos = [":tink-grpc-v1-api"],
-    visibility = ["//visibility:public"],
-    with_grpc = True,
-)
-
-filegroup(
-    name = "tink-grpc-v1-api",
-    srcs = glob([
-        "proto/*.proto",
-        "google/**/*.proto",
-    ]),
-)
-
 junit_test(
     name = "aggregation-api-test",
     srcs = glob(["src/aggregation-api/src/test/**/*.java"]) + [
@@ -693,12 +535,9 @@ junit_test(
     ],
     deps = [
         ":aggregation-api",
-        ":aggregation-grpc",
-        ":aggregation-grpc_compile_imports",
         ":aggregation-lib",
         ":common-lib",
         ":common-lib-testlib",
-        ":common-utilities",
         ":main-api",
         ":system-api",
 

@@ -27,15 +27,12 @@ import se.tink.backend.common.config.repository.PersistenceUnit;
 import se.tink.backend.common.config.repository.SingletonRepositoryConfiguration;
 import se.tink.backend.common.dao.ActivityDao;
 import se.tink.backend.common.dao.ApplicationDAO;
-import se.tink.backend.common.dao.DeviceConfigurationDao;
 import se.tink.backend.common.dao.InvestmentDao;
 import se.tink.backend.common.dao.NotificationDao;
 import se.tink.backend.common.dao.ProductDAO;
 import se.tink.backend.common.dao.ProviderDao;
-import se.tink.backend.common.dao.StatisticDao;
 import se.tink.backend.common.dao.transactions.TransactionRepository;
 import se.tink.backend.common.repository.RepositoryFactory;
-import se.tink.backend.common.repository.cassandra.CassandraStatisticRepository;
 import se.tink.backend.common.repository.cassandra.DAO.LoanDAO;
 import se.tink.backend.common.repository.cassandra.InstrumentHistoryRepository;
 import se.tink.backend.common.repository.cassandra.InstrumentRepository;
@@ -50,7 +47,6 @@ import se.tink.backend.common.repository.cassandra.ProductTemplateRepository;
 import se.tink.backend.common.repository.mysql.main.ActivityRepository;
 import se.tink.backend.common.repository.mysql.main.ApplicationFormRepository;
 import se.tink.backend.common.repository.mysql.main.ApplicationRepository;
-import se.tink.backend.common.repository.mysql.main.DeviceConfigurationRepository;
 import se.tink.backend.common.repository.mysql.main.NotificationRepository;
 import se.tink.backend.common.repository.mysql.main.ProviderRepository;
 import se.tink.backend.common.tracking.EventTracker;
@@ -257,10 +253,7 @@ public class ServiceContext implements Managed, RepositoryFactory {
 
             @Override
             public Object load(Class<?> key) throws Exception {
-                if (key.equals(StatisticDao.class)) {
-                    return new StatisticDao(
-                            getRepository(CassandraStatisticRepository.class), cacheClient, metricRegistry);
-                } else if (key.equals(ActivityDao.class)) {
+                if (key.equals(ActivityDao.class)) {
                     return new ActivityDao(
                             getRepository(ActivityRepository.class),
                             cacheClient,
@@ -289,9 +282,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
                             getRepository(ProviderRepository.class),
                             aggregationControllerCommonClient,
                             new ProviderCacheConfiguration(5, TimeUnit.MINUTES));
-                } else if (key.equals(DeviceConfigurationDao.class)) {
-                    return new DeviceConfigurationDao(
-                            getRepository(DeviceConfigurationRepository.class));
                 } else if (key.equals(InvestmentDao.class)) {
                     return new InvestmentDao(
                             getRepository(PortfolioRepository.class),

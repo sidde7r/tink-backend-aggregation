@@ -1,3 +1,0 @@
-These are files from googleapis and protobuf.
-
-TODO: Move to linked workspaces when Bazel has better gRPC support.
