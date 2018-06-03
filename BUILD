@@ -105,23 +105,6 @@ java_library(
 )
 
 java_library(
-    name = "insights-api",
-    srcs = glob(["src/insights-api/src/main/**/*.java"]),
-    deps = [
-        ":main-api",
-        "//src/api-annotations",
-        "//src/libraries/auth",
-        "@javax_inject_javax_inject//jar",
-        "//src/libraries/http:http-annotations",
-        "//src/libraries/http:http-utils",
-        "//src/libraries/http_client:http-client",
-        "//third_party:com_sun_jersey_jersey_core",
-        "//src/libraries/jersey_utils:jersey-utils",
-
-    ],
-)
-
-java_library(
     name = "product-executor-api",
     srcs = glob(["src/fs-product-execution-api/src/main/**/*.java"]),
     deps = [
@@ -254,7 +237,6 @@ java_library(
         "@tink_backend_encryption//:encryption-api",
         ":main-api",
         ":system-api",
-        ":insights-api",
         ":product-executor-api",
 
         "//src/libraries/http:http-annotations",
