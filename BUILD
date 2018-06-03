@@ -5,28 +5,6 @@ load("@org_pubref_rules_protobuf//java:rules.bzl", "java_proto_library")
 # have been merged to suitable components.
 
 java_library(
-    name = "connector-api",
-    srcs = glob(["src/connector-api/src/main/**/*.java"]),
-    deps = [
-        "@tink_backend_encryption//:encryption-api",
-        ":main-api",
-
-        "//src/libraries/http:http-annotations",
-        "//src/libraries/i18n",
-        "//src/libraries/serialization_utils:serialization-utils",
-        "//src/libraries/http_client:http-client",
-        "//src/api-annotations",
-
-        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
-        "//third_party:com_google_guava_guava",
-        "//third_party:com_sun_jersey_jersey_client",
-        "//third_party:eu_geekplace_javapinning_java_pinning_jar",
-        "//third_party:io_swagger_swagger_annotations",
-        "//third_party:javax_validation_validation_api",
-    ],
-)
-
-java_library(
     name = "aggregation-api",
     srcs = glob(["src/aggregation-api/src/main/**/*.java"]),
     deps = [
@@ -160,7 +138,6 @@ java_library(
     srcs = glob(["src/common-lib/src/main/**/*.java"]),
     deps = [
         ":aggregation-api",
-        ":connector-api",
         "@tink_backend_encryption//:encryption-api",
         ":main-api",
         ":system-api",
