@@ -20,14 +20,6 @@ BRANCHES = {
 
 PROJECTS = {
     'tink-backend-aggregation': {'chart': False, 'salt': True},
-    'tink-backend-main': {'chart': False, 'salt': True},
-    'tink-backend-system': {'chart': False, 'salt': True},
-    'tink-backend-connector': {'chart': False, 'salt': True},
-    'tink-backend-webhook': {'chart': False, 'salt': True},
-    'tink-backend-insights': {'chart': True, 'salt': False},
-    'tink-backend-aggregation-controller': {'chart': False, 'salt': True},
-    'tink-backend-data-export': {'chart': True, 'salt': False},
-    'tink-backend-product-executor': {'chart': True, 'salt': False},
 }
 
 STEP = """
@@ -43,7 +35,7 @@ STEP = """
       TINK_VERSION: "{version}"
       TINK_BRANCH: "{branch}"
       TINK_BLOCK: "{block}"
-      TINK_CHART_REPO: "tink-backend"
+      TINK_CHART_REPO: "tink-backend-aggregation"
       TINK_SALT_DEPLOY: "{salt_deploy}"
       TINK_KUBERNETES_DEPLOY: "{kubernetes_deploy}"
 """

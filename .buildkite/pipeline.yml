@@ -1,23 +1,5 @@
 steps:
 
-  - name: ':white_check_mark: :docker: Run integration tests'
-    branches: '!master'
-    command: .buildkite/run-integration-tests.sh
-    timeout_in_minutes: 30
-    env:
-      SSH_AUTH_SOCK:
-      BUILDKITE_DOCKER_COMPOSE_CONTAINER: integration-tests
-      BUILDKITE_DOCKER_COMPOSE_FILE: docker/docker-compose.integration-tests.yml
-
-  - name: ':white_check_mark: :docker: Run Cornwall system tests'
-    branches: '!master'
-    command: .buildkite/run-seb-system-tests.sh
-    timeout_in_minutes: 30
-    env:
-      SSH_AUTH_SOCK:
-      BUILDKITE_DOCKER_COMPOSE_CONTAINER: integration-tests
-      BUILDKITE_DOCKER_COMPOSE_FILE: docker/docker-compose.integration-tests.yml
-
   - name: ':white_check_mark: Test'
     branches: '!master'
     command: .buildkite/run-unit-tests.sh
@@ -25,10 +7,10 @@ steps:
       SSH_AUTH_SOCK:
       BUILDKITE_DOCKER_COMPOSE_CONTAINER: app
       BUILDKITE_DOCKER_COMPOSE_FILE: docker/docker-compose.bazel.yml
-  
+
   - name: ":kubernetes: Helm Lint"
     command: /go/bin/kubernetes-generator --mode lint --repo /tink-backend
-    env: 
+    env:
       BUILDKITE_DOCKER_COMPOSE_CONTAINER: app
       BUILDKITE_DOCKER_COMPOSE_FILE: docker/docker-compose.helm.yml
 
@@ -42,15 +24,6 @@ steps:
 
       bazel build docker:bundle.tar;
       docker load -i bazel-bin/docker/bundle.tar;
-
-      docker tag gcr.io/tink-containers/tink-backend-insights:latest gcr.io/tink-containers/tink-backend-insights:$VERSION;
-      gcloud docker -- push gcr.io/tink-containers/tink-backend-insights:$VERSION;
-
-      docker tag gcr.io/tink-containers/tink-backend-data-export:latest gcr.io/tink-containers/tink-backend-data-export:$VERSION;
-      gcloud docker -- push gcr.io/tink-containers/tink-backend-data-export:$VERSION;
-
-      docker tag gcr.io/tink-containers/tink-backend-product-executor:latest gcr.io/tink-containers/tink-backend-product-executor:$VERSION;
-      gcloud docker -- push gcr.io/tink-containers/tink-backend-product-executor:$VERSION;
     env:
       SSH_AUTH_SOCK:
       BUILDKITE_DOCKER_COMPOSE_CONTAINER: app

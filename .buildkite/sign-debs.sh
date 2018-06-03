@@ -21,11 +21,6 @@ fi
 echo "--- Sign packages"
 pids=()
 sign_deb_package "debs/tink-backend-aggregation__amd64.deb"
-sign_deb_package "debs/tink-backend-connector__amd64.deb"
-sign_deb_package "debs/tink-backend-main__amd64.deb"
-sign_deb_package "debs/tink-backend-system__amd64.deb"
-sign_deb_package "debs/tink-backend-webhook__amd64.deb"
-sign_deb_package "debs/tink-backend-aggregation-controller__amd64.deb"
 for pid in ${pids[*]}; do
   wait "$pid"
 done
