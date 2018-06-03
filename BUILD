@@ -34,22 +34,6 @@ java_library(
     visibility = ["//visibility:public"],
 )
 
-
-java_library(
-    name = "main-api-testlib",
-    srcs = glob(["src/main-api-testlib/src/main/**/*.java"]),
-    deps = [
-        ":main-api",
-        ":common-utilities",
-
-        "//src/libraries/uuid:uuid",
-        "//src/libraries/date:date",
-
-        "//third_party:com_google_guava_guava",
-    ],
-    visibility = ["//visibility:public"],
-)
-
 java_library(
     name = "connector-api",
     srcs = glob(["src/connector-api/src/main/**/*.java"]),
