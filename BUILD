@@ -170,23 +170,6 @@ java_library(
     ],
 )
 
-java_library(
-    name = "gdpr-export-api",
-    srcs = glob(["src/gdpr-export-api/src/main/**/*.java"]),
-    deps = [
-        ":main-api",
-        "//src/api-annotations",
-        "//src/libraries/auth",
-        "@javax_inject_javax_inject//jar",
-        "//src/libraries/http:http-annotations",
-        "//src/libraries/http_client:http-client",
-        "//src/libraries/jersey_utils:jersey-utils",
-        "//third_party:com_sun_jersey_jersey_core",
-
-
-    ],
-)
-
 java_proto_library(
     name = "firehose-v1-java-pb",
     protos = [":firehose-v1-pb"],
