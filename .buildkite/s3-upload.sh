@@ -19,11 +19,6 @@ if aws s3 ls "s3://${S3_BUCKET}"; then
     export AWS_ACCESS_KEY_ID="$TINK_REPO_UPLOAD_ACCESS_KEY_ID"
     export AWS_SECRET_ACCESS_KEY="$TINK_REPO_UPLOAD_SECRET_ACCESS_KEY"
     upload_package_s3 "tink-backend-aggregation" "debs/tink-backend-aggregation__amd64.deb"
-    upload_package_s3 "tink-backend-main"        "debs/tink-backend-main__amd64.deb"
-    upload_package_s3 "tink-backend-system"      "debs/tink-backend-system__amd64.deb"
-    upload_package_s3 "tink-backend-connector"   "debs/tink-backend-connector__amd64.deb"
-    upload_package_s3 "tink-backend-webhook"     "debs/tink-backend-webhook__amd64.deb"
-    upload_package_s3 "tink-backend-aggregation-controller" "debs/tink-backend-aggregation-controller__amd64.deb"
     for pid in ${pids[*]}; do
       wait "$pid"
     done
