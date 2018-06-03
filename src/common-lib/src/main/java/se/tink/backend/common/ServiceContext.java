@@ -1,6 +1,5 @@
 package se.tink.backend.common;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -8,52 +7,35 @@ import com.google.common.cache.LoadingCache;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import io.dropwizard.lifecycle.Managed;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
-import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import org.apache.curator.framework.CuratorFramework;
-import org.elasticsearch.client.Client;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.data.cassandra.core.CassandraOperations;
 import org.springframework.data.cassandra.repository.CassandraRepository;
 import se.tink.backend.aggregation.client.AggregationServiceFactory;
-import se.tink.backend.categorization.api.CategoryConfiguration;
 import se.tink.backend.client.ServiceFactory;
 import se.tink.backend.common.admin.ApplicationDrainMode;
 import se.tink.backend.common.cache.CacheClient;
 import se.tink.backend.common.client.AggregationControllerCommonClient;
 import se.tink.backend.common.concurrency.ListenableThreadPoolExecutor;
 import se.tink.backend.common.config.DatabaseConfiguration;
-import se.tink.backend.common.config.DistributedRepositoryConfiguration;
 import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.backend.common.config.repository.PersistenceUnit;
 import se.tink.backend.common.config.repository.SingletonRepositoryConfiguration;
-import se.tink.backend.common.dao.AccountDao;
 import se.tink.backend.common.dao.ActivityDao;
 import se.tink.backend.common.dao.ApplicationDAO;
-import se.tink.backend.common.dao.CategoryChangeRecordDao;
 import se.tink.backend.common.dao.DeviceConfigurationDao;
 import se.tink.backend.common.dao.InvestmentDao;
 import se.tink.backend.common.dao.NotificationDao;
 import se.tink.backend.common.dao.ProductDAO;
 import se.tink.backend.common.dao.ProviderDao;
 import se.tink.backend.common.dao.StatisticDao;
-import se.tink.backend.common.dao.transactions.TransactionCleaner;
-import se.tink.backend.common.dao.transactions.TransactionDao;
-import se.tink.backend.common.dao.transactions.TransactionEnricher;
 import se.tink.backend.common.dao.transactions.TransactionRepository;
-import se.tink.backend.common.dao.transactions.TransactionRepositoryImpl;
-import se.tink.backend.common.mail.MailSender;
 import se.tink.backend.common.repository.RepositoryFactory;
-import se.tink.backend.common.repository.cassandra.AccountBalanceHistoryRepository;
-import se.tink.backend.common.repository.cassandra.CassandraPeriodByUserIdRepository;
 import se.tink.backend.common.repository.cassandra.CassandraStatisticRepository;
-import se.tink.backend.common.repository.cassandra.CassandraTransactionByUserIdAndPeriodRepository;
-import se.tink.backend.common.repository.cassandra.CassandraTransactionDeletedRepository;
-import se.tink.backend.common.repository.cassandra.CategoryChangeRecordRepository;
 import se.tink.backend.common.repository.cassandra.DAO.LoanDAO;
 import se.tink.backend.common.repository.cassandra.InstrumentHistoryRepository;
 import se.tink.backend.common.repository.cassandra.InstrumentRepository;
@@ -65,20 +47,12 @@ import se.tink.backend.common.repository.cassandra.PortfolioRepository;
 import se.tink.backend.common.repository.cassandra.ProductFilterRepository;
 import se.tink.backend.common.repository.cassandra.ProductInstanceRepository;
 import se.tink.backend.common.repository.cassandra.ProductTemplateRepository;
-import se.tink.backend.common.repository.cassandra.TransferDestinationPatternRepository;
-import se.tink.backend.common.repository.elasticsearch.TransactionSearchIndex;
-import se.tink.backend.common.repository.mysql.main.AccountRepository;
 import se.tink.backend.common.repository.mysql.main.ActivityRepository;
 import se.tink.backend.common.repository.mysql.main.ApplicationFormRepository;
 import se.tink.backend.common.repository.mysql.main.ApplicationRepository;
-import se.tink.backend.common.repository.mysql.main.CategoryRepository;
 import se.tink.backend.common.repository.mysql.main.DeviceConfigurationRepository;
-import se.tink.backend.common.repository.mysql.main.FollowItemRepository;
 import se.tink.backend.common.repository.mysql.main.NotificationRepository;
 import se.tink.backend.common.repository.mysql.main.ProviderRepository;
-import se.tink.backend.common.repository.mysql.main.UserRepository;
-import se.tink.backend.common.search.SearchProxy;
-import se.tink.backend.common.template.PooledRythmProxy;
 import se.tink.backend.common.tracking.EventTracker;
 import se.tink.backend.common.utils.ExecutorServiceUtils;
 import se.tink.backend.encryption.client.EncryptionServiceFactory;
@@ -105,14 +79,10 @@ public class ServiceContext implements Managed, RepositoryFactory {
     private final ServiceConfiguration configuration;
     private CuratorFramework zookeeperClient;
     private final MetricRegistry metricRegistry;
-    private Client searchClient;
     private final ServiceFactory serviceFactory;
     private final SystemServiceFactory systemServiceFactory;
     private LoadingCache<Class<?>, Object> DAOs;
-    private Optional<TransactionDao> indexedTransactionDAO = Optional.empty();
-    private MailSender mailSender;
     private final EventTracker eventTracker;
-    private final CategoryConfiguration categoryConfiguration;
     private ApplicationDrainMode applicationDrainMode;
     private final boolean supplementalOnAggregation;
     private final boolean isAggregationCluster;
@@ -127,29 +97,24 @@ public class ServiceContext implements Managed, RepositoryFactory {
     private ListenableThreadPoolExecutor<Runnable> executorService;
     private AnnotationConfigApplicationContext distributedApplicationContext;
 
-    private PooledRythmProxy threadSafeRythm;
-
     @Inject
     public ServiceContext(@Named("useAggregationController") boolean isUseAggregationController,
             AggregationControllerCommonClient aggregationControllerCommonClient,
             final ServiceConfiguration configuration, MetricRegistry metricRegistry,
             CacheClient cacheClient, CuratorFramework zookeeperClient,
-            @Nullable Client searchClient, ServiceFactory serviceFactory, SystemServiceFactory systemServiceFactory,
+            ServiceFactory serviceFactory, SystemServiceFactory systemServiceFactory,
             AggregationServiceFactory aggregationServiceFactory,
             EventTracker eventTracker,
             EncryptionServiceFactory encryptionServiceFactory,
-            CategoryConfiguration categoryConfiguration, ApplicationDrainMode applicationDrainMode,
-            @Nullable PooledRythmProxy templateRenderer,
+            ApplicationDrainMode applicationDrainMode,
             @Named("executor") ListenableThreadPoolExecutor<Runnable> executorService,
             @Named("trackingExecutor") ListenableThreadPoolExecutor<Runnable> trackingExecutorService,
-            @Nullable MailSender mailSender,
             @Named("isSupplementalOnAggregation") boolean supplementalOnAggregation,
             @Named("isAggregationCluster") boolean isAggregationCluster,
             @Named("isProvidersOnAggregation") boolean isProvidersOnAggregation) {
 
         this.isUseAggregationController = isUseAggregationController;
         this.aggregationControllerCommonClient = aggregationControllerCommonClient;
-        this.searchClient = searchClient;
         this.serviceFactory = serviceFactory;
         this.systemServiceFactory = systemServiceFactory;
         this.aggregationServiceFactory = aggregationServiceFactory;
@@ -158,13 +123,10 @@ public class ServiceContext implements Managed, RepositoryFactory {
         this.configuration = configuration;
         this.metricRegistry = metricRegistry;
         this.eventTracker = eventTracker;
-        this.categoryConfiguration = categoryConfiguration;
         this.applicationDrainMode = applicationDrainMode;
         this.encryptionServiceFactory = encryptionServiceFactory;
-        this.threadSafeRythm = templateRenderer;
         this.executorService = executorService;
         this.trackingExecutorService = trackingExecutorService;
-        this.mailSender = mailSender;
         this.supplementalOnAggregation = supplementalOnAggregation;
         this.isAggregationCluster = isAggregationCluster;
         this.isProvidersOnAggregation = isProvidersOnAggregation;
@@ -176,10 +138,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
 
     public CacheClient getCacheClient() {
         return cacheClient;
-    }
-
-    public CategoryConfiguration getCategoryConfiguration() {
-        return categoryConfiguration;
     }
 
     public ServiceConfiguration getConfiguration() {
@@ -249,23 +207,12 @@ public class ServiceContext implements Managed, RepositoryFactory {
         }
     }
 
-    public Client getSearchClient() {
-        return searchClient;
-    }
-
     public ServiceFactory getServiceFactory() {
         return serviceFactory;
     }
 
     public SystemServiceFactory getSystemServiceFactory() {
         return systemServiceFactory;
-    }
-
-    public MailSender getMailSender() {
-        if (mailSender == null) {
-            throw new IllegalStateException("Trying to get MailSender in container where it is not instantiate.");
-        }
-        return mailSender;
     }
 
     public ListenableThreadPoolExecutor<Runnable> getExecutorService() {
@@ -302,38 +249,7 @@ public class ServiceContext implements Managed, RepositoryFactory {
             initializeDAOs();
         }
 
-        if (configuration.getDistributedDatabase().isEnabled()) {
-            DistributedRepositoryConfiguration.setConfiguration(configuration.getDistributedDatabase());
-            distributedApplicationContext = new AnnotationConfigApplicationContext(
-                    DistributedRepositoryConfiguration.class);
-
-            if (persistenceUnit != null && persistenceUnit.canAccessTransactions()) {
-                transactionsByUserIdAndPeriodRepository = new TransactionRepositoryImpl(
-                        getRepository(CassandraTransactionByUserIdAndPeriodRepository.class,
-                                RepositorySource.DISTRIBUTED),
-                        getRepository(CassandraPeriodByUserIdRepository.class,
-                                RepositorySource.DISTRIBUTED),
-                        metricRegistry, configuration.getDistributedDatabase().getBatchSize());
-
-                indexedTransactionDAO = Optional.of(createIndexedTransactionDao());
-                indexedTransactionDAO.get().start();
-            }
-
-        }
         log.info("Started.");
-    }
-
-    private TransactionDao createIndexedTransactionDao() {
-        return new TransactionDao(
-                getRepository(CategoryRepository.class),
-                getRepository(TransactionRepository.class), getRepository(AccountRepository.class),
-                getRepository(CassandraTransactionDeletedRepository.class),
-                getRepository(UserRepository.class),
-                new TransactionSearchIndex(SearchProxy.getInstance().getClient(), new ObjectMapper(), metricRegistry),
-                new TransactionEnricher(getRepository(CategoryRepository.class)),
-                new TransactionCleaner(getRepository(CategoryRepository.class)),
-                metricRegistry,
-                new CategoryChangeRecordDao(getRepository(CategoryChangeRecordRepository.class), metricRegistry));
     }
 
     private void initializeDAOs() {
@@ -344,15 +260,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
                 if (key.equals(StatisticDao.class)) {
                     return new StatisticDao(
                             getRepository(CassandraStatisticRepository.class), cacheClient, metricRegistry);
-                } else if (key.equals(AccountDao.class)) {
-                    return new AccountDao(
-                            getRepository(AccountBalanceHistoryRepository.class),
-                            getRepository(AccountRepository.class),
-                            getRepository(FollowItemRepository.class),
-                            getRepository(TransferDestinationPatternRepository.class),
-                            getDao(InvestmentDao.class),
-                            getDao(LoanDAO.class),
-                            indexedTransactionDAO.orElse(null));
                 } else if (key.equals(ActivityDao.class)) {
                     return new ActivityDao(
                             getRepository(ActivityRepository.class),
@@ -392,8 +299,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
                             getRepository(InstrumentRepository.class),
                             getRepository(InstrumentHistoryRepository.class),
                             metricRegistry);
-                } else if (key.equals(TransactionDao.class)) {
-                    return indexedTransactionDAO.get();
                 } else {
                     throw new IllegalArgumentException("Class could not be instantiated");
                 }
@@ -442,16 +347,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
                 cacheClient = null;
             }
 
-            if (searchClient != null) {
-                searchClient.close();
-                searchClient = null;
-            }
-
-            if (indexedTransactionDAO.isPresent()) {
-                indexedTransactionDAO.get().stop();
-                indexedTransactionDAO = Optional.empty();
-            }
-
             if (applicationContext != null) {
                 applicationContext.close();
                 applicationContext = null;
@@ -489,10 +384,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
 
     public EncryptionServiceFactory getEncryptionServiceFactory() {
         return encryptionServiceFactory;
-    }
-
-    public PooledRythmProxy getTemplateRenderer() {
-        return threadSafeRythm;
     }
 
     public ApplicationDrainMode getApplicationDrainMode() {

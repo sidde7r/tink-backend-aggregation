@@ -207,7 +207,6 @@ java_library(
     srcs = glob(["src/common-lib/src/main/**/*.java"]),
     deps = [
         ":aggregation-api",
-        "//src/categorization-api",
         ":common-utilities",
         ":connector-api",
         "@tink_backend_encryption//:encryption-api",

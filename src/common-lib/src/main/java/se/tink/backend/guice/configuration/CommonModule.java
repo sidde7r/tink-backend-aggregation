@@ -11,26 +11,14 @@ import com.google.inject.Scopes;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
-import net.spy.memcached.AddrUtil;
 import net.spy.memcached.BinaryConnectionFactory;
-import org.elasticsearch.client.Client;
-import org.elasticsearch.client.transport.TransportClient;
-import org.elasticsearch.common.settings.ImmutableSettings;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.joda.time.DateTime;
-import se.tink.backend.categorization.api.AbnAmroCategories;
-import se.tink.backend.categorization.api.CategoryConfiguration;
-import se.tink.backend.categorization.api.SECategories;
-import se.tink.backend.categorization.api.SebCategories;
 import se.tink.backend.common.VersionInformation;
 import se.tink.backend.common.cache.CacheClient;
 import se.tink.backend.common.cache.CacheInstrumentationDecorator;
@@ -42,10 +30,7 @@ import se.tink.backend.common.concurrency.LockFactory;
 import se.tink.backend.common.concurrency.TypedThreadPoolBuilder;
 import se.tink.backend.common.concurrency.WrappedRunnableListenableFutureTask;
 import se.tink.backend.common.config.CacheConfiguration;
-import se.tink.backend.common.config.SearchConfiguration;
-import se.tink.backend.common.search.SearchProxy;
 import se.tink.backend.common.tracking.intercom.IntercomTracker;
-import se.tink.libraries.cluster.Cluster;
 import se.tink.backend.guice.annotations.Now;
 import se.tink.backend.utils.LogUtils;
 import se.tink.libraries.metrics.HeapDumpGauge;
@@ -117,46 +102,6 @@ public class CommonModule extends AbstractModule {
                 new TypedThreadPoolBuilder(10, executorServiceThreadFactory))
                 .withMetric(metricRegistry, "tracking_executor_service")
                 .build();
-    }
-
-    @Provides
-    @Singleton
-    public CategoryConfiguration provideCategoryConfiguration(Cluster cluster) {
-        // TODO: Use different cluster-specific modules for this.
-        switch (cluster) {
-        case ABNAMRO:
-            return new AbnAmroCategories();
-        case CORNWALL:
-            return new SebCategories();
-        default:
-            return new SECategories();
-        }
-    }
-
-    @Provides
-    @Singleton
-    public Client provideSearchClient(SearchConfiguration configuration) {
-        if (configuration == null || !configuration.isEnabled()) {
-            return null;
-        }
-
-        Settings settings = ImmutableSettings.settingsBuilder()
-                .put("cluster.name", configuration.getClusterName())
-                .put("client.transport.sniff", configuration.useHostSniffing())
-                .put("client.transport.ping_timeout", "20s")
-                .build();
-
-        List<InetSocketAddress> addresses = AddrUtil.getAddresses(configuration.getHosts());
-
-        TransportClient client = new TransportClient(settings);
-
-        for (InetSocketAddress address : addresses) {
-            client.addTransportAddress(new InetSocketTransportAddress(address.getHostName(), address.getPort()));
-        }
-
-        SearchProxy.getInstance().setClient(client);
-
-        return client;
     }
 
     private static class CacheProvider implements Provider<CacheClient> {
