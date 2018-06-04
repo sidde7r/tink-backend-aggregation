@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.transfer.rpc;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc;
 
 import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
