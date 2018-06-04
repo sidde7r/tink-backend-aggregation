@@ -12,19 +12,6 @@ git_repository(
     remote = "git@github.com:tink-ab/dropwizard.git",
 )
 
-git_repository(
-     name = "tink_backend_encryption",
-     commit = "39104da5b70ffc7c4ca3872b61dac9321e4dc34f",
-     remote = "git@github.com:tink-ab/tink-backend-encryption.git",
-)
-
-# tink_backend_encryption has a reference to tink_backend
-# for development purposes this will be .
-local_repository(
-    name = "tink_backend",
-    path = ".",
-)
-
 # Docker dependencies
 git_repository(
     name = "io_bazel_rules_docker",
