@@ -5,25 +5,17 @@ import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
 import java.util.Optional;
 import java.util.UUID;
-import org.springframework.cassandra.core.PrimaryKeyType;
-import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
-import org.springframework.data.cassandra.mapping.Table;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
 
-@Table(value = "transfer_destination_patterns")
 public class TransferDestinationPattern implements Comparable<TransferDestinationPattern> {
 
     public static final String ALL = ".+";
 
-    @PrimaryKeyColumn(ordinal = 0, type = PrimaryKeyType.PARTITIONED)
     private UUID userId;
-    @PrimaryKeyColumn(ordinal = 1, type = PrimaryKeyType.CLUSTERED)
     private UUID accountId;
-    @PrimaryKeyColumn(ordinal = 2, type = PrimaryKeyType.CLUSTERED)
     private String type;
-    @PrimaryKeyColumn(ordinal = 3, type = PrimaryKeyType.CLUSTERED)
     private String pattern;
     private boolean matchesMultiple;
     private String name;

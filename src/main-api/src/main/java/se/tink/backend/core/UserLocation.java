@@ -4,11 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.MoreObjects;
 import java.util.Date;
 import java.util.UUID;
-import org.springframework.cassandra.core.PrimaryKeyType;
-import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
-import org.springframework.data.cassandra.mapping.Table;
 
-@Table(value = "users_locations")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserLocation {
     @Creatable
@@ -17,13 +13,11 @@ public class UserLocation {
     // information.
     @Creatable
     protected Date date;
-    @PrimaryKeyColumn(type = PrimaryKeyType.CLUSTERED, ordinal = 1)
     private UUID id;
     @Creatable
     protected double latitude;
     @Creatable
     protected double longitude;
-    @PrimaryKeyColumn(type = PrimaryKeyType.PARTITIONED, ordinal = 0)
     private UUID userId;
 
     public UserLocation() {

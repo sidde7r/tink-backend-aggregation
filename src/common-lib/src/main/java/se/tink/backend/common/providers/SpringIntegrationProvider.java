@@ -7,7 +7,6 @@ import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.data.cassandra.repository.CassandraRepository;
 import se.tink.backend.common.ServiceContext;
 import se.tink.backend.guice.annotations.Centralized;
 import se.tink.backend.guice.annotations.Distributed;
@@ -26,10 +25,8 @@ public class SpringIntegrationProvider<T> implements Provider<T> {
 
     @Inject
     void initialize(
-            @Nullable @Centralized AnnotationConfigApplicationContext applicationContext,
-            @Nullable @Distributed AnnotationConfigApplicationContext distributedApplicationContext) {
+            @Nullable @Centralized AnnotationConfigApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
-        this.distributedApplicationContext = distributedApplicationContext;
     }
 
     @Override
@@ -45,12 +42,6 @@ public class SpringIntegrationProvider<T> implements Provider<T> {
         Preconditions.checkNotNull(source);
 
         switch (source) {
-            case DISTRIBUTED:
-                if (distributedApplicationContext == null) {
-                    log.warn("Distributed repository not initialized.");
-                    return null;
-                }
-                return distributedApplicationContext.getBean(cls);
             case CENTRALIZED:
                 if (applicationContext == null) {
                     log.warn("Centralized repository not initialized.");
@@ -58,11 +49,6 @@ public class SpringIntegrationProvider<T> implements Provider<T> {
                 }
                 return applicationContext.getBean(cls);
             default:
-                if (CassandraRepository.class.isAssignableFrom(cls)) {
-                    // There _are_ super interfaces of CassandraRepository, but this should cover 99% of our cases.
-                    return getRepository(cls, ServiceContext.RepositorySource.DISTRIBUTED);
-                }
-
                 // Default to centralized
                 return getRepository(cls, ServiceContext.RepositorySource.CENTRALIZED);
         }

@@ -3,20 +3,13 @@ package se.tink.backend.core;
 import java.time.Instant;
 import java.util.Date;
 import java.util.UUID;
-import org.springframework.cassandra.core.PrimaryKeyType;
-import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
-import org.springframework.data.cassandra.mapping.Table;
 import se.tink.libraries.uuid.UUIDUtils;
 
-@Table(value = "transactions_external_id")
 public class TransactionExternalId {
-    @PrimaryKeyColumn(ordinal = 0, type = PrimaryKeyType.PARTITIONED)
     private UUID userId;
 
-    @PrimaryKeyColumn(ordinal = 1, type = PrimaryKeyType.CLUSTERED)
     private UUID accountId;
 
-    @PrimaryKeyColumn(ordinal = 2, type = PrimaryKeyType.CLUSTERED)
     private String externalTransactionId;
 
     private boolean deleted;

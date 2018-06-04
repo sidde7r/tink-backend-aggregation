@@ -7,7 +7,6 @@ import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.backend.guice.configuration.CommonModule;
 import se.tink.backend.guice.configuration.ConfigurationModule;
 import se.tink.libraries.discovery.CoordinationModule;
-import se.tink.backend.guice.configuration.EventTrackerModule;
 
 public class AggregationModuleFactory {
     public static ImmutableList<Module> build(ServiceConfiguration configuration,
@@ -15,7 +14,6 @@ public class AggregationModuleFactory {
         return ImmutableList.of(
                 new CommonModule(),
                 new CoordinationModule(),
-                new EventTrackerModule(),
                 new AggregationRepositoryModule(configuration.getDatabase()),
                 new ConfigurationModule(configuration),
                 new AggregationModule(configuration, jersey));

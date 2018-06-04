@@ -4,9 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import org.springframework.data.cassandra.mapping.Table;
 
-@Table(value = "portfolios")
 public class Portfolio {
 
     @ApiModelProperty(value="The internal identifier of the user which owns the portfolio.", example = "a52e9890520d4ec38cc0d4526a4cdcbe")

@@ -6,15 +6,10 @@ import com.google.common.base.Preconditions;
 import io.protostuff.Tag;
 import java.util.List;
 import java.util.UUID;
-import org.springframework.cassandra.core.PrimaryKeyType;
-import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
-import org.springframework.data.cassandra.mapping.Table;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-@Table(value = "loan_details")
 public class LoanDetails {
     @Tag(1)
-    @PrimaryKeyColumn(ordinal = 0, type = PrimaryKeyType.PARTITIONED)
     private UUID accountId;
     @Tag(2)
     private Boolean coApplicant;

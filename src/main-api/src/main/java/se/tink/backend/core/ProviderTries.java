@@ -1,13 +1,7 @@
 package se.tink.backend.core;
 
-import org.springframework.cassandra.core.PrimaryKeyType;
-import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
-import org.springframework.data.cassandra.mapping.Table;
-
-@Table(value = "providers_tries")
 public class ProviderTries {
     private Integer onetryfailure;
-    @PrimaryKeyColumn(ordinal = 0, type = PrimaryKeyType.PARTITIONED)
     private String providername;
     private Integer threetriesfailure;
     private Integer tries;

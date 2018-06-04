@@ -1,20 +1,13 @@
 package se.tink.backend.core.giros;
 
 import io.protostuff.Tag;
-import org.springframework.cassandra.core.PrimaryKeyType;
-import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
-import org.springframework.data.cassandra.mapping.Table;
+import java.util.Date;
 import se.tink.libraries.account.AccountIdentifier;
 
-import java.util.Date;
-
-@Table(value = "giro_numbers")
 public class Giro {
     @Tag(1)
-    @PrimaryKeyColumn(ordinal = 0, type = PrimaryKeyType.PARTITIONED)
     private String accountNumber;
     @Tag(2)
-    @PrimaryKeyColumn(ordinal = 1, type = PrimaryKeyType.CLUSTERED)
     private String giroType;
     @Tag(3)
     private Date created;

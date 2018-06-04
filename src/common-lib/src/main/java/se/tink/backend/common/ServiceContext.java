@@ -1,8 +1,6 @@
 package se.tink.backend.common;
 
 import com.google.common.base.Preconditions;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -13,8 +11,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import org.apache.curator.framework.CuratorFramework;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.data.cassandra.core.CassandraOperations;
-import org.springframework.data.cassandra.repository.CassandraRepository;
 import se.tink.backend.aggregation.client.AggregationServiceFactory;
 import se.tink.backend.client.ServiceFactory;
 import se.tink.backend.common.admin.ApplicationDrainMode;
@@ -25,37 +21,11 @@ import se.tink.backend.common.config.DatabaseConfiguration;
 import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.backend.common.config.repository.PersistenceUnit;
 import se.tink.backend.common.config.repository.SingletonRepositoryConfiguration;
-import se.tink.backend.common.dao.ActivityDao;
-import se.tink.backend.common.dao.ApplicationDAO;
-import se.tink.backend.common.dao.InvestmentDao;
-import se.tink.backend.common.dao.NotificationDao;
-import se.tink.backend.common.dao.ProductDAO;
-import se.tink.backend.common.dao.ProviderDao;
-import se.tink.backend.common.dao.transactions.TransactionRepository;
 import se.tink.backend.common.repository.RepositoryFactory;
-import se.tink.backend.common.repository.cassandra.DAO.LoanDAO;
-import se.tink.backend.common.repository.cassandra.InstrumentHistoryRepository;
-import se.tink.backend.common.repository.cassandra.InstrumentRepository;
-import se.tink.backend.common.repository.cassandra.LoanDataRepository;
-import se.tink.backend.common.repository.cassandra.LoanDetailsRepository;
-import se.tink.backend.common.repository.cassandra.NotificationEventRepository;
-import se.tink.backend.common.repository.cassandra.PortfolioHistoryRepository;
-import se.tink.backend.common.repository.cassandra.PortfolioRepository;
-import se.tink.backend.common.repository.cassandra.ProductFilterRepository;
-import se.tink.backend.common.repository.cassandra.ProductInstanceRepository;
-import se.tink.backend.common.repository.cassandra.ProductTemplateRepository;
-import se.tink.backend.common.repository.mysql.main.ActivityRepository;
-import se.tink.backend.common.repository.mysql.main.ApplicationFormRepository;
-import se.tink.backend.common.repository.mysql.main.ApplicationRepository;
-import se.tink.backend.common.repository.mysql.main.NotificationRepository;
-import se.tink.backend.common.repository.mysql.main.ProviderRepository;
-import se.tink.backend.common.tracking.EventTracker;
 import se.tink.backend.common.utils.ExecutorServiceUtils;
 import se.tink.backend.encryption.client.EncryptionServiceFactory;
-import se.tink.backend.guice.configuration.ProviderCacheConfiguration;
 import se.tink.backend.system.client.SystemServiceFactory;
 import se.tink.backend.utils.LogUtils;
-import se.tink.libraries.metrics.MeterFactory;
 import se.tink.libraries.metrics.MetricRegistry;
 
 /**
@@ -78,7 +48,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
     private final ServiceFactory serviceFactory;
     private final SystemServiceFactory systemServiceFactory;
     private LoadingCache<Class<?>, Object> DAOs;
-    private final EventTracker eventTracker;
     private ApplicationDrainMode applicationDrainMode;
     private final boolean supplementalOnAggregation;
     private final boolean isAggregationCluster;
@@ -91,7 +60,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
      */
 
     private ListenableThreadPoolExecutor<Runnable> executorService;
-    private AnnotationConfigApplicationContext distributedApplicationContext;
 
     @Inject
     public ServiceContext(@Named("useAggregationController") boolean isUseAggregationController,
@@ -100,7 +68,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
             CacheClient cacheClient, CuratorFramework zookeeperClient,
             ServiceFactory serviceFactory, SystemServiceFactory systemServiceFactory,
             AggregationServiceFactory aggregationServiceFactory,
-            EventTracker eventTracker,
             EncryptionServiceFactory encryptionServiceFactory,
             ApplicationDrainMode applicationDrainMode,
             @Named("executor") ListenableThreadPoolExecutor<Runnable> executorService,
@@ -118,7 +85,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
         this.zookeeperClient = zookeeperClient;
         this.configuration = configuration;
         this.metricRegistry = metricRegistry;
-        this.eventTracker = eventTracker;
         this.applicationDrainMode = applicationDrainMode;
         this.encryptionServiceFactory = encryptionServiceFactory;
         this.executorService = executorService;
@@ -152,8 +118,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
 
     private AtomicReference<ManagedState> managedState = new AtomicReference<>(ManagedState.STOPPED);
 
-    private TransactionRepository transactionsByUserIdAndPeriodRepository;
-
     private final EncryptionServiceFactory encryptionServiceFactory;
 
     public enum RepositorySource {
@@ -161,11 +125,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
          * See #getRepository implementation.
          */
         DEFAULT,
-
-        /**
-         * Cassandra.
-         */
-        DISTRIBUTED,
 
         /**
          * MySQL.
@@ -183,21 +142,11 @@ public class ServiceContext implements Managed, RepositoryFactory {
         Preconditions.checkNotNull(source);
 
         switch (source) {
-        case DISTRIBUTED:
-            Preconditions.checkState(distributedApplicationContext != null, "Distributed repository not initialized.");
-            return distributedApplicationContext.getBean(cls);
         case CENTRALIZED:
             Preconditions.checkState(applicationContext != null,
                     "ServiceContext is not initialized/managed. Call start().");
             return applicationContext.getBean(cls);
         default:
-            if (CassandraRepository.class.isAssignableFrom(cls)) {
-                // There _are_ super interfaces of CassandraRepository, but this should cover 99% of our cases.
-                return getRepository(cls, RepositorySource.DISTRIBUTED);
-            }
-            if (cls.equals(TransactionRepository.class)) {
-                return (R) transactionsByUserIdAndPeriodRepository;
-            }
             // Default to centralized
             return getRepository(cls, RepositorySource.CENTRALIZED);
         }
@@ -241,60 +190,9 @@ public class ServiceContext implements Managed, RepositoryFactory {
             persistenceUnit = PersistenceUnit.fromName(
                     databaseConfiguration.getPersistenceUnitName());
             applicationContext = new AnnotationConfigApplicationContext(persistenceUnit.getConfiguratorKlass());
-
-            initializeDAOs();
         }
 
         log.info("Started.");
-    }
-
-    private void initializeDAOs() {
-        DAOs = CacheBuilder.newBuilder().build(new CacheLoader<Class<?>, Object>() {
-
-            @Override
-            public Object load(Class<?> key) throws Exception {
-                if (key.equals(ActivityDao.class)) {
-                    return new ActivityDao(
-                            getRepository(ActivityRepository.class),
-                            cacheClient,
-                            new MeterFactory(metricRegistry));
-                } else if (key.equals(ApplicationDAO.class)) {
-                    return new ApplicationDAO(
-                            getRepository(ApplicationRepository.class),
-                            getRepository(ApplicationFormRepository.class)
-                    );
-                } else if (key.equals(NotificationDao.class)) {
-                    return new NotificationDao(getRepository(NotificationRepository.class),
-                            getRepository(NotificationEventRepository.class),
-                            new MeterFactory(metricRegistry));
-                } else if (key.equals(LoanDAO.class)) {
-                    return new LoanDAO(
-                            getRepository(LoanDataRepository.class),
-                            getRepository(LoanDetailsRepository.class));
-                } else if (key.equals(ProductDAO.class)) {
-                    return new ProductDAO(
-                            getRepository(ProductFilterRepository.class),
-                            getRepository(ProductInstanceRepository.class),
-                            getRepository(ProductTemplateRepository.class));
-                } else if (key.equals(ProviderDao.class)) {
-                    return new ProviderDao(
-                            isProvidersOnAggregation,
-                            getRepository(ProviderRepository.class),
-                            aggregationControllerCommonClient,
-                            new ProviderCacheConfiguration(5, TimeUnit.MINUTES));
-                } else if (key.equals(InvestmentDao.class)) {
-                    return new InvestmentDao(
-                            getRepository(PortfolioRepository.class),
-                            getRepository(PortfolioHistoryRepository.class),
-                            getRepository(InstrumentRepository.class),
-                            getRepository(InstrumentHistoryRepository.class),
-                            metricRegistry);
-                } else {
-                    throw new IllegalArgumentException("Class could not be instantiated");
-                }
-            }
-
-        });
     }
 
     public ListenableThreadPoolExecutor<Runnable> getTrackingExecutorService() {
@@ -341,10 +239,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
                 applicationContext.close();
                 applicationContext = null;
             }
-            if (distributedApplicationContext != null) {
-                distributedApplicationContext.close();
-                distributedApplicationContext = null;
-            }
 
             if (DAOs != null) {
                 DAOs = null;
@@ -359,17 +253,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
 
     public <T> T getDao(Class<T> key) {
         return key.cast(DAOs.getUnchecked(key));
-    }
-
-    /**
-     * Handler used to execute low-level Cassandra operations with.
-     */
-    public CassandraOperations getCassandraOperations() {
-        return distributedApplicationContext.getBean("cassandraTemplate", CassandraOperations.class);
-    }
-
-    public EventTracker getEventTracker() {
-        return eventTracker;
     }
 
     public EncryptionServiceFactory getEncryptionServiceFactory() {

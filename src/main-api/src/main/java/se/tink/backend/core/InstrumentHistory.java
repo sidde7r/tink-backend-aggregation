@@ -2,26 +2,19 @@ package se.tink.backend.core;
 
 import java.util.Date;
 import java.util.UUID;
-import org.springframework.cassandra.core.PrimaryKeyType;
-import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
-import org.springframework.data.cassandra.mapping.Table;
 
-@Table(value = "instrument_history")
 public class InstrumentHistory {
-    @PrimaryKeyColumn(ordinal = 0, type = PrimaryKeyType.PARTITIONED)
     private UUID userId;
-    @PrimaryKeyColumn(ordinal = 1, type = PrimaryKeyType.CLUSTERED)
     private UUID portfolioId;
-    @PrimaryKeyColumn(ordinal = 2, type = PrimaryKeyType.CLUSTERED)
     private UUID instrumentId;
-    @PrimaryKeyColumn(ordinal = 3, type = PrimaryKeyType.CLUSTERED)
     private Date timestamp;
     private Double quantity;
     private Double averageAcquisitionPrice;
     private Double profit;
     private Double marketValue;
 
-    private InstrumentHistory() {}
+    private InstrumentHistory() {
+    }
 
     public static InstrumentHistory createFromInstrumentAndTimestamp(Instrument instrument, Date timestamp) {
         InstrumentHistory history = new InstrumentHistory();

@@ -1,24 +1,16 @@
 package se.tink.backend.core;
 
-import com.datastax.driver.core.utils.UUIDs;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.Objects;
 import java.util.Date;
 import java.util.UUID;
-import org.springframework.cassandra.core.PrimaryKeyType;
-import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
-import org.springframework.data.cassandra.mapping.Table;
-import se.tink.libraries.uuid.UUIDUtils;
 import se.tink.backend.core.enums.RefreshType;
+import se.tink.libraries.uuid.UUIDUtils;
 
-@Table(value = "credentials_events")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CredentialsEvent {
-    @PrimaryKeyColumn(type = PrimaryKeyType.PARTITIONED, ordinal = 0)
     private UUID userId;
-    @PrimaryKeyColumn(type = PrimaryKeyType.CLUSTERED, ordinal = 1)
     private UUID credentialsId;
-    @PrimaryKeyColumn(type = PrimaryKeyType.CLUSTERED, ordinal = 2)
     private UUID id;
     private String message;
     private String providerName;
@@ -30,13 +22,11 @@ public class CredentialsEvent {
     }
 
     public CredentialsEvent(Credentials credentials, CredentialsStatus status, String message, boolean isManual) {
-        this.id = UUIDs.timeBased();
         this.userId = UUIDUtils.fromTinkUUID(credentials.getUserId());
         this.credentialsId = UUIDUtils.fromTinkUUID(credentials.getId());
         this.providerName = credentials.getProviderName();
         this.status = status.name();
         this.message = message;
-        this.timestamp = new Date(UUIDs.unixTimestamp(id));
         this.refreshType = getRefreshTypeFromIsManual(isManual).name();
 
         // Use same timestamp as on the credentials if UPDATED.

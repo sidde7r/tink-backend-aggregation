@@ -2,11 +2,7 @@ package se.tink.backend.core;
 
 import java.util.Objects;
 import java.util.UUID;
-import org.springframework.cassandra.core.PrimaryKeyType;
-import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
-import org.springframework.data.cassandra.mapping.Table;
 
-@Table(value = "instruments")
 public class Instrument {
 
     public enum Type {
@@ -15,11 +11,8 @@ public class Instrument {
         public static final String DOCUMENTED = "FUND, STOCK, OTHER";
     }
 
-    @PrimaryKeyColumn(ordinal = 0, type = PrimaryKeyType.PARTITIONED)
     private UUID userId;
-    @PrimaryKeyColumn(ordinal = 1, type = PrimaryKeyType.CLUSTERED)
     private UUID portfolioId;
-    @PrimaryKeyColumn(ordinal = 2, type = PrimaryKeyType.CLUSTERED)
     private UUID id;
     private String isin; // An International Securities Identification Number (ISIN) uniquely identifies a security.
     private String marketPlace;

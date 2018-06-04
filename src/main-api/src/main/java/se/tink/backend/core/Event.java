@@ -1,6 +1,5 @@
 package se.tink.backend.core;
 
-import com.datastax.driver.core.utils.UUIDs;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.MoreObjects;
@@ -9,12 +8,8 @@ import io.protostuff.Tag;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
-import org.springframework.cassandra.core.PrimaryKeyType;
-import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
-import org.springframework.data.cassandra.mapping.Table;
 import se.tink.libraries.uuid.UUIDUtils;
 
-@Table(value = "events")
 public class Event {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
@@ -25,12 +20,10 @@ public class Event {
      * Type 1 UUID which also contains timestamp of the event.
      */
     @Exclude
-    @PrimaryKeyColumn(type = PrimaryKeyType.CLUSTERED, ordinal = 1)
     private UUID id;
     @Creatable
     @Tag(2)
     private String type;
-    @PrimaryKeyColumn(type = PrimaryKeyType.PARTITIONED, ordinal = 0)
     @Exclude
     private UUID userId;
     @Tag(1)
@@ -56,7 +49,6 @@ public class Event {
     }
 
     public Event(String userId, Date date, String type, String content) {
-        this.id = UUIDs.timeBased();
         this.userId = UUIDUtils.fromTinkUUID(userId);
         this.date = date;
         this.type = type;
@@ -73,7 +65,7 @@ public class Event {
 
     /**
      * Returns a type 1 UUID that uniquely identifies this entity.
-     * 
+     *
      * @return
      */
     public UUID getId() {
