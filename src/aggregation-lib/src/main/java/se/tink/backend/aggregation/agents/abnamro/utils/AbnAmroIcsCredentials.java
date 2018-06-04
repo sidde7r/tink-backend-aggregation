@@ -15,7 +15,6 @@ import se.tink.backend.core.CredentialsStatus;
 import se.tink.backend.core.CredentialsTypes;
 import se.tink.backend.core.Provider;
 import se.tink.backend.core.User;
-import se.tink.backend.utils.guavaimpl.predicates.AccountPredicate;
 import se.tink.libraries.abnamro.utils.AbnAmroLegacyUserUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -95,7 +94,7 @@ public class AbnAmroIcsCredentials {
         }
 
         Set<Long> accountNumbers = FluentIterable.from(accounts)
-                .filter(AccountPredicate.IS_INCLUDED)
+                .filter(account -> !account.isExcluded())
                 .transform(account -> Long.valueOf(account.getAccountNumber())).toSet();
 
         addContractNumbers(accountNumbers);

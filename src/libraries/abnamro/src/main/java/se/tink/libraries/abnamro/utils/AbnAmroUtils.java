@@ -19,13 +19,9 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.joda.time.DateTime;
-import se.tink.backend.core.AbnAmroBufferedAccount;
 import se.tink.backend.core.Account;
 import se.tink.backend.core.AccountTypes;
 import se.tink.backend.core.Credentials;
-import se.tink.backend.core.Transaction;
-import se.tink.backend.core.TransactionPayloadTypes;
-import se.tink.backend.core.TransactionTypes;
 import se.tink.backend.core.User;
 import se.tink.backend.core.enums.FeatureFlags;
 import se.tink.backend.utils.LogUtils;
@@ -112,19 +108,11 @@ public class AbnAmroUtils {
 
     // Complement to se.tink.backend.utils.guavaimpl.Functions
     public static class Functions {
-
-        public static final Function<AbnAmroBufferedAccount, Long> BUFFERED_ACCOUNT_TO_ACCOUNT_NUMBER = AbnAmroBufferedAccount::getAccountNumber;
-
-        public static final Function<AbnAmroBufferedAccount, Integer> BUFFERED_ACCOUNT_TO_TRANSACTION_COUNT = AbnAmroBufferedAccount::getTransactionCount;
-
         public static final Function<RejectedContractEntity, Long> REJECTED_CONTRACT_TO_CONTRACT_NUMBER = RejectedContractEntity::getContractNumber;
     }
 
     // Complement to se.tink.backend.utils.guavaimpl.Predicates
     public static class Predicates {
-
-        public static final Predicate<AbnAmroBufferedAccount> COMPLETE_BUFFERED_ACCOUNTS = AbnAmroBufferedAccount::isComplete;
-
         public static final Predicate<ContractEntity> IS_VALID_CONTRACT_ENTITY = contractEntity -> AbnAmroAccountValidator
                 .validate(contractEntity).isValid();
 
@@ -221,28 +209,6 @@ public class AbnAmroUtils {
         }
 
         return parts;
-    }
-
-    public static TransactionTypes getTransactionType(String trxType) {
-
-        // TODO: Fix actual mapping from the ABN AMRO types (`AbnTransaction.trxType`).
-
-        return TransactionTypes.DEFAULT;
-    }
-
-    /**
-     * Two transactions are considered duplicates if they have the same external id on the same account. Null or empty
-     * external ids on two transactions aren't not considered duplicates.
-     * <p/>
-     * A transfer from one account to another will have the same external id but different account ids and are because
-     * of that not a duplicate.
-     */
-    public static boolean isDuplicate(Transaction left, Transaction right) {
-        String externalId1 = left.getPayloadValue(TransactionPayloadTypes.EXTERNAL_ID);
-        String externalId2 = right.getPayloadValue(TransactionPayloadTypes.EXTERNAL_ID);
-
-        return left.getAccountId() != null && externalId1 != null && Objects.equals(externalId1, externalId2) &&
-                Objects.equals(left.getAccountId(), right.getAccountId());
     }
 
     /**

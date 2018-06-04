@@ -1,12 +1,9 @@
 package se.tink.libraries.abnamro.utils;
 
 import com.google.common.collect.ImmutableList;
-import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import se.tink.backend.core.Notification;
 import se.tink.backend.core.User;
 import se.tink.backend.rpc.abnamro.AuthenticatedRequest;
 
@@ -46,13 +43,5 @@ public class AbnAmroLegacyUserUtils {
         }
 
         return Optional.empty();
-    }
-
-    public static void replaceGripPrefixForLegacyUsers(String username, List<Notification> notifications) {
-        if (isValidUsername(username)) {
-            // Legacy apps
-            notifications.forEach(
-                    n -> n.setUrl(n.getUrl().replaceFirst(GRIP_DEEPLINK_PREFIX, GRIP_LEGACY_DEEPLINK_PREFIX)));
-        }
     }
 }

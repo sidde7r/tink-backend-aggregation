@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.agents.banks.handelsbanken.v6.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import se.tink.backend.aggregation.agents.banks.handelsbanken.v6.PendingStringTypes;
 import se.tink.backend.aggregation.agents.banks.handelsbanken.v6.utils.SHBUtils;
-import se.tink.backend.core.PendingStringTypes;
 import se.tink.backend.system.rpc.Transaction;
 import se.tink.backend.system.rpc.TransactionTypes;
-import se.tink.libraries.date.DateUtils;
 import se.tink.backend.utils.StringUtils;
+import se.tink.libraries.date.DateUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CardTransactionEntity {

@@ -14,7 +14,6 @@ import java.util.regex.Pattern;
 import se.tink.backend.core.Credentials;
 import se.tink.backend.core.CredentialsStatus;
 import se.tink.credentials.demo.DemoCredentials;
-import se.tink.backend.core.enums.Gender;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
@@ -24,7 +23,6 @@ public class SocialSecurityNumber {
 
         private static final Pattern PATTERN_SWEDISH = Pattern.compile("(19|20)?\\d{2}(0|1)\\d(0|1|2|3)\\d\\d{4}");
         private String parsedSocialSecurityNumber = null; // yyyyMMddnnnn
-        private Gender gender = null;
         private String birth = null;
 
         private final boolean isValid;
@@ -51,7 +49,6 @@ public class SocialSecurityNumber {
                 String datePart = DateUtils.turnPastSixDigitsDateIntoEightDigits(text.substring(0, len - 4));
 
                 parsedSocialSecurityNumber = datePart + fourLast;
-                gender = calculateGender();
                 birth = calculateBirth();
 
                 //noinspection SimplifiableIfStatement
@@ -129,14 +126,6 @@ public class SocialSecurityNumber {
         }
 
         /**
-         * @return Gender if valid social security number.
-         */
-        public Gender getGender() {
-            checkValidity();
-            return gender;
-        }
-
-        /**
          * @return Birth year if valid social security number
          */
         public int getBirthYear() {
@@ -178,12 +167,6 @@ public class SocialSecurityNumber {
             if (!isValid()) {
                 throw new IllegalStateException("Personnumber is not valid. Caller should make sure to call isValid.");
             }
-        }
-
-        private Gender calculateGender() {
-            int genderNumber = Integer.parseInt(parsedSocialSecurityNumber.substring(10, 11));
-            boolean female = genderNumber % 2 == 0;
-            return female ? Gender.FEMALE : Gender.MALE;
         }
 
         private String calculateBirth() {

@@ -11,15 +11,7 @@ public class FraudTransactionEntity {
 
     public FraudTransactionEntity() {
     }
-    
-    public FraudTransactionEntity(Transaction transaction) {
-        this.id = transaction.getId();
-        this.date = transaction.getDate();
-        this.description = transaction.getDescription();
-        this.amount = transaction.getAmount();
-        this.categoryId = transaction.getCategoryId();
-    }
-    
+
     public String getId() {
         return id;
     }

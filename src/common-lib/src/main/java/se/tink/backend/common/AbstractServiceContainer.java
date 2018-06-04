@@ -108,7 +108,7 @@ public abstract class AbstractServiceContainer extends Application<ServiceConfig
         return list.stream()
                 .filter(l -> Predicates.instanceOf(HttpConnectorFactory.class).apply(l))
                 .filter(l -> !Predicates.instanceOf(HttpsConnectorFactory.class).apply(l))
-                .map(l -> se.tink.backend.utils.guavaimpl.Functions.cast(HttpConnectorFactory.class).apply(l))
+                .map(HttpConnectorFactory.class::cast)
                 .map(HttpConnectorFactory::getPort)
                 .findFirst();
     }
@@ -116,7 +116,7 @@ public abstract class AbstractServiceContainer extends Application<ServiceConfig
     private static Optional<Integer> tryFindFirstTLSPort(List<ConnectorFactory> list) {
         return list.stream()
                 .filter(l -> Predicates.instanceOf(HttpsConnectorFactory.class).apply(l))
-                .map(l -> se.tink.backend.utils.guavaimpl.Functions.cast(HttpsConnectorFactory.class).apply(l))
+                .map(HttpsConnectorFactory.class::cast)
                 .map(HttpConnectorFactory::getPort)
                 .findFirst();
     }

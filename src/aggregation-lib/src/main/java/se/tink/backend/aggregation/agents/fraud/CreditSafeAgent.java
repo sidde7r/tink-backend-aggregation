@@ -47,7 +47,6 @@ import se.tink.backend.aggregation.rpc.RemoveMonitoredConsumerCreditSafeRequest;
 import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.common.bankid.signicat.SignicatBankIdAuthenticator;
 import se.tink.backend.common.config.ServiceConfiguration;
-import se.tink.backend.common.workers.fraud.FraudUtils;
 import se.tink.backend.core.FraudAddressContent;
 import se.tink.backend.core.FraudCompanyContent;
 import se.tink.backend.core.FraudCompanyDirector;

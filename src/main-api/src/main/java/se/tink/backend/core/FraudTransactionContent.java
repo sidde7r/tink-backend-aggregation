@@ -1,8 +1,6 @@
 package se.tink.backend.core;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.google.common.base.Strings;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -13,8 +11,6 @@ import org.hibernate.annotations.Type;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class FraudTransactionContent extends FraudDetailsContent {
-    private static final TypeReference<List<FraudTransactionEntity>> STRING_LIST_TYPE_REFERENCE = new TypeReference<List<FraudTransactionEntity>>() {
-    };
 
     // Having duplicate info for ID, but keeping transactionIds for legacy reasons.
     private List<String> transactionIds;
@@ -73,19 +69,6 @@ public class FraudTransactionContent extends FraudDetailsContent {
             return SerializationUtils.serializeToString(transactions);
         } else {
             return transactionsSerialized;
-        }
-    }
-
-    @JsonIgnore
-    public void setTransactionsSerialized(String transactionsSerialized) {
-        if (Strings.isNullOrEmpty(transactionsSerialized)) {
-            return;
-        }
-
-        this.transactionsSerialized = transactionsSerialized;
-
-        if (!Strings.isNullOrEmpty(transactionsSerialized)) {
-            transactions = SerializationUtils.deserializeFromString(transactionsSerialized, STRING_LIST_TYPE_REFERENCE);
         }
     }
 

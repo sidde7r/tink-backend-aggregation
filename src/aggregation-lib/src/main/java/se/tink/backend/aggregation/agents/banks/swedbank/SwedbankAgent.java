@@ -126,7 +126,6 @@ import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
 import se.tink.backend.common.i18n.SocialSecurityNumber;
 import se.tink.backend.common.i18n.SocialSecurityNumber.Sweden;
-import se.tink.backend.core.PendingStringTypes;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.enums.TransferType;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
@@ -248,7 +247,7 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
             // "Övf via internet [Account Number]"
 
             if (transaction.getDescription()
-                    .equalsIgnoreCase(PendingStringTypes.SWEDBANK_PENDING_TRANSFER.getValue())) {
+                    .equalsIgnoreCase("ÖVF VIA INTERNET")) {
                 transaction.setPending(true);
             }
 

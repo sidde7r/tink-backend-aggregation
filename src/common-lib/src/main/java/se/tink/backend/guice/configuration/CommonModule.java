@@ -30,7 +30,6 @@ import se.tink.backend.common.concurrency.LockFactory;
 import se.tink.backend.common.concurrency.TypedThreadPoolBuilder;
 import se.tink.backend.common.concurrency.WrappedRunnableListenableFutureTask;
 import se.tink.backend.common.config.CacheConfiguration;
-import se.tink.backend.common.tracking.intercom.IntercomTracker;
 import se.tink.backend.guice.annotations.Now;
 import se.tink.backend.utils.LogUtils;
 import se.tink.libraries.metrics.HeapDumpGauge;
@@ -50,7 +49,6 @@ public class CommonModule extends AbstractModule {
         bind(LockFactory.class).in(Scopes.SINGLETON);
         bind(MeterFactory.class).in(Scopes.SINGLETON);
         bind(VersionInformation.class).in(Scopes.SINGLETON);
-        bind(IntercomTracker.class).in(Scopes.SINGLETON);
 
         bind(MetricCollector.class).in(Scopes.SINGLETON);
         bind(PrometheusExportServer.class).in(Scopes.SINGLETON);

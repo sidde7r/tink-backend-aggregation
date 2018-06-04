@@ -18,9 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import se.tink.backend.core.Category;
-import se.tink.backend.core.CategoryTypes;
-import se.tink.backend.core.Merchant;
 import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.date.DateUtils;
 
@@ -552,24 +549,6 @@ public class Transaction implements Comparable<Transaction>, Cloneable {
                 .add("amount", getAmount())
                 .add("description", getDescription())
                 .toString();
-    }
-
-    /**
-     * Change merchant on a transaction. Change description if it is unmodified
-     * @param merchant
-     */
-    public void changeMerchant(Merchant merchant){
-        setMerchantId(merchant.getId());
-
-        // Update description if it is unmodified
-        if (!isUserModifiedDescription()){
-            setDescription(StringUtils.formatHuman(merchant.getName()));
-        }
-    }
-
-    public void setCategory(Category category) {
-        Preconditions.checkNotNull(category, "Category must not be null.");
-        setCategory(category.getId(), category.getType());
     }
 
     public void setCategory(String categoryId, CategoryTypes categoryType) {

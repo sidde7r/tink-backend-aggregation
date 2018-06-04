@@ -1,12 +1,11 @@
 package se.tink.backend.utils;
 
 import java.util.UUID;
-import se.tink.libraries.uuid.UUIDUtils;
 import se.tink.backend.core.Account;
-import se.tink.backend.core.Application;
 import se.tink.backend.core.Credentials;
-import se.tink.libraries.application.GenericApplication;
 import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.application.GenericApplication;
+import se.tink.libraries.uuid.UUIDUtils;
 
 /**
  * Tink implementation of logging. Must be thread-safe.
@@ -97,13 +96,6 @@ public class LogUtils extends se.tink.libraries.log.LogUtils {
                 " providerName:" + credentials.getProviderName() + "] " + message, e);
     }
 
-    public void error(Application application, Credentials credentials, String message) {
-        log.error("[userId:" + UUIDUtils.toTinkUUID(application.getUserId()) +
-                " credentialsId:" + credentials.getId() +
-                " applicationId:" + UUIDUtils.toTinkUUID(application.getId()) +
-                " providerName:" + credentials.getProviderName() + "] " + message);
-    }
-
     public void error(Transfer transfer, String message, Throwable e) {
         log.error("[userId:" + UUIDUtils.toTinkUUID(transfer.getUserId()) +
                 " credentialsId:" + UUIDUtils.toTinkUUID(transfer.getCredentialsId()) +
@@ -189,15 +181,5 @@ public class LogUtils extends se.tink.libraries.log.LogUtils {
     public void debug(GenericApplication application, String message) {
         debug(String.format("[userId:%s applicationId:%s] %s", UUIDUtils.toTinkUUID(application.getUserId()),
                 UUIDUtils.toTinkUUID(application.getApplicationId()), message));
-    }
-
-    public void debug(Application application, String message) {
-        debug(String.format("[userId:%s applicationId:%s] %s", UUIDUtils.toTinkUUID(application.getUserId()),
-                UUIDUtils.toTinkUUID(application.getId()), message));
-    }
-
-    public void info(Application application, String message) {
-        info(String.format("[userId:%s applicationId:%s] %s", UUIDUtils.toTinkUUID(application.getUserId()),
-                UUIDUtils.toTinkUUID(application.getId()), message));
     }
 }

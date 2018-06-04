@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.rpc;
 
 import java.util.Date;
-import se.tink.backend.core.Loan;
 
 public class AccountDetails {
     private Double interest;
@@ -10,13 +9,6 @@ public class AccountDetails {
     private Date nextDayOfTermsChange;
 
     public AccountDetails() {
-    }
-
-    public AccountDetails(Loan loan) {
-        interest = loan.getInterest();
-        numMonthsBound = loan.getNumMonthsBound();
-        type = loan.getType() != null ? loan.getType().toString() : null;
-        nextDayOfTermsChange = loan.getNextDayOfTermsChange();
     }
 
     public Double getInterest() {

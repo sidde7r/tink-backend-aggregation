@@ -2,7 +2,6 @@ package se.tink.backend.core.enums;
 
 import com.google.common.collect.ImmutableSet;
 import java.util.List;
-import se.tink.backend.core.TinkUserAgent;
 
 /**
  * Class for feature flags. Reason why enum is not used is because the flexibility to add feature flags in DB directly
@@ -104,10 +103,6 @@ public class FeatureFlags {
             }
 
             return false;
-        }
-
-        public boolean hasValidClientVersion(TinkUserAgent userAgent) {
-            return userAgent.hasValidVersion(minIosVersion, minAndroidVersion);
         }
     }
 }
