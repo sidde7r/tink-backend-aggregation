@@ -5,7 +5,6 @@
 # Logs and databases #
 ######################
 *.log
-data/version.json
 
 # OS generated files #
 ######################
