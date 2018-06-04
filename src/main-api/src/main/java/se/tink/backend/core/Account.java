@@ -115,6 +115,9 @@ public class Account implements Cloneable {
     private String holderName;
     @Exclude
     private boolean closed;
+    @Tag(16)
+    @ApiModelProperty(name = "flags", value="A list of flags specifying attributes on an account", example = "[\"MANDATE\"]", allowableValues = AccountFlag.DOCUMENTED)
+    private String flags;
 
     @Override
     public Account clone() throws CloneNotSupportedException {
@@ -125,6 +128,7 @@ public class Account implements Cloneable {
         this.id = StringUtils.generateUUID();
         this.ownership = 1;
         this.identifiers = "[]";
+        this.flags = "[]";
     }
 
     public static class PayloadKeys {
@@ -282,6 +286,39 @@ public class Account implements Cloneable {
     public void setClosed(boolean closed) {
         this.closed = closed;
     }
+
+    public List<AccountFlag> getFlags() {
+        return deserializeFlags();
+    }
+
+    public void setFlags(List<AccountFlag> flags) {
+        for (AccountFlag flag: flags) {
+            this.putFlag(flag);
+        }
+    }
+
+    public void putFlag(AccountFlag flag) {
+        Set<String> flags = Sets.newHashSet();
+        if (this.flags != null) {
+            flags = Sets.newHashSet(SerializationUtils.deserializeFromString(this.flags, TypeReferences.LIST_OF_STRINGS));
+        }
+
+        flags.add(flag.name());
+        this.flags = SerializationUtils.serializeToString(Lists.newArrayList(flags));
+    }
+
+    private List<AccountFlag> deserializeFlags() {
+        List<AccountFlag> accountFlags = Lists.newArrayList();
+
+        if (this.flags != null) {
+            List<String> flags = SerializationUtils.deserializeFromString(this.flags, TypeReferences.LIST_OF_STRINGS);
+            for(String flag : flags) {
+                accountFlags.add(AccountFlag.valueOf(flag));
+            }
+        }
+        return accountFlags;
+    }
+
 
     @Override
     public String toString() {

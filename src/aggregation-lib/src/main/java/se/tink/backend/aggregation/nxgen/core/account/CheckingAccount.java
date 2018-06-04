@@ -4,14 +4,15 @@ import java.util.List;
 import java.util.Map;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.core.AccountFlag;
 import se.tink.backend.core.Amount;
 import se.tink.libraries.account.AccountIdentifier;
 
 public class CheckingAccount extends TransactionalAccount {
     private CheckingAccount(String name, String accountNumber, Amount balance,
             List<AccountIdentifier> identifiers, String tinkId, String bankIdentifier, HolderName holderName,
-            Map<String, String> temporaryStorage) {
-        super(name, accountNumber, balance, identifiers, tinkId, bankIdentifier, holderName, temporaryStorage);
+            Map<String, String> temporaryStorage, List<AccountFlag> flags) {
+        super(name, accountNumber, balance, identifiers, tinkId, bankIdentifier, holderName, temporaryStorage, flags);
     }
 
     @Override
@@ -59,9 +60,19 @@ public class CheckingAccount extends TransactionalAccount {
         }
 
         @Override
+        public List<AccountFlag> getFlags() {
+            return super.getFlags();
+        }
+
+        @Override
+        public Account.Builder addFlag(AccountFlag flag) {
+            return (SavingsAccount.Builder) super.addFlag(flag);
+        }
+
+        @Override
         public CheckingAccount build() {
             return new CheckingAccount(getName(), getAccountNumber(), getBalance(), getIdentifiers(), getUniqueIdentifier(),
-                    getBankIdentifier(), getHolderName(), getTemporaryStorage());
+                    getBankIdentifier(), getHolderName(), getTemporaryStorage(), getFlags());
         }
     }
 }

@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.AccountTypes;
+import se.tink.backend.core.AccountFlag;
 import se.tink.backend.core.transfer.TransferDestination;
 import se.tink.backend.serialization.TypeReferences;
 import se.tink.backend.utils.StringUtils;
@@ -58,6 +59,7 @@ public class Account implements Cloneable {
     private AccountDetails details;
     private boolean closed;
     private String holderName;
+    private String flags;
 
     @Override
     public Account clone() throws CloneNotSupportedException {
@@ -68,6 +70,7 @@ public class Account implements Cloneable {
         id = StringUtils.generateUUID();
         ownership = 1;
         identifiers = "[]";
+        flags = "[]";
     }
 
     public String getAccountNumber() {
@@ -132,6 +135,10 @@ public class Account implements Cloneable {
 
     public boolean isUserModifiedType() {
         return userModifiedType;
+    }
+
+    public List<AccountFlag> getFlags() {
+        return deserializeFlags();
     }
 
     public void setAccountNumber(String accountNumber) {
@@ -222,6 +229,22 @@ public class Account implements Cloneable {
         this.holderName = holderName;
     }
 
+    public void setFlags(List<AccountFlag> flags) {
+        for (AccountFlag flag: flags) {
+            this.putFlag(flag);
+        }
+    }
+
+    public void putFlag(AccountFlag flag) {
+        Set<String> flags = Sets.newHashSet();
+        if (this.flags != null) {
+            flags = Sets.newHashSet(SerializationUtils.deserializeFromString(this.flags, TypeReferences.LIST_OF_STRINGS));
+        }
+
+        flags.add(flag.name());
+        this.flags = SerializationUtils.serializeToString(Lists.newArrayList(flags));
+    }
+
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this.getClass()).add("id", getId()).add("credentialsid", getCredentialsId())
@@ -304,6 +327,18 @@ public class Account implements Cloneable {
             }
         }
         return accountIdentifiers;
+    }
+
+    private List<AccountFlag> deserializeFlags() {
+        List<AccountFlag> accountFlags = Lists.newArrayList();
+
+        if (this.flags != null) {
+            List<String> flags = SerializationUtils.deserializeFromString(this.flags, TypeReferences.LIST_OF_STRINGS);
+            for(String flag : flags) {
+                accountFlags.add(AccountFlag.valueOf(flag));
+            }
+        }
+        return accountFlags;
     }
 
     public boolean definedBy(AccountIdentifier identifier) {

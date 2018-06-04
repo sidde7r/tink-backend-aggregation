@@ -1,7 +1,9 @@
 package se.tink.backend.common.mapper;
 
+import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 import se.tink.backend.core.Account;
+import se.tink.backend.core.AccountFlag;
 import static org.junit.Assert.assertEquals;
 
 public class CoreAccountMapperTest {
@@ -15,11 +17,13 @@ public class CoreAccountMapperTest {
         Account account = new Account();
         account.setAccountNumber("accountNumber");
         account.setHolderName("Thomas Alan Waits");
+        account.setFlags(ImmutableList.of(AccountFlag.BUSINESS));
 
         se.tink.backend.aggregation.rpc.Account aggregationAccount = CoreAccountMapper.toAggregation(account);
 
         assertEquals("accountNumber", aggregationAccount.getAccountNumber());
         assertEquals("Thomas Alan Waits", aggregationAccount.getHolderName());
+        assertEquals(ImmutableList.of(AccountFlag.BUSINESS), aggregationAccount.getFlags());
     }
 
     @Test
@@ -32,11 +36,13 @@ public class CoreAccountMapperTest {
         se.tink.backend.aggregation.rpc.Account account = new se.tink.backend.aggregation.rpc.Account();
         account.setCredentialsId("credentialsId");
         account.setHolderName("Thomas Alan Waits");
+        account.setFlags(ImmutableList.of(AccountFlag.BUSINESS));
 
         Account coreAccount = CoreAccountMapper.fromAggregation(account);
 
         assertEquals("credentialsId", coreAccount.getCredentialsId());
         assertEquals("Thomas Alan Waits", coreAccount.getHolderName());
+        assertEquals(ImmutableList.of(AccountFlag.BUSINESS), coreAccount.getFlags());
     }
 
 }

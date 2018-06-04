@@ -1,20 +1,24 @@
 package se.tink.backend.aggregation.nxgen.core.account;
 
+import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Map;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.core.AccountFlag;
 import se.tink.backend.core.Amount;
 import se.tink.libraries.account.AccountIdentifier;
 
 public class CreditCardAccount extends Account {
     private final Amount availableCredit;
+    private final List<AccountFlag> flags;
 
     private CreditCardAccount(String name, String accountNumber, Amount balance, List<AccountIdentifier> identifiers,
             String tinkId, String bankIdentifier, Amount availableCredit, HolderName holderName,
-            Map<String, String> temporaryStorage) {
+            Map<String, String> temporaryStorage, List<AccountFlag> flags) {
         super(name, accountNumber, balance, identifiers, tinkId, bankIdentifier, holderName, temporaryStorage);
         this.availableCredit = availableCredit;
+        this.flags = flags;
     }
 
     public Amount getAvailableCredit() {
@@ -31,6 +35,7 @@ public class CreditCardAccount extends Account {
         se.tink.backend.aggregation.rpc.Account account = super.toSystemAccount();
 
         account.setAvailableCredit(this.availableCredit.getValue());
+        account.setFlags(this.flags);
 
         return account;
     }
@@ -41,10 +46,12 @@ public class CreditCardAccount extends Account {
 
     public static class Builder extends Account.Builder {
         private final Amount availableCredit;
+        private final List<AccountFlag> flags;
 
         private Builder(String accountNumber, Amount balance, Amount availableCredit) {
             super(accountNumber, balance);
             this.availableCredit = availableCredit;
+            this.flags = Lists.newArrayList();
         }
 
         public Amount getAvailableCredit() {
@@ -76,10 +83,19 @@ public class CreditCardAccount extends Account {
             return (Builder) super.setHolderName(holderName);
         }
 
+        public List<AccountFlag> getFlags() {
+            return this.flags;
+        }
+
+        public Account.Builder addFlag(AccountFlag flag) {
+            this.flags.add(flag);
+            return this;
+        }
+
         @Override
         public CreditCardAccount build() {
             return new CreditCardAccount(getName(), getAccountNumber(), getBalance(), getIdentifiers(), getUniqueIdentifier(),
-                    getBankIdentifier(), getAvailableCredit(), getHolderName(), getTemporaryStorage());
+                    getBankIdentifier(), getAvailableCredit(), getHolderName(), getTemporaryStorage(), getFlags());
         }
 
         @Override
