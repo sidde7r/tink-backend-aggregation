@@ -3,11 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.SwedbankDefaultBankIdAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.SwedbankTransferHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.creditcard.SwedbankDefaultCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.investment.SwedbankDefaultInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.einvoice.SwedbankDefaultEinvoiceFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.loan.SwedbankDefaultLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transactional.SwedbankDefaultTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.transfer.SwedbankDefaultBankTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transferdestination.SwedbankDefaultTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.filters.SwedbankBaseHttpFilter;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -113,6 +115,14 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransferController> constructTransferController() {
-        return Optional.empty();
+        SwedbankTransferHelper transferHelper = new SwedbankTransferHelper(apiClient);
+        SwedbankDefaultBankTransferExecutor transferExecutor = new SwedbankDefaultBankTransferExecutor(
+                apiClient, transferHelper);
+        return Optional.of(
+                new TransferController(
+                        null,
+                        transferExecutor,
+                        null,
+                        null));
     }
 }

@@ -105,10 +105,16 @@ public class SwedbankBaseConstants {
         public static final String CREDIT_CARD_RESPONSE = "creditCardResponse";
     }
 
+    public static class BankIdStatus {
+        public static final String USER_SIGN = "USER_SIGN";
+        public static final String COMPLETE = "COMPLETE";
+    }
+
     public enum MenuItemKey {
         ACCOUNTS("EngagementOverview"), UPCOMING_TRANSACTIONS("UpcomingTransactions"), LOANS("LendingLoanOverview"),
         PORTFOLIOS("PortfolioHoldings"), FUND_MARKET_INFO("FundMarketinfo"), EINVOICES("EinvoiceIncoming"),
-        PAYMENT_BASEINFO("PaymentBaseinfo");
+        PAYMENT_BASEINFO("PaymentBaseinfo"), PAYMENT_REGISTERED("PaymentRegistered"),
+        REGISTER_TRANSFER("PaymentRegisterTransfer");
 
         private String key;
 
@@ -128,5 +134,18 @@ public class SwedbankBaseConstants {
         public static final LogTag DETAILED_PORTFOLIO_RESPONSE = LogTag.from(
                 "Swedbank detailed portfolio - type:[{}] - response: {}");
         public static final LogTag PORTFOLIO_HOLDINGS_RESPONSE = LogTag.from("Portfolio holdings response: {}");
+    }
+
+    public static class ErrorMessage {
+        public static final String INVALID_DESTINATION = "Transfer failed due to invalid destination account.";
+        public static final String INVALID_SOURCE = "Transfer failed due to invalid source account.";
+        public static final String SOURCE_NOT_FOUND = "Transfer destination could not be found at bank.";
+        public static final String SOURCE_NOT_TRANSFER_CAPABLE = "Source account not allowed to to make transfers.";
+        public static final String TRANSFER_REGISTER_FAILED = "Could not register transfer.";
+        public static final String TRANSFER_CONFIRM_FAILED = "Could not confirm transfer was executed.";
+        public static final String COLLECT_BANKID_FAILED = "Failed when collecting bankid for signing transfer.";
+        public static final String COLLECT_BANKID_CANCELLED = "Could not confirm transfer with BankID signing.";
+        public static final String NOT_EXACTLY_ONE_UNSIGNED_TRANSFER = "Number of unsigned transfers not equal to one - Cancelling to not sign more than one transfer.";
+        public static final String UNSIGNED_TRANFERS = "Existing unsigned transfers - Cancelling to not sign more than one transfer.";
     }
 }

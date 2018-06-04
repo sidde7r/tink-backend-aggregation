@@ -36,4 +36,9 @@ public class LinksEntity {
     public LinkEntity getNextOrThrow() {
         return Optional.ofNullable(next).orElseThrow(IllegalStateException::new);
     }
+
+    @JsonIgnore
+    public LinkEntity getSignOrThrow() {
+        return Optional.ofNullable(sign).orElseThrow(IllegalStateException::new);
+    }
 }

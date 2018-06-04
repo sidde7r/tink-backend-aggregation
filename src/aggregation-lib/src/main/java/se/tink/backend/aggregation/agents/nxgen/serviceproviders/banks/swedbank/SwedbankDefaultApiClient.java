@@ -16,11 +16,18 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.InitBankIdRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.InitBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.creditcard.rpc.DetailedCardAccountResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.einvoice.rpc.EInvoiceEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.investment.rpc.FundMarketInfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.einvoice.rpc.EInvoiceDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.einvoice.rpc.EInvoiceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.einvoice.rpc.IncomingEinvoicesResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.investment.rpc.FundMarketInfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.loan.rpc.LoanDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.transfer.rpc.CollectBankIdSignResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.transfer.rpc.ConfirmTransferResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.transfer.rpc.InitiateSignTransferRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.transfer.rpc.InitiateSignTransferResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.transfer.rpc.RegisterTransferRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.transfer.rpc.RegisterTransferResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.transfer.rpc.RegisteredTransfersResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.EngagementOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.EngagementTransactionsResponse;
@@ -58,15 +65,20 @@ public class SwedbankDefaultApiClient {
         return buildAbstractRequest(url).post(responseClass, requestObject);
     }
 
-    private <T> T makePostRequest(URL url, Class<T> responseClass) {
-        return makePostRequest(url, null, responseClass);
+    private <T> T makePutRequest(URL url, Class<T> responseClass) {
+        return buildAbstractRequest(url).put(responseClass);
     }
 
     private <T> T makeRequest(LinkEntity linkEntity, Class<T> responseClass) {
-        return makeRequest(linkEntity, responseClass, Collections.emptyMap());
+        return makeRequest(linkEntity, null, responseClass);
     }
 
-    private <T> T makeRequest(LinkEntity linkEntity, Class<T> responseClass, Map<String, String> parameters) {
+    private <T> T makeRequest(LinkEntity linkEntity, Object requestObject, Class<T> responseClass) {
+        return makeRequest(linkEntity, requestObject, responseClass, Collections.emptyMap());
+    }
+
+    private <T> T makeRequest(LinkEntity linkEntity, Object requestObject, Class<T> responseClass,
+            Map<String, String> parameters) {
         LinkEntity.LinkMethod method = linkEntity.getMethod();
         Preconditions.checkState(linkEntity.isValid(),
                 "Create dynamic request failed - Cannot proceed without valid link entity - Method:[{}], Uri:[{}]",
@@ -75,9 +87,13 @@ public class SwedbankDefaultApiClient {
         switch (method) {
         case POST:
             return makePostRequest(
-                    SwedbankBaseConstants.Url.createDynamicUrl(linkEntity.getUri(), parameters), responseClass);
+                    SwedbankBaseConstants.Url.createDynamicUrl(linkEntity.getUri(), parameters), requestObject,
+                    responseClass);
         case GET:
             return makeGetRequest(
+                    SwedbankBaseConstants.Url.createDynamicUrl(linkEntity.getUri(), parameters), responseClass);
+        case PUT:
+            return makePutRequest(
                     SwedbankBaseConstants.Url.createDynamicUrl(linkEntity.getUri(), parameters), responseClass);
         default:
             log.warn("Create dynamic request failed - Not implemented method - Method:[{}]", method);
@@ -89,6 +105,8 @@ public class SwedbankDefaultApiClient {
         String dsid = generateDSID();
 
         return client.request(url)
+                .header(SwedbankBaseConstants.Headers.AUTHORIZATION_KEY,
+                        SwedbankBaseConstants.generateAuthorization(configuration, username))
                 .queryParam(SwedbankBaseConstants.Url.DSID_KEY, dsid)
                 .cookie(new Cookie(SwedbankBaseConstants.Url.DSID_KEY, dsid));
     }
@@ -174,8 +192,8 @@ public class SwedbankDefaultApiClient {
     }
 
     public FundMarketInfoResponse fundMarketInfo(String fundCode) {
-        return makeMenuItemRequest(SwedbankBaseConstants.MenuItemKey.FUND_MARKET_INFO, FundMarketInfoResponse.class,
-                ImmutableMap.of(SwedbankBaseConstants.ParameterKey.FUND_CODE, fundCode));
+        return makeMenuItemRequest(SwedbankBaseConstants.MenuItemKey.FUND_MARKET_INFO, null,
+                FundMarketInfoResponse.class, ImmutableMap.of(SwedbankBaseConstants.ParameterKey.FUND_CODE, fundCode));
     }
 
     public List<EInvoiceEntity> incomingEInvoices() {
@@ -198,12 +216,47 @@ public class SwedbankDefaultApiClient {
         return this.paymentBaseinfoResponse;
     }
 
-    private <T> T makeMenuItemRequest(SwedbankBaseConstants.MenuItemKey menuItemKey, Class<T> responseClass) {
-        return makeMenuItemRequest(menuItemKey, responseClass, Collections.emptyMap());
+    public RegisterTransferResponse registerTransfer(double amount, String destinationAccountId,
+            String sourceAccountId) {
+        return makeMenuItemRequest(
+                SwedbankBaseConstants.MenuItemKey.REGISTER_TRANSFER,
+                RegisterTransferRequest.create(amount, destinationAccountId, sourceAccountId),
+                RegisterTransferResponse.class);
     }
 
-    private <T> T makeMenuItemRequest(SwedbankBaseConstants.MenuItemKey menuItemKey, Class<T> responseClass,
-            Map<String, String> parameters) {
+    public RegisteredTransfersResponse registeredTransfers() {
+        return makeMenuItemRequest(
+                SwedbankBaseConstants.MenuItemKey.PAYMENT_REGISTERED,
+                RegisteredTransfersResponse.class);
+    }
+
+    public RegisteredTransfersResponse registeredTransfers(LinkEntity linkEntity) {
+        return makeRequest(linkEntity, RegisteredTransfersResponse.class);
+    }
+
+    public ConfirmTransferResponse confirmTransfer(LinkEntity linkEntity) {
+        return makeRequest(linkEntity, ConfirmTransferResponse.class);
+    }
+
+    public InitiateSignTransferResponse signExternalTransfer(LinkEntity linkEntity) {
+        return makeRequest(linkEntity, InitiateSignTransferRequest.create(), InitiateSignTransferResponse.class);
+    }
+
+    public CollectBankIdSignResponse collectSignBankId(LinkEntity linkEntity) {
+        return makeRequest(linkEntity, CollectBankIdSignResponse.class);
+    }
+
+    private <T> T makeMenuItemRequest(SwedbankBaseConstants.MenuItemKey menuItemKey, Class<T> responseClass) {
+        return makeMenuItemRequest(menuItemKey, null, responseClass);
+    }
+
+    private <T> T makeMenuItemRequest(SwedbankBaseConstants.MenuItemKey menuItemKey, Object requestObject,
+            Class<T> responseClass) {
+        return makeMenuItemRequest(menuItemKey, requestObject, responseClass, Collections.emptyMap());
+    }
+
+    private <T> T makeMenuItemRequest(SwedbankBaseConstants.MenuItemKey menuItemKey, Object requestObject,
+            Class<T> responseClass, Map<String, String> parameters) {
         Preconditions.checkNotNull(menuItemKey);
         Preconditions.checkNotNull(menuItems);
         Preconditions.checkState(menuItems.containsKey(menuItemKey.getKey()));
@@ -215,7 +268,7 @@ public class SwedbankDefaultApiClient {
             throw new IllegalStateException();
         }
 
-        return makeRequest(menuItem, responseClass, parameters);
+        return makeRequest(menuItem, requestObject, responseClass, parameters);
     }
 
     private void ensureAuthorizationHeaderIsSet() {
