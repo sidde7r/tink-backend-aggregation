@@ -46,6 +46,12 @@ public class TransferExecutionException extends RuntimeException {
             return this;
         }
 
+        public Builder setEndUserMessage(EndUserMessage endUserMessage) {
+            EndUserMessage message = Preconditions.checkNotNull(endUserMessage);
+            this.endUserMessage = Preconditions.checkNotNull(message.getKey().get());
+            return this;
+        }
+
         public Builder setException(Throwable exception) {
             this.exception = exception;
             return this;
