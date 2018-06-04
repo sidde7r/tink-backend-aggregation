@@ -4,6 +4,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.SwedbankDefaultBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.SwedbankTransferHelper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.payment.SwedbankDefaultPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.creditcard.SwedbankDefaultCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.investment.SwedbankDefaultInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.einvoice.SwedbankDefaultEinvoiceFetcher;
@@ -118,9 +119,10 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent {
         SwedbankTransferHelper transferHelper = new SwedbankTransferHelper(apiClient);
         SwedbankDefaultBankTransferExecutor transferExecutor = new SwedbankDefaultBankTransferExecutor(
                 apiClient, transferHelper);
+        SwedbankDefaultPaymentExecutor paymentExecutor = new SwedbankDefaultPaymentExecutor(apiClient, transferHelper);
         return Optional.of(
                 new TransferController(
-                        null,
+                        paymentExecutor,
                         transferExecutor,
                         null,
                         null));

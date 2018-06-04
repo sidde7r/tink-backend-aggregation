@@ -113,7 +113,7 @@ public class PaymentBaseinfoResponse {
     }
 
     @JsonIgnore
-    public Optional<String> getDestinationAccountId(AccountIdentifier accountIdentifier) {
+    public Optional<String> getTransferDestinationAccountId(AccountIdentifier accountIdentifier) {
         Preconditions.checkNotNull(accountIdentifier, "The account identifier cannot be null.");
         Preconditions.checkState(accountIdentifier.isValid(), "The account identifier must be valid.");
 
@@ -163,5 +163,36 @@ public class PaymentBaseinfoResponse {
 
         TransferDestinationAccountEntity transferDestinationAccountEntity = internalAccountEntity.get();
         return Optional.ofNullable(transferDestinationAccountEntity.getId());
+    }
+
+    @JsonIgnore
+    public Optional<String> getPaymentDestinationAccountId(AccountIdentifier accountIdentifier) {
+        Preconditions.checkNotNull(accountIdentifier, "The account identifier cannot be null.");
+        Preconditions.checkState(accountIdentifier.isValid(), "The account identifier must be valid.");
+
+        Optional<PayeeEntity> payeeEntity = Optional.ofNullable(payment)
+                .map(PaymentDestinationsEntity::getPayees)
+                .orElseGet(Collections::emptyList).stream()
+                .filter(pe -> {
+                    AccountIdentifier peAccountIdentifier = pe.generalGetAccountIdentifier();
+                    String originalAccountIdentifier = accountIdentifier.getIdentifier(DEFAULT_FORMAT);
+
+                    if (peAccountIdentifier == null || originalAccountIdentifier == null) {
+                        return false;
+                    }
+
+                    return originalAccountIdentifier.equals(peAccountIdentifier.getIdentifier(DEFAULT_FORMAT));
+                })
+                .findFirst();
+
+        // Either it is an external or internal transfer
+        if (!payeeEntity.isPresent()) {
+            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                    .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_DESTINATION)
+                    .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_DESTINATION)
+                    .build();
+        }
+
+        return Optional.ofNullable(payeeEntity.get().getId());
     }
 }

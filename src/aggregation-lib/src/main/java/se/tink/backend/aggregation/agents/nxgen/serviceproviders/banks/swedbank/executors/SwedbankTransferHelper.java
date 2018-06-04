@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors;
 
 import com.google.common.util.concurrent.Uninterruptibles;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
@@ -9,11 +10,17 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.transfer.rpc.AbstractBankIdSignResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.transfer.rpc.ConfirmTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
+import se.tink.backend.common.utils.giro.validation.GiroMessageValidator;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.giro.validation.OcrValidationConfiguration;
 
 public class SwedbankTransferHelper {
+    public enum ReferenceType {
+        OCR, MESSAGE
+    }
+
     private static final int MAX_ATTEMPTS = 90;
 
     private SwedbankDefaultApiClient apiClient;
@@ -56,6 +63,13 @@ public class SwedbankTransferHelper {
         throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setEndUserMessage(TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE)
                 .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_CANCELLED).build();
+    }
+
+    public static ReferenceType getReferenceTypeFor(Transfer transfer) {
+        GiroMessageValidator giroValidator = GiroMessageValidator.create(OcrValidationConfiguration.softOcr());
+        Optional<String> validOcr = giroValidator.validate(transfer.getDestinationMessage()).getValidOcr();
+
+        return validOcr.isPresent() ? ReferenceType.OCR : ReferenceType.MESSAGE;
     }
 
     public static void confirmSuccessfulTransfer(ConfirmTransferResponse confirmTransferResponse, String idToConfirm) {
