@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankDefaultApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.einvoice.rpc.EInvoiceEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.einvoice.rpc.IncomingEinvoicesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceFetcher;
 import se.tink.backend.core.transfer.Transfer;
@@ -32,7 +31,8 @@ public class SwedbankDefaultEinvoiceFetcher implements EInvoiceFetcher {
             Optional.ofNullable(eInvoiceEntity.getLinks())
                     .map(LinksEntity::getNext)
                     .map(apiClient::eInvoiceDetails)
-                    .flatMap(eInvoiceDetails -> eInvoiceDetails.toEInvoiceTransfer(eInvoiceEntity.getCurrency()))
+                    .flatMap(eInvoiceDetails -> eInvoiceDetails.toEInvoiceTransfer(
+                            eInvoiceEntity.getCurrency(), eInvoiceEntity.getHashedEinvoiceRefNo()))
                     .ifPresent(eInvoices::add);
         }
 
