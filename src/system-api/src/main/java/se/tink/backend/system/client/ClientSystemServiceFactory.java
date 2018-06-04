@@ -1,12 +1,10 @@
 package se.tink.backend.system.client;
 
-import se.tink.libraries.jersey.utils.InterContainerJerseyClientFactory;
-import se.tink.libraries.http.client.BasicWebServiceClassBuilder;
-import se.tink.libraries.http.client.ServiceClassBuilder;
-import se.tink.backend.system.api.CronService;
-import se.tink.backend.system.api.NotificationGatewayService;
 import se.tink.backend.system.api.ProcessService;
 import se.tink.backend.system.api.UpdateService;
+import se.tink.libraries.http.client.BasicWebServiceClassBuilder;
+import se.tink.libraries.http.client.ServiceClassBuilder;
+import se.tink.libraries.jersey.utils.InterContainerJerseyClientFactory;
 
 public class ClientSystemServiceFactory implements SystemServiceFactory {
     private ServiceClassBuilder builder;
@@ -37,17 +35,8 @@ public class ClientSystemServiceFactory implements SystemServiceFactory {
         return builder.build(UpdateService.class);
     }
 
-    public NotificationGatewayService getNotificationGatewayService() {
-        return builder.build(NotificationGatewayService.class);
-    }
-
     @Override
     public ProcessService getProcessService() {
         return builder.build(ProcessService.class);
-    }
-
-    @Override
-    public CronService getCronService() {
-        return builder.build(CronService.class);
     }
 }

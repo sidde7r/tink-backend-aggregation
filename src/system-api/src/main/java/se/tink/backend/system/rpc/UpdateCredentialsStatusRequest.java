@@ -5,9 +5,6 @@ import se.tink.backend.core.Credentials;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UpdateCredentialsStatusRequest {
-
-    public static final int MAX_REFRESH_TIME = 10 * 60 * 1000; // 10 minutes
-    
     private Credentials credentials;
     private boolean updateContextTimestamp;
     private String userDeviceId;
