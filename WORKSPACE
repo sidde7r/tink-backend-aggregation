@@ -142,7 +142,6 @@ sass_repositories()
 # Same as above, always make sure to specify a checksum. To check what is using
 # a specifc library you can use:
 # $ bazel query 'rdeps(//:all, @aopalliance_aopalliance//jar, 1)'
-# //third_party:org_springframework_data_spring_data_cassandra
 # //third_party:org_springframework_data_spring_cql
 # //third_party:com_google_inject_guice
 # @aopalliance_aopalliance//jar:jar
@@ -579,12 +578,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_datastax_spark_spark_cassandra_connector_2_10",
-    artifact = "com.datastax.spark:spark-cassandra-connector_2.10:1.2.1",
-    sha1 = "9681c526ca02ac88a2487d3499a3176a0c8b1c9a",
-)
-
-maven_jar(
     name = "commons_httpclient_commons_httpclient",
     artifact = "commons-httpclient:commons-httpclient:3.1",
     sha1 = "964cd74171f427720480efdec40a7c7f6e58426a",
@@ -693,12 +686,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_springframework_data_spring_data_cassandra",
-    artifact = "org.springframework.data:spring-data-cassandra:1.5.1.RELEASE",
-    sha1 = "a6fb4cd5bb612d5058ea3144b78982f384674a15",
-)
-
-maven_jar(
     name = "io_dropwizard_dropwizard_logging",
     artifact = "io.dropwizard:dropwizard-logging:0.7.1",
     sha1 = "039d41453b0cb37c4c6239566ccb52787a68d270",
@@ -768,12 +755,6 @@ maven_jar(
     name = "org_seleniumhq_selenium_selenium_server",
     artifact = "org.seleniumhq.selenium:selenium-server:2.31.0",
     sha1 = "14996f8c7dc90e6fd93e221089bc5f4267ce7fa9",
-)
-
-maven_jar(
-    name = "org_apache_cassandra_cassandra_clientutil",
-    artifact = "org.apache.cassandra:cassandra-clientutil:2.1.3",
-    sha1 = "e0df5bfc2ba81ce86eacc5854d0c09aa7b17b8e0",
 )
 
 maven_jar(
@@ -1679,18 +1660,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_cassandra_cassandra_thrift",
-    artifact = "org.apache.cassandra:cassandra-thrift:2.1.3",
-    sha1 = "50fb81b6338ca3f2cf80ba4462809f87f0685e9e",
-)
-
-maven_jar(
-    name = "com_datastax_spark_spark_cassandra_connector_java_2_10",
-    artifact = "com.datastax.spark:spark-cassandra-connector-java_2.10:1.2.1",
-    sha1 = "94799fab44255030b62d77d7f5f343a9b111e80d",
-)
-
-maven_jar(
     name = "com_github_rholder_guava_retrying",
     artifact = "com.github.rholder:guava-retrying:2.0.0",
     sha1 = "974bc0a04a11cc4806f7c20a34703bd23c34e7f4",
@@ -2308,12 +2277,6 @@ maven_jar(
     name = "org_tukaani_xz",
     artifact = "org.tukaani:xz:1.5",
     sha1 = "9c64274b7dbb65288237216e3fae7877fd3f2bee",
-)
-
-maven_jar(
-    name = "org_apache_cassandra_cassandra_all",
-    artifact = "org.apache.cassandra:cassandra-all:2.1.3",
-    sha1 = "ffbb113ab802b32e106482cb39196a658a953ff3",
 )
 
 maven_jar(

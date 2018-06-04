@@ -3,12 +3,7 @@ package se.tink.backend.core;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import org.springframework.cassandra.core.PrimaryKeyType;
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
-import org.springframework.data.cassandra.mapping.Table;
 
-@Table(value = "portfolios")
 public class Portfolio {
 
     public enum Type {
@@ -17,11 +12,8 @@ public class Portfolio {
         public static final String DOCUMENTED = "ISK, KF, DEPOT, PENSION, OTHER";
     }
 
-    @PrimaryKeyColumn(ordinal = 0, type = PrimaryKeyType.PARTITIONED)
     private UUID userId;
-    @PrimaryKeyColumn(ordinal = 1, type = PrimaryKeyType.CLUSTERED)
     private UUID accountId;
-    @PrimaryKeyColumn(ordinal = 2, type = PrimaryKeyType.CLUSTERED)
     private UUID id;
 
     // For an account with one portfolio this can be the account nr. For accounts with multiple portfolios this can be
@@ -34,10 +26,8 @@ public class Portfolio {
     private Double cashValue;
 
     // Instruments are saved in a separate table.
-    @Transient
     private List<Instrument> instruments;
 
-    @Transient
     private Credentials credentials;
     private Double totalValue;
     private Type type;

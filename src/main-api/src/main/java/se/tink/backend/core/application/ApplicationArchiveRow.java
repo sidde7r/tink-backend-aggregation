@@ -2,16 +2,10 @@ package se.tink.backend.core.application;
 
 import java.util.Date;
 import java.util.UUID;
-import org.springframework.cassandra.core.PrimaryKeyType;
-import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
-import org.springframework.data.cassandra.mapping.Table;
 import se.tink.libraries.application.ApplicationType;
 
-@Table(value = "applications_archive")
 public class ApplicationArchiveRow {
-    @PrimaryKeyColumn(type = PrimaryKeyType.PARTITIONED, ordinal = 0)
     private UUID userId;
-    @PrimaryKeyColumn(type = PrimaryKeyType.CLUSTERED, ordinal = 1)
     private UUID applicationId;
     private String applicationType;
     private String status;

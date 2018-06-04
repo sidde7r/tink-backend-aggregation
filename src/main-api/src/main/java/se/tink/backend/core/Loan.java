@@ -1,6 +1,5 @@
 package se.tink.backend.core;
 
-import com.datastax.driver.core.utils.UUIDs;
 import com.google.common.base.Preconditions;
 import io.protostuff.Exclude;
 import io.protostuff.Tag;
@@ -8,14 +7,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
-import org.springframework.cassandra.core.PrimaryKeyType;
-import org.springframework.data.annotation.AccessType;
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
-import org.springframework.data.cassandra.mapping.Table;
-import se.tink.libraries.uuid.UUIDUtils;
 
-@Table(value = "loan_data")
 public class Loan implements Comparable<Loan>, Serializable {
 
     public enum Type {
@@ -25,11 +17,8 @@ public class Loan implements Comparable<Loan>, Serializable {
     }
 
     @Tag(1)
-    @PrimaryKeyColumn(ordinal = 0, type = PrimaryKeyType.PARTITIONED)
     private UUID accountId;
     @Tag(2)
-    @AccessType(AccessType.Type.PROPERTY)
-    @PrimaryKeyColumn(ordinal = 1, type = PrimaryKeyType.CLUSTERED)
     private UUID id;
     @Tag(3)
     private UUID userId;
@@ -53,7 +42,6 @@ public class Loan implements Comparable<Loan>, Serializable {
     private Date nextDayOfTermsChange;
     @Exclude
     private String serializedLoanResponse;
-    @Transient
     @Tag(13)
     private Date updated;
     @Tag(14)
@@ -64,19 +52,16 @@ public class Loan implements Comparable<Loan>, Serializable {
     private String loanNumber;
     @Tag(17)
     private Double monthlyAmortization;
-    @Transient
     @Tag(18)
     private LoanDetails loanDetails;
     @Exclude
     private Boolean userModifiedType;
 
     public Loan() {
-        this.id = UUIDs.timeBased();
+
     }
 
     public Loan(Loan toCopy) {
-        this.id = UUIDs.timeBased();
-
         setAccountId(toCopy.getAccountId());
         setAmortized(toCopy.getAmortized());
         setBalance(toCopy.getBalance());
@@ -177,7 +162,6 @@ public class Loan implements Comparable<Loan>, Serializable {
 
     public void setId(UUID id) {
         this.id = id;
-        updated = UUIDUtils.UUIDToDate(id);
     }
 
     public UUID getUserId() {

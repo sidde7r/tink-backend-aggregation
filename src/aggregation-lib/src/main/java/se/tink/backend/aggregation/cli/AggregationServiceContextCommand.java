@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.backend.guice.configuration.CommonModule;
 import se.tink.backend.guice.configuration.ConfigurationModule;
-import se.tink.backend.guice.configuration.EventTrackerModule;
 import se.tink.libraries.discovery.CoordinationModule;
 
 public abstract class AggregationServiceContextCommand<T extends ServiceConfiguration> extends ConfiguredCommand<T> {
@@ -31,7 +30,6 @@ public abstract class AggregationServiceContextCommand<T extends ServiceConfigur
         List<AbstractModule> modules = Lists.newArrayList(
                 new CommonModule(),
                 new CoordinationModule(),
-                new EventTrackerModule(),
                 new ConfigurationModule(configuration),
                 new AggregationRepositoryModule(configuration.getDatabase()));
 

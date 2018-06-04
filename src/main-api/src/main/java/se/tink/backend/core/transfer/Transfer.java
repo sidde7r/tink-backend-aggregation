@@ -13,7 +13,6 @@ import io.protostuff.Exclude;
 import io.protostuff.Tag;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
-import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.text.DecimalFormat;
@@ -24,16 +23,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import javax.persistence.Transient;
-import org.springframework.cassandra.core.PrimaryKeyType;
-import org.springframework.data.cassandra.mapping.Column;
-import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
-import org.springframework.data.cassandra.mapping.Table;
 import se.tink.backend.core.Amount;
 import se.tink.backend.core.Creatable;
 import se.tink.backend.core.Modifiable;
 import se.tink.backend.core.enums.MessageType;
 import se.tink.backend.core.enums.TransferType;
-import se.tink.backend.utils.BeanUtils;
 import se.tink.backend.utils.LogUtils;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.date.ThreadSafeDateFormat;
@@ -43,7 +37,6 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY,
         getterVisibility = JsonAutoDetect.Visibility.NONE,
         setterVisibility = JsonAutoDetect.Visibility.NONE)
-@Table(value = "transfers")
 public class Transfer implements Serializable, Cloneable {
     private static final String FOUR_POINT_PRECISION_FORMAT_STRING = "0.0000";
 
@@ -52,16 +45,15 @@ public class Transfer implements Serializable, Cloneable {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final TypeReference<Map<TransferPayloadType, String>> PAYLOAD_TYPE_REFERENCE =
-            new TypeReference<Map<TransferPayloadType, String>>() { };
+            new TypeReference<Map<TransferPayloadType, String>>() {
+            };
 
     @Modifiable
     @Creatable
     @Tag(1)
     @ApiModelProperty(name = "amount", example = "10", required = true, value = "The amount that will be transferred")
-    @Column("exactamount")
     private BigDecimal amount;
     @JsonIgnore
-    @Column("amount")
     @Exclude
     private Double oldAmount;
     @Tag(2)
@@ -85,7 +77,6 @@ public class Transfer implements Serializable, Cloneable {
     @ApiModelProperty(name = "destinationMessage", example = "Happy birthday!", required = true, value = "The message to the recipient. Optional for bank transfers but required for payments. If the payment recipient requires an OCR, it should be set as destinationMessage.")
     private String destinationMessage;
     @Tag(6)
-    @PrimaryKeyColumn(ordinal = 1, type = PrimaryKeyType.CLUSTERED)
     @ApiModelProperty(name = "id", example = "a4516bda6ff545e0aa24e54b859579e0", value = "The id of this transfer.")
     private UUID id;
     @Modifiable
@@ -103,7 +94,6 @@ public class Transfer implements Serializable, Cloneable {
     @ApiModelProperty(name = "sourceMessage", example = "Gift to Sophie", value = "A note to show to the source account.")
     private String sourceMessage;
     @Tag(9)
-    @PrimaryKeyColumn(ordinal = 0, type = PrimaryKeyType.PARTITIONED)
     @ApiModelProperty(name = "userId", example = "2f37e3ff1e5342b39c41bee3ee73cf8e", value = "The id of the user making the transfer.")
     private UUID userId;
     @Tag(10)
@@ -134,7 +124,7 @@ public class Transfer implements Serializable, Cloneable {
     @Transient
     @JsonIgnore
     public String getHashIgnoreSource() {
-       return getHash(true);
+        return getHash(true);
     }
 
     @Transient
@@ -430,39 +420,6 @@ public class Transfer implements Serializable, Cloneable {
         } catch (CloneNotSupportedException e) {
             return null;
         }
-    }
-
-    @Transient
-    @JsonIgnore
-    public Transfer makeReliableCopy() {
-        Transfer transfer = new Transfer();
-        transfer.setType(TransferType.typeOf(getDestination()));
-        transfer.setMessageType(getMessageType());
-
-        return makeReliableCopy(transfer, Creatable.class);
-    }
-
-    @Transient
-    @JsonIgnore
-    public Transfer makeReliableCopy(Transfer existingTransfer) {
-        Transfer transfer = existingTransfer.clone();
-
-        return makeReliableCopy(transfer, Modifiable.class);
-    }
-
-    @Transient
-    @JsonIgnore
-    private Transfer makeReliableCopy(Transfer transfer, Class<? extends Annotation> annotation) {
-        transfer.setOriginalTransfer();
-        copyTo(transfer, annotation);
-        transfer.setOriginalSource(transfer.getSource());
-        transfer.setOriginalDestination(transfer.getDestination());
-
-        return transfer;
-    }
-
-    private void copyTo(Transfer targetTransfer, final Class<? extends Annotation> annotation) {
-        BeanUtils.copyProperties(this, targetTransfer, annotation);
     }
 
     @JsonIgnore

@@ -1,25 +1,18 @@
 package se.tink.backend.core.interests;
 
 import com.google.common.collect.Maps;
-import java.util.UUID;
-import org.springframework.cassandra.core.PrimaryKeyType;
-import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
-import org.springframework.data.cassandra.mapping.Table;
-
 import java.io.Serializable;
 import java.util.Map;
+import java.util.UUID;
 
-@Table(value = "aggregated_loans_by_area")
 public class AggregatedAreaLoanData implements Serializable {
 
     private double avgInterest;
     private double avgBalance;
-    @PrimaryKeyColumn(ordinal = 1, type = PrimaryKeyType.CLUSTERED)
     private String bank;
     private String bankDisplayName;
     private long numLoans;
     private long numUsers;
-    @PrimaryKeyColumn(ordinal = 0, type = PrimaryKeyType.PARTITIONED)
     private UUID areaId;
 
     public static Map<String, String> getColumnMap() {

@@ -120,7 +120,6 @@ java_library(
         "//third_party:org_hibernate_hibernate_annotations",
         "//third_party:org_iban4j_iban4j",
         "//third_party:org_pojava_pojava",
-        "//third_party:org_springframework_data_spring_data_cassandra",
         "//third_party:org_xerial_snappy_snappy_java",
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:commons_codec_commons_codec",
@@ -228,7 +227,6 @@ java_library(
         "//third_party:org_pojava_pojava",
         "//third_party:org_quartz_scheduler_quartz",
         "//third_party:org_rythmengine_rythm_engine",
-        "//third_party:org_springframework_data_spring_data_cassandra",
         "//third_party:org_springframework_data_spring_data_commons",
         "//third_party:org_springframework_data_spring_data_jpa",
         "//third_party:org_assertj_assertj_core",
@@ -236,39 +234,6 @@ java_library(
     visibility = ["//visibility:public"],
 )
 
-java_library(
-    name = "common-lib-testlib",
-    srcs = glob(
-        include = ["src/common-lib/src/test/**/*.java"],
-        exclude = ["src/common-lib/src/test/**/*Test.java"],
-    ),
-    runtime_deps = [
-        "//third_party:com_fasterxml_jackson_core_jackson_core",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
-        "//third_party:pl_pragmatists_junitparams",
-    ],
-    deps = [
-        ":common-lib",
-        ":main-api",
-
-        "//src/libraries/uuid:uuid",
-        "//src/libraries/http:http-annotations",
-        "//src/libraries/metrics:metrics",
-        "//src/libraries/date:date",
-        "//src/libraries/account_identifier:account-identifier",
-
-        "//third_party:com_github_tomakehurst_wiremock",
-        "//third_party:com_google_code_findbugs_jsr305",
-        "//third_party:com_google_guava_guava",
-        "//third_party:com_sun_jersey_jersey_client",
-        "//third_party:com_sun_jersey_jersey_core",
-        "//third_party:commons_lang_commons_lang",
-        "//third_party:joda_time_joda_time",
-        "//third_party:junit_junit",
-        "//third_party:org_mockito_mockito_core",
-        "//third_party:org_springframework_data_spring_data_cassandra",
-    ],
-)
 
 java_library(
      name = "aggregation-service",
@@ -343,45 +308,6 @@ java_library(
     ],
 )
 
-java_library(
-    name = "aggregation-controller-lib",
-    srcs = glob(["src/aggregation-controller-lib/src/main/**/*.java"]),
-    data = [
-        "etc/development-minikube-aggregation-controller-server.yml",
-        "//data",
-    ],
-    deps = [
-        ":common-lib",
-        ":main-api",
-        ":system-api",
-        ":aggregation-api",
-        ":aggregation-controller-api",
-
-        "//src/libraries/jersey_log:jersey-log",
-        "//src/libraries/jersey_guice:jersey-guice",
-        "//src/libraries/metrics:metrics",
-        "//src/libraries/http:http-annotations",
-        "//src/api-annotations",
-        "//src/libraries/jersey_utils:jersey-utils",
-        "//src/libraries/http_client:http-client",
-        "//src/libraries/discovery:discovery",
-        "//src/libraries/discovered_web_service:discovered_web_service",
-        "//src/libraries/endpoint_configuration:endpoint_configuration",
-        "//src/libraries/serialization_utils:serialization-utils",
-        "//src/libraries/log:log",
-        "//src/libraries/http:http-utils",
-
-        "//third_party:com_google_inject_guice",
-        "//third_party:com_google_http_client_google_http_client",
-        "//third_party:com_google_inject_extensions_guice_multibindings",
-        "//third_party:com_google_guava_guava",
-        "//third_party:org_apache_curator_curator_framework",
-        "//third_party:org_apache_curator_curator_x_discovery",
-        "//third_party:com_netflix_governator",
-        "//third_party:io_dropwizard_dropwizard_core",
-        "//third_party:com_sun_jersey_jersey_client",
-    ],
-)
 
 java_library(
     name = "aggregation-lib",
@@ -425,6 +351,7 @@ java_library(
         "//src/api-annotations",
         "//src/libraries/cli_print_utils:cli_print_utils",
 
+        "//third_party:org_springframework_spring_expression",
         "//third_party:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
         "//third_party:com_github_detro_ghostdriver_phantomjsdriver",
         "//third_party:com_github_rholder_guava_retrying",
@@ -537,7 +464,6 @@ junit_test(
         ":aggregation-api",
         ":aggregation-lib",
         ":common-lib",
-        ":common-lib-testlib",
         ":main-api",
         ":system-api",
 
@@ -587,7 +513,6 @@ junit_test(
         ":aggregation-api",
         ":aggregation-lib",
         ":common-lib",
-        ":common-lib-testlib",
         ":main-api",
         ":system-api",
 

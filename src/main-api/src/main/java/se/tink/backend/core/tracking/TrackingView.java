@@ -2,20 +2,12 @@ package se.tink.backend.core.tracking;
 
 import io.protostuff.Exclude;
 import io.protostuff.Tag;
-
 import java.util.Date;
 import java.util.UUID;
 
-import org.springframework.cassandra.core.PrimaryKeyType;
-import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
-import org.springframework.data.cassandra.mapping.Table;
-
-@Table(value = "tracking_views")
 public class TrackingView {
     @Exclude
-    @PrimaryKeyColumn(type = PrimaryKeyType.CLUSTERED, ordinal = 1)
     private UUID id;
-    @PrimaryKeyColumn(type = PrimaryKeyType.PARTITIONED, ordinal = 0)
     @Exclude
     private UUID sessionId;
     @Tag(1)

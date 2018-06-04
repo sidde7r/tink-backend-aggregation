@@ -2,16 +2,10 @@ package se.tink.backend.core;
 
 import java.nio.ByteBuffer;
 import java.util.UUID;
-import org.springframework.cassandra.core.PrimaryKeyType;
-import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
-import org.springframework.data.cassandra.mapping.Table;
 
-@Table(value = "data_export_fragments")
 public class DataExportFragment {
 
-    @PrimaryKeyColumn(ordinal = 0, type = PrimaryKeyType.PARTITIONED)
     private UUID id;
-    @PrimaryKeyColumn(ordinal = 1, type = PrimaryKeyType.CLUSTERED)
     private int index;
     private ByteBuffer data;
 

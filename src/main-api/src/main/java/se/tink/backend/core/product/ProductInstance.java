@@ -5,26 +5,18 @@ import com.google.common.collect.Maps;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
-import org.springframework.cassandra.core.PrimaryKeyType;
-import org.springframework.data.cassandra.mapping.Column;
-import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
-import org.springframework.data.cassandra.mapping.Table;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.backend.serialization.TypeReferences;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
-@Table(value = "products_instances")
 public class ProductInstance {
     private UUID filterId;
-    @PrimaryKeyColumn(ordinal = 1, type = PrimaryKeyType.CLUSTERED)
     private UUID id;
-    @Column(value = "properties")
     private String propertiesSerialized;
     private UUID templateId;
-    @PrimaryKeyColumn(ordinal = 0, type = PrimaryKeyType.PARTITIONED)
     private UUID userId;
     private Date validFrom;
     private Date validTo;
-    
+
     public ProductInstance() {
         id = UUID.randomUUID();
     }
@@ -48,14 +40,14 @@ public class ProductInstance {
     public String getPropertiesSerialized() {
         return propertiesSerialized;
     }
-    
+
     public Object getProperty(String key) {
         Map<String, Object> properties = getProperties();
-        
+
         if (properties == null) {
             return null;
         }
-        
+
         return properties.get(key);
     }
 

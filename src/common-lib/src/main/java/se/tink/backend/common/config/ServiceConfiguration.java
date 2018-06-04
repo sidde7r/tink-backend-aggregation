@@ -58,9 +58,6 @@ public class ServiceConfiguration extends Configuration {
     private TemplateConfiguration template = new TemplateConfiguration();
 
     @JsonProperty
-    private DistributedDatabaseConfiguration distributedDatabase = new DistributedDatabaseConfiguration();
-
-    @JsonProperty
     private EndpointsConfiguration endpoints = new EndpointsConfiguration();
 
     @JsonProperty
@@ -195,10 +192,6 @@ public class ServiceConfiguration extends Configuration {
 
     public DatabaseConfiguration getDatabase() {
         return database;
-    }
-
-    public DistributedDatabaseConfiguration getDistributedDatabase() {
-        return distributedDatabase;
     }
 
     public EndpointsConfiguration getEndpoints() {

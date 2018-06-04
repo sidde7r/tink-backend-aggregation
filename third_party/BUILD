@@ -223,53 +223,6 @@ java_library(
 )
 
 java_library(
-    name = "com_datastax_spark_spark_cassandra_connector_2_10",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_codahale_metrics_metrics_core//jar",
-        "@com_datastax_cassandra_cassandra_driver_core//jar",
-        "@com_datastax_spark_spark_cassandra_connector_2_10//jar",
-        "@com_google_guava_guava//jar",
-        "@com_twitter_jsr166e//jar",
-        "@joda_time_joda_time//jar",
-        "@org_apache_cassandra_cassandra_clientutil//jar",
-        "@org_apache_cassandra_cassandra_thrift//jar",
-        "@org_apache_commons_commons_lang3//jar",
-        "@org_apache_httpcomponents_httpclient//jar",
-        "@org_apache_httpcomponents_httpcore//jar",
-        "@org_apache_thrift_libthrift//jar",
-        "@org_joda_joda_convert//jar",
-        "@org_scala_lang_scala_library//jar",
-        "@org_scala_lang_scala_reflect//jar",
-        "@org_slf4j_slf4j_api//jar",
-    ],
-)
-
-java_library(
-    name = "com_datastax_spark_spark_cassandra_connector_java_2_10",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_codahale_metrics_metrics_core//jar",
-        "@com_datastax_cassandra_cassandra_driver_core//jar",
-        "@com_datastax_spark_spark_cassandra_connector_2_10//jar",
-        "@com_datastax_spark_spark_cassandra_connector_java_2_10//jar",
-        "@com_google_guava_guava//jar",
-        "@com_twitter_jsr166e//jar",
-        "@joda_time_joda_time//jar",
-        "@org_apache_cassandra_cassandra_clientutil//jar",
-        "@org_apache_cassandra_cassandra_thrift//jar",
-        "@org_apache_commons_commons_lang3//jar",
-        "@org_apache_httpcomponents_httpclient//jar",
-        "@org_apache_httpcomponents_httpcore//jar",
-        "@org_apache_thrift_libthrift//jar",
-        "@org_joda_joda_convert//jar",
-        "@org_scala_lang_scala_library//jar",
-        "@org_scala_lang_scala_reflect//jar",
-        "@org_slf4j_slf4j_api//jar",
-    ],
-)
-
-java_library(
     name = "com_fasterxml_classmate",
     visibility = ["//visibility:public"],
     exports = [
@@ -1818,27 +1771,6 @@ java_library(
 )
 
 java_library(
-    name = "org_apache_cassandra_cassandra_clientutil",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_apache_cassandra_cassandra_clientutil//jar",
-    ],
-)
-
-java_library(
-    name = "org_apache_cassandra_cassandra_thrift",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_apache_cassandra_cassandra_thrift//jar",
-        "@org_apache_commons_commons_lang3//jar",
-        "@org_apache_httpcomponents_httpclient//jar",
-        "@org_apache_httpcomponents_httpcore//jar",
-        "@org_apache_thrift_libthrift//jar",
-        "@org_slf4j_slf4j_api//jar",
-    ],
-)
-
-java_library(
     name = "org_apache_commons_commons_collections4",
     visibility = ["//visibility:public"],
     exports = [
@@ -3017,48 +2949,6 @@ java_library(
     ],
 )
 
-java_library(
-    name = "org_springframework_data_spring_cql",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@aopalliance_aopalliance//jar",
-        "@com_datastax_cassandra_cassandra_driver_core//jar",
-        "@com_google_guava_guava//jar",
-        "@org_liquibase_liquibase_core//jar",
-        "@org_slf4j_slf4j_api//jar",
-        "@org_springframework_data_spring_cql//jar",
-        "@org_springframework_data_spring_data_commons//jar",
-        "@org_springframework_spring_aop//jar",
-        "@org_springframework_spring_beans//jar",
-        "@org_springframework_spring_context//jar",
-        "@org_springframework_spring_core//jar",
-        "@org_springframework_spring_expression//jar",
-        "@org_springframework_spring_tx//jar",
-        "@org_yaml_snakeyaml//jar",
-    ],
-)
-
-java_library(
-    name = "org_springframework_data_spring_data_cassandra",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@aopalliance_aopalliance//jar",
-        "@com_datastax_cassandra_cassandra_driver_core//jar",
-        "@com_google_guava_guava//jar",
-        "@org_liquibase_liquibase_core//jar",
-        "@org_slf4j_slf4j_api//jar",
-        "@org_springframework_data_spring_cql//jar",
-        "@org_springframework_data_spring_data_cassandra//jar",
-        "@org_springframework_data_spring_data_commons//jar",
-        "@org_springframework_spring_aop//jar",
-        "@org_springframework_spring_beans//jar",
-        "@org_springframework_spring_context//jar",
-        "@org_springframework_spring_core//jar",
-        "@org_springframework_spring_expression//jar",
-        "@org_springframework_spring_tx//jar",
-        "@org_yaml_snakeyaml//jar",
-    ],
-)
 
 java_library(
     name = "org_springframework_data_spring_data_commons",
@@ -3321,23 +3211,6 @@ java_import(
     name = "dse",
     visibility = ["//visibility:public"],
     jars = ["dse.jar"],
-)
-
-java_library(
-    name = "org_apache_cassandra_cassandra_all",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_apache_cassandra_cassandra_all//jar",
-        "@net_sf_supercsv_super_csv//jar",
-        "@org_yaml_snakeyaml//jar",
-        "@com_github_jbellis_jamm//jar",
-        "@com_boundary_high_scale_lib//jar",
-        "@com_yammer_metrics_metrics_core//jar",
-        "@org_antlr_antlr_runtime//jar",
-        "@com_googlecode_concurrentlinkedhashmap_concurrentlinkedhashmap_lru//jar",
-        "@net_jpountz_lz4_lz4//jar",
-        "@com_clearspring_analytics_stream//jar",
-    ],
 )
 
 java_library(

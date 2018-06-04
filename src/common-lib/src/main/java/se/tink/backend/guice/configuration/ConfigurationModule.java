@@ -9,7 +9,6 @@ import se.tink.backend.common.config.AuthenticationConfiguration;
 import se.tink.backend.common.config.BackOfficeConfiguration;
 import se.tink.backend.common.config.CacheConfiguration;
 import se.tink.backend.common.config.CategorizationConfiguration;
-import se.tink.backend.common.config.DistributedDatabaseConfiguration;
 import se.tink.backend.common.config.FacebookConfiguration;
 import se.tink.backend.common.config.FirehoseConfiguration;
 import se.tink.backend.common.config.FlagsConfiguration;
@@ -84,8 +83,6 @@ public class ConfigurationModule extends AbstractModule {
                 .to(configuration.getNotifications().getDeepLinkPrefix());
         bindConstant().annotatedWith(Names.named("developmentMode")).to(configuration.isDevelopmentMode());
         bindConstant().annotatedWith(Names.named("productionMode")).to(!configuration.isDevelopmentMode());
-        bindConstant().annotatedWith(Names.named("distributedBatchSize"))
-                .to(configuration.getDistributedDatabase().getBatchSize());
         bindConstant().annotatedWith(Names.named("isSupplementalOnAggregation"))
                 .to(configuration.isSupplementalOnAggregation());
         bindConstant().annotatedWith(Names.named("useAggregationController"))
@@ -102,7 +99,6 @@ public class ConfigurationModule extends AbstractModule {
         bind(Cluster.class).toInstance(configuration.getCluster());
         bind(se.tink.backend.common.config.ConnectorConfiguration.class)
                 .toProvider(Providers.of(configuration.getConnector()));
-        bind(DistributedDatabaseConfiguration.class).toProvider(Providers.of(configuration.getDistributedDatabase()));
         bind(NotificationsConfiguration.class).toInstance(configuration.getNotifications());
         bind(ProviderCacheConfiguration.class).toInstance(new ProviderCacheConfiguration(5, TimeUnit.MINUTES));
         bind(SearchConfiguration.class).toProvider(Providers.of(configuration.getSearchConfiguration()));
