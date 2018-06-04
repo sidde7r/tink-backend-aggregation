@@ -1,4 +1,4 @@
-package se.tink.backend.abnamro.utils;
+package se.tink.backend.aggregation.agents.abnamro.utils;
 
 import com.google.common.collect.Sets;
 import org.junit.Test;

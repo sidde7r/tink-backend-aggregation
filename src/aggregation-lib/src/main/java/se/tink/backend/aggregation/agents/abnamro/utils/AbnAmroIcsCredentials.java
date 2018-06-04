@@ -1,4 +1,4 @@
-package se.tink.backend.abnamro.utils;
+package se.tink.backend.aggregation.agents.abnamro.utils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.Preconditions;
