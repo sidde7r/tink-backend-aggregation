@@ -10,13 +10,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.banks.seb.model.SebCreditCard;
 import se.tink.backend.aggregation.agents.banks.seb.model.SebCreditCardAccount;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.core.Location;
 import se.tink.backend.system.rpc.Transaction;
 import se.tink.backend.system.rpc.TransactionTypes;
-import se.tink.libraries.date.DateUtils;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.utils.StringUtils;
+import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class SEBAgentUtils {
@@ -144,7 +143,6 @@ public class SEBAgentUtils {
         private boolean cardPayment = false;
         protected Date date;
         protected String description;
-        private Location location;
         private String metaData;
         protected String originalDate;
         protected String originalDescription;
@@ -162,10 +160,6 @@ public class SEBAgentUtils {
 
         public String getDescription() {
             return description;
-        }
-
-        public Location getLocation() {
-            return location;
         }
 
         public String getMetaData() {

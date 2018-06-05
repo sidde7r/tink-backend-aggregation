@@ -2,10 +2,9 @@ package se.tink.backend.aggregation.agents.banks.lansforsakringar.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
-import se.tink.backend.core.PendingStringTypes;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.system.rpc.Transaction;
 import se.tink.libraries.date.DateUtils;
-import se.tink.backend.aggregation.log.AggregationLogger;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionEntity {
@@ -54,8 +53,7 @@ public class TransactionEntity {
         transaction.setDescription(text);
         transaction.setAmount(amount);
 
-        if (isPreliminary() || transaction.getDescription().equalsIgnoreCase(
-                PendingStringTypes.LANSFORSAKRINGAR.getValue())) {
+        if (isPreliminary() || transaction.getDescription().equalsIgnoreCase("PREL KORTKÖP")) {
             transaction.setPending(true);
             // This check is used to see if we have any occurence of legacy way of finding pending
             // transactions for LF

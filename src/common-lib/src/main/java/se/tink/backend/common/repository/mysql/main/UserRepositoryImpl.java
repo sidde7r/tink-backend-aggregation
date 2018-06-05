@@ -7,7 +7,6 @@ import javax.persistence.TypedQuery;
 import rx.Observable;
 import se.tink.backend.common.utils.repository.PrefixRepository;
 import se.tink.backend.common.utils.repository.RepositoryUtils;
-import se.tink.backend.core.Notification;
 import se.tink.backend.core.User;
 
 public class UserRepositoryImpl implements UserRepositoryCustom, PrefixRepository<User> {

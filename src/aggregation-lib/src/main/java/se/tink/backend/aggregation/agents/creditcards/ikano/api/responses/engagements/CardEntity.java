@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.creditcards.ikano.api.utils.IkanoParse
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.system.rpc.Transaction;
-import se.tink.backend.utils.CreditCardUtils;
+import se.tink.backend.aggregation.agents.creditcards.ikano.api.utils.CreditCardUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CardEntity {

@@ -1,11 +1,8 @@
 package se.tink.backend.aggregation.aggregationcontroller.v1.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.util.Optional;
 import se.tink.backend.core.StatisticGenerationMode;
 import se.tink.backend.core.StatisticMode;
-import se.tink.backend.core.UserData;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GenerateStatisticsAndActivitiesRequest {
@@ -13,9 +10,6 @@ public class GenerateStatisticsAndActivitiesRequest {
     private StatisticMode mode;
     private boolean userTriggered = false;
     private boolean takeReadlock = true;
-
-    @JsonIgnore
-    private Optional<UserData> userData = Optional.empty();
 
     private String userId;
     private StatisticGenerationMode statisticGenerationMode = StatisticGenerationMode.REWRITE;
@@ -25,15 +19,6 @@ public class GenerateStatisticsAndActivitiesRequest {
 
     public StatisticMode getMode() {
         return mode;
-    }
-
-    /**
-     * Get the user data. Returns an {@link Optional}, since Java might have garbage collected this.
-     * 
-     * @return an optional user data data structure.
-     */
-    public Optional<UserData> getUserData() {
-        return userData;
     }
 
     public String getUserId() {
@@ -54,16 +39,6 @@ public class GenerateStatisticsAndActivitiesRequest {
 
     public void setUserTriggered(boolean userTriggered) {
         this.userTriggered = userTriggered;
-    }
-
-    /**
-     * Store a {@link UserData} instance softly. Note that this might be garbage collected at any time.
-     * 
-     * @param userData
-     *            the data to store
-     */
-    public void setUserData(UserData userData) {
-        this.userData = Optional.of(userData);
     }
 
     public void setUserId(String userId) {

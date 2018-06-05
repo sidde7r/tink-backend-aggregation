@@ -16,21 +16,14 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import org.joda.time.DateTime;
-import se.tink.backend.rpc.abnamro.AuthenticationRequest;
-import se.tink.backend.rpc.abnamro.SubscriptionActivationRequest;
-import se.tink.libraries.abnamro.client.exceptions.AlreadySubscribedCustomerException;
 import se.tink.libraries.abnamro.client.exceptions.IcsException;
 import se.tink.libraries.abnamro.client.exceptions.IcsRetryableException;
-import se.tink.libraries.abnamro.client.exceptions.NonRetailCustomerException;
 import se.tink.libraries.abnamro.client.exceptions.SubscriptionException;
-import se.tink.libraries.abnamro.client.exceptions.UnderAge16CustomerException;
 import se.tink.libraries.abnamro.client.model.ErrorEntity;
 import se.tink.libraries.abnamro.client.model.PfmContractEntity;
 import se.tink.libraries.abnamro.client.model.RejectedContractEntity;
 import se.tink.libraries.abnamro.client.model.creditcards.CreditCardAccountContainerEntity;
 import se.tink.libraries.abnamro.client.model.creditcards.CreditCardAccountResponse;
-import se.tink.libraries.abnamro.client.rpc.CreateSubscriptionRequest;
-import se.tink.libraries.abnamro.client.rpc.CreateSubscriptionResponse;
 import se.tink.libraries.abnamro.client.rpc.ErrorResponse;
 import se.tink.libraries.abnamro.client.rpc.PfmContractResponse;
 import se.tink.libraries.abnamro.client.rpc.SubscriptionAccountsRequest;
@@ -73,94 +66,6 @@ public class IBSubscriptionClient extends IBClient {
         return metricRegistry.timer(IB_SUBSCRIPTION_CLIENT_TIMERS_METRIC
                 .label("source", source)
                 .label("outcome", outcome));
-    }
-
-    /**
-     * Initialize a subscription request against the ABN AMRO backend.
-     * <p/>
-     * Exception AlreadySubscribedCustomerException is thrown if the user already have an active/signed subscription.
-     * <p/>
-     * Exception NonRetailCustomerException is thrown if a non retail customer tried to subscribe.
-     * <p/>
-     * Multiple calls for the same customer will then return the same subscriptionId. The subscriptionId is needed
-     * when signing the Terms&Conditions.
-     */
-    public Long subscribe(AuthenticationRequest request) throws SubscriptionException {
-
-        CreateSubscriptionRequest createSubscriptionRequest = new CreateSubscriptionRequest(request.getBcNumber());
-
-        final Stopwatch watch = Stopwatch.createStarted();
-        ClientResponse clientResponse = new IBClientRequestBuilder("/pfmsubscription")
-                .withSession(request.getSessionToken())
-                .build()
-                .post(ClientResponse.class, createSubscriptionRequest);
-        watch.stop();
-
-        validateContentType(clientResponse, MediaType.APPLICATION_JSON_TYPE);
-
-        CreateSubscriptionResponse response = clientResponse.getEntity(CreateSubscriptionResponse.class);
-
-        if (response.isSuccess()) {
-            log.info(String.format("Subscribed (Customer = %s, SubscriptionId = %d)", request.getBcNumber(),
-                    response.getId()));
-            getTimer("subscribe", "success")
-                    .update(watch.elapsed(TimeUnit.NANOSECONDS), TimeUnit.NANOSECONDS);
-            return response.getId();
-        }
-
-        if (response.isCustomerAlreadySubscribed()) {
-            log.info(String.format("Already subscribed (Customer = '%s')", request.getBcNumber()));
-            getTimer("subscribe", "already_subscribed")
-                    .update(watch.elapsed(TimeUnit.NANOSECONDS), TimeUnit.NANOSECONDS);
-            throw new AlreadySubscribedCustomerException();
-        }
-
-        if (response.isNonRetailCustomer()) {
-            log.info(String.format("Non retail customer (Customer = '%s')", request.getBcNumber()));
-            getTimer("subscribe", "non_retail_customer")
-                    .update(watch.elapsed(TimeUnit.NANOSECONDS), TimeUnit.NANOSECONDS);
-            throw new NonRetailCustomerException();
-        }
-
-        if (response.isUnderAge16()) {
-            log.info(String.format("Customer under 16 years old (Customer = '%s')", request.getBcNumber()));
-            getTimer("subscribe", "under_16_years_old")
-                    .update(watch.elapsed(TimeUnit.NANOSECONDS), TimeUnit.NANOSECONDS);
-            throw new UnderAge16CustomerException();
-        }
-
-        getTimer("subscribe", "other_error")
-                .update(watch.elapsed(TimeUnit.NANOSECONDS), TimeUnit.NANOSECONDS);
-        log.error(String.format(
-                "Could not subscribe customer (Reason = '%s', Customer = '%s', HttpStatus = '%d', Errors = '%s')",
-                response.getReason().orElse("N/A"), request.getBcNumber(), clientResponse.getStatus(),
-                response.getErrorDetails()));
-
-        throw new SubscriptionException();
-    }
-
-    /**
-     * Verify if the user has an active subscription at the ABN AMRO Backend.
-     * <p/>
-     * NOT a good solution/design to do the subscribe call but there is no other option for checking if the user has
-     * an active subscription. There is no side effects of initializing a subscription since it must be signed to
-     * become active.
-     */
-    public boolean isSubscriptionActivated(SubscriptionActivationRequest request) {
-
-        try {
-            AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-            authenticationRequest.setBcNumber(request.getBcNumber());
-            authenticationRequest.setSessionToken(request.getSessionToken());
-
-            subscribe(authenticationRequest);
-        } catch (AlreadySubscribedCustomerException exception) {
-            return true;
-        } catch (SubscriptionException e) {
-            return false;
-        }
-
-        return false;
     }
 
     /**

@@ -3,8 +3,6 @@ package se.tink.backend.core;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableSet;
 import io.protostuff.Tag;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
@@ -22,9 +20,8 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.Period;
-import se.tink.libraries.serialization.utils.SerializationUtils;
-import se.tink.backend.core.enums.Gender;
 import se.tink.libraries.date.ResolutionTypes;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Embeddable
 @SuppressWarnings("serial")
@@ -32,43 +29,6 @@ import se.tink.libraries.date.ResolutionTypes;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserProfile implements Serializable {
     public static final Pattern PATTERN_BIRTH = Pattern.compile("([0-9]{4})(-([0-9]{2})(-([0-9]{2}))?)?");
-
-    public static final Pattern PATTERN_GENDER = Pattern.compile("(" + Gender.MALE + "|" + Gender.FEMALE + ")");
-    private static final ImmutableSet<String> VERBOSE_MARKETS = ImmutableSet.of();
-
-    public static UserProfile createDefault(Market market) {
-        return createDefault(market, null);
-    }
-
-    public static UserProfile createDefault(Market market, String locale) {
-        UserProfile profile = new UserProfile();
-        profile.setPeriodMode(market.getDefaultPeriodMode());
-        profile.setPeriodAdjustedDay(market.getDefaultPeriodBreak());
-
-        NotificationSettings notificationSettings = new NotificationSettings();
-
-        boolean verbose = VERBOSE_MARKETS.contains(market.getCodeAsString());
-
-        notificationSettings.setDoubleCharge(true);
-        notificationSettings.setIncome(true);
-
-        notificationSettings.setTransaction(verbose);
-        notificationSettings.setBalance(verbose);
-        notificationSettings.setBudget(verbose);
-        notificationSettings.setLargeExpense(verbose);
-        notificationSettings.setSummaryMonthly(verbose);
-        notificationSettings.setSummaryWeekly(verbose);
-        notificationSettings.setUnusualCategory(verbose);
-
-        profile.setNotificationSettings(notificationSettings);
-
-        profile.setMarket(market.getCodeAsString());
-        profile.setCurrency(market.getDefaultCurrency());
-        profile.setLocale(Strings.isNullOrEmpty(locale) ? market.getDefaultLocale() : locale);
-        profile.setTimeZone(market.getDefaultTimeZone());
-
-        return profile;
-    }
 
     @Modifiable
     @Creatable
@@ -147,16 +107,6 @@ public class UserProfile implements Serializable {
     @ApiModelProperty(name = "market", value="The primary market/country of the user.", example="SE", required = true)
     public String getMarket() {
         return market;
-    }
-
-    @JsonIgnore
-    @ApiModelProperty(name = "marketAsCode", hidden = true)
-    public Market.Code getMarketAsCode() {
-        if (market == null) {
-            return null;
-        }
-
-        return Market.Code.valueOf(market.toUpperCase());
     }
 
     public String getName() {
@@ -246,11 +196,6 @@ public class UserProfile implements Serializable {
 
     public void setFraudPersonNumber(String fraudPersonNumber) {
         this.fraudPersonNumber = fraudPersonNumber;
-    }
-
-    @ApiModelProperty(name = "periodSettings", hidden = true)
-    public PeriodSettings getPeriodSettings() {
-        return new PeriodSettings(periodMode, periodAdjustedDay);
     }
 
     public static class ProfileDateUtils {

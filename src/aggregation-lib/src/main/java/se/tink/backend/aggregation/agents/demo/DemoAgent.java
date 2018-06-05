@@ -44,7 +44,6 @@ import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.ProductType;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.common.bankid.signicat.SignicatBankIdAuthenticator;
-import se.tink.backend.common.mapper.CoreTransactionMapper;
 import se.tink.backend.common.utils.DemoDataUtils;
 import se.tink.backend.core.SwedishGiroType;
 import se.tink.backend.core.account.TransferDestinationPattern;
@@ -151,22 +150,18 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
 
     private List<Transaction> getTransactions(Account account) {
         if (demoCredentials.hasFeature(DemoUserFeature.GENERATE_TRANSACTIONS)) {
-            List<se.tink.backend.core.Transaction> transactions = DemoTransactionsGenerator
-                    .generateTransactions(demoCredentials, account);
-
-            return CoreTransactionMapper.toSystemTransaction(transactions);
+            return DemoTransactionsGenerator.generateTransactions(demoCredentials, account);
         } else if (account.getType() != AccountTypes.LOAN) {
             File accountFile = new File(userPath + File.separator + account.getBankId() + ".txt");
 
             List<Transaction> transactions;
             try {
                 if (demoCredentials != null && demoCredentials.hasFeature(DemoUserFeature.RANDOMIZE_TRANSACTIONS)) {
-                    transactions = CoreTransactionMapper.toSystemTransaction(DemoDataUtils
+                    transactions = DemoDataUtils
                             .readTransactionsWithRandomization(demoCredentials, accountFile, account,
-                                    NUMBER_OF_TRANSACTIONS_TO_RANDOMIZE));
+                                    NUMBER_OF_TRANSACTIONS_TO_RANDOMIZE);
                 } else {
-                    transactions = CoreTransactionMapper
-                            .toSystemTransaction(DemoDataUtils.readTransactions(demoCredentials, accountFile, account));
+                    transactions = DemoDataUtils.readTransactions(demoCredentials, accountFile, account);
                 }
             } catch (Exception e) {
                 throw new IllegalStateException(e);

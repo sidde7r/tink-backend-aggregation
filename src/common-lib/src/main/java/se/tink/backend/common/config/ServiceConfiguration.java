@@ -114,12 +114,6 @@ public class ServiceConfiguration extends Configuration {
     private ActivitiesConfiguration activities = new ActivitiesConfiguration();
 
     @JsonProperty
-    private AuthenticationConfiguration authentication = new AuthenticationConfiguration();
-
-    @JsonProperty
-    private CategorizationConfiguration categorization = new CategorizationConfiguration();
-
-    @JsonProperty
     private TransactionConfiguration transaction = new TransactionConfiguration();
 
     @JsonProperty
@@ -333,14 +327,6 @@ public class ServiceConfiguration extends Configuration {
 
     public void setActivities(ActivitiesConfiguration activities) {
         this.activities = activities;
-    }
-
-    public AuthenticationConfiguration getAuthentication() {
-        return authentication;
-    }
-
-    public CategorizationConfiguration getCategorization() {
-        return categorization;
     }
 
     public TransactionConfiguration getTransaction() {

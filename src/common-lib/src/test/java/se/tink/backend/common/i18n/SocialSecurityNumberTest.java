@@ -11,7 +11,6 @@ import org.junit.Test;
 import se.tink.backend.common.SwedishTimeRule;
 import se.tink.backend.core.Credentials;
 import se.tink.backend.core.CredentialsStatus;
-import se.tink.backend.core.enums.Gender;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
@@ -80,92 +79,6 @@ public class SocialSecurityNumberTest {
         } catch (ComparisonFailure comparisonFailure) {
             throw new ComparisonFailure("Is this not a demo user any more in DemoUser.java? " + demoUserWithInvalidSSN,
                     comparisonFailure.getExpected(), comparisonFailure.getActual());
-        }
-    }
-
-    @Test
-    public void testGenderFemale() throws Exception {
-        Gender gender = new SocialSecurityNumber.Sweden(pnrFemale1999).getGender();
-        Assert.assertEquals(gender, Gender.FEMALE);
-
-        gender = new SocialSecurityNumber.Sweden(pnrFemale2010).getGender();
-        Assert.assertEquals(gender, Gender.FEMALE);
-
-        gender = new SocialSecurityNumber.Sweden(pnrFemale1900).getGender();
-        Assert.assertEquals(gender, Gender.FEMALE);
-
-        gender = new SocialSecurityNumber.Sweden(pnrFemale1957).getGender();
-        Assert.assertEquals(gender, Gender.FEMALE);
-
-        gender = new SocialSecurityNumber.Sweden(pnrFemale1921).getGender();
-        Assert.assertEquals(gender, Gender.FEMALE);
-
-        gender = new SocialSecurityNumber.Sweden(pnrFemale2000).getGender();
-        Assert.assertEquals(gender, Gender.FEMALE);
-    }
-
-    @Test
-    public void testGenderMale() throws Exception {
-        Gender gender = new SocialSecurityNumber.Sweden(pnrMale1999).getGender();
-        Assert.assertEquals(gender, Gender.MALE);
-
-        gender = new SocialSecurityNumber.Sweden(pnrMale2010).getGender();
-        Assert.assertEquals(gender, Gender.MALE);
-
-        gender = new SocialSecurityNumber.Sweden(pnrMale1900).getGender();
-        Assert.assertEquals(gender, Gender.MALE);
-
-        gender = new SocialSecurityNumber.Sweden(pnrMale1957).getGender();
-        Assert.assertEquals(gender, Gender.MALE);
-
-        gender = new SocialSecurityNumber.Sweden(pnrMale1921).getGender();
-        Assert.assertEquals(gender, Gender.MALE);
-
-        gender = new SocialSecurityNumber.Sweden(pnrMale2000).getGender();
-        Assert.assertEquals(gender, Gender.MALE);
-    }
-
-    @Test
-    public void testGenderReturnsNullIfInputInvalid() throws Exception {
-        try {
-            new SocialSecurityNumber.Sweden(pnrInvalid1).getGender();
-            fail("Should have been validated");
-        } catch (RuntimeException e) {
-        }
-        try {
-            new SocialSecurityNumber.Sweden(pnrInvalid2).getGender();
-            fail("Should have been validated");
-        } catch (RuntimeException e) {
-        }
-        try {
-            new SocialSecurityNumber.Sweden(pnrInvalid3).getGender();
-            fail("Should have been validated");
-        } catch (RuntimeException e) {
-        }
-        try {
-            new SocialSecurityNumber.Sweden(pnrInvalid4).getGender();
-            fail("Should have been validated");
-        } catch (RuntimeException e) {
-        }
-        try {
-            new SocialSecurityNumber.Sweden(pnrInvalid5).getGender();
-            fail("Should have been validated");
-        } catch (RuntimeException e) {
-        }
-        try {
-            new SocialSecurityNumber.Sweden(pnrInvalid6).getGender();
-            fail("Should have been validated");
-        } catch (RuntimeException e) {
-        }
-        try {
-            new SocialSecurityNumber.Sweden(pnrInvalid7).getGender();
-            fail("Should have been validated");
-        } catch (RuntimeException e) {
-        }
-        try {
-            new SocialSecurityNumber.Sweden(pnrInvalid8).getGender();
-            fail("Should have been validated");
-        } catch (RuntimeException e) {
         }
     }
 

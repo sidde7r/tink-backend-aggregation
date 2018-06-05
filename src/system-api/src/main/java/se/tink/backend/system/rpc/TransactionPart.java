@@ -1,12 +1,8 @@
 package se.tink.backend.system.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.MoreObjects;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.Objects;
-import se.tink.backend.core.Category;
-import se.tink.backend.core.CategoryTypes;
 import se.tink.backend.utils.StringUtils;
 
 public class TransactionPart {
@@ -18,34 +14,10 @@ public class TransactionPart {
     private String id;
     private Date lastModified;
 
-    public static se.tink.backend.core.TransactionPart create(Transaction transaction, BigDecimal amount, Category category) {
-        se.tink.backend.core.TransactionPart part = new se.tink.backend.core.TransactionPart();
-        part.setAmount((transaction.getDispensableAmount().signum() < 0) ? amount.negate() : amount);
-        part.setCategoryId(category.getId());
-        part.setDate(transaction.getDate());
-        part.setLastModified(new Date());
-
-        return part;
-    }
-
     public void setCounterpart(String counterpartId, String counterpartTransactionId) {
         this.counterpartId = counterpartId;
         this.counterpartTransactionId = counterpartTransactionId;
         this.lastModified = new Date();
-    }
-
-    public boolean isValidCategory(Category category) {
-        // Invalid category: An expense category is not valid for a part with positive amount.
-        if (Objects.equals(category.getType(), CategoryTypes.EXPENSES) && amount.signum() > 0) {
-            return false;
-        }
-
-        // Invalid category: An income category is not valid for a part with negative amount.
-        if (Objects.equals(category.getType(), CategoryTypes.INCOME) && amount.signum() < 0) {
-            return false;
-        }
-
-        return true;
     }
 
     public BigDecimal getAmount() {
