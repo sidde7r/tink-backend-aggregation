@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken;
 
+import com.google.common.base.Preconditions;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
+import org.apache.http.HttpStatus;
 import org.apache.http.cookie.Cookie;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOConstants.Headers;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOConstants.Tags;
@@ -14,6 +16,8 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authentic
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.rpc.SendSmsRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.rpc.VerifyCustomerResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.rpc.AccountFetchingResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.rpc.FinalizeInvestorLoginRequest;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.rpc.InitInvestorLoginResponse;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -158,5 +162,33 @@ public class HandelsbankenNOApiClient {
     public HttpResponse extendSession() {
         return requestInSession(Url.KEEP_ALIVE.get())
                 .get(HttpResponse.class);
+    }
+
+    public InitInvestorLoginResponse initInvestorLogin() {
+        return requestInSession(Url.INIT_INVESTOR_LOGIN
+                .queryParam(HandelsbankenNOConstants.QueryParams.SHIBBOLETH_ENDPOINT.getKey(),
+                        HandelsbankenNOConstants.QueryParams.SHIBBOLETH_ENDPOINT.getValue()))
+                .post(InitInvestorLoginResponse.class);
+    }
+
+    public String customerPortalLogin(String so) {
+        URL url = HandelsbankenNOConstants.Url.CUSTOMER_PORTAL_LOGIN.get()
+                .queryParam(HandelsbankenNOConstants.UrlParameters.SO, so)
+                .queryParam(HandelsbankenNOConstants.QueryParams.INVESTOR_PROVIDER_ID.getKey(),
+                        HandelsbankenNOConstants.QueryParams.INVESTOR_PROVIDER_ID.getValue())
+                .queryParam(HandelsbankenNOConstants.QueryParams.INVESTOR_TARGET.getKey(),
+                        HandelsbankenNOConstants.QueryParams.INVESTOR_TARGET.getValue());
+
+        return requestInSession(url).get(String.class);
+    }
+
+    public void finalizeInvestorLogin(String samlResponse) {
+        HttpResponse response = client.request(HandelsbankenNOConstants.Url.INVESTOR_LOGIN.get())
+                .header(Headers.USER_AGENT)
+                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .post(HttpResponse.class, new FinalizeInvestorLoginRequest(samlResponse));
+
+        Preconditions.checkState(response.getStatus() == HttpStatus.SC_OK,
+                "Login to investor unsuccessful, could not fetch investment accounts.");
     }
 }

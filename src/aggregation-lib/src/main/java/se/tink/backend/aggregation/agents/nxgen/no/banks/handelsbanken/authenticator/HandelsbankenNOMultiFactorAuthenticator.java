@@ -112,7 +112,7 @@ public class HandelsbankenNOMultiFactorAuthenticator implements BankIdAuthentica
         FinalizeBankIdRequest finalizeBankIdRequest = FinalizeBankIdRequest.build();
         String finalizedBankIdResponse = apiClient.finalizeBankId(finalizeBankIdRequest);
         String evryToken = Jsoup.parse(finalizedBankIdResponse)
-                .getElementsByAttributeValue(Tags.EVRY_TOKEN_FIELD_KEY, Tags.EVRY_TOKEN_FIELD_VALUE)
+                .getElementsByAttributeValue(Tags.NAME, Tags.EVRY_TOKEN_FIELD_VALUE)
                 .first().val();
 
         if (evryToken == null) {

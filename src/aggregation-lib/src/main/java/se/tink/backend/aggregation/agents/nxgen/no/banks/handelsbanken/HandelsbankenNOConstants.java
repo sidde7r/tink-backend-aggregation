@@ -127,13 +127,14 @@ public class HandelsbankenNOConstants {
     public static final class Tags {
         public static final String JSESSION_ID = "JSESSIONID";
         public static final String REFERENCE_WORD = "bidm_ref-word";
-        public static final String EVRY_TOKEN_FIELD_KEY = "name";
+        public static final String NAME = "name";
         public static final String EVRY_TOKEN_FIELD_VALUE = "so";
         public static final String ACCESS_TOKEN = "accessToken";
         public static final String TRANSACTIONS = "transactions";
         public static final String NONCE = "SECESB_NONCE";
         public static final String SESSION_STAMP = "SECESB_SESSION_STAMP";
         public static final String SESSION_STAMP_VALUE = "SECESB_SESSION_STAMP_VALUE";
+        public static final String SAML_RESPONSE = "SAMLResponse";
     }
 
     public static final class InitBankIdForm {
@@ -156,6 +157,11 @@ public class HandelsbankenNOConstants {
         public static final String FORM_VALUE = "bidmobStep2Form";
         public static final String BTN = "completeBtn";
         public static final String VIEWSTATE = "javax.faces.ViewState";
+    }
+
+    public static final class FinalizeInvestorLoginForm {
+        public static final String RELAY_STATE = "RelayState";
+        public static final String SAML_RESPONSE = "SAMLResponse";
     }
 
     public static final class LogInRequestConstants {

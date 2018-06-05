@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.HandelsbankenNOAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.HandelsbankenNOMultiFactorAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.HandelsbankenNOAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.HandelsbankenNOInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.HandelsbankenNOTransactionFetcher;
 import se.tink.backend.aggregation.agents.utils.authentication.encap.EncapClient;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -75,7 +76,10 @@ public class HandelsbankenNOAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.empty();
+        return Optional.of(new InvestmentRefreshController(
+                metricRefreshController,
+                updateController,
+                new HandelsbankenNOInvestmentFetcher(apiClient)));
     }
 
     @Override
