@@ -124,7 +124,13 @@ public class SparebankenSorApiClient {
                 .get(AccountListResponse.class);
     }
 
-    public TransactionListResponse fetchTransactions(URL url) {
+    public TransactionListResponse fetchTransactions(String transactionsPath) {
+        URL url = new URL(SparebankenSorConstants.Url.TRANSACTIONS_URL_START + transactionsPath)
+                .queryParam(StaticUrlValuePairs.TRANSACTIONS_BATCH_SIZE.getKey(),
+                        StaticUrlValuePairs.TRANSACTIONS_BATCH_SIZE.getValue())
+                .queryParam(StaticUrlValuePairs.RESERVED_TRANSACTIONS.getKey(),
+                        StaticUrlValuePairs.RESERVED_TRANSACTIONS.getValue());
+
         return getRequestWithCommonHeaders(url)
                 .get(TransactionListResponse.class);
     }
