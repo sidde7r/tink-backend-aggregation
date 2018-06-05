@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import com.google.common.base.Objects;
 import org.apache.commons.lang.StringUtils;
-import se.tink.backend.common.utils.giro.validation.GiroMessageValidator;
+import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
 import se.tink.libraries.giro.validation.OcrValidationConfiguration;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

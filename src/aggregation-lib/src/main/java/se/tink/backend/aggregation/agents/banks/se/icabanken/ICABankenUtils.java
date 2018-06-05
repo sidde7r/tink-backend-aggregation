@@ -12,7 +12,7 @@ import java.util.Objects;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.model.BankEntity;
 import se.tink.libraries.i18n.Catalog;
-import se.tink.backend.common.utils.giro.validation.GiroMessageValidator;
+import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.backend.core.enums.TransferType;
 import se.tink.backend.core.transfer.SignableOperationStatuses;

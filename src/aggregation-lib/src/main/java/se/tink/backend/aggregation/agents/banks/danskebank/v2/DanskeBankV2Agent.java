@@ -80,7 +80,7 @@ import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
-import se.tink.backend.common.utils.giro.validation.GiroMessageValidator;
+import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
 import se.tink.backend.core.SwedishGiroType;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.transfer.SignableOperationStatuses;

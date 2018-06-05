@@ -12,13 +12,11 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
 import net.spy.memcached.BinaryConnectionFactory;
-import org.joda.time.DateTime;
 import se.tink.backend.common.VersionInformation;
 import se.tink.backend.common.cache.CacheClient;
 import se.tink.backend.common.cache.CacheInstrumentationDecorator;
@@ -30,7 +28,6 @@ import se.tink.backend.common.concurrency.LockFactory;
 import se.tink.backend.common.concurrency.TypedThreadPoolBuilder;
 import se.tink.backend.common.concurrency.WrappedRunnableListenableFutureTask;
 import se.tink.backend.common.config.CacheConfiguration;
-import se.tink.backend.guice.annotations.Now;
 import se.tink.backend.utils.LogUtils;
 import se.tink.libraries.metrics.HeapDumpGauge;
 import se.tink.libraries.metrics.MeterFactory;
@@ -54,18 +51,6 @@ public class CommonModule extends AbstractModule {
         bind(PrometheusExportServer.class).in(Scopes.SINGLETON);
         bind(MetricRegistry.class).in(Scopes.SINGLETON);
         bind(HeapDumpGauge.class).in(Scopes.SINGLETON);
-    }
-
-    @Provides
-    @Now
-    public DateTime provideNowDateTime() {
-        return DateTime.now();
-    }
-
-    @Provides
-    @Now
-    public Date provideNowDate() {
-        return provideNowDateTime().toDate();
     }
 
     @Provides

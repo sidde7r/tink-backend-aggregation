@@ -11,7 +11,6 @@ import org.apache.curator.framework.CuratorFramework;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
-import se.tink.backend.common.utils.CommonStringUtils;
 import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.core.FraudDetailsContent;
 import se.tink.backend.core.account.TransferDestinationPattern;
@@ -42,6 +41,26 @@ public abstract class AgentContext {
 
     public abstract MetricRegistry getMetricRegistry();
 
+    private String formatCredentialsStatusPayloadSuffix(long numberOfAccounts, long numberOfTransactions,
+            Catalog catalog) {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(Catalog.format(catalog.getPluralString("{0} account", "{0} accounts", numberOfAccounts),
+                numberOfAccounts));
+
+        if (numberOfTransactions > 0) {
+            builder.append(" ");
+            builder.append(catalog.getString("and"));
+            builder.append(" ");
+
+            builder.append(Catalog.format(
+                    catalog.getPluralString("{0} transaction", "{0} transactions", numberOfTransactions),
+                    numberOfTransactions));
+        }
+
+        return builder.toString();
+    }
+
     protected String createStatusPayload() {
         Catalog catalog = getCatalog();
 
@@ -53,7 +72,7 @@ public abstract class AgentContext {
         }
 
         return Catalog
-                .format(catalog.getString("Updating {0}..."), CommonStringUtils.formatCredentialsStatusPayloadSuffix(
+                .format(catalog.getString("Updating {0}..."), formatCredentialsStatusPayloadSuffix(
                         numberOfAccounts, numberOfTransactions, catalog));
     }
 

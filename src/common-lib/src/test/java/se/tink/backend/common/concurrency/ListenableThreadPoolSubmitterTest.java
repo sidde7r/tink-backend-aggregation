@@ -1,7 +1,5 @@
 package se.tink.backend.common.concurrency;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -11,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
-import java.util.concurrent.CancellationException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadFactory;
@@ -152,49 +149,5 @@ public class ListenableThreadPoolSubmitterTest {
             }
         }
 
-    }
-
-    @Test
-    public void testTransactionProcessorPriorityQueue() throws Exception {
-        ThreadFactory TRANSACTIONS_CPU_THREAD_FACTORY = new ThreadFactoryBuilder()
-                .setNameFormat("transaction-processor-cpu-thread-%d").build();
-        Predicate<PrioritizedRunnable> IS_HIGH_PRIORITY_RUNNABLE = input ->
-                input.priority <= PrioritizedRunnable.HIGH_PRIORITY;
-
-        BlockingQueue<WrappedRunnableListenableFutureTask<PrioritizedRunnable, ?>> cpuThreadPoolQueue = PriorityExecutorQueueFactory
-                .cappedPriorityQueue(t -> t.getDelegate().priority, 10,
-                        Predicates.not(IS_HIGH_PRIORITY_RUNNABLE));
-
-        ListenableThreadPoolExecutor<PrioritizedRunnable> cpuThreadPool = ListenableThreadPoolExecutor.builder(
-                cpuThreadPoolQueue,
-                new TypedThreadPoolBuilder(10, TRANSACTIONS_CPU_THREAD_FACTORY))
-                .build();
-
-        final ArrayList<ListenableFuture> futures = Lists.newArrayList();
-
-        final Random random = new Random();
-        for (int i = 0; i < 100000; i++) {
-            final PrioritizedRunnable processRunnable = new PrioritizedRunnable(random.nextInt(1) > 0 ?
-                    PrioritizedRunnable.HIGH_PRIORITY : PrioritizedRunnable.LOW_PRIORITY,
-                    () -> {
-                        if (random.nextInt(1) > 0) {
-                            throw new RuntimeException("Expected.");
-                        }
-                    });
-
-            final ListenableFuture<?> result = cpuThreadPool.execute(processRunnable);
-            futures.add(result);
-        }
-
-        int i = 0;
-        for (ListenableFuture future : futures) {
-            try {
-                future.get();
-            } catch (ExecutionException e) {
-                // Ok.
-            } catch (CancellationException e) {
-                // Ok.
-            }
-        }
     }
 }

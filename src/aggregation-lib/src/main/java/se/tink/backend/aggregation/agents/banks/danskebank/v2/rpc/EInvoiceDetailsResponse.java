@@ -12,7 +12,7 @@ import com.google.common.collect.Lists;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
-import se.tink.backend.common.utils.giro.lookup.GiroParser;
+import se.tink.backend.aggregation.agents.banks.danskebank.v2.helpers.GiroParser;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.backend.core.Amount;
 import se.tink.backend.core.enums.TransferType;

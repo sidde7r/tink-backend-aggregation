@@ -13,9 +13,7 @@ import org.apache.curator.framework.CuratorFramework;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import se.tink.backend.aggregation.client.AggregationServiceFactory;
 import se.tink.backend.client.ServiceFactory;
-import se.tink.backend.common.admin.ApplicationDrainMode;
 import se.tink.backend.common.cache.CacheClient;
-import se.tink.backend.common.client.AggregationControllerCommonClient;
 import se.tink.backend.common.concurrency.ListenableThreadPoolExecutor;
 import se.tink.backend.common.config.DatabaseConfiguration;
 import se.tink.backend.common.config.ServiceConfiguration;
@@ -38,7 +36,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
     private static final LogUtils log = new LogUtils(ServiceContext.class);
 
     private final boolean isUseAggregationController;
-    private final AggregationControllerCommonClient aggregationControllerCommonClient;
     private final AggregationServiceFactory aggregationServiceFactory;
     private AnnotationConfigApplicationContext applicationContext;
     private CacheClient cacheClient;
@@ -48,7 +45,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
     private final ServiceFactory serviceFactory;
     private final SystemServiceFactory systemServiceFactory;
     private LoadingCache<Class<?>, Object> DAOs;
-    private ApplicationDrainMode applicationDrainMode;
     private final boolean supplementalOnAggregation;
     private final boolean isAggregationCluster;
     private final boolean isProvidersOnAggregation;
@@ -63,13 +59,11 @@ public class ServiceContext implements Managed, RepositoryFactory {
 
     @Inject
     public ServiceContext(@Named("useAggregationController") boolean isUseAggregationController,
-            AggregationControllerCommonClient aggregationControllerCommonClient,
             final ServiceConfiguration configuration, MetricRegistry metricRegistry,
             CacheClient cacheClient, CuratorFramework zookeeperClient,
             ServiceFactory serviceFactory, SystemServiceFactory systemServiceFactory,
             AggregationServiceFactory aggregationServiceFactory,
             EncryptionServiceFactory encryptionServiceFactory,
-            ApplicationDrainMode applicationDrainMode,
             @Named("executor") ListenableThreadPoolExecutor<Runnable> executorService,
             @Named("trackingExecutor") ListenableThreadPoolExecutor<Runnable> trackingExecutorService,
             @Named("isSupplementalOnAggregation") boolean supplementalOnAggregation,
@@ -77,7 +71,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
             @Named("isProvidersOnAggregation") boolean isProvidersOnAggregation) {
 
         this.isUseAggregationController = isUseAggregationController;
-        this.aggregationControllerCommonClient = aggregationControllerCommonClient;
         this.serviceFactory = serviceFactory;
         this.systemServiceFactory = systemServiceFactory;
         this.aggregationServiceFactory = aggregationServiceFactory;
@@ -85,7 +78,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
         this.zookeeperClient = zookeeperClient;
         this.configuration = configuration;
         this.metricRegistry = metricRegistry;
-        this.applicationDrainMode = applicationDrainMode;
         this.encryptionServiceFactory = encryptionServiceFactory;
         this.executorService = executorService;
         this.trackingExecutorService = trackingExecutorService;
@@ -259,20 +251,12 @@ public class ServiceContext implements Managed, RepositoryFactory {
         return encryptionServiceFactory;
     }
 
-    public ApplicationDrainMode getApplicationDrainMode() {
-        return applicationDrainMode;
-    }
-
     public boolean isSupplementalOnAggregation() {
         return supplementalOnAggregation;
     }
 
     public boolean isUseAggregationController() {
         return isUseAggregationController;
-    }
-
-    public AggregationControllerCommonClient getAggregationControllerCommonClient() {
-        return aggregationControllerCommonClient;
     }
 
     public boolean isAggregationCluster() {

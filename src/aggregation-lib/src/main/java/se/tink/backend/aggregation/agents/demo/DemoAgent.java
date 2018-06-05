@@ -44,7 +44,7 @@ import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.ProductType;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.common.bankid.signicat.SignicatBankIdAuthenticator;
-import se.tink.backend.common.utils.DemoDataUtils;
+import se.tink.backend.aggregation.agents.utils.demo.DemoDataUtils;
 import se.tink.backend.core.SwedishGiroType;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.application.RefreshApplicationParameterKey;
