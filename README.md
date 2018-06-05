@@ -1,4 +1,4 @@
-# Tink Backend
+# Tink Backend Aggregation
 
 ## Getting started
 
@@ -47,7 +47,7 @@ Check [trobule shooting list](./TROUBLESHOOTING.md) when you're failed in some s
 2. Find the IP-address of your workstation
 
 3. Switch to custom mode in the app by going to the start view (logged out)
-    * Android: Not implemented yet. 
+    * Android: Not implemented yet.
     * iOS: Press the "Get Started / Kom igång" button with two fingers for 5 seconds.
 
 4. Input your workstation ip into the custom input dialog
@@ -309,7 +309,7 @@ Start the development environment by running `setup-minikube.sh` from `tink-infr
 # Connect Docker to the docker server running inside Minikube
 eval $(minikube docker-env);
 
-# Build docker images with Bazel 
+# Build docker images with Bazel
 bazel build docker:bundle.tar && docker load -i bazel-bin/docker/bundle.tar;
 
 # Render and apply a Chart
