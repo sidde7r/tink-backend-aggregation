@@ -11,15 +11,10 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource.Builder;
 import com.sun.jersey.api.client.filter.ClientFilter;
 import java.time.LocalDate;
-import java.time.Month;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
@@ -234,36 +229,26 @@ public class AvanzaV2Agent extends AbstractAgent implements RefreshableItemExecu
     }
 
     private void refreshAccounts() {
-        switch (request.getCredentials().getType()) {
-        case PASSWORD:
-            String passwordAuthenticationSession = ensureValidPasswordSession();
-            updateInvestmentAccounts(passwordAuthenticationSession);
-            break;
-        case MOBILE_BANKID:
+        if (request.getCredentials().getType() == CredentialsTypes.MOBILE_BANKID) {
             session.getAuthenticationSessions().forEach(bankIDAuthenticationSession -> {
                 ensureValidBankIDSession(bankIDAuthenticationSession);
                 updateInvestmentAccounts(bankIDAuthenticationSession);
             });
-            break;
-        default:
-            log.error("Credential type %s is not supported");
+        } else {
+            log.error(String.format("Credential type %s is not supported",
+                    request.getCredentials().getType().name()));
         }
     }
 
     private void refreshTransactions() {
-        switch (request.getCredentials().getType()) {
-        case PASSWORD:
-            String passwordAuthenticationSession = ensureValidPasswordSession();
-            updateAccountsAndTransactions(passwordAuthenticationSession);
-            break;
-        case MOBILE_BANKID:
+        if (request.getCredentials().getType() == CredentialsTypes.MOBILE_BANKID) {
             session.getAuthenticationSessions().forEach(bankIDAuthenticationSession -> {
                 ensureValidBankIDSession(bankIDAuthenticationSession);
                 updateAccountsAndTransactions(bankIDAuthenticationSession);
             });
-            break;
-        default:
-            log.error("Credential type %s is not supported");
+        } else {
+            log.error(String.format("Credential type %s is not supported",
+                    request.getCredentials().getType().name()));
         }
     }
 
@@ -277,19 +262,6 @@ public class AvanzaV2Agent extends AbstractAgent implements RefreshableItemExecu
             refreshTransactions();
             break;
         }
-    }
-
-    private String ensureValidPasswordSession() {
-        String passwordAuthenticationSession = Preconditions.checkNotNull(
-                credentials.getSensitivePayload(AUTHENTICATION_SESSION_PAYLOAD));
-
-        if (accountOverview == null) {
-            accountOverview = fetchOverview(passwordAuthenticationSession);
-        }
-
-        Preconditions.checkNotNull(accountOverview);
-        Preconditions.checkNotNull(accountOverview.getAccounts());
-        return passwordAuthenticationSession;
     }
 
     private void ensureValidBankIDSession(String bankIDAuthenticationSession) {
@@ -468,16 +440,18 @@ public class AvanzaV2Agent extends AbstractAgent implements RefreshableItemExecu
 
     @Override
     public boolean login() throws AuthenticationException, AuthorizationException {
-        // Try to fetch the account overview if we have an existing session.
-        if (request.getProvider().getCredentialsType() == CredentialsTypes.PASSWORD) {
-            accountOverview = fetchOverview(credentials.getSensitivePayload(AUTHENTICATION_SESSION_PAYLOAD));
-        }
-
         // Authenticate the user if the session isn't valid.
         if (accountOverview != null) {
             return true;
         } else {
-            return authenticateBankId();
+            if (request.getCredentials().getType() == CredentialsTypes.MOBILE_BANKID) {
+                return authenticateBankId();
+            } else {
+                String msg = String.format("Credential type %s is not supported",
+                        request.getCredentials().getType().name());
+                log.error(msg);
+                throw new IllegalStateException(msg);
+            }
         }
     }
 
