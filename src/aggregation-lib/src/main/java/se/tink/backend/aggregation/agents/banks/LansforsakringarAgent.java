@@ -68,7 +68,6 @@ import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.LoanDetai
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.LoanDetailsRequest;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.LoanEntity;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.LoanListResponse;
-import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.LoginRequest;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.LoginResponse;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.OverviewEntity;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.PaymentAccountsResponse;
@@ -92,7 +91,6 @@ import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.UpdatePay
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -308,24 +306,6 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
         }
 
         throw BankIdError.TIMEOUT.exception();
-    }
-
-    private LoginResponse authenticatePassword() throws LoginException {
-        ClientResponse clientLoginResponse = createPostRequest(PASSWORD_LOGIN_URL,
-                new LoginRequest(credentials.getField(Field.Key.USERNAME), credentials.getField(Field.Key.PASSWORD)));
-
-        int status = clientLoginResponse.getStatus();
-
-        if (status == Status.UNAUTHORIZED.getStatusCode()) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
-        }
-
-        if (status != Status.OK.getStatusCode()) {
-            throw new IllegalStateException(
-                    String.format("#login-refactoring - LF - Login failed with unknown status: %s", status));
-        }
-
-        return clientLoginResponse.getEntity(LoginResponse.class);
     }
 
     private Builder createClientRequest(String url) {
@@ -1294,14 +1274,11 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
         LoginResponse loginResponse;
 
         switch (credentials.getType()) {
-        case PASSWORD:
-            loginResponse = authenticatePassword();
-            break;
         case MOBILE_BANKID:
             loginResponse = authenticateBankId();
             break;
         default:
-            throw new IllegalStateException("Not implemented");
+            throw new IllegalStateException("Credentials type not implemented");
         }
 
         Preconditions.checkNotNull(loginResponse);
