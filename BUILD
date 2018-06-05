@@ -309,53 +309,6 @@ java_library(
 )
 
 java_library(
-    name = "aggregation-controller-api",
-    srcs = glob(["src/aggregation-controller-api/src/main/**/*.java"]),
-    data = [
-        "etc/development-minikube-aggregation-controller-server.yml",
-        "//data",
-    ],
-    deps = [
-        ":common-lib",
-        ":aggregation-api",
-        ":main-api",
-
-        "//src/libraries/http:http-annotations",
-        "//src/api-annotations",
-        "//src/libraries/jersey_utils:jersey-utils",
-        "//src/libraries/account_identifier:account-identifier",
-        "//src/libraries/http_client:http-client",
-        "//src/libraries/demo_credentials:demo-credentials",
-        "//src/libraries/discovery:discovery",
-        "//src/libraries/discovered_web_service:discovered_web_service",
-        "//src/libraries/endpoint_configuration:endpoint_configuration",
-        "//src/libraries/jersey_guice:jersey-guice",
-        "//src/libraries/generic_application:generic-application",
-        "//src/libraries/serialization_utils:serialization-utils",
-        "//src/libraries/strings",
-        "//src/libraries/uuid",
-        "//src/libraries/date",
-
-        "//third_party:io_dropwizard_dropwizard_core",
-        "//third_party:com_sun_jersey_jersey_client",
-        "//third_party:com_google_inject_guice",
-        "//third_party:com_google_http_client_google_http_client",
-        "//third_party:com_google_inject_extensions_guice_multibindings",
-        "//third_party:com_google_guava_guava",
-        "//third_party:org_apache_curator_curator_framework",
-        "//third_party:org_apache_curator_curator_x_discovery",
-        "//third_party:commons_codec_commons_codec",
-        "//third_party:commons_beanutils_commons_beanutils",
-        "//third_party:org_hibernate_hibernate_annotations",
-        "//third_party:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
-        "//third_party:org_assertj_assertj_core",
-        "//third_party:org_modelmapper_modelmapper",
-        "//third_party:joda_time_joda_time",
-    ],
-)
-
-
-java_library(
     name = "aggregation-lib",
     srcs = glob(["src/aggregation-lib/src/main/**/*.java"]),
     data = [
