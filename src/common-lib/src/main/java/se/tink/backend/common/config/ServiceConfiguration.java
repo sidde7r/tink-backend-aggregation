@@ -1,5 +1,6 @@
 package se.tink.backend.common.config;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.Lists;
 import io.dropwizard.Configuration;
@@ -8,6 +9,7 @@ import se.tink.libraries.abnamro.config.AbnAmroConfiguration;
 import se.tink.libraries.cluster.Cluster;
 import se.tink.libraries.endpoints.EndpointsConfiguration;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ServiceConfiguration extends Configuration {
     @JsonProperty
     private List<String> administrativeMode = Lists.newArrayList();
