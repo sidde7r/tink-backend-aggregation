@@ -3,11 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOConstants;
 
-public class FinalizeInvestorLoginRequest extends MultivaluedMapImpl {
+public class FinalizeAksjerLoginRequest extends MultivaluedMapImpl {
 
-    public FinalizeInvestorLoginRequest(String samlResponse) {
-        add(HandelsbankenNOConstants.FinalizeInvestorLoginForm.RELAY_STATE,
-                HandelsbankenNOConstants.QueryParamPairs.INVESTOR_TARGET.getValue());
+    public FinalizeAksjerLoginRequest(String samlResponse) {
         add(HandelsbankenNOConstants.FinalizeInvestorLoginForm.SAML_RESPONSE, samlResponse);
     }
 }

@@ -23,7 +23,13 @@ public class HandelsbankenNOConstants {
         KEEP_ALIVE(getNetbankEndpoint("/secesb/rest/esb/v1/keepalive")),
         INIT_INVESTOR_LOGIN(getNetbankEndpoint("/secesb/rest/era/ssotoken/so")),
         CUSTOMER_PORTAL_LOGIN(getCustomerPortalEndpoint("/idp/profile/SAML2/Unsolicited/SSO")),
-        INVESTOR_LOGIN(getInvestorEndpoint("/saml/sp/profile/post/acs"));
+        INVESTOR_LOGIN(getInvestorEndpoint("/saml/sp/profile/post/acs")),
+        INVESTMENTS_OVERVIEW(getInvestorEndpoint("/vip/json/0/investors/{" + UrlParameters.DOB + "}")),
+        POSITIONS(getInvestorEndpoint("/vip/json/0/positions/csdAccounts/{" + UrlParameters.ACCOUNT_NUMBER + "}")),
+        AKSJER_LOGIN(getAksjerEndpoint("/server/rest/auth/login/saml")),
+        AKSJER_OVERVIEW(getAksjerEndpoint("/server/rest/me")),
+        AKSJER_AVAILABLE_BALANCE(getAksjerEndpoint("/server/rest/customers/{" + UrlParameters.DOB + "}/balance/{"
+                + UrlParameters.CUSTOMER_ID + "}"));
 
         private URL url;
 
@@ -41,6 +47,10 @@ public class HandelsbankenNOConstants {
 
         public static String getInvestorEndpoint(String uri) {
             return UrlParameters.INVESTOR_HOST + uri;
+        }
+
+        public static String getAksjerEndpoint(String uri) {
+            return UrlParameters.AKSJER_HOST + uri;
         }
 
         @Override
@@ -67,22 +77,31 @@ public class HandelsbankenNOConstants {
         public static final String HB_NETBANK_HOST = "https://nettbank.handelsbanken.no";
         public static final String CUSTOMER_PORTAL_HOST = "https://customerportal.edb.com";
         public static final String INVESTOR_HOST = "https://investor.vps.no";
+        public static final String AKSJER_HOST = "https://aksjer.handelsbanken.no";
         public static final String USER_ID = "userId";
         public static final String PHONE_NUMBER = "phoneNumber";
         public static final String SESSION_1 = "e1s1";
         public static final String SESSION_2 = "e1s2";
-        public static final String SO = "so";
+        public static final String DOB = "dateOfBirth";
+        public static final String ACCOUNT_NUMBER = "accountNumber";
+        public static final String CUSTOMER_ID = "customerId";
     }
 
-    public enum QueryParams {
+    public static final class QueryParams {
+        public static final String SO = "so";
+        public static final String DATE = "date";
+    }
+
+    public enum QueryParamPairs {
         SHIBBOLETH_ENDPOINT("endpoint", "shibboleth"),
         INVESTOR_PROVIDER_ID("providerId", "https://investor.vps.no:443"),
+        AKSJER_PROVIDER_ID("providerId", "https://aksjer.handelsbanken.no/"),
         INVESTOR_TARGET("target", "/vip/auth/sts?vipLandingPage=fund&avtalehaver=09055");
 
         private final String key;
         private final String value;
 
-        QueryParams(String key, String value) {
+        QueryParamPairs(String key, String value) {
             this.key = key;
             this.value = value;
         }
@@ -185,6 +204,12 @@ public class HandelsbankenNOConstants {
         public static final String SAVING = "saving";
         public static final String YOUTH_SAVING = "bsu";
         public static final String SPENDING = "spending";
+    }
+
+    public static final class InvestmentConstants {
+        public static final String STOCK_PORTAL = "stock portal";
+        public static final String INVESTOR_PORTAL = "investor";
+        public static final String HB_NORWAY = "HB-NORWAY";
     }
 
     public static final class EncapConstants {

@@ -40,7 +40,6 @@ public class HandelsbankenNOAgent extends NextGenerationAgent {
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
-        client.setDebugOutput(true);
     }
 
     @Override
@@ -79,7 +78,7 @@ public class HandelsbankenNOAgent extends NextGenerationAgent {
         return Optional.of(new InvestmentRefreshController(
                 metricRefreshController,
                 updateController,
-                new HandelsbankenNOInvestmentFetcher(apiClient)));
+                new HandelsbankenNOInvestmentFetcher(apiClient, credentials.getField(Field.Key.USERNAME))));
     }
 
     @Override

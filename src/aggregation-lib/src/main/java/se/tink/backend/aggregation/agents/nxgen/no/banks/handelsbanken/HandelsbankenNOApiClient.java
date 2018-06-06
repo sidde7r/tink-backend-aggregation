@@ -16,13 +16,20 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authentic
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.rpc.SendSmsRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.rpc.VerifyCustomerResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.rpc.AccountFetchingResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.rpc.AksjerOverviewResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.rpc.AvailableBalanceResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.rpc.FinalizeAksjerLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.rpc.FinalizeInvestorLoginRequest;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.rpc.InitInvestorLoginResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.rpc.InitInvestmentsLoginResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.rpc.InvestmentsOverviewResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.rpc.PositionsListEntity;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.date.DateUtils;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class HandelsbankenNOApiClient {
     private final TinkHttpClient client;
@@ -34,13 +41,16 @@ public class HandelsbankenNOApiClient {
         this.sessionStorage = sessionStorage;
     }
 
+    private RequestBuilder requestWithUserAgent(URL url) {
+        return client.request(url).header(Headers.USER_AGENT);
+    }
+
     private RequestBuilder requestInSession(URL url){
-        return client.request(url)
+        return requestWithUserAgent(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
                 // at this moment, any random 8 numeric/alphabets works, but they might change later
                 .header(HandelsbankenNOConstants.Header.REQUEST_ID, "11111111")
-                .header(Headers.USER_AGENT)
                 .header(Headers.X_EVRY_CLIENT)
                 .header(HandelsbankenNOConstants.Header.EVRY_TOKEN, sessionStorage.get(Tags.ACCESS_TOKEN))
                 .cookie(sessionStorage.get(Tags.SESSION_STAMP), sessionStorage.get(Tags.SESSION_STAMP_VALUE))
@@ -164,31 +174,74 @@ public class HandelsbankenNOApiClient {
                 .get(HttpResponse.class);
     }
 
-    public InitInvestorLoginResponse initInvestorLogin() {
+    public InitInvestmentsLoginResponse initInvestmentLogin() {
         return requestInSession(Url.INIT_INVESTOR_LOGIN
-                .queryParam(HandelsbankenNOConstants.QueryParams.SHIBBOLETH_ENDPOINT.getKey(),
-                        HandelsbankenNOConstants.QueryParams.SHIBBOLETH_ENDPOINT.getValue()))
-                .post(InitInvestorLoginResponse.class);
+                .queryParam(HandelsbankenNOConstants.QueryParamPairs.SHIBBOLETH_ENDPOINT.getKey(),
+                        HandelsbankenNOConstants.QueryParamPairs.SHIBBOLETH_ENDPOINT.getValue()))
+                .post(InitInvestmentsLoginResponse.class);
     }
 
-    public String customerPortalLogin(String so) {
+    public String investorCustomerPortalLogin(String so) {
         URL url = HandelsbankenNOConstants.Url.CUSTOMER_PORTAL_LOGIN.get()
-                .queryParam(HandelsbankenNOConstants.UrlParameters.SO, so)
-                .queryParam(HandelsbankenNOConstants.QueryParams.INVESTOR_PROVIDER_ID.getKey(),
-                        HandelsbankenNOConstants.QueryParams.INVESTOR_PROVIDER_ID.getValue())
-                .queryParam(HandelsbankenNOConstants.QueryParams.INVESTOR_TARGET.getKey(),
-                        HandelsbankenNOConstants.QueryParams.INVESTOR_TARGET.getValue());
+                .queryParam(HandelsbankenNOConstants.QueryParams.SO, so)
+                .queryParam(HandelsbankenNOConstants.QueryParamPairs.INVESTOR_PROVIDER_ID.getKey(),
+                        HandelsbankenNOConstants.QueryParamPairs.INVESTOR_PROVIDER_ID.getValue())
+                .queryParam(HandelsbankenNOConstants.QueryParamPairs.INVESTOR_TARGET.getKey(),
+                        HandelsbankenNOConstants.QueryParamPairs.INVESTOR_TARGET.getValue());
+
+        return requestInSession(url).get(String.class);
+    }
+
+    public String aksjerCustomerPortalLogin(String so) {
+        URL url = HandelsbankenNOConstants.Url.CUSTOMER_PORTAL_LOGIN.get()
+                .queryParam(HandelsbankenNOConstants.QueryParams.SO, so)
+                .queryParam(HandelsbankenNOConstants.QueryParamPairs.AKSJER_PROVIDER_ID.getKey(),
+                        HandelsbankenNOConstants.QueryParamPairs.AKSJER_PROVIDER_ID.getValue());
 
         return requestInSession(url).get(String.class);
     }
 
     public void finalizeInvestorLogin(String samlResponse) {
-        HttpResponse response = client.request(HandelsbankenNOConstants.Url.INVESTOR_LOGIN.get())
-                .header(Headers.USER_AGENT)
+        HttpResponse response = requestWithUserAgent(HandelsbankenNOConstants.Url.INVESTOR_LOGIN.get())
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(HttpResponse.class, new FinalizeInvestorLoginRequest(samlResponse));
 
         Preconditions.checkState(response.getStatus() == HttpStatus.SC_OK,
                 "Login to investor unsuccessful, could not fetch investment accounts.");
+    }
+
+    public void finalizeAksjerLogin(String samlResponse) {
+        HttpResponse response = requestWithUserAgent(Url.AKSJER_LOGIN.get())
+                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .post(HttpResponse.class, new FinalizeAksjerLoginRequest(samlResponse));
+
+        Preconditions.checkState(response.getStatus() == HttpStatus.SC_OK,
+                "Login to stock portal unsuccessful, could not fetch investment accounts.");
+    }
+
+    public InvestmentsOverviewResponse fetchInvestmentsOverview(String username) {
+        return requestWithUserAgent(HandelsbankenNOConstants.Url.INVESTMENTS_OVERVIEW.get()
+                    .parameter(HandelsbankenNOConstants.UrlParameters.DOB, username))
+                .get(InvestmentsOverviewResponse.class);
+    }
+
+    public AksjerOverviewResponse getAksjerOverview() {
+        return requestWithUserAgent(HandelsbankenNOConstants.Url.AKSJER_OVERVIEW.get())
+                .get(AksjerOverviewResponse.class);
+    }
+
+    public AvailableBalanceResponse getAksjerAvailableBalance(String username, String customerId) {
+        return requestWithUserAgent(HandelsbankenNOConstants.Url.AKSJER_AVAILABLE_BALANCE.get()
+                    .parameter(HandelsbankenNOConstants.UrlParameters.DOB, username)
+                    .parameter(HandelsbankenNOConstants.UrlParameters.CUSTOMER_ID, customerId))
+                .get(AvailableBalanceResponse.class);
+    }
+
+    public PositionsListEntity getPositions(String csdAccountNumber) {
+        return requestWithUserAgent(HandelsbankenNOConstants.Url.POSITIONS.get()
+                    .parameter(HandelsbankenNOConstants.UrlParameters.ACCOUNT_NUMBER, csdAccountNumber))
+                .queryParam(HandelsbankenNOConstants.QueryParams.DATE,
+                        ThreadSafeDateFormat.FORMATTER_DAILY.format(DateUtils.getToday()))
+                .get(PositionsListEntity.class);
     }
 }
