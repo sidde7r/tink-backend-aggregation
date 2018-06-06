@@ -78,7 +78,8 @@ filegroup(
 filegroup(
     name = "aggregation-test",
     srcs = glob([
-        "aggregation/**"
+        "aggregation/**",
+        "demo/**"
     ]),
     visibility = ["//visibility:public"],
 )
