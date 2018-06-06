@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.Field;
-import se.tink.backend.common.utils.DemoDataUtils;
+import se.tink.backend.aggregation.agents.utils.demo.DemoDataUtils;
 import se.tink.backend.core.Amount;
 import se.tink.credentials.demo.DemoCredentials;
 

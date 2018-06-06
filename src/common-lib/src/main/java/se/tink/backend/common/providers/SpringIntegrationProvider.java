@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import se.tink.backend.common.ServiceContext;
 import se.tink.backend.guice.annotations.Centralized;
-import se.tink.backend.guice.annotations.Distributed;
 
 public class SpringIntegrationProvider<T> implements Provider<T> {
     private final static Logger log = LoggerFactory.getLogger(SpringIntegrationProvider.class);

@@ -111,6 +111,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.general.GeneralUtils;
 import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuilder;
+import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
 import se.tink.backend.aggregation.log.ClientFilterFactory;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
@@ -128,14 +129,12 @@ import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
 import se.tink.backend.common.config.SEBMortgageIntegrationConfiguration;
 import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.backend.common.i18n.SocialSecurityNumber;
-import se.tink.backend.common.utils.giro.validation.GiroMessageValidator;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.application.RefreshApplicationParameterKey;
 import se.tink.backend.core.enums.TransferType;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.core.transfer.TransferPayloadType;
-import se.tink.backend.seb.utils.SEBUtils;
 import se.tink.backend.system.rpc.AccountFeatures;
 import se.tink.backend.system.rpc.Instrument;
 import se.tink.backend.system.rpc.Loan;
@@ -404,6 +403,10 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
         });
     }
 
+    private String getDepotNumberForHolding(String depotNumber) {
+        return depotNumber.replaceAll("^01[0]*", "");
+    }
+
     private void updateDepotAccounts() {
         Optional<SebResponse> sebResponse = fetchDepots();
 
@@ -435,7 +438,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
             Account account = depot.toAccount(depotIdAccountNumberMappings.get(depot.getId()));
             Portfolio portfolio = depot.toPortfolio();
 
-            String depotNumber = SEBUtils.getDepotNumberForHolding(depot.getId());
+            String depotNumber = getDepotNumberForHolding(depot.getId());
             if (depotNumber.isEmpty()) {
                 return;
             }

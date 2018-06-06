@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.BankEntity;
-import se.tink.backend.common.utils.giro.validation.GiroMessageValidator;
+import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
 import se.tink.backend.core.enums.TransferType;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.account.AccountIdentifier;

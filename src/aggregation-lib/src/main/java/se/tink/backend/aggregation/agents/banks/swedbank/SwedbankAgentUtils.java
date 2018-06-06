@@ -4,7 +4,7 @@ import com.google.common.base.CharMatcher;
 import com.google.common.base.Joiner;
 import java.util.Optional;
 import com.google.common.base.Splitter;
-import se.tink.backend.common.utils.giro.validation.GiroMessageValidator;
+import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
 import se.tink.libraries.giro.validation.OcrValidationConfiguration;
 import se.tink.backend.core.transfer.Transfer;
 

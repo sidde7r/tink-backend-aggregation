@@ -4,10 +4,8 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -74,44 +72,5 @@ public class ListenableThreadPoolExecutorTest {
             Assert.assertTrue(ExecutorServiceUtils.shutdownExecutor("identifier", executorService, 10, TimeUnit
                     .SECONDS));
         }
-    }
-
-    @Test
-    public void testPriorityQueueCase() throws Exception {
-        int MAX_QUEUED = 10;
-        int CONCURRENCY = 3;
-        int SUBMISSIONS = 10000;
-        ThreadFactory statisticsThreadFactory = new ThreadFactoryBuilder()
-                .setNameFormat("transaction-processor-thread-%d")
-                .build();
-
-        BlockingQueue<WrappedRunnableListenableFutureTask<PrioritizedRunnable, ?>> executorQueue = PriorityExecutorQueueFactory
-                .cappedPriorityQueue(t -> t.getDelegate().priority, MAX_QUEUED,
-                        com.google.common.base.Predicates.<PrioritizedRunnable>alwaysFalse());
-
-
-        ListenableThreadPoolExecutor<PrioritizedRunnable> executor = ListenableThreadPoolExecutor.builder(
-                executorQueue,
-                new TypedThreadPoolBuilder(CONCURRENCY, statisticsThreadFactory))
-                .build();
-
-        final Random random = new Random(42);
-        final AtomicInteger successfulExecutions = new AtomicInteger();
-        int failedSubmissions = 0;
-        for (int i = 0; i < SUBMISSIONS; i++) {
-            try {
-                executor.execute(new PrioritizedRunnable(
-                        random.nextInt() < 0 ? PrioritizedRunnable.LOW_PRIORITY : PrioritizedRunnable.HIGH_PRIORITY,
-                        successfulExecutions::incrementAndGet));
-            } catch (RejectedExecutionException e) {
-                failedSubmissions++;
-            }
-        }
-
-        boolean wasGraceful = ExecutorServiceUtils.shutdownExecutor("testExecutor", executor, 1, TimeUnit.SECONDS);
-        Assert.assertTrue(wasGraceful);
-
-        Assert.assertEquals(SUBMISSIONS - failedSubmissions, successfulExecutions.get());
-
     }
 }
