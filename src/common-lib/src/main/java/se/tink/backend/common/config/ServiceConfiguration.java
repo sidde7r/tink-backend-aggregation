@@ -2,18 +2,13 @@ package se.tink.backend.common.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.Lists;
 import io.dropwizard.Configuration;
-import java.util.List;
 import se.tink.libraries.abnamro.config.AbnAmroConfiguration;
 import se.tink.libraries.cluster.Cluster;
 import se.tink.libraries.endpoints.EndpointsConfiguration;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ServiceConfiguration extends Configuration {
-    @JsonProperty
-    private List<String> administrativeMode = Lists.newArrayList();
-
     @JsonProperty
     private AbnAmroConfiguration abnAmro = new AbnAmroConfiguration();
 
@@ -69,10 +64,6 @@ public class ServiceConfiguration extends Configuration {
 
     public AbnAmroConfiguration getAbnAmro() {
         return abnAmro;
-    }
-
-    public List<String> getAdministrativeMode() {
-        return administrativeMode;
     }
 
     public AggregationWorkerConfiguration getAggregationWorker() {
