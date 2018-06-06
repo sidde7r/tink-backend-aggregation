@@ -40,13 +40,6 @@ endpoints:
   fasttext:
     url: http://localhost:9090/
 
-taskQueue:
-  workers: 1
-  hosts:
-    - 172.16.42.2:9092
-  firehoseEnabled: true
-  mode: ENABLED
-  highPrioTopic: true
 cluster: TINK
 
 flags:
@@ -67,8 +60,6 @@ flags:
         - RESIDENCE_VALUATION
     TINK_EMPLOYEE:
         - RESIDENCE_VALUATION
-
-administrativeMode: ["ccccccelgiev", "ccccccflgngc"]
 
 developmentMode: true
 
@@ -95,29 +86,8 @@ creditsafe:
   username: TINKTESTIN
   password: cU7356rwx
 
-idcontrol:
-  dryRunDataRefresh: true
-  daysToFetchChangesFor: 2
-
-scheduler:
-  enabled: true
-
 coordination:
   hosts: 172.16.42.2:2181
-
-search:
-  clusterName: elasticsearch
-  hosts: 172.16.42.2:9300
-  enabled: true
-
-facebook:
-  appId: 1482993025252778
-  appSecret: 6f7ba2566960534e999ee20d775a5235
-
-twilio:
-  accountSid: ASK_FH
-  authToken: ASK_FH
-  enabled: false
 
 notifications:
   startHourOfDay: 9
@@ -131,10 +101,6 @@ notifications:
           password: AgtZfUBuvQhF9Cr9nHsbqx]RBLfat2CH
       google:
         apiKey: AIzaSyBbD-9t5m3EnL9U8vxD-3qrg9OKUrVZ92g
-
-analytics:
-  intercom:
-    enabled: false
 
 aggregationWorker:
   collectorSubscriptionKey: ASK_JOHANNES
@@ -156,14 +122,6 @@ integrations:
       username: sys_tink
       password: bytkod
       signBaseUrl: https://testsign.sbab.se
-  booli:
-    callerId: tink_app
-    privateKey: PRIVATE_KEY_PLACEHOLDER
-
-reprocessTransactions:
-  categoryCodes: ["expenses:misc.uncategorized", "income:other.other"]
-  description:
-  includeModifiedByUser: false
 
 transfers:
   enabled: true
@@ -185,13 +143,3 @@ logging:
       threshold: ALL
       timeZone: Europe/Stockholm
       logFormat: '%magenta(%date{"yyyy-MM-dd HH:mm:ss,SSSXXX"}) %highlight(%level) [%thread] R:%X{requestId} %blue(%logger) %message%n%xException'
-
-authentication:
-  methods:
-    - BASIC
-    - FACEBOOK
-    - BEARER
-    - SESSION
-
-categorization:
-  usePatchedFastText: true
