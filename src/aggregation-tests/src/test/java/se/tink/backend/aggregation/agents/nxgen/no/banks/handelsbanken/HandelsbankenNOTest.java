@@ -12,6 +12,11 @@ import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.utils.CurrencyConstants;
 
+/**
+ * This test makes use of an active handelsbanken session. Log in to the Handelsbanken app and go to the
+ * last https://nettbank.handelsbanken.no/secesb/rest/era/accounts request. That request will contain the values
+ * for the session storage. These values are only valid as long as the session is active.
+ */
 public class HandelsbankenNOTest extends NextGenerationAgentTest<HandelsbankenNOAgent> {
 
     public HandelsbankenNOTest() {
@@ -36,11 +41,15 @@ public class HandelsbankenNOTest extends NextGenerationAgentTest<HandelsbankenNO
     // the value after '=' of previous field, usually in a '1-1' format
     private final String SESSION_STAMP_VALUE = "";
 
+    // username of user to execute test for
+    private final String USERNAME = "";
+
     @Test
     public void testAccount() throws Exception {
         Credentials credentials = new Credentials();
         credentials.setType(CredentialsTypes.PASSWORD);
         credentials.setStatus(CredentialsStatus.UPDATING);
+        credentials.setUsername(USERNAME);
         Agent agent = createAgent(createRefreshInformationRequest(credentials));
         HandelsbankenNOAgent hbAgent = (HandelsbankenNOAgent) agent;
         hbAgent.populateSessionStorage(EVRY_TOKEN_KEY, EVRY_TOKEN_VALUE);
