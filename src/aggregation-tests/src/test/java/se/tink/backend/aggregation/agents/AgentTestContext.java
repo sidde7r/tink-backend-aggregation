@@ -1,26 +1,22 @@
 package se.tink.backend.aggregation.agents;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import javax.ws.rs.core.MediaType;
 import org.apache.curator.framework.CuratorFramework;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
-import se.tink.backend.aggregation.utils.GraphicalStdInForIntelliJ;
 import se.tink.backend.core.DocumentContainer;
-import se.tink.backend.core.Field;
 import se.tink.backend.core.FraudDetailsContent;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.application.ApplicationState;
@@ -33,11 +29,12 @@ import se.tink.backend.system.rpc.UpdateDocumentResponse;
 import se.tink.backend.utils.LogUtils;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.MetricRegistry;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class AgentTestContext extends AgentContext {
     private static final LogUtils log = new LogUtils(AgentTestContext.class);
     private static final ObjectMapper mapper = new ObjectMapper();
+    private static final TinkHttpClient supplementalClient = new TinkHttpClient(null, null);
+    private static final String SUPPLEMENTAL_TEST_API = "http://127.0.0.1:7357/api/v1/supplemental";
 
     static {
         mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z"));
@@ -128,27 +125,9 @@ public class AgentTestContext extends AgentContext {
             return null;
         }
 
-        List<Field> fields = SerializationUtils.deserializeFromString(
-                                                        credentials.getSupplementalInformation(),
-                                                        new TypeReference<ArrayList<Field>>() {});
-        Map<String, String> answers = new HashMap<String, String>();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        for (Field field : fields) {
-            GraphicalStdInForIntelliJ.setMessage(
-                    String.format(
-                            "Supplimental informaton\nDescription: %s\nHelp: %s\nNumeric: %s\nValue: %s",
-                            field.getDescription(),
-                            field.getHelpText(),
-                            field.isNumeric(),
-                            field.getValue()));
-            try {
-                answers.put(field.getName(), reader.readLine());
-            } catch (Exception e) {
-                log.error("Caught exception while waiting for supplemental information", e);
-                return null;
-            }
-        }
-        return SerializationUtils.serializeToString(answers);
+        return supplementalClient.request(SUPPLEMENTAL_TEST_API)
+                .type(MediaType.APPLICATION_JSON)
+                .post(String.class, credentials.getSupplementalInformation());
     }
 
     @Override
