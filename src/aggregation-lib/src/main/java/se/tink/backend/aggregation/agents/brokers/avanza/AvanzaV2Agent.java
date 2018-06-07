@@ -11,15 +11,10 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource.Builder;
 import com.sun.jersey.api.client.filter.ClientFilter;
 import java.time.LocalDate;
-import java.time.Month;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
@@ -33,7 +28,6 @@ import se.tink.backend.aggregation.agents.brokers.avanza.v2.model.AccountOvervie
 import se.tink.backend.aggregation.agents.brokers.avanza.v2.model.LoginEntity;
 import se.tink.backend.aggregation.agents.brokers.avanza.v2.model.Session;
 import se.tink.backend.aggregation.agents.brokers.avanza.v2.model.TransactionEntity;
-import se.tink.backend.aggregation.agents.brokers.avanza.v2.rpc.AuthenticateUsernameRequest;
 import se.tink.backend.aggregation.agents.brokers.avanza.v2.rpc.BankIdResponse;
 import se.tink.backend.aggregation.agents.brokers.avanza.v2.rpc.BondMarketInfoResponse;
 import se.tink.backend.aggregation.agents.brokers.avanza.v2.rpc.CertificateMarketInfoResponse;
@@ -52,10 +46,8 @@ import se.tink.backend.aggregation.agents.brokers.avanza.v2.rpc.WarrantMarketInf
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -77,7 +69,6 @@ public class AvanzaV2Agent extends AbstractAgent implements RefreshableItemExecu
     private static final String URL_ACCOUNT_OVERVIEW = BASE_URL + "/_mobile/account/overview";
     private static final String URL_ACCOUNT_DETAILS = BASE_URL + "/_mobile/account/%s/overview";
     private static final String URL_INVESTMENT_TRANSACTIONS = BASE_URL + "/_mobile/account/transactions/%s/options?from=%s&includeInstrumentsWithNoOrderbook=1&to=%s";
-    private static final String URL_PASSWORD_AUTHENTICATE = BASE_URL + "/_api/authentication/sessions/username";
     private static final String URL_BANK_ID_COLLECT = BASE_URL + "/_api/authentication/sessions/bankid/%s";
     private static final String URL_BANK_ID_INIT = BASE_URL + "/_api/authentication/sessions/bankid";
     private static final String URL_POSITIONS = BASE_URL + "/_mobile/account/%s/positions?autoPortfolio=1&sort=name";
@@ -87,7 +78,6 @@ public class AvanzaV2Agent extends AbstractAgent implements RefreshableItemExecu
     private static final String AUTHENTICATION_SESSION_PAYLOAD = "authenticationSession";
     private static final String SECURITY_TOKEN_HEADER = "X-SecurityToken";
     private static final String FROM_DATE_FOR_INVESTMENT_TRANSACTIONS = "2000-01-01";
-    private static final int SESSION_TIMEOUT = 240;
 
     private String authenticationToken;
     private Client client;
@@ -198,31 +188,6 @@ public class AvanzaV2Agent extends AbstractAgent implements RefreshableItemExecu
         throw BankIdError.TIMEOUT.exception();
     }
 
-    private boolean authenticatePassword() throws LoginException {
-        credentials.setSensitivePayload(AUTHENTICATION_SESSION_PAYLOAD, null);
-
-        AuthenticateUsernameRequest request = new AuthenticateUsernameRequest(SESSION_TIMEOUT);
-
-        request.setUsername(credentials.getField(Field.Key.USERNAME));
-        request.setPassword(credentials.getField(Field.Key.PASSWORD));
-
-        ClientResponse clientResponse = createClientRequest(
-                URL_PASSWORD_AUTHENTICATE).post(
-                ClientResponse.class, request);
-
-        int status = clientResponse.getStatus();
-
-        if (status == Status.OK.getStatusCode()) {
-            CreateSessionResponse sessionResponse = clientResponse.getEntity(CreateSessionResponse.class);
-
-            credentials.setSensitivePayload(AUTHENTICATION_SESSION_PAYLOAD, sessionResponse.getAuthenticationSession());
-            return true;
-        }
-
-        Preconditions.checkState(status == Status.UNAUTHORIZED.getStatusCode());
-        throw LoginError.INCORRECT_CREDENTIALS.exception();
-    }
-
     private Builder createClientRequest(String url) {
         return createClientRequest(url, credentials.getSensitivePayload(AUTHENTICATION_SESSION_PAYLOAD));
     }
@@ -264,36 +229,26 @@ public class AvanzaV2Agent extends AbstractAgent implements RefreshableItemExecu
     }
 
     private void refreshAccounts() {
-        switch (request.getCredentials().getType()) {
-        case PASSWORD:
-            String passwordAuthenticationSession = ensureValidPasswordSession();
-            updateInvestmentAccounts(passwordAuthenticationSession);
-            break;
-        case MOBILE_BANKID:
+        if (request.getCredentials().getType() == CredentialsTypes.MOBILE_BANKID) {
             session.getAuthenticationSessions().forEach(bankIDAuthenticationSession -> {
                 ensureValidBankIDSession(bankIDAuthenticationSession);
                 updateInvestmentAccounts(bankIDAuthenticationSession);
             });
-            break;
-        default:
-            log.error("Credential type %s is not supported");
+        } else {
+            log.error(String.format("Credential type %s is not supported",
+                    request.getCredentials().getType().name()));
         }
     }
 
     private void refreshTransactions() {
-        switch (request.getCredentials().getType()) {
-        case PASSWORD:
-            String passwordAuthenticationSession = ensureValidPasswordSession();
-            updateAccountsAndTransactions(passwordAuthenticationSession);
-            break;
-        case MOBILE_BANKID:
+        if (request.getCredentials().getType() == CredentialsTypes.MOBILE_BANKID) {
             session.getAuthenticationSessions().forEach(bankIDAuthenticationSession -> {
                 ensureValidBankIDSession(bankIDAuthenticationSession);
                 updateAccountsAndTransactions(bankIDAuthenticationSession);
             });
-            break;
-        default:
-            log.error("Credential type %s is not supported");
+        } else {
+            log.error(String.format("Credential type %s is not supported",
+                    request.getCredentials().getType().name()));
         }
     }
 
@@ -307,19 +262,6 @@ public class AvanzaV2Agent extends AbstractAgent implements RefreshableItemExecu
             refreshTransactions();
             break;
         }
-    }
-
-    private String ensureValidPasswordSession() {
-        String passwordAuthenticationSession = Preconditions.checkNotNull(
-                credentials.getSensitivePayload(AUTHENTICATION_SESSION_PAYLOAD));
-
-        if (accountOverview == null) {
-            accountOverview = fetchOverview(passwordAuthenticationSession);
-        }
-
-        Preconditions.checkNotNull(accountOverview);
-        Preconditions.checkNotNull(accountOverview.getAccounts());
-        return passwordAuthenticationSession;
     }
 
     private void ensureValidBankIDSession(String bankIDAuthenticationSession) {
@@ -496,46 +438,18 @@ public class AvanzaV2Agent extends AbstractAgent implements RefreshableItemExecu
         }
     }
 
-    private LocalDate calculateEarliestDateToFetchFor() {
-        final ZoneId stockholmZoneId = TimeZone.getTimeZone("Europe/Stockholm").toZoneId();
-
-        Date updated = credentials.getUpdated();
-        if (updated == null) {
-            return LocalDate.of(1999, Month.JANUARY, 1); // Avanza was founded 1999, no need to fetch further...
-        }
-
-        LocalDate now = LocalDate.now(stockholmZoneId);
-        LocalDate updatedAsLocalDate = updated.toInstant()
-                .atZone(stockholmZoneId)
-                .toLocalDate();
-
-        // Temporary fix to ensure that we fetch enough transaction to get isin for all instruments for all users
-        // -- START --
-        if (updatedAsLocalDate.isBefore(LocalDate.of(2017, Month.NOVEMBER, 1))) {
-            return LocalDate.of(1999, Month.JANUARY, 1); // Avanza was founded 1999, no need to fetch further...
-        }
-        // -- END --
-
-        long monthsBetween = ChronoUnit.MONTHS.between(updatedAsLocalDate, now);
-
-        return now.minusMonths(monthsBetween);
-    }
-    
     @Override
     public boolean login() throws AuthenticationException, AuthorizationException {
-        // Try to fetch the account overview if we have an existing session.
-        if (request.getProvider().getCredentialsType() == CredentialsTypes.PASSWORD) {
-            accountOverview = fetchOverview(credentials.getSensitivePayload(AUTHENTICATION_SESSION_PAYLOAD));
-        }
-
         // Authenticate the user if the session isn't valid.
         if (accountOverview != null) {
             return true;
         } else {
-            if (request.getProvider().getCredentialsType() == CredentialsTypes.PASSWORD) {
-                return authenticatePassword();
-            } else {
+            if (request.getCredentials().getType() == CredentialsTypes.MOBILE_BANKID) {
                 return authenticateBankId();
+            } else {
+                String msg = String.format("Credential type %s is not supported",
+                        request.getCredentials().getType().name());
+                throw new IllegalStateException(msg);
             }
         }
     }
