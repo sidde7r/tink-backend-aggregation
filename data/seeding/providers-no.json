@@ -698,7 +698,7 @@
       "passwordHelpText": "",
       "payload": "",
       "popular": false,
-      "multiFactor": false,
+      "multiFactor": true,
       "transactional": true,
       "fields": [
         {
