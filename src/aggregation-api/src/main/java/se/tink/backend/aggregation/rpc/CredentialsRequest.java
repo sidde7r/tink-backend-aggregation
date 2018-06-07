@@ -14,6 +14,7 @@ public abstract class CredentialsRequest {
     private Provider provider;
     private User user;
     private String userDeviceId;
+    private List<Account> accounts;
 
     // TODO: Remove with new AgentWorker
     protected boolean create;
@@ -102,8 +103,6 @@ public abstract class CredentialsRequest {
     private static String sha1ToHexString(String s) {
         return new String(Hex.encodeHex(StringUtils.hashSHA1(s)));
     }
-
-    private List<Account> accounts;
 
     public List<Account> getAccounts() {
         return accounts;
