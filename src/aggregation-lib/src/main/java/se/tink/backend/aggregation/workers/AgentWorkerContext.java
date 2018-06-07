@@ -272,11 +272,14 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             }
         });
 
+        List<String> accountIds = accounts.stream()
+                .map(Account::getId)
+                .collect(Collectors.toList());
 
         if (useAggregationController) {
             se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest processAccountsRequest =
                     new se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest();
-            processAccountsRequest.setAccountIds(Lists.newArrayList(Iterables.transform(accounts, Account::getId)));
+            processAccountsRequest.setAccountIds(accountIds);
             processAccountsRequest.setCredentialsId(credentials.getId());
             processAccountsRequest.setUserId(request.getUser().getId());
 
@@ -289,8 +292,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         } else {
             ProcessAccountsRequest processAccountsRequest = new ProcessAccountsRequest();
 
-            processAccountsRequest
-                    .setAccountIds(Lists.newArrayList(Iterables.transform(accounts, Account::getId)));
+            processAccountsRequest.setAccountIds(accountIds);
             processAccountsRequest.setCredentialsId(credentials.getId());
             processAccountsRequest.setUserId(request.getUser().getId());
 
