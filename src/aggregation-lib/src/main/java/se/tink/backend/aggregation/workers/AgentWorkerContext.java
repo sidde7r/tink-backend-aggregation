@@ -52,6 +52,7 @@ import se.tink.backend.core.FraudDetailsContent;
 import se.tink.backend.core.StatisticMode;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.application.ApplicationState;
+import se.tink.backend.core.enums.TinkFeature;
 import se.tink.backend.core.product.ProductPropertyKey;
 import se.tink.backend.core.signableoperation.SignableOperation;
 import se.tink.backend.core.transfer.Transfer;
@@ -339,6 +340,17 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         List<Transaction> transactions = Lists.newArrayList();
 
         for (String accountId : transactionsByAccount.keySet()) {
+            Optional<Account> account = request.getAccounts().stream()
+                    .filter(a -> Objects.equals(a.getId(), accountId))
+                    .findFirst();
+
+            if (account.isPresent() && shouldNotAggregateDataForAccount(account.get())) {
+                // Account marked to not aggregate data from.
+                // Preferably we would not even download the data but this makes sure
+                // we don't process further or store the account's data.
+                continue;
+            }
+
             List<Transaction> accountTransactions = transactionsByAccount.get(accountId);
 
             if (!credentials.isDemoCredentials()) {
@@ -550,8 +562,25 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         requestSupplementalInformation(credentials, wait);
     }
 
+    private boolean shouldNotAggregateDataForAccount(Account account) {
+        Optional<Account> existingAccount = request.getAccounts().stream()
+                .filter(a -> Objects.equals(a.getBankId(), account.getBankId()))
+                .findFirst();
+
+        return existingAccount.isPresent() &&
+                existingAccount.get().getAccountExclusion().excludedFeatures.contains(TinkFeature.AGGREGATION);
+    }
+
     @Override
     public Account updateAccount(Account account, AccountFeatures accountFeatures) {
+
+        if (shouldNotAggregateDataForAccount(account)) {
+            // Account marked to not aggregate data from.
+            // Preferably we would not even download the data but this makes sure
+            // we don't process further or store the account's data.
+            return account;
+        }
+
         account.setCredentialsId(request.getCredentials().getId());
         account.setUserId(request.getCredentials().getUserId());
 
@@ -711,6 +740,14 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
     @Override
     public Account updateTransactions(final Account account, List<Transaction> transactions) {
+
+        if (shouldNotAggregateDataForAccount(account)) {
+            // Account marked to not aggregate data from.
+            // Preferably we would not even download the data but this makes sure
+            // we don't process further or store the account's data.
+            return account;
+        }
+
         final Account updatedAccount = updateAccount(account);
 
         for (Transaction transaction : transactions) {
