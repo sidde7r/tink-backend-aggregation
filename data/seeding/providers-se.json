@@ -33,7 +33,7 @@
         },
         {
             "name": "americanexpress",
-            "className": "nxgen.se.creditcards.amex.AmericanExpressSEAgent",
+            "className": "nxgen.se.creditcards.amex.v62.AmericanExpressV62SEAgent",
             "credentialsType": "PASSWORD",
             "currency": "SEK",
             "displayName": "American Express",
@@ -1171,7 +1171,7 @@
         },
         {
             "name": "saseurobonusamericanexpress",
-            "className": "nxgen.se.creditcards.amex.AmericanExpressSEAgent",
+            "className": "nxgen.se.creditcards.amex.v62.AmericanExpressV62SEAgent",
             "credentialsType": "PASSWORD",
             "currency": "SEK",
             "displayName": "SAS EuroBonus American Express",
