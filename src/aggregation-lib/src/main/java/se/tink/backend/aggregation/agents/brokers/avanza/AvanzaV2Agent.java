@@ -449,7 +449,6 @@ public class AvanzaV2Agent extends AbstractAgent implements RefreshableItemExecu
             } else {
                 String msg = String.format("Credential type %s is not supported",
                         request.getCredentials().getType().name());
-                log.error(msg);
                 throw new IllegalStateException(msg);
             }
         }
