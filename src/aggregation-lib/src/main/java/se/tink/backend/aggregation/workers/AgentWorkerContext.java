@@ -1,10 +1,8 @@
 package se.tink.backend.aggregation.workers;
 
-import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sun.jersey.api.client.UniformInterfaceException;
@@ -17,6 +15,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -27,11 +26,11 @@ import org.apache.curator.framework.recipes.barriers.DistributedBarrier;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.AgentEventListener;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.aggregation.rpc.CreateCredentialsRequest;
@@ -329,7 +328,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
     private Optional<Account> getAccount(String accountId) {
         return accounts.stream()
-                .filter(a -> Objects.equal(a.getId(), accountId))
+                .filter(a -> Objects.equals(a.getId(), accountId))
                 .findFirst();
     }
 
@@ -522,7 +521,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                     //       and this comment.
                     // updateCredentialsExcludingSensitiveInformation(credentials);
 
-                    if (Objects.equal(supplementalInformation, "null")) {
+                    if (Objects.equals(supplementalInformation, "null")) {
                         log.info("Supplemental information request was cancelled by client (returned null)");
                         supplementalInformation = null;
                     }
@@ -691,7 +690,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
             String payload;
 
-            if (Objects.equal(serviceContext.getConfiguration().getCluster(), Cluster.ABNAMRO)) {
+            if (Objects.equals(serviceContext.getConfiguration().getCluster(), Cluster.ABNAMRO)) {
                 payload = statusPayload;
             } else {
                 StringBuffer buffer = new StringBuffer();
