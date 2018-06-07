@@ -1,12 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants.StaticUrlValuePairs;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.entities.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.entitites.TransactionEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
@@ -17,27 +20,26 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SparebankenSorTransactionFetcher implements TransactionFetcher {
     private final SparebankenSorApiClient apiClient;
-    private final SessionStorage sessionStorage;
 
-    public SparebankenSorTransactionFetcher(SparebankenSorApiClient apiClient, SessionStorage sessionStorage) {
+    public SparebankenSorTransactionFetcher(SparebankenSorApiClient apiClient) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
     }
 
     @Override
     public List<AggregationTransaction> fetchTransactionsFor(Account account) {
-        Map transactionUrlsByAccount = SerializationUtils.deserializeFromString(
-                sessionStorage.get(SparebankenSorConstants.Storage.ACCOUNT_TRANSACTION_URLS), Map.class);
 
-        String urlEndPart = (String) transactionUrlsByAccount.get(account.getBankIdentifier());
+        Map<String, String> tempStorage = account.getTemporaryStorage();
+        // if no transactions link, return empty
+        if (!tempStorage.containsKey(SparebankenSorConstants.Storage.TEMPORARY_STORAGE_LINKS)) {
+            return Collections.emptyList();
+        }
 
-        URL url = new URL(SparebankenSorConstants.Url.TRANSACTIONS_URL_START + urlEndPart)
-                .queryParam(StaticUrlValuePairs.TRANSACTIONS_BATCH_SIZE.getKey(),
-                            StaticUrlValuePairs.TRANSACTIONS_BATCH_SIZE.getValue())
-                .queryParam(StaticUrlValuePairs.RESERVED_TRANSACTIONS.getKey(),
-                            StaticUrlValuePairs.RESERVED_TRANSACTIONS.getValue());
+        HashMap<String, LinkEntity> links = SerializationUtils.deserializeFromString(
+                tempStorage.get(SparebankenSorConstants.Storage.TEMPORARY_STORAGE_LINKS),
+                new TypeReference<HashMap<String, LinkEntity>>() {});
 
-        List<TransactionEntity> transactions = apiClient.fetchTransactions(url).getTransactions();
+        List<TransactionEntity> transactions = apiClient.
+                fetchTransactions(links.get(SparebankenSorConstants.Storage.TRANSACTIONS).getHref()).getTransactions();
 
         if (transactions == null){
             return Collections.emptyList();

@@ -14,27 +14,15 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SparebankenSorTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
     private final SparebankenSorApiClient apiClient;
-    private final SessionStorage sessionStorage;
 
-    public SparebankenSorTransactionalAccountFetcher(SparebankenSorApiClient apiClient, SessionStorage sessionStorage) {
+    public SparebankenSorTransactionalAccountFetcher(SparebankenSorApiClient apiClient) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
     }
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         AccountListResponse accountListResponse = apiClient.fetchAccounts();
-        saveTransactionUrlsToSessionStorage(accountListResponse.getAccountList());
+
         return accountListResponse.toTinkAccounts();
-    }
-
-    private void saveTransactionUrlsToSessionStorage(List<AccountEntity> accountEntityList) {
-        Map<String, String> transactionUrlsByAccountId = accountEntityList.stream()
-                .collect(Collectors.toMap(
-                        AccountEntity::getId,
-                        ae -> ae.getLinks().get(SparebankenSorConstants.Storage.TRANSACTIONS).getHref())
-                );
-
-        sessionStorage.put(SparebankenSorConstants.Storage.ACCOUNT_TRANSACTION_URLS, transactionUrlsByAccountId);
     }
 }

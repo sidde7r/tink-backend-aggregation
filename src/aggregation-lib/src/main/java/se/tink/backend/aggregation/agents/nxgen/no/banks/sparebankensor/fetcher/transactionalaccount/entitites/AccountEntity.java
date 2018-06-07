@@ -64,6 +64,7 @@ public class AccountEntity {
                Amount.inNOK(accountBalance.getAvailableBalance()))
                .setName(getProperties().getAlias())
                .setBankIdentifier(id)
+               .addToTemporaryStorage(SparebankenSorConstants.Storage.TEMPORARY_STORAGE_LINKS, links)
                .build();
     }
 

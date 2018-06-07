@@ -52,6 +52,7 @@ public class SparebankenSorAgent extends NextGenerationAgent {
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
+
         AddRefererFilter filter = new AddRefererFilter();
         client.addFilter(filter);
         client.addMessageWriter(new NoEscapeOfBackslashMessageBodyWriter(FirstLoginRequest.class));
@@ -79,8 +80,8 @@ public class SparebankenSorAgent extends NextGenerationAgent {
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
         return Optional.of(
                 new TransactionalAccountRefreshController(metricRefreshController, updateController,
-                        new SparebankenSorTransactionalAccountFetcher(apiClient, sessionStorage),
-                        new SparebankenSorTransactionFetcher(apiClient, sessionStorage)));
+                        new SparebankenSorTransactionalAccountFetcher(apiClient),
+                        new SparebankenSorTransactionFetcher(apiClient)));
     }
 
     @Override
