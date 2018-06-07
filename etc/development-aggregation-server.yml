@@ -61,10 +61,6 @@ serviceAuthentication:
   serverTokens:
     - devtoken
 
-administrativeMode: ["ccccccelgiev", "ccccccflgngc"]
-
-requireInjection: false
-
 developmentMode: true
 
 distributedDatabase:
@@ -81,9 +77,6 @@ database:
   persistenceUnitName: tink-aggregation-api
   generateDdl: true
 
-scheduler:
-  enabled: false
-
 creditsafe:
   username: TINKTESTIN
   password: cU7356rwx
@@ -94,15 +87,6 @@ coordination:
 cache:
   hosts: 172.16.42.2:11211
   enabled: true
-
-search:
-  clusterName: elasticsearch
-  hosts: 172.16.42.2:9300
-  enabled: true
-
-analytics:
-  intercom:
-    enabled: false
 
 aggregationWorker:
   collectorSubscriptionKey: ASK_JOHANNES
@@ -144,6 +128,3 @@ logging:
       archivedFileCount: 5
       timeZone: Europe/Stockholm
       logFormat: '%date{"yyyy-MM-dd HH:mm:ss,SSSXXX"} %level [%thread] R:%X{requestId} %logger %message%n%xException'
-
-template:
-  enabled: false
