@@ -147,5 +147,7 @@ public class SwedbankBaseConstants {
         public static final String COLLECT_BANKID_CANCELLED = "Could not confirm transfer with BankID signing.";
         public static final String NOT_EXACTLY_ONE_UNSIGNED_TRANSFER = "Number of unsigned transfers not equal to one - Cancelling to not sign more than one transfer.";
         public static final String UNSIGNED_TRANFERS = "Existing unsigned transfers - Cancelling to not sign more than one transfer.";
+        public static final String EINVOICE_NO_UNIQUE_ID = "Could not get unique id from transfer object.";
+        public static final String EINVOICE_NO_MATCH = "Could not find a matching eInvoice.";
     }
 }

@@ -237,6 +237,16 @@ public class SwedbankDefaultApiClient {
                 RegisterTransferResponse.class);
     }
 
+    public RegisterTransferResponse registerEInvoice(double amount, String message,
+            SwedbankTransferHelper.ReferenceType referenceType, Date date, String eInvoiceId,
+            String destinationAccountId, String sourceAccountId) {
+        return makeMenuItemRequest(
+                SwedbankBaseConstants.MenuItemKey.REGISTER_PAYMENT,
+                RegisterPaymentRequest.create(amount, message, referenceType, date, destinationAccountId,
+                        sourceAccountId),
+                RegisterTransferResponse.class);
+    }
+
     public RegisteredTransfersResponse registeredTransfers() {
         return makeMenuItemRequest(
                 SwedbankBaseConstants.MenuItemKey.PAYMENT_REGISTERED,
