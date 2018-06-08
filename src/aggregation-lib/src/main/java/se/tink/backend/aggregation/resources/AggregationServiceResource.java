@@ -88,7 +88,8 @@ public class AggregationServiceResource implements AggregationService, Managed {
             return ClusterInfo.createForAggregationCluster(clusterId,
                     Preconditions.checkNotNull(configuration.getHost()),
                     Preconditions.checkNotNull(configuration.getApiToken()),
-                    Preconditions.checkNotNull(configuration.getClientCertificate()));
+                    Preconditions.checkNotNull(configuration.getClientCertificate()),
+                    configuration.isDisableRequestCompression());
         } else {
             return ClusterInfo.createForLegacyAggregation(clusterId);
         }

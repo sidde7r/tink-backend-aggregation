@@ -19,6 +19,7 @@ public class ClusterHostConfiguration {
     private String apiToken;
     @Type(type = "text")
     private String base64EncodedClientCertificate;
+    private boolean disableRequestCompression;
 
     public String getClusterId() {
         return clusterId;
@@ -38,5 +39,9 @@ public class ClusterHostConfiguration {
 
     public byte[] getClientCertificate() {
         return BASE64.decode(base64EncodedClientCertificate);
+    }
+
+    public boolean isDisableRequestCompression() {
+        return disableRequestCompression;
     }
 }
