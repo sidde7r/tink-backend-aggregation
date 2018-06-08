@@ -12,8 +12,13 @@ public class JerseyUtils {
         return new InterContainerJerseyClientFactory(getPinnedCertificates(pinnedCertificates)).build();
     }
 
-    public static Client getClusterClient(byte[] clientCertificate, String clientCertificatePassword) {
+    public static Client getClusterClient(byte[] clientCertificate, String clientCertificatePassword,
+            boolean disableRequestCompression) {
         InterClusterJerseyClientFactory interClusterJerseyClientFactory = new InterClusterJerseyClientFactory();
+
+        if (disableRequestCompression) {
+            interClusterJerseyClientFactory.disableRequestCompression();
+        }
 
         if (Objects.nonNull(clientCertificate) && clientCertificate.length != 0) {
             interClusterJerseyClientFactory

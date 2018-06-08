@@ -64,7 +64,8 @@ public class AggregationControllerAggregationClient {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(clusterInfo.getAggregationControllerHost()),
                 "Aggregation controller host was not set.");
 
-        Client client = JerseyUtils.getClusterClient(clusterInfo.getClientCertificate(), EMPTY_PASSWORD);
+        Client client = JerseyUtils.getClusterClient(clusterInfo.getClientCertificate(), EMPTY_PASSWORD,
+                clusterInfo.isDisableRequestCompression());
         JerseyUtils.registerAPIAccessToken(client, clusterInfo.getApiToken());
 
         return WebResourceFactory.newResource(
