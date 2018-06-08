@@ -71,12 +71,14 @@ public class IngCardReaderAuthenticationController implements MultiFactorAuthent
     }
 
     private Field getChallengeField(String challenge) {
-        String helpText = catalog.getString("Insert your bank card in your ING Card Reader and "
-                + "press SIGN. Enter your PIN and press OK, then enter the challenge and press "
-                + "SIGN. Enter the challenge response in the field below.");
+        String helpText = catalog.getString(
+                  "1. Insert your bank card into ![](https://Card-Reader_ING@2x.png) the ING Card Reader.\n"
+                + "2. Press ![](https://BT_Sign_ING@2x.png)\n"
+                + "3. Enter your PIN and press ![](https://BT_OK_ING@2x.png)\n"
+                + "4. Enter the following number");
 
         Field challengeField = new Field();
-        challengeField.setDescription(catalog.getString("Challenge"));
+        challengeField.setDescription(getChallengeFormattedWithSpaces(challenge));
         challengeField.setName("challenge");
         challengeField.setHelpText(helpText);
         challengeField.setValue(getChallengeFormattedWithSpaces(challenge));
@@ -85,9 +87,13 @@ public class IngCardReaderAuthenticationController implements MultiFactorAuthent
     }
 
     private Field getChallengeResponseField() {
+        String helpText = catalog.getString(
+                  "5. press ![](https://BT_Sign_ING@2x.png.png)\n"
+                + "6. Enter the e-signature");
         Field challengeResponse = new Field();
-        challengeResponse.setDescription(catalog.getString("Challenge response"));
+        challengeResponse.setDescription(catalog.getString("Input"));
         challengeResponse.setName(CHALLENGE_RESPONSE_FIELD_KEY);
+        challengeResponse.setHelpText(helpText);
         challengeResponse.setNumeric(true);
 
         return challengeResponse;
