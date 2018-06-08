@@ -3207,12 +3207,6 @@ java_library(
     ],
 )
 
-java_import(
-    name = "dse",
-    visibility = ["//visibility:public"],
-    jars = ["dse.jar"],
-)
-
 java_library(
     name = "com_clearspring_analytics_stream",
     visibility = ["//visibility:public"],
