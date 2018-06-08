@@ -45,15 +45,15 @@
           "description": "Card ID",
           "name": "cardId",
           "numeric": true,
-          "minLength": 1,
-          "helpText": "Insert your ING bank card into the ING card reader and press IDENTIFY. Enter your PIN and press OK. Enter the response code in the response code field"
+          "minLength": 1
         },
         {
           "description": "Response code",
           "name": "otp",
           "numeric": true,
           "minLength": 1,
-          "sensitive": true
+          "sensitive": true,
+          "helpText": "1. Insert your ING bank card into ![](https://Card-Reader_ING@2x.png) the ING Card Reader.\n2. Press ![](https://BT_Identify_ING@2x.png)\n3. Enter your PIN and press ![](https://BT_OK_ING@2x.png)\n4. Enter the respond code in the field below"
         }
       ],
       "multiFactor": true,
