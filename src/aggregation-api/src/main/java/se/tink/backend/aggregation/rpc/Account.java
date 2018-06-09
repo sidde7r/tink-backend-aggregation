@@ -74,6 +74,7 @@ public class Account implements Cloneable {
         this.ownership = 1;
         this.identifiers = "[]";
         this.flags = "[]";
+        this.accountExclusion = AccountExclusion.NONE;
     }
 
     public String getAccountNumber() {
