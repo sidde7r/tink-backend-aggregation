@@ -24,6 +24,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import se.tink.backend.core.enums.AccountExclusion;
 import se.tink.backend.core.transfer.TransferDestination;
 import se.tink.backend.serialization.TypeReferences;
 import se.tink.backend.utils.StringUtils;
@@ -118,6 +119,9 @@ public class Account implements Cloneable {
     @Tag(16)
     @ApiModelProperty(name = "flags", value="A list of flags specifying attributes on an account", example = "[\"MANDATE\"]", allowableValues = AccountFlag.DOCUMENTED)
     private String flags;
+    @Tag(17)
+    @ApiModelProperty(name = "accountExclusion", value = "The type of account exclusion. This can be modified by the user.", required = true, allowableValues = AccountExclusion.DOCUMENTED)
+    private AccountExclusion accountExclusion;
 
     @Override
     public Account clone() throws CloneNotSupportedException {
@@ -129,6 +133,14 @@ public class Account implements Cloneable {
         this.ownership = 1;
         this.identifiers = "[]";
         this.flags = "[]";
+    }
+
+    public AccountExclusion getAccountExclusion() {
+        return accountExclusion;
+    }
+
+    public void setAccountExclusion(AccountExclusion accountExclusion) {
+        this.accountExclusion = accountExclusion;
     }
 
     public static class PayloadKeys {
