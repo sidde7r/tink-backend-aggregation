@@ -36,22 +36,14 @@ public class BbvaApiClient {
     }
 
     public HttpResponse login(String username, String password) {
-        UrlEncodedFormBody loginBody = new UrlEncodedFormBody()
-                .add(BbvaConstants.PostParameter.ORIGEN_KEY,
-                        BbvaConstants.PostParameter.ORIGEN_VALUE)
-                .add(BbvaConstants.PostParameter.EAI_TIPOCP_KEY,
-                        BbvaConstants.PostParameter.EAI_TIPOCP_VALUE)
-                .add(BbvaConstants.PostParameter.EAI_USER_KEY,
-                        BbvaConstants.PostParameter.EAI_USER_VALUE_PREFIX + username)
-                .add(BbvaConstants.PostParameter.EAI_PASSWORD_KEY,
-                        password);
+        String loginBody = UrlEncodedFormBody.createLoginRequest(username, password);
 
         return client.request(BbvaConstants.Url.LOGIN)
                 .type(BbvaConstants.Header.CONTENT_TYPE_URLENCODED_UTF8)
                 .accept(MediaType.WILDCARD)
                 .header(BbvaConstants.Header.CONSUMER_ID_KEY, BbvaConstants.Header.CONSUMER_ID_VALUE)
                 .header(BbvaConstants.Header.BBVA_USER_AGENT_KEY, userAgent)
-                .post(HttpResponse.class, loginBody.getBodyValue());
+                .post(HttpResponse.class, loginBody);
     }
 
     public InitiateSessionResponse initiateSession() {

@@ -30,7 +30,7 @@ public class BbvaSessionHandler implements SessionHandler {
     public void keepAlive() throws SessionException {
         try {
             InitiateSessionResponse response = apiClient.initiateSession();
-            if (!Objects.equals(response.getResult().getCode(), BbvaConstants.Message.OK)) {
+            if (!BbvaConstants.Message.OK.equalsIgnoreCase(response.getResult().getCode())) {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
         } catch (HttpClientException|HttpResponseException e) {

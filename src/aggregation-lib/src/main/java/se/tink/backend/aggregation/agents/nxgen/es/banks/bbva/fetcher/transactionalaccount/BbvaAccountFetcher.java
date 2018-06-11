@@ -26,15 +26,11 @@ public class BbvaAccountFetcher implements AccountFetcher<TransactionalAccount> 
     public Collection<TransactionalAccount> fetchAccounts() {
         FetchProductsResponse productsResponse = apiClient.fetchProducts();
 
-        if (productsResponse == null) {
+        if (productsResponse == null || productsResponse.getAccounts() == null) {
             return Collections.emptyList();
         }
 
         logUnknownAccountTypes(productsResponse.getAccounts());
-
-        if (productsResponse.getAccounts() == null) {
-            return Collections.emptyList();
-        }
 
         return productsResponse.getAccounts().stream()
                 .filter(AccountEntity::isKnownAccountType)
@@ -43,10 +39,6 @@ public class BbvaAccountFetcher implements AccountFetcher<TransactionalAccount> 
     }
 
     private void logUnknownAccountTypes(List<AccountEntity> accounts) {
-        if (accounts == null) {
-            return;
-        }
-
         try {
             accounts.stream()
                     .filter(a -> !a.isKnownAccountType())
