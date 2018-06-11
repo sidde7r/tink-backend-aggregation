@@ -4,7 +4,7 @@
     "providers":
     [
         {
-            "name":"es-banco-de-sabadell",
+            "name":"es-banco-de-sabadell-password",
             "displayName":"Banco de Sabadell",
             "popular":true,
             "type":"BANK",
@@ -31,7 +31,7 @@
             ]
         },
         {
-            "name":"es-banco-popular",
+            "name":"es-banco-popular-password",
             "displayName":"Banco Popular",
             "popular":true,
             "type":"BANK",
@@ -64,7 +64,36 @@
             ]
         },
         {
-            "name":"es-bankia",
+            "name":"es-bbva-password",
+            "displayName":"BBVA",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"nxgen.es.banks.bbva.BbvaAgent",
+            "passwordHelpText":null,
+            "transactional":true,
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"User",
+                    "immutable":true,
+                    "helpText":"Your username (DNI/NIE ID number)"
+                },
+                {
+                    "name":"password",
+                    "description":"Password",
+                    "masked":true,
+                    "minLength":4,
+                    "maxLength":6
+                }
+            ]
+        },
+        {
+            "name":"es-bankia-password",
             "displayName":"Bankia",
             "popular":true,
             "type":"BANK",
@@ -92,7 +121,7 @@
             ]
         },
         {
-            "name":"es-la-caixa",
+            "name":"es-la-caixa-password",
             "displayName":"La Caixa",
             "popular":true,
             "type":"BANK",
@@ -120,7 +149,7 @@
             ]
         },
         {
-            "name":"es-americanexpress",
+            "name":"es-americanexpress-password",
             "displayName":"American Express",
             "groupDisplayName":"American Express",
             "popular":true,
