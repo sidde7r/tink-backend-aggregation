@@ -1,6 +1,6 @@
 build_flags:
   --javacopt="-g"
-  --test_output=all
+  --test_output=streamed
 
 directories:
   .
