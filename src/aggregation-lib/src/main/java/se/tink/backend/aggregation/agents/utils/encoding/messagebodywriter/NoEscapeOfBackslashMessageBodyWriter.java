@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.messagebodywriter;
+package se.tink.backend.aggregation.agents.utils.encoding.messagebodywriter;
 
 import com.fasterxml.jackson.core.SerializableString;
 import com.fasterxml.jackson.core.io.CharacterEscapes;

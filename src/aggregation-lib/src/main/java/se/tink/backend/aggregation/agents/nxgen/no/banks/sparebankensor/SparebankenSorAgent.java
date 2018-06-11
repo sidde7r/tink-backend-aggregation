@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.SparebankenSorTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.SparebankenSorTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.filters.AddRefererFilter;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.messagebodywriter.NoEscapeOfBackslashMessageBodyWriter;
+import se.tink.backend.aggregation.agents.utils.encoding.messagebodywriter.NoEscapeOfBackslashMessageBodyWriter;
 import se.tink.backend.aggregation.agents.utils.authentication.encap.EncapClient;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
