@@ -1,5 +1,5 @@
 <?php
-require_once('lib/onesky.php');
+require_once('translation/onesky.php');
 
 class OneSkyClient {
     private $apiKey = "E8omlD3G9COIQJQFAsFivgtQuoqmgEsK";

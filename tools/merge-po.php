@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 
-require_once('lib/onesky.php');
+require_once('translation/onesky.php');
 
 // Parameters.
 
