@@ -1,12 +1,10 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transferdestination.rpc;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.AbstractPayeeEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
 import se.tink.libraries.account.AccountIdentifier;
 
 public class PayeeEntity extends AbstractPayeeEntity implements GeneralAccountEntity {

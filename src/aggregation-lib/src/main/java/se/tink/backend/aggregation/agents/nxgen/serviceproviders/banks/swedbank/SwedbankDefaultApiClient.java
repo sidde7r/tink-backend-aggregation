@@ -25,6 +25,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.transfer.rpc.RegisterTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.RegisterTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.RegisteredTransfersResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.updatepayment.rpc.PaymentDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.updatepayment.rpc.PaymentsConfirmedResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.creditcard.rpc.DetailedCardAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.einvoice.rpc.EInvoiceDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.einvoice.rpc.EInvoiceEntity;
@@ -68,8 +70,8 @@ public class SwedbankDefaultApiClient {
         return buildAbstractRequest(url).post(responseClass, requestObject);
     }
 
-    private <T> T makePutRequest(URL url, Class<T> responseClass) {
-        return buildAbstractRequest(url).put(responseClass);
+    private <T> T makePutRequest(URL url, Object requestObject, Class<T> responseClass) {
+        return buildAbstractRequest(url).put(responseClass, requestObject);
     }
 
     private <T> T makeRequest(LinkEntity linkEntity, Class<T> responseClass) {
@@ -97,7 +99,8 @@ public class SwedbankDefaultApiClient {
                     SwedbankBaseConstants.Url.createDynamicUrl(linkEntity.getUri(), parameters), responseClass);
         case PUT:
             return makePutRequest(
-                    SwedbankBaseConstants.Url.createDynamicUrl(linkEntity.getUri(), parameters), responseClass);
+                    SwedbankBaseConstants.Url.createDynamicUrl(linkEntity.getUri(), parameters), requestObject,
+                    responseClass);
         default:
             log.warn("Create dynamic request failed - Not implemented method - Method:[{}]", method);
             throw new IllegalStateException();
@@ -259,6 +262,23 @@ public class SwedbankDefaultApiClient {
 
     public ConfirmTransferResponse confirmTransfer(LinkEntity linkEntity) {
         return makeRequest(linkEntity, ConfirmTransferResponse.class);
+    }
+
+    public PaymentsConfirmedResponse paymentsConfirmed() {
+        return makeMenuItemRequest(
+                SwedbankBaseConstants.MenuItemKey.PAYMENTS_CONFIRMED,
+                PaymentsConfirmedResponse.class);
+    }
+
+    public PaymentDetailsResponse paymentDetails(LinkEntity linkEntity) {
+        return makeRequest(linkEntity, PaymentDetailsResponse.class);
+    }
+
+    public RegisterTransferResponse updatePayment(LinkEntity linkEntity, double amount, String message,
+            SwedbankTransferHelper.ReferenceType referenceType, Date date, String recipientId, String fromAccountId) {
+        return makeRequest(linkEntity,
+                RegisterPaymentRequest.create(amount, message, referenceType, date, recipientId, fromAccountId),
+                RegisterTransferResponse.class);
     }
 
     public InitiateSignTransferResponse signExternalTransfer(LinkEntity linkEntity) {

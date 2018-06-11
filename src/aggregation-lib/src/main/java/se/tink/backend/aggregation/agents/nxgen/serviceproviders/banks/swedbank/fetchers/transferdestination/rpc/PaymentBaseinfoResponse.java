@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.PayeeEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.libraries.account.AccountIdentifier;

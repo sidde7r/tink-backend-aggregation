@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableMap;
 import java.util.Date;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.ReferenceEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.core.Amount;
 import se.tink.backend.core.enums.TransferType;

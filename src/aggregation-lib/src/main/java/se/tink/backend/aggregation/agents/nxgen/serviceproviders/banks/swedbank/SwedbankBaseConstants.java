@@ -114,7 +114,8 @@ public class SwedbankBaseConstants {
         ACCOUNTS("EngagementOverview"), UPCOMING_TRANSACTIONS("UpcomingTransactions"), LOANS("LendingLoanOverview"),
         PORTFOLIOS("PortfolioHoldings"), FUND_MARKET_INFO("FundMarketinfo"), EINVOICES("EinvoiceIncoming"),
         PAYMENT_BASEINFO("PaymentBaseinfo"), PAYMENT_REGISTERED("PaymentRegistered"),
-        REGISTER_TRANSFER("PaymentRegisterTransfer"), REGISTER_PAYMENT("PaymentRegisterPayment");
+        REGISTER_TRANSFER("PaymentRegisterTransfer"), REGISTER_PAYMENT("PaymentRegisterPayment"),
+        PAYMENTS_CONFIRMED("PaymentConfirmed");
 
         private String key;
 

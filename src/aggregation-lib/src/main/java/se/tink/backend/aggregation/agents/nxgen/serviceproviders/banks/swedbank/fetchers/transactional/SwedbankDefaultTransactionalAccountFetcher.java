@@ -7,13 +7,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankDefaultApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.updatepayment.rpc.PaymentsConfirmedResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.EngagementOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.EngagementTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.SavingAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.TransactionDisposalAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.TransactionalAccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.UpcomingTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
@@ -29,7 +29,7 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
     private final SwedbankDefaultApiClient apiClient;
     private final String defaultCurrency;
 
-    private UpcomingTransactionsResponse upcomingTransactionsResponse;
+    private PaymentsConfirmedResponse paymentsConfirmedResponse;
 
     public SwedbankDefaultTransactionalAccountFetcher(SwedbankDefaultApiClient apiClient, String defaultCurrency) {
         this.apiClient = apiClient;
@@ -62,11 +62,11 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
 
     @Override
     public Collection<UpcomingTransaction> fetchUpcomingTransactionsFor(TransactionalAccount account) {
-        if (upcomingTransactionsResponse == null) {
-            upcomingTransactionsResponse = apiClient.upcomingTransactions();
+        if (paymentsConfirmedResponse == null) {
+            paymentsConfirmedResponse = apiClient.paymentsConfirmed();
         }
 
-        return upcomingTransactionsResponse.toTinkUpcomingTransactions(account.getAccountNumber(), defaultCurrency);
+        return paymentsConfirmedResponse.toTinkUpcomingTransactions(account.getAccountNumber());
     }
 
     @Override
