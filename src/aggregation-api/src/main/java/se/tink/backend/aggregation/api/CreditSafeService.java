@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.rpc.SeedPersonDataResponse;
 @Produces({
     MediaType.APPLICATION_JSON
 })
+@Deprecated
 public interface CreditSafeService {
     @DELETE
     @Path("consumermonitoring")

@@ -99,6 +99,7 @@ public interface AggregationService {
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Deprecated
     void createProduct(CreateProductRequest request) throws Exception;
 
     @POST
@@ -106,6 +107,7 @@ public interface AggregationService {
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Deprecated
     void fetchProductInformation(ProductInformationRequest request) throws Exception;
 
     @POST
@@ -113,6 +115,7 @@ public interface AggregationService {
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Deprecated
     void refreshApplication(RefreshApplicationRequest request) throws Exception;
 
     @POST
