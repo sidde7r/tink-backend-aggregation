@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2018-05-03 11:50+0000\n"
-"PO-Revision-Date: 2018-05-03 11:50+0000\n"
+"POT-Creation-Date: 2018-06-11 15:41+0000\n"
+"PO-Revision-Date: 2018-06-11 15:41+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: nl\n"
@@ -10,10 +10,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#, java-format
-msgid "{0} large expense"
-msgstr "{0} grote uitgave"
 
 #, java-format
 msgid "Updating {0}..."
@@ -1408,4 +1404,8 @@ msgstr "Je houdt elke maand een mooi bedrag over."
 
 msgid "Maybe it is a good idea to transfer this amount to a savings account. In this way you save easily money for vacation or unexpected expenses."
 msgstr "Misschien een idee om dit bedrag op een spaarrekening te zetten. Zo spaar je eenvoudig voor bijvoorbeeld vakantie of onverwachte uitgaven."
+
+#, java-format
+msgid "{0} large expense"
+msgstr "{0} grote uitgave"
 
