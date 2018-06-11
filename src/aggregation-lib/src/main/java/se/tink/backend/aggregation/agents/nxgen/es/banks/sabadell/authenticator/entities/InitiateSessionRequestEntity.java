@@ -1,8 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
+import org.apache.commons.lang3.StringEscapeUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellCryptoUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -18,6 +22,7 @@ public class InitiateSessionRequestEntity {
     private String compilationType;
     private String password;
     private String contract;
+    private List<ParametersBSEntity> parametersBS;
     private String devicePrint;
     private int lastKnownBrand;
     private String csid;
@@ -38,12 +43,30 @@ public class InitiateSessionRequestEntity {
         initiateSessionRequestEntity.compilationType = SabadellConstants.InitiateSessionRequest.COMPILATION_TYPE;
         initiateSessionRequestEntity.password = password;
         initiateSessionRequestEntity.contract = SabadellConstants.InitiateSessionRequest.CONTRACT;
+        initiateSessionRequestEntity.parametersBS = getParametersBS(username, password);
         initiateSessionRequestEntity.devicePrint = SabadellConstants.InitiateSessionRequest.DEVICE_PRINT;
         initiateSessionRequestEntity.lastKnownBrand = SabadellConstants.InitiateSessionRequest.LAST_KNOWN_BRAND;
         initiateSessionRequestEntity.csid = UUID.randomUUID().toString();
         initiateSessionRequestEntity.trusteer = SabadellConstants.InitiateSessionRequest.TRUSTEER;
 
         return initiateSessionRequestEntity;
+    }
+
+    @JsonIgnore
+    private static List<ParametersBSEntity> getParametersBS(String username, String password) {
+        ParametersBSEntity usernameParam = new ParametersBSEntity()
+                .setKey(SabadellConstants.InitiateSessionRequest.USERNAME_BS_KEY)
+                .setValue(StringEscapeUtils.escapeJson(
+                        SabadellCryptoUtils.getEncryptedParamAsB64String(username))
+                );
+
+        ParametersBSEntity passwordParam = new ParametersBSEntity()
+                .setKey(SabadellConstants.InitiateSessionRequest.PASSWORD_BS_KEY)
+                .setValue(StringEscapeUtils.escapeJson(
+                        SabadellCryptoUtils.getEncryptedParamAsB64String(password))
+                );
+
+        return Arrays.asList(usernameParam, passwordParam);
     }
 
     public String getDeviceInfo() {
@@ -132,6 +155,16 @@ public class InitiateSessionRequestEntity {
 
     public void setContract(String contract) {
         this.contract = contract;
+    }
+
+    public List<ParametersBSEntity> getParametersBS() {
+        return parametersBS;
+    }
+
+    public InitiateSessionRequestEntity setParametersBS(
+            List<ParametersBSEntity> parametersBS) {
+        this.parametersBS = parametersBS;
+        return this;
     }
 
     public String getDevicePrint() {

@@ -5,6 +5,20 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 
 public final class SabadellConstants {
 
+    public static final class Authentication {
+        public static final String CERTIFICATE_B64 = "MIIC8jCCAdqgAwIBAgIEWmXJpjANBgkqhkiG9w0BAQsFADA7MQ4wDAYDVQQKDAVT"
+                + "QUJJUzEWMBQGA1UECwwNQ1lCRVJTRUNVUklUWTERMA8GA1UEAwwIQVBJX0tFWVMwHhcNMTgwMTIyMTEyMzE4WhcNMjMwMTIyMTE"
+                + "yMzE4WjA7MQ4wDAYDVQQKDAVTQUJJUzEWMBQGA1UECwwNQ1lCRVJTRUNVUklUWTERMA8GA1UEAwwIQVBJX0tFWVMwggEiMA0GCS"
+                + "qGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDhSDzjxL0d/TCDhhRusopM/abniTbIH02Hs+FAqZ0196X0uRF5riEWKzcp3O/Qpb9l5"
+                + "Q0DkoqPmFk7ccbtkjPkR7w4byPv3rkyy4uRTUg+XST56AXlQuNxXPw5Tmxky2KFSFw9/d5kRSqXgj6Un/xv11PONvQSNGh+eM5i"
+                + "6cvIxfvY+692Hw+oOZaTouH5yj3LjXhYL9yvBr29k7FbHeUbbxR4TBEKRLGfCqz8SRCLxxPKaiFD3EkBc7yOic02hN5wRQDtmdE"
+                + "0aoBq3sqeyf5MtXb6kQ9F+kRqyxmRVWlIZn4lyGtEtuvaRHXDInJtWCDXZUmaETTK/LkxxkTObdPzAgMBAAEwDQYJKoZIhvcNAQ"
+                + "ELBQADggEBADtexq1iJ4jPyeXNxzzT9TrFxwPrT8bYkROdgs/C7V6X2f05iqKRILn0snnvWAD2a0mKn+uYdQTawUfkr+3fG/c5i"
+                + "mfiZNQ1bXA1vf/hVgV8PuSxmVFe786I3jQTc+TmZHMhitOhcWah6Hkq9paxyURNlSYzvDfwIOnbc2NESd0wafDbNcHuuChAH7NJ"
+                + "n9KIysE7VtNNMz3Dea0Kxb/s1CC44nVgeePVrZWnGiByNu6N+SA4vcVEJBYg3LPJj7e7gukgzKD2GrRhyTrt1AghV179lOaBHCA"
+                + "PCB3YFau3AXSpZHJvwEBwqlXNbRarBJR1WPPH5BtpFTIGrRXouPQazZk=";
+    }
+
     public static final class Urls {
         public static final String BASE_URL = "https://www.bancsabadell.mobi/bsmobil/api";
 
@@ -59,6 +73,8 @@ public final class SabadellConstants {
         public static final String DEVICE_PRINT = "";
         public static final int LAST_KNOWN_BRAND = 0;
         public static final String TRUSTEER = "";
+        public static final String USERNAME_BS_KEY = "userName";
+        public static final String PASSWORD_BS_KEY = "password";
     }
 
     public static final class ErrorCodes {
