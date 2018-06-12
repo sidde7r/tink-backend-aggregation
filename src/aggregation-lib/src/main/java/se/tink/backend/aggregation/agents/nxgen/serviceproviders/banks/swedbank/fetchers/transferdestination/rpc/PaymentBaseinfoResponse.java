@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBasePredicates;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.PayeeEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
@@ -121,32 +122,14 @@ public class PaymentBaseinfoResponse {
         Optional<ExternalRecipientEntity> accountEntity = Optional.ofNullable(transfer)
                 .map(TransferDestinationsEntity::getExternalRecipients)
                 .orElseGet(Collections::emptyList).stream()
-                .filter(ere -> {
-                    AccountIdentifier ereAccountIdentifier = ere.generalGetAccountIdentifier();
-                    String originalAccountIdentifier = accountIdentifier.getIdentifier(DEFAULT_FORMAT);
-
-                    if (ereAccountIdentifier == null || originalAccountIdentifier == null) {
-                        return false;
-                    }
-
-                    return originalAccountIdentifier.equals(ereAccountIdentifier.getIdentifier(DEFAULT_FORMAT));
-                })
+                .filter(SwedbankBasePredicates.filterExternalRecipients(accountIdentifier))
                 .findFirst();
 
         Optional<TransferDestinationAccountEntity> internalAccountEntity = Optional.ofNullable(transactionAccountGroups)
                 .orElseGet(Collections::emptyList).stream()
                 .map(TransactionAccountGroupEntity::getAccounts)
                 .flatMap(Collection::stream)
-                .filter(tdae -> {
-                    AccountIdentifier tdaeAccountIdentifier = tdae.generalGetAccountIdentifier();
-                    String originalAccountIdentifier = accountIdentifier.getIdentifier(DEFAULT_FORMAT);
-
-                    if (tdaeAccountIdentifier == null || originalAccountIdentifier == null) {
-                        return false;
-                    }
-
-                    return originalAccountIdentifier.equals(tdaeAccountIdentifier.getIdentifier(DEFAULT_FORMAT));
-                })
+                .filter(SwedbankBasePredicates.filterTransferDestinationAccounts(accountIdentifier))
                 .findFirst();
 
         // Either it is an external or internal transfer
@@ -174,16 +157,7 @@ public class PaymentBaseinfoResponse {
         Optional<PayeeEntity> payeeEntity = Optional.ofNullable(payment)
                 .map(PaymentDestinationsEntity::getPayees)
                 .orElseGet(Collections::emptyList).stream()
-                .filter(pe -> {
-                    AccountIdentifier peAccountIdentifier = pe.generalGetAccountIdentifier();
-                    String originalAccountIdentifier = accountIdentifier.getIdentifier(DEFAULT_FORMAT);
-
-                    if (peAccountIdentifier == null || originalAccountIdentifier == null) {
-                        return false;
-                    }
-
-                    return originalAccountIdentifier.equals(peAccountIdentifier.getIdentifier(DEFAULT_FORMAT));
-                })
+                .filter(SwedbankBasePredicates.filterPayees(accountIdentifier))
                 .findFirst();
 
         // Either it is an external or internal transfer
