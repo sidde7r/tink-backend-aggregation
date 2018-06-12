@@ -688,6 +688,42 @@
       "transactional": true
     },
     {
+      "className": "nxgen.no.banks.sparebankensor.SparebankenSorAgent",
+      "name": "no-sparebankensor-bankid",
+      "displayName": "Sparebanken Sør",
+      "displayDescription": "Mobile BankID",
+      "credentialsType": "MOBILE_BANKID",
+      "type": "BANK",
+      "status": "ENABLED",
+      "passwordHelpText": "",
+      "payload": "",
+      "popular": false,
+      "multiFactor": true,
+      "transactional": true,
+      "fields": [
+        {
+          "description": "National ID number",
+          "name": "username",
+          "hint": "DDMMYYNNNNN",
+          "maxLength": 11,
+          "minLength": 11,
+          "numeric": true,
+          "pattern": "[0-9]{11}",
+          "patternError": "Please enter a valid national ID number."
+        },
+        {
+          "description": "Mobile number",
+          "hint": "(8 digits)",
+          "maxLength": 8,
+          "minLength": 8,
+          "name": "mobilenumber",
+          "numeric": true,
+          "pattern": "[0-9]{8}",
+          "patternError": "Please enter a valid mobile number."
+        }
+      ]
+    },
+    {
       "name": "no-aasen-sparebank",
       "displayName": "Aasen Sparebank",
       "popular": false,
