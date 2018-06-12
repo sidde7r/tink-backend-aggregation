@@ -140,7 +140,7 @@ public class SwedbankBaseConstants {
     public static class ErrorMessage {
         public static final String INVALID_DESTINATION = "Transfer failed due to invalid destination account.";
         public static final String INVALID_SOURCE = "Transfer failed due to invalid source account.";
-        public static final String SOURCE_NOT_FOUND = "Transfer destination could not be found at bank.";
+        public static final String SOURCE_NOT_FOUND = "Source account could not be found at bank.";
         public static final String SOURCE_NOT_TRANSFER_CAPABLE = "Source account not allowed to to make transfers.";
         public static final String TRANSFER_REGISTER_FAILED = "Could not register transfer.";
         public static final String TRANSFER_CONFIRM_FAILED = "Could not confirm transfer was executed.";
