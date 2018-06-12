@@ -975,8 +975,6 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
 
             String transactionsUrl = String.format(TRANSACTIONS_URL, accountEntity.getAccountId(), toDate);
 
-            log.info("Quering transactions: " + transactionsUrl);
-
             transactionsResponse = createClientRequest(transactionsUrl).get(TransactionListResponse.class);
 
             for (TransactionEntity transactionEntity : transactionsResponse.getBody().getTransactions()) {
