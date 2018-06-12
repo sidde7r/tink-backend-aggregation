@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 
-require_once('translation/onesky.php');
+require_once('onesky.php');
 
 // Parameters.
 
@@ -26,10 +26,10 @@ foreach ($locales as $locale) {
 	    'locale' => $locale
 	));
 
-	file_put_contents('po/'.$locale.'.po', $response);
+	file_put_contents('../../po/'.$locale.'.po', $response);
 }
 
 print('Converting translations...');
-exec('cd src/common-lib && mvn gettext:dist && cd ../../');
+exec('cd ../../src/common-lib && mvn gettext:dist && cd ../../');
 
 ?>
