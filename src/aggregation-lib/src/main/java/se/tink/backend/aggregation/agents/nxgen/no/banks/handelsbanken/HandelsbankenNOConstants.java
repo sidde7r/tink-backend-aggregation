@@ -9,23 +9,48 @@ public class HandelsbankenNOConstants {
     public static final int AUTHENTICATION_TIMEOUT_COUNT = 15;  // set to 15 currently same as SparebankenSor
 
     public enum Url implements UrlEnum {
-        APP_INFORMATION("/smbmobile/9055/appversion_ios.json"),
-        VERIFY_CUSTOMER("/secesb/rest/era/era/public/customers/%s/mobile?number=+47%s&orgid=9055"),
-        CONFIGURE_BANKID("/authenticate/login/bankidmobile?configKey=smbmactivate9055&userid=%s&phoneNumber=%s"),
-        BANKID_1("/authenticate/login/bankidmobile;jsessionid=%s?execution=e1s1"),
-        BANKID_2("/authenticate/login/bankidmobile;jsessionid=%s?execution=e1s2"),
-        POLL_BANK("/authenticate/login/rest/bankidmobilestatus.json;jsessionid=%s"),
-        LOGIN_FIRST_STEP("/secesb/rest/esb/v1/login"),
-        LOGIN_SECOND_STEP("/secesb/rest/era/login"),
-        SEND_SMS("/secesb/rest/era/sam/sms"),
-        ACCOUNTS("/secesb/rest/era/accounts"),
-        TRANSACTIONS("/secesb/rest/era%s?number=%s&include_authorizations=true&index=%s"),
-        KEEP_ALIVE("/secesb/rest/esb/v1/keepalive");
+        APP_INFORMATION(getNetbankEndpoint("/smbmobile/9055/appversion_ios.json")),
+        VERIFY_CUSTOMER(getNetbankEndpoint("/secesb/rest/era/era/public/customers/%s/mobile?number=+47%s&orgid=9055")),
+        CONFIGURE_BANKID(getNetbankEndpoint("/authenticate/login/bankidmobile?configKey=smbmactivate9055&userid=%s&phoneNumber=%s")),
+        BANKID_1(getNetbankEndpoint("/authenticate/login/bankidmobile;jsessionid=%s?execution=e1s1")),
+        BANKID_2(getNetbankEndpoint("/authenticate/login/bankidmobile;jsessionid=%s?execution=e1s2")),
+        POLL_BANK(getNetbankEndpoint("/authenticate/login/rest/bankidmobilestatus.json;jsessionid=%s")),
+        LOGIN_FIRST_STEP(getNetbankEndpoint("/secesb/rest/esb/v1/login")),
+        LOGIN_SECOND_STEP(getNetbankEndpoint("/secesb/rest/era/login")),
+        SEND_SMS(getNetbankEndpoint("/secesb/rest/era/sam/sms")),
+        ACCOUNTS(getNetbankEndpoint("/secesb/rest/era/accounts")),
+        TRANSACTIONS(getNetbankEndpoint("/secesb/rest/era%s?number=%s&include_authorizations=true&index=%s")),
+        KEEP_ALIVE(getNetbankEndpoint("/secesb/rest/esb/v1/keepalive")),
+        INIT_INVESTOR_LOGIN(getNetbankEndpoint("/secesb/rest/era/ssotoken/so")),
+        CUSTOMER_PORTAL_LOGIN(getCustomerPortalEndpoint("/idp/profile/SAML2/Unsolicited/SSO")),
+        INVESTOR_LOGIN(getInvestorEndpoint("/saml/sp/profile/post/acs")),
+        INVESTMENTS_OVERVIEW(getInvestorEndpoint("/vip/json/0/investors/{" + UrlParameters.DOB + "}")),
+        POSITIONS(getInvestorEndpoint("/vip/json/0/positions/csdAccounts/{" + UrlParameters.ACCOUNT_NUMBER + "}")),
+        AKSJER_LOGIN(getAksjerEndpoint("/server/rest/auth/login/saml")),
+        AKSJER_OVERVIEW(getAksjerEndpoint("/server/rest/me")),
+        AKSJER_AVAILABLE_BALANCE(getAksjerEndpoint("/server/rest/customers/{" + UrlParameters.DOB + "}/balance/{"
+                + UrlParameters.CUSTOMER_ID + "}"));
 
         private URL url;
 
-        Url(String uri) {
-            this.url = new URL(UrlParameters.HOST + uri);
+        Url(String url) {
+            this.url = new URL(url);
+        }
+
+        public static String getNetbankEndpoint(String uri) {
+            return UrlParameters.HB_NETBANK_HOST + uri;
+        }
+
+        public static String getCustomerPortalEndpoint(String uri) {
+            return UrlParameters.CUSTOMER_PORTAL_HOST + uri;
+        }
+
+        public static String getInvestorEndpoint(String uri) {
+            return UrlParameters.INVESTOR_HOST + uri;
+        }
+
+        public static String getAksjerEndpoint(String uri) {
+            return UrlParameters.AKSJER_HOST + uri;
         }
 
         @Override
@@ -49,18 +74,53 @@ public class HandelsbankenNOConstants {
     }
 
     public static final class UrlParameters {
-        public static final String HOST = "https://nettbank.handelsbanken.no";
+        public static final String HB_NETBANK_HOST = "https://nettbank.handelsbanken.no";
+        public static final String CUSTOMER_PORTAL_HOST = "https://customerportal.edb.com";
+        public static final String INVESTOR_HOST = "https://investor.vps.no";
+        public static final String AKSJER_HOST = "https://aksjer.handelsbanken.no";
         public static final String USER_ID = "userId";
         public static final String PHONE_NUMBER = "phoneNumber";
         public static final String SESSION_1 = "e1s1";
         public static final String SESSION_2 = "e1s2";
+        public static final String DOB = "dateOfBirth";
+        public static final String ACCOUNT_NUMBER = "accountNumber";
+        public static final String CUSTOMER_ID = "customerId";
+    }
+
+    public static final class QueryParams {
+        public static final String SO = "so";
+        public static final String DATE = "date";
+    }
+
+    public enum QueryParamPairs {
+        SHIBBOLETH_ENDPOINT("endpoint", "shibboleth"),
+        INVESTOR_PROVIDER_ID("providerId", "https://investor.vps.no:443"),
+        AKSJER_PROVIDER_ID("providerId", "https://aksjer.handelsbanken.no/"),
+        INVESTOR_TARGET("target", "/vip/auth/sts?vipLandingPage=fund&avtalehaver=09055");
+
+        private final String key;
+        private final String value;
+
+        QueryParamPairs(String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public String getKey() {
+            return key;
+        }
+
+        public String getValue() {
+            return value;
+        }
     }
 
     public enum Headers implements HeaderEnum {
-        ORIGIN("Origin", UrlParameters.HOST),
+        ORIGIN("Origin", UrlParameters.HB_NETBANK_HOST),
         REQUEST_WITH("X-Requested-With", "XMLHttpRequest"),
         X_EVRY_CLIENT("X-EVRY-CLIENT-CLIENTNAME", "SMARTbankMobile"),
         USER_AGENT("User-Agent", "MB 1.20.1 9055 iPhone 6s iOS 10.2");
+
         private final String key;
         private final String value;
 
@@ -86,13 +146,14 @@ public class HandelsbankenNOConstants {
     public static final class Tags {
         public static final String JSESSION_ID = "JSESSIONID";
         public static final String REFERENCE_WORD = "bidm_ref-word";
-        public static final String EVRY_TOKEN_FIELD_KEY = "name";
+        public static final String NAME = "name";
         public static final String EVRY_TOKEN_FIELD_VALUE = "so";
         public static final String ACCESS_TOKEN = "accessToken";
         public static final String TRANSACTIONS = "transactions";
         public static final String NONCE = "SECESB_NONCE";
         public static final String SESSION_STAMP = "SECESB_SESSION_STAMP";
         public static final String SESSION_STAMP_VALUE = "SECESB_SESSION_STAMP_VALUE";
+        public static final String SAML_RESPONSE = "SAMLResponse";
     }
 
     public static final class InitBankIdForm {
@@ -117,6 +178,11 @@ public class HandelsbankenNOConstants {
         public static final String VIEWSTATE = "javax.faces.ViewState";
     }
 
+    public static final class FinalizeInvestorLoginForm {
+        public static final String RELAY_STATE = "RelayState";
+        public static final String SAML_RESPONSE = "SAMLResponse";
+    }
+
     public static final class LogInRequestConstants {
         public static final String TOKEN_TYPE = "EvrySO";
         public static final String TOKEN_PROTOCOL_VERSION = "ATP-1.0";
@@ -138,6 +204,12 @@ public class HandelsbankenNOConstants {
         public static final String SAVING = "saving";
         public static final String YOUTH_SAVING = "bsu";
         public static final String SPENDING = "spending";
+    }
+
+    public static final class InvestmentConstants {
+        public static final String STOCK_PORTAL = "stock portal";
+        public static final String INVESTOR_PORTAL = "investor";
+        public static final String HB_NORWAY = "HB-NORWAY";
     }
 
     public static final class EncapConstants {
