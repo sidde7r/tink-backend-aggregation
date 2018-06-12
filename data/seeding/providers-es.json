@@ -4,7 +4,7 @@
     "providers":
     [
         {
-            "name":"es-banco-de-sabadell",
+            "name":"es-banco-de-sabadell-password",
             "displayName":"Banco de Sabadell",
             "popular":true,
             "type":"BANK",
@@ -31,7 +31,7 @@
             ]
         },
         {
-            "name":"es-banco-popular",
+            "name":"es-banco-popular-password",
             "displayName":"Banco Popular",
             "popular":true,
             "type":"BANK",
@@ -64,14 +64,14 @@
             ]
         },
         {
-            "name":"es-bankia",
-            "displayName":"Bankia",
+            "name":"es-bbva-password",
+            "displayName":"BBVA",
             "popular":true,
             "type":"BANK",
             "status":"ENABLED",
             "credentialsType":"PASSWORD",
             "multiFactor":false,
-            "className":"banks.es.bankia.BankiaAgent",
+            "className":"nxgen.es.banks.bbva.BbvaAgent",
             "passwordHelpText":null,
             "transactional":true,
             "payload":null,
@@ -79,66 +79,17 @@
             "fields":[
                 {
                     "name":"username",
-                    "description":"Document number",
-                    "helpText":"ID, passport or residence card",
-                    "immutable":true
+                    "description":"User",
+                    "immutable":true,
+                    "helpText":"Your username (DNI/NIE ID number)"
                 },
                 {
                     "name":"password",
                     "description":"Password",
-                    "numeric":true,
-                    "masked":true
-                }
-            ]
-        },
-        {
-            "name":"es-la-caixa",
-            "displayName":"La Caixa",
-            "popular":true,
-            "type":"BANK",
-            "status":"ENABLED",
-            "credentialsType":"PASSWORD",
-            "multiFactor":false,
-            "className":"banks.es.lacaixa.LaCaixaAgent",
-            "passwordHelpText":null,
-            "transactional":true,
-            "payload":null,
-            "tutorialUrl":null,
-            "fields":[
-                {
-                    "name":"username",
-                    "description":"ID number",
-                    "immutable":true,
-                    "numeric":true
-                },
-                {
-                    "name":"password",
-                    "description":"PIN",
-                    "numeric":true,
-                    "masked":true
-                }
-            ]
-        },
-        {
-            "name":"es-americanexpress",
-            "displayName":"American Express",
-            "groupDisplayName":"American Express",
-            "popular":true,
-            "type":"CREDIT_CARD",
-            "status":"ENABLED",
-            "credentialsType":"PASSWORD",
-            "className":"creditcards.americanexpress.AmericanExpressV1Agent",
-            "passwordHelpText":"You use the same username and password as you use on americanexpress.com in order to verify your identity.",
-            "transactional":true,
-            "payload":"es_ES",
-            "fields":[
-                {"description":"Username",
-                    "name":"username",
-                    "immutable":true},
-
-                {"description":"Password",
                     "masked":true,
-                    "name":"password"}
+                    "minLength":4,
+                    "maxLength":6
+                }
             ]
         }
     ]
