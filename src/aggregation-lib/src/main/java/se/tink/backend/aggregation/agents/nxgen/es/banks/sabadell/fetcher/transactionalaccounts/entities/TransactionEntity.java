@@ -1,20 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.text.ParseException;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.core.Amount;
-import se.tink.backend.utils.StringUtils;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @JsonObject
 public class TransactionEntity {
-    private static final ThreadSafeDateFormat DATE_FORMAT = new ThreadSafeDateFormat("dd-MM-yyyy");
 
-    private String date;
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private Date date;
     private String concept;
     private AmountEntity amount;
     private boolean canSplit;
