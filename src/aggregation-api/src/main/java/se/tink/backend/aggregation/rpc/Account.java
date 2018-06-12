@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import se.tink.backend.core.AccountFlag;
+import se.tink.backend.core.enums.AccountExclusion;
 import se.tink.backend.core.transfer.TransferDestination;
 import se.tink.backend.serialization.TypeReferences;
 import se.tink.backend.utils.StringUtils;
@@ -38,6 +39,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
         setterVisibility = JsonAutoDetect.Visibility.NONE)
 public class Account implements Cloneable {
     private String accountNumber;
+    private AccountExclusion accountExclusion;
     private double availableCredit;
     private double balance;
     private String bankId;
@@ -456,5 +458,13 @@ public class Account implements Cloneable {
     @Override
     public int hashCode() {
         return Objects.hash(bankId);
+    }
+
+    public AccountExclusion getAccountExclusion() {
+        return accountExclusion;
+    }
+
+    public void setAccountExclusion(AccountExclusion accountExclusion) {
+        this.accountExclusion = accountExclusion;
     }
 }
