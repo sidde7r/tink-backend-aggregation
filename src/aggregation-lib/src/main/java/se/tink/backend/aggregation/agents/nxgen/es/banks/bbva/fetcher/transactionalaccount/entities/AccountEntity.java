@@ -48,10 +48,19 @@ public class AccountEntity {
 
     @JsonIgnore
     // until we have seen more than on account we do this
-    public boolean isCheckingAccount() {
+    private boolean isCheckingAccount() {
         String bbvaType = String.format("%s:%s", subfamilyCode, subfamilyTypeCode);
 
         return BbvaConstants.AccountTypes.CHECKING_TYPES.contains(bbvaType);
+    }
+
+    @JsonIgnore
+    private AccountTypes getTinkAccountType() {
+        if (isCheckingAccount()) {
+            return AccountTypes.CHECKING;
+        }
+
+        return AccountTypes.OTHER;
     }
 
     @JsonIgnore

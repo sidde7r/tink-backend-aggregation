@@ -41,7 +41,7 @@ public class BbvaCreditCardFetcher  implements AccountFetcher<CreditCardAccount>
     }
 
     private void logCreditCardData(List<AccountEntity> cards) {
-        if (cards == null || cards.size() == 0) {
+        if (cards == null) {
             return;
         }
 
@@ -56,11 +56,11 @@ public class BbvaCreditCardFetcher  implements AccountFetcher<CreditCardAccount>
                                 LOGGER.infoExtraLong(apiClient.getCardTransactions(a.getId()), BbvaConstants.Logging.CREDIT_CARD);
                             }
                         } catch (Exception e) {
-                            LOGGER.info("Failed to log credit card transactions, " + e.getMessage());
+                            LOGGER.warn("Failed to log credit card transactions, " + e.getMessage());
                         }
                     });
         } catch (Exception e) {
-            LOGGER.info("Failed to log credit card, " + e.getMessage());
+            LOGGER.warn("Failed to log credit card, " + e.getMessage());
         }
     }
 }

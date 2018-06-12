@@ -37,14 +37,14 @@ public class BbvaInvestmentFetcher implements AccountFetcher<InvestmentAccount> 
     }
 
     private void logInvestment(List<Object> data, LogTag logTag) {
-        if (data == null || data.size() == 0) {
+        if (data == null || data.isEmpty()) {
             return;
         }
 
         try {
             LOGGER.infoExtraLong(SerializationUtils.serializeToString(data), logTag);
         } catch (Exception e) {
-            LOGGER.info(logTag.toString() + " - Failed to log investment data, " + e.getMessage());
+            LOGGER.warn(logTag.toString() + " - Failed to log investment data, " + e.getMessage());
         }
 
     }

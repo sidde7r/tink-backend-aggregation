@@ -36,20 +36,20 @@ public class BbvaLoanFetcher implements AccountFetcher<LoanAccount> {
     }
 
     private void logLoan(List<Object> data, LogTag logTag) {
-        if (data == null || data.size() == 0) {
+        if (data == null || data.isEmpty()) {
             return;
         }
 
         try {
             LOGGER.infoExtraLong(SerializationUtils.serializeToString(data), logTag);
         } catch (Exception e) {
-            LOGGER.info(logTag.toString() + " - Failed to log loan data, " + e.getMessage());
+            LOGGER.warn(logTag.toString() + " - Failed to log loan data, " + e.getMessage());
         }
 
     }
 
     private void logMortgage(List<Object> data) {
-        if (data == null || data.size() == 0) {
+        if (data == null || data.isEmpty()) {
             return;
         }
 
@@ -66,7 +66,7 @@ public class BbvaLoanFetcher implements AccountFetcher<LoanAccount> {
                 }
             );
         } catch (Exception e) {
-            LOGGER.info(BbvaConstants.Logging.LOAN_MULTI_MORTGAGE.toString() + " - Failed to log mortgage data, " + e.getMessage());
+            LOGGER.warn(BbvaConstants.Logging.LOAN_MULTI_MORTGAGE.toString() + " - Failed to log mortgage data, " + e.getMessage());
         }
 
     }

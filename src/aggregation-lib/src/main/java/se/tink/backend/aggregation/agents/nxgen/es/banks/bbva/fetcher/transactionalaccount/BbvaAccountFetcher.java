@@ -46,7 +46,7 @@ public class BbvaAccountFetcher implements AccountFetcher<TransactionalAccount> 
                         LOGGER.infoExtraLong(SerializationUtils.serializeToString(a), BbvaConstants.Logging.UNKNOWN_ACCOUNT_TYPE);
                     });
         } catch (Exception e) {
-            LOGGER.info("Failed to log unknown account type, " + e.getMessage());
+            LOGGER.warn("Failed to log unknown account type, " + e.getMessage());
         }
     }
 }
