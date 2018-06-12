@@ -24,7 +24,12 @@ public class FromAccountEntity extends AbstractAccountEntity implements GeneralA
 
     @Override
     public String generalGetBank() {
-        return null;
+        SwedishIdentifier swedishIdentifier = new SwedishIdentifier(fullyFormattedNumber);
+        if (!swedishIdentifier.isValid()) {
+            return null;
+        }
+
+        return swedishIdentifier.getBankName();
     }
 
     @Override
