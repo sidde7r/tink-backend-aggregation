@@ -2,13 +2,16 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.ImmutableMap;
 import java.util.Date;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.ReferenceEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.core.Amount;
 import se.tink.backend.core.enums.TransferType;
 import se.tink.backend.core.transfer.Transfer;
+import se.tink.backend.core.transfer.TransferPayloadType;
 import se.tink.libraries.account.AccountIdentifier;
 
 @JsonObject
@@ -50,7 +53,7 @@ public class EInvoicePaymentEntity {
                 new Amount(currency, AgentParsingUtils.parseAmount(amount)));
     }
 
-    public Optional<Transfer> toTinkTransfer(String currency) {
+    public Optional<Transfer> toTinkTransfer(String currency, String providerUniqueId) {
         Optional<Amount> tinkAmount = getTinkAmount(currency);
         Optional<AccountIdentifier.Type> tinkType = Optional.ofNullable(this.payee).flatMap(EInvoicePayeeEntity::getTinkType);
         Optional<String> referenceValue = Optional.ofNullable(this.reference).map(ReferenceEntity::getValue);
@@ -67,6 +70,7 @@ public class EInvoicePaymentEntity {
         transfer.setDueDate(dueDate);
         transfer.setDestinationMessage(referenceValue.get());
         transfer.setSourceMessage(this.payee.getName());
+        transfer.setPayload(ImmutableMap.of(TransferPayloadType.PROVIDER_UNIQUE_ID, providerUniqueId));
 
         return transfer.getDestination().isValid() ? Optional.of(transfer) : Optional.empty();
     }

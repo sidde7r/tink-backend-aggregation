@@ -18,7 +18,8 @@ public class EInvoiceDetailsResponse {
         return payment;
     }
 
-    public Optional<Transfer> toEInvoiceTransfer(String currency) {
-        return Optional.ofNullable(payment).flatMap(EInvoicePaymentEntity -> EInvoicePaymentEntity.toTinkTransfer(currency));
+    public Optional<Transfer> toEInvoiceTransfer(String currency, String hashedRefNumber) {
+        return Optional.ofNullable(payment).flatMap(EInvoicePaymentEntity ->
+                EInvoicePaymentEntity.toTinkTransfer(currency, hashedRefNumber));
     }
 }
