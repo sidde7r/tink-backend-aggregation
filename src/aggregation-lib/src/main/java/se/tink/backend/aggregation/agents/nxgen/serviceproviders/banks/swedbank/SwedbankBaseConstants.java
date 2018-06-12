@@ -151,4 +151,9 @@ public class SwedbankBaseConstants {
         public static final String EINVOICE_NO_UNIQUE_ID = "Could not get unique id from transfer object.";
         public static final String EINVOICE_NO_MATCH = "Could not find a matching eInvoice.";
     }
+
+    public static class TransactionType {
+        public static final String TRANSFER = "transfer";
+        public static final String PAYMENT = "payment";
+    }
 }

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.AbstractExecutorTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.ToAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.TransferEntity;
@@ -75,7 +76,7 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
                 .setDescription(getSourceMessage());
 
         Optional<Transfer> upcomingTransfer = getUpcomingTransfer(sourceAccount);
-        if ("payment".equalsIgnoreCase(type) && upcomingTransfer.isPresent()) {
+        if (SwedbankBaseConstants.TransactionType.PAYMENT.equalsIgnoreCase(type) && upcomingTransfer.isPresent()) {
             upcomingTransactionBuilder.setUpcomingTransfer(upcomingTransfer.get());
         }
 
@@ -89,11 +90,11 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
         }
 
         switch (type.toLowerCase()) {
-        case "transfer":
+        case SwedbankBaseConstants.TransactionType.TRANSFER:
             return Optional.ofNullable(transfer)
                     .map(TransferEntity::getNoteToRecipient)
                     .orElse(EMPTY_STRING);
-        case "payment":
+        case SwedbankBaseConstants.TransactionType.PAYMENT:
             return Optional.ofNullable(payment)
                     .map(PaymentEntity::getReference)
                     .map(ReferenceEntity::getValue)
@@ -111,14 +112,14 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
         }
 
         switch (type.toLowerCase()) {
-        case "transfer":
+        case SwedbankBaseConstants.TransactionType.TRANSFER:
             return Optional.ofNullable(noteToSender)
                     .filter(note -> !Strings.isNullOrEmpty(note))
                     .orElse(Optional.ofNullable(transfer)
                             .map(TransferEntity::getToAccount)
                             .map(ToAccountEntity::getName)
                             .orElse(EMPTY_STRING));
-        case "payment":
+        case SwedbankBaseConstants.TransactionType.PAYMENT:
             return Optional.ofNullable(payment)
                     .map(PaymentEntity::getPayee)
                     .map(PayeeEntity::getName)
@@ -136,12 +137,12 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
         }
 
         switch (type.toLowerCase()) {
-        case "transfer":
+        case SwedbankBaseConstants.TransactionType.TRANSFER:
             return Optional.ofNullable(transfer)
                     .map(TransferEntity::getToAccount)
                     .map(ToAccountEntity::getFullyFormattedNumber)
                     .map(SwedishIdentifier::new);
-        case "payment":
+        case SwedbankBaseConstants.TransactionType.PAYMENT:
             return Optional.ofNullable(payment)
                     .map(PaymentEntity::getPayee)
                     .map(PayeeEntity::generalGetAccountIdentifier);
@@ -158,9 +159,9 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
         }
 
         switch (type.toLowerCase()) {
-        case "transfer":
+        case SwedbankBaseConstants.TransactionType.TRANSFER:
             return TransferType.BANK_TRANSFER;
-        case "payment":
+        case SwedbankBaseConstants.TransactionType.PAYMENT:
             return TransferType.PAYMENT;
         default:
             log.warn("Unexpected transfer type: {}", type);
