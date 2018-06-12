@@ -3,14 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.credi
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
-import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.backend.core.Amount;
-import se.tink.backend.utils.StringUtils;
 
 @JsonObject
 public class CreditCardEntity {
@@ -62,28 +59,13 @@ public class CreditCardEntity {
     public CreditCardAccount toTinkAccount() {
         String bankIdentifier = Hash.sha1AsHex(number);
 
-        return CreditCardAccount.builder(number, parseBalance(balance),
-                parseAvailableBalance(availableBalance))
+        return CreditCardAccount.builder(number, balance.parseToNegativeTinkAmount(),
+                availableBalance.parseToTinkAmount())
                 .setName(description)
                 .setHolderName(new HolderName(name))
                 .setBankIdentifier(bankIdentifier)
                 .addToTemporaryStorage(bankIdentifier, this)
                 .build();
-    }
-
-    @JsonIgnore
-    private Amount parseBalance(AmountEntity balance) {
-        return Amount.inEUR(-1 * parseToTinkAmount(balance.getValue()));
-    }
-
-    @JsonIgnore
-    private Amount parseAvailableBalance(AmountEntity availableBalance) {
-        return Amount.inEUR(parseToTinkAmount(availableBalance.getValue()));
-    }
-
-    @JsonIgnore
-    private double parseToTinkAmount(String amount) {
-        return Strings.isNullOrEmpty(amount) ? 0d : StringUtils.parseAmount(amount);
     }
 
     public String getBsprotect() {

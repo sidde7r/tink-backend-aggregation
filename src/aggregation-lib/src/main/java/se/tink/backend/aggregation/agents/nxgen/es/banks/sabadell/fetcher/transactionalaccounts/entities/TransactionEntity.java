@@ -35,22 +35,13 @@ public class TransactionEntity {
     @JsonIgnore
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setAmount(Amount.inEUR(StringUtils.parseAmount(amount.getValue())))
-                .setDate(parseTransactionDate())
+                .setAmount(balance.parseToTinkAmount())
+                .setDate(date)
                 .setDescription(concept)
                 .build();
     }
 
-    @JsonIgnore
-    private Date parseTransactionDate() {
-        try {
-            return DATE_FORMAT.parse(date);
-        } catch (ParseException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 

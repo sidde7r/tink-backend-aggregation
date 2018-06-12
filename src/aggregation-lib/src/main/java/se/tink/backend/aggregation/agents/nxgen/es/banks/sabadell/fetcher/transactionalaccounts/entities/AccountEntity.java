@@ -10,8 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.entiti
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.core.Amount;
-import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 @JsonObject
@@ -40,8 +38,7 @@ public class AccountEntity {
 
     @JsonIgnore
     public TransactionalAccount toTinkAccount() {
-        return TransactionalAccount.builder(getTinkAccountType(), iban,
-                Amount.inEUR(StringUtils.parseAmount(amount.getValue())))
+        return TransactionalAccount.builder(getTinkAccountType(), iban, amount.parseToTinkAmount())
                 .setName(getTinkName())
                 .setBankIdentifier(iban)
                 .addIdentifier(new IbanIdentifier(iban))
