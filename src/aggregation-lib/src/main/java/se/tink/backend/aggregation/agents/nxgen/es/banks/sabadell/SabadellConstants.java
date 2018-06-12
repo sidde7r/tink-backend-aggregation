@@ -35,7 +35,13 @@ public final class SabadellConstants {
     public enum QueryParamPairs {
         NO_ERROR("noError", "true"),
         CTA_VISTA("type", "CTA_VISTA"),
-        CTA_CARD_ALL("filter", "CTA_CARD_ALL");
+        CTA_CARD_ALL("filter", "CTA_CARD_ALL"),
+        PAGE_1("page", "1"),
+        ITEMS_PER_PAGE_20("itemsPerPage", "20"),
+        ITEMS_PER_PAGE_5("itemsPerPage", "5"),
+        ORDER_DESC("order", "desc"),
+        ORDER_0("order", "0");
+
 
         private final String key;
         private final String value;
@@ -69,6 +75,13 @@ public final class SabadellConstants {
         public static final String TRUSTEER = "";
         public static final String USERNAME_BS_KEY = "userName";
         public static final String PASSWORD_BS_KEY = "password";
+    }
+
+    public static final class CreditCardTransactionsRequest {
+        public static final int ITEMS_PER_PAGE_20 = 20;
+        public static final String ORDER_DESC = "desc";
+        public static final String DATE_FROM = "";
+        public static final String DATE_TO = "";
     }
 
     public static final class ErrorCodes {

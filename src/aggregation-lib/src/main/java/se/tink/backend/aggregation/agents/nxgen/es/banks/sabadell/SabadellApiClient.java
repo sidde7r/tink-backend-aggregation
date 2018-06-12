@@ -74,10 +74,12 @@ public class SabadellApiClient {
 
     public String fetchLoans() {
         return createRequest(SabadellConstants.Urls.FETCH_LOANS)
-                // Keeping these strings here now since they won't be hardcoded when we start fetching for real
-                .queryParam("page", "1")
-                .queryParam("itemsPerPage", "20")
-                .queryParam("order", "desc")
+                .queryParam(SabadellConstants.QueryParamPairs.PAGE_1.getKey(),
+                        SabadellConstants.QueryParamPairs.PAGE_1.getValue())
+                .queryParam(SabadellConstants.QueryParamPairs.ITEMS_PER_PAGE_20.getKey(),
+                        SabadellConstants.QueryParamPairs.ITEMS_PER_PAGE_20.getValue())
+                .queryParam(SabadellConstants.QueryParamPairs.ORDER_DESC.getKey(),
+                        SabadellConstants.QueryParamPairs.ORDER_DESC.getValue())
                 .get(String.class);
     }
 
@@ -95,10 +97,12 @@ public class SabadellApiClient {
         return createRequest(SabadellConstants.Urls.FETCH_PENSION_PLANS)
                 .queryParam(SabadellConstants.QueryParamPairs.NO_ERROR.getKey(),
                         SabadellConstants.QueryParamPairs.NO_ERROR.getValue())
-                // Keeping these strings here now since they won't be hardcoded when we start fetching for real
-                .queryParam("page", "1")
-                .queryParam("itemsPerPage", "5")
-                .queryParam("order", "0")
+                .queryParam(SabadellConstants.QueryParamPairs.PAGE_1.getKey(),
+                        SabadellConstants.QueryParamPairs.PAGE_1.getValue())
+                .queryParam(SabadellConstants.QueryParamPairs.ITEMS_PER_PAGE_5.getKey(),
+                        SabadellConstants.QueryParamPairs.ITEMS_PER_PAGE_5.getValue())
+                .queryParam(SabadellConstants.QueryParamPairs.ORDER_0.getKey(),
+                        SabadellConstants.QueryParamPairs.ORDER_0.getValue())
                 .get(PensionPlansResponse.class);
     }
 

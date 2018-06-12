@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.entities.CreditCardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.entities.PaginatorEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -15,14 +16,14 @@ public class CreditCardTransactionsRequest {
     @JsonIgnore
     public static CreditCardTransactionsRequest build(CreditCardEntity cardEntity, int totalItems, int page) {
         PaginatorEntity cardPaginator = new PaginatorEntity();
-        cardPaginator.setItemsPerPage(20);
-        cardPaginator.setOrder("desc");
+        cardPaginator.setItemsPerPage(SabadellConstants.CreditCardTransactionsRequest.ITEMS_PER_PAGE_20);
+        cardPaginator.setOrder(SabadellConstants.CreditCardTransactionsRequest.ORDER_DESC);
         cardPaginator.setTotalItems(totalItems);
         cardPaginator.setPage(page);
 
         CreditCardTransactionsRequest cardTransactionsRequest = new CreditCardTransactionsRequest();
-        cardTransactionsRequest.setDateFrom("");
-        cardTransactionsRequest.setDateTo("");
+        cardTransactionsRequest.setDateFrom(SabadellConstants.CreditCardTransactionsRequest.DATE_FROM);
+        cardTransactionsRequest.setDateTo(SabadellConstants.CreditCardTransactionsRequest.DATE_TO);
         cardTransactionsRequest.setCard(cardEntity);
         cardTransactionsRequest.setPaginator(cardPaginator);
 
