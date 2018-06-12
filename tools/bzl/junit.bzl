@@ -10,8 +10,15 @@ import ch.qos.logback.classic.Level;
 
 @RunWith(ClasspathSuite.class)
 @ClasspathSuite.IncludeJars(true)
-@ClasspathSuite.ClassnameFilters("se.tink.*")
+@ClasspathSuite.ClassnameFilters("se.tink.backend.aggregation.*")
 public class %s {
+    @BeforeClass
+    public static void setLogLevelForTests() {
+        // This overrides the bootstrapping done from the parent of
+        // se.tink.backend.common.AbstractServiceContainer, which is
+        // (almost) always on the classpath.
+        LoggingFactory.bootstrap(Level.INFO);
+    }
 }
 """
 
