@@ -49,13 +49,9 @@ public class SabadellInvestmentFetcher implements AccountFetcher<InvestmentAccou
         try {
             ServicingFundsResponse servicingFundsResponse = apiClient.fetchServicingFunds();
 
-            if (!servicingFundsResponse.getAccountList().getAccounts().isEmpty()) {
-                log.infoExtraLong(SerializationUtils.serializeToString(servicingFundsResponse.getAccountList()),
-                        SabadellConstants.Tags.SERVICING_FUNDS);
-            }
-
-            if (servicingFundsResponse.getFundList() != null) {
-                log.infoExtraLong(SerializationUtils.serializeToString(servicingFundsResponse.getFundList()),
+            if (!servicingFundsResponse.getAccountList().getAccounts().isEmpty() ||
+                    servicingFundsResponse.getFundList() != null) {
+                log.infoExtraLong(SerializationUtils.serializeToString(servicingFundsResponse),
                         SabadellConstants.Tags.SERVICING_FUNDS);
             }
         } catch (Exception e) {

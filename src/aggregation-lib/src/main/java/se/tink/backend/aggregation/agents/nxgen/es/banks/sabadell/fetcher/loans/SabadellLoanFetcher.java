@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.loans;
 
+import com.google.common.base.Strings;
 import java.util.Collection;
 import java.util.Collections;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellApiClient;
@@ -22,7 +23,9 @@ public class SabadellLoanFetcher implements AccountFetcher<LoanAccount> {
     public Collection<LoanAccount> fetchAccounts() {
         try {
             String loansResponseString = apiClient.fetchLoans();
-            log.infoExtraLong(loansResponseString, SabadellConstants.Tags.LOANS);
+            if (!Strings.isNullOrEmpty(loansResponseString)) {
+                log.infoExtraLong(loansResponseString, SabadellConstants.Tags.LOANS);
+            }
         } catch (HttpResponseException e) {
             ErrorResponse response = e.getResponse().getBody(ErrorResponse.class);
             String errorCode = response.getErrorCode();
@@ -31,7 +34,7 @@ public class SabadellLoanFetcher implements AccountFetcher<LoanAccount> {
                 return Collections.emptyList();
             }
 
-            throw new IllegalStateException(String.format(
+            log.warn(String.format(
                     "%s: Loan fetching failed with error code: %s, error message: %s",
                     SabadellConstants.Tags.LOAN_ERROR,
                     response.getErrorCode(),
