@@ -11,7 +11,7 @@
             "status":"ENABLED",
             "credentialsType":"PASSWORD",
             "multiFactor":false,
-            "className":"banks.es.sabadell.SabadellAgent",
+            "className":"nxgen.es.banks.sabadell.SabadellAgent",
             "passwordHelpText":null,
             "transactional":true,
             "payload":null,
