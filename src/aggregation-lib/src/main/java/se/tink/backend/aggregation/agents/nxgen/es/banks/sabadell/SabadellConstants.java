@@ -6,17 +6,11 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 public final class SabadellConstants {
 
     public static final class Authentication {
-        public static final String CERTIFICATE_B64 = "MIIC8jCCAdqgAwIBAgIEWmXJpjANBgkqhkiG9w0BAQsFADA7MQ4wDAYDVQQKDAVT"
-                + "QUJJUzEWMBQGA1UECwwNQ1lCRVJTRUNVUklUWTERMA8GA1UEAwwIQVBJX0tFWVMwHhcNMTgwMTIyMTEyMzE4WhcNMjMwMTIyMTE"
-                + "yMzE4WjA7MQ4wDAYDVQQKDAVTQUJJUzEWMBQGA1UECwwNQ1lCRVJTRUNVUklUWTERMA8GA1UEAwwIQVBJX0tFWVMwggEiMA0GCS"
-                + "qGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDhSDzjxL0d/TCDhhRusopM/abniTbIH02Hs+FAqZ0196X0uRF5riEWKzcp3O/Qpb9l5"
-                + "Q0DkoqPmFk7ccbtkjPkR7w4byPv3rkyy4uRTUg+XST56AXlQuNxXPw5Tmxky2KFSFw9/d5kRSqXgj6Un/xv11PONvQSNGh+eM5i"
-                + "6cvIxfvY+692Hw+oOZaTouH5yj3LjXhYL9yvBr29k7FbHeUbbxR4TBEKRLGfCqz8SRCLxxPKaiFD3EkBc7yOic02hN5wRQDtmdE"
-                + "0aoBq3sqeyf5MtXb6kQ9F+kRqyxmRVWlIZn4lyGtEtuvaRHXDInJtWCDXZUmaETTK/LkxxkTObdPzAgMBAAEwDQYJKoZIhvcNAQ"
-                + "ELBQADggEBADtexq1iJ4jPyeXNxzzT9TrFxwPrT8bYkROdgs/C7V6X2f05iqKRILn0snnvWAD2a0mKn+uYdQTawUfkr+3fG/c5i"
-                + "mfiZNQ1bXA1vf/hVgV8PuSxmVFe786I3jQTc+TmZHMhitOhcWah6Hkq9paxyURNlSYzvDfwIOnbc2NESd0wafDbNcHuuChAH7NJ"
-                + "n9KIysE7VtNNMz3Dea0Kxb/s1CC44nVgeePVrZWnGiByNu6N+SA4vcVEJBYg3LPJj7e7gukgzKD2GrRhyTrt1AghV179lOaBHCA"
-                + "PCB3YFau3AXSpZHJvwEBwqlXNbRarBJR1WPPH5BtpFTIGrRXouPQazZk=";
+        public static final String PUBLIC_KEY_B64 = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4Ug848S9Hf0wg4YUbr"
+                + "KKTP2m54k2yB9Nh7PhQKmdNfel9LkRea4hFis3Kdzv0KW/ZeUNA5KKj5hZO3HG7ZIz5Ee8OG8j7965MsuLkU1IPl0k+egF5U"
+                + "LjcVz8OU5sZMtihUhcPf3eZEUql4I+lJ/8b9dTzjb0EjRofnjOYunLyMX72Puvdh8PqDmWk6Lh+co9y414WC/crwa9vZOxWx"
+                + "3lG28UeEwRCkSxnwqs/EkQi8cTymohQ9xJAXO8jonNNoTecEUA7ZnRNGqAat7Knsn+TLV2+pEPRfpEassZkVVpSGZ+JchrRL"
+                + "br2kR1wyJybVgg12VJmhE0yvy5McZEzm3T8wIDAQAB";
     }
 
     public static final class Urls {
