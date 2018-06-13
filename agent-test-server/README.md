@@ -18,25 +18,6 @@ Python 2.7.9
 (.venv) $ pip install -r requirements.txt
 ```
 
-For the graphical component to work you'll need to install python-tk (it will otherwise use stdin).
-
-### osx
-
-!THIS HAS NOT BEEN VERIFIED!
-
-```
-$ xcode-select --install
-$ brew uninstall python
-$ brew install python --use-brewed-tk
-```
-
-### linux
-
-```
-$ sudo apt-get install python-tk
-```
-
-
 ## Start the server
 ```
 $ source .venv/bin/activate
