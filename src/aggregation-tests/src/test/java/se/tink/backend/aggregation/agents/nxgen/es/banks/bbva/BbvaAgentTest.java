@@ -3,13 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgentTest;
+import se.tink.backend.aggregation.agents.nxgen.NextGenerationBaseAgentTest;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
 
 @Ignore
-public class BbvaAgentTest extends NextGenerationAgentTest<BbvaAgent> {
+public class BbvaAgentTest extends NextGenerationBaseAgentTest<BbvaAgent> {
     private final Credentials credentials = new Credentials();
 
     public BbvaAgentTest() {
