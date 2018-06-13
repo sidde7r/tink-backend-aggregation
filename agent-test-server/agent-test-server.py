@@ -67,6 +67,8 @@ def main():
     )
     args = parser.parse_args()
 
+    print("Agent test server listening on %s:%u" % (args.bind, args.port))
+
     http_server = WSGIServer((args.bind, args.port), app, log=None)
     http_server.serve_forever()
 
