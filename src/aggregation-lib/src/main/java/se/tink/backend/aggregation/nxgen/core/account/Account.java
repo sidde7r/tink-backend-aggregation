@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.nxgen.core.account;
 
+import com.google.api.client.repackaged.com.google.common.base.Preconditions;
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.common.base.Objects;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.util.Collections;
@@ -16,31 +18,24 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public abstract class Account {
     private static final String BANK_IDENTIFIER_KEY = "bankIdentifier";
-    private final String name;
-    private final String accountNumber;
-    private final Amount balance;
-    private final List<AccountIdentifier> identifiers;
-    private final String uniqueIdentifier;
-    private final String bankIdentifier;
-    private final HolderName holderName;
-    private final Map<String, String> temporaryStorage;
+    private String name;
+    private String accountNumber;
+    private Amount balance;
+    private List<AccountIdentifier> identifiers;
+    private String uniqueIdentifier;
+    private String bankIdentifier;
+    private HolderName holderName;
+    private Map<String, String> temporaryStorage;
 
-    Account(String name, String accountNumber, Amount balance, List<AccountIdentifier> identifiers,
-            String uniqueIdentifier, String bankIdentifier, HolderName holderName,
-            Map<String, String> temporaryStorage) {
-        this.name = name;
-        this.accountNumber = accountNumber;
-        this.balance = balance;
-        this.identifiers = identifiers;
-        this.uniqueIdentifier = uniqueIdentifier;
-        this.bankIdentifier = bankIdentifier;
-        this.holderName = holderName;
-        this.temporaryStorage = temporaryStorage;
-    }
-
-    public Account(String name, String accountNumber, Amount balance, List<AccountIdentifier> identifiers,
-            String uniqueIdentifier, String bankIdentifier) {
-        this(name, accountNumber, balance, identifiers, uniqueIdentifier, bankIdentifier, null, Collections.emptyMap());
+    protected Account(Builder<? extends Account, ? extends Account.Builder> builder) {
+        this.name = builder.getName();
+        this.accountNumber = builder.getAccountNumber();
+        this.balance = builder.getBalance();
+        this.identifiers = ImmutableList.copyOf(builder.getIdentifiers());
+        this.uniqueIdentifier = builder.getUniqueIdentifier();
+        this.bankIdentifier = builder.getBankIdentifier();
+        this.holderName = builder.getHolderName();
+        this.temporaryStorage = ImmutableMap.copyOf(builder.getTemporaryStorage());
     }
 
     public AccountTypes getType() {
@@ -115,53 +110,71 @@ public abstract class Account {
         temporaryStorage.put(key, SerializationUtils.serializeToString(value));
     }
 
-    public static abstract class Builder {
-        private String name;
-        private final String accountNumber;
-        private final Amount balance;
-        private final List<AccountIdentifier> identifiers = Lists.newArrayList();
-        private String uniqueIdentifier;
-        private HolderName holderName;
-        private Map<String, String> temporaryStorage;
+    public abstract static class Builder<A extends Account, T extends Builder<A, T>> {
+        protected final List<AccountIdentifier> identifiers = Lists.newArrayList();
+        protected final Map<String, String> temporaryStorage = Maps.newHashMap();
+        protected String name;
+        protected String accountNumber;
+        protected Amount balance;
+        protected String uniqueIdentifier;
+        protected HolderName holderName;
+        private T thisObj;
 
-        protected Builder(String accountNumber, Amount balance) {
-            this.accountNumber = accountNumber;
-            this.balance = balance;
+        protected Builder() {
+            this.thisObj = self();
         }
+
+        @Deprecated
+        protected Builder(String accountNumber, Amount balance) {
+            thisObj.accountNumber = accountNumber;
+            thisObj.balance = balance;
+        }
+
+        protected abstract T self();
 
         public String getName() {
-            return Strings.isNullOrEmpty(this.name) ? getAccountNumber() : this.name;
+            return Strings.isNullOrEmpty(thisObj.name) ? getAccountNumber() : thisObj.name;
         }
 
-        public Builder setName(String name) {
-            this.name = name;
-            return this;
+        public T setName(String name) {
+            thisObj.name = name;
+            return self();
         }
 
         public String getAccountNumber() {
-            return Preconditions.checkNotNull(Strings.emptyToNull(this.accountNumber));
+            return Preconditions.checkNotNull(Strings.emptyToNull(thisObj.accountNumber));
+        }
+
+        public T setAccountNumber(String accountNumber) {
+            thisObj.accountNumber = accountNumber;
+            return self();
         }
 
         public Amount getBalance() {
-            return Amount.createFromAmount(this.balance).orElseThrow(NullPointerException::new);
+            return Amount.createFromAmount(thisObj.balance).orElseThrow(NullPointerException::new);
+        }
+
+        public T setBalance(Amount balance) {
+            thisObj.balance = balance;
+            return self();
         }
 
         public List<AccountIdentifier> getIdentifiers() {
-            return this.identifiers != null ? this.identifiers : Collections.emptyList();
+            return thisObj.identifiers != null ? thisObj.identifiers : Collections.emptyList();
         }
 
-        public Builder addIdentifier(AccountIdentifier identifier) {
-            this.identifiers.add(identifier);
-            return this;
+        public T addIdentifier(AccountIdentifier identifier) {
+            thisObj.identifiers.add(identifier);
+            return self();
         }
 
         public String getUniqueIdentifier() {
-            return !Strings.isNullOrEmpty(this.uniqueIdentifier) ? this.uniqueIdentifier : getAccountNumber();
+            return !Strings.isNullOrEmpty(thisObj.uniqueIdentifier) ? thisObj.uniqueIdentifier : getAccountNumber();
         }
 
-        public Builder setUniqueIdentifier(String uniqueIdentifier) {
-            this.uniqueIdentifier = uniqueIdentifier;
-            return this;
+        public T setUniqueIdentifier(String uniqueIdentifier) {
+            thisObj.uniqueIdentifier = uniqueIdentifier;
+            return self();
         }
 
         public String getBankIdentifier() {
@@ -170,38 +183,34 @@ public abstract class Account {
                     SerializationUtils.deserializeFromString(bankIdentifier, String.class) : getUniqueIdentifier();
         }
 
-        public Builder setBankIdentifier(String bankIdentifier) {
+        public T setBankIdentifier(String bankIdentifier) {
             addToTemporaryStorage(BANK_IDENTIFIER_KEY, bankIdentifier);
-            return this;
+            return self();
         }
 
         public HolderName getHolderName() {
-            return this.holderName;
+            return thisObj.holderName;
         }
 
-        public Builder setHolderName(HolderName holderName) {
-            this.holderName = holderName;
-            return this;
+        public T setHolderName(HolderName holderName) {
+            thisObj.holderName = holderName;
+            return self();
         }
 
-        public Builder setTemporaryStorage(Map<String, String> temporaryStorage) {
-            this.temporaryStorage = temporaryStorage;
-            return this;
-        }
-
-        public <T> Builder addToTemporaryStorage(String key, T value) {
-            if (temporaryStorage == null) {
-                temporaryStorage = Maps.newHashMap();
-            }
-
+        public <K> T addToTemporaryStorage(String key, K value) {
             temporaryStorage.put(key, SerializationUtils.serializeToString(value));
-            return this;
+            return self();
         }
 
         public Map<String, String> getTemporaryStorage() {
             return java.util.Objects.nonNull(temporaryStorage) ? temporaryStorage : Collections.emptyMap();
         }
 
-        public abstract Account build();
+        public T setTemporaryStorage(Map<String, String> temporaryStorage) {
+            thisObj.temporaryStorage.putAll(temporaryStorage);
+            return self();
+        }
+
+        public abstract A build();
     }
 }

@@ -1,96 +1,73 @@
 package se.tink.backend.aggregation.nxgen.core.account;
 
-import java.util.List;
-import java.util.Map;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.core.AccountFlag;
 import se.tink.backend.core.Amount;
-import se.tink.libraries.account.AccountIdentifier;
 
 public class SavingsAccount extends TransactionalAccount {
-    private final Double interestRate;
+  private final Double interestRate;
 
-    private SavingsAccount(String name, String accountNumber, Amount balance, List<AccountIdentifier> identifiers,
-            String tinkId, String bankIdentifier, Double interestRate, HolderName holderName,
-            Map<String, String> temporaryStorage, List<AccountFlag> flags) {
-        super(name, accountNumber, balance, identifiers, tinkId, bankIdentifier, holderName, temporaryStorage, flags);
-        this.interestRate = interestRate;
+  //    private SavingsAccount(String name, String accountNumber, Amount balance,
+  // List<AccountIdentifier> identifiers,
+  //            String tinkId, String bankIdentifier, Double interestRate, HolderName holderName,
+  //            Map<String, String> temporaryStorage) {
+  //        super(name, accountNumber, balance, identifiers, tinkId, bankIdentifier, holderName,
+  // temporaryStorage);
+  //        this.interestRate = interestRate;
+  //    }
+
+  private SavingsAccount(Builder<?, ?> builder) {
+    super(builder);
+    this.interestRate = builder.getInterestRate();
+  }
+
+  //    public static Builder builder(String accountNumber, Amount balance) {
+  //        return new Builder(accountNumber, balance);
+  //    }
+
+  public static Builder<?, ?> builder() {
+    return new DefaultSavingAccountsBuilder();
+  }
+
+  public static Builder<?, ?> builder(String accountNumber, Amount balance) {
+    DefaultSavingAccountsBuilder defaultSavingAccountsBuilder = new DefaultSavingAccountsBuilder();
+    defaultSavingAccountsBuilder.setBalance(balance).setAccountNumber(accountNumber);
+    return defaultSavingAccountsBuilder;
+  }
+
+  @Override
+  public AccountTypes getType() {
+    return AccountTypes.SAVINGS;
+  }
+
+  public Double getInterestRate() {
+    return this.interestRate;
+  }
+
+  public abstract static class Builder<
+          A extends SavingsAccount, T extends SavingsAccount.Builder<A, T>>
+      extends TransactionalAccount.Builder<SavingsAccount, Builder<A, T>> {
+    private Double interestRate;
+
+    public Double getInterestRate() {
+      return this.interestRate;
+    }
+
+    public Builder<A, T> setInterestRate(Double interestRate) {
+      self().interestRate = interestRate;
+      return self();
+    }
+  }
+
+  private static class DefaultSavingAccountsBuilder
+      extends SavingsAccount.Builder<SavingsAccount, DefaultSavingAccountsBuilder> {
+    @Override
+    protected DefaultSavingAccountsBuilder self() {
+      return this;
     }
 
     @Override
-    public AccountTypes getType() {
-        return AccountTypes.SAVINGS;
+    public SavingsAccount build() {
+      return new SavingsAccount(this);
     }
-
-    public Double getInterestRate() {
-        return this.interestRate;
-    }
-
-    public static Builder builder(String accountNumber, Amount balance) {
-        return new Builder(accountNumber, balance);
-    }
-
-    public static class Builder extends TransactionalAccount.Builder {
-        private Double interestRate;
-
-        private Builder(String accountNumber, Amount balance) {
-            super(accountNumber, balance);
-        }
-
-        public Double getInterestRate() {
-            return this.interestRate;
-        }
-
-        public Builder setInterestRate(Double interestRate) {
-            this.interestRate = interestRate;
-            return this;
-        }
-
-        @Override
-        public Builder setName(String name) {
-            return (Builder) super.setName(name);
-        }
-
-        @Override
-        public Builder addIdentifier(AccountIdentifier identifier) {
-            return (Builder) super.addIdentifier(identifier);
-        }
-
-        @Override
-        public Builder setUniqueIdentifier(String uniqueIdentifier) {
-            return (Builder) super.setUniqueIdentifier(uniqueIdentifier);
-        }
-
-        @Override
-        public Builder setBankIdentifier(String bankIdentifier) {
-            return (Builder) super.setBankIdentifier(bankIdentifier);
-        }
-
-        @Override
-        public Builder setTemporaryStorage(Map<String, String> temporaryStorage) {
-            return (Builder) super.setTemporaryStorage(temporaryStorage);
-        }
-
-        @Override
-        public <T> Builder addToTemporaryStorage(String key, T value) {
-            return (Builder) super.addToTemporaryStorage(key, value);
-        }
-
-        @Override
-        public List<AccountFlag> getFlags() {
-            return super.getFlags();
-        }
-
-        @Override
-        public Account.Builder addFlag(AccountFlag flag) {
-            return (Builder) super.addFlag(flag);
-        }
-
-        @Override
-        public SavingsAccount build() {
-            return new SavingsAccount(getName(), getAccountNumber(), getBalance(), getIdentifiers(), getUniqueIdentifier(),
-                    getBankIdentifier(), getInterestRate(), getHolderName(), getTemporaryStorage(), getFlags());
-        }
-    }
+  }
 }

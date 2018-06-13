@@ -69,7 +69,7 @@ public class NordeaDkParser extends NordeaV20Parser {
 
     @Override
     public LoanAccount parseMortgage(ProductEntity pe, LoanDetailsResponse loanDetailsResponse) {
-        LoanAccount.Builder accountBuilder = LoanAccount.builder(pe.getAccountNumber(true),
+        LoanAccount.Builder<?, ?> accountBuilder = LoanAccount.builder(pe.getAccountNumber(true),
                 new Amount(pe.getCurrency(), pe.getBalance()))
                 .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(true)))
                 .setUniqueIdentifier(pe.getAccountNumber(false))
