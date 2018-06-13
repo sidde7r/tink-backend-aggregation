@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.rpc.Field;
 import se.tink.libraries.i18n.Catalog;
 
 public class SmsOtpAuthenticationController<T> implements MultiFactorAuthenticator {
-    private static final int DEFAULT_OTP_VALUE_LENGTH = 4;
     private static final String OTP_VALUE_FIELD_KEY = "otpValue";
 
     private final Catalog catalog;
@@ -26,16 +25,12 @@ public class SmsOtpAuthenticationController<T> implements MultiFactorAuthenticat
     private final int otpValueLength;
 
     public SmsOtpAuthenticationController(Catalog catalog,
-            SupplementalInformationController supplementalInformationController, SmsOtpAuthenticator authenticator) {
-        this(catalog, supplementalInformationController, authenticator, DEFAULT_OTP_VALUE_LENGTH);
-    }
-
-    public SmsOtpAuthenticationController(Catalog catalog,
             SupplementalInformationController supplementalInformationController,
             SmsOtpAuthenticator<T> authenticator, int otpValueLength) {
         this.catalog = Preconditions.checkNotNull(catalog);
         this.supplementalInformationController = Preconditions.checkNotNull(supplementalInformationController);
         this.authenticator = Preconditions.checkNotNull(authenticator);
+        Preconditions.checkArgument(otpValueLength > 0);
         this.otpValueLength = otpValueLength;
     }
 
@@ -51,13 +46,12 @@ public class SmsOtpAuthenticationController<T> implements MultiFactorAuthenticat
                 String.format("Authentication method not implemented for CredentialsType: %s", credentials.getType()));
 
         String username = credentials.getField(Field.Key.USERNAME);
-        String password = credentials.getField(Field.Key.PASSWORD);
 
-        if (Strings.isNullOrEmpty(username) || Strings.isNullOrEmpty(password)) {
+        if (Strings.isNullOrEmpty(username)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
-        T initValues = authenticator.init(username, password);
+        T initValues = authenticator.init(username);
 
         Map<String, String> supplementalInformation = supplementalInformationController
                 .askSupplementalInformation(getOtpField());
@@ -67,7 +61,7 @@ public class SmsOtpAuthenticationController<T> implements MultiFactorAuthenticat
 
     private Field getOtpField() {
         Field otpValue = new Field();
-        otpValue.setDescription(catalog.getString("SMS code"));
+        otpValue.setDescription(catalog.getString("Verification code"));
         otpValue.setName(OTP_VALUE_FIELD_KEY);
         otpValue.setNumeric(true);
         otpValue.setMinLength(otpValueLength);
