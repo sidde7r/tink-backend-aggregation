@@ -7,18 +7,8 @@ public abstract class TimelineRequest {
     private boolean pendingChargeEnabled;
     private String localTime;
     private String timestamp;
-  /*
 
-  "pendingChargeEnabled": true,
-  "sortedIndex": "0",
-  "goodsSvcOfferEnabled": false,
-  "payWithPointsEnabled": false,
-  "payYourWayEnabled": false,
-  "cmlEnabled": true,
-  "pushEnabled": false
-      */
-
-  public String getTimeZone() {
+    public String getTimeZone() {
         return timeZone;
     }
 

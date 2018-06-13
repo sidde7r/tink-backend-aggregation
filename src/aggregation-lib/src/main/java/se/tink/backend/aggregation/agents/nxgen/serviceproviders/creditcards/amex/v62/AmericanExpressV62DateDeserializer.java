@@ -23,9 +23,6 @@ public class AmericanExpressV62DateDeserializer extends JsonDeserializer<Date> {
         ObjectCodec objectCodec = jsonParser.getCodec();
         JsonNode node = objectCodec.readTree(jsonParser);
         JsonNode contentNode = node.get("rawValue");
-        if (contentNode == null) {
-            return null;
-        }
         return contentNode;
     }
 
