@@ -2,14 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor;
 
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgentTest;
+import se.tink.backend.aggregation.agents.nxgen.NextGenerationBaseAgentTest;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.utils.CurrencyConstants;
 
-public class SparebankenSorAgentTest extends NextGenerationAgentTest<SparebankenSorAgent> {
+public class SparebankenSorAgentTest extends NextGenerationBaseAgentTest<SparebankenSorAgent> {
     private static final String USERNAME = "username";
     private static final String MOBILENUMBER = "number";
     private static final String PASSWORD = "password";

@@ -1,15 +1,14 @@
-package se.tink.backend.aggregation.nxgen.agents.no.banks.dnb;
+package se.tink.backend.aggregation.agents.nxgen.no.banks.dnb;
 
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.DnbAgent;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgentTest;
+import se.tink.backend.aggregation.agents.nxgen.NextGenerationBaseAgentTest;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.utils.CurrencyConstants;
 
-public class DnbAgentTest extends NextGenerationAgentTest<DnbAgent> {
+public class DnbAgentTest extends NextGenerationBaseAgentTest<DnbAgent> {
     private final Credentials credentials = new Credentials();
 
     public DnbAgentTest() {

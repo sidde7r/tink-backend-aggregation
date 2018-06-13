@@ -2,12 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.n26;
 
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgentTest;
+import se.tink.backend.aggregation.agents.nxgen.NextGenerationBaseAgentTest;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 
-public class N26AgentTest extends NextGenerationAgentTest<N26Agent> {
+public class N26AgentTest extends NextGenerationBaseAgentTest<N26Agent> {
 
     public static final String USERNAME = "";
     public static final String PASSWORD = "";
