@@ -69,7 +69,7 @@ public class HandelsbankenNOTest extends NextGenerationBaseAgentTest<Handelsbank
     }
 
     private Agent createAgent(RefreshInformationRequest refreshInformationRequest) throws Exception {
-        testContext = new AgentTestContext(this, refreshInformationRequest.getCredentials());
+        testContext = new AgentTestContext(refreshInformationRequest.getCredentials());
         testContext.setTestContext(true);
         return factory.create(cls, refreshInformationRequest, testContext);
     }

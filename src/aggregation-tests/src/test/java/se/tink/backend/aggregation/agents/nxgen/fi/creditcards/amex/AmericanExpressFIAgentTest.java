@@ -72,7 +72,7 @@ public class AmericanExpressFIAgentTest extends NextGenerationBaseAgentTest<Amer
         credentials.setType(CredentialsTypes.PASSWORD);
         testRefresh(credentials);
 
-        this.testContext = new AgentTestContext(this, credentials);
+        this.testContext = new AgentTestContext(credentials);
         this.testContext.setTestContext(true);
         Agent agent = factory.create(cls, createRefreshInformationRequest(credentials),
                 this.testContext);

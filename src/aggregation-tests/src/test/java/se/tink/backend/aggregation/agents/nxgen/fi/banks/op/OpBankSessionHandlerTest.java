@@ -6,9 +6,6 @@ import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.AgentTestContext;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.rpc.OpBankResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.sessionhandler.OpBankSessionHandler;
@@ -34,7 +31,7 @@ public class OpBankSessionHandlerTest {
         credentials.setField(Field.Key.PASSWORD, PASSWORD);
         credentials.setType(CredentialsTypes.PASSWORD);
 
-        AgentContext context = new AgentTestContext(null, null);
+        AgentContext context = new AgentTestContext(null);
         SupplementalInformationController supplementalInformationController = new SupplementalInformationController(
                 context, credentials);
         bankClient = new OpBankApiClient(new TinkHttpClient(context, null));

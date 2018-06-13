@@ -10,11 +10,9 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAuthenticationTokenGenerator;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankLoginResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankMobileConfigurationsEntity;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -64,7 +62,7 @@ public class OpBankAuthenticatorTest {
         credentials.setField(Field.Key.USERNAME, username);
         credentials.setField(Field.Key.PASSWORD, password);
         credentials.setType(CredentialsTypes.PASSWORD);
-        TinkHttpClient tinkHttpClient = new TinkHttpClient(new AgentTestContext(null, credentials), null);
+        TinkHttpClient tinkHttpClient = new TinkHttpClient(new AgentTestContext(credentials), null);
         //tinkHttpClient.setDebugOutput(true);
         //tinkHttpClient.setProxy("http://127.0.0.1:8888");
 
@@ -177,11 +175,11 @@ public class OpBankAuthenticatorTest {
         credentials.setField(Field.Key.USERNAME, username);
         credentials.setField(Field.Key.PASSWORD, password);
         credentials.setType(CredentialsTypes.PASSWORD);
-        AgentContext context = new AgentTestContext(null, credentials);
+        AgentContext context = new AgentTestContext(credentials);
         SupplementalInformationController supplementalInformationController = new SupplementalInformationController(
                 context, credentials);
         OpBankApiClient bankClient =
-                spy(new OpBankApiClient(new TinkHttpClient(new AgentTestContext(null, null), null)));
+                spy(new OpBankApiClient(new TinkHttpClient(new AgentTestContext(null), null)));
         loginResultCaptor = new ResultCaptor();
         doAnswer(loginResultCaptor).when(bankClient).login(any());
         doReturn(new OpBankMobileConfigurationsEntity())

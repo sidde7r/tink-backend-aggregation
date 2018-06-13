@@ -45,11 +45,9 @@ public class AgentTestContext extends AgentContext {
     private Map<Account, List<TransferDestinationPattern>> transferDestinationPatternsByAccount = Maps.newHashMap();
     private List<FraudDetailsContent> detailsContents;
     private List<Transfer> transfers = Lists.newArrayList();
-    private AbstractAgentTest<?> agentTest;
     private Credentials credentials;
 
-    public AgentTestContext(AbstractAgentTest<?> agentTest, Credentials credentials) {
-        this.agentTest = agentTest;
+    public AgentTestContext(Credentials credentials) {
         this.credentials = credentials;
     }
 

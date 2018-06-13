@@ -91,7 +91,7 @@ public class AmericanExpressV3AgentTest extends AbstractAgentTest<AmericanExpres
         mockTransactionsRequest(1, 0);
         mockTransactionsRequest(1, 1);
 
-        context = new AgentTestContext(this, credentials);
+        context = new AgentTestContext(credentials);
         CredentialsRequest request = new RefreshInformationRequest(CoreUserMapper.toAggregationUser(user), provider,
                 credentials,
                 true);

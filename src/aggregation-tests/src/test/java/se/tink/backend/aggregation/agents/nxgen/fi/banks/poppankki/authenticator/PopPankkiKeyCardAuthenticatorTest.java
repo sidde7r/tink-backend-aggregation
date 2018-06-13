@@ -71,7 +71,7 @@ public class PopPankkiKeyCardAuthenticatorTest extends NextGenerationBaseAgentTe
     }
 
     private void authenticate() throws AuthenticationException, AuthorizationException {
-        AgentContext context = new AgentTestContext(this, credentials);
+        AgentContext context = new AgentTestContext(credentials);
         TinkHttpClient client = new TinkHttpClient(context, credentials);
         client.setDebugOutput(true);
         SamlinkSessionStorage sessionStorage = new SamlinkSessionStorage(new SessionStorage());

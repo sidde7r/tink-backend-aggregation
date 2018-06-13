@@ -30,7 +30,7 @@ public class BankdataTransactionFetcherTest {
         debugOutput = BankdataTestConfig.DEBUG_OUTPUT;
 
         Credentials credentials = new Credentials();
-        AgentContext context = new AgentTestContext(null, credentials);
+        AgentContext context = new AgentTestContext(credentials);
         TinkHttpClient client = new TinkHttpClient(context, credentials);
         client.setDebugOutput(debugOutput);
         Provider provider = new Provider();
