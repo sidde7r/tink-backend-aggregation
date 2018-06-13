@@ -19,13 +19,13 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.rpc.SdcAgreementServiceConfigurationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.SelectAgreementRequest;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.smsotp.SmsOtpAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.smsotp.SmsOtpAuthenticatorPassword;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.Field;
 
-public class SdcSmsOtpAuthenticator implements SmsOtpAuthenticator<SdcSmsOtpAuthenticator.InitValues> {
+public class SdcSmsOtpAuthenticator implements SmsOtpAuthenticatorPassword<SdcSmsOtpAuthenticator.InitValues> {
     private static final AggregationLogger LOGGER = new AggregationLogger(SdcSmsOtpAuthenticator.class);
 
     private final SdcApiClient apiClient;

@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.SdcSmsOtpAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.smsotp.SmsOtpAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.smsotp.SmsOtpAuthenticationPasswordController;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 /*
@@ -30,7 +30,7 @@ public class SdcNoAgent extends SdcAgent {
         SdcSmsOtpAuthenticator noSmsOtpAuthenticator = new SdcSmsOtpAuthenticator(bankClient,
                 sdcSessionStorage, agentConfiguration, credentials, sdcPersistentStorage);
 
-        SmsOtpAuthenticationController smsOtpController = new SmsOtpAuthenticationController(catalog,
+        SmsOtpAuthenticationPasswordController smsOtpController = new SmsOtpAuthenticationPasswordController(catalog,
                 supplementalInformationController, noSmsOtpAuthenticator);
 
         return new AutoAuthenticationController(request, context, smsOtpController,
