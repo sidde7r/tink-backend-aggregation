@@ -34,7 +34,6 @@ import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.aggregation.rpc.UserProfile;
 import se.tink.backend.aggregation.utils.CookieContainer;
-import se.tink.backend.aggregation.utils.GraphicalStdInForIntelliJ;
 import se.tink.backend.aggregation.utils.StringMasker;
 import se.tink.backend.common.config.AggregationWorkerConfiguration;
 import se.tink.backend.core.application.RefreshApplicationParameterKey;
@@ -298,7 +297,6 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
     }
 
     protected void testAgent(Credentials credentials, boolean expectsTransactions) throws Exception {
-        GraphicalStdInForIntelliJ.apply();
         testContext = new AgentTestContext(this, credentials);
 
         Agent agent = factory.create(cls, createRefreshInformationRequest(credentials), testContext);
