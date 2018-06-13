@@ -4,7 +4,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentTestContext;
 import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
-import se.tink.backend.aggregation.agents.nxgen.NextGenerationAgentTest;
+import se.tink.backend.aggregation.agents.nxgen.NextGenerationBaseAgentTest;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.utils.CurrencyConstants;
  * last https://nettbank.handelsbanken.no/secesb/rest/era/accounts request. That request will contain the values
  * for the session storage. These values are only valid as long as the session is active.
  */
-public class HandelsbankenNOTest extends NextGenerationAgentTest<HandelsbankenNOAgent> {
+public class HandelsbankenNOTest extends NextGenerationBaseAgentTest<HandelsbankenNOAgent> {
 
     public HandelsbankenNOTest() {
         super(HandelsbankenNOAgent.class);

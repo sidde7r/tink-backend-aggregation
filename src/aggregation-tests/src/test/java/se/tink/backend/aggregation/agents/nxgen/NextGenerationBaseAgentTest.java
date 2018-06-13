@@ -12,8 +12,8 @@ import se.tink.backend.aggregation.rpc.ProviderTypes;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 
-public abstract class NextGenerationAgentTest<T extends NextGenerationAgent> extends AbstractAgentTest<T> {
-    protected NextGenerationAgentTest(Class<T> cls) {
+public abstract class NextGenerationBaseAgentTest<T extends NextGenerationAgent> extends AbstractAgentTest<T> {
+    protected NextGenerationBaseAgentTest(Class<T> cls) {
         super(cls);
     }
 

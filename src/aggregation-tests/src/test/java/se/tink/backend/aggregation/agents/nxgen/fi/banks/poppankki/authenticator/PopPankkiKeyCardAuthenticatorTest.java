@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.S
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.authenticator.SamlinkKeyCardAuthenticator;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.agents.nxgen.NextGenerationAgentTest;
+import se.tink.backend.aggregation.agents.nxgen.NextGenerationBaseAgentTest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardInitValues;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -25,7 +25,7 @@ import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.utils.CurrencyConstants;
 
-public class PopPankkiKeyCardAuthenticatorTest extends NextGenerationAgentTest {
+public class PopPankkiKeyCardAuthenticatorTest extends NextGenerationBaseAgentTest {
     private static final AggregationLogger LOGGER = new AggregationLogger(PopPankkiKeyCardAuthenticatorTest.class);
     String username;
     String password;
