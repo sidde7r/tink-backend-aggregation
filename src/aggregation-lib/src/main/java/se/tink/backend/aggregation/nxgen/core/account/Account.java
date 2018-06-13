@@ -124,12 +124,6 @@ public abstract class Account {
             this.thisObj = self();
         }
 
-        @Deprecated
-        protected Builder(String accountNumber, Amount balance) {
-            thisObj.accountNumber = accountNumber;
-            thisObj.balance = balance;
-        }
-
         protected abstract T self();
 
         public String getName() {
@@ -169,7 +163,9 @@ public abstract class Account {
         }
 
         public String getUniqueIdentifier() {
-            return !Strings.isNullOrEmpty(thisObj.uniqueIdentifier) ? thisObj.uniqueIdentifier : getAccountNumber();
+            return !Strings.isNullOrEmpty(thisObj.uniqueIdentifier)
+                    ? thisObj.uniqueIdentifier
+                    : getAccountNumber();
         }
 
         public T setUniqueIdentifier(String uniqueIdentifier) {
@@ -179,8 +175,9 @@ public abstract class Account {
 
         public String getBankIdentifier() {
             String bankIdentifier = getTemporaryStorage().get(BANK_IDENTIFIER_KEY);
-            return java.util.Objects.nonNull(bankIdentifier) ?
-                    SerializationUtils.deserializeFromString(bankIdentifier, String.class) : getUniqueIdentifier();
+            return java.util.Objects.nonNull(bankIdentifier)
+                    ? SerializationUtils.deserializeFromString(bankIdentifier, String.class)
+                    : getUniqueIdentifier();
         }
 
         public T setBankIdentifier(String bankIdentifier) {
@@ -203,7 +200,9 @@ public abstract class Account {
         }
 
         public Map<String, String> getTemporaryStorage() {
-            return java.util.Objects.nonNull(temporaryStorage) ? temporaryStorage : Collections.emptyMap();
+            return java.util.Objects.nonNull(temporaryStorage)
+                    ? temporaryStorage
+                    : Collections.emptyMap();
         }
 
         public T setTemporaryStorage(Map<String, String> temporaryStorage) {
