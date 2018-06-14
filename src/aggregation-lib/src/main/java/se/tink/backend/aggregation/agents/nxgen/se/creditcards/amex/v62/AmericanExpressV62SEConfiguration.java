@@ -11,11 +11,9 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class AmericanExpressV62SEConfiguration implements AmericanExpressV62Configuration {
 
-    public static final String SWEDISH_LOCALE = "sv_SE";
-
     @Override
     public String getLocale() {
-        return SWEDISH_LOCALE;
+        return AmericanExpressV62SEConstants.LOCALE;
     }
 
     @Override
@@ -39,5 +37,16 @@ public class AmericanExpressV62SEConfiguration implements AmericanExpressV62Conf
         request.setCmlEnabled(true);
         request.setTimestamp(Long.toString(System.currentTimeMillis()));
         return request;
+    }
+
+
+    @Override
+    public String getAppId() {
+        return AmericanExpressV62SEConstants.APP_ID;
+    }
+
+    @Override
+    public String getUserAgent() {
+        return AmericanExpressV62SEConstants.USER_AGENT;
     }
 }
