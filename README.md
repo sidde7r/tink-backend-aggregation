@@ -1,12 +1,24 @@
 # Tink Backend Aggregation
 
+## Integration Squad
+
 ## Getting started
+
+Read through these documents:
+
+[Environment Setup](https://docs.google.com/document/d/1GirwFcub-0q2RK1zXLzKJt_dUTXEkhpPWJGKozPVias/)
+
+[Integration Playbook](https://docs.google.com/document/d/18pSzbRPlHYbKJtCDntMYE_4TqNWFdyTFuETq6lyNZBk)
+
+[Entities](https://docs.google.com/document/d/1jZj9p-jgafdX3iFZzNhEQynpoNi_pyR16Pwnq4UOd9c)
+
+[Good To Know Commands](https://docs.google.com/document/d/1tfVv733hbOBUxDByGhIpdPphMARVjaoxcsK4xnM3MOM)
+
+More documents can be found in the[Onboarding Folder](https://drive.google.com/drive/folders/1vuuznSI7I7FJpXeGwy3V_wNS_aZoq-yH)in Google Drive 
 
 ### Up and running
 
-Below is the easiest method to run the Tink Backend Aggregation Service.
-
-Check [trobule shooting list](./TROUBLESHOOTING.md) when you're failed in some steps.
+Check [trouble shooting list](./TROUBLESHOOTING.md) when you're failed in some steps.
 
 0. Prerequisites: Git, Java 8,
    [Bazel](https://bazel.build/versions/master/docs/install.html), Vagrant
@@ -18,8 +30,6 @@ Check [trobule shooting list](./TROUBLESHOOTING.md) when you're failed in some s
    [tink-backend-encryption](https://github.com/tink-ab/tink-backend-encryption),
    [tink-backend](https://github.com/tink-ab/tink-backend)
    and this repository.
-
-3. Build the project using Bazel: `bazel build :all`.
 
 ### Setup mobile app to use your local Tink service
 
@@ -111,15 +121,3 @@ _NB_ see: [test_output](https://docs.bazel.build/versions/master/command-line-re
  * production.p12 - se.tink.frontend.mobile.apple Production/Sandbox APN
  * enterprise.p12 - se.tink.iphone Production/Sandbox APN
 
-### Running applications
-
-```bash
-# Connect Docker to the docker server running inside Minikube
-eval $(minikube docker-env);
-
-# Build docker images with Bazel
-bazel build docker:bundle.tar && docker load -i bazel-bin/docker/bundle.tar;
-
-# Render and apply a Chart
-kubernetes-generator --chart insights --cluster local --environment development | kubectl apply -f -;
-```
