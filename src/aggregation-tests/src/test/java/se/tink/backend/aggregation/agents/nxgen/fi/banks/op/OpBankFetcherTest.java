@@ -9,10 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.AgentTestContext;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.OpBankTransactionalAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities.OpBankTransactionPaginationKey;
@@ -41,7 +37,7 @@ public class OpBankFetcherTest {
         credentials.setField(Field.Key.PASSWORD, PASSWORD);
         credentials.setType(CredentialsTypes.PASSWORD);
 
-        AgentContext context = new AgentTestContext(null, null);
+        AgentContext context = new AgentTestContext(null);
         SupplementalInformationController supplementalInformationController = new SupplementalInformationController(
                 context, credentials);
         bankClient = new OpBankApiClient(new TinkHttpClient(context, null));

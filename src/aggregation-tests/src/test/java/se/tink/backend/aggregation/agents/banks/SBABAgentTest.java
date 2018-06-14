@@ -34,7 +34,7 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
 
         credentials = createCredentials(TestSSN.TOLVAN, null, CredentialsTypes.MOBILE_BANKID);
 
-        testContext = new AgentTestContext(this, credentials);
+        testContext = new AgentTestContext(credentials);
         agent = (SBABAgent) factory
                 .create(SBABAgent.class, createRefreshInformationRequest(credentials, new Provider()), testContext);
     }

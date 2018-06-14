@@ -126,7 +126,7 @@ public class CreditSafeAgentTest extends AbstractAgentTest<CreditSafeAgent> {
         
         CredentialsRequest informationRefreshRequest = new RefreshInformationRequest(
                 CoreUserMapper.toAggregationUser(user), constructProvider(), credentials, true);
-        AgentTestContext testContext = new AgentTestContext(this, credentials);
+        AgentTestContext testContext = new AgentTestContext(credentials);
 
         CreditSafeAgent creditSafeAgent = new CreditSafeAgent(informationRefreshRequest, testContext);
         creditSafeAgent.setConfiguration(configuration);

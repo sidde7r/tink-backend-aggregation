@@ -46,7 +46,7 @@ public class PopPankkiAutoAuthenticatorTest extends NextGenerationBaseAgentTest 
 
     @Test
     public void testAuthenticate() throws Exception {
-        AgentContext context = new AgentTestContext(this, credentials);
+        AgentContext context = new AgentTestContext(credentials);
         TinkHttpClient client = new TinkHttpClient(context, credentials);
         client.setDebugOutput(true);
         SamlinkSessionStorage sessionStorage = new SamlinkSessionStorage(new SessionStorage());

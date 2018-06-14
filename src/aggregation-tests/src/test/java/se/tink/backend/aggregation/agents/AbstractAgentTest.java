@@ -137,7 +137,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
      * Test is done by first creating a agent and then recreate the same agent again and load the stored login session
      */
     protected void testAgentPersistentLoggedIn(Credentials credentials) throws Exception {
-        AgentTestContext testContext = new AgentTestContext(this, credentials);
+        AgentTestContext testContext = new AgentTestContext(credentials);
         Agent agent = factory.create(cls, createRefreshInformationRequest(credentials), testContext);
 
         Assert.assertTrue(agent instanceof PersistentLogin);
@@ -163,7 +163,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
         /** Login and save the Session on the Credentials
          *  Then logout to remove the Session from the banks backend
          */
-        AgentTestContext testContext = new AgentTestContext(this, credentials);
+        AgentTestContext testContext = new AgentTestContext(credentials);
         Agent agent = factory.create(cls, createRefreshInformationRequest(credentials), testContext);
 
         Assert.assertTrue(agent instanceof PersistentLogin);
@@ -208,7 +208,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
         /** Login and save the Session on the Credentials
          *  Then logout to remove the Session from the banks backend
          */
-        AgentTestContext testContext = new AgentTestContext(this, credentials);
+        AgentTestContext testContext = new AgentTestContext(credentials);
         Agent agent = factory.create(cls, createRefreshInformationRequest(credentials), testContext);
 
         Assert.assertTrue(agent instanceof PersistentLogin);
@@ -254,7 +254,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
      */
     protected void testAgentPersistentLoggedInExpiredSession(Credentials credentials, Class<?> sessionType)
             throws Exception {
-        AgentTestContext testContext = new AgentTestContext(this, credentials);
+        AgentTestContext testContext = new AgentTestContext(credentials);
 
         Agent agent = factory.create(cls, createRefreshInformationRequest(credentials), testContext);
 
@@ -273,7 +273,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
     }
 
     protected List<Transfer> fetchEInvoices(Credentials credentials) throws Exception {
-        AgentTestContext testContext = new AgentTestContext(this, credentials);
+        AgentTestContext testContext = new AgentTestContext(credentials);
         Agent agent = factory.create(cls, createRefreshInformationRequest(credentials), testContext);
         
         Assert.assertTrue("Agent could not login successfully", agent.login());
@@ -297,7 +297,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
     }
 
     protected void testAgent(Credentials credentials, boolean expectsTransactions) throws Exception {
-        testContext = new AgentTestContext(this, credentials);
+        testContext = new AgentTestContext(credentials);
 
         Agent agent = factory.create(cls, createRefreshInformationRequest(credentials), testContext);
 
@@ -357,7 +357,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
     }
 
     protected AgentTestContext testAgentNoCheck(Credentials credentials) throws Exception {
-        AgentTestContext testContext = new AgentTestContext(this, credentials);
+        AgentTestContext testContext = new AgentTestContext(credentials);
         testContext.setTestContext(true);
 
         Agent agent = factory.create(cls, createRefreshInformationRequest(credentials), testContext);
@@ -387,7 +387,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
     protected void testAgentAuthenticationError(Map<String, String> fields) throws Exception {
         Credentials credentials = createCredentials(fields, CredentialsTypes.PASSWORD);
 
-        AgentTestContext testContext = new AgentTestContext(this, credentials);
+        AgentTestContext testContext = new AgentTestContext(credentials);
 
         Agent agent = factory.create(cls, createRefreshInformationRequest(credentials), testContext);
 
@@ -461,7 +461,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
     }
 
     protected void testAgentAuthenticationError(Credentials credentials) throws Exception {
-        AgentTestContext testContext = new AgentTestContext(this, credentials);
+        AgentTestContext testContext = new AgentTestContext(credentials);
 
         Agent agent = factory.create(cls, createRefreshInformationRequest(credentials), testContext);
 
@@ -484,7 +484,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
 
     protected void testTransfer(Credentials credentials, Transfer transfer) throws Exception {
         // Create a regular agent.
-        AgentTestContext testContext = new AgentTestContext(this, credentials);
+        AgentTestContext testContext = new AgentTestContext(credentials);
 
         Agent agent = factory.create(cls, createRefreshInformationRequest(credentials), testContext);
 
@@ -528,7 +528,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
 
     protected void testUpdateTransfer(Credentials credentials, Transfer transfer) throws Exception {
         // Create a regular agent.
-        AgentTestContext testContext = new AgentTestContext(this, credentials);
+        AgentTestContext testContext = new AgentTestContext(credentials);
 
         Agent agent = factory.create(cls, createRefreshInformationRequest(credentials), testContext);
 
@@ -581,7 +581,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
 
         // Create a regular agent.
 
-        AgentTestContext testContext = new AgentTestContext(this, credentials);
+        AgentTestContext testContext = new AgentTestContext(credentials);
         Agent agent = factory.create(cls, createRefreshInformationRequest(credentials), testContext);
         SignableOperation signableOperation = new SignableOperation(transfer);
 
@@ -617,7 +617,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
     protected void testTransferError(Credentials credentials, Transfer transfer) throws Exception {
         // Create a regular agent.
 
-        AgentTestContext testContext = new AgentTestContext(this, credentials);
+        AgentTestContext testContext = new AgentTestContext(credentials);
 
         Agent agent = factory.create(cls, createRefreshInformationRequest(credentials), testContext);
 
@@ -668,7 +668,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
     protected void testFetchProductInformation(Credentials credentials, ProductType productType,
             UUID productInstanceId, Map<FetchProductInformationParameterKey, Object> parameters) throws Exception {
 
-        testContext = new AgentTestContext(this, credentials);
+        testContext = new AgentTestContext(credentials);
 
         Agent agent = instantiateAgent(createRefreshInformationRequest(credentials));
 
@@ -680,7 +680,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
     protected void testRefreshApplication(Credentials credentials, ProductType type, UUID applicationId,
             Map<RefreshApplicationParameterKey, Object> parameters) throws Exception {
 
-        testContext = new AgentTestContext(this, credentials);
+        testContext = new AgentTestContext(credentials);
 
         Agent agent = instantiateAgent(createRefreshInformationRequest(credentials));
 
@@ -729,7 +729,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
     }
 
     private Agent instantiateAgent(CredentialsRequest request) throws Exception {
-        testContext = new AgentTestContext(this, request.getCredentials());
+        testContext = new AgentTestContext(request.getCredentials());
 
         Agent agent = factory.create(cls, request, testContext);
         agent.setConfiguration(configuration);

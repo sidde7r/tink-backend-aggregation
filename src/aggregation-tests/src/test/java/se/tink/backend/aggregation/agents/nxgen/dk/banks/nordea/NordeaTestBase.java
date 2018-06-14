@@ -28,7 +28,7 @@ public class NordeaTestBase {
         credentials.setUsername(username);
         credentials.setPassword(password);
 
-        context = new AgentTestContext(null, credentials);
+        context = new AgentTestContext(credentials);
 
         tinkHttpClient = spy(new TinkHttpClient(context, credentials));
         tinkHttpClient.setDebugOutput(TestConfig.CLIENT_DEBUG_OUTPUT);

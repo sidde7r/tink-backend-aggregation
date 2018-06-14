@@ -52,7 +52,7 @@ public class LansforsakringarAgentTest extends AbstractAgentTest<Lansforsakringa
     @Test
     public void testKeepAlive() throws Exception {
         Credentials credentials = getUser1BankIdCredentials();
-        AgentTestContext testContext = new AgentTestContext(this, credentials);
+        AgentTestContext testContext = new AgentTestContext(credentials);
         LansforsakringarAgent agent = (LansforsakringarAgent) factory
                 .create(cls, createRefreshInformationRequest(credentials), testContext);
         agent.login();
