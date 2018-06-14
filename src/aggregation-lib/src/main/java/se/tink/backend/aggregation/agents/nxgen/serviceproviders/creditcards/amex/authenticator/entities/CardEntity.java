@@ -21,17 +21,16 @@ public class CardEntity {
         // TODO confirm there is no credit for this account or find credit for this account
         // currently the credit is set to 0
 
-        CreditCardAccount.Builder builder =
-                CreditCardAccount.builder(
-                        cardNumberDisplay,
-                        config.toAmount(getBalanceValue()),
-                        config.toAmount(0d))
-                        .setName(
-                                cardProductName
-                                        + " - "
-                                        + cardNumberDisplay.substring(cardNumberDisplay.length() - 5))
-                        // card number display in format "xxxxxx - {last 5 digits in number}"
-                        .setBankIdentifier(String.valueOf(sortedIndex));
+        CreditCardAccount.Builder<?, ?> builder = CreditCardAccount.builder(
+                cardNumberDisplay,
+                config.toAmount(getBalanceValue()),
+                config.toAmount(0d))
+                .setName(
+                        cardProductName
+                                + " - "
+                                + cardNumberDisplay.substring(cardNumberDisplay.length() - 5))
+                // card number display in format "xxxxxx - {last 5 digits in number}"
+                .setBankIdentifier(String.valueOf(sortedIndex));
         return builder.build();
     }
 

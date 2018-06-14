@@ -16,7 +16,8 @@ public class LoanDetailsEntity extends LoanOverviewEntity {
             throw new IllegalStateException("Unknown loan data received: " + SerializationUtils.serializeToString(this));
         }
 
-        LoanAccount.Builder loanAccountBuilder = LoanAccount.builder(getLoanNumber(), Amount.inEUR(-getBalance()))
+        LoanAccount.Builder<?, ?> loanAccountBuilder = LoanAccount.builder(getLoanNumber(), Amount.inEUR(-getBalance()));
+        loanAccountBuilder
                 .setName(getLoanName().getFi())
                 .setUniqueIdentifier(getLoanNumber())
                 .setBankIdentifier(getLoanNumber())
