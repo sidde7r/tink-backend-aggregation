@@ -1,10 +1,8 @@
 package se.tink.backend.aggregation.workers;
 
-import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sun.jersey.api.client.UniformInterfaceException;
@@ -17,6 +15,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -27,11 +26,11 @@ import org.apache.curator.framework.recipes.barriers.DistributedBarrier;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.AgentEventListener;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.aggregation.rpc.CreateCredentialsRequest;
@@ -53,6 +52,7 @@ import se.tink.backend.core.FraudDetailsContent;
 import se.tink.backend.core.StatisticMode;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.application.ApplicationState;
+import se.tink.backend.core.enums.TinkFeature;
 import se.tink.backend.core.product.ProductPropertyKey;
 import se.tink.backend.core.signableoperation.SignableOperation;
 import se.tink.backend.core.transfer.Transfer;
@@ -272,11 +272,14 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             }
         });
 
+        List<String> accountIds = accounts.stream()
+                .map(Account::getId)
+                .collect(Collectors.toList());
 
         if (useAggregationController) {
             se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest processAccountsRequest =
                     new se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest();
-            processAccountsRequest.setAccountIds(Lists.newArrayList(Iterables.transform(accounts, Account::getId)));
+            processAccountsRequest.setAccountIds(accountIds);
             processAccountsRequest.setCredentialsId(credentials.getId());
             processAccountsRequest.setUserId(request.getUser().getId());
 
@@ -289,8 +292,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         } else {
             ProcessAccountsRequest processAccountsRequest = new ProcessAccountsRequest();
 
-            processAccountsRequest
-                    .setAccountIds(Lists.newArrayList(Iterables.transform(accounts, Account::getId)));
+            processAccountsRequest.setAccountIds(accountIds);
             processAccountsRequest.setCredentialsId(credentials.getId());
             processAccountsRequest.setUserId(request.getUser().getId());
 
@@ -327,7 +329,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
     private Optional<Account> getAccount(String accountId) {
         return accounts.stream()
-                .filter(a -> Objects.equal(a.getId(), accountId))
+                .filter(a -> Objects.equals(a.getId(), accountId))
                 .findFirst();
     }
 
@@ -338,6 +340,17 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         List<Transaction> transactions = Lists.newArrayList();
 
         for (String accountId : transactionsByAccount.keySet()) {
+            Optional<Account> account = request.getAccounts().stream()
+                    .filter(a -> Objects.equals(a.getId(), accountId))
+                    .findFirst();
+
+            if (account.isPresent() && shouldNotAggregateDataForAccount(account.get())) {
+                // Account marked to not aggregate data from.
+                // Preferably we would not even download the data but this makes sure
+                // we don't process further or store the account's data.
+                continue;
+            }
+
             List<Transaction> accountTransactions = transactionsByAccount.get(accountId);
 
             if (!credentials.isDemoCredentials()) {
@@ -520,7 +533,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                     //       and this comment.
                     // updateCredentialsExcludingSensitiveInformation(credentials);
 
-                    if (Objects.equal(supplementalInformation, "null")) {
+                    if (Objects.equals(supplementalInformation, "null")) {
                         log.info("Supplemental information request was cancelled by client (returned null)");
                         supplementalInformation = null;
                     }
@@ -549,8 +562,25 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         requestSupplementalInformation(credentials, wait);
     }
 
+    private boolean shouldNotAggregateDataForAccount(Account account) {
+        Optional<Account> existingAccount = request.getAccounts().stream()
+                .filter(a -> Objects.equals(a.getBankId(), account.getBankId()))
+                .findFirst();
+
+        return existingAccount.isPresent() &&
+                existingAccount.get().getAccountExclusion().excludedFeatures.contains(TinkFeature.AGGREGATION);
+    }
+
     @Override
     public Account updateAccount(Account account, AccountFeatures accountFeatures) {
+
+        if (shouldNotAggregateDataForAccount(account)) {
+            // Account marked to not aggregate data from.
+            // Preferably we would not even download the data but this makes sure
+            // we don't process further or store the account's data.
+            return account;
+        }
+
         account.setCredentialsId(request.getCredentials().getId());
         account.setUserId(request.getCredentials().getUserId());
 
@@ -689,7 +719,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
             String payload;
 
-            if (Objects.equal(serviceContext.getConfiguration().getCluster(), Cluster.ABNAMRO)) {
+            if (Objects.equals(serviceContext.getConfiguration().getCluster(), Cluster.ABNAMRO)) {
                 payload = statusPayload;
             } else {
                 StringBuffer buffer = new StringBuffer();
@@ -710,6 +740,14 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
     @Override
     public Account updateTransactions(final Account account, List<Transaction> transactions) {
+
+        if (shouldNotAggregateDataForAccount(account)) {
+            // Account marked to not aggregate data from.
+            // Preferably we would not even download the data but this makes sure
+            // we don't process further or store the account's data.
+            return account;
+        }
+
         final Account updatedAccount = updateAccount(account);
 
         for (Transaction transaction : transactions) {
