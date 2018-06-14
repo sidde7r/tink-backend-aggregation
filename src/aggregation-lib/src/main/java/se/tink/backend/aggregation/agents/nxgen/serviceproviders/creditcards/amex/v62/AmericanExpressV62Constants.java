@@ -7,8 +7,6 @@ public class AmericanExpressV62Constants {
     public static final String BASE_API = "https://global.americanexpress.com";
 
     public enum ConstantValueHeaders implements HeaderEnum {
-        APP_ID("X-AXP-AppId", "se.co.americanexpress.amexservice"),
-        USER_AGENT("User-Agent", "Amex%20SE/27 CFNetwork/808.2.16 Darwin/16.3.0"),
         CHARSET("charset", "UTF-8"),
         CLIENT_TYPE("X-AXP-ClientType", "iPhone"),
         APP_VERSION("X-AXP-AppVersion", "6.2.1"),
@@ -63,6 +61,7 @@ public class AmericanExpressV62Constants {
         public static final String SESSION = "X-AXP-AmexSession";
         public static final String CUPCAKE = "X-AXP-BlueBoxValues";
         public static final String INSTALLATION_ID = "X-AXP-AppInstallationId";
+        public static final String APP_ID = "X-AXP-AppId";
     }
 
     public static final class RequestValue {

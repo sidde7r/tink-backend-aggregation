@@ -8,6 +8,10 @@ public interface AmericanExpressV62Configuration {
 
     public String getLocale();
 
+    public String getAppId();
+    public String getUserAgent();
+
+
     // == Credit Card Account ==
     public String getBankId(CardEntity cardEntity);
 
