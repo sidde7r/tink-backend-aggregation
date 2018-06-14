@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.assertj.core.util.Lists;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Configuration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Predicates;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.BillingInfoDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.TransactionDetailsEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginatorResponse;
@@ -20,7 +21,9 @@ public class TransactionResponse implements TransactionPagePaginatorResponse {
     @JsonIgnore
     private boolean canStillFetch = true;
     @JsonIgnore
-    private Optional<List<Transaction>> tinkTransactions = Optional.empty();
+    private int pageNo;
+    @JsonIgnore
+    private List<Transaction> pendingTransactions;
 
     public TransactionDetailsEntity getTransactionDetails() {
         return this.transactionDetails;
@@ -28,19 +31,14 @@ public class TransactionResponse implements TransactionPagePaginatorResponse {
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        List<Transaction> transactions = tinkTransactions.orElseGet(() -> parseResponse());
-        return transactions;
+        return parseResponse();
     }
 
-    // Hack to know if we can fetch more transaction pages
-    // if Tink transaction Optional is empty it means that the response was not parsed, otherwise it was and we need
-    // only the status
     @Override
     public boolean canFetchMore() {
-        return tinkTransactions.map(t -> canStillFetch).orElseGet(() -> {
-            this.parseResponse();
-            return canStillFetch;
-        });
+        int maxPageNo = transactionDetails.getBillingInfo().getBillingInfoDetails().stream()
+                .mapToInt(BillingInfoDetailsEntity::getPageNo).max().orElse(0);
+        return maxPageNo > pageNo;
     }
 
     public TransactionResponse setConfig(AmericanExpressV62Configuration config) {
@@ -48,26 +46,22 @@ public class TransactionResponse implements TransactionPagePaginatorResponse {
         return this;
     }
 
-    public TransactionPagePaginatorResponse getPaginatorResponse() {
+    public TransactionPagePaginatorResponse getPaginatorResponse(int pageNo, List<Transaction> pendingTransactions) {
+        this.pageNo = pageNo;
+        this.pendingTransactions = pendingTransactions;
         return this;
     }
 
-    // If this page contains error we can't fetch more pages.
-    // If it's a proper page we can try to fetch one more
-    // Solution used as we don't have information about number of pages
-    protected List<Transaction> parseResponse() {
-        List<Transaction> list = new ArrayList<>();
-        Optional.ofNullable(this.transactionDetails.getActivityList()).orElseGet(() -> {
-            this.canStillFetch = false;
-            return Lists.emptyList();
-        })
-                .forEach(
-                        activity ->
-                                AmericanExpressV62Predicates.getTransactionsFromGivenPage.apply(activity)
-                                        .forEach(AmericanExpressV62Predicates
-                                                .transformIntoTinkTransactions(config, list))
-                );
-        this.tinkTransactions = Optional.of(list);
+    private List<Transaction> parseResponse() {
+        List<Transaction> list = new ArrayList<>(pendingTransactions);
+
+        Optional.ofNullable(this.transactionDetails.getActivityList()).orElseGet(Lists::emptyList)
+            .forEach(
+                activity ->
+                    AmericanExpressV62Predicates.getTransactionsFromGivenPage.apply(activity)
+                        .forEach(AmericanExpressV62Predicates
+                            .transformIntoTinkTransactions(config, list))
+            );
         return list;
     }
 }

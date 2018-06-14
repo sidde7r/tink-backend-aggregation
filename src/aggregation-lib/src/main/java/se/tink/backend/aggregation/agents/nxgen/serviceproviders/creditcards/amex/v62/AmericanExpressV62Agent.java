@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62;
 
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.AmericanExpressV62PasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.AmericanExpressV62CreditCardFetcher;
@@ -27,8 +25,6 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 public class AmericanExpressV62Agent extends NextGenerationAgent {
 
-    private static final Logger LOGGER =
-            LoggerFactory.getLogger(AmericanExpressV62Agent.class);
     private final AmericanExpressV62ApiClient apiClient;
     private final AmericanExpressV62Configuration config;
 
@@ -72,8 +68,7 @@ public class AmericanExpressV62Agent extends NextGenerationAgent {
         TransactionFetcherController<CreditCardAccount> amexV62TransactionFetcherController =
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        amexV66TransactionPagePaginationController,
-                        americanExpressV62TransactionFetcher
+                        amexV66TransactionPagePaginationController
                 );
 
         return Optional.of(
