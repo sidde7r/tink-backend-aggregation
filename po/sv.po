@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2018-05-03 11:50+0000\n"
-"PO-Revision-Date: 2018-05-03 11:50+0000\n"
+"POT-Creation-Date: 2018-06-11 15:41+0000\n"
+"PO-Revision-Date: 2018-06-11 15:41+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: sv\n"
@@ -10,64 +10,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-msgid "Failed to sign using BankID"
-msgstr "Misslyckades med att signera med BankID"
-
-msgid "Transfer doesn't exist."
-msgstr "Överföringen finns inte."
-
-msgid "Couldn't find giro account."
-msgstr "Kunde inte hitta giro-konto."
-
-msgid "Not a valid giro number."
-msgstr "Inte ett giltigt giro-nummer."
-
-msgid "Transfer destination already exists."
-msgstr "Mottagaren finns redan."
-
-msgid "The stream is aborted by the client."
-msgstr "Strömmen stängdes av klienten."
-
-msgid "Application was not found."
-msgstr "Ansökan kunde inte hittas."
-
-msgid "Failed to get application."
-msgstr "Ansökan kunde inte hämtas."
-
-msgid "Failed to submit form."
-msgstr "Kunde inte skicka in formulär."
-
-msgid "The application is already signed and cannot be modified"
-msgstr "Ansökan har redan signerats och kan inte ändras."
-
-msgid "Unable to invoke application signing."
-msgstr "Kunde inte öppna signering av ansökan."
-
-msgid "Could not process application"
-msgstr "Ansökan kunde inte bearbetas."
-
-msgid "Application hasn't been completed yet."
-msgstr "Ansökan har inte slutförts än."
-
-msgid "Permission denied."
-msgstr "Du har inte rätt att genomföra åtgärden."
-
-msgid "Property not found."
-msgstr "Fastighet kunde inte hittas."
-
-msgid "Illegal argument"
-msgstr "Felaktigt argument"
-
-msgid "Follow item already exist"
-msgstr "Budgeten finns redan"
-
-msgid "Follow item was not found"
-msgstr "Budgeten kunde inte hittas"
-
-#, java-format
-msgid "{0} large expense"
-msgstr "{0} stor utgift"
 
 #, java-format
 msgid "Updating {0}..."
@@ -3932,4 +3874,62 @@ msgstr "Du har en bra sparbuffert! Mer än {0} över snittet."
 
 msgid "Your savings buffer is slightly lower than average. We can help!"
 msgstr "Din sparbuffert är lite lägre än snittet. Vi kan hjälpa till!"
+
+msgid "Failed to sign using BankID"
+msgstr "Misslyckades med att signera med BankID"
+
+msgid "Transfer doesn't exist."
+msgstr "Överföringen finns inte."
+
+msgid "Couldn't find giro account."
+msgstr "Kunde inte hitta giro-konto."
+
+msgid "Not a valid giro number."
+msgstr "Inte ett giltigt giro-nummer."
+
+msgid "Transfer destination already exists."
+msgstr "Mottagaren finns redan."
+
+msgid "The stream is aborted by the client."
+msgstr "Strömmen stängdes av klienten."
+
+msgid "Application was not found."
+msgstr "Ansökan kunde inte hittas."
+
+msgid "Failed to get application."
+msgstr "Ansökan kunde inte hämtas."
+
+msgid "Failed to submit form."
+msgstr "Kunde inte skicka in formulär."
+
+msgid "The application is already signed and cannot be modified"
+msgstr "Ansökan har redan signerats och kan inte ändras."
+
+msgid "Unable to invoke application signing."
+msgstr "Kunde inte öppna signering av ansökan."
+
+msgid "Could not process application"
+msgstr "Ansökan kunde inte bearbetas."
+
+msgid "Application hasn't been completed yet."
+msgstr "Ansökan har inte slutförts än."
+
+msgid "Permission denied."
+msgstr "Du har inte rätt att genomföra åtgärden."
+
+msgid "Property not found."
+msgstr "Fastighet kunde inte hittas."
+
+msgid "Illegal argument"
+msgstr "Felaktigt argument"
+
+msgid "Follow item already exist"
+msgstr "Budgeten finns redan"
+
+msgid "Follow item was not found"
+msgstr "Budgeten kunde inte hittas"
+
+#, java-format
+msgid "{0} large expense"
+msgstr "{0} stor utgift"
 

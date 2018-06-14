@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
-require_once('onesky/oneskyclient.php');
-require_once('onesky/potfilegenerator.php');
+require_once('oneskyclient.php');
+require_once('potfilegenerator.php');
 
 $oneSkyClient = new OneSkyClient();
 $potFileGenerator = new PotFileGenerator();

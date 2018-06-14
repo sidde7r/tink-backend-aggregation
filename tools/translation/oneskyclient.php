@@ -1,5 +1,5 @@
 <?php
-require_once('lib/onesky.php');
+require_once('onesky.php');
 
 class OneSkyClient {
     private $apiKey = "E8omlD3G9COIQJQFAsFivgtQuoqmgEsK";
@@ -17,12 +17,12 @@ class OneSkyClient {
     public function upload($filename) {
         // Use xgettext to remove duplicate strings from the .pot file
         echo "Removing duplicate strings from '" . $filename . "'..." . PHP_EOL;
-        exec('msguniq --use-first --no-location po/' . $filename . ' -o po/' . $filename);
+        exec('msguniq --use-first --no-location ../../po/' . $filename . ' -o ../../po/' . $filename);
 
         echo "Uploading '" . $filename . "'..." . PHP_EOL;
         $response = $this->client->files('upload', array(
             'project_id'                => $this->projectId,
-            'file'                      => 'po/' . $filename,
+            'file'                      => '../../po/' . $filename,
             'file_format'               => 'GNU_PO',
             'locale'                    => $this->baseLocale,
             'is_keeping_all_strings'    => FALSE
