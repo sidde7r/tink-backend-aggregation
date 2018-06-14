@@ -18,7 +18,13 @@ public class AgentFactory {
     }
 
     @SuppressWarnings("unchecked")
-    private Class<? extends Agent> getAgentClass(Credentials credentials, Provider provider) throws Exception {
+    public static Class<? extends Agent> getAgentClass(Provider provider) throws ClassNotFoundException {
+        return (Class<? extends Agent>) Class.forName(AgentWorker.DEFAULT_AGENT_PACKAGE_CLASS_PREFIX + "."
+                + provider.getClassName());
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Class<? extends Agent> getAgentClass(Credentials credentials, Provider provider) throws Exception {
         Class<? extends Agent> agentClass;
 
         // Check if this is demo account.
@@ -27,8 +33,7 @@ public class AgentFactory {
             agentClass = DemoAgent.class;
             credentials.setPassword("demo");
         } else {
-            agentClass = (Class<? extends Agent>) Class.forName(AgentWorker.DEFAULT_AGENT_PACKAGE_CLASS_PREFIX + "."
-                    + provider.getClassName());
+            agentClass = getAgentClass(provider);
         }
 
         return agentClass;
