@@ -1,4 +1,0 @@
-__label__expenses:home.incurences-fees försäkring
-__label__expenses:home.communications telefon
-__label__expenses:food.restaurants pizza
-__label__expenses:transport.car bil

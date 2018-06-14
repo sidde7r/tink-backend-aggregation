@@ -111,15 +111,6 @@ http_archive(
 
 load("@io_bazel_rules_sass//sass:sass.bzl", "sass_repositories")
 
-# Facebook fasttext
-new_http_archive(
-  name = "fasttext",
-  url = "https://github.com/tink-ab/fastText/archive/46ee6c6.tar.gz",
-  sha256 = "4f5287385e48313de2b64a2e8b3d7779b0d198d9c913b3980d2783256b24cf7f",
-  build_file = "third_party/BUILD.fasttext",
-  strip_prefix = "fastText-46ee6c6087e09bf72a72742e5da1821a9a903cda",
-)
-
 # This imports the SASS compiler using the io_bazel_rules_sass build rules.
 # It is using sha256 checksums, so it's fine - but if upgrading make sure to
 # make sure that the new version is doing the same.
