@@ -1,12 +1,11 @@
 package se.tink.backend.aggregation.agents.banks.skandiabanken.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.List;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.system.rpc.Portfolio;
 import se.tink.backend.utils.StringUtils;
-
-import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class InvestmentEntity {
@@ -24,6 +23,11 @@ public class InvestmentEntity {
     private int transferStatus;
     private int type;
     private int investmentStatus;
+    private String disposableAmount;
+
+    public String getDisposableAmount() {
+        return disposableAmount;
+    }
 
     public String getId() {
         return id;
