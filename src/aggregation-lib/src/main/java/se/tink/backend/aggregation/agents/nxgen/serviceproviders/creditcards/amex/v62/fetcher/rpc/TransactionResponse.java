@@ -23,7 +23,7 @@ public class TransactionResponse implements TransactionPagePaginatorResponse {
     @JsonIgnore
     private int pageNo;
     @JsonIgnore
-    private List<Transaction> pendingTransactions;
+    private List<Transaction> pendingTransactions = new ArrayList<>();
 
     public TransactionDetailsEntity getTransactionDetails() {
         return this.transactionDetails;
@@ -31,11 +31,19 @@ public class TransactionResponse implements TransactionPagePaginatorResponse {
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
+        if (transactionDetails.getStatus() != 0) {
+            throw new IllegalStateException("Could not fetch transactions");
+        }
+
         return parseResponse();
     }
 
     @Override
     public boolean canFetchMore() {
+        if (transactionDetails.getStatus() != 0) {
+            throw new IllegalStateException("Could not fetch transactions");
+        }
+
         int maxPageNo = transactionDetails.getBillingInfo().getBillingInfoDetails().stream()
                 .mapToInt(BillingInfoDetailsEntity::getPageNo).max().orElse(0);
         return maxPageNo > pageNo;

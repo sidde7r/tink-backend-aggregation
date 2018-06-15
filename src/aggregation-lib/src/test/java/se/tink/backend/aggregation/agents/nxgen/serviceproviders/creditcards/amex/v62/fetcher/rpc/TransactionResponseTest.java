@@ -22,11 +22,12 @@ public class TransactionResponseTest {
     public void parseResponse_emptyTransactionList() throws IOException {
         TransactionResponse transactionResponse = TransactionResponseTestDataHelper
                 .buildResponse(TransactionResponseTestDataHelper.ResponseType.NO_TRANSACTIONS_FOR_PERIOD);
+
         Collection transactions = transactionResponse.getTinkTransactions();
         assertTrue(transactions.isEmpty());
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void parseResponse_errorPageOfTransactionList() throws IOException {
         TransactionResponse transactionResponse = TransactionResponseTestDataHelper
                 .buildResponse(TransactionResponseTestDataHelper.ResponseType.ERROR_LIST);
