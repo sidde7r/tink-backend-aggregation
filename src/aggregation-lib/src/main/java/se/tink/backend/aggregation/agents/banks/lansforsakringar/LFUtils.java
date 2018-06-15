@@ -138,6 +138,11 @@ public class LFUtils {
                     (paymentRequest.getPaymentDate() == 0 || Objects.equals(requestDate, entityDate));
         } else if (obj instanceof UpcomingTransactionEntity) {
             UpcomingTransactionEntity transaction = (UpcomingTransactionEntity) obj;
+
+            if (transaction.getPaymentInfo() == null) {
+                return false;
+            }
+
             long transactionDate = flattenDate(transaction.getDate().getTime());
 
             return Objects.equals(requestHash, transaction.calculatePaymentHash(paymentRequest.getFromAccount())) &&
@@ -149,6 +154,11 @@ public class LFUtils {
 
     public static boolean isSameTransfer(TransferRequest transferRequest,
             UpcomingTransactionEntity upcomingTransactionEntity) {
+
+
+        if (upcomingTransactionEntity.getTransferInfo() == null) {
+            return false;
+        }
 
         return Objects.equals(transferRequest.calculateHash(),
                 upcomingTransactionEntity.calculateTransferHash(transferRequest.getFromAccount()));
