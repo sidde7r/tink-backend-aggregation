@@ -1,10 +1,12 @@
 import sys
 import argparse
+import os
 from gevent.pywsgi import WSGIServer
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, abort, Response
 
 app = Flask(__name__)
 
+CREDENTIALS_PATH = "./credentials/"
 
 class SupplementalStdin(object):
     def __init__(self, fields):
@@ -38,6 +40,43 @@ class SupplementalStdin(object):
 def ask_user_for_data(fields):
     sp = SupplementalStdin(fields)
     return sp.get_answers()
+
+
+def sanitize_filename(filename):
+    return "".join([c for c in filename if c.isalpha() or c.isdigit() or c==" "]).rstrip()
+
+
+def make_dirs(path):
+    try:
+        os.makedirs(path)
+    except OSError:
+        if not os.path.isdir(path):
+            raise
+
+
+@app.route("/api/v1/credential/<provider>/<credentialId>", methods=("POST",))
+def save_credential(provider, credentialId):
+
+    # make sure the credentials output path exists
+    make_dirs(CREDENTIALS_PATH)
+
+    filename = CREDENTIALS_PATH + sanitize_filename(provider + credentialId)
+
+    with open(filename, "wb") as f:
+        f.write(request.get_data())
+
+    return ('', 204)
+
+
+@app.route("/api/v1/credential/<provider>/<credentialId>", methods=("GET",))
+def load_credential(provider, credentialId):
+    filename = CREDENTIALS_PATH + sanitize_filename(provider + credentialId)
+
+    try:
+        with open(filename, "rb") as f:
+            return Response(f.read(), mimetype="application/json")
+    except IOError:
+        abort(404, "credential not found")
 
 
 @app.route("/api/v1/supplemental", methods=("POST",))
