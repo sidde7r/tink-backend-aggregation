@@ -45,9 +45,9 @@ public class HandelsbankenAPIAgent implements WebResourceBuilderFactory {
         clientRequest = clientRequest.header("User-Agent", defaultUserAgent);
 
         clientRequest = clientRequest.header("X-SHB-DEVICE-NAME", "iOS;Tink;Tink"); // iOS;Apple;iPhone9.3
-        clientRequest = clientRequest.header("X-SHB-DEVICE-MODEL", "IOS-10.1.1,7.4.0,iPhone9.3,SEPRIV");
+        clientRequest = clientRequest.header("X-SHB-DEVICE-MODEL", "IOS-11.1.2,7.8.2,iPhone9.3,SEPRIV");
         clientRequest = clientRequest.header("X-SHB-DEVICE-CLASS", "APP");
-        clientRequest = clientRequest.header("X-SHB-APP-VERSION", "2.4:8.0");
+        clientRequest = clientRequest.header("X-SHB-APP-VERSION", "3.3:8.4");
         return clientRequest;
     }
 
