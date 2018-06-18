@@ -31,7 +31,6 @@ public class AmericanExpressV62ApiClient {
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
         this.config = config;
-        client.setDebugOutput(true);
     }
 
     protected RequestBuilder createRequest(String uri) {

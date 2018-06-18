@@ -2,74 +2,86 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.am
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import org.assertj.core.util.Lists;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Configuration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Predicates;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.BillingInfoDetailsEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.ActivityListEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.TransactionDetailsEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
-public class TransactionResponse implements TransactionPagePaginatorResponse {
+public class TransactionResponse {
     private TransactionDetailsEntity transactionDetails;
+    @JsonIgnore
     private AmericanExpressV62Configuration config;
-    @JsonIgnore
-    private boolean canStillFetch = true;
-    @JsonIgnore
-    private int pageNo;
-    @JsonIgnore
-    private List<Transaction> pendingTransactions = new ArrayList<>();
 
     public TransactionDetailsEntity getTransactionDetails() {
         return this.transactionDetails;
     }
 
-    @Override
-    public Collection<? extends Transaction> getTinkTransactions() {
-        if (transactionDetails.getStatus() != 0) {
-            throw new IllegalStateException("Could not fetch transactions");
-        }
-
-        return parseResponse();
+    @JsonIgnore
+    public TransactionPagePaginatorResponse getPaginatorResponse(AmericanExpressV62Configuration config) {
+        return getPaginatorResponse(config, Collections.emptyList());
     }
 
-    @Override
-    public boolean canFetchMore() {
-        if (transactionDetails.getStatus() != 0) {
-            throw new IllegalStateException("Could not fetch transactions");
-        }
-
-        int maxPageNo = transactionDetails.getBillingInfo().getBillingInfoDetails().stream()
-                .mapToInt(BillingInfoDetailsEntity::getPageNo).max().orElse(0);
-        return maxPageNo > pageNo;
-    }
-
-    public TransactionResponse setConfig(AmericanExpressV62Configuration config) {
+    @JsonIgnore
+    public TransactionPagePaginatorResponse getPaginatorResponse(AmericanExpressV62Configuration config, List<Transaction> pendingTransactions) {
         this.config = config;
-        return this;
+
+        List<Transaction> transactions = new ArrayList<>();
+        transactions.addAll(pendingTransactions);
+        transactions.addAll(parseResponse());
+
+        TransactionPagePaginatorResponseImpl response = new TransactionPagePaginatorResponseImpl();
+        response.setTransactions(transactions);
+        response.setCanFetchMore(hasMoreTransactions());
+
+        return response;
     }
 
-    public TransactionPagePaginatorResponse getPaginatorResponse(int pageNo, List<Transaction> pendingTransactions) {
-        this.pageNo = pageNo;
-        this.pendingTransactions = pendingTransactions;
-        return this;
-    }
-
+    // If this page contains error we can't fetch more pages.
+    // If it's a proper page we can try to fetch one more
+    // Solution used as we don't have information about number of pages
     private List<Transaction> parseResponse() {
-        List<Transaction> list = new ArrayList<>(pendingTransactions);
+        List<Transaction> list = new ArrayList<>();
 
-        Optional.ofNullable(this.transactionDetails.getActivityList()).orElseGet(Lists::emptyList)
-            .forEach(
-                activity ->
-                    AmericanExpressV62Predicates.getTransactionsFromGivenPage.apply(activity)
-                        .forEach(AmericanExpressV62Predicates
-                            .transformIntoTinkTransactions(config, list))
-            );
+        if (!hasTransactions()) {
+            return Lists.emptyList();
+        }
+
+        transactionDetails.getActivityList()
+                .forEach(
+                        activity ->
+                                AmericanExpressV62Predicates.getTransactionsFromGivenPage.apply(activity)
+                                        .forEach(AmericanExpressV62Predicates
+                                                .transformIntoTinkTransactions(config, list))
+                );
+
         return list;
+    }
+
+    @JsonIgnore
+    private boolean hasTransactions() {
+        int numTransctions = 0;
+        if (hasMoreTransactions()) {
+            for (ActivityListEntity activityListEntity : transactionDetails.getActivityList()) {
+                if (activityListEntity.getTransactionList() != null) {
+                    numTransctions += activityListEntity.getTransactionList().size();
+                }
+            }
+        }
+
+        return numTransctions > 0;
+    }
+
+    // if there is no activityList we will not be able to fetch more transactions
+    @JsonIgnore
+    private boolean hasMoreTransactions() {
+        return transactionDetails.getActivityList() != null;
     }
 }

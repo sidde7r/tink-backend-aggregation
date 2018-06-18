@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.am
 
 import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -41,15 +40,14 @@ public class AmericanExpressV62TransactionFetcher
         request.setSortedIndex(Integer.parseInt(account.getBankIdentifier()))
                 .setBillingIndexList(ImmutableList.of(page));
 
-        List<Transaction> transactions = new ArrayList<>();
         if (page == AmericanExpressV62Constants.Fetcher.START_PAGE) {
-            transactions.addAll(fetchPendingTransactionsFor(account));
+            return client.requestTransaction(request).getPaginatorResponse(config, fetchPendingTransactionsFor(account));
         }
 
-        return client.requestTransaction(request).setConfig(config).getPaginatorResponse(page, transactions);
+        return client.requestTransaction(request).getPaginatorResponse(config);
     }
 
-    private Collection<Transaction> fetchPendingTransactionsFor(CreditCardAccount account) {
+    private List<Transaction> fetchPendingTransactionsFor(CreditCardAccount account) {
         TimelineRequest timelineRequest =
                 config.createTimelineRequest(Integer.valueOf(account.getBankIdentifier()));
         TimelineResponse timelineResponse = client.requestTimeline(timelineRequest);
