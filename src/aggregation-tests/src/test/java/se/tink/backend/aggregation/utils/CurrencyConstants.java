@@ -6,6 +6,7 @@ public enum CurrencyConstants {
     BE("EUR", "€"),
     ES("EUR", "€"),
     NL("EUR", "€"),
+    DE("EUR", "€"),
     DK("DKK", "kr"),
     NO("NOK", "kr");
 

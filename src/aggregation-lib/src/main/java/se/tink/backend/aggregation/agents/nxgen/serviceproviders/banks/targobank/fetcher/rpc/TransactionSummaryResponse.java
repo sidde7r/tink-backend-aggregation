@@ -1,0 +1,40 @@
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.targobank.fetcher.rpc;
+
+import java.util.Date;
+import java.util.List;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.targobank.utils.TargoBankMsgDateDeserializer;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.targobank.fetcher.entities.TransactionEntity;
+
+@XmlRootElement(name = "root")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class TransactionSummaryResponse {
+
+    @XmlElement(name = "code_retour")
+    private String returnCode;
+
+    @XmlElement(name = "date_msg")
+    @XmlJavaTypeAdapter(TargoBankMsgDateDeserializer.class)
+    private Date date;
+
+    @XmlElement(name = "ligmvt")
+    @XmlElementWrapper(name = "tabmvt")
+    private List<TransactionEntity> transactions;
+
+    public String getReturnCode() {
+        return returnCode;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public List<TransactionEntity> getTransactions() {
+        return transactions;
+    }
+}
