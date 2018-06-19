@@ -126,41 +126,52 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
     }
 
     private String waitForLoginCode(String challenge) throws SupplementalInfoException {
-        return waitForSupplementalInformation("Insert your card into the card reader & press LOGIN. "
-                + "Enter the control code and your pin code in the card reader. "
-                + "Then enter the code from the card reader in the field below.", challenge);
+    return waitForSupplementalInformation(
+        createDescriptionField(
+            "1  Sign using your Belfius Card Reader ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_CardReader.png)\n"
+                + "2  Press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_LOGIN.png)\n"
+                + "3  Enter the security code []  ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png)",
+            challenge),
+        createInputField(
+            "4  Enter your PIN ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png)\n"
+                    + "5  Enter the login code"));
     }
 
     private String waitForSignCode(String challenge) throws SupplementalInfoException {
-        return waitForSupplementalInformation("Insert your card into the card reader & press SIGN. "
-                        + "Enter the control code and your pin code in the card reader. "
-                        + "Then enter the code from the card reader in the field below.", challenge);
+    return waitForSupplementalInformation(
+        createDescriptionField(
+            "1  Sign using your Belfius Card Reader ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_CardReader.png)\n"
+                + "2  Press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_SIGN.png)\n"
+                + "3   Enter the security code [] ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png)",
+            challenge),
+        createInputField(
+            "4  Want to register your device? ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png)\n"
+                    + "5  Enter your PIN ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png)\n"
+                    + "6  Enter the signature code"));
     }
 
-    private String waitForSupplementalInformation(String helpText, String controlCode)
+    private String waitForSupplementalInformation(Field... fields)
             throws SupplementalInfoException {
-        return supplementalInformationController.askSupplementalInformation(
-                createDescriptionField(helpText, controlCode),
-                createInputField(BelfiusConstants.MultiFactorAuthentication.CODE))
+        return supplementalInformationController.askSupplementalInformation(fields)
                 .get(BelfiusConstants.MultiFactorAuthentication.CODE);
     }
 
-    private Field createDescriptionField(String description, String challenge) {
+    private Field createDescriptionField(String helpText, String challenge) {
         Field field = new Field();
         field.setMasked(false);
-        field.setDescription("Control Code");
+        field.setDescription(challenge);
         field.setName("description");
-        field.setHelpText(description);
-        field.setValue(challenge);
+        field.setHelpText(helpText);
         field.setImmutable(true);
         return field;
     }
 
-    private Field createInputField(String name) {
+    private Field createInputField(String helpText) {
         Field field = new Field();
         field.setMasked(false);
-        field.setDescription("Response Code");
-        field.setName(name);
+        field.setDescription("Input");
+        field.setName(BelfiusConstants.MultiFactorAuthentication.CODE);
+        field.setHelpText(helpText);
         field.setNumeric(true);
         field.setHint("NNNNNNN");
         return field;

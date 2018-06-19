@@ -53,7 +53,7 @@
           "numeric": true,
           "minLength": 1,
           "sensitive": true,
-          "helpText": "1. Insert your ING bank card into ![](https://Card-Reader_ING@2x.png) the ING Card Reader.\n2. Press ![](https://BT_Identify_ING@2x.png)\n3. Enter your PIN and press ![](https://BT_OK_ING@2x.png)\n4. Enter the respond code in the field below"
+          "helpText": "1  Insert your ING bank card into the ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png)\n<br>ING Card Reader\n2  Press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_IDENTIFY.png)\n3  Enter your PIN\n4  Press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png)\nEnter the respond code"
         }
       ],
       "multiFactor": true,
@@ -73,7 +73,7 @@
       ],
       "fields": [
         {
-          "description": "Card number",
+          "description": "Number of your bank card",
           "name": "username",
           "numeric": true,
           "minLength": 1
