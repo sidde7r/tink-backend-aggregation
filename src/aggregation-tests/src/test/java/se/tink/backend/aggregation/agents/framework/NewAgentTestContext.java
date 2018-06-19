@@ -311,10 +311,8 @@ public class NewAgentTestContext extends AgentContext {
                             )
                     );
                     row.put("security",
-                            String.valueOf(
-                                    details.map(LoanDetails::getLoanSecurity)
-                                            .orElse(null)
-                            )
+                            details.map(LoanDetails::getLoanSecurity)
+                                    .orElse(null)
                     );
                     return row;
                 })
