@@ -94,7 +94,7 @@ public class CliPrintUtils {
 
         // Print data
 
-        if (maxRows > 0 && maxRows < rows.size()) {
+        if ((maxRows > 0) && (maxRows < rows.size())) {
             // do (maxRows/2) first and (maxRows/2) last.
 
             int segmentCount = maxRows / 2;
