@@ -1,9 +1,9 @@
 # coding=utf-8
-from tinydb import TinyDB, Query
-from flask import Flask
-from flask import request
-from flask import abort
+from tinydb import TinyDB, Query, where
+from flask import Flask, request, abort, Response
 from functools import wraps
+import gzip
+import StringIO
 import requests
 import ast
 import sys
@@ -62,8 +62,24 @@ def create_credentials():
 	credentialsRequest = create_credentials_request()
 	r = requests.post(AGGREGATION_HOST + '/aggregation/create', data=json.dumps(credentialsRequest), headers=POST_HEADERS)
 	credential = json.loads(r.text)
+	if CREDENTIALS_TABLE.search(Query().id == credential['id']):
+		abort(400)
 	CREDENTIALS_TABLE.insert(credential)
-	return json.dumps({'credentialsId': credential.get('id')})
+	return json.dumps({'credentialsId': credential['id']})
+
+@app.route("/credentials/refresh/<id>", methods = ['POST'])
+def refresh_credentials(id):
+	credentialsRequest = create_credentials_request(id)
+	credentialsRequest['manual'] = True
+	r = requests.post(AGGREGATION_HOST + '/aggregation/refresh', data=json.dumps(credentialsRequest), headers=POST_HEADERS)
+	return ('', 204)
+
+@app.route("/credentials/supplemental", methods = ['POST'])
+@validate_request('credentialsId', 'supplementalInformation')
+def credentials_supplemental():
+	supplementalRequest = request.json
+	r = requests.post(AGGREGATION_HOST + '/aggregation/supplemental', data=json.dumps(supplementalRequest), headers=POST_HEADERS)
+	return ('', 204)
 
 @app.route("/providers/list", methods = ['GET', 'POST'])
 def list_providers(*args):
@@ -77,6 +93,43 @@ def list_providers(*args):
 		return requests.get(AGGREGATION_HOST + '/providers/' + request.args.get('market') + '/list', headers=GET_HEADERS).text
 	abort(400)
 
+@app.route("/aggregation/controller/v1/system/update/credentials/update", methods = ['POST'])
+def update_credentials():
+	responseObject = get_json(request)
+	credentials = responseObject['credentials']
+	CREDENTIALS_TABLE.update({'status': credentials['status']}, where('id') == credentials['id'])
+	return Response({}, status=200, mimetype="application/json")
+
+@app.route("/aggregation/controller/v1/system/update/accounts/update", methods = ['POST'])
+def update_account():
+	responseData = get_json(request)
+	return Response(json.dumps(responseData['account']), status=200, mimetype="application/json")
+
+@app.route("/aggregation/controller/v1/system/update/accounts/process", methods = ['POST'])
+def process_accounts():
+	responseData = get_json(request)
+	return Response({}, status=200, mimetype="application/json")
+
+@app.route("/aggregation/controller/v1/system/process/transactions/update", methods = ['POST'])
+def process_transactions():
+	responseData = get_json(request)
+	return Response({}, status=200, mimetype="application/json")
+
+@app.route("/aggregation/controller/v1/system/update/transfer/process", methods = ['POST'])
+def process_transfers():
+	responseData = get_json(request)
+	return Response({}, status=200, mimetype="application/json")
+
+@app.route("/aggregation/controller/v1/system/update/accounts/transfer-destinations/update", methods = ['POST'])
+def process_transfer_destinations():
+	responseData = get_json(request)
+	return Response({}, status=200, mimetype="application/json")
+
+@app.route("/aggregation/controller/v1/credentials/sensitive", methods = ['PUT'])
+def credentials_sensitive():
+	get_json(request)
+	return Response({}, status=200, mimetype="application/json")
+	
 ### END - ENDPOINTS ###
 
 ### START - HELPER METHODS ###
@@ -89,36 +142,74 @@ def get_provider(providerName):
 		abort(400)
 	return json.loads(r.text)
 
-def create_credentials_request():
-	provider = get_provider(request.json['providerName'])
+def create_credentials_request(credentialsId=None):
+	credentials = None
+	provider = None
+	user = None
+
+	if credentialsId:
+		listOfCredentials = CREDENTIALS_TABLE.search(Query().id == credentialsId)
+		if not listOfCredentials:
+			abort(400)
+		if len(listOfCredentials) != 1:
+			abort(400)
+		credentials = listOfCredentials[0]
+		user = create_user(credentials['userId'])
+		provider = get_provider(credentials['providerName'])
+	
+	if not credentials:
+		user = create_user()
+		provider = get_provider(request.json['providerName'])
+		credentials = create_credential(user['id'])
 
 	if not provider:
 		abort(400)
 
-	user = create_random_user()
 	return {
 		'user': user,
-		'credentials': create_random_credential(user['id']),
-		'provider': provider
+		'credentials': credentials,
+		'provider': provider,
+		'accounts': []
 	}
 
-def create_random_credential(userId):
+def create_credential(userId):
 	return {
 		'id': random_uuid_string(),
 		'username': request.json['username'],
 		'providerName': request.json['providerName'],
 		'userId': userId,
-		'type': request.json['credentialsType']
+		'type': request.json['credentialsType'],
+		'status': 'CREATED'
 	}
 
-def create_random_user():
+def create_user(id=None):
+	if not id:
+		id = random_uuid_string()
+	
 	return {
-		'id': random_uuid_string(),
+		'id': id,
 		'profile': {"locale": "sv_SE"}
 	}
 
 def random_uuid_string():
 	return str(uuid.uuid4()).replace('-', '')
+
+def get_json(requestObject):
+	'''
+	`request.data` is a compressed string and `gzip.GzipFile` doesn't work on strings.
+	We use StringIO to make it look like a file with this:
+	'''
+	fakefile = StringIO.StringIO(requestObject.data)
+	'''
+	Now we can load the compressed 'file' into the `uncompressed` variable.
+	While we're at it, we tell gzip.GzipFile to use the 'rb' mode
+	'''
+	uncompressed = gzip.GzipFile(fileobj=fakefile, mode='rb')
+	'''
+	Since StringIOs aren't real files, you don't have to close the file.
+	This means that it's safe to return its contents directly:
+	'''
+	return json.loads(uncompressed.read())
 
 ### END - HELPER METHODS ###
 
