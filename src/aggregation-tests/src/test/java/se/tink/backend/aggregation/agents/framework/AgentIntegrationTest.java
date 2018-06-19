@@ -67,7 +67,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         this.doLogout = builder.isDoLogout();
         this.refreshableItems = builder.getRefreshableItems();
 
-        this.context = new NewAgentTestContext(credential, builder.getTransactionsToPrint());
+        this.context = new NewAgentTestContext(user, credential, builder.getTransactionsToPrint());
     }
 
     private boolean loadCredentials() {

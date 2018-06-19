@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.Field;
+import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.core.FraudDetailsContent;
 import se.tink.backend.core.account.TransferDestinationPattern;
@@ -53,12 +54,14 @@ public class NewAgentTestContext extends AgentContext {
     private final Map<String, List<TransferDestinationPattern>> transferDestinationPatternsByAccountBankId = new HashMap<>();
     private final List<Transfer> transfers = new ArrayList<>();
 
+    private final User user;
     private final Credentials credential;
 
     // configuration
     private final int transactionsToPrint;
 
-    public NewAgentTestContext(Credentials credential, int transactionsToPrint) {
+    public NewAgentTestContext(User user, Credentials credential, int transactionsToPrint) {
+        this.user = user;
         this.credential = credential;
         this.transactionsToPrint = transactionsToPrint;
 
@@ -218,7 +221,7 @@ public class NewAgentTestContext extends AgentContext {
 
     @Override
     public Catalog getCatalog() {
-        return Catalog.getCatalog("en_US");
+        return Catalog.getCatalog(this.user.getLocale());
     }
 
     @Override
