@@ -287,7 +287,11 @@ public class NewAgentTestContext extends AgentContext {
                 .map(loan -> {
                     Map<String, String> row = new LinkedHashMap<>();
 
-                    row.put("type", loan.getType().name());
+                    row.put("type",
+                            Optional.ofNullable(loan.getType())
+                                    .map(Loan.Type::name)
+                                    .orElse(null)
+                    );
                     row.put("number", loan.getLoanNumber());
                     row.put("name", loan.getName());
                     row.put("balance", String.valueOf(loan.getBalance()));
