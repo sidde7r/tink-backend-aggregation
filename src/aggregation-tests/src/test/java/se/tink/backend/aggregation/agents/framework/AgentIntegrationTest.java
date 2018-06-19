@@ -83,10 +83,15 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         return optionalCredential.isPresent();
     }
 
-    private void saveCredentials() {
-        if (!saveCredentialsAfter) {
+    private void saveCredentials(Agent agent) {
+        if (!saveCredentialsAfter || !(agent instanceof PersistentLogin)) {
             return;
         }
+
+        PersistentLogin persistentAgent = PersistentLogin.class.cast(agent);
+
+        // Tell the agent to store data onto the credential (cookies etcetera)
+        persistentAgent.persistLoginSession();
 
         AgentTestServerClient.saveCredential(provider.getName(), credential);
     }
@@ -232,8 +237,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             }
         }
 
+        Agent agent = createAgent(createRefreshInformationRequest());
         try {
-            Agent agent = createAgent(createRefreshInformationRequest());
             login(agent);
             refresh(agent);
             Assert.assertTrue("Expected to be logged in.", keepAlive(agent));
@@ -242,7 +247,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 logout(agent);
             }
         } finally {
-            saveCredentials();
+            saveCredentials(agent);
         }
 
         context.printCollectedData();
