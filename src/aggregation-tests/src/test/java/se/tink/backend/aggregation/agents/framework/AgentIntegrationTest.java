@@ -256,6 +256,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     public static class Builder {
         private static final String DEFAULT_USER_ID = "deadbeefdeadbeefdeadbeefdeadbeef";
         private static final String DEFAULT_CREDENTIAL_ID = "cafebabecafebabecafebabecafebabe";
+        private static final String DEFAULT_LOCALE = "sv_SE";
 
         private final Provider provider;
         private User user = createDefaultUser();
@@ -298,7 +299,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
         private static User createDefaultUser() {
             UserProfile profile = new UserProfile();
-            profile.setLocale("sv_SE");
+            profile.setLocale(DEFAULT_LOCALE);
 
             User user = new User();
             user.setId(DEFAULT_USER_ID);
@@ -314,6 +315,13 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             credential.setUserId(DEFAULT_USER_ID);
 
             return credential;
+        }
+
+        public Builder setUserLocale(String locale) {
+            Preconditions.checkNotNull(this.user, "User not set.");
+            Preconditions.checkNotNull(this.user.getProfile(), "User has no profile.");
+            this.user.getProfile().setLocale(locale);
+            return this;
         }
 
         public Builder transactionsToPrint(int transactionsToPrint) {
