@@ -72,4 +72,12 @@ public class IngHelper {
     public Optional<LoginResponseEntity> retrieveLoginResponse() {
         return this.sessionStorage.get(IngConstants.Storage.LOGIN_RESPONSE, LoginResponseEntity.class);
     }
+
+    public void setCardNumber(String cardNumber){
+        this.sessionStorage.put(IngConstants.Storage.VIRTUAL_CARDNUMBER, cardNumber);
+    }
+
+    public String getCardNumber(){
+        return this.sessionStorage.get(IngConstants.Storage.VIRTUAL_CARDNUMBER);
+    }
 }
