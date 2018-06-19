@@ -80,12 +80,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
         Optional<Credentials> optionalCredential = AgentTestServerClient.loadCredential(provider.getName(),
                 credential.getId());
-        if (!optionalCredential.isPresent()) {
-            return false;
-        }
 
-        this.credential = optionalCredential.get();
-        return true;
+        optionalCredential.ifPresent(c -> this.credential = c);
+
+        return optionalCredential.isPresent();
     }
 
     private void saveCredentials() {
@@ -118,7 +116,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             return false;
         }
 
-        PersistentLogin persistentAgent = (PersistentLogin) agent;
+        PersistentLogin persistentAgent = PersistentLogin.class.cast(agent);
 
         persistentAgent.loadLoginSession();
         if (!persistentAgent.isLoggedIn()) {
