@@ -3,16 +3,12 @@ package se.tink.backend.aggregation.workers;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Ordering;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
-import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.rpc.CreateProductRequest;
@@ -84,25 +80,6 @@ public class AgentWorkerOperationFactory {
     private final CacheClient cacheClient;
 
     private final MetricCacheLoader metricCacheLoader;
-
-    // Explicit order of refreshable items.
-    // Prioritize accounts before transactions in order to give faster feedback.
-    private static final Ordering<RefreshableItem> REFRESHABLE_ITEM_ORDERING = Ordering.explicit(ImmutableList.of(
-            RefreshableItem.CHECKING_ACCOUNTS,
-            RefreshableItem.SAVING_ACCOUNTS,
-            RefreshableItem.CREDITCARD_ACCOUNTS,
-            RefreshableItem.LOAN_ACCOUNTS,
-            RefreshableItem.INVESTMENT_ACCOUNTS,
-
-            RefreshableItem.CHECKING_TRANSACTIONS,
-            RefreshableItem.SAVING_TRANSACTIONS,
-            RefreshableItem.CREDITCARD_TRANSACTIONS,
-            RefreshableItem.LOAN_TRANSACTIONS,
-            RefreshableItem.INVESTMENT_TRANSACTIONS,
-
-            RefreshableItem.EINVOICES,
-            RefreshableItem.TRANSFER_DESTINATIONS
-    ));
 
     private static final ImmutableSet<RefreshableItem> REFRESHABLE_ITEMS_ALL = ImmutableSet.<RefreshableItem>builder()
             .add(RefreshableItem.CHECKING_ACCOUNTS)
@@ -203,7 +180,7 @@ public class AgentWorkerOperationFactory {
         itemsToRefresh = convertLegacyItems(itemsToRefresh);
 
         // Sort the refreshable items
-        List<RefreshableItem> items = REFRESHABLE_ITEM_ORDERING.sortedCopy(itemsToRefresh);
+        List<RefreshableItem> items = RefreshableItem.sort(itemsToRefresh);
 
         log.info("Items to refresh (sorted): {}", items.stream().map(Enum::name).collect(Collectors.joining(", ")));
 
@@ -215,12 +192,12 @@ public class AgentWorkerOperationFactory {
             commands.add(new RefreshItemAgentWorkerCommand(context, item, createMetricState(request)));
         }
         // Post refresh processing. Only once per data type (accounts, transactions etcetera)
-        if (!Collections.disjoint(items, REFRESHABLE_ITEMS_ACCOUNTS)) {
+        if (RefreshableItem.hasAccounts(items)) {
             commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.ACCOUNTS,
                     createMetricState(request)));
         }
 
-        if (!Collections.disjoint(items, REFRESHABLE_ITEMS_TRANSACTIONS)) {
+        if (RefreshableItem.hasTransactions(items)) {
             commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.TRANSACTIONS,
                     createMetricState(request)));
         }
