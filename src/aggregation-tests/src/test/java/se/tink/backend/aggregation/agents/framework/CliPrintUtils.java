@@ -13,6 +13,10 @@ public class CliPrintUtils {
     private static final PrintStream out = initOutput();
 
     private static final int INFINITE_MAX_ROWS = 0;
+    private static final String NULL_VALUE = "<null>";
+    private static final String ROW_START = "| ";
+    private static final String ROW_END = " |";
+
 
     private static PrintStream initOutput() {
         try {
@@ -46,7 +50,7 @@ public class CliPrintUtils {
         for (Map<String, String> row : rows) {
             for (Map.Entry<String, String> col : row.entrySet()) {
                 if (col.getValue() == null) {
-                    col.setValue("<null>");
+                    col.setValue(NULL_VALUE);
                 }
                 columnWidths.put(col.getKey(),
                         Math.max(Optional.ofNullable(columnWidths.get(col.getKey())).orElse(0), col.getValue().length
@@ -70,7 +74,7 @@ public class CliPrintUtils {
 
         // Print column headers
 
-        out.print(Strings.repeat(" ", indentation) + "| ");
+        out.print(Strings.repeat(" ", indentation) + ROW_START);
         boolean first = true;
         for (String key : columnWidths.keySet()) {
             if (!first) {
@@ -82,7 +86,7 @@ public class CliPrintUtils {
             out.print(key);
             out.print(Strings.repeat(" ", columnWidths.get(key) - key.length())); // Padding
         }
-        out.println(" |");
+        out.println(ROW_END);
 
         out.print(Strings.repeat(" ", indentation) + "|");
         out.print(Strings.repeat("-", totalWidth - 2));
@@ -102,7 +106,7 @@ public class CliPrintUtils {
             }
 
             String skippedRowsMessage = String.format("Skipped rows: %d", rows.size() - segmentCount * 2);
-            out.println(Strings.repeat(" ", indentation) + "| " + encapsuleTitle(skippedRowsMessage, totalWidth - 4, '~') + " |");
+            out.println(Strings.repeat(" ", indentation) + ROW_START + encapsuleTitle(skippedRowsMessage, totalWidth - 4, '~') + ROW_END);
 
             // from end
             for (int i=segmentCount; i>0; i--) {
@@ -120,7 +124,7 @@ public class CliPrintUtils {
     }
 
     private static void printRow(int indentation, Map<String, String> row, final Map<String, Integer> columnWidths) {
-        out.print(Strings.repeat(" ", indentation) + "| ");
+        out.print(Strings.repeat(" ", indentation) + ROW_START);
         boolean first = true;
         for (Map.Entry<String, Integer> column : columnWidths.entrySet()) {
             if (!first) {
@@ -132,6 +136,6 @@ public class CliPrintUtils {
             out.print(value);
             out.print(Strings.repeat(" ", column.getValue() - value.length())); // Padding
         }
-        out.println(" |");
+        out.println(ROW_END);
     }
 }
