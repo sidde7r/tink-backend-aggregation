@@ -71,11 +71,12 @@ public class IngCardReaderAuthenticationController implements MultiFactorAuthent
     }
 
     private Field getChallengeField(String challenge) {
-        String helpText = catalog.getString(
-                  "1. Insert your bank card into ![](https://Card-Reader_ING@2x.png) the ING Card Reader.\n"
-                + "2. Press ![](https://BT_Sign_ING@2x.png)\n"
-                + "3. Enter your PIN and press ![](https://BT_OK_ING@2x.png)\n"
-                + "4. Enter the following number");
+    String helpText =
+        catalog.getString(
+            "1  Insert your ING bank card in your ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png) ING Card Reader\n"
+                    + "2  Press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_SIGN.png)\n"
+                    + "3  Enter your PIN and press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png)\n"
+                    + "4  Enter the following number []");
 
         Field challengeField = new Field();
         challengeField.setDescription(getChallengeFormattedWithSpaces(challenge));
@@ -87,9 +88,10 @@ public class IngCardReaderAuthenticationController implements MultiFactorAuthent
     }
 
     private Field getChallengeResponseField() {
-        String helpText = catalog.getString(
-                  "5. press ![](https://BT_Sign_ING@2x.png.png)\n"
-                + "6. Enter the e-signature");
+    String helpText =
+        catalog.getString(
+            "5  And press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_SIGN.png)\n"
+                    + "Enter your RESPONSE code");
         Field challengeResponse = new Field();
         challengeResponse.setDescription(catalog.getString("Input"));
         challengeResponse.setName(CHALLENGE_RESPONSE_FIELD_KEY);

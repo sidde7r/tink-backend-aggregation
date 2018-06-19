@@ -191,41 +191,55 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
     }
 
     private String waitForLoginCode(String challenge) throws SupplementalInfoException {
-        return waitForSupplementalInformation("1. Insert your card into the card reader and press LOGIN twice.\n\n"
-                + "2. Enter the control code on the card reader and press OK. Then enter your PIN and press OK.\n\n"
-                + "3. Enter the code from the card reader in the response code field.", challenge);
+    return waitForSupplementalInformation(
+        createDescriptionField(
+            "1  Insert your bank card into the card reader ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_CardReader.png)\n"
+                + "2  Tap ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_LOGIN.png) + ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_LOGIN.png)\n"
+                + "3  Enter the start code []",
+            challenge),
+        createInputField(
+            "4  Tap ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png)\n"
+                    + "5  Enter your secret code\n"
+                    + "6  Tap ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png)\n"
+                    + "7  Enter the login code"));
     }
 
     private String waitForSignCode(String challenge) throws SupplementalInfoException {
-        return waitForSupplementalInformation("1. Insert your card into the card reader and press SIGN twice.\n\n"
-                + "2. Enter the control code on the card reader and press OK. Then enter your PIN and press OK.\n\n"
-                + "3. Enter the code from the card reader in the response code field.", challenge);
+    return waitForSupplementalInformation(
+        createDescriptionField(
+            "1  Insert your bank card into the card reader ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_CardReader.png)\n"
+                + "2  Tap ![]https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN.png) + ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN.png)\n"
+                + "3  Enter the start code []",
+            challenge),
+        createInputField(
+            "4  Tap ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) + ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png)\n"
+                    + "5  Enter your PIN\n"
+                    + "6  Tap ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png)\n"
+                    + "7  Enter the sign code"));
     }
 
-    private String waitForSupplementalInformation(String helpText, String controlCode)
+    private String waitForSupplementalInformation(Field... fields)
             throws SupplementalInfoException {
-        return supplementalInformationController.askSupplementalInformation(
-                createDescriptionField(helpText, controlCode),
-                createInputField(KbcConstants.MultiFactorAuthentication.CODE))
+        return supplementalInformationController.askSupplementalInformation(fields)
                 .get(KbcConstants.MultiFactorAuthentication.CODE);
     }
 
-    private Field createDescriptionField(String description, String challenge) {
+    private Field createDescriptionField(String helpText, String challenge) {
         Field field = new Field();
         field.setMasked(false);
-        field.setDescription("Control Code");
+        field.setDescription(getChallengeFormattedWithSpace(challenge));
         field.setName("description");
-        field.setHelpText(description);
-        field.setValue(getChallengeFormattedWithSpace(challenge));
+        field.setHelpText(helpText);
         field.setImmutable(true);
         return field;
     }
 
-    private Field createInputField(String name) {
+    private Field createInputField(String helpText) {
         Field field = new Field();
         field.setMasked(false);
-        field.setDescription("Response Code");
-        field.setName(name);
+        field.setDescription("Input");
+        field.setName(KbcConstants.MultiFactorAuthentication.CODE);
+        field.setHelpText(helpText);
         field.setNumeric(true);
         field.setHint("NNNNNNN");
         return field;
