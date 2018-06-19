@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.framework;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import io.dropwizard.configuration.ConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -37,7 +36,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     private static final Logger log = LoggerFactory.getLogger(AbstractAgentTest.class);
     private static final ObjectMapper mapper = new ObjectMapper();
 
-    private final AgentFactory factory;
     private final Provider provider;
     private final User user;
     private Credentials credential;
@@ -72,12 +70,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         this.doLogout = doLogout;
         this.refreshableItems = refreshableItems;
 
-        try {
-            configuration = CONFIGURATION_FACTORY.build(new File("etc/development.yml"));
-        } catch (IOException | ConfigurationException e) {
-            log.warn("Couldn't set development configuration", e);
-        }
-        this.factory = new AgentFactory(configuration);
         this.context = new NewAgentTestContext(credential, transactionsToPrint);
     }
 
@@ -111,6 +103,9 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
     private Agent createAgent(CredentialsRequest credentialsRequest) {
         try {
+            configuration = CONFIGURATION_FACTORY.build(new File("etc/development.yml"));
+            AgentFactory factory = new AgentFactory(configuration);
+
             Class<? extends Agent> cls = AgentFactory.getAgentClass(provider);
             return factory.create(cls, credentialsRequest, context);
         } catch (Exception e) {
