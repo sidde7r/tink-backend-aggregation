@@ -180,7 +180,8 @@ public class NewAgentTestContext extends AgentContext {
 
     @Override
     public void updateStatus(CredentialsStatus status, String statusPayload, boolean statusFromProvider) {
-        log.info("Updating status: " + status.name() + " (" + statusPayload + ")");
+        log.info("Updating status: " + status.name() + " (" + statusPayload + ") - statusFromProvider: "
+                + String.valueOf(statusFromProvider));
 
         credential.setStatus(status);
         credential.setStatusPayload(statusPayload);
