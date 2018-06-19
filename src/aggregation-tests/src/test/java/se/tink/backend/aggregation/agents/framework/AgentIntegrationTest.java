@@ -57,7 +57,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     private final NewAgentTestContext context;
 
 
-    AgentIntegrationTest(Provider provider, User user, Credentials credential, int transactionsToPrint,
+    private AgentIntegrationTest(Provider provider, User user, Credentials credential, int transactionsToPrint,
             boolean loadCredentialsBefore, boolean saveCredentialsAfter, Boolean requestFlagCreate,
             Boolean requestFlagUpdate, boolean requestFlagManual, boolean doLogout,
             Set<RefreshableItem> refreshableItems) {
