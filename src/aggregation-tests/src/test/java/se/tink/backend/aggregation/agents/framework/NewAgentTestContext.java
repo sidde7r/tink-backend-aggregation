@@ -46,11 +46,11 @@ public class NewAgentTestContext extends AgentContext {
     private static final Logger log = LoggerFactory.getLogger(NewAgentTestContext.class);
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    private Map<String, Account> accountsByBankId = new HashMap<>();
-    private Map<String, AccountFeatures> accountFeaturesByBankId = new HashMap<>();
-    private Map<String, List<Transaction>> transactionsByAccountBankId = new HashMap<>();
-    private Map<String, List<TransferDestinationPattern>> transferDestinationPatternsByAccountBankId = new HashMap<>();
-    private List<Transfer> transfers = new ArrayList<>();
+    private final Map<String, Account> accountsByBankId = new HashMap<>();
+    private final Map<String, AccountFeatures> accountFeaturesByBankId = new HashMap<>();
+    private final Map<String, List<Transaction>> transactionsByAccountBankId = new HashMap<>();
+    private final Map<String, List<TransferDestinationPattern>> transferDestinationPatternsByAccountBankId = new HashMap<>();
+    private final List<Transfer> transfers = new ArrayList<>();
 
     private final Credentials credential;
 
