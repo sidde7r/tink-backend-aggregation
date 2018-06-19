@@ -9,11 +9,13 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.rpc.Credentials;
 
 public class AgentTestServerClient {
+    private static final String PROVIDER_NAME_KEY = "providerName";
+    private static final String CREDENTIAL_ID_KEY = "credentialId";
     private static final TinkHttpClient client = new TinkHttpClient(null, null);
 
     private enum Urls {
         SUPPLEMENTAL("supplemental"),
-        CREDENTIAL("credential/{providerName}/{credentialId}");
+        CREDENTIAL(String.format("credential/{%s}/{%s}", PROVIDER_NAME_KEY, CREDENTIAL_ID_KEY));
 
         private URL url;
 
@@ -37,8 +39,8 @@ public class AgentTestServerClient {
     public static void saveCredential(String providerName, Credentials credential) {
         client.request(
                 Urls.CREDENTIAL.getUrl()
-                        .parameter("providerName", providerName)
-                        .parameter("credentialId", credential.getId()))
+                        .parameter(PROVIDER_NAME_KEY, providerName)
+                        .parameter(CREDENTIAL_ID_KEY, credential.getId()))
                 .type(MediaType.APPLICATION_JSON)
                 .post(credential);
     }
@@ -48,8 +50,8 @@ public class AgentTestServerClient {
             return Optional.ofNullable(
                     client.request(
                             Urls.CREDENTIAL.getUrl()
-                                    .parameter("providerName", providerName)
-                                    .parameter("credentialId", credentialId))
+                                    .parameter(PROVIDER_NAME_KEY, providerName)
+                                    .parameter(CREDENTIAL_ID_KEY, credentialId))
                             .get(Credentials.class)
             );
         } catch(HttpResponseException hre) {
