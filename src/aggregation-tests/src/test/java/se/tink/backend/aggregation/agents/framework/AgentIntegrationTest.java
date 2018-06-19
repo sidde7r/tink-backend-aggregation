@@ -43,7 +43,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     private final boolean loadCredentialsBefore;
     private final boolean saveCredentialsAfter;
 
-    // if it should override standard logic
+    // if it should override standard logic (Todo: find a better way to implement this!)
     private Boolean requestFlagCreate;
     private Boolean requestFlagUpdate;
     private final boolean requestFlagManual;
