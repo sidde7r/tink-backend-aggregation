@@ -147,9 +147,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         boolean alive = persistentAgent.keepAlive();
         if (!alive) {
             persistentAgent.clearLoginSession();
+            log.info("Credential is not alive.");
+        } else {
+            log.info("Credential is alive.");
         }
-
-        log.info(alive ? "Credential is alive." : "Credential is not alive.");
 
         return alive;
     }
