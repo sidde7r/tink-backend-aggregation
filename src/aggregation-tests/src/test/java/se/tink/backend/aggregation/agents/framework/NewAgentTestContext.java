@@ -19,6 +19,7 @@ import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
@@ -212,7 +213,7 @@ public class NewAgentTestContext extends AgentContext {
 
     @Override
     public void updateFraudDetailsContent(List<FraudDetailsContent> contents) {
-        // Not in scope for this test
+        throw new NotImplementedException("Fraud cannot be tested yet.");
     }
 
     @Override
@@ -259,12 +260,12 @@ public class NewAgentTestContext extends AgentContext {
     @Override
     public void updateProductInformation(UUID productInstanceId,
             HashMap<ProductPropertyKey, Object> productProperties) {
-        // Not in scope for this test
+        throw new NotImplementedException("Product executor cannot be tested.");
     }
 
     @Override
     public void updateApplication(UUID applicationId, ApplicationState applicationState) {
-        // Not in scope for this test
+        throw new NotImplementedException("Product executor cannot be tested.");
     }
 
     @Override
