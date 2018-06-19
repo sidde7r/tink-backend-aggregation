@@ -55,22 +55,19 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     private final NewAgentTestContext context;
 
 
-    private AgentIntegrationTest(Provider provider, User user, Credentials credential, int transactionsToPrint,
-            boolean loadCredentialsBefore, boolean saveCredentialsAfter, Boolean requestFlagCreate,
-            Boolean requestFlagUpdate, boolean requestFlagManual, boolean doLogout,
-            Set<RefreshableItem> refreshableItems) {
-        this.provider = provider;
-        this.user = user;
-        this.credential = credential;
-        this.loadCredentialsBefore = loadCredentialsBefore;
-        this.saveCredentialsAfter = saveCredentialsAfter;
-        this.requestFlagCreate = requestFlagCreate;
-        this.requestFlagUpdate = requestFlagUpdate;
-        this.requestFlagManual = requestFlagManual;
-        this.doLogout = doLogout;
-        this.refreshableItems = refreshableItems;
+    private AgentIntegrationTest(Builder builder) {
+        this.provider = builder.getProvider();
+        this.user = builder.getUser();
+        this.credential = builder.getCredential();
+        this.loadCredentialsBefore = builder.isLoadCredentialsBefore();
+        this.saveCredentialsAfter = builder.isSaveCredentialsAfter();
+        this.requestFlagCreate = builder.getRequestFlagCreate();
+        this.requestFlagUpdate = builder.getRequestFlagUpdate();
+        this.requestFlagManual = builder.isRequestFlagManual();
+        this.doLogout = builder.isDoLogout();
+        this.refreshableItems = builder.getRefreshableItems();
 
-        this.context = new NewAgentTestContext(credential, transactionsToPrint);
+        this.context = new NewAgentTestContext(credential, builder.getTransactionsToPrint());
     }
 
     private boolean loadCredentials() {
@@ -315,6 +312,50 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             return credential;
         }
 
+        public Provider getProvider() {
+            return provider;
+        }
+
+        public User getUser() {
+            return user;
+        }
+
+        public Credentials getCredential() {
+            return credential;
+        }
+
+        public int getTransactionsToPrint() {
+            return transactionsToPrint;
+        }
+
+        public boolean isLoadCredentialsBefore() {
+            return loadCredentialsBefore;
+        }
+
+        public boolean isSaveCredentialsAfter() {
+            return saveCredentialsAfter;
+        }
+
+        public Boolean getRequestFlagCreate() {
+            return requestFlagCreate;
+        }
+
+        public Boolean getRequestFlagUpdate() {
+            return requestFlagUpdate;
+        }
+
+        public boolean isRequestFlagManual() {
+            return requestFlagManual;
+        }
+
+        public boolean isDoLogout() {
+            return doLogout;
+        }
+
+        public Set<RefreshableItem> getRefreshableItems() {
+            return refreshableItems;
+        }
+
         public Builder setUserLocale(String locale) {
             Preconditions.checkNotNull(this.user, "User not set.");
             Preconditions.checkNotNull(this.user.getProfile(), "User has no profile.");
@@ -403,9 +444,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
             Preconditions.checkNotNull(provider, "Provider was not set.");
 
-            return new AgentIntegrationTest(provider, user, credential, transactionsToPrint, loadCredentialsBefore,
-                    saveCredentialsAfter, requestFlagCreate, requestFlagUpdate, requestFlagManual, doLogout,
-                    refreshableItems);
+            return new AgentIntegrationTest(this);
         }
     }
 }
