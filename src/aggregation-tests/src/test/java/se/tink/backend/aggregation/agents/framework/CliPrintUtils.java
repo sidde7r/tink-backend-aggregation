@@ -12,6 +12,8 @@ public class CliPrintUtils {
     // To get UTF-8 output.
     private static final PrintStream out = initOutput();
 
+    private static final int INFINITE_MAX_ROWS = 0;
+
     private static PrintStream initOutput() {
         try {
             return new PrintStream(System.out, true, "UTF-8");
@@ -21,7 +23,7 @@ public class CliPrintUtils {
     }
 
     public static void printTable(int indentation, String tableName, List<Map<String, String>> rows) {
-        printTable(indentation, tableName, rows, 0);
+        printTable(indentation, tableName, rows, INFINITE_MAX_ROWS);
     }
 
     private static String encapsuleTitle(String title, int maxLength, char c) {
