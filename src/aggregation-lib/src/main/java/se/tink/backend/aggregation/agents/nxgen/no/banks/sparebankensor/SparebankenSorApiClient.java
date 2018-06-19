@@ -53,6 +53,8 @@ public class SparebankenSorApiClient {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
+                .header(SparebankenSorConstants.Headers.NAME_CLIENTNAME, SparebankenSorConstants.Headers.VALUE_CLIENTNAME)
+                .header(SparebankenSorConstants.Headers.NAME_REQUESTID, generateRequestId())
                 .get(VerifyCustomerResponse.class);
     }
 
