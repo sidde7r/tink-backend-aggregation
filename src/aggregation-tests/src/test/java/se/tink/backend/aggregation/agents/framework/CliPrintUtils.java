@@ -26,6 +26,8 @@ public class CliPrintUtils {
         printTable(indentation, tableName, rows, INFINITE_MAX_ROWS);
     }
 
+    // This method encapsulates the title with maxLength of character `c`.
+    // I.e. encapsuleTitle("test", 10, '-') --> "-- test --"
     private static String encapsuleTitle(String title, int maxLength, char c) {
         title = String.format(" %s ", title);
         int headerStart = (maxLength / 2) - (title.length() / 2);
