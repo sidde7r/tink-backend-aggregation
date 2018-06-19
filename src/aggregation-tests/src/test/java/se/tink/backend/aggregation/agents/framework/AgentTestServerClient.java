@@ -2,8 +2,10 @@ package se.tink.backend.aggregation.agents.framework;
 
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.rpc.Credentials;
 
 public class AgentTestServerClient {
@@ -50,8 +52,12 @@ public class AgentTestServerClient {
                                     .parameter("credentialId", credentialId))
                             .get(Credentials.class)
             );
-        } catch(Exception e) {
-            return Optional.empty();
+        } catch(HttpResponseException hre) {
+            if (hre.getResponse().getStatus() == HttpStatus.SC_NOT_FOUND) {
+                return Optional.empty();
+            }
+
+            throw hre;
         }
     }
 }
