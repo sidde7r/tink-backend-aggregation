@@ -189,16 +189,16 @@ public class NewAgentTestContext extends AgentContext {
 
     @Override
     public Account updateTransactions(Account account, List<Transaction> transactions) {
-        account = updateAccount(account);
+        final Account updatedAccount = updateAccount(account);
 
         for (Transaction updatedTransaction : transactions) {
-            updatedTransaction.setAccountId(account.getId());
-            updatedTransaction.setCredentialsId(account.getCredentialsId());
-            updatedTransaction.setUserId(account.getUserId());
+            updatedTransaction.setAccountId(updatedAccount.getId());
+            updatedTransaction.setCredentialsId(updatedAccount.getCredentialsId());
+            updatedTransaction.setUserId(updatedAccount.getUserId());
         }
 
-        transactionsByAccountBankId.put(account.getBankId(), transactions);
-        return account;
+        transactionsByAccountBankId.put(updatedAccount.getBankId(), transactions);
+        return updatedAccount;
     }
 
     @Override
