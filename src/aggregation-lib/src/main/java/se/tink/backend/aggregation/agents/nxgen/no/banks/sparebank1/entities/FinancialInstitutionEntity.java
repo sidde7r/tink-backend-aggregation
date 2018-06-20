@@ -1,12 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.HashMap;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonObject
 public class FinancialInstitutionEntity {
     private String id;
     private String name;

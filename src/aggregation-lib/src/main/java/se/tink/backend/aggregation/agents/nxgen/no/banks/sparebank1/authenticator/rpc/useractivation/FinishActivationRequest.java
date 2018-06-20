@@ -1,10 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.useractivation;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Identity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.entities.useractivation.DeviceInfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.entities.useractivation.PinSrpDataEntity;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonObject
 public class FinishActivationRequest {
     private String deviceDescription;
     private String deviceId;
@@ -12,6 +15,20 @@ public class FinishActivationRequest {
     private DeviceInfoEntity deviceInfo;
     private String type;
     private PinSrpDataEntity pinSrpData;
+
+    @JsonIgnore
+    public static FinishActivationRequest create(Sparebank1Identity identity) {
+        FinishActivationRequest request = new FinishActivationRequest();
+
+        request.setDeviceDescription(Sparebank1Constants.DeviceValues.DESCRIPTION);
+        request.setDeviceId(identity.getDeviceId());
+        request.setBase64EncodedPublicKey(identity.getUserName());
+        request.setDeviceInfo(DeviceInfoEntity.create());
+        request.setType(Sparebank1Constants.DeviceValues.STRONG);
+        request.setPinSrpData(PinSrpDataEntity.create(identity));
+
+        return request;
+    }
 
     public String getDeviceDescription() {
         return deviceDescription;

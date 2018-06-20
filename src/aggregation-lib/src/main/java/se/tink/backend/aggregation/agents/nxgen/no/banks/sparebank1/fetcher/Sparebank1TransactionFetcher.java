@@ -26,7 +26,7 @@ public class Sparebank1TransactionFetcher implements TransactionPaginator<Transa
     @Override
     public Collection<Transaction> fetchTransactionsFor(TransactionalAccount account) {
         HashMap transactionUrlsByAccount = SerializationUtils.deserializeFromString(
-                sessionStorage.get(Sparebank1Constants.ACCOUNT_TRANSACTION_URLS_KEY), HashMap.class);
+                sessionStorage.get(Sparebank1Constants.Keys.ACCOUNT_TRANSACTION_URLS_KEY), HashMap.class);
 
         URL url = new URL((String) transactionUrlsByAccount.get(account.getBankIdentifier()));
 

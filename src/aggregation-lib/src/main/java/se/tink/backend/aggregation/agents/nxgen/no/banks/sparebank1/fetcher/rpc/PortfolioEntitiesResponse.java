@@ -5,8 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.entities.PortfolioEntity;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
-@se.tink.backend.aggregation.annotations.JsonObject
+@JsonObject
 public class PortfolioEntitiesResponse {
     private List<PortfolioEntity> portfolios;
     private Boolean hasNomineePortfolios;

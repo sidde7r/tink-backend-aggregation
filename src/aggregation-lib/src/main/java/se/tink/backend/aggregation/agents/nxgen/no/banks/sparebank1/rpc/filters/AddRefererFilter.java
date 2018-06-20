@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.rpc.filters
 
 import com.google.common.base.Strings;
 import java.util.Objects;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants;
 import se.tink.backend.aggregation.nxgen.http.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
@@ -25,7 +26,7 @@ public class AddRefererFilter extends Filter {
                 nextReferer = previousRequestUri;
             }
 
-            httpRequest.getHeaders().add("Referer", nextReferer);
+            httpRequest.getHeaders().add(Sparebank1Constants.Headers.REFERER, nextReferer);
         }
 
         previousRequestUri = httpRequest.getURI().toASCIIString();

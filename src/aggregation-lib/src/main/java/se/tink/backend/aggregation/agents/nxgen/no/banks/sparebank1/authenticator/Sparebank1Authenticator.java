@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator;
 
-import com.google.common.base.Objects;
+import com.google.api.client.http.HttpStatusCodes;
+import com.google.common.base.Preconditions;
 import com.nimbusds.srp6.SRP6ClientCredentials;
 import com.nimbusds.srp6.SRP6ClientSession;
 import com.nimbusds.srp6.SRP6CryptoParams;
@@ -19,35 +20,22 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1ApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.UrlParameter;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Identity;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.entities.useractivation.DeviceInfoEntity;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.entities.useractivation.PinSrpDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.authentication.FinishAuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.authentication.FinishAuthenticationResponse;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.authentication.InitiateAuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.authentication.InitiateAuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.authentication.RestRootResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.useractivation.AgreementsResponse;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.useractivation.FinishActivationRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.useractivation.FinishActivationResponse;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.useractivation.InitBankIdBody;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.useractivation.InitLoginBody;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.useractivation.PollBankIdResponse;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.useractivation.TargetUrlRequest;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.useractivation.TargetUrlResponse;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.FinancialInstitutionEntity;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.LinkEntity;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticatorNO;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
-import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.Field;
-import se.tink.backend.utils.StringUtils;
-import static se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.Urls;
 
 public class Sparebank1Authenticator implements BankIdAuthenticatorNO, AutoAuthenticator {
 
@@ -56,88 +44,48 @@ public class Sparebank1Authenticator implements BankIdAuthenticatorNO, AutoAuthe
     private final Sparebank1ApiClient apiClient;
     private final Credentials credentials;
     private final PersistentStorage persistentStorage;
-    private final String bankKey;
-    private final String bankName;
-    private final FinancialInstitutionEntity financialInstitution;
     private final RestRootResponse restRootResponse;
     private int pollWaitCounter;
 
     public Sparebank1Authenticator(Sparebank1ApiClient apiClient, Credentials credentials,
-            PersistentStorage persistentStorage, String bankKey, FinancialInstitutionEntity financialInstitution,
-            RestRootResponse restRootResponse) {
+            PersistentStorage persistentStorage, RestRootResponse restRootResponse) {
         this.apiClient = apiClient;
         this.credentials = credentials;
         this.persistentStorage = persistentStorage;
-        this.bankKey = bankKey;
-        // Remove "fid-" prefix from the bankKey
-        this.bankName = bankKey.substring(4);
-        this.financialInstitution = financialInstitution;
         this.restRootResponse = restRootResponse;
     }
     @Override
     public String init(String nationalId, String dob, String mobilenumber) throws BankIdException, LoginException {
         pollWaitCounter = 0;
 
-        apiClient.get(financialInstitution.getLinks().get(Sparebank1Constants.ACTIVATION_KEY).getHref(), HttpResponse.class);
-        String loginHtmlResponse = apiClient.get(getLoginDispatcherUrl(), String.class);
-        InitLoginBody loginBody = getLoginBody(loginHtmlResponse, nationalId);
-        apiClient.postLoginInformation(
-                Urls.INIT_LOGIN.queryParam(Sparebank1Constants.CID, Sparebank1Constants.CID_VALUE), loginBody);
+        apiClient.initActivation();
+        String loginDispatcherHtmlString = apiClient.getLoginDispatcher();
+        apiClient.postLoginInformation(loginDispatcherHtmlString, nationalId);
 
-        String initBankIdHtmlResponse = apiClient.get(getSelectMarketAndAuthTypeUrl(), String.class);
-        InitBankIdBody initBankIdBody = getInitBankIdBody(initBankIdHtmlResponse, mobilenumber, dob);
+        String selectMarketAndAuthenticationHtmlString = apiClient.selectMarketAndAuthentication();
 
-        String bankIdHtmlResponse = apiClient.initBankIdLogin(
-                Urls.SELECT_MARKET_AND_AUTH_TYPE.queryParam(
-                        Sparebank1Constants.CID, Sparebank1Constants.CID_VALUE), initBankIdBody);
+        String bankIdHtmlResponse = apiClient.initBankId(selectMarketAndAuthenticationHtmlString, mobilenumber, dob);
 
         Document doc = Jsoup.parse(bankIdHtmlResponse);
         Element pollingElement = doc.getElementById("bim-polling");
 
-        if (pollingElement != null) {
-            return pollingElement.select("h1").first().text();
-        } else {
-            handleKnownBankIdErrors(doc.getElementsByClass("bid-error-wrapper").first()
-                    .select("input").first().val().toLowerCase());
-
-            String errorMessage = doc.getElementsByClass("infobox-warning").first()
-                    .getElementsByClass("infobox-content").first()
-                    .select("li").first().text();
-
-            throw new IllegalStateException(String.format("Could not initiate bankID: %s",
-                    errorMessage));
+        if (pollingElement == null) {
+            handleBankIdError(doc);
         }
+
+        return pollingElement.select("h1").first().text();
     }
 
-    private URL getLoginDispatcherUrl() {
-        return Urls.GET_LOGIN_DISPATCHER
-                .queryParam("app", "mobilbank")
-                .queryParam("finInst", bankKey)
-                .queryParam("goto", Urls.CONTINUE_ACTIVATION.toString());
-    }
+    private void handleBankIdError(Document doc) throws LoginException, BankIdException {
+        handleKnownBankIdErrors(doc.getElementsByClass("bid-error-wrapper").first()
+                .select("input").first().val().toLowerCase());
 
-    private InitLoginBody getLoginBody(String htmlResponse, String nationalId) {
-        Document loginDoc = Jsoup.parse(htmlResponse);
-        String viewStateValuesLogin = loginDoc.getElementById("j_id1:javax.faces.ViewState:0").val();
+        String errorMessage = doc.getElementsByClass("infobox-warning").first()
+                .getElementsByClass("infobox-content").first()
+                .select("li").first().text();
 
-        return new InitLoginBody(nationalId, viewStateValuesLogin);
-    }
-
-    private URL getSelectMarketAndAuthTypeUrl() {
-        return Urls.SELECT_MARKET_AND_AUTH_TYPE
-                .queryParam("app", "mobilbank")
-                .queryParam("finInst", bankKey)
-                .queryParam("market", "PRIVATE")
-                .queryParam("goto", "https://mobilbank-pm.sparebank1.no/personal/activation/continue-activation&cid=1");
-    }
-
-    private InitBankIdBody getInitBankIdBody(String htmlResponse, String mobilenumber, String dob) {
-        Document initBankIdDoc = Jsoup.parse(htmlResponse);
-        Element form = initBankIdDoc.getElementById("panel-bankID-mobile").select("form").first();
-        String formId = form.id();
-        String viewStateValuesInitBankId = form.getElementById("j_id1:javax.faces.ViewState:1").val();
-
-        return new InitBankIdBody(mobilenumber, dob, formId, viewStateValuesInitBankId);
+        throw new IllegalStateException(String.format("Could not initiate bankID: %s",
+                errorMessage));
     }
 
     private void handleKnownBankIdErrors(String bankIdErrorCode) throws LoginException, BankIdException {
@@ -152,26 +100,23 @@ public class Sparebank1Authenticator implements BankIdAuthenticatorNO, AutoAuthe
     @Override
     public BankIdStatus collect() throws AuthenticationException, AuthorizationException {
         try {
-            HttpResponse httpResponse = apiClient.pollBankId(
-                    Urls.POLL_BANKID.queryParam(Sparebank1Constants.CID, Sparebank1Constants.CID_VALUE));
-
-            PollBankIdResponse pollResponse = httpResponse.getBody(PollBankIdResponse.class);
+            PollBankIdResponse pollResponse = apiClient.pollBankId();
             String pollStatus = pollResponse.getPollStatus();
 
-            if (Objects.equal(pollStatus.toLowerCase(), "waiting")) {
+            if (Sparebank1Constants.BankIdStatuses.WAITING.equalsIgnoreCase(pollStatus)) {
                 pollWaitCounter++;
                 return BankIdStatus.WAITING;
-            } else if (Objects.equal(pollStatus.toLowerCase(), "complete")) {
+            } else if (Sparebank1Constants.BankIdStatuses.COMPLETE.equalsIgnoreCase(pollStatus)) {
                 continueActivation();
                 return BankIdStatus.DONE;
             } else {
-                log.info(String.format("%s - Sparebank1 - Unknown poll status: %s",
-                        Sparebank1Constants.LOG_BANKID_POLL_UNKNOWN_STATUS_TAG,
+                log.info(String.format("%s: Unknown poll status: %s",
+                        Sparebank1Constants.Tags.BANKID_POLL_UNKNOWN_STATUS,
                         pollStatus));
                 return BankIdStatus.FAILED_UNKNOWN;
             }
         } catch (HttpResponseException e) {
-            if (Objects.equal(e.getResponse().getStatus(), 500)) {
+            if (e.getResponse().getStatus() == HttpStatusCodes.STATUS_CODE_SERVER_ERROR) {
                 // 500 + more than 20 poll requests means it should be a timeout
                 if (pollWaitCounter >= 20) {
                     return BankIdStatus.TIMEOUT;
@@ -181,14 +126,14 @@ public class Sparebank1Authenticator implements BankIdAuthenticatorNO, AutoAuthe
                     return BankIdStatus.CANCELLED;
                 }
             }
+
             throw e;
         }
     }
 
     private void continueActivation() throws AuthenticationException {
-        apiClient.get(Urls.LOGIN_DONE.queryParam(Sparebank1Constants.CID, Sparebank1Constants.CID_VALUE),
-                HttpResponse.class);
-        apiClient.continueActivation(Urls.CONTINUE_ACTIVATION);
+        apiClient.loginDone();
+        apiClient.continueActivation();
 
         handleAgreementSession();
 
@@ -197,33 +142,24 @@ public class Sparebank1Authenticator implements BankIdAuthenticatorNO, AutoAuthe
     }
 
     private void handleAgreementSession() throws AuthenticationException {
-        AgreementsResponse agreementsResponse = apiClient.getAgreement(Urls.AGREEMENTS.parameter(
-                UrlParameter.BANK_NAME, bankName));
+        AgreementsResponse agreementsResponse = apiClient.getAgreement();
 
         if (agreementsResponse.getAgreements().isEmpty()) {
             throw LoginError.NOT_CUSTOMER.exception();
         }
 
-        TargetUrlRequest targetUrlRequest = getTargetUrlRequest(agreementsResponse);
-        TargetUrlResponse targetUrlResponse = apiClient.finishAgreementSession(
-                Urls.AGREEMENTS.parameter(UrlParameter.BANK_NAME, bankName), targetUrlRequest, bankName);
-        apiClient.get(new URL(targetUrlResponse.getTargetUrl()), HttpResponse.class);
-    }
-
-    private TargetUrlRequest getTargetUrlRequest(AgreementsResponse agreementsResponse) {
-        TargetUrlRequest targetUrlRequest = new TargetUrlRequest();
-        targetUrlRequest.setAgreementId(agreementsResponse.getAgreements().get(0).getAgreementId());
-
-        return targetUrlRequest;
+        apiClient.finishAgreementSession(agreementsResponse);
     }
 
     private Sparebank1Identity finishActivationAndGetIdentity() {
-        Sparebank1Identity identity = createIdentity();
+        Sparebank1Identity identity = Sparebank1Identity.create(credentials.getField(Field.Key.USERNAME));
 
-        FinishActivationRequest finishActivationRequest = createActivateUserRequest(identity);
-        FinishActivationResponse activateUserResponse = apiClient.finishActivation(
-                restRootResponse.getLinks()
-                        .get(Sparebank1Constants.CHALLENGE_KEY).getHref(), finishActivationRequest);
+        LinkEntity challengeLink = Preconditions.checkNotNull(
+                restRootResponse.getLinks().get(Sparebank1Constants.Keys.CHALLENGE_KEY),
+                "Challenge link not find.");
+
+        FinishActivationResponse activateUserResponse = apiClient.finishActivation(identity,
+                challengeLink.getHref());
 
         identity.setToken(activateUserResponse.getRememberMeToken());
         identity.save(persistentStorage);
@@ -231,86 +167,42 @@ public class Sparebank1Authenticator implements BankIdAuthenticatorNO, AutoAuthe
         return identity;
     }
 
-    private Sparebank1Identity createIdentity() {
-        String deviceId = StringUtils.hashAsUUID("TINK-" + credentials.getField(Field.Key.USERNAME));
-        return Sparebank1Identity.create(deviceId);
-    }
-
-    private FinishActivationRequest createActivateUserRequest(Sparebank1Identity identity) {
-        DeviceInfoEntity deviceInfoEntity = createDeviceInfoEntity();
-        PinSrpDataEntity pinSrpDataEntity = createPinSrpDataEntity(identity);
-
-        FinishActivationRequest request = new FinishActivationRequest();
-        request.setDeviceDescription(Sparebank1Constants.DEVICE_DESCRIPTION);
-        request.setDeviceId(identity.getDeviceId());
-        request.setBase64EncodedPublicKey(identity.getUserName());
-        request.setDeviceInfo(deviceInfoEntity);
-        request.setType("strong");
-        request.setPinSrpData(pinSrpDataEntity);
-
-        return request;
-    }
-
-    private DeviceInfoEntity createDeviceInfoEntity() {
-        DeviceInfoEntity deviceInfoEntity = new DeviceInfoEntity();
-        deviceInfoEntity.setManufacturer(Sparebank1Constants.DEVICE_MANUFACTURER);
-        deviceInfoEntity.setModel(Sparebank1Constants.DEVICE_MODEL);
-
-        return deviceInfoEntity;
-    }
-
-    private PinSrpDataEntity createPinSrpDataEntity(Sparebank1Identity identity) {
-        PinSrpDataEntity pinSrpDataEntity = new PinSrpDataEntity();
-        pinSrpDataEntity.setSalt(String.valueOf(identity.getSalt()));
-        pinSrpDataEntity.setUsername(identity.getUserName());
-        pinSrpDataEntity.setVerificator(String.valueOf(identity.getVerificator()));
-
-        return pinSrpDataEntity;
-    }
-
     @Override
     public void autoAuthenticate() throws SessionException {
-        authenticateWithSRP(loadIdentity());
-    }
-
-    private Sparebank1Identity loadIdentity() {
-        Sparebank1Identity identity = new Sparebank1Identity();
-        identity.load(persistentStorage);
-        return identity;
+        authenticateWithSRP(Sparebank1Identity.load(persistentStorage));
     }
 
     private void authenticateWithSRP(Sparebank1Identity identity) {
         SRP6ClientSession clientSession = new SRP6ClientSession();
 
-        InitiateAuthenticationRequest initRequest = createInitiateAuthenticationRequest(identity);
+        LinkEntity loginLink = Preconditions.checkNotNull(
+                restRootResponse.getLinks().get(Sparebank1Constants.Keys.LOGIN_KEY),
+                "Login link not found");
+
         InitiateAuthenticationResponse initAuthResponse = apiClient.initAuthentication(
-                restRootResponse.getLinks().get(Sparebank1Constants.LOGIN_KEY).getHref(), initRequest);
+                identity, loginLink.getHref());
 
         FinishAuthenticationRequest finishAuthRequest = createFinishAuthenticationRequest(
                 clientSession, initAuthResponse, identity);
+        LinkEntity validateSessionLink = Preconditions.checkNotNull(
+                initAuthResponse.getLinks().get(Sparebank1Constants.Keys.VALIDATE_SESSION_KEY),
+                "Validate session key link not found");
 
         FinishAuthenticationResponse step2Response = apiClient.finishAuthentication(
-                initAuthResponse.getLinks().get("validateSessionKey").getHref(),
+                validateSessionLink.getHref(),
                 finishAuthRequest);
 
         validateServerEvidenceMesssage(clientSession, step2Response.getM2());
     }
 
-    private InitiateAuthenticationRequest createInitiateAuthenticationRequest(Sparebank1Identity identity) {
-        InitiateAuthenticationRequest request = new InitiateAuthenticationRequest();
-        request.setToken(identity.getToken());
-        request.setDeviceId(identity.getDeviceId());
-        request.setAuthenticationMethod("pin");
-
-        return request;
-    }
-
     private FinishAuthenticationRequest createFinishAuthenticationRequest(SRP6ClientSession clientSession,
             InitiateAuthenticationResponse authResponse, Sparebank1Identity identity) {
-        SRP6ClientCredentials cred = computeSRPClientCredentials(clientSession, authResponse, identity);
+
+        SRP6ClientCredentials srp6credentials = computeSRPClientCredentials(clientSession, authResponse, identity);
+
         FinishAuthenticationRequest request = new FinishAuthenticationRequest();
-        request.setPublicA(String.valueOf(cred.A));
-        request.setM1(String.valueOf(cred.M1));
+        request.setPublicA(String.valueOf(srp6credentials.A));
+        request.setM1(String.valueOf(srp6credentials.M1));
 
         return request;
     }
