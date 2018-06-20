@@ -263,8 +263,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         private Credentials credential = createDefaultCredential();
 
         private int transactionsToPrint = 32;
-        private boolean loadCredentialsBefore = true;
-        private boolean saveCredentialsAfter = true;
+        private boolean loadCredentialsBefore = false;
+        private boolean saveCredentialsAfter = false;
 
         // if it should override standard logic
         private Boolean requestFlagCreate = null;
