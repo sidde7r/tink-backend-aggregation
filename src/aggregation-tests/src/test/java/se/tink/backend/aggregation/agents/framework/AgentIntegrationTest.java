@@ -313,6 +313,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             Credentials credential = new Credentials();
             credential.setId(DEFAULT_CREDENTIAL_ID);
             credential.setUserId(DEFAULT_USER_ID);
+            credential.setStatus(CredentialsStatus.CREATED);
 
             return credential;
         }
