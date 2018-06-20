@@ -11,7 +11,8 @@ import se.tink.backend.aggregation.rpc.Credentials;
 public class AgentTestServerClient {
     private static final String PROVIDER_NAME_KEY = "providerName";
     private static final String CREDENTIAL_ID_KEY = "credentialId";
-    private static final TinkHttpClient client = new TinkHttpClient(null, null);
+    private final static int TIMEOUT_MS = 2 * 60 * 1000; // 2 minutes
+    private static final TinkHttpClient client = constructHttpClient();
 
     private enum Urls {
         SUPPLEMENTAL("supplemental"),
@@ -28,6 +29,12 @@ public class AgentTestServerClient {
         }
 
         private static final String BASE_URL = "http://127.0.0.1:7357/api/v1/";
+    }
+
+    private static TinkHttpClient constructHttpClient() {
+        TinkHttpClient client = new TinkHttpClient(null, null);
+        client.setTimeout(TIMEOUT_MS);
+        return client;
     }
 
     public static String askForSupplementalInformation(String fields) {
