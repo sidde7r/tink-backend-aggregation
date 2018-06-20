@@ -924,9 +924,16 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
         try {
             signAndValidatePayment(paymentRequest);
         } catch (Exception initialException) {
-            cancelFailedPayment(paymentRequest);
-            deleteSignedTransaction(paymentRequest);
-            throw initialException;
+            boolean cancelled = cancelFailedPayment(paymentRequest);
+            boolean deleted = deleteSignedTransaction(paymentRequest);
+            if (cancelled || deleted) {
+                throw initialException;
+            }
+
+            // if we fail to remove a payment after
+            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                    .setEndUserMessage(catalog.getString("We encountered problems signing the payment/transfer with your bank. Please log in to your bank app and validate the payment/transfer."))
+                    .build();
         }
     }
 
@@ -938,41 +945,47 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
         return recipientNameClientResponse;
     }
 
-    private void deleteSignedTransaction(Object deleteRequest) throws Exception {
+    private boolean deleteSignedTransaction(Object deleteRequest) throws Exception {
         if (deleteRequest instanceof PaymentRequest) {
             PaymentRequest paymentRequest = (PaymentRequest) deleteRequest;
             Optional<String> uniqueId = findFailedPaymentInSignedList(paymentRequest);
 
             if (!uniqueId.isPresent()) {
-                return;
+                return false;
             }
 
-            deleteAndValidateRemovalOfTransaction(paymentRequest.getFromAccount(), uniqueId.get());
+            return deleteAndValidateRemovalOfTransaction(paymentRequest.getFromAccount(), uniqueId.get());
         } else if (deleteRequest instanceof TransferRequest) {
             TransferRequest transferRequest = (TransferRequest) deleteRequest;
             Optional<String> uniqueId = findFailedTransferInSignedList(transferRequest);
 
             if (!uniqueId.isPresent()) {
-                return;
+                return false;
             }
 
-            deleteAndValidateRemovalOfTransaction(transferRequest.getFromAccount(), uniqueId.get());
+            return deleteAndValidateRemovalOfTransaction(transferRequest.getFromAccount(), uniqueId.get());
         } else {
             log.warn(String.format("Got unexpected delete request object: %s",
                     deleteRequest.getClass().getSimpleName()));
         }
+
+        return false;
     }
 
-    private void deleteAndValidateRemovalOfTransaction(String fromAccount, String uniqueId) {
+    private boolean deleteAndValidateRemovalOfTransaction(String fromAccount, String uniqueId) {
         try {
             log.info("Removing payment/transfer from signed since there was an exception.");
             DeleteSignedTransactionRequest request = createDeleteSignedTransactionRequest(false, fromAccount, uniqueId);
 
             ClientResponse deleteTransactionResponse = createPostRequest(DELETE_SIGNED_TRANSACTION_URL, request);
             validateTransactionClientResponse(deleteTransactionResponse);
+
+            return true;
         } catch (Exception e) {
             log.error("Was expecting to delete signed payment/transfer but failed.", e);
         }
+
+        return false;
     }
 
     private DeleteSignedTransactionRequest createDeleteSignedTransactionRequest(boolean isTransfer, String fromAccount,
@@ -1011,22 +1024,25 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
         return Optional.empty();
     }
 
-    private void cancelFailedPayment(PaymentRequest paymentRequest)
+    private boolean cancelFailedPayment(PaymentRequest paymentRequest)
             throws TransferExecutionException, HttpStatusCodeErrorException {
         List<PaymentEntity> unsignedPayments = fetchUnsignedPaymentsAndTransfers();
 
         Optional<String> uniqueId = findFailedPaymentInUnsignedList(paymentRequest, unsignedPayments);
 
         if (!uniqueId.isPresent()) {
-            return;
+            return false;
         }
 
         try {
             cancelUnsignedPayment(uniqueId.get());
+            return true;
         } catch (TransferExecutionException deleteException) {
             log.warn("Could not delete unsigned transfer from outbox but was expecting it to be possible.",
                     deleteException);
         }
+
+        return false;
     }
 
     private Optional<String> findFailedPaymentInUnsignedList(PaymentRequest paymentRequest,
@@ -1097,13 +1113,13 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
                                 .setEndUserMessage(clientResponse.getHeaders().getFirst("Error-Message")).build();
                     } else {
                         throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                                .setEndUserMessage(catalog.getString("Failed to sign using BankID"))
+                                .setEndUserMessage(catalog.getString("Failed to sign using BankID, please try again later"))
                                 .build();
                     }
                 }
             } else {
                 throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                        .setEndUserMessage(catalog.getString("Failed to sign using BankID"))
+                        .setEndUserMessage(catalog.getString("Failed to sign using BankID, please try again later"))
                         .build();
             }
             Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
