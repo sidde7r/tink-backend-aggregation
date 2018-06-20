@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.framework;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -11,7 +12,7 @@ import se.tink.backend.aggregation.rpc.Credentials;
 public class AgentTestServerClient {
     private static final String PROVIDER_NAME_KEY = "providerName";
     private static final String CREDENTIAL_ID_KEY = "credentialId";
-    private final static int TIMEOUT_MS = 2 * 60 * 1000; // 2 minutes
+    private final static int TIMEOUT_MS = Math.toIntExact(TimeUnit.MINUTES.toMillis(2));
     private static final TinkHttpClient client = constructHttpClient();
 
     private enum Urls {
