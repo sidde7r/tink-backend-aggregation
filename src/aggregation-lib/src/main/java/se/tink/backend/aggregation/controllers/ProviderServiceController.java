@@ -98,7 +98,7 @@ public class ProviderServiceController {
             field.setHint(catalog.getString(field.getHint()));
         }
         if (!Strings.isNullOrEmpty(field.getPatternError())) {
-            field.setPattern(catalog.getString(field.getPatternError()));
+            field.setPatternError(catalog.getString(field.getPatternError()));
         }
 
         if (field.getChildren() != null) {
