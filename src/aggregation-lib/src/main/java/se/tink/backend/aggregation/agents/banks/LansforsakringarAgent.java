@@ -14,7 +14,6 @@ import com.google.common.util.concurrent.Uninterruptibles;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource.Builder;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -97,7 +96,6 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.general.GeneralUtils;
 import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuilder;
-import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
 import se.tink.backend.aggregation.log.ClientFilterFactory;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -222,7 +220,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
         catalog = context.getCatalog();
         credentials = request.getCredentials();
         client = clientFactory.createCustomClient(context.getLogOutputStream());
-        client.addFilter(new LoggingFilter(new PrintStream(System.out)));
+        // client.addFilter(new LoggingFilter(new PrintStream(System.out)));
 
         deviceId = new String(Hex.encodeHex(StringUtils.hashSHA1(credentials.getField(Field.Key.USERNAME) + "-TINK")));
         transferMessageFormatter = new TransferMessageFormatter(
