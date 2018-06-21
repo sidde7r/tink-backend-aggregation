@@ -48,7 +48,10 @@ public enum RefreshableItem {
             RefreshableItem.INVESTMENT_TRANSACTIONS,
 
             RefreshableItem.EINVOICES,
-            RefreshableItem.TRANSFER_DESTINATIONS
+            RefreshableItem.TRANSFER_DESTINATIONS,
+
+            RefreshableItem.ACCOUNTS,
+            RefreshableItem.TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS
     ));
 
     private static final ImmutableSet<RefreshableItem> REFRESHABLE_ITEMS_ACCOUNTS = ImmutableSet.<RefreshableItem>builder()
@@ -72,8 +75,6 @@ public enum RefreshableItem {
     }
 
     public static List<RefreshableItem> sort(Set<RefreshableItem> items) {
-        // Remove the legacy items before ordering (cannot order items that are not included in the Oredering<>).
-        items.removeAll(LEGACY_ITEMS);
         return REFRESHABLE_ITEM_ORDERING.sortedCopy(items);
     }
 
