@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.rpc.
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.rpc.LoanListResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.rpc.PortfolioEntitiesResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.rpc.FinancialInstituationsListResponse;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -278,7 +279,11 @@ public class Sparebank1ApiClient {
                 .queryParam(Sparebank1Constants.QueryParams.UNDERSCORE,
                         String.valueOf(System.currentTimeMillis()))
                 .get(LoanDetailsEntity.class);
-        }
+    }
+
+    public TransactionsResponse fetchTransactions(String url) {
+        return client.request(url).get(TransactionsResponse.class);
+    }
 
     public HttpResponse logout(String url) {
         // Find the cookie DSESSIONID cookie, need to set the X-CSRFToken header to the value of this cookie.

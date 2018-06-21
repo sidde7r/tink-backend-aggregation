@@ -72,9 +72,9 @@ public class Sparebank1Agent extends NextGenerationAgent {
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
         return Optional.of(new TransactionalAccountRefreshController(metricRefreshController,
                 updateController,
-                new Sparebank1TransactionalAccountFetcher(apiClient, sessionStorage),
+                new Sparebank1TransactionalAccountFetcher(apiClient),
                 new TransactionFetcherController<>(transactionPaginationHelper,
-                        new Sparebank1TransactionFetcher(apiClient, sessionStorage))));
+                        new Sparebank1TransactionFetcher(apiClient))));
     }
 
     @Override

@@ -68,13 +68,12 @@ public class Sparebank1Constants {
         public static final String VALIDATE_SESSION_KEY = "validateSessionKey";
         public static final String LOGIN_KEY = "login";
         public static final String ACTIVATION_KEY = "activation";
-        public static final String ACCOUNTS_KEY = "accountsRest";
         public static final String TRANSACTIONS_KEY = "transactions";
-        public static final String ACCOUNT_TRANSACTION_URLS_KEY = "accountTransactionUrls";
         public static final String REST_ROOT_KEY = "restRoot";
         public static final String MORE_TRANSACTIONS_KEY = "moreTransactions";
         public static final String PORTFOLIO_HOLDINGS_KEY = "portfolioHoldings";
         public static final String SESSION_ID = "dsessionid";
+        public static final String TRANSACTIONS_LINK = "transactionsLink";
     }
 
     public static final class DeviceValues {

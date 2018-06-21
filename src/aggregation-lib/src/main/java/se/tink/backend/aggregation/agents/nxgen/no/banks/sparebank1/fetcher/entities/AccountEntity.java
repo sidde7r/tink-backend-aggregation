@@ -36,6 +36,8 @@ public class AccountEntity {
         return TransactionalAccount.builder(getTinkAccountType(), formattedNumber, constructAmount())
                 .setName(name)
                 .setUniqueIdentifier(id)
+                .addToTemporaryStorage(Sparebank1Constants.Keys.TRANSACTIONS_LINK,
+                        links.get(Sparebank1Constants.Keys.TRANSACTIONS_KEY))
                 .build();
     }
 
