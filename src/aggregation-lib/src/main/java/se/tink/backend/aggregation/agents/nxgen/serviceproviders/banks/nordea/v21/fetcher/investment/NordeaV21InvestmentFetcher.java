@@ -1,11 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v21.fetcher.investment;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v21.NordeaV21ApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v21.NordeaV21Constants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v21.fetcher.investment.entities.CustodyAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v21.parsers.NordeaV21Parser;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
@@ -29,7 +31,13 @@ public class NordeaV21InvestmentFetcher implements AccountFetcher<InvestmentAcco
                 }).map(parser::parseInvestmentAccount)
                 .collect(Collectors.toList());
 
-        accounts.addAll(client.fetchCustodyAccounts().stream()
+        List<CustodyAccount> custodyAccounts = client.fetchCustodyAccounts();
+
+        if (custodyAccounts == null) {
+            return Collections.emptyList();
+        }
+
+        accounts.addAll(custodyAccounts.stream()
                 .filter(Objects::nonNull)
                 .map(parser::parseInvestmentAccount)
                 .collect(Collectors.toList()));
