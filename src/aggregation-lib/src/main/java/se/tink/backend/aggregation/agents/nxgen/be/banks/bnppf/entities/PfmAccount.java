@@ -29,4 +29,22 @@ public class PfmAccount {
     public boolean getPfmOptInFlag() {
         return pfmOptInFlag;
     }
+
+    public TransactionalAccount toTransactionalAccount() {
+        return CheckingAccount.builder(maskIban(iban), balance.toTinkAmount())
+                .setName(accType)
+                .setBankIdentifier(externalAccId)
+                .setUniqueIdentifier(externalAccId)
+                .build();
+    }
+
+    private String maskIban(String iban) {
+        StringBuffer buffer = new StringBuffer(iban.length());
+        buffer.append(iban.substring(0, 2));
+        for (int i = 0; i < iban.length()-6; i++) {
+            buffer.append("x");
+        }
+        buffer.append(iban.substring(iban.length()-4));
+        return buffer.toString();
+    }
 }
