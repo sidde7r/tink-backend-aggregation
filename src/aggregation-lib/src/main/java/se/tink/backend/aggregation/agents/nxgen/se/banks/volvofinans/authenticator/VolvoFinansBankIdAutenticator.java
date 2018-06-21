@@ -1,0 +1,37 @@
+package se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.authenticator;
+
+import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.BankIdException;
+import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.VolvoFinansApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.VolvoFinansConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.authenticator.rpc.bankid.AuthenticateResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.authenticator.rpc.bankid.InitBankIdRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+
+public class VolvoFinansBankIdAutenticator implements BankIdAuthenticator<String> {
+
+    private final VolvoFinansApiClient apiClient;
+    private final SessionStorage sessionStorage;
+
+    public VolvoFinansBankIdAutenticator(VolvoFinansApiClient apiClient, SessionStorage sessionStorage) {
+        this.apiClient = apiClient;
+        this.sessionStorage = sessionStorage;
+    }
+
+    @Override
+    public String init(String ssn) throws BankIdException, BankServiceException, AuthorizationException {
+        HttpResponse httpResponse = apiClient.loginBankIdInit(new InitBankIdRequest(ssn));
+        String location = httpResponse.getHeaders().getFirst(VolvoFinansConstants.Headers.HEADER_LOCATION);
+        return location.substring(location.lastIndexOf('/') + 1);
+    }
+
+    @Override
+    public BankIdStatus collect(String identificationId) throws AuthenticationException, AuthorizationException {
+        return apiClient.loginBankIdPoll(identificationId).getBankIdStatus();
+    }
+}
