@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.ent
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
 import java.util.HashMap;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.LinkEntity;
@@ -16,29 +17,40 @@ import se.tink.backend.utils.StringUtils;
 public class AccountEntity {
     private static final AggregationLogger log = new AggregationLogger(AccountEntity.class);
 
-    @JsonProperty("_links")
-    private HashMap<String, LinkEntity> links;
-    private String accountType;
-    private String balanceAmountFraction;
-    private String balanceAmountInteger;
-    private Boolean balancePreferred;
-    private String disposableAmountFraction;
-    private String disposableAmountInteger;
-    private String formattedNumber;
     private String id;
     private String name;
-    private Boolean paymentFromEnabled;
-    private Boolean transferFromEnabled;
-    private Boolean transferToEnabled;
+    private String formattedNumber;
+    private String disposableAmountInteger;
+    private String disposableAmountFraction;
+    private String balanceAmountInteger;
+    private String balanceAmountFraction;
+    private String currencyCode;
+    private String accountType;
+    private String accountNumber;
+    private boolean paymentFromEnabled;
+    private boolean transferFromEnabled;
+    private boolean transferToEnabled;
+    private boolean balancePreferred;
+    private boolean defaultAccount;
+    @JsonProperty("_links")
+    private HashMap<String, LinkEntity> links;
 
     @JsonIgnore
     public TransactionalAccount toTransactionalAccount() {
-        return TransactionalAccount.builder(getTinkAccountType(), formattedNumber, constructAmount())
+        return TransactionalAccount.builder(getTinkAccountType(), getTinkFormattedAccountNumber(), constructAmount())
                 .setName(name)
                 .setUniqueIdentifier(id)
                 .addToTemporaryStorage(Sparebank1Constants.Keys.TRANSACTIONS_LINK,
                         links.get(Sparebank1Constants.Keys.TRANSACTIONS_KEY))
                 .build();
+    }
+
+    private String getTinkFormattedAccountNumber() {
+        // Prefer accountNumber as it is unformatted and should only contain digits, always remove all that is
+        // not digits just in case they change format going forward.
+        String formattedAccountNumber = !Strings.isNullOrEmpty(accountNumber) ? accountNumber : formattedNumber;
+
+        return formattedAccountNumber.replaceAll("[^0-9]", "");
     }
 
     @JsonIgnore
