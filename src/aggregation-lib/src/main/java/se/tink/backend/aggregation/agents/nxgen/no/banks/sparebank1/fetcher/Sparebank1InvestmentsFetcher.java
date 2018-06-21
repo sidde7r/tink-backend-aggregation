@@ -31,10 +31,6 @@ public class Sparebank1InvestmentsFetcher implements AccountFetcher<InvestmentAc
         PortfolioEntitiesResponse portfolioEntitiesResponse = apiClient.fetchPortfolios();
         List<PortfolioEntity> portfolioEntitiesList = portfolioEntitiesResponse.getPortfolios();
 
-        if (portfolioEntitiesList.isEmpty()) {
-            return Collections.emptyList();
-        }
-
         return portfolioEntitiesList.stream()
                 .map(portfolioEntity -> {
                     Portfolio portfolio = portfolioEntity.toPortfolio();

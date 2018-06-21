@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.LinkEntity;
@@ -18,7 +19,7 @@ public class CreditCardAccountsListResponse {
     private String aggregatedAmountInteger;
 
     public List<CreditCardAccountEntity> getCreditCards() {
-        return creditCards;
+        return creditCards == null ? Collections.emptyList() : creditCards;
     }
 
     public HashMap<String, LinkEntity> getLinks() {
