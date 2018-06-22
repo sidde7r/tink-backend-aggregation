@@ -24,7 +24,6 @@ import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
-import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
@@ -424,11 +423,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             return this;
         }
 
-        public Builder setCredentialType(CredentialsTypes type) {
-            this.credential.setType(type);
-            return this;
-        }
-
         public Builder setCredentialFields(Map<String, String> fields) {
             this.credential.setFields(fields);
             return this;
@@ -449,6 +443,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             }
 
             Preconditions.checkNotNull(provider, "Provider was not set.");
+            Preconditions.checkNotNull(credential, "Credential was not set.");
+            credential.setType(provider.getCredentialsType());
 
             return new AgentIntegrationTest(this);
         }
