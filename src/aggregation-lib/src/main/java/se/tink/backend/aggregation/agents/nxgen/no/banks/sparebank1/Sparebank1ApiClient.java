@@ -9,6 +9,8 @@ import org.apache.http.cookie.Cookie;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.authentication.FinishAuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.authentication.FinishAuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.authentication.InitiateAuthenticationRequest;
@@ -23,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticato
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.useractivation.TargetUrlResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.FinancialInstitutionEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.LinkEntity;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.MessageEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.entities.LoanDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.rpc.AccountListResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.rpc.CreditCardAccountsListResponse;
@@ -30,10 +33,12 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.rpc.
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.rpc.LoanListResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.rpc.PortfolioEntitiesResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.rpc.ErrorMessageResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.rpc.FinancialInstituationsListResponse;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class Sparebank1ApiClient {
     private final String bankId;
@@ -228,17 +233,37 @@ public class Sparebank1ApiClient {
                 .post(InitiateAuthenticationResponse.class, request);
     }
 
-    public FinishAuthenticationResponse finishAuthentication(String url, FinishAuthenticationRequest request) {
+    public FinishAuthenticationResponse finishAuthentication(String url, FinishAuthenticationRequest request)
+            throws SessionException {
         // Find the cookie DSESSIONID cookie, need to set the X-CSRFToken header to the value of this cookie.
         Cookie dSessionIdCookie = getDSessionIdCookie();
 
-        return client.request(url)
-                .header(Sparebank1Constants.Headers.CSRFT_TOKEN, dSessionIdCookie.getValue())
-                .header(Sparebank1Constants.Headers.X_SB1_REST_VERSION,
-                        Sparebank1Constants.Headers.X_SB1_REST_VERSION_VALUE)
-                .accept(Sparebank1Constants.Headers.APPLICATION_JSON_CHARSET_UTF8)
-                .type(MediaType.APPLICATION_JSON)
-                .put(FinishAuthenticationResponse.class, request);
+        try {
+            return client.request(url)
+                    .header(Sparebank1Constants.Headers.CSRFT_TOKEN, dSessionIdCookie.getValue())
+                    .header(Sparebank1Constants.Headers.X_SB1_REST_VERSION,
+                            Sparebank1Constants.Headers.X_SB1_REST_VERSION_VALUE)
+                    .accept(Sparebank1Constants.Headers.APPLICATION_JSON_CHARSET_UTF8)
+                    .type(MediaType.APPLICATION_JSON)
+                    .put(FinishAuthenticationResponse.class, request);
+        } catch (HttpResponseException e) {
+
+            ErrorMessageResponse errorResponse = e.getResponse().getBody(ErrorMessageResponse.class);
+            Optional<MessageEntity> badCredentialsMessage = errorResponse.getMessages().stream()
+                    .filter(this::userDeletedTinkProfileAtBank)
+                    .findFirst();
+
+                if (badCredentialsMessage.isPresent()) {
+                    throw SessionError.SESSION_EXPIRED.exception();
+                }
+
+            throw e;
+        }
+    }
+
+    private boolean userDeletedTinkProfileAtBank(MessageEntity errorMessage) {
+        return Sparebank1Constants.ErrorMessages.SRP_BAD_CREDENTIALS
+                .equalsIgnoreCase(errorMessage.getKey());
     }
 
     public AccountListResponse fetchAccounts() {

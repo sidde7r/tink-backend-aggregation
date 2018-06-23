@@ -103,4 +103,8 @@ public class Sparebank1Constants {
         public static final String C161 = "bid-c161";
         public static final String C167 = "bid-c167";
     }
+
+    public static final class ErrorMessages {
+        public static final String SRP_BAD_CREDENTIALS = "error.srp.bad.credentials";
+    }
 }

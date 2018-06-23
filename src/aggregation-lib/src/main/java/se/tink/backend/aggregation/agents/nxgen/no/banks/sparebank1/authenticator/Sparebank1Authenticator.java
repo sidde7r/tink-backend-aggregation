@@ -172,7 +172,7 @@ public class Sparebank1Authenticator implements BankIdAuthenticatorNO, AutoAuthe
         authenticateWithSRP(Sparebank1Identity.load(persistentStorage));
     }
 
-    private void authenticateWithSRP(Sparebank1Identity identity) {
+    private void authenticateWithSRP(Sparebank1Identity identity) throws SessionException {
         SRP6ClientSession clientSession = new SRP6ClientSession();
 
         LinkEntity loginLink = Preconditions.checkNotNull(
