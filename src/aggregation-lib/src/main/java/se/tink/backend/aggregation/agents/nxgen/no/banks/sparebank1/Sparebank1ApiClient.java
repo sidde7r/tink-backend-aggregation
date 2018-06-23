@@ -9,7 +9,9 @@ import org.apache.http.cookie.Cookie;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.authentication.FinishAuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.authentication.FinishAuthenticationResponse;
@@ -217,15 +219,30 @@ public class Sparebank1ApiClient {
                 .post(FinishActivationResponse.class, request);
     }
 
-    public InitiateAuthenticationResponse initAuthentication(Sparebank1Identity identity, String url) {
+    public InitiateAuthenticationResponse initAuthentication(Sparebank1Identity identity, String url)
+            throws BankServiceException {
         InitiateAuthenticationRequest request = InitiateAuthenticationRequest.create(identity);
 
-        return client.request(url)
-                .header(Sparebank1Constants.Headers.X_SB1_REST_VERSION,
-                        Sparebank1Constants.Headers.X_SB1_REST_VERSION_VALUE)
-                .accept(Sparebank1Constants.Headers.APPLICATION_JSON_CHARSET_UTF8)
-                .type(MediaType.APPLICATION_JSON)
-                .post(InitiateAuthenticationResponse.class, request);
+        try {
+            return client.request(url)
+                    .header(Sparebank1Constants.Headers.X_SB1_REST_VERSION,
+                            Sparebank1Constants.Headers.X_SB1_REST_VERSION_VALUE)
+                    .accept(Sparebank1Constants.Headers.APPLICATION_JSON_CHARSET_UTF8)
+                    .type(MediaType.APPLICATION_JSON)
+                    .post(InitiateAuthenticationResponse.class, request);
+        } catch (HttpResponseException e) {
+
+            ErrorMessageResponse errorResponse = e.getResponse().getBody(ErrorMessageResponse.class);
+            Optional<MessageEntity> serviceUnavailableMessage = errorResponse.getMessages().stream()
+                    .filter(this::serviceUnavailable)
+                    .findFirst();
+
+            if (serviceUnavailableMessage.isPresent()) {
+                throw BankServiceError.NO_BANK_SERVICE.exception();
+            }
+
+            throw e;
+        }
     }
 
     public FinishAuthenticationResponse finishAuthentication(String url, FinishAuthenticationRequest request)
@@ -248,6 +265,11 @@ public class Sparebank1ApiClient {
 
             throw e;
         }
+    }
+
+    private boolean serviceUnavailable(MessageEntity errorMessage) {
+        return Sparebank1Constants.ErrorMessages.SERVICE_UNAVAILABLE
+                .equalsIgnoreCase(errorMessage.getKey());
     }
 
     private boolean userDeletedTinkProfileAtBank(MessageEntity errorMessage) {

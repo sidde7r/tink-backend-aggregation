@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
+import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
@@ -168,11 +169,11 @@ public class Sparebank1Authenticator implements BankIdAuthenticatorNO, AutoAuthe
     }
 
     @Override
-    public void autoAuthenticate() throws SessionException {
+    public void autoAuthenticate() throws SessionException, BankServiceException {
         authenticateWithSRP(Sparebank1Identity.load(persistentStorage));
     }
 
-    private void authenticateWithSRP(Sparebank1Identity identity) throws SessionException {
+    private void authenticateWithSRP(Sparebank1Identity identity) throws SessionException, BankServiceException {
         SRP6ClientSession clientSession = new SRP6ClientSession();
 
         LinkEntity loginLink = Preconditions.checkNotNull(

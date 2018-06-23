@@ -106,5 +106,6 @@ public class Sparebank1Constants {
 
     public static final class ErrorMessages {
         public static final String SRP_BAD_CREDENTIALS = "error.srp.bad.credentials";
+        public static final String SERVICE_UNAVAILABLE = "SERVICE_UNAVAILABLE";
     }
 }
