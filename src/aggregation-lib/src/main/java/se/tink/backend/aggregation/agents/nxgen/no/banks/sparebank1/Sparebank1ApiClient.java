@@ -36,6 +36,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.rpc.
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.rpc.ErrorMessageResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.rpc.FinancialInstituationsListResponse;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
@@ -208,15 +209,9 @@ public class Sparebank1ApiClient {
     }
 
     public FinishActivationResponse finishActivation(Sparebank1Identity identity, String url) {
-        // Find the cookie DSESSIONID cookie, need to set the X-CSRFToken header to the value of this cookie.
-        Cookie dSessionIdCookie = getDSessionIdCookie();
-
         FinishActivationRequest request = FinishActivationRequest.create(identity);
 
-        return client.request(url)
-                .header(Sparebank1Constants.Headers.CSRFT_TOKEN, dSessionIdCookie.getValue())
-                .header(Sparebank1Constants.Headers.X_SB1_REST_VERSION,
-                        Sparebank1Constants.Headers.X_SB1_REST_VERSION_VALUE)
+        return getActiveSessionRequest(url)
                 .accept(Sparebank1Constants.Headers.APPLICATION_JSON_CHARSET_UTF8)
                 .type(MediaType.APPLICATION_JSON)
                 .post(FinishActivationResponse.class, request);
@@ -235,14 +230,8 @@ public class Sparebank1ApiClient {
 
     public FinishAuthenticationResponse finishAuthentication(String url, FinishAuthenticationRequest request)
             throws SessionException {
-        // Find the cookie DSESSIONID cookie, need to set the X-CSRFToken header to the value of this cookie.
-        Cookie dSessionIdCookie = getDSessionIdCookie();
-
         try {
-            return client.request(url)
-                    .header(Sparebank1Constants.Headers.CSRFT_TOKEN, dSessionIdCookie.getValue())
-                    .header(Sparebank1Constants.Headers.X_SB1_REST_VERSION,
-                            Sparebank1Constants.Headers.X_SB1_REST_VERSION_VALUE)
+            return getActiveSessionRequest(url)
                     .accept(Sparebank1Constants.Headers.APPLICATION_JSON_CHARSET_UTF8)
                     .type(MediaType.APPLICATION_JSON)
                     .put(FinishAuthenticationResponse.class, request);
@@ -311,16 +300,20 @@ public class Sparebank1ApiClient {
     }
 
     public HttpResponse logout(String url) {
+        return getActiveSessionRequest(url)
+                .accept(Sparebank1Constants.Headers.APPLICATION_JSON_CHARSET_UTF8)
+                .type(MediaType.APPLICATION_JSON)
+                .delete(HttpResponse.class);
+    }
+
+    private RequestBuilder getActiveSessionRequest(String url) {
         // Find the cookie DSESSIONID cookie, need to set the X-CSRFToken header to the value of this cookie.
         Cookie dSessionIdCookie = getDSessionIdCookie();
 
         return client.request(url)
                 .header(Sparebank1Constants.Headers.CSRFT_TOKEN, dSessionIdCookie.getValue())
                 .header(Sparebank1Constants.Headers.X_SB1_REST_VERSION,
-                        Sparebank1Constants.Headers.X_SB1_REST_VERSION_VALUE)
-                .accept(Sparebank1Constants.Headers.APPLICATION_JSON_CHARSET_UTF8)
-                .type(MediaType.APPLICATION_JSON)
-                .delete(HttpResponse.class);
+                        Sparebank1Constants.Headers.X_SB1_REST_VERSION_VALUE);
     }
 
     private Cookie getDSessionIdCookie() {
