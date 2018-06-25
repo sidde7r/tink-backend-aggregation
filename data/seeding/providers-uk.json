@@ -6,7 +6,6 @@
             "name": "uk-americanexpress-password",
             "className": "nxgen.uk.creditcards.amex.v62.AmericanExpressV62UKAgent",
             "credentialsType": "PASSWORD",
-            "currency": "GBP",
             "displayName": "American Express",
             "fields": [
                 {
@@ -24,7 +23,6 @@
                 }
             ],
             "groupDisplayName": "American Express",
-            "market": "UK",
             "multiFactor": false,
             "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
             "popular": false,
