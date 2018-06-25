@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.entities;
 
-@se.tink.backend.aggregation.annotations.JsonObject
+import se.tink.backend.aggregation.annotations.JsonObject;
+
+@JsonObject
 public class InstallmentEntity {
     private String dueDate;
     private String amountInteger;

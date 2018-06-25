@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.HashMap;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1AmountUtils;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.LinkEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
-import se.tink.backend.core.Amount;
-import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.date.DateUtils;
 
 @JsonObject
@@ -34,6 +34,16 @@ public class CreditCardTransactionEntity {
     @JsonProperty("_links")
     private HashMap<String, LinkEntity> links;
     private String externalAccountNo;
+
+    @JsonIgnore
+    public CreditCardTransaction toTinkTransaction() {
+        return CreditCardTransaction.builder()
+                .setAmount(Sparebank1AmountUtils.constructAmount(billingAmount, billingAmountFraction))
+                .setDate(DateUtils.parseDate(postingDate == null ? transactionDate : postingDate))
+                .setDescription(transactionText)
+                .setPending(postingDate == null)
+                .build();
+    }
 
     public String getTransactionReference() {
         return transactionReference;
@@ -121,14 +131,5 @@ public class CreditCardTransactionEntity {
 
     public String getExternalAccountNo() {
         return externalAccountNo;
-    }
-
-    public CreditCardTransaction toTinkTransaction() {
-        return CreditCardTransaction.builder()
-                .setAmount(Amount.inNOK(StringUtils.parseAmount(billingAmount + "," + billingAmountFraction)))
-                .setDate(DateUtils.parseDate(postingDate == null ? transactionDate : postingDate))
-                .setDescription(transactionText)
-                .setPending(postingDate == null)
-                .build();
     }
 }

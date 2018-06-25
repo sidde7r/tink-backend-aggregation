@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.sessionhandler;
 
 import com.google.api.client.http.HttpStatusCodes;
-import com.google.common.base.Objects;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1ApiClient;
@@ -17,8 +16,7 @@ public class Sparebank1SessionHandler implements SessionHandler {
     private final Sparebank1ApiClient apiClient;
     private final RestRootResponse restRootResponse;
 
-    public Sparebank1SessionHandler(Sparebank1ApiClient apiClient, String bankKey,
-            RestRootResponse restRootResponse) {
+    public Sparebank1SessionHandler(Sparebank1ApiClient apiClient, RestRootResponse restRootResponse) {
         this.apiClient = apiClient;
         this.restRootResponse = restRootResponse;
     }
@@ -26,8 +24,8 @@ public class Sparebank1SessionHandler implements SessionHandler {
     @Override
     public void logout() {
         HttpResponse response = apiClient.logout(restRootResponse.getLinks()
-                .get(Sparebank1Constants.LOGOUT_KEY).getHref());
-        if (!Objects.equal(response.getStatus(), HttpStatusCodes.STATUS_CODE_NO_CONTENT)) {
+                .get(Sparebank1Constants.Keys.LOGOUT_KEY).getHref());
+        if (response.getStatus() != HttpStatusCodes.STATUS_CODE_NO_CONTENT) {
             log.warn(String.format("Logout failed with status: %d", response.getStatus()));
         }
     }
@@ -37,9 +35,9 @@ public class Sparebank1SessionHandler implements SessionHandler {
         try {
             HttpResponse response = apiClient
                     .get(restRootResponse.getLinks()
-                            .get(Sparebank1Constants.KEEP_ALIVE_KEY).getHref(), HttpResponse.class);
+                            .get(Sparebank1Constants.Keys.KEEP_ALIVE_KEY).getHref(), HttpResponse.class);
 
-            if (!Objects.equal(response.getStatus(), HttpStatusCodes.STATUS_CODE_OK)) {
+            if (response.getStatus() != HttpStatusCodes.STATUS_CODE_OK) {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
         } catch (HttpResponseException e) {

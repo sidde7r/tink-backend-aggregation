@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.authentication;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonObject
 public class FinishAuthenticationRequest {
     private String m1;
     private String publicA;

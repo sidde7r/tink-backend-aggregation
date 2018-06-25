@@ -14,10 +14,6 @@ public class ServerStatusResponse {
         return properties;
     }
 
-    public void setProperties(ServerStatusProperties properties) {
-        this.properties = properties;
-    }
-
     public List<MaintenanceMessageEntity> getMaintenanceMessages() {
         return maintenanceMessages;
     }

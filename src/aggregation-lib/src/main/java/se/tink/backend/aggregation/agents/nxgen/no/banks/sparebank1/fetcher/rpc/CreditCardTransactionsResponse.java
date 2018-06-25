@@ -50,13 +50,13 @@ public class CreditCardTransactionsResponse implements TransactionKeyPaginatorRe
 
     @Override
     public boolean hasNext() {
-        return links.containsKey(Sparebank1Constants.MORE_TRANSACTIONS_KEY);
+        return links.containsKey(Sparebank1Constants.Keys.MORE_TRANSACTIONS_KEY);
     }
 
     @Override
     public String nextKey() {
         if (hasNext()) {
-            return links.get(Sparebank1Constants.MORE_TRANSACTIONS_KEY).getHref();
+            return links.get(Sparebank1Constants.Keys.MORE_TRANSACTIONS_KEY).getHref();
         }
 
         return null;

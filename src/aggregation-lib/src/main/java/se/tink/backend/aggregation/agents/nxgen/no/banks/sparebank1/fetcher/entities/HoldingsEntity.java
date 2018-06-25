@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.ent
 
 import com.google.common.base.Strings;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1AmountUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.system.rpc.Instrument;
-import se.tink.backend.utils.StringUtils;
 
 @JsonObject
 public class HoldingsEntity {
@@ -84,7 +84,7 @@ public class HoldingsEntity {
             return 0.0;
         }
 
-        return StringUtils.parseAmount(marketValueInteger + "," + marketValueFraction);
+        return Sparebank1AmountUtils.constructDouble(marketValueInteger, marketValueFraction);
     }
 
     private Double getPrice() {
@@ -92,7 +92,7 @@ public class HoldingsEntity {
             return 0.0;
         }
 
-        return StringUtils.parseAmount(costPriceInteger + "," + costPriceFraction);
+        return Sparebank1AmountUtils.constructDouble(costPriceInteger, costPriceFraction);
     }
 
     private Double getProfit() {
@@ -102,7 +102,7 @@ public class HoldingsEntity {
             return 0.0;
         }
 
-        return StringUtils.parseAmount(rateOfInvestCurrencyInteger + "," + rateOfInvestCurrencyFraction);
+        return Sparebank1AmountUtils.constructDouble(rateOfInvestCurrencyInteger, rateOfInvestCurrencyFraction);
     }
 
     private Double getQuantity() {
@@ -110,7 +110,7 @@ public class HoldingsEntity {
             return 0.0;
         }
 
-        return StringUtils.parseAmount(sharesInteger + "," + sharesFraction);
+        return Sparebank1AmountUtils.constructDouble(sharesInteger, sharesFraction);
     }
 
     public Optional<Instrument> toInstrument() {

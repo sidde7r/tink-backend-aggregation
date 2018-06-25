@@ -3,11 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.ent
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.HashMap;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1AmountUtils;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.LinkEntity;
-import se.tink.backend.core.Amount;
-import se.tink.backend.utils.StringUtils;
+import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
+import se.tink.backend.aggregation.nxgen.core.account.LoanDetails;
 
-@se.tink.backend.aggregation.annotations.JsonObject
+@JsonObject
 public class LoanEntity {
     private String id;
     private String name;
@@ -21,6 +23,21 @@ public class LoanEntity {
     private Boolean transferToEnabled;
     @JsonProperty("_links")
     private HashMap<String, LinkEntity> links;
+
+    @JsonIgnore
+    public LoanAccount toTinkLoan(LoanDetailsEntity loanDetails) {
+        return LoanAccount.builder(formattedNumber,
+                Sparebank1AmountUtils.constructAmount(balanceAmountInteger, balanceAmountFraction))
+                .setName(name)
+                .setInterestRate(loanDetails.getInterestRate())
+                .setUniqueIdentifier(id)
+                .setDetails(LoanDetails.builder()
+                        .setName(loanDetails.getName())
+                        .setInitialBalance(loanDetails.getInitialBalance())
+                        .setSecurity(loanDetails.getCollateral())
+                        .build())
+                .build();
+    }
 
     public String getId() {
         return id;
@@ -64,10 +81,5 @@ public class LoanEntity {
 
     public HashMap<String, LinkEntity> getLinks() {
         return links;
-    }
-
-    @JsonIgnore
-    public Amount getBalance() {
-        return Amount.inNOK(StringUtils.parseAmount(balanceAmountInteger + "," + balanceAmountFraction));
     }
 }

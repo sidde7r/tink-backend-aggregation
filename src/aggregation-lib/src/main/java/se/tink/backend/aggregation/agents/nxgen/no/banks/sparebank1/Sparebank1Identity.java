@@ -10,6 +10,8 @@ import java.security.SecureRandom;
 import java.util.Map;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.rpc.Field;
+import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class Sparebank1Identity {
@@ -86,7 +88,9 @@ public class Sparebank1Identity {
         this.token = token;
     }
 
-    public static Sparebank1Identity create(String deviceId) {
+    public static Sparebank1Identity create(String username) {
+        String deviceId = StringUtils.hashAsUUID("TINK-" + username);
+
         try {
             KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
 
@@ -124,27 +128,31 @@ public class Sparebank1Identity {
         persistentStorage.put(STORAGE_KEY_TOKEN, token);
     }
 
-    public void load(Map<String, String> persistentStorage) {
+    public static Sparebank1Identity load(Map<String, String> persistentStorage) {
+        Sparebank1Identity identity = new Sparebank1Identity();
+
         if (persistentStorage.containsKey(STORAGE_KEY_DEVICEID)) {
-            deviceId = persistentStorage.get(STORAGE_KEY_DEVICEID);
+            identity.setDeviceId(persistentStorage.get(STORAGE_KEY_DEVICEID));
         }
         if (persistentStorage.containsKey(STORAGE_KEY_KEY_PAIR)) {
-            keyPair = SerializationUtils.deserializeKeyPair(persistentStorage.get(STORAGE_KEY_KEY_PAIR));
+            identity.setKeyPair(SerializationUtils.deserializeKeyPair(persistentStorage.get(STORAGE_KEY_KEY_PAIR)));
         }
         if (persistentStorage.containsKey(STORAGE_KEY_SALT)) {
-            salt = new BigInteger(persistentStorage.get(STORAGE_KEY_SALT));
+            identity.setSalt(new BigInteger(persistentStorage.get(STORAGE_KEY_SALT)));
         }
         if (persistentStorage.containsKey(STORAGE_KEY_USERNAME)) {
-            userName = persistentStorage.get(STORAGE_KEY_USERNAME);
+            identity.setUserName(persistentStorage.get(STORAGE_KEY_USERNAME));
         }
         if (persistentStorage.containsKey(STORAGE_KEY_PASSWORD)) {
-            password = persistentStorage.get(STORAGE_KEY_PASSWORD);
+            identity.setPassword(persistentStorage.get(STORAGE_KEY_PASSWORD));
         }
         if (persistentStorage.containsKey(STORAGE_KEY_VERIFICATOR)) {
-            verificator = new BigInteger(persistentStorage.get(STORAGE_KEY_VERIFICATOR));
+            identity.setVerificator(new BigInteger(persistentStorage.get(STORAGE_KEY_VERIFICATOR)));
         }
         if (persistentStorage.containsKey(STORAGE_KEY_TOKEN)) {
-            token = persistentStorage.get(STORAGE_KEY_TOKEN);
+            identity.setToken(persistentStorage.get(STORAGE_KEY_TOKEN));
         }
+
+        return identity;
     }
 }
