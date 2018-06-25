@@ -16,6 +16,7 @@ BRANCHES = {
     'newport-staging': {'block': False},
     'farnham-staging': {'block': False},
     'aggregation-production': {'block': False},
+    'aggregation-staging': {'block': False},
 }
 
 PROJECTS = {
