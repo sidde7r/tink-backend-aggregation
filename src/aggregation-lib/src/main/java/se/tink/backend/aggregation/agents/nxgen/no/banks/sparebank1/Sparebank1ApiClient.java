@@ -29,11 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.Fin
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.MessageEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.entities.LoanDetailsEntity;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.rpc.AccountListResponse;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.rpc.CreditCardAccountsListResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.rpc.CreditCardTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.rpc.LoanListResponse;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.rpc.PortfolioEntitiesResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.rpc.ErrorMessageResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.rpc.FinancialInstituationsListResponse;
@@ -65,6 +61,12 @@ public class Sparebank1ApiClient {
         return client.request(url).get(responseClass);
     }
 
+    public <T> T getAccounts(URL url, Class<T> responseClass) {
+        return client.request(url
+                .parameter(Sparebank1Constants.Parameters.BANK_NAME, bankName))
+                .get(responseClass);
+    }
+
     public FinancialInstitutionEntity getFinancialInstitution() {
         Optional<FinancialInstitutionEntity> finInstitution = client.request(Sparebank1Constants.Urls.CMS)
                 .get(FinancialInstituationsListResponse.class).getFinancialInstitutions()
@@ -86,11 +88,11 @@ public class Sparebank1ApiClient {
                 financialInstitution.getLinks().get(Sparebank1Constants.Keys.ACTIVATION_KEY),
                 "Activation link not found");
 
-        client.request(activationLinkEntity.getHref()).get(HttpResponse.class);
+        get(activationLinkEntity.getHref(), HttpResponse.class);
     }
 
     public String getLoginDispatcher() {
-        return client.request(Sparebank1Constants.Urls.GET_LOGIN_DISPATCHER)
+        return client.request(Sparebank1Constants.Urls.LOGIN_DISPATCHER)
                 .queryParam(Sparebank1Constants.QueryParams.APP,
                         Sparebank1Constants.QueryParams.APP_VALUE)
                 .queryParam(Sparebank1Constants.QueryParams.FIN_INST, bankId)
@@ -106,7 +108,7 @@ public class Sparebank1ApiClient {
 
         InitLoginBody initLoginBody = new InitLoginBody(nationalId, viewState.val());
 
-        return client.request(Sparebank1Constants.Urls.INIT_LOGIN)
+        return client.request(Sparebank1Constants.Urls.LOGIN_DISPATCHER)
                 .header(Sparebank1Constants.Headers.ORIGIN, Sparebank1Constants.Urls.BASE_LOGIN)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .queryParam(Sparebank1Constants.Parameters.CID,
@@ -207,15 +209,13 @@ public class Sparebank1ApiClient {
         Preconditions.checkState(!Strings.isNullOrEmpty(response.getTargetUrl()),
                 "Did not receive target url");
 
-        client.request(new URL(response.getTargetUrl())).get(HttpResponse.class);
+        get(response.getTargetUrl(), HttpResponse.class);
     }
 
     public FinishActivationResponse finishActivation(Sparebank1Identity identity, String url) {
         FinishActivationRequest request = FinishActivationRequest.create(identity);
 
         return getActiveSessionRequest(url)
-                .accept(Sparebank1Constants.Headers.APPLICATION_JSON_CHARSET_UTF8)
-                .type(MediaType.APPLICATION_JSON)
                 .post(FinishActivationResponse.class, request);
     }
 
@@ -249,8 +249,6 @@ public class Sparebank1ApiClient {
             throws SessionException {
         try {
             return getActiveSessionRequest(url)
-                    .accept(Sparebank1Constants.Headers.APPLICATION_JSON_CHARSET_UTF8)
-                    .type(MediaType.APPLICATION_JSON)
                     .put(FinishAuthenticationResponse.class, request);
         } catch (HttpResponseException e) {
 
@@ -277,35 +275,11 @@ public class Sparebank1ApiClient {
                 .equalsIgnoreCase(errorMessage.getKey());
     }
 
-    public AccountListResponse fetchAccounts() {
-        return client.request(Sparebank1Constants.Urls.ACCOUNTS
-                .parameter(Sparebank1Constants.Parameters.BANK_NAME, bankName))
-                .get(AccountListResponse.class);
-    }
-
-    public CreditCardAccountsListResponse fetchCreditCards() {
-        return client.request(Sparebank1Constants.Urls.CREDITCARDS
-                .parameter(Sparebank1Constants.Parameters.BANK_NAME, bankName))
-                .get(CreditCardAccountsListResponse.class);
-    }
-
     public CreditCardTransactionsResponse fetchCreditCardTransactions(String bankIdentifier) {
         return client.request(Sparebank1Constants.Urls.CREDITCARD_TRANSACTIONS
                 .parameter(Sparebank1Constants.Parameters.BANK_NAME, bankName)
                 .parameter(Sparebank1Constants.Parameters.ACCOUNT_ID, bankIdentifier))
                 .get(CreditCardTransactionsResponse.class);
-    }
-
-    public PortfolioEntitiesResponse fetchPortfolios() {
-        return client.request(Sparebank1Constants.Urls.PORTFOLIOS
-                .parameter(Sparebank1Constants.Parameters.BANK_NAME, bankName))
-                .get(PortfolioEntitiesResponse.class);
-    }
-
-    public LoanListResponse fetchLoans() {
-        return client.request(Sparebank1Constants.Urls.LOANS
-                .parameter(Sparebank1Constants.Parameters.BANK_NAME, bankName))
-                .get(LoanListResponse.class);
     }
 
     public LoanDetailsEntity fetchLoanDetails(String loanId) {
@@ -323,8 +297,6 @@ public class Sparebank1ApiClient {
 
     public HttpResponse logout(String url) {
         return getActiveSessionRequest(url)
-                .accept(Sparebank1Constants.Headers.APPLICATION_JSON_CHARSET_UTF8)
-                .type(MediaType.APPLICATION_JSON)
                 .delete(HttpResponse.class);
     }
 
@@ -335,7 +307,9 @@ public class Sparebank1ApiClient {
         return client.request(url)
                 .header(Sparebank1Constants.Headers.CSRFT_TOKEN, dSessionIdCookie.getValue())
                 .header(Sparebank1Constants.Headers.X_SB1_REST_VERSION,
-                        Sparebank1Constants.Headers.X_SB1_REST_VERSION_VALUE);
+                        Sparebank1Constants.Headers.X_SB1_REST_VERSION_VALUE)
+                .accept(Sparebank1Constants.Headers.APPLICATION_JSON_CHARSET_UTF8)
+                .type(MediaType.APPLICATION_JSON);
     }
 
     private Cookie getDSessionIdCookie() {

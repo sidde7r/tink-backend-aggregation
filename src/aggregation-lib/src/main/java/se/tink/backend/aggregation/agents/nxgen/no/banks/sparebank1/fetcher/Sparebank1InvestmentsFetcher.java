@@ -28,7 +28,8 @@ public class Sparebank1InvestmentsFetcher implements AccountFetcher<InvestmentAc
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
-        PortfolioEntitiesResponse portfolioEntitiesResponse = apiClient.fetchPortfolios();
+        PortfolioEntitiesResponse portfolioEntitiesResponse = apiClient.getAccounts(
+                Sparebank1Constants.Urls.PORTFOLIOS, PortfolioEntitiesResponse.class);
         List<PortfolioEntity> portfolioEntitiesList = portfolioEntitiesResponse.getPortfolios();
 
         return portfolioEntitiesList.stream()

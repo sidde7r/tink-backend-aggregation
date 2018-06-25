@@ -9,8 +9,7 @@ public class Sparebank1Constants {
         public static final String BASE_LOGIN = "https://login.sparebank1.no/";
 
         public static final URL CMS = new URL(BASE + "personal/rest/cms");
-        public static final URL GET_LOGIN_DISPATCHER = new URL(BASE_LOGIN + "auth/pages/loginDispatcher.xhtml");
-        public static final URL INIT_LOGIN = new URL(BASE_LOGIN + "auth/pages/loginDispatcher.xhtml");
+        public static final URL LOGIN_DISPATCHER = new URL(BASE_LOGIN + "auth/pages/loginDispatcher.xhtml");
         public static final URL SELECT_MARKET_AND_AUTH_TYPE = new URL(
                 BASE_LOGIN + "auth/pages/selectMarketAndAuthType.xhtml");
         public static final URL POLL_BANKID = new URL(BASE_LOGIN + "auth/api/bim/poll");
