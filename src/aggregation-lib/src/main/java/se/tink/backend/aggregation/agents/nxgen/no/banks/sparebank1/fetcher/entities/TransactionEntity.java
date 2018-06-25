@@ -4,11 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 import java.util.HashMap;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1AmountUtils;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.LinkEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.core.Amount;
-import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.date.DateUtils;
 
 @JsonObject
@@ -27,7 +26,7 @@ public class TransactionEntity {
     @JsonIgnore
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setAmount(Amount.inNOK(StringUtils.parseAmount(amountInteger + "," + amountFraction)))
+                .setAmount(Sparebank1AmountUtils.constructAmount(amountInteger, amountFraction))
                 .setDate(DateUtils.parseDate(date))
                 .setDescription(getTinkFormattedDescription(description))
                 .setPending(id == null)

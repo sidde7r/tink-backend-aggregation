@@ -3,12 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.ent
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.HashMap;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1AmountUtils;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.LinkEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.LoanDetails;
-import se.tink.backend.core.Amount;
-import se.tink.backend.utils.StringUtils;
 
 @JsonObject
 public class LoanEntity {
@@ -27,7 +26,8 @@ public class LoanEntity {
 
     @JsonIgnore
     public LoanAccount toTinkLoan(LoanDetailsEntity loanDetails) {
-        return LoanAccount.builder(formattedNumber, getBalance())
+        return LoanAccount.builder(formattedNumber,
+                Sparebank1AmountUtils.constructAmount(balanceAmountInteger, balanceAmountFraction))
                 .setName(name)
                 .setInterestRate(loanDetails.getInterestRate())
                 .setUniqueIdentifier(id)
@@ -37,11 +37,6 @@ public class LoanEntity {
                         .setSecurity(loanDetails.getCollateral())
                         .build())
                 .build();
-    }
-
-    @JsonIgnore
-    public Amount getBalance() {
-        return Amount.inNOK(StringUtils.parseAmount(balanceAmountInteger + "," + balanceAmountFraction));
     }
 
     public String getId() {

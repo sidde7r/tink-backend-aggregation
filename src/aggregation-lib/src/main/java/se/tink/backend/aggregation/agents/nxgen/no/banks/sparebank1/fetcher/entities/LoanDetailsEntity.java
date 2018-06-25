@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.HashMap;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1AmountUtils;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.LinkEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.core.Amount;
-import se.tink.backend.utils.StringUtils;
 
 @JsonObject
 public class LoanDetailsEntity {
@@ -155,6 +155,6 @@ public class LoanDetailsEntity {
 
     @JsonIgnore
     public Amount getInitialBalance() {
-        return Amount.inNOK(StringUtils.parseAmount(loanAmountInteger + "," + loanAmountFraction));
+        return Sparebank1AmountUtils.constructAmount(loanAmountInteger, loanAmountFraction);
     }
 }

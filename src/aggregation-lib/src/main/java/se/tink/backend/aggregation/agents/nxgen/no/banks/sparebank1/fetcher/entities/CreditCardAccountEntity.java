@@ -3,11 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.ent
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.HashMap;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1AmountUtils;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.LinkEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
-import se.tink.backend.core.Amount;
-import se.tink.backend.utils.StringUtils;
 
 @JsonObject
 public class CreditCardAccountEntity {
@@ -42,18 +41,10 @@ public class CreditCardAccountEntity {
     private HashMap<String, LinkEntity> links;
 
     @JsonIgnore
-    private Amount getBalance() {
-        return Amount.inNOK(StringUtils.parseAmount(balanceAmountInteger + "," + balanceAmountFraction));
-    }
-
-    @JsonIgnore
-    private Amount getAvailableCredit() {
-        return Amount.inNOK(StringUtils.parseAmount(creditLimitInteger + "," + creditLimitFraction));
-    }
-
-    @JsonIgnore
     public CreditCardAccount toAccount() {
-        return CreditCardAccount.builder(formattedNumber, getBalance(), getAvailableCredit())
+        return CreditCardAccount.builder(formattedNumber,
+                Sparebank1AmountUtils.constructAmount(balanceAmountInteger, balanceAmountFraction),
+                Sparebank1AmountUtils.constructAmount(creditLimitInteger, creditLimitFraction))
                 .setName(name)
                 .setUniqueIdentifier(id)
                 .build();
