@@ -39,7 +39,6 @@ public class BnpPfAgent extends NextGenerationAgent {
             byte[] clientCertificateBytes = FileUtils.readFileToByteArray(new File(BNPPF_CERT_PATH));
             client.setSslClientCertificate(clientCertificateBytes, "");
             client.addFilter(new BnpPfHttpFilter(credentials.getField(Field.Key.ACCESS_TOKEN)));
-            client.setDebugOutput(true);
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
