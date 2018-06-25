@@ -23,6 +23,9 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.Field;
 
 public class BnpPfAgent extends NextGenerationAgent {
+
+    private static final String BNPPF_CERT_PATH = "/etc/tink/bnppf-cert.p12";
+
     private final BnpPfApiClient apiClient;
 
     public BnpPfAgent(CredentialsRequest request, AgentContext context) {
@@ -33,7 +36,7 @@ public class BnpPfAgent extends NextGenerationAgent {
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
         try {
-            byte[] clientCertificateBytes = FileUtils.readFileToByteArray(new File("data/agents/fortis/fortis.p12"));
+            byte[] clientCertificateBytes = FileUtils.readFileToByteArray(new File(BNPPF_CERT_PATH));
             client.setSslClientCertificate(clientCertificateBytes, "");
             client.addFilter(new BnpPfHttpFilter(credentials.getField(Field.Key.ACCESS_TOKEN)));
             client.setDebugOutput(true);
