@@ -1,0 +1,36 @@
+{
+    "market": "UK",
+    "currency": "GBP",
+    "providers": [
+        {
+            "name": "uk-americanexpress-password",
+            "className": "nxgen.uk.creditcards.amex.v62.AmericanExpressV62UKAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "American Express",
+            "fields": [
+                {
+                    "description": "Username",
+                    "name": "username",
+                    "immutable": true,
+                    "minLength": 1
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password",
+                    "minLength": 1
+                }
+            ],
+            "groupDisplayName": "American Express",
+            "multiFactor": false,
+            "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        }
+    ]
+}
