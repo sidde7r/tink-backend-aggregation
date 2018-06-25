@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62;
 
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.LogonRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.LogonResponse;
@@ -30,7 +31,6 @@ public class AmericanExpressV62ApiClient {
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
         this.config = config;
-        client.setDebugOutput(true);
     }
 
     protected RequestBuilder createRequest(String uri) {
@@ -39,8 +39,8 @@ public class AmericanExpressV62ApiClient {
                 .request(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
-                .header(AmericanExpressV62Constants.ConstantValueHeaders.APP_ID)
-                .header(AmericanExpressV62Constants.ConstantValueHeaders.USER_AGENT)
+                .header(AmericanExpressV62Constants.Headers.APP_ID, config.getAppId())
+                .header(HttpHeaders.USER_AGENT, config.getUserAgent())
                 .header(
                         AmericanExpressV62Constants.ConstantValueHeaders.CHARSET)
                 .header(

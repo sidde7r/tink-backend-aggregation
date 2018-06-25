@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.am
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import se.tink.backend.aggregation.agents.nxgen.se.creditcards.amex.v62.AmericanExpressV62SEConfiguration;
 
 public class TransactionResponseTestDataHelper {
     private static final String END_OF_MESSAGE = "} }";
@@ -187,7 +186,6 @@ public class TransactionResponseTestDataHelper {
 
     public static TransactionResponse buildResponse(ResponseType type) throws IOException {
         TransactionResponse transactionResponse = mapper.readValue(type.getMessage(), TransactionResponse.class);
-        transactionResponse.setConfig(new AmericanExpressV62SEConfiguration());
         return transactionResponse;
     }
 
