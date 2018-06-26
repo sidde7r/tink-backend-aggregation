@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.filter;
 
 import java.net.URI;
+import java.security.KeyPair;
 import java.security.PrivateKey;
 import javax.ws.rs.core.MultivaluedMap;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.BunqConstants;
@@ -11,14 +12,15 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BunqSignatureHeaderFilter extends Filter {
-    private final PrivateKey privateKey;
+    private final PersistentStorage persistentStorage;
     private final String userAgent;
 
-    public BunqSignatureHeaderFilter(PrivateKey privateKey, String userAgent) {
-        this.privateKey = privateKey;
+    public BunqSignatureHeaderFilter(PersistentStorage persistentStorage, String userAgent) {
+        this.persistentStorage = persistentStorage;
         this.userAgent = userAgent;
     }
 
@@ -45,10 +47,21 @@ public class BunqSignatureHeaderFilter extends Filter {
             rawHeader += SerializationUtils.serializeToString(httpRequest.getBody());
         }
 
-        byte[] signatureHeader = RSA.signSha256(privateKey, rawHeader.getBytes());
+        httpRequest.getHeaders().putSingle(BunqConstants.Headers.CLIENT_SIGNATURE.getKey(),
+                getEncodedSignature(rawHeader));
+    }
 
-        httpRequest.getHeaders().add(BunqConstants.Headers.CLIENT_SIGNATURE.getKey(),
-                EncodingUtils.encodeAsBase64String(signatureHeader));
+    private String getEncodedSignature(String rawHeader) {
+        PrivateKey privateKey = getPrivateKey();
+
+        byte[] signatureHeader = RSA.signSha256(privateKey, rawHeader.getBytes());
+        return EncodingUtils.encodeAsBase64String(signatureHeader);
+    }
+
+    private PrivateKey getPrivateKey() {
+        KeyPair keyPair = SerializationUtils.deserializeKeyPair(
+                persistentStorage.get(BunqConstants.StorageKeys.DEVICE_RSA_SIGNING_KEY_PAIR));
+        return keyPair.getPrivate();
     }
 
     private String getPathAndQuery(HttpRequest httpRequest) {

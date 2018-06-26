@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator.Bunq
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.fetchers.transactional.BunqTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.fetchers.transactional.BunqTransactionalTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.filter.BunqRequiredHeadersFilter;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.filter.BunqSignatureHeaderFilter;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
@@ -38,6 +39,7 @@ public class BunqAgent extends NextGenerationAgent {
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.addFilter(new BunqRequiredHeadersFilter(sessionStorage));
+        client.addFilter(new BunqSignatureHeaderFilter(persistentStorage, client.getUserAgent()));
     }
 
     @Override
