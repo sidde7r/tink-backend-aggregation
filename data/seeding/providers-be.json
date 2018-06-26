@@ -3,6 +3,20 @@
   "currency": "EUR",
   "providers": [
     {
+      "className": "nxgen.be.banks.bnppf.BnpPfAgent",
+      "credentialsType": "PASSWORD",
+      "displayName": "BNP Paribas Fortis",
+      "capabilities": [
+        "TRANSFERS"
+      ],
+      "multiFactor": true,
+      "name": "be-bnppf-jwt",
+      "popular": false,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
       "className": "nxgen.be.banks.kbc.KbcAgent",
       "credentialsType": "PASSWORD",
       "displayName": "KBC",

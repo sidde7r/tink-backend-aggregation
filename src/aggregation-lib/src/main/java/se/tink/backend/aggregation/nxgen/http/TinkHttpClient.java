@@ -8,6 +8,8 @@ import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
@@ -57,6 +59,7 @@ import se.tink.backend.aggregation.nxgen.http.redirect.FixRedirectHandler;
 import se.tink.backend.aggregation.nxgen.http.redirect.RedirectHandler;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
+import se.tink.libraries.jersey.utils.InterClusterJerseyClientFactory;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class TinkHttpClient extends Filterable<TinkHttpClient> {
@@ -301,13 +304,16 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         this.internalSslContextBuilder = this.internalSslContextBuilder.useProtocol(sslProtocol);
     }
 
-    public void setSslClientCertificate(InputStream key, String password) {
+    public void setSslClientCertificate(byte[] clientCertificateBytes, String password) {
         Preconditions.checkState(this.internalClient == null);
+        ByteArrayInputStream clientCertificateStream = new ByteArrayInputStream(clientCertificateBytes);
         try {
             KeyStore keyStore = KeyStore.getInstance("PKCS12", "BC");
-            this.internalSslContextBuilder = this.internalSslContextBuilder
-                    .loadKeyMaterial(keyStore, password.toCharArray());
-        } catch (NoSuchProviderException | KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
+            keyStore.load(clientCertificateStream, password.toCharArray());
+
+            internalSslContextBuilder.loadKeyMaterial(keyStore, null);
+        } catch (KeyStoreException | NoSuchProviderException | IOException | NoSuchAlgorithmException |
+                CertificateException | UnrecoverableKeyException e) {
             throw new IllegalStateException(e);
         }
     }

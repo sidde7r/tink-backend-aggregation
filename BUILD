@@ -535,6 +535,7 @@ junit_test(
         "//third_party:joda_time_joda_time",
         "//third_party:junit_junit",
         "//third_party:org_apache_commons_commons_lang3",
+        "//third_party:commons_io_commons_io",
         "//third_party:org_apache_curator_curator_framework",
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_assertj_assertj_core",
