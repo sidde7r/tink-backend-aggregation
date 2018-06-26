@@ -22,14 +22,12 @@ import se.tink.backend.aggregation.rpc.Field;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BunqRegistrationAuthenticator implements Authenticator {
-    private final Credentials credentials;
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
     private final BunqApiClient apiClient;
 
-    public BunqRegistrationAuthenticator(Credentials credentials, PersistentStorage persistentStorage,
-            SessionStorage sessionStorage, BunqApiClient apiClient) {
-        this.credentials = credentials;
+    public BunqRegistrationAuthenticator(PersistentStorage persistentStorage, SessionStorage sessionStorage,
+            BunqApiClient apiClient) {
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
         this.apiClient = apiClient;

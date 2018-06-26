@@ -45,17 +45,17 @@ public class BunqAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         return new BunqAuthenticator(request,
-                new BunqRegistrationAuthenticator(credentials, persistentStorage, sessionStorage, apiClient),
+                new BunqRegistrationAuthenticator(persistentStorage, sessionStorage, apiClient),
                 new BunqAuthenticationAuthenticator(credentials, sessionStorage, apiClient));
     }
 
     @Override
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
         return Optional.of(new TransactionalAccountRefreshController(metricRefreshController, updateController,
-                new BunqTransactionalAccountFetcher(credentials, sessionStorage, apiClient),
+                new BunqTransactionalAccountFetcher(sessionStorage, apiClient),
                 new TransactionFetcherController<>(transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(
-                                new BunqTransactionalTransactionsFetcher(credentials, sessionStorage, apiClient)))));
+                                new BunqTransactionalTransactionsFetcher(sessionStorage, apiClient)))));
     }
 
     @Override
