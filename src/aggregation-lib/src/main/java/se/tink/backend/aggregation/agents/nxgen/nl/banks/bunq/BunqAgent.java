@@ -85,7 +85,7 @@ public class BunqAgent extends NextGenerationAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new BunqSessionHandler();
+        return new BunqSessionHandler(apiClient, sessionStorage);
     }
 
     @Override
