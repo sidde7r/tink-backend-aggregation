@@ -1,37 +1,32 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.NextGenerationBaseAgentTest;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
-import se.tink.backend.aggregation.utils.CurrencyConstants;
 
-@Ignore
-public class LaCaixaAgentTest extends NextGenerationBaseAgentTest<LaCaixaAgent> {
+//@Ignore
+public class LaCaixaAgentTest {
 
-    private final Credentials credentials = new Credentials();
+    private final String TEST_USERNAME = "CCCCCCCC";
+    private final String TEST_PASSWORD = "NNNNNN";
 
-    public LaCaixaAgentTest() {
-        super(LaCaixaAgent.class);
-    }
+    private AgentIntegrationTest.Builder builder;
 
     @Before
     public void setup(){
-        credentials.setField(Field.Key.USERNAME, "CCCCCCCC");
-        credentials.setField(Field.Key.PASSWORD, "NNNNNN");
-        credentials.setType(CredentialsTypes.PASSWORD);
+        builder = new AgentIntegrationTest.Builder("es", "es-lacaixa-password")
+                .setCredentialType(CredentialsTypes.PASSWORD)
+                .addCredentialField(Field.Key.USERNAME, TEST_USERNAME)
+                .addCredentialField(Field.Key.PASSWORD, TEST_PASSWORD)
+                .loadCredentialsBefore(false)
+                .saveCredentialsAfter(false);
     }
 
     @Test
-    public void testPasswordLogin() throws Exception{
-        testLogin(credentials);
-    }
+    public void testRefresh() throws Exception{
 
-    @Override
-    public String getCurrency() {
-        return CurrencyConstants.ES.getCode();
+        builder.build().testRefresh();
     }
 }

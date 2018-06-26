@@ -8,7 +8,7 @@ public class LaCaixaConstants {
         public static final String LOGIN_INIT_PATH = "login/loginInicio";
         public static final String LOGIN_SUBMIT_PATH = "login/loginResultado";
         public static final String MAIN_ACCOUNT_PATH = "dashboardApp/cuentaPrincipal?";
-
+        public static final String CHECK_FOTO = "smartContent/consultaFoto"; // Used for keep alive. TODO: Evaluate
     }
 
     public static class Urls{
@@ -17,6 +17,7 @@ public class LaCaixaConstants {
         public static final URL INIT_LOGIN = new URL(BASE + ApiService.LOGIN_INIT_PATH); // Gets session id. Needed before login.
         public static final URL SUBMIT_LOGIN = new URL(BASE + ApiService.LOGIN_SUBMIT_PATH);
         public static final URL FETCH_MAIN_ACCOUNT = new URL(BASE + ApiService.MAIN_ACCOUNT_PATH);
+        public static final URL KEEP_ALIVE = new URL(BASE + ApiService.CHECK_FOTO);
     }
 
     public static class Cookies{

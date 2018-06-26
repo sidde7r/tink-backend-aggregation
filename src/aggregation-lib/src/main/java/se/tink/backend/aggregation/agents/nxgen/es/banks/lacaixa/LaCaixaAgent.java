@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.LaCaixaPasswordAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.session.LaCaixaSessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
@@ -29,7 +30,7 @@ public class LaCaixaAgent extends NextGenerationAgent {
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
 
-        // client.setProxy("http://127.0.0.1:8888");
+        //  client.setProxy("http://127.0.0.1:8888");
     }
 
     @Override
@@ -71,7 +72,7 @@ public class LaCaixaAgent extends NextGenerationAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return null;
+        return new LaCaixaSessionHandler(bankClient);
     }
 
     @Override

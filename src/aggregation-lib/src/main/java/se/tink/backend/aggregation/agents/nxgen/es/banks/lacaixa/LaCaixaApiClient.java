@@ -32,20 +32,16 @@ public class LaCaixaApiClient {
                 LaCaixaConstants.DefaultRequestParams.ID_INSTALACION
         );
 
-        HttpResponse res = createRequest(LaCaixaConstants.Urls.INIT_LOGIN, request)
-                .post(HttpResponse.class, request);
-
-        return res.getBody(SessionResponse.class);
+        return createRequest(LaCaixaConstants.Urls.INIT_LOGIN, request)
+                .post(SessionResponse.class, request);
     }
 
     public LoginResponse login(LoginRequest loginRequest) throws LoginException {
 
         try {
 
-            HttpResponse rawResponse = createRequest(LaCaixaConstants.Urls.SUBMIT_LOGIN, loginRequest)
-                    .post(HttpResponse.class, loginRequest);
-
-            return rawResponse.getBody(LoginResponse.class);
+            return createRequest(LaCaixaConstants.Urls.SUBMIT_LOGIN, loginRequest)
+                    .post(LoginResponse.class, loginRequest);
 
         } catch (HttpResponseException e){
             int statusCode = e.getResponse().getStatus();
@@ -59,6 +55,18 @@ public class LaCaixaApiClient {
 
             LOGGER.warn("Login failed, status code: " + statusCode);
             throw e;
+        }
+    }
+
+    public boolean isAlive(){
+
+        try{
+
+            createRequest(LaCaixaConstants.Urls.KEEP_ALIVE, null).get(HttpResponse.class);
+            return true;
+        } catch(HttpResponseException e){
+
+            return false;
         }
     }
 
