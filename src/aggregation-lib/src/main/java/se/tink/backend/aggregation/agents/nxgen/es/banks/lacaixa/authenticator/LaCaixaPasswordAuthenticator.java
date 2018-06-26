@@ -2,12 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator;
 
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.SessionResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
-import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 
 public class LaCaixaPasswordAuthenticator implements PasswordAuthenticator {
 
@@ -26,8 +24,8 @@ public class LaCaixaPasswordAuthenticator implements PasswordAuthenticator {
 
 
         // Initialize password hasher with seed from initialization request.
-        LaCaixaPasswordHash otpHelper = new LaCaixaPasswordHash(sessionResponse.getSemilla(),
-                Integer.parseInt(sessionResponse.getIteraciones()),
+        LaCaixaPasswordHash otpHelper = new LaCaixaPasswordHash(sessionResponse.getSeed(),
+                Integer.parseInt(sessionResponse.getIterations()),
                 password);
 
 
