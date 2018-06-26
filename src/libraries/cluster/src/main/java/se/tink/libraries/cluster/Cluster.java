@@ -10,6 +10,7 @@ public enum Cluster {
     KIRKBY,
     NEWPORT,
     FARNHAM,
+    NESTON,
 
     // TODO: remove this when new cluster names are merged in tink-infrastructure.
     SEB
