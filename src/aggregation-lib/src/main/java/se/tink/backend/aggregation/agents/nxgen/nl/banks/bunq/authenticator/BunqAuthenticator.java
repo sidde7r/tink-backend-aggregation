@@ -25,9 +25,9 @@ public class BunqAuthenticator implements Authenticator {
     public void authenticate(Credentials credentials) throws AuthenticationException, AuthorizationException {
         if (request.isCreate() || request.isUpdate()) {
             registration(credentials);
+        } else {
+            authentication(credentials);
         }
-
-        authentication(credentials);
     }
 
     private void registration(Credentials credentials) throws AuthenticationException, AuthorizationException {

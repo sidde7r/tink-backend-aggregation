@@ -52,6 +52,11 @@ public class BunqRegistrationAuthenticator implements Authenticator {
             // Persist everything we need need to save
             persistentStorage.put(BunqConstants.StorageKeys.BUNQ_PUBLIC_KEY, installationResponse.getServerPublicKey());
             persistentStorage.put(BunqConstants.StorageKeys.DEVICE_SERVER_ID, registerDeviceResponse.getId());
+
+            // Create the session and save session values
+            CreateSessionResponse createSessionResponse = apiClient.createSession(apiKey);
+            sessionStorage.put(BunqConstants.StorageKeys.SESSION_TOKEN, createSessionResponse.getToken());
+            sessionStorage.put(BunqConstants.StorageKeys.USER_ID, createSessionResponse.getUserPerson().getId());
         } catch (HttpResponseException e) {
             HttpResponse response = e.getResponse();
             ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
