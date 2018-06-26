@@ -9,6 +9,25 @@ import ast
 import sys
 import json
 import uuid
+
+from logging.config import dictConfig
+
+dictConfig({
+    'version': 1,
+    'formatters': {'default': {
+        'format': '[%(asctime)s] %(levelname)s: %(message)s',
+    }},
+    'handlers': {'wsgi': {
+        'class': 'logging.StreamHandler',
+        'stream': 'ext://flask.logging.wsgi_errors_stream',
+        'formatter': 'default'
+    }},
+    'root': {
+        'level': 'INFO',
+        'handlers': ['wsgi']
+    }
+})
+
 app = Flask(__name__)
 
 ### START - CONSTANTS ###
@@ -18,8 +37,11 @@ AGGREGATION_HOST = 'http://127.0.0.1:9095'
 DATA_BASE = None
 CREDENTIALS_TABLE = None
 USER_TABLE = None
-ACCOUNT_TABLE = None
+ACCOUNTS_TABLE = None
 TRANSACTION_TABLE = None
+TRANSFER_TRABLE = None
+
+LOG = None
 
 CLUSTER_ENVIRONMENT_KEY = 'x-tink-cluster-environment'
 CLUSTER_ENVIRONMENT_VALUE = 'development'
@@ -94,7 +116,7 @@ def list_providers(*args):
 	abort(400)
 
 @app.route("/aggregation/controller/v1/system/update/credentials/update", methods = ['POST'])
-def update_credentials():
+def update_credentials_status():
 	responseObject = get_json(request)
 	credentials = responseObject['credentials']
 	CREDENTIALS_TABLE.update({'status': credentials['status']}, where('id') == credentials['id'])
@@ -103,11 +125,19 @@ def update_credentials():
 @app.route("/aggregation/controller/v1/system/update/accounts/update", methods = ['POST'])
 def update_account():
 	responseData = get_json(request)
+	aggregationAccount = to_aggregation_account(responseData['account'])
+	listOfAccounts = ACCOUNTS_TABLE.search(((where('bankId') == aggregationAccount['bankId']) & (where('credentialsId') == aggregationAccount['credentialsId'])))
+	if not listOfAccounts:
+		ACCOUNTS_TABLE.insert(aggregationAccount)
+	else:
+		ACCOUNTS_TABLE.update(aggregationAccount, where('bankId') == aggregationAccount['bankId'])
+	LOG.info("Request to update account: \n %s", prettify_dict(aggregationAccount))
 	return Response(json.dumps(responseData['account']), status=200, mimetype="application/json")
 
 @app.route("/aggregation/controller/v1/system/update/accounts/process", methods = ['POST'])
 def process_accounts():
 	responseData = get_json(request)
+	LOG.info("Received request to process accounts: \n %s", prettify_dict(responseData))
 	return Response({}, status=200, mimetype="application/json")
 
 @app.route("/aggregation/controller/v1/system/process/transactions/update", methods = ['POST'])
@@ -118,6 +148,7 @@ def process_transactions():
 @app.route("/aggregation/controller/v1/system/update/transfer/process", methods = ['POST'])
 def process_transfers():
 	responseData = get_json(request)
+	LOG.info("Request to process transfers: \n %s", prettify_dict(responseData))
 	return Response({}, status=200, mimetype="application/json")
 
 @app.route("/aggregation/controller/v1/system/update/accounts/transfer-destinations/update", methods = ['POST'])
@@ -127,7 +158,8 @@ def process_transfer_destinations():
 
 @app.route("/aggregation/controller/v1/credentials/sensitive", methods = ['PUT'])
 def credentials_sensitive():
-	get_json(request)
+	requestData = get_json(request)
+	CREDENTIALS_TABLE.update({'sensitiveDataSerialized': requestData['sensitiveData']}, where('id') == requestData['credentialsId'])
 	return Response({}, status=200, mimetype="application/json")
 	
 ### END - ENDPOINTS ###
@@ -182,6 +214,22 @@ def create_credential(userId):
 		'status': 'CREATED'
 	}
 
+def to_aggregation_account(coreAccount):
+	return {
+		'id': coreAccount['id'],
+		'accountNumber': coreAccount['accountNumber'],
+		'availableCredit': coreAccount['availableCredit'],
+		'balance': coreAccount['balance'],
+		'bankId': coreAccount['bankId'],
+		'credentialsId': coreAccount['credentialsId'],
+		'holderName': coreAccount['holderName'],
+		'identifiers': coreAccount['identifiers'],
+		'name': coreAccount['name'],
+		'transferDestinations': coreAccount['transferDestinations'],
+		'type': coreAccount['type'],
+		'userId': coreAccount['userId']
+	}
+
 def create_user(id=None):
 	if not id:
 		id = random_uuid_string()
@@ -193,6 +241,9 @@ def create_user(id=None):
 
 def random_uuid_string():
 	return str(uuid.uuid4()).replace('-', '')
+
+def prettify_dict(dictToPrettify):
+	return json.dumps(dictToPrettify, sort_keys=True, indent=4, separators=(',', ': '))
 
 def get_json(requestObject):
 	'''
@@ -214,11 +265,14 @@ def get_json(requestObject):
 ### END - HELPER METHODS ###
 
 def main():
-	global DATA_BASE, CREDENTIALS_TABLE
+	global DATA_BASE, CREDENTIALS_TABLE, ACCOUNTS_TABLE, LOG
 	if not DATA_BASE:
 		DATA_BASE = TinyDB('db.json')
 	if not CREDENTIALS_TABLE:
 		CREDENTIALS_TABLE = DATA_BASE.table('credentials')
+	if not ACCOUNTS_TABLE:
+		ACCOUNTS_TABLE = DATA_BASE.table('accounts')
+	LOG = app.logger
 
 if __name__ == "__main__":
     app.run(main())
