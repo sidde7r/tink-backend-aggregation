@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq;
 import com.google.common.base.Preconditions;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator.BunqAuthenticationAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator.BunqAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator.BunqAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator.BunqRegistrationAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.fetchers.transactional.BunqTransactionalAccountFetcher;
@@ -46,7 +46,7 @@ public class BunqAgent extends NextGenerationAgent {
     protected Authenticator constructAuthenticator() {
         return new BunqAuthenticator(request,
                 new BunqRegistrationAuthenticator(persistentStorage, sessionStorage, apiClient),
-                new BunqAuthenticationAuthenticator(credentials, sessionStorage, apiClient));
+                new BunqAutoAuthenticator(credentials, sessionStorage, apiClient));
     }
 
     @Override

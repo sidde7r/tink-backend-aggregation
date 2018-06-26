@@ -14,13 +14,13 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.Field;
 
-public class BunqAuthenticationAuthenticator implements AutoAuthenticator {
-    private static final AggregationLogger log = new AggregationLogger(BunqAuthenticationAuthenticator.class);
+public class BunqAutoAuthenticator implements AutoAuthenticator {
+    private static final AggregationLogger log = new AggregationLogger(BunqAutoAuthenticator.class);
     private final Credentials credentials;
     private final SessionStorage sessionStorage;
     private final BunqApiClient apiClient;
 
-    public BunqAuthenticationAuthenticator(Credentials credentials, SessionStorage sessionStorage,
+    public BunqAutoAuthenticator(Credentials credentials, SessionStorage sessionStorage,
             BunqApiClient apiClient) {
         this.credentials = credentials;
         this.sessionStorage = sessionStorage;
