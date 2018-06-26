@@ -21,15 +21,19 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
+import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthenticator {
+
+    private final Catalog catalog;
     private final PersistentStorage persistentStorage;
     private final KbcApiClient apiClient;
     private final SupplementalInformationController supplementalInformationController;
 
-    public KbcAuthenticator(PersistentStorage persistentStorage, KbcApiClient apiClient,
+    public KbcAuthenticator(Catalog catalog, PersistentStorage persistentStorage, KbcApiClient apiClient,
             SupplementalInformationController supplementalInformationController) {
+        this.catalog = catalog;
         this.persistentStorage = persistentStorage;
         this.apiClient = apiClient;
         this.supplementalInformationController = supplementalInformationController;
@@ -229,7 +233,7 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
         field.setMasked(false);
         field.setDescription(getChallengeFormattedWithSpace(challenge));
         field.setName("description");
-        field.setHelpText(helpText);
+        field.setHelpText(catalog.getString(helpText));
         field.setImmutable(true);
         return field;
     }
@@ -237,9 +241,9 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
     private Field createInputField(String helpText) {
         Field field = new Field();
         field.setMasked(false);
-        field.setDescription("Input");
+        field.setDescription(catalog.getString("Input"));
         field.setName(KbcConstants.MultiFactorAuthentication.CODE);
-        field.setHelpText(helpText);
+        field.setHelpText(catalog.getString(helpText));
         field.setNumeric(true);
         field.setHint("NNNNNNN");
         return field;

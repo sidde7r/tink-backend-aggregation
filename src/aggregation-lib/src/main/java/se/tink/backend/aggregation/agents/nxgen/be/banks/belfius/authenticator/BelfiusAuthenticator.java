@@ -27,9 +27,11 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
+import se.tink.libraries.i18n.Catalog;
 
 public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenticator {
 
+    private final Catalog catalog;
     private final BelfiusApiClient apiClient;
     private final Credentials credentials;
     private final PersistentStorage persistentStorage;
@@ -37,11 +39,13 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
     private final BelfiusSessionStorage sessionStorage;
 
     public BelfiusAuthenticator(
+            Catalog catalog,
             BelfiusApiClient apiClient,
             Credentials credentials,
             PersistentStorage persistentStorage,
             SupplementalInformationController supplementalInformationController,
             BelfiusSessionStorage sessionStorage) {
+        this.catalog = catalog;
         this.apiClient = apiClient;
         this.credentials = credentials;
         this.persistentStorage = persistentStorage;
@@ -161,7 +165,7 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
         field.setMasked(false);
         field.setDescription(challenge);
         field.setName("description");
-        field.setHelpText(helpText);
+        field.setHelpText(catalog.getString(helpText));
         field.setImmutable(true);
         return field;
     }
@@ -169,9 +173,9 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
     private Field createInputField(String helpText) {
         Field field = new Field();
         field.setMasked(false);
-        field.setDescription("Input");
+        field.setDescription(catalog.getString("Input"));
         field.setName(BelfiusConstants.MultiFactorAuthentication.CODE);
-        field.setHelpText(helpText);
+        field.setHelpText(catalog.getString(helpText));
         field.setNumeric(true);
         field.setHint("NNNNNNN");
         return field;
