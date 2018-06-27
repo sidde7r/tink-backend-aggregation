@@ -11,7 +11,7 @@ public class DanskeBankNOConfiguration implements DanskeBankConfiguration {
     private static final String APP_CULTURE = "nb_NO";
     private static final String APP_NAME = "com.danskebank.mobilebank3no";
     private static final String APP_REFERER = "MobileBanking3 NO";
-    private static final String APP_VERSION = "0.36.2";
+    private static final String APP_VERSION = "0.38.1";
     private static final String BRAND = "FOK";
     private static final String LANGUAGE_CODE = "NB";
     private static final String MARKET_CODE = "NO";
