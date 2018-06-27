@@ -11,7 +11,7 @@ public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
     private static final String APP_CULTURE = "da_DK";
     private static final String APP_NAME = "com.danskebank.mobilebank3dk";
     private static final String APP_REFERER = "MobileBanking3 DK";
-    private static final String APP_VERSION = "0.34.1";
+    private static final String APP_VERSION = "0.38.1";
     private static final String BRAND = "DB";
     private static final String LANGUAGE_CODE = "DA";
     private static final String MARKET_CODE = "DK";

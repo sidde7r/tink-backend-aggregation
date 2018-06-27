@@ -11,7 +11,7 @@ public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
     private static final String APP_CULTURE = "sv_SE";
     private static final String APP_NAME = "com.danskebank.mobilebank3se";
     private static final String APP_REFERER = "MobileBanking3 SE";
-    private static final String APP_VERSION = "0.34.0";
+    private static final String APP_VERSION = "0.38.1";
     private static final String BRAND = "OEB";
     private static final String LANGUAGE_CODE = "SV";
     private static final String MARKET_CODE = "SE";

@@ -11,7 +11,7 @@ public class DanskeBankFIConfiguration implements DanskeBankConfiguration {
     private static final String APP_CULTURE = "fi_FI";
     private static final String APP_NAME = "com.danskebank.mobilebank3fi";
     private static final String APP_REFERER = "MobileBanking3 FI";
-    private static final String APP_VERSION = "0.36.2";
+    private static final String APP_VERSION = "0.38.1";
     private static final String BRAND = "SAM";
     private static final String LANGUAGE_CODE = "FI";
     private static final String MARKET_CODE = "FI";
