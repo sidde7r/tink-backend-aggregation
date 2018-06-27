@@ -317,6 +317,7 @@ java_library(
         "//tools:phantomjs_mac",
         "//tools:libkbc_wbaes_linux",
         "//tools:libkbc_wbaes_mac",
+        "//data:tesseract-training-set",
     ],
     deps = [
         ":aggregation-api",
@@ -379,6 +380,7 @@ java_library(
         "//third_party:org_apache_pdfbox_fontbox",
         "//third_party:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
         "//third_party:org_assertj_assertj_core",
+        "//third_party:net_sourceforge_tess4j",
     ],
 )
 
@@ -506,6 +508,7 @@ junit_test(
     data = [
         "etc/development.yml",
         "//data:aggregation-test",
+        "//data:tesseract-training-set",
     ],
     tags = [
         "external",
@@ -546,5 +549,6 @@ junit_test(
         "//third_party:net_bytebuddy_byte_buddy",
         "//third_party:org_objenesis_objenesis",
         "//third_party:org_seleniumhq_selenium_selenium_java",
+        "//third_party:net_sourceforge_tess4j",
     ],
 )

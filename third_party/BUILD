@@ -3255,3 +3255,30 @@ java_library(
         "@com_sproutsocial_nsqj_j//jar",
     ],
 )
+
+java_library(
+    name = "com_sun_media_jai_imageio",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@com_sun_media_jai_imageio//jar",
+    ],
+)
+
+java_library(
+    name = "net_sourceforge_lept4j",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@net_sourceforge_lept4j//jar",
+    ],
+)
+
+java_library(
+    name = "net_sourceforge_tess4j",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@com_sun_media_jai_imageio//jar",
+        "@net_java_dev_jna_jna//jar",
+        "@net_sourceforge_lept4j//jar",
+        "@net_sourceforge_tess4j//jar",
+    ],
+)
