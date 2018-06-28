@@ -89,7 +89,7 @@ def create_credentials():
 	credential = json.loads(r.text)
 	credential['timestamp'] = get_time_in_millis()
 	CREDENTIALS_TABLE.insert(credential)
-	return json.dumps({'credentialsId': credential['id']})
+	return prettify_dict({'credentialsId': credential['id']})
 
 @app.route("/credentials/refresh/<id>", methods = ['POST'])
 def refresh_credentials(id):
@@ -114,6 +114,15 @@ def credentials_supplemental():
 	CREDENTIALS_TABLE.update({'status': 'UPDATING', 'timestamp': get_time_in_millis()}, where('id') == credential['id'])
 	return ('', 204)
 
+@app.route("/credentials/list", methods = ['GET'])
+def list_credentials():
+	credentials = CREDENTIALS_TABLE.search(Query().id.matches('.*'))
+	print json.dumps(credentials)
+	filter_credentials_info = lambda credential: {'id': credential['id'], 'status': credential['status'], 'type': credential['type'], 'username': credential['username']}
+
+	responseList = map(filter_credentials_info, credentials)
+	return (prettify_dict(responseList), 200)
+
 @app.route("/providers/list", methods = ['GET', 'POST'])
 def list_providers(*args):
 	if request.method == 'POST':
@@ -137,7 +146,7 @@ def get_credential(id):
 		'timestamp': credentials[0]['timestamp']
 	}
 
-	return (json.dumps(response), 200)
+	return (prettify_dict(response), 200)
 
 ### END - USABLE ENDPOINTS ###
 
