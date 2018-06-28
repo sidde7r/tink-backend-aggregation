@@ -1,6 +1,6 @@
 # coding=utf-8
 from tinydb import TinyDB, Query, where
-from flask import Flask, request, abort, Response
+from flask import Flask, request, abort, Response, jsonify, make_response
 from functools import wraps
 import gzip
 import StringIO
@@ -10,6 +10,7 @@ import sys
 import getopt
 import json
 import uuid
+import time
 
 from logging.config import dictConfig
 
@@ -62,15 +63,19 @@ def validate_request(*keys):
 		@wraps(func)
 		def decorated_function(*args, **kwargs):
 			if not request.json:
-				return abort(400)
+				abort(400, 'Your request is not application/json')
 			for key in keys:
 				if key not in request.json:
-					return abort(400)
+					abort(400, str.format('Your request is missing {}', key))
 				if not len(request.json[key]):
-					return abort(400)
+					abort(400, str.format('The field \'{}\' did not contain a value', key))
 				return func(*args, **kwargs)
 		return decorated_function
 	return decorator
+
+@app.errorhandler(400)
+def custom400(error):
+	return make_response(jsonify({'message': error.description}), 400)
 
 ### END - DECORATORS ###
 
@@ -82,8 +87,7 @@ def create_credentials():
 	credentialsRequest = create_credentials_request()
 	r = requests.post(AGGREGATION_HOST + '/aggregation/create', data=json.dumps(credentialsRequest), headers=POST_HEADERS)
 	credential = json.loads(r.text)
-	if CREDENTIALS_TABLE.search(Query().id == credential['id']):
-		abort(400)
+	credential['timestamp'] = get_time_in_millis()
 	CREDENTIALS_TABLE.insert(credential)
 	return json.dumps({'credentialsId': credential['id']})
 
@@ -98,20 +102,42 @@ def refresh_credentials(id):
 @validate_request('credentialsId', 'supplementalInformation')
 def credentials_supplemental():
 	supplementalRequest = request.json
+	credentials = CREDENTIALS_TABLE.search(Query().id == supplementalRequest['credentialsId'])
+	if not credentials:
+		abort(400, 'Not a valid credentials id.')
+
+	credential = credentials[0]
+	if not credential['status'] == 'AWAITING_SUPPLEMENTAL_INFORMATION':
+		abort(400, 'This credentials is not awaiting supplemental information.')
+
 	r = requests.post(AGGREGATION_HOST + '/aggregation/supplemental', data=json.dumps(supplementalRequest), headers=POST_HEADERS)
+	CREDENTIALS_TABLE.update({'status': 'UPDATING', 'timestamp': get_time_in_millis()}, where('id') == credential['id'])
 	return ('', 204)
 
 @app.route("/providers/list", methods = ['GET', 'POST'])
 def list_providers(*args):
 	if request.method == 'POST':
 		if not request.json:
-			abort(400)
+			abort(400, 'Your request should have Content-Type: application/json')
 		return get_provider(request.json['providerName'])
 	if not len(request.args):
 		return requests.get(AGGREGATION_HOST + '/providers/list', headers=GET_HEADERS).text
 	if request.args.get('market'):
 		return requests.get(AGGREGATION_HOST + '/providers/' + request.args.get('market') + '/list', headers=GET_HEADERS).text
-	abort(400)
+	abort(400, 'Invalid request.')
+
+@app.route("/credentials/status/<id>", methods = ['GET'])
+def get_credential(id):
+	credentials = CREDENTIALS_TABLE.search(Query().id == id)
+	if not credentials:
+		return (json.dumps({}, 204))
+
+	response = {
+		'status': credentials[0]['status'],
+		'timestamp': credentials[0]['timestamp']
+	}
+
+	return (json.dumps(response), 200)
 
 ### END - USABLE ENDPOINTS ###
 
@@ -121,7 +147,7 @@ def list_providers(*args):
 def update_credentials_status():
 	responseObject = get_json(request)
 	credentials = responseObject['credentials']
-	CREDENTIALS_TABLE.update({'status': credentials['status']}, where('id') == credentials['id'])
+	CREDENTIALS_TABLE.update({'status': credentials['status'], 'timestamp': get_time_in_millis()}, where('id') == credentials['id'])
 	return Response({}, status=200, mimetype="application/json")
 
 @app.route("/aggregation/controller/v1/system/update/accounts/update", methods = ['POST'])
@@ -160,8 +186,8 @@ def process_transfer_destinations():
 
 @app.route("/aggregation/controller/v1/credentials/sensitive", methods = ['PUT'])
 def credentials_sensitive():
-	requestData = get_json(request)
-	CREDENTIALS_TABLE.update({'sensitiveDataSerialized': requestData['sensitiveData']}, where('id') == requestData['credentialsId'])
+	responseData = get_json(request)
+	CREDENTIALS_TABLE.update({'sensitiveDataSerialized': responseData['sensitiveData']}, where('id') == responseData['credentialsId'])
 	return Response({}, status=200, mimetype="application/json")
 	
 ### START - ENDPOINTS FOR AGGREGATION SERVICE ###
@@ -170,10 +196,10 @@ def credentials_sensitive():
 
 def get_provider(providerName):
 	if not providerName:
-		abort(400)
+		abort(400, 'Provider name is missing.')
 	r = requests.get(AGGREGATION_HOST + '/providers/' + providerName, headers=GET_HEADERS)
 	if not r.text:
-		abort(400)
+		abort(400, 'Invalid provider name')
 	return json.loads(r.text)
 
 def create_credentials_request(credentialsId=None):
@@ -184,9 +210,9 @@ def create_credentials_request(credentialsId=None):
 	if credentialsId:
 		listOfCredentials = CREDENTIALS_TABLE.search(Query().id == credentialsId)
 		if not listOfCredentials:
-			abort(400)
+			abort(400, 'Invalid credentials id.')
 		if len(listOfCredentials) != 1:
-			abort(400)
+			abort(400, 'There exists more than one credentials with this id. This should not happen.')
 		credentials = listOfCredentials[0]
 		user = create_user(credentials['userId'])
 		provider = get_provider(credentials['providerName'])
@@ -197,7 +223,7 @@ def create_credentials_request(credentialsId=None):
 		credentials = create_credential(user['id'])
 
 	if not provider:
-		abort(400)
+		abort(400, 'Invalid provider name')
 
 	return {
 		'user': user,
@@ -269,6 +295,9 @@ def showHelp(f, argv):
     h += "  -h/--help     	  This menu\n"
     h += "  -a/--aggregation-host=  Configuration file\n"
     print >>f, h
+
+def get_time_in_millis():
+	return int(round(time.time() * 1000))
 
 ### END - HELPER METHODS ###
 
