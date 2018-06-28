@@ -74,7 +74,7 @@ def validate_request(*keys):
 
 ### END - DECORATORS ###
 
-### START - ENDPOINTS ###
+### START - USABLE ENDPOINTS ###
 
 @app.route("/credentials/create", methods = ['POST'])
 @validate_request('username', 'providerName', 'credentialsType')
@@ -112,6 +112,10 @@ def list_providers(*args):
 	if request.args.get('market'):
 		return requests.get(AGGREGATION_HOST + '/providers/' + request.args.get('market') + '/list', headers=GET_HEADERS).text
 	abort(400)
+
+### END - USABLE ENDPOINTS ###
+
+### START - ENDPOINTS FOR AGGREGATION SERVICE ###
 
 @app.route("/aggregation/controller/v1/system/update/credentials/update", methods = ['POST'])
 def update_credentials_status():
@@ -160,7 +164,7 @@ def credentials_sensitive():
 	CREDENTIALS_TABLE.update({'sensitiveDataSerialized': requestData['sensitiveData']}, where('id') == requestData['credentialsId'])
 	return Response({}, status=200, mimetype="application/json")
 	
-### END - ENDPOINTS ###
+### START - ENDPOINTS FOR AGGREGATION SERVICE ###
 
 ### START - HELPER METHODS ###
 
