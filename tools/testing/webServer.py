@@ -7,6 +7,7 @@ import StringIO
 import requests
 import ast
 import sys
+import getopt
 import json
 import uuid
 
@@ -259,9 +260,34 @@ def get_json(requestObject):
 	'''
 	return json.loads(uncompressed.read())
 
+def showHelp(f, argv):
+    h = "%s [-h] [-a aggregationHost]\n" % argv[0]
+    h += "  -h/--help     	  This menu\n"
+    h += "  -a/--aggregation-host=  Configuration file\n"
+    print >>f, h
+
 ### END - HELPER METHODS ###
 
-def main():
+def main(argv):
+	try:
+		opts, args = getopt.getopt(
+                                argv[1:],
+                                "ha:",
+                                ["help", "aggregation-host="]
+                            )
+	except getopt.GetoptError:
+		print "HERE"
+		showHelp(sys.stderr, argv)
+		return sys.exit(1)
+
+	global AGGREGATION_HOST
+	for opt, arg in opts:
+		if opt in ("-a", "--aggregation-host"):
+			AGGREGATION_HOST = arg
+		elif opt in ("-h", "--help"):
+			showHelp(sys.stdout, argv)
+			sys.exit(0)
+
 	global DATA_BASE, CREDENTIALS_TABLE, ACCOUNTS_TABLE, LOG
 	if not DATA_BASE:
 		DATA_BASE = TinyDB('db.json')
@@ -271,5 +297,7 @@ def main():
 		ACCOUNTS_TABLE = DATA_BASE.table('accounts')
 	LOG = app.logger
 
+	print str.format("\n Starting testing service with aggregation host: {} \n", AGGREGATION_HOST)
+
 if __name__ == "__main__":
-    app.run(main())
+    app.run(main(sys.argv))
