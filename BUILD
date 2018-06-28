@@ -20,6 +20,7 @@ java_library(
 java_library(
     name = "aggregation-api",
     srcs = glob(["src/aggregation-api/src/main/**/*.java"]),
+    visibility = ["//visibility:public"],
     deps = [
         ":main-api",
         ":system-api",
@@ -311,6 +312,7 @@ java_library(
 java_library(
     name = "aggregation-lib",
     srcs = glob(["src/aggregation-lib/src/main/**/*.java"]),
+    visibility = ["//visibility:public"],
     data = [
         "//tools:phantomjs_mac",
         "//tools:libkbc_wbaes_linux",
