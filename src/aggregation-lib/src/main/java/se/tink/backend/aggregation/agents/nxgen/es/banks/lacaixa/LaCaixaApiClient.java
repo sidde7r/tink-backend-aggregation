@@ -7,6 +7,9 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.r
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.SessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.SessionResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.ListAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.UserDataRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.UserDataResponse;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -32,7 +35,7 @@ public class LaCaixaApiClient {
                 LaCaixaConstants.DefaultRequestParams.ID_INSTALACION
         );
 
-        return createRequest(LaCaixaConstants.Urls.INIT_LOGIN, request)
+        return createRequest(LaCaixaConstants.Urls.INIT_LOGIN)
                 .post(SessionResponse.class, request);
     }
 
@@ -40,17 +43,15 @@ public class LaCaixaApiClient {
 
         try {
 
-            return createRequest(LaCaixaConstants.Urls.SUBMIT_LOGIN, loginRequest)
+            return createRequest(LaCaixaConstants.Urls.SUBMIT_LOGIN)
                     .post(LoginResponse.class, loginRequest);
 
         } catch (HttpResponseException e){
             int statusCode = e.getResponse().getStatus();
 
-            switch (statusCode){
-
-                case LaCaixaConstants.StatusCodes.INCORRECT_USERNAME_PASSWORD:
-                    LOGGER.trace("Login failed, incorrect username/password.");
-                    throw LoginError.INCORRECT_CREDENTIALS.exception();
+            if(statusCode == LaCaixaConstants.StatusCodes.INCORRECT_USERNAME_PASSWORD){
+                LOGGER.trace("Login failed, incorrect username/password.");
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
             }
 
             LOGGER.warn("Login failed, status code: " + statusCode);
@@ -58,11 +59,26 @@ public class LaCaixaApiClient {
         }
     }
 
+    public ListAccountsResponse FetchAccountList() {
+
+        return createRequest(LaCaixaConstants.Urls.FETCH_MAIN_ACCOUNT)
+                .get(ListAccountsResponse.class);
+    }
+
+    public UserDataResponse FetchUserData(){
+
+        UserDataRequest request = new UserDataRequest(LaCaixaConstants.UserData.FULL_HOLDER_NAME,
+                "linkPriape");
+
+        return createRequest(LaCaixaConstants.Urls.FETCH_USER_DATA)
+                .post(UserDataResponse.class, request);
+    }
+
     public boolean isAlive(){
 
         try{
 
-            createRequest(LaCaixaConstants.Urls.KEEP_ALIVE, null).get(HttpResponse.class);
+            createRequest(LaCaixaConstants.Urls.KEEP_ALIVE).get(HttpResponse.class);
             return true;
         } catch(HttpResponseException e){
 
@@ -70,7 +86,7 @@ public class LaCaixaApiClient {
         }
     }
 
-    private RequestBuilder createRequest(URL url, Object request){
+    private RequestBuilder createRequest(URL url){
 
         return client
                 .request(url)
