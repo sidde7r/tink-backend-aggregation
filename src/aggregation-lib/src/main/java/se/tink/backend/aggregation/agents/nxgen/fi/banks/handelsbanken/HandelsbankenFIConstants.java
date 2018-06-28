@@ -23,7 +23,7 @@ public class HandelsbankenFIConstants {
     }
 
     public static final class Headers {
-        public static final String APP_VERSION = "2.2:1.4";
+        public static final String APP_VERSION = "3.4:1.5";
     }
 
     public static final class Fetcher {
