@@ -148,6 +148,10 @@ def get_credential(id):
 
 	return (prettify_dict(response), 200)
 
+@app.route("/ping", methods = ['GET'])
+def ping():
+	return "pong"
+
 ### END - USABLE ENDPOINTS ###
 
 ### START - ENDPOINTS FOR AGGREGATION SERVICE ###
@@ -302,7 +306,7 @@ def get_json(requestObject):
 def showHelp(f, argv):
     h = "%s [-h] [-a aggregationHost]\n" % argv[0]
     h += "  -h/--help     	  This menu\n"
-    h += "  -a/--aggregation-host=  Configuration file\n"
+    h += "  -a/--aggregation-host=  Aggregation host (including port)\n"
     print >>f, h
 
 def get_time_in_millis():
