@@ -88,6 +88,7 @@ import se.tink.backend.aggregation.agents.banks.swedbank.model.PaymentReference;
 import se.tink.backend.aggregation.agents.banks.swedbank.model.PaymentRequest;
 import se.tink.backend.aggregation.agents.banks.swedbank.model.ProfileMenu;
 import se.tink.backend.aggregation.agents.banks.swedbank.model.ProfileResponse;
+import se.tink.backend.aggregation.agents.banks.swedbank.model.ProfilesHandler;
 import se.tink.backend.aggregation.agents.banks.swedbank.model.RecipientEntity;
 import se.tink.backend.aggregation.agents.banks.swedbank.model.RegisteredPaymentResponse;
 import se.tink.backend.aggregation.agents.banks.swedbank.model.RemindersResponse;
@@ -271,14 +272,10 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
     private ApacheHttpClient4 client;
     private Credentials credentials;
     private ProfileParameters profileParameters;
-    private ProfileResponse profileResponse;
-    private ProfileMenu profileMenu;
     private Map<String, List<Transaction>> upcomingTransactionsByBankId;
     private static final int MAX_ATTEMPTS = 90;
     private static final int MAX_RETRY_ATTEMPTS = 4;
-
-    // cache
-    private List<EngagementOverviewResponse> engagementOverviewResponses = null;
+    private ProfilesHandler profilesHandler = new ProfilesHandler();
 
     public SwedbankAgent(CredentialsRequest request, AgentContext context) {
         super(request, context);
@@ -478,7 +475,7 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
     /**
      * Creates a new recipient for the transfer destination account.
      */
-    private SwedbankAccountEntity createSignedRecipient(final Transfer transfer) throws Exception {
+    private SwedbankAccountEntity createSignedRecipient(ProfileMenu profileMenu, final Transfer transfer) throws Exception {
         MenuItem menuItem = profileMenu.getMenuItem("PaymentRegisterExternalRecipient");
 
         if (!menuItem.isAuthorizedURI(MenuItem.Method.POST)) {
@@ -540,7 +537,7 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
     /**
      * Creates a new payee.
      */
-    private SwedbankAccountEntity createSignedPayee(final Transfer transfer) throws Exception {
+    private SwedbankAccountEntity createSignedPayee(ProfileMenu profileMenu, final Transfer transfer) throws Exception {
         MenuItem menuItem = profileMenu.getMenuItem("PaymentRegisterPayee");
 
         if (!menuItem.isAuthorizedURI(MenuItem.Method.POST)) {
@@ -699,12 +696,15 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
 
     @Override
     public void update(Transfer transfer) throws Exception {
+        ProfilesHandler.BankProfile bankProfile = getAndActivateTransferProfile();
+        ProfileMenu profileMenu = bankProfile.getProfileMenu();
+
         switch (transfer.getType()) {
         case EINVOICE:
-            approveEInvoice(transfer);
+            approveEInvoice(profileMenu, transfer);
             break;
         case PAYMENT:
-            updatePayment(transfer);
+            updatePayment(profileMenu, transfer);
             break;
         default:
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
@@ -713,7 +713,7 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
         }
     }
 
-    private void approveEInvoice(Transfer transfer) throws Exception {
+    private void approveEInvoice(ProfileMenu profileMenu, Transfer transfer) throws Exception {
         final Transfer originalTransfer = SerializationUtils.deserializeFromString(
                 transfer.getPayload().get(TransferPayloadType.ORIGINAL_TRANSFER), Transfer.class);
 
@@ -722,7 +722,7 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
                     .setMessage("No original transfer on payload to compare with.").build();
         }
 
-        Optional<InvoiceDetails> eInvoiceDetails = findMatchingInvoiceDetails(originalTransfer);
+        Optional<InvoiceDetails> eInvoiceDetails = findMatchingInvoiceDetails(profileMenu, originalTransfer);
 
         if (!eInvoiceDetails.isPresent()) {
             throw TransferExecutionException
@@ -736,10 +736,10 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
         // Validate source and execute the update
         TransactionAccountEntity sourceAccount = validateSourceAccountFromEInvoice(transfer.getSource(),
                 eInvoiceDetails.get().getFromAccountGroups());
-        executeUpdate(transfer, sourceAccount, eInvoiceDetails.get());
+        executeUpdate(profileMenu, transfer, sourceAccount, eInvoiceDetails.get());
     }
 
-    private void updatePayment(Transfer transfer) throws Exception {
+    private void updatePayment(ProfileMenu profileMenu, Transfer transfer) throws Exception {
 
         // Get confirmed payments
         ClientResponse paymentClientResponse = createClientRequest(
@@ -765,7 +765,7 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
 
         // Validate source account and then execute the update
         validateSourceAccountFromInvoice(transfer.getSource(), paymentToUpdate.getFromAccount());
-        executeUpdate(transfer, paymentToUpdate.getFromAccount(), paymentToUpdate);
+        executeUpdate(profileMenu, transfer, paymentToUpdate.getFromAccount(), paymentToUpdate);
     }
 
     private InvoiceDetails getPaymentToUpdate(ConfirmedPaymentResponse paymentResponse, Transfer originalTransfer) {
@@ -809,16 +809,16 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
         return payment.get();
     }
 
-    private void executeUpdate(Transfer transfer, TransactionAccountEntity sourceAccount,
+    private void executeUpdate(ProfileMenu profileMenu, Transfer transfer, TransactionAccountEntity sourceAccount,
             InvoiceDetails invoiceDetails) throws Exception {
 
         PaymentRequest paymentRequest = createUpdateRequest(transfer, sourceAccount,
                 invoiceDetails.getPayment());
 
-        RegisteredPaymentResponse transferResponse = createPayment(invoiceDetails, paymentRequest);
+        RegisteredPaymentResponse transferResponse = createPayment(profileMenu, invoiceDetails, paymentRequest);
 
         if (transferResponse.getRegisteredTransactions() != null) {
-            signAndConfirmTransfer(transferResponse);
+            signAndConfirmTransfer(profileMenu, transferResponse);
         }
     }
 
@@ -844,14 +844,16 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
 
     @Override
     public void execute(final Transfer transfer) throws Exception {
+        ProfilesHandler.BankProfile bankProfile = getAndActivateTransferProfile();
+        ProfileMenu profileMenu = bankProfile.getProfileMenu();
 
         SwedbankTransferResponseFilter swedbankTransferResponseFilter = new SwedbankTransferResponseFilter(context);
         client.addFilter(swedbankTransferResponseFilter);
 
         if (transfer.getType() == TransferType.BANK_TRANSFER) {
-            executeBankTransfer(transfer);
+            executeBankTransfer(profileMenu, transfer);
         } else if (transfer.getType() == TransferType.PAYMENT) {
-            executePayment(transfer);
+            executePayment(profileMenu, transfer);
         } else {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setMessage("Not implemented.")
@@ -861,9 +863,9 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
         client.removeFilter(swedbankTransferResponseFilter);
     }
 
-    private void executePayment(Transfer transfer) throws Exception {
+    private void executePayment(ProfileMenu profileMenu, Transfer transfer) throws Exception {
 
-        validateNoUnsignedTransfers();
+        validateNoUnsignedTransfers(profileMenu);
 
         // Validate transfer source information.
         final AccountIdentifier source = transfer.getSource();
@@ -876,17 +878,17 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
                 baseInfoPaymentResponse.getPaymentFromAccounts());
 
         // Validate transfer destination information and get id for destination account.
-        String destinationAccountId = getDestinationAccountIdForPayment(transfer, baseInfoPaymentResponse);
+        String destinationAccountId = getDestinationAccountIdForPayment(profileMenu, transfer, baseInfoPaymentResponse);
 
         // Create the payment request.
         PaymentRequest paymentRequest = createPaymentRequest(transfer, sourceAccount, destinationAccountId);
 
         // Make the payment.
-        RegisteredPaymentResponse paymentResponse = createPayment(null, paymentRequest);
-        signAndConfirmTransfer(paymentResponse);
+        RegisteredPaymentResponse paymentResponse = createPayment(profileMenu, null, paymentRequest);
+        signAndConfirmTransfer(profileMenu, paymentResponse);
     }
 
-    private String getDestinationAccountIdForPayment(Transfer transfer, BaseInfoPaymentResponse baseInfoPaymentResponse)
+    private String getDestinationAccountIdForPayment(ProfileMenu profileMenu, Transfer transfer, BaseInfoPaymentResponse baseInfoPaymentResponse)
         throws Exception {
 
         final AccountIdentifier destination = transfer.getDestination();
@@ -894,7 +896,7 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
                 baseInfoPaymentResponse.getPayment().getPayees());
 
         if (!destinationAccount.isPresent()) {
-            SwedbankAccountEntity newDestinationAccount = createSignedPayee(transfer);
+            SwedbankAccountEntity newDestinationAccount = createSignedPayee(profileMenu, transfer);
             return newDestinationAccount.getId();
         }
 
@@ -920,9 +922,9 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
         return paymentRequest;
     }
 
-    private void executeBankTransfer(final Transfer transfer) throws Exception {
+    private void executeBankTransfer(ProfileMenu profileMenu, final Transfer transfer) throws Exception {
 
-        validateNoUnsignedTransfers();
+        validateNoUnsignedTransfers(profileMenu);
 
         // Get transfer account information.
         BaseInfoPaymentResponse baseInfoPaymentResponse =
@@ -930,7 +932,7 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
                 .get(BaseInfoPaymentResponse.class);
 
         // Create the transfer request.
-        TransferRequest transferRequest = createTransferRequestForBankTransfer(transfer, baseInfoPaymentResponse);
+        TransferRequest transferRequest = createTransferRequestForBankTransfer(profileMenu, transfer, baseInfoPaymentResponse);
 
         // Execute the transfer.
         ClientResponse transferClientResponse =
@@ -951,10 +953,10 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
                         + transferClientResponse.getEntity(RegisteredPaymentResponse.class).getLinks().getNext()
                         .getUri(), false).get(RegisteredPaymentResponse.class);
 
-        signAndConfirmTransfer(transferResponse);
+        signAndConfirmTransfer(profileMenu, transferResponse);
     }
 
-    private TransferRequest createTransferRequestForBankTransfer(Transfer transfer,
+    private TransferRequest createTransferRequestForBankTransfer(ProfileMenu profileMenu, Transfer transfer,
             BaseInfoPaymentResponse baseInfoPaymentResponse) throws Exception {
 
         // Ensure correct formatting of transfer messages.
@@ -975,7 +977,7 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
         if (destinationAccount.isPresent()) {
             recipientAccountId = destinationAccount.get().getId();
         } else {
-            SwedbankAccountEntity newDestinationAccount = createSignedRecipient(transfer);
+            SwedbankAccountEntity newDestinationAccount = createSignedRecipient(profileMenu, transfer);
             recipientAccountId = newDestinationAccount.getId();
         }
 
@@ -990,7 +992,7 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
         return transferRequest;
     }
 
-    private void signAndConfirmTransfer(RegisteredPaymentResponse transferResponse) throws Exception {
+    private void signAndConfirmTransfer(ProfileMenu profileMenu, RegisteredPaymentResponse transferResponse) throws Exception {
         ConfirmedPaymentResponse confirmedPaymentResponse = null;
 
         try {
@@ -1052,7 +1054,7 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
      * This method is used in all cases a payment is made, that is approve e-invoice, update payment
      * and execute payment. However, the different cases have different ways of doing the payment.
      */
-    private RegisteredPaymentResponse createPayment(InvoiceDetails invoiceDetails, PaymentRequest paymentRequest)
+    private RegisteredPaymentResponse createPayment(ProfileMenu profileMenu, InvoiceDetails invoiceDetails, PaymentRequest paymentRequest)
             throws Exception {
         ClientResponse transferClientResponse;
         boolean isUpdate = false;
@@ -1071,7 +1073,8 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
             // This a post of an e-invoice or a payment.
 
             transferClientResponse = createClientRequest(
-                    BASE_URL + profileMenu.getMenuItem("PaymentRegisterPayment").getUri(), true)
+                    BASE_URL + profileMenu
+                            .getMenuItem("PaymentRegisterPayment").getUri(), true)
                     .post(ClientResponse.class, paymentRequest);
         }
 
@@ -1110,17 +1113,17 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
         }
     }
 
-    private List<InvoiceDetails> getInvoices() throws Exception {
+    private List<InvoiceDetails> getInvoices(ProfileMenu profileMenu) throws Exception {
         List<InvoiceDetails> invoices = Lists.newArrayList();
 
-        for (Invoice invoice : getInvoiceList()) {
+        for (Invoice invoice : getInvoiceList(profileMenu)) {
             invoices.add(getDetailsFor(invoice));
         }
 
         return invoices;
     }
 
-    private List<Invoice> getInvoiceList() throws Exception {
+    private List<Invoice> getInvoiceList(ProfileMenu profileMenu) throws Exception {
         if (!profileMenu.hasMenuItem("MessageReminders")) {
             // "Youth" users do not have this key. Working theory is that they are not allowed
             // to have e-invoices.
@@ -1143,8 +1146,9 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
         return invoicesResponse.getEinvoices();
     }
 
-    private Optional<InvoiceDetails> findMatchingInvoiceDetails(final Transfer originalTransfer) throws Exception {
-        for (Invoice invoice : getInvoiceList()) {
+    private Optional<InvoiceDetails> findMatchingInvoiceDetails(ProfileMenu profileMenu, final Transfer originalTransfer) throws Exception {
+
+        for (Invoice invoice : getInvoiceList(profileMenu)) {
             InvoiceDetails invoiceDetails = getDetailsFor(invoice);
 
             if (invoiceDetails == null) {
@@ -1166,7 +1170,7 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
                 BASE_URL + invoice.getLinks().getNext().getUri(), false).get(InvoiceDetails.class);
     }
 
-    private void validateNoUnsignedTransfers() throws Exception {
+    private void validateNoUnsignedTransfers(ProfileMenu profileMenu) throws Exception {
         RegisteredPaymentResponse registeredTransferResponse = createClientRequest(
                 BASE_URL + profileMenu.getMenuItem("PaymentRegistered").getUri(), false)
                 .get(RegisteredPaymentResponse.class);
@@ -1292,9 +1296,9 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
             return false;
         }
 
-        profileResponse = getProfileResponse();
+        ProfileResponse profileResponse = getProfileResponse();
         Preconditions.checkNotNull(profileResponse);
-        checkProfileResponseErrorMessages();
+        checkProfileResponseErrorMessages(profileResponse);
 
         // Mismatch! User logs in through Swedbank provider but has only a Savingsbank profile, or vice versa.
         if (credentials.getType() == CredentialsTypes.MOBILE_BANKID && modeAndProfileMismatch(profileResponse)) {
@@ -1312,7 +1316,6 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
         // We're in the correct profile and we have data, select the profile
         // and go fetch all of our account information.
         // Cache the details response for later checking of authorized URI's
-        profileMenu = null;
         List<BankEntity> bankEntityList = profileResponse.getBanks();
         if (bankEntityList.isEmpty()) {
             // This check protects against errors if the user has engagements in i.e. swedbank but the user has
@@ -1324,9 +1327,9 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
 
             // Activate a profile.
             BankEntity bankEntity = bankEntityList.get(0);
-            profileMenu = createClientRequest(
-                    BASE_URL + bankEntity.getPrivateProfile().getLinks().getNext().getUri(), false)
-                    .post(ProfileMenu.class);
+            ProfileMenu profileMenu = activateProfile(bankEntity);
+            EngagementOverviewResponse engagementOverView = fetchEngagementOverviewNoActivation(profileMenu);
+            profilesHandler.addBankProfile(bankEntity, profileMenu, engagementOverView, true, true);
         } else {
             try {
                 log.info("Multiple banks detected: " + MAPPER.writeValueAsString(bankEntityList));
@@ -1338,9 +1341,9 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
             for (BankEntity bank : bankEntityList) {
                 try {
                     log.info("Multiple banks - activating profile " + bank.getName());
-                    profileMenu = createClientRequest(
-                            BASE_URL + bank.getPrivateProfile().getLinks().getNext().getUri(), false)
-                            .post(ProfileMenu.class);
+                    ProfileMenu profileMenu = activateProfile(bank);
+                    EngagementOverviewResponse engagementOverView = fetchEngagementOverviewNoActivation(profileMenu);
+                    profilesHandler.addBankProfile(bank, profileMenu, engagementOverView, true, true);
                 } catch (Exception e) {
                     log.error("Multiple banks - could not activate profile " + bank.getName(), e);
                 }
@@ -1350,7 +1353,7 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
         return true;
     }
 
-    private void checkProfileResponseErrorMessages() throws  AuthorizationException {
+    private void checkProfileResponseErrorMessages(ProfileResponse profileResponse) throws  AuthorizationException {
 
         if (profileResponse.getErrorMessages() == null) {
             return;
@@ -1398,7 +1401,8 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
 
     @Override
     public void logout() throws Exception {
-        createClientRequest(BASE_URL + profileMenu.getMenuItem("IdentificationLogout").getUri(), false).put();
+        createClientRequest(BASE_URL + profilesHandler.getActiveProfile().getProfileMenu()
+                .getMenuItem("IdentificationLogout").getUri(), false).put();
     }
 
     private boolean modeAndProfileMismatch(ProfileResponse profileResponse) {
@@ -1467,7 +1471,8 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
             return Optional.empty();
         }
 
-        ProfileMenu profileMenu = createClientRequest(BASE_URL + profileLink.getUri(), false).post(ProfileMenu.class);
+        ProfileMenu profileMenu = createClientRequest(BASE_URL + profileLink.getUri(), false)
+                .post(ProfileMenu.class);
 
         MenuItem portfolioHoldings = profileMenu.getMenuItem("PortfolioHoldings");
 
@@ -1572,7 +1577,8 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
 
         try {
             String logUnknownEntity = createClientRequest(
-                    BASE_URL + endowmentInsuranceEntity.getLinks().getSelf().getUri(), false).get(String.class);
+                    BASE_URL + endowmentInsuranceEntity.getLinks().getSelf().getUri(), false)
+                    .get(String.class);
             log.info("#unkown-entity-logging: " + logUnknownEntity);
         } catch (Exception e) {
             log.info("#unkown-entity-logging failed");
@@ -1794,31 +1800,24 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
         }
     }
 
-    private List<EngagementOverviewResponse> getEngagementOverview() {
-        if (engagementOverviewResponses != null) {
-            return engagementOverviewResponses;
-        }
-
-        engagementOverviewResponses = profileResponse.getBanks().stream()
-                .map(bank -> {
-                    try {
-                        return fetchEngagementOverview(bank);
-                    } catch (Exception e) {
-                        throw new IllegalStateException(e);
-                    }
-                })
-                .filter(java.util.Objects::nonNull)
-                .collect(Collectors.toList());
-        return engagementOverviewResponses;
-    }
-
     private void updateLoanAccounts() {
-        getEngagementOverview().forEach(overviewResponse -> updateLoanAccounts(overviewResponse.getLoanAccounts()));
+        profilesHandler.getProfiles().forEach((bankName, bankProfile) -> {
+            if (!profilesHandler.isActiveProfile(bankProfile)) {
+                activateProfile(bankProfile);
+            }
+
+            EngagementOverviewResponse overviewResponse = bankProfile.getEngagementOverview();
+            updateLoanAccounts(overviewResponse.getLoanAccounts());
+        });
     }
 
     private void updateCreditCardAccounts() {
-        getEngagementOverview().forEach(overviewResponse ->
-        {
+        profilesHandler.getProfiles().forEach((bankName, bankProfile) -> {
+            if (!profilesHandler.isActiveProfile(bankProfile)) {
+                activateProfile(bankProfile);
+            }
+
+            EngagementOverviewResponse overviewResponse = bankProfile.getEngagementOverview();
             try {
                 updateCreditCardAccounts(overviewResponse.getCardAccounts());
             } catch (Exception e) {
@@ -1828,8 +1827,12 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
     }
 
     private void updateCreditCardTransactions() {
-        getEngagementOverview().forEach(overviewResponse ->
-        {
+        profilesHandler.getProfiles().forEach((bankName, bankProfile) -> {
+            if (!profilesHandler.isActiveProfile(bankProfile)) {
+                activateProfile(bankProfile);
+            }
+
+            EngagementOverviewResponse overviewResponse = bankProfile.getEngagementOverview();
             try {
                 updateAccountsAndTransactions(overviewResponse.getCardAccounts(), AccountTypes.CREDIT_CARD);
             } catch (Exception e) {
@@ -1839,8 +1842,12 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
     }
 
     private void updateCheckingAccounts() {
-        getEngagementOverview().forEach(overviewResponse ->
-        {
+        profilesHandler.getProfiles().forEach((bankName, bankProfile) -> {
+            if (!profilesHandler.isActiveProfile(bankProfile)) {
+                activateProfile(bankProfile);
+            }
+
+            EngagementOverviewResponse overviewResponse = bankProfile.getEngagementOverview();
             try {
                 updateAccounts(overviewResponse.getTransactionAccounts(), AccountTypes.CHECKING);
                 updateAccounts(overviewResponse.getTransactionDisposalAccounts(), AccountTypes.OTHER);
@@ -1851,8 +1858,12 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
     }
 
     private void updateCheckingTransactions() {
-        getEngagementOverview().forEach(overviewResponse ->
-        {
+        profilesHandler.getProfiles().forEach((bankName, bankProfile) -> {
+            if (!profilesHandler.isActiveProfile(bankProfile)) {
+                activateProfile(bankProfile);
+            }
+
+            EngagementOverviewResponse overviewResponse = bankProfile.getEngagementOverview();
             try {
                 updateAccountsAndTransactions(overviewResponse.getTransactionAccounts(), AccountTypes.CHECKING);
                 updateAccountsAndTransactions(overviewResponse.getTransactionDisposalAccounts(), AccountTypes.OTHER);
@@ -1863,8 +1874,12 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
     }
 
     private void updateSavingAccounts() {
-        getEngagementOverview().forEach(overviewResponse ->
-        {
+        profilesHandler.getProfiles().forEach((bankName, bankProfile) -> {
+            if (!profilesHandler.isActiveProfile(bankProfile)) {
+                activateProfile(bankProfile);
+            }
+
+            EngagementOverviewResponse overviewResponse = bankProfile.getEngagementOverview();
             try {
                 updateAccounts(overviewResponse.getSavingAccounts(), AccountTypes.SAVINGS);
             } catch (Exception e) {
@@ -1874,8 +1889,12 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
     }
 
     private void updateSavingTransactions() {
-        getEngagementOverview().forEach(overviewResponse ->
-        {
+        profilesHandler.getProfiles().forEach((bankName, bankProfile) -> {
+            if (!profilesHandler.isActiveProfile(bankProfile)) {
+                activateProfile(bankProfile);
+            }
+
+            EngagementOverviewResponse overviewResponse = bankProfile.getEngagementOverview();
             try {
                 updateAccountsAndTransactions(overviewResponse.getSavingAccounts(), AccountTypes.SAVINGS);
             } catch (Exception e) {
@@ -1887,17 +1906,21 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
     public void updateTransferDestinations() throws Exception {
         TransferDestinationsResponse response = new TransferDestinationsResponse();
 
-        for (BankEntity bank : profileResponse.getBanks()) {
-            EngagementOverviewResponse overviewResponse = fetchEngagementOverview(bank);
-
-            if (overviewResponse == null) {
-                continue;
+        profilesHandler.getProfiles().forEach((bankName, bankProfile) -> {
+            if (!profilesHandler.isActiveProfile(bankProfile)) {
+                activateProfile(bankProfile);
             }
 
-            TransferDestinationsResponse profileDestinationResponse = getActivatedProfileTransferDestinations(
-                    context.getAccounts());
-            response.addDestinations(profileDestinationResponse.getDestinations());
-        }
+            ProfileMenu profileMenu = bankProfile.getProfileMenu();
+
+            try {
+                TransferDestinationsResponse profileDestinationResponse = getActivatedProfileTransferDestinations(
+                        profileMenu, context.getAccounts());
+                response.addDestinations(profileDestinationResponse.getDestinations());
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
+            }
+        });
 
         context.updateTransferDestinationPatterns(response.getDestinations());
     }
@@ -1905,15 +1928,19 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
     public void updateEInvoices() throws Exception {
         List<Transfer> eInvoices = Lists.newArrayList();
 
-        for (BankEntity bank : profileResponse.getBanks()) {
-            EngagementOverviewResponse overviewResponse = fetchEngagementOverview(bank);
-
-            if (overviewResponse == null) {
-                continue;
+        profilesHandler.getProfiles().forEach((bankName, bankProfile) -> {
+            if (!profilesHandler.isActiveProfile(bankProfile)) {
+                activateProfile(bankProfile);
             }
 
-            eInvoices.addAll(getActivatedProfileEInvoices());
-        }
+            ProfileMenu profileMenu = bankProfile.getProfileMenu();
+
+            try {
+                eInvoices.addAll(getActivatedProfileEInvoices(profileMenu));
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
+            }
+        });
 
         context.updateEinvoices(eInvoices);
     }
@@ -2012,39 +2039,34 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
         }
     }
 
-    private TransferDestinationsResponse getActivatedProfileTransferDestinations(List<Account> accounts)
+    private TransferDestinationsResponse getActivatedProfileTransferDestinations(ProfileMenu profileMenu, List<Account> accounts)
             throws Exception {
         TransferDestinationsResponse response = new TransferDestinationsResponse();
 
-        // Activate profiles again if more than one bank.
-        if (profileResponse.getBanks().size() > 1) {
-            for (BankEntity bank : profileResponse.getBanks()) {
-                profileMenu = createClientRequest(
-                        BASE_URL + bank.getPrivateProfile().getLinks().getNext().getUri(), false)
-                        .post(ProfileMenu.class);
-                response.addDestinations(getAccountDestinations(accounts, DestinationType.TRANSFER));
-                response.addDestinations(getAccountDestinations(accounts, DestinationType.PAYMENT));
-            }
-        } else {
-            response.addDestinations(getAccountDestinations(accounts, DestinationType.TRANSFER));
-            response.addDestinations(getAccountDestinations(accounts, DestinationType.PAYMENT));
-        }
+        response.addDestinations(getAccountDestinations(profileMenu, accounts, DestinationType.TRANSFER));
+        response.addDestinations(getAccountDestinations(profileMenu, accounts, DestinationType.PAYMENT));
 
         return response;
     }
 
-    private EngagementOverviewResponse fetchEngagementOverview(BankEntity bank) throws Exception {
-        try {
-            log.info("Activating profile " + bank.getName());
-            profileMenu = createClientRequest(
-                    BASE_URL + bank.getPrivateProfile().getLinks().getNext().getUri(),false)
-                    .post(ProfileMenu.class);
-        } catch (Exception e) {
-            log.error("Could not activate profile " + bank.getName(), e);
+    private ProfileMenu activateProfile(ProfilesHandler.BankProfile bankProfile) {
+        ProfileMenu profileMenu = activateProfile(bankProfile.getBank());
+        profilesHandler.setActiveProfile(bankProfile);
 
-            return null;
-        }
+        return profileMenu;
+    }
 
+    private ProfileMenu activateProfile(BankEntity bank) {
+        log.info("Activating profile " + bank.getName());
+
+        ProfileMenu profileMenu = createClientRequest(
+                BASE_URL + bank.getPrivateProfile().getLinks().getNext().getUri(),false)
+                .post(ProfileMenu.class);
+
+        return profileMenu;
+    }
+
+    private EngagementOverviewResponse fetchEngagementOverviewNoActivation(ProfileMenu profileMenu) {
         return createClientRequest(BASE_URL + profileMenu.getMenuItem("EngagementOverview").getUri(), false)
                 .get(EngagementOverviewResponse.class);
     }
@@ -2079,8 +2101,12 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
     private void fetchUpcomingTransactions() throws Exception {
         upcomingTransactionsByBankId = Maps.newHashMap();
 
+        ProfilesHandler.BankProfile bankProfile = profilesHandler.getActiveProfile();
+        ProfileMenu profileMenu = bankProfile.getProfileMenu();
+
         ClientResponse transferClientResponse = createClientRequest(
-                BASE_URL + profileMenu.getMenuItem("PaymentConfirmed").getUri(), false)
+                BASE_URL + profileMenu.getMenuItem("PaymentConfirmed").getUri(),
+                false)
                 .get(ClientResponse.class);
 
         if (transferClientResponse.getStatus() != HttpStatusCodes.STATUS_CODE_OK) {
@@ -2157,9 +2183,9 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
         return null;
     }
 
-    private Map<Account, List<TransferDestinationPattern>> getAccountDestinations(List<Account> updatedAccounts,
+    private Map<Account, List<TransferDestinationPattern>> getAccountDestinations(ProfileMenu profileMenu, List<Account> updatedAccounts,
             DestinationType destinationType) throws Exception {
-        BaseInfoPaymentResponse response = getBaseInfoPaymentResponse();
+        BaseInfoPaymentResponse response = getBaseInfoPaymentResponse(profileMenu);
 
         if (response == null) {
             return Collections.emptyMap();
@@ -2190,7 +2216,7 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
                 .build();
     }
 
-    private BaseInfoPaymentResponse getBaseInfoPaymentResponse() {
+    private BaseInfoPaymentResponse getBaseInfoPaymentResponse(ProfileMenu profileMenu) {
         MenuItem menuItem = profileMenu.getMenuItem("PaymentBaseinfo");
 
         if (!menuItem.isAuthorizedURI(MenuItem.Method.GET)) {
@@ -2458,20 +2484,23 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
         }
 
         // Keep the session active by requesting and updating the profile response
+        EngagementOverviewResponse engagementOverView = null;
         try {
-            profileResponse = getProfileResponse();
+            if (profilesHandler.getActiveProfile() != null) {
+                engagementOverView =
+                        fetchEngagementOverviewNoActivation(profilesHandler.getActiveProfile().getProfileMenu());
+            }
         } catch (Exception e) {
             return false;
         }
 
-        return profileResponse != null;
+        return engagementOverView != null;
     }
 
     @Override
     public void persistLoginSession() {
         Session session = new Session();
         session.setCookiesFromClient(client);
-        session.setProfileMenu(profileMenu);
 
         credentials.setPersistentSession(session);
     }
@@ -2484,23 +2513,30 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
             return;
         }
 
-        this.profileMenu = session.getProfileMenu();
         addSessionCookiesToClient(client, session);
     }
 
     @Override
     public void clearLoginSession() {
-        this.profileMenu = null;
 
         credentials.removePersistentSession();
     }
 
-    private List<Transfer> getActivatedProfileEInvoices() throws Exception {
+    private ProfilesHandler.BankProfile getAndActivateTransferProfile() {
+        ProfilesHandler.BankProfile transferProfile = profilesHandler.getTransferProfile();
+        if (!profilesHandler.isActiveProfile(transferProfile)) {
+            activateProfile(transferProfile);
+        }
+
+        return transferProfile;
+    }
+
+    private List<Transfer> getActivatedProfileEInvoices(ProfileMenu profileMenu) throws Exception {
         log.info("Fetching e-invoices from bank.");
 
         List<Transfer> einvoices = Lists.newArrayList();
 
-        for (InvoiceDetails invoiceDetails : getInvoices()) {
+        for (InvoiceDetails invoiceDetails : getInvoices(profileMenu)) {
 
             invoiceDetails.getPayment().setType("EINVOICE");
             Transfer transfer = invoiceDetails.toTransfer(false);
