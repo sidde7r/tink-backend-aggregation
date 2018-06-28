@@ -12,22 +12,22 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 public class BunqAuthenticator implements Authenticator {
     private final CredentialsRequest request;
     private final BunqRegistrationAuthenticator registrationAuthenticator;
-    private final BunqAuthenticationAuthenticator authenticationAuthenticator;
+    private final BunqAutoAuthenticator autoAuthenticator;
 
     public BunqAuthenticator(CredentialsRequest request, BunqRegistrationAuthenticator registrationAuthenticator,
-            BunqAuthenticationAuthenticator authenticationAuthenticator) {
+            BunqAutoAuthenticator authenticationAuthenticator) {
         this.request = Preconditions.checkNotNull(request);
         this.registrationAuthenticator = Preconditions.checkNotNull(registrationAuthenticator);
-        this.authenticationAuthenticator = Preconditions.checkNotNull(authenticationAuthenticator);
+        this.autoAuthenticator = Preconditions.checkNotNull(authenticationAuthenticator);
     }
 
     @Override
     public void authenticate(Credentials credentials) throws AuthenticationException, AuthorizationException {
         if (request.isCreate() || request.isUpdate()) {
             registration(credentials);
+        } else {
+            authentication(credentials);
         }
-
-        authentication(credentials);
     }
 
     private void registration(Credentials credentials) throws AuthenticationException, AuthorizationException {
@@ -40,7 +40,7 @@ public class BunqAuthenticator implements Authenticator {
 
     private void authentication(Credentials credentials) throws AuthenticationException, AuthorizationException {
         try {
-            authenticationAuthenticator.autoAuthenticate();
+            autoAuthenticator.autoAuthenticate();
         } catch (SessionException autoException) {
             if (!request.isManual()) {
                 throw autoException;

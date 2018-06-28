@@ -7,16 +7,12 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.fetchers.transacti
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.backend.aggregation.rpc.Credentials;
 
 public class BunqTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
-    private final Credentials credentials;
     private final SessionStorage sessionStorage;
     private final BunqApiClient apiClient;
 
-    public BunqTransactionalAccountFetcher(Credentials credentials,
-            SessionStorage sessionStorage, BunqApiClient apiClient) {
-        this.credentials = credentials;
+    public BunqTransactionalAccountFetcher(SessionStorage sessionStorage, BunqApiClient apiClient) {
         this.sessionStorage = sessionStorage;
         this.apiClient = apiClient;
     }

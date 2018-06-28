@@ -7,16 +7,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.backend.aggregation.rpc.Credentials;
 
 public class BunqTransactionalTransactionsFetcher implements TransactionKeyPaginator<TransactionalAccount, String> {
-    private final Credentials credentials;
     private final SessionStorage sessionStorage;
     private final BunqApiClient apiClient;
 
-    public BunqTransactionalTransactionsFetcher(Credentials credentials,
-            SessionStorage sessionStorage, BunqApiClient apiClient) {
-        this.credentials = credentials;
+    public BunqTransactionalTransactionsFetcher(SessionStorage sessionStorage, BunqApiClient apiClient) {
         this.sessionStorage = sessionStorage;
         this.apiClient = apiClient;
     }
