@@ -63,6 +63,7 @@ import se.tink.libraries.jersey.utils.InterClusterJerseyClientFactory;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class TinkHttpClient extends Filterable<TinkHttpClient> {
+
     private Client internalClient = null;
     private final ClientConfig internalClientConfig;
     private HttpClientBuilder internalHttpClientBuilder;
@@ -74,6 +75,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     private boolean followRedirects = false;
     private final ApacheHttpRedirectStrategy redirectStrategy;
 
+    private final LoggingFilter debugOutputLoggingFilter= new LoggingFilter(new PrintStream(System.out));
     private boolean debugOutput = false;
 
     private final AgentContext context;
@@ -220,7 +222,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
             }
         }
         if (this.debugOutput) {
-            this.internalClient.addFilter(new LoggingFilter(new PrintStream(System.out)));
+            this.internalClient.addFilter(debugOutputLoggingFilter);
         }
     }
 
@@ -333,6 +335,15 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
     public void setDebugOutput(boolean debugOutput) {
         this.debugOutput = debugOutput;
+
+        if (internalClient == null) {
+            return;
+        }
+        if (debugOutput && !internalClient.isFilterPresent(debugOutputLoggingFilter)) {
+            this.internalClient.addFilter(debugOutputLoggingFilter);
+        } else if (!debugOutput && internalClient.isFilterPresent(debugOutputLoggingFilter)) {
+            this.internalClient.removeFilter(debugOutputLoggingFilter);
+        }
     }
     // --- Configuration ---
 
