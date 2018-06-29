@@ -93,6 +93,11 @@ def create_credentials():
 
 @app.route("/credentials/refresh/<id>", methods = ['POST'])
 def refresh_credentials(id):
+	credentials = CREDENTIALS_TABLE.search(Query().id == id)
+	if not credentials:
+		abort(400, 'Not a valid credentials id.')
+
+	CREDENTIALS_TABLE.update({'status': 'AUTHENTICATING', 'timestamp': get_time_in_millis()}, where('id') == credential['id'])
 	credentialsRequest = create_credentials_request(id)
 	credentialsRequest['manual'] = True
 	r = requests.post(AGGREGATION_HOST + '/aggregation/refresh', data=json.dumps(credentialsRequest), headers=POST_HEADERS)
@@ -150,7 +155,7 @@ def list_providers(*args):
 def get_credential(id):
 	credentials = CREDENTIALS_TABLE.search(Query().id == id)
 	if not credentials:
-		return (json.dumps({}, 204))
+		abort(400, 'Not a valid credentials id.')
 
 	response = {
 		'status': credentials[0]['status'],
