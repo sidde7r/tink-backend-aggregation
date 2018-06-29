@@ -36,6 +36,9 @@ public class SwedbankDefaultApproveEInvoiceExecutor implements ApproveEInvoiceEx
 
     @Override
     public void approveEInvoice(Transfer transfer) throws TransferExecutionException {
+        // this is the current implementation for transfers, only use the last profile for transfers
+        apiClient.selectTransferProfile();
+
         RegisteredTransfersResponse registeredTransfers = apiClient.registeredTransfers();
         registeredTransfers.noUnsignedTransfersOrThrow();
 

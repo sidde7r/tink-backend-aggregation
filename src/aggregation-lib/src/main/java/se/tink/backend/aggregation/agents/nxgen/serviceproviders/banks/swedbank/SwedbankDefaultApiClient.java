@@ -365,6 +365,14 @@ public class SwedbankDefaultApiClient {
         return activateProfile(foundBankProfile);
     }
 
+    public void selectTransferProfile() {
+        int transferProfileIndex = bankProfiles.size() -1;
+
+        BankProfile transferProfile = bankProfiles.get(transferProfileIndex);
+
+        selectProfile(transferProfile);
+    }
+
     private void setupProfiles(ProfileResponse profileResponse) {
         for (BankEntity bank : profileResponse.getBanks()) {
             // fetch all profile details
