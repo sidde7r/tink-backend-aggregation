@@ -95,7 +95,7 @@ public class IngConstants {
             USER_LANG_CODE("userLanguageCode", "EN"),
             LANG_AT_AUTH("langatauth", "/EN/"),
             LANG("lang", "/EN/"),
-            APP_IDENTIFICATION("applicationIdentification", "8.4"),
+            APP_IDENTIFICATION("applicationIdentification", "8.7"),
             USER_PROFILE("userProfile", "M_iOS"),
             CHANNEL_CODE("channelCode", "4"),
             APP_NAME("AppName", "1"),
