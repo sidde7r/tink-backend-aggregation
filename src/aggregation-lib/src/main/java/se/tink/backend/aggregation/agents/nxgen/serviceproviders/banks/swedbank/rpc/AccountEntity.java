@@ -63,7 +63,7 @@ public abstract class AccountEntity extends AbstractAccountEntity {
         return type;
     }
 
-    protected Optional<TransactionalAccount> toTransactionalAccount(@Nonnull AccountTypes type) {
+    protected Optional<TransactionalAccount> toTransactionalAccount(BankProfile bankProfile, @Nonnull AccountTypes type) {
         if (fullyFormattedNumber == null || currency == null || balance == null) {
             return Optional.empty();
         }
@@ -77,6 +77,7 @@ public abstract class AccountEntity extends AbstractAccountEntity {
                         .addIdentifier(new SwedishIdentifier(fullyFormattedNumber))
                         .addToTemporaryStorage(SwedbankBaseConstants.StorageKey.NEXT_LINK,
                                 links != null ? links.getNext() : null)
+                        .addToTemporaryStorage(SwedbankBaseConstants.StorageKey.PROFILE, bankProfile)
                         .build());
     }
 }

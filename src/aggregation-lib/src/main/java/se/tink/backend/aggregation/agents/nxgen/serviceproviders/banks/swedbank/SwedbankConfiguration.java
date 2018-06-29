@@ -4,4 +4,5 @@ public interface SwedbankConfiguration {
     String getApiKey();
     String getBankId();
     String getName();
+    boolean isSavingsBank();
 }

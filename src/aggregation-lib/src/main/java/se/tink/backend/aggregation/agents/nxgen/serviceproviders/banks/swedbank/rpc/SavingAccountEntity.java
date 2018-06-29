@@ -11,13 +11,13 @@ import se.tink.backend.aggregation.rpc.AccountTypes;
 public class SavingAccountEntity extends AccountEntity {
     private static final Logger log = LoggerFactory.getLogger(SavingAccountEntity.class);
 
-    public Optional<TransactionalAccount> toTransactionalAccount() {
+    public Optional<TransactionalAccount> toTransactionalAccount(BankProfile bankProfile) {
         if (type != null) {
             // It seems as if the investment accounts has a type and the rest doesn't.
             log.info("Swedbank account type:[%s]", type);
             return Optional.empty();
         }
 
-        return toTransactionalAccount(AccountTypes.SAVINGS);
+        return toTransactionalAccount(bankProfile, AccountTypes.SAVINGS);
     }
 }

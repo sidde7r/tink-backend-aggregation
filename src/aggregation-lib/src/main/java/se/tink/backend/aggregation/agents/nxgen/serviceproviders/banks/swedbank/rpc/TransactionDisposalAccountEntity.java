@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.rpc.AccountTypes;
 @JsonObject
 public class TransactionDisposalAccountEntity extends AccountEntity {
 
-    public Optional<TransactionalAccount> toTransactionalAccount() {
-        return toTransactionalAccount(AccountTypes.OTHER);
+    public Optional<TransactionalAccount> toTransactionalAccount(BankProfile bankProfile) {
+        return toTransactionalAccount(bankProfile, AccountTypes.OTHER);
     }
 }

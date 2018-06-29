@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transferdestination;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,7 @@ import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankDefaultApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.BankProfile;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationFetcher;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.core.account.TransferDestinationPattern;
@@ -31,11 +33,20 @@ public class SwedbankDefaultTransferDestinationFetcher implements TransferDestin
     }
 
     private Map<Account, List<TransferDestinationPattern>> getPaymentDestinations(Collection<Account> accounts) {
-        PaymentBaseinfoResponse paymentBaseinfoResponse = apiClient.paymentBaseinfo();
+        List paymentSourceAccounts = new ArrayList<>();
+        List paymentDestinationAccounts = new ArrayList<>();
+
+        for (BankProfile bankProfile : apiClient.getBankProfiles()) {
+            apiClient.selectProfile(bankProfile);
+            PaymentBaseinfoResponse paymentBaseinfoResponse = apiClient.paymentBaseinfo();
+
+            paymentSourceAccounts.addAll(paymentBaseinfoResponse.getPaymentSourceAccounts());
+            paymentDestinationAccounts.addAll(paymentBaseinfoResponse.getPaymentDestinations());
+        }
 
         return new TransferDestinationPatternBuilder()
-                .setSourceAccounts(paymentBaseinfoResponse.getPaymentSourceAccounts())
-                .setDestinationAccounts(paymentBaseinfoResponse.getPaymentDestinations())
+                .setSourceAccounts(paymentSourceAccounts)
+                .setDestinationAccounts(paymentDestinationAccounts)
                 .setTinkAccounts(accounts)
                 .addMultiMatchPattern(AccountIdentifier.Type.SE_BG, TransferDestinationPattern.ALL)
                 .addMultiMatchPattern(AccountIdentifier.Type.SE_PG, TransferDestinationPattern.ALL)
@@ -43,11 +54,20 @@ public class SwedbankDefaultTransferDestinationFetcher implements TransferDestin
     }
 
     private Map<Account, List<TransferDestinationPattern>> getTransferDestinations(Collection<Account> accounts) {
-        PaymentBaseinfoResponse paymentBaseinfoResponse = apiClient.paymentBaseinfo();
+        List transferSourceAccounts = new ArrayList<>();
+        List transferDestinationAccounts = new ArrayList<>();
+
+        for (BankProfile bankProfile : apiClient.getBankProfiles()) {
+            apiClient.selectProfile(bankProfile);
+            PaymentBaseinfoResponse paymentBaseinfoResponse = apiClient.paymentBaseinfo();
+
+            transferSourceAccounts.addAll(paymentBaseinfoResponse.getTransferSourceAccounts());
+            transferDestinationAccounts.addAll(paymentBaseinfoResponse.getTransferDestinations());
+        }
 
         return new TransferDestinationPatternBuilder()
-                .setSourceAccounts(paymentBaseinfoResponse.getTransferSourceAccounts())
-                .setDestinationAccounts(paymentBaseinfoResponse.getTransferDestinations())
+                .setSourceAccounts(transferSourceAccounts)
+                .setDestinationAccounts(transferDestinationAccounts)
                 .setTinkAccounts(accounts)
                 .addMultiMatchPattern(AccountIdentifier.Type.SE, TransferDestinationPattern.ALL)
                 .build();

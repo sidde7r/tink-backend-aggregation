@@ -10,6 +10,10 @@ public class LoanOverviewResponse {
     private String mortgageCalculatorLink;
     private boolean eligibleForCarLoan;
     private LinksEntity links;
+    private List<LoanEntity> ongoingLoans;
+    private List<LoanEntity> carLoans;
+    private List<LoanEntity> mortgageLoanCommitments;
+    private List<LoanEntity> consumptionLoans;
 
     public List<CollateralsEntity> getCollaterals() {
         return collaterals;
@@ -25,5 +29,22 @@ public class LoanOverviewResponse {
 
     public LinksEntity getLinks() {
         return links;
+    }
+
+    // experimental, i.e. for logging purposes
+    public List<LoanEntity> getOngoingLoans() {
+        return ongoingLoans;
+    }
+
+    public List<LoanEntity> getCarLoans() {
+        return carLoans;
+    }
+
+    public List<LoanEntity> getMortgageLoanCommitments() {
+        return mortgageLoanCommitments;
+    }
+
+    public List<LoanEntity> getConsumptionLoans() {
+        return consumptionLoans;
     }
 }
