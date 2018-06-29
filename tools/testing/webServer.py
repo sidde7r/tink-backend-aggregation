@@ -123,17 +123,22 @@ def list_credentials():
 	responseList = map(filter_credentials_info, credentials)
 	return (prettify_dict(responseList), 200)
 
-@app.route("/providers/list", methods = ['GET', 'POST'])
+@app.route("/providers/list/<market>", methods = ['GET'])
+def list_provider_by_market(market):
+	print market
+	return requests.get(AGGREGATION_HOST + '/providers/' + market + '/list', headers=GET_HEADERS).text
+
+@app.route("/providers/<providername>", methods = ['GET'])
+def list_provider(providername):
+	if not providername:
+		return list_providers()
+
+	return json.dumps(get_provider(providername))
+
+
+@app.route("/providers/list", methods = ['GET'])
 def list_providers(*args):
-	if request.method == 'POST':
-		if not request.json:
-			abort(400, 'Your request should have Content-Type: application/json')
-		return get_provider(request.json['providerName'])
-	if not len(request.args):
-		return requests.get(AGGREGATION_HOST + '/providers/list', headers=GET_HEADERS).text
-	if request.args.get('market'):
-		return requests.get(AGGREGATION_HOST + '/providers/' + request.args.get('market') + '/list', headers=GET_HEADERS).text
-	abort(400, 'Invalid request.')
+	return requests.get(AGGREGATION_HOST + '/providers/list', headers=GET_HEADERS).text
 
 @app.route("/credentials/status/<id>", methods = ['GET'])
 def get_credential(id):
