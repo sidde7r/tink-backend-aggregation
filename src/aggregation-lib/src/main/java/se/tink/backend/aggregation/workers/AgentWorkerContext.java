@@ -493,38 +493,9 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                 // Wait for the barrier and the supplemental information.
 
                 if (lock.waitOnBarrier(2, TimeUnit.MINUTES)) {
-                    if (supplementalOnAggregation) {
-                        supplementalInformation = supplementalInformationController.getSupplementalInformation(
+
+                    supplementalInformation = supplementalInformationController.getSupplementalInformation(
                                 credentials.getId());
-                    } else {
-                        if (useAggregationController) {
-                            se.tink.backend.aggregation.aggregationcontroller.v1.rpc.SupplementalInformationRequest supplementalInformationRequest =
-                                    new se.tink.backend.aggregation.aggregationcontroller.v1.rpc.SupplementalInformationRequest();
-
-                            supplementalInformationRequest.setCredentialsId(credentials.getId());
-                            se.tink.backend.aggregation.aggregationcontroller.v1.rpc.SupplementalInformationResponse supplementalInformationResponse;
-                            if (isAggregationCluster) {
-                                supplementalInformationResponse = aggregationControllerAggregationClient
-                                        .getSupplementalInformation(clusterInfo,
-                                                supplementalInformationRequest);
-                            } else {
-                                supplementalInformationResponse = aggregationControllerAggregationClient
-                                        .getSupplementalInformation(supplementalInformationRequest);
-                            }
-
-
-                            supplementalInformation = supplementalInformationResponse.getContent();
-                        } else {
-                            SupplementalInformationRequest supplementalInformationRequest = new SupplementalInformationRequest();
-                            supplementalInformationRequest.setCredentialsId(credentials.getId());
-
-                            SupplementalInformationResponse supplementalInformationResponse = systemServiceFactory
-                                    .getUpdateService()
-                                    .getSupplementalInformation(supplementalInformationRequest);
-
-                            supplementalInformation = supplementalInformationResponse.getContent();
-                        }
-                    }
 
                     credentials.setSupplementalInformation(supplementalInformation);
                     // TODO: We've noticed that we get app crashes for Sparbanken Syd and we believe the reason is that
