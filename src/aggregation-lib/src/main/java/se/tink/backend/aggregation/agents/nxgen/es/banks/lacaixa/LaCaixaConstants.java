@@ -10,6 +10,8 @@ public class LaCaixaConstants {
         public static final String MAIN_ACCOUNT_PATH = "dashboardApp/cuentaPrincipal?";
         public static final String CHECK_FOTO = "smartContent/consultaFoto"; // Used for keep alive. TODO: Evaluate
         public static final String USER_DATA = "login/loginDatosUsuario";
+        public static final String ACCOUNT_TRANSACTION = "cuentas/extracto?";
+
     }
 
     public static class Urls{
@@ -20,6 +22,8 @@ public class LaCaixaConstants {
         public static final URL FETCH_MAIN_ACCOUNT = new URL(BASE + ApiService.MAIN_ACCOUNT_PATH);
         public static final URL KEEP_ALIVE = new URL(BASE + ApiService.CHECK_FOTO);
         public static final URL FETCH_USER_DATA = new URL(BASE + ApiService.USER_DATA);
+        public static final URL FETCH_ACCOUNT_TRANSACTION = new URL(BASE + ApiService.ACCOUNT_TRANSACTION);
+
     }
 
     public static class DefaultRequestParams{
@@ -27,12 +31,21 @@ public class LaCaixaConstants {
         public static final String ORIGEN = "4024"; // Can seemingly be anything as long as it exists, purpose unknown.
         public static final String CANAL = "O"; // Only some valid values (1, 2, O, ...), purpose unknown.
         public static final String ID_INSTALACION = "CIAPPLPh7,2CakrHGsSyjX1nakKcEk6dOc3gHc="; // Suspected to be app install ID
+    }
+
+    public static class QueryParams{
+        public static final String FROM_BEGIN = "inicio";
+        public static final String ACCOUNT_REFERENCE = "numeroCuenta";
 
     }
 
     public static class Fetcher{
 
         public static final String MAX_TRANSACTION_HISTORY = "30";
+    }
+
+    public static class TemporaryStorage{
+        public static final String ACCOUNT_REFERENCE = "accountRef";
     }
 
     public static class StatusCodes{

@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRe
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
@@ -34,7 +34,7 @@ public class LaCaixaAgent extends NextGenerationAgent {
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
 
-//          client.setProxy("http://127.0.0.1:8888");
+          client.setProxy("http://127.0.0.1:8888");
     }
 
     @Override
@@ -53,7 +53,7 @@ public class LaCaixaAgent extends NextGenerationAgent {
                 updateController,
                 accountFetcher,
                 new TransactionFetcherController<>(transactionPaginationHelper,
-                        new TransactionKeyPaginationController<>(transactionFetcher))));
+                        new TransactionPagePaginationController<>(transactionFetcher, 0))));
 
     }
 

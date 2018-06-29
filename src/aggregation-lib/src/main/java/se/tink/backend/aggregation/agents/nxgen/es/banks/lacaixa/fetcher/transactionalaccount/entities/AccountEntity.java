@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transa
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
@@ -10,7 +11,6 @@ import se.tink.backend.aggregation.rpc.AccountTypes;
 @JsonObject
 public class AccountEntity {
 
-    private String id;
     private String alias;
 
     @JsonProperty("tipoCuenta")
@@ -22,12 +22,14 @@ public class AccountEntity {
     @JsonProperty("numeroCuenta")
     private AccountIdentifierEntity identifiers;
 
+
     @JsonIgnore
     public TransactionalAccount toTinkAccount(HolderName holderName) {
-        return TransactionalAccount.builder(AccountTypes.CHECKING, identifiers.getAccountNumber(), balance.toTinkAmount())
+        return TransactionalAccount.builder(AccountTypes.CHECKING, identifiers.getAccountNumber(), balance)
                 .setName(alias)
                 .setUniqueIdentifier(identifiers.getIban())
                 .addIdentifiers(identifiers.getIdentifiers())
+                .addToTemporaryStorage(LaCaixaConstants.TemporaryStorage.ACCOUNT_REFERENCE, identifiers.getAccountReference())
                 .setHolderName(holderName)
                 .build();
     }

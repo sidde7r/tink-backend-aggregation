@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.r
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.SessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.SessionResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.AccountTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.UserDataRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.UserDataResponse;
@@ -72,6 +73,14 @@ public class LaCaixaApiClient {
 
         return createRequest(LaCaixaConstants.Urls.FETCH_USER_DATA)
                 .post(UserDataResponse.class, request);
+    }
+
+    public AccountTransactionResponse fetchNextAccountTransactions(String accountReference, boolean fromBegin){
+
+        return createRequest(LaCaixaConstants.Urls.FETCH_ACCOUNT_TRANSACTION)
+                .queryParam(LaCaixaConstants.QueryParams.FROM_BEGIN, Boolean.toString(fromBegin))
+                .queryParam(LaCaixaConstants.QueryParams.ACCOUNT_REFERENCE, accountReference)
+                .get(AccountTransactionResponse.class);
     }
 
     public boolean isAlive(){
