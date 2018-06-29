@@ -134,6 +134,13 @@ def list_provider(providername):
 
 	return json.dumps(get_provider(providername))
 
+@app.route("/credentials/<credentialsid>/accounts", methods = ['GET'])
+def list_accounts(credentialsid):
+	try:
+		accounts = ACCOUNTS_TABLE.search(Query().credentialsId == credentialsid)
+		return prettify_dict(accounts)
+	except NameError:
+		return ('', 204)
 
 @app.route("/providers/list", methods = ['GET'])
 def list_providers(*args):
