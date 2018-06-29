@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.libraries.i18n.Catalog;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 
@@ -24,10 +25,10 @@ public class BelfiusTest {
         );
 
         return new BelfiusAuthenticator(
-                this.apiClient, credentials, persistentStorage,
+                Catalog.getCatalog("en_US"), this.apiClient, credentials, persistentStorage,
                 this.supplementalInformation, sessionStorage);
     }
-
+    
     protected void autoAuthenticate() throws SessionException {
         BelfiusAuthenticator authenticator = setupAuthentication(TestConfig.PERSISTENT_STORAGE, TestConfig.CREDENTIALS);
 

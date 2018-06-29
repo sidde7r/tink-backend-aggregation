@@ -42,7 +42,7 @@ public class KbcAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        KbcAuthenticator authenticator = new KbcAuthenticator(persistentStorage, apiClient,
+        KbcAuthenticator authenticator = new KbcAuthenticator(catalog, persistentStorage, apiClient,
                 supplementalInformationController);
         return new AutoAuthenticationController(request, context, authenticator, authenticator);
     }

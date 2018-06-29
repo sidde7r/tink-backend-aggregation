@@ -42,7 +42,7 @@ public class BelfiusAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        BelfiusAuthenticator authenticator = new BelfiusAuthenticator(this.apiClient, this.credentials,
+        BelfiusAuthenticator authenticator = new BelfiusAuthenticator(catalog, this.apiClient, this.credentials,
                 this.persistentStorage,
                 this.supplementalInformationController,
                 belfiusSessionStorage);
