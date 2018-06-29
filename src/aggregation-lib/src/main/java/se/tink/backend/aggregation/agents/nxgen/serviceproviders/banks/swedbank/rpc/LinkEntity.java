@@ -2,19 +2,21 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class LinkEntity {
-    public enum LinkMethod {
-        GET, POST, PUT, OPTIONS, DELETE
-    }
 
-    private LinkMethod method;
+    private String method;
     private String uri;
 
-    public LinkMethod getMethod() {
+    public String getMethod() {
         return method;
+    }
+
+    public SwedbankBaseConstants.LinkMethod getMethodValue() {
+        return SwedbankBaseConstants.LinkMethod.fromVerb(method);
     }
 
     public String getUri() {
@@ -23,6 +25,8 @@ public class LinkEntity {
 
     @JsonIgnore
     public boolean isValid() {
-        return method != null && !Strings.isNullOrEmpty(uri);
+        return method != null
+                && getMethodValue() !=  SwedbankBaseConstants.LinkMethod.UNKNOWN
+                && !Strings.isNullOrEmpty(uri);
     }
 }

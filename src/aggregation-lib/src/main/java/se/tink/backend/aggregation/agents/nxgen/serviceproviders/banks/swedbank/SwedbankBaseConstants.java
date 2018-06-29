@@ -5,7 +5,9 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableSet;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 import org.apache.commons.codec.binary.Base64;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
@@ -34,7 +36,9 @@ public class SwedbankBaseConstants {
 
 
     public enum Url implements UrlEnum {
-        INIT_BANKID(createUrlWithHost("/v5/identification/bankid/mobile"));
+        INIT_BANKID(createUrlWithHost("/v5/identification/bankid/mobile")),
+        TOUCH(createUrlWithHost("/v5/identification/touch")),
+        LOGOUT(createUrlWithHost("/v5/identification/logout"));
 
         public static final String DSID_KEY = "dsid";
         private URL url;
@@ -102,12 +106,102 @@ public class SwedbankBaseConstants {
 
     public static class StorageKey {
         public static final String NEXT_LINK = "nextLink";
+        public static final String PROFILE = "profile";
         public static final String CREDIT_CARD_RESPONSE = "creditCardResponse";
     }
 
-    public static class BankIdStatus {
-        public static final String USER_SIGN = "USER_SIGN";
-        public static final String COMPLETE = "COMPLETE";
+    public enum InvestmentAccountType {
+        EQUITY_TRADER("EQUITY_TRADER"),
+        SAVINGSACCOUNT("SAVINGSACCOUNT"),
+        ISK("ISK"),
+        FUNDACCOUNT("FUNDACCOUNT"),
+        UNKNOWN("");
+
+        private String accountType;
+
+        InvestmentAccountType(String accountType) { this.accountType = accountType; }
+
+        public String getAccountType() { return accountType; }
+
+        public static InvestmentAccountType fromAccountType(String accountType) {
+            String type = Optional.ofNullable(accountType).orElse("");
+
+            return Arrays.stream(InvestmentAccountType.values())
+                    .filter(investmentAccountType -> investmentAccountType.getAccountType().equalsIgnoreCase(type))
+                    .findFirst()
+                    .orElse(InvestmentAccountType.UNKNOWN);
+        }
+    }
+
+    public enum BankIdResponseStatus {
+        CLIENT_NOT_STARTED("CLIENT_NOT_STARTED"),
+        USER_SIGN("USER_SIGN"),
+        COMPLETE("COMPLETE"),
+        CANCELLED("CANCELLED"),
+        TIMEOUT("TIMEOUT"),
+        UNKNOWN("");
+
+        private String statusCode;
+
+        BankIdResponseStatus(String statusCode) { this.statusCode = statusCode; }
+
+        public String getStatusCode() { return statusCode; }
+
+        public static BankIdResponseStatus fromStatusCode(String statusCode) {
+            String code = Optional.ofNullable(statusCode).orElse("");
+
+            return Arrays.stream(BankIdResponseStatus.values())
+                    .filter(bankIdStatus -> bankIdStatus.getStatusCode().equalsIgnoreCase(statusCode))
+                    .findFirst()
+                    .orElse(BankIdResponseStatus.UNKNOWN);
+        }
+    }
+
+    public enum Authorization {
+        AUTHORIZED("AUTHORIZED"),
+        REQUIRES_AUTH_METHOD_CHANGE("REQUIRES_AUTH_METHOD_CHANGE"),
+        UNAUTHORIZED("UNAUTHORIZED"),
+        UNKNOWN("");
+
+        private String authRequirement;
+
+        Authorization(String authRequirement) { this.authRequirement = authRequirement; }
+
+        public String getAuthRequirement() { return authRequirement; }
+
+        public static Authorization fromAuthorizationString(String authorization) {
+            String auth = Optional.ofNullable(authorization).orElse("");
+
+            return Arrays.stream(Authorization.values())
+                    .filter(authorizationEnum -> authorizationEnum.getAuthRequirement().equalsIgnoreCase(auth))
+                    .findFirst()
+                    .orElse(Authorization.UNKNOWN);
+        }
+    }
+
+    public enum LinkMethod {
+        GET("GET"),
+        POST("POST"),
+        PUT("PUT"),
+        OPTIONS("OPTIONS"),
+        DELETE("DELETE"),
+        HEAD("HEAD"),
+        UNKNOWN("");
+
+        private String verb;
+
+        LinkMethod(String verb) { this.verb = verb; }
+
+        public String getVerb() { return verb; }
+
+        public static LinkMethod fromVerb(String verb) {
+            String auth = Optional.ofNullable(verb).orElse("");
+
+            return Arrays.stream(LinkMethod.values())
+                    .filter(linkMethod -> linkMethod.getVerb().equalsIgnoreCase(verb))
+                    .findFirst()
+                    .orElse(LinkMethod.UNKNOWN);
+        }
     }
 
     public enum MenuItemKey {
@@ -135,6 +229,10 @@ public class SwedbankBaseConstants {
         public static final LogTag DETAILED_PORTFOLIO_RESPONSE = LogTag.from(
                 "Swedbank detailed portfolio - type:[{}] - response: {}");
         public static final LogTag PORTFOLIO_HOLDINGS_RESPONSE = LogTag.from("Portfolio holdings response: {}");
+    }
+
+    public static class BankErrorMessage {
+        public static final String LOGIN_FAILED = "LOGIN_FAILED";
     }
 
     public static class ErrorMessage {

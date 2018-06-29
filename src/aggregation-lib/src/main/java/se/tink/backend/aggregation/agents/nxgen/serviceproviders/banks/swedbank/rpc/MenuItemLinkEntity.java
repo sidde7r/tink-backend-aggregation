@@ -1,37 +1,39 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class MenuItemLinkEntity extends LinkEntity {
-    public enum Authorization {
-        AUTHORIZED, REQUIRES_AUTH_METHOD_CHANGE, UNAUTHORIZED
-    }
-
     private String name;
-    private Authorization authorization;
+    private String authorization;
 
     public String getName() {
         return name;
     }
 
-    public Authorization getAuthorization() {
+    public String getAuthorization() {
         return authorization;
     }
 
     @JsonIgnore
+    public SwedbankBaseConstants.Authorization getAuthorizationValue() {
+        return SwedbankBaseConstants.Authorization.fromAuthorizationString(authorization);
+    }
+
+    @JsonIgnore
     public boolean isAuthorized() {
-        return Authorization.AUTHORIZED == authorization;
+        return SwedbankBaseConstants.Authorization.AUTHORIZED == getAuthorizationValue();
     }
 
     @JsonIgnore
     public boolean isRequiresChangeAuthMethod() {
-        return Authorization.REQUIRES_AUTH_METHOD_CHANGE == authorization;
+        return SwedbankBaseConstants.Authorization.REQUIRES_AUTH_METHOD_CHANGE == getAuthorizationValue();
     }
 
     @JsonIgnore
     public boolean isUnauthroized() {
-        return Authorization.UNAUTHORIZED == authorization;
+        return SwedbankBaseConstants.Authorization.UNAUTHORIZED == getAuthorizationValue();
     }
 }
