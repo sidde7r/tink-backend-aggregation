@@ -117,7 +117,6 @@ def credentials_supplemental():
 @app.route("/credentials/list", methods = ['GET'])
 def list_credentials():
 	credentials = CREDENTIALS_TABLE.search(Query().id.matches('.*'))
-	print json.dumps(credentials)
 	filter_credentials_info = lambda credential: {'id': credential['id'], 'status': credential['status'], 'type': credential['type'], 'username': credential['username']}
 
 	responseList = map(filter_credentials_info, credentials)
