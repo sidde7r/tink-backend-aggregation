@@ -494,9 +494,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
                 if (lock.waitOnBarrier(2, TimeUnit.MINUTES)) {
 
-                        supplementalInformation = supplementalInformationController.getSupplementalInformation(
+                    supplementalInformation = supplementalInformationController.getSupplementalInformation(
                                 credentials.getId());
-
 
                     credentials.setSupplementalInformation(supplementalInformation);
                     // TODO: We've noticed that we get app crashes for Sparbanken Syd and we believe the reason is that
