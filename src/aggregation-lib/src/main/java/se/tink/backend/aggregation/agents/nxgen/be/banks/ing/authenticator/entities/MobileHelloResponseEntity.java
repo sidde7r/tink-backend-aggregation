@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities;
 
+import java.util.Collections;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.entites.json.BaseMobileResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.entites.json.RequestEntity;
@@ -15,6 +16,6 @@ public class MobileHelloResponseEntity extends BaseMobileResponseEntity {
     }
 
     public List<RequestEntity> getRequests() {
-        return requests;
+        return requests == null ? Collections.emptyList() : requests;
     }
 }
