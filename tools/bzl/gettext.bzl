@@ -13,7 +13,7 @@ def i18n_java_source(name, lang, visibility=None):
     outs = ["{path}_{lang}.java".format(lang=lang, path=path)],
     cmd = (
         "mkdir temp-{name};".format(name=name) +
-        "msgfmt --source --java2 -d temp-{name}/ -r {cls} -l {lang} po/{lang}.po".format(
+        "msgfmt --source --java2 -d temp-{name}/ -r {cls} -l {lang} $(location {lang}.po)".format(
             name=name, lang=lang, cls=cls) +
         "&& cp temp-{name}/{path}*.java $@".format(name=name, path=path)),
     visibility = visibility,
