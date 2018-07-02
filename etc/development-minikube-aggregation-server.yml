@@ -63,7 +63,7 @@ supplementalOnAggregation: true
 
 useAggregationController: true
 
-isAggregationCluster: false
+isAggregationCluster: true
 
 distributedDatabase:
   seeds:
