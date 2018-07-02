@@ -71,8 +71,11 @@ def refresh_credential():
         if not currentStatus:
             return '\nRefresh failed.'
         
-        if currentStatus['message']:
-            return str.format('\nRefresh failed with message: {}', currentStatus['message'])
+        try:
+            if currentStatus['message']:
+                return str.format('\nRefresh failed with message: {}', currentStatus['message'])
+        except KeyError:
+            pass
 
         if statusBeforeUpdate['timestamp'] == currentStatus['timestamp']:
             print output
