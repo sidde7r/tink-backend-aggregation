@@ -32,6 +32,8 @@ PROVIDERS_OPERATION = ['providers', 'p']
 SUPPLEMENTAL_OPERATION = ['supp', 's']
 MARKET_OPERATION = ['market', 'm']
 
+REFRESH_TIME_OUT_LIMIT = 120 # 2 minutes * 60 seconds
+
 ### END ENDPOINTS ###
 
 ### START CLIENT METHODS ###
@@ -62,7 +64,7 @@ def refresh_credential():
     }
 
     while True:
-        if (get_time_in_millis() - startTime) / 1000.0 >= 120:
+        if (get_time_in_millis() - startTime) / 1000.0 >= REFRESH_TIME_OUT_LIMIT:
             return '\nRefresh timed out.'
 
         currentStatus = json.loads(credentials_status(credentialsId))
