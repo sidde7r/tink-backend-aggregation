@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.LaCaixaPasswordAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.LaCaixaCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.LaCaixaAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.LaCaixaTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.session.LaCaixaSessionHandler;
@@ -34,7 +35,7 @@ public class LaCaixaAgent extends NextGenerationAgent {
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
 
-          client.setProxy("http://127.0.0.1:8888");
+//          client.setProxy("http://127.0.0.1:8888");
     }
 
     @Override
@@ -59,7 +60,10 @@ public class LaCaixaAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.empty();
+        LaCaixaCreditCardFetcher creditCardFetcher = new LaCaixaCreditCardFetcher(bankClient);
+
+        return Optional.of(new CreditCardRefreshController(metricRefreshController, updateController,
+                creditCardFetcher, creditCardFetcher));
     }
 
     @Override

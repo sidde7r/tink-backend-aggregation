@@ -3,10 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.JyskeConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.SessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.SessionResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.CreditCardRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.CreditCardResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.AccountTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.UserDataRequest;
@@ -81,6 +84,12 @@ public class LaCaixaApiClient {
                 .queryParam(LaCaixaConstants.QueryParams.FROM_BEGIN, Boolean.toString(fromBegin))
                 .queryParam(LaCaixaConstants.QueryParams.ACCOUNT_REFERENCE, accountReference)
                 .get(AccountTransactionResponse.class);
+    }
+
+    public CreditCardResponse fetchCreditCards(){
+        return createRequest(LaCaixaConstants.Urls.FETCH_CREDIT_CARDS)
+                .post(CreditCardResponse.class,
+                        new CreditCardRequest(true, LaCaixaConstants.DefaultRequestParams.NUM_CARDS));
     }
 
     public boolean isAlive(){
