@@ -5,6 +5,7 @@
 # Logs and databases #
 ######################
 *.log
+/tools/testing/*.json
 
 # OS generated files #
 ######################
