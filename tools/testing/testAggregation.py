@@ -86,6 +86,10 @@ def refresh_credential():
         statusBeforeUpdate = currentStatus
         
         status = currentStatus['status']
+        if status == 'UPDATING':
+            output['message'] = 'Fetching accounts and transactions.'
+            continue
+
         if status == 'AWAITING_SUMMPLEMENTAL_INFORMATION':
             suppResponse = supplemental_information(credentialsId)
             if not suppResponse:
