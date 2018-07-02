@@ -91,14 +91,14 @@ def create_credentials():
 	CREDENTIALS_TABLE.insert(credential)
 	return prettify_dict({'credentialsId': credential['id']})
 
-@app.route("/credentials/refresh/<id>", methods = ['POST'])
-def refresh_credentials(id):
-	credentials = CREDENTIALS_TABLE.search(Query().id == id)
+@app.route("/credentials/refresh/<cid>", methods = ['POST'])
+def refresh_credentials(cid):
+	credentials = CREDENTIALS_TABLE.search(Query().id == cid)
 	if not credentials:
 		abort(400, 'Not a valid credentials id.')
 
-	CREDENTIALS_TABLE.update({'status': 'AUTHENTICATING', 'timestamp': get_time_in_millis()}, where('id') == credential['id'])
-	credentialsRequest = create_credentials_request(id)
+	CREDENTIALS_TABLE.update({'status': 'AUTHENTICATING', 'timestamp': get_time_in_millis()}, where('id') == cid)
+	credentialsRequest = create_credentials_request(cid)
 	credentialsRequest['manual'] = True
 	r = requests.post(AGGREGATION_HOST + '/aggregation/refresh', data=json.dumps(credentialsRequest), headers=POST_HEADERS)
 	return ('', 204)
