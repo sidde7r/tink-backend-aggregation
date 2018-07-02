@@ -339,6 +339,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         if (internalClient == null) {
             return;
         }
+
         if (debugOutput && !internalClient.isFilterPresent(debugOutputLoggingFilter)) {
             this.internalClient.addFilter(debugOutputLoggingFilter);
         } else if (!debugOutput && internalClient.isFilterPresent(debugOutputLoggingFilter)) {
