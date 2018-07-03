@@ -8,10 +8,10 @@ public class ErrorResponse {
     private ErrorMessagesEntity errorMessages;
 
     @JsonIgnore
-    public boolean hasErrorCode(String anErrorCode) {
+    public boolean hasErrorCode(String errorCode) {
         if (errorMessages != null && errorMessages.getGeneral() != null) {
             return errorMessages.getGeneral().stream()
-                    .anyMatch(generalEntity -> generalEntity.getCode().equalsIgnoreCase(anErrorCode));
+                    .anyMatch(generalEntity -> generalEntity.getCode().equalsIgnoreCase(errorCode));
         }
 
         return false;
