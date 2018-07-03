@@ -235,13 +235,10 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
 
         AccountEntity account = new AccountEntity();
 
-        // Parse account number
-        String detailsPage = createClientRequest(CARD_DETAILS_URL).get(String.class);
-        account.setAccountNumber(CreditCardParsingUtils.parseAccountNumber(detailsPage));
-
-        // Parse account balance
-        String balancePage = createClientRequest(CARD_BALANCE_URL).get(String.class);
-        account.setBalance(CreditCardParsingUtils.parseBalance(balancePage));
+        // Parse account number and balance
+        String creditcardPage = createClientRequest(CREDIT_CARD_URL).get(String.class);
+        account.setAccountNumber(CreditCardParsingUtils.parseAccountNumber(creditcardPage));
+        account.setBalance(CreditCardParsingUtils.parseBalance(creditcardPage));
 
         return account.toTinkAccount();
     }

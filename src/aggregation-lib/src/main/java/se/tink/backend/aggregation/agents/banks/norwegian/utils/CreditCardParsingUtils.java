@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.agents.banks.norwegian.utils;
 
-import java.util.Optional;
 import com.google.common.collect.Lists;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -19,21 +20,22 @@ public class CreditCardParsingUtils {
     public static Double parseBalance(String htmlContent) {
         Document document = Jsoup.parse(htmlContent);
 
-        Double creditCeiling = StringUtils.parseAmount(document
-                .select(".page")
-                .select(".data-table")
-                .select(".data-table-value")
+        Double creditLimit = StringUtils.parseAmount(getUnescapedAmountString(document, 1));
+
+        Double leftToSpend = StringUtils.parseAmount(getUnescapedAmountString(document, 5));
+
+        return leftToSpend - creditLimit;
+    }
+
+    private static String getUnescapedAmountString(Document document, int amountStringIndex) {
+        String escapedAmount = document
+                .select("div.grid")
                 .get(0)
-                .text());
+                .select("div.grid-u-1-2")
+                .get(amountStringIndex)
+                .text();
 
-        Double leftToSpend = StringUtils.parseAmount(document
-                .select(".page")
-                .select(".data-table")
-                .select(".data-table-value")
-                .get(2)
-                .text());
-
-        return leftToSpend - creditCeiling;
+        return StringEscapeUtils.unescapeHtml4(escapedAmount);
     }
 
     public static class AccountNotFoundException extends Exception {
@@ -52,16 +54,18 @@ public class CreditCardParsingUtils {
      */
     public static String parseAccountNumber(String htmlContent) throws AccountNotFoundException {
         Elements elements = Jsoup.parse(htmlContent)
-                .select(".page > table > tbody > tr");
+                .select("div.creditcard");
+
         if (elements.size() == 0) {
             throw new AccountNotFoundException("Could not extract account number.");
         }
 
         return elements
                 .get(0)
-                .select("td")
+                .select("div.creditcard__number")
                 .first()
-                .text();
+                .text()
+                .replaceAll("\\s", "");
     }
 
     public static Optional<String> parseTransactionalAccountNumber(String htmlContent) {
