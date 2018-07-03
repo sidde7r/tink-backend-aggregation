@@ -545,5 +545,6 @@ junit_test(
         "//third_party:org_mockito_mockito_core",
         "//third_party:net_bytebuddy_byte_buddy",
         "//third_party:org_objenesis_objenesis",
+        "//third_party:org_seleniumhq_selenium_selenium_java",
     ],
 )

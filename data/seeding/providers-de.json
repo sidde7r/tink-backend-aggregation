@@ -28,6 +28,33 @@
                     "sensitive": true
                 }
             ]
+        },
+        {
+            "name": "de-fidor-password",
+            "displayName": "Fidor",
+            "groupDisplayName": "Fidor",
+            "popular": false,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.de.banks.fidor.FidorAgent",
+            "passwordHelpText": "Use the same password as you would in Fidors website",
+            "transactional": true,
+            "payload": "de_DE",
+            "fields": [
+                {
+                    "description": "Username",
+                    "name": "username",
+                    "immutable": true
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "name": "password",
+                    "sensitive": true
+                }
+            ]
         }
     ]
 }
