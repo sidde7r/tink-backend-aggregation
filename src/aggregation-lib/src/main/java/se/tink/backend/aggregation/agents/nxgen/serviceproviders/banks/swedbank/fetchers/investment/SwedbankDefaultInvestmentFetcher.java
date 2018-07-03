@@ -51,14 +51,7 @@ public class SwedbankDefaultInvestmentFetcher implements AccountFetcher<Investme
             PortfolioHoldingsResponse portfolioHoldings = SerializationUtils
                     .deserializeFromString(portfolioHoldingsString, PortfolioHoldingsResponse.class);
 
-            if ((portfolioHoldings.getEndowmentInsurances() != null &&
-                    !portfolioHoldings.getEndowmentInsurances().isEmpty()) ||
-                    (portfolioHoldings.getEquityTraders() != null &&
-                            !portfolioHoldings.getEquityTraders().isEmpty()) ||
-                    (portfolioHoldings.getFundAccounts() != null &&
-                            !portfolioHoldings.getFundAccounts().isEmpty()) ||
-                    (portfolioHoldings.getInvestmentSavings() != null &&
-                            !portfolioHoldings.getInvestmentSavings().isEmpty())) {
+            if (portfolioHoldings.hasInvestments()) {
                 log.info(SwedbankBaseConstants.LogTags.PORTFOLIO_HOLDINGS_RESPONSE.toString(), portfolioHoldingsString);
             }
 

@@ -31,7 +31,7 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
 
     private final SwedbankDefaultApiClient apiClient;
     private final String defaultCurrency;
-    private List<String> investmentAccountNumbersLessSavingsAccount;
+    private List<String> savingsAccountNumbers;
 
     private PaymentsConfirmedResponse paymentsConfirmedResponse;
 
@@ -61,12 +61,12 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
                     .collect(Collectors.toList()));
             accounts.addAll(engagementOverviewResponse.getSavingAccounts().stream()
                     // have not found any other way to filter out investment accounts from
-                    .filter(account -> !getInvestmentAccountNumbersLessSavingsAccount().contains(account.getFullyFormattedNumber()))
+                    .filter(account -> getSavingsAccountNumbers().contains(account.getFullyFormattedNumber()))
                     .map(account -> account.toTransactionalAccount(bankProfile))
                     .filter(Optional::isPresent)
                     .map(Optional::get)
                     .collect(Collectors.toList()));
-            investmentAccountNumbersLessSavingsAccount = null;
+            savingsAccountNumbers = null;
         }
 
         return accounts;
@@ -117,16 +117,16 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
 
     // fetch all account number from investment accounts BUT savings accounts, this is because we want savings accounts
     // to be fetched by transactional fetcher to get any transactions
-    private List<String> getInvestmentAccountNumbersLessSavingsAccount() {
+    private List<String> getSavingsAccountNumbers() {
 
-        if (investmentAccountNumbersLessSavingsAccount == null) {
+        if (savingsAccountNumbers == null) {
             String portfolioHoldingsString = apiClient.portfolioHoldings();
             PortfolioHoldingsResponse portfolioHoldings = SerializationUtils
                     .deserializeFromString(portfolioHoldingsString, PortfolioHoldingsResponse.class);
 
-            investmentAccountNumbersLessSavingsAccount = portfolioHoldings.getInvestmentAccountNumbers();
+            savingsAccountNumbers = portfolioHoldings.getSavingsAccountNumbers();
         }
 
-        return investmentAccountNumbersLessSavingsAccount;
+        return savingsAccountNumbers;
     }
 }
