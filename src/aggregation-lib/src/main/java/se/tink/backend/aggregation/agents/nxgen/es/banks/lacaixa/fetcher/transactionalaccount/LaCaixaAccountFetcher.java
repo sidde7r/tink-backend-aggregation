@@ -2,13 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transa
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.UserDataResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 
 public class LaCaixaAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
@@ -21,8 +19,8 @@ public class LaCaixaAccountFetcher implements AccountFetcher<TransactionalAccoun
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
 
-        UserDataResponse userDataResponse = apiClient.FetchUserData();
-        ListAccountsResponse accountResponse = apiClient.FetchAccountList();
+        UserDataResponse userDataResponse = apiClient.fetchUserData();
+        ListAccountsResponse accountResponse = apiClient.fetchAccountList();
 
         if(accountResponse == null || !accountResponse.hasAccounts()) {
             return Collections.emptyList();

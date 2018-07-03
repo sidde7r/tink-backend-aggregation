@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.JyskeConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.SessionRequest;
@@ -33,10 +32,10 @@ public class LaCaixaApiClient {
     public SessionResponse initializeSession() {
 
         SessionRequest request = new SessionRequest(
-                LaCaixaConstants.DefaultRequestParams.IDIOMA,
-                LaCaixaConstants.DefaultRequestParams.ORIGEN,
-                LaCaixaConstants.DefaultRequestParams.CANAL,
-                LaCaixaConstants.DefaultRequestParams.ID_INSTALACION
+                LaCaixaConstants.DefaultRequestParams.LANGUAGE_EN,
+                LaCaixaConstants.DefaultRequestParams.ORIGIN,
+                LaCaixaConstants.DefaultRequestParams.CHANNEL,
+                LaCaixaConstants.DefaultRequestParams.INSTALLATION_ID
         );
 
         return createRequest(LaCaixaConstants.Urls.INIT_LOGIN)
@@ -68,16 +67,15 @@ public class LaCaixaApiClient {
                 .post();
     }
 
-    public ListAccountsResponse FetchAccountList() {
+    public ListAccountsResponse fetchAccountList() {
 
         return createRequest(LaCaixaConstants.Urls.FETCH_MAIN_ACCOUNT)
                 .get(ListAccountsResponse.class);
     }
 
-    public UserDataResponse FetchUserData(){
+    public UserDataResponse fetchUserData(){
 
-        UserDataRequest request = new UserDataRequest(LaCaixaConstants.UserData.FULL_HOLDER_NAME,
-                "linkPriape");
+        UserDataRequest request = new UserDataRequest(LaCaixaConstants.UserData.FULL_HOLDER_NAME);
 
         return createRequest(LaCaixaConstants.Urls.FETCH_USER_DATA)
                 .post(UserDataResponse.class, request);

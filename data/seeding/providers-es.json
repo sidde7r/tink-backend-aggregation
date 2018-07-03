@@ -110,14 +110,13 @@
                     "name":"username",
                     "description":"User id",
                     "immutable":true,
-                    "helpText":"Your user id"
+                    "helpText":"Your username (DNI/NIE ID number)"
                 },
                 {
                     "name":"password",
                     "description":"Password",
                     "masked":true,
-                    "minLength":6,
-                    "maxLength":6
+                    "minLength":1
                 }
             ]
         }
