@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.norwegian;
 
 import com.google.api.client.http.HttpStatusCodes;
-import com.google.common.base.Objects;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -45,6 +44,7 @@ import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
+import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.system.rpc.Transaction;
 
 /**
@@ -124,7 +124,7 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
         String bankIdUrl = SignicatParsingUtils.parseBankIdServiceUrl(initStartPage);
 
         LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setSubject(credentials.getUsername());
+        loginRequest.setSubject(credentials.getField(Field.Key.USERNAME));
 
         OrderBankIdResponse orderBankIdResponse = client.resource(bankIdUrl + "/order")
                 .type(MediaType.APPLICATION_JSON)
@@ -193,7 +193,7 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
 
             ErrorEntity error = collectResponse.getError();
             if (error != null) {
-                switch (error.getCode()) {
+                switch (error.getCode().toUpperCase()) {
                 case "CANCELLED":
                     throw BankIdError.ALREADY_IN_PROGRESS.exception();
                 case "USER_CANCEL":
@@ -206,7 +206,7 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
                 }
             }
 
-            if (Objects.equal(collectResponse.getProgressStatus(), "COMPLETE")) {
+            if ("COMPLETE".equalsIgnoreCase(collectResponse.getProgressStatus())) {
                 break;
             }
 
@@ -218,7 +218,7 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
 
         // Authenticate against Norwegian
 
-        if (!Objects.equal(collectResponse.getProgressStatus(), "COMPLETE")) {
+        if (!"COMPLETE".equalsIgnoreCase(collectResponse.getProgressStatus())) {
             throw BankIdError.TIMEOUT.exception();
         }
 
@@ -235,13 +235,10 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
 
         AccountEntity account = new AccountEntity();
 
-        // Parse account number
-        String detailsPage = createClientRequest(CARD_DETAILS_URL).get(String.class);
-        account.setAccountNumber(CreditCardParsingUtils.parseAccountNumber(detailsPage));
-
-        // Parse account balance
-        String balancePage = createClientRequest(CARD_BALANCE_URL).get(String.class);
-        account.setBalance(CreditCardParsingUtils.parseBalance(balancePage));
+        // Parse account number and balance
+        String creditcardPage = createClientRequest(CREDIT_CARD_URL).get(String.class);
+        account.setAccountNumber(CreditCardParsingUtils.parseAccountNumber(creditcardPage));
+        account.setBalance(CreditCardParsingUtils.parseBalance(creditcardPage));
 
         return account.toTinkAccount();
     }
