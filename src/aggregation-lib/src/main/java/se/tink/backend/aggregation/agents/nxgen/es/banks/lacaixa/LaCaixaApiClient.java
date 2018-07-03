@@ -63,6 +63,11 @@ public class LaCaixaApiClient {
         }
     }
 
+    public void logout(){
+        createRequest(LaCaixaConstants.Urls.LOGOUT)
+                .post();
+    }
+
     public ListAccountsResponse FetchAccountList() {
 
         return createRequest(LaCaixaConstants.Urls.FETCH_MAIN_ACCOUNT)

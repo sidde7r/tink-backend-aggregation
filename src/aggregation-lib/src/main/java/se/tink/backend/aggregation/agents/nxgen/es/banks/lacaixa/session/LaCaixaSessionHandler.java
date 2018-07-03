@@ -15,7 +15,7 @@ public class LaCaixaSessionHandler implements SessionHandler {
 
     @Override
     public void logout() {
-
+        apiClient.logout();
     }
 
     @Override
