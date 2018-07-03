@@ -265,9 +265,7 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
     }
 
     private String constructIcsExternalId(String contractNumber, Date datetime) {
-        String payload = String.format("%s-%d", contractNumber, datetime.getTime());
-
-        return Hashing.sha256().hashString(payload, StandardCharsets.UTF_8).toString();
+        return String.format("%s-%d", contractNumber, datetime.getTime());
     }
 
     @Override
