@@ -71,8 +71,11 @@ def refresh_credential():
         if not currentStatus:
             return '\nRefresh failed.'
         
-        if currentStatus['message']:
-            return str.format('\nRefresh failed with message: {}', currentStatus['message'])
+        try:
+            if currentStatus['message']:
+                return str.format('\nRefresh failed with message: {}', currentStatus['message'])
+        except KeyError:
+            pass
 
         if statusBeforeUpdate['timestamp'] == currentStatus['timestamp']:
             print output
@@ -83,6 +86,10 @@ def refresh_credential():
         statusBeforeUpdate = currentStatus
         
         status = currentStatus['status']
+        if status == 'UPDATING':
+            output['message'] = 'Fetching accounts and transactions.'
+            continue
+
         if status == 'AWAITING_SUMMPLEMENTAL_INFORMATION':
             suppResponse = supplemental_information(credentialsId)
             if not suppResponse:
