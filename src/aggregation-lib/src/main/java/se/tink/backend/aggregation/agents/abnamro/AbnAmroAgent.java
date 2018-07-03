@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.abnamro;
 
 import com.google.common.base.Preconditions;
+import com.google.common.hash.Hashing;
 import com.google.common.util.concurrent.Uninterruptibles;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -24,6 +27,7 @@ import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.backend.system.rpc.Transaction;
+import se.tink.backend.system.rpc.TransactionPayloadTypes;
 import se.tink.libraries.abnamro.client.EnrollmentClient;
 import se.tink.libraries.abnamro.client.IBSubscriptionClient;
 import se.tink.libraries.abnamro.client.exceptions.IcsException;
@@ -251,8 +255,19 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
                     .map(TransactionMapper::toTransaction)
                     .collect(Collectors.toList());
 
+            // Dirty solution to ensure all ABN AMRO transactions have external IDs. ABN AMRO claims that contract
+            // number and date in conjunction will be uniquely identifiable.
+            transactions.forEach(t -> t.setPayload(TransactionPayloadTypes.EXTERNAL_ID,
+                    constructIcsExternalId(account.getBankId(), t.getDate())));
+
             context.updateTransactions(account, transactions);
         }
+    }
+
+    private String constructIcsExternalId(String contractNumber, Date datetime) {
+        String payload = String.format("%s-%d", contractNumber, datetime.getTime());
+
+        return Hashing.sha256().hashString(payload, StandardCharsets.UTF_8).toString();
     }
 
     @Override
