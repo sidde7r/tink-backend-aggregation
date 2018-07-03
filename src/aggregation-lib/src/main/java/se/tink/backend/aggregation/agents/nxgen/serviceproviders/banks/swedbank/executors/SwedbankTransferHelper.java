@@ -17,13 +17,6 @@ import se.tink.libraries.giro.validation.OcrValidationConfiguration;
 
 public class SwedbankTransferHelper {
 
-    public enum ReferenceType {
-        OCR, MESSAGE
-    }
-
-    private static final int MAX_ATTEMPTS = 90;
-    public static final int BANKID_SLEEP_INTERVAL = 2000;
-
     private SwedbankDefaultApiClient apiClient;
 
     public SwedbankTransferHelper(SwedbankDefaultApiClient apiClient) {
@@ -31,7 +24,7 @@ public class SwedbankTransferHelper {
     }
 
     public LinksEntity collectBankId(AbstractBankIdSignResponse bankIdSignResponse) {
-        for (int i = 0; i < MAX_ATTEMPTS; i++) {
+        for (int i = 0; i < SwedbankBaseConstants.BankId.MAX_ATTEMPTS; i++) {
             SwedbankBaseConstants.BankIdResponseStatus signingStatus = bankIdSignResponse.getBankIdStatus();
 
             switch (signingStatus) {
@@ -59,7 +52,7 @@ public class SwedbankTransferHelper {
             }
 
             bankIdSignResponse = apiClient.collectSignBankId(links.getNextOrThrow());
-            Uninterruptibles.sleepUninterruptibly(BANKID_SLEEP_INTERVAL, TimeUnit.MILLISECONDS);
+            Uninterruptibles.sleepUninterruptibly(SwedbankBaseConstants.BankId.BANKID_SLEEP_INTERVAL, TimeUnit.MILLISECONDS);
         }
 
         throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
@@ -67,11 +60,11 @@ public class SwedbankTransferHelper {
                 .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_CANCELLED).build();
     }
 
-    public static ReferenceType getReferenceTypeFor(Transfer transfer) {
+    public static SwedbankBaseConstants.ReferenceType getReferenceTypeFor(Transfer transfer) {
         GiroMessageValidator giroValidator = GiroMessageValidator.create(OcrValidationConfiguration.softOcr());
         Optional<String> validOcr = giroValidator.validate(transfer.getDestinationMessage()).getValidOcr();
 
-        return validOcr.isPresent() ? ReferenceType.OCR : ReferenceType.MESSAGE;
+        return validOcr.isPresent() ? SwedbankBaseConstants.ReferenceType.OCR : SwedbankBaseConstants.ReferenceType.MESSAGE;
     }
 
     public static void confirmSuccessfulTransfer(ConfirmTransferResponse confirmTransferResponse, String idToConfirm) {

@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.CollectBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.InitBankIdRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.InitBankIdResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.SwedbankTransferHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.payment.rpc.RegisterPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.CollectBankIdSignResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.ConfirmTransferResponse;
@@ -238,7 +237,7 @@ public class SwedbankDefaultApiClient {
     }
 
     public RegisterTransferResponse registerPayment(double amount, String message,
-            SwedbankTransferHelper.ReferenceType referenceType, Date date, String destinationAccountId,
+            SwedbankBaseConstants.ReferenceType referenceType, Date date, String destinationAccountId,
             String sourceAccountId) {
         return makeMenuItemRequest(
                 SwedbankBaseConstants.MenuItemKey.REGISTER_PAYMENT,
@@ -248,7 +247,7 @@ public class SwedbankDefaultApiClient {
     }
 
     public RegisterTransferResponse registerEInvoice(double amount, String message,
-            SwedbankTransferHelper.ReferenceType referenceType, Date date, String eInvoiceId,
+            SwedbankBaseConstants.ReferenceType referenceType, Date date, String eInvoiceId,
             String destinationAccountId, String sourceAccountId) {
         return makeMenuItemRequest(
                 SwedbankBaseConstants.MenuItemKey.REGISTER_PAYMENT,
@@ -282,7 +281,7 @@ public class SwedbankDefaultApiClient {
     }
 
     public RegisterTransferResponse updatePayment(LinkEntity linkEntity, double amount, String message,
-            SwedbankTransferHelper.ReferenceType referenceType, Date date, String recipientId, String fromAccountId) {
+            SwedbankBaseConstants.ReferenceType referenceType, Date date, String recipientId, String fromAccountId) {
         return makeRequest(linkEntity,
                 RegisterPaymentRequest.create(amount, message, referenceType, date, recipientId, fromAccountId),
                 RegisterTransferResponse.class);

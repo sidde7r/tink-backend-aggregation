@@ -254,4 +254,13 @@ public class SwedbankBaseConstants {
         public static final String TRANSFER = "transfer";
         public static final String PAYMENT = "payment";
     }
+
+    public enum ReferenceType {
+        OCR, MESSAGE
+    }
+
+    public static class BankId {
+        public static final int MAX_ATTEMPTS = 90;
+        public static final int BANKID_SLEEP_INTERVAL = 2000;
+    }
 }

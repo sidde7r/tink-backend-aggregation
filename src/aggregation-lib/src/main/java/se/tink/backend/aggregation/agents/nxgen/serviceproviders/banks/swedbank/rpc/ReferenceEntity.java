@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc;
 
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.SwedbankTransferHelper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -25,7 +25,7 @@ public class ReferenceEntity {
         return referenceEntity;
     }
 
-    public static ReferenceEntity create(String message, SwedbankTransferHelper.ReferenceType type) {
+    public static ReferenceEntity create(String message, SwedbankBaseConstants.ReferenceType type) {
         return create(message, type.name());
     }
 }
