@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.utils;
 public enum CurrencyConstants {
     SE("SEK", "kr"),
     FI("EUR", "€"),
+    AT("EUR", "€"),
     BE("EUR", "€"),
     ES("EUR", "€"),
     NL("EUR", "€"),
