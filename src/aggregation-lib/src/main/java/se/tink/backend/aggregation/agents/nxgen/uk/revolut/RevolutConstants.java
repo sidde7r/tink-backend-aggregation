@@ -58,5 +58,11 @@ public class RevolutConstants {
 
     public static final class Accounts {
         public static final String ACTIVE_STATE = "ACTIVE";
+        public static final String REQUIRED_REFERENCE = "requiredReference";
+    }
+
+    public static final class Pockets {
+        public static final String CURRENT_ACCOUNT = "CURRENT";
+        public static final String SAVINGS_ACCOUNT = "SAVINGS";
     }
 }
