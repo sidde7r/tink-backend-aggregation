@@ -52,7 +52,8 @@ public class VolvoFinansCreditCardFetcher implements AccountFetcher<CreditCardAc
         return transactions;
     }
 
-    private List<CreditCardTransaction> getTransactionsBatch(CreditCardAccount account, LocalDate localFromDate, LocalDate localToDate) {
+    private List<CreditCardTransaction> getTransactionsBatch(CreditCardAccount account, LocalDate localFromDate,
+            LocalDate localToDate) {
         String accountId = account.getTemporaryStorage(VolvoFinansConstants.UrlParameters.ACCOUNT_ID, String.class);
         int limit = VolvoFinansConstants.Pagination.LIMIT;
         int offset = 0;
@@ -62,7 +63,8 @@ public class VolvoFinansCreditCardFetcher implements AccountFetcher<CreditCardAc
         boolean pagesLeft = true;
         while (pagesLeft) {
             List<CreditCardTransaction> collected = apiClient
-                    .creditCardAccountTransactions(accountId, localFromDate, localToDate, limit, offset).getTransactions()
+                    .creditCardAccountTransactions(accountId, localFromDate, localToDate, limit, offset)
+                    .getTransactions()
                     .stream()
                     .map(CreditCardTransactionEntity::toTinkTransaction)
                     .collect(Collectors.toList());
