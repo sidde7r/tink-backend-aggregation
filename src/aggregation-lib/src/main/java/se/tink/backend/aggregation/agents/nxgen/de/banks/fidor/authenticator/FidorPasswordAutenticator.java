@@ -15,6 +15,8 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.FidorApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.FidorConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
+import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class FidorPasswordAutenticator implements PasswordAuthenticator {
 
@@ -59,11 +61,12 @@ public class FidorPasswordAutenticator implements PasswordAuthenticator {
     }
 
     private String getCode(WebDriver driver, String clientId, String state, String redirectUrl, String username, String password){
-        String url = new StringBuilder().append(FidorConstants.URL.OPENAPI.SANDBOX_BASE).append(FidorConstants.URL.OPENAPI.OAUTH_AUTHORIZE)
-                .append("?client_id=").append(clientId)
-                .append("&redirect_uri=").append(redirectUrl)
-                .append("&state=").append(state)
-                .append("&response_type=code").toString();
+        String url = new URL(FidorConstants.URL.OPENAPI.SANDBOX_BASE + FidorConstants.URL.OPENAPI.OAUTH_AUTHORIZE)
+                .queryParam(FidorConstants.QUERYPARAMS.CLIENT_ID, clientId)
+                .queryParam(FidorConstants.QUERYPARAMS.REDRIECT_URI, redirectUrl)
+                .queryParam(FidorConstants.QUERYPARAMS.STATE, state)
+                .queryParam(FidorConstants.QUERYPARAMS.RESPONSE_TYPE, FidorConstants.QUERYPARAMS.RESPONSE_TYPE_CODE)
+                .get();
 
         driver.navigate().to(url);
 

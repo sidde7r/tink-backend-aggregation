@@ -44,6 +44,14 @@ public class FidorConstants {
         }
     }
 
+    public class QUERYPARAMS {
+        public static final String CLIENT_ID = "client_id";
+        public static final String REDRIECT_URI = "redirect_uri";
+        public static final String STATE = "state";
+        public static final String RESPONSE_TYPE = "response_type";
+        public static final String RESPONSE_TYPE_CODE = "code";
+    }
+
     public class FORM {
         public static final String EMAIL_ID = "session_email";
         public static final String PASSWORD_ID = "session_password";
