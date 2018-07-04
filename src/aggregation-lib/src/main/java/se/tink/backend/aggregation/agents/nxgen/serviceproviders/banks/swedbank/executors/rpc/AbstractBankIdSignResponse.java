@@ -1,16 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc;
 
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.AbstractBankIdResponse;
 
-public abstract class AbstractBankIdSignResponse {
+public abstract class AbstractBankIdSignResponse extends AbstractBankIdResponse {
     private String signingStatus;
-    private LinksEntity links;
+
+    @JsonIgnore
+    public SwedbankBaseConstants.BankIdResponseStatus getBankIdStatus() {
+        return SwedbankBaseConstants.BankIdResponseStatus.fromStatusCode(signingStatus);
+    }
 
     public String getSigningStatus() {
         return signingStatus;
-    }
-
-    public LinksEntity getLinks() {
-        return links;
     }
 }

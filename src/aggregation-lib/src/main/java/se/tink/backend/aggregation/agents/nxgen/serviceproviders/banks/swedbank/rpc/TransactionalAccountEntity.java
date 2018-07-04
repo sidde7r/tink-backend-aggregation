@@ -13,7 +13,7 @@ public class TransactionalAccountEntity extends AccountEntity {
         return originalName;
     }
 
-    public Optional<TransactionalAccount> toTransactionalAccount() {
-        return toTransactionalAccount(AccountTypes.CHECKING);
+    public Optional<TransactionalAccount> toTransactionalAccount(BankProfile bankProfile) {
+        return toTransactionalAccount(bankProfile, AccountTypes.CHECKING);
     }
 }

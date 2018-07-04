@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankDefaultApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -127,7 +128,7 @@ public class DetailedPortfolioEntity extends AbstractInvestmentAccountEntity {
                 .map(amountEntity -> amountEntity.toTinkAmount(defaultCurrency))
                 .map(Amount::getValue)
                 .orElse(null));
-        portfolio.setRawType(this.type != null ? this.type.name() : "");
+        portfolio.setRawType(this.type != null ? this.type : "");
         portfolio.setTotalProfit(Optional.ofNullable(this.performance)
                 .map(performanceEntity -> performanceEntity.getTinkAmount(defaultCurrency))
                 .filter(Optional::isPresent)
@@ -170,7 +171,7 @@ public class DetailedPortfolioEntity extends AbstractInvestmentAccountEntity {
             return Portfolio.Type.OTHER;
         }
 
-        switch (this.type) {
+        switch (SwedbankBaseConstants.InvestmentAccountType.fromAccountType(type)) {
         case ISK:
             return Portfolio.Type.ISK;
         case FUNDACCOUNT:

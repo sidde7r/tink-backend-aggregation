@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankDefaultApiClient;
@@ -17,11 +16,6 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.giro.validation.OcrValidationConfiguration;
 
 public class SwedbankTransferHelper {
-    public enum ReferenceType {
-        OCR, MESSAGE
-    }
-
-    private static final int MAX_ATTEMPTS = 90;
 
     private SwedbankDefaultApiClient apiClient;
 
@@ -30,23 +24,24 @@ public class SwedbankTransferHelper {
     }
 
     public LinksEntity collectBankId(AbstractBankIdSignResponse bankIdSignResponse) {
-        for (int i = 0; i < MAX_ATTEMPTS; i++) {
-            String signingStatus = bankIdSignResponse.getSigningStatus();
-            if (Strings.isNullOrEmpty(signingStatus)) {
-                throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                        .setEndUserMessage(TransferExecutionException.EndUserMessage.TRANSFER_CONFIRM_FAILED)
-                        .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_FAILED).build();
-            }
+        for (int i = 0; i < SwedbankBaseConstants.BankId.MAX_ATTEMPTS; i++) {
+            SwedbankBaseConstants.BankIdResponseStatus signingStatus = bankIdSignResponse.getBankIdStatus();
 
             switch (signingStatus) {
-            case SwedbankBaseConstants.BankIdStatus.USER_SIGN:
-                break;
-            case SwedbankBaseConstants.BankIdStatus.COMPLETE:
-                return bankIdSignResponse.getLinks();
-            default:
-                throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                        .setEndUserMessage(TransferExecutionException.EndUserMessage.BANKID_TRANSFER_FAILED)
-                        .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_CANCELLED).build();
+                case CLIENT_NOT_STARTED:
+                case USER_SIGN:
+                    break;
+                case COMPLETE:
+                    return bankIdSignResponse.getLinks();
+                case CANCELLED:
+                    throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                            .setEndUserMessage(TransferExecutionException.EndUserMessage.BANKID_TRANSFER_FAILED)
+                            .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_CANCELLED).build();
+                case TIMEOUT:
+                default:
+                    throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                            .setEndUserMessage(TransferExecutionException.EndUserMessage.BANKID_TRANSFER_FAILED)
+                            .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_FAILED).build();
             }
 
             LinksEntity links = bankIdSignResponse.getLinks();
@@ -57,7 +52,7 @@ public class SwedbankTransferHelper {
             }
 
             bankIdSignResponse = apiClient.collectSignBankId(links.getNextOrThrow());
-            Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
+            Uninterruptibles.sleepUninterruptibly(SwedbankBaseConstants.BankId.BANKID_SLEEP_INTERVAL, TimeUnit.MILLISECONDS);
         }
 
         throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
@@ -65,11 +60,11 @@ public class SwedbankTransferHelper {
                 .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_CANCELLED).build();
     }
 
-    public static ReferenceType getReferenceTypeFor(Transfer transfer) {
+    public static SwedbankBaseConstants.ReferenceType getReferenceTypeFor(Transfer transfer) {
         GiroMessageValidator giroValidator = GiroMessageValidator.create(OcrValidationConfiguration.softOcr());
         Optional<String> validOcr = giroValidator.validate(transfer.getDestinationMessage()).getValidOcr();
 
-        return validOcr.isPresent() ? ReferenceType.OCR : ReferenceType.MESSAGE;
+        return validOcr.isPresent() ? SwedbankBaseConstants.ReferenceType.OCR : SwedbankBaseConstants.ReferenceType.MESSAGE;
     }
 
     public static void confirmSuccessfulTransfer(ConfirmTransferResponse confirmTransferResponse, String idToConfirm) {

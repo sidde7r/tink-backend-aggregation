@@ -10,12 +10,8 @@ import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
 
 @JsonObject
 public abstract class AbstractInvestmentAccountEntity extends AbstractAccountEntity {
-    public enum InvestmentAccountType {
-        EQUITY_TRADER, SAVINGSACCOUNT, ISK, FUNDACCOUNT
-    }
-
     protected AmountEntity totalValue;
-    protected InvestmentAccountType type;
+    protected String type;
     protected PerformanceEntity performance;
     protected AmountEntity marketValue;
     protected List<HoldingEntity> holdings;
@@ -26,7 +22,7 @@ public abstract class AbstractInvestmentAccountEntity extends AbstractAccountEnt
         return totalValue;
     }
 
-    public InvestmentAccountType getType() {
+    public String getType() {
         return type;
     }
 

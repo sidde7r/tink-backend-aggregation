@@ -1,6 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.investment.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.AbstractAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -40,5 +44,24 @@ public class PortfolioHoldingsResponse {
 
     public AmountEntity getTotalValue() {
         return totalValue;
+    }
+
+    public boolean hasInvestments() {
+        return (endowmentInsurances != null && !endowmentInsurances.isEmpty()) ||
+                (equityTraders != null && !equityTraders.isEmpty()) ||
+                (fundAccounts != null && !fundAccounts.isEmpty()) ||
+                (investmentSavings != null && !investmentSavings.isEmpty());
+    }
+    @JsonIgnore
+    // extract all account numbers for the savings accounts
+    // let savings account be fetch by transactional account fetcher
+    public List<String> getSavingsAccountNumbers() {
+        if (savingsAccounts == null) {
+            return Collections.emptyList();
+        }
+
+        return savingsAccounts.stream()
+                .map(AbstractAccountEntity::getFullyFormattedNumber)
+                .collect(Collectors.toList());
     }
 }

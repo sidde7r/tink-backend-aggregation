@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.SwedbankTransferHelper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.ReferenceEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -33,7 +33,7 @@ public class RegisterPaymentRequest {
     }
 
     public static RegisterPaymentRequest create(double amount, String message,
-            SwedbankTransferHelper.ReferenceType referenceType, Date date, String recipientId, String fromAccountId) {
+            SwedbankBaseConstants.ReferenceType referenceType, Date date, String recipientId, String fromAccountId) {
 
         return new RegisterPaymentRequest(
                 String.valueOf(amount).replace(".", ","),

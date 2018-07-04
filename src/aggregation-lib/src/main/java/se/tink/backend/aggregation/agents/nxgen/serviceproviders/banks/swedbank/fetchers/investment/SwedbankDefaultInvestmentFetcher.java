@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.investment.rpc.FundAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.investment.rpc.InvestmentSavingsAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.investment.rpc.PortfolioHoldingsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.BankProfile;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
@@ -40,31 +41,29 @@ public class SwedbankDefaultInvestmentFetcher implements AccountFetcher<Investme
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
-        String portfolioHoldingsString = apiClient.portfolioHoldings();
-
-        PortfolioHoldingsResponse portfolioHoldings = SerializationUtils
-                .deserializeFromString(portfolioHoldingsString, PortfolioHoldingsResponse.class);
-
-        if ((portfolioHoldings.getEndowmentInsurances() != null &&
-                !portfolioHoldings.getEndowmentInsurances().isEmpty()) ||
-                (portfolioHoldings.getEquityTraders() != null &&
-                        !portfolioHoldings.getEquityTraders().isEmpty()) ||
-                (portfolioHoldings.getFundAccounts() != null &&
-                        !portfolioHoldings.getFundAccounts().isEmpty()) ||
-                (portfolioHoldings.getInvestmentSavings() != null &&
-                        !portfolioHoldings.getInvestmentSavings().isEmpty())) {
-            log.info(SwedbankBaseConstants.LogTags.PORTFOLIO_HOLDINGS_RESPONSE.toString(), portfolioHoldingsString);
-        }
-
         ArrayList<InvestmentAccount> investmentAccounts = new ArrayList<>();
-        investmentAccounts.addAll(fundAccountsToInvestmentAccounts(
-                portfolioHoldings.getFundAccounts()));
-        investmentAccounts.addAll(endowmentInsurancesToTinkInvestmentAccounts(
-                portfolioHoldings.getEndowmentInsurances()));
-        investmentAccounts.addAll(equityTradersToTinkInvestmentAccounts(
-                portfolioHoldings.getEquityTraders()));
-        investmentAccounts.addAll(investmentSavingsToTinkInvestmentAccounts(
-                portfolioHoldings.getInvestmentSavings()));
+
+        for (BankProfile bankProfile : apiClient.getBankProfiles()) {
+            apiClient.selectProfile(bankProfile);
+
+            String portfolioHoldingsString = apiClient.portfolioHoldings();
+
+            PortfolioHoldingsResponse portfolioHoldings = SerializationUtils
+                    .deserializeFromString(portfolioHoldingsString, PortfolioHoldingsResponse.class);
+
+            if (portfolioHoldings.hasInvestments()) {
+                log.info(SwedbankBaseConstants.LogTags.PORTFOLIO_HOLDINGS_RESPONSE.toString(), portfolioHoldingsString);
+            }
+
+            investmentAccounts.addAll(fundAccountsToInvestmentAccounts(
+                    portfolioHoldings.getFundAccounts()));
+            investmentAccounts.addAll(endowmentInsurancesToTinkInvestmentAccounts(
+                    portfolioHoldings.getEndowmentInsurances()));
+            investmentAccounts.addAll(equityTradersToTinkInvestmentAccounts(
+                    portfolioHoldings.getEquityTraders()));
+            investmentAccounts.addAll(investmentSavingsToTinkInvestmentAccounts(
+                    portfolioHoldings.getInvestmentSavings()));
+        }
 
         return investmentAccounts;
     }

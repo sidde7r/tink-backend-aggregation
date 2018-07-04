@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class CollectBankIdResponse extends AbstractBankIdResponse {
+public class CollectBankIdResponse extends AbstractBankIdAuthResponse {
     private boolean extendedUsage;
     private String formattedServerTime;
     private String serverTime;

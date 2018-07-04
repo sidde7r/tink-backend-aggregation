@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.BankProfile;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.ReservedTransactionEntity;
@@ -57,7 +58,7 @@ public class DetailedCardAccountResponse {
         return links;
     }
 
-    public Optional<CreditCardAccount> toTinkCreditCardAccount(String defaultCurrency) {
+    public Optional<CreditCardAccount> toTinkCreditCardAccount(BankProfile bankProfile, String defaultCurrency) {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(defaultCurrency));
 
         String currentBalance = cardAccount.getCurrentBalance();
@@ -76,6 +77,7 @@ public class DetailedCardAccountResponse {
                         .setName(cardAccount.getName())
                         .setHolderName(new HolderName(cardAccount.getCardHolder()))
                         .addToTemporaryStorage(SwedbankBaseConstants.StorageKey.CREDIT_CARD_RESPONSE, this)
+                        .addToTemporaryStorage(SwedbankBaseConstants.StorageKey.PROFILE, bankProfile)
                         .build());
     }
 

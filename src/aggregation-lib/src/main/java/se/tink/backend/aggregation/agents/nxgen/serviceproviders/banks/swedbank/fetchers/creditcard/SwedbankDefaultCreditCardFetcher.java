@@ -3,20 +3,18 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank
 import com.google.common.base.Preconditions;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankDefaultApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.creditcard.rpc.DetailedCardAccountResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.BankProfile;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.CardAccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.DetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.EngagementOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
@@ -35,26 +33,37 @@ public class SwedbankDefaultCreditCardFetcher implements AccountFetcher<CreditCa
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        EngagementOverviewResponse engagementOverviewResponse = apiClient.engagementOverview();
-        List<CardAccountEntity> cardAccounts = engagementOverviewResponse.getCardAccounts();
+        List<CreditCardAccount> tinkCardAccounts = new ArrayList<>();
 
-        if (cardAccounts == null) {
-            return Collections.emptyList();
+        for (BankProfile bankProfile : apiClient.getBankProfiles()) {
+            apiClient.selectProfile(bankProfile);
+
+            EngagementOverviewResponse engagementOverviewResponse = apiClient.engagementOverview();
+            List<CardAccountEntity> cardAccounts = engagementOverviewResponse.getCardAccounts();
+
+            if (cardAccounts != null) {
+                tinkCardAccounts.addAll(
+                        cardAccounts.stream()
+                                .map(CardAccountEntity::getLinks)
+                                .map(LinksEntity::getNext)
+                                .map(apiClient::cardAccountDetails)
+                                .map(detailedCardAccountResponse ->
+                                        detailedCardAccountResponse.toTinkCreditCardAccount(bankProfile, defaultCurrency))
+                                .filter(Optional::isPresent)
+                                .map(Optional::get)
+                                .collect(Collectors.toList())
+                );
+            }
         }
 
-        return cardAccounts.stream()
-                .map(CardAccountEntity::getLinks)
-                .map(LinksEntity::getNext)
-                .map(apiClient::cardAccountDetails)
-                .map(detailedCardAccountResponse ->
-                        detailedCardAccountResponse.toTinkCreditCardAccount(defaultCurrency))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());
+        return tinkCardAccounts;
     }
 
     @Override
     public TransactionKeyPaginatorResponse<LinkEntity> getTransactionsFor(CreditCardAccount account, LinkEntity key) {
+        BankProfile bankProfile = account.getTemporaryStorage(SwedbankBaseConstants.StorageKey.PROFILE, BankProfile.class);
+        apiClient.selectProfile(bankProfile);
+
         if (key != null) {
             return apiClient.cardAccountDetails(key).toTransactionKeyPaginatorResponse(account, defaultCurrency);
         }

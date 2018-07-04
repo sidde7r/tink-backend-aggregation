@@ -33,6 +33,8 @@ public class SwedbankDefaultUpdatePaymentExecutor implements UpdatePaymentExecut
 
     @Override
     public void updatePayment(Transfer transfer) throws TransferExecutionException {
+        // this is the current implementation for transfers, only use the last profile for transfers
+        apiClient.selectTransferProfile();
 
         RegisteredTransfersResponse registeredTransfers = apiClient.registeredTransfers();
         registeredTransfers.noUnsignedTransfersOrThrow();

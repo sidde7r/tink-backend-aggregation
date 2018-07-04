@@ -53,26 +53,31 @@ public class PaymentBaseinfoResponse {
         return internationalRecipients;
     }
 
+    @JsonIgnore
     public List<? extends GeneralAccountEntity> getPaymentDestinations() {
         return Optional.ofNullable(payment)
                 .map(PaymentDestinationsEntity::getPayees)
                 .orElseGet(Collections::emptyList);
     }
 
+    @JsonIgnore
     public List<? extends GeneralAccountEntity> getTransferDestinations() {
         return Optional.ofNullable(transfer)
                 .map(TransferDestinationsEntity::getExternalRecipients)
                 .orElseGet(Collections::emptyList);
     }
 
+    @JsonIgnore
     public List<? extends GeneralAccountEntity> getPaymentSourceAccounts() {
         return getSourceAccounts(SwedbankBaseConstants.TransferScope.PAYMENT_FROM);
     }
 
+    @JsonIgnore
     public List<? extends GeneralAccountEntity> getTransferSourceAccounts() {
         return getSourceAccounts(SwedbankBaseConstants.TransferScope.TRANSFER_FROM);
     }
 
+    @JsonIgnore
     private List<? extends GeneralAccountEntity> getSourceAccounts(String scope) {
         return Optional.ofNullable(transactionAccountGroups)
                 .orElseGet(Collections::emptyList).stream()
