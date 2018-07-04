@@ -20,8 +20,7 @@ public class VolvoFinansSessionHandler implements SessionHandler {
     @Override
     public void keepAlive() throws SessionException {
         try {
-            /* Try requesting customer info to check if session active */
-            apiClient.customer();
+            apiClient.keepAlive();
         } catch (Exception e) {
             throw new SessionException(SessionError.SESSION_EXPIRED);
         }

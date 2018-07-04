@@ -54,5 +54,14 @@ public class VolvoFinansConstants {
     public static final class Currencies {
         public static String SEK = "SEK";
     }
+
+    public static final class BankIdStatus {
+        public static final String DONE = "OK";
+        public static final String WAITING = "PAGAENDE";
+    }
+
+    public static class Pagination {
+        public static int LIMIT = 100;
+    }
 }
 

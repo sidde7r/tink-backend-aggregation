@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.accounts.entities;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.creditcards.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.VolvoFinansConstants;
@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.core.Amount;
 
 @JsonObject
-public class CreditCardAccountEntity {
+public class CreditCardEntity {
     @JsonProperty("kontoId")
     private String accountId;   // used as api endpoint
     @JsonProperty("kontonummer")

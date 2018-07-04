@@ -1,15 +1,12 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.transactions.entities;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.creditcards.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
-import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.backend.core.Amount;
 
-@JsonObject
-public class TransactionEntity {
-
+public class CreditCardTransactionEntity {
     private String transaktionsId;
     @JsonProperty("text")
     private String description;
@@ -24,8 +21,8 @@ public class TransactionEntity {
     private boolean pending;
     private boolean beloppInkuderarAndraKategorier;
 
-    public Transaction toTinkTransaction() {
-        return Transaction.builder()
+    public CreditCardTransaction toTinkTransaction() {
+        return CreditCardTransaction.builder()
                 .setAmount(Amount.inSEK(amount))
                 .setDate(date)
                 .setDescription(description)

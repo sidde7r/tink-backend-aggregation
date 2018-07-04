@@ -3,9 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.authenticator.VolvoFinansBankIdAutenticator;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.accounts.VolvoFinansCreditCardAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.accounts.VolvoFinansTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.transactions.VolvoFinansTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.creditcards.VolvoFinansCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.transactionalaccounts.VolvoFinansTransactionalAccountFetcher;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
@@ -49,7 +48,7 @@ public class VolvoFinansAgent extends NextGenerationAgent {
                 updateController,
                 new VolvoFinansTransactionalAccountFetcher(apiClient),
                 new TransactionFetcherController<>(transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(new VolvoFinansTransactionFetcher<>(apiClient)))));
+                        new TransactionDatePaginationController<>(new VolvoFinansTransactionalAccountFetcher(apiClient)))));
 
     }
 
@@ -58,9 +57,9 @@ public class VolvoFinansAgent extends NextGenerationAgent {
         return Optional.of(new CreditCardRefreshController(
                 metricRefreshController,
                 updateController,
-                new VolvoFinansCreditCardAccountFetcher(apiClient),
+                new VolvoFinansCreditCardFetcher(apiClient),
                 new TransactionFetcherController<>(transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(new VolvoFinansTransactionFetcher<>(apiClient)))));
+                        new TransactionDatePaginationController<>(new VolvoFinansCreditCardFetcher(apiClient)))));
     }
 
     @Override
