@@ -22,6 +22,10 @@ public class N26SessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
+        if(!n26ApiClient.tokenExists()){
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+
         HttpResponse response = n26ApiClient.checkIfSessionAlive();
 
         if (response.getStatus() != HttpStatusCodes.STATUS_CODE_OK) {
