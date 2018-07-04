@@ -1,22 +1,17 @@
 package se.tink.backend.aggregation.agents.abnamro;
 
 import com.google.common.base.Preconditions;
-import com.google.common.hash.Hashing;
 import com.google.common.util.concurrent.Uninterruptibles;
-import java.nio.charset.StandardCharsets;
-import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
 import se.tink.backend.aggregation.agents.abnamro.converters.AccountConverter;
-import se.tink.backend.aggregation.agents.abnamro.ics.mappers.AccountMapper;
-import se.tink.backend.aggregation.agents.abnamro.ics.mappers.TransactionMapper;
 import se.tink.backend.aggregation.agents.abnamro.utils.AbnAmroAgentUtils;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
@@ -26,15 +21,9 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.common.config.ServiceConfiguration;
-import se.tink.backend.system.rpc.Transaction;
-import se.tink.backend.system.rpc.TransactionPayloadTypes;
 import se.tink.libraries.abnamro.client.EnrollmentClient;
 import se.tink.libraries.abnamro.client.IBSubscriptionClient;
-import se.tink.libraries.abnamro.client.exceptions.IcsException;
 import se.tink.libraries.abnamro.client.model.PfmContractEntity;
-import se.tink.libraries.abnamro.client.model.creditcards.CreditCardAccountContainerEntity;
-import se.tink.libraries.abnamro.client.model.creditcards.CreditCardAccountEntity;
-import se.tink.libraries.abnamro.client.model.creditcards.TransactionContainerEntity;
 import se.tink.libraries.abnamro.client.rpc.enrollment.CollectEnrollmentResponse;
 import se.tink.libraries.abnamro.client.rpc.enrollment.InitiateEnrollmentResponse;
 import se.tink.libraries.abnamro.config.AbnAmroConfiguration;
@@ -100,11 +89,14 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
     private boolean authenticateWithMobileBanking() throws InvalidPhoneNumberException {
         final String phoneNumber = PhoneNumberUtils.normalize(user.getUsername());
 
+        log.info("Authenticating with mobile banking.");
         InitiateEnrollmentResponse response = enrollmentService.initiate(phoneNumber);
 
         openThirdPartyApp(MobileBankingAuthenticationPayload.create(catalog, response.getToken()));
 
+        log.debug("Polling for mobile banking signing completed.");
         Optional<String> bcNumber = collect(response.getToken());
+        log.debug(String.format("Got bcnumber %s.", bcNumber.orElse("failed")));
 
         // Reset supplemental and status payload
         credentials.setSupplementalInformation(null);
@@ -114,6 +106,7 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
             credentials.setPayload(bcNumber.get());
             credentials.setStatus(CredentialsStatus.UPDATING);
         } else {
+            log.error("Failed to receive bc number from ABN.");
             credentials.setStatus(CredentialsStatus.AUTHENTICATION_ERROR);
         }
 
@@ -173,8 +166,16 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
 
     private void updateAccountPerType(RefreshableItem type) {
         getAccounts().stream()
+                .filter(this::isNotCreditCardAccount)
                 .filter(account -> type.isAccountType(account.getType()))
                 .forEach(context::updateAccount);
+    }
+
+    private void refreshTransactionsPerType(RefreshableItem type) {
+        getAccounts().stream()
+                .filter(this::isNotCreditCardAccount)
+                .filter(account -> type.isAccountType(account.getType()))
+                .forEach(this::updateAccount);
     }
 
     private List<Account> getAccounts() {
@@ -195,81 +196,28 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
         }
     }
 
-    private void refreshTransactionsPerType(RefreshableItem type) {
-        final String bcNumber = credentials.getPayload();
+    private void updateAccount(Account account) {
+        // Update the account. This will call system which will subscribe the account towards ABN AMRO if it is
+        // a new account.
+        account = context.updateAccount(account);
 
-        getAccounts().stream()
-                .filter(account -> type.isAccountType(account.getType()))
-                .forEach(account ->
-        {
-            // Update the account. This will call system which will subscribe the account towards ABN AMRO if it is
-            // a new account.
-            account = context.updateAccount(account);
-
-            if (account.getType() == AccountTypes.CREDIT_CARD) {
-                // Refresh credit cards and credit cards transactions. They are both fetched from ABN AMRO.
-                try {
-                    refreshCreditCard(bcNumber, account);
-                } catch (Exception e) {
-                    throw new IllegalStateException(e);
-                }
-            } else if (AbnAmroAgentUtils.isSubscribed(account)) {
-                // This is a new account that was subscribed towards ABN AMRO. Tell aggregation that we are waiting
-                // on getting transactions ingested in the connector.
-                if (!context.isWaitingOnConnectorTransactions()) {
-                    context.setWaitingOnConnectorTransactions(true);
-                }
-            }
-        });
-    }
-
-    /**
-     * First need to update the account & subscribe the account towards ABN AMRO. If it is a credit card then
-     * the agent will fetch/pull transactions. If it is a non credit card then the transactions will be pushed
-     * to the ABN AMRO connector.
-     */
-    private void refreshCreditCard(String bcNumber, Account account) throws IcsException {
-        try {
-            updateCreditCardAccountAndTransactions(bcNumber, account.getBankId());
-        } catch (IcsException e) {
-            // The connection to ICS is returning a lot of errors in the test environments.
-            if (abnAmroConfiguration.shouldIgnoreCreditCardErrors()) {
-                log.warn("Ignoring error from ICS.", e);
-            } else {
-                throw e;
+        if (account.getType() == AccountTypes.CREDIT_CARD) {
+            // TODO Move credit card accounts to ICS
+        } else if (AbnAmroAgentUtils.isSubscribed(account)) {
+            // This is a new account that was subscribed towards ABN AMRO. Tell aggregation that we are waiting
+            // on getting transactions ingested in the connector.
+            if (!context.isWaitingOnConnectorTransactions()) {
+                context.setWaitingOnConnectorTransactions(true);
             }
         }
-    }
-
-    private void updateCreditCardAccountAndTransactions(String bcNumber, String bankId) throws IcsException {
-        List<CreditCardAccountContainerEntity> entities = subscriptionClient
-                .getCreditCardAccountAndTransactions(bcNumber, Long.valueOf(bankId));
-
-        for (CreditCardAccountContainerEntity entity : entities) {
-            CreditCardAccountEntity creditCardAccount = entity.getCreditCardAccount();
-
-            Account account = AccountMapper.toAccount(creditCardAccount);
-
-            List<Transaction> transactions = creditCardAccount.getTransactions().stream()
-                    .filter(TransactionContainerEntity::isInEUR)
-                    .map(TransactionMapper::toTransaction)
-                    .collect(Collectors.toList());
-
-            // Dirty solution to ensure all ABN AMRO transactions have external IDs. ABN AMRO claims that contract
-            // number and date in conjunction will be uniquely identifiable.
-            transactions.forEach(t -> t.setPayload(TransactionPayloadTypes.EXTERNAL_ID,
-                    constructIcsExternalId(account.getBankId(), t.getDate())));
-
-            context.updateTransactions(account, transactions);
-        }
-    }
-
-    private String constructIcsExternalId(String contractNumber, Date datetime) {
-        return String.format("%s-%d", contractNumber, datetime.getTime());
     }
 
     @Override
     public void logout() throws Exception {
         // NOP
+    }
+
+    private boolean isNotCreditCardAccount(Account account) {
+        return !Objects.equals(account.getType(), AccountTypes.CREDIT_CARD);
     }
 }
