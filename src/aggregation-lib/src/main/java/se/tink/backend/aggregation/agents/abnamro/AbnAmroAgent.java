@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.abnamro;
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.joda.time.DateTime;
@@ -88,14 +89,14 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
     private boolean authenticateWithMobileBanking() throws InvalidPhoneNumberException {
         final String phoneNumber = PhoneNumberUtils.normalize(user.getUsername());
 
-        log.info(String.format("[userId: %s] Authenticating with mobile banking", user.getId()));
+        log.info("Authenticating with mobile banking.");
         InitiateEnrollmentResponse response = enrollmentService.initiate(phoneNumber);
 
         openThirdPartyApp(MobileBankingAuthenticationPayload.create(catalog, response.getToken()));
 
-        log.debug(String.format("[userId: %s] Polling for mobile banking signing completed", user.getId()));
+        log.debug("Polling for mobile banking signing completed.");
         Optional<String> bcNumber = collect(response.getToken());
-        log.debug(String.format("[userId: %s] Got bcnumber %s", user.getId(), bcNumber.orElse("failed")));
+        log.debug(String.format("Got bcnumber %s.", bcNumber.orElse("failed")));
 
         // Reset supplemental and status payload
         credentials.setSupplementalInformation(null);
@@ -105,6 +106,7 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
             credentials.setPayload(bcNumber.get());
             credentials.setStatus(CredentialsStatus.UPDATING);
         } else {
+            log.error("Failed to receive bc number from ABN.");
             credentials.setStatus(CredentialsStatus.AUTHENTICATION_ERROR);
         }
 
@@ -164,8 +166,16 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
 
     private void updateAccountPerType(RefreshableItem type) {
         getAccounts().stream()
+                .filter(this::isNotCreditCardAccount)
                 .filter(account -> type.isAccountType(account.getType()))
                 .forEach(context::updateAccount);
+    }
+
+    private void refreshTransactionsPerType(RefreshableItem type) {
+        getAccounts().stream()
+                .filter(this::isNotCreditCardAccount)
+                .filter(account -> type.isAccountType(account.getType()))
+                .forEach(this::updateAccount);
     }
 
     private List<Account> getAccounts() {
@@ -184,14 +194,6 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
-    }
-
-    private void refreshTransactionsPerType(RefreshableItem type) {
-        final String bcNumber = credentials.getPayload();
-
-        getAccounts().stream()
-                .filter(account -> type.isAccountType(account.getType()))
-                .forEach(this::updateAccount);
     }
 
     private void updateAccount(Account account) {
@@ -213,5 +215,9 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
     @Override
     public void logout() throws Exception {
         // NOP
+    }
+
+    private boolean isNotCreditCardAccount(Account account) {
+        return !Objects.equals(account.getType(), AccountTypes.CREDIT_CARD);
     }
 }
