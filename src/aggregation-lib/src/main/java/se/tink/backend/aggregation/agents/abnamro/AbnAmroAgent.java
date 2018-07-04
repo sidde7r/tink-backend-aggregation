@@ -88,11 +88,14 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
     private boolean authenticateWithMobileBanking() throws InvalidPhoneNumberException {
         final String phoneNumber = PhoneNumberUtils.normalize(user.getUsername());
 
+        log.info(String.format("[userId: %s] Authenticating with mobile banking", user.getId()));
         InitiateEnrollmentResponse response = enrollmentService.initiate(phoneNumber);
 
         openThirdPartyApp(MobileBankingAuthenticationPayload.create(catalog, response.getToken()));
 
+        log.debug(String.format("[userId: %s] Polling for mobile banking signing completed", user.getId()));
         Optional<String> bcNumber = collect(response.getToken());
+        log.debug(String.format("[userId: %s] Got bcnumber %s", user.getId(), bcNumber.orElse("failed")));
 
         // Reset supplemental and status payload
         credentials.setSupplementalInformation(null);
