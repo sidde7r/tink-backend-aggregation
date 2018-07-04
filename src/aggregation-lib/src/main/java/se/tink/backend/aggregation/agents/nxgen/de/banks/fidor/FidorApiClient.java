@@ -103,10 +103,6 @@ public class FidorApiClient{
                 .get(AccountResponse.class);
     }
 
-    public TransactionResponse fetchOpenApiTransactions(OpenTokenEntity tokenEntity){
-        return fetchOpenApiTransactions(tokenEntity, 0);
-    }
-
     public TransactionResponse fetchOpenApiTransactions(OpenTokenEntity tokenEntity, int page){
 
         String bearer = FidorConstants.BEARER_TOKEN + tokenEntity.getAccessToken();
