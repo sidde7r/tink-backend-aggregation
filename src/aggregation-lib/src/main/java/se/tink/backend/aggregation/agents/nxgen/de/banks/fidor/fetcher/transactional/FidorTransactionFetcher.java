@@ -28,7 +28,7 @@ public class FidorTransactionFetcher implements TransactionPagePaginator<Transac
 
         TransactionResponse transactions = this.fidorApiClient.fetchOpenApiTransactions(tokenEntity, page);
 
-        response.setCanFetchMore(page < (transactions.getCollectionEntity().getTotalPages() - 1));
+        response.setCanFetchMore(transactions.canFetchMore(page));
         response.setTransactions(transactions.toTinkTransactions());
 
         return response;

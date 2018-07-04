@@ -31,4 +31,8 @@ public class TransactionResponse {
                 .map(TransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }
+
+    public boolean canFetchMore(int page){
+        return page < (collectionEntity.getTotalPages() - 1);
+    }
 }
