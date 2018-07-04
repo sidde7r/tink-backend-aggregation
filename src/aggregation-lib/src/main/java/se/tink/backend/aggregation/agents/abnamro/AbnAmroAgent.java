@@ -191,22 +191,23 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
 
         getAccounts().stream()
                 .filter(account -> type.isAccountType(account.getType()))
-                .forEach(account ->
-        {
-            // Update the account. This will call system which will subscribe the account towards ABN AMRO if it is
-            // a new account.
-            account = context.updateAccount(account);
+                .forEach(this::updateAccount);
+    }
 
-            if (account.getType() == AccountTypes.CREDIT_CARD) {
-                // TODO Move credit card accounts to ICS
-            } else if (AbnAmroAgentUtils.isSubscribed(account)) {
-                // This is a new account that was subscribed towards ABN AMRO. Tell aggregation that we are waiting
-                // on getting transactions ingested in the connector.
-                if (!context.isWaitingOnConnectorTransactions()) {
-                    context.setWaitingOnConnectorTransactions(true);
-                }
+    private void updateAccount(Account account) {
+        // Update the account. This will call system which will subscribe the account towards ABN AMRO if it is
+        // a new account.
+        account = context.updateAccount(account);
+
+        if (account.getType() == AccountTypes.CREDIT_CARD) {
+            // TODO Move credit card accounts to ICS
+        } else if (AbnAmroAgentUtils.isSubscribed(account)) {
+            // This is a new account that was subscribed towards ABN AMRO. Tell aggregation that we are waiting
+            // on getting transactions ingested in the connector.
+            if (!context.isWaitingOnConnectorTransactions()) {
+                context.setWaitingOnConnectorTransactions(true);
             }
-        });
+        }
     }
 
     @Override
