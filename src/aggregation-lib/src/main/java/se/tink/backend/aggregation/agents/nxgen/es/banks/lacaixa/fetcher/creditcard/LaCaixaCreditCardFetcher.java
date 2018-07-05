@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -23,6 +24,6 @@ public class LaCaixaCreditCardFetcher implements AccountFetcher<CreditCardAccoun
 
     @Override
     public List<AggregationTransaction> fetchTransactionsFor(CreditCardAccount account) {
-        return null;
+        return Collections.emptyList();
     }
 }

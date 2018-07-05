@@ -19,17 +19,16 @@ public class UserDataDeserializer extends JsonDeserializer<Map<String, String>> 
         ObjectCodec oc = p.getCodec();
         JsonNode node = oc.readTree(p);
 
-        node = node.get("pair"); // Skip one level of JSON tree.
+        // Skip one level of JSON tree.
+        node = node.get("pair");
 
         int numElements = node.size();
         Map<String, String> userData = new HashMap<>(numElements);
 
         // Extract key/value pairs and populate map.
-        for(int i = 0; i < numElements; i++){
-
-            JsonNode dataElement = node.get(i);
-            userData.put(dataElement.get("key").asText(), dataElement.get("value").asText());
-        }
+        node.forEach(child ->
+            userData.put(child.get("key").asText(), child.get("value").asText())
+        );
 
         return userData;
     }

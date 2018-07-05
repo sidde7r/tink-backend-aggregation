@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -16,7 +15,6 @@ public class ListAccountsResponse {
     @JsonProperty("listaCuentas")
     AccountList accountList;
 
-    @JsonIgnore
     public Collection<AccountEntity> getAccounts() {
         return accountList.getAccounts();
     }
@@ -27,7 +25,6 @@ public class ListAccountsResponse {
                 .collect(Collectors.toList());
     }
 
-    @JsonIgnore
     public boolean hasAccounts(){
         return !accountList.isEmpty();
     }

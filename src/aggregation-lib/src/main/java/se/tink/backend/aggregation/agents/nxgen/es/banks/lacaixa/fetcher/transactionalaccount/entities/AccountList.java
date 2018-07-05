@@ -13,7 +13,7 @@ public class AccountList {
     private List<AccountEntity> accounts;
 
     @JsonProperty("masDatos")
-    private String moreData;
+    private boolean moreData;
 
     @JsonIgnore
     public Collection<AccountEntity> getAccounts() {

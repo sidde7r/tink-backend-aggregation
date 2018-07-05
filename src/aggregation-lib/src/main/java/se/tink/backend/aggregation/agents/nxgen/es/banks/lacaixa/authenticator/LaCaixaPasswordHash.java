@@ -7,17 +7,18 @@ import java.security.NoSuchAlgorithmException;
 public class LaCaixaPasswordHash {
 
 
-    static final String HASH_ALGORITHM = "MD5";
-    static final String PADDING = "                " +
-                                    "                " +
-                                    "                ";
-    static final int MESSAGE_LENGTH = 64;
-    static final int COUNTER_1_VALUE = 3;
-    static final int COUNTER_2_VALUE = 7;
+    private static final String HASH_ALGORITHM = "MD5";
+    private static final String PADDING = "                " +
+                                        "                " +
+                                        "                ";
 
-    String pin;
-    int iterations;
-    String seed;
+    private static final int MESSAGE_LENGTH = 64;
+    private static final int COUNTER_1_VALUE = 3;
+    private static final int COUNTER_2_VALUE = 7;
+
+    private String pin;
+    private int iterations;
+    private String seed;
 
     /*
      * Create caixa otp (hashed password).

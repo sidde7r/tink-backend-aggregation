@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transac
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.UserDataRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.UserDataResponse;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -29,7 +30,7 @@ public class LaCaixaApiClient {
         this.client = client;
     }
 
-    public SessionResponse initializeSession() {
+    public SessionResponse initializeSession(){
 
         SessionRequest request = new SessionRequest(
                 LaCaixaConstants.DefaultRequestParams.LANGUAGE_EN,
@@ -53,11 +54,9 @@ public class LaCaixaApiClient {
             int statusCode = e.getResponse().getStatus();
 
             if(statusCode == LaCaixaConstants.StatusCodes.INCORRECT_USERNAME_PASSWORD){
-                LOGGER.trace("Login failed, incorrect username/password.");
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             }
 
-            LOGGER.warn("Login failed, status code: " + statusCode);
             throw e;
         }
     }
@@ -67,7 +66,7 @@ public class LaCaixaApiClient {
                 .post();
     }
 
-    public ListAccountsResponse fetchAccountList() {
+    public ListAccountsResponse fetchAccountList(){
 
         return createRequest(LaCaixaConstants.Urls.FETCH_MAIN_ACCOUNT)
                 .get(ListAccountsResponse.class);
@@ -100,11 +99,12 @@ public class LaCaixaApiClient {
         try{
 
             createRequest(LaCaixaConstants.Urls.KEEP_ALIVE).get(HttpResponse.class);
-            return true;
         } catch(HttpResponseException e){
 
             return false;
         }
+
+        return true;
     }
 
     private RequestBuilder createRequest(URL url){
