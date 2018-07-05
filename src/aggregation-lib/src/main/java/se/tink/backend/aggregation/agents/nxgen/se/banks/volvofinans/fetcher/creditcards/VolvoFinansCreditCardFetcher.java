@@ -28,7 +28,7 @@ public class VolvoFinansCreditCardFetcher implements AccountFetcher<CreditCardAc
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        return apiClient.creditCardAccounts().getAccounts().stream()
+        return apiClient.creditCardAccounts().stream()
                 .map(CreditCardEntity::toTinkAccount)
                 .collect(Collectors.toList());
     }
@@ -64,7 +64,6 @@ public class VolvoFinansCreditCardFetcher implements AccountFetcher<CreditCardAc
         while (pagesLeft) {
             List<CreditCardTransaction> collected = apiClient
                     .creditCardAccountTransactions(accountId, localFromDate, localToDate, limit, offset)
-                    .getTransactions()
                     .stream()
                     .map(CreditCardTransactionEntity::toTinkTransaction)
                     .collect(Collectors.toList());
