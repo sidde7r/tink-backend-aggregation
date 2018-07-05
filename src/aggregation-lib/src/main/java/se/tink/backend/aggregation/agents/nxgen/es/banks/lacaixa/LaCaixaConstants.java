@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa;
 
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class LaCaixaConstants {
@@ -59,5 +60,9 @@ public class LaCaixaConstants {
 
     public static class UserData{
         public static final String FULL_HOLDER_NAME = "linkNombreEmp";
+    }
+
+    public static class LogTags{
+        public static final LogTag CREDIT_CARDS = LogTag.from("es_lacaixa_creditcards");
     }
 }

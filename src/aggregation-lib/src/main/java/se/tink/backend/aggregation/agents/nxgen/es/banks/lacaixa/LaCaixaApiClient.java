@@ -13,13 +13,14 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transac
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.UserDataRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.UserDataResponse;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import static se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities.AccountEntity.LOGGER;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class LaCaixaApiClient {
 
@@ -88,9 +89,11 @@ public class LaCaixaApiClient {
                 .get(AccountTransactionResponse.class);
     }
 
-    public CreditCardResponse fetchCreditCards(){
+    public String fetchCreditCards(){
+        
+        // TODO: Implement properly when logging is done.
         return createRequest(LaCaixaConstants.Urls.FETCH_CREDIT_CARDS)
-                .post(CreditCardResponse.class,
+                .post(String.class,
                         new CreditCardRequest(true, LaCaixaConstants.DefaultRequestParams.NUM_CARDS));
     }
 
