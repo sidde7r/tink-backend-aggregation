@@ -41,7 +41,6 @@
             "className": "nxgen.de.banks.fidor.FidorAgent",
             "passwordHelpText": "Use the same password as you would in Fidors website",
             "transactional": true,
-            "payload": "de_DE",
             "fields": [
                 {
                     "description": "Username",
