@@ -104,7 +104,7 @@ public class IngCardReaderAuthenticator {
         this.apiClient.trustBuilderLogin(
                 authUrl,
                 ingId,
-                this.persistentStorage.get(IngConstants.Storage.VIRTUAL_CARDNUMBER),
+                this.ingHelper.getCardNumber(),
                 otp,
                 this.cryptoInitValues.getDeviceId(),
                 this.persistentStorage.get(IngConstants.Storage.PSN));
@@ -114,7 +114,7 @@ public class IngCardReaderAuthenticator {
         LoginResponseEntity loginResponseEntity = this.apiClient.login(
                 loginUrl,
                 ingId,
-                this.persistentStorage.get(IngConstants.Storage.VIRTUAL_CARDNUMBER),
+                this.ingHelper.getCardNumber(),
                 this.cryptoInitValues.getDeviceId());
 
         if (!IngConstants.ReturnCodes.OK.equalsIgnoreCase(loginResponseEntity.getReturnCode())) {
@@ -146,7 +146,7 @@ public class IngCardReaderAuthenticator {
 
         this.persistentStorage.put(IngConstants.Storage.ING_ID, ingId);
         this.persistentStorage.put(IngConstants.Storage.DEVICE_ID, cryptoInitValues.getDeviceId());
-        this.persistentStorage.put(IngConstants.Storage.VIRTUAL_CARDNUMBER, virtualCardNumber);
+        this.ingHelper.setCardNumber(virtualCardNumber);
         this.persistentStorage.put(IngConstants.Storage.PSN, psn);
         this.persistentStorage.put(IngConstants.Storage.OTP_KEY_HEX, EncodingUtils.encodeHexAsString(otpKey));
         this.persistentStorage.put(IngConstants.Storage.SYSTEM_PIN, systemPin);

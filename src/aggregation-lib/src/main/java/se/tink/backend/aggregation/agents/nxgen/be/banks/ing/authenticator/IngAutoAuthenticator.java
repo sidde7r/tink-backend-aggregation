@@ -35,7 +35,7 @@ public class IngAutoAuthenticator implements AutoAuthenticator {
         this.apiClient.trustBuilderLogin(
                 authUrl,
                 this.persistentStorage.get(IngConstants.Storage.ING_ID),
-                this.persistentStorage.get(IngConstants.Storage.VIRTUAL_CARDNUMBER),
+                this.ingHelper.getCardNumber(),
                 otp,
                 this.persistentStorage.get(IngConstants.Storage.DEVICE_ID),
                 this.persistentStorage.get(IngConstants.Storage.PSN));
@@ -45,7 +45,7 @@ public class IngAutoAuthenticator implements AutoAuthenticator {
         LoginResponseEntity loginResponseEntity = this.apiClient.login(
                 loginUrl,
                 this.persistentStorage.get(IngConstants.Storage.ING_ID),
-                this.persistentStorage.get(IngConstants.Storage.VIRTUAL_CARDNUMBER),
+                this.ingHelper.getCardNumber(),
                 this.persistentStorage.get(IngConstants.Storage.DEVICE_ID));
 
         this.ingHelper.persist(loginResponseEntity);
