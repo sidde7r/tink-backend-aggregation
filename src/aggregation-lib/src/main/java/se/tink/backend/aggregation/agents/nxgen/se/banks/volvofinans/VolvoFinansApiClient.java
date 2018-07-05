@@ -29,12 +29,7 @@ public class VolvoFinansApiClient {
                 .request(url)
                 .accept(MediaType.WILDCARD)
                 .acceptLanguage(Locale.US)
-                .header(VolvoFinansConstants.Headers.HEADER_HOST, VolvoFinansConstants.Headers.VALUE_HOST)
-                .header(VolvoFinansConstants.Headers.HEADER_X_API_KEY, VolvoFinansConstants.Headers.VALUE_X_API_KEY)
-                .header(VolvoFinansConstants.Headers.HEADER_USER_AGENT, VolvoFinansConstants.Headers.VALUE_USER_AGENT)
-                .header(VolvoFinansConstants.Headers.HEADER_CONNECTION, VolvoFinansConstants.Headers.VALUE_CONNECTION)
-                .header(VolvoFinansConstants.Headers.HEADER_ACCEPT_ENCODING,
-                        VolvoFinansConstants.Headers.VALUE_ACCEPT_ENCODING);
+                .header(VolvoFinansConstants.Headers.HEADER_X_API_KEY, VolvoFinansConstants.Headers.VALUE_X_API_KEY);
 
         if (sessionStorage.containsKey(VolvoFinansConstants.Headers.HEADER_BEARER_TOKEN)) {
             String bearerToken = sessionStorage.get(VolvoFinansConstants.Headers.HEADER_BEARER_TOKEN);

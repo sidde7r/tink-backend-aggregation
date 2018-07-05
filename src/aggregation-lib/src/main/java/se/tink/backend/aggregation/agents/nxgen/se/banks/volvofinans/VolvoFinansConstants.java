@@ -34,16 +34,8 @@ public class VolvoFinansConstants {
 
     public static final class Headers {
         // Request headers
-        public static final String HEADER_HOST = "Host";
-        public static final String VALUE_HOST = "api.volvofinans.se";
         public static final String HEADER_X_API_KEY = "X-API-KEY";
         public static final String VALUE_X_API_KEY = "Clgrvs8obSzvqsQZHy8fPn8GiwjFfMkt";
-        public static final String HEADER_USER_AGENT = "User-Agent";
-        public static final String VALUE_USER_AGENT = "vfb/3 CFNetwork/811.4.18 Darwin/16.5.0";
-        public static final String HEADER_ACCEPT_ENCODING = "Accept-Encoding";
-        public static final String VALUE_ACCEPT_ENCODING = "gzip, deflate";
-        public static final String HEADER_CONNECTION = "Connection";
-        public static final String VALUE_CONNECTION = "keep-alive";
         public static final String HEADER_BEARER_TOKEN = "Authorization";
         public static final String VALUE_BEARER_TOKEN_PREFIX = "Bearer ";
 
