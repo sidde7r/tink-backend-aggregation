@@ -9,8 +9,12 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.FidorApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.FidorConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
@@ -22,6 +26,7 @@ public class FidorPasswordAutenticator implements PasswordAuthenticator {
 
     private FidorApiClient client;
     private static final File phantomJsFile;
+    Logger logger = LoggerFactory.getLogger(FidorApiClient.class);
 
     public FidorPasswordAutenticator(FidorApiClient client){
         this.client = client;
@@ -60,7 +65,8 @@ public class FidorPasswordAutenticator implements PasswordAuthenticator {
         return new PhantomJSDriver(capabilities);
     }
 
-    private String getCode(WebDriver driver, String clientId, String state, String redirectUrl, String username, String password){
+    private String getCode(WebDriver driver, String clientId, String state, String redirectUrl, String username, String password)
+            throws LoginException {
         String url = new URL(FidorConstants.URL.OPENAPI.SANDBOX_BASE + FidorConstants.URL.OPENAPI.OAUTH_AUTHORIZE)
                 .queryParam(FidorConstants.QUERYPARAMS.CLIENT_ID, clientId)
                 .queryParam(FidorConstants.QUERYPARAMS.REDRIECT_URI, redirectUrl)
@@ -70,12 +76,25 @@ public class FidorPasswordAutenticator implements PasswordAuthenticator {
 
         driver.navigate().to(url);
 
-        WebElement emailField = driver.findElement(By.id(FidorConstants.FORM.EMAIL_ID));
+        WebElement emailField = null;
+        WebElement passwordField = null;
+        WebElement submitButton = null;
+        try{
+            emailField = driver.findElement(By.id(FidorConstants.FORM.EMAIL_ID));
+            passwordField = driver.findElement(By.id(FidorConstants.FORM.PASSWORD_ID));
+            submitButton = driver.findElement(By.name(FidorConstants.FORM.SUBMIT_NAME));
+        }
+        catch (org.openqa.selenium.NoSuchElementException e){
+            logger.error("Selenium could not find element %s", e);
+        }
+
         emailField.sendKeys(username);
-        WebElement passwordField = driver.findElement(By.id(FidorConstants.FORM.PASSWORD_ID));
         passwordField.sendKeys(password);
-        WebElement submitButton = driver.findElement(By.name(FidorConstants.FORM.SUBMIT_NAME));
         submitButton.click();
+
+        if(driver.getPageSource().contains(FidorConstants.ERROR.INVALID_CREDENTIALS)){
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
 
         driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
 

@@ -28,6 +28,10 @@ public class FidorConstants {
         public static final String OAUTH_TOKEN = "OAUTH_TOKEN";
     }
 
+    public class ERROR {
+        public static final String INVALID_CREDENTIALS = "Wrong User or Password";
+    }
+
     public class BODY {
 
         public class OPENAPI {
