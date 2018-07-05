@@ -15,6 +15,7 @@ public class RevolutConstants {
         public static final URL USER_CURRENT = new URL(HOST + "/user/current");
         public static final URL WALLET = new URL(HOST + "/user/current/wallet");
         public static final URL TOPUP_ACCOUNTS = new URL(HOST + "/topup/accounts");
+        public static final URL TRANSACTIONS = new URL(HOST + "/user/current/transactions/last");
     }
 
     public static final class Storage {
@@ -31,6 +32,12 @@ public class RevolutConstants {
         public static final String AUTHORIZATION_HEADER = "Authorization";
         public static final String DEVICE_ID_HEADER = "X-Device-Id";
         public static final String BASIC = "Basic ";
+    }
+
+    public static final class Params {
+        public static final String PHONES = "phones";
+        public static final String COUNT = "count";
+        public static final String TO = "to";
     }
 
     public enum AppAuthenticationValues {
@@ -64,5 +71,9 @@ public class RevolutConstants {
     public static final class Pockets {
         public static final String CURRENT_ACCOUNT = "CURRENT";
         public static final String SAVINGS_ACCOUNT = "SAVINGS";
+    }
+
+    public static class Pagination {
+        public static final int COUNT = 120;
     }
 }

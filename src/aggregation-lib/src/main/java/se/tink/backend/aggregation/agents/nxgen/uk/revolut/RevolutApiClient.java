@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.uk.revolut.authenticator.rpc.Sig
 import se.tink.backend.aggregation.agents.nxgen.uk.revolut.authenticator.rpc.UserExistResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.revolut.entities.WalletEntity;
 import se.tink.backend.aggregation.agents.nxgen.uk.revolut.fetcher.transactionalaccount.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.uk.revolut.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -32,7 +33,7 @@ public class RevolutApiClient {
 
     public UserExistResponse userExists(String username) {
         return getAppAuthorizedRequest(RevolutConstants.Urls.USER_EXIST)
-                .queryParam("phones", username).get(UserExistResponse.class);
+                .queryParam(RevolutConstants.Params.PHONES, username).get(UserExistResponse.class);
     }
 
     public void signIn(String username) {
@@ -69,6 +70,14 @@ public class RevolutApiClient {
     public AccountsResponse fetchAccounts() {
         return getUserAuthorizedRequest(RevolutConstants.Urls.TOPUP_ACCOUNTS)
                 .get(AccountsResponse.class);
+
+}
+
+    public TransactionsResponse fetchTransactions(int count, String toDateMillis) {
+        return getUserAuthorizedRequest(RevolutConstants.Urls.TRANSACTIONS)
+                .queryParam(RevolutConstants.Params.COUNT, Integer.toString(count))
+                .queryParam(RevolutConstants.Params.TO, toDateMillis)
+                .get(TransactionsResponse.class);
     }
 
     private RequestBuilder getAppAuthorizedRequest(URL url) {
