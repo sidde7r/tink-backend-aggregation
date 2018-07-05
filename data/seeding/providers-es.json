@@ -26,6 +26,7 @@
                     "name":"password",
                     "description":"Access Code",
                     "masked":true,
+                    "sensitive":true,
                     "numeric":true
                 }
             ]
@@ -54,6 +55,7 @@
                     "name":"password",
                     "description":"Password",
                     "masked":true,
+                    "sensitive":true,
                     "numeric":true,
                     "minLength":6,
                     "maxLength":6,
@@ -87,6 +89,7 @@
                     "name":"password",
                     "description":"Password",
                     "masked":true,
+                    "sensitive":true,
                     "minLength":4,
                     "maxLength":6
                 }
@@ -116,6 +119,7 @@
                     "name":"password",
                     "description":"Password",
                     "masked":true,
+                    "sensitive":true,
                     "minLength":1
                 }
             ]
