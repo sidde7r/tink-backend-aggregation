@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fidor;
 
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
+
 public class FidorConstants {
 
     public static final String BEARER_TOKEN = "Bearer ";
@@ -66,6 +68,10 @@ public class FidorConstants {
         public class OPENAPI {
             public static final String APPLICATION_JSON_FIDOR_V1 = "application/vnd.fidor.de; version=1,text/json";
         }
+    }
+
+    public static class LOGGING {
+        public static final LogTag AUTHENTICATION_ERROR = LogTag.from("FIDOR_AUTHENTICATION_ERROR");
     }
 
 }
