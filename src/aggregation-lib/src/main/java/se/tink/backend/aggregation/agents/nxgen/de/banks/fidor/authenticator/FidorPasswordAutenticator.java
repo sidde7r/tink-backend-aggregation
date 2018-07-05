@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.authenticator;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -19,7 +20,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.FidorApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.FidorConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
-import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class FidorPasswordAutenticator implements PasswordAuthenticator {
@@ -91,8 +91,8 @@ public class FidorPasswordAutenticator implements PasswordAuthenticator {
         emailField.sendKeys(username);
         passwordField.sendKeys(password);
         submitButton.click();
-
-        if(driver.getPageSource().contains(FidorConstants.ERROR.INVALID_CREDENTIALS)){
+        
+        if(StringUtils.containsIgnoreCase(driver.getPageSource(), FidorConstants.ERROR.INVALID_CREDENTIALS)){
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
