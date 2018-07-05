@@ -91,6 +91,34 @@
                     "maxLength":6
                 }
             ]
+        },
+        {
+            "name":"es-lacaixa-password",
+            "displayName":"LaCaixa",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"nxgen.es.banks.lacaixa.LaCaixaAgent",
+            "passwordHelpText":null,
+            "transactional":true,
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"User id",
+                    "immutable":true,
+                    "helpText":"Your username (DNI/NIE ID number)"
+                },
+                {
+                    "name":"password",
+                    "description":"Password",
+                    "masked":true,
+                    "minLength":1
+                }
+            ]
         }
     ]
 }
