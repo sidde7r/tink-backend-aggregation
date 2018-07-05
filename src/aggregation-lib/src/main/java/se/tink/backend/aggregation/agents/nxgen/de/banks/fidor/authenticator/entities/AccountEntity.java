@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.authenticator.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.n26.N26Constants;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.FidorConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.rpc.AccountTypes;
@@ -88,7 +88,7 @@ public class AccountEntity {
     }
 
     public Amount getTinkBalance(){
-        return new Amount(N26Constants.CURRENCY_EUR, availableBalance);
+        return new Amount(FidorConstants.CURRENCY_EUR, availableBalance);
     }
 
     public TransactionalAccount toTransactionalAccount(){

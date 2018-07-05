@@ -6,6 +6,7 @@ public class FidorConstants {
 
     public static final String BEARER_TOKEN = "Bearer ";
     public static final String BASIC = "Basic ";
+    public static final String CURRENCY_EUR = "EUR";
 
     public static final String SANBOX_CLIENT_ID = "4c7b5996af0ee5db";
     public static final String SANDBOX_BASE64_BASIC_AUTH = "NGM3YjU5OTZhZjBlZTVkYjo2ZTU4MWM0NDBjZjk5ZjE3NjI1YTJlYzZiYzQwNGE4MA=="; //client_id:client_secret
