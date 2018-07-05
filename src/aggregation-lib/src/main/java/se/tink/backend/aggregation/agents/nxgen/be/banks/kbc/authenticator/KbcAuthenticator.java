@@ -229,9 +229,11 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
     }
 
     private Field createDescriptionField(String helpText, String challenge) {
+        String formattedChallenge = getChallengeFormattedWithSpace(challenge);
         Field field = new Field();
         field.setMasked(false);
-        field.setDescription(getChallengeFormattedWithSpace(challenge));
+        field.setDescription(formattedChallenge);
+        field.setValue(formattedChallenge);
         field.setName("description");
         field.setHelpText(catalog.getString(helpText));
         field.setImmutable(true);
