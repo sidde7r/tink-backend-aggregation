@@ -164,6 +164,7 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
         Field field = new Field();
         field.setMasked(false);
         field.setDescription(challenge);
+        field.setValue(challenge);
         field.setName("description");
         field.setHelpText(catalog.getString(helpText));
         field.setImmutable(true);
