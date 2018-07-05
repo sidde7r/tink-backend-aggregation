@@ -1,46 +1,28 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.n26;
 
-import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.NextGenerationBaseAgentTest;
-import se.tink.backend.aggregation.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.CredentialsStatus;
+import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
+import se.tink.backend.aggregation.rpc.Field;
 
-public class N26AgentTest extends NextGenerationBaseAgentTest<N26Agent> {
+@Ignore
+public class N26AgentTest {
 
     public static final String USERNAME = "";
     public static final String PASSWORD = "";
 
-    private Credentials credentials;
-
-    public N26AgentTest(){
-        super(N26Agent.class);
-    }
-
-    @Override
-    public String getCurrency() {
-        return N26Constants.CURRENCY_EUR;
-    }
-
-    @Before
-    public void setup(){
-        credentials = new Credentials();
-        credentials.setStatus(CredentialsStatus.CREATED);
-        credentials.setUsername(USERNAME);
-    }
-
     @Test
-    public void testPasswordLogin() throws Exception{
-        credentials.setPassword(PASSWORD);
-        testLogin(credentials);
+    public void refresh() throws Exception {
+        new AgentIntegrationTest.Builder("de", "de-n26-password")
+                .setCredentialType(CredentialsTypes.PASSWORD)
+                .addCredentialField(Field.Key.USERNAME, USERNAME)
+                .addCredentialField(Field.Key.PASSWORD, PASSWORD)
+                .loadCredentialsBefore(false)
+                .saveCredentialsAfter(false)
+                .build()
+                .testRefresh();
+
     }
 
-    @Test
-    public void testRefresh() throws Exception {
-        credentials.setPassword(PASSWORD);
-        credentials.setType(CredentialsTypes.PASSWORD);
-
-        testRefresh(credentials);
-    }
 }

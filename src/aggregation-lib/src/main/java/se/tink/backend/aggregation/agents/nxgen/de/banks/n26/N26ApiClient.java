@@ -31,6 +31,10 @@ public class N26ApiClient {
         this.storage = storage;
     }
 
+    public boolean tokenExists(){
+        return storage.containsKey(N26Constants.Storage.TOKEN_ENTITY);
+    }
+
     private TokenEntity getToken(){
         TokenEntity token = storage.get(N26Constants.Storage.TOKEN_ENTITY, TokenEntity.class)
                 .orElseThrow(() -> new NoSuchElementException("Token missing"));
