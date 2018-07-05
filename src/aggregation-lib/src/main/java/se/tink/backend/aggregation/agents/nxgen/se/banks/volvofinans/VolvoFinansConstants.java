@@ -63,5 +63,10 @@ public class VolvoFinansConstants {
     public static class Pagination {
         public static int LIMIT = 100;
     }
+
+    public static class LogTags {
+        public static final String SAVINGS_ACCOUNTS = "#se_VolvoFinans_savings_accounts";
+        public static final String SAVINGS_ACCOUNT_TRANSACTIONS = "#se_VolvoFinans_savings_account_transactions";
+    }
 }
 

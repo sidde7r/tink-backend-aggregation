@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.VolvoFinansApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.VolvoFinansConstants;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
@@ -26,7 +27,7 @@ public class VolvoFinansTransactionalAccountFetcher implements AccountFetcher<Tr
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        log.info(apiClient.savingsAccounts());
+        log.infoExtraLong(apiClient.savingsAccounts(), LogTag.from(VolvoFinansConstants.LogTags.SAVINGS_ACCOUNTS));
         return new ArrayList<>();
     }
 
@@ -40,7 +41,8 @@ public class VolvoFinansTransactionalAccountFetcher implements AccountFetcher<Tr
         LocalDate localFromDate = max(localToDate.minusDays(localToDate.getDayOfMonth()-1), localStartDate);
 
         int offset = 0;
-        log.info(apiClient.savingsAccountTransactions(accountId, localFromDate, localToDate, limit, offset));
+        log.infoExtraLong(apiClient.savingsAccountTransactions(accountId, localFromDate, localToDate, limit, offset),
+                LogTag.from(VolvoFinansConstants.LogTags.SAVINGS_ACCOUNT_TRANSACTIONS));
         return new ArrayList<>();
     }
 }
