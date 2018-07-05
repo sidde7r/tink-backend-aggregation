@@ -34,12 +34,12 @@ public class FidorApiClient{
     }
 
     private RequestBuilder getRequest(String baseUrl, String resource, String authorization, String contentType){
-                return getRequest(baseUrl, resource, authorization)
+        return getRequest(baseUrl, resource, authorization)
                 .header(HttpHeaders.CONTENT_TYPE, contentType);
     }
 
     private RequestBuilder getRequest(String baseUrl, String resource, String authorization, String contentType, String accept){
-        return getRequest(baseUrl, resource, authorization, contentType, accept)
+        return getRequest(baseUrl, resource, authorization, contentType)
                 .header(HttpHeaders.ACCEPT, accept);
     }
 
