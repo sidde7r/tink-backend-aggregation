@@ -1272,7 +1272,7 @@
                 "TRANSFERS",
                 "MORTGAGE_AGGREGATION"
             ],
-            "className": "banks.swedbank.SwedbankAgent",
+            "className": "nxgen.se.banks.swedbank.SwedbankSEAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "Sparbankerna Ung",
@@ -1741,7 +1741,7 @@
                 "TRANSFERS",
                 "MORTGAGE_AGGREGATION"
             ],
-            "className": "banks.swedbank.SwedbankAgent",
+            "className": "nxgen.se.banks.swedbank.SwedbankSEAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "Swedbank Ung",
