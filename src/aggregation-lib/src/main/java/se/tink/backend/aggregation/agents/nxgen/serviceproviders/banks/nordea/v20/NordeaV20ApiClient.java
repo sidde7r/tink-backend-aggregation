@@ -39,7 +39,7 @@ import se.tink.backend.aggregation.rpc.Credentials;
 
 public class NordeaV20ApiClient {
     // magic switch to toggle response logging, for beta
-    private static final boolean LOG_RESPONSE = true;
+    private static final boolean LOG_RESPONSE = false;
     protected final TinkHttpClient client;
     protected final Credentials credentials;
     protected final String marketCode;
