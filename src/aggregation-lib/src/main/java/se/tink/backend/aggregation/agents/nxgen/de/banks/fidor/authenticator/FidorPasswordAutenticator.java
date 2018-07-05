@@ -18,7 +18,6 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.FidorApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.FidorConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
@@ -60,8 +59,6 @@ public class FidorPasswordAutenticator implements PasswordAuthenticator {
                 //"--debug=true",
         };
         capabilities.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, phantomArgs);
-        capabilities.setCapability(PhantomJSDriverService.PHANTOMJS_PAGE_SETTINGS_PREFIX + "userAgent",
-                DanskeBankConstants.Javascript.USER_AGENT);
         return new PhantomJSDriver(capabilities);
     }
 
