@@ -14,7 +14,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class PrepareAuthenticationResponse extends BelfiusResponse {
 
     public void validate() throws AuthenticationException {
-        Widget widget = ScreenUpdateResponse.findWidget(this, BelfiusConstants.Widget.PAN);
+        Widget widget = ScreenUpdateResponse.findWidget(this, BelfiusConstants.Widget.PAN)
+                .orElse(null);
 
         if (widget == null) {
             return;

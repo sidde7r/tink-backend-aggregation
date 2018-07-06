@@ -11,9 +11,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class FetchTransactionsRequest extends BelfiusRequest {
 
-    public static Builder create(String key, Date fromDate, Date toDate) {
-        String from = DateFormatUtils.format(fromDate, "dd/MM/yyyy");
-        String to = DateFormatUtils.format(toDate, "dd/MM/yyyy");
+    public static Builder createInitialRequest(String key) {
         return BelfiusRequest.builder()
                 .setRequests(WidgetEventsRequest.create(WidgetEventInformation.newRepeaterValueChangedWidgetEvent(
                         BelfiusConstants.Widget.PRODUCT_LIST_REPEATER_DETAIL, key)),
@@ -25,10 +23,12 @@ public class FetchTransactionsRequest extends BelfiusRequest {
                                 WidgetEventInformation.newInputValueChangedWidgetEvent(
                                         BelfiusConstants.Widget.HISTORY_TYPE_TRANSACTIONS, "A"),
                                 WidgetEventInformation.newInputValueChangedWidgetEvent(
-                                        BelfiusConstants.Widget.HISTORY_CURRENCY, "EUR"),
-                                WidgetEventInformation.newInputValueChangedWidgetEvent(
-                                        BelfiusConstants.Widget.HISTORY_DATE_FROM, from),
-                                WidgetEventInformation.newInputValueChangedWidgetEvent(
-                                        BelfiusConstants.Widget.HISTORY_DATE_TO, to)));
+                                        BelfiusConstants.Widget.HISTORY_CURRENCY, "EUR")));
+    }
+
+    public static Builder createNextPageRequest() {
+        return BelfiusRequest.builder()
+                .setRequests(WidgetEventsRequest.create(WidgetEventInformation.newButtonClickedWidgetEvent(
+                                BelfiusConstants.Widget.HISTORY_BTN_NEXT)));
     }
 }

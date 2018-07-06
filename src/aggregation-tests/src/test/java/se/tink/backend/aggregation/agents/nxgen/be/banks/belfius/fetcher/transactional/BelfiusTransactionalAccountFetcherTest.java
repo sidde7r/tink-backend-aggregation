@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transac
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.rpc.FetchProductsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -31,10 +32,8 @@ public class BelfiusTransactionalAccountFetcherTest extends BelfiusTest {
         assertNotNull(accounts);
         assertFalse(accounts.isEmpty());
 
-        Date toDate = new Date();
-        Date fromDate = DateUtils.addMonths(toDate, -1);
         accounts.forEach(account -> {
-            Collection<Transaction> transactions = fetcher.getTransactionsFor(account, fromDate, toDate);
+            Collection<AggregationTransaction> transactions = fetcher.fetchTransactionsFor(account);
             assertNotNull(transactions);
             assertFalse(transactions.isEmpty());
         });
