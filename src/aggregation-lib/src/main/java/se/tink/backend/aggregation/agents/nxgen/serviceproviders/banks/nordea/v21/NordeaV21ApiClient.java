@@ -38,6 +38,8 @@ import se.tink.backend.aggregation.nxgen.http.filter.LogResponseFilter;
 import se.tink.backend.aggregation.rpc.Credentials;
 
 public class NordeaV21ApiClient {
+    // magic switch to toggle response logging, for beta
+    private static final boolean LOG_RESPONSE = false;
     protected final TinkHttpClient client;
     protected final Credentials credentials;
     protected final String marketCode;
@@ -110,7 +112,7 @@ public class NordeaV21ApiClient {
     }
 
     protected <T extends NordeaResponse> T request(HttpRequest request, Class<T> responseModel) {
-        return request(request, responseModel, true);
+        return request(request, responseModel, LOG_RESPONSE);
     }
 
     protected <T extends NordeaResponse> T authRequest(HttpRequest request, Class<T> responseModel)

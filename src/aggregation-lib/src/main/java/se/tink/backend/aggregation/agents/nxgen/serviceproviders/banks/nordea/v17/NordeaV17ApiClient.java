@@ -38,6 +38,9 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.Credentials;
 
 public class NordeaV17ApiClient {
+    // magic switch to toggle response logging, for beta
+    private static final boolean LOG_RESPONSE = false;
+
     protected final TinkHttpClient client;
     protected final Credentials credentials;
     protected final String marketCode;
@@ -73,7 +76,7 @@ public class NordeaV17ApiClient {
     }
 
     public TransactionsResponse fetchTransactions(String accountId, String continueKey) {
-        return request(new TransactionsRequest(accountId, continueKey), TransactionsResponse.class, true);
+        return request(new TransactionsRequest(accountId, continueKey), TransactionsResponse.class);
     }
 
     public CreditCardTransactionsResponse fetchCreditCardTransactions(String cardNumber, String invoicePeriod) {
@@ -82,15 +85,15 @@ public class NordeaV17ApiClient {
 
     public CreditCardTransactionsResponse fetchCreditCardTransactions(String cardNumber, String invoicePeriod, String continueKey) {
         return request(new CreditCardTransactionsRequest(cardNumber, invoicePeriod, continueKey),
-                CreditCardTransactionsResponse.class, true);
+                CreditCardTransactionsResponse.class);
     }
 
     public LoanDetailsResponse fetchLoanDetails(String accountId) {
-        return request(new LoanDetailsRequest(accountId), LoanDetailsResponse.class, true);
+        return request(new LoanDetailsRequest(accountId), LoanDetailsResponse.class);
     }
 
     public CardBalancesResponse fetchCardDetails(String accountId) {
-        return request(new CardBalancesRequest(accountId), CardBalancesResponse.class, true);
+        return request(new CardBalancesRequest(accountId), CardBalancesResponse.class);
     }
 
     public LightLoginResponse passwordLogin(String username, String password) throws AuthenticationException,
@@ -114,7 +117,7 @@ public class NordeaV17ApiClient {
     }
 
     protected <T extends NordeaResponse> T request(HttpRequest request, Class<T> responseModel) {
-        return request(request, responseModel, false);
+        return request(request, responseModel, LOG_RESPONSE);
     }
 
     protected <T extends NordeaResponse> T authRequest(HttpRequest request, Class<T> responseModel)
@@ -168,7 +171,7 @@ public class NordeaV17ApiClient {
     }
 
     public List<CustodyAccount> fetchCustodyAccounts() {
-        CustodyAccountsResponse response = request(new CustodyAccountsRequest(), CustodyAccountsResponse.class, true);
+        CustodyAccountsResponse response = request(new CustodyAccountsRequest(), CustodyAccountsResponse.class);
         return response.getCustodyAccounts();
     }
 }
