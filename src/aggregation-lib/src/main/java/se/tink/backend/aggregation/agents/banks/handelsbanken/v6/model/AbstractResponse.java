@@ -2,8 +2,11 @@ package se.tink.backend.aggregation.agents.banks.handelsbanken.v6.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.api.client.util.Strings;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +14,8 @@ import java.util.Optional;
 public class AbstractResponse {
     protected String code;
     protected String desc;
+    @JsonProperty("_links")
+    protected HashMap<String, LinkEntity> linksMap;
     protected List<LinkEntity> links;
     protected String message;
     private List<ResponseError> errors;
@@ -25,8 +30,20 @@ public class AbstractResponse {
         return desc;
     }
 
+    public HashMap<String, LinkEntity> getLinksMap() {
+        return linksMap != null ? linksMap : Maps.newHashMap();
+    }
+
+    public void setLinksMap(HashMap<String, LinkEntity> linksMap) {
+        this.linksMap = linksMap;
+    }
+
     public List<LinkEntity> getLinks() {
-        return links != null ? links : Lists.<LinkEntity>newArrayList();
+        return links != null ? links : Lists.newArrayList();
+    }
+
+    public void setLinks(List<LinkEntity> links) {
+        this.links = links;
     }
 
     public String getMessage() {
@@ -39,10 +56,6 @@ public class AbstractResponse {
 
     public void setDesc(String desc) {
         this.desc = desc;
-    }
-
-    public void setLinks(List<LinkEntity> links) {
-        this.links = links;
     }
 
     public void setMessage(String message) {

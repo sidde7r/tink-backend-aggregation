@@ -104,6 +104,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.general.GeneralUtils;
 import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuilder;
+import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.log.ClientFilterFactory;
 import se.tink.backend.aggregation.rpc.Account;
@@ -117,7 +118,6 @@ import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
-import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.enums.FeatureFlags;
 import se.tink.backend.core.enums.TransferType;
@@ -215,6 +215,10 @@ public class HandelsbankenV6Agent extends AbstractAgent
         return SHBUtils.findLinkEntity(links, rel).orElse(null);
     }
 
+    private static LinkEntity findLinkEntity(Map<String, LinkEntity> links, final String rel) {
+        return SHBUtils.findLinkEntity(links, rel).orElse(null);
+    }
+
     /*
         [2017-01-11] jrenold:
             An attempt to support the new endpoints. The data returned from the new endpoints are, at this date,
@@ -228,7 +232,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
             3. Log when the old endpoints are removed from the SHB backend.
             4. All "REL_*" key names are now monitored in the AppStoreMonitor.
      */
-    private LinkEntity findLinkEntityNewApi(List<LinkEntity> links, final String relOld, final String relNew) {
+    private LinkEntity findLinkEntityNewApi(Map<String,LinkEntity> links, final String relOld, final String relNew) {
 
         if (request.getUser().getFlags().contains(FeatureFlags.TEMP_SHB_NEW_API)) {
             // Always use the new endpoint for feature flagged users
@@ -457,7 +461,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
 
         // Wait for authentication is successful.
 
-        LinkEntity authenticateLink = findLinkEntity(initResponse.getLinks(), "authenticate");
+        LinkEntity authenticateLink = findLinkEntity(initResponse.getLinksMap(), "authenticate");
 
         AuthenticateBankIdResponse authenticateResponse = null;
         String authenticateResult = null;
@@ -513,7 +517,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
 
         // Execute the authorization request.
 
-        LinkEntity authorizeLink = findLinkEntity(authenticateResponse.getLinks(), "authorize");
+        LinkEntity authorizeLink = findLinkEntity(authenticateResponse.getLinksMap(), "authorize");
 
         ClientResponse authorizeClientResponse = createClientRequest(authorizeLink.getHref()).type(
                 MediaType.APPLICATION_JSON).post(ClientResponse.class, new AbstractRequest());
@@ -534,7 +538,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
             }
         }
 
-        LinkEntity sessionLink = findLinkEntity(authorizeResponse.getLinks(), "application-entry-point");
+        LinkEntity sessionLink = findLinkEntity(authorizeResponse.getLinksMap(), "application-entry-point");
 
         String sessionLinkHref = sessionLink.getHref();
 
@@ -584,7 +588,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
                     return true;
                 }
 
-                int linksSize = response.getLinks() != null ? response.getLinks().size() : 0;
+                int linksSize = response.getLinksMap() != null ? response.getLinksMap().size() : 0;
 
                 errorMessage = MoreObjects.toStringHelper(response)
                         .add("authToken", response.getAuthToken())
@@ -679,7 +683,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
         // Find payment to update at bank.
 
         Optional<List<TransactionListResponse>> upcomingTransactionsResponse = fetchPendingTransactions(entrypointsResponse
-                .getLinks());
+                .getLinksMap());
 
         if (!upcomingTransactionsResponse.isPresent()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
@@ -739,7 +743,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
                     .build();
         }
 
-        LinkEntity einvoicesLink = findLinkEntity(entrypointsResponse.getLinks(), REL_PENDING_EINVOICES);
+        LinkEntity einvoicesLink = findLinkEntity(entrypointsResponse.getLinksMap(), REL_PENDING_EINVOICES);
         ClientResponse response = createClientRequest(einvoicesLink.getHref()).get(ClientResponse.class);
 
         if (response.getStatus() != HttpStatus.SC_OK) {
@@ -948,7 +952,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
     private void pay(Transfer transfer, PaymentContextResponse contextResponse, AccountEntity source,
             RecipientAccountEntity destination) throws Exception {
 
-        LinkEntity transferCreateLink = findLinkEntity(contextResponse.getLinks(), REL_TRANSFER_CREATE);
+        LinkEntity transferCreateLink = findLinkEntity(contextResponse.getLinksMap(), REL_TRANSFER_CREATE);
 
         PaymentRequest paymentRequest = PaymentRequest.create(transfer, source, destination);
 
@@ -961,7 +965,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
         TransferMessageFormatter.Messages formattedTransferMessages = transferMessageFormatter
                 .getMessages(transfer, isBetweenUserAccounts);
 
-        LinkEntity transferCreate = findLinkEntity(contextResponse.getLinks(), REL_TRANSFER_CREATE);
+        LinkEntity transferCreate = findLinkEntity(contextResponse.getLinksMap(), REL_TRANSFER_CREATE);
         TransferRequest transferRequest = TransferRequest
                 .create(sourceEntity, destinationEntity, transfer.getAmount(), formattedTransferMessages);
 
@@ -972,7 +976,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
             AccountIdentifier destination)
             throws Exception {
 
-        LinkEntity lookupRecipientLink = findLinkEntity(contextResponse.getLinks(), REL_LOOKUP_RECIPIENT);
+        LinkEntity lookupRecipientLink = findLinkEntity(contextResponse.getLinksMap(), REL_LOOKUP_RECIPIENT);
 
         String recipientUrl = lookupRecipientLink.getHref().replace("{bgPgNumber}",
                 destination.getIdentifier(new DisplayAccountIdentifierFormatter()));
@@ -996,13 +1000,13 @@ public class HandelsbankenV6Agent extends AbstractAgent
         TransferMessageFormatter.Messages formattedTransferMessages =
                 transferMessageFormatter.getMessages(transfer, false);
 
-        LinkEntity validateRecipient = findLinkEntity(contextResponse.getLinks(), REL_TRANSFER_RECIPIENT);
+        LinkEntity validateRecipient = findLinkEntity(contextResponse.getLinksMap(), REL_TRANSFER_RECIPIENT);
         ValidateRecipientRequest recipientRequest = ValidateRecipientRequest.create(transfer.getDestination());
 
         ValidRecipientEntity validRecipientEntity = createClientRequest(validateRecipient.getHref())
                 .type(MediaType.APPLICATION_JSON).post(ValidRecipientEntity.class, recipientRequest);
 
-        LinkEntity transferCreate = findLinkEntity(validRecipientEntity.getLinks(), REL_TRANSFER_CREATE);
+        LinkEntity transferCreate = findLinkEntity(validRecipientEntity.getLinksMap(), REL_TRANSFER_CREATE);
         TransferRequest transferRequest = TransferRequest
                 .create(sourceEntity, validRecipientEntity, transfer.getAmount(), formattedTransferMessages);
 
@@ -1021,7 +1025,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
 
         TransferResponseEntity transferCreateResponse = createResponse.getEntity(TransferResponseEntity.class);
 
-        LinkEntity signLink = findLinkEntity(transferCreateResponse.getLinks(), REL_TRANSFER_SIGN);
+        LinkEntity signLink = findLinkEntity(transferCreateResponse.getLinksMap(), REL_TRANSFER_SIGN);
 
         if (signLink == null) {
             throwTransferError(transferCreateResponse);
@@ -1047,7 +1051,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
 
         AbstractResponse createResponse = response.getEntity(AbstractResponse.class);
 
-        LinkEntity signLink = findLinkEntity(createResponse.getLinks(), REL_TRANSFER_SIGN);
+        LinkEntity signLink = findLinkEntity(createResponse.getLinksMap(), REL_TRANSFER_SIGN);
 
         if (signLink == null) {
             throwTransferError(createResponse);
@@ -1119,7 +1123,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
     }
 
     private void updateTransactionsAndAccounts(final CardEntity cardEntity) throws Exception {
-        LinkEntity cardTransactionLink = findLinkEntity(cardEntity.getLinks(), "card-transactions");
+        LinkEntity cardTransactionLink = findLinkEntity(cardEntity.getLinksMap(), "card-transactions");
 
         CardTransactionListResponse cardTransactionListResponse = apiClient.fetchCardTransactionListResponse(
                 cardTransactionLink);
@@ -1137,7 +1141,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
         context.updateTransactions(account.get(), transactions);
     }
 
-    private Optional<List<TransactionListResponse>> fetchPendingTransactions(List<LinkEntity> links) throws Exception {
+    private Optional<List<TransactionListResponse>> fetchPendingTransactions(Map<String,LinkEntity> links) throws Exception {
         LinkEntity transactionsPendingLink = findLinkEntityNewApi(links, REL_PENDING_PAYMENTS, REL_PENDING_PAYMENTS_V3);
 
         ClientResponse response = createClientRequest(
@@ -1162,7 +1166,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
 
         // Fetch the account and transactions.
 
-        LinkEntity transactionLink = findLinkEntity(accountEntity.getLinks(), "transactions");
+        LinkEntity transactionLink = findLinkEntity(accountEntity.getLinksMap(), "transactions");
 
         TransactionListResponse transactionListResponse = apiClient.fetchTransactionListResponse(transactionLink);
 
@@ -1183,7 +1187,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
                 .toSet();
 
         // Fetch and add the credit-card transactions.
-        LinkEntity cardTransactionListLink = findLinkEntity(accountEntity.getLinks(), "card-transactions");
+        LinkEntity cardTransactionListLink = findLinkEntity(accountEntity.getLinksMap(), "card-transactions");
 
         if (cardTransactionListLink != null) {
             String cardTransactionListUrl = cardTransactionListLink.getHref();
@@ -1338,7 +1342,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
     }
 
     private Optional<PaymentContextResponse> getPaymentAccounts() throws Exception {
-        LinkEntity transferContextLink = findLinkEntity(entrypointsResponse.getLinks(), REL_PAYMENT_CONTEXT);
+        LinkEntity transferContextLink = findLinkEntity(entrypointsResponse.getLinksMap(), REL_PAYMENT_CONTEXT);
         ClientResponse response = createClientRequest(transferContextLink.getHref())
                 .get(ClientResponse.class);
 
@@ -1358,7 +1362,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
     }
 
     private TransferContextResponse getTransferAccounts() throws Exception {
-        LinkEntity transferContextLink = findLinkEntity(entrypointsResponse.getLinks(), REL_BANK_TRANSFER_CONTEXT);
+        LinkEntity transferContextLink = findLinkEntity(entrypointsResponse.getLinksMap(), REL_BANK_TRANSFER_CONTEXT);
         return createClientRequest(transferContextLink.getHref()).get(TransferContextResponse.class);
     }
 
@@ -1383,7 +1387,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
                 MoreObjects.toStringHelper(entrypointsResponse)
                         .add("authToken", entrypointsResponse.getAuthToken())
                         .add("code", entrypointsResponse.getCode())
-                        .add("links", entrypointsResponse.getLinks().size())
+                        .add("links", entrypointsResponse.getLinksMap().size())
                         .add("details", entrypointsResponse.getDetail())
                         .add("message", entrypointsResponse.getMessage())
                         .add("first error message", entrypointsResponse.getFirstErrorMessage().orElse(null))
@@ -1659,7 +1663,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
             return loans;
         }
 
-        LinkEntity loansLink = findLinkEntity(entrypointsResponse.getLinks(), REL_LOANS);
+        LinkEntity loansLink = findLinkEntity(entrypointsResponse.getLinksMap(), REL_LOANS);
 
         LoansResponse loansResponse = createClientRequest(loansLink.getHref()).get(LoansResponse.class);
 
@@ -1695,7 +1699,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
     }
 
     private void updateEinvoices() {
-        LinkEntity einvoicesLink = findLinkEntity(entrypointsResponse.getLinks(), REL_PENDING_EINVOICES);
+        LinkEntity einvoicesLink = findLinkEntity(entrypointsResponse.getLinksMap(), REL_PENDING_EINVOICES);
         ClientResponse response = createClientRequest(einvoicesLink.getHref()).get(ClientResponse.class);
 
         if (response.getStatus() != HttpStatus.SC_OK) {
@@ -1739,7 +1743,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
                     .uniqueIndex(SHBUtils.getEntitiesToStrippedLinkFunction("card-transactions"));
 
             Optional<List<TransactionListResponse>> upcomingTransactionsResponse = fetchPendingTransactions(
-                    entrypointsResponse.getLinks());
+                    entrypointsResponse.getLinksMap());
 
             ImmutableMap<String, TransactionListResponse> upcomingTransactionsByNumber = ImmutableMap.of();
 
@@ -1818,7 +1822,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
     private void updateInvestmentAccounts() {
         // This request will give us information about the aggregated holdings of securities.
         // We can then also use the links we get to fetch more detailed information.
-        LinkEntity holdingsLink = findLinkEntity(entrypointsResponse.getLinks(), REL_SECURITIES_HOLDINGS);
+        LinkEntity holdingsLink = findLinkEntity(entrypointsResponse.getLinksMap(), REL_SECURITIES_HOLDINGS);
 
         // If the user is younger than 18, fetching the holdings summary will fail with a 400.
         // Thus we expect that this can happen, but other error will be passed out of this method.
@@ -1870,7 +1874,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
     }
 
     private void updateFundHoldings(CustodyAccountEntity custodyAccount) {
-        LinkEntity fundHoldingsLink = findLinkEntity(custodyAccount.getLinks(), REL_FUND_HOLDINGS);
+        LinkEntity fundHoldingsLink = findLinkEntity(custodyAccount.getLinksMap(), REL_FUND_HOLDINGS);
         if (fundHoldingsLink == null) {
             return;
         }
@@ -1894,7 +1898,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
     }
 
     private void updateCustodyAccount(CustodyAccountEntity custodyAccount) {
-        LinkEntity custodyAccountLink = findLinkEntity(custodyAccount.getLinks(), REL_CUSTODY_ACCOUNTS);
+        LinkEntity custodyAccountLink = findLinkEntity(custodyAccount.getLinksMap(), REL_CUSTODY_ACCOUNTS);
         if (custodyAccountLink == null) {
             return;
         }
@@ -1943,7 +1947,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
     }
 
     private void updatePensionAccount(CustodyAccountEntity custodyAccount) {
-        LinkEntity pensionDetailsLink = findLinkEntity(custodyAccount.getLinks(), REL_PENSION_DETAILS);
+        LinkEntity pensionDetailsLink = findLinkEntity(custodyAccount.getLinksMap(), REL_PENSION_DETAILS);
         if (pensionDetailsLink == null) {
             return;
         }
@@ -1955,7 +1959,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
 
             portfolio.setInstruments(
                     pensionDetails.getFunds().stream()
-                            .map(fund -> findLinkEntity(fund.getLinks(), REL_FUND_HOLDING_DETAILS))
+                            .map(fund -> findLinkEntity(fund.getLinksMap(), REL_FUND_HOLDING_DETAILS))
                             .filter(java.util.Objects::nonNull)
                             .map(link -> createClientRequest(link.getHref())
                                     .get(FundAccountHoldingDetailResponse.class))
@@ -1971,7 +1975,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
     }
 
     private List<AccountEntity> fetchAccountEntities(EntrypointsResponse entrypointsResponse) throws Exception {
-        LinkEntity accountsLink = findLinkEntity(entrypointsResponse.getLinks(), REL_ACCOUNTS);
+        LinkEntity accountsLink = findLinkEntity(entrypointsResponse.getLinksMap(), REL_ACCOUNTS);
         AccountListResponse accountListResponse = apiClient.fetchAccountListResponse(accountsLink);
 
         return accountListResponse.toAccountEntityList();
@@ -1979,7 +1983,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
 
     private List<CardEntity> fetchCardEntities(EntrypointsResponse entrypointsResponse) throws Exception {
 
-        LinkEntity cardsLink = findLinkEntityNewApi(entrypointsResponse.getLinks(), REL_CARDS, REL_CARDS_V2);
+        LinkEntity cardsLink = findLinkEntityNewApi(entrypointsResponse.getLinksMap(), REL_CARDS, REL_CARDS_V2);
         CardListResponse cardListResponse = apiClient.fetchCardListResponse(cardsLink);
 
         List<AccountEntity> accountEntities = fetchAccountEntities(entrypointsResponse);
@@ -2014,14 +2018,14 @@ public class HandelsbankenV6Agent extends AbstractAgent
     }
 
     private Account constructAccount(AccountEntity accountEntity) throws Exception {
-        LinkEntity transactionLink = findLinkEntity(accountEntity.getLinks(), "transactions");
+        LinkEntity transactionLink = findLinkEntity(accountEntity.getLinksMap(), "transactions");
 
         TransactionListResponse transactionListResponse = apiClient.fetchTransactionListResponse(transactionLink);
 
         final Account account = transactionListResponse.toAccount();
         account.setName(accountEntity.getName());
 
-        Optional<LinkEntity> transactionsLink = SHBUtils.findLinkEntity(accountEntity.getLinks(), "card-transactions");
+        Optional<LinkEntity> transactionsLink = SHBUtils.findLinkEntity(accountEntity.getLinksMap(), "card-transactions");
 
         if (transactionsLink.isPresent()) {
             account.setType(AccountTypes.CREDIT_CARD);
@@ -2035,7 +2039,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
     }
 
     private Optional<Account> constructAccount(CardEntity cardEntity) throws Exception {
-        LinkEntity cardTransactionListUrl = findLinkEntity(cardEntity.getLinks(), "card-transactions");
+        LinkEntity cardTransactionListUrl = findLinkEntity(cardEntity.getLinksMap(), "card-transactions");
 
         CardTransactionListResponse response = apiClient.fetchCardTransactionListResponse(cardTransactionListUrl);
 
