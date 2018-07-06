@@ -1855,8 +1855,7 @@
             "name": "volvofinans-bankid",
             "className": "nxgen.se.banks.volvofinans.VolvoFinansAgent",
             "credentialsType": "MOBILE_BANKID",
-            "currency": "SEK",
-            "displayName": "Volvokortet",
+            "displayName": "Volvofinans Bank",
             "fields": [
                 {
                   "hint": "ÅÅÅÅMMDDNNNN",
@@ -1870,13 +1869,9 @@
                   "patternError": "Vänligen ange ett befintligt personnummer."
                 }
             ],
-            "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID.",
-            "payload": "VOLVO",
+            "passwordHelpText": "För att ansluta din bank behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som i CarPay-appen. ",
             "popular": false,
-            "refreshFrequency": 1,
-            "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
             "type": "BANK"
