@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Nullable;
@@ -342,6 +343,14 @@ public class SHBUtils {
         }
 
         return links.stream().filter(le -> rel.equals(le.getRel())).findFirst();
+    }
+
+    public static Optional<LinkEntity> findLinkEntity(Map<String, LinkEntity> links, final String rel) {
+        if (links == null) {
+            return Optional.empty();
+        }
+
+        return Optional.ofNullable(links.get(rel));
     }
 
     public static SignableOperationStatuses getSignableOperationStatusForErrorCode(String errorCode) {
