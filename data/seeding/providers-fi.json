@@ -215,9 +215,9 @@
       "transactional": "true"
     },
     {
-      "className": "nxgen.fi.banks.nordea.NordeaFiAgent",
-      "credentialsType": "PASSWORD",
-      "displayDescription": "Password",
+      "className": "nxgen.fi.banks.nordea.v30.NordeaFiAgent",
+      "credentialsType": "THIRD_PARTY_APP",
+      "displayDescription": "Nordea Codes App",
       "displayName": "Nordea",
       "fields": [
         {
@@ -225,22 +225,10 @@
           "name": "username",
           "numeric": true,
           "minLength": 1
-        },
-        {
-          "description": "Password",
-          "maxLength": 4,
-          "minLength": 4,
-          "masked": true,
-          "sensitive": true,
-          "name": "password",
-          "pattern": "[0-9]{4}",
-          "patternError": "Please enter a valid password",
-          "numeric": true
         }
       ],
-      "multiFactor": false,
-      "name": "fi-nordea-lightlogin",
-      "passwordHelpText": "Please note that Tink currently only supports the password login method. This method requires a different password than the one used in the code app",
+      "multiFactor": true,
+      "name": "fi-nordea-codeslogin",
       "popular": true,
       "refreshFrequency": 1,
       "refreshFrequencyFactor": 1,

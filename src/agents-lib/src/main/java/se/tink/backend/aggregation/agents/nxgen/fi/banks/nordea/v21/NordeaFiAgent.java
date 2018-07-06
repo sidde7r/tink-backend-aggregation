@@ -1,11 +1,11 @@
-package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea;
+package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v21;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.authenticator.NordeaFiAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.parser.NordeaFiParser;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.parser.NordeaFiTransactionParser;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.rpc.filter.NordeaFiFilter;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v21.authenticator.NordeaFiAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v21.parser.NordeaFiParser;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v21.parser.NordeaFiTransactionParser;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v21.filter.NordeaFiFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v21.NordeaV21Agent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v21.NordeaV21ApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -33,6 +33,7 @@ public class NordeaFiAgent extends NordeaV21Agent {
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.addFilter(new NordeaFiFilter());
+//        client.setProxy("http://127.0.0.1:8888");
     }
 
     @Override

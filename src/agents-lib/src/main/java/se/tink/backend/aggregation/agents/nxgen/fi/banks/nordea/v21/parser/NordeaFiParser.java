@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.parser;
+package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v21.parser;
 
 import com.google.common.base.Strings;
 import java.util.Collections;
@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.NordeaFiConstants;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v21.NordeaFiConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v21.fetcher.creditcard.entities.CardBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v21.fetcher.entities.ProductEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v21.fetcher.investment.entities.CustodyAccount;
@@ -52,7 +52,6 @@ public class NordeaFiParser extends NordeaV21Parser {
     public LoanAccount parseLoanAccount(ProductEntity productEntity, LoanDetailsResponse loanDetailsResponse) {
         LoanAccount.Builder<?, ?> accountBuilder = LoanAccount.builder(productEntity.getAccountNumber(),
                 new Amount(productEntity.getCurrency(), productEntity.getBalance()))
-                .setAccountNumber(productEntity.getAccountNumber())
                 .setName(getTinkAccountName(productEntity).orElse(productEntity.getAccountNumber()))
                 .setBankIdentifier(productEntity.getNordeaAccountIdV2());
 
@@ -77,7 +76,6 @@ public class NordeaFiParser extends NordeaV21Parser {
     public TransactionalAccount parseAccount(ProductEntity productEntity) {
         return TransactionalAccount.builder(getTinkAccountType(productEntity), productEntity.getAccountNumber(),
                 new Amount(productEntity.getCurrency(), productEntity.getBalance()))
-                .setAccountNumber(productEntity.getAccountNumber())
                 .setName(getTinkAccountName(productEntity).orElse(productEntity.getAccountNumber()))
                 .setBankIdentifier(productEntity.getNordeaAccountIdV2())
                 .build();
@@ -92,8 +90,8 @@ public class NordeaFiParser extends NordeaV21Parser {
     public CreditCardAccount parseCreditCardAccount(ProductEntity productEntity, CardBalanceEntity cardBalance) {
         return CreditCardAccount.builder(cardBalance.getUniqueIdentifier(), cardBalance.getBalance(),
                 cardBalance.getAvailableCredit())
-                .setAccountNumber(cardBalance.getCardNumber())
                 .setName(getTinkAccountName(productEntity).orElse(cardBalance.getCardNumber()))
+                .setAccountNumber(cardBalance.getCardNumber())
                 .setBankIdentifier(productEntity.getNordeaAccountIdV2())
                 .build();
     }
@@ -102,7 +100,6 @@ public class NordeaFiParser extends NordeaV21Parser {
     public InvestmentAccount parseInvestmentAccount(ProductEntity productEntity) {
         return InvestmentAccount.builder(productEntity.getAccountNumber(),
                 new Amount(productEntity.getCurrency(), productEntity.getBalance()))
-                .setAccountNumber(productEntity.getAccountNumber())
                 .setName(getTinkAccountName(productEntity).orElse(productEntity.getAccountNumber()))
                 .setBankIdentifier(productEntity.getNordeaAccountIdV2())
                 .build();
@@ -112,8 +109,8 @@ public class NordeaFiParser extends NordeaV21Parser {
     public InvestmentAccount parseInvestmentAccount(CustodyAccount custodyAccount) {
         return InvestmentAccount.builder(custodyAccount.getAccountId(),
                 new Amount(custodyAccount.getCurrency(), custodyAccount.getMarketValue()))
-                .setAccountNumber(custodyAccount.getAccountNumber())
                 .setName(custodyAccount.getName())
+                .setAccountNumber(custodyAccount.getAccountNumber())
                 .setPortfolios(Collections.singletonList(parsePortfolio(custodyAccount)))
                 .build();
     }
