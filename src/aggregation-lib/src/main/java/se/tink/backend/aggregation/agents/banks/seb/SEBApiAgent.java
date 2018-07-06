@@ -1117,12 +1117,12 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
 
         // if there is a credit on this account
 
-        if ((accountEntity.KREDBEL != null) && (accountEntity.KREDBEL.length() > 0)) {
+        if (!Strings.isNullOrEmpty(accountEntity.KREDBEL)) {
             double credit = parseAmount(accountEntity.KREDBEL);
             account.setBalance(account.getAvailableCredit() - credit);
         }
 
-        if ((accountEntity.KTOBEN_TXT != null) && (accountEntity.KTOBEN_TXT.length() > 0)) {
+        if (!Strings.isNullOrEmpty(accountEntity.KTOBEN_TXT)) {
             account.setName(StringUtils.firstLetterUppercaseFormatting(accountEntity.KTOBEN_TXT));
         } else {
             account.setName(StringUtils.firstLetterUppercaseFormatting(accountEntity.KTOSLAG_TXT));
