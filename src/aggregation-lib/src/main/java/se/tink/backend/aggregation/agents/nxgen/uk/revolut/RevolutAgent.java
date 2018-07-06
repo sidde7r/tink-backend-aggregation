@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.uk.revolut.session.RevolutSessio
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.smsotp.SmsOtpAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.smsotp.SmsOtpAuthenticationPasswordController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
@@ -52,8 +52,8 @@ public class RevolutAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        SmsOtpAuthenticationController smsOtpAuthenticationController =
-                new SmsOtpAuthenticationController<>(catalog, supplementalInformationController,
+        SmsOtpAuthenticationPasswordController smsOtpAuthenticationController =
+                new SmsOtpAuthenticationPasswordController<>(catalog, supplementalInformationController,
                         new RevolutMultifactorAuthenticator(apiClient, persistentStorage), 6);
 
         return new AutoAuthenticationController(request, context, smsOtpAuthenticationController,

@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.uk.revolut;
 
 import com.google.api.client.http.HttpStatusCodes;
 import com.google.common.base.Preconditions;
+import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.uk.revolut.authenticator.rpc.ConfirmSignInRequest;
 import se.tink.backend.aggregation.agents.nxgen.uk.revolut.authenticator.rpc.ConfirmSignInResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.revolut.authenticator.rpc.ResendCodeRequest;
@@ -36,10 +37,10 @@ public class RevolutApiClient {
                 .queryParam(RevolutConstants.Params.PHONES, username).get(UserExistResponse.class);
     }
 
-    public void signIn(String username) {
-        SignInRequest request = SignInRequest.build(username);
+    public void signIn(String username, String password) {
+        SignInRequest request = SignInRequest.build(username, password);
 
-        HttpResponse response = getAppAuthorizedRequest(RevolutConstants.Urls.SIGN_IN)
+        HttpResponse response = getAppAuthorizedPostRequest(RevolutConstants.Urls.SIGN_IN)
                 .post(HttpResponse.class, request);
 
         Preconditions.checkState(successfulRequest(response.getStatus()), "Init of sign in failed");
@@ -49,7 +50,7 @@ public class RevolutApiClient {
         ResendCodeRequest request = new ResendCodeRequest();
         request.setPhone(username);
 
-        HttpResponse response = getAppAuthorizedRequest(RevolutConstants.Urls.RESEND_CODE_VIA_CALL)
+        HttpResponse response = getAppAuthorizedPostRequest(RevolutConstants.Urls.RESEND_CODE_VIA_CALL)
                 .post(HttpResponse.class, request);
 
         Preconditions.checkState(successfulRequest(response.getStatus()), "Resend of code failed");
@@ -58,7 +59,7 @@ public class RevolutApiClient {
     public ConfirmSignInResponse confirmSignIn(String phoneNumber, String verificationCode) {
         ConfirmSignInRequest request = ConfirmSignInRequest.build(phoneNumber, verificationCode);
 
-        return getAppAuthorizedRequest(RevolutConstants.Urls.CONFIRM_SIGN_IN)
+        return getAppAuthorizedPostRequest(RevolutConstants.Urls.CONFIRM_SIGN_IN)
                 .post(ConfirmSignInResponse.class, request);
     }
 
@@ -90,6 +91,10 @@ public class RevolutApiClient {
                         RevolutConstants.Headers.BASIC + authStringB64)
                 .header(RevolutConstants.Headers.DEVICE_ID_HEADER,
                         persistentStorage.get(RevolutConstants.Storage.DEVICE_ID));
+    }
+
+    private RequestBuilder getAppAuthorizedPostRequest(URL url) {
+        return getAppAuthorizedRequest(url).type(MediaType.APPLICATION_JSON_TYPE);
     }
 
     private RequestBuilder getUserAuthorizedRequest(URL url) {

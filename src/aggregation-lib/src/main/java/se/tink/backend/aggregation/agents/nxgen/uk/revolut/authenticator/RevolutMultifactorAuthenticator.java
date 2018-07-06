@@ -11,10 +11,10 @@ import se.tink.backend.aggregation.agents.nxgen.uk.revolut.RevolutApiClient;
 import se.tink.backend.aggregation.agents.nxgen.uk.revolut.RevolutConstants;
 import se.tink.backend.aggregation.agents.nxgen.uk.revolut.authenticator.rpc.ConfirmSignInResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.revolut.authenticator.rpc.UserExistResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.smsotp.SmsOtpAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.smsotp.SmsOtpAuthenticatorPassword;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-public class RevolutMultifactorAuthenticator implements SmsOtpAuthenticator<String> {
+public class RevolutMultifactorAuthenticator implements SmsOtpAuthenticatorPassword<String> {
     private final RevolutApiClient apiClient;
     private final PersistentStorage persistentStorage;
 
@@ -24,7 +24,7 @@ public class RevolutMultifactorAuthenticator implements SmsOtpAuthenticator<Stri
     }
 
     @Override
-    public String init(String username) throws AuthenticationException, AuthorizationException {
+    public String init(String username, String password) throws AuthenticationException, AuthorizationException {
         String deviceId = UUID.randomUUID().toString().toUpperCase();
         persistentStorage.put(RevolutConstants.Storage.DEVICE_ID, deviceId);
 
@@ -35,7 +35,7 @@ public class RevolutMultifactorAuthenticator implements SmsOtpAuthenticator<Stri
         }
 
         // This request will trigger a verification code being sent to the user's phone via text
-        apiClient.signIn(username);
+        apiClient.signIn(username, password);
 
         // ------------------------------------------------------------------------------------------
         // Resending the code via a phonecall after 30 seconds for testing purposes as the text doesn't reach

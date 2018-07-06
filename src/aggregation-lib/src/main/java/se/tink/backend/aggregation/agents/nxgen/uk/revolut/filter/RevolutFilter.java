@@ -26,6 +26,11 @@ public class RevolutFilter extends Filter {
                     RevolutConstants.AppAuthenticationValues.MODEL.getValue());
         }
 
+        if (httpRequest.getHeaders().getFirst(RevolutConstants.AppAuthenticationValues.USER_AGENT.getKey()) == null) {
+            httpRequest.getHeaders().add(RevolutConstants.AppAuthenticationValues.USER_AGENT.getKey(),
+                    RevolutConstants.AppAuthenticationValues.USER_AGENT.getValue());
+        }
+
         return nextFilter(httpRequest);
     }
 }

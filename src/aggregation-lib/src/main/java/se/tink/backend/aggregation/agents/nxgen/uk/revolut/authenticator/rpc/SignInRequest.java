@@ -8,10 +8,10 @@ public class SignInRequest {
     private String phone;
     private String password;
 
-    public static SignInRequest build(String phoneNumber) {
+    public static SignInRequest build(String phoneNumber, String passcode) {
         return new SignInRequest()
                 .setPhone(phoneNumber)
-                .setPassword(generateRandomPassword());
+                .setPassword(passcode);
     }
 
     public SignInRequest setPhone(String phone) {
@@ -22,10 +22,5 @@ public class SignInRequest {
     public SignInRequest setPassword(String password) {
         this.password = password;
         return this;
-    }
-
-    private static String generateRandomPassword() {
-        SecureRandom rand = new SecureRandom();
-        return Integer.toString(rand.nextInt(10000));
     }
 }
