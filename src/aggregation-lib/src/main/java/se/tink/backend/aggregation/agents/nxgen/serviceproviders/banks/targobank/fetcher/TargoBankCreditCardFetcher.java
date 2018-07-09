@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class TargoBankCreditCardFetcher implements AccountFetcher<CreditCardAccount> {
     private static final Logger LOGGER = LoggerFactory.getLogger(TargoBankCreditCardFetcher.class);
@@ -41,10 +41,10 @@ public class TargoBankCreditCardFetcher implements AccountFetcher<CreditCardAcco
         return details
                 .getAccountDetailsList()
                 .stream()
-//                .filter(a -> a.getTinkTypeByTypeNumber().getTinkType().equals(AccountTypes.CREDIT_CARD))
+                //.filter(a -> a.getTinkTypeByTypeNumber().getTinkType().equals(AccountTypes.CREDIT_CARD))
                 .filter(a -> a.getTinkTypeByTypeNumber().equals(AccountTypeEnum.UNKNOWN))
                 .flatMap(a -> {
-                    AGGREGATION_LOGGER.infoExtraLong(a.toString(), creditCardLogTag);
+                    AGGREGATION_LOGGER.infoExtraLong(SerializationUtils.serializeToString(a), creditCardLogTag);
                     // TODO: We do not have account with credit card data
                     return Stream.<CreditCardAccount>empty();
                 })
