@@ -29,7 +29,7 @@ public class TargoBankAgent extends NextGenerationAgent {
     protected TargoBankAgent(CredentialsRequest request,
             AgentContext context, TargoBankConfiguration config) {
         super(request, context);
-        this.apiClient = new TargoBankApiClient(this.client, config);
+        this.apiClient = new TargoBankApiClient(this.client, sessionStorage, config);
     }
 
     @Override

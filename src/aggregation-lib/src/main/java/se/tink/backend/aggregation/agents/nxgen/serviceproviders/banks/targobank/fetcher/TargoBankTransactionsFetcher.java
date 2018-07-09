@@ -1,16 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.targobank.fetcher;
 
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
-import org.apache.http.client.utils.URIBuilder;
 import org.assertj.core.util.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.targobank.TargoBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.targobank.TargoBankConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.targobank.utils.TargoBankUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.targobank.fetcher.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.targobank.fetcher.rpc.TransactionSummaryResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.targobank.utils.TargoBankUtils;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;

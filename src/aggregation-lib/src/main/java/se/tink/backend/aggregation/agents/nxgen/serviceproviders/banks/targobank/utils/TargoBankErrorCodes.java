@@ -1,7 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.targobank.utils;
 
 import java.util.Arrays;
-import se.tink.backend.aggregation.log.AggregationLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public enum TargoBankErrorCodes {
     SUCCESS("0000"),
@@ -10,7 +11,7 @@ public enum TargoBankErrorCodes {
     TECHNICAL_PROBLEM("9000"),
     NO_ENUM_VALUE("");
 
-    private static final AggregationLogger LOGGER = new AggregationLogger(TargoBankErrorCodes.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TargoBankErrorCodes.class);
     private final String codeNumber;
 
     TargoBankErrorCodes(String s) {

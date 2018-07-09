@@ -33,7 +33,7 @@ public class TargoBankAccountFetcher implements AccountFetcher<TransactionalAcco
     public Collection<TransactionalAccount> fetchAccounts() {
         AccountSummaryResponse details = this.sessionStorage
                 .get(TargoBankConstants.Tags.ACCOUNT_LIST, AccountSummaryResponse.class)
-                .orElse(requestAccounts());
+                .orElse(this.apiClient.requestAccounts());
         return details
                 .getAccountDetailsList()
                 .stream()

@@ -37,7 +37,8 @@ public class TargoBankCreditCardFetcher implements AccountFetcher<CreditCardAcco
     public Collection<CreditCardAccount> fetchAccounts() {
         AccountSummaryResponse details = this.sessionStorage
                 .get(TargoBankConstants.Tags.ACCOUNT_LIST, AccountSummaryResponse.class)
-                .orElse(requestAccounts());
+                .orElse(apiClient.requestAccounts());
+
         AGGREGATION_LOGGER.infoExtraLong(details.toString(), creditCardLogTag);
         return details
                 .getAccountDetailsList()
@@ -48,33 +49,5 @@ public class TargoBankCreditCardFetcher implements AccountFetcher<CreditCardAcco
                     return Stream.<CreditCardAccount>empty();
                 })
                 .collect(Collectors.toList());
-    }
-
-    private AccountSummaryResponse requestAccounts() {
-        String body = buildAccountSummaryRequest();
-        AccountSummaryResponse details = apiClient.getAccounts(body);
-        this.sessionStorage.put(TargoBankConstants.Tags.ACCOUNT_LIST, details);
-        return details;
-    }
-
-    private String buildAccountSummaryRequest() {
-        URIBuilder uriBuilder = new URIBuilder();
-        try {
-            return uriBuilder
-                    .addParameter(
-                            TargoBankConstants.RequestBodyValues.WS_VERSION,
-                            "2")
-                    .addParameter(
-                            TargoBankConstants.RequestBodyValues.CATEGORIZE,
-                            TargoBankConstants.RequestBodyValues.CATEGORIZE_VALUE)
-                    .addParameter(
-                            TargoBankConstants.RequestBodyValues.MEDIA,
-                            TargoBankConstants.RequestBodyValues.MEDIA_VALUE)
-                    .build()
-                    .getQuery();
-        } catch (URISyntaxException e) {
-            LOGGER.error("Error building login body request\n", e);
-            throw new RuntimeException(e);
-        }
     }
 }
