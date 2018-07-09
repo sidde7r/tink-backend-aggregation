@@ -44,37 +44,13 @@ public class TargoBankAccountFetcher implements AccountFetcher<TransactionalAcco
                             .getAccountBuilder();
                     return accountBuilder
                             .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, a.getIban()))
-                            .setName(a.getIntX()).setAccountNumber(a.getAccountNumber().toLowerCase())
-                            .addToTemporaryStorage(TargoBankConstants.Tags.WEB_ID, a.getWebId()).build();
+                            .setUniqueIdentifier(a.getIban().toLowerCase())
+                            .setName(a.getIntX())
+                            .setAccountNumber(a.getAccountNumber().toLowerCase())
+                            .addToTemporaryStorage(TargoBankConstants.Tags.WEB_ID, a.getWebId())
+                            .build();
                 })
                 .collect(Collectors.toList());
     }
 
-    private AccountSummaryResponse requestAccounts() {
-        String body = buildAccountSummaryRequest();
-        AccountSummaryResponse details = apiClient.getAccounts(body);
-        this.sessionStorage.put(TargoBankConstants.Tags.ACCOUNT_LIST, details);
-        return details;
-    }
-
-    private String buildAccountSummaryRequest() {
-        URIBuilder uriBuilder = new URIBuilder();
-        try {
-            return uriBuilder
-                    .addParameter(
-                            TargoBankConstants.RequestBodyValues.WS_VERSION,
-                            "2")
-                    .addParameter(
-                            TargoBankConstants.RequestBodyValues.CATEGORIZE,
-                            TargoBankConstants.RequestBodyValues.CATEGORIZE_VALUE)
-                    .addParameter(
-                            TargoBankConstants.RequestBodyValues.MEDIA,
-                            TargoBankConstants.RequestBodyValues.MEDIA_VALUE)
-                    .build()
-                    .getQuery();
-        } catch (URISyntaxException e) {
-            LOGGER.error("Error building login body request\n", e);
-            throw new RuntimeException(e);
-        }
-    }
 }
