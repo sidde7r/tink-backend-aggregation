@@ -52,8 +52,8 @@ public class TargoBankApiClient {
                     .addParameter(TargoBankConstants.RequestBodyValues.PASSWORD, password)
                     .addParameter(TargoBankConstants.RequestBodyValues.APP_VERSION,
                             TargoBankConstants.RequestBodyValues.APP_VERSION_VALUE)
-                    .addParameter(TargoBankConstants.RequestBodyValues.CIBLE,
-                            TargoBankConstants.RequestBodyValues.CIBLE_VALUE)
+                    .addParameter(TargoBankConstants.RequestBodyValues.TARGET,
+                            TargoBankConstants.RequestBodyValues.TARGET_VALUE)
                     .addParameter(TargoBankConstants.RequestBodyValues.WS_VERSION,
                             "2")
                     .addParameter(TargoBankConstants.RequestBodyValues.MEDIA,

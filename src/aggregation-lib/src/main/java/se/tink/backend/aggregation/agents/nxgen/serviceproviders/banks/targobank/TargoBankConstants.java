@@ -40,8 +40,8 @@ public class TargoBankConstants {
         public static final String PASSWORD = "_cm_pwd";
         public static final String APP_VERSION = "appversion";
         public static final String APP_VERSION_VALUE = "4.31.0";
-        public static final String CIBLE = "_cible";
-        public static final String CIBLE_VALUE = "TARGO";
+        public static final String TARGET = "_cible";
+        public static final String TARGET_VALUE = "TARGO";
         public static final String WS_VERSION = "_wsversion";
         public static final String MEDIA = "_media";
         public static final String MEDIA_VALUE = "AN";
