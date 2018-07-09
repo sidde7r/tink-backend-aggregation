@@ -4,6 +4,30 @@
     "providers":
     [
         {
+            "name":"es-banco-santander-password",
+            "displayName":"Banco Santander",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"nxgen.es.banks.santander.SantanderEsAgent",
+            "transactional":true,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"NIE/NIF",
+                    "immutable":true
+                },
+                {
+                    "name":"password",
+                    "description":"Clave de acceso",
+                    "masked":true,
+                    "numeric":true
+                }
+            ]
+        },
+        {
             "name":"es-banco-de-sabadell-password",
             "displayName":"Banco de Sabadell",
             "popular":true,
