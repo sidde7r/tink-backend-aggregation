@@ -1695,6 +1695,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
 
                 context.updateAccount(account, AccountFeatures.createForLoan(loan));
             } catch (Exception e) {
+                log.error("Exception caught when updating loans", e);
                 throw new IllegalStateException(e);
             }
         });
