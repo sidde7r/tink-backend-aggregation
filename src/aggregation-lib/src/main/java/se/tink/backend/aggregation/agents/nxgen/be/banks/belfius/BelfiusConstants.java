@@ -123,6 +123,8 @@ public class BelfiusConstants {
         public static final String HISTORY_DATE_FROM = "Container@reuse_History@inp_datefrom";
         public static final String HISTORY_DATE_TO = "Container@reuse_History@inp_dateto";
         public static final String HISTORY_HIST = "Container@reuse_History@rep_hist";
+        public static final String HISTORY_HAS_NEXT = "Container@reuse_History@lb_hasNext";
+        public static final String HISTORY_BTN_NEXT = "Container@reuse_History@btn_Next";
 
         // Payments
         public static final String TRANSFER_INIT = "Container@b_Transfer";

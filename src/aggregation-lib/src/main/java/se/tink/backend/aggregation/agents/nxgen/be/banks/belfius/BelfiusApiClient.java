@@ -149,12 +149,14 @@ public class BelfiusApiClient {
                 FetchProductsRequest.create());
     }
 
-    public FetchTransactionsResponse fetchTransactions(String key, Date fromDate, Date toDate) {
-        client.setDebugOutput(true);
+    public FetchTransactionsResponse fetchTransactions(String key, boolean initialRequest) {
+        BelfiusRequest.Builder requestBuilder = initialRequest ? FetchTransactionsRequest.createInitialRequest(key)
+                : FetchTransactionsRequest.createNextPageRequest();
+
         FetchTransactionsResponse transactionsResponse = post(BelfiusConstants.Url.GEPA_RENDERING_URL,
                 FetchTransactionsResponse.class,
-                FetchTransactionsRequest.create(key, fromDate, toDate));
-        client.setDebugOutput(false);
+                requestBuilder);
+
         return transactionsResponse;
     }
 
