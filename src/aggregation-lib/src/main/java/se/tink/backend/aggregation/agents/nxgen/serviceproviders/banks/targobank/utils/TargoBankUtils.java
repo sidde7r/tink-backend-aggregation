@@ -12,6 +12,8 @@ public class TargoBankUtils {
     // Example `input` format: +1.11SEK
     public static final String AMOUNT_REGEX = "^([-+])(\\d+\\.\\d{2})(|\\w{3})$";
 
+    private static final Pattern pattern = Pattern.compile(AMOUNT_REGEX);
+
     public static Amount parseAmount(String input) {
         return parseAmountForInput(input, null);
     }
