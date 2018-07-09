@@ -9,7 +9,6 @@ public class CheckingAccount extends TransactionalAccount {
         super(builder);
     }
 
-//    public static Builder<CheckingAccount, DefaultCheckingAccountBuilder> builder() {
     public static Builder<?, ?> builder() {
         return new DefaultCheckingAccountBuilder();
     }
