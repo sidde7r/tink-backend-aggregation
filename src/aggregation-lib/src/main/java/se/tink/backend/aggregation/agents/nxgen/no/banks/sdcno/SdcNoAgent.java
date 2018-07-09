@@ -31,13 +31,13 @@ public class SdcNoAgent extends SdcAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         if (SdcNoConstants.Authentication.BANKS_WITH_PIN_AUTHENTICATION.contains(agentConfiguration.getBankCode())) {
-            LOG.info("SDC bank using pin authentication");
-
-            SdcPinAuthenticator dkAuthenticator = new SdcPinAuthenticator(bankClient,
-                    sdcSessionStorage, agentConfiguration);
-            return new PasswordAuthenticationController(dkAuthenticator);
+            return constructPinAuthenticator();
+        } else {
+            return constructSmsAuthenticator();
         }
+    }
 
+    private Authenticator constructSmsAuthenticator() {
         LOG.info("SDC bank using SMS authentication");
         SdcAutoAuthenticator noAutoAuthenticator = new SdcAutoAuthenticator(bankClient,
                 sdcSessionStorage, agentConfiguration, credentials, sdcPersistentStorage);
@@ -49,6 +49,14 @@ public class SdcNoAgent extends SdcAgent {
 
         return new AutoAuthenticationController(request, context, smsOtpController,
                 noAutoAuthenticator);
+    }
+
+    private Authenticator constructPinAuthenticator() {
+        LOG.info("SDC bank using pin authentication");
+
+        SdcPinAuthenticator dkAuthenticator = new SdcPinAuthenticator(bankClient,
+                sdcSessionStorage, agentConfiguration);
+        return new PasswordAuthenticationController(dkAuthenticator);
     }
 
     @Override
