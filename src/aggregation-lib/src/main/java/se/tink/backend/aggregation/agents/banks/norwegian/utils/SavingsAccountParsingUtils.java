@@ -1,27 +1,28 @@
 package se.tink.backend.aggregation.agents.banks.norwegian.utils;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Iterator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Element;
+import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 import se.tink.backend.utils.StringUtils;
 
 public class SavingsAccountParsingUtils {
 
     public static Double parseSavingsAccountBalance(String htmlContent) {
-        Elements tdElements = Jsoup.parse(htmlContent).select(".page").select("td");
-        Iterator<Element> iterator = tdElements.iterator();
-        String balance = null;
-        while (iterator.hasNext()) {
-            Element tdElement = iterator.next();
-            if (tdElement.text().toLowerCase().contains("belopp")) {
-                balance = iterator.next().text();
-                break;
-            }
+        Elements elements = Jsoup.parse(htmlContent).select("div.grid-u-1-2");
+
+        if (elements.size() == 0) {
+            return 0D;
         }
+
+        List<TextNode> textNodes = elements.get(1).textNodes();
+
+        if (textNodes.size() == 0) {
+            return 0D;
+        }
+
+        String balance = textNodes.get(0).text();
 
         // Means that the account has been created recently
         if (balance == null || balance.isEmpty() || balance.equalsIgnoreCase("Inte tillgänglig")) {
@@ -32,15 +33,13 @@ public class SavingsAccountParsingUtils {
     }
 
     public static Optional<String> parseSavingsAccountNumber(String htmlContent) {
-        Elements elements = Jsoup.parse(htmlContent).select(".page");
+        Elements elements = Jsoup.parse(htmlContent).select("div.card__data--label");
 
-        Pattern pattern = Pattern.compile("Overview\\?accountNumber=(.+?)\"");
-        Matcher matcher = pattern.matcher(elements.html());
-
-        if (!matcher.find()) {
+        // Return Optional.empty if user doesn't have a savings account
+        if (elements.size() == 0) {
             return Optional.empty();
         }
 
-        return Optional.of(matcher.group(1));
+        return Optional.of(elements.get(0).text());
     }
 }
