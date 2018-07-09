@@ -9,27 +9,18 @@ import se.tink.backend.aggregation.nxgen.http.filter.Filter;
 
 public class RevolutFilter extends Filter {
 
+    private void addHeaderIfNotPresent(HttpRequest httpRequest, RevolutConstants.AppAuthenticationValues constant) {
+        if (!httpRequest.getHeaders().containsKey(constant.getKey())) {
+            httpRequest.getHeaders().add(constant.getKey(), constant.getValue());
+        }
+    }
+
     @Override
     public HttpResponse handle(HttpRequest httpRequest) throws HttpClientException, HttpResponseException {
-        if (httpRequest.getHeaders().getFirst(RevolutConstants.AppAuthenticationValues.API_VERSION.getKey()) == null) {
-            httpRequest.getHeaders().add(RevolutConstants.AppAuthenticationValues.API_VERSION.getKey(),
-                    RevolutConstants.AppAuthenticationValues.API_VERSION.getValue());
-        }
-
-        if (httpRequest.getHeaders().getFirst(RevolutConstants.AppAuthenticationValues.APP_VERSION.getKey()) == null) {
-            httpRequest.getHeaders().add(RevolutConstants.AppAuthenticationValues.APP_VERSION.getKey(),
-                    RevolutConstants.AppAuthenticationValues.APP_VERSION.getValue());
-        }
-
-        if (httpRequest.getHeaders().getFirst(RevolutConstants.AppAuthenticationValues.MODEL.getKey()) == null) {
-            httpRequest.getHeaders().add(RevolutConstants.AppAuthenticationValues.MODEL.getKey(),
-                    RevolutConstants.AppAuthenticationValues.MODEL.getValue());
-        }
-
-        if (httpRequest.getHeaders().getFirst(RevolutConstants.AppAuthenticationValues.USER_AGENT.getKey()) == null) {
-            httpRequest.getHeaders().add(RevolutConstants.AppAuthenticationValues.USER_AGENT.getKey(),
-                    RevolutConstants.AppAuthenticationValues.USER_AGENT.getValue());
-        }
+        addHeaderIfNotPresent(httpRequest, RevolutConstants.AppAuthenticationValues.API_VERSION);
+        addHeaderIfNotPresent(httpRequest, RevolutConstants.AppAuthenticationValues.APP_VERSION);
+        addHeaderIfNotPresent(httpRequest, RevolutConstants.AppAuthenticationValues.MODEL);
+        addHeaderIfNotPresent(httpRequest, RevolutConstants.AppAuthenticationValues.USER_AGENT);
 
         return nextFilter(httpRequest);
     }
