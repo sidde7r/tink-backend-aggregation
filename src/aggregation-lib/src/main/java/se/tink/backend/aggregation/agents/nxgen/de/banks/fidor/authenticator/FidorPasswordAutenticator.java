@@ -82,7 +82,7 @@ public class FidorPasswordAutenticator implements PasswordAuthenticator {
             submitButton = driver.findElement(By.name(FidorConstants.FORM.SUBMIT_NAME));
         }
         catch (org.openqa.selenium.NoSuchElementException e){
-            logger.error("Selenium could not find element: %s %s", e, FidorConstants.LOGGING.AUTHENTICATION_ERROR);
+            logger.error("Selenium could not find element: %s", e, FidorConstants.LOGGING.AUTHENTICATION_ERROR);
         }
 
         emailField.sendKeys(username);
