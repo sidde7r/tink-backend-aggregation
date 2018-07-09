@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.handelsbanken.v6.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.util.List;
 import se.tink.backend.aggregation.agents.banks.handelsbanken.v6.PendingStringTypes;
 import se.tink.backend.aggregation.agents.banks.handelsbanken.v6.utils.SHBUtils;
 import se.tink.backend.system.rpc.Transaction;
@@ -9,10 +8,9 @@ import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.date.DateUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TransactionEntity {
+public class TransactionEntity extends AbstractLinkResponse {
     private AmountEntity amount;
     private String dueDate;
-    private List<LinkEntity> links;
     private RecipientAccountEntity recipient;
 
     public AmountEntity getAmount() {
@@ -64,14 +62,6 @@ public class TransactionEntity {
         }
 
         return transaction;
-    }
-
-    public List<LinkEntity> getLinks() {
-        return links;
-    }
-
-    public void setLinks(List<LinkEntity> links) {
-        this.links = links;
     }
 
     public boolean isAbandonedOrSuspended() {

@@ -4,6 +4,7 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import java.util.HashMap;
 import java.util.List;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.banks.handelsbanken.v6.model.AbstractResponse;
@@ -18,10 +19,13 @@ public class SHBUtilsTest {
 
     static AbstractResponse createResponse(String rel, String url) {
         AbstractResponse r = new AbstractResponse();
+        HashMap<String, LinkEntity> linksMap = new HashMap<>();
         LinkEntity link = new LinkEntity();
         link.setRel(rel);
         link.setHref(url);
         r.setLinks(Lists.newArrayList(link));
+        linksMap.put(rel, link);
+        r.setLinksMap(linksMap);
         return r;
     }
 

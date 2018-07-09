@@ -1,17 +1,16 @@
 package se.tink.backend.aggregation.agents.banks.handelsbanken.v6.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.util.List;
 import se.tink.backend.core.Amount;
-import se.tink.libraries.account.identifiers.SwedishSHBInternalIdentifier;
 import se.tink.backend.core.enums.TransferType;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.core.transfer.TransferPayloadType;
-import se.tink.libraries.date.DateUtils;
 import se.tink.backend.utils.StringUtils;
+import se.tink.libraries.account.identifiers.SwedishSHBInternalIdentifier;
+import se.tink.libraries.date.DateUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PaymentEntity {
+public class PaymentEntity extends AbstractLinkResponse {
     private AccountEntity account;
     private AmountEntity amount;
     private String approvalId;
@@ -19,7 +18,6 @@ public class PaymentEntity {
     private boolean deleteAllowed;
     private String dueDate;
     private String message;
-    private List<LinkEntity> links;
     private RecipientAccountEntity recipient;
     private DetailedPermissions detailedPermissions;
     private PaymentContextResponse context;
@@ -78,14 +76,6 @@ public class PaymentEntity {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public List<LinkEntity> getLinks() {
-        return links;
-    }
-
-    public void setLinks(List<LinkEntity> links) {
-        this.links = links;
     }
 
     public RecipientAccountEntity getRecipient() {

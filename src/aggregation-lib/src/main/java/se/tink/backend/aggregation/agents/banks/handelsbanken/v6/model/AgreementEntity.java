@@ -1,9 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.handelsbanken.v6.model;
 
-import java.util.List;
-
-public class AgreementEntity {
-    private List<LinkEntity> links;
+public class AgreementEntity extends AbstractLinkResponse {
     private String documentUrl;
     private String effDt;
     private String effDtRcv;
@@ -17,14 +14,6 @@ public class AgreementEntity {
     private String typeOfStaticDocId;
     private String hashKey;
     private boolean accepted;
-
-    public List<LinkEntity> getLinks() {
-        return links;
-    }
-
-    public void setLinks(List<LinkEntity> links) {
-        this.links = links;
-    }
 
     public String getDocumentUrl() {
         return documentUrl;

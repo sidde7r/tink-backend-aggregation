@@ -25,16 +25,16 @@ import se.tink.backend.aggregation.agents.banks.handelsbanken.v6.model.PaymentEn
 import se.tink.backend.aggregation.agents.banks.handelsbanken.v6.model.TransactionEntity;
 import se.tink.backend.aggregation.agents.banks.handelsbanken.v6.model.TransactionListResponse;
 import se.tink.backend.aggregation.agents.banks.handelsbanken.v6.model.TransferContextResponse;
-import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.account.AccountIdentifier;
 import se.tink.backend.aggregation.rpc.Credentials;
-import se.tink.backend.system.rpc.Transaction;
-import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.core.transfer.TransferPayloadType;
+import se.tink.backend.system.rpc.Transaction;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
 import se.tink.libraries.date.ThreadSafeDateFormat;
+import se.tink.libraries.i18n.Catalog;
 
 public class SHBUtils {
     private static final DefaultAccountIdentifierFormatter DEFAULT_FORMATTER = new DefaultAccountIdentifierFormatter();
@@ -70,11 +70,11 @@ public class SHBUtils {
             transactionEntity -> transactionEntity != null && !transactionEntity.isAbandonedOrSuspended();
 
     public static final Predicate<AbstractResponse> getEntitiesWithLinkPredicate(final String rel) {
-        return ar -> SHBUtils.findLinkEntity(ar.getLinks(), rel).isPresent();
+        return ar -> SHBUtils.findLinkEntity(ar.getLinksMap(), rel).isPresent();
     }
 
     public static final Function<AbstractResponse, String> getEntitiesToStrippedLinkFunction(final String rel) {
-        return ar -> stripQueryString(findLinkEntity(ar.getLinks(), rel).get().getHref());
+        return ar -> stripQueryString(findLinkEntity(ar.getLinksMap(), rel).get().getHref());
     }
 
     public static Predicate<AbstractResponse> getEntitiesWithLinkPresentInList(final String rel, final List<String> links) {
