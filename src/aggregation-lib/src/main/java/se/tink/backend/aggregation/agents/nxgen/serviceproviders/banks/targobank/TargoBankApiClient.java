@@ -25,7 +25,6 @@ public class TargoBankApiClient {
         URL url = new URL(config.getUrl() + urlString);
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_XML_TYPE, MediaType.TEXT_HTML_TYPE)
-                .header(config.getHost())
                 .header(TargoBankConstants.Headers.CONTENT_TYPE);
     }
 
