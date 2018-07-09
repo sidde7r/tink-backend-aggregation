@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.santander;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.authenticator.SantanderEsAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.CreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.SantanderEsAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.SantanderEsTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.session.SantanderEsSessionHandler;
@@ -52,7 +53,12 @@ public class SantanderEsAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.empty();
+        CreditCardFetcher creditcardFetcher = new CreditCardFetcher(sessionStorage);
+
+        return Optional.of(
+                new CreditCardRefreshController(metricRefreshController, updateController,
+                        creditcardFetcher, creditcardFetcher)
+        );
     }
 
     @Override
