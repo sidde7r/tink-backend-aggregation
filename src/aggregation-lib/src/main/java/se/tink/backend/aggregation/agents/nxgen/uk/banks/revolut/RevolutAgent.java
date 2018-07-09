@@ -28,13 +28,7 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 /**
  * WIP - Things left to implement/fix
  *
- * Update RevolutAgentTest to use the new integration test framework.
- * Verify that authentication flow works.
  * Remove resend of authentication code via phone call as we won't support that (in RevolutMultifactorAuthenticator).
- * Implement the toTinkAccount methods in PocketEntity
- * Implement transaction fetching for transactional accounts. Look at how Revolut fetches transactions the first time
- * during registration. We can use those query parameters to paginate with a key.
- *
  * Traffic logs are can be found on Google drive.
  */
 public class RevolutAgent extends NextGenerationAgent {
