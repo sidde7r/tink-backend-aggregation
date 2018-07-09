@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.demo;
 import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
-import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.credentials.demo.DemoCredentials;
 
@@ -12,7 +11,6 @@ public class NewDemoAgentTest {
 
     private static AgentIntegrationTest.Builder builder() {
         return new AgentIntegrationTest.Builder("se", "demo")
-                .setCredentialType(CredentialsTypes.PASSWORD)
                 .addCredentialField(Field.Key.PASSWORD, "demo")
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false);
