@@ -87,6 +87,10 @@ public abstract class SdcConfiguration {
         return new URL(baseUrl + SdcConstants.Url.CREDIT_CARD_TRANSACTIONS_PATH);
     }
 
+    public String getBankCode() {
+        return bankCode;
+    }
+
     public abstract boolean canRetrieveInvestmentData();
 
 
