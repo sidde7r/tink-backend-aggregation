@@ -20,9 +20,10 @@ public class AccountDetailsEntity {
     private String accountNumber;
     @XmlElement(name = "devise")
     private String currency;
-    private String intc;
+    @XmlElement(name = "intc")
+    private String accountNameAndNumber;
     @XmlElement(name = "int")
-    private String intX;
+    private String accountName;
     private String codprod;
     @XmlElement(name = "category_code")
     private String categoryCode;
@@ -60,12 +61,12 @@ public class AccountDetailsEntity {
         return currency;
     }
 
-    public String getIntc() {
-        return intc;
+    public String getAccountNameAndNumber() {
+        return accountNameAndNumber;
     }
 
-    public String getIntX() {
-        return intX;
+    public String getAccountName() {
+        return accountName;
     }
 
     public String getCodprod() {

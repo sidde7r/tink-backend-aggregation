@@ -45,7 +45,7 @@ public class TargoBankAccountFetcher implements AccountFetcher<TransactionalAcco
                     return accountBuilder
                             .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, a.getIban()))
                             .setUniqueIdentifier(a.getIban().toLowerCase())
-                            .setName(a.getIntX())
+                            .setName(a.getAccountName())
                             .setAccountNumber(a.getAccountNumber().toLowerCase())
                             .addToTemporaryStorage(TargoBankConstants.Tags.WEB_ID, a.getWebId())
                             .build();
