@@ -1,18 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.targobank.authentication;
 
-import java.net.URISyntaxException;
-import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.targobank.TargoBankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.targobank.TargoBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.targobank.authentication.rpc.LoginResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.targobank.utils.TargoBankErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.targobank.utils.TargoBankUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class TargoBankPasswordAuthenticator implements PasswordAuthenticator {
 
@@ -29,29 +27,21 @@ public class TargoBankPasswordAuthenticator implements PasswordAuthenticator {
 
     @Override
     public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
-        LoginResponse logon = apiClient.logon(buildBodyLogonRequest(username, password));
+        LoginResponse logon = apiClient.logon(username, password);
         if (!TargoBankUtils.isSuccess(logon.getReturnCode())) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+            TargoBankErrorCodes errorCode = TargoBankErrorCodes.getByCodeNumber(logon.getReturnCode());
+            switch (errorCode) {
+            case NOT_LOGGED_IN:
+                throw SessionError.SESSION_EXPIRED.exception();
+            case LOGIN_ERROR:
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            case TECHNICAL_PROBLEM:
+                throw new IllegalStateException(TargoBankErrorCodes.TECHNICAL_PROBLEM.getCodeNumber());
+            case NO_ENUM_VALUE:
+                LOGGER.error("Unknown error code:" + logon);
+                throw new UnknownError(TargoBankErrorCodes.NO_ENUM_VALUE + logon.getReturnCode());
+            }
         }
     }
 
-    private String buildBodyLogonRequest(String username, String password) {
-        URIBuilder uriBuilder = new URIBuilder();
-        try {
-            return uriBuilder.addParameter(TargoBankConstants.RequestBodyValues.USER, username)
-                    .addParameter(TargoBankConstants.RequestBodyValues.PASSWORD, password)
-                    .addParameter(TargoBankConstants.RequestBodyValues.APP_VERSION,
-                            TargoBankConstants.RequestBodyValues.APP_VERSION_VALUE)
-                    .addParameter(TargoBankConstants.RequestBodyValues.CIBLE,
-                            TargoBankConstants.RequestBodyValues.CIBLE_VALUE)
-                    .addParameter(TargoBankConstants.RequestBodyValues.WS_VERSION,
-                            "2")
-                    .addParameter(TargoBankConstants.RequestBodyValues.MEDIA,
-                            TargoBankConstants.RequestBodyValues.MEDIA_VALUE)
-                    .build().getQuery();
-        } catch (URISyntaxException e) {
-            LOGGER.error("Error building login body request\n", e);
-            throw new RuntimeException(e);
-        }
-    }
 }

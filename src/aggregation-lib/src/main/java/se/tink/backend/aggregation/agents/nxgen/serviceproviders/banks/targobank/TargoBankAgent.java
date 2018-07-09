@@ -49,7 +49,7 @@ public class TargoBankAgent extends NextGenerationAgent {
                         metricRefreshController,
                         updateController,
                         TargoBankAccountFetcher.create(this.apiClient, this.sessionStorage),
-                        TargoBankTransactionsFetcher.create(this.apiClient, this.sessionStorage)));
+                        TargoBankTransactionsFetcher.create(this.apiClient)));
     }
 
     @Override

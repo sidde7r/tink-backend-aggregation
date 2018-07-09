@@ -18,15 +18,13 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 public class TargoBankTransactionsFetcher implements TransactionFetcher<TransactionalAccount> {
     private static final Logger LOGGER = LoggerFactory.getLogger(TargoBankTransactionsFetcher.class);
     private final TargoBankApiClient apiClient;
-    private final SessionStorage sessionStorage;
 
-    private TargoBankTransactionsFetcher(TargoBankApiClient apiClient, SessionStorage sessionStorage) {
+    private TargoBankTransactionsFetcher(TargoBankApiClient apiClient) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
     }
 
-    public static TargoBankTransactionsFetcher create(TargoBankApiClient apiClient, SessionStorage sessionStorage) {
-        return new TargoBankTransactionsFetcher(apiClient, sessionStorage);
+    public static TargoBankTransactionsFetcher create(TargoBankApiClient apiClient) {
+        return new TargoBankTransactionsFetcher(apiClient);
     }
 
     @Override
@@ -36,41 +34,19 @@ public class TargoBankTransactionsFetcher implements TransactionFetcher<Transact
 
         List<AggregationTransaction> transactions = Lists.newArrayList();
         transactionsForAccount.ifPresent(transactionList ->
-                transactionList.getTransactions()
-                        .stream().map(tr -> tr.toTransaction())
-                        .forEach(t -> transactions.add(t))
+                transactionList.getTransactions().stream()
+                        .map(TransactionEntity::toTransaction)
+                        .forEach(transactions::add)
         );
         return transactions;
     }
 
     private Optional<TransactionSummaryResponse> getTransactionsForAccount(String webId) {
-        String body = buildTransactionSummaryRequest(webId);
-        TransactionSummaryResponse details = apiClient.getTransactions(body);
+        TransactionSummaryResponse details = apiClient.getTransactions(webId);
         if (!TargoBankUtils.isSuccess(details.getReturnCode())) {
             return Optional.empty();
         }
-        this.sessionStorage.put(TargoBankConstants.Tags.ACCOUNT_LIST, details);
         return Optional.of(details);
     }
 
-    private String buildTransactionSummaryRequest(String webId) {
-        URIBuilder uriBuilder = new URIBuilder();
-        try {
-            return uriBuilder
-                    .addParameter(
-                            TargoBankConstants.RequestBodyValues.WEB_ID,
-                            webId)
-                    .addParameter(
-                            TargoBankConstants.RequestBodyValues.WS_VERSION,
-                            "1")
-                    .addParameter(
-                            TargoBankConstants.RequestBodyValues.MEDIA,
-                            TargoBankConstants.RequestBodyValues.MEDIA_VALUE)
-                    .build()
-                    .getQuery();
-        } catch (URISyntaxException e) {
-            LOGGER.error("Error building login body request\n", e);
-            throw new RuntimeException(e);
-        }
-    }
 }
