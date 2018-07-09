@@ -39,6 +39,24 @@ public abstract class Account {
         this.temporaryStorage = ImmutableMap.copyOf(builder.getTemporaryStorage());
     }
 
+    public static Builder<? extends Account, ?> builder(AccountTypes type) {
+        switch (type) {
+        case SAVINGS:
+        case OTHER:
+        case CHECKING:
+            return TransactionalAccount.builder(type);
+        case CREDIT_CARD:
+            return CreditCardAccount.builder();
+        case INVESTMENT:
+            return InvestmentAccount.builder();
+        case LOAN:
+            return LoanAccount.builder();
+        default:
+            throw new IllegalStateException(
+                    String.format("Unknown Account type (%s)", type));
+        }
+    }
+
     public AccountTypes getType() {
         return AccountTypes.CHECKING;
     }
