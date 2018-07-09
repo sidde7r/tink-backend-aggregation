@@ -39,7 +39,7 @@ public class TargoBankInvestmentAccountFetcher implements AccountFetcher<Investm
     public Collection<InvestmentAccount> fetchAccounts() {
         InvestmentAccountsListResponse investmentAccountsListResponse = this.sessionStorage
                 .get(TargoBankConstants.Tags.INVESTMENT_ACCOUNTS, InvestmentAccountsListResponse.class)
-                .orElse(apiClient.requestInvestmentAccounts());
+                .orElseGet(() -> apiClient.requestInvestmentAccounts());
 
         Collection<InvestmentAccount> accountsDetails = Lists.newArrayList();
         AGGREGATION_LOGGER.info(accountsDetails.toString());

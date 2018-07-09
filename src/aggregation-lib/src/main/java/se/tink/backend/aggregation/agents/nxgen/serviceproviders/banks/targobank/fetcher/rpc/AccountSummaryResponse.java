@@ -25,7 +25,7 @@ public class AccountSummaryResponse {
     @XmlElement(name = "category_list")
     private CategoryEntities categoryList;
     @XmlElementWrapper(name = "liste_compte")
-    @XmlElement(name = "liste_compte")
+    @XmlElement(name = "compte")
     private List<AccountDetailsEntity> accountDetailsList;
 
     public CategoryEntities getCategoryList() {

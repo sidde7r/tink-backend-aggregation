@@ -36,14 +36,15 @@ public class TargoBankCreditCardFetcher implements AccountFetcher<CreditCardAcco
     public Collection<CreditCardAccount> fetchAccounts() {
         AccountSummaryResponse details = this.sessionStorage
                 .get(TargoBankConstants.Tags.ACCOUNT_LIST, AccountSummaryResponse.class)
-                .orElse(apiClient.requestAccounts());
+                .orElseGet(() -> apiClient.requestAccounts());
 
-        AGGREGATION_LOGGER.infoExtraLong(details.toString(), creditCardLogTag);
         return details
                 .getAccountDetailsList()
                 .stream()
-                .filter(a -> a.getTinkTypeByTypeNumber().getTinkType().equals(AccountTypes.CREDIT_CARD))
+//                .filter(a -> a.getTinkTypeByTypeNumber().getTinkType().equals(AccountTypes.CREDIT_CARD))
+                .filter(a -> a.getTinkTypeByTypeNumber().equals(AccountTypeEnum.UNKNOWN))
                 .flatMap(a -> {
+                    AGGREGATION_LOGGER.infoExtraLong(a.toString(), creditCardLogTag);
                     // TODO: We do not have account with credit card data
                     return Stream.<CreditCardAccount>empty();
                 })

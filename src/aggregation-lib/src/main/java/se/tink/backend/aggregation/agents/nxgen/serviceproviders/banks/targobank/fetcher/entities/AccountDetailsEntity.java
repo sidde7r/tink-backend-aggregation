@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.targobank.fetcher.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Arrays;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -7,7 +8,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.targobank.utils.TargoBankUtils;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.core.Amount;
 
 @XmlRootElement(name = "compte")
@@ -93,19 +93,18 @@ public class AccountDetailsEntity {
         return webId;
     }
 
-    public TransactionalAccount toTransactionalAccount() {
-        Amount amount = TargoBankUtils.parseAmount(amountToParse, currency);
-        return TransactionalAccount.builder(
-                getTinkTypeByTypeNumber().getTinkType(), accountNumber, amount)
-                .build();
-    }
-
+    // Using it as we store this entity in `SessionStorage`, which  serializes to JSON
+    // because of that mapper searcher for field `accountBuilder` and throws `NullPointerException`
+    @JsonIgnore
     public Account.Builder<? extends Account, ?> getAccountBuilder() {
         Amount amount = TargoBankUtils.parseAmount(amountToParse, currency);
         return Account.builder(getTinkTypeByTypeNumber().getTinkType()).setAccountNumber(accountNumber)
                 .setBalance(amount);
     }
 
+    // Using it as we store this entity in `SessionStorage`, which  serializes to JSON
+    // because of that mapper searcher for field `accountBuilder` and throws `NullPointerException`
+    @JsonIgnore
     public AccountTypeEnum getTinkTypeByTypeNumber() {
         return Arrays.stream(AccountTypeEnum.values())
                 .filter(v -> v.getType().equalsIgnoreCase(accountType))
