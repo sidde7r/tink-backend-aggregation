@@ -6,8 +6,12 @@
       "className": "nxgen.be.banks.bnppf.BnpPfAgent",
       "credentialsType": "PASSWORD",
       "displayName": "BNP Paribas Fortis",
-      "capabilities": [
-        "TRANSFERS"
+      "fields": [
+        {
+          "description": "Access Token",
+          "name": "access-token",
+          "sensitive": true
+        }
       ],
       "multiFactor": true,
       "name": "be-bnppf-jwt",
