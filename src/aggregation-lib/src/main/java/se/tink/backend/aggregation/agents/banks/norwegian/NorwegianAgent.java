@@ -57,18 +57,13 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
     private static final int AUTHENTICATION_BANK_ID_RETRIES = 60;
 
     private static final String BASE_URL = "https://www.banknorwegian.se/";
-    private static final String MY_PAGE = BASE_URL + "Minsida";
     private static final String CREDIT_CARD_URL = BASE_URL + "MinSida/Creditcard/";
-    private static final String CARD_BALANCE_URL = CREDIT_CARD_URL + "Overview";
-    private static final String CARD_DETAILS_URL = CREDIT_CARD_URL + "MyCard/Overview";
     private static final String SAVINGS_ACCOUNTS_URL = BASE_URL + "MinSida/SavingsAccount";
     private static final String CARD_TRANSACTION_URL = CREDIT_CARD_URL + "Transactions";
     private static final String TRANSACTIONS_URL = BASE_URL + "MyPage2/Transaction/GetTransactions?accountNo=%s&year=%d&month=%d";
     private static final String LOGIN_URL = "https://id.banknorwegian.se/std/method/"
             + "banknorwegian.se/?id=sbid-mobil-2014:default:sv&target=https%3a%2f%2fwww.banknorwegian.se%"
             + "2fLogin%2fSignicatCallback%3fipid%3d22%26returnUrl%3d%252FMinSida";
-    private static final String SAVINGS_ACCOUNTS_OVERVIEW_URL = BASE_URL + "MinSida/SavingsAccount/Overview?accountNumber=%s";
-    private static final String LOANS_URL = BASE_URL + "MinSida/Loan/Overview";
 
     private final ApacheHttpClient4 client;
     private boolean hasRefreshed = false;
