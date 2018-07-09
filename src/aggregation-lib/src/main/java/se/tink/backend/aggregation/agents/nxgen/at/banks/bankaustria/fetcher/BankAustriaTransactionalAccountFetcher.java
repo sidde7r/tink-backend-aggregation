@@ -1,0 +1,44 @@
+package se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.fetcher;
+
+import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.BankAustriaApiClient;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.otml.OtmlResponseConverter;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+
+import java.util.Collection;
+import java.util.Date;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+public class BankAustriaTransactionalAccountFetcher implements
+        AccountFetcher<TransactionalAccount>,
+        TransactionDatePaginator<TransactionalAccount> {
+
+    private BankAustriaApiClient apiClient;
+    private OtmlResponseConverter otmlResponseConverter;
+
+    public BankAustriaTransactionalAccountFetcher(BankAustriaApiClient apiClient, OtmlResponseConverter otmlResponseConverter) {
+        this.apiClient = apiClient;
+        this.otmlResponseConverter = otmlResponseConverter;
+    }
+
+    @Override
+    public Collection<TransactionalAccount> fetchAccounts() {
+        return otmlResponseConverter.getAccountsFromSettings(apiClient.getAccountsFromSettings().getDataSources())
+                .stream()
+                .map(account -> otmlResponseConverter
+                        .fillAccountInformation(
+                                apiClient.getAccountInformationFromAccountMovement(
+                                        account.getBankIdentifier()).getDataSources(), account))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+
+    @Override
+    public Collection<? extends Transaction> getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
+        return otmlResponseConverter.getTransactions(apiClient.getTransactionsForDatePeriod(account, fromDate, toDate).getDataSources());
+    }
+}

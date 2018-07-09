@@ -4,14 +4,14 @@
     "providers":
     [
         {
-            "name":"at-bank-austria",
+            "name":"at-bankaustria-password",
             "displayName":"Bank Austria",
             "popular":true,
             "type":"BANK",
             "status":"ENABLED",
             "credentialsType":"PASSWORD",
             "multiFactor":false,
-            "className":"demo.DemoAgent",
+            "className":"nxgen.at.banks.bankaustria.BankAustriaAgent",
             "passwordHelpText":null,
             "transactional":"true",
             "payload":null,
