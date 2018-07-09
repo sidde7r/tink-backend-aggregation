@@ -274,6 +274,8 @@ public class HandelsbankenV6Agent extends AbstractAgent
     private void initClient() {
         client = clientFactory.createCustomClient(context.getLogOutputStream());
         client.setFollowRedirects(true);
+//        client.addFilter(new LoggingFilter(new PrintStream(System.out, true)));
+
         apiClient = new HandelsbankenAPIAgent(client, DEFAULT_USER_AGENT);
     }
 
@@ -297,7 +299,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
 
         // Initialize new profile.
 
-        String pinnedActivationUrl = findLinkEntity(entrypoints.getLinks(), "pinned-activation").getHref();
+        String pinnedActivationUrl = findLinkEntity(entrypoints.getLinksMap(), "pinned-activation").getHref();
 
         InitNewProfileResponse initNewProfileResponse = createClientRequest(pinnedActivationUrl).type(
                 MediaType.APPLICATION_JSON).post(InitNewProfileResponse.class, tfa.createInitNewProfileRequest());
@@ -353,7 +355,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
 
         // Create profile.
 
-        String createProfileUrl = findLinkEntity(initNewProfileResponse.getLinks(), "createProfile").getHref();
+        String createProfileUrl = findLinkEntity(initNewProfileResponse.getLinksMap(), "createProfile").getHref();
 
         CreateProfileResponse createProfileResponse = createClientRequest(createProfileUrl).type(
                 MediaType.APPLICATION_JSON).post(CreateProfileResponse.class, tfa.createCreateProfileRequest(code));
@@ -361,7 +363,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
 
         // Activate profile.
 
-        String activateProfileUrl = findLinkEntity(createProfileResponse.getLinks(), "activateProfile").getHref();
+        String activateProfileUrl = findLinkEntity(createProfileResponse.getLinksMap(), "activateProfile").getHref();
 
         ActivateProfileResponse activateProfileResponse = createClientRequest(activateProfileUrl).type(
                 MediaType.APPLICATION_JSON).post(ActivateProfileResponse.class,
@@ -370,7 +372,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
 
         // Commit profile.
 
-        String commitProfileUrl = findLinkEntity(activateProfileResponse.getLinks(), "commitProfile").getHref();
+        String commitProfileUrl = findLinkEntity(activateProfileResponse.getLinksMap(), "commitProfile").getHref();
 
         CommitProfileResponse commitProfileResponse = createClientRequest(commitProfileUrl).get(
                 CommitProfileResponse.class);
@@ -407,7 +409,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
 
         // Check agreement.
 
-        String checkAgreementUrl = findLinkEntity(commitProfileResponse.getLinks(), "checkAgreement").getHref();
+        String checkAgreementUrl = findLinkEntity(commitProfileResponse.getLinksMap(), "checkAgreement").getHref();
 
         CheckAgreementResponse checkAgreementResponse = createClientRequest(checkAgreementUrl).get(
                 CheckAgreementResponse.class);
@@ -723,7 +725,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
 
         PaymentEntity paymentEntity = updatePaymentDetails(transfer, originalTransfer, payment.get());
 
-        LinkEntity signLink = findLinkEntity(paymentEntity.getLinks(), REL_TRANSFER_SIGN);
+        LinkEntity signLink = findLinkEntity(paymentEntity.getLinksMap(), REL_TRANSFER_SIGN);
 
         if (signLink == null) {
             throwTransferError(context.getCatalog().getString("Payment cannot be signed on bank."));
@@ -777,13 +779,13 @@ public class HandelsbankenV6Agent extends AbstractAgent
 
         if (!Objects.equal(originalTransfer.getHash(), transfer.getHash())) {
 
-            LinkEntity detailsLink = findLinkEntity(paymentEntity.getLinks(), REL_EINVOICE_DETAILS);
+            LinkEntity detailsLink = findLinkEntity(paymentEntity.getLinksMap(), REL_EINVOICE_DETAILS);
             PaymentEntity detailedEInvoice = createClientRequest(detailsLink.getHref()).get(PaymentEntity.class);
 
             paymentEntity = updatePaymentDetails(transfer, originalTransfer, detailedEInvoice);
         }
 
-        signEInvoice(eInvoicesResponse.getLinks(), paymentEntity);
+        signEInvoice(eInvoicesResponse.getLinksMap(), paymentEntity);
     }
 
     private PaymentEntity updatePaymentDetails(Transfer transfer, Transfer originalTransfer, PaymentEntity eInvoice)
@@ -793,7 +795,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
 
         SHBUtils.validateUpdateIsPermitted(catalog, transfer, originalTransfer, eInvoice);
 
-        LinkEntity updateLink = findLinkEntity(eInvoice.getLinks(), REL_UDPATE);
+        LinkEntity updateLink = findLinkEntity(eInvoice.getLinksMap(), REL_UDPATE);
 
         if (updateLink == null) {
             throwTransferError(catalog.getString("Not able to update this e-invoice"));
@@ -824,7 +826,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
     }
 
     private PaymentContextResponse getPaymentContext(PaymentEntity eInvoice, Catalog catalog) {
-        LinkEntity paymentContextLink = findLinkEntity(eInvoice.getLinks(), REL_PAYMENT_CONTEXT);
+        LinkEntity paymentContextLink = findLinkEntity(eInvoice.getLinksMap(), REL_PAYMENT_CONTEXT);
         ClientResponse paymentContextResponse = createClientRequest(paymentContextLink.getHref())
                 .get(ClientResponse.class);
 
@@ -835,7 +837,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
         return paymentContextResponse.getEntity(PaymentContextResponse.class);
     }
 
-    private void signEInvoice(List<LinkEntity> links, PaymentEntity eInvoice)
+    private void signEInvoice(Map<String, LinkEntity> links, PaymentEntity eInvoice)
             throws Exception {
 
         Catalog catalog = context.getCatalog();
@@ -857,7 +859,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
             throwTransferError(approveEInvoicesResponse);
         }
 
-        LinkEntity signLink = findLinkEntity(approveEInvoicesResponse.getLinks(), REL_EINVOICE_SIGNATURE);
+        LinkEntity signLink = findLinkEntity(approveEInvoicesResponse.getLinksMap(), REL_EINVOICE_SIGNATURE);
 
         if (signLink == null) {
             throwTransferError(catalog.getString("Something went wrong when signing e-invoice"));
@@ -1271,7 +1273,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
     }
 
     private Optional<PaymentEntity> fetchPaymentDetails(TransactionEntity transaction) throws Exception {
-        Optional<LinkEntity> detailsLink = SHBUtils.findLinkEntity(transaction.getLinks(), REL_PAYMENT_DETAILS);
+        Optional<LinkEntity> detailsLink = SHBUtils.findLinkEntity(transaction.getLinksMap(), REL_PAYMENT_DETAILS);
         if (detailsLink.isPresent()) {
             ClientResponse response = createClientRequest(detailsLink.get().getHref()).get(ClientResponse.class);
             if (response.getStatus() == HttpStatus.SC_OK) {
@@ -1414,7 +1416,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
 
         // Handshake.
 
-        String pinnedLoginUrl = findLinkEntity(entrypoints.getLinks(), "pinned-login").getHref();
+        String pinnedLoginUrl = findLinkEntity(entrypoints.getLinksMap(), "pinned-login").getHref();
 
         HandshakeResponse handshakeResponse = createClientRequest(pinnedLoginUrl).type(
                 MediaType.APPLICATION_JSON).post(HandshakeResponse.class, tfa.createHandshakeRequest());
@@ -1423,7 +1425,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
 
         // Get server profile.
 
-        String serverProfileUrl = findLinkEntity(handshakeResponse.getLinks(), "getServerProfile").getHref();
+        String serverProfileUrl = findLinkEntity(handshakeResponse.getLinksMap(), "getServerProfile").getHref();
 
         ServerProfileResponse serverProfileResponse = createClientRequest(serverProfileUrl).type(
                 MediaType.APPLICATION_JSON).post(ServerProfileResponse.class,
@@ -1457,7 +1459,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
 
         // Challenge/response.
 
-        String getChallengeUrl = findLinkEntity(serverProfileResponse.getLinks(), "getChallenge").getHref();
+        String getChallengeUrl = findLinkEntity(serverProfileResponse.getLinksMap(), "getChallenge").getHref();
 
         CallengeResponse challengeResponse = createClientRequest(getChallengeUrl).type(
                 MediaType.APPLICATION_JSON).post(CallengeResponse.class, tfa.createChallengeRequest());
@@ -1487,7 +1489,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
 
         // Validate signature.
 
-        String validateSignatureUrl = findLinkEntity(challengeResponse.getLinks(), "validateSignature").getHref();
+        String validateSignatureUrl = findLinkEntity(challengeResponse.getLinksMap(), "validateSignature").getHref();
 
         ValidateSignatureResponse validateSignatureResponse = createClientRequest(validateSignatureUrl).type(
                 MediaType.APPLICATION_JSON).post(ValidateSignatureResponse.class,
@@ -1526,14 +1528,14 @@ public class HandelsbankenV6Agent extends AbstractAgent
 
         // Authorize.
 
-        String authorizeUrl = findLinkEntity(validateSignatureResponse.getLinks(), "authorize").getHref();
+        String authorizeUrl = findLinkEntity(validateSignatureResponse.getLinksMap(), "authorize").getHref();
 
         AuthorizeResponse authorizeResponse = createClientRequest(authorizeUrl)
                 .type(MediaType.APPLICATION_JSON).post(AuthorizeResponse.class, tfa.createAuthorizeRequest());
 
         // Get authorization token.
 
-        String appEntrypointUrl = findLinkEntity(authorizeResponse.getLinks(), "application-entry-point").getHref();
+        String appEntrypointUrl = findLinkEntity(authorizeResponse.getLinksMap(), "application-entry-point").getHref();
 
         // Return the authorization token.
         return createClientRequest(appEntrypointUrl).type(MediaType.APPLICATION_JSON)
@@ -1865,8 +1867,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
                 break;
             default:
                 log.info(String.format("Not yet implemented custody account - type: %s, relative links: %s",
-                                custodyAccountType, custodyAccount.getLinks().stream()
-                                        .map(LinkEntity::getRel)
+                                custodyAccountType, custodyAccount.getLinksMap().keySet().stream()
                                         .distinct()
                                         .collect(Collectors.joining(", "))));
             }

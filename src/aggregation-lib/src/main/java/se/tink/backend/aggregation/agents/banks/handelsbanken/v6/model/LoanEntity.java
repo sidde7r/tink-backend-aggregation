@@ -16,8 +16,7 @@ import se.tink.backend.system.rpc.LoanDetails;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class LoanEntity {
-    private List<LinkEntity> links;
+public class LoanEntity extends AbstractLinkResponse {
     private List<Segment> segments;
     private String lenderId;
     private String lender;
@@ -110,14 +109,6 @@ public class LoanEntity {
         loan.setLoanDetails(loanDetails);
         loan.setSerializedLoanResponse(MAPPER.writeValueAsString(this));
         return loan;
-    }
-
-    public List<LinkEntity> getLinks() {
-        return links;
-    }
-
-    public void setLinks(List<LinkEntity> links) {
-        this.links = links;
     }
 
     public List<Segment> getSegments() {

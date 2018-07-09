@@ -2,21 +2,14 @@ package se.tink.backend.aggregation.agents.banks.handelsbanken.v6.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.api.client.util.Strings;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AbstractResponse {
+public class AbstractResponse extends AbstractLinkResponse {
     protected String code;
     protected String desc;
-    @JsonProperty("_links")
-    protected HashMap<String, LinkEntity> linksMap;
-    protected List<LinkEntity> links;
     protected String message;
     private List<ResponseError> errors;
     private String detail;
@@ -28,22 +21,6 @@ public class AbstractResponse {
 
     public String getDesc() {
         return desc;
-    }
-
-    public HashMap<String, LinkEntity> getLinksMap() {
-        return linksMap != null ? linksMap : Maps.newHashMap();
-    }
-
-    public void setLinksMap(HashMap<String, LinkEntity> linksMap) {
-        this.linksMap = linksMap;
-    }
-
-    public List<LinkEntity> getLinks() {
-        return links != null ? links : Lists.newArrayList();
-    }
-
-    public void setLinks(List<LinkEntity> links) {
-        this.links = links;
     }
 
     public String getMessage() {

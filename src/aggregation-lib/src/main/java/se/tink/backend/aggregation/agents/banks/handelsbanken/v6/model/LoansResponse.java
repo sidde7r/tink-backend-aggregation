@@ -1,13 +1,11 @@
 package se.tink.backend.aggregation.agents.banks.handelsbanken.v6.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class LoansResponse {
+public class LoansResponse extends AbstractLinkResponse {
     private List<LoanEntity> loans;
-    private List<LinkEntity> links;
 
     public List<LoanEntity> getLoans() {
         return loans;
@@ -15,13 +13,5 @@ public class LoansResponse {
 
     public void setLoans(List<LoanEntity> loans) {
         this.loans = loans;
-    }
-
-    public List<LinkEntity> getLinks() {
-        return links;
-    }
-
-    public void setLinks(List<LinkEntity> links) {
-        this.links = links;
     }
 }
