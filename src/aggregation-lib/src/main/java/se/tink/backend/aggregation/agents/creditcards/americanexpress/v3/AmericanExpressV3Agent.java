@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model.T
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
@@ -291,6 +292,10 @@ public class AmericanExpressV3Agent extends AbstractAgent implements DeprecatedR
 
             if (message.toLowerCase().contains("inaktiv längre än 10 minuter")) {
                 throw SessionError.SESSION_EXPIRED.exception();
+            }
+
+            if (message.toLowerCase().contains("fel inträffade tyvärr vid laddning av innehållet")) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
             }
         }
 
