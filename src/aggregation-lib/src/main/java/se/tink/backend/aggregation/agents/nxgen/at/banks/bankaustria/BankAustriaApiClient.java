@@ -19,7 +19,6 @@ public class BankAustriaApiClient {
 
     public BankAustriaApiClient(TinkHttpClient client, BankAustriaSessionStorage sessionStorage) {
         this.client = client;
-        client.setDebugOutput(true);
         this.sessionStorage = sessionStorage;
     }
 
