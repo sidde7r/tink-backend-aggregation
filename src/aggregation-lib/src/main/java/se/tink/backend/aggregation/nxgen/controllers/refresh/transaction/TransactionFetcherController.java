@@ -6,8 +6,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -17,6 +19,9 @@ public class TransactionFetcherController<A extends Account> implements Transact
     private final TransactionPaginator<A> paginator;
     private final UpcomingTransactionFetcher upcomingTransactionFetcher;
     private final TransactionPaginationHelper paginationHelper;
+
+    // TODO: this is temporary just to be able to log credit card transaction fetching for "no-storebrand" = "9680"
+    private static final AggregationLogger log = new AggregationLogger(TransactionDatePaginationController.class);
 
     public TransactionFetcherController(
             TransactionPaginationHelper paginationHelper, TransactionPaginator<A> paginator) {
@@ -36,11 +41,20 @@ public class TransactionFetcherController<A extends Account> implements Transact
     public List<AggregationTransaction> fetchTransactionsFor(A account) {
         Preconditions.checkNotNull(account);
         List<AggregationTransaction> transactions = Lists.newArrayList();
+
         transactions.addAll(fetchUpcomingTransactionsFor(account));
 
+        // TODO: this is temporary just to be able to log credit card transaction fetching for "no-storebrand" = "9680"
+        String bankCode = account.getTemporaryStorage().get("BANK_CODE");
         do {
-            Collection<? extends Transaction> batchTransactions = paginator.fetchTransactionsFor(account);
+            // TODO: this is temporary just to be able to log credit card transaction fetching for "no-storebrand" = "9680"
+            if ("9680".equals(bankCode)) {
+                log.info(String.format("Can fetch more transactions for account with bankIdentifier: %s [%b]",
+                        account.getBankIdentifier(),
+                        paginator.canFetchMoreFor(account)));
+            }
 
+            Collection<? extends Transaction> batchTransactions = paginator.fetchTransactionsFor(account);
             if (batchTransactions != null) {
                 transactions.addAll(batchTransactions);
             }
