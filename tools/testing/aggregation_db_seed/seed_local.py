@@ -173,5 +173,6 @@ currency = providers['currency']
 
 for provider in providers['providers']:
     add_row(db, tablename, provider)
+
 insertLocalDevelopmentCrypto(db)
 insertIntoClusterHostConfiguration(db)
