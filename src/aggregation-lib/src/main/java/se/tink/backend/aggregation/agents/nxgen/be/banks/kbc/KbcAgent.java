@@ -87,7 +87,7 @@ public class KbcAgent extends NextGenerationAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return KbcSessionHandler.create(httpFilter);
+        return KbcSessionHandler.create(httpFilter, apiClient);
     }
 
     @Override

@@ -7,14 +7,15 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
 public class KbcSessionHandler implements SessionHandler {
     private final KbcHttpFilter httpFilter;
+    private final KbcApiClient apiClient;
 
-    private KbcSessionHandler(KbcHttpFilter httpFilter) {
+    private KbcSessionHandler(KbcHttpFilter httpFilter, KbcApiClient apiClient) {
         this.httpFilter = httpFilter;
+        this.apiClient = apiClient;
     }
 
-
-    public static KbcSessionHandler create(KbcHttpFilter httpFilter) {
-        return new KbcSessionHandler(httpFilter);
+    public static KbcSessionHandler create(KbcHttpFilter httpFilter, KbcApiClient apiClient) {
+        return new KbcSessionHandler(httpFilter, apiClient);
     }
 
     @Override
@@ -25,6 +26,10 @@ public class KbcSessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
-        throw SessionError.SESSION_EXPIRED.exception();
+        try {
+            apiClient.fetchAccounts();
+        } catch (Exception e) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
     }
 }
