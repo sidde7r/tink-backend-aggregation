@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinfor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class EuroInformationPasswordAuthenticator implements PasswordAuthenticator {
 
@@ -38,8 +39,7 @@ public class EuroInformationPasswordAuthenticator implements PasswordAuthenticat
             case TECHNICAL_PROBLEM:
                 throw new IllegalStateException(EuroInformationErrorCodes.TECHNICAL_PROBLEM.getCodeNumber());
             case NO_ENUM_VALUE:
-                LOGGER.error("Unknown error code:" + logon);
-                throw new UnknownError(EuroInformationErrorCodes.NO_ENUM_VALUE + logon.getReturnCode());
+                throw new  IllegalArgumentException("Unknown bank value code " + SerializationUtils.serializeToString(logon));
             }
         }
     }
