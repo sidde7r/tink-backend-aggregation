@@ -45,7 +45,7 @@ public class BawagPskTransactionalAccountFetcherTest {
         final AgentContext context = new AgentTestContext(credentials);
 
         Provider provider = new Provider();
-        provider.setPayload("¨ebanking.bawagpsk.com, BAWAG");
+        provider.setPayload("ebanking.bawagpsk.com, BAWAG");
 
         final BawagPskApiClient apiClient = new BawagPskApiClient(new TinkHttpClient(context, credentials), new SessionStorage(), provider);
         authenticator = new BawagPskPasswordAuthenticator(apiClient);
