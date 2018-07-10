@@ -43,7 +43,7 @@ public class TransactionDatePaginationController<A extends Account> implements T
             consecutiveEmptyPages++;
 
             // TODO: this is temporary just to be able to log credit card transaction fetching for "no-storebrand" = "9680"
-            String bankCode = account.getTemporaryStorage().get("BANK_CODE");
+            String bankCode = account.getTemporaryStorage("BANK_CODE", String.class);
             // TODO: this is temporary just to be able to log credit card transaction fetching for "no-storebrand" = "9680"
             if ("9680".equals(bankCode)) {
                 log.info(String.format("Couldn't find any transactions for account with bankIdentifier: %s [%d]",
@@ -65,7 +65,7 @@ public class TransactionDatePaginationController<A extends Account> implements T
     public boolean canFetchMoreFor(A account) {
 
         // TODO: this is temporary just to be able to log credit card transaction fetching for "no-storebrand" = "9680"
-        String bankCode = account.getTemporaryStorage().get("BANK_CODE");
+        String bankCode = account.getTemporaryStorage("BANK_CODE", String.class);
         // TODO: this is temporary just to be able to log credit card transaction fetching for "no-storebrand" = "9680"
         if ("9680".equals(bankCode)) {
             log.info(String.format("canFetchMoreFor: %s [%d] = %b",
@@ -83,7 +83,7 @@ public class TransactionDatePaginationController<A extends Account> implements T
         Preconditions.checkNotNull(account);
 
         // TODO: this is temporary just to be able to log credit card transaction fetching for "no-storebrand" = "9680"
-        String bankCode = account.getTemporaryStorage().get("BANK_CODE");
+        String bankCode = account.getTemporaryStorage("BANK_CODE", String.class);
         // TODO: this is temporary just to be able to log credit card transaction fetching for "no-storebrand" = "9680"
         if ("9680".equals(bankCode)) {
             log.info(String.format("resetStateIfAccountChanged: %s, same account? %b %b",
