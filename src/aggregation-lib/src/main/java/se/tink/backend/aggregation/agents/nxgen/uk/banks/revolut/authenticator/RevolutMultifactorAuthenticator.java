@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.uk.banks.revolut.RevolutConstant
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.revolut.authenticator.rpc.ConfirmSignInResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.revolut.authenticator.rpc.UserExistResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.smsotp.SmsOtpAuthenticatorPassword;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class RevolutMultifactorAuthenticator implements SmsOtpAuthenticatorPassword<String> {
@@ -35,7 +36,11 @@ public class RevolutMultifactorAuthenticator implements SmsOtpAuthenticatorPassw
         }
 
         // This request will trigger a verification code being sent to the user's phone via text
-        apiClient.signIn(username, password);
+        try {
+            apiClient.signIn(username, password);
+        } catch (HttpResponseException e) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
 
         // ------------------------------------------------------------------------------------------
         // Resending the code via a phonecall after 30 seconds for testing purposes as the text doesn't reach
@@ -49,7 +54,14 @@ public class RevolutMultifactorAuthenticator implements SmsOtpAuthenticatorPassw
 
     @Override
     public void authenticate(String otp, String initValues) throws AuthenticationException, AuthorizationException {
-        ConfirmSignInResponse confirmSignInResponse = apiClient.confirmSignIn(initValues, otp);
+
+        ConfirmSignInResponse confirmSignInResponse;
+
+        try {
+            confirmSignInResponse = apiClient.confirmSignIn(initValues, otp);
+        } catch (HttpResponseException e) {
+            throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
+        }
 
         String userId = Preconditions.checkNotNull(confirmSignInResponse.getUser().getId(),
                 "UserId can't be null");
