@@ -42,10 +42,10 @@
                 {
                     "description": "Phone number",
                     "name": "username",
-                    "pattern": "[0-9]+",
+                    "pattern": "\\+?[1-9][0-9]+",
                     "minLength": 5,
-                    "maxLength": 15,
-                    "patternError": "Please enter your phone number."
+                    "maxLength": 16,
+                    "patternError": "Please enter your full phone number in international format, starting with '+' and including country code. Example: +44 NNN NNN NNNN"
                 },
                 {
                     "description": "Passcode",
@@ -58,7 +58,7 @@
                     "patternError": "Please enter your four digit passcode."
                 }
             ],
-            "passwordhelptext": "Use the four digit passcode you set up in your Revolut app.",
+            "passwordhelptext": "Enter your full phone number in international format starting with '+', and the four digit passcode you set up in your Revolut app.",
             "status": "ENABLED",
             "transactional": true,
             "type": "BANK"
