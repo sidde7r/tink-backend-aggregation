@@ -1,7 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.santander;
 
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.authenticator.rpc.AuthenticateCredentialsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.entities.RepositionEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.rpc.FirstPageOfTransactionsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.rpc.TransactionPaginationRequest;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -19,7 +23,7 @@ public class SantanderEsApiClient {
     }
 
     public String authenticateCredentials(String username, String password) {
-        String requestBody = SantanderEsXmlUtils.createAuthenticateCredentialMessage(username, password);
+        String requestBody = AuthenticateCredentialsRequest.create(username, password);
 
         return postSoapMessage(SantanderEsConstants.Urls.SANMOV,
                 SantanderEsConstants.Urls.SANMOV.toString(),
@@ -27,7 +31,7 @@ public class SantanderEsApiClient {
     }
 
     public String login() {
-        String requestBody = SantanderEsXmlUtils.createLoginMessage(tokenCredential);
+        String requestBody = LoginRequest.create(tokenCredential);
 
         return postSoapMessage(SantanderEsConstants.Urls.SCH_BAMOBI,
                 SantanderEsConstants.Urls.SCH_BAMOBI.toString(),
@@ -61,13 +65,12 @@ public class SantanderEsApiClient {
     private String getTransactionsRequestBody(String userDataXmlString, String contractIdXmlString,
             String balanceXmlString, RepositionEntity repositionEntity) {
         if (repositionEntity == null) {
-            return SantanderEsXmlUtils.createFirstPageTransactionsMessage(
+            return FirstPageOfTransactionsRequest.create(
                     tokenCredential, userDataXmlString, contractIdXmlString, balanceXmlString, false);
         }
 
         String repositionXmlString = SantanderEsXmlUtils.parseJsonToXmlString(repositionEntity);
-        return SantanderEsXmlUtils
-                .createTransactionPaginationRequest(tokenCredential, userDataXmlString, contractIdXmlString,
+        return TransactionPaginationRequest.create(tokenCredential, userDataXmlString, contractIdXmlString,
                 balanceXmlString, true, repositionXmlString);
     }
 }
