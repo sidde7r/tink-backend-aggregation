@@ -4,7 +4,7 @@
     "providers":
     [
         {
-            "name":"at-bawag-psk",
+            "name":"at-bawag-password",
             "displayName":"BAWAG P.S.K.",
             "popular":true,
             "type":"BANK",
@@ -14,7 +14,34 @@
             "className":"nxgen.at.banks.bawagpsk.BawagPskAgent",
             "passwordHelpText":null,
             "transactional":"true",
-            "payload":null,
+            "payload":"ebanking.bawagpsk.com, BAWAG",
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"User code",
+                    "immutable":true
+                },
+                {
+                    "name":"password",
+                    "description":"PIN",
+                    "masked":true,
+                    "numeric":true
+                }
+            ]
+        },
+        {
+            "name":"at-easybank-password",
+            "displayName":"Easybank",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"nxgen.at.banks.bawagpsk.BawagPskAgent",
+            "passwordHelpText":null,
+            "transactional":"true",
+            "payload":"ebanking.easybank.at, EASYBANK",
             "tutorialUrl":null,
             "fields":[
                 {

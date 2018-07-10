@@ -7,7 +7,6 @@ public class BawagPskConstants {
     public static class CLIENT {
         // Values sent in LoginRequest messages originating from the app
         public static final String BANK_CODE = "14000";
-        public static final String SHORT_NAME = "BAWAG";
     }
 
     public static class SERVER {
@@ -34,7 +33,6 @@ public class BawagPskConstants {
     }
 
     public static class URLS {
-        public static final String HOST = "ebanking.bawagpsk.com";
         public static final String SERVICE_ENDPOINT = "/ebanking.mobile/SelfServiceMobileService";
         public static final String SOAP_NAMESPACE = "urn:selfservicemobile.bawag.com/ws/v0100-draft03";
     }
@@ -42,6 +40,7 @@ public class BawagPskConstants {
     public static class MESSAGES {
         public static final String STRING_TOO_SHORT = "String too short, minimum is 5";
         public static final String ACCOUNT_LOCKED = "ERR_DISPOSER_DEACTIVATED";
+        public static final String INCORRECT_CREDENTIALS = "ERR_LOGIN";
     }
 
     public enum Storage {

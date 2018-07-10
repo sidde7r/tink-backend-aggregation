@@ -26,7 +26,8 @@ public class BawagPskPasswordAuthenticator implements PasswordAuthenticator {
     @Override
     public void authenticate(final String username, final String password)
             throws AuthenticationException, AuthorizationException {
-        final LoginRequest request = new LoginRequest(username, password);
+        final String bankName = bawagPskApiClient.getBankName();
+        final LoginRequest request = new LoginRequest(username, password, bankName);
         final String requestBody;
         try {
             requestBody = request.getXml();
@@ -38,6 +39,9 @@ public class BawagPskPasswordAuthenticator implements PasswordAuthenticator {
             final LoginResponse response = bawagPskApiClient.login(requestBody);
             if (response.accountIsLocked()) {
                 throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+            }
+            if(response.incorrectCredentials()){
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
             }
         } catch (HttpResponseException e) {
             final Envelope errorResponse = e.getResponse().getBody(Envelope.class);

@@ -31,33 +31,6 @@
             ]
         },
         {
-            "name":"at-bawag-psk",
-            "displayName":"BAWAG P.S.K.",
-            "popular":true,
-            "type":"BANK",
-            "status":"ENABLED",
-            "credentialsType":"PASSWORD",
-            "multiFactor":false,
-            "className":"demo.DemoAgent",
-            "passwordHelpText":null,
-            "transactional":"true",
-            "payload":null,
-            "tutorialUrl":null,
-            "fields":[
-                {
-                    "name":"username",
-                    "description":"User code",
-                    "immutable":true
-                },
-                {
-                    "name":"password",
-                    "description":"PIN",
-                    "masked":true,
-                    "numeric":true
-                }
-            ]
-        },
-        {
             "name":"at-erste-bank-and-sparkasse",
             "displayName":"Erste Bank & Sparkasse",
             "popular":true,

@@ -16,31 +16,42 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.rpc.Provider;
 
 public class BawagPskApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage storage;
+    private final String baseUrl;
+    private final String bankName;
 
     private LoginResponse loginResponse; // Saving it here to be processed by the fetchers later
 
-    public BawagPskApiClient(TinkHttpClient client, SessionStorage storage) {
+    public BawagPskApiClient(TinkHttpClient client, SessionStorage storage, Provider provider) {
         this.client = client;
         this.storage = storage;
+
+        String[] providerStrings = provider.getPayload().split(",");
+        this.baseUrl = providerStrings[0];
+        this.bankName = providerStrings[1].trim();
     }
 
     private RequestBuilder getRequest() {
         return client.request(getUrl())
-                .header(HttpHeaders.HOST, BawagPskConstants.URLS.HOST)
+                .header(HttpHeaders.HOST, this.baseUrl)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_XML_TYPE)
                 .header(HttpHeaders.ACCEPT, BawagPskConstants.Header.ACCEPT)
                 .header(HttpHeaders.USER_AGENT, BawagPskConstants.Header.USER_AGENT)
                 .header(HttpHeaders.ACCEPT_LANGUAGE, BawagPskConstants.Header.ACCEPT_LANGUAGE);
     }
 
-    private static URL getUrl() {
+    private URL getUrl() {
         return new URL(
-                String.format("https://%s%s", BawagPskConstants.URLS.HOST, BawagPskConstants.URLS.SERVICE_ENDPOINT));
+                String.format("https://%s%s", this.baseUrl, BawagPskConstants.URLS.SERVICE_ENDPOINT));
+    }
+
+    public String getBankName(){
+        return this.bankName;
     }
 
     public LoginResponse login(final String requestString) throws HttpResponseException {

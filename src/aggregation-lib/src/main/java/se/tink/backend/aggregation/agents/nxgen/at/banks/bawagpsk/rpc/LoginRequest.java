@@ -15,19 +15,19 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.bawagpsk.entities.Login
 public class LoginRequest {
     private Envelope envelope;
 
-    public LoginRequest(String username, String password) {
+    public LoginRequest(String username, String password, String shortName) {
 
         Body body = new Body();
-        body.setLoginRequestEntity(createRequest(username, password));
+        body.setLoginRequestEntity(createRequest(username, password, shortName));
         envelope = new Envelope();
         envelope.setBody(body);
         envelope.setHeader("");
     }
 
-    private LoginRequestEntity createRequest(final String username, final String password) {
+    private LoginRequestEntity createRequest(final String username, final String password, final String shortName) {
         FinancialInstitute fininst = new FinancialInstitute();
         fininst.setBankCode(BawagPskConstants.CLIENT.BANK_CODE);
-        fininst.setShortName(BawagPskConstants.CLIENT.SHORT_NAME);
+        fininst.setShortName(shortName);
 
         DisposerContext dcontext = new DisposerContext();
 

@@ -28,16 +28,39 @@ public class LoginResponse {
                 .map(LoginResponseEntity::getOk).isPresent();
     }
 
-    public boolean accountIsLocked() {
-        return Optional.ofNullable(envelope.getBody())
+    public boolean incorrectCredentials(){
+        List<String> list = Optional.ofNullable(envelope.getBody())
                 .map(Body::getLoginResponseEntity)
                 .map(LoginResponseEntity::getFailure)
                 .map(Failure::getResponseMessageList).orElse(new ArrayList<>())
                 .stream()
                 .map(ResponseMessage::getCode)
-                .collect(Collectors.toList())
-                .get(0) // TODO assert one and only one element
-                .trim().equalsIgnoreCase(BawagPskConstants.MESSAGES.ACCOUNT_LOCKED);
+                .collect(Collectors.toList());
+
+        if(!list.isEmpty()){
+            return list.get(0)
+                    .trim().equalsIgnoreCase(BawagPskConstants.MESSAGES.INCORRECT_CREDENTIALS);
+        }
+
+        return false;
+    }
+
+    public boolean accountIsLocked() {
+
+        List<String> list = Optional.ofNullable(envelope.getBody())
+                .map(Body::getLoginResponseEntity)
+                .map(LoginResponseEntity::getFailure)
+                .map(Failure::getResponseMessageList).orElse(new ArrayList<>())
+                .stream()
+                .map(ResponseMessage::getCode)
+                .collect(Collectors.toList());
+
+        if(!list.isEmpty()){
+            return list.get(0) // TODO assert one and only one element
+                    .trim().equalsIgnoreCase(BawagPskConstants.MESSAGES.ACCOUNT_LOCKED);
+        }
+
+        return false;
     }
 
     public String getServerSessionID() {

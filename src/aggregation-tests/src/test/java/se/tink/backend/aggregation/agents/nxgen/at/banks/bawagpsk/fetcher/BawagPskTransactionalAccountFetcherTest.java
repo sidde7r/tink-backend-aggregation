@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.core.Amount;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 
@@ -42,7 +43,11 @@ public class BawagPskTransactionalAccountFetcherTest {
         credentials.setUsername(TestConfig.USERNAME);
         credentials.setPassword(TestConfig.PASSWORD);
         final AgentContext context = new AgentTestContext(credentials);
-        final BawagPskApiClient apiClient = new BawagPskApiClient(new TinkHttpClient(context, credentials), new SessionStorage());
+
+        Provider provider = new Provider();
+        provider.setPayload("¨ebanking.bawagpsk.com, BAWAG");
+
+        final BawagPskApiClient apiClient = new BawagPskApiClient(new TinkHttpClient(context, credentials), new SessionStorage(), provider);
         authenticator = new BawagPskPasswordAuthenticator(apiClient);
         accountFetcher = new BawagPskTransactionalAccountFetcher(apiClient);
     }

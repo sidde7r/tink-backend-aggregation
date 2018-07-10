@@ -30,7 +30,7 @@ public class BawagPskAgent extends NextGenerationAgent {
     public BawagPskAgent(CredentialsRequest request, AgentContext context) {
         super(request, context);
         SessionStorage sessionStorage = new SessionStorage();
-        this.apiClient = new BawagPskApiClient(this.client, sessionStorage);
+        this.apiClient = new BawagPskApiClient(this.client, sessionStorage, request.getProvider());
     }
 
     @Override
