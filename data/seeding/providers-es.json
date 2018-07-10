@@ -21,7 +21,7 @@
                 },
                 {
                     "name":"password",
-                    "description":"Clave de acceso",
+                    "description":"Access Code",
                     "masked":true,
                     "numeric":true
                 }
