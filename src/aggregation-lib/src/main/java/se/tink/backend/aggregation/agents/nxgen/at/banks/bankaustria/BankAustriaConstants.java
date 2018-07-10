@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria;
 
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class BankAustriaConstants {
@@ -109,6 +110,11 @@ public class BankAustriaConstants {
         public static final String XPATH_TRANSACTION_DESCRIPTION = ".//element[@key='bookingText']";
         public static final String XPATH_TRANSACTION_DATE = ".//element[@key='transactionDate']/element[@key='date']";
         public static final String XPATH_RESPONSE_WITH_ACCOUNT = "/datasources/datasource[@key='otml_store_session']/element[@key='account']/element";
+    }
+
+    public static class LogTags {
+        public static final LogTag LOG_TAG_ACCOUNT = LogTag.from("#BankAustria_account");
+        public static final LogTag LOG_TAG_CODE_ERROR = LogTag.from("#BankAustria_code_error");
     }
 
 }

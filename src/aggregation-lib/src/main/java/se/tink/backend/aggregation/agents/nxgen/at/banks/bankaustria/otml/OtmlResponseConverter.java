@@ -8,7 +8,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.BankAustriaConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.PayeeEntity;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.SavingsAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class OtmlResponseConverter {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PayeeEntity.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(OtmlResponseConverter.class);
 
     private final DocumentBuilderFactory factory;
     private XPathFactory xPathfactory;
@@ -63,16 +63,17 @@ public class OtmlResponseConverter {
             }
             return Optional.of(xpathNodeList.item(0));
         } catch (XPathExpressionException e) {
-            LOGGER.error("Xpath expression not valid, test in unittest");
+            LOGGER.error(withTag(BankAustriaConstants.LogTags.LOG_TAG_CODE_ERROR, "Xpath expression not valid, test in unittest"));
         }
         return Optional.empty();
     }
+
 
     public Collection<TransactionalAccount> getAccountsFromSettings(String xml) {
         Document document = parseDocument(xml);
         NodeList nodeList = getNodeList(document, BankAustriaConstants.XPathExpression.XPATH_SETTINGS_RESPONSE_ACCOUNTS);
         if (nodeList == null) {
-            LOGGER.warn("No accounts found.");
+            LOGGER.warn(withTag(BankAustriaConstants.LogTags.LOG_TAG_ACCOUNT,"No accounts found."));
             return Collections.EMPTY_LIST;
         }
 
@@ -96,7 +97,7 @@ public class OtmlResponseConverter {
                     .setBankIdentifier(accountKey)
                     .build();
         else {
-            LOGGER.error(String.format("Unknown account type %s", accountType));
+            LOGGER.error(withTag(BankAustriaConstants.LogTags.LOG_TAG_ACCOUNT, String.format("Unknown account type %s", accountType)));
             return null;
         }
     }
@@ -107,7 +108,7 @@ public class OtmlResponseConverter {
             XPathExpression accountNumberExtractor = xpath.compile(expression);
             return (Node) accountNumberExtractor.evaluate(node, XPathConstants.NODE);
         } catch (XPathExpressionException e) {
-            LOGGER.error("Xpath expression not valid, test in unittest");
+            LOGGER.error(withTag(BankAustriaConstants.LogTags.LOG_TAG_CODE_ERROR, "Xpath expression not valid, test in unittest"));
         }
         return null;
     }
@@ -119,7 +120,7 @@ public class OtmlResponseConverter {
             XPathExpression xpathExpression = xpath.compile(expression);
             xpathNodeList = (NodeList) xpathExpression.evaluate(document, XPathConstants.NODESET);
         } catch (XPathExpressionException e) {
-            LOGGER.error("Xpath expression not valid, test in unittest");
+            LOGGER.error(withTag(BankAustriaConstants.LogTags.LOG_TAG_CODE_ERROR, "Xpath expression not valid, test in unittest"));
         }
         return xpathNodeList;
     }
@@ -137,7 +138,7 @@ public class OtmlResponseConverter {
 
         nodeList = getNodeList(document, BankAustriaConstants.XPathExpression.XPATH_ACCOUNT_COMPANIES);
         if(nodeList.getLength() > 1) {
-            LOGGER.warn("Multiple companies/account holders");
+            LOGGER.warn(withTag(BankAustriaConstants.LogTags.LOG_TAG_ACCOUNT, "Multiple companies/account holders"));
         }
         Node companyNode = nodeList.item(0);
         String name = getValue(getNode(companyNode, BankAustriaConstants.XPathExpression.XPATH_NAME));
@@ -167,7 +168,7 @@ public class OtmlResponseConverter {
 
             default:
                 filledAccount = null;
-                LOGGER.error(String.format("Not implemented account type %s", account.getType()));
+                LOGGER.error(withTag(BankAustriaConstants.LogTags.LOG_TAG_ACCOUNT, String.format("Not implemented account type %s", account.getType())));
                 break;
         }
 
@@ -177,7 +178,8 @@ public class OtmlResponseConverter {
     private void logAdditonalDataToIdentifyAccountTypes(TransactionalAccount account, Document document) {
         String type = getNodeValueFromDocument(document, BankAustriaConstants.XPathExpression.XPATH_ACCOUNT_TYPE);
         String dataBaseCode = getNodeValueFromDocument(document, BankAustriaConstants.XPathExpression.XPATH_ACCOUNT_DATABASE_CODE);
-        LOGGER.info(String.format("AccountType:%s, type:%s, dataBaseCode:%s", account.getType(), type, dataBaseCode));
+        LOGGER.info(withTag(BankAustriaConstants.LogTags.LOG_TAG_ACCOUNT,
+                String.format("AccountType:%s, type:%s, dataBaseCode:%s", account.getType(), type, dataBaseCode)));
     }
 
     private String getNodeValueFromDocument(Document document, String expression) {
@@ -226,5 +228,9 @@ public class OtmlResponseConverter {
         Document document = parseDocument(dataSources);
         NodeList nodeList = getNodeList(document, BankAustriaConstants.XPathExpression.XPATH_RESPONSE_WITH_ACCOUNT);
         return nodeList != null && nodeList.getLength() > 0;
+    }
+
+    private String withTag(LogTag logTag, String string) {
+        return String.format("%s: %s", logTag.toString(), string);
     }
 }
