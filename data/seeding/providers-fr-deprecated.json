@@ -1,0 +1,171 @@
+{
+	"market": "FR",
+	"currency": "EUR",
+	"providers":
+	[
+		{
+			"name":"fr-cic-password",
+			"displayName":"CIC",
+			"popular":true,
+			"type":"BANK",
+			"status":"ENABLED",
+			"credentialsType":"PASSWORD",
+			"multiFactor":false,
+			"className":"nxgen.fr.banks.cic.CicBankAgent",
+			"passwordHelpText":"In order to use CIC with Tink, please authenticate yourself using the same credentials you normally use in CIC's mobile banking app.",
+			"transactional":"true",
+			"payload":"CIC",
+			"tutorialUrl":null,
+			"fields":[
+				{"description":"Identifiant",
+					"name":"username",
+					"immutable":true},
+
+				{"description":"Mot de passe",
+					"masked":true,
+					"name":"password"}
+			]
+		},
+		{
+			"name":"fr-credit-mutuel",
+			"displayName":"Crédit Mutuel",
+			"groupDisplayName":"Crédit Mutuel",
+			"popular":true,
+			"type":"BANK",
+			"status":"ENABLED",
+			"credentialsType":"PASSWORD",
+			"multiFactor":false,
+			"className":"banks.fr.euroinformation.EuroInformationAgent",
+			"passwordHelpText":"In order to use Crédit Mutuel with Tink, please authenticate yourself using the same credentials you normally use in Crédit Mutuel's mobile banking app.",
+			"transactional":"true",
+			"payload":"CM",
+			"tutorialUrl":null,
+			"fields":[
+				{"description":"Identifiant",
+					"name":"username",
+					"immutable":true},
+
+				{"description":"Mot de passe",
+					"masked":true,
+					"name":"password"}
+			]
+		},
+		{
+			"name":"fr-credit-du-nord",
+			"displayName":"Crédit du Nord",
+			"popular":true,
+			"type":"BANK",
+			"status":"ENABLED",
+			"credentialsType":"PASSWORD",
+			"multiFactor":false,
+			"className":"demo.DemoAgent",
+			"passwordHelpText":"In order to use Crédit du Nord with Tink, please authenticate yourself using the same credentials you normally use in Crédit du Nord's mobile banking app.",
+			"transactional":"true",
+			"payload":null,
+			"tutorialUrl":null,
+			"fields":[
+				{"description":"Identifiant",
+					"name":"username",
+					"numeric":true,
+					"immutable":true},
+
+				{"description":"Code confidentiel",
+					"masked":true,
+					"name":"password"}
+			]
+		},
+		{
+			"name":"fr-credit-mutuel-bretagne",
+			"displayName":"Crédit Mutuel du Bretagne",
+			"groupDisplayName":"Crédit Mutuel",
+			"popular":true,
+			"type":"BANK",
+			"status":"ENABLED",
+			"credentialsType":"PASSWORD",
+			"multiFactor":false,
+			"className":"banks.fr.arkea.ArkeaAgent",
+			"passwordHelpText":"In order to use Crédit Mutuel du Bretagne with Tink, please authenticate yourself using the same credentials you normally use in Crédit Mutuel du Bretagne's mobile banking app.",
+			"transactional":"true",
+			"payload":"CMB",
+			"tutorialUrl":null,
+			"fields":[
+				{"description":"Identifiant",
+					"name":"username",
+					"immutable":true},
+
+				{"description":"Mot de passe",
+					"masked":true,
+					"name":"password"}
+			]
+		},
+		{
+			"name":"fr-credit-mutuel-sud-ouest",
+			"displayName":"Crédit Mutuel du Sud-Ouest",
+			"groupDisplayName":"Crédit Mutuel",
+			"popular":true,
+			"type":"BANK",
+			"status":"ENABLED",
+			"credentialsType":"PASSWORD",
+			"multiFactor":false,
+			"className":"banks.fr.arkea.ArkeaAgent",
+			"passwordHelpText":"In order to use Crédit Mutuel du Sud-Ouest with Tink, please authenticate yourself using the same credentials you normally use in Crédit Mutuel du Sud-Ouest's mobile banking app.",
+			"transactional":"true",
+			"payload":"CMSO",
+			"tutorialUrl":null,
+			"fields":[
+				{"description":"Identifiant",
+					"name":"username",
+					"immutable":true},
+
+				{"description":"Mot de passe",
+					"masked":true,
+					"name":"password"}
+			]
+		},
+		{
+			"name":"fr-credit-mutuel-massif-central",
+			"displayName":"Crédit Mutuel Massif Central",
+			"groupDisplayName":"Crédit Mutuel",
+			"popular":true,
+			"type":"BANK",
+			"status":"ENABLED",
+			"credentialsType":"PASSWORD",
+			"multiFactor":false,
+			"className":"banks.fr.arkea.ArkeaAgent",
+			"passwordHelpText":"In order to use Crédit Mutuel Massif Central with Tink, please authenticate yourself using the same credentials you normally use in Crédit Mutuel Massif Central's mobile banking app.",
+			"transactional":"true",
+			"payload":"CMMC",
+			"tutorialUrl":null,
+			"fields":[
+				{"description":"Identifiant",
+					"name":"username",
+					"immutable":true},
+
+				{"description":"Mot de passe",
+					"masked":true,
+					"name":"password"}
+			]
+		},
+		{
+			"name":"fr-americanexpress",
+			"displayName":"American Express",
+			"popular":true,
+			"type":"CREDIT_CARD",
+			"status":"ENABLED",
+			"credentialsType":"PASSWORD",
+			"className":"creditcards.americanexpress.AmericanExpressV1Agent",
+			"passwordHelpText":"In order to use American Express with Tink, please authenticate yourself using the same credentials you normally use in American Express' mobile app or at their website.",
+			"transactional":"true",
+			"payload":"fr_FR",
+			"fields":[
+				{"description":"Identifiant",
+					"name":"username",
+					"immutable":true},
+
+				{"description":"Mot de passe",
+					"masked":true,
+					"name":"password"}
+			]
+		}
+	]
+}
