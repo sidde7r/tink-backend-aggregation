@@ -19,7 +19,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class EuroInformationCreditCardFetcher implements AccountFetcher<CreditCardAccount> {
     private static final Logger LOGGER = LoggerFactory.getLogger(EuroInformationCreditCardFetcher.class);
     private static final AggregationLogger AGGREGATION_LOGGER = new AggregationLogger(EuroInformationCreditCardFetcher.class);
-    private final static LogTag creditCardLogTag = LogTag.from("targobank_creditcard_fetcher");
+    private final static LogTag creditCardLogTag = LogTag.from("euroinformation_creditcard_fetcher");
     private final EuroInformationApiClient apiClient;
     private final SessionStorage sessionStorage;
 
