@@ -8,7 +8,8 @@ public enum CurrencyConstants {
     NL("EUR", "€"),
     DE("EUR", "€"),
     DK("DKK", "kr"),
-    NO("NOK", "kr");
+    NO("NOK", "kr"),
+    UK("GBP", "£");
 
     private final String code;
     private final String symbol;
