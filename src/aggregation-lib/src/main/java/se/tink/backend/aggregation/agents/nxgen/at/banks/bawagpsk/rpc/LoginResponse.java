@@ -28,7 +28,7 @@ public class LoginResponse {
                 .map(LoginResponseEntity::getOk).isPresent();
     }
 
-    public boolean incorrectCredentials(){
+    public boolean incorrectCredentials() {
         List<String> list = Optional.ofNullable(envelope.getBody())
                 .map(Body::getLoginResponseEntity)
                 .map(LoginResponseEntity::getFailure)
@@ -37,7 +37,7 @@ public class LoginResponse {
                 .map(ResponseMessage::getCode)
                 .collect(Collectors.toList());
 
-        if(!list.isEmpty()){
+        if (!list.isEmpty()) {
             return list.get(0)
                     .trim().equalsIgnoreCase(BawagPskConstants.MESSAGES.INCORRECT_CREDENTIALS);
         }
@@ -55,7 +55,7 @@ public class LoginResponse {
                 .map(ResponseMessage::getCode)
                 .collect(Collectors.toList());
 
-        if(!list.isEmpty()){
+        if (!list.isEmpty()) {
             return list.get(0) // TODO assert one and only one element
                     .trim().equalsIgnoreCase(BawagPskConstants.MESSAGES.ACCOUNT_LOCKED);
         }

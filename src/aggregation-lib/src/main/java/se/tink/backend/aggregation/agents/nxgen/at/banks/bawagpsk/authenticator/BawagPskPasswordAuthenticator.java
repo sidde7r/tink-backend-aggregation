@@ -40,7 +40,7 @@ public class BawagPskPasswordAuthenticator implements PasswordAuthenticator {
             if (response.accountIsLocked()) {
                 throw AuthorizationError.ACCOUNT_BLOCKED.exception();
             }
-            if(response.incorrectCredentials()){
+            if (response.incorrectCredentials()) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             }
         } catch (HttpResponseException e) {
