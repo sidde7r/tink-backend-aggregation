@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.creditcards.amex;
 
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.AmericanExpressConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.AmericanExpressConstants;
 
 public class AmericanExpressFIConstants extends AmericanExpressConstants {
 
