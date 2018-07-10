@@ -6,6 +6,6 @@ import java.util.Collection;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
-public interface TransactionMonthPaginator {
-    Collection<Transaction> getTransactionsFor(Account account, Year year, Month month);
+public interface TransactionMonthPaginator<A extends Account> {
+    Collection<? extends Transaction> getTransactionsFor(A account, Year year, Month month);
 }
