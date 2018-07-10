@@ -4,15 +4,40 @@ import pymysql
 import yaml
 import substring
 import sys
+import os
 
 
+#########################
+#Configuration Variables#
+#########################
 path = "../../../data/seeding/providers-" + sys.argv[1] + ".json"
 aggregatonConfigurationsFile = "../../../etc/development-minikube-aggregation-server.yml"
+
+#########################
+#Database Insert Values #
+#########################
+clusterHostConfigurationTable = "cluster_host_configuration"
+clusterHostDefaultValues = {
+    "clusterid" :"local-development",
+    "host":"http://127.0.0.1:5000",
+    "apitoken": "devtoken",
+    "base64encodedclientcertificate":"",
+    "disablerequestcompression": False}
+
+clusterCryptoConfigurationTable = "cluster_crypto_configurations"
+clusterCryptoConfigurationDefaultValues = {
+    "clusterid":"local-development",
+    "keyid": "1",
+    "base64encodedkey":"'QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUE='"}
+
+joinQuery = "insert into cluster_provider_configurations (clusterid, providername) select 'local-development', name from provider_configurations;"
+
 host = ""
 password = ""
 username = ""
 market = ""
 currency = ""
+
 
 def join(columns, rowdict):
     for row in rowdict:
@@ -63,7 +88,7 @@ def add_row(db, tablename, rowdict):
     formatInput(newDict)
     dataCheck(newDict)
 
-    if(rowExist(db, tablename, primaryKey, newDict[primaryKey])):
+    if(rowExist(db, "*", tablename, primaryKey, newDict[primaryKey])):
         print "Inserting: " + json.dumps(newDict) + "\n"
         mysql_insert(db, tablename, newDict)
         print "\n Inserted New Row \n"
@@ -81,15 +106,35 @@ def mysql_insert(conn, table, row):
     conn.cursor().execute(sql, vals)
     conn.commit()
 
-def rowExist(conn, table, primaryKey, primaryValue):
-    sql = "select * from (%s) where (%s) = %s"
-    print "Looking for row with the primary-key set to: " + primaryValue
+def rowExist(conn, selectWhat, table, primaryKey, primaryValue):
+    sql = "select %s from (%s) where (%s) = %s"
+    print "Looking for rows with the column set to: " + primaryValue
     cursor = conn.cursor()
     primaryValue = "'" + primaryValue + "'"
-    cursor.execute(sql % (table, primaryKey, primaryValue))
+    cursor.execute(sql % (selectWhat, table,primaryKey, primaryValue))
     val = cursor.fetchall()
     conn.commit()
     return not val
+
+def insertLocalDevelopmentCrypto(conn):
+    if rowExist(conn, "clusterid", clusterCryptoConfigurationTable, "clusterid", clusterCryptoConfigurationDefaultValues['clusterid']):
+        mysql_insert(conn, clusterCryptoConfigurationTable, clusterCryptoConfigurationDefaultValues)
+    else:
+        print "cluster_crypto_configurations already up to date"
+
+def insertIntoClusterHostConfiguration(conn):
+    if rowExist(conn, "clusterid", clusterHostConfigurationTable, "clusterid", clusterHostDefaultValues['clusterid']):
+        mysql_insert(conn, clusterHostConfigurationTable, clusterHostDefaultValues)
+        sqlExecutor(conn, joinQuery)
+    else:
+        print "cluster_configurations already up to date"
+
+def sqlExecutor(conn, sql):
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    val = cursor.fetchall()
+    conn.commit()
+    return val
 
 
 def getConnection():
@@ -113,6 +158,9 @@ def getConnection():
         except yaml.YAMLError as exc:
             print(exc)
 
+ 
+filePath = os.path.abspath(__file__)
+os.chdir(os.path.dirname(filePath))
 
 db = getConnection()
 tablename = "provider_configurations"
@@ -125,3 +173,5 @@ currency = providers['currency']
 
 for provider in providers['providers']:
     add_row(db, tablename, provider)
+insertLocalDevelopmentCrypto(db)
+insertIntoClusterHostConfiguration(db)
