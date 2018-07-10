@@ -1,6 +1,6 @@
 0. From your local `tink-infrastructure` run `./setup-minikube.sh --create-tink-backend-databases`
 1. Start up the aggregation service `tink-backend-aggregation$ bazel run :aggregation --jvmopt=-Djava.net.preferIPv4Stack=true server etc/development-minikube-aggregation-server.yml`
-2. Run `./aggregation_db_seed/local_aggregation_db_seeder.sh`
+2. Run `./aggregation_db_seed/seed_local.sh <country_code> (uk/se/fi/.../be)` 
 3. Make sure you have all necessary packages installed by doing:
 	a) `$ pip install virtualenv` # Only do this if you not already have virtualenv installed
 	b) `$ cd tink-backend-aggregation/tools/testing/`
