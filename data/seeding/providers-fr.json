@@ -4,14 +4,14 @@
 	"providers":
 	[
 		{
-			"name":"fr-cic",
+			"name":"fr-cic-password",
 			"displayName":"CIC",
 			"popular":true,
 			"type":"BANK",
 			"status":"ENABLED",
 			"credentialsType":"PASSWORD",
 			"multiFactor":false,
-			"className":"banks.fr.euroinformation.EuroInformationAgent",
+			"className":"nxgen.fr.banks.cic.CicBankAgent",
 			"passwordHelpText":"In order to use CIC with Tink, please authenticate yourself using the same credentials you normally use in CIC's mobile banking app.",
 			"transactional":"true",
 			"payload":"CIC",
