@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.acc
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class ItemsEntity {
+public class TransactionEntity {
     private String productName;
     private BalanceEntity originalBalance;
     // `balanceEUR` is null - cannot define it!

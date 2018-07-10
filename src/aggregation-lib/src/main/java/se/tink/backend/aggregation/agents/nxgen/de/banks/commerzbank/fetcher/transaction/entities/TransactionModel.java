@@ -1,13 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.transaction.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class RootModel {
+public class TransactionModel {
     // `error` is null - cannot define it!
-    private ResultEntity result;
+    @JsonProperty("result")
+    private TransactionResultEntity result;
 
-    public ResultEntity getResult() {
+    public TransactionResultEntity getResult() {
         return result;
     }
 }
