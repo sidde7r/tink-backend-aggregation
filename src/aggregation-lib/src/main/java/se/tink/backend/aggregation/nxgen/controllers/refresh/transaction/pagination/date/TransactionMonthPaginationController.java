@@ -13,8 +13,9 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 public class TransactionMonthPaginationController<A extends Account> implements TransactionPaginator<A> {
+    /** Needs to be set to 1 + 'the minimum number of months check'. On the first day of the month 3 months and 1 day will be checked. */
     protected static final int MAX_CONSECUTIVE_EMPTY_PAGES = 4;
-    protected static final int MAX_TOTAL_EMPTY_PAGES = 24;
+    protected static final int MAX_TOTAL_EMPTY_PAGES = 25;
     private static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("Europe/Stockholm");
     private final LocalDate nowInLocalDate;
     private final TransactionMonthPaginator paginator;
@@ -22,7 +23,7 @@ public class TransactionMonthPaginationController<A extends Account> implements 
     private LocalDate dateToFetch;
     private int consecutiveEmptyFetches = 0;
     private int totalEmptyFetches = 0;
-    private boolean haveFoundSomething;
+    private boolean foundSomething;
 
     public TransactionMonthPaginationController(TransactionMonthPaginator paginator) {
         this(paginator, DEFAULT_ZONE_ID);
@@ -51,15 +52,14 @@ public class TransactionMonthPaginationController<A extends Account> implements 
         }
 
         consecutiveEmptyFetches = 0;
-        haveFoundSomething = true;
+        foundSomething = true;
         return transactions;
     }
 
     @Override
     public boolean canFetchMoreFor(A account) {
         resetStateIfAccountChanged(account);
-
-        return haveFoundSomething ? consecutiveEmptyFetches < MAX_CONSECUTIVE_EMPTY_PAGES : totalEmptyFetches < MAX_TOTAL_EMPTY_PAGES;
+        return foundSomething ? consecutiveEmptyFetches < MAX_CONSECUTIVE_EMPTY_PAGES : totalEmptyFetches < MAX_TOTAL_EMPTY_PAGES;
     }
 
     private void resetStateIfAccountChanged(A account) {
@@ -72,7 +72,7 @@ public class TransactionMonthPaginationController<A extends Account> implements 
         currentAccount = account;
         consecutiveEmptyFetches = 0;
         totalEmptyFetches = 0;
-        haveFoundSomething = false;
+        foundSomething = false;
         dateToFetch = nowInLocalDate;
     }
 }
