@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.rpc.Field;
 
 @Ignore
 public class BawagPskAgentTest {
-    private static final AgentIntegrationTest.Builder builder = new AgentIntegrationTest.Builder("at", "at-bawag-password")
+    private static final AgentIntegrationTest.Builder builder = new AgentIntegrationTest.Builder("at", "at-bawagpsk-password")
             .addCredentialField(Field.Key.PASSWORD, TestConfig.PASSWORD)
             .loadCredentialsBefore(false)
             .saveCredentialsAfter(false);
