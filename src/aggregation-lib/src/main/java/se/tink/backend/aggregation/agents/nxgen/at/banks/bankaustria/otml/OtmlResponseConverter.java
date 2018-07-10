@@ -1,11 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.otml;
 
 import org.apache.commons.lang3.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.PayeeEntity;
 import se.tink.backend.aggregation.nxgen.core.account.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.SavingsAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
@@ -25,7 +27,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class OtmlResponseConverter {
-    private static final AggregationLogger LOGGER = new AggregationLogger(OtmlResponseConverter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PayeeEntity.class);
 
     private final DocumentBuilderFactory factory;
     private XPathFactory xPathfactory;
