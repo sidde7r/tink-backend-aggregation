@@ -55,7 +55,7 @@
             ]
         },
       {
-        "name": "targobank-password",
+        "name": "de-targobank-password",
         "displayName": "TargoBank",
         "groupDisplayName": "TargoBank",
         "popular": false,

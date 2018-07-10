@@ -13,7 +13,7 @@ public class TargoBankDEAgentNewTest {
     public static final String USERNAME = "<username>";
 
     private static AgentIntegrationTest.Builder builder() {
-        return new AgentIntegrationTest.Builder("de", "targobank-password")
+        return new AgentIntegrationTest.Builder("de", "de-targobank-password")
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false);
     }
