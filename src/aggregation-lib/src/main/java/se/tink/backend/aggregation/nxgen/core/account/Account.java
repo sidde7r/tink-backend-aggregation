@@ -181,7 +181,7 @@ public abstract class Account {
             return self();
         }
 
-        public T addIdentifiers(Collection<AccountIdentifier> identifiers) {
+        public T addIdentifiers(Collection<AccountIdentifier> identifiers){
             thisObj.identifiers.addAll(identifiers);
             return self();
         }
@@ -219,8 +219,7 @@ public abstract class Account {
         }
 
         public <K> T addToTemporaryStorage(String key, K value) {
-            temporaryStorage.put(key,
-                    value instanceof String ? (String) value : SerializationUtils.serializeToString(value));
+            temporaryStorage.put(key, SerializationUtils.serializeToString(value));
             return self();
         }
 
