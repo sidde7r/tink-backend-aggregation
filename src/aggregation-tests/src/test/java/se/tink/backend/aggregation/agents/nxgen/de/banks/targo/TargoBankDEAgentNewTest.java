@@ -14,7 +14,6 @@ public class TargoBankDEAgentNewTest {
 
     private static AgentIntegrationTest.Builder builder() {
         return new AgentIntegrationTest.Builder("de", "targobank-password")
-                .setCredentialType(CredentialsTypes.PASSWORD)
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false);
     }
