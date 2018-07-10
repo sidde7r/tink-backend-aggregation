@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -39,7 +40,10 @@ public class RevolutMultifactorAuthenticator implements SmsOtpAuthenticatorPassw
         try {
             apiClient.signIn(username, password);
         } catch (HttpResponseException e) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+            if (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+            throw e;
         }
 
         // ------------------------------------------------------------------------------------------
@@ -60,7 +64,10 @@ public class RevolutMultifactorAuthenticator implements SmsOtpAuthenticatorPassw
         try {
             confirmSignInResponse = apiClient.confirmSignIn(initValues, otp);
         } catch (HttpResponseException e) {
-            throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
+            if (e.getResponse().getStatus() == HttpStatus.SC_UNPROCESSABLE_ENTITY) {
+                throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
+            }
+            throw e;
         }
 
         String userId = Preconditions.checkNotNull(confirmSignInResponse.getUser().getId(),
