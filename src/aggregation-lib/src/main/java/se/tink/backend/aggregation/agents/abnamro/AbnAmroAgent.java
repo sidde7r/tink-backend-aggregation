@@ -155,23 +155,14 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
         case CREDITCARD_ACCOUNTS:
             updateAccountPerType(item);
             break;
-
-        case CHECKING_TRANSACTIONS:
-        case SAVING_TRANSACTIONS:
-        case CREDITCARD_TRANSACTIONS:
-            refreshTransactionsPerType(item);
+        default:
+            // Info instead of warn because the ABN agent only is responsible to fetch new user accounts.
+            log.info(String.format("Refresh for item (%s) not implemented", item));
             break;
         }
     }
 
     private void updateAccountPerType(RefreshableItem type) {
-        getAccounts().stream()
-                .filter(this::isNotCreditCardAccount)
-                .filter(account -> type.isAccountType(account.getType()))
-                .forEach(context::updateAccount);
-    }
-
-    private void refreshTransactionsPerType(RefreshableItem type) {
         getAccounts().stream()
                 .filter(this::isNotCreditCardAccount)
                 .filter(account -> type.isAccountType(account.getType()))
@@ -206,9 +197,8 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
         } else if (AbnAmroAgentUtils.isSubscribed(account)) {
             // This is a new account that was subscribed towards ABN AMRO. Tell aggregation that we are waiting
             // on getting transactions ingested in the connector.
-            if (!context.isWaitingOnConnectorTransactions()) {
-                context.setWaitingOnConnectorTransactions(true);
-            }
+            log.info(account, "Waiting for updates from the connector...");
+            context.setWaitingOnConnectorTransactions(true);
         }
     }
 
