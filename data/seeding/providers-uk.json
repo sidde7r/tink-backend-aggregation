@@ -34,7 +34,7 @@
         },
         {
             "name": "uk-revolut-password",
-            "className": "nxgen.uk.revolut.RevolutAgent",
+            "className": "nxgen.uk.banks.revolut.RevolutAgent",
             "displayName": "Revolut",
             "credentialsType": "PASSWORD",
             "multiFactor": true,
