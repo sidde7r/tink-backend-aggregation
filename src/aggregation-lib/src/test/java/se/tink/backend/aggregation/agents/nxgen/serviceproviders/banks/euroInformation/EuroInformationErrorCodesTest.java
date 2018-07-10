@@ -1,7 +1,7 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation;
 
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.utils.EuroInformationErrorCodes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationErrorCodes;
 import static org.junit.Assert.assertEquals;
 
 public class EuroInformationErrorCodesTest {

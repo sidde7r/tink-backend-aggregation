@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.fetcher.entities;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.entities;
 
 import se.tink.backend.aggregation.rpc.AccountTypes;
 

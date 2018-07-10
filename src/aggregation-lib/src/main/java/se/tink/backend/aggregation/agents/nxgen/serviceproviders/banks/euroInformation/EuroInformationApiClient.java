@@ -1,22 +1,22 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation;
 
 import java.net.URISyntaxException;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.authentication.rpc.LoginResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.authentication.rpc.LogoutResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.fetcher.rpc.AccountSummaryResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.fetcher.rpc.InvestmentAccountOverviewResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.fetcher.rpc.InvestmentAccountsListResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.fetcher.rpc.TransactionSummaryResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.sessionHandler.rpc.InitResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.authentication.rpc.LoginResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.authentication.rpc.LogoutResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.AccountSummaryResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.InvestmentAccountOverviewResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.InvestmentAccountsListResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.TransactionSummaryResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.sessionHandler.rpc.InitResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.fetcher.EuroInformationInvestmentAccountFetcher.MAX_ELEMENTS;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.EuroInformationInvestmentAccountFetcher.MAX_ELEMENTS;
 
 public class EuroInformationApiClient {
     private final TinkHttpClient client;

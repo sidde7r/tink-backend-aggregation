@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.sessionHandler;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.sessionHandler;
 
 import java.net.URISyntaxException;
 import java.util.Optional;
@@ -7,11 +7,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.EuroInformationApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.EuroInformationConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.authentication.rpc.LogoutResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.sessionHandler.rpc.InitResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.utils.EuroInformationUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.authentication.rpc.LogoutResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.sessionHandler.rpc.InitResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationUtils;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 

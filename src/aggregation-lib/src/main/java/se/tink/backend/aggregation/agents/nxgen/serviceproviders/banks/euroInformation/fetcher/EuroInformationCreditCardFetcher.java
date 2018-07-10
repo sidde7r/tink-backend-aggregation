@@ -1,14 +1,14 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.fetcher;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.EuroInformationApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.EuroInformationConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.fetcher.entities.AccountTypeEnum;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.fetcher.rpc.AccountSummaryResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.entities.AccountTypeEnum;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.AccountSummaryResponse;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;

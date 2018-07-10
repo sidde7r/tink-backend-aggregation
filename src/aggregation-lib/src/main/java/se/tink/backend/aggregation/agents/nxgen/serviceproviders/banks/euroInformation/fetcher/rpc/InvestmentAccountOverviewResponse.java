@@ -1,11 +1,11 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.fetcher.rpc;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc;
 
 import java.util.Date;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.fetcher.entities.SecurityAccountOverviewEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.utils.EuroInformationMsgDateDeserializer;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.entities.SecurityAccountOverviewEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationMsgDateDeserializer;
 
 @XmlRootElement(name = "root")
 public class InvestmentAccountOverviewResponse {

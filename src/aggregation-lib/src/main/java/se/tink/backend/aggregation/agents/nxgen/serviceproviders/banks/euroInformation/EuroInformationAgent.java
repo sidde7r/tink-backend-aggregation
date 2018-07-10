@@ -1,14 +1,14 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.authentication.EuroInformationPasswordAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.fetcher.EuroInformationAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.fetcher.EuroInformationCreditCardFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.fetcher.EuroInformationCreditCardTransactionsFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.fetcher.EuroInformationInvestmentAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.fetcher.EuroInformationTransactionsFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.sessionHandler.EuroInformationSessionHandler;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.authentication.EuroInformationPasswordAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.EuroInformationAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.EuroInformationCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.EuroInformationCreditCardTransactionsFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.EuroInformationInvestmentAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.EuroInformationTransactionsFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.sessionHandler.EuroInformationSessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;

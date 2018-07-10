@@ -1,8 +1,8 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation;
 
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.utils.EuroInformationErrorCodes;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation.utils.EuroInformationUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationErrorCodes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationUtils;
 import se.tink.backend.core.Amount;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

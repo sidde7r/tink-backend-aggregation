@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroInformation;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation;
 
 import se.tink.backend.aggregation.nxgen.http.HeaderEnum;
 
