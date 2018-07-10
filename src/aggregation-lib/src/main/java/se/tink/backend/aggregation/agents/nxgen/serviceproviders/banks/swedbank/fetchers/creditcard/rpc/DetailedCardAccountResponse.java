@@ -63,17 +63,19 @@ public class DetailedCardAccountResponse {
 
         String currentBalance = cardAccount.getCurrentBalance();
         String reservedAmount = cardAccount.getReservedAmount();
+        String availableAmount = cardAccount.getAvailableAmount();
         String creditLimit = cardAccount.getCreditLimit();
-        if (cardAccount == null || currentBalance == null || reservedAmount == null) {
+        if (cardAccount == null || currentBalance == null || reservedAmount == null || availableAmount == null) {
             return Optional.empty();
         }
 
         double balanceValue = StringUtils.parseAmount(currentBalance) + StringUtils.parseAmount(reservedAmount);
-        Amount balance = new Amount(defaultCurrency, -1 * balanceValue);
+        Amount balance = new Amount(defaultCurrency, balanceValue);
         Amount creditLimitAmount = new Amount(defaultCurrency, StringUtils.parseAmount(creditLimit));
+        Amount availableAmountValue = new Amount(defaultCurrency, StringUtils.parseAmount(availableAmount));
 
         return Optional.of(
-                CreditCardAccount.builder(cardAccount.getCardNumber(), balance, creditLimitAmount.subtract(balanceValue))
+                CreditCardAccount.builder(cardAccount.getCardNumber(), balance, availableAmountValue)
                         .setName(cardAccount.getName())
                         .setHolderName(new HolderName(cardAccount.getCardHolder()))
                         .addToTemporaryStorage(SwedbankBaseConstants.StorageKey.CREDIT_CARD_RESPONSE, this)
