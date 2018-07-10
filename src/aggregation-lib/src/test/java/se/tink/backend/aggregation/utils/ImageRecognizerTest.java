@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class ImageRecognizerTest {
 
     @Test
