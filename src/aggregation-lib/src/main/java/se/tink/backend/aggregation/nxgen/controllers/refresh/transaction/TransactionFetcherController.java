@@ -45,7 +45,7 @@ public class TransactionFetcherController<A extends Account> implements Transact
         transactions.addAll(fetchUpcomingTransactionsFor(account));
 
         // TODO: this is temporary just to be able to log credit card transaction fetching for "no-storebrand" = "9680"
-        String bankCode = account.getTemporaryStorage().get("BANK_CODE");
+        String bankCode = account.getTemporaryStorage("BANK_CODE", String.class);
         do {
             // TODO: this is temporary just to be able to log credit card transaction fetching for "no-storebrand" = "9680"
             if ("9680".equals(bankCode)) {
