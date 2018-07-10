@@ -7,6 +7,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.BankAustriaConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.PayeeEntity;
 import se.tink.backend.aggregation.nxgen.core.account.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.SavingsAccount;
@@ -55,7 +56,7 @@ public class OtmlResponseConverter {
         try {
             Document document = parseDocument(xml);
             XPath xpath = xPathfactory.newXPath();
-            XPathExpression expression = xpath.compile("/datasources/datasource[@key='response']/element[@key='result']");
+            XPathExpression expression = xpath.compile(BankAustriaConstants.XPathExpression.XPATH_RESPONSE_RESULT);
             NodeList xpathNodeList = (NodeList) expression.evaluate(document, XPathConstants.NODESET);
             if (xpathNodeList.getLength() != 1) {
                 return Optional.empty();
@@ -69,7 +70,7 @@ public class OtmlResponseConverter {
 
     public Collection<TransactionalAccount> getAccountsFromSettings(String xml) {
         Document document = parseDocument(xml);
-        NodeList nodeList = getNodeList(document, "/datasources/datasource[@key='response']/element[@key='customizedAccountMetaModelsList']/element");
+        NodeList nodeList = getNodeList(document, BankAustriaConstants.XPathExpression.XPATH_SETTINGS_RESPONSE_ACCOUNTS);
         if (nodeList == null) {
             LOGGER.warn("No accounts found.");
             return Collections.EMPTY_LIST;
@@ -85,10 +86,10 @@ public class OtmlResponseConverter {
     }
 
     private TransactionalAccount getAccountFromSetting(Node accountNode) {
-        String accountNumber = getValue(getNode(accountNode, ".//element[@key='accountNumber']"));
-        String accountNickName = getValue(getNode(accountNode, ".//element[@key='accountNickname']"));
-        String accountKey = getValue(getNode(accountNode, ".//element[@key='accountKey']"));
-        String accountType = getValue(getNode(accountNode, ".//element[@key='accountType']"));
+        String accountNumber = getValue(getNode(accountNode, BankAustriaConstants.XPathExpression.XPATH_ACCOUNT_NUMBER));
+        String accountNickName = getValue(getNode(accountNode, BankAustriaConstants.XPathExpression.XPATH_ACCOUNT_NICKNAME));
+        String accountKey = getValue(getNode(accountNode, BankAustriaConstants.XPathExpression.XPATH_ACCOUNT_KEY));
+        String accountType = getValue(getNode(accountNode, BankAustriaConstants.XPathExpression.XPATH_SETTINGS_ACCOUNT_TYPE));
         if (accountType.equals("CURRENT"))
             return SavingsAccount.builder(accountNumber, Amount.inEUR(0D))
                     .setName(accountNickName)
@@ -125,21 +126,21 @@ public class OtmlResponseConverter {
 
     public TransactionalAccount fillAccountInformation(String accountMovementXml, TransactionalAccount account)  {
         Document document = parseDocument(accountMovementXml);
-        NodeList nodeList = getNodeList(document, "/datasources/datasource[@key='response']/element[@key='balance']/element[@key='accountable']");
+        NodeList nodeList = getNodeList(document, BankAustriaConstants.XPathExpression.XPATH_ACCOUNT_BALANCE);
         Node balanceNode = nodeList.item(0);
-        String balanceCurrency = getValue(getNode(balanceNode, ".//element[@key='currency']"));
-        String balanceValue = getValue(getNode(balanceNode, ".//element[@key='value']"));
+        String balanceCurrency = getValue(getNode(balanceNode, BankAustriaConstants.XPathExpression.XPATH_CURRENCY));
+        String balanceValue = getValue(getNode(balanceNode, BankAustriaConstants.XPathExpression.XPATH_VALUE));
         Amount amount = new Amount(balanceCurrency, Double.valueOf(balanceValue));
 
-        String iban = getNodeValueFromDocument(document, "/datasources/datasource[@key='response']/element[@key='account']/element[@key='iban']");
+        String iban = getNodeValueFromDocument(document, BankAustriaConstants.XPathExpression.XPATH_ACCOUNT_IBAN);
         logAdditonalDataToIdentifyAccountTypes(account, document);
 
-        nodeList = getNodeList(document, "/datasources/datasource[@key='response']/element[@key='account']/element[@key='companies']");
+        nodeList = getNodeList(document, BankAustriaConstants.XPathExpression.XPATH_ACCOUNT_COMPANIES);
         if(nodeList.getLength() > 1) {
             LOGGER.warn("Multiple companies/account holders");
         }
         Node companyNode = nodeList.item(0);
-        String name = getValue(getNode(companyNode, ".//element[@key='name']"));
+        String name = getValue(getNode(companyNode, BankAustriaConstants.XPathExpression.XPATH_NAME));
         HolderName holderName = new HolderName(name);
 
         TransactionalAccount filledAccount;
@@ -174,8 +175,8 @@ public class OtmlResponseConverter {
     }
 
     private void logAdditonalDataToIdentifyAccountTypes(TransactionalAccount account, Document document) {
-        String type = getNodeValueFromDocument(document, "/datasources/datasource[@key='response']/element[@key='account']/element[@key='type']");
-        String dataBaseCode = getNodeValueFromDocument(document, "/datasources/datasource[@key='response']/element[@key='account']/element[@key='dataBaseCode']");
+        String type = getNodeValueFromDocument(document, BankAustriaConstants.XPathExpression.XPATH_ACCOUNT_TYPE);
+        String dataBaseCode = getNodeValueFromDocument(document, BankAustriaConstants.XPathExpression.XPATH_ACCOUNT_DATABASE_CODE);
         LOGGER.info(String.format("AccountType:%s, type:%s, dataBaseCode:%s", account.getType(), type, dataBaseCode));
     }
 
@@ -187,7 +188,7 @@ public class OtmlResponseConverter {
 
     public Collection<? extends Transaction> getTransactions(String balanceMovementsForAccount)  {
         Document document = parseDocument(balanceMovementsForAccount);
-        NodeList movements = getNodeList(document, "/datasources/datasource[@key='response']/element[@key='movements']/element");
+        NodeList movements = getNodeList(document, BankAustriaConstants.XPathExpression.XPATH_TRANSACTIONS_MOVEMENTS);
         List<Transaction> transactions =
                 IntStream.range(0, movements.getLength())
                         .mapToObj(i -> getTransactionFromMovement(movements.item(i)))
@@ -197,12 +198,12 @@ public class OtmlResponseConverter {
     }
 
     private Transaction getTransactionFromMovement(Node movement)  {
-        String amountCurrency = getValue(getNode(movement, ".//element[@key='amount']/element[@key='currency']"));
-        String amountValue = getValue(getNode(movement, ".//element[@key='amount']/element[@key='value']"));
+        String amountCurrency = getValue(getNode(movement, BankAustriaConstants.XPathExpression.XPATH_TRANSACTION_CURRENCY));
+        String amountValue = getValue(getNode(movement, BankAustriaConstants.XPathExpression.XPATH_TRANSACTION_VALUE));
 
-        String description = getValue(getNode(movement, ".//element[@key='bookingText']"));
+        String description = getValue(getNode(movement, BankAustriaConstants.XPathExpression.XPATH_TRANSACTION_DESCRIPTION));
 
-        String movementDate = getValue(getNode(movement, ".//element[@key='transactionDate']/element[@key='date']"));
+        String movementDate = getValue(getNode(movement, BankAustriaConstants.XPathExpression.XPATH_TRANSACTION_DATE));
 
         Date date;
         try {
@@ -223,7 +224,7 @@ public class OtmlResponseConverter {
 
     public boolean getAccountNodeExists(String dataSources) {
         Document document = parseDocument(dataSources);
-        NodeList nodeList = getNodeList(document, "/datasources/datasource[@key='otml_store_session']/element[@key='account']/element");
+        NodeList nodeList = getNodeList(document, BankAustriaConstants.XPathExpression.XPATH_RESPONSE_WITH_ACCOUNT);
         return nodeList != null && nodeList.getLength() > 0;
     }
 }

@@ -14,6 +14,7 @@ import java.time.ZoneId;
 import java.util.Date;
 
 public class BankAustriaApiClient {
+    public static final String USER_ID = "userId";
     private final TinkHttpClient client;
     private final BankAustriaSessionStorage sessionStorage;
 
@@ -36,15 +37,15 @@ public class BankAustriaApiClient {
 
     private Form loginForm(String userId, String password) {
         Form form = new Form();
-        form.putSingle("userId", userId);
-        form.putSingle("password", password);
-        form.putSingle("otml_secure_enclave_params", "token");
-        form.putSingle("useLoginViaFingerprint", "");
-        form.putSingle("activate_fingerprint_message", "Activate%20fingerprint%20login");
-        form.putSingle("language", "en_US");
-        form.putSingle("supportFaceId", "false");
-        form.putSingle("optparam", "");
-        form.putSingle("securityCheckAvailable", "");
+        form.putSingle(USER_ID, userId);
+        form.putSingle(BankAustriaConstants.LoginForm.PASSWORD, password);
+        form.putSingle(BankAustriaConstants.LoginForm.OTML_SECURE_ENCLAVE_PARAMS, BankAustriaConstants.LoginForm.OTML_SECURE_ENCLAVE_TOKEN);
+        form.putSingle(BankAustriaConstants.LoginForm.USE_LOGIN_VIA_FINGERPRINT, "");
+        form.putSingle(BankAustriaConstants.LoginForm.ACTIVATE_FINGERPRINT_MESSAGE, BankAustriaConstants.LoginForm.ACTIVATE_FINGERPRINT_LOGIN_VALUE);
+        form.putSingle(BankAustriaConstants.LoginForm.LANGUAGE, BankAustriaConstants.LoginForm.LANGUAGE_EN_US);
+        form.putSingle(BankAustriaConstants.LoginForm.SUPPORT_FACE_ID, BankAustriaConstants.LoginForm.SUPPORT_FACE_ID_FALSE);
+        form.putSingle(BankAustriaConstants.LoginForm.OPTPARAM, "");
+        form.putSingle(BankAustriaConstants.LoginForm.SECURITY_CHECK_AVAILABLE, "");
         return form;
     }
 
@@ -57,7 +58,7 @@ public class BankAustriaApiClient {
 
     private Form settingsForm() {
         Form form = new Form();
-        form.putSingle("_target0", "xxx");
+        form.putSingle(BankAustriaConstants.SettingsForm.SETTINGS_TARGET, BankAustriaConstants.SettingsForm.SETTINGS_TARGET_VALUE);
         return form;
     }
 
@@ -83,36 +84,36 @@ public class BankAustriaApiClient {
 
         return client.request(url)
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                .header("X-OTML-CLUSTER", BankAustriaConstants.Device.IPHONE7_RESOLUTION)
-                .header("X-DEVICE", BankAustriaConstants.Device.IPHONE7_DEVICEID)
-                .header("User-Agent", BankAustriaConstants.Device.IPHONE7_USERAGENT)
-                .header("X-OTML-MANIFEST", sessionStorage.getXOtmlManifest())
-                .header("X-OTML-PLATFORM", BankAustriaConstants.Application.PLATFORM)
-                .header("X-OTMLID", BankAustriaConstants.Application.OTMLID)
-                .header("X-APPID", BankAustriaConstants.Application.PLATFORM_VERSION);
+                .header(BankAustriaConstants.Header.X_OTML_CLUSTER, BankAustriaConstants.Device.IPHONE7_RESOLUTION)
+                .header(BankAustriaConstants.Header.X_DEVICE, BankAustriaConstants.Device.IPHONE7_DEVICEID)
+                .header(BankAustriaConstants.Header.USER_AGENT, BankAustriaConstants.Device.IPHONE7_USERAGENT)
+                .header(BankAustriaConstants.Header.X_OTML_MANIFEST, sessionStorage.getXOtmlManifest())
+                .header(BankAustriaConstants.Header.X_OTML_PLATFORM, BankAustriaConstants.Application.PLATFORM)
+                .header(BankAustriaConstants.Header.X_OTMLID, BankAustriaConstants.Application.OTMLID)
+                .header(BankAustriaConstants.Header.X_APPID, BankAustriaConstants.Application.PLATFORM_VERSION);
     }
 
 
     private Form getFormForGenericAccount(String bankIdentifier) {
         Form form = new Form();
-        form.putSingle("searchType", "30");
-        form.putSingle("account.id", bankIdentifier);
-        form.putSingle("start.year", "");
-        form.putSingle("start.month", "");
-        form.putSingle("start.day", "");
-        form.putSingle("end.year", "");
-        form.putSingle("end.month", "");
-        form.putSingle("end.day", "");
-        form.putSingle("type", "all");
-        form.putSingle("source", "otml");
-        form.putSingle("amountToPositivity", "+");
-        form.putSingle("amountFromPositivity", "+");
-        form.putSingle(".otmlBind->side_content", "");
-        form.putSingle("_finish", "xxx");
-        form.putSingle("otmlFirstSearch", "false");
-        form.putSingle("amountFrom", "");
-        form.putSingle("amountTo", "");
-        form.putSingle("text", "");
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.SEARCH_TYPE, BankAustriaConstants.MovementsSearchForm.SEARCH_TYPE_VALUE_LAST_30_DAYS);
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.ACCOUNT_ID, bankIdentifier);
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.START_YEAR, "");
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.START_MONTH, "");
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.START_DAY, "");
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.END_YEAR, "");
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.END_MONTH, "");
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.END_DAY, "");
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.TYPE, BankAustriaConstants.MovementsSearchForm.TYPE_ALL);
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.SOURCE, BankAustriaConstants.MovementsSearchForm.SOURCE_OTML);
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.AMOUNT_TO_POSITIVITY, "+");
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.AMOUNT_FROM_POSITIVITY, "+");
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.OTML_BIND_SIDE_CONTENT, "");
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.FINISH, BankAustriaConstants.MovementsSearchForm.FINISH_VALUE);
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.OTML_FIRST_SEARCH, BankAustriaConstants.MovementsSearchForm.OTML_FIRST_SEARCH_VALUE_FALSE);
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.AMOUNT_FROM, "");
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.AMOUNT_TO, "");
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.TEXT, "");
         return form;
     }
 
@@ -121,24 +122,24 @@ public class BankAustriaApiClient {
         LocalDate localfromDate = fromDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate localtoDate = toDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         Form form = new Form();
-        form.putSingle("searchType", "custom");
-        form.putSingle("account.id", bankIdentifier);
-        form.putSingle("start.year", Integer.toString(localfromDate.getYear()));
-        form.putSingle("start.month", Integer.toString(localfromDate.getMonthValue()));
-        form.putSingle("start.day", Integer.toString(localfromDate.getDayOfMonth()));
-        form.putSingle("end.year", Integer.toString(localtoDate.getYear()));
-        form.putSingle("end.month", Integer.toString(localtoDate.getMonthValue()));
-        form.putSingle("end.day", Integer.toString(localtoDate.getDayOfMonth()));
-        form.putSingle("type", "all");
-        form.putSingle("source", "otml");
-        form.putSingle("amountToPositivity", "+");
-        form.putSingle("amountFromPositivity", "+");
-        form.putSingle(".otmlBind->side_content", "");
-        form.putSingle("_finish", "xxx");
-        form.putSingle("otmlFirstSearch", "false");
-        form.putSingle("amountFrom", "");
-        form.putSingle("amountTo", "");
-        form.putSingle("text", "");
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.SEARCH_TYPE, BankAustriaConstants.MovementsSearchForm.SEARCH_TYPE_VALUE_CUSTOM);
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.ACCOUNT_ID, bankIdentifier);
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.START_YEAR, Integer.toString(localfromDate.getYear()));
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.START_MONTH, Integer.toString(localfromDate.getMonthValue()));
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.START_DAY, Integer.toString(localfromDate.getDayOfMonth()));
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.END_YEAR, Integer.toString(localtoDate.getYear()));
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.END_MONTH, Integer.toString(localtoDate.getMonthValue()));
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.END_DAY, Integer.toString(localtoDate.getDayOfMonth()));
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.TYPE, BankAustriaConstants.MovementsSearchForm.TYPE_ALL);
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.SOURCE, BankAustriaConstants.MovementsSearchForm.SOURCE_OTML);
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.AMOUNT_TO, "+");
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.AMOUNT_FROM_POSITIVITY, "+");
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.OTML_BIND_SIDE_CONTENT, "");
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.FINISH, BankAustriaConstants.MovementsSearchForm.FINISH_VALUE);
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.OTML_FIRST_SEARCH, BankAustriaConstants.MovementsSearchForm.OTML_FIRST_SEARCH_VALUE_FALSE);
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.AMOUNT_FROM, "");
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.AMOUNT_TO, "");
+        form.putSingle(BankAustriaConstants.MovementsSearchForm.TEXT, "");
         return form;
     }
 }

@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.authenticator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.BankAustriaTestData;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.entities.OtmlResponse;
@@ -10,6 +11,7 @@ import java.io.IOException;
 
 import static junit.framework.TestCase.assertTrue;
 
+@Ignore
 public class BankAustriaAuthenticatorTest {
     @Test
     public void shouldDetectWrongCredentials() throws IOException {

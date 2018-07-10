@@ -3,15 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.otml;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.xml.sax.SAXException;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.BankAustriaTestData;
 import se.tink.backend.aggregation.nxgen.core.account.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.core.Amount;
 
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
 import java.util.Collection;
 
 public class OtmlResponseConverterTest {
@@ -24,7 +21,7 @@ public class OtmlResponseConverterTest {
     }
 
     @Test
-    public void convertSettingsToAccountCollection() throws ParserConfigurationException, SAXException, IOException {
+    public void convertSettingsToAccountCollection()  {
         Collection<TransactionalAccount> accountsFromSettings = otmlResponseConverter.getAccountsFromSettings(BankAustriaTestData.SETTINGS_ASSUMED_DATA_SOURCES);
         Assert.assertEquals(2, accountsFromSettings.size());
 
