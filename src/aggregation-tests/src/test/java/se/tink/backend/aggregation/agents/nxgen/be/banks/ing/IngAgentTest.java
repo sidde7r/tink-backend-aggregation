@@ -15,7 +15,6 @@ public class IngAgentTest {
 
     private static final AgentIntegrationTest.Builder builder =
             new AgentIntegrationTest.Builder("be", "be-ing-cardreader")
-                    .setCredentialType(CredentialsTypes.PASSWORD)
                     .addCredentialField(Field.Key.USERNAME, USERNAME)
                     .addCredentialField("cardId", CARD_ID)
                     .addCredentialField("otp", OTP)
