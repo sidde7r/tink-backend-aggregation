@@ -123,6 +123,46 @@
                     "minLength":1
                 }
             ]
+        },
+        {
+            "name":"es-ing-password",
+            "displayName":"ING",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"nxgen.es.banks.ing.IngAgent",
+            "passwordHelpText":"Use the same credentials as when using the ING Direct app.",
+            "transactional":true,
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"User",
+                    "immutable":true,
+                    "helpText":"Your username (DNI/NIE ID number)"
+                },
+                {
+                    "name":"date-of-birth",
+                    "description":"Date of birth",
+                    "pattern":"[0-3][0-9]/[0-1][0-9]/[1-2][9|0][0-9][0-9]",
+                    "immutable":true,
+                    "helpText":"Your birth date"
+                },
+                {
+                    "name":"password",
+                    "description":"Password",
+                    "masked":true,
+                    "sensitive":true,
+                    "pattern":"([0-9]{6})",
+                    "numeric":true,
+                    "minLength":6,
+                    "maxLength":6,
+                    "helpText":"6 digit PIN online"
+                }
+            ]
         }
     ]
 }
