@@ -69,13 +69,11 @@ public class SdcCreditCardEntity {
     }
 
     @JsonIgnore
-    public CreditCardAccount toTinkCard(SdcAccount creditCardAccount, String bankCode) {
+    public CreditCardAccount toTinkCard(SdcAccount creditCardAccount) {
         return CreditCardAccount.builder(creditcardNumber.replaceAll(" ", ""),
                 creditCardAccount.getAmount().toTinkAmount(), creditCardAccount.getAvailableAmount().toTinkAmount())
                 .setName(creditCardAccount.getName())
                 .setUniqueIdentifier(constructUniqueIdentifier())
-                // TODO: this is temporary just to be able to log credit card transaction fetching for "no-storebrand" = "9680"
-                .addToTemporaryStorage("BANK_CODE", bankCode)
                 .build();
     }
 

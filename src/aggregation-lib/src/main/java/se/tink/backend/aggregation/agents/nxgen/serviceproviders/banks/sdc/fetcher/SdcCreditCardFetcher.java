@@ -118,9 +118,7 @@ public class SdcCreditCardFetcher extends SdcAgreementFetcher implements Account
         for (SdcCreditCardEntity creditCardEntity : creditAndDebetCards.getCreditCards()) {
             SdcAccount sdcAccount = accounts.findAccount(creditCardEntity);
 
-
-            // TODO: this is temporary just to be able to log credit card transaction fetching for "no-storebrand" = "9680"
-            CreditCardAccount creditCard = creditCardEntity.toTinkCard(sdcAccount, this.agentConfiguration.getBankCode());
+            CreditCardAccount creditCard = creditCardEntity.toTinkCard(sdcAccount);
 
             String creditCardBankIdentifier = creditCard.getBankIdentifier();
 

@@ -42,15 +42,6 @@ public class TransactionDatePaginationController<A extends Account> implements T
                     account.getBankIdentifier()));
             consecutiveEmptyPages++;
 
-            // TODO: this is temporary just to be able to log credit card transaction fetching for "no-storebrand" = "9680"
-            String bankCode = account.getTemporaryStorage("BANK_CODE", String.class);
-            // TODO: this is temporary just to be able to log credit card transaction fetching for "no-storebrand" = "9680"
-            if ("9680".equals(bankCode)) {
-                log.info(String.format("Couldn't find any transactions for account with bankIdentifier: %s [%d]",
-                        account.getBankIdentifier(),
-                        consecutiveEmptyPages));
-            }
-
             return Collections.emptyList();
         }
 
@@ -64,16 +55,6 @@ public class TransactionDatePaginationController<A extends Account> implements T
     @Override
     public boolean canFetchMoreFor(A account) {
 
-        // TODO: this is temporary just to be able to log credit card transaction fetching for "no-storebrand" = "9680"
-        String bankCode = account.getTemporaryStorage("BANK_CODE", String.class);
-        // TODO: this is temporary just to be able to log credit card transaction fetching for "no-storebrand" = "9680"
-        if ("9680".equals(bankCode)) {
-            log.info(String.format("canFetchMoreFor: %s [%d] = %b",
-                    account.getBankIdentifier(),
-                    consecutiveEmptyPages,
-                    (consecutiveEmptyPages < MAX_CONSECUTIVE_EMPTY_PAGES)));
-        }
-
         resetStateIfAccountChanged(account);
 
         return consecutiveEmptyPages < MAX_CONSECUTIVE_EMPTY_PAGES;
@@ -82,25 +63,8 @@ public class TransactionDatePaginationController<A extends Account> implements T
     private void resetStateIfAccountChanged(Account account) {
         Preconditions.checkNotNull(account);
 
-        // TODO: this is temporary just to be able to log credit card transaction fetching for "no-storebrand" = "9680"
-        String bankCode = account.getTemporaryStorage("BANK_CODE", String.class);
-        // TODO: this is temporary just to be able to log credit card transaction fetching for "no-storebrand" = "9680"
-        if ("9680".equals(bankCode)) {
-            log.info(String.format("resetStateIfAccountChanged: %s, same account? %b %b",
-                    account.getBankIdentifier(),
-                    (currentAccount != null && account.equals(currentAccount)),
-                    Objects.equals(currentAccount, account)));
-        }
-
         if (Objects.equals(currentAccount, account)) {
             return;
-        }
-
-        // TODO: this is temporary just to be able to log credit card transaction fetching for "no-storebrand" = "9680"
-        if ("9680".equals(bankCode)) {
-            log.info(String.format("resetting state as account is changed: new[%s], same account? current[%s]",
-                    account.getUniqueIdentifier(),
-                    (currentAccount != null ? currentAccount.getUniqueIdentifier() : "N/A")));
         }
 
         currentAccount = account;
