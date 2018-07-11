@@ -3,8 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authentica
 import com.fasterxml.jackson.core.JsonProcessingException;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.RootModel;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -28,6 +30,8 @@ public class CommerzbankPasswordAuthenticator implements PasswordAuthenticator {
             response = apiClient.login(username, password);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
+        } if (response.getBody(RootModel.class).getError().getCode().equals(CommerzbankConstants.ERRORS.PIN_ERROR) ){
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
         String cookie = response.getCookies().toString();
         sessionStorage.put(CommerzbankConstants.HEADERS.COOKIE, cookie);

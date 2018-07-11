@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank;
 
-import se.tink.libraries.jersey.logging.PublicAPIHTTPHeadersFilter;
-
 public class CommerzbankConstants {
 
     public static class URLS {
@@ -31,6 +29,10 @@ public class CommerzbankConstants {
         public static final String CURRENCY_VALUE = "EUR";
         public static final String PRODUCT_BRANCH = "100";
         public static final String AMOUNT_TYPE = "ALL";
+    }
+
+    public static class ERRORS {
+        public static final String PIN_ERROR = "login.pin.error.10203";
     }
 
 }

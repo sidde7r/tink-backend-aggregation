@@ -4,10 +4,14 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class RootModel {
-    // `error` is null - cannot define it!
+    private ErrorEntity error;
     private ResultEntity result;
 
     public ResultEntity getResult() {
         return result;
+    }
+
+    public ErrorEntity getError() {
+        return error;
     }
 }
