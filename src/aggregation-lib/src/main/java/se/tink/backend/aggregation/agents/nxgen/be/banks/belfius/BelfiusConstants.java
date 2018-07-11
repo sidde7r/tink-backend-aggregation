@@ -126,6 +126,13 @@ public class BelfiusConstants {
         public static final String HISTORY_HAS_NEXT = "Container@reuse_History@lb_hasNext";
         public static final String HISTORY_BTN_NEXT = "Container@reuse_History@btn_Next";
 
+        // FetchUpcomingTransactionsRequest
+        public static final String UPCOMING_TRANSACTIONS = "Container@reuse_Pending@rep_pending";
+        public static final String UPCOMING_TRANSACTIONS_BUTTON_PENDING = "Container@b_Pending";
+        public static final String UPCOMING_TRANSACTIONS_BUTTON_FIND = "Container@reuse_Pending@btn_Find";
+        public static final String UPCOMING_TRANSACTIONS_HAS_NEXT = "Container@reuse_Pending@lb_hasNext";
+        public static final String UPCOMING_TRANSACTIONS_BTN_NEXT = "Container@reuse_Pending@btn_Next";
+
         // Payments
         public static final String TRANSFER_INIT = "Container@b_Transfer";
         public static final String TRANSFER_PAY = "Container@reuse_transfer@btn_pay";

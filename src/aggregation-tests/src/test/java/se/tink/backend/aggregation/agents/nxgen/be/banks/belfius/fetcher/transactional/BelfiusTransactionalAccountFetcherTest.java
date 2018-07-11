@@ -1,23 +1,23 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusTest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.entities.BelfiusTransaction;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.entities.BelfiusUpcomingTransaction;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.rpc.FetchProductsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.rpc.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.rpc.FetchUpcomingTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.date.DateUtils;
+import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.*;
 
 public class BelfiusTransactionalAccountFetcherTest extends BelfiusTest {
 
@@ -33,7 +33,7 @@ public class BelfiusTransactionalAccountFetcherTest extends BelfiusTest {
         assertFalse(accounts.isEmpty());
 
         accounts.forEach(account -> {
-            Collection<AggregationTransaction> transactions = fetcher.fetchTransactionsFor(account);
+            Collection<Transaction> transactions = fetcher.fetchTransactionsFor(account);
             assertNotNull(transactions);
             assertFalse(transactions.isEmpty());
         });
@@ -77,6 +77,21 @@ public class BelfiusTransactionalAccountFetcherTest extends BelfiusTest {
         assertTrue(collect.get(5).toSystemTransaction().getAmount() == 103.6);
         assertTrue(collect.get(6).toSystemTransaction().getAmount() == 103.6012);
         assertTrue(collect.get(7).toSystemTransaction().getAmount() == -0.35);
+    }
+
+    @Test
+    public void parseUpcomingTransactionsTest() {
+        FetchUpcomingTransactionsResponse belfiusUpcomingTransaction = SerializationUtils
+                .deserializeFromString(ProductList.pendingTransactions, FetchUpcomingTransactionsResponse.class);
+
+        List<UpcomingTransaction> collect = belfiusUpcomingTransaction.stream()
+                .map(BelfiusUpcomingTransaction::toTinkUpcomingTransaction)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        assertEquals(1, collect.size());
+        assertEquals(collect.get(0).toSystemTransaction().getAmount(), -0.10, 0.0);
+        assertEquals(ProductList.RandomTestData.BENEFICIARY_NAME, collect.get(0).toSystemTransaction().getDescription());
     }
 
 }
