@@ -1,0 +1,2 @@
+bankId	name	type	currency	balance
+9999-111111111111	Transaktionskonto	CHECKING	SEK	"26245.33"

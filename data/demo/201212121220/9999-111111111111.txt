@@ -1,0 +1,12 @@
+date	description	amount	type	pending
+2018-07-06	Nytorget 6 Bar	-345
+2018-07-06	Swish Markus	100
+2018-07-06	Swish Emil	150
+2018-07-04	Dobelns pasta	-300
+2018-07-04	Swish Henrik Karlsson	100
+2018-07-04	Swish Boris Johansson	100
+2018-07-04	Spy bar	-1200
+2018-07-04	Swish Alice Wallander	500
+2018-07-01	Salong Betong	-2000
+2018-07-01	Swish hyra	4000
+2018-06-24	Lön	25000
