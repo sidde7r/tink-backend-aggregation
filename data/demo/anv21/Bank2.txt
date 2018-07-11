@@ -1,5 +1,0 @@
-date	description	amount			
-11/30/12	7-ELEVEN 161	-345.00			
-11/30/12	SWEDEN ROCK FESTIVAL	-345.00			
-11/30/12	KAPHAL Malmo	-345.00			
-11/30/12	SKYDDAT BELOPP	-145.00		true	
