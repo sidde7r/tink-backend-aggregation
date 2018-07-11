@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.sessionHandler.rpc;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.session.rpc;
 
 import java.util.Date;
 import javax.xml.bind.annotation.XmlAccessType;
