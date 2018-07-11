@@ -76,8 +76,10 @@ public class NordnetApiClient {
     private String referrer;
     private String accessToken;
     private String ntag;
+    private final String aggregator;
 
-    public NordnetApiClient(TinkApacheHttpClient4 client) {
+    public NordnetApiClient(TinkApacheHttpClient4 client, String aggregator) {
+        this.aggregator = aggregator;
         this.client = client;
     }
 
@@ -328,7 +330,7 @@ public class NordnetApiClient {
 
     private WebResource.Builder createClientRequest(String url, MediaType contentType, Map<String, String> headers) {
         WebResource.Builder requestBuilder = client.resource(url)
-                .header("User-Agent", AbstractAgent.DEFAULT_USER_AGENT)
+                .header("User-Agent", aggregator)
                 .accept(MediaType.APPLICATION_JSON_TYPE, MediaType.TEXT_HTML_TYPE,
                         MediaType.TEXT_PLAIN_TYPE, MediaType.WILDCARD_TYPE)
                 .type(contentType);

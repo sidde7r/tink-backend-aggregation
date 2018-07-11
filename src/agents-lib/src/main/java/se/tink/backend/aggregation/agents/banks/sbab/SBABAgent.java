@@ -129,20 +129,20 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
 
         if (payload != null && Objects.equal(payload.get("isSwitchMortgageProviderTest"), "true")) {
             clientWithoutSSL = clientFactory.createCookieClientWithoutSSL();
-            mortgageSignClient = new MortgageSignClient(clientWithoutSSL, credentials);
-            bankIdSignClient = new BankIdSignClient(clientWithoutSSL, credentials);
+            mortgageSignClient = new MortgageSignClient(clientWithoutSSL, credentials, getAggregator().getAggregatorIdentifier());
+            bankIdSignClient = new BankIdSignClient(clientWithoutSSL, credentials, getAggregator().getAggregatorIdentifier());
         } else {
             clientWithoutSSL = null;
-            mortgageSignClient = new MortgageSignClient(client, credentials);
-            bankIdSignClient = new BankIdSignClient(client, credentials);
+            mortgageSignClient = new MortgageSignClient(client, credentials, getAggregator().getAggregatorIdentifier());
+            bankIdSignClient = new BankIdSignClient(client, credentials, getAggregator().getAggregatorIdentifier());
         }
 
         mortgageClient = new MortgageClient(client, credentials,
-                new CreateProductExecutorTracker(context.getMetricRegistry()));
-        authenticationClient = new AuthenticationClient(client, credentials);
-        userDataClient = new UserDataClient(client, credentials);
-        transferClient = new TransferClient(client, credentials, catalog);
-        openSavingsAccountClient = new OpenSavingsAccountClient(client, credentials);
+                new CreateProductExecutorTracker(context.getMetricRegistry()), getAggregator().getAggregatorIdentifier());
+        authenticationClient = new AuthenticationClient(client, credentials, getAggregator().getAggregatorIdentifier());
+        userDataClient = new UserDataClient(client, credentials, getAggregator().getAggregatorIdentifier());
+        transferClient = new TransferClient(client, credentials, catalog, getAggregator().getAggregatorIdentifier());
+        openSavingsAccountClient = new OpenSavingsAccountClient(client, credentials, getAggregator().getAggregatorIdentifier());
     }
 
     @Override

@@ -72,7 +72,7 @@ public class CollectorAgent extends AbstractAgent implements CreateProductExecut
         credentials = request.getCredentials();
         catalog = context.getCatalog();
         httpClient = clientFactory.createCustomClient(context.getLogOutputStream());
-        apiClient = new CollectorApiClient(httpClient);
+        apiClient = new CollectorApiClient(httpClient, getAggregator().getAggregatorIdentifier());
     }
 
     @Override

@@ -60,8 +60,8 @@ public class MortgageClient extends SBABClient {
 
     private final CreateProductExecutorTracker tracker;
 
-    public MortgageClient(Client client, Credentials credentials, CreateProductExecutorTracker tracker) {
-        super(client, credentials);
+    public MortgageClient(Client client, Credentials credentials, CreateProductExecutorTracker tracker, String aggregator) {
+        super(client, credentials, aggregator);
 
         this.tracker = tracker;
     }

@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.AgentEventListener;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
+import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
@@ -128,7 +129,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     private boolean supplementalOnAggregation;
     private boolean useAggregationController;
     private AggregationControllerAggregationClient aggregationControllerAggregationClient;
-    private final ClusterInfo clusterInfo;
+    //private final ClusterInfo clusterInfo;
     private boolean isAggregationCluster;
 
     public AgentWorkerContext(CredentialsRequest request, ServiceContext serviceContext, MetricRegistry metricRegistry,
@@ -217,6 +218,11 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     @Override
+    public Aggregator getAggregator(){
+        return this.clusterInfo.getClusterId().getAggregator();
+    }
+
+    @Override
     public Catalog getCatalog() {
         return catalog;
     }
@@ -229,6 +235,11 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     @Override
     public MetricRegistry getMetricRegistry() {
         return metricRegistry;
+    }
+
+    @Override
+    public ClusterInfo getClusterInfo() {
+        return null;
     }
 
     public CredentialsRequest getRequest() {

@@ -12,8 +12,8 @@ public class MortgageSignClient extends BankIdSignClient {
     private static final String BANKID_SIGN_WEBPAGE_PATH = "/sign/%s";
     private static final String NON_VISIBLE_TBS = "Empty tbs";
 
-    public MortgageSignClient(Client client, Credentials credentials) {
-        super(client, credentials);
+    public MortgageSignClient(Client client, Credentials credentials, String aggregator) {
+        super(client, credentials, aggregator);
     }
 
     @Override

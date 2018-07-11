@@ -39,9 +39,10 @@ public class OKQ8BankAgent extends AbstractAgent implements DeprecatedRefreshExe
      */
     private Optional<LoginResponse> loginResponseFromAuthenticationRequest;
 
-    protected static Builder createClientRequest(String uri, Client client) {
+    //TODO is this right?
+    protected static Builder createClientRequest(String uri, Client client, String userAgent) {
         return client.resource(uri)
-                .header("User-Agent", DEFAULT_USER_AGENT)
+                .header("User-Agent", userAgent)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept("*/*")
                 .acceptLanguage("sv-se");
@@ -91,7 +92,7 @@ public class OKQ8BankAgent extends AbstractAgent implements DeprecatedRefreshExe
 
     private LoginResponse loginAndFetchAllTransactions() throws LoginException {
         LoginRequest loginRequest = createLoginRequestForCredentials(credentials);
-        ClientResponse response = createClientRequest(LOGIN_URL, client)
+        ClientResponse response = createClientRequest(LOGIN_URL, client, getAggregator().getAggregatorIdentifier())
                 .post(ClientResponse.class, loginRequest);
 
         ensureLoginSuccessful(response);

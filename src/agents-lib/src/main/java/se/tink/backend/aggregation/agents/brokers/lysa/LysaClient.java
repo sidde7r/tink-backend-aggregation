@@ -17,8 +17,10 @@ public class LysaClient {
     private static final String BASE_URL = "https://api.lysa.se/";
 
     private final Client httpClient;
+    private final String aggregator;
 
-    public LysaClient(Client httpClient) {
+    public LysaClient(Client httpClient, String aggregator) {
+        this.aggregator = aggregator;
         this.httpClient = httpClient;
     }
 
@@ -44,13 +46,15 @@ public class LysaClient {
         return createClientRequest("transactions").get(new GenericType<List<TransactionEntity>>() {});
     }
 
+
+    //TODO IS THIS RIGHT?
     private WebResource.Builder createClientRequest(String uri) {
         Preconditions.checkNotNull(uri);
 
         WebResource.Builder builder = httpClient.resource(BASE_URL + uri)
                 .type(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
-                .header("User-Agent", AbstractAgent.DEFAULT_USER_AGENT);
+                .header("User-Agent", aggregator);
 
         return builder;
     }

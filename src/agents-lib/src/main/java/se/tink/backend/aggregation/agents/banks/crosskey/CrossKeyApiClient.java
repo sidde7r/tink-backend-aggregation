@@ -261,8 +261,10 @@ public class CrossKeyApiClient {
         return BaseResponse.deserializeResponse(response, model, errorHandler);
     }
 
+
+    //TODO FIX THIS
     private WebResource.Builder createClientRequest(String uri) {
-        return client.resource(rootUrl + uri).header("User-Agent", AbstractAgent.DEFAULT_USER_AGENT)
+        return client.resource(rootUrl + uri).header("User-Agent", "CROSSKEY") //AbstractAgent.getDefaultUserAgent())
                 .type(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON_TYPE);
     }

@@ -38,8 +38,8 @@ public class TransferClient extends SBABClient {
     private final Catalog catalog;
     private final TransferMessageFormatter messageFormatter;
 
-    public TransferClient(Client client, Credentials credentials, Catalog catalog) {
-        super(client, credentials);
+    public TransferClient(Client client, Credentials credentials, Catalog catalog, String aggregator) {
+        super(client, credentials, aggregator);
         this.messageFormatter = new TransferMessageFormatter(catalog,
                 TransferMessageLengthConfig.createWithMaxLength(30, 12, 12),
                 new StringNormalizerSwedish("!+%\"/?,.§\\-"));

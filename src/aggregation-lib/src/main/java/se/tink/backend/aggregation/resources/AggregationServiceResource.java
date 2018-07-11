@@ -85,6 +85,7 @@ public class AggregationServiceResource implements AggregationService, Managed {
         if (isAggregationCluster) {
             ClusterHostConfiguration configuration = clusterHostConfigurationRepository.findOne(clusterId.getId());
             Preconditions.checkNotNull(configuration);
+
             return ClusterInfo.createForAggregationCluster(clusterId,
                     Preconditions.checkNotNull(configuration.getHost()),
                     Preconditions.checkNotNull(configuration.getApiToken()),

@@ -29,8 +29,9 @@ import se.tink.backend.system.rpc.TransactionTypes;
 public class RikskortetAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
     private static final File WSDL_FILE = new File("data/agents/rikskortet.wsdl");
     private boolean hasRefreshed = false;
+    SOAPUserAgentHandler userAgentHandler;
 
-    private static void addSoapHandlers(MobileWSV2Soap service) {
+    private static void addSoapHandlers(MobileWSV2Soap service, String aggregator) {
         Binding binding = ((BindingProvider) service).getBinding();
 
         @SuppressWarnings("rawtypes")
@@ -40,7 +41,7 @@ public class RikskortetAgent extends AbstractAgent implements DeprecatedRefreshE
             handlerChain = Lists.newArrayList();
         }
 
-        handlerChain.add(new SOAPUserAgentHandler());
+        handlerChain.add(new SOAPUserAgentHandler(aggregator));
         handlerChain.add(new SOAPLoggingHandler());
         binding.setHandlerChain(handlerChain);
     }
@@ -55,12 +56,13 @@ public class RikskortetAgent extends AbstractAgent implements DeprecatedRefreshE
 
     public RikskortetAgent(CredentialsRequest request, AgentContext context) {
         super(request, context);
+        userAgentHandler = new SOAPUserAgentHandler(getAggregator().getAggregatorIdentifier());
 
         try {
             credentials = request.getCredentials();
             service = new MobileWSV2(WSDL_FILE.toURI().toURL()).getMobileWSV2Soap();
 
-            addSoapHandlers(service);
+            addSoapHandlers(service, getAggregator().getAggregatorIdentifier());
         } catch (Exception e) {
             log.error("Could not initialize client", e);
         }
@@ -130,4 +132,6 @@ public class RikskortetAgent extends AbstractAgent implements DeprecatedRefreshE
     public void logout() throws Exception {
         // TODO Implement.
     }
+
+
 }

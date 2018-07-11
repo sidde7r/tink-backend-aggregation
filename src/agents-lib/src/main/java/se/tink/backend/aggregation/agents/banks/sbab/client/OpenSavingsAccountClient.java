@@ -104,8 +104,8 @@ public class OpenSavingsAccountClient extends SBABClient {
             .put(ApplicationFieldOptionValues.INDUSTRY_WEAPON, ApplicationFieldName.SBAB_SAVINGS_SOURCES_REASON_OWN_BUSINESS_WEAPON_COMPANY_REGISTRATION_NUMBER)
             .build();
 
-    public OpenSavingsAccountClient(Client client, Credentials credentials) {
-        super(client, credentials);
+    public OpenSavingsAccountClient(Client client, Credentials credentials, String aggregator) {
+        super(client, credentials, aggregator);
     }
 
     public OpenSavingsAccountResponse submit(GenericApplication application) throws Exception {

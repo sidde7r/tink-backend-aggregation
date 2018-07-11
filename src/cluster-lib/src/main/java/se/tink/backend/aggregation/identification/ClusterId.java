@@ -13,12 +13,12 @@ public class ClusterId {
 
     private final String name;
     private final String environment;
-    private final String aggregator;
+    private final Aggregator aggregator;
 
     private ClusterId(String name, String environment, String aggregator) {
         this.name = name;
         this.environment = environment;
-        this.aggregator = aggregator;
+        this.aggregator = new Aggregator(aggregator);
     }
 
     public MetricId.MetricLabels metricLabels() {
@@ -32,7 +32,7 @@ public class ClusterId {
     }
 
     public boolean isValidId() {
-        return !(Strings.isNullOrEmpty(name) || Strings.isNullOrEmpty(environment));
+        return !(Strings.isNullOrEmpty(name) || Strings.isNullOrEmpty(environment) || Strings.isNullOrEmpty(aggregator.getAggregatorIdentifier()));
     }
 
     public String getName() {
@@ -45,6 +45,10 @@ public class ClusterId {
 
     public String getId() {
         return String.format("%s-%s", name, environment);
+    }
+
+    public Aggregator getAggregator(){
+        return aggregator;
     }
 
     public static ClusterId createFromHttpServletRequest(HttpServletRequest request) {

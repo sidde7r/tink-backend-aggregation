@@ -22,8 +22,8 @@ public class BankIdSignClient extends SBABClient {
 
     private String signPath;
 
-    public BankIdSignClient(Client client, Credentials credentials) {
-        super(client, credentials);
+    public BankIdSignClient(Client client, Credentials credentials, String aggregator) {
+        super(client, credentials, aggregator);
     }
 
     private void setSignMode(SignFormRequestBody signFormRequestBody) throws UnsupportedSignTypeException {

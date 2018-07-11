@@ -29,8 +29,8 @@ public class AuthenticationClient extends SBABClient {
     private static final String BANKID_REDIRECT_START_URL =
             SECURE_BASE_URL + "/login/mobillandning?PW_AuthMech=PW_MBID&dep=privat";
 
-    public AuthenticationClient(Client client, Credentials credentials) {
-        super(client, credentials);
+    public AuthenticationClient(Client client, Credentials credentials, String aggregator) {
+        super(client, credentials, aggregator);
     }
 
     public void initiateBankIdLogin() {
