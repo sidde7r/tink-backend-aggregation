@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.password.Pas
 public class FinTsAuthenticator implements PasswordAuthenticator {
 
     private FinTsApiClient apiClient;
-    private static final Logger LOGGER = LoggerFactory.getLogger(AmericanExpressV62Predicates.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FinTsAuthenticator.class);
 
     public FinTsAuthenticator(FinTsApiClient apiClient) {
         this.apiClient = apiClient;

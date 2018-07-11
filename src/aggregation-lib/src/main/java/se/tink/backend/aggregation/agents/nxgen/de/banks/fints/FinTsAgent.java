@@ -32,8 +32,8 @@ public class FinTsAgent extends NextGenerationAgent {
         // TODO, get blz and endpoint from provider configuration when provider conf is finished
         FinTsConfiguration configuration =
                 new FinTsConfiguration(
-                        "20070000",
-                        "https://fints.deutsche-bank.de",
+                        "",
+                        "",
                         request.getCredentials().getField(Field.Key.USERNAME),
                         request.getCredentials().getField(Field.Key.PASSWORD));
 
