@@ -335,8 +335,8 @@ maven_jar(
 
 maven_jar(
     name = "net_java_dev_jna_platform",
-    artifact = "net.java.dev.jna:platform:3.4.0",
-    sha1 = "e3f70017be8100d3d6923f50b3d2ee17714e9c13",
+    artifact = "net.java.dev.jna:jna-platform:4.5.1",
+    sha1 = "117d52c9f672d8b7ea80a81464c33ef843de9254",
 )
 
 maven_jar(
@@ -695,8 +695,8 @@ maven_jar(
 
 maven_jar(
     name = "net_java_dev_jna_jna",
-    artifact = "net.java.dev.jna:jna:3.4.0",
-    sha1 = "803ff252fedbd395baffd43b37341dc4a150a554",
+    artifact = "net.java.dev.jna:jna:4.5.1",
+    sha1 = "65bd0cacc9c79a21c6ed8e9f588577cd3c2f85b9",
 )
 
 maven_jar(
@@ -2333,4 +2333,22 @@ maven_jar(
     name = "com_sproutsocial_nsqj_j",
     artifact = "com.sproutsocial:nsq-j:0.9.1",
     sha1 = "4d51d71be5236e737b178716b226bb87a03949c7"
+)
+
+maven_jar(
+    name = "net_sourceforge_lept4j",
+    artifact = "net.sourceforge.lept4j:lept4j:1.10.0",
+    sha1 = "72153b28e8e1f0391afcc2380c41ac8e73bd599e"
+)
+
+maven_jar(
+    name = "net_sourceforge_tess4j",
+    artifact = "net.sourceforge.tess4j:tess4j:4.0.2",
+    sha1 = "95516b133368840a0974ef5316fedd9c5e3aa635"
+)
+
+maven_jar(
+    name = "com_sun_media_jai_imageio",
+    artifact = "com.github.jai-imageio:jai-imageio-core:1.4.0",
+    sha1 = "fb6d79b929556362a241b2f65a04e538062f0077"
 )

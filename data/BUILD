@@ -69,3 +69,11 @@ filegroup(
     ],
     visibility = ["//visibility:public"],
 )
+
+filegroup(
+    name = "tesseract-training-set",
+    srcs = glob(
+        include = ["tesseract/**"],
+    ),
+    visibility = ["//visibility:public"],
+)
