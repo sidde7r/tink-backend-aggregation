@@ -9,6 +9,7 @@ public enum EuroInformationErrorCodes {
     LOGIN_ERROR("1000"),
     NOT_LOGGED_IN("0001"),
     TECHNICAL_PROBLEM("9000"),
+    NO_ACCOUNT("2005"),
     NO_ENUM_VALUE("");
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EuroInformationErrorCodes.class);
