@@ -20,7 +20,7 @@ public class CommerzbankApiClient {
         this.storage = storage;
     }
 
-    private URL getUrl(String resource) {
+    private static URL getUrl(String resource) {
         return new URL(CommerzbankConstants.URLS.HOST + resource);
     }
 
