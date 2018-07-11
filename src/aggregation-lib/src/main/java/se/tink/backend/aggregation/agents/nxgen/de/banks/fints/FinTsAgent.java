@@ -29,11 +29,11 @@ public class FinTsAgent extends NextGenerationAgent {
 
     public FinTsAgent(CredentialsRequest request, AgentContext context) {
         super(request, context);
-        // TODO, get blz and endpoint from provider configuration when provider conf is finished
+        String[] payload = request.getProvider().getPayload().split(" ");
         FinTsConfiguration configuration =
                 new FinTsConfiguration(
-                        "",
-                        "",
+                        payload[0],
+                        payload[1],
                         request.getCredentials().getField(Field.Key.USERNAME),
                         request.getCredentials().getField(Field.Key.PASSWORD));
 
