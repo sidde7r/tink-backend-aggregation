@@ -200,6 +200,19 @@ public class FinTsApiClient {
         }
     }
 
+    public boolean keepAlive() {
+        FinTsRequest getAccountRequest =
+                new FinTsRequest(
+                        configuration,
+                        this.dialogId,
+                        this.messageNumber,
+                        localSettings.systemId,
+                        localSettings.tanCapability,
+                        new HKSPA(3, null, null, null));
+        FinTsResponse getAccountResponse = sendMessage(getAccountRequest);
+        return getAccountResponse.isSuccess();
+    }
+
     public List<SEPAAccount> getAccounts() {
         FinTsRequest getAccountRequest =
                 new FinTsRequest(
