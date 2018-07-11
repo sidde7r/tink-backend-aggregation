@@ -1,8 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius;
 
-import java.util.Date;
-import java.util.Map;
-import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.AuthenticateWithCodeRequest;
@@ -25,6 +22,8 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transac
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.rpc.FetchProductsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.rpc.FetchTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.rpc.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.rpc.FetchUpcomingTransactionsRequest;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.rpc.FetchUpcomingTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.BelfiusPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.getsigningprotocol.SignProtocolResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.preparetransfer.PrepareRoot;
@@ -58,6 +57,10 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+
+import javax.ws.rs.core.MediaType;
+import java.util.Map;
+
 
 public class BelfiusApiClient {
 
@@ -232,7 +235,7 @@ public class BelfiusApiClient {
     }
 
     public BelfiusPaymentResponse executePayment(boolean toOwnAccount, Transfer transfer,
-            String clientHash, boolean isStructuredMessage) {
+                                                 String clientHash, boolean isStructuredMessage) {
         this.entityClick();
         this.setSecurityType();
         this.entitySelect();
@@ -281,6 +284,17 @@ public class BelfiusApiClient {
                 SignProtocolResponse.class,
                 DoubleSignTransferRequest
                         .create(BelfiusSecurityUtils.generateSignTransferId(), challenge));
+    }
+
+    public FetchUpcomingTransactionsResponse fetchUpcomingTransactions(String key, boolean initialRequest) {
+        BelfiusRequest.Builder requestBuilder = initialRequest ? FetchUpcomingTransactionsRequest.createInitialRequest(key)
+                : FetchUpcomingTransactionsRequest.createNextPageRequest();
+
+        FetchUpcomingTransactionsResponse transactionsResponse = post(BelfiusConstants.Url.GEPA_RENDERING_URL,
+                FetchUpcomingTransactionsResponse.class,
+                requestBuilder);
+
+        return transactionsResponse;
     }
 
     private <T extends BelfiusResponse> T post(URL url, Class<T> c, BelfiusRequest.Builder builder) {

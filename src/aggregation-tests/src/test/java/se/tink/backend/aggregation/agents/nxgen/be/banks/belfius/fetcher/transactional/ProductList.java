@@ -1373,4 +1373,169 @@ public class ProductList {
             + "\t}]\n"
             + "}";
 
+    public static final class RandomTestData {
+        public static final String BENEFICIARY_NAME = "Firstname Lastname";
+        public static final String BENEFICIARY_ACCOUNT = "BE26549642529529"; // http://randomiban.com/?country=Belgium
+        public static final String TRANSACTION_KEY = "DECAFBEEF";
+
+    }
+
+    public static String pendingTransactions = "{\n" +
+            "  \"pendingResponseSets\": false,\n" +
+            "  \"responseSets\": [{\n" +
+            "    \"requestCounter\": 22,\n" +
+            "    \"applicationId\": \"BDM\",\n" +
+            "    \"responses\": []\n" +
+            "  }, {\n" +
+            "    \"requestCounter\": 22,\n" +
+            "    \"applicationId\": \"BDM\",\n" +
+            "    \"responses\": [{\n" +
+            "      \"LoadScreen\": [{\n" +
+            "        \"screenName\": \"gef0.gef1.gemd.Native_PendingTransactions\"\n" +
+            "      }, {\n" +
+            "        \"screenVersion\": \"%24Revision%3A+1.2+%24+%5BP061%5D\"\n" +
+            "      }, {\n" +
+            "        \"parentWidgetId\": \"Container@reuse_Pending\"\n" +
+            "      }, {\n" +
+            "        \"modal\": false\n" +
+            "      }]\n" +
+            "    }, {\n" +
+            "      \"ScreenUpdate\": [{\n" +
+            "        \"widgetId\": \"Container@reuse_Pending@btn_Next\",\n" +
+            "        \"properties\": [{\n" +
+            "          \"label\": \"Next\"\n" +
+            "        }]\n" +
+            "      }, {\n" +
+            "        \"widgetId\": \"Container@reuse_Pending@minp_TransactionKey\",\n" +
+            "        \"properties\": [{\n" +
+            "          \"text\": \"\"\n" +
+            "        }]\n" +
+            "      }, {\n" +
+            "        \"widgetId\": \"Container@reuse_Pending@mlb_ModifyOK\",\n" +
+            "        \"properties\": [{\n" +
+            "          \"text\": \"\"\n" +
+            "        }]\n" +
+            "      }, {\n" +
+            "        \"widgetId\": \"Container@reuse_Pending@mlb_DeleteOK\",\n" +
+            "        \"properties\": [{\n" +
+            "          \"text\": \"\"\n" +
+            "        }]\n" +
+            "      }, {\n" +
+            "        \"widgetId\": \"Container@reuse_Pending@minp_NewDateExec\",\n" +
+            "        \"properties\": [{\n" +
+            "          \"text\": \"\"\n" +
+            "        }]\n" +
+            "      }, {\n" +
+            "        \"widgetId\": \"Container@reuse_Pending@rep_pending\",\n" +
+            "        \"properties\": [{\n" +
+            "          \"contentList\": {\n" +
+            "            \"staticcontent\": {\n" +
+            "              \"rp_hist\": {\n" +
+            "                \"lbl_Test_Description\": {\n" +
+            "                  \"endColon\": \"false\"\n" +
+            "                }\n" +
+            "              }\n" +
+            "            },\n" +
+            "            \"dynamiccontent\": [],\n" +
+            "            \"type\": \"full\"\n" +
+            "          }\n" +
+            "        }]\n" +
+            "      }]\n" +
+            "    }]\n" +
+            "  }, {\n" +
+            "    \"requestCounter\": 22,\n" +
+            "    \"applicationId\": \"BDM\",\n" +
+            "    \"responses\": [{\n" +
+            "      \"ScreenUpdate\": [{\n" +
+            "        \"widgetId\": \"Container@reuse_Pending@minp_TransactionKey\",\n" +
+            "        \"properties\": [{\n" +
+            "          \"text\": \"\"\n" +
+            "        }]\n" +
+            "      }, {\n" +
+            "        \"widgetId\": \"Container@reuse_Pending@mlb_ModifyOK\",\n" +
+            "        \"properties\": [{\n" +
+            "          \"text\": \"\"\n" +
+            "        }]\n" +
+            "      }, {\n" +
+            "        \"widgetId\": \"Container@reuse_Pending@mlb_DeleteOK\",\n" +
+            "        \"properties\": [{\n" +
+            "          \"text\": \"\"\n" +
+            "        }]\n" +
+            "      }, {\n" +
+            "        \"widgetId\": \"Container@reuse_Pending@lb_hasNext\",\n" +
+            "        \"properties\": [{\n" +
+            "          \"text\": \"N\"\n" +
+            "        }]\n" +
+            "      }, {\n" +
+            "        \"widgetId\": \"Container@reuse_Pending@minp_NewDateExec\",\n" +
+            "        \"properties\": [{\n" +
+            "          \"text\": \"\"\n" +
+            "        }]\n" +
+            "      }, {\n" +
+            "        \"widgetId\": \"Container@reuse_Pending@lb_Currency_Available\",\n" +
+            "        \"properties\": [{\n" +
+            "          \"text\": \"2,57 EUR\"\n" +
+            "        }]\n" +
+            "      }, {\n" +
+            "        \"widgetId\": \"Container@reuse_Pending@rep_pending\",\n" +
+            "        \"properties\": [{\n" +
+            "          \"contentList\": {\n" +
+            "            \"staticcontent\": {\n" +
+            "              \"rp_hist\": {\n" +
+            "                \"lbl_Test_Description\": {\n" +
+            "                  \"endColon\": \"false\"\n" +
+            "                }\n" +
+            "              }\n" +
+            "            },\n" +
+            "            \"dynamiccontent\": [{\n" +
+            "              \"rp_hist\": {\n" +
+            "                \"lb_Type\": {\n" +
+            "                  \"text\": \"3\"\n" +
+            "                },\n" +
+            "                \"lb_DateExec\": {\n" +
+            "                  \"text\": \"20/07/2018\"\n" +
+            "                },\n" +
+            "                \"mlb_Communication\": {\n" +
+            "                  \"text\": \"Test\"\n" +
+            "                },\n" +
+            "                \"mlb_Bewaarloon\": {\n" +
+            "                  \"text\": \" \"\n" +
+            "                },\n" +
+            "                \"lb_Status\": {\n" +
+            "                  \"text\": \"Uitgesteld\"\n" +
+            "                },\n" +
+            "                \"mlb_NoDeleteExpl\": {\n" +
+            "                  \"text\": \"\"\n" +
+            "                },\n" +
+            "                \"lb_Amount\": {\n" +
+            "                  \"text\": \"-0,10 EUR\"\n" +
+            "                },\n" +
+            "                \"lb_BenefAccount\": {\n" +
+            "                  \"text\": \""+ RandomTestData.BENEFICIARY_ACCOUNT +"\"\n" +
+            "                },\n" +
+            "                \"lbl_Test_Description\": {\n" +
+            "                  \"text\": \"RKHI - WACHTEN UITVOERING\"\n" +
+            "                },\n" +
+            "                \"mlb_ManageAllowed\": {\n" +
+            "                  \"text\": \"Y\"\n" +
+            "                },\n" +
+            "                \"mlb_TransactionKey\": {\n" +
+            "                  \"text\": \"" + RandomTestData.TRANSACTION_KEY + "\"\n" +
+            "                },\n" +
+            "                \"lb_BenefName\": {\n" +
+            "                  \"text\": \"" + RandomTestData.BENEFICIARY_NAME +"\"\n" +
+            "                },\n" +
+            "                \"mlb_StructuredComm\": {\n" +
+            "                  \"text\": \"N\"\n" +
+            "                }\n" +
+            "              },\n" +
+            "              \"key\": \"1\"\n" +
+            "            }],\n" +
+            "            \"type\": \"full\"\n" +
+            "          }\n" +
+            "        }]\n" +
+            "      }]\n" +
+            "    }]\n" +
+            "  }]\n" +
+            "}";
 }
