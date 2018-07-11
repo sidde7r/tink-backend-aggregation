@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.transaction;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -31,7 +32,12 @@ public class CommerzbankTransactionFetcher implements TransactionIndexPaginator<
         String productType = keys.get(CommerzbankConstants.HEADERS.PRODUCT_TYPE).replaceAll("\"", "");
         String identifier = keys.get(CommerzbankConstants.HEADERS.IDENTIFIER).replaceAll("\"", "");
 
-        TransactionEntity transactionEntity = apiClient.transactionOverview(productType, identifier).getItems().get(0);
+        TransactionEntity transactionEntity = null;
+        try {
+            transactionEntity = apiClient.transactionOverview(productType, identifier).getItems().get(0);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
         List<PfmTransactionsEntity> pfmTransactionsEntities = transactionEntity.getPfmTransactions();
 
         transactions = pfmTransactionsEntities.stream()
