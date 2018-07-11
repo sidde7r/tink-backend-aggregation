@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.account;
 
+import com.google.common.base.Preconditions;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.ResultEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.account.entities.ProductsEntity;
@@ -25,9 +28,12 @@ public class CommerzbankAccountFetcher implements AccountFetcher<TransactionalAc
 
         Collection<TransactionalAccount> accounts = new ArrayList<>();
         ResultEntity resultEntity = apiClient.financialOverview();
-        ProductsEntity productsEntity = resultEntity.getItems().get(0).getProducts().get(0);
-        accounts.add(productsEntity.toTransactionalAccount());
 
+        Optional<ProductsEntity> productsEntity;
+        productsEntity = Optional.ofNullable(resultEntity.getItems().get(0).getProducts().get(0));
+
+        Preconditions.checkState(productsEntity != null, Collections.EMPTY_LIST);
+        accounts.add(productsEntity.get().toTransactionalAccount());
         return accounts;
     }
 }

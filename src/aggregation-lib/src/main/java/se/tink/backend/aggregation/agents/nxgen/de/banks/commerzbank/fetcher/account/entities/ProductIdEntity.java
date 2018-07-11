@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.account.entities;
 
+import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -22,6 +23,7 @@ public class ProductIdEntity {
     }
 
     public String getProductType() {
+        Preconditions.checkState(productType != null, "Expected a Product type object but it was null");
         return productType;
     }
 }

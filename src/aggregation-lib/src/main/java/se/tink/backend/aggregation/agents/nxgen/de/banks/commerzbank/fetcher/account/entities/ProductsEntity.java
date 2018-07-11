@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.account.entities;
 
+import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -133,6 +134,7 @@ public class ProductsEntity {
     }
 
     public ProductIdEntity getProductId() {
+        Preconditions.checkState(productId != null, "Expected a Product Id object but it was null");
         return productId;
     }
 
@@ -307,16 +309,15 @@ public class ProductsEntity {
     public AccountTypes getType() {
         if (getProductId().getProductType().equals(CommerzbankConstants.VALUES.CURRENT_ACCOUNT)) {
             return AccountTypes.CHECKING;
-        } else return AccountTypes.OTHER;
+        } else
+            return AccountTypes.OTHER;
     }
 
-
-    public Amount getTinkBalance(){
+    public Amount getTinkBalance() {
         return new Amount(getCurrency(), originalBalance.getValue());
     }
 
-
-    public TransactionalAccount toTransactionalAccount(){
+    public TransactionalAccount toTransactionalAccount() {
 
         return TransactionalAccount.builder(getType(), getInternalAccountNumber(), getTinkBalance())
                 .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
