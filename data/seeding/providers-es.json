@@ -148,6 +148,9 @@
                     "name":"date-of-birth",
                     "description":"Date of birth",
                     "pattern":"[0-3][0-9]/[0-1][0-9]/[1-2][9|0][0-9][0-9]",
+                    "hint":"DD/MM/YYYY",
+                    "minLength":10,
+                    "maxLength":10,
                     "immutable":true,
                     "helpText":"Your birth date"
                 },
