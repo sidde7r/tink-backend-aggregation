@@ -50,9 +50,8 @@ public class EuroInformationInvestmentAccountFetcher implements AccountFetcher<I
         String returnCode = investmentAccountsListResponse.getReturnCode();
         if (!EuroInformationUtils.isSuccess(returnCode)) {
             if (!EuroInformationErrorCodes.NO_ACCOUNT.equals(EuroInformationErrorCodes.getByCodeNumber(returnCode))) {
-                LOGGER.error("Problem while fetching investment accounts: " + investmentAccountsListResponse);
-            } else {
-                LOGGER.info("No investment accounts");
+                AGGREGATION_LOGGER.infoExtraLong("Problem while fetching investment accounts: " + SerializationUtils
+                        .serializeToString(investmentAccountsListResponse), investmentLogTag);
             }
             return Collections.emptyList();
         }
