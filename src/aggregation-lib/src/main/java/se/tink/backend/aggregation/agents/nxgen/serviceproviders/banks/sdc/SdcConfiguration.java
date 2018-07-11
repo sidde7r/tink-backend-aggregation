@@ -102,6 +102,10 @@ public abstract class SdcConfiguration {
     public abstract String getPhoneCountryCode();
 
     // parse error messages to find reason for error
+    public boolean isNotCustomer(String errorMessage) {
+        return SdcConstants.ErrorMessage.isNotCustomer(errorMessage);
+    }
+
     public boolean isLoginError(String errorMessage) {
         for (SdcConstants.ErrorMessage error : SdcConstants.ErrorMessage.values()) {
             if (error.isLoginError(errorMessage)) {

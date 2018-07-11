@@ -82,7 +82,9 @@ public class SdcSmsOtpAuthenticator implements SmsOtpAuthenticatorPassword<SdcSm
                 String errorMessage = Optional
                         .ofNullable(e.getResponse().getHeaders().getFirst(SdcConstants.Headers.X_SDC_ERROR_MESSAGE))
                         .orElse("");
-                if (this.agentConfiguration.isLoginError(errorMessage)) {
+                if (this.agentConfiguration.isNotCustomer(errorMessage)) {
+                    throw LoginError.NOT_CUSTOMER.exception();
+                } else if (this.agentConfiguration.isLoginError(errorMessage)) {
                     LOGGER.info(errorMessage);
 
                     // if user is blocked throw more specific exception

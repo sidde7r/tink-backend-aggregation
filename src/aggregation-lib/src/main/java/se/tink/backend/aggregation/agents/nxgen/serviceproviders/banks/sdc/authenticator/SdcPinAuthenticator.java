@@ -65,7 +65,9 @@ public class SdcPinAuthenticator implements PasswordAuthenticator {
                 String errorMessage = Optional
                         .ofNullable(e.getResponse().getHeaders().getFirst(SdcConstants.Headers.X_SDC_ERROR_MESSAGE))
                         .orElse("");
-                if (agentConfiguration.isLoginError(errorMessage)) {
+                if (this.agentConfiguration.isNotCustomer(errorMessage)) {
+                    throw LoginError.NOT_CUSTOMER.exception();
+                } else if (agentConfiguration.isLoginError(errorMessage)) {
                     LOGGER.info(errorMessage);
 
                     // if user is blocked throw more specific exception

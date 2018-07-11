@@ -24,7 +24,8 @@ public class SdcConstants {
         INCORRECT_USER_PASSWORD("incorrect user id or password", false),
         PASSWORD_EXPIRED("the password has expired", false),
         PIN_OR_CODE_NOT_VALID("pin or code is not valid", false),
-        PASSWORD_BLOCKED("the password is blocked", true);
+        PASSWORD_BLOCKED("the password is blocked", true),
+        NO_AGREEMENT("you have no agreement", false);
 
         private final String message;
         private final boolean blocked;
@@ -38,6 +39,9 @@ public class SdcConstants {
             return this.message;
         }
 
+        public static boolean isNotCustomer(String msg) {
+            return msg.toLowerCase().contains(NO_AGREEMENT.message);
+        }
         public boolean isLoginError(String msg) {
             return msg.toLowerCase().contains(this.message);
         }
