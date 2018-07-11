@@ -21,7 +21,8 @@ public class FinTsSessionHandler implements SessionHandler {
     @Override
     public void keepAlive() throws SessionException {
 
-        // TODO proper keep alive
-        throw SessionError.SESSION_EXPIRED.exception();
+        if (!apiClient.keepAlive()) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
     }
 }
