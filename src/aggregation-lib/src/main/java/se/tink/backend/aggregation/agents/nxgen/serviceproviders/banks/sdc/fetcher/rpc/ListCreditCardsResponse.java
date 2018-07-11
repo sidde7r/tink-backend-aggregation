@@ -14,35 +14,45 @@ public class ListCreditCardsResponse extends ArrayList<SdcCreditCardEntity> {
 
     @JsonIgnore
     public List<SdcCreditCardEntity> getCreditCards() {
-        Map<String, SdcCreditCardEntity> cardsByAccount = new HashMap<>();
 
         List<SdcCreditCardEntity>  creditCards = stream()
                 .filter(SdcCreditCardEntity::isCreditCard)
                 .collect(Collectors.toList());
 
-        // filter any extra cards for an account, only display the most recent one
-        creditCards.forEach(newCard -> {
-            String creditCardAccountId = newCard.getAttachedAccount().getId();
+        // filter any extra cards for an account, keep the most recent one
+        Map<String, SdcCreditCardEntity> filteredCardAccounts = filterMostRecentCardPerAccount(creditCards);
+
+        return new ArrayList<>(filteredCardAccounts.values());
+    }
+
+    // only save one credit card per account, save the most recent card
+    private Map<String, SdcCreditCardEntity> filterMostRecentCardPerAccount(List<SdcCreditCardEntity> creditCards) {
+        Map<String, SdcCreditCardEntity> cardsByAccount = new HashMap<>();
+
+        for (SdcCreditCardEntity creditCard : creditCards) {
+            String creditCardAccountId = creditCard.getAttachedAccount().getId();
+
             if (cardsByAccount.containsKey(creditCardAccountId)) {
                 SdcCreditCardEntity addedCard = cardsByAccount.get(creditCardAccountId);
 
-                if (isMoreRecent(addedCard, newCard)) {
-                    cardsByAccount.put(creditCardAccountId, newCard);
+                if (isMoreRecent(addedCard, creditCard)) {
+                    cardsByAccount.put(creditCardAccountId, creditCard);
                 }
             } else {
-                cardsByAccount.put(creditCardAccountId, newCard);
+                cardsByAccount.put(creditCardAccountId, creditCard);
             }
-        });
+        }
 
-        return new ArrayList<>(cardsByAccount.values());
+        return cardsByAccount;
     }
 
+    // if new card has end date and end date is after already added cards end date -> true
     private boolean isMoreRecent(SdcCreditCardEntity addedCard, SdcCreditCardEntity newCard) {
-        // if new card has end date and end date is after already added cards end date -> true
-        if (newCard.getEndDate() != null) {
-            if (addedCard.getEndDate() == null || addedCard.getEndDate().before(newCard.getEndDate())) {
-                return true;
-            }
+        if (newCard.getEndDate() == null) {
+            return false;
+        }
+        if (addedCard.getEndDate() == null || addedCard.getEndDate().before(newCard.getEndDate())) {
+            return true;
         }
 
         return false;
