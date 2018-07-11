@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank;
 
+import se.tink.libraries.jersey.logging.PublicAPIHTTPHeadersFilter;
+
 public class CommerzbankConstants {
 
     public static class URLS {
@@ -25,6 +27,10 @@ public class CommerzbankConstants {
         public static final String CCB_VALUE = "MobBkniOS+10.0.0+10.3.1";
         public static final String USER_AGENT_VALUE = "MobBkniOS-10.0.0";
         public static final String CURRENT_ACCOUNT = "CurrentAccount";
+        public static final String SESSION_TOKEN_VALUE = "false";
+        public static final String CURRENCY_VALUE = "EUR";
+        public static final String PRODUCT_BRANCH = "100";
+        public static final String AMOUNT_TYPE = "ALL";
     }
 
 }
