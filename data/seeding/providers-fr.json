@@ -65,7 +65,7 @@
       "credentialsType": "PASSWORD",
       "multiFactor": false,
       "className": "nxgen.fr.banks.bmcedirect.BmceDirectAgent",
-      "passwordHelpText": "In order to use BMCE Direct with Tink, please authenticate yourself using the same credentials you normally use in CIC's mobile banking app.",
+      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in CIC's mobile banking app.",
       "transactional": "true",
       "tutorialUrl": null,
       "fields": [
