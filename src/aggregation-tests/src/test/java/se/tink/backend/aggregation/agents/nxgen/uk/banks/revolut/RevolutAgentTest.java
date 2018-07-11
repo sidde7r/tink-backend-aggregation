@@ -15,7 +15,6 @@ public class RevolutAgentTest {
     @Test
     public void testLoginRefresh() throws Exception {
         new AgentIntegrationTest.Builder("uk", "uk-revolut-password")
-                .setCredentialType(CredentialsTypes.PASSWORD)
                 .addCredentialField(Field.Key.USERNAME, USERNAME)
                 .addCredentialField(Field.Key.PASSWORD, PASSWORD)
                 .loadCredentialsBefore(false)
