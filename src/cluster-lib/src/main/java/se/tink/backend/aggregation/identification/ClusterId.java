@@ -9,13 +9,16 @@ import se.tink.libraries.metrics.MetricId;
 public class ClusterId {
     private static final String CLUSTER_NAME_HEADER = "x-tink-cluster-name";
     private static final String CLUSTER_ENVIRONMENT_HEADER = "x-tink-cluster-environment";
+    private static final String AGGREGATOR_NAME_HEADER = "x-tink-aggregator-header";
 
     private final String name;
     private final String environment;
+    private final String aggregator;
 
-    private ClusterId(String name, String environment) {
+    private ClusterId(String name, String environment, String aggregator) {
         this.name = name;
         this.environment = environment;
+        this.aggregator = aggregator;
     }
 
     public MetricId.MetricLabels metricLabels() {
@@ -51,8 +54,8 @@ public class ClusterId {
 
         String clusterName = request.getHeader(CLUSTER_NAME_HEADER);
         String clusterEnvironment = request.getHeader(CLUSTER_ENVIRONMENT_HEADER);
-
-        return create(clusterName, clusterEnvironment);
+        String aggregatorName = request.getHeader(AGGREGATOR_NAME_HEADER);
+        return create(clusterName, clusterEnvironment, aggregatorName);
     }
 
     public static ClusterId createFromContainerRequest(ContainerRequest request) {
@@ -62,15 +65,16 @@ public class ClusterId {
 
         String clusterName = request.getHeaderValue(CLUSTER_NAME_HEADER);
         String clusterEnvironment = request.getHeaderValue(CLUSTER_ENVIRONMENT_HEADER);
+        String aggregatorName = request.getHeaderValue(AGGREGATOR_NAME_HEADER);
 
-        return create(clusterName, clusterEnvironment);
+        return create(clusterName, clusterEnvironment, aggregatorName);
     }
 
     public static ClusterId createEmpty() {
-        return new ClusterId(null, null);
+        return new ClusterId(null, null, null);
     }
 
-    public static ClusterId create(String name, String environment) {
-        return new ClusterId(name, environment);
+    public static ClusterId create(String name, String environment, String aggregator) {
+        return new ClusterId(name, environment, aggregator);
     }
 }
