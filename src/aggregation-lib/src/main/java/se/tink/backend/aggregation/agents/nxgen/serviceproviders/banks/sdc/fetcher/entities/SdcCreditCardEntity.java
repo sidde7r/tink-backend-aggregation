@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
@@ -16,7 +18,8 @@ public class SdcCreditCardEntity {
     private String creditcardNumber;
     private String cardHolderName;
     private SdcCreditCardAccountEntity attachedAccount;
-    private String endDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date endDate;
     private String creditcardStatusType;
 
     @JsonIgnore
@@ -57,7 +60,7 @@ public class SdcCreditCardEntity {
         return attachedAccount != null ? attachedAccount : new SdcCreditCardAccountEntity();
     }
 
-    public String getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 
@@ -66,13 +69,11 @@ public class SdcCreditCardEntity {
     }
 
     @JsonIgnore
-    public CreditCardAccount toTinkCard(SdcAccount creditCardAccount, String bankCode) {
+    public CreditCardAccount toTinkCard(SdcAccount creditCardAccount) {
         return CreditCardAccount.builder(creditcardNumber.replaceAll(" ", ""),
                 creditCardAccount.getAmount().toTinkAmount(), creditCardAccount.getAvailableAmount().toTinkAmount())
                 .setName(creditCardAccount.getName())
                 .setUniqueIdentifier(constructUniqueIdentifier())
-                // TODO: this is temporary just to be able to log credit card transaction fetching for "no-storebrand" = "9680"
-                .addToTemporaryStorage("BANK_CODE", bankCode)
                 .build();
     }
 
