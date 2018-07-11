@@ -25,7 +25,11 @@ public class IcaBankenConstants {
         public static final URL UNSIGNED_ASSIGNMENTS_URL = new URL(ENTRY_POINT + "/api/assignments");
         public static final URL DELETE_UNSIGNED_TRANSFER_URL = new URL(ENTRY_POINT + "/api/assignments/bundle/{transferId}");
         public static final URL UPCOMING_TRANSACTIONS_URL = new URL(ENTRY_POINT + "/api/events/future");
-        public static final URL MORTGAGES_URL = new URL(ENTRY_POINT + "/api/engagement");
+        public static final URL ACCEPT_EINVOICE_URL = new URL(ENTRY_POINT + "/api/egiro/invoice/accept");
+        public static final URL VALIDATE_INVOICE_URL = new URL(ENTRY_POINT + "/api/egiro/invoice/validate");
+        public static final URL EINVOICES_URL = new URL(ENTRY_POINT + "/api/egiro/invoices");
+        public static final URL UPDATE_INVOICE_URL = new URL (ENTRY_POINT + "/api/egiro/invoice/update");
+        public static final URL INIT_EINVOICE_SIGN_URL = new URL (ENTRY_POINT + "/api/egiro/recipient/bankId/init/{invoiceId}");
     }
 
     public static final class Headers {
@@ -54,24 +58,10 @@ public class IcaBankenConstants {
         public static String GIRO_NUMBER_TAG = "pgNumber";
         public static String REQUEST_ID_TAG = "requestId";
         public static String TRANSFER_ID_TAG = "transferId";
+        public static String INVOICE_ID_TAG = "invoiceId";
+        public static String NOT_AVAILABLE_TAG = "N/A";
         //Used for making a sign request for transfers
         public static String BUNDLE_TAG = "Bundle";
-        public static String KEY_TAG = "Key";
-        public static String VALUE_TAG = "Tag";
-        public static String SWEDISH_AND_SEPARATOR = "och";
-    }
-
-    public static final class IcaMessages{
-        public static String INTEREST_RATE = "Aktuell räntesats";
-        public static String LOAN_NAME = "Lån";
-        public static String INITIAL_DEBT = "Ursprunglig skuld";
-        public static String INITIAL_DATE = "Utbetalningsdag";
-        public static String APPLICANTS = "Aktuell räntesats";
-        public static String NEXT_DAY_OF_TERMS_CHANGE = "Nästa villkorsändringsdag";
-        public static String MONTH_BOUND = "Räntebindningstid";
-        public static String SECURITY = "Säkerhet";
-        public static String TYPE_OF_SECURITY = "Typ av objekt";
-        public static String TYPE_OF_LOAN = "Typ av lån";
     }
 
     public static final class Currencies{

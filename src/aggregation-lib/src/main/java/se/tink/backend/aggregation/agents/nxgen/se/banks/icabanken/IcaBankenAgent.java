@@ -6,8 +6,9 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaBankenBankIdTransferController;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaBankenBankIdTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.Accounts.IcaBankenAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.IcaBankenApproveEInvoiceExecutor;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.IcaBankenEInvoiceFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.IcaBankenInvestmentFetcher;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans.IcaBankenLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transactions.IcaBankenTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.IcaBankenTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.rpc.IcaBankenSessionFilter;
@@ -32,6 +33,8 @@ import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
 
 public class IcaBankenAgent extends NextGenerationAgent {
     private final IcaBankenApiClient apiClient;
+    private final TransferMessageFormatter transferMessageFormatter = new TransferMessageFormatter(catalog,
+            TransferMessageLengthConfig.createWithMaxLength(14, 12), new StringNormalizerSwedish(",.-?!/+"));
 
     public IcaBankenAgent(CredentialsRequest request, AgentContext context) {
         super(request, context);
@@ -45,15 +48,15 @@ public class IcaBankenAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new BankIdAuthenticationController<>(context, new IcaBankenBankIdAuthenticator(apiClient,sessionStorage));
+        return new BankIdAuthenticationController<>(context,
+                new IcaBankenBankIdAuthenticator(apiClient, sessionStorage));
     }
 
     @Override
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        return Optional.of(new TransactionalAccountRefreshController(metricRefreshController,updateController,
-                new IcaBankenAccountFetcher(apiClient),
-                new TransactionFetcherController<>(transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(new IcaBankenTransactionFetcher(apiClient)))));
+        return Optional.of(new TransactionalAccountRefreshController(metricRefreshController, updateController,
+                new IcaBankenAccountFetcher(apiClient), new TransactionFetcherController<>(transactionPaginationHelper,
+                new TransactionDatePaginationController<>(new IcaBankenTransactionFetcher(apiClient)))));
     }
 
     @Override
@@ -64,18 +67,18 @@ public class IcaBankenAgent extends NextGenerationAgent {
     @Override
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
         return Optional.of(new InvestmentRefreshController(metricRefreshController, updateController,
-                new IcaBankenInvestmentFetcher(apiClient,sessionStorage)));
+                new IcaBankenInvestmentFetcher(apiClient, sessionStorage)));
     }
 
     @Override
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        IcaBankenLoanFetcher loanFetcher = new IcaBankenLoanFetcher(apiClient);
-        return Optional.of(new LoanRefreshController(metricRefreshController, updateController, loanFetcher));
+        return Optional.empty();
     }
 
     @Override
     protected Optional<EInvoiceRefreshController> constructEInvoiceRefreshController() {
-        return Optional.empty();
+        IcaBankenEInvoiceFetcher eInvoiceFetcher = new IcaBankenEInvoiceFetcher(apiClient, catalog, context);
+        return Optional.of(new EInvoiceRefreshController(metricRefreshController, updateController, eInvoiceFetcher));
     }
 
     @Override
@@ -92,14 +95,8 @@ public class IcaBankenAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransferController> constructTransferController() {
         return Optional.of(new IcaBankenBankIdTransferController(context,
-                new IcaBankenBankIdTransferExecutor(apiClient, context,
-                        new TransferMessageFormatter(catalog,
-                TransferMessageLengthConfig.createWithMaxLength(14, 12),
-                new StringNormalizerSwedish(",.-?!/+")),
-                        new IcaBankenTransferDestinationFetcher(apiClient)),
-                null,
-                null,
-                null));
+                new IcaBankenBankIdTransferExecutor(apiClient, context, transferMessageFormatter), null,
+                new IcaBankenApproveEInvoiceExecutor(apiClient, context, catalog, transferMessageFormatter,
+                        new IcaBankenEInvoiceFetcher(apiClient, catalog, context)), null));
     }
-
 }

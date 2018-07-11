@@ -1,19 +1,24 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken;
 
+import com.sun.jersey.api.client.ClientResponse;
 import java.util.List;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.bankid.BankIdResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.PaymentNameResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.SignBundleResponseBody;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.SignedAssignmentList;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.Accounts.entities.AccountBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.Accounts.entities.AccountFetcherRoot;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.entities.AcceptEInvoiceTransferRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.entities.EInvoiceBody;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.entities.PaymentNameBody;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.entities.UpdateEInvoiceRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.entities.ValidateEInvoiceRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.entities.ValidateEInvoiceResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.entities.InstrumentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.entities.InvestmentAccountResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans.entities.LoanListEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans.entities.LoanOverviewResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans.entities.MortgageListEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transactions.entities.RootTransactionModel;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transactions.entities.UpcomingTransactionsBody;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transactions.entities.UpcomingTransactionsResponse;
@@ -28,14 +33,11 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class IcaBankenApiClient {
 
     private final TinkHttpClient client;
     private final Logger log = LoggerFactory.getLogger(IcaBankenApiClient.class);
-
 
     public IcaBankenApiClient(TinkHttpClient client) {
         this.client = client;
@@ -46,7 +48,8 @@ public class IcaBankenApiClient {
     }
 
     protected RequestBuilder createRequest(URL url) {
-        return client.request(url).accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML)
+        return client.request(url)
+                .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML)
                 .header(IcaBankenConstants.Headers.HEADER_APIKEY, IcaBankenConstants.Headers.VALUE_APIKEY)
                 .header(IcaBankenConstants.Headers.HEADER_USERAGENT, IcaBankenConstants.Headers.VALUE_USERAGENT)
                 .header(IcaBankenConstants.Headers.HEADER_CLIENTAPPVERSION,
@@ -55,8 +58,14 @@ public class IcaBankenApiClient {
 
     public BankIdResponse initBankId(String ssn) {
         return createPostRequest(
-                IcaBankenConstants.Urls.LOGIN_BANKID.parameter(IcaBankenConstants.IdTags.IDENTIFIER_TAG, ssn))
-                .post(BankIdResponse.class);
+                IcaBankenConstants.Urls.LOGIN_BANKID.parameter(IcaBankenConstants.IdTags.IDENTIFIER_TAG, ssn)).post(
+                BankIdResponse.class);
+    }
+
+    public BankIdResponse initBankIdEInvoice(String invoiceId) {
+        return createPostRequest(
+                IcaBankenConstants.Urls.INIT_EINVOICE_SIGN_URL.parameter(IcaBankenConstants.IdTags.INVOICE_ID_TAG,
+                        invoiceId)).post(BankIdResponse.class);
     }
 
     public BankIdResponse initBankIdTransfer() {
@@ -64,20 +73,21 @@ public class IcaBankenApiClient {
     }
 
     public SignedAssignmentList getSignedAssignmentsList(String requestId) {
-        SignBundleResponseBody assignmentRequest = createPostRequest(IcaBankenConstants.Urls.SIGNED_ASSIGNMENTS_URL
-                .queryParam(IcaBankenConstants.IdTags.REQUEST_ID_TAG, requestId)).post(SignBundleResponseBody.class);
+        SignBundleResponseBody assignmentRequest = createPostRequest(
+                IcaBankenConstants.Urls.SIGNED_ASSIGNMENTS_URL.queryParam(IcaBankenConstants.IdTags.REQUEST_ID_TAG,
+                        requestId)).post(SignBundleResponseBody.class);
         return assignmentRequest.getSignedAssignmentList();
     }
 
     public BankIdResponse authenticate(String reference) {
-        return createRequest(
-                IcaBankenConstants.Urls.LOGIN_BANKID.parameter(IcaBankenConstants.IdTags.IDENTIFIER_TAG, reference))
-                .get(BankIdResponse.class);
+        return createRequest(IcaBankenConstants.Urls.LOGIN_BANKID.parameter(IcaBankenConstants.IdTags.IDENTIFIER_TAG,
+                reference)).get(BankIdResponse.class);
     }
 
     public BankIdResponse sign(String requestId) {
-        return createRequest(IcaBankenConstants.Urls.SIGN_TRANSFER_COLLECT_URL
-                .parameter(IcaBankenConstants.IdTags.REQUEST_ID_TAG, requestId)).get(BankIdResponse.class);
+        return createRequest(
+                IcaBankenConstants.Urls.SIGN_TRANSFER_COLLECT_URL.parameter(IcaBankenConstants.IdTags.REQUEST_ID_TAG,
+                        requestId)).get(BankIdResponse.class);
     }
 
     public AccountBodyEntity requestAccountsBody() {
@@ -87,8 +97,8 @@ public class IcaBankenApiClient {
     public TransferResponse redoTransferWithValidDate(TransferRequest transferRequest,
             TransferResponse transferResponse) {
         transferRequest.setDueDate(transferResponse.getBody().getProposedNewDate());
-        return createPostRequest(IcaBankenConstants.Urls.UNSIGNED_ASSIGNMENTS_URL)
-                .post(TransferResponse.class, transferRequest);
+        return createPostRequest(IcaBankenConstants.Urls.UNSIGNED_ASSIGNMENTS_URL).post(TransferResponse.class,
+                transferRequest);
     }
 
     public void deleteUnsignedTransfer(AssignmentsResponseBody responseBody) {
@@ -102,19 +112,19 @@ public class IcaBankenApiClient {
             log.warn("Unexpected size of list of assignments. Expected 1 - Real size %s", assignments);
         }
 
-        String transferId = responseBody.getAssignments().stream()
+        String transferId = responseBody.getAssignments()
+                .stream()
                 .findFirst()
                 .orElseThrow(IllegalStateException::new)
                 .getRegistrationId();
 
-        createRequest(IcaBankenConstants.Urls.DELETE_UNSIGNED_TRANSFER_URL
-                .parameter(IcaBankenConstants.IdTags.TRANSFER_ID_TAG, transferId)).delete();
+        createRequest(IcaBankenConstants.Urls.DELETE_UNSIGNED_TRANSFER_URL.parameter(
+                IcaBankenConstants.IdTags.TRANSFER_ID_TAG, transferId)).delete();
     }
 
-
     public RootTransactionModel fetchTransactions(String accountNumber, String fromDate, String toDate) {
-        URL request = IcaBankenConstants.Urls.TRANSACTIONS
-                .parameter(IcaBankenConstants.IdTags.IDENTIFIER_TAG, accountNumber)
+        URL request = IcaBankenConstants.Urls.TRANSACTIONS.parameter(IcaBankenConstants.IdTags.IDENTIFIER_TAG,
+                accountNumber)
                 .queryParam(IcaBankenConstants.IdTags.FROM_DATE_TAG, fromDate)
                 .queryParam(IcaBankenConstants.IdTags.TO_DATE_TAG, toDate);
         return postTransactionRequest(request);
@@ -126,8 +136,8 @@ public class IcaBankenApiClient {
     }
 
     public RootTransactionModel fetchReservedTransactions(String accountNumber) {
-        URL request = IcaBankenConstants.Urls.RESERVED_TRANSACTIONS
-                .parameter(IcaBankenConstants.IdTags.IDENTIFIER_TAG, accountNumber);
+        URL request = IcaBankenConstants.Urls.RESERVED_TRANSACTIONS.parameter(IcaBankenConstants.IdTags.IDENTIFIER_TAG,
+                accountNumber);
         return postTransactionRequest(request);
     }
 
@@ -141,8 +151,17 @@ public class IcaBankenApiClient {
         }
     }
 
+    public void acceptEInvoiceTransfer(String accountId, String invoiceId) {
+        AcceptEInvoiceTransferRequest request = new AcceptEInvoiceTransferRequest();
+        request.setDebitAccountId(accountId);
+        request.setInvoiceId(invoiceId);
+
+        createPostRequest(IcaBankenConstants.Urls.ACCEPT_EINVOICE_URL).post(ClientResponse.class, request).close();
+    }
+
     public List<RecipientEntity> fetchDestinationAccounts() {
-        return createRequest(IcaBankenConstants.Urls.TRANSFER_DESTINATIONS_URL).get(RecipientsResponse.class).getBody()
+        return createRequest(IcaBankenConstants.Urls.TRANSFER_DESTINATIONS_URL).get(RecipientsResponse.class)
+                .getBody()
                 .getRecipients();
     }
 
@@ -154,8 +173,8 @@ public class IcaBankenApiClient {
     public TransferResponse makeTransferRequest(TransferRequest transferRequest) {
         TransferResponse transferResponse = new TransferResponse();
         try {
-            transferResponse = createPostRequest(IcaBankenConstants.Urls.UNSIGNED_ASSIGNMENTS_URL)
-                    .post(TransferResponse.class, transferRequest);
+            transferResponse = createPostRequest(IcaBankenConstants.Urls.UNSIGNED_ASSIGNMENTS_URL).post(
+                    TransferResponse.class, transferRequest);
         } catch (HttpResponseException e) {
 
             if (e.getResponse().getStatus() == 409) {
@@ -171,23 +190,13 @@ public class IcaBankenApiClient {
     }
 
     public void TransferDestinationRecipient(RecipientEntity recipientEntity) {
-        createPostRequest(IcaBankenConstants.Urls.TRANSFER_DESTINATIONS_URL)
-                .post(RecipientsResponse.class, recipientEntity);
+        createPostRequest(IcaBankenConstants.Urls.TRANSFER_DESTINATIONS_URL).post(RecipientsResponse.class,
+                recipientEntity);
     }
 
     public AssignmentsResponse fetchUnsignedTransfers() {
         return createRequest(IcaBankenConstants.Urls.UNSIGNED_TRANSFERS_URL).type(MediaType.APPLICATION_JSON)
                 .get(AssignmentsResponse.class);
-    }
-
-    public LoanListEntity fetchLoanOverview() {
-        return createRequest(IcaBankenConstants.Urls.LOAN_OVERVIEW).get(LoanOverviewResponse.class).getBody()
-                .getLoanList();
-    }
-
-    public MortgageListEntity fetchMortgages() {
-        return createRequest(IcaBankenConstants.Urls.MORTGAGES_URL).get(LoanOverviewResponse.class).getBody()
-                .getMortgageList();
     }
 
     public InvestmentAccountResponse getInvestments() {
@@ -196,8 +205,8 @@ public class IcaBankenApiClient {
 
     public InstrumentResponse getInstrument(String fundId) {
         return createRequest(
-                IcaBankenConstants.Urls.INSTRUMENT.parameter(IcaBankenConstants.IdTags.FUND_ID_TAG, fundId))
-                .get(InstrumentResponse.class);
+                IcaBankenConstants.Urls.INSTRUMENT.parameter(IcaBankenConstants.IdTags.FUND_ID_TAG, fundId)).get(
+                InstrumentResponse.class);
     }
 
     public boolean keepAlive() {
@@ -206,10 +215,29 @@ public class IcaBankenApiClient {
     }
 
     public Optional<String> fetchDestinationNameFor(String pgNumber) {
-        PaymentNameResponse paymentNameResponse = createRequest(IcaBankenConstants.Urls.GIRO_DESTINATION_NAME
-                .parameter(IcaBankenConstants.IdTags.GIRO_NUMBER_TAG, pgNumber)).type(MediaType.APPLICATION_JSON)
-                .get(PaymentNameResponse.class);
+        PaymentNameBody paymentNameResponse = createRequest(
+                IcaBankenConstants.Urls.GIRO_DESTINATION_NAME.parameter(IcaBankenConstants.IdTags.GIRO_NUMBER_TAG,
+                        pgNumber)).type(MediaType.APPLICATION_JSON).get(PaymentNameBody.class);
 
-        return paymentNameResponse.getBody().getName();
+        return Optional.ofNullable(paymentNameResponse.getName());
+    }
+
+    public ValidateEInvoiceResponse validateEInvoice(ValidateEInvoiceRequest validateRequest) {
+        ClientResponse response = createPostRequest(IcaBankenConstants.Urls.VALIDATE_INVOICE_URL).type(
+                MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, validateRequest);
+        try {
+            return response.getEntity(ValidateEInvoiceResponse.class);
+        } finally {
+            response.close();
+        }
+    }
+
+    public EInvoiceBody fetchEInvoices() {
+        return createRequest(IcaBankenConstants.Urls.EINVOICES_URL).get(EInvoiceBody.class);
+    }
+
+    public ValidateEInvoiceResponse updateEInvoice(UpdateEInvoiceRequest updateEInvoiceRequest) {
+        return createRequest(IcaBankenConstants.Urls.UPDATE_INVOICE_URL).put(ValidateEInvoiceResponse.class,
+                updateEInvoiceRequest);
     }
 }
