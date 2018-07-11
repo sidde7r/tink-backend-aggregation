@@ -19,6 +19,7 @@ public enum DemoCredentials {
     USER12("201212121218"), // 2 accounts, 10 transactions
     USER13("201212121219", DemoUserFeature.GENERATE_TRANSACTIONS), // 1 account, transactions that will generate fraud/identity events
     GROWTH_USER("demoUser"),
+    USER14("201212121220"), // Credentials with good test data for split transactions
     ;
 
     public enum DemoUserFeature {
