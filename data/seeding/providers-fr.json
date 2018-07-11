@@ -11,19 +11,20 @@
       "credentialsType": "PASSWORD",
       "multiFactor": false,
       "className": "nxgen.fr.banks.cic.CicBankAgent",
-      "passwordHelpText": "In order to use CIC with Tink, please authenticate yourself using the same credentials you normally use in CIC's mobile banking app.",
+      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in CIC's mobile banking app.",
       "transactional": "true",
       "payload": "CIC",
       "tutorialUrl": null,
       "fields": [
         {
-          "description": "Identifiant",
+          "description": "Username",
           "name": "username",
           "numeric": true,
           "immutable": true
         },
         {
-          "description": "Mot de passe",
+          "description": "Password",
+          "sensitive": true,
           "masked": true,
           "name": "password"
         }
