@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.LoginRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.ResultEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.RootModel;
@@ -40,7 +41,7 @@ public class CommerzbankApiClient {
                 .header(CommerzbankConstants.HEADERS.CONTENT_TYPE, CommerzbankConstants.VALUES.JSON)
                 .header(CommerzbankConstants.HEADERS.COOKIE, storage.get(CommerzbankConstants.HEADERS.COOKIE))
                 .header(CommerzbankConstants.HEADERS.CCB_CLIENT_VERSION, CommerzbankConstants.VALUES.CCB_VALUE)
-                .header(CommerzbankConstants.HEADERS.USER_AGENT, CommerzbankConstants.VALUES.USER_AGENT_VALUE);
+                .header(CommerzbankConstants.HEADERS.USER_AGENT, AbstractAgent.DEFAULT_USER_AGENT);
     }
 
     public HttpResponse login(String username, String password) throws JsonProcessingException {
