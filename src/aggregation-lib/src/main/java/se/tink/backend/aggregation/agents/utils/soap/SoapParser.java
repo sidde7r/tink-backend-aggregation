@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.utils.authentication.encap;
+package se.tink.backend.aggregation.agents.utils.soap;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -12,7 +12,7 @@ import org.w3c.dom.NodeList;
 
 public class SoapParser {
 
-    static Node getSoapBody(String xml) {
+    public static Node getSoapBody(String xml) {
         SOAPMessage message = getSoapMessage(xml);
         return getFirstElement(message);
     }

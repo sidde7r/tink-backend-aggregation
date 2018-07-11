@@ -1,0 +1,44 @@
+package se.tink.backend.aggregation.agents.nxgen.es.banks.santander;
+
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.google.common.base.Preconditions;
+import java.io.IOException;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.XML;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import se.tink.backend.aggregation.agents.utils.soap.SoapParser;
+import se.tink.libraries.serialization.utils.SerializationUtils;
+
+public class SantanderEsXmlUtils {
+    private final static XmlMapper MAPPER = new XmlMapper();
+
+    public static Node getTagNodeFromSoapString(String responseString, String tagName) {
+        Node node = SoapParser.getSoapBody(responseString);
+        Preconditions.checkState(node instanceof Element,
+                "Could not parse SOAP body from server response.");
+
+        Element element = (Element) node;
+        return element.getElementsByTagName(tagName).item(0);
+    }
+
+    public static String parseJsonToXmlString(Object jsonObject) {
+        try {
+            JSONObject json = new JSONObject(SerializationUtils.serializeToString(jsonObject));
+            return XML.toString(json);
+        } catch (JSONException e) {
+            throw new IllegalStateException("Could not parse JSON object to XML string.");
+        }
+
+    }
+
+    public static <T> T parseXmlStringToJson(String xmlString, Class<T> returnType) {
+        try {
+            return MAPPER.readValue(xmlString, returnType);
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not parse XML string into JSON object.");
+        }
+
+    }
+}
