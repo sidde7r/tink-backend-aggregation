@@ -4,7 +4,7 @@
     "providers":
     [
         {
-            "name":"es-banco-santander-password",
+            "name":"es-bancosantander-password",
             "displayName":"Banco Santander",
             "popular":true,
             "type":"BANK",
@@ -16,19 +16,20 @@
             "fields":[
                 {
                     "name":"username",
-                    "description":"NIE/NIF",
+                    "description":"NIF/NIE ID number",
                     "immutable":true
                 },
                 {
                     "name":"password",
-                    "description":"Access Code",
+                    "description":"Password",
                     "masked":true,
+                    "sensitive":true,
                     "numeric":true
                 }
             ]
         },
         {
-            "name":"es-banco-de-sabadell-password",
+            "name":"es-bancosabadell-password",
             "displayName":"Banco de Sabadell",
             "popular":true,
             "type":"BANK",
@@ -36,14 +37,11 @@
             "credentialsType":"PASSWORD",
             "multiFactor":false,
             "className":"nxgen.es.banks.sabadell.SabadellAgent",
-            "passwordHelpText":null,
             "transactional":true,
-            "payload":null,
-            "tutorialUrl":null,
             "fields":[
                 {
                     "name":"username",
-                    "description":"User ID",
+                    "description":"DNI/NIE ID number",
                     "immutable":true
                 },
                 {
@@ -56,7 +54,7 @@
             ]
         },
         {
-            "name":"es-banco-popular-password",
+            "name":"es-bancopopular-password",
             "displayName":"Banco Popular",
             "popular":true,
             "type":"BANK",
@@ -64,10 +62,7 @@
             "credentialsType":"PASSWORD",
             "multiFactor":false,
             "className":"nxgen.es.banks.popular.BancoPopularAgent",
-            "passwordHelpText":null,
             "transactional":true,
-            "payload":null,
-            "tutorialUrl":null,
             "fields":[
                 {
                     "name":"username",
@@ -98,16 +93,12 @@
             "credentialsType":"PASSWORD",
             "multiFactor":false,
             "className":"nxgen.es.banks.bbva.BbvaAgent",
-            "passwordHelpText":null,
             "transactional":true,
-            "payload":null,
-            "tutorialUrl":null,
             "fields":[
                 {
                     "name":"username",
-                    "description":"User",
-                    "immutable":true,
-                    "helpText":"Your username (DNI/NIE ID number)"
+                    "description":"DNI/NIE ID number",
+                    "immutable":true
                 },
                 {
                     "name":"password",
@@ -135,9 +126,8 @@
             "fields":[
                 {
                     "name":"username",
-                    "description":"User id",
-                    "immutable":true,
-                    "helpText":"Your username (DNI/NIE ID number)"
+                    "description":"DNI/NIE ID number",
+                    "immutable":true
                 },
                 {
                     "name":"password",
@@ -159,14 +149,11 @@
             "className":"nxgen.es.banks.ing.IngAgent",
             "passwordHelpText":"Use the same credentials as when using the ING Direct app.",
             "transactional":true,
-            "payload":null,
-            "tutorialUrl":null,
             "fields":[
                 {
                     "name":"username",
-                    "description":"User",
-                    "immutable":true,
-                    "helpText":"Your username (DNI/NIE ID number)"
+                    "description":"DNI/NIE ID number",
+                    "immutable":true
                 },
                 {
                     "name":"date-of-birth",
@@ -175,8 +162,7 @@
                     "hint":"DD/MM/YYYY",
                     "minLength":10,
                     "maxLength":10,
-                    "immutable":true,
-                    "helpText":"Your birth date"
+                    "immutable":true
                 },
                 {
                     "name":"password",
@@ -187,7 +173,7 @@
                     "numeric":true,
                     "minLength":6,
                     "maxLength":6,
-                    "helpText":"6 digit PIN online"
+                    "helpText":"Your 6 digit online PIN"
                 }
             ]
         }
