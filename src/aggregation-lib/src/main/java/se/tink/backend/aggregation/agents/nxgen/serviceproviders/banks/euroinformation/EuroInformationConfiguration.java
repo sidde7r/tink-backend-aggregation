@@ -8,4 +8,8 @@ public interface EuroInformationConfiguration {
 
     public String getAppVersion();
 
+    public default String getLoginSubpage() {
+        return EuroInformationConstants.Url.LOGIN;
+    }
+
 }
