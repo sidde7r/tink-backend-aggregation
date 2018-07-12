@@ -43,6 +43,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.params.CoreConnectionPNames;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
+import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
@@ -71,6 +72,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     private final BasicCookieStore internalCookieStore;
     private SSLContextBuilder internalSslContextBuilder;
     private String userAgent;
+    private final Aggregator aggregator;
 
     private boolean followRedirects = false;
     private final ApacheHttpRedirectStrategy redirectStrategy;
@@ -86,7 +88,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
     private class DEFAULTS {
 
-        private final static String USER_AGENT = "Tink (+https://www.tink.se/; noc@tink.se)";
+        private final static String UNKNOWN_AGGREGATOR = "Unknown Aggregator";
         private final static int TIMEOUT_MS = 30000;
         private final static int MAX_REDIRECTS = 10;
         private final static boolean CHUNKED_ENCODING = false;
@@ -96,7 +98,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
     public String getUserAgent() {
         if (this.userAgent == null) {
-            return DEFAULTS.USER_AGENT;
+            return aggregator.getAggregatorIdentifier();
         }
 
         return this.userAgent;
@@ -166,12 +168,15 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         // Add the filter that is responsible to add persistent data to each request
         addFilter(this.persistentHeaderFilter);
 
-        setUserAgent(DEFAULTS.USER_AGENT);
+        this.aggregator = (context == null) ? new Aggregator("Unknown Aggregator") : context.getAggregator();
+
+        setUserAgent(aggregator.getAggregatorIdentifier());
         setTimeout(DEFAULTS.TIMEOUT_MS);
         setChunkedEncoding(DEFAULTS.CHUNKED_ENCODING);
         setMaxRedirects(DEFAULTS.MAX_REDIRECTS);
         setFollowRedirects(DEFAULTS.FOLLOW_REDIRECTS);
         setDebugOutput(DEFAULTS.DEBUG_OUTPUT);
+        addPersistentHeader("X-Aggregator", getUserAgent());
     }
 
     private void constructInternalClient() {

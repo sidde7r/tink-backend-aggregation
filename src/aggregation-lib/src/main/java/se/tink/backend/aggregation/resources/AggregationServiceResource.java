@@ -131,7 +131,6 @@ public class AggregationServiceResource implements AggregationService, Managed {
     @Override
     public void refreshInformation(final RefreshInformationRequest request) throws Exception {
         agentWorker.execute(agentWorkerCommandFactory.createRefreshOperation(getClusterInfo(), request));
-
     }
 
     @Override
