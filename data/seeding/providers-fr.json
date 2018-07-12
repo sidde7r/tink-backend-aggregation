@@ -81,6 +81,33 @@
           "name": "password"
         }
       ]
-    }
+    },
+    {
+      "className": "nxgen.fr.creditcards.amex.AmericanExpressFRAgent",
+      "credentialsType": "PASSWORD",
+      "displayName": "American Express",
+      "fields": [
+        {
+          "description": "Username",
+          "immutable": true,
+          "name": "username"
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "sensitive": true,
+          "name": "password"
+        }
+      ],
+      "name": "fr-americanexpress-password",
+      "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
+      "popular": true,
+      "refreshFrequency": 1,
+      "refreshFrequencyFactor": 1,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "CREDIT_CARD"
+    },
+
   ]
 }
