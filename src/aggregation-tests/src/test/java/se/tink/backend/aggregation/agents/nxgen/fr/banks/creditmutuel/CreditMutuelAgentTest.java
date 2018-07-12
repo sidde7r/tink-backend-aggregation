@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fr.banks.cm;
+package se.tink.backend.aggregation.agents.nxgen.fr.banks.creditmutuel;
 
 import org.junit.Ignore;
 import org.junit.Test;

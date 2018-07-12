@@ -10,7 +10,7 @@
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
       "multiFactor": false,
-      "className": "nxgen.fr.banks.cm.CreditMutuelAgent",
+      "className": "nxgen.fr.banks.creditmutuel.CreditMutuelAgent",
       "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in CM's mobile banking app.",
       "transactional": "true",
       "payload": "CM",

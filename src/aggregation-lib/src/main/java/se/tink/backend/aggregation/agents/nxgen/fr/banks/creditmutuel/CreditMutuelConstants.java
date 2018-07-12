@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fr.banks.cm;
+package se.tink.backend.aggregation.agents.nxgen.fr.banks.creditmutuel;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationConstants;
 
