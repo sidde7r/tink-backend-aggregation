@@ -1,43 +1,29 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.cm;
 
-import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.NextGenerationBaseAgentTest;
-import se.tink.backend.aggregation.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.utils.CurrencyConstants;
+import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.backend.aggregation.rpc.Field;
 
-public class CreditMutuelAgentTest extends NextGenerationBaseAgentTest<CreditMutuelAgent> {
+@Ignore
+public class CreditMutuelAgentTest {
 
     private static final String USERNAME = "<username>";
     private static final String PASSWORD = "<password>";
 
-    private Credentials credentials;
-
-    public CreditMutuelAgentTest() {
-        super(CreditMutuelAgent.class);
-    }
-
-    @Override
-    public String getCurrency() {
-        return CurrencyConstants.FR.getCode();
-    }
-
-    @Before
-    public void setup() {
-        credentials = new Credentials();
-        credentials.setUsername(USERNAME);
-        credentials.setPassword(PASSWORD);
-        credentials.setType(CredentialsTypes.PASSWORD);
+    private static AgentIntegrationTest.Builder builder() {
+        return new AgentIntegrationTest.Builder("fr", "fr-cm-password")
+                .loadCredentialsBefore(false)
+                .saveCredentialsAfter(false);
     }
 
     @Test
-    public void testPasswordLogin() throws Exception {
-        testLogin(credentials);
+    public void testCicbankFr() throws Exception {
+        builder()
+                .addCredentialField(Field.Key.USERNAME, USERNAME)
+                .addCredentialField(Field.Key.PASSWORD, PASSWORD)
+                .build()
+                .testRefresh();
     }
 
-    @Test
-    public void testRefresh() throws Exception {
-        testRefresh(credentials);
-    }
 }

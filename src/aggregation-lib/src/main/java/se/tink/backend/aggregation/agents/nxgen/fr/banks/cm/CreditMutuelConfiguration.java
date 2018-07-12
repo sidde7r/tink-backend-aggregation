@@ -13,4 +13,9 @@ public class CreditMutuelConfiguration implements EuroInformationConfiguration {
     public String getTarget() {
         return CreditMutuelConstants.TARGET;
     }
+
+    @Override
+    public String getAppVersion() {
+        return CreditMutuelConstants.APP_VERSION;
+    }
 }

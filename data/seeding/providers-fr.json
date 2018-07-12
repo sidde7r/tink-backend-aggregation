@@ -3,6 +3,34 @@
   "currency": "EUR",
   "providers": [
     {
+      "name": "fr-cm-password",
+      "displayName": "Credit Mutuel",
+      "popular": true,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.fr.banks.cm.CreditMutuelAgent",
+      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in CM's mobile banking app.",
+      "transactional": "true",
+      "payload": "CM",
+      "tutorialUrl": null,
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "numeric": true,
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "sensitive": true,
+          "masked": true,
+          "name": "password"
+        }
+      ]
+    },
+    {
       "name": "fr-cic-password",
       "displayName": "CIC",
       "popular": true,
