@@ -33,7 +33,8 @@
           "name": "username",
           "numeric": true,
           "minLength": 1,
-          "maxLength": 17
+          "maxLength": 17,
+          "sensitive": true
         }
       ],
       "multiFactor": true,
@@ -63,7 +64,8 @@
           "description": "Card ID",
           "name": "cardId",
           "numeric": true,
-          "minLength": 1
+          "minLength": 1,
+          "sensitive": true
         },
         {
           "description": "Response code",
@@ -94,7 +96,8 @@
           "description": "Number of your bank card",
           "name": "username",
           "numeric": true,
-          "minLength": 1
+          "minLength": 1,
+          "sensitive": true
         },
         {
           "description": "Password",
