@@ -3,7 +3,7 @@
   "currency": "EUR",
   "providers": [
     {
-      "name": "fr-cm-password",
+      "name": "fr-creditmutuel-password",
       "displayName": "Credit Mutuel",
       "popular": true,
       "type": "BANK",

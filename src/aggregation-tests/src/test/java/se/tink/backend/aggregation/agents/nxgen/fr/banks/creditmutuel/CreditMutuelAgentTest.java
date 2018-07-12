@@ -12,7 +12,7 @@ public class CreditMutuelAgentTest {
     private static final String PASSWORD = "<password>";
 
     private static AgentIntegrationTest.Builder builder() {
-        return new AgentIntegrationTest.Builder("fr", "fr-cm-password")
+        return new AgentIntegrationTest.Builder("fr", "fr-creditmutuel-password")
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false);
     }
