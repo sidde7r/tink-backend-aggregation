@@ -55,6 +55,32 @@
           "name": "password"
         }
       ]
+    },
+    {
+      "name": "fr-bmce-password",
+      "displayName": "BMCE Direct",
+      "popular": true,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.fr.banks.bmcedirect.BmceDirectAgent",
+      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in CIC's mobile banking app.",
+      "transactional": "true",
+      "tutorialUrl": null,
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "sensitive": true,
+          "masked": true,
+          "name": "password"
+        }
+      ]
     }
   ]
 }
