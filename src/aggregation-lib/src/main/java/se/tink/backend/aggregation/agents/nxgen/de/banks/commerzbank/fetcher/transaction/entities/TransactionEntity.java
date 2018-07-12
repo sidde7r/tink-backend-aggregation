@@ -8,13 +8,17 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class TransactionEntity {
     private String productName;
     private BalanceEntity originalBalance;
-    // `balanceEUR` is null - cannot define it!
-    // `creditLimit` is null - cannot define it!
+    private Object balanceEUR;
+    private Object creditLimit;
     private int totalTransactions;
     private int pageCount;
     private boolean kontoAlarmActivated;
     private List<String> validActions;
     private List<PfmTransactionsEntity> pfmTransactions;
+    private Object transactionsWithBookingGreaterToday;
+    private Object realtimeTransactions;
+    private Object scheduledOrders;
+    private Object type;
 
     public String getProductName() {
         return productName;
@@ -43,8 +47,28 @@ public class TransactionEntity {
     public List<PfmTransactionsEntity> getPfmTransactions() {
         return pfmTransactions;
     }
-    // `transactionsWithBookingGreaterToday` is null - cannot define it!
-    // `realtimeTransactions` is null - cannot define it!
-    // `scheduledOrders` is null - cannot define it!
-    // `type` is null - cannot define it!
+
+    public Object getBalanceEUR() {
+        return balanceEUR;
+    }
+
+    public Object getCreditLimit() {
+        return creditLimit;
+    }
+
+    public Object getTransactionsWithBookingGreaterToday() {
+        return transactionsWithBookingGreaterToday;
+    }
+
+    public Object getRealtimeTransactions() {
+        return realtimeTransactions;
+    }
+
+    public Object getScheduledOrders() {
+        return scheduledOrders;
+    }
+
+    public Object getType() {
+        return type;
+    }
 }

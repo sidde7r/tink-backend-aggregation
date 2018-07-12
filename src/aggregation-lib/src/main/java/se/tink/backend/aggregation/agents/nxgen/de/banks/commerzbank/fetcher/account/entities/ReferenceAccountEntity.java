@@ -7,10 +7,13 @@ public class ReferenceAccountEntity {
     private String accountOwnerName;
     private String bankCode;
     private String bic;
-    // `currency` is null - cannot define it!
+    private Object currency;
     private String externalAccountNumber;
     private String iban;
     private String linkedAccount;
+    private Object technicalAccountNumber;
+    private Object productBranch;
+    private Object referenceAccountString;
 
     public String getAccountOwnerName() {
         return accountOwnerName;
@@ -35,7 +38,20 @@ public class ReferenceAccountEntity {
     public String getLinkedAccount() {
         return linkedAccount;
     }
-    // `technicalAccountNumber` is null - cannot define it!
-    // `productBranch` is null - cannot define it!
-    // `referenceAccountString` is null - cannot define it!
+
+    public Object getCurrency() {
+        return currency;
+    }
+
+    public Object getTechnicalAccountNumber() {
+        return technicalAccountNumber;
+    }
+
+    public Object getProductBranch() {
+        return productBranch;
+    }
+
+    public Object getReferenceAccountString() {
+        return referenceAccountString;
+    }
 }

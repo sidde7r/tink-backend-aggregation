@@ -5,11 +5,15 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class TransactionModel {
-    // `error` is null - cannot define it!
+    private Object error;
     @JsonProperty("result")
     private TransactionResultEntity result;
 
     public TransactionResultEntity getResult() {
         return result;
+    }
+
+    public Object getError() {
+        return error;
     }
 }

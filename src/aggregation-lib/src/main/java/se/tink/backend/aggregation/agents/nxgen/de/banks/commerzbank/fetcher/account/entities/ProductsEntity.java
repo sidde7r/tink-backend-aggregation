@@ -12,7 +12,7 @@ import se.tink.libraries.account.AccountIdentifier;
 @JsonObject
 public class ProductsEntity {
     private ProductTypeEntity productType;
-    // `convertedBalance` is null - cannot define it!
+    private Object convertedBalance;
     private BalanceEntity originalBalance;
     private String bankCode;
     private String productNumber;
@@ -30,7 +30,7 @@ public class ProductsEntity {
     private BalanceEntity externalLimit;
     private String externalLimitInterestRate;
     private String openingDate;
-    // `referenceAccount` is null - cannot define it!
+    private Object referenceAccount;
     private String underAccountDescriptionOne;
     private String underAccountDescriptionTwo;
     private String productVariationType;
@@ -43,10 +43,10 @@ public class ProductsEntity {
     private boolean pfmenabled;
     private String accountCharacteristic;
     private String accountConditionModel;
-    // `accountCustomerNote` is null - cannot define it!
+    private Object accountCustomerNote;
     private String accountType;
-    // `blockingDateUntil` is null - cannot define it!
-    // `blockingNote` is null - cannot define it!
+    private Object blockingDateUntil;
+    private Object blockingNote;
     private String branchNumber;
     private String capitalAccountCurrency;
     private String capitalAccountNumber;
@@ -63,13 +63,13 @@ public class ProductsEntity {
     private String internalSecuritiesAccountNumber;
     private String internalStatementCalculationCurrency;
     private String internalStatementCalculationSchedule;
-    // `limit` is null - cannot define it!
-    // `ownershipFlag` is null - cannot define it!
+    private Object limit;
+    private Object ownershipFlag;
     private String profitAccountCurrency;
     private String profitAccountNumber;
     private String proxyPolicy;
     private String proxyPolicyValidUntil;
-    // `shortDescription` is null - cannot define it!
+    private Object shortDescription;
     private String statementCalculationMethod;
     private String taxCertificatePolicy;
     private String technicalSecuritiesAccountNumber;
@@ -326,4 +326,35 @@ public class ProductsEntity {
                 .build();
     }
 
+    public Object getConvertedBalance() {
+        return convertedBalance;
+    }
+
+    public Object getReferenceAccount() {
+        return referenceAccount;
+    }
+
+    public Object getAccountCustomerNote() {
+        return accountCustomerNote;
+    }
+
+    public Object getBlockingDateUntil() {
+        return blockingDateUntil;
+    }
+
+    public Object getBlockingNote() {
+        return blockingNote;
+    }
+
+    public Object getLimit() {
+        return limit;
+    }
+
+    public Object getOwnershipFlag() {
+        return ownershipFlag;
+    }
+
+    public Object getShortDescription() {
+        return shortDescription;
+    }
 }

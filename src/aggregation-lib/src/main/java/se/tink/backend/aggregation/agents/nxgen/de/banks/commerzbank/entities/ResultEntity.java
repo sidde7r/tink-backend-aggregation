@@ -6,10 +6,14 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class ResultEntity {
+    private Object metaData;
     private List<ItemsEntity> items;
 
     public List<ItemsEntity> getItems() {
         return items;
     }
-    // `metaData` is null - cannot define it!
+
+    public Object getMetaData() {
+        return metaData;
+    }
 }

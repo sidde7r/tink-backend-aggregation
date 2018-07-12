@@ -16,35 +16,35 @@ public class PfmTransactionsEntity {
     private String amountInCurrency;
     private String balance;
     private String bankId;
-    // `categoryChangedTime` is null - cannot define it!
+    private Object categoryChangedTime;
     private int categoryId;
-    // `changedByRule` is null - cannot define it!
-    // `changedByRuleTime` is null - cannot define it!
-    // `comment` is null - cannot define it!
-    // `counterpartyAccountIdentifier` is null - cannot define it!
+    private Object changedByRule;
+    private Object changedByRuleTime;
+    private Object comment;
+    private Object counterpartyAccountIdentifier;
     private int dataFormat;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date date;
-    // `detectedCategories` is null - cannot define it!
+    private Object detectedCategories;
     private String dueDate;
     private boolean hasUncertainCategorization;
     private boolean hasUserClearedCategoryUncertainty;
     private String id;
     private String insertTime;
-    // `lastModifiedTime` is null - cannot define it!
+    private Object lastModifiedTime;
     private int mcc;
     private String merchantId;
     private String originalDate;
     private String originalText;
     private String parentIdentifier;
     private List<String> parsedData;
-    // `tags` is null - cannot define it!
+    private Object tags;
     private String text;
     private String timestamp;
     private CategoryEntity category;
     private String typeDescription;
     private String typeKey;
-    // `creditCardStatement` is null - cannot define it!
+    private Object creditCardStatement;
     private String gvo;
     private boolean flagged;
     private boolean read;
@@ -187,5 +187,41 @@ public class PfmTransactionsEntity {
                 .setDate((getDate()))
                 .setDescription(getOriginalText())
                 .setPending(isUncleared()).build();
+    }
+
+    public Object getCategoryChangedTime() {
+        return categoryChangedTime;
+    }
+
+    public Object getChangedByRule() {
+        return changedByRule;
+    }
+
+    public Object getChangedByRuleTime() {
+        return changedByRuleTime;
+    }
+
+    public Object getComment() {
+        return comment;
+    }
+
+    public Object getCounterpartyAccountIdentifier() {
+        return counterpartyAccountIdentifier;
+    }
+
+    public Object getDetectedCategories() {
+        return detectedCategories;
+    }
+
+    public Object getLastModifiedTime() {
+        return lastModifiedTime;
+    }
+
+    public Object getTags() {
+        return tags;
+    }
+
+    public Object getCreditCardStatement() {
+        return creditCardStatement;
     }
 }
