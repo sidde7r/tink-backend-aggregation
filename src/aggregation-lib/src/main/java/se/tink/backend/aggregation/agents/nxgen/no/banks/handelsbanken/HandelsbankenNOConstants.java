@@ -96,7 +96,8 @@ public class HandelsbankenNOConstants {
         SHIBBOLETH_ENDPOINT("endpoint", "shibboleth"),
         INVESTOR_PROVIDER_ID("providerId", "https://investor.vps.no:443"),
         AKSJER_PROVIDER_ID("providerId", "https://aksjer.handelsbanken.no/"),
-        INVESTOR_TARGET("target", "/vip/auth/sts?vipLandingPage=fund&avtalehaver=09055");
+        INVESTOR_TARGET("target", "/vip/auth/sts?vipLandingPage=fund&avtalehaver=09055"),
+        KEEP_ALIVE("authenticated", "false");
 
         private final String key;
         private final String value;

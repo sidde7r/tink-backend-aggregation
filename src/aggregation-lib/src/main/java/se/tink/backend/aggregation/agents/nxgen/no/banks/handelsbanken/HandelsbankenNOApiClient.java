@@ -172,7 +172,9 @@ public class HandelsbankenNOApiClient {
 
     public HttpResponse extendSession() {
         return requestInSession(Url.KEEP_ALIVE.get())
-                .get(HttpResponse.class);
+                .queryParam(HandelsbankenNOConstants.QueryParamPairs.KEEP_ALIVE.getKey(),
+                        HandelsbankenNOConstants.QueryParamPairs.KEEP_ALIVE.getValue())
+                .post(HttpResponse.class);
     }
 
     public InitInvestmentsLoginResponse initInvestmentLogin() {
