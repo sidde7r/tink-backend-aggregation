@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 import java.util.HashMap;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.entities.LinkEntity;
@@ -74,13 +75,37 @@ public class TransactionEntity {
         return sequenceNumber;
     }
 
+    @JsonIgnore
     public Transaction toTinkTransaction() {
         Transaction.Builder transactionBuilder = Transaction.builder()
-                .setDescription(description)
+                .setDescription(getTinkFormattedDescription(description.trim()))
                 .setAmount(new Amount(this.amounts.getExecuted().getCurrency(),this.amount))
                 .setDate(accountingDate)
                 .setPending(reserved);
 
         return transactionBuilder.build();
+    }
+
+    /**
+     * Pattern: <date> <Actual merchant name>
+     * Example: 01.01 Spotify
+     * Formatted: Spotify
+     *
+     * Pattern: *<last four digits of cardnumber> <date> <currency> <amount> <Actual merchant name> Kurs: <exchange rate>
+     * Example: *1234 01.01 SEK 99.00 Spotify Kurs: 1.0000
+     * Formatted: Spotify
+     */
+    @JsonIgnore
+    public static String getTinkFormattedDescription(String rawDescription) {
+        String prefixRegex = "^(\\*\\d{4}\\s)?\\d{2}\\.\\d{2}\\s(\\w{3}\\s\\d+\\.\\d{2}\\s)?";
+        String suffixRegex = "\\sKurs:\\s\\d+.\\d{4}$";
+
+        String prefixModifiedDescription = rawDescription.replaceAll(prefixRegex, "");
+
+        if (!prefixModifiedDescription.equalsIgnoreCase(rawDescription)) {
+            return prefixModifiedDescription.replaceAll(suffixRegex, "");
+        }
+
+        return rawDescription;
     }
 }
