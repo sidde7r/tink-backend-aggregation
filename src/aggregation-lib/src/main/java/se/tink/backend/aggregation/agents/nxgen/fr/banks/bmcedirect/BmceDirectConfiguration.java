@@ -12,4 +12,9 @@ public class BmceDirectConfiguration implements EuroInformationConfiguration {
     public String getTarget() {
         return BmceDirectConstants.TARGET;
     }
+
+    @Override
+    public String getAppVersion() {
+        return BmceDirectConstants.APP_VERSION;
+    }
 }
