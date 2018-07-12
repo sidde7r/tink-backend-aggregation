@@ -41688,6 +41688,816 @@
           "sensitive": true
         }
       ]
+    },
+    {
+      "name": "de-psdbankberlin-password",
+      "displayName": "PSD Bank Berlin-Brandenburg",
+      "groupDisplayName": "PSD Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "10090900 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-psdbanknordhamburg-password",
+      "displayName": "PSD Bank Nord Hamburg",
+      "groupDisplayName": "PSD Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "20090900 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-psdbankkiel-password",
+      "displayName": "PSD Bank Kiel",
+      "groupDisplayName": "PSD Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "21090900 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-psdbankhannover-password",
+      "displayName": "PSD Bank Hannover",
+      "groupDisplayName": "PSD Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "25090900 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-psdbankbraunschweig-password",
+      "displayName": "PSD Bank Braunschweig",
+      "groupDisplayName": "PSD Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "27090900 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-psdbanknordbremen-password",
+      "displayName": "PSD Bank Nord Bremen",
+      "groupDisplayName": "PSD Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "29090900 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-psdbankdüsseldorf-password",
+      "displayName": "PSD Bank Rhein-Ruhr Düsseldorf",
+      "groupDisplayName": "PSD Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "30060992 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-psdbankköln-password",
+      "displayName": "PSD Bank Köln",
+      "groupDisplayName": "PSD Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "37060993 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-psdbankwestfalen-password",
+      "displayName": "PSD Bank Westfalen-Lippe",
+      "groupDisplayName": "PSD Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "40090900 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-psdbankdortmund-password",
+      "displayName": "PSD Bank Rhein-Ruhr Dortmund",
+      "groupDisplayName": "PSD Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "44090920 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-psdbankthüringen-password",
+      "displayName": "SD Bank Hessen-Thüringen",
+      "groupDisplayName": "PSD Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "50090900 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-psdbankkoblenz-password",
+      "displayName": "PSD Bank Koblenz, Mainz",
+      "groupDisplayName": "PSD Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "57090900 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-psdbankköln-password",
+      "displayName": "PSD Bank Köln",
+      "groupDisplayName": "PSD Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "58590900 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-psdbankneckarsaarsaarbrücken-password",
+      "displayName": "PSD Bank RheinNeckarSaar Saarbrücken",
+      "groupDisplayName": "PSD Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "59090900 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-psdbankstutgart-password",
+      "displayName": "PSD Bank RheinNeckarSaar Stuttgart",
+      "groupDisplayName": "PSD Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "60090900 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-psdbankkarlsruhe-password",
+      "displayName": "PSD Bank Karlsruhe-Neustadt",
+      "groupDisplayName": "PSD Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "66090900 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-psdbankfreiburg-password",
+      "displayName": "PSD Bank RheinNeckarSaar Freiburg im Breisgau",
+      "groupDisplayName": "PSD Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "68090900 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-psdbankmünchen-password",
+      "displayName": "PSD Bank München",
+      "groupDisplayName": "PSD Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "72090900 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-psdbankniederbayern-password",
+      "displayName": "PSD Bank Niederbayern-Oberpfalz",
+      "groupDisplayName": "PSD Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "75090900 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-psdbanknürnberg-password",
+      "displayName": "PSD Bank Nürnberg",
+      "groupDisplayName": "PSD Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "76090900 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-fürstlichcastellschebank-password",
+      "displayName": "Fürstlich Castell'sche Bank",
+      "groupDisplayName": "Fürstlich Castell'sche Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "79030001 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-bankhauslampe-password",
+      "displayName": "Bankhaus Lampe",
+      "groupDisplayName": "Bankhaus Lampe",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "48020151 https://www.bv-activebanking.de/hbciTunnel/hbciTransfer.jsp",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-edekabank20090700-password",
+      "displayName": "BLZ: 20090700",
+      "groupDisplayName": "Edekabank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "20090700 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-edekabank20090745-password",
+      "displayName": "BLZ: 20090745",
+      "groupDisplayName": "Edekabank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "20090745 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-bhfbankberlin-password",
+      "displayName": "BHF-Bank AG Berlin",
+      "groupDisplayName": "BHF-Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "10020200 https://www.bv-activebanking.de/hbciTunnel/hbciTransfer.jsp",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-bhfbankdusseldorf-password",
+      "displayName": "BHF-Bank AG Düsseldorf",
+      "groupDisplayName": "BHF-Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "30020500 https://www.bv-activebanking.de/hbciTunnel/hbciTransfer.jsp",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-bhfbankfrankfurt-password",
+      "displayName": "BHF-Bank AG Frankfurt am Main",
+      "groupDisplayName": "BHF-Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "50020200 https://www.bv-activebanking.de/hbciTunnel/hbciTransfer.jsp",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-bhfbankwiesbaden-password",
+      "displayName": "BHF-Bank AG Wiesbaden",
+      "groupDisplayName": "BHF-Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "51020000 https://www.bv-activebanking.de/hbciTunnel/hbciTransfer.jsp",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-bhfbankstuttgart-password",
+      "displayName": "BHF-Bank AG Stuttgart",
+      "groupDisplayName": "BHF-Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "60120200 https://www.bv-activebanking.de/hbciTunnel/hbciTransfer.jsp",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-bhfbankmünchen-password",
+      "displayName": "BHF-Bank AG München",
+      "groupDisplayName": "BHF-Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "70220200 https://www.bv-activebanking.de/hbciTunnel/hbciTransfer.jsp",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
     }
   ]
 }
