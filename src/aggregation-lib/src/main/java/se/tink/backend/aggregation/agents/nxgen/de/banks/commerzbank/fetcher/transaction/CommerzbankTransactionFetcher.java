@@ -40,7 +40,7 @@ public class CommerzbankTransactionFetcher implements TransactionIndexPaginator<
         try {
             transactionResultEntity = apiClient.transactionOverview(productType, identifier);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            throw new IllegalArgumentException(String.format("The transaction search is invalid"));
         }
 
         Preconditions.checkState(transactionResultEntity != null, Collections.EMPTY_LIST);
