@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenUtil
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.PaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.SignedAssignmentList;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.Accounts.entities.OwnAccountsEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.IcaBankenTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.AssignmentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.BankTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.OwnRecipientEntity;
@@ -27,17 +26,14 @@ public class IcaBankenBankIdTransferExecutor implements BankTransferExecutor {
 	private final IcaBankenApiClient apiClient;
 	private final AgentContext context;
 	private final TransferMessageFormatter transferMessageFormatter;
-	private IcaBankenTransferDestinationFetcher transferDestinationFetcher;
 	private OwnAccountsEntity source;
 	private RecipientEntity destination;
 
 	public IcaBankenBankIdTransferExecutor(
-			IcaBankenApiClient apiClient, AgentContext context, TransferMessageFormatter transferMessageFormatter,
-			IcaBankenTransferDestinationFetcher transferDestinationFetcher) {
+			IcaBankenApiClient apiClient, AgentContext context, TransferMessageFormatter transferMessageFormatter) {
 		this.apiClient = apiClient;
 		this.context = context;
 		this.transferMessageFormatter = transferMessageFormatter;
-		this.transferDestinationFetcher = transferDestinationFetcher;
 	}
 
 	@Override
