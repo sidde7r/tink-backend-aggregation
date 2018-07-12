@@ -17,18 +17,18 @@ public class SantanderPasswordAuthenticator implements PasswordAuthenticator {
     private final SantanderApiClient client;
     Logger logger = LoggerFactory.getLogger(SantanderPasswordAuthenticator.class);
 
-    public SantanderPasswordAuthenticator(SantanderApiClient client){
+    public SantanderPasswordAuthenticator(SantanderApiClient client) {
         this.client = client;
     }
 
     @Override
     public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
         LoginRequest request = new LoginRequest(username, password);
-        try{
+        try {
             client.login(request);
-        }catch(HttpResponseException e){
+        } catch (HttpResponseException e) {
             String error = e.getResponse().getBody(String.class);
-            if(StringUtils.containsIgnoreCase(error, SantanderConstants.ERROR.WRONG_PASSWORD_CODE)){
+            if (StringUtils.containsIgnoreCase(error, SantanderConstants.ERROR.WRONG_PASSWORD_CODE)) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             }
             logger.error("Unable to authenticate error %s ", error, SantanderConstants.LOGTAG.SANTANDER_LOGIN_ERROR);
