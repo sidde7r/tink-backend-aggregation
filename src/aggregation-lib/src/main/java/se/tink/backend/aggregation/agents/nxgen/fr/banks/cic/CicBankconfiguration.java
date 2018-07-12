@@ -12,4 +12,9 @@ public class CicBankconfiguration implements EuroInformationConfiguration {
     public String getTarget() {
         return CicBankConstants.TARGET;
     }
+
+    @Override
+    public String getAppVersion() {
+        return CicBankConstants.APP_VERSION;
+    }
 }

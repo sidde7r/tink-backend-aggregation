@@ -12,4 +12,9 @@ public class TargoBankDEConfiguration implements EuroInformationConfiguration {
     public String getTarget() {
         return TargoBankDEConstants.TARGET;
     }
+
+    @Override
+    public String getAppVersion() {
+       return TargoBankDEConstants.APP_VERSION;
+    }
 }

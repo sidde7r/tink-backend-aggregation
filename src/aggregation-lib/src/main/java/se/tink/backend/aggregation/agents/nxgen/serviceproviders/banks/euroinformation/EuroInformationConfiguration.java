@@ -6,4 +6,6 @@ public interface EuroInformationConfiguration {
 
     public String getTarget();
 
+    public String getAppVersion();
+
 }

@@ -51,7 +51,7 @@ public class EuroInformationApiClient {
             return uriBuilder.addParameter(EuroInformationConstants.RequestBodyValues.USER, username)
                     .addParameter(EuroInformationConstants.RequestBodyValues.PASSWORD, password)
                     .addParameter(EuroInformationConstants.RequestBodyValues.APP_VERSION,
-                            EuroInformationConstants.RequestBodyValues.APP_VERSION_VALUE)
+                            config.getAppVersion())
                     .addParameter(EuroInformationConstants.RequestBodyValues.TARGET,
                             config.getTarget())
                     .addParameter(EuroInformationConstants.RequestBodyValues.WS_VERSION,
