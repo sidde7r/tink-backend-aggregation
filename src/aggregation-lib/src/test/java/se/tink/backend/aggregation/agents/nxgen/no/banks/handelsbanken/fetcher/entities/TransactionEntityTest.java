@@ -23,7 +23,5 @@ public class TransactionEntityTest {
         assertThat(TransactionEntity.getTinkFormattedDescription(rawDescr3)).isEqualTo(formattedDescr3);
         assertThat(TransactionEntity.getTinkFormattedDescription(rawDescr4)).isEqualTo(formattedDescr4);
         assertThat(TransactionEntity.getTinkFormattedDescription(rawDescr5)).isEqualTo(formattedDescr5);
-
     }
-
 }
