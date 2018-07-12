@@ -4,44 +4,17 @@
     "providers":
     [
         {
-            "name":"at-bankaustria-password",
-            "displayName":"Bank Austria",
-            "popular":true,
-            "type":"BANK",
-            "status":"ENABLED",
-            "credentialsType":"PASSWORD",
-            "multiFactor":false,
-            "className":"nxgen.at.banks.bankaustria.BankAustriaAgent",
-            "passwordHelpText":null,
-            "transactional":"true",
-            "payload":null,
-            "tutorialUrl":null,
-            "fields":[
-                {
-                    "name":"usernumber",
-                    "description":"User number",
-                    "immutable":true
-                },
-                {
-                    "name":"password",
-                    "description":"PIN",
-                    "masked":true,
-                    "numeric":true
-                }
-            ]
-        },
-        {
-            "name":"at-bawag-psk",
+            "name":"at-bawagpsk-password",
             "displayName":"BAWAG P.S.K.",
             "popular":true,
             "type":"BANK",
             "status":"ENABLED",
             "credentialsType":"PASSWORD",
             "multiFactor":false,
-            "className":"demo.DemoAgent",
+            "className":"nxgen.at.banks.easybank.bawagpsk.BawagPskAgent",
             "passwordHelpText":null,
             "transactional":"true",
-            "payload":null,
+            "payload":"ebanking.bawagpsk.com, BAWAG",
             "tutorialUrl":null,
             "fields":[
                 {
@@ -58,87 +31,22 @@
             ]
         },
         {
-            "name":"at-erste-bank-and-sparkasse",
-            "displayName":"Erste Bank & Sparkasse",
+            "name":"at-easybank-password",
+            "displayName":"Easybank",
             "popular":true,
             "type":"BANK",
             "status":"ENABLED",
             "credentialsType":"PASSWORD",
             "multiFactor":false,
-            "className":"banks.at.erstebank.ErsteBankAgent",
+            "className":"nxgen.at.banks.easybank.bawagpsk.BawagPskAgent",
             "passwordHelpText":null,
             "transactional":"true",
-            "payload":null,
+            "payload":"ebanking.easybank.at, EASYBANK",
             "tutorialUrl":null,
             "fields":[
                 {
                     "name":"username",
-                    "description":"Verfügernummer",
-                    "immutable":true,
-                    "numeric":true
-                },
-                {
-                    "name":"password",
-                    "description":"Passwort",
-                    "masked":true
-                }
-            ]
-        },
-        {
-            "name":"at-raiffeisen-bank",
-            "displayName":"Raiffeisen Bank",
-            "popular":true,
-            "type":"BANK",
-            "status":"ENABLED",
-            "credentialsType":"PASSWORD",
-            "multiFactor":false,
-            "className":"demo.DemoAgent",
-            "passwordHelpText":null,
-            "transactional":"true",
-            "payload":null,
-            "tutorialUrl":null,
-            "fields":[
-                {
-                    "name":"username",
-                    "description":"Username",
-                    "immutable":true
-                },
-                {
-                    "name":"password",
-                    "description":"Password",
-                    "masked":true
-                },
-                {
-                    "name":"pin",
-                    "description":"PIN",
-                    "numeric":true,
-                    "masked":true
-                }
-            ]
-        },
-        {
-            "name":"at-volksbank",
-            "displayName":"Volksbank",
-            "popular":true,
-            "type":"BANK",
-            "status":"ENABLED",
-            "credentialsType":"PASSWORD",
-            "multiFactor":false,
-            "className":"demo.DemoAgent",
-            "passwordHelpText":null,
-            "transactional":"true",
-            "payload":null,
-            "tutorialUrl":null,
-            "fields":[
-                {
-                    "name":"usernumber",
-                    "description":"User number",
-                    "immutable":true,
-                    "numeric":true
-                },
-                {
-                    "name":"username",
-                    "description":"Username",
+                    "description":"User code",
                     "immutable":true
                 },
                 {
