@@ -40,7 +40,7 @@ public class EuroInformationApiClient {
     }
 
     public LoginResponse logon(String username, String password) {
-        return buildRequestHeaders(EuroInformationConstants.Url.LOGIN)
+        return buildRequestHeaders(config.getLoginSubpage())
                 .body(buildBodyLogonRequest(username, password))
                 .post(LoginResponse.class);
     }
