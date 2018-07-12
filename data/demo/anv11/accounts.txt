@@ -1,2 +1,0 @@
-bankId	name	type	currency	balance
-Bank1	Lonekonto	CHECKING	SEK	7065

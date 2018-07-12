@@ -28,9 +28,12 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 public class FinTsApiClient {
     private final TinkHttpClient apiClient;
     private final FinTsConfiguration configuration;
-    private FinTsLocalSettings localSettings;
     private int messageNumber = 1;
     private String dialogId = "0";
+    private String systemId = "0";
+    private List<String> tanCapability;
+    private int hksalVersion = 6;
+    private int hkkazVersion = 6;
     // We need to get full information of account in two calls, so need to cache here.
     private List<SEPAAccount> sepaAccounts;
 
@@ -60,20 +63,20 @@ public class FinTsApiClient {
         HKSYN segSync = new HKSYN(5);
 
         return new FinTsRequest(
-                configuration, dialogId, messageNumber, "0", segIdentification, segPrepare, segSync);
+                configuration, dialogId, messageNumber, this.systemId, segIdentification, segPrepare, segSync);
     }
 
     private FinTsRequest getMessageInit() {
         HKIDN segIdentification =
-                new HKIDN(3, configuration.getBlz(), configuration.getUsername(), localSettings.systemId);
+                new HKIDN(3, configuration.getBlz(), configuration.getUsername(), this.systemId);
         HKVVB segPrepare = new HKVVB(4);
 
         return new FinTsRequest(
                 configuration,
                 this.dialogId,
                 this.messageNumber,
-                localSettings.systemId,
-                localSettings.tanCapability,
+                this.systemId,
+                this.tanCapability,
                 segIdentification,
                 segPrepare);
     }
@@ -83,8 +86,8 @@ public class FinTsApiClient {
                 configuration,
                 this.dialogId,
                 this.messageNumber,
-                localSettings.systemId,
-                localSettings.tanCapability,
+                this.systemId,
+                this.tanCapability,
                 new HKEND(3, this.dialogId));
     }
 
@@ -128,10 +131,10 @@ public class FinTsApiClient {
                 configuration,
                 this.dialogId,
                 this.messageNumber,
-                localSettings.systemId,
-                localSettings.tanCapability,
-                new HKSAL(3, localSettings.hksalVersion,
-                        this.getAccountString(sepaAccount, localSettings.hksalVersion)));
+                this.systemId,
+                this.tanCapability,
+                new HKSAL(3, this.hksalVersion,
+                        this.getAccountString(sepaAccount, this.hksalVersion)));
     }
 
     public Collection<String> sync() {
@@ -142,10 +145,10 @@ public class FinTsApiClient {
 
             return Stream.concat(rmg.stream(), rms.stream()).collect(Collectors.toList());
         }
-        localSettings = new FinTsLocalSettings(syncResponse.getSystemId(),
-                syncResponse.getSupportedTanMechanisms(),
-                syncResponse.getHKSALMaxVersion(),
-                syncResponse.getHKKAZMaxVersion());
+        this.systemId = syncResponse.getSystemId();
+        this.tanCapability = syncResponse.getSupportedTanMechanisms();
+        this.hksalVersion = syncResponse.getHKSALMaxVersion();
+        this.hkkazVersion = syncResponse.getHKKAZMaxVersion();
         this.dialogId = syncResponse.getDialogId();
 
         this.end();
@@ -206,8 +209,8 @@ public class FinTsApiClient {
                         configuration,
                         this.dialogId,
                         this.messageNumber,
-                        localSettings.systemId,
-                        localSettings.tanCapability,
+                        this.systemId,
+                        this.tanCapability,
                         new HKSPA(3, null, null, null));
         FinTsResponse getAccountResponse = sendMessage(getAccountRequest);
         return getAccountResponse.isSuccess();
@@ -219,8 +222,8 @@ public class FinTsApiClient {
                         configuration,
                         this.dialogId,
                         this.messageNumber,
-                        localSettings.systemId,
-                        localSettings.tanCapability,
+                        this.systemId,
+                        this.tanCapability,
                         new HKSPA(3, null, null, null));
         FinTsResponse getAccountResponse = sendMessage(getAccountRequest);
         if (!getAccountResponse.isSuccess()) {
@@ -275,7 +278,7 @@ public class FinTsApiClient {
                     this.sepaAccounts
                             .stream()
                             .filter(acc -> Objects
-                                    .equals(this.getAccountString(acc, localSettings.hksalVersion), deg.get(1)))
+                                    .equals(this.getAccountString(acc, this.hksalVersion), deg.get(1)))
                             .findFirst()
                             .orElseThrow(IllegalStateException::new);
             sepaAccount.setBalance(FinTsParser.getDataGroupElements(deg.get(4)).get(1));
@@ -364,11 +367,11 @@ public class FinTsApiClient {
                 configuration,
                 this.dialogId,
                 this.messageNumber,
-                localSettings.systemId,
-                localSettings.tanCapability,
+                this.systemId,
+                this.tanCapability,
                 new HKKAZ(3,
-                        localSettings.hkkazVersion,
-                        this.getAccountString(account, localSettings.hkkazVersion),
+                        this.hkkazVersion,
+                        this.getAccountString(account, this.hkkazVersion),
                         start.toInstant()
                                 .atZone(ZoneId.systemDefault())
                                 .toLocalDateTime(),
@@ -376,19 +379,5 @@ public class FinTsApiClient {
                                 .atZone(ZoneId.systemDefault())
                                 .toLocalDateTime(),
                         touchdown));
-    }
-
-    private class FinTsLocalSettings {
-        private final String systemId;
-        private final List<String> tanCapability;
-        private final int hksalVersion;
-        private final int hkkazVersion;
-
-        FinTsLocalSettings(String systemId, List<String> tanCapability, int hksalVersion, int hkkazVersion) {
-            this.systemId = systemId;
-            this.tanCapability = tanCapability;
-            this.hksalVersion = hksalVersion;
-            this.hkkazVersion = hkkazVersion;
-        }
     }
 }

@@ -1,2 +1,0 @@
-bankId	name	type	currency	balance
-Bank1	Lönekonto	CHECKING	SEK	47930.85

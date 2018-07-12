@@ -1,2 +1,0 @@
-bankId	name	type	currency	balance
-Bank2	Regressions Konto	CHECKING	SEK	"10,456.33"
