@@ -8342,6 +8342,683 @@
       ]
     },
     {
+      "name": "de-ingdiba-password",
+      "displayName": "ING-DiBa",
+      "groupDisplayName": "ING-DiBa",
+      "popular": true,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "50010517 https://fints.ing-diba.de/fints/",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-comdirect20041111-password",
+      "displayName": "BLZ: 20041111",
+      "groupDisplayName": "Comdirect Bank AG",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "20041111 https://fints.comdirect.de/fints",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-comdirect20041133-password",
+      "displayName": "BLZ: 20041133",
+      "groupDisplayName": "Comdirect Bank AG",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "20041133 https://fints.comdirect.de/fints",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-comdirect20041144-password",
+      "displayName": "BLZ: 20041144",
+      "groupDisplayName": "Comdirect Bank AG",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "20041144 https://fints.comdirect.de/fints",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-comdirect20041155-password",
+      "displayName": "BLZ: 20041155",
+      "groupDisplayName": "Comdirect Bank AG",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "20041155 https://fints.comdirect.de/fints",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-noris10077777-password",
+      "displayName": "BLZ: 10077777",
+      "groupDisplayName": "Norisbank GmbH",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "10077777 https://fints.norisbank.de/",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-noris76026000-password",
+      "displayName": "BLZ: 76026000",
+      "groupDisplayName": "Norisbank GmbH",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "76026000 https://fints.norisbank.de/",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-dkb-password",
+      "displayName": "Deutsche Kreditbank Berlin (DKB)",
+      "groupDisplayName": "Deutsche Kreditbank Berlin (DKB)",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "12030000 https://banking-dkb.s-fints-pt-dkb.de/fints30",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-bw-password",
+      "displayName": "Baden-Württembergische Bank (BW-Bank)",
+      "groupDisplayName": "Baden-Württembergische Bank (BW-Bank)",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "60050101 https://banking-li4.s-fints-pt-li.de/fints30",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-consorsbank76030080-password",
+      "displayName": "BLZ: 76030080",
+      "groupDisplayName": "Consorsbank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "76030080 https://brokerage-hbci.consorsbank.de/hbci",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "hint": "Account number suffixed with three digit auth number, default 001",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-consorsbank70120400-password",
+      "displayName": "BLZ: 70120400",
+      "groupDisplayName": "Consorsbank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "70120400 https://brokerage-hbci.consorsbank.de/hbci",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "hint": "Account number suffixed with three digit auth number, default 001",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-spardaberlin-password",
+      "displayName": "Sparda-Bank Berlin eG",
+      "groupDisplayName": "Sparda-Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "12096597 https://fints.bankingonline.de/fints/FinTs30PinTanHttpGate",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-spardahamburg-password",
+      "displayName": "Sparda-Bank Hamburg eG",
+      "groupDisplayName": "Sparda-Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "20690500 https://fints.bankingonline.de/fints/FinTs30PinTanHttpGate",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-spardahannover-password",
+      "displayName": "Sparda-Bank Hannover eG",
+      "groupDisplayName": "Sparda-Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "25090500 https://fints.bankingonline.de/fints/FinTs30PinTanHttpGate",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-spardawuppertal-password",
+      "displayName": "Sparda-Bank West eG Wuppertal",
+      "groupDisplayName": "Sparda-Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "33060592 https://fints.bankingonline.de/fints/FinTs30PinTanHttpGate",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-spardaessen-password",
+      "displayName": "Sparda-Bank West eG Essen",
+      "groupDisplayName": "Sparda-Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "36060591 https://fints.bankingonline.de/fints/FinTs30PinTanHttpGate",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-spardaköln-password",
+      "displayName": "Sparda-Bank West eG Köln",
+      "groupDisplayName": "Sparda-Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "37060590 https://fints.bankingonline.de/fints/FinTs30PinTanHttpGate",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-spardamünster-password",
+      "displayName": "Sparda-Bank Münster eG",
+      "groupDisplayName": "Sparda-Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "40060560 https://fints.bankingonline.de/fints/FinTs30PinTanHttpGate",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-spardahessen-password",
+      "displayName": "Sparda-Bank Hessen eG",
+      "groupDisplayName": "Sparda-Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "50090500 https://fints.bankingonline.de/fints/FinTs30PinTanHttpGate",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-spardasüdwest-password",
+      "displayName": "Sparda-Bank Südwest eG",
+      "groupDisplayName": "Sparda-Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "55090500 https://fints.bankingonline.de/fints/FinTs30PinTanHttpGate",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-spardabaden-password",
+      "displayName": "Sparda-Bank Baden-Württemberg eG",
+      "groupDisplayName": "Sparda-Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "60090800 https://fints.bankingonline.de/fints/FinTs30PinTanHttpGate",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-spardamünchen-password",
+      "displayName": "Sparda-Bank München eG",
+      "groupDisplayName": "Sparda-Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "70090500 https://fints.bankingonline.de/fints/FinTs30PinTanHttpGate",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-spardaaugsburg-password",
+      "displayName": "Sparda-Bank Augsburg eG",
+      "groupDisplayName": "Sparda-Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "72090500 https://fints.bankingonline.de/fints/FinTs30PinTanHttpGate",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-spardaregensburg-password",
+      "displayName": "Sparda-Bank Regensburg eG",
+      "groupDisplayName": "Sparda-Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "75090500 https://fints.bankingonline.de/fints/FinTs30PinTanHttpGate",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-spardanürnberg-password",
+      "displayName": "Sparda-Bank Nürnberg eG",
+      "groupDisplayName": "Sparda-Bank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "76090500 https://fints.bankingonline.de/fints/FinTs30PinTanHttpGate",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
       "name": "de-sparkasse-wismar-password",
       "displayName": "Sparkasse Mecklenburg-Nordwest",
       "groupDisplayName": "Sparkasse",
