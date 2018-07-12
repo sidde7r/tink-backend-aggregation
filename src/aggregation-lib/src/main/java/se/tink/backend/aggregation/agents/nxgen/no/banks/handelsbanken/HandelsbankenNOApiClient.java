@@ -49,8 +49,7 @@ public class HandelsbankenNOApiClient {
         return requestWithUserAgent(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
-                // at this moment, any random 8 numeric/alphabets works, but they might change later
-                .header(HandelsbankenNOConstants.Header.REQUEST_ID, "11111111")
+                .header(Headers.X_EVRY_CLIENT_REQUESTID)
                 .header(Headers.X_EVRY_CLIENT)
                 .header(HandelsbankenNOConstants.Header.EVRY_TOKEN, sessionStorage.get(Tags.ACCESS_TOKEN))
                 .cookie(sessionStorage.get(Tags.SESSION_STAMP), sessionStorage.get(Tags.SESSION_STAMP_VALUE))
@@ -68,6 +67,8 @@ public class HandelsbankenNOApiClient {
         return client.request(Url.VERIFY_CUSTOMER.parameters(nationalId, mobileNumber))
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .type(MediaType.APPLICATION_JSON)
+                .header(Headers.X_EVRY_CLIENT_REQUESTID)
+                .header(Headers.X_EVRY_CLIENT)
                 .get(VerifyCustomerResponse.class);
     }
 

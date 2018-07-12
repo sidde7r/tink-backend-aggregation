@@ -119,6 +119,8 @@ public class HandelsbankenNOConstants {
         ORIGIN("Origin", UrlParameters.HB_NETBANK_HOST),
         REQUEST_WITH("X-Requested-With", "XMLHttpRequest"),
         X_EVRY_CLIENT("X-EVRY-CLIENT-CLIENTNAME", "SMARTbankMobile"),
+        // at this moment, any random 8 numeric/alphabets works as requestId, but they might change later
+        X_EVRY_CLIENT_REQUESTID("X-EVRY-CLIENT-REQUESTID", "11111111"),
         USER_AGENT("User-Agent", "MB 1.20.1 9055 iPhone 6s iOS 10.2");
 
         private final String key;
@@ -140,7 +142,6 @@ public class HandelsbankenNOConstants {
 
     public static final class Header {
         public static final String EVRY_TOKEN = "X-EVRY-CLIENT-ACCESSTOKEN";
-        public static final String REQUEST_ID = "X-EVRY-CLIENT-REQUESTID";
     }
 
     public static final class Tags {
