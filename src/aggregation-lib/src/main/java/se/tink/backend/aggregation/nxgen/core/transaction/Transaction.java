@@ -8,7 +8,6 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class Transaction extends AggregationTransaction {
     private final boolean pending;
-    private final String rawDetails;
     private final String externalId;
 
     protected Transaction(Amount amount, Date date, String description, boolean pending) {
@@ -21,17 +20,13 @@ public class Transaction extends AggregationTransaction {
 
     protected Transaction(Amount amount, Date date, String description, boolean pending, String rawDetails,
             String externalId) {
-        super(amount, date, description);
+        super(amount, date, description, rawDetails);
         this.pending = pending;
-        this.rawDetails = rawDetails;
         this.externalId = externalId;
     }
 
     public boolean isPending() {
         return pending;
-    }
-    public String getRawDetails() {
-        return rawDetails;
     }
 
     public String getExternalId() {
@@ -42,10 +37,6 @@ public class Transaction extends AggregationTransaction {
         se.tink.backend.system.rpc.Transaction transaction = super.toSystemTransaction();
 
         transaction.setPending(isPending());
-        if (!Strings.isNullOrEmpty(getRawDetails())) {
-            transaction.setPayload(TransactionPayloadTypes.DETAILS, getRawDetails());
-        }
-
         if (!Strings.isNullOrEmpty(getExternalId())) {
             transaction.setPayload(TransactionPayloadTypes.EXTERNAL_ID, getExternalId());
         }
@@ -59,7 +50,6 @@ public class Transaction extends AggregationTransaction {
 
     public static class Builder extends AggregationTransaction.Builder {
         private boolean pending;
-        private String rawDetails;
         private String externalId;
 
         @Override
@@ -87,18 +77,7 @@ public class Transaction extends AggregationTransaction {
         }
 
         public Builder setRawDetails(Object rawDetails) {
-            if (rawDetails != null) {
-                if (rawDetails instanceof String) {
-                    this.rawDetails = (String)rawDetails;
-                } else {
-                    this.rawDetails = SerializationUtils.serializeToString(rawDetails);
-                }
-            }
-            return this;
-        }
-
-        String getRawDetails() {
-            return rawDetails;
+            return (Builder) super.setRawDetails(rawDetails);
         }
 
         public Builder setExternalId(String externalId) {

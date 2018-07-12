@@ -1,5 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngHelper;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
@@ -134,6 +139,37 @@ public class PendingPaymentEntity {
                 .setAmount(Amount.inEUR(IngHelper.parseAmountStringToDouble(amount)))
                 .setDate(DateUtils.parseDate(executionDate))
                 .setDescription(beneficiaryName)
+                .setRawDetails(getRawDetails())
                 .build();
+    }
+
+    @JsonIgnore
+    private RawDetails getRawDetails() {
+        return new RawDetails(this);
+    }
+
+    @JsonObject
+    public class RawDetails {
+        private String beneficiaryAccount;
+        private String beneficiaryName;
+        private String beneficiaryAddress;
+        private String beneficiaryCity;
+        private String beneficiaryCountry;
+        private String communicationLine1;
+        private String communicationLine2;
+        private String communicationLine3;
+        private String communicationLine4;
+
+        public RawDetails(PendingPaymentEntity pendingPaymentEntity) {
+            this.beneficiaryAccount = pendingPaymentEntity.beneficiaryAccount;
+            this.beneficiaryName = pendingPaymentEntity.beneficiaryName;
+            this.beneficiaryAddress = pendingPaymentEntity.beneficiaryAddress;
+            this.beneficiaryCity = pendingPaymentEntity.beneficiaryCity;
+            this.beneficiaryCountry = pendingPaymentEntity.beneficiaryCountry;
+            this.communicationLine1 = pendingPaymentEntity.communicationLine1;
+            this.communicationLine2 = pendingPaymentEntity.communicationLine2;
+            this.communicationLine3 = pendingPaymentEntity.communicationLine3;
+            this.communicationLine4 = pendingPaymentEntity.communicationLine4;
+        }
     }
 }

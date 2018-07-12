@@ -12,7 +12,11 @@ public final class UpcomingTransaction extends AggregationTransaction {
     private final Transfer upcomingTransfer;
 
     protected UpcomingTransaction(Amount amount, Date date, String description, Transfer upcomingTransfer) {
-        super(amount, date, description);
+        this(amount, date, description, upcomingTransfer, null);
+    }
+
+    protected UpcomingTransaction(Amount amount, Date date, String description, Transfer upcomingTransfer, String rawDetails) {
+        super(amount, date, description, rawDetails);
         this.upcomingTransfer = upcomingTransfer;
     }
 
@@ -68,9 +72,13 @@ public final class UpcomingTransaction extends AggregationTransaction {
             return (Builder) super.setDescription(description);
         }
 
+        public Builder setRawDetails(Object rawDetails) {
+            return (Builder) super.setRawDetails(rawDetails);
+        }
+
         @Override
         public UpcomingTransaction build() {
-            return new UpcomingTransaction(getAmount(), getDate(), getDescription(), upcomingTransfer);
+            return new UpcomingTransaction(getAmount(), getDate(), getDescription(), upcomingTransfer, getRawDetails());
         }
     }
 }

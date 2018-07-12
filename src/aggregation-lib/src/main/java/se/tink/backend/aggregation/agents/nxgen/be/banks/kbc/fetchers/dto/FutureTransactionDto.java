@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.text.ParseException;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import org.apache.commons.lang3.time.DateUtils;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeValueEncodedTriplet;
@@ -27,18 +29,10 @@ public class FutureTransactionDto {
     public UpcomingTransaction toUpcomingTransaction() {
         return UpcomingTransaction.builder()
                 .setAmount(Amount.inEUR(Double.valueOf(amount.getValue())))
-                .setDescription(getDescription())
+                .setDescription(descriptionLine01.getValue())
+                .setRawDetails(getRawDetails())
                 .setDate(parseExecutionDate())
                 .build();
-    }
-
-    @JsonIgnore
-    private String getDescription() {
-        if (descriptionLine02 != null && !Strings.isNullOrEmpty(descriptionLine02.getValue())) {
-            return descriptionLine02.getValue();
-        } else {
-            return descriptionLine01.getValue();
-        }
     }
 
     private Date parseExecutionDate() {
@@ -47,6 +41,28 @@ public class FutureTransactionDto {
                     executionDate.getValue(), "ddMMyyyy");
         } catch (ParseException e) {
             throw new IllegalStateException(e);
+        }
+    }
+
+    @JsonIgnore
+    private RawDetails getRawDetails() {
+        if (descriptionLine02 == null || com.google.common.base.Strings.isNullOrEmpty(descriptionLine02.getValue())) {
+            return null;
+        }
+
+        return new RawDetails(descriptionLine02.getValue());
+    }
+
+    @JsonObject
+    public class RawDetails {
+        private List<String> details;
+
+        public RawDetails(String details) {
+            this.details = Collections.singletonList(details);
+        }
+
+        public List<String> getDetails() {
+            return details;
         }
     }
 }
