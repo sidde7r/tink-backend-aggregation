@@ -32803,6 +32803,32 @@
           "sensitive": true
         }
       ]
+    },
+    {
+      "name": "de-santander-password",
+      "displayName": "Santander",
+      "groupDisplayName": "Santander",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.santander.SantanderAgent",
+      "passwordHelpText": "Use the same pin as you would in your bank's mobile app.",
+      "transactional": true,
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
     }
   ]
 }
