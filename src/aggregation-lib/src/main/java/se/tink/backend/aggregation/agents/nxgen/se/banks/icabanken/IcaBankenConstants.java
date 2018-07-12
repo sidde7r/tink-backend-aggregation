@@ -30,6 +30,7 @@ public class IcaBankenConstants {
         public static final URL EINVOICES_URL = new URL(ENTRY_POINT + "/api/egiro/invoices");
         public static final URL UPDATE_INVOICE_URL = new URL (ENTRY_POINT + "/api/egiro/invoice/update");
         public static final URL INIT_EINVOICE_SIGN_URL = new URL (ENTRY_POINT + "/api/egiro/recipient/bankId/init/{invoiceId}");
+        public static final URL MORTGAGES_URL = new URL(ENTRY_POINT + "/api/engagement");
     }
 
     public static final class Headers {
@@ -62,6 +63,22 @@ public class IcaBankenConstants {
         public static String NOT_AVAILABLE_TAG = "N/A";
         //Used for making a sign request for transfers
         public static String BUNDLE_TAG = "Bundle";
+        public static String KEY_TAG = "Key";
+        public static String VALUE_TAG = "Tag";
+        public static String SWEDISH_AND_SEPARATOR = "och";
+    }
+
+    public static final class IcaMessages{
+        public static String INTEREST_RATE = "Aktuell räntesats";
+        public static String LOAN_NAME = "Lån";
+        public static String INITIAL_DEBT = "Ursprunglig skuld";
+        public static String INITIAL_DATE = "Utbetalningsdag";
+        public static String APPLICANTS = "Aktuell räntesats";
+        public static String NEXT_DAY_OF_TERMS_CHANGE = "Nästa villkorsändringsdag";
+        public static String MONTH_BOUND = "Räntebindningstid";
+        public static String SECURITY = "Säkerhet";
+        public static String TYPE_OF_SECURITY = "Typ av objekt";
+        public static String TYPE_OF_LOAN = "Typ av lån";
     }
 
     public static final class Currencies{

@@ -19,6 +19,9 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvo
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.entities.ValidateEInvoiceResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.entities.InstrumentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.entities.InvestmentAccountResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans.entities.LoanListEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans.entities.LoanOverviewResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans.entities.MortgageListEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transactions.entities.RootTransactionModel;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transactions.entities.UpcomingTransactionsBody;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transactions.entities.UpcomingTransactionsResponse;
@@ -240,4 +243,13 @@ public class IcaBankenApiClient {
         return createRequest(IcaBankenConstants.Urls.UPDATE_INVOICE_URL).put(ValidateEInvoiceResponse.class,
                 updateEInvoiceRequest);
     }
+
+    public LoanListEntity fetchLoanOverview() {
+        return createRequest(IcaBankenConstants.Urls.LOAN_OVERVIEW).get(LoanOverviewResponse.class).getBody().getLoanList();
+    }
+
+    public MortgageListEntity fetchMortgages() {
+        return createRequest(IcaBankenConstants.Urls.MORTGAGES_URL).get(LoanOverviewResponse.class).getBody().getMortgageList();
+    }
+
 }
