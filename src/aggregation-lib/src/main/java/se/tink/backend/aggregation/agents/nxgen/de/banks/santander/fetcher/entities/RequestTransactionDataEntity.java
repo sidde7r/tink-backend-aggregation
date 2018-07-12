@@ -13,7 +13,8 @@ public class RequestTransactionDataEntity {
     private String localContractType;
     private String localContractDetail;
 
-    public RequestTransactionDataEntity(Date fromDate, Date toDate, String companyId, String localContractType, String localContractDetail){
+    public RequestTransactionDataEntity(Date fromDate, Date toDate, String companyId, String localContractType,
+            String localContractDetail) {
         this.fromDate = fromDate;
         this.toDate = toDate;
         this.companyId = companyId;
@@ -21,7 +22,8 @@ public class RequestTransactionDataEntity {
         this.localContractDetail = localContractDetail;
     }
 
-    public String toJson(){
-        return String.format(SantanderConstants.JSON.TRANSACTION_SEARCH, fromDate.toInstant().toString(), toDate.toInstant().toString(), companyId, localContractType, localContractDetail);
+    public String toJson() {
+        return String.format(SantanderConstants.JSON.TRANSACTION_SEARCH, fromDate.toInstant().toString(),
+                toDate.toInstant().toString(), companyId, localContractType, localContractDetail);
     }
 }
