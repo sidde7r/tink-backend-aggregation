@@ -198,6 +198,24 @@ public class PaperEntity {
         this.untreatedText = untreatedText;
     }
 
+    private Double getProfit() {
+        // GainChangeNominal is not always set. Instead multiply the priceChangePerPaper with paperCount.
+        return getGainChangeNominal() != null ? getGainChangeNominal() :
+                getPaperPriceChangeNominal() * getPaperCount();
+    }
+
+    private Double calculateAverageAcquisitionPrice() {
+        Double totalValue = getPaperTotalValue();
+        Double totalChange = getProfit();
+        Double paperCount = getPaperCount();
+
+        if (totalValue == null || totalChange == null || paperCount == null) {
+            return null;
+        }
+
+        return (totalValue - totalChange) / paperCount;
+    }
+
     public Optional<Instrument> toInstrument() {
         Instrument instrument = new Instrument();
 
@@ -205,12 +223,12 @@ public class PaperEntity {
             return Optional.empty();
         }
 
-        instrument.setAverageAcquisitionPrice((getPaperTotalValue() - getGainChangeNominal()) / getPaperCount());
+        instrument.setAverageAcquisitionPrice(calculateAverageAcquisitionPrice());
         instrument.setIsin(getPaperId());
         instrument.setMarketValue(getPaperTotalValue());
         instrument.setName(getPaperName());
         instrument.setPrice(getPaperPrice());
-        instrument.setProfit(getGainChangeNominal());
+        instrument.setProfit(getProfit());
         instrument.setQuantity(getPaperCount());
         instrument.setRawType(String.format("Paper is fund: %s", String.valueOf(getPaperIsFund())));
         instrument.setType(getInstrumentType());
