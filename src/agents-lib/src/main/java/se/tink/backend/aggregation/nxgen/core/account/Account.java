@@ -187,9 +187,7 @@ public abstract class Account {
         }
 
         public String getUniqueIdentifier() {
-            return !Strings.isNullOrEmpty(thisObj.uniqueIdentifier)
-                    ? thisObj.uniqueIdentifier
-                    : getAccountNumber();
+            return Preconditions.checkNotNull(thisObj.uniqueIdentifier, "Unique identifier must be set.");
         }
 
         public T setUniqueIdentifier(String uniqueIdentifier) {
