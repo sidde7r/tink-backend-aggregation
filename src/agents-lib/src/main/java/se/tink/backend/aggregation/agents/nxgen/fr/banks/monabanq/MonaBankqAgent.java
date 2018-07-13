@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fr.banks.monabankq;
+package se.tink.backend.aggregation.agents.nxgen.fr.banks.monabanq;
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationAgent;
