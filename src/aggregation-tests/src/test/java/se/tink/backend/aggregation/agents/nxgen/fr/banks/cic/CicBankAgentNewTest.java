@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.rpc.Field;
 
 @Ignore
 public class CicBankAgentNewTest {
+
     private static final String USERNAME = "<username>";
     private static final String PASSWORD = "<password>";
 
