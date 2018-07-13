@@ -1,6 +1,6 @@
-package se.tink.backend.aggregation.agents.nxgen.de.banks.n26.authenticator.rpc;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.authenticator.rpc;
 
-import se.tink.backend.aggregation.agents.nxgen.de.banks.n26.N26Constants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.N26Constants;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.core.Amount;

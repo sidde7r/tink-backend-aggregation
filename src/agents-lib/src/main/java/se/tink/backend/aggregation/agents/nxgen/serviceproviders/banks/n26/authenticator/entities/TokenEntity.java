@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.de.banks.n26.authenticator.entities;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.authenticator.entities;
 
 import com.google.common.base.Strings;
 import java.util.Date;

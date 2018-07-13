@@ -1,9 +1,9 @@
-package se.tink.backend.aggregation.agents.nxgen.de.banks.n26.session;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.session;
 
 import com.google.api.client.http.HttpStatusCodes;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.n26.N26ApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.N26ApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 

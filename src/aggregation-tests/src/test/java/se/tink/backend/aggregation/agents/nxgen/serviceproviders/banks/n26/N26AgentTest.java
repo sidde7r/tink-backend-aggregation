@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.de.banks.n26;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26;
 
 import org.junit.Ignore;
 import org.junit.Test;

@@ -11,7 +11,7 @@
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
       "multiFactor": false,
-      "className": "nxgen.de.banks.n26.N26Agent",
+      "className": "nxgen.serviceproviders.banks.n26.N26Agent",
       "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
       "transactional": true,
       "fields": [
