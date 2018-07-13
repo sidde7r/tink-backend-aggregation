@@ -144,6 +144,34 @@ java_library(
 )
 
 java_library(
+    name = "aggregationcontroller-api",
+    srcs = glob(["src/aggregationcontroller-api/src/main/**/*.java"]),
+    deps = [
+        ":main-api",
+        ":system-api",
+        ":aggregation-api",
+        ":common-lib",
+        "//src/api-annotations",
+        "//src/cluster-lib:cluster-lib",
+        "//src/libraries/discovery:discovery",
+        "//src/libraries/discovered_web_service:discovered_web_service",
+        "//src/libraries/jersey_utils:jersey-utils",
+        "//src/libraries/http_client:http-client",
+        "//src/libraries/endpoint_configuration:endpoint_configuration",
+        "//src/libraries/http:http-annotations",
+        "//third_party:com_google_inject_guice",
+        "//third_party:org_apache_curator_curator_framework",
+        "//third_party:org_apache_curator_curator_x_discovery",
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:com_fasterxml_jackson_core_jackson_core",
+        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:com_sun_jersey_jersey_client",
+        "//third_party:com_sun_jersey_jersey_core",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+java_library(
     name = "common-lib",
     srcs = glob(["src/common-lib/src/main/**/*.java"]),
     deps = [
@@ -296,6 +324,7 @@ java_library(
          ":main-api",
          ":system-api",
          ":agents-lib",
+         ":aggregationcontroller-api",
 
           "//src/libraries/auth:auth",
           "//src/libraries/discovery:discovery",
@@ -327,6 +356,8 @@ java_library(
         ":main-api",
         ":system-api",
         "agents-lib",
+        ":aggregationcontroller-api",
+
         "//src/libraries/uuid:uuid",
         "//src/libraries/http:http-utils",
         "//src/libraries/serialization_utils:serialization-utils",
@@ -405,6 +436,7 @@ java_library(
         ":main-api",
         ":aggregation-api",
         ":system-api",
+        ":aggregationcontroller-api",
 
         "//src/cluster-lib:cluster-lib",
         "//src/libraries/uuid:uuid",
@@ -489,6 +521,7 @@ java_binary(
         ":common-lib",
         ":main-api",
         ":agents-lib",
+        ":aggregationcontroller-api",
 
         "//src/libraries/auth:auth",
         "//src/libraries/cluster:cluster",
