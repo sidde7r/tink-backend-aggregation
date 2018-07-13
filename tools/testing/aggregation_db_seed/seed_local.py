@@ -54,7 +54,9 @@ def join(columns, rowdict):
 def formatInput(rowdict):
     for row in rowdict:
         if isinstance(rowdict[row], list) or isinstance(rowdict[row], dict): 
-            rowdict[row] = "'" + json.dumps(rowdict[row]) + "'"
+            #rowdict[row] = "'" + json.dumps(rowdict[row], ensure_ascii=False) + "'"
+            rowdict[row] = json.dumps(rowdict[row], ensure_ascii=False)
+            print rowdict[row]
 
 def findPrimaryKey(definedColumns):
     for a in definedColumns:
