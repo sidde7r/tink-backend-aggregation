@@ -607,6 +607,7 @@ junit_test(
         ":common-lib-testlib",
         ":main-api",
         ":system-api",
+        ":agents-lib",
 
         "//src/libraries/uuid:uuid",
         "//src/libraries/serialization_utils:serialization-utils",
