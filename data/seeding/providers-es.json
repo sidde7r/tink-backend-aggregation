@@ -176,6 +176,37 @@
                     "helpText":"Your 6 digit online PIN"
                 }
             ]
+        },
+        {
+            "name": "es-revolut-password",
+            "className": "nxgen.serviceproviders.banks.revolut.RevolutAgent",
+            "displayName": "Revolut",
+            "credentialsType": "PASSWORD",
+            "multiFactor": true,
+            "fields": [
+                {
+                    "description": "Phone number",
+                    "name": "username",
+                    "pattern": "\\+?[1-9][0-9]+",
+                    "minLength": 5,
+                    "maxLength": 16,
+                    "patternError": "Please enter your full phone number in international format, starting with '+' and including country code. Example: +34 NNN NNN NNNN"
+                },
+                {
+                    "description": "Passcode",
+                    "name": "password",
+                    "pattern": "[0-9]{4}",
+                    "sensitive": true,
+                    "masked": true,
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "patternError": "Please enter your four digit passcode."
+                }
+            ],
+            "passwordhelptext": "Enter your full phone number in international format starting with '+', and the four digit passcode you set up in your Revolut app.",
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         }
     ]
 }
