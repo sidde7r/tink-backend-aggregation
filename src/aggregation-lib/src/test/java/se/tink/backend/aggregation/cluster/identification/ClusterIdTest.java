@@ -19,15 +19,6 @@ public class ClusterIdTest {
     }
 
     @Test(expected = WebApplicationException.class)
-    public void whenAggregatorNull_throwWebApplicationException() {
-        ClusterId validClusterId = ClusterId.create(NAME, ENVIRONMENT, null);
-        Optional.of(validClusterId)
-                .filter(ClusterId::isValidId)
-                .orElseThrow(WebApplicationException::new);
-    }
-
-
-    @Test(expected = WebApplicationException.class)
     public void whenEnvironmentNull_throwWebApplicationException() {
         ClusterId validClusterId = ClusterId.create(NAME, null, null);
         Optional.of(validClusterId)
