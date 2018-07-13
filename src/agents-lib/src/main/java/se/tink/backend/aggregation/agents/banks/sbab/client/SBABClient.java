@@ -14,6 +14,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import se.tink.backend.aggregation.agents.AbstractAgent;
+import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.common.config.SbabIntegrationConfiguration;
 import se.tink.backend.aggregation.rpc.Credentials;
 
@@ -31,9 +32,9 @@ public class SBABClient {
 
     private String bearerToken;
     private String remoteIp;
-    private final String aggregator;
+    private final Aggregator aggregator;
 
-    public SBABClient(Client client, Credentials credentials, String aggregator) {
+    public SBABClient(Client client, Credentials credentials, Aggregator aggregator) {
         this.client = client;
         this.credentials = credentials;
         this.aggregator = aggregator;

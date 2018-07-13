@@ -104,6 +104,14 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         return this.userAgent;
     }
 
+    public String getHeaderAggregatorIdentifier(){
+        if(aggregator != null){
+            return aggregator.getAggregatorIdentifier();
+        }
+
+        return DEFAULTS.UNKNOWN_AGGREGATOR;
+    }
+
     // good site to test this: https://badssl.com/
     private class TrustAllCertificatesStrategy implements TrustStrategy {
 

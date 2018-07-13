@@ -21,7 +21,7 @@ import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public abstract class AbstractAgent extends AgentParsingUtils implements Agent, AgentEventListener{
+public abstract class AbstractAgent extends AgentParsingUtils implements Agent, AgentEventListener {
     public static final String AGENT_LOCK_PATTERN = "/locks/refreshCredentials/credentials/%s/%s";
 
     protected ServiceConfiguration configuration;

@@ -55,7 +55,7 @@ public class AgentTestContext extends AgentContext {
 
     public AgentTestContext(Credentials credentials) {
         this.credentials = credentials;
-        this.clusterInfo = this.clusterInfo.createForLegacyAggregation(ClusterId.create("test", "local-development", "TINK-Testing"));
+        this.clusterInfo = clusterInfo.createForLegacyAggregation(ClusterId.create("test", "local-development", "TINK-Testing"));
     }
 
     @Override
