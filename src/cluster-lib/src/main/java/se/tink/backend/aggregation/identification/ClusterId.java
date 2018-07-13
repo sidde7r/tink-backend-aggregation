@@ -32,7 +32,7 @@ public class ClusterId {
     }
 
     public boolean isValidId() {
-        return !(Strings.isNullOrEmpty(name) || Strings.isNullOrEmpty(environment) || Strings.isNullOrEmpty(aggregator.getAggregatorIdentifier()));
+        return !(Strings.isNullOrEmpty(name) || Strings.isNullOrEmpty(environment) /*|| Strings.isNullOrEmpty(aggregator.getAggregatorIdentifier())*/);
     }
 
     public String getName() {

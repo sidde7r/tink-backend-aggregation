@@ -88,7 +88,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
     private class DEFAULTS {
 
-        private final static String UNKNOWN_AGGREGATOR = "Unknown Aggregator";
+        private final static String UNKNOWN_AGGREGATOR = "Tink (+https://www.tink.se/; noc@tink.se)";
         private final static int TIMEOUT_MS = 30000;
         private final static int MAX_REDIRECTS = 10;
         private final static boolean CHUNKED_ENCODING = false;
@@ -184,7 +184,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         setMaxRedirects(DEFAULTS.MAX_REDIRECTS);
         setFollowRedirects(DEFAULTS.FOLLOW_REDIRECTS);
         setDebugOutput(DEFAULTS.DEBUG_OUTPUT);
-        addPersistentHeader("X-Aggregator", getUserAgent());
+        addPersistentHeader("X-Aggregator", getHeaderAggregatorIdentifier());
     }
 
     private void constructInternalClient() {
