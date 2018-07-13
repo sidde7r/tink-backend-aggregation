@@ -554,6 +554,7 @@ junit_test(
         ":common-lib-testlib",
         ":main-api",
         ":system-api",
+        ":agents-lib",
 
         "//src/cluster-lib:cluster-lib",
         "//src/libraries/serialization_utils:serialization-utils",
