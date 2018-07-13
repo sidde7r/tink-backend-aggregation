@@ -10,3 +10,4 @@ requests==2.18.4
 tinydb==3.9.0.post1
 urllib3==1.22
 Werkzeug==0.14.1
+pymysql==0.9.1
