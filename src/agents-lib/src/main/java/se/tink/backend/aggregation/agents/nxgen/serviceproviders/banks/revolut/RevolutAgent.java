@@ -25,12 +25,6 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
-/**
- * WIP - Things left to implement/fix
- *
- * Remove resend of authentication code via phone call as we won't support that (in RevolutMultifactorAuthenticator).
- * Traffic logs are can be found on Google drive.
- */
 public class RevolutAgent extends NextGenerationAgent {
     private final RevolutApiClient apiClient;
 
