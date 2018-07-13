@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agents.banks.sbab.model.response.LoanResponse
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.SignFormRequestBody;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.TransactionEntity;
 import se.tink.backend.aggregation.agents.banks.sbab.util.JsonUtils;
+import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -44,8 +45,8 @@ public class UserDataClient extends SBABClient {
     private static final String AMORTIZATION_DOCUMENTATION_URL = SECURE_BASE_URL + "/secure-rest/rest/amorteringskrav/ejomfattad/%s";
     private static final String LOAN_DETAILS_URL = SECURE_BASE_URL + "/privat/lan/mina_lan/detaljer.html?lanenummer=%s";
 
-    public UserDataClient(Client client, Credentials credentials) {
-        super(client, credentials);
+    public UserDataClient(Client client, Credentials credentials, Aggregator aggregator) {
+        super(client, credentials, aggregator);
     }
 
     public List<AccountEntity> getAccounts() throws Exception {

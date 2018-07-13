@@ -8,6 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ClusterIdTest {
     private static final String NAME = "clusterName";
     private static final String ENVIRONMENT = "clusterEnvironment";
+    private static final String AGGREGATOR = "tinkTest";
 
     @Test(expected = WebApplicationException.class)
     public void whenEmptyClusterId_throwWebApplicationException() {
@@ -19,7 +20,7 @@ public class ClusterIdTest {
 
     @Test(expected = WebApplicationException.class)
     public void whenEnvironmentNull_throwWebApplicationException() {
-        ClusterId validClusterId = ClusterId.create(NAME, null);
+        ClusterId validClusterId = ClusterId.create(NAME, null, null);
         Optional.of(validClusterId)
                 .filter(ClusterId::isValidId)
                 .orElseThrow(WebApplicationException::new);
@@ -27,7 +28,7 @@ public class ClusterIdTest {
 
     @Test(expected = WebApplicationException.class)
     public void whenNameNull_throwWebApplicationException() {
-        ClusterId validClusterId = ClusterId.create(null, ENVIRONMENT);
+        ClusterId validClusterId = ClusterId.create(null, ENVIRONMENT, null);
         Optional.of(validClusterId)
                 .filter(ClusterId::isValidId)
                 .orElseThrow(WebApplicationException::new);
@@ -35,7 +36,7 @@ public class ClusterIdTest {
 
     @Test
     public void whenValidClusterId_doNotThrow() {
-        ClusterId validClusterId = ClusterId.create(NAME, ENVIRONMENT);
+        ClusterId validClusterId = ClusterId.create(NAME, ENVIRONMENT, AGGREGATOR);
         Optional.of(validClusterId)
                 .filter(ClusterId::isValidId)
                 .orElseThrow(WebApplicationException::new);
@@ -43,13 +44,13 @@ public class ClusterIdTest {
 
     @Test
     public void whenValidClusterId_assertThatClusterIdIsValid() {
-        ClusterId clusterId = ClusterId.create(NAME, ENVIRONMENT);
+        ClusterId clusterId = ClusterId.create(NAME, ENVIRONMENT, AGGREGATOR);
         assertThat(clusterId.isValidId()).isTrue();
     }
 
     @Test
     public void whenValidClusterId_assertThatIdEqualsExpectedId() {
-        ClusterId validClusterId = ClusterId.create(NAME, ENVIRONMENT);
+        ClusterId validClusterId = ClusterId.create(NAME, ENVIRONMENT, AGGREGATOR);
         ClusterId clusterId = Optional.of(validClusterId)
                 .filter(ClusterId::isValidId)
                 .orElseThrow(WebApplicationException::new);

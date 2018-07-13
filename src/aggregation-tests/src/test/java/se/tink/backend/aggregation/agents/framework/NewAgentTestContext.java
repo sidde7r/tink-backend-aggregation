@@ -19,6 +19,8 @@ import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.cluster.identification.Aggregator;
+import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -106,6 +108,17 @@ public class NewAgentTestContext extends AgentContext {
     @Override
     public void processTransactions() {
         // noop
+    }
+
+
+    @Override
+    public ClusterInfo getClusterInfo(){
+        return this.clusterInfo;
+    }
+
+    @Override
+    public Aggregator getAggregator() {
+        return clusterInfo.getClusterId().getAggregator();
     }
 
     @Override

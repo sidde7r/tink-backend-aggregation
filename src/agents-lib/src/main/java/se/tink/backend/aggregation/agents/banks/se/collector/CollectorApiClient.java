@@ -74,11 +74,13 @@ class CollectorApiClient {
     private final Client client;
     private String subscriptionKey;
     private String accessToken;
+    private final String aggregator;
 
     private AccountEntities accounts = new AccountEntities();
 
-    CollectorApiClient(Client client) {
+    CollectorApiClient(Client client, String aggregator) {
         this.client = client;
+        this.aggregator = aggregator;
     }
 
     void setSubscriptionKey(String subscriptionKey) {
@@ -232,12 +234,14 @@ class CollectorApiClient {
         return createClientRequest(url).post(responseClass, requestData);
     }
 
+
+    //TODO IS THIS RIGHT?
     private WebResource.Builder createClientRequest(String uri) {
         WebResource.Builder builder = client.resource(BASE_URL + uri)
                 .type(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .header("Ocp-Apim-Subscription-Key", subscriptionKey)
-                .header("User-Agent", AbstractAgent.DEFAULT_USER_AGENT);
+                .header("User-Agent", aggregator);
 
         if (!Strings.isNullOrEmpty(accessToken)) {
             builder.header("Authorization", String.format("Bearer %s", accessToken));

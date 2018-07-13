@@ -581,7 +581,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         int requestId = ThreadLocalRandom.current().nextInt(100000);
 
         Builder request = this.client.resource(url).accept("*/*")
-                .header("User-Agent", DEFAULT_USER_AGENT)
+                .header("User-Agent", getAggregator().getAggregatorIdentifier())
                 .header("x-Request-Id", Integer.toString(requestId))
                 .header("x-Platform-Version", "8.1.3")
                 .header("x-App-Country", this.market.getMarketCode())

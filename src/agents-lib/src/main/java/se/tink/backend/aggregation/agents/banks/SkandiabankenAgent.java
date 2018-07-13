@@ -342,7 +342,7 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
                 .header("x-smartrefill-api-version", "3").header("x-smartrefill-company", "SKANDIABANKEN")
                 .header("x-smartrefill-country", COUNTRY_CODE).header("x-smartrefill-marketing-version", "2.8.2")
                 .header("x-smartrefill-application", "se.skandiabanken.android.wallet")
-                .header("User-Agent", DEFAULT_USER_AGENT);
+                .header("User-Agent", getAggregator().getAggregatorIdentifier());
 
         if (customerId != null) {
             requestBuilder = requestBuilder.header("x-smartrefill-customer", Integer.toString(customerId));

@@ -461,7 +461,7 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
 
         String uri = UriBuilder.fromUri(url).queryParam("dsid", dsid).build().toString();
 
-        Builder request = client.resource(uri).header("User-Agent", DEFAULT_USER_AGENT)
+        Builder request = client.resource(uri).header("User-Agent", getAggregator().getAggregatorIdentifier())
                 .cookie(new NewCookie("dsid", dsid)).accept("*/*").acceptLanguage("sv-se")
                 .header("Authorization", authorization);
 

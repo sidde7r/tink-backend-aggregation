@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.banks.sbab.model.response.InitialTrans
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.MakeTransferResponse;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.SavedRecipientEntity;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.TransferEntity;
+import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
@@ -38,8 +39,8 @@ public class TransferClient extends SBABClient {
     private final Catalog catalog;
     private final TransferMessageFormatter messageFormatter;
 
-    public TransferClient(Client client, Credentials credentials, Catalog catalog) {
-        super(client, credentials);
+    public TransferClient(Client client, Credentials credentials, Catalog catalog, Aggregator aggregator) {
+        super(client, credentials, aggregator);
         this.messageFormatter = new TransferMessageFormatter(catalog,
                 TransferMessageLengthConfig.createWithMaxLength(30, 12, 12),
                 new StringNormalizerSwedish("!+%\"/?,.§\\-"));

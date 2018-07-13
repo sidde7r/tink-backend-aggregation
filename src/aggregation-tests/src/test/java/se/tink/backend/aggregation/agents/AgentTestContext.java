@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -12,10 +13,14 @@ import java.util.Map;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import org.apache.curator.framework.CuratorFramework;
+import se.tink.backend.aggregation.cluster.identification.Aggregator;
+import se.tink.backend.aggregation.cluster.identification.ClusterId;
+import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
+import se.tink.backend.core.ClusterHostConfiguration;
 import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.core.FraudDetailsContent;
 import se.tink.backend.core.account.TransferDestinationPattern;
@@ -38,6 +43,7 @@ public class AgentTestContext extends AgentContext {
 
     static {
         mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z"));
+
     }
 
     private Map<String, Account> accountsByBankId = Maps.newHashMap();
@@ -49,6 +55,7 @@ public class AgentTestContext extends AgentContext {
 
     public AgentTestContext(Credentials credentials) {
         this.credentials = credentials;
+        this.clusterInfo = clusterInfo.createForLegacyAggregation(ClusterId.create("test", "local-development", "TINK-Testing"));
     }
 
     @Override
@@ -221,6 +228,16 @@ public class AgentTestContext extends AgentContext {
                 + (Strings.isNullOrEmpty(operation.getStatusMessage()) ?
                 "" :
                 " (" + operation.getStatusMessage() + ")"));
+    }
+
+    @Override
+    public ClusterInfo getClusterInfo(){
+        return clusterInfo;
+    }
+
+    @Override
+    public Aggregator getAggregator() {
+        return this.clusterInfo.getClusterId().getAggregator();
     }
 
     @Override

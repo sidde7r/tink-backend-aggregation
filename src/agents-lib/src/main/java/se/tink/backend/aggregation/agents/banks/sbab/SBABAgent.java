@@ -129,20 +129,20 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
 
         if (payload != null && Objects.equal(payload.get("isSwitchMortgageProviderTest"), "true")) {
             clientWithoutSSL = clientFactory.createCookieClientWithoutSSL();
-            mortgageSignClient = new MortgageSignClient(clientWithoutSSL, credentials);
-            bankIdSignClient = new BankIdSignClient(clientWithoutSSL, credentials);
+            mortgageSignClient = new MortgageSignClient(clientWithoutSSL, credentials, getAggregator());
+            bankIdSignClient = new BankIdSignClient(clientWithoutSSL, credentials, getAggregator());
         } else {
             clientWithoutSSL = null;
-            mortgageSignClient = new MortgageSignClient(client, credentials);
-            bankIdSignClient = new BankIdSignClient(client, credentials);
+            mortgageSignClient = new MortgageSignClient(client, credentials, getAggregator());
+            bankIdSignClient = new BankIdSignClient(client, credentials, getAggregator());
         }
 
         mortgageClient = new MortgageClient(client, credentials,
-                new CreateProductExecutorTracker(context.getMetricRegistry()));
-        authenticationClient = new AuthenticationClient(client, credentials);
-        userDataClient = new UserDataClient(client, credentials);
-        transferClient = new TransferClient(client, credentials, catalog);
-        openSavingsAccountClient = new OpenSavingsAccountClient(client, credentials);
+                new CreateProductExecutorTracker(context.getMetricRegistry()), getAggregator());
+        authenticationClient = new AuthenticationClient(client, credentials, getAggregator());
+        userDataClient = new UserDataClient(client, credentials, getAggregator());
+        transferClient = new TransferClient(client, credentials, catalog, getAggregator());
+        openSavingsAccountClient = new OpenSavingsAccountClient(client, credentials, getAggregator());
     }
 
     @Override

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import org.apache.http.client.CookieStore;
 import org.apache.http.cookie.Cookie;
+import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.agents.utils.jersey.JerseyClientFactory;
 import se.tink.backend.aggregation.rpc.Account;
@@ -21,7 +22,6 @@ import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public abstract class AbstractAgent extends AgentParsingUtils implements Agent, AgentEventListener {
-    public static final String DEFAULT_USER_AGENT = "Tink (+https://www.tink.se/; noc@tink.se)";
     public static final String AGENT_LOCK_PATTERN = "/locks/refreshCredentials/credentials/%s/%s";
 
     protected ServiceConfiguration configuration;
@@ -33,10 +33,13 @@ public abstract class AbstractAgent extends AgentParsingUtils implements Agent, 
     protected AbstractAgent(CredentialsRequest request, AgentContext context) {
         this.request = request;
         this.context = context;
-
         this.clientFactory = new JerseyClientFactory();
 
         this.log = new AggregationLogger(getAgentClass());
+    }
+
+    public Aggregator getAggregator(){
+        return context.getAggregator();
     }
 
     @Override

@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.banks.crosskey.responses.BaseResponse;
 import se.tink.backend.aggregation.agents.banks.crosskey.responses.LoanDetailsResponse;
 import se.tink.backend.aggregation.agents.banks.crosskey.responses.CrossKeyLoanDetails;
 import se.tink.backend.aggregation.agents.banks.crosskey.responses.TransactionsResponse;
+import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.Field;
@@ -51,16 +52,18 @@ public class CrossKeyApiClient {
     private String appId;
     private String language;
     private final Credentials credentials;
+    private final Aggregator aggregator;
 
     //Constant Values
     private static final String VERSION_1_4_0 = "1.4.0-iOS";
 
     private final AggregationLogger log;
 
-    public CrossKeyApiClient(Client client, Credentials credentials, AggregationLogger log) {
+    public CrossKeyApiClient(Client client, Credentials credentials, AggregationLogger log, Aggregator aggregator) {
         this.client = client;
         this.credentials = credentials;
         this.log = log;
+        this.aggregator = aggregator;
     }
 
     public void setErrorHandler(CrossKeyErrorHandler errorHandler) {
@@ -262,7 +265,7 @@ public class CrossKeyApiClient {
     }
 
     private WebResource.Builder createClientRequest(String uri) {
-        return client.resource(rootUrl + uri).header("User-Agent", AbstractAgent.DEFAULT_USER_AGENT)
+        return client.resource(rootUrl + uri).header("User-Agent", aggregator.getAggregatorIdentifier())
                 .type(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON_TYPE);
     }

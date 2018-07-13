@@ -193,7 +193,7 @@ public class AvanzaV2Agent extends AbstractAgent implements RefreshableItemExecu
     }
 
     private Builder createClientRequest(String url, String authenticationSession) {
-        Builder builder = client.resource(url).header("User-Agent", DEFAULT_USER_AGENT)
+        Builder builder = client.resource(url).header("User-Agent", getAggregator().getAggregatorIdentifier())
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON);
 

@@ -333,7 +333,7 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
      * Helper method to create a client request.
      */
     private Builder createClientRequest(String url) {
-        Builder request = client.resource(url).header("User-Agent", DEFAULT_USER_AGENT)
+        Builder request = client.resource(url).header("User-Agent", getAggregator().getAggregatorIdentifier())
                 .accept(MediaType.APPLICATION_JSON).header("ApiKey", API_KEY).header("ApiVersion", API_VERSION)
                 .header("ClientAppVersion", CLIENT_APP_VERSION).header("ClientHardware", CLIENT_HARDWARE)
                 .header("ClientOSVersion", CLIENT_OS_VERSION).header("ClientOS", CLIENT_OS);

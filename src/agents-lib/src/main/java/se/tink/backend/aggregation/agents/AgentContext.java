@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.apache.curator.framework.CuratorFramework;
+import se.tink.backend.aggregation.cluster.identification.Aggregator;
+import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
@@ -30,6 +32,7 @@ public abstract class AgentContext {
     protected ByteArrayOutputStream logOutputStream = new ByteArrayOutputStream();
     protected boolean isTestContext = false;
     private boolean isWaitingOnConnectorTransactions = false;
+    protected ClusterInfo clusterInfo;
 
     public abstract Catalog getCatalog();
 
@@ -40,6 +43,10 @@ public abstract class AgentContext {
     }
 
     public abstract MetricRegistry getMetricRegistry();
+
+    public abstract ClusterInfo getClusterInfo();
+
+    public abstract Aggregator getAggregator();
 
     private String formatCredentialsStatusPayloadSuffix(long numberOfAccounts, long numberOfTransactions,
             Catalog catalog) {

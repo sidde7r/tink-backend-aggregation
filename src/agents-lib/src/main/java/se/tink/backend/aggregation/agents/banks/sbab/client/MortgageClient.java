@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.banks.sbab.model.response.MortgageSign
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.MortgageStatus;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.MortgageStatusResponse;
 import se.tink.backend.aggregation.agents.exceptions.application.InvalidApplicationException;
+import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.agents.utils.CreateProductExecutorTracker;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -60,8 +61,8 @@ public class MortgageClient extends SBABClient {
 
     private final CreateProductExecutorTracker tracker;
 
-    public MortgageClient(Client client, Credentials credentials, CreateProductExecutorTracker tracker) {
-        super(client, credentials);
+    public MortgageClient(Client client, Credentials credentials, CreateProductExecutorTracker tracker, Aggregator aggregator) {
+        super(client, credentials, aggregator);
 
         this.tracker = tracker;
     }

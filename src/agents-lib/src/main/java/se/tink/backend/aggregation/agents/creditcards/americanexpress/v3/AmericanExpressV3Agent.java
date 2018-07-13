@@ -49,7 +49,7 @@ public class AmericanExpressV3Agent extends AbstractAgent implements DeprecatedR
         this.apiClient = new AmericanExpressV3ApiClient(
                 clientFactory.createCustomClient(context.getLogOutputStream()),
                 request.getProvider().getMarket(),
-                DEFAULT_USER_AGENT,
+                getAggregator().getAggregatorIdentifier(),
                 credentials);
 
         // client.addFilter(new LoggingFilter(System.out));

@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.banks.sbab.exception.UnsupportedSignTy
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.BankIdPollResponse;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.BankIdStartResponse;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.SignFormRequestBody;
+import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.Credentials;
 
@@ -22,8 +23,8 @@ public class BankIdSignClient extends SBABClient {
 
     private String signPath;
 
-    public BankIdSignClient(Client client, Credentials credentials) {
-        super(client, credentials);
+    public BankIdSignClient(Client client, Credentials credentials, Aggregator aggregator) {
+        super(client, credentials, aggregator);
     }
 
     private void setSignMode(SignFormRequestBody signFormRequestBody) throws UnsupportedSignTypeException {

@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.agents.banks.sbab.model.response.QuestionGrou
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.SignFormRequestBody;
 import se.tink.backend.aggregation.agents.banks.sbab.util.OpenSavingsAccountModelMapper;
 import se.tink.backend.aggregation.agents.banks.sbab.util.SBABOpenSavingsAccountUtils;
+import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.common.i18n.SocialSecurityNumber;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.application.GenericApplication;
@@ -104,8 +105,8 @@ public class OpenSavingsAccountClient extends SBABClient {
             .put(ApplicationFieldOptionValues.INDUSTRY_WEAPON, ApplicationFieldName.SBAB_SAVINGS_SOURCES_REASON_OWN_BUSINESS_WEAPON_COMPANY_REGISTRATION_NUMBER)
             .build();
 
-    public OpenSavingsAccountClient(Client client, Credentials credentials) {
-        super(client, credentials);
+    public OpenSavingsAccountClient(Client client, Credentials credentials, Aggregator aggregator) {
+        super(client, credentials, aggregator);
     }
 
     public OpenSavingsAccountResponse submit(GenericApplication application) throws Exception {

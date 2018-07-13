@@ -14,6 +14,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import se.tink.backend.aggregation.agents.AbstractAgent;
+import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.common.config.SbabIntegrationConfiguration;
 import se.tink.backend.aggregation.rpc.Credentials;
 
@@ -31,18 +32,21 @@ public class SBABClient {
 
     private String bearerToken;
     private String remoteIp;
+    private final Aggregator aggregator;
 
-    public SBABClient(Client client, Credentials credentials) {
+    public SBABClient(Client client, Credentials credentials, Aggregator aggregator) {
         this.client = client;
         this.credentials = credentials;
+        this.aggregator = aggregator;
     }
     
     public void setConfiguration(SbabIntegrationConfiguration configuration) {
         this.signBaseUrl = configuration.getSignBaseUrl();
     }
 
+    //TODO IS THIS RIGHT?
     Builder createRequest(String url) {
-        Builder builder = client.resource(url).header("User-Agent", AbstractAgent.DEFAULT_USER_AGENT);
+        Builder builder = client.resource(url).header("User-Agent", aggregator);
         return Strings.isNullOrEmpty(remoteIp) ? builder : builder.header("X-Forwarded-For", remoteIp);
     }
 
@@ -64,10 +68,11 @@ public class SBABClient {
         return createRequest(url).header("Referer", referer).get(ClientResponse.class);
     }
 
+    //TODO IS THIS RIGHT?
     Builder createJsonRequest(String url, MultivaluedMap<String, String> queryParameters) {
         return client.resource(url)
                 .queryParams(queryParameters)
-                .header("User-Agent", AbstractAgent.DEFAULT_USER_AGENT)
+                .header("User-Agent", aggregator)
                 .type(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
     }

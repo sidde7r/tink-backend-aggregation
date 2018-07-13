@@ -40,13 +40,15 @@ public class IkanoApiClient {
     private CardEntities cardsAndTransactionsResponse = null;
     private static final int DEFAULT_LIMIT = 200;
     private int limit = DEFAULT_LIMIT;
+    private final String aggregator;
 
-    public IkanoApiClient(Client client, Credentials credentials, String payload) throws NoSuchAlgorithmException {
+    public IkanoApiClient(Client client, Credentials credentials, String payload, String aggregator) throws NoSuchAlgorithmException {
         this.client = client;
         this.credentials = credentials;
         cardType = CardType.valueOf(payload);
         deviceId = IkanoCrypt.findOrGenerateDeviceIdFor(credentials);
         deviceAuth = IkanoCrypt.generateDeviceAuth(deviceId);
+        this.aggregator = aggregator;
     }
 
     public String authenticateWithBankId() throws Exception {
@@ -151,8 +153,9 @@ public class IkanoApiClient {
         return numberOfTransactions == this.limit;
     }
 
+    //TODO IS THIS RIGHT?
     private WebResource.Builder createClientRequest(String uri) {
-        return client.resource(ROOT_URL + uri).header("User-Agent", AbstractAgent.DEFAULT_USER_AGENT)
+        return client.resource(ROOT_URL + uri).header("User-Agent", aggregator)
                 .header("DeviceId", deviceId)
                 .header("DeviceAuth", deviceAuth)
                 .type(MediaType.APPLICATION_JSON)

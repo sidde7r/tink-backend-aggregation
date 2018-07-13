@@ -46,7 +46,7 @@ public class NordnetAgent extends AbstractAgent implements RefreshableItemExecut
 
         credentials = request.getCredentials();
         apiClient = new NordnetApiClient(clientFactory.createClientWithRedirectHandler(context.getLogOutputStream(),
-                NordnetApiClient.REDIRECT_STRATEGY));
+                NordnetApiClient.REDIRECT_STRATEGY), getAggregator().getAggregatorIdentifier());
     }
 
     private void refreshSavingsAccounts(AccountEntities accountEntities) {

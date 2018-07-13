@@ -31,7 +31,8 @@ public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExe
         apiClient = new IkanoApiClient(
                 clientFactory.createCookieClient(context.getLogOutputStream()),
                 credentials,
-                request.getProvider().getPayload());
+                request.getProvider().getPayload(),
+                getAggregator().getAggregatorIdentifier());
     }
 
     /**

@@ -4,6 +4,7 @@ import com.sun.jersey.api.client.Client;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.SignFormRequestBody;
+import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.common.config.SbabIntegrationConfiguration;
 import se.tink.backend.aggregation.rpc.Credentials;
 
@@ -12,8 +13,8 @@ public class MortgageSignClient extends BankIdSignClient {
     private static final String BANKID_SIGN_WEBPAGE_PATH = "/sign/%s";
     private static final String NON_VISIBLE_TBS = "Empty tbs";
 
-    public MortgageSignClient(Client client, Credentials credentials) {
-        super(client, credentials);
+    public MortgageSignClient(Client client, Credentials credentials, Aggregator aggregator) {
+        super(client, credentials, aggregator);
     }
 
     @Override

@@ -15,6 +15,13 @@ import se.tink.backend.aggregation.agents.creditcards.rikskortet.RikskortetAgent
 import com.google.common.collect.Lists;
 
 public class SOAPUserAgentHandler implements SOAPHandler<SOAPMessageContext> {
+
+    private final String aggregator;
+
+    public SOAPUserAgentHandler(String aggregator){
+        this.aggregator = aggregator;
+    }
+
     @Override
     public boolean handleMessage(SOAPMessageContext context) {
         boolean request = ((Boolean) context.get(SOAPMessageContext.MESSAGE_OUTBOUND_PROPERTY)).booleanValue();
@@ -27,7 +34,8 @@ public class SOAPUserAgentHandler implements SOAPHandler<SOAPMessageContext> {
                 headers = new HashMap<String, List<String>>();
             }
 
-            headers.put("User-Agent", Lists.newArrayList(RikskortetAgent.DEFAULT_USER_AGENT));
+            //TODO IS THIS RIGHT?
+            headers.put("User-Agent", Lists.newArrayList(aggregator));
             context.put(MessageContext.HTTP_REQUEST_HEADERS, headers);
         }
 
