@@ -39,10 +39,10 @@ public class OKQ8BankAgent extends AbstractAgent implements DeprecatedRefreshExe
      */
     private Optional<LoginResponse> loginResponseFromAuthenticationRequest;
 
-    //TODO is this right?
-    protected static Builder createClientRequest(String uri, Client client, String userAgent) {
+
+    protected static Builder createClientRequest(String uri, Client client, String aggregator) {
         return client.resource(uri)
-                .header("User-Agent", userAgent)
+                .header("User-Agent", aggregator)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept("*/*")
                 .acceptLanguage("sv-se");

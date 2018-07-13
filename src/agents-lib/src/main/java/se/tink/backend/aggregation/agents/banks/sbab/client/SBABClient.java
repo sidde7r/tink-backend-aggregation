@@ -44,9 +44,8 @@ public class SBABClient {
         this.signBaseUrl = configuration.getSignBaseUrl();
     }
 
-    //TODO IS THIS RIGHT?
     Builder createRequest(String url) {
-        Builder builder = client.resource(url).header("User-Agent", aggregator);
+        Builder builder = client.resource(url).header("User-Agent", aggregator.getAggregatorIdentifier());
         return Strings.isNullOrEmpty(remoteIp) ? builder : builder.header("X-Forwarded-For", remoteIp);
     }
 
@@ -68,11 +67,10 @@ public class SBABClient {
         return createRequest(url).header("Referer", referer).get(ClientResponse.class);
     }
 
-    //TODO IS THIS RIGHT?
     Builder createJsonRequest(String url, MultivaluedMap<String, String> queryParameters) {
         return client.resource(url)
                 .queryParams(queryParameters)
-                .header("User-Agent", aggregator)
+                .header("User-Agent", aggregator.getAggregatorIdentifier())
                 .type(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
     }

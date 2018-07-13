@@ -34,7 +34,6 @@ public class SOAPUserAgentHandler implements SOAPHandler<SOAPMessageContext> {
                 headers = new HashMap<String, List<String>>();
             }
 
-            //TODO IS THIS RIGHT?
             headers.put("User-Agent", Lists.newArrayList(aggregator));
             context.put(MessageContext.HTTP_REQUEST_HEADERS, headers);
         }
