@@ -1,7 +1,7 @@
 date	description	amount	type	pending
-2018-07-06	Nytorget 6 Bar	-345
-2018-07-06	Swish Markus	100
-2018-07-06	Swish Emil	150
+2018-07-06	Nytorget 6 Bar	-345.11
+2018-07-06	Swish Markus	100.66
+2018-07-06	Swish Emil	150.33
 2018-07-04	Dobelns pasta	-300
 2018-07-04	Swish Henrik Karlsson	100
 2018-07-04	Swish Boris Johansson	100
