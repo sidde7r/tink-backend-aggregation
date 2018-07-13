@@ -235,7 +235,6 @@ class CollectorApiClient {
     }
 
 
-    //TODO IS THIS RIGHT?
     private WebResource.Builder createClientRequest(String uri) {
         WebResource.Builder builder = client.resource(BASE_URL + uri)
                 .type(MediaType.APPLICATION_JSON)

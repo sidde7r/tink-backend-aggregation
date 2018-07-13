@@ -46,8 +46,6 @@ public class LysaClient {
         return createClientRequest("transactions").get(new GenericType<List<TransactionEntity>>() {});
     }
 
-
-    //TODO IS THIS RIGHT?
     private WebResource.Builder createClientRequest(String uri) {
         Preconditions.checkNotNull(uri);
 

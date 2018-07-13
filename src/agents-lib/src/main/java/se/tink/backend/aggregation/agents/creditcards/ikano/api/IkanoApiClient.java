@@ -153,7 +153,6 @@ public class IkanoApiClient {
         return numberOfTransactions == this.limit;
     }
 
-    //TODO IS THIS RIGHT?
     private WebResource.Builder createClientRequest(String uri) {
         return client.resource(ROOT_URL + uri).header("User-Agent", aggregator)
                 .header("DeviceId", deviceId)
