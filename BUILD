@@ -641,6 +641,7 @@ junit_test(
         ":main-api",
         ":system-api",
         ":agents-lib",
+        "//src/cluster-lib:cluster-lib",
 
         "//src/libraries/uuid:uuid",
         "//src/libraries/serialization_utils:serialization-utils",
