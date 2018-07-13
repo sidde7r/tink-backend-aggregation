@@ -1,11 +1,11 @@
-package se.tink.backend.aggregation.agents.nxgen.de.banks.n26;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.n26.authenticator.N26PasswordAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.n26.fetcher.transactional.N26AccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.n26.fetcher.transactional.N26TransactionFetcher;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.n26.session.N26SessionHandler;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.authenticator.N26PasswordAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.transactional.N26AccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.transactional.N26TransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.session.N26SessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
@@ -14,13 +14,11 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRe
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;

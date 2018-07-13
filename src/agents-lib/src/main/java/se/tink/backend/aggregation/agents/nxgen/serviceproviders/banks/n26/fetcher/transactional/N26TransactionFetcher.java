@@ -1,6 +1,6 @@
-package se.tink.backend.aggregation.agents.nxgen.de.banks.n26.fetcher.transactional;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.transactional;
 
-import se.tink.backend.aggregation.agents.nxgen.de.banks.n26.N26ApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.N26ApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;

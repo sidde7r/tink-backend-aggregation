@@ -1,11 +1,11 @@
-package se.tink.backend.aggregation.agents.nxgen.de.banks.n26.fetcher.transactional;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.transactional;
 
 import java.util.Arrays;
 import java.util.Collection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.n26.N26ApiClient;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.n26.N26Constants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.N26ApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.N26Constants;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 

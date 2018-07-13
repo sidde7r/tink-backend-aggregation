@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.de.banks.n26;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26;
 
 import java.io.UnsupportedEncodingException;
 import java.util.NoSuchElementException;
@@ -8,11 +8,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.n26.authenticator.entities.TokenEntity;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.n26.authenticator.rpc.AccountResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.n26.authenticator.rpc.AuthenticationRequest;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.n26.authenticator.rpc.AuthenticationResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.n26.authenticator.rpc.TransactionResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.authenticator.entities.TokenEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.authenticator.rpc.AccountResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.authenticator.rpc.AuthenticationRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.authenticator.rpc.AuthenticationResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.authenticator.rpc.TransactionResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
