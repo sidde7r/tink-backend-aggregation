@@ -26,6 +26,7 @@ import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import javax.annotation.Nullable;
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.core.MultivaluedMap;
@@ -176,7 +177,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         // Add the filter that is responsible to add persistent data to each request
         addFilter(this.persistentHeaderFilter);
 
-        this.aggregator = (context.getAggregator() == null) ? new Aggregator(DEFAULTS.UNKNOWN_AGGREGATOR) : context.getAggregator();
+        this.aggregator = Objects.isNull(context.getAggregator()) ? new Aggregator(DEFAULTS.UNKNOWN_AGGREGATOR) : context.getAggregator();
 
         setUserAgent(aggregator.getAggregatorIdentifier());
         setTimeout(DEFAULTS.TIMEOUT_MS);
