@@ -146,7 +146,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         this.coordinationClient = serviceContext.getCoordinationClient();
 
         this.aggregationCredentialsRepository = serviceContext.getRepository(AggregationCredentialsRepository.class);
-        this.clusterInfo = clusterInfo;
+        setClusterInfo(clusterInfo);
+        setAggregator(clusterId.getAggregator());
 
         if (request.getUser() != null) {
             this.catalog = Catalog.getCatalog(request.getUser().getProfile().getLocale());
@@ -218,11 +219,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     @Override
-    public Aggregator getAggregator(){
-        return this.clusterInfo.getClusterId().getAggregator();
-    }
-
-    @Override
     public Catalog getCatalog() {
         return catalog;
     }
@@ -235,11 +231,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     @Override
     public MetricRegistry getMetricRegistry() {
         return metricRegistry;
-    }
-
-    @Override
-    public ClusterInfo getClusterInfo() {
-        return null;
     }
 
     public CredentialsRequest getRequest() {
@@ -295,7 +286,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             processAccountsRequest.setUserId(request.getUser().getId());
 
             if (isAggregationCluster) {
-                aggregationControllerAggregationClient.processAccounts(clusterInfo,
+                aggregationControllerAggregationClient.processAccounts(getClusterInfo(),
                         processAccountsRequest);
             } else {
                 aggregationControllerAggregationClient.processAccounts(processAccountsRequest);
@@ -414,7 +405,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
                 if (isAggregationCluster) {
                     aggregationControllerAggregationClient.generateStatisticsAndActivityAsynchronously(
-                            clusterInfo, generateStatisticsReq);
+                            getClusterInfo(), generateStatisticsReq);
                 } else {
                     aggregationControllerAggregationClient.generateStatisticsAndActivityAsynchronously(
                             generateStatisticsReq);
@@ -461,7 +452,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             updateTransactionsRequest.setUserTriggered(request.isManual());
 
             if (isAggregationCluster) {
-                aggregationControllerAggregationClient.updateTransactionsAsynchronously(clusterInfo,
+                aggregationControllerAggregationClient.updateTransactionsAsynchronously(getClusterInfo(),
                         updateTransactionsRequest);
             } else {
                 aggregationControllerAggregationClient.updateTransactionsAsynchronously(updateTransactionsRequest);
@@ -581,7 +572,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
             try {
                 if (isAggregationCluster) {
-                    updatedAccount = aggregationControllerAggregationClient.updateAccount(clusterInfo,
+                    updatedAccount = aggregationControllerAggregationClient.updateAccount(getClusterInfo(),
                             updateAccountRequest);
                 } else {
                     updatedAccount = aggregationControllerAggregationClient.updateAccount(updateAccountRequest);
@@ -652,7 +643,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             updateCredentialsStatusRequest.setUserDeviceId(request.getUserDeviceId());
 
             if (isAggregationCluster) {
-                aggregationControllerAggregationClient.updateCredentials(clusterInfo,
+                aggregationControllerAggregationClient.updateCredentials(getClusterInfo(),
                         updateCredentialsStatusRequest);
             } else {
                 aggregationControllerAggregationClient.updateCredentials(updateCredentialsStatusRequest);
@@ -775,7 +766,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
             if (!transferDestinationPatternsByAccount.isEmpty()) {
                 if (isAggregationCluster) {
-                    aggregationControllerAggregationClient.updateTransferDestinationPatterns(clusterInfo,
+                    aggregationControllerAggregationClient.updateTransferDestinationPatterns(getClusterInfo(),
                             request);
                 } else {
                     aggregationControllerAggregationClient.updateTransferDestinationPatterns(request);
@@ -846,7 +837,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     public void updateSignableOperation(SignableOperation signableOperation) {
         if (useAggregationController) {
             if (isAggregationCluster) {
-                aggregationControllerAggregationClient.updateSignableOperation(clusterInfo,
+                aggregationControllerAggregationClient.updateSignableOperation(getClusterInfo(),
                         signableOperation);
             } else {
                 aggregationControllerAggregationClient.updateSignableOperation(signableOperation);
@@ -865,7 +856,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                             getRequest().getUser().getId(), productInstanceId, productProperties);
 
             if (isAggregationCluster) {
-                aggregationControllerAggregationClient.updateProductInformation(clusterInfo, request);
+                aggregationControllerAggregationClient.updateProductInformation(getClusterInfo(), request);
             } else {
                 aggregationControllerAggregationClient.updateProductInformation(request);
             }
@@ -892,7 +883,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             log.debug("Request: " + SerializationUtils.serializeToString(request));
 
             if (isAggregationCluster) {
-                aggregationControllerAggregationClient.updateApplication(clusterInfo, request);
+                aggregationControllerAggregationClient.updateApplication(getClusterInfo(), request);
             } else {
                 aggregationControllerAggregationClient.updateApplication(request);
             }
@@ -920,7 +911,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateDocumentResponse updateDocumentResponse;
             if (isAggregationCluster) {
                 updateDocumentResponse =
-                        aggregationControllerAggregationClient.updateDocument(clusterInfo,
+                        aggregationControllerAggregationClient.updateDocument(getClusterInfo(),
                                 updateDocumentRequest);
             } else {
                 updateDocumentResponse = aggregationControllerAggregationClient.updateDocument(updateDocumentRequest);
@@ -994,7 +985,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             updateTransfersRequest.setTransfers(transfers);
 
             if (isAggregationCluster) {
-                aggregationControllerAggregationClient.processEinvoices(clusterInfo,
+                aggregationControllerAggregationClient.processEinvoices(getClusterInfo(),
                         updateTransfersRequest);
             } else {
                 aggregationControllerAggregationClient.processEinvoices(updateTransfersRequest);
