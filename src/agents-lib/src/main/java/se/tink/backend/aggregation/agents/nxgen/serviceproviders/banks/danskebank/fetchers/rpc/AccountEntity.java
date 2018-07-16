@@ -159,9 +159,9 @@ public class AccountEntity {
     }
 
     public SavingsAccount toSavingsAccount() {
-        return SavingsAccount.builder(accountNoExt, new Amount(currency, balance))
+        return SavingsAccount.builder(accountNoInt, new Amount(currency, balance))
+                .setAccountNumber(accountNoExt)
                 .setName(accountName)
-                .setUniqueIdentifier(accountNoInt)
                 .build();
     }
 
