@@ -99,9 +99,9 @@ public class NordeaNoParser extends NordeaV17Parser {
     @Override
     public InvestmentAccount parseInvestmentAccount(CustodyAccount custodyAccount) {
         return InvestmentAccount
-                .builder(custodyAccount.getAccountNumber(), Amount.inNOK(custodyAccount.getMarketValue()))
+                .builder(custodyAccount.getAccountId(), Amount.inNOK(custodyAccount.getMarketValue()))
+                .setAccountNumber(custodyAccount.getAccountNumber())
                 .setName(custodyAccount.getName())
-                .setUniqueIdentifier(custodyAccount.getAccountId())
                 .setPortfolios(Collections.singletonList(parsePortfolio(custodyAccount)))
                 .build();
     }

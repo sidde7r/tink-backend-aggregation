@@ -29,8 +29,8 @@ public class PortfolioDetailsResponse extends OpBankResponseEntity {
     @JsonIgnore
     public InvestmentAccount toTinkInvestmentAccount() {
         return InvestmentAccount.builder(portfolioId, getMarketValue())
+                .setAccountNumber(portfolioId)
                 .setBankIdentifier(portfolioId)
-                .setUniqueIdentifier(portfolioId)
                 .setPortfolios(Lists.newArrayList(getTinkPortfolio()))
                 .setName(portfolioId)
                 .build();

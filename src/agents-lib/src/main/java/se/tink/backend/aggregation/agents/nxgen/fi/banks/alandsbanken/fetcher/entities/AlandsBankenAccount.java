@@ -102,11 +102,11 @@ public class AlandsBankenAccount {
     }
 
     public InvestmentAccount toInvestmentAccount(Portfolio portfolio) {
-        return InvestmentAccount.builder(bbanFormatted, new Amount(currency, balance))
+        return InvestmentAccount.builder(accountId, new Amount(currency, balance))
+                .setAccountNumber(bbanFormatted)
                 .setName(accountNickname)
                 .addIdentifier(new IbanIdentifier(bic, accountNumber))
                 .addIdentifier(new FinnishIdentifier(bban))
-                .setUniqueIdentifier(accountId)
                 .setBankIdentifier(accountId)
                 .setPortfolios(Collections.singletonList(portfolio))
                 .build();

@@ -82,6 +82,7 @@ public class PensionDataEntity {
 
     public InvestmentAccount toTinkAccount() {
         return InvestmentAccount.builder(accountNumbers.get(0), Amount.inNOK(totalHolding))
+                .setAccountNumber(accountNumbers.get(0))
                 .setName("Pension")
                 .build();
     }

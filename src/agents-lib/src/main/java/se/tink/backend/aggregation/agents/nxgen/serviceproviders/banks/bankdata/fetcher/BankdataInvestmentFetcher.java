@@ -57,10 +57,10 @@ public class BankdataInvestmentFetcher implements AccountFetcher<InvestmentAccou
                     Portfolio portfolio = deposit.toTinkPortfolio();
                     portfolio.setInstruments(collectDepositInstruments(deposit, depositContents));
 
-                    return InvestmentAccount.builder(deposit.getAccountNumberFormatted(), deposit.toTinkAmount())
+                    return InvestmentAccount.builder(deposit.getAccountNumber(), deposit.toTinkAmount())
+                            .setAccountNumber(deposit.getAccountNumberFormatted())
                             .setBankIdentifier(deposit.getAccountNumber())
                             .setName(deposit.getName())
-                            .setUniqueIdentifier(deposit.getAccountNumber())
                             .setPortfolios(Collections.singletonList(portfolio))
                             .build();
                 })

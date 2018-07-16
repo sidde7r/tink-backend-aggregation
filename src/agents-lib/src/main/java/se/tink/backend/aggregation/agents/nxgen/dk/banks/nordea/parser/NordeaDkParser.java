@@ -127,7 +127,8 @@ public class NordeaDkParser extends NordeaV20Parser {
     @Override
     public InvestmentAccount parseInvestmentAccount(CustodyAccount custodyAccount) {
         return InvestmentAccount
-                .builder(custodyAccount.getAccountNumber(), Amount.inDKK(custodyAccount.getMarketValue()))
+                .builder(custodyAccount.getAccountId(), Amount.inDKK(custodyAccount.getMarketValue()))
+                .setAccountNumber(custodyAccount.getAccountNumber())
                 .setName(custodyAccount.getName())
                 .setUniqueIdentifier(custodyAccount.getAccountId())
                 .setPortfolios(Collections.singletonList(parsePortfolio(custodyAccount)))

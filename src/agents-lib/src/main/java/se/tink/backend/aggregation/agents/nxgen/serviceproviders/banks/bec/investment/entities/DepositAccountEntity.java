@@ -64,8 +64,8 @@ public class DepositAccountEntity {
     }
 
     public InvestmentAccount toTinkInvestmentAccount(List<Portfolio> portfolios) {
-        return InvestmentAccount.builder(getAccountNo(), toTinkAmount())
-                .setUniqueIdentifier(getId())
+        return InvestmentAccount.builder(getId(), toTinkAmount())
+                .setAccountNumber(getAccountNo())
                 .setBankIdentifier(getId())
                 .setName(getName())
                 .setPortfolios(portfolios)

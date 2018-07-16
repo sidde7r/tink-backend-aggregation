@@ -35,6 +35,7 @@ public class FetchInvestmentResponse {
         return this.custodyAccounts.stream()
                 .map(custodyAccount -> InvestmentAccount
                         .builder(custodyAccount.createUniqueIdentifier(), Amount.inDKK(custodyAccount.getMarketValue()))
+                        .setAccountNumber(custodyAccount.createUniqueIdentifier())
                         .setName(custodyAccount.getName())
                         .setPortfolios(
                                 holdingOption

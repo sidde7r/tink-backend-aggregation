@@ -25,6 +25,7 @@ public class SdcCustodyDetailsModel {
 
     public InvestmentAccount toInvestmentAccount(SdcApiClient bankClient) {
         return InvestmentAccount.builder(this.id, this.availableBalance.toTinkAmount())
+                .setAccountNumber(this.id)
                 .setName(this.name)
                 .setBankIdentifier(Optional.ofNullable(this.yieldAccount)
                         .map(SdcCustodyDetailsAccount::getId)
