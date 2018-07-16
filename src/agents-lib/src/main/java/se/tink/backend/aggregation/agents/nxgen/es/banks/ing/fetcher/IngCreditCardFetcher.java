@@ -20,7 +20,7 @@ public class IngCreditCardFetcher extends ProductMovementsFetcher<CreditCardAcco
     private static CreditCardAccount toCreditCardAccount(Product product) {
 
         CreditCardAccount.Builder<? extends Account, ?> builder = CreditCardAccount
-                .builder();
+                .builder(product.getUniqueIdentifier());
 
         copyCommonAttributes(product, builder);
 

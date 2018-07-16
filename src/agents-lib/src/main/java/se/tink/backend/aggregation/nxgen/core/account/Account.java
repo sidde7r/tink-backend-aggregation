@@ -46,7 +46,7 @@ public abstract class Account {
         case CHECKING:
             return TransactionalAccount.builder(type, uniqueIdentifier);
         case CREDIT_CARD:
-            return CreditCardAccount.builder();
+            return CreditCardAccount.builder(uniqueIdentifier);
         case INVESTMENT:
             return InvestmentAccount.builder();
         case LOAN:
