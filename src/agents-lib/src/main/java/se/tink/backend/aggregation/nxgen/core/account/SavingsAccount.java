@@ -11,16 +11,14 @@ public class SavingsAccount extends TransactionalAccount {
         this.interestRate = builder.getInterestRate();
     }
 
-    public static Builder<?, ?> builder() {
-        return new DefaultSavingAccountsBuilder();
+    public static Builder<?, ?> builder(String uniqueIdentifier) {
+        return new DefaultSavingAccountsBuilder()
+                .setUniqueIdentifier(uniqueIdentifier);
     }
 
     public static Builder<?, ?> builder(String uniqueIdentifier, Amount balance) {
-        DefaultSavingAccountsBuilder defaultSavingAccountsBuilder = new DefaultSavingAccountsBuilder();
-        defaultSavingAccountsBuilder
-                .setUniqueIdentifier(uniqueIdentifier)
+        return builder(uniqueIdentifier)
                 .setBalance(balance);
-        return defaultSavingAccountsBuilder;
     }
 
     @Override

@@ -9,16 +9,14 @@ public class CheckingAccount extends TransactionalAccount {
         super(builder);
     }
 
-    public static Builder<?, ?> builder() {
-        return new DefaultCheckingAccountBuilder();
+    public static Builder<?, ?> builder(String uniqueIdentifier) {
+        return new DefaultCheckingAccountBuilder()
+                .setUniqueIdentifier(uniqueIdentifier);
     }
 
-    public static Builder<CheckingAccount, DefaultCheckingAccountBuilder> builder(String uniqueIdentifier,
-            Amount balance) {
-        DefaultCheckingAccountBuilder defaultCheckingAccountBuilder = new DefaultCheckingAccountBuilder();
-        defaultCheckingAccountBuilder.setUniqueIdentifier(uniqueIdentifier)
+    public static Builder<?, ?> builder(String uniqueIdentifier, Amount balance) {
+        return builder(uniqueIdentifier)
                 .setBalance(balance);
-        return defaultCheckingAccountBuilder;
     }
 
     @Override

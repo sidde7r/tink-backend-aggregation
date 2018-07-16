@@ -148,12 +148,11 @@ public class OtmlResponseConverter {
         TransactionalAccount filledAccount;
         switch (account.getType()) {
             case CHECKING:
-                filledAccount = CheckingAccount.builder()
+                filledAccount = CheckingAccount.builder(iban)
                         .setHolderName(holderName)
                         .setBalance(amount)
                         .setBankIdentifier(account.getBankIdentifier())
                         .setAccountNumber(iban)
-                        .setUniqueIdentifier(iban)
                         .setName(account.getName())
                         .build();
                 break;

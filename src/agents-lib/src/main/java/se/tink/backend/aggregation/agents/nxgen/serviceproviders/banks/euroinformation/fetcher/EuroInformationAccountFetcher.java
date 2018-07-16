@@ -44,7 +44,6 @@ public class EuroInformationAccountFetcher implements AccountFetcher<Transaction
                             .getAccountBuilder();
                     return accountBuilder
                             .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, a.getIban()))
-                            .setUniqueIdentifier(a.getIban().toLowerCase())
                             .setName(a.getAccountName())
                             .setAccountNumber(a.getAccountNumber().toLowerCase())
                             .addToTemporaryStorage(EuroInformationConstants.Tags.WEB_ID, a.getWebId())
