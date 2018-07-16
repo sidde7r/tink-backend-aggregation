@@ -106,9 +106,9 @@ public class LoansEntity {
 
         return LoanAccount.builder(getLoanNumber(),
                 toAmount(-AgentParsingUtils.parseAmountTrimCurrency(getPresentDebt())))
+                .setAccountNumber(getLoanNumber())
                 .setName(getLoanName())
                 .setBankIdentifier(getLoanNumber())
-                .setUniqueIdentifier(getLoanNumber())
                 .setInterestRate(getInterestRate())
                 .setDetails(LoanDetails.builder()
                         .setType(LoanDetails.Type.BLANCO)

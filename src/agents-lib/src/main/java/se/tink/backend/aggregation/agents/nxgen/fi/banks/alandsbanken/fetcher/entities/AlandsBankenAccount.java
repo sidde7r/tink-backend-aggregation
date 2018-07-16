@@ -133,10 +133,10 @@ public class AlandsBankenAccount {
     }
 
     public LoanAccount toLoanAccount(LoanDetailsEntity loanDetailsEntity) {
-        return LoanAccount.builder(bbanFormatted, new Amount(currency, balance))
+        return LoanAccount.builder(accountNumber, new Amount(currency, balance))
+                .setAccountNumber(bbanFormatted)
                 .setName(accountNickname)
                 .setInterestRate(interestRate)
-                .setUniqueIdentifier(accountNumber)
                 .setBankIdentifier(accountId)
                 .setDetails(LoanDetails.builder()
                         .setName(accountNickname)

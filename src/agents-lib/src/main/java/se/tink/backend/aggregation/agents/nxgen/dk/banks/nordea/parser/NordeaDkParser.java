@@ -69,10 +69,10 @@ public class NordeaDkParser extends NordeaV20Parser {
 
     @Override
     public LoanAccount parseMortgage(ProductEntity pe, LoanDetailsResponse loanDetailsResponse) {
-        LoanAccount.Builder<?, ?> accountBuilder = LoanAccount.builder(pe.getAccountNumber(true),
+        LoanAccount.Builder<?, ?> accountBuilder = LoanAccount.builder(pe.getAccountNumber(false),
                 new Amount(pe.getCurrency(), pe.getBalance()))
+                .setAccountNumber(pe.getAccountNumber(true))
                 .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(true)))
-                .setUniqueIdentifier(pe.getAccountNumber(false))
                 .setBankIdentifier(pe.getNordeaAccountIdV2());
 
         LoanData loanData = loanDetailsResponse.getLoanData();
@@ -92,9 +92,9 @@ public class NordeaDkParser extends NordeaV20Parser {
     }
 
     public LoanAccount parseBlancoLoan(ProductEntity pe) {
-        return LoanAccount.builder(pe.getAccountNumber(true), new Amount(pe.getCurrency(), pe.getBalance()))
+        return LoanAccount.builder(pe.getAccountNumber(false), new Amount(pe.getCurrency(), pe.getBalance()))
+                .setAccountNumber(pe.getAccountNumber(true))
                 .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(true)))
-                .setUniqueIdentifier(pe.getAccountNumber(false))
                 .setBankIdentifier(pe.getNordeaAccountIdV2())
                 .setDetails(LoanDetails.builder()
                         .setLoanNumber(Optional.ofNullable(pe.getLoanId()).orElse(pe.getProductNumber()))

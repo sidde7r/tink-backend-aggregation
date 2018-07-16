@@ -41,6 +41,7 @@ public class MortgageLoanEntity {
 
     public LoanAccount toTinkLoan(LoanDetailsResponse loanDetails) {
         return LoanAccount.builder(getLoanNumber(), new Amount(currency, 0 - amount))
+                .setAccountNumber(getLoanNumber())
                 .setName(getDisplayName())
                 .setInterestRate(loanDetails.getInterestRate().orElse(null))
                 .setDetails(LoanDetails.builder()

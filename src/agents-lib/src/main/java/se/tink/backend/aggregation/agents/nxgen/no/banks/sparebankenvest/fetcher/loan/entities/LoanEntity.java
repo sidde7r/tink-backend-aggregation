@@ -54,9 +54,9 @@ public class LoanEntity {
                 .setType(getLoanType())
                 .build();
         return LoanAccount.builder(loanNumber, Amount.inNOK(balance))
+                .setAccountNumber(loanNumber)
                 .setName(name)
                 .setInterestRate(loanDetailsResponse.getNominalInterestRate())
-                .setUniqueIdentifier(loanNumber)
                 .setBankIdentifier(loanNumber)
                 .setDetails(loanDetails)
                 .build();

@@ -26,11 +26,11 @@ public class LoanEntity {
 
     @JsonIgnore
     public LoanAccount toTinkLoan(LoanDetailsEntity loanDetails) {
-        return LoanAccount.builder(formattedNumber,
+        return LoanAccount.builder(id,
                 Sparebank1AmountUtils.constructAmount(balanceAmountInteger, balanceAmountFraction))
+                .setAccountNumber(formattedNumber)
                 .setName(name)
                 .setInterestRate(loanDetails.getInterestRate())
-                .setUniqueIdentifier(id)
                 .setDetails(LoanDetails.builder()
                         .setName(loanDetails.getName())
                         .setInitialBalance(loanDetails.getInitialBalance())

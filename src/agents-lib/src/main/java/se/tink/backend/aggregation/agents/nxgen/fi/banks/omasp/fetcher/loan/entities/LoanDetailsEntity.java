@@ -32,10 +32,10 @@ public class LoanDetailsEntity extends LoanEntity {
     }
 
     public LoanAccount toTinkAccount() {
-        return LoanAccount.builder(loanNumber, Amount.inEUR(balance.getValue()))
+        return LoanAccount.builder(id, Amount.inEUR(balance.getValue()))
+                .setAccountNumber(loanNumber)
                 .setInterestRate(getInterestRate())
                 .setBankIdentifier(id)
-                .setUniqueIdentifier(id)
                 .setName(getName())
                 .setDetails(
                         LoanDetails.builder()

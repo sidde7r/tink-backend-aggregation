@@ -52,6 +52,7 @@ public class NordeaFiParser extends NordeaV21Parser {
     public LoanAccount parseLoanAccount(ProductEntity productEntity, LoanDetailsResponse loanDetailsResponse) {
         LoanAccount.Builder<?, ?> accountBuilder = LoanAccount.builder(productEntity.getAccountNumber(),
                 new Amount(productEntity.getCurrency(), productEntity.getBalance()))
+                .setAccountNumber(productEntity.getAccountNumber())
                 .setName(getTinkAccountName(productEntity).orElse(productEntity.getAccountNumber()))
                 .setBankIdentifier(productEntity.getNordeaAccountIdV2());
 

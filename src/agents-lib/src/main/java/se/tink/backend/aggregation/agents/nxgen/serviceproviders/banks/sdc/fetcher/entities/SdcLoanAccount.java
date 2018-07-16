@@ -41,10 +41,10 @@ public class SdcLoanAccount {
 
     public LoanAccount toTinkLoan(String defaultCurrency) {
         // No interest rate returned from the bank
-        return LoanAccount.builder(findAccountId().orElse(getSecondaryLabel()), amount.toTinkAmount(defaultCurrency))
+        return LoanAccount.builder(getSecondaryLabel(), amount.toTinkAmount(defaultCurrency))
+                .setAccountNumber(findAccountId().orElse(getSecondaryLabel()))
                 .setName(getLabel())
                 .setBankIdentifier(getSecondaryLabel())
-                .setUniqueIdentifier(getSecondaryLabel())
                 .build();
     }
 }

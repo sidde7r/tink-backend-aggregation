@@ -18,8 +18,8 @@ public class LoanDetailsEntity extends LoanOverviewEntity {
 
         LoanAccount.Builder<?, ?> loanAccountBuilder = LoanAccount.builder(getLoanNumber(), Amount.inEUR(-getBalance()));
         loanAccountBuilder
+                .setAccountNumber(getLoanNumber())
                 .setName(getLoanName().getFi())
-                .setUniqueIdentifier(getLoanNumber())
                 .setBankIdentifier(getLoanNumber())
                 .setInterestRate(getInterestRate());
 

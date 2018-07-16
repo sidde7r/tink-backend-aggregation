@@ -55,10 +55,10 @@ public class NordeaNoParser extends NordeaV17Parser {
 
     @Override
     public LoanAccount parseLoanAccount(ProductEntity pe, LoanDetailsEntity loanDetails) {
-        LoanAccount.Builder<?, ?> accountBuilder = LoanAccount.builder(pe.getAccountNumber(true),
+        LoanAccount.Builder<?, ?> accountBuilder = LoanAccount.builder(pe.getAccountNumber(false),
                 pe.getBalanceAmount().orElse(loanDetails.getBalanceAmount()))
+                .setAccountNumber(pe.getAccountNumber(true))
                 .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(true)))
-                .setUniqueIdentifier(pe.getAccountNumber(false))
                 .setBankIdentifier(pe.getNordeaAccountIdV2());
 
         loanDetails.getLoanData().ifPresent(loanData -> accountBuilder.setInterestRate(loanData.getInterest())

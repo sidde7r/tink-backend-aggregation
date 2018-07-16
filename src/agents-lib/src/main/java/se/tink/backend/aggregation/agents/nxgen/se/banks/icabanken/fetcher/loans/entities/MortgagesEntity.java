@@ -126,9 +126,9 @@ public class MortgagesEntity {
         try {
             return LoanAccount.builder(getMortgageNumber(),
                     toAmount(-AgentParsingUtils.parseAmountTrimCurrency(getPresentDebt())))
+                    .setAccountNumber(getMortgageNumber())
                     .setName(getTypeOfLoan())
                     .setBankIdentifier(getMortgageNumber())
-                    .setUniqueIdentifier(getMortgageNumber())
                     .setInterestRate(getInterestRate())
                     .setDetails(LoanDetails.builder()
                             .setType(LoanDetails.Type.MORTGAGE)
@@ -146,7 +146,9 @@ public class MortgagesEntity {
             e.printStackTrace();
         }
         return LoanAccount.builder(getMortgageNumber(),
-                toAmount(-AgentParsingUtils.parseAmountTrimCurrency(getPresentDebt()))).build();
+                toAmount(-AgentParsingUtils.parseAmountTrimCurrency(getPresentDebt())))
+                .setAccountNumber(getMortgageNumber())
+                .build();
     }
 
     public Amount toAmount(Double amount) {

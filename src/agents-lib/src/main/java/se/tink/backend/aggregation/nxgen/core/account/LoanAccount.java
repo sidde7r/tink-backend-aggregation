@@ -18,9 +18,11 @@ public class LoanAccount extends Account {
         return new DefaultLoanBuilder();
     }
 
-    public static Builder<?, ?> builder(String accountNumber, Amount balance) {
+    public static Builder<?, ?> builder(String uniqueIdentifier, Amount balance) {
         DefaultLoanBuilder defaultLoanBuilder = new DefaultLoanBuilder();
-        defaultLoanBuilder.setAccountNumber(accountNumber).setBalance(balance);
+        defaultLoanBuilder
+                .setUniqueIdentifier(uniqueIdentifier)
+                .setBalance(balance);
         return defaultLoanBuilder;
     }
 

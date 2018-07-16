@@ -29,6 +29,7 @@ public class HandelsbankenSELoan {
         BankIdValidator.validate(agreementNumber);
 
         return LoanAccount.builder(agreementNumber, Amount.inSEK(calculateCurrentDebt()))
+                .setAccountNumber(agreementNumber)
                 .setName(lender)
                 .addIdentifier(new SwedishIdentifier(agreementNumber))
                 .setInterestRate(interestRateFormatted)

@@ -20,9 +20,9 @@ public class CreditDetailsResponse {
     @JsonIgnore
     public LoanAccount toLoanAccount(OpBankCreditEntity creditEntity) {
         return LoanAccount.builder(creditEntity.getAgreementNumberIban(), Amount.inEUR(balance))
+                .setAccountNumber(creditEntity.getAgreementNumberIban())
                 .setInterestRate(totalInterestRate)
                 .setBankIdentifier(creditEntity.getAgreementNumberIban())
-                .setUniqueIdentifier(creditEntity.getAgreementNumberIban())
                 .setName(creditEntity.getLoanName())
                 .setDetails(LoanDetails.builder()
                         .setLoanNumber(creditEntity.getAgreementNumberIban())

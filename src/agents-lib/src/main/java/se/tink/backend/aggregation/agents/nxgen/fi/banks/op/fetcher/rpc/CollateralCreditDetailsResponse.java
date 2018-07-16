@@ -43,9 +43,9 @@ public class CollateralCreditDetailsResponse extends OpBankResponseEntity {
     @JsonIgnore
     public LoanAccount toLoanAccount(OpBankCreditEntity creditEntity) {
         return LoanAccount.builder(creditEntity.getAgreementNumberIban(), Amount.inEUR(balance))
+                .setAccountNumber(creditEntity.getAgreementNumberIban())
                 .setInterestRate(interestRate)
                 .setBankIdentifier(creditEntity.getAgreementNumberIban())
-                .setUniqueIdentifier(creditEntity.getAgreementNumberIban())
                 .setName(creditEntity.getLoanName())
                 .setDetails(LoanDetails.builder()
                         .setLoanNumber(creditEntity.getAgreementNumberIban())

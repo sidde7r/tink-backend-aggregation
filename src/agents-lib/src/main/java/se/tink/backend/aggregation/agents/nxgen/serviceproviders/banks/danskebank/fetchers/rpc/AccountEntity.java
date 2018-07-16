@@ -137,9 +137,9 @@ public class AccountEntity {
     }
 
     public LoanAccount toLoanAccount() {
-        return LoanAccount.builder(accountNoExt, new Amount(currency, balance))
+        return LoanAccount.builder(accountNoInt, new Amount(currency, balance))
+                .setAccountNumber(accountNoExt)
                 .setName(accountName)
-                .setUniqueIdentifier(accountNoInt)
                 .build();
     }
 
