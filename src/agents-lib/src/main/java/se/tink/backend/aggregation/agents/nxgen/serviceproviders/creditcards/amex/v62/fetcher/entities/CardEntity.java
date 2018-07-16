@@ -25,6 +25,7 @@ public class CardEntity {
                 cardNumberDisplay,
                 config.toAmount(getBalanceValue()),
                 config.toAmount(ZERO))
+                .setAccountNumber(cardNumberDisplay)
                 .setName(
                         cardProductName
                                 + " - "

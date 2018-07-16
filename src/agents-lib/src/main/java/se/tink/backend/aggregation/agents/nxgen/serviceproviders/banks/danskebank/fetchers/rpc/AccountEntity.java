@@ -145,9 +145,9 @@ public class AccountEntity {
 
     public CreditCardAccount toCreditCardAccount() {
         Amount availableCredit = new Amount(currency, 0d); // Not possible to get available credit
-        return CreditCardAccount.builder(accountNoExt, new Amount(currency, balance), availableCredit)
+        return CreditCardAccount.builder(accountNoInt, new Amount(currency, balance), availableCredit)
+                .setAccountNumber(accountNoExt)
                 .setName(accountName)
-                .setUniqueIdentifier(accountNoInt)
                 .build();
     }
 

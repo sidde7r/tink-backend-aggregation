@@ -28,8 +28,8 @@ public class CreditCardEntity {
     }
 
     public CreditCardAccount toTinkAccount() {
-        return CreditCardAccount.builder(cardNumber, getBalance(), creditLimit.toTinkAmount())
-                .setUniqueIdentifier(id)
+        return CreditCardAccount.builder(id, getBalance(), creditLimit.toTinkAmount())
+                .setAccountNumber(cardNumber)
                 .setBankIdentifier(id)
                 .setName(name)
                 .build();

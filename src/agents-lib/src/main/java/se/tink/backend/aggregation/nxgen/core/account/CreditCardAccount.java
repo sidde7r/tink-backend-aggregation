@@ -11,10 +11,10 @@ public class CreditCardAccount extends Account {
         this.availableCredit = builder.getAvailableCredit();
     }
 
-    public static Builder<?, ?> builder(String accountNumber, Amount balance, Amount availableCredit) {
+    public static Builder<?, ?> builder(String uniqueIdentifier, Amount balance, Amount availableCredit) {
         DefaultCreditCardBuilder defaultCreditCardBuilder = new DefaultCreditCardBuilder();
         defaultCreditCardBuilder
-                .setAccountNumber(accountNumber)
+                .setUniqueIdentifier(uniqueIdentifier)
                 .setBalance(balance)
                 .setAvailableCredit(availableCredit);
         return defaultCreditCardBuilder;

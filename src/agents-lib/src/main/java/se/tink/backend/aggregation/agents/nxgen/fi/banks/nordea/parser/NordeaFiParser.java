@@ -88,10 +88,10 @@ public class NordeaFiParser extends NordeaV21Parser {
 
     @Override
     public CreditCardAccount parseCreditCardAccount(ProductEntity productEntity, CardBalanceEntity cardBalance) {
-        return CreditCardAccount.builder(cardBalance.getCardNumber(), cardBalance.getBalance(),
+        return CreditCardAccount.builder(cardBalance.getUniqueIdentifier(), cardBalance.getBalance(),
                 cardBalance.getAvailableCredit())
+                .setAccountNumber(cardBalance.getCardNumber())
                 .setName(getTinkAccountName(productEntity).orElse(cardBalance.getCardNumber()))
-                .setUniqueIdentifier(cardBalance.getUniqueIdentifier())
                 .setBankIdentifier(productEntity.getNordeaAccountIdV2())
                 .build();
     }

@@ -124,8 +124,9 @@ public class BelfiusProduct implements GeneralAccountEntity{
         return getAmount().flatMap(amount ->
                 parseAvailable().map(availableAmount ->
                         CreditCardAccount.builder(this.numberAccount, amount, availableAmount)
-                        .setBankIdentifier(key)
-                        .build()
+                                .setAccountNumber(this.numberAccount)
+                                .setBankIdentifier(key)
+                                .build()
                 )
 
         ).orElse(null);

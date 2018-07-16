@@ -86,12 +86,12 @@ public class NordeaNoParser extends NordeaV17Parser {
 
     @Override
     public CreditCardAccount parseCreditCardAccount(ProductEntity pe, CardsEntity cardsEntity) {
-        return CreditCardAccount.builder(pe.getAccountNumber(true),
+        return CreditCardAccount.builder(pe.getAccountNumber(false),
                 pe.getNegativeBalanceAmount().orElse(Amount.inNOK(-1 * pe.getBalance())),
                 pe.getCurrency().map(c -> new Amount(c, cardsEntity.getFundsAvailable()))
                         .orElse(Amount.inNOK(cardsEntity.getFundsAvailable())))
+                .setAccountNumber(pe.getAccountNumber(true))
                 .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(true)))
-                .setUniqueIdentifier(pe.getAccountNumber(false))
                 .setBankIdentifier(pe.getNordeaAccountIdV2())
                 .build();
     }

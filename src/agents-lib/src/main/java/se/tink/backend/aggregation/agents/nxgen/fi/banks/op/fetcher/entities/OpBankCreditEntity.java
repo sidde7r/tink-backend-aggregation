@@ -52,8 +52,8 @@ public class OpBankCreditEntity {
         return CreditCardAccount.builder(agreementNumberIban,
                 Amount.inEUR(balance),
                 Amount.inEUR(AgentParsingUtils.parseAmount(withdrawableAmount)))
+                .setAccountNumber(agreementNumberIban)
                 .setBankIdentifier(encryptedAgreementNumber)  // to fetch transactions
-                .setUniqueIdentifier(agreementNumberIban)
                 .setName(getCreditAccountName())
                 .build();
     }

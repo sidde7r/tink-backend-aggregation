@@ -26,9 +26,9 @@ public class AlandsBankenCard {
     }
 
     public CreditCardAccount toCreditCardAccount() {
-        return CreditCardAccount.builder(maskedCardNumber, Amount.inEUR(-currentTotalDebt), Amount.inEUR(usageLimit))
+        return CreditCardAccount.builder(id, Amount.inEUR(-currentTotalDebt), Amount.inEUR(usageLimit))
+                .setAccountNumber(maskedCardNumber)
                 .setName(maskedCardNumber)
-                .setUniqueIdentifier(id)
                 .setBankIdentifier(id)
                 .build();
     }

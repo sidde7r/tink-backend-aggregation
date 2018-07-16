@@ -29,9 +29,9 @@ public class CreditCard extends LinksResponse {
     }
 
     public CreditCardAccount toTinkAccount(Amount balance) {
-        return CreditCardAccount.builder(cardId, balance, getAvailableCredit())
+        return CreditCardAccount.builder(number, balance, getAvailableCredit())
+                .setAccountNumber(cardId)
                 .setName(name)
-                .setUniqueIdentifier(number)
                 .setBankIdentifier(transactionsLink())
                 .build();
     }

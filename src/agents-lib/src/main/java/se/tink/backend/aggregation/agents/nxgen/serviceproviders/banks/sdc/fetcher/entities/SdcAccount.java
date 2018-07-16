@@ -38,6 +38,7 @@ public class SdcAccount {
     @JsonIgnore
     public CreditCardAccount toTinkCreditCardAccount(SdcConfiguration agentConfiguration) {
         return CreditCardAccount.builder(id, amount.toTinkAmount(), availableAmount.toTinkAmount())
+                .setAccountNumber(id)
                 .setName(name)
                 .setBankIdentifier(normalizedBankId())
                 .build();
