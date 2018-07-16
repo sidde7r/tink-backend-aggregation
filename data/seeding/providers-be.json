@@ -3,6 +3,34 @@
   "currency": "EUR",
   "providers": [
     {
+      "name": "be-beobank-password",
+      "displayName": "Beobank",
+      "popular": true,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.be.banks.beobank.BeobankAgent",
+      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in Beobank's mobile banking app.",
+      "transactional": "true",
+      "payload": "BEOBANK",
+      "tutorialUrl": null,
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "numeric": true,
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "sensitive": true,
+          "masked": true,
+          "name": "password"
+        }
+      ]
+    },
+    {
       "className": "nxgen.be.banks.bnppf.BnpPfAgent",
       "credentialsType": "PASSWORD",
       "displayName": "BNP Paribas Fortis",
