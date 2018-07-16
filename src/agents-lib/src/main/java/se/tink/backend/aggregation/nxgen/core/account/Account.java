@@ -50,7 +50,7 @@ public abstract class Account {
         case INVESTMENT:
             return InvestmentAccount.builder(uniqueIdentifier);
         case LOAN:
-            return LoanAccount.builder();
+            return LoanAccount.builder(uniqueIdentifier);
         default:
             throw new IllegalStateException(
                     String.format("Unknown Account type (%s)", type));
