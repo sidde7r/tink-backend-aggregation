@@ -51,9 +51,9 @@ public class HandelsbankenFILoan {
         }
 
         return LoanAccount.builder(loanNumber, loanAmount.asAmount())
+                .setAccountNumber(loanNumber)
                 .setName(loanName)
                 .setInterestRate(getInterest())
-                .setUniqueIdentifier(loanNumber)
                 .setDetails(details)
                 .build();
     }

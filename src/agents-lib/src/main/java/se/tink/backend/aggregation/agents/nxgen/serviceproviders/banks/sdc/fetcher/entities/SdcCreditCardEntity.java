@@ -70,10 +70,10 @@ public class SdcCreditCardEntity {
 
     @JsonIgnore
     public CreditCardAccount toTinkCard(SdcAccount creditCardAccount) {
-        return CreditCardAccount.builder(creditcardNumber.replaceAll(" ", ""),
+        return CreditCardAccount.builder(constructUniqueIdentifier(),
                 creditCardAccount.getAmount().toTinkAmount(), creditCardAccount.getAvailableAmount().toTinkAmount())
+                .setAccountNumber(creditcardNumber.replaceAll(" ", ""))
                 .setName(creditCardAccount.getName())
-                .setUniqueIdentifier(constructUniqueIdentifier())
                 .build();
     }
 

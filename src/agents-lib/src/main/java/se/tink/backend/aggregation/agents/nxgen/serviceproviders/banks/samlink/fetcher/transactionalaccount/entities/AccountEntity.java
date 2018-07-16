@@ -44,6 +44,7 @@ public class AccountEntity extends LinksResponse {
 
     public TransactionalAccount toTransactionalAccount() {
         return CheckingAccount.builder(accountId.getIban(), usableBalance.toTinkAmount())
+                .setAccountNumber(accountId.getIban())
                 .setBankIdentifier(getLinks().getLinkPath(SamlinkConstants.LinkRel.TRANSACTIONS))
                 .build();
     }

@@ -70,8 +70,8 @@ public class MastercardAgreementEntity {
         Optional<MastercardEntity> cardDetails = getAccountOwnerCardDetails();
 
         return cardDetails.map(mastercardEntity -> CreditCardAccount.builder(
-                mastercardEntity.getCardNo(), Amount.inDKK(balance), Amount.inDKK(maxBalance))
-                .setUniqueIdentifier(constructUniqueIdentifier())
+                constructUniqueIdentifier(), Amount.inDKK(balance), Amount.inDKK(maxBalance))
+                .setAccountNumber(mastercardEntity.getCardNo())
                 .setName(mastercardEntity.getCardName())
                 .build());
     }

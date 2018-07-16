@@ -151,6 +151,7 @@ public class AccountDetailsEntity {
 
     public TransactionalAccount toTransactionalAccount() {
         return TransactionalAccount.builder(getType(), number, Amount.inNOK(availableBalanceNok))
+                .setAccountNumber(number)
                 .setName(getTinkAccountName())
                 .build();
     }

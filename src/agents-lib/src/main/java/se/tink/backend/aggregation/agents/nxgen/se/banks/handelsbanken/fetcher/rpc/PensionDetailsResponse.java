@@ -21,6 +21,7 @@ public class PensionDetailsResponse extends BaseResponse {
 
     public InvestmentAccount toInvestmentAccount(HandelsbankenSEApiClient client, CustodyAccount custodyAccount) {
         return InvestmentAccount.builder(custodyAccount.getCustodyAccountNumber(), custodyAccount.getTinkAmount())
+                .setAccountNumber(custodyAccount.getCustodyAccountNumber())
                 .setName(pensionName)
                 .setPortfolios(Collections.singletonList(toPortfolio(client, custodyAccount)))
                 .build();

@@ -15,9 +15,11 @@ public class SavingsAccount extends TransactionalAccount {
         return new DefaultSavingAccountsBuilder();
     }
 
-    public static Builder<?, ?> builder(String accountNumber, Amount balance) {
+    public static Builder<?, ?> builder(String uniqueIdentifier, Amount balance) {
         DefaultSavingAccountsBuilder defaultSavingAccountsBuilder = new DefaultSavingAccountsBuilder();
-        defaultSavingAccountsBuilder.setBalance(balance).setAccountNumber(accountNumber);
+        defaultSavingAccountsBuilder
+                .setUniqueIdentifier(uniqueIdentifier)
+                .setBalance(balance);
         return defaultSavingAccountsBuilder;
     }
 

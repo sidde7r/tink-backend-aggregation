@@ -75,7 +75,7 @@ public class AccountEntity {
                 .orElseThrow(() -> new IllegalStateException("Unknown account type"));
 
         return TransactionalAccount.builder(accountType, accountId, getTinkBalance())
-                .setUniqueIdentifier(accountId)
+                .setAccountNumber(accountId)
                 .setBankIdentifier(accountId)
                 .setName(accountName)
                 .setHolderName(new HolderName(details.getAccountHolder()))

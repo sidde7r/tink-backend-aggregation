@@ -69,10 +69,10 @@ public class NordeaDkParser extends NordeaV20Parser {
 
     @Override
     public LoanAccount parseMortgage(ProductEntity pe, LoanDetailsResponse loanDetailsResponse) {
-        LoanAccount.Builder<?, ?> accountBuilder = LoanAccount.builder(pe.getAccountNumber(true),
+        LoanAccount.Builder<?, ?> accountBuilder = LoanAccount.builder(pe.getAccountNumber(false),
                 new Amount(pe.getCurrency(), pe.getBalance()))
+                .setAccountNumber(pe.getAccountNumber(true))
                 .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(true)))
-                .setUniqueIdentifier(pe.getAccountNumber(false))
                 .setBankIdentifier(pe.getNordeaAccountIdV2());
 
         LoanData loanData = loanDetailsResponse.getLoanData();
@@ -92,9 +92,9 @@ public class NordeaDkParser extends NordeaV20Parser {
     }
 
     public LoanAccount parseBlancoLoan(ProductEntity pe) {
-        return LoanAccount.builder(pe.getAccountNumber(true), new Amount(pe.getCurrency(), pe.getBalance()))
+        return LoanAccount.builder(pe.getAccountNumber(false), new Amount(pe.getCurrency(), pe.getBalance()))
+                .setAccountNumber(pe.getAccountNumber(true))
                 .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(true)))
-                .setUniqueIdentifier(pe.getAccountNumber(false))
                 .setBankIdentifier(pe.getNordeaAccountIdV2())
                 .setDetails(LoanDetails.builder()
                         .setLoanNumber(Optional.ofNullable(pe.getLoanId()).orElse(pe.getProductNumber()))
@@ -105,21 +105,21 @@ public class NordeaDkParser extends NordeaV20Parser {
 
     @Override
     public TransactionalAccount parseAccount(ProductEntity pe) {
-        return TransactionalAccount.builder(getTinkAccountType(pe), pe.getAccountNumber(true),
+        return TransactionalAccount.builder(getTinkAccountType(pe), pe.getAccountNumber(false),
                 new Amount(pe.getCurrency(), pe.getBalance()))
+                .setAccountNumber(pe.getAccountNumber(true))
                 .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(true)))
-                .setUniqueIdentifier(pe.getAccountNumber(false))
                 .setBankIdentifier(pe.getNordeaAccountIdV2())
                 .build();
     }
 
     @Override
     public CreditCardAccount parseCreditCardAccount(ProductEntity pe, CardDetailsEntity cardDetails) {
-        return CreditCardAccount.builder(pe.getAccountNumber(true),
+        return CreditCardAccount.builder(pe.getAccountNumber(false),
                 new Amount(pe.getCurrency(), cardDetails.getCurrentBalance()),
                 new Amount(pe.getCurrency(), cardDetails.constructAvailableFunds()))
+                .setAccountNumber(pe.getAccountNumber(true))
                 .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(true)))
-                .setUniqueIdentifier(pe.getAccountNumber(false))
                 .setBankIdentifier(pe.getNordeaAccountIdV2())
                 .build();
     }
@@ -127,7 +127,8 @@ public class NordeaDkParser extends NordeaV20Parser {
     @Override
     public InvestmentAccount parseInvestmentAccount(CustodyAccount custodyAccount) {
         return InvestmentAccount
-                .builder(custodyAccount.getAccountNumber(), Amount.inDKK(custodyAccount.getMarketValue()))
+                .builder(custodyAccount.getAccountId(), Amount.inDKK(custodyAccount.getMarketValue()))
+                .setAccountNumber(custodyAccount.getAccountNumber())
                 .setName(custodyAccount.getName())
                 .setUniqueIdentifier(custodyAccount.getAccountId())
                 .setPortfolios(Collections.singletonList(parsePortfolio(custodyAccount)))

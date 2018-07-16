@@ -61,6 +61,7 @@ public class CreditCardEntity {
 
         return CreditCardAccount.builder(number, balance.parseToNegativeTinkAmount(),
                 availableBalance.parseToTinkAmount())
+                .setAccountNumber(number)
                 .setName(description)
                 .setHolderName(new HolderName(name))
                 .setBankIdentifier(bankIdentifier)

@@ -72,8 +72,13 @@ public class EuroInformationInvestmentAccountFetcher implements AccountFetcher<I
                             Amount amount = EuroInformationUtils
                                     .parseAmount(investmentAccount.getSecurityAccountOverview().getOverview().getAmount());
                             AGGREGATION_LOGGER.infoExtraLong(investmentAccount.toString(), investmentLogTag);
+                            String accountNumber = investmentAccount
+                                    .getSecurityAccountOverview()
+                                    .getOverview()
+                                    .getNumber();
                             accountsDetails.add(InvestmentAccount
-                                    .builder(investmentAccount.getSecurityAccountOverview().getOverview().getNumber(), amount)
+                                    .builder(accountNumber, amount)
+                                    .setAccountNumber(accountNumber)
                                     .build());
                         }
                 );

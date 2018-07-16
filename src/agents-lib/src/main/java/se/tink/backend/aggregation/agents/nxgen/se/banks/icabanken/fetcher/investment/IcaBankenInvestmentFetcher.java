@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.entities.BodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.entities.DepotsEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.entities.FundDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.entities.FundHoldingsEntity;
@@ -12,13 +15,6 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.core.Amount;
 import se.tink.backend.system.rpc.Instrument;
 import se.tink.backend.system.rpc.Portfolio;
-
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class IcaBankenInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
     private final IcaBankenApiClient client;
@@ -86,6 +82,7 @@ public class IcaBankenInvestmentFetcher implements AccountFetcher<InvestmentAcco
         List<Portfolio> portfolios = new ArrayList<Portfolio>();
         portfolios.add(toPortfolio(depot));
         return InvestmentAccount.builder(depot.getDepotNumber(), Amount.inSEK(depot.getTotalDepotValue()))
+                .setAccountNumber(depot.getDepotNumber())
                 .setName(depot.getDepotName())
                 .setPortfolios(portfolios)
                 .setBankIdentifier(depot.getDepotNumber())

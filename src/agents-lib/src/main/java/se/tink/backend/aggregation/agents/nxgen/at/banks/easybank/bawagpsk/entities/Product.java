@@ -56,6 +56,7 @@ public class Product {
 
     public TransactionalAccount toTransactionalAccount(final Amount balance) {
         return TransactionalAccount.builder(productID.getAccountType(), accountNumber, balance)
+                .setAccountNumber(accountNumber)
                 .addIdentifier(getIban())
                 .setHolderName(new HolderName(productID.getAccountOwner().trim()))
                 .build();

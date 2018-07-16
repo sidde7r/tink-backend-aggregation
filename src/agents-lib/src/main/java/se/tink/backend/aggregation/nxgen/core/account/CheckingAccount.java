@@ -13,10 +13,10 @@ public class CheckingAccount extends TransactionalAccount {
         return new DefaultCheckingAccountBuilder();
     }
 
-    public static Builder<CheckingAccount, DefaultCheckingAccountBuilder> builder(String accountNumber,
+    public static Builder<CheckingAccount, DefaultCheckingAccountBuilder> builder(String uniqueIdentifier,
             Amount balance) {
         DefaultCheckingAccountBuilder defaultCheckingAccountBuilder = new DefaultCheckingAccountBuilder();
-        defaultCheckingAccountBuilder.setAccountNumber(accountNumber)
+        defaultCheckingAccountBuilder.setUniqueIdentifier(uniqueIdentifier)
                 .setBalance(balance);
         return defaultCheckingAccountBuilder;
     }

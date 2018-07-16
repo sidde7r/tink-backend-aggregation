@@ -38,6 +38,7 @@ public class OtmlResponseConverterTest {
     @Test
     public void fillAccountInformation() {
         TransactionalAccount account =  CheckingAccount.builder("IBAN", Amount.inEUR(0D))
+                .setAccountNumber("IBAN")
                 .setName("")
                 .setBankIdentifier("accountKey")
                 .build();

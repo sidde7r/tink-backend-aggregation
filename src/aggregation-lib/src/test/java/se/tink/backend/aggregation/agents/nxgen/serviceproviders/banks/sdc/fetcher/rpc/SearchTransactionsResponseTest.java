@@ -31,10 +31,10 @@ public class SearchTransactionsResponseTest {
     public void getTinkCreditCardTransactions() throws Exception {
         SearchTransactionsResponse response = SearchCreditCardTransactionsResponseTestData.getTestData();
 
-        CreditCardAccount creditCardAccount = CreditCardAccount.builder("0123456789", Amount.inSEK(9500.0),
+        CreditCardAccount creditCardAccount = CreditCardAccount.builder("uniqueIdentifier", Amount.inSEK(9500.0),
                 Amount.inSEK(10500.0))
+                .setAccountNumber("0123456789")
                 .setName("Credit-card")
-                .setUniqueIdentifier("uniqueIdentifier")
                 .build();
 
         SdcSeTransactionParser transactionParser = new SdcSeTransactionParser();

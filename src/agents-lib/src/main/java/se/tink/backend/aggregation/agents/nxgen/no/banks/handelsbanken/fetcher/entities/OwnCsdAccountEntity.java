@@ -106,8 +106,8 @@ public class OwnCsdAccountEntity {
         double totalMarketValue = getTotalMarketValue(positions);
 
         return InvestmentAccount.builder(csdAccountNumber, Amount.inNOK(totalMarketValue))
+                .setAccountNumber(csdAccountNumber)
                 .setName(name)
-                .setUniqueIdentifier(csdAccountNumber)
                 .setPortfolios(Collections.singletonList(toPortfolio(positions, totalMarketValue,
                         availableBalanceByCsdAccountNumber)))
                 .build();

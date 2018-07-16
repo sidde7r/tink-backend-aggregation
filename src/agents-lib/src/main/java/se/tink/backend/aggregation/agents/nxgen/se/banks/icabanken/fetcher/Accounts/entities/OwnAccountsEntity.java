@@ -114,8 +114,12 @@ public class OwnAccountsEntity implements GeneralAccountEntity {
 
     public TransactionalAccount toTinkAccount() {
         return TransactionalAccount.builder(convertAccountType(), accountNumber,
-                new Amount(IcaBankenConstants.Currencies.SEK, getAvailableAmount())).setName(name)
-                .setBankIdentifier(accountId).addIdentifier(new SwedishIdentifier(getAccountNumber())).build();
+                new Amount(IcaBankenConstants.Currencies.SEK, getAvailableAmount()))
+                .setAccountNumber(accountNumber)
+                .setName(name)
+                .setBankIdentifier(accountId)
+                .addIdentifier(new SwedishIdentifier(getAccountNumber()))
+                .build();
     }
 
     private AccountTypes convertAccountType() {

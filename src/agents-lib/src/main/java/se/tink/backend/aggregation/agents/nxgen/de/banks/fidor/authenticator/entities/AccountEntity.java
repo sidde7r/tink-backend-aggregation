@@ -93,6 +93,7 @@ public class AccountEntity {
 
     public TransactionalAccount toTransactionalAccount(){
         return TransactionalAccount.builder(getType(), getId(), getTinkBalance())
+                .setAccountNumber(getId())
                 .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
                 .build();
     }

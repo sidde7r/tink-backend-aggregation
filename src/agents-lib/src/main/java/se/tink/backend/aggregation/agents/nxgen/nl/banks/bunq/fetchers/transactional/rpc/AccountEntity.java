@@ -109,6 +109,7 @@ public class AccountEntity {
         }
 
         return accountIban.map(accountNumber -> CheckingAccount.builder(accountNumber, balanceAsAmount.get())
+                .setAccountNumber(accountNumber)
                 .setName(description)
                 .setBankIdentifier(accountId)
                 .build());

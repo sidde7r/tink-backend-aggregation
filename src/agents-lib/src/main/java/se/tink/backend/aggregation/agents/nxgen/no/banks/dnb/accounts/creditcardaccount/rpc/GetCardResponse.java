@@ -145,10 +145,10 @@ public class GetCardResponse {
     }
 
     public CreditCardAccount toTinkCard() {
-        return CreditCardAccount.builder(cardNumber.replaceAll(" ", ""), Amount.inNOK(-balanceAmount),
+        return CreditCardAccount.builder(StringUtils.hashAsStringSHA1(cardNumber), Amount.inNOK(-balanceAmount),
                 Amount.inNOK(availableAmount))
+                .setAccountNumber(cardNumber.replaceAll(" ", ""))
                 .setName(productName)
-                .setUniqueIdentifier(StringUtils.hashAsStringSHA1(cardNumber))
                 .build();
     }
 }

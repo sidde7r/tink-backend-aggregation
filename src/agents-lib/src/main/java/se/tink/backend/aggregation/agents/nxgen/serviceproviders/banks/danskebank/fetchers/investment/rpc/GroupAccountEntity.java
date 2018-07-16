@@ -38,9 +38,9 @@ public class GroupAccountEntity {
     }
 
     public InvestmentAccount toInvestmentAccount(Amount balance, List<Portfolio> portfolios) {
-        return InvestmentAccount.builder(displayAccountIdentifier, balance)
+        return InvestmentAccount.builder(accountIdentifier, balance)
+                .setAccountNumber(displayAccountIdentifier)
                 .setName(name)
-                .setUniqueIdentifier(accountIdentifier)
                 .setPortfolios(portfolios)
                 .build();
     }

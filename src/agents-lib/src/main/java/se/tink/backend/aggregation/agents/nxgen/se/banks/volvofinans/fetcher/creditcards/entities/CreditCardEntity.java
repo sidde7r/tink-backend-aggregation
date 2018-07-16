@@ -41,6 +41,7 @@ public class CreditCardEntity {
     public CreditCardAccount toTinkAccount() {
         return CreditCardAccount
                 .builder(accountNumber, Amount.inSEK(balance), Amount.inSEK(availableCredit))
+                .setAccountNumber(accountNumber)
                 .setName(name)
                 .addToTemporaryStorage(VolvoFinansConstants.UrlParameters.ACCOUNT_ID, accountId)
                 .build();

@@ -103,8 +103,8 @@ public class AccountEntity {
     @JsonIgnore
     public TransactionalAccount toTinkAccount(UserData userData) {
         return TransactionalAccount.builder(getTinkAccountType(), getAccountNumber(), balance.getTinkAmount())
+                .setAccountNumber(getAccountNumber())
                 .setName(generalInfo.getAlias())
-                .setUniqueIdentifier(getAccountNumber())
                 .addToTemporaryStorage(SantanderEsConstants.Storage.USER_DATA_XML,
                         SantanderEsXmlUtils.parseJsonToXmlString(userData))
                 .addToTemporaryStorage(SantanderEsConstants.Storage.CONTRACT_ID_XML,

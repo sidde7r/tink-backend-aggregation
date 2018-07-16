@@ -64,8 +64,8 @@ public class FundsPortfoliosResponse extends SpankkiResponse {
 
             investmentAccounts.add(
                     InvestmentAccount.builder(accountData.id, new Amount(accountData.currency, accountData.balance))
+                            .setAccountNumber(accountData.id)
                             .setPortfolios(accountData.portfolios)
-                            .setUniqueIdentifier(accountData.id)
                             .setName(accountData.name)
                             .setBankIdentifier(accountData.id)
                             .build()

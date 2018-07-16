@@ -29,9 +29,9 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
         BankIdValidator.validate(number);
         final String accountNumber = applicationEntryPoint.getClearingNumber() + "-" + numberFormatted;
 
-        return CheckingAccount.builder(accountNumber, findBalanceAmount().asAmount())
+        return CheckingAccount.builder(number, findBalanceAmount().asAmount())
+                .setAccountNumber(accountNumber)
                 .setName(name)
-                .setUniqueIdentifier(number)
                 .addIdentifier(new SwedishIdentifier(accountNumber))
                 .addIdentifier(new SwedishSHBInternalIdentifier(number))
                 .build();

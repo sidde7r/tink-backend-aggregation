@@ -93,6 +93,7 @@ public class OtmlResponseConverter {
         String accountType = getValue(getNode(accountNode, BankAustriaConstants.XPathExpression.XPATH_SETTINGS_ACCOUNT_TYPE));
         if (accountType.equals("CURRENT"))
             return SavingsAccount.builder(accountNumber, Amount.inEUR(0D))
+                    .setAccountNumber(accountNumber)
                     .setName(accountNickName)
                     .setBankIdentifier(accountKey)
                     .build();
@@ -159,10 +160,10 @@ public class OtmlResponseConverter {
             case SAVINGS:
                 filledAccount = SavingsAccount
                         .builder(iban, amount)
+                        .setAccountNumber(iban)
                         .setHolderName(holderName)
                         .setName(account.getName())
                         .setBankIdentifier(account.getBankIdentifier())
-                        .setUniqueIdentifier(iban)
                         .build();
                 break;
 

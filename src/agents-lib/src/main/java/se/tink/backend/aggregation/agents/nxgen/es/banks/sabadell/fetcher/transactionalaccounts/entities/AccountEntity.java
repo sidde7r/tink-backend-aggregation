@@ -39,6 +39,7 @@ public class AccountEntity {
     @JsonIgnore
     public TransactionalAccount toTinkAccount() {
         return TransactionalAccount.builder(getTinkAccountType(), iban, amount.parseToTinkAmount())
+                .setAccountNumber(iban)
                 .setName(getTinkName())
                 .setBankIdentifier(iban)
                 .addIdentifier(new IbanIdentifier(iban))

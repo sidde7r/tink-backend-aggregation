@@ -22,10 +22,12 @@ public class InvestmentAccount extends Account {
     }
 
     public static Builder<InvestmentAccount, DefaultInvestmentAccountsBuilder> builder(
-            String accountNumber, Amount balance) {
+            String uniqueIdentifier, Amount balance) {
         DefaultInvestmentAccountsBuilder defaultInvestmentAccountsBuilder =
                 new DefaultInvestmentAccountsBuilder();
-        defaultInvestmentAccountsBuilder.setAccountNumber(accountNumber).setBalance(balance);
+        defaultInvestmentAccountsBuilder
+                .setUniqueIdentifier(uniqueIdentifier)
+                .setBalance(balance);
         return defaultInvestmentAccountsBuilder;
     }
 

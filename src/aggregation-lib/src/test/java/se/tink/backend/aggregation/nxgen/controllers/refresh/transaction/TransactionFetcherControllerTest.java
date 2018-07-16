@@ -18,7 +18,6 @@ import se.tink.backend.core.Amount;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -118,10 +117,10 @@ public class TransactionFetcherControllerTest {
 
     @Test
     public void ensureUpcomingTransactions_areFetched_whenAccountType_isCreditCard() {
-        CreditCardAccount creditCardAccount = CreditCardAccount.builder("0123456789", Amount.inSEK(-2500.0),
+        CreditCardAccount creditCardAccount = CreditCardAccount.builder("uniqueIdentifier", Amount.inSEK(-2500.0),
                 Amount.inSEK(7500.0))
+                .setAccountNumber("0123456789")
                 .setName("Credit-card")
-                .setUniqueIdentifier("uniqueIdentifier")
                 .build();
 
         new TransactionFetcherController<>(paginationHelper, creditCardAccountPaginator, upcomingTransactionFetcher)

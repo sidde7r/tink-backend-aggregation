@@ -48,9 +48,9 @@ public class CreditCardAccountEntity {
 
     public CreditCardAccount toTinkCreditCardAccount() {
         // spv uses positive amount for balance of a credit card
-        return CreditCardAccount.builder(cardNumber, Amount.inNOK(-balance), Amount.inNOK(available))
+        return CreditCardAccount.builder(transactionAccountNumber, Amount.inNOK(-balance), Amount.inNOK(available))
+                .setAccountNumber(cardNumber)
                 .setName(name)
-                .setUniqueIdentifier(transactionAccountNumber)
                 .setBankIdentifier(createBankIdentifier())
                 .build();
     }

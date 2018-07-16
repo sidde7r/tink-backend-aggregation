@@ -72,8 +72,8 @@ public class BankdataPoolAccountEntity {
         portfolio.setTotalProfit(getProfit());
         portfolio.setTotalValue(getBalance());
 
-        return InvestmentAccount.builder(getFormattedAccountNumber(), getBalanceAsAmount())
-                .setUniqueIdentifier(getAccountNumber())
+        return InvestmentAccount.builder(getAccountNumber(), getBalanceAsAmount())
+                .setAccountNumber(getFormattedAccountNumber())
                 .setBankIdentifier(getAccountNumber())
                 .setName(name)
                 .setPortfolios(Collections.singletonList(portfolio))

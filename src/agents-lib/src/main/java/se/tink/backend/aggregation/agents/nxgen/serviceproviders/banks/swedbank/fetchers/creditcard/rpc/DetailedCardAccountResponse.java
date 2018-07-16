@@ -76,6 +76,7 @@ public class DetailedCardAccountResponse {
 
         return Optional.of(
                 CreditCardAccount.builder(cardAccount.getCardNumber(), balance, availableAmountValue)
+                        .setAccountNumber(cardAccount.getCardNumber())
                         .setName(cardAccount.getName())
                         .setHolderName(new HolderName(cardAccount.getCardHolder()))
                         .addToTemporaryStorage(SwedbankBaseConstants.StorageKey.CREDIT_CARD_RESPONSE, this)

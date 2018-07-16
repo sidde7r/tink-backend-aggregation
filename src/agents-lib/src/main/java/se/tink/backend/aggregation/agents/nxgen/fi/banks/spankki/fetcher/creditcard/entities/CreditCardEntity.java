@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.fetcher.credit
 
 
 
-import java.util.Objects;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.core.Amount;
@@ -92,8 +91,8 @@ public class CreditCardEntity {
     }
 
     public CreditCardAccount toTinkAccount() {
-        return CreditCardAccount.builder(this.creditAccountNr , toTinkAmount(this.balance), toTinkAmount(this.totalLimit))
-                .setUniqueIdentifier(this.getCreditAccountNr())
+        return CreditCardAccount.builder(this.getCreditAccountNr(), toTinkAmount(this.balance), toTinkAmount(this.totalLimit))
+                .setAccountNumber(this.creditAccountNr)
                 .setBankIdentifier(this.getCreditAccountNr())
                 .setName(this.creditName)
                 .build();

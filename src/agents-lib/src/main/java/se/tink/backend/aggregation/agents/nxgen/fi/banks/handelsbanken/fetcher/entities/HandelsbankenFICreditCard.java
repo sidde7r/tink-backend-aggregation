@@ -16,6 +16,7 @@ public class HandelsbankenFICreditCard extends HandelsbankenCreditCard {
 
     public CreditCardAccount toTinkAccount() {
         return CreditCardAccount.builder(numberMasked, amountAvailable.asAmount(), creditLimit.asAmount())
+                .setAccountNumber(numberMasked)
                 .setName(name)
                 .build();
     }

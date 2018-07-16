@@ -106,10 +106,10 @@ public class BelfiusProduct implements GeneralAccountEntity{
 
     public TransactionalAccount toTransactionalAccount(String key) {
         return getAmount().map(amount ->
-                TransactionalAccount.builder(getAccountType(), this.numberAccount, amount)
+                TransactionalAccount.builder(getAccountType(), this.extIntAccount, amount)
+                        .setAccountNumber(this.numberAccount)
                         .setName(this.denominationDescription)
                         .setBankIdentifier(key)
-                        .setUniqueIdentifier(this.extIntAccount)
                         .setHolderName(this.holderName)
                         .addIdentifier(new BelgianIdentifier(this.numberAccount.replace(" ", "")))
                         .build()
@@ -124,8 +124,9 @@ public class BelfiusProduct implements GeneralAccountEntity{
         return getAmount().flatMap(amount ->
                 parseAvailable().map(availableAmount ->
                         CreditCardAccount.builder(this.numberAccount, amount, availableAmount)
-                        .setBankIdentifier(key)
-                        .build()
+                                .setAccountNumber(this.numberAccount)
+                                .setBankIdentifier(key)
+                                .build()
                 )
 
         ).orElse(null);

@@ -24,6 +24,7 @@ public class LoanAccountEntity extends AccountEntity {
 
         return Optional.of(
                 LoanAccount.builder(fullyFormattedNumber, new Amount(currency, StringUtils.parseAmount(balance)))
+                        .setAccountNumber(fullyFormattedNumber)
                         .setDetails(loanDetails)
                         .setInterestRate(StringUtils.parseAmount(interest))
                         .setName(name)

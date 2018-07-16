@@ -60,6 +60,7 @@ public class AccountSummaryEntity extends AbstractAccountEntity {
 
     public TransactionalAccount toTinkAccount() {
         return TransactionalAccount.builder(getTinkAccountType(), iban, Amount.inEUR(balance))
+                .setAccountNumber(iban)
                 .setName(name)
                 .setBankIdentifier(id)
                 .build();

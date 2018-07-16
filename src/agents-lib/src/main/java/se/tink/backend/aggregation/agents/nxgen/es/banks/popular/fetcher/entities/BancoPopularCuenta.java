@@ -56,9 +56,9 @@ public class BancoPopularCuenta {
     private int producto;
 
     public TransactionalAccount toTinkAccount() {
-        return CheckingAccount.builder(formatAccountNumber(), Amount.inEUR(posicion))
+        return CheckingAccount.builder(iban, Amount.inEUR(posicion))
+                .setAccountNumber(formatAccountNumber())
                 .setName(tipoContrato)
-                .setUniqueIdentifier(constructUniqueIdentifier())
                 .build();
     }
 
@@ -76,10 +76,6 @@ public class BancoPopularCuenta {
         return idExternaContrato;
     }
 
-    // using internal identifier
-    private String constructUniqueIdentifier() {
-        return String.format("%d", numIntContrato);
-    }
     public long getNumIntContrato() {
         return numIntContrato;
     }

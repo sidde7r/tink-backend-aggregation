@@ -152,6 +152,7 @@ public class SEPAAccount {
                 getType(),
                 getAccountNo(),
                 new Amount(getCurrency(), StringUtils.parseAmount(getBalance())))
+                .setAccountNumber(getAccountNo())
                 .setHolderName(new HolderName(getHolderName()))
                 .setName(getProductName())
                 .setBankIdentifier(getBlz() + getAccountNo())

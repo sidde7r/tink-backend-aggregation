@@ -59,9 +59,9 @@ public class AccountEntity extends AccountBriefEntity {
     }
 
     public TransactionalAccount toTransactionalAccount() {
-        return TransactionalAccount.builder(getType(), getAccountNumber(), getTinkBalance())
+        return TransactionalAccount.builder(getType(), regNo + accountNo, getTinkBalance())
+                .setAccountNumber(getAccountNumber())
                 .setName(name)
-                .setUniqueIdentifier(regNo + accountNo)
                 .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
                 .build();
     }

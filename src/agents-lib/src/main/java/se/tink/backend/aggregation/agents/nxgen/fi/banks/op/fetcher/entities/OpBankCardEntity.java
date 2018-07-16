@@ -49,10 +49,10 @@ public class OpBankCardEntity {
 
     @JsonIgnore
     public CreditCardAccount toTinkCardAccount() {
-        return CreditCardAccount.builder(cardNumberMasked, Amount.inEUR(balance), Amount.inEUR(liquidFunds))
+        return CreditCardAccount.builder(creditAccountNumber, Amount.inEUR(balance), Amount.inEUR(liquidFunds))
+                .setAccountNumber(cardNumberMasked)
                 .setName(name)
                 .setBankIdentifier(cardNumber)
-                .setUniqueIdentifier(creditAccountNumber)
                 .build();
     }
 

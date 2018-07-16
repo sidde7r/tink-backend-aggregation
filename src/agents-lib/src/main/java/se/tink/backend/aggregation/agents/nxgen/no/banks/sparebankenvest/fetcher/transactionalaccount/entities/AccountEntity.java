@@ -75,6 +75,7 @@ public class AccountEntity {
 
     public TransactionalAccount toTinkAccount() {
         return TransactionalAccount.builder(getTinkAccountType(), accountNumber, Amount.inNOK(disposable))
+                .setAccountNumber(accountNumber)
                 .setName(accountNumber)
                 .setBankIdentifier(accountId)
                 .build();

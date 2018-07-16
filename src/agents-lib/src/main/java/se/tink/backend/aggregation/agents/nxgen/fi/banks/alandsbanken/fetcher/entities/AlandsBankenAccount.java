@@ -66,11 +66,11 @@ public class AlandsBankenAccount {
 //    private List<InterestLadder> interestLadder;
 
     public TransactionalAccount toTransactionalAccount() {
-        return TransactionalAccount.builder(translateAccountType(), bbanFormatted, new Amount(currency, balance))
+        return TransactionalAccount.builder(translateAccountType(), accountId, new Amount(currency, balance))
+                .setAccountNumber(bbanFormatted)
                 .setName(accountNickname)
                 .addIdentifier(new IbanIdentifier(bic, accountNumber))
                 .addIdentifier(new FinnishIdentifier(bban))
-                .setUniqueIdentifier(accountId)
                 .build();
     }
 
@@ -102,11 +102,11 @@ public class AlandsBankenAccount {
     }
 
     public InvestmentAccount toInvestmentAccount(Portfolio portfolio) {
-        return InvestmentAccount.builder(bbanFormatted, new Amount(currency, balance))
+        return InvestmentAccount.builder(accountId, new Amount(currency, balance))
+                .setAccountNumber(bbanFormatted)
                 .setName(accountNickname)
                 .addIdentifier(new IbanIdentifier(bic, accountNumber))
                 .addIdentifier(new FinnishIdentifier(bban))
-                .setUniqueIdentifier(accountId)
                 .setBankIdentifier(accountId)
                 .setPortfolios(Collections.singletonList(portfolio))
                 .build();
@@ -133,10 +133,10 @@ public class AlandsBankenAccount {
     }
 
     public LoanAccount toLoanAccount(LoanDetailsEntity loanDetailsEntity) {
-        return LoanAccount.builder(bbanFormatted, new Amount(currency, balance))
+        return LoanAccount.builder(accountNumber, new Amount(currency, balance))
+                .setAccountNumber(bbanFormatted)
                 .setName(accountNickname)
                 .setInterestRate(interestRate)
-                .setUniqueIdentifier(accountNumber)
                 .setBankIdentifier(accountId)
                 .setDetails(LoanDetails.builder()
                         .setName(accountNickname)

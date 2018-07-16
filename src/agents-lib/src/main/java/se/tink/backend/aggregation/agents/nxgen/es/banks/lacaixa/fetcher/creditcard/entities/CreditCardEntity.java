@@ -16,6 +16,7 @@ public class CreditCardEntity {
     public CreditCardAccount toTinkCard(){
         return CreditCardAccount
                 .builder(cardNumber, liquidationData.getPrepaidAmount(), liquidationData.getAvaliableCredit())
+                .setAccountNumber(cardNumber)
                 .build();
     }
 }

@@ -52,6 +52,7 @@ public class NordeaFiParser extends NordeaV21Parser {
     public LoanAccount parseLoanAccount(ProductEntity productEntity, LoanDetailsResponse loanDetailsResponse) {
         LoanAccount.Builder<?, ?> accountBuilder = LoanAccount.builder(productEntity.getAccountNumber(),
                 new Amount(productEntity.getCurrency(), productEntity.getBalance()))
+                .setAccountNumber(productEntity.getAccountNumber())
                 .setName(getTinkAccountName(productEntity).orElse(productEntity.getAccountNumber()))
                 .setBankIdentifier(productEntity.getNordeaAccountIdV2());
 
@@ -76,6 +77,7 @@ public class NordeaFiParser extends NordeaV21Parser {
     public TransactionalAccount parseAccount(ProductEntity productEntity) {
         return TransactionalAccount.builder(getTinkAccountType(productEntity), productEntity.getAccountNumber(),
                 new Amount(productEntity.getCurrency(), productEntity.getBalance()))
+                .setAccountNumber(productEntity.getAccountNumber())
                 .setName(getTinkAccountName(productEntity).orElse(productEntity.getAccountNumber()))
                 .setBankIdentifier(productEntity.getNordeaAccountIdV2())
                 .build();
@@ -88,10 +90,10 @@ public class NordeaFiParser extends NordeaV21Parser {
 
     @Override
     public CreditCardAccount parseCreditCardAccount(ProductEntity productEntity, CardBalanceEntity cardBalance) {
-        return CreditCardAccount.builder(cardBalance.getCardNumber(), cardBalance.getBalance(),
+        return CreditCardAccount.builder(cardBalance.getUniqueIdentifier(), cardBalance.getBalance(),
                 cardBalance.getAvailableCredit())
+                .setAccountNumber(cardBalance.getCardNumber())
                 .setName(getTinkAccountName(productEntity).orElse(cardBalance.getCardNumber()))
-                .setUniqueIdentifier(cardBalance.getUniqueIdentifier())
                 .setBankIdentifier(productEntity.getNordeaAccountIdV2())
                 .build();
     }
@@ -100,6 +102,7 @@ public class NordeaFiParser extends NordeaV21Parser {
     public InvestmentAccount parseInvestmentAccount(ProductEntity productEntity) {
         return InvestmentAccount.builder(productEntity.getAccountNumber(),
                 new Amount(productEntity.getCurrency(), productEntity.getBalance()))
+                .setAccountNumber(productEntity.getAccountNumber())
                 .setName(getTinkAccountName(productEntity).orElse(productEntity.getAccountNumber()))
                 .setBankIdentifier(productEntity.getNordeaAccountIdV2())
                 .build();
@@ -107,10 +110,10 @@ public class NordeaFiParser extends NordeaV21Parser {
 
     @Override
     public InvestmentAccount parseInvestmentAccount(CustodyAccount custodyAccount) {
-        return InvestmentAccount.builder(custodyAccount.getAccountNumber(),
+        return InvestmentAccount.builder(custodyAccount.getAccountId(),
                 new Amount(custodyAccount.getCurrency(), custodyAccount.getMarketValue()))
+                .setAccountNumber(custodyAccount.getAccountNumber())
                 .setName(custodyAccount.getName())
-                .setUniqueIdentifier(custodyAccount.getAccountId())
                 .setPortfolios(Collections.singletonList(parsePortfolio(custodyAccount)))
                 .build();
     }

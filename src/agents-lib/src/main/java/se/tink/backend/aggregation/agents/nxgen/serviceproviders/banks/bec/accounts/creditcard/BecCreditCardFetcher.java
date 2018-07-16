@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BecCreditCardFetcher implements AccountFetcher<CreditCardAccount> {
@@ -74,12 +73,14 @@ public class BecCreditCardFetcher implements AccountFetcher<CreditCardAccount> {
             return Optional.empty();
         }
 
-        return Optional.of(CreditCardAccount.builder(accountDetails.getAccountId(),
-                account.getTinkBalance(), accountDetails.getTinkMaxAmount())
-                .setHolderName(new HolderName(accountDetails.getAccountHolder()))
-                .setName(account.getAccountName())
-                .setUniqueIdentifier(account.getAccountId())
-                .build());
+        return Optional.of(
+                CreditCardAccount.builder(account.getAccountId(), account.getTinkBalance(),
+                        accountDetails.getTinkMaxAmount())
+                    .setAccountNumber(accountDetails.getAccountId())
+                    .setHolderName(new HolderName(accountDetails.getAccountHolder()))
+                    .setName(account.getAccountName())
+                    .build()
+        );
     }
 
     private void logUnknownCardType(AccountEntity account, AccountDetailsResponse accountDetails,
