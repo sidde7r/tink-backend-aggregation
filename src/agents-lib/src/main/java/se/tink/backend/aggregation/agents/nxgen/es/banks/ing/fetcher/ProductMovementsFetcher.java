@@ -102,7 +102,8 @@ abstract class ProductMovementsFetcher<A extends Account, T extends Transaction>
     }
 
     protected static void copyCommonAttributes(Product product, Account.Builder builder) {
-        builder.setAccountNumber(product.getProductNumber())
+        builder.setUniqueIdentifier(product.getProductNumber())
+                .setAccountNumber(product.getProductNumber())
                 .setName(product.getName())
                 .setBankIdentifier(product.getBank())
                 .setBalance(new Amount(product.getCurrency(), product.getBalance()))
