@@ -18,7 +18,7 @@ public class ClusterId {
     private ClusterId(String name, String environment, String aggregator) {
         this.name = name;
         this.environment = environment;
-        this.aggregator = new Aggregator(aggregator);
+        this.aggregator = Aggregator.of(aggregator);
     }
 
     public MetricId.MetricLabels metricLabels() {

@@ -55,7 +55,8 @@ public class AgentTestContext extends AgentContext {
 
     public AgentTestContext(Credentials credentials) {
         this.credentials = credentials;
-        this.clusterInfo = clusterInfo.createForLegacyAggregation(ClusterId.create("test", "local-development", "TINK-Testing"));
+        setClusterInfo(ClusterInfo.createForLegacyAggregation(ClusterId.create("test", "local-development", "TINK-Testing")));
+        setAggregator(Aggregator.getDefault());
     }
 
     @Override
@@ -228,16 +229,6 @@ public class AgentTestContext extends AgentContext {
                 + (Strings.isNullOrEmpty(operation.getStatusMessage()) ?
                 "" :
                 " (" + operation.getStatusMessage() + ")"));
-    }
-
-    @Override
-    public ClusterInfo getClusterInfo(){
-        return clusterInfo;
-    }
-
-    @Override
-    public Aggregator getAggregator() {
-        return this.clusterInfo.getClusterId().getAggregator();
     }
 
     @Override

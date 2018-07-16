@@ -110,17 +110,6 @@ public class NewAgentTestContext extends AgentContext {
         // noop
     }
 
-
-    @Override
-    public ClusterInfo getClusterInfo(){
-        return this.clusterInfo;
-    }
-
-    @Override
-    public Aggregator getAggregator() {
-        return clusterInfo.getClusterId().getAggregator();
-    }
-
     @Override
     public String requestSupplementalInformation(Credentials credentials, boolean wait) {
         if (!wait) {

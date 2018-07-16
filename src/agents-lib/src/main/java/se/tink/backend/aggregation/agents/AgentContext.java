@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import org.apache.curator.framework.CuratorFramework;
 import se.tink.backend.aggregation.cluster.identification.Aggregator;
@@ -32,8 +33,8 @@ public abstract class AgentContext {
     protected ByteArrayOutputStream logOutputStream = new ByteArrayOutputStream();
     protected boolean isTestContext = false;
     private boolean isWaitingOnConnectorTransactions = false;
-    protected ClusterInfo clusterInfo;
-
+    private ClusterInfo clusterInfo;
+    private Aggregator aggregator;
     public abstract Catalog getCatalog();
 
     public abstract CuratorFramework getCoordinationClient();
@@ -44,9 +45,24 @@ public abstract class AgentContext {
 
     public abstract MetricRegistry getMetricRegistry();
 
-    public abstract ClusterInfo getClusterInfo();
+    public ClusterInfo getClusterInfo() {
+        return clusterInfo;
+    }
 
-    public abstract Aggregator getAggregator();
+    public Aggregator getAggregator() {
+        if (Objects.isNull(aggregator)) {
+            return Aggregator.getDefault();
+        }
+        return aggregator;
+    }
+
+    public void setClusterInfo(ClusterInfo clusterInfo) {
+        this.clusterInfo = clusterInfo;
+    }
+
+    public void setAggregator(Aggregator aggregator) {
+        this.aggregator = aggregator;
+    }
 
     private String formatCredentialsStatusPayloadSuffix(long numberOfAccounts, long numberOfTransactions,
             Catalog catalog) {

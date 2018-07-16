@@ -89,7 +89,6 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
     private class DEFAULTS {
 
-        private final static String UNKNOWN_AGGREGATOR = "Tink (+https://www.tink.se/; noc@tink.se)";
         private final static int TIMEOUT_MS = 30000;
         private final static int MAX_REDIRECTS = 10;
         private final static boolean CHUNKED_ENCODING = false;
@@ -99,7 +98,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
     public String getUserAgent() {
         if (this.userAgent == null) {
-            return aggregator.getAggregatorIdentifier();
+            return getHeaderAggregatorIdentifier();
         }
 
         return this.userAgent;
@@ -110,7 +109,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
             return aggregator.getAggregatorIdentifier();
         }
 
-        return DEFAULTS.UNKNOWN_AGGREGATOR;
+        return Aggregator.DEFAULT;
     }
 
     // good site to test this: https://badssl.com/
@@ -177,7 +176,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         // Add the filter that is responsible to add persistent data to each request
         addFilter(this.persistentHeaderFilter);
 
-        this.aggregator = (Objects.isNull(context) || Objects.isNull(context.getAggregator())) ? new Aggregator(DEFAULTS.UNKNOWN_AGGREGATOR) : context.getAggregator();
+        this.aggregator = Objects.isNull(context) ? Aggregator.getDefault(): context.getAggregator();
 
         setUserAgent(aggregator.getAggregatorIdentifier());
         setTimeout(DEFAULTS.TIMEOUT_MS);
