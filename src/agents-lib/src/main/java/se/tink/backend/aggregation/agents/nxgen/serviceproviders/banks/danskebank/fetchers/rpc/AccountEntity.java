@@ -152,7 +152,7 @@ public class AccountEntity {
     }
 
     public CheckingAccount toCheckingAccount() {
-        return CheckingAccount.builder(accountNoExt, new Amount(currency, balance))
+        return CheckingAccount.builder(accountNoInt, new Amount(currency, balance))
                 .setAccountNumber(accountNoExt)
                 .setName(accountName)
                 .build();
