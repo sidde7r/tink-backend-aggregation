@@ -17,9 +17,9 @@ public class HandelsbankenFIAccount extends HandelsbankenAccount {
     private String unformattedNumber;
 
     public TransactionalAccount toTinkAccount() {
-        return CheckingAccount.builder(number, Amount.inEUR(chooseAmountField().asDouble()))
+        return CheckingAccount.builder(unformattedNumber, Amount.inEUR(chooseAmountField().asDouble()))
+                .setAccountNumber(number)
                 .setName(displayName)
-                .setUniqueIdentifier(unformattedNumber)
                 .addIdentifier(new FinnishIdentifier(unformattedNumber))
                 .build();
     }

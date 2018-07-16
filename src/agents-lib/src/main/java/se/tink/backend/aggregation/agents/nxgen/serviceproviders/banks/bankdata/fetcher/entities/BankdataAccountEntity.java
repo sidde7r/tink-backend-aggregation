@@ -39,9 +39,9 @@ public class BankdataAccountEntity {
     private long accountOwnerRefNo;
 
     public TransactionalAccount toTinkAccount() {
-        return CheckingAccount.builder(iban, new Amount(currencyCode, balance))
+        return CheckingAccount.builder(constructUniqueIdentifier(), new Amount(currencyCode, balance))
+                .setAccountNumber(iban)
                 .setName(name)
-                .setUniqueIdentifier(constructUniqueIdentifier())
                 .build();
     }
 

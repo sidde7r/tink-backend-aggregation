@@ -31,10 +31,10 @@ public class PfmAccount {
     }
 
     public TransactionalAccount toTransactionalAccount() {
-        return CheckingAccount.builder(maskIban(iban), balance.toTinkAmount())
+        return CheckingAccount.builder(externalAccId, balance.toTinkAmount())
+                .setAccountNumber(maskIban(iban))
                 .setName(accType)
                 .setBankIdentifier(externalAccId)
-                .setUniqueIdentifier(externalAccId)
                 .build();
     }
 

@@ -2,13 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.SavingsAccount;
-import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.core.Amount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -154,8 +153,8 @@ public class AccountEntity {
 
     public CheckingAccount toCheckingAccount() {
         return CheckingAccount.builder(accountNoExt, new Amount(currency, balance))
+                .setAccountNumber(accountNoExt)
                 .setName(accountName)
-                .setUniqueIdentifier(accountNoInt)
                 .build();
     }
 
