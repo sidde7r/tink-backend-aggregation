@@ -26,11 +26,13 @@ public class PocketEntity {
     @JsonIgnore
     public TransactionalAccount toTinkAccount(AccountEntity accountEntity) {
 
+        String accountNumber = Optional.of(accountEntity.getIban()).orElse(accountEntity.getAccountNumber());
         TransactionalAccount.Builder builder = TransactionalAccount
                 .builder(
                     getTinkAccountType(),
-                    Optional.of(accountEntity.getIban()).orElse(accountEntity.getAccountNumber()),
-                    new Amount(currency.toUpperCase(), (double) balance));
+                    accountNumber,
+                    new Amount(currency.toUpperCase(), (double) balance))
+                .setAccountNumber(accountNumber);
 
         if (accountEntity.getRequiredReference() != null) {
             builder.addToTemporaryStorage(

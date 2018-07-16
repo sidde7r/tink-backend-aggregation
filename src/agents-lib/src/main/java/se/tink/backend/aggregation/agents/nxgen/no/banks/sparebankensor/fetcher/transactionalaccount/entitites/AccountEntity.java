@@ -62,6 +62,7 @@ public class AccountEntity {
     public TransactionalAccount toTinkAccount() {
        return TransactionalAccount.builder(getTinkAccountType(), accountNumber,
                Amount.inNOK(accountBalance.getAvailableBalance()))
+               .setAccountNumber(accountNumber)
                .setName(getProperties().getAlias())
                .setBankIdentifier(id)
                .addToTemporaryStorage(SparebankenSorConstants.Storage.TEMPORARY_STORAGE_LINKS, links)

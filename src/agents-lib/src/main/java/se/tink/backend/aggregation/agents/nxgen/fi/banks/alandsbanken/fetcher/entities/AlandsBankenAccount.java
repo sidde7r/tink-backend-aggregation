@@ -66,11 +66,11 @@ public class AlandsBankenAccount {
 //    private List<InterestLadder> interestLadder;
 
     public TransactionalAccount toTransactionalAccount() {
-        return TransactionalAccount.builder(translateAccountType(), bbanFormatted, new Amount(currency, balance))
+        return TransactionalAccount.builder(translateAccountType(), accountId, new Amount(currency, balance))
+                .setAccountNumber(bbanFormatted)
                 .setName(accountNickname)
                 .addIdentifier(new IbanIdentifier(bic, accountNumber))
                 .addIdentifier(new FinnishIdentifier(bban))
-                .setUniqueIdentifier(accountId)
                 .build();
     }
 

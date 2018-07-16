@@ -105,10 +105,10 @@ public class NordeaDkParser extends NordeaV20Parser {
 
     @Override
     public TransactionalAccount parseAccount(ProductEntity pe) {
-        return TransactionalAccount.builder(getTinkAccountType(pe), pe.getAccountNumber(true),
+        return TransactionalAccount.builder(getTinkAccountType(pe), pe.getAccountNumber(false),
                 new Amount(pe.getCurrency(), pe.getBalance()))
+                .setAccountNumber(pe.getAccountNumber(true))
                 .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(true)))
-                .setUniqueIdentifier(pe.getAccountNumber(false))
                 .setBankIdentifier(pe.getNordeaAccountIdV2())
                 .build();
     }

@@ -34,7 +34,7 @@ public class AccountEntity {
     @JsonIgnore
     public TransactionalAccount toTinkAccount() {
         return TransactionalAccount.builder(AccountTypes.CHECKING, getId(), new Amount(currency, getAvailableBalance()))
-                .setUniqueIdentifier(getId())
+                .setAccountNumber(getId())
                 .setName(getName())
                 .addIdentifier(AccountIdentifier.create(IBAN, getIban().replaceAll(" ","")))
                 .build();

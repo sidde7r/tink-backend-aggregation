@@ -77,6 +77,7 @@ public class NordeaFiParser extends NordeaV21Parser {
     public TransactionalAccount parseAccount(ProductEntity productEntity) {
         return TransactionalAccount.builder(getTinkAccountType(productEntity), productEntity.getAccountNumber(),
                 new Amount(productEntity.getCurrency(), productEntity.getBalance()))
+                .setAccountNumber(productEntity.getAccountNumber())
                 .setName(getTinkAccountName(productEntity).orElse(productEntity.getAccountNumber()))
                 .setBankIdentifier(productEntity.getNordeaAccountIdV2())
                 .build();

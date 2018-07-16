@@ -71,9 +71,9 @@ public abstract class AccountEntity extends AbstractAccountEntity {
         return Optional.of(
                 TransactionalAccount.builder(type, fullyFormattedNumber,
                         new Amount(currency, StringUtils.parseAmount(balance)))
+                        .setAccountNumber(fullyFormattedNumber)
                         .setName(name)
                         .setBankIdentifier(id)
-                        .setUniqueIdentifier(fullyFormattedNumber)
                         .addIdentifier(new SwedishIdentifier(fullyFormattedNumber))
                         .addToTemporaryStorage(SwedbankBaseConstants.StorageKey.NEXT_LINK,
                                 links != null ? links.getNext() : null)

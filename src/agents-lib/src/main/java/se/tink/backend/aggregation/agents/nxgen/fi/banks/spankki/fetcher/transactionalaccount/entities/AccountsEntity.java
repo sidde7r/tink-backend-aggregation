@@ -49,6 +49,7 @@ public class AccountsEntity {
 
     public TransactionalAccount toTinkAccount() {
         return TransactionalAccount.builder(convertAccountType(), accountNumber, new Amount(currency, balance))
+                .setAccountNumber(accountNumber)
                 .setName(accountNickname)
                 .setBankIdentifier(accountId)
                 .build();

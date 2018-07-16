@@ -55,9 +55,9 @@ public class NextGenerationDemoFetcher implements AccountFetcher<TransactionalAc
                     .filter(a -> TRANSACTIONAL_ACCOUNT_TYPES.contains(a.getType()))
                     .map(a -> {
                         TransactionalAccount.Builder builder = TransactionalAccount.builder(a.getType(),
-                                a.getAccountNumber(), Amount.inSEK(a.getBalance()))
-                                .setName(a.getName())
-                                .setUniqueIdentifier(a.getBankId());
+                                a.getBankId(), Amount.inSEK(a.getBalance()))
+                                .setAccountNumber(a.getAccountNumber())
+                                .setName(a.getName());
 
                         a.getIdentifiers().forEach(builder::addIdentifier);
 

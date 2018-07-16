@@ -222,6 +222,7 @@ public class AccountEntity {
     public TransactionalAccount toTinkAccount(LoginResponseEntity loginResponse) {
         return TransactionalAccount.builder(getTinkAccountType(), ibanNumber,
                 Amount.inEUR(IngHelper.parseAmountStringToDouble(balance)))
+                .setAccountNumber(ibanNumber)
                 .setName(type)
                 .setBankIdentifier(bbanNumber)
                 .addIdentifier(new BelgianIdentifier(ibanNumber))

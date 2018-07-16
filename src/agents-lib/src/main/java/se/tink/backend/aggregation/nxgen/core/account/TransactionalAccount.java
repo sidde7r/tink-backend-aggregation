@@ -16,8 +16,10 @@ public class TransactionalAccount extends Account {
         super(builder);
     }
 
-    public static Builder<?, ?> builder(AccountTypes type, String accountNumber, Amount balance) {
-        return builder(type).setAccountNumber(accountNumber).setBalance(balance);
+    public static Builder<?, ?> builder(AccountTypes type, String uniqueIdentifier, Amount balance) {
+        return builder(type)
+                .setUniqueIdentifier(uniqueIdentifier)
+                .setBalance(balance);
     }
 
     public static Builder<? extends Account, ?> builder(AccountTypes type) {

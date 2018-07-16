@@ -63,6 +63,7 @@ public class AccountEntity {
     public TransactionalAccount toTinkAccount() {
         return TransactionalAccount.builder(getTinkAccountType(), this.accountNumber,
                 Amount.inNOK(this.accountBalance.getAccountingBalance()))
+                .setAccountNumber(this.accountNumber)
                 .setName(this.properties.getAlias())
                 .setBankIdentifier(getTransactionUrl())
                 .build();

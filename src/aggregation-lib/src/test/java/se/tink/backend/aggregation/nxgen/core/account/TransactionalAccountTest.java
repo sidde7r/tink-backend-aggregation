@@ -16,7 +16,7 @@ public class TransactionalAccountTest {
     public void ensureBankIdentifierHasCorrectFormat() {
         TransactionalAccount transactionalAccount =
                 TransactionalAccount.builder(AccountTypes.CHECKING, ACCOUNT_NUMBER, Amount.inSEK(1.0))
-                        .setUniqueIdentifier(ACCOUNT_NUMBER)
+                        .setAccountNumber(ACCOUNT_NUMBER)
                         .setBankIdentifier("123456")
                         .setName("")
                         .build();

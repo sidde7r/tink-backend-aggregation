@@ -29,7 +29,7 @@ public class SdcAccount {
     public TransactionalAccount toTinkAccount(SdcConfiguration agentConfiguration) {
         return TransactionalAccount.builder(convertAccountType(name, agentConfiguration.getTypeGuesser()), id,
                 amount.toTinkAmount())
-                .setUniqueIdentifier(id)
+                .setAccountNumber(id)
                 .setName(name)
                 .setBankIdentifier(normalizedBankId())
                 .build();

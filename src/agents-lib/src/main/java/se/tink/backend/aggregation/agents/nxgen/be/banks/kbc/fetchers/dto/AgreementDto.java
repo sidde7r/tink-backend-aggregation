@@ -9,8 +9,6 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.core.Amount;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.identifiers.BelgianIdentifier;
-import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 @JsonObject
 public class AgreementDto implements GeneralAccountEntity {
@@ -169,10 +167,10 @@ public class AgreementDto implements GeneralAccountEntity {
 
     public TransactionalAccount toTransactionalAccount() {
         return TransactionalAccount.builder(getAccountType(), agreementNo.getValue(), getAmount())
+                .setAccountNumber(agreementNo.getValue())
                 .setName(agreementMakeUp.getName().getValue())
                 .setHolderName(new HolderName(agreementName.getValue()))
                 .setBankIdentifier(agreementNo.getValue())
-                .setUniqueIdentifier(agreementNo.getValue())
                 .addIdentifier(generalGetAccountIdentifier())
                 .build();
     }

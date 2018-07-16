@@ -36,10 +36,10 @@ public class AccountEntity {
 
     @JsonIgnore
     public TransactionalAccount toTransactionalAccount() {
-        return TransactionalAccount.builder(getTinkAccountType(), getTinkFormattedAccountNumber(),
+        return TransactionalAccount.builder(getTinkAccountType(), id,
                 Sparebank1AmountUtils.constructAmount(disposableAmountInteger, disposableAmountFraction))
+                .setAccountNumber(getTinkFormattedAccountNumber())
                 .setName(name)
-                .setUniqueIdentifier(id)
                 .addToTemporaryStorage(Sparebank1Constants.Keys.TRANSACTIONS_LINK,
                         links.get(Sparebank1Constants.Keys.TRANSACTIONS_KEY))
                 .build();

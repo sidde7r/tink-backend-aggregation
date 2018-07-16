@@ -36,6 +36,7 @@ public class CurrentEntity {
 
     public TransactionalAccount toTransactionalAccount(){
         return TransactionalAccount.builder(AccountTypes.CHECKING, accountEntity.getAccountNumberSort(), accountEntity.getAvailableBalance().toTinkAmount())
+                .setAccountNumber(accountEntity.getAccountNumberSort())
                 .setName(accountEntity.getAccountAlias())
                 .build();
     }

@@ -76,10 +76,10 @@ public class NordeaNoParser extends NordeaV17Parser {
 
     @Override
     public TransactionalAccount parseTransactionalAccount(ProductEntity pe) {
-        return TransactionalAccount.builder(getTinkAccountType(pe), pe.getAccountNumber(true),
+        return TransactionalAccount.builder(getTinkAccountType(pe), pe.getAccountNumber(false),
                 pe.getBalanceAmount().orElse(Amount.inNOK(pe.getBalance())))
+                .setAccountNumber(pe.getAccountNumber(true))
                 .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(true)))
-                .setUniqueIdentifier(pe.getAccountNumber(false))
                 .setBankIdentifier(pe.getNordeaAccountIdV2())
                 .build();
     }
