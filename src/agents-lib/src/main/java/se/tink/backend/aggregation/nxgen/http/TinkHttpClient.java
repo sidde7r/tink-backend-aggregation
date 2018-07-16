@@ -176,7 +176,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         // Add the filter that is responsible to add persistent data to each request
         addFilter(this.persistentHeaderFilter);
 
-        this.aggregator = (context == null) ? new Aggregator(DEFAULTS.UNKNOWN_AGGREGATOR) : context.getAggregator();
+        this.aggregator = (context.getAggregator() == null) ? new Aggregator(DEFAULTS.UNKNOWN_AGGREGATOR) : context.getAggregator();
 
         setUserAgent(aggregator.getAggregatorIdentifier());
         setTimeout(DEFAULTS.TIMEOUT_MS);
