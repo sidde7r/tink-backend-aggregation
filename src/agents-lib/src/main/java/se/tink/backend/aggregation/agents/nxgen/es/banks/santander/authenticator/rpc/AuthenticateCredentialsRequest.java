@@ -11,13 +11,25 @@ public class AuthenticateCredentialsRequest {
                         + "<CB_AuthenticationData i:type=\":CB_AuthenticationData\">"
                         + "<documento i:type=\":documento\">"
                         + "<CODIGO_DOCUM_PERSONA_CORP i:type=\"d:string\">%s</CODIGO_DOCUM_PERSONA_CORP>"
-                        + "<TIPO_DOCUM_PERSONA_CORP i:type=\"d:string\">C</TIPO_DOCUM_PERSONA_CORP>"
+                        + "<TIPO_DOCUM_PERSONA_CORP i:type=\"d:string\">%s</TIPO_DOCUM_PERSONA_CORP>"
                         + "</documento>"
                         + "<password i:type=\"d:string\">%s</password>"
                         + "</CB_AuthenticationData>"
                         + "<userAddress i:type=\"d:string\">127.0.0.1</userAddress>"
                         + "</n0:authenticateCredential>"
                         + "</v:Body>"
-                        + "</v:Envelope>", username, password);
+                        + "</v:Envelope>", username, getIdNumberType(username), password);
+    }
+
+    /**
+     * Return "N" for NIF ID numbers and "C" for NIE ID numbers. NIF numbers start with a digit while NIE numbers
+     * start with a letter.
+     */
+    private static String getIdNumberType(String username) {
+        return startsWithDigit(username) ? "N" : "C";
+    }
+
+    private static boolean startsWithDigit(String username) {
+        return username.substring(0, 1).matches("[\\d]");
     }
 }
