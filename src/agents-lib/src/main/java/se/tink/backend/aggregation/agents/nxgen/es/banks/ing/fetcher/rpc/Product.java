@@ -57,6 +57,10 @@ public final class Product {
     private String codConTar;
     private double availableCreditAmount;
 
+    public String getUniqueIdentifier() {
+        return getProductNumber();
+    }
+
     public String getProductNumber() {
         return productNumber;
     }

@@ -14,16 +14,14 @@ public class LoanAccount extends Account {
         this.details = builder.getDetails();
     }
 
-    public static Builder<?, ?> builder() {
-        return new DefaultLoanBuilder();
+    public static Builder<?, ?> builder(String uniqueIdentifier) {
+        return new DefaultLoanBuilder()
+                .setUniqueIdentifier(uniqueIdentifier);
     }
 
     public static Builder<?, ?> builder(String uniqueIdentifier, Amount balance) {
-        DefaultLoanBuilder defaultLoanBuilder = new DefaultLoanBuilder();
-        defaultLoanBuilder
-                .setUniqueIdentifier(uniqueIdentifier)
+        return builder(uniqueIdentifier)
                 .setBalance(balance);
-        return defaultLoanBuilder;
     }
 
     private static Amount ensureNegativeSign(Amount amount) {

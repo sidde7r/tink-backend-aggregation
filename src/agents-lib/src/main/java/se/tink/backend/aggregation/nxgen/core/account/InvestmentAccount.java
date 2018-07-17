@@ -21,18 +21,15 @@ public class InvestmentAccount extends Account {
         this.portfolios = builder.getPortfolios();
     }
 
-    public static Builder<InvestmentAccount, DefaultInvestmentAccountsBuilder> builder(
-            String uniqueIdentifier, Amount balance) {
-        DefaultInvestmentAccountsBuilder defaultInvestmentAccountsBuilder =
-                new DefaultInvestmentAccountsBuilder();
-        defaultInvestmentAccountsBuilder
-                .setUniqueIdentifier(uniqueIdentifier)
-                .setBalance(balance);
-        return defaultInvestmentAccountsBuilder;
+    public static Builder<InvestmentAccount, DefaultInvestmentAccountsBuilder> builder(String uniqueIdentifier) {
+        return new DefaultInvestmentAccountsBuilder()
+                .setUniqueIdentifier(uniqueIdentifier);
     }
 
-    public static Builder<InvestmentAccount, DefaultInvestmentAccountsBuilder> builder() {
-        return new DefaultInvestmentAccountsBuilder();
+    public static Builder<InvestmentAccount, DefaultInvestmentAccountsBuilder> builder(
+            String uniqueIdentifier, Amount balance) {
+        return builder(uniqueIdentifier)
+                .setBalance(balance);
     }
 
     public List<Portfolio> getPortfolios() {

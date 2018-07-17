@@ -6,22 +6,20 @@ import se.tink.backend.core.Amount;
 public class CreditCardAccount extends Account {
     private final Amount availableCredit;
 
-    public CreditCardAccount(Builder builder) {
+    private CreditCardAccount(Builder<CreditCardAccount, DefaultCreditCardBuilder> builder) {
         super(builder);
         this.availableCredit = builder.getAvailableCredit();
     }
 
-    public static Builder<?, ?> builder(String uniqueIdentifier, Amount balance, Amount availableCredit) {
-        DefaultCreditCardBuilder defaultCreditCardBuilder = new DefaultCreditCardBuilder();
-        defaultCreditCardBuilder
-                .setUniqueIdentifier(uniqueIdentifier)
-                .setBalance(balance)
-                .setAvailableCredit(availableCredit);
-        return defaultCreditCardBuilder;
+    public static Builder<?, ?> builder(String uniqueIdentifier) {
+        return new DefaultCreditCardBuilder()
+                .setUniqueIdentifier(uniqueIdentifier);
     }
 
-    public static Builder<?, ?> builder() {
-        return new DefaultCreditCardBuilder();
+    public static Builder<?, ?> builder(String uniqueIdentifier, Amount balance, Amount availableCredit) {
+        return builder(uniqueIdentifier)
+                .setBalance(balance)
+                .setAvailableCredit(availableCredit);
     }
 
     public Amount getAvailableCredit() {
