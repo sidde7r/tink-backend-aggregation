@@ -1,40 +1,23 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva;
 
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.NextGenerationBaseAgentTest;
-import se.tink.backend.aggregation.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.CredentialsTypes;
+import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.rpc.Field;
 
 @Ignore
-public class BbvaAgentTest extends NextGenerationBaseAgentTest<BbvaAgent> {
-    private final Credentials credentials = new Credentials();
-
-    public BbvaAgentTest() {
-        super(BbvaAgent.class);
-    }
-
-    @Before
-    public void setup() {
-        credentials.setField(Field.Key.USERNAME, "ccccccccc");
-        credentials.setField(Field.Key.PASSWORD, "nnnnnn");
-        credentials.setType(CredentialsTypes.PASSWORD);
-    }
+public class BbvaAgentTest {
+    private final String USERNAME = "";
+    private final String PASSWORD = "";
 
     @Test
-    public void testPasswordLogin() throws Exception {
-        testLogin(credentials);
-    }
-
-    @Test
-    public void testRefresh() throws Exception {
-        testRefresh(credentials);
-    }
-
-    @Override
-    public String getCurrency() {
-        return "EUR";
+    public void testLogin() throws Exception {
+        new AgentIntegrationTest.Builder("es", "es-bbva-password")
+                .addCredentialField(Field.Key.USERNAME, USERNAME)
+                .addCredentialField(Field.Key.PASSWORD, PASSWORD)
+                .loadCredentialsBefore(false)
+                .saveCredentialsAfter(true)
+                .build()
+                .testRefresh();
     }
 }
