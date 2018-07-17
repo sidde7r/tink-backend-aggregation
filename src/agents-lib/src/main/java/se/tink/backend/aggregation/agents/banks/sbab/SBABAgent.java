@@ -28,7 +28,6 @@ import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.BankIdMessage;
 import se.tink.backend.aggregation.agents.BankIdStatus;
-import se.tink.backend.aggregation.agents.CreateProductExecutor;
 import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutor;
@@ -94,8 +93,7 @@ import se.tink.libraries.application.GenericApplication;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor, CreateProductExecutor,
-        TransferExecutor {
+public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor, TransferExecutor {
 
     private final Credentials credentials;
     private final Catalog catalog;

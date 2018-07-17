@@ -57,7 +57,6 @@ import org.apache.http.params.CoreConnectionPNames;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.CreateProductExecutor;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
@@ -153,8 +152,7 @@ import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecutor, PersistentLogin, TransferExecutor,
-        CreateProductExecutor {
+public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecutor, PersistentLogin, TransferExecutor {
 
     private static final String BASE_URL = "https://mP.seb.se";
     private static final String API_URL = "/1000/ServiceFactory/PC_BANK/";

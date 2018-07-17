@@ -15,7 +15,6 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.lang.NotImplementedException;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.CreateProductExecutor;
 import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
@@ -57,7 +56,7 @@ import se.tink.libraries.application.GenericApplication;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 
-public class CollectorAgent extends AbstractAgent implements CreateProductExecutor, RefreshableItemExecutor,
+public class CollectorAgent extends AbstractAgent implements RefreshableItemExecutor,
         TransferExecutor {
     private static final int MAX_ATTEMPTS = 90;
 
