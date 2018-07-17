@@ -22,7 +22,6 @@ import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutor;
-import se.tink.backend.aggregation.agents.UnsupportedApplicationException;
 import se.tink.backend.aggregation.agents.bankid.CredentialsSignicatBankIdAuthenticationHandler;
 import se.tink.backend.aggregation.agents.demo.generators.DemoTransactionsGenerator;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -33,20 +32,16 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.log.ClientFilterFactory;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.aggregation.rpc.CreateProductResponse;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.rpc.FetchProductInformationParameterKey;
 import se.tink.backend.aggregation.rpc.Field;
-import se.tink.backend.aggregation.rpc.ProductType;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.common.bankid.signicat.SignicatBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.utils.demo.DemoDataUtils;
 import se.tink.backend.core.SwedishGiroType;
 import se.tink.backend.core.account.TransferDestinationPattern;
-import se.tink.backend.core.application.RefreshApplicationParameterKey;
 import se.tink.backend.core.enums.TransferType;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
@@ -59,7 +54,6 @@ import se.tink.backend.system.rpc.TransactionPayloadTypes;
 import se.tink.credentials.demo.DemoCredentials;
 import se.tink.credentials.demo.DemoCredentials.DemoUserFeature;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.application.GenericApplication;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.uuid.UUIDUtils;
 
@@ -291,30 +285,6 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
 
     }
 
-    @Override
-    public CreateProductResponse create(GenericApplication application) throws Exception {
-        switch (application.getType()) {
-        case SWITCH_MORTGAGE_PROVIDER:
-            return new CreateProductResponse(switchMortgageProvider(application));
-        case OPEN_SAVINGS_ACCOUNT:
-            return new CreateProductResponse(openSavingsAccount(application));
-        default:
-            throw new UnsupportedApplicationException(application.getType());
-        }
-    }
-
-    @Override
-    public void fetchProductInformation(ProductType type, UUID productInstanceId,
-            Map<FetchProductInformationParameterKey, Object> parameters) {
-        throw new IllegalStateException("Not implemented yet");
-    }
-
-    @Override
-    public void refreshApplication(ProductType type, UUID applicationId,
-            Map<RefreshApplicationParameterKey, Object> parameters) {
-        throw new IllegalStateException("Not implemented yet");
-    }
-
     private Account findAccountForIdentifier(AccountIdentifier transferAccountIdentifier) throws IOException {
         for (Account account : DemoDataUtils.readAggregationAccounts(accountsFile, request.getCredentials())) {
             for (AccountIdentifier accountAccountIdentifier : account.getIdentifiers()) {
@@ -422,22 +392,6 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
         authenticator.run();
 
         return Objects.equal(CredentialsStatus.UPDATING, credentials.getStatus());
-    }
-
-    private String switchMortgageProvider(GenericApplication application) throws BankIdException {
-        if (!authenticateWithBankId(request.getCredentials())) {
-            throw BankIdError.CANCELLED.exception();
-        }
-
-        return "demo";
-    }
-
-    private String openSavingsAccount(GenericApplication application) throws BankIdException {
-        if (!authenticateWithBankId(request.getCredentials())) {
-            throw BankIdError.CANCELLED.exception();
-        }
-
-        return "demo";
     }
 
     private Portfolio generateFakePortolio(Account account) {
