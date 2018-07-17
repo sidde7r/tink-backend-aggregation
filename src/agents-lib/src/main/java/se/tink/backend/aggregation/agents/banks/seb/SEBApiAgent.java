@@ -16,8 +16,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 import com.google.common.util.concurrent.Uninterruptibles;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource.Builder;
@@ -40,7 +38,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -62,7 +59,6 @@ import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutor;
-import se.tink.backend.aggregation.agents.UnsupportedApplicationException;
 import se.tink.backend.aggregation.agents.banks.seb.model.AccountEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.DepotEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.EInvoiceListEntity;
@@ -100,7 +96,6 @@ import se.tink.backend.aggregation.agents.banks.seb.model.UpcomingTransactionEnt
 import se.tink.backend.aggregation.agents.banks.seb.model.UserCredentials;
 import se.tink.backend.aggregation.agents.banks.seb.model.UserCredentialsRequestEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.VODB;
-import se.tink.backend.aggregation.agents.banks.seb.mortgage.SEBCreatableProductModule;
 import se.tink.backend.aggregation.agents.banks.seb.utilities.SEBBankIdLoginUtils;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -114,22 +109,17 @@ import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValid
 import se.tink.backend.aggregation.log.ClientFilterFactory;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.aggregation.rpc.CreateProductResponse;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
-import se.tink.backend.aggregation.rpc.FetchProductInformationParameterKey;
 import se.tink.backend.aggregation.rpc.Field;
-import se.tink.backend.aggregation.rpc.ProductType;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
-import se.tink.backend.common.config.SEBMortgageIntegrationConfiguration;
 import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.backend.common.i18n.SocialSecurityNumber;
 import se.tink.backend.core.account.TransferDestinationPattern;
-import se.tink.backend.core.application.RefreshApplicationParameterKey;
 import se.tink.backend.core.enums.TransferType;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
@@ -144,7 +134,6 @@ import se.tink.backend.system.rpc.TransactionTypes;
 import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.application.GenericApplication;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableEnum;
@@ -233,8 +222,6 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
     private final Credentials credentials;
     private final Catalog catalog;
     private final TransferMessageFormatter transferMessageFormatter;
-    private final CreateProductExecutor createProductExecutor;
-    private final SEBCreatableProductModule sebCreatableProductInjectorModule;
 
     // cache
     private Map<AccountEntity, Account> accountEntityAccountMap = null;
@@ -249,9 +236,6 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
                 TRANSFER_MESSAGE_LENGTH_CONFIG,
                 new StringNormalizerSwedish("#%*+=$@©£·…~_-/:;()&@\".,?!\'"));
 
-        sebCreatableProductInjectorModule = new SEBCreatableProductModule(context, credentials);
-        Injector injector = Guice.createInjector(sebCreatableProductInjectorModule);
-        createProductExecutor = injector.getInstance(CreateProductExecutor.class);
     }
 
     /**
@@ -262,12 +246,6 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
     @Override
     public void setConfiguration(ServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-
-        if (configuration.getIntegrations().getSeb() != null) {
-            SEBMortgageIntegrationConfiguration mortgageIntegrationConfiguration = configuration.getIntegrations()
-                    .getSeb().getMortgage();
-            sebCreatableProductInjectorModule.setMortgageConfiguration(mortgageIntegrationConfiguration);
-        }
     }
 
     static {
@@ -455,24 +433,6 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
 
             context.updateAccount(account, AccountFeatures.createForPortfolios(portfolio));
         });
-    }
-
-    private void updateAccounts() {
-        List<AccountEntity> accounts = listCheckingAccounts(customerId);
-
-        if (accounts == null) {
-            log.info("No accounts found.");
-            return;
-        }
-
-        for (AccountEntity account : accounts) {
-            // Investment accounts are refreshed in a separate method
-            if (SEBAgentUtils.guessAccountType(account.KTOSLAG_KOD) == AccountTypes.INVESTMENT) {
-                continue;
-            }
-
-            context.updateAccount(toTinkAccount(account));
-        }
     }
 
     private static void attachCreditCardsToAccount(Account account, List<SebCreditCard> creditCards) {
@@ -1467,7 +1427,6 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
     @Override
     public void attachHttpFilters(ClientFilterFactory filterFactory) {
         filterFactory.addClientFilter(client);
-        createProductExecutor.attachHttpFilters(filterFactory);
     }
 
     @Override
@@ -1988,28 +1947,6 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
                 String.format("Error fetching SEB eInvoices: %s" ,sebResponse.getFirstErrorMessage().orElse(null)));
 
         return sebResponse.d.VODB.getEInvoices();
-    }
-
-    @Override
-    public CreateProductResponse create(GenericApplication application) throws Exception {
-        switch (application.getType()) {
-        case SWITCH_MORTGAGE_PROVIDER:
-            return createProductExecutor.create(application);
-        default:
-            throw new UnsupportedApplicationException(application.getType());
-        }
-    }
-
-    @Override
-    public void fetchProductInformation(ProductType type, UUID productInstanceId,
-            Map<FetchProductInformationParameterKey, Object> parameters) {
-        createProductExecutor.fetchProductInformation(type, productInstanceId, parameters);
-    }
-
-    @Override
-    public void refreshApplication(ProductType type, UUID applicationId,
-            Map<RefreshApplicationParameterKey, Object> parameters) throws Exception {
-        createProductExecutor.refreshApplication(type, applicationId, parameters);
     }
 
     private enum UserMessage implements LocalizableEnum {
