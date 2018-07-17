@@ -51,9 +51,6 @@ public class ServiceConfiguration extends Configuration {
     private PrometheusConfiguration prometheus = new PrometheusConfiguration();
 
     @JsonProperty
-    private boolean supplementalOnAggregation = false;
-
-    @JsonProperty
     private boolean useAggregationController = false;
 
     @JsonProperty
@@ -129,10 +126,6 @@ public class ServiceConfiguration extends Configuration {
 
     public PrometheusConfiguration getPrometheus() {
         return prometheus;
-    }
-
-    public boolean isSupplementalOnAggregation() {
-        return supplementalOnAggregation;
     }
 
     public boolean isUseAggregationController() {

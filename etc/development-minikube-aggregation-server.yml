@@ -59,8 +59,6 @@ serviceAuthentication:
 
 developmentMode: true
 
-supplementalOnAggregation: true
-
 useAggregationController: true
 
 isAggregationCluster: true
