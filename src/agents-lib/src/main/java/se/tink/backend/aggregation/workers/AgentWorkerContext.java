@@ -52,16 +52,12 @@ import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.core.FraudDetailsContent;
 import se.tink.backend.core.StatisticMode;
 import se.tink.backend.core.account.TransferDestinationPattern;
-import se.tink.backend.core.application.ApplicationState;
 import se.tink.backend.core.enums.TinkFeature;
-import se.tink.backend.core.product.ProductPropertyKey;
 import se.tink.backend.core.signableoperation.SignableOperation;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.encryption.api.EncryptionService;
 import se.tink.backend.encryption.rpc.EncryptionKeySet;
 import se.tink.backend.encryption.rpc.EncryptionRequest;
-import se.tink.backend.rpc.SupplementalInformationRequest;
-import se.tink.backend.rpc.SupplementalInformationResponse;
 import se.tink.backend.system.client.SystemServiceFactory;
 import se.tink.backend.system.rpc.AccountFeatures;
 import se.tink.backend.system.rpc.GenerateStatisticsAndActivitiesRequest;
@@ -69,12 +65,10 @@ import se.tink.backend.system.rpc.ProcessAccountsRequest;
 import se.tink.backend.system.rpc.Transaction;
 import se.tink.backend.system.rpc.TransactionTypes;
 import se.tink.backend.system.rpc.UpdateAccountRequest;
-import se.tink.backend.system.rpc.UpdateApplicationRequest;
 import se.tink.backend.system.rpc.UpdateCredentialsStatusRequest;
 import se.tink.backend.system.rpc.UpdateDocumentRequest;
 import se.tink.backend.system.rpc.UpdateDocumentResponse;
 import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;
-import se.tink.backend.system.rpc.UpdateProductInformationRequest;
 import se.tink.backend.system.rpc.UpdateTransactionsRequest;
 import se.tink.backend.system.rpc.UpdateTransferDestinationPatternsRequest;
 import se.tink.backend.system.rpc.UpdateTransfersRequest;
@@ -88,7 +82,6 @@ import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.metrics.Timer;
 import se.tink.libraries.metrics.Timer.Context;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.uuid.UUIDUtils;
 
 public class AgentWorkerContext extends AgentContext implements Managed {
@@ -844,59 +837,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             }
         } else{
             systemServiceFactory.getUpdateService().updateSignableOperation(signableOperation);
-        }
-    }
-
-    @Override
-    public void updateProductInformation(UUID productInstanceId,
-            HashMap<ProductPropertyKey, Object> productProperties) {
-        if (useAggregationController) {
-            se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateProductInformationRequest request =
-                    new se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateProductInformationRequest(
-                            getRequest().getUser().getId(), productInstanceId, productProperties);
-
-            if (isAggregationCluster) {
-                aggregationControllerAggregationClient.updateProductInformation(getClusterInfo(), request);
-            } else {
-                aggregationControllerAggregationClient.updateProductInformation(request);
-            }
-        } else {
-            UpdateProductInformationRequest request = new UpdateProductInformationRequest(
-                    getRequest().getUser().getId(),
-                    productInstanceId,
-                    productProperties);
-
-            systemServiceFactory.getUpdateService().updateProductInformation(request);
-        }
-    }
-
-    @Override
-    public void updateApplication(UUID applicationId, ApplicationState applicationState) {
-        if (useAggregationController) {
-            se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateApplicationRequest request =
-                    new se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateApplicationRequest(
-                            UUIDUtils.fromTinkUUID(getRequest().getUser().getId()),
-                            UUIDUtils.fromTinkUUID(getRequest().getCredentials().getId()),
-                            applicationId,
-                            applicationState);
-
-            log.debug("Request: " + SerializationUtils.serializeToString(request));
-
-            if (isAggregationCluster) {
-                aggregationControllerAggregationClient.updateApplication(getClusterInfo(), request);
-            } else {
-                aggregationControllerAggregationClient.updateApplication(request);
-            }
-        } else {
-            UpdateApplicationRequest request = new UpdateApplicationRequest(
-                    UUIDUtils.fromTinkUUID(getRequest().getUser().getId()),
-                    UUIDUtils.fromTinkUUID(getRequest().getCredentials().getId()),
-                    applicationId,
-                    applicationState);
-
-            log.debug("Request: " + SerializationUtils.serializeToString(request));
-
-            systemServiceFactory.getUpdateService().updateApplication(request);
         }
     }
 

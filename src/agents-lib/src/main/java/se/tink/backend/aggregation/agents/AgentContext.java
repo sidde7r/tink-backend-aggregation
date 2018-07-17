@@ -3,11 +3,9 @@ package se.tink.backend.aggregation.agents;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.io.ByteArrayOutputStream;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 import org.apache.curator.framework.CuratorFramework;
 import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
@@ -17,8 +15,6 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.core.FraudDetailsContent;
 import se.tink.backend.core.account.TransferDestinationPattern;
-import se.tink.backend.core.application.ApplicationState;
-import se.tink.backend.core.product.ProductPropertyKey;
 import se.tink.backend.core.signableoperation.SignableOperation;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
@@ -196,11 +192,6 @@ public abstract class AgentContext {
     }
 
     public abstract void updateSignableOperation(SignableOperation signableOperation);
-
-    public abstract void updateProductInformation(UUID productInstanceId,
-            HashMap<ProductPropertyKey, Object> productProperties);
-
-    public abstract void updateApplication(UUID applicationId, ApplicationState applicationState);
 
     public abstract UpdateDocumentResponse updateDocument(DocumentContainer container);
 
