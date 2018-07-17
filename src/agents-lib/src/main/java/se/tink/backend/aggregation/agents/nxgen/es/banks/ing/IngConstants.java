@@ -1,15 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing;
 
-import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
 public abstract class IngConstants {
 
     public static final String DATE_PATTERN = "dd/MM/yyyy";
-    public static final String DATE_OF_BIRTH = "DoB";
+    public static final String DATE_OF_BIRTH = "date-of-birth";
     public static final String ORIGINAL_ENTITY = "originalEntity";
     public static final ZoneId ZONE_ID = ZoneId.of("Europe/Madrid");
     public static final String PROVIDER_NAME = "es-ing-password";
