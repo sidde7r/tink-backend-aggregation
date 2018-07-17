@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 public class ListAccountsResponse {
 
     @JsonProperty("listaCuentas")
-    AccountList accountList;
+    private AccountList accountList;
 
     public Collection<AccountEntity> getAccounts() {
         return accountList.getAccounts();
