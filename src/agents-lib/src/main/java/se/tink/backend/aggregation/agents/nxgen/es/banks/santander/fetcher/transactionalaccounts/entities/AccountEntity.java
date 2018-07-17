@@ -141,11 +141,10 @@ public class AccountEntity {
 
     @JsonIgnore
     private boolean isCheckingAccount() {
-
         String productTypeNumber = generalInfo.getContractId().getProduct();
 
-        // Assuming that checking account product numbers starts with 3, so far we've seen 300 and 301.
-        return SantanderEsConstants.AccountTypes.CHECKING_ACCOUNT_PROD_NR
-                .equalsIgnoreCase(productTypeNumber.substring(0, 1));
+        // As far as we know today, checking accounts have product number 300 or 301.
+        return SantanderEsConstants.AccountTypes.PROD_NR_300.equalsIgnoreCase(productTypeNumber)
+                || SantanderEsConstants.AccountTypes.PROD_NR_301.equalsIgnoreCase(productTypeNumber);
     }
 }
