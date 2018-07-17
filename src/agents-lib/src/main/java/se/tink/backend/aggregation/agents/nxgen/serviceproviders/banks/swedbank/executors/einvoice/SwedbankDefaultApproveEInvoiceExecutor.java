@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.einvoice;
 
+import com.google.common.base.Strings;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -71,14 +72,6 @@ public class SwedbankDefaultApproveEInvoiceExecutor implements ApproveEInvoiceEx
                     .setMessage(SwedbankBaseConstants.ErrorMessage.SOURCE_NOT_FOUND).build();
         }
 
-        AccountIdentifier destinationAccount = SwedbankTransferHelper.getDestinationAccount(transfer);
-        Optional<String> destinationAccountId = paymentBaseinfo.getPaymentDestinationAccountId(destinationAccount);
-        if (!destinationAccountId.isPresent()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_DESTINATION)
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_DESTINATION).build();
-        }
-
         Optional<String> providerUniqueId = transfer.getPayloadValue(TransferPayloadType.PROVIDER_UNIQUE_ID);
         if (!providerUniqueId.isPresent()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
@@ -87,17 +80,19 @@ public class SwedbankDefaultApproveEInvoiceExecutor implements ApproveEInvoiceEx
         }
 
         List<EInvoiceEntity> eInvoiceEntities = apiClient.incomingEInvoices();
-        Optional<String> eInvoiceReference = eInvoiceEntities.stream()
+        Optional<EInvoicePaymentEntity> eInvoicePaymentEntity = eInvoiceEntities.stream()
                 .filter(eInvoiceEntity ->
                         Objects.equals(providerUniqueId.get(), eInvoiceEntity.getHashedEinvoiceRefNo()))
                 .map(EInvoiceEntity::getLinks)
                 .map(LinksEntity::getNext)
                 .map(apiClient::eInvoiceDetails)
                 .map(EInvoiceDetailsResponse::getPayment)
-                .map(EInvoicePaymentEntity::getEinvoiceReference)
+                .filter(eInvoicePayment -> !Strings.isNullOrEmpty(eInvoicePayment.getEinvoiceReference()))
+                .filter(eInvoicePayment -> eInvoicePayment.getPayee() != null)
+                .filter(eInvoicePayment -> !Strings.isNullOrEmpty(eInvoicePayment.getPayee().getId()))
                 .findFirst();
 
-        if (!eInvoiceReference.isPresent()) {
+        if (!eInvoicePaymentEntity.isPresent()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setEndUserMessage(TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES)
                     .setMessage(SwedbankBaseConstants.ErrorMessage.EINVOICE_NO_MATCH).build();
@@ -108,8 +103,8 @@ public class SwedbankDefaultApproveEInvoiceExecutor implements ApproveEInvoiceEx
                 transfer.getDestinationMessage(),
                 SwedbankTransferHelper.getReferenceTypeFor(transfer),
                 transfer.getDueDate(),
-                eInvoiceReference.get(),
-                destinationAccountId.get(),
+                eInvoicePaymentEntity.get().getEinvoiceReference(),
+                eInvoicePaymentEntity.get().getPayee().getId(),
                 sourceAccountId.get());
 
         RegisteredTransfersResponse registeredTransfers = apiClient.registeredTransfers(

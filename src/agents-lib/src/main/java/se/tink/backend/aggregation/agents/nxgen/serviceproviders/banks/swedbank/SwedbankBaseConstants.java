@@ -108,6 +108,7 @@ public class SwedbankBaseConstants {
         public static final String NEXT_LINK = "nextLink";
         public static final String PROFILE = "profile";
         public static final String CREDIT_CARD_RESPONSE = "creditCardResponse";
+        public static final String BANK_PROFILE_HANDLER = "BANK_PROFILES";
     }
 
     public enum InvestmentAccountType {
@@ -257,6 +258,11 @@ public class SwedbankBaseConstants {
 
     public enum ReferenceType {
         OCR, MESSAGE
+    }
+
+    public static class PaymentType {
+        public static final String DOMESTIC = "DOMESTIC";
+        public static final String EINVOICE = "EINVOICE";
     }
 
     public static class BankId {
