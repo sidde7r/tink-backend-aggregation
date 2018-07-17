@@ -82,7 +82,8 @@ public class BbvaApiClient {
     private FetchTransactionsRequestEntity createAccountTransactionsQuery(Account account) {
         FetchTransactionsRequestEntity request = new FetchTransactionsRequestEntity();
 
-        ContractEntity contract = new ContractEntity().setId(account.getAccountNumber());
+        String accountId = account.getTemporaryStorage(BbvaConstants.Storage.ACCOUNT_ID, String.class);
+        ContractEntity contract = new ContractEntity().setId(accountId);
 
         AccountContractsEntity accountContract = new AccountContractsEntity();
         accountContract.setContract(contract);

@@ -21,6 +21,10 @@ public final class BbvaConstants {
         public static final String CARD_TRANSACTIONS = BASE_URL + "/ASO/cardTransactions/V01/{" + PARAM_ID + "}";
     }
 
+    public static final class Storage {
+        public static final String ACCOUNT_ID = "accountId";
+    }
+
     public final class Header {
         public static final String CONTENT_TYPE_URLENCODED_UTF8 = "application/x-www-form-urlencoded; charset=utf-8";
         public static final String CONSUMER_ID_KEY = "ConsumerID";

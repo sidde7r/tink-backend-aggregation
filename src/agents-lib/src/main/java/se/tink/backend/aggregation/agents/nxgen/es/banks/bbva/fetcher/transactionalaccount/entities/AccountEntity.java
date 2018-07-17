@@ -33,10 +33,13 @@ public class AccountEntity {
 
     @JsonIgnore
     public TransactionalAccount toTinkAccount() {
-        return TransactionalAccount.builder(AccountTypes.CHECKING, getId(), new Amount(currency, getAvailableBalance()))
-                .setAccountNumber(getId())
-                .setName(getName())
-                .addIdentifier(AccountIdentifier.create(IBAN, getIban().replaceAll(" ","")))
+        String normalizedIban = iban.replaceAll(" ","").toLowerCase();
+
+        return TransactionalAccount.builder(getTinkAccountType(), normalizedIban, new Amount(currency, availableBalance))
+                .setAccountNumber(iban)
+                .setName(name)
+                .addToTemporaryStorage(BbvaConstants.Storage.ACCOUNT_ID, id)
+                .addIdentifier(AccountIdentifier.create(IBAN, normalizedIban))
                 .build();
     }
 
@@ -80,7 +83,6 @@ public class AccountEntity {
     public String getName() {
         return name;
     }
-
 
     public String getIban() {
         return iban;
