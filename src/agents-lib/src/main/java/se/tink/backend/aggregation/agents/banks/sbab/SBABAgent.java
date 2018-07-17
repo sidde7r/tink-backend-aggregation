@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.sbab;
 
 import com.google.common.base.Objects;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -10,7 +8,6 @@ import com.google.common.collect.Lists;
 import com.google.common.hash.Hashing;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.UniformInterfaceException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.time.LocalDate;
@@ -18,11 +15,8 @@ import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import javax.ws.rs.core.Response;
 import org.apache.commons.math3.util.Precision;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
@@ -31,29 +25,16 @@ import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutor;
-import se.tink.backend.aggregation.agents.UnsupportedApplicationException;
 import se.tink.backend.aggregation.agents.banks.sbab.client.AuthenticationClient;
 import se.tink.backend.aggregation.agents.banks.sbab.client.BankIdSignClient;
-import se.tink.backend.aggregation.agents.banks.sbab.client.MortgageClient;
-import se.tink.backend.aggregation.agents.banks.sbab.client.MortgageSignClient;
-import se.tink.backend.aggregation.agents.banks.sbab.client.OpenSavingsAccountClient;
 import se.tink.backend.aggregation.agents.banks.sbab.client.TransferClient;
 import se.tink.backend.aggregation.agents.banks.sbab.client.UserDataClient;
-import se.tink.backend.aggregation.agents.banks.sbab.exception.UnacceptedTermsAndConditionsException;
 import se.tink.backend.aggregation.agents.banks.sbab.exception.UnsupportedTransferException;
-import se.tink.backend.aggregation.agents.banks.sbab.model.request.MortgageApplicationRequest;
-import se.tink.backend.aggregation.agents.banks.sbab.model.request.MortgageSignatureRequest;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.AccountEntity;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.BankIdStartResponse;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.DiscountResponse;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.InitialTransferResponse;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.InterestRateEntity;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.InterestsResponse;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.MakeTransferResponse;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.MortgageSignatureStatus;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.MortgageStatus;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.OpenSavingsAccountResponse;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.SavedRecipientEntity;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.SignFormRequestBody;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -61,35 +42,24 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuilder;
-import se.tink.backend.aggregation.agents.utils.CreateProductExecutorTracker;
 import se.tink.backend.aggregation.log.ClientFilterFactory;
 import se.tink.backend.aggregation.rpc.Account;
-import se.tink.backend.aggregation.rpc.CreateProductResponse;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
-import se.tink.backend.aggregation.rpc.FetchProductInformationParameterKey;
-import se.tink.backend.aggregation.rpc.ProductType;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.common.config.SbabIntegrationConfiguration;
 import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.core.DocumentIdentifier;
 import se.tink.backend.core.account.TransferDestinationPattern;
-import se.tink.backend.core.application.ApplicationPropertyKey;
-import se.tink.backend.core.application.ApplicationState;
-import se.tink.backend.core.application.RefreshApplicationParameterKey;
-import se.tink.backend.core.enums.ApplicationStatusKey;
-import se.tink.backend.core.product.ProductPropertyKey;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.serialization.TypeReferences;
 import se.tink.backend.system.rpc.AccountFeatures;
 import se.tink.backend.system.rpc.Loan;
 import se.tink.backend.system.rpc.Transaction;
-import se.tink.backend.utils.Doubles;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.application.GenericApplication;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -100,14 +70,11 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
 
     private static final int BANKID_MAX_ATTEMPTS = 100;
 
-    private final MortgageClient mortgageClient;
-    private final MortgageSignClient mortgageSignClient;
     private final AuthenticationClient authenticationClient;
     private final UserDataClient userDataClient;
     private final TransferClient transferClient;
     private final BankIdSignClient bankIdSignClient;
     private final Client client;
-    private final OpenSavingsAccountClient openSavingsAccountClient;
     private final Client clientWithoutSSL;
     private final LocalDate lastCredentialsUpdate;
 
@@ -127,20 +94,15 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
 
         if (payload != null && Objects.equal(payload.get("isSwitchMortgageProviderTest"), "true")) {
             clientWithoutSSL = clientFactory.createCookieClientWithoutSSL();
-            mortgageSignClient = new MortgageSignClient(clientWithoutSSL, credentials, getAggregator());
             bankIdSignClient = new BankIdSignClient(clientWithoutSSL, credentials, getAggregator());
         } else {
             clientWithoutSSL = null;
-            mortgageSignClient = new MortgageSignClient(client, credentials, getAggregator());
             bankIdSignClient = new BankIdSignClient(client, credentials, getAggregator());
         }
 
-        mortgageClient = new MortgageClient(client, credentials,
-                new CreateProductExecutorTracker(context.getMetricRegistry()), getAggregator());
         authenticationClient = new AuthenticationClient(client, credentials, getAggregator());
         userDataClient = new UserDataClient(client, credentials, getAggregator());
         transferClient = new TransferClient(client, credentials, catalog, getAggregator());
-        openSavingsAccountClient = new OpenSavingsAccountClient(client, credentials, getAggregator());
     }
 
     @Override
@@ -152,9 +114,6 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
         if (sbabConfiguration != null) {
             authenticationClient.setConfiguration(sbabConfiguration);
             bankIdSignClient.setConfiguration(sbabConfiguration);
-            mortgageClient.setConfiguration(sbabConfiguration);
-            mortgageSignClient.setConfiguration(sbabConfiguration);
-            openSavingsAccountClient.setConfiguration(sbabConfiguration);
             transferClient.setConfiguration(sbabConfiguration);
             userDataClient.setConfiguration(sbabConfiguration);
         }
@@ -239,147 +198,6 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
     @Override
     public void update(Transfer transfer) throws Exception, TransferExecutionException {
         throw new UnsupportedTransferException(transfer.getType());
-    }
-
-
-    @Override
-    public CreateProductResponse create(GenericApplication application) throws Exception {
-        switch (application.getType()) {
-        case SWITCH_MORTGAGE_PROVIDER:
-            return new CreateProductResponse(switchMortgageProvider(application));
-        case OPEN_SAVINGS_ACCOUNT:
-            return new CreateProductResponse(openSavingsAccount(application));
-        default:
-            throw new UnsupportedApplicationException(application.getType());
-        }
-    }
-
-    @Override
-    public void fetchProductInformation(ProductType type, UUID productInstanceId,
-            Map<FetchProductInformationParameterKey, Object> parameters) {
-
-        if (!Objects.equal(ProductType.MORTGAGE, type)) {
-            log.warn(String.format("Product information can't be fetched for product type '%s'.", type));
-            return;
-        }
-
-        if (!parameters.containsKey(FetchProductInformationParameterKey.MARKET_VALUE)) {
-            log.error(String.format("[productInstanceId:%s] Market value is missing.", productInstanceId));
-            return;
-        }
-
-        if (!parameters.containsKey(FetchProductInformationParameterKey.MORTGAGE_AMOUNT)) {
-            log.error(String.format("[productInstanceId:%s] Mortgage amount is missing.", productInstanceId));
-            return;
-        }
-
-        if (!parameters.containsKey(FetchProductInformationParameterKey.NUMBER_OF_APPLICANTS)) {
-            log.error(String.format("[productInstanceId:%s] Number of applicants is missing.", productInstanceId));
-            return;
-        }
-
-        int marketValue = (int) parameters.get(FetchProductInformationParameterKey.MARKET_VALUE);
-        int mortgageAmount = (int) parameters.get(FetchProductInformationParameterKey.MORTGAGE_AMOUNT);
-        int numberOfApplicants = (int) parameters.get(FetchProductInformationParameterKey.NUMBER_OF_APPLICANTS);
-
-        try {
-            InterestsResponse interestResponse = mortgageClient.getInterestRates(marketValue, mortgageAmount);
-
-            // Find the 3 months duration rate entity.
-            InterestRateEntity rate = Iterables.find(interestResponse.getInterestRates(),
-                    rateEntity -> Doubles.fuzzyEquals(rateEntity.getContractDurationInMonths(), 3d, 0.1));
-
-            DiscountResponse discountResponse = mortgageClient.getMortgageDiscounts(numberOfApplicants, mortgageAmount,
-                    "BYT_BANK");
-
-            HashMap<ProductPropertyKey, Object> properties = new HashMap<>();
-            properties.put(ProductPropertyKey.INTEREST_RATE, rate.getCustomerRate() / 100);
-            properties.put(ProductPropertyKey.LIST_INTEREST_RATE, rate.getListRate() / 100);
-            properties.put(ProductPropertyKey.INTEREST_RATE_DISCOUNT, discountResponse.getDiscount() / 100);
-            properties.put(ProductPropertyKey.INTEREST_RATE_DISCOUNT_DESCRIPTION, discountResponse.getDescription());
-            properties.put(ProductPropertyKey.INTEREST_RATE_DISCOUNT_DURATION_MONTHS,
-                    discountResponse.getNumberOfMonths());
-
-            log.debug(String.format(
-                    "[productInstanceId:%s, marketValue:%d, mortgageAmount:%d, numberOfApplicants:%d] %s.",
-                    productInstanceId, marketValue, mortgageAmount, numberOfApplicants, properties));
-
-            context.updateProductInformation(productInstanceId, properties);
-        } catch (NoSuchElementException e) {
-            log.error(
-                    String.format(
-                            "No interest rate with 3 months duration available [productInstanceId:%s, marketValue:%d, mortgageAmount:%d, numberOfApplicants:%d].",
-                            productInstanceId, marketValue, mortgageAmount, numberOfApplicants));
-        } catch (Exception e) {
-            log.error(String.format("[productInstanceId:%s] Unable to fetch product information.", productInstanceId), e);
-        }
-    }
-
-    @Override
-    public void refreshApplication(ProductType type, UUID applicationId,
-            Map<RefreshApplicationParameterKey, Object> parameters) throws Exception {
-        String externalId = getExternalId(parameters);
-
-        Preconditions.checkState(!Strings.isNullOrEmpty(externalId),
-                "No external application reference was supplied.");
-
-        ApplicationState applicationState = null;
-
-        try {
-            MortgageStatus mortgageStatus = mortgageClient.getMortgageStatus(externalId);
-            applicationState = createApplicationState(mortgageStatus);
-        } catch (UniformInterfaceException e) {
-            if (Objects.equal(e.getResponse().getStatus(), Response.Status.NOT_FOUND.getStatusCode())) {
-                applicationState = new ApplicationState();
-                applicationState.setNewApplicationStatus(ApplicationStatusKey.EXPIRED);
-            } else {
-                throw e;
-            }
-        }
-        context.updateApplication(applicationId, applicationState);
-    }
-
-    private String getExternalId(Map<RefreshApplicationParameterKey, Object> parameters) {
-        Object parameter = parameters.get(RefreshApplicationParameterKey.EXTERNAL_ID);
-        return parameter != null ? String.valueOf(parameter) : null;
-    }
-
-    private ApplicationState createApplicationState(MortgageStatus mortgageStatus) {
-        Preconditions.checkArgument(mortgageStatus != null,
-                "Mortgage status not available.");
-
-        ApplicationState applicationState = new ApplicationState();
-
-        ApplicationStatusKey statusKey = getApplicationStatus(mortgageStatus);
-        applicationState.setNewApplicationStatus(statusKey);
-        applicationState.setApplicationProperty(ApplicationPropertyKey.EXTERNAL_STATUS, mortgageStatus.name());
-
-        return applicationState;
-    }
-
-    private ApplicationStatusKey getApplicationStatus(MortgageStatus mortgageStatus) {
-        switch (mortgageStatus) {
-        case MAKULERAD:
-            return ApplicationStatusKey.ABORTED;
-        case UTBETALT:
-            return ApplicationStatusKey.EXECUTED;
-        case AVSLAGEN:
-            return ApplicationStatusKey.REJECTED;
-        case TEKNISKT_FEL:
-            return ApplicationStatusKey.ERROR;
-        case AVSLAGEN_UC:
-        case BEARBETNING_PAGAR:
-        case ANSOKAN_REGISTRERAD:
-            return ApplicationStatusKey.SIGNED;
-        case KOMPLETTERING_KRAVS:
-            return ApplicationStatusKey.SUPPLEMENTAL_INFORMATION_REQUIRED;
-        case LANEHANDLINGAR_KLARA:
-        case LANEHANDLINGAR_INKOMNA:
-            return ApplicationStatusKey.APPROVED;
-        default:
-            throw new IllegalStateException(String.format(
-                    "The mortgage status '%s' is not mapped to an application status.", mortgageStatus.name()));
-        }
     }
 
     private void executeBankTransfer(Transfer transfer) throws Exception {
@@ -508,24 +326,6 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
         return BankIdStatus.TIMEOUT;
     }
 
-    private BankIdStatus signMortgageWithMobileBankId(SignFormRequestBody signFormRequestBody) throws Exception {
-        BankIdStartResponse startResponse = mortgageSignClient.initiateSign(signFormRequestBody);
-
-        requestBankIdSupplemental();
-
-        for (int i = 0; i < BANKID_MAX_ATTEMPTS; i++) {
-            BankIdStatus bankIdStatus = mortgageSignClient.getStatus(signFormRequestBody, startResponse.getOrderRef());
-
-            if (!Objects.equal(bankIdStatus, BankIdStatus.WAITING)) {
-                return bankIdStatus;
-            }
-
-            Thread.sleep(2000);
-        }
-
-        return BankIdStatus.TIMEOUT;
-    }
-
     private List<Transaction> fetchTransactions(Account account) throws Exception {
         List<Transaction> transactions = Lists.newArrayList();
         String accountNumber = account.getAccountNumber();
@@ -631,136 +431,10 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
         context.updateTransferDestinationPatterns(transferPatterns);
     }
 
-    private String switchMortgageProvider(GenericApplication application) throws Exception {
-        // Create the request objects before calling SBAB api's so that we bail early if models contains errors
-        MortgageSignatureRequest signatureRequest = mortgageClient.getSignatureRequest(application);
-        MortgageApplicationRequest mortgageApplicationRequest = mortgageClient
-                .getMortgageApplicationRequest(application);
-
-        mortgageClient.setRemoteIp(application.getRemoteIp());
-
-        String signatureId = mortgageClient.createSignature(signatureRequest);
-        signMortgageSignature(signatureId);
-
-        return mortgageClient.sendApplication(mortgageApplicationRequest, signatureId);
-    }
-
-    private void signMortgageSignature(String signatureId) throws Exception {
-        SignFormRequestBody signFormRequestBody = mortgageSignClient.initiateSignProcess(signatureId);
-
-        BankIdStatus bankIdStatus = signMortgageWithMobileBankId(signFormRequestBody);
-
-        switch (bankIdStatus) {
-        case DONE:
-            MortgageSignatureStatus finalStatus = mortgageClient.getMortgageSigningStatus(signatureId);
-
-            if (Objects.equal(finalStatus, MortgageSignatureStatus.SUCCESSFUL)) {
-                log.info("Successfully created and signed a new mortgage application signature.");
-                return;
-            } else {
-                throw new IllegalStateException(
-                        String.format("[BankIdStatus: %s, MortgageSignatureStatus: %s]", bankIdStatus, finalStatus));
-            }
-        case CANCELLED:
-            throw BankIdError.CANCELLED.exception();
-        case TIMEOUT:
-            throw BankIdError.TIMEOUT.exception();
-        case FAILED_UNKNOWN:
-        default:
-            throw new IllegalStateException(String.format("[BankIdStatus: %s]", bankIdStatus));
-        }
-    }
-
     private void requestBankIdSupplemental() {
         credentials.setSupplementalInformation(null);
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
         context.requestSupplementalInformation(credentials, false);
-    }
-
-    private String openSavingsAccount(GenericApplication application) throws Exception {
-        openSavingsAccountClient.setRemoteIp(application.getRemoteIp());
-
-        // The user must first login at SBAB, even if the user doesn't have an account there yet.
-        BankIdStatus bankIdStatus = loginWithMobileBankId();
-
-        switch (bankIdStatus) {
-        case DONE:
-            break;
-        case CANCELLED:
-            throw BankIdError.CANCELLED.exception();
-        case TIMEOUT:
-            throw BankIdError.TIMEOUT.exception();
-        case FAILED_UNKNOWN:
-        default:
-            throw new IllegalStateException(String.format("[BankId status]: %s", bankIdStatus));
-        }
-
-        List<AccountEntity> accountsBefore;
-
-        log.info("Login completed.");
-
-        try {
-            accountsBefore = userDataClient.getAccounts();
-        } catch (UnacceptedTermsAndConditionsException e) {
-            log.info("User has not accepted Terms & Conditions. Initiating signing.");
-            // The user has not accepted the Terms & Conditions for getting access to SBABs services. These needs
-            // to be accepted before we can retrieve accounts and open new savings accounts.
-            SignFormRequestBody signForm = userDataClient.initiateTermsAndConditionsSigning(e.getUrl(), e.getInput());
-
-            signTermsAndConditions(signForm);
-
-            log.info("User accepted Terms & Conditions.");
-
-            accountsBefore = userDataClient.getAccounts();
-
-            log.info(String.format("Fetched %d accounts.", accountsBefore.size()));
-        }
-
-        OpenSavingsAccountResponse response = openSavingsAccountClient.submit(application);
-
-        return signNewSavingsAccount(response, accountsBefore);
-    }
-
-    private String signNewSavingsAccount(OpenSavingsAccountResponse openAccountResponse,
-            List<AccountEntity> accountsBefore) throws Exception {
-
-        SignFormRequestBody signFormRequestBody = openSavingsAccountClient.initiateSignProcess(openAccountResponse);
-
-        BankIdStatus bankIdStatus = signWithMobileBankId(signFormRequestBody);
-
-        switch (bankIdStatus) {
-        case DONE:
-            List<AccountEntity> accountsAfter = userDataClient.getAccounts();
-            String accountNumber = openSavingsAccountClient.getNewAccountNumber(accountsBefore, accountsAfter);
-            log.info(String.format("Successfully created a new savings account (account number %s).", accountNumber));
-            // TODO: This should probably be done by a separate refresh call instead, but for some reason that doesn't
-            // work.
-            context.updateAccounts(toTinkAccounts(accountsAfter));
-            return accountNumber;
-        case CANCELLED:
-            throw BankIdError.CANCELLED.exception();
-        case TIMEOUT:
-            throw BankIdError.TIMEOUT.exception();
-        case FAILED_UNKNOWN:
-        default:
-            throw new IllegalStateException(String.format("[BankId status]: %s", bankIdStatus));
-        }
-    }
-
-    private void signTermsAndConditions(SignFormRequestBody signFormRequestBody) throws Exception {
-        BankIdStatus bankIdStatus = signWithMobileBankId(signFormRequestBody);
-
-        switch (bankIdStatus) {
-        case DONE:
-            return;
-        case CANCELLED:
-            throw BankIdError.CANCELLED.exception();
-        case TIMEOUT:
-            throw BankIdError.TIMEOUT.exception();
-        case FAILED_UNKNOWN:
-        default:
-            throw new IllegalStateException(String.format("[BankId status]: %s", bankIdStatus));
-        }
     }
 
     @Override
