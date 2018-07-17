@@ -42,7 +42,7 @@ public class CreditCardAccountEntity {
 
     @JsonIgnore
     public CreditCardAccount toAccount() {
-        return CreditCardAccount.builder(id,
+        return CreditCardAccount.builder(formattedNumber,
                 Sparebank1AmountUtils.constructAmount(balanceAmountInteger, balanceAmountFraction),
                 Sparebank1AmountUtils.constructAmount(creditLimitInteger, creditLimitFraction))
                 .setAccountNumber(formattedNumber)

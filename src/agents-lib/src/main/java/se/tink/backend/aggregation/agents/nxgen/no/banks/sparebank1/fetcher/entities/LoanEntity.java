@@ -26,7 +26,7 @@ public class LoanEntity {
 
     @JsonIgnore
     public LoanAccount toTinkLoan(LoanDetailsEntity loanDetails) {
-        return LoanAccount.builder(id,
+        return LoanAccount.builder(formattedNumber,
                 Sparebank1AmountUtils.constructAmount(balanceAmountInteger, balanceAmountFraction))
                 .setAccountNumber(formattedNumber)
                 .setName(name)

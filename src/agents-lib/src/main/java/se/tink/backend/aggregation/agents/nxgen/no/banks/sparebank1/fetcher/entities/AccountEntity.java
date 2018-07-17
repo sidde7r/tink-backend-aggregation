@@ -36,7 +36,7 @@ public class AccountEntity {
 
     @JsonIgnore
     public TransactionalAccount toTransactionalAccount() {
-        return TransactionalAccount.builder(getTinkAccountType(), id,
+        return TransactionalAccount.builder(getTinkAccountType(), getTinkFormattedAccountNumber(),
                 Sparebank1AmountUtils.constructAmount(disposableAmountInteger, disposableAmountFraction))
                 .setAccountNumber(getTinkFormattedAccountNumber())
                 .setName(name)
