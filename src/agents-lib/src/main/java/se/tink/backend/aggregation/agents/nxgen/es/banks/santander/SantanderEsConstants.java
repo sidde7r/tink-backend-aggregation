@@ -36,7 +36,7 @@ public class SantanderEsConstants {
     }
 
     public static final class AccountTypes {
-        public static final String CHECKING_ACCOUNT_PROD_NR = "201";
+        public static final String CHECKING_ACCOUNT_PROD_NR = "3";
         public static final String DEBIT_CARD_TYPE = "débito";
     }
 
