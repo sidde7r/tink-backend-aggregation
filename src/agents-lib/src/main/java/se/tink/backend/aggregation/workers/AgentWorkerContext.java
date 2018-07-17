@@ -158,7 +158,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         this.supplementalInformationController = new SupplementalInformationController(serviceContext.getCacheClient(),
                 serviceContext.getCoordinationClient());
-        this.supplementalOnAggregation = serviceContext.isSupplementalOnAggregation();
         this.useAggregationController = useAggregationController;
         this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
         this.isAggregationCluster = serviceContext.isAggregationCluster();
