@@ -11,22 +11,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
-import se.tink.backend.aggregation.rpc.CreateProductRequest;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsDecryptRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsReencryptRequest;
-import se.tink.backend.aggregation.rpc.ProductInformationRequest;
 import se.tink.backend.aggregation.rpc.ReencryptionRequest;
-import se.tink.backend.aggregation.rpc.RefreshApplicationRequest;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.workers.AgentWorkerOperation.AgentWorkerOperationState;
 import se.tink.backend.aggregation.workers.commands.CircuitBreakerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.CircuitBreakerAgentWorkerCommand.CircuitBreakerAgentWorkerCommandState;
-import se.tink.backend.aggregation.workers.commands.CreateProductAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DebugAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DebugAgentWorkerCommand.DebugAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.DecryptAgentWorkerCommand;
@@ -37,7 +33,6 @@ import se.tink.backend.aggregation.workers.commands.DeleteAgentWorkerCommand.Del
 import se.tink.backend.aggregation.workers.commands.EncryptAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.EncryptAgentWorkerCommand.EncryptAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.EncryptCredentialsWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.FetchProductInformationAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.InstantiateAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.InstantiateAgentWorkerCommand.InstantiateAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.KeepAliveAgentWorkerCommand;
@@ -45,7 +40,6 @@ import se.tink.backend.aggregation.workers.commands.LockAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LoginAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LoginAgentWorkerCommand.LoginAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.ProcessItemAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.RefreshApplicationAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.RefreshItemAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ReportProviderMetricsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ReportProviderMetricsAgentWorkerCommand.ReportProviderMetricsAgentWorkerCommandState;
@@ -59,7 +53,6 @@ import se.tink.backend.aggregation.workers.refresh.ProcessableItem;
 import se.tink.backend.common.ServiceContext;
 import se.tink.backend.common.cache.CacheClient;
 import se.tink.backend.common.repository.mysql.aggregation.ClusterCryptoConfigurationRepository;
-import se.tink.libraries.application.ApplicationType;
 import se.tink.libraries.metrics.MetricRegistry;
 
 public class AgentWorkerOperationFactory {
@@ -373,111 +366,6 @@ public class AgentWorkerOperationFactory {
         commands.add(new KeepAliveAgentWorkerCommand(context));
 
         return new AgentWorkerOperation(agentWorkerOperationState, "keep-alive", request, commands, context);
-    }
-
-    public AgentWorkerOperation createCreateProductOperation(ClusterInfo clusterInfo, CreateProductRequest request) {
-        AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
-                useAggregationController, aggregationControllerAggregationClient, clusterInfo);
-
-        List<AgentWorkerCommand> commands = Lists.newArrayList();
-
-        commands.add(new ValidateProviderAgentWorkerStatus(context, useAggregationController,
-                aggregationControllerAggregationClient, isAggregationCluster, clusterInfo));
-        commands.add(new ReportProviderMetricsAgentWorkerCommand(context, "create-product",
-                reportMetricsAgentWorkerCommandState));
-
-        commands.add(new LockAgentWorkerCommand(context));
-
-        if (isAggregationCluster) {
-            commands.add(new DecryptCredentialsWorkerCommand(clusterInfo, cacheClient,
-                    clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context));
-        } else {
-            commands.add(new DecryptAgentWorkerCommand(context, useAggregationController,
-                    aggregationControllerAggregationClient));
-        }
-
-        commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState));
-        commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
-        commands.add(new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.AUTHENTICATING));
-
-        if (Objects.equals(ApplicationType.OPEN_SAVINGS_ACCOUNT, request.getApplication().getType()) &&
-                Objects.equals(request.getProvider().getName(), "collector-bankid")) {
-            // Utilize login command for collector in order to get persistent login and error handling
-            commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState,
-                    createMetricState(request)));
-        }
-
-        commands.add(new CreateProductAgentWorkerCommand(context, request));
-        commands.add(new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
-
-        // FIXME: Temporary hack to process the accounts after a new savings account has been established.
-        if (Objects.equals(ApplicationType.OPEN_SAVINGS_ACCOUNT, request.getApplication().getType())) {
-
-            if (Objects.equals(request.getProvider().getName(), "sbab-bankid")) {
-                // Special treatment for SBAB
-                commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.ACCOUNTS,
-                        createMetricState(request)));
-                commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.TRANSFER_DESTINATIONS,
-                        createMetricState(request)));
-            } else {
-                // Normal case
-                commands.add(new RefreshItemAgentWorkerCommand(context, RefreshableItem.ACCOUNTS,
-                        createMetricState(request)));
-                commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.ACCOUNTS,
-                        createMetricState(request)));
-
-                commands.add(new RefreshItemAgentWorkerCommand(context, RefreshableItem.TRANSFER_DESTINATIONS,
-                        createMetricState(request)));
-                commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.TRANSFER_DESTINATIONS,
-                        createMetricState(request)));
-            }
-        }
-
-        commands.add(new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATED));
-
-        return new AgentWorkerOperation(agentWorkerOperationState, "create-product", request, commands, context);
-    }
-
-    public AgentWorkerOperation createRefreshApplicationOperation(ClusterInfo clusterInfo,
-            RefreshApplicationRequest request) {
-        AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
-                useAggregationController, aggregationControllerAggregationClient, clusterInfo);
-
-        // FIXME: Do we need locks etc on this refresh call?
-        List<AgentWorkerCommand> commands = Lists.newArrayList();
-        commands.add(new ValidateProviderAgentWorkerStatus(context, useAggregationController,
-                aggregationControllerAggregationClient, isAggregationCluster, clusterInfo));
-        commands.add(new ReportProviderMetricsAgentWorkerCommand(context, "refresh-application",
-                reportMetricsAgentWorkerCommandState));
-        commands.add(new LockAgentWorkerCommand(context));
-        commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
-        commands.add(new RefreshApplicationAgentWorkerCommand(context, request));
-
-        return new AgentWorkerOperation(agentWorkerOperationState, "refresh-application", request, commands, context);
-    }
-
-    /**
-     * Note: ProductInformationRequest inherits FakedCredentialsRequest, since this operation should not operate on
-     * credential dependent information and no Credentials will be sent in to this method.
-     *
-     * So mind that when adding new commands to the Operation, that `Credentials` should not be used.
-     */
-    public AgentWorkerOperation createFetchProductInformationOperation(ClusterInfo clusterInfo,
-            ProductInformationRequest request) {
-        AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
-                useAggregationController, aggregationControllerAggregationClient, clusterInfo);
-
-        List<AgentWorkerCommand> commands = Lists.newArrayList();
-
-        commands.add(new ValidateProviderAgentWorkerStatus(context, useAggregationController,
-                aggregationControllerAggregationClient, isAggregationCluster, clusterInfo));
-        commands.add(new ReportProviderMetricsAgentWorkerCommand(context, "fetch-product-information",
-                reportMetricsAgentWorkerCommandState));
-        commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
-        commands.add(new FetchProductInformationAgentWorkerCommand(context, request));
-
-        return new AgentWorkerOperation(
-                agentWorkerOperationState, "fetch-product-information", request, commands, context);
     }
 
     public AgentWorkerOperation createDecryptCredentialsOperation(ClusterInfo clusterInfo,
