@@ -19,8 +19,6 @@ import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.cluster.identification.Aggregator;
-import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -30,8 +28,6 @@ import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.core.FraudDetailsContent;
 import se.tink.backend.core.account.TransferDestinationPattern;
-import se.tink.backend.core.application.ApplicationState;
-import se.tink.backend.core.product.ProductPropertyKey;
 import se.tink.backend.core.signableoperation.SignableOperation;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.system.rpc.AccountFeatures;
@@ -260,17 +256,6 @@ public class NewAgentTestContext extends AgentContext {
     public UpdateDocumentResponse updateDocument(DocumentContainer contianer) {
         // Not in scope for this test
         return UpdateDocumentResponse.createSuccessful(contianer.getIdentifier(), UUID.randomUUID(), "url");
-    }
-
-    @Override
-    public void updateProductInformation(UUID productInstanceId,
-            HashMap<ProductPropertyKey, Object> productProperties) {
-        throw new NotImplementedException("Product executor cannot be tested.");
-    }
-
-    @Override
-    public void updateApplication(UUID applicationId, ApplicationState applicationState) {
-        throw new NotImplementedException("Product executor cannot be tested.");
     }
 
     @Override
