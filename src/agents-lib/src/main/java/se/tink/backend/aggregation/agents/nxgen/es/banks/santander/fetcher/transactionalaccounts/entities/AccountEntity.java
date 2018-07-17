@@ -102,8 +102,8 @@ public class AccountEntity {
 
     @JsonIgnore
     public TransactionalAccount toTinkAccount(UserData userData) {
-        return TransactionalAccount.builder(getTinkAccountType(), getAccountNumber(), balance.getTinkAmount())
-                .setAccountNumber(getAccountNumber())
+        return TransactionalAccount.builder(getTinkAccountType(), getUniqueIdentifier(), balance.getTinkAmount())
+                .setAccountNumber(iban)
                 .setName(generalInfo.getAlias())
                 .addToTemporaryStorage(SantanderEsConstants.Storage.USER_DATA_XML,
                         SantanderEsXmlUtils.parseJsonToXmlString(userData))
@@ -115,8 +115,8 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    private String getAccountNumber() {
-        return iban.replaceAll("[^0-9]", "");
+    private String getUniqueIdentifier() {
+        return iban.replaceAll(" ", "").toLowerCase();
     }
 
     @JsonIgnore
@@ -141,10 +141,10 @@ public class AccountEntity {
 
     @JsonIgnore
     private boolean isCheckingAccount() {
-        String productTypeNumber = originalContractId.getProduct();
+        String productTypeNumber = generalInfo.getContractId().getProduct();
 
-        // The account product number is 201 for our credential, assuming that this is the product number for
-        // checking accounts in general, but it might need to be revised.
-        return SantanderEsConstants.AccountTypes.CHECKING_ACCOUNT_PROD_NR.equalsIgnoreCase(productTypeNumber);
+        // As far as we know today, checking accounts have product number 300 or 301.
+        return SantanderEsConstants.AccountTypes.PROD_NR_300.equalsIgnoreCase(productTypeNumber)
+                || SantanderEsConstants.AccountTypes.PROD_NR_301.equalsIgnoreCase(productTypeNumber);
     }
 }
