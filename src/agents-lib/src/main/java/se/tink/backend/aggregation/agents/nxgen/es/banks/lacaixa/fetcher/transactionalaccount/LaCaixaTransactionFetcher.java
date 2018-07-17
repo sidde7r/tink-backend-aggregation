@@ -4,9 +4,9 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaApiClien
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginatorResponse;
-import se.tink.backend.aggregation.nxgen.core.account.Account;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 
-public class LaCaixaTransactionFetcher implements TransactionPagePaginator {
+public class LaCaixaTransactionFetcher implements TransactionPagePaginator<TransactionalAccount> {
 
     LaCaixaApiClient bankClient;
 
@@ -15,7 +15,7 @@ public class LaCaixaTransactionFetcher implements TransactionPagePaginator {
     }
 
     @Override
-    public TransactionPagePaginatorResponse getTransactionsFor(Account account, int page) {
+    public TransactionPagePaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
         return bankClient.fetchNextAccountTransactions(
                 account.getTemporaryStorage(LaCaixaConstants.TemporaryStorage.ACCOUNT_REFERENCE, String.class),
                 page == 0);
