@@ -3185,33 +3185,6 @@
       ]
     },
     {
-      "name": "de-deutsche-35070030-password",
-      "displayName": "BLZ: 35070030",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "35070030 https://fints.deutsche-bank.de/",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-deutsche-36070024-password",
       "displayName": "BLZ: 36070024",
       "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
@@ -16174,33 +16147,6 @@
       ]
     },
     {
-      "name": "de-sparkasse-westfalica-password",
-      "displayName": "Sparkasse Bad Oeynhausen-Porta",
-      "groupDisplayName": "Sparkasse",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "49051285 https://banking-wl2.s-fints-pt-wl.de/fints30",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-sparkasse-herford-password",
       "displayName": "Sparkasse Herford",
       "groupDisplayName": "Sparkasse",
@@ -20224,33 +20170,6 @@
       ]
     },
     {
-      "name": "de-sparkasse-münchen-password",
-      "displayName": "Stadtsparkasse München",
-      "groupDisplayName": "Sparkasse",
-      "popular": false,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "70150000 https://banking-by6.s-fints-pt-by.de/fints30",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisenhamburgervolksbank-password",
       "displayName": "Hamburger Volksbank",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -23005,33 +22924,6 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-hamburg-password",
-      "displayName": "Hamburger Bank von 1861 Volksbank eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "20190003 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-stormarn-password",
       "displayName": "Volksbank Stormarn eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -23125,33 +23017,6 @@
       "passwordHelpText": "Use the same password as you would in your bank's web login.",
       "transactional": true,
       "payload": "21092023 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-neumünster-password",
-      "displayName": "Volksbank Neumünster eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "21290016 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
       "fields": [
         {
           "description": "Username",
@@ -23329,33 +23194,6 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-pinneberg-uetersen-password",
-      "displayName": "Volksbank Pinneberg-Uetersen eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "22191405 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-itzehoe-password",
       "displayName": "Volksbank Itzehoe eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -23518,8 +23356,8 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-celle-password",
-      "displayName": "Volksbank Südheide",
+      "name": "de-volksraiffeisenalleroker-password",
+      "displayName": "Volksbank Aller-Oker",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -24247,33 +24085,6 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-grafeld-nortrup-password",
-      "displayName": "Raiffeisen-Volksbank Grafeld-Nortrup eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "26567943 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-osnabrück-password",
       "displayName": "Volksbank Osnabrück eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -24355,8 +24166,8 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-geeste-password",
-      "displayName": "Emsländische Volksbank eG",
+      "name": "de-volksraiffeisenemslandische-password",
+      "displayName": "Emsländische Volksbank Meppen",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -24463,35 +24274,8 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-braunschweig-wolfsburg-password",
-      "displayName": "Volksbank eG Braunschweig Wolfsburg ",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "26991066 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-wolfsburg-password",
-      "displayName": "Volksbank eG Wolfsburg",
+      "name": "de-volksraiffeisenbraunschweigwolfsburg-password",
+      "displayName": "Volksbank Braunschweig Wolfsburg",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -25246,33 +25030,6 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-veldhausen-neuenhaus-password",
-      "displayName": "Volksbank Veldhausen-Neuenhaus eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "28069956 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-emstal-rütenbrock-lathen-password",
       "displayName": "Volksbank Emstal Rütenbrock-Lathen eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -25285,33 +25042,6 @@
       "passwordHelpText": "Use the same password as you would in your bank's web login.",
       "transactional": true,
       "payload": "28069991 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-spelle-freren-password",
-      "displayName": "Volksbank Spelle-Freren eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "28069994 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
       "fields": [
         {
           "description": "Username",
@@ -25759,33 +25489,6 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-mönchengladbach-password",
-      "displayName": "Volksbank Mönchengladbach eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "31060517 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-brüggen-nettetal-password",
       "displayName": "Volksbank Brüggen-Nettetal eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -25896,33 +25599,6 @@
     {
       "name": "de-volksraiffeisen-geldern-password",
       "displayName": "Volksbank an der Niers",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "32061384 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-gelderland-password",
-      "displayName": "Volksbank Gelderland eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -26245,35 +25921,8 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-heinsberg-password",
-      "displayName": "Volksbank Heinsberg eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "37069412 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-rhein-sieg-password",
-      "displayName": "Volksbank Bonn Rhein-Sieg eG",
+      "name": "de-volksraiffeisenrheinsieg-password",
+      "displayName": "Volksbank Köln Bonn",
       "groupDisplayName": "Volks- and Raiffeisenbanken Bonn",
       "popular": true,
       "type": "BANK",
@@ -27055,8 +26704,8 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-ahlen-password",
-      "displayName": "Volksbank Ahlen Sassenberg Warendorf eG",
+      "name": "de-volksraiffeisenoeldeennigerlohneubeckum-password",
+      "displayName": "Volksbank Oelde-Ennigerloh-Neubeckum -alt-",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -27325,33 +26974,6 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-gelsenkirchen-password",
-      "displayName": "Volksbank eG Gelsenkirchen-Buer",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "42260001 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-dorsten-kirchhhellen-bottrop-password",
       "displayName": "Vereinte Volksbank eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -27472,33 +27094,6 @@
       "passwordHelpText": "Use the same password as you would in your bank's web login.",
       "transactional": true,
       "payload": "42860003 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-borken-password",
-      "displayName": "Borkener Volksbank eG.",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "42861387 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
       "fields": [
         {
           "description": "Username",
@@ -27649,8 +27244,8 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-dortmund-password",
-      "displayName": "Volksbank Dortmund-Nordwest eG",
+      "name": "de-volksraiffeisen-dortmundnordwest-password",
+      "displayName": "Volksbank Dortmund-Nordwest",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -27677,7 +27272,7 @@
     },
     {
       "name": "de-volksraiffeisen-dortmund-password",
-      "displayName": "Dortmunder Volksbank eG.",
+      "displayName": "Dortmunder Volksbank",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -27892,34 +27487,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-siegerland-password",
-      "displayName": "Volksbank im Siegerland eG.",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "46060040 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-siegerland-password",
+      "name": "de-volksraiffeisensiegerland-password",
       "displayName": "Volksbank Siegerland eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -27931,60 +27499,6 @@
       "passwordHelpText": "Use the same password as you would in your bank's web login.",
       "transactional": true,
       "payload": "46060040 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-siegen-littfeld-password",
-      "displayName": "Volksbank Siegerland eG.",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "46060040 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-freudenberg-password",
-      "displayName": "Volksbank Freudenberg eG.",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "46061724 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
       "fields": [
         {
           "description": "Username",
@@ -28066,33 +27580,6 @@
       "passwordHelpText": "Use the same password as you would in your bank's web login.",
       "transactional": true,
       "payload": "46260023 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-grevenbrück-password",
-      "displayName": "Volksbank Grevenbrück eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "46261607 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
       "fields": [
         {
           "description": "Username",
@@ -28567,34 +28054,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-bielefeld-password",
-      "displayName": "Volksbank Bielefeld eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "48060036 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-halle-password",
+      "name": "de-volksraiffeisen-hallewestf-password",
       "displayName": "Volksbank Halle/Westf. eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -28606,33 +28066,6 @@
       "passwordHelpText": "Use the same password as you would in your bank's web login.",
       "transactional": true,
       "payload": "48062051 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-bad-salzuflen-password",
-      "displayName": "Volksbank Bad Salzuflen eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "48291490 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
       "fields": [
         {
           "description": "Username",
@@ -29161,7 +28594,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-büdingen-hess-password",
+      "name": "de-volksraiffeisenbüdingen-hess-password",
       "displayName": "Volksbank Büdingen",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -30052,33 +29485,6 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-kassel-hess-password",
-      "displayName": "Volksbank Kassel Göttingen eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "52090000 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-schlüchtern-password",
       "displayName": "Volksbank Raiffeisenbank Schlüchtern",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -30214,7 +29620,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-mainz-a-rhein-password",
+      "name": "de-volksraiffeisenmainzfinthen-password",
       "displayName": "Volksbank Mainz-Finthen",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -30592,33 +29998,6 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-kirchberg-password",
-      "displayName": "Volksbank Kirchberg-Hunsrück eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "56061472 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-rheinböllen-password",
       "displayName": "Volksbank Rheinböllen eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -30862,33 +30241,6 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-bitburg-password",
-      "displayName": "Volksbank Bitburg eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "58660101 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-sulzbach-saar-password",
       "displayName": "Vereinigte Volksbank eG Dillingen*Dudweiler*Sulzbach/Saar",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -30970,8 +30322,8 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-homburg-saar-password",
-      "displayName": "Volksbank Saarpfalz",
+      "name": "de-volksraiffeisensaarpfalz-password",
+      "displayName": "Volks- und Raiffeisenbank Saarpfalz BLZ: 59291200",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -31213,7 +30565,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-baiersbronn-password",
+      "name": "de-volksraiffeisenmurgtalbaiersbronn-password",
       "displayName": "Volksbank Murgtal Baiersbr-Klosterreichenbach",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -31618,7 +30970,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-ludwigsburg-württ-password",
+      "name": "de-volksraiffeisen-freibergumgebung-password",
       "displayName": "Volksbank Freiberg und Umgebung",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -32509,8 +31861,8 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-horb-am-neckar-password",
-      "displayName": "Volksbank Horb -alt-",
+      "name": "de-volksraiffeisen-horbalt-password",
+      "displayName": "Volksbank Horb -alt- BLZ: 64191700",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -32536,8 +31888,8 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-baiersbronn-password",
-      "displayName": "Volksbank Baiersbronn",
+      "name": "de-volksraiffeisenbaiersbronn-password",
+      "displayName": "Volksbank Baiersbronn Murgtal",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -32968,7 +32320,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-albstadt-württ-password",
+      "name": "de-volksraiffeisentailfingen-password",
       "displayName": "Volksbank Tailfingen",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -33454,7 +32806,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-mannheim-password",
+      "name": "de-volksraiffeisensandhofenmannheim-password",
       "displayName": "Volksbank Sandhofen",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -34561,7 +33913,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-rosenheim-oberbay-password",
+      "name": "de-volksraiffeisenrosenheimalt-password",
       "displayName": "Volksbank Rosenheim -alt-",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -34939,7 +34291,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-vilshofen-an-der-donau-password",
+      "name": "de-volksraiffeisen-vilshofen--password",
       "displayName": "Volksbank Vilshofen",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -34966,7 +34318,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-straubing-password",
+      "name": "de-volksraiffeisen-vbstraubing-password",
       "displayName": "Volksbank Straubing",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -35371,7 +34723,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-aschaffenburg-password",
+      "name": "de-volksraiffeisenaschaffenburg-password",
       "displayName": "Volksbank Aschaffenburg",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -36289,33 +35641,6 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-wismar-password",
-      "displayName": "Volks- und Raiffeisenbank eG Wismar",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "13061078 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-bad-doberan-password",
       "displayName": "Raiffeisenbank Bad Doberan eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -36398,34 +35723,7 @@
     },
     {
       "name": "de-volksraiffeisen-waren-password",
-      "displayName": "Raiffeisenbank Waren eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "15061618 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-neubrandenburg-waren-password",
-      "displayName": "Raiffeisenbank Waren eG Neubrandenburg",
+      "displayName": "Raiffeisenbank Mecklenburger Seenplatte im Waren",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -36964,33 +36262,6 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-leezen-password",
-      "displayName": "Raiffeisenbank Leezen eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "23061220 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-bargteheide-password",
       "displayName": "Raiffeisenbank Bargteheide eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -37477,33 +36748,6 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-frechen-hürth-password",
-      "displayName": "Raiffeisenbank Frechen-Hürth",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "37062365 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-kürten-odenthal-password",
       "displayName": "Raiffeisenbank Kürten-Odenthal eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -37936,7 +37180,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-offenbach-am-main-password",
+      "name": "de-volksraiffeisen-offenbach-am-mainbieber-password",
       "displayName": "Raiffeisenbank Offenbach/M.-Bieber",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -38044,7 +37288,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-birstein-password",
+      "name": "de-volksraiffeisen-birsteinvogelsberg-password",
       "displayName": "Raiffeisenbank Vogelsberg",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -39097,7 +38341,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-reutlingen-password",
+      "name": "de-volksraiffeisen-sondelfingen-password",
       "displayName": "Raiffeisenbank Sondelfingen",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -39367,7 +38611,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-göppingen-password",
+      "name": "de-volksraiffeisenmaitis-password",
       "displayName": "Raiffeisenbank Maitis",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -39394,7 +38638,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-laupheim-password",
+      "name": "de-volksraiffeisenrißtal-password",
       "displayName": "Raiffeisenbank Rißtal",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -40204,7 +39448,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-schwäbisch-hall-password",
+      "name": "de-volksraiffeisen-tungerntal-password",
       "displayName": "Raiffeisenbank Tüngental",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -40231,7 +39475,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-heilbronn-neckar-password",
+      "name": "de-volksraiffeisenbollingertal-password",
       "displayName": "Raiffeisenbank Böllingertal",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -40798,7 +40042,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-bühl-baden-password",
+      "name": "de-volksraiffeisen-altschweierl-password",
       "displayName": "Raiffeisenbank Altschweier",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -40960,7 +40204,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-wiesloch-password",
+      "name": "de-volksraiffeisenbaiertal-password",
       "displayName": "Raiffeisenbank Baiertal",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -41635,7 +40879,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-unterschleißheim-password",
+      "name": "de-volksraiffeisenmünchennord-password",
       "displayName": "Raiffeisenbank München-Nord",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -41674,33 +40918,6 @@
       "passwordHelpText": "Use the same password as you would in your bank's web login.",
       "transactional": true,
       "payload": "70169466 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-neumarkt-sankt-veit-password",
-      "displayName": "Raiffbk Neumarkt-St. Veit - Niederbergkirchen",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "70169474 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
       "fields": [
         {
           "description": "Username",
@@ -43174,7 +42391,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-langenmosen-password",
+      "name": "de-volksraiffeisen-bergimgaulangenmosen-password",
       "displayName": "Raiffeisenbank Berg im Gau-Langenmosen -alt-",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -43795,7 +43012,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-tiefenbach-kr-passau-password",
+      "name": "de-volksraiffeisenilkr-passau-password",
       "displayName": "Raiffeisenbank i Lkr Passau-Nord",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -44389,7 +43606,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-regensburg-password",
+      "name": "de-volksraiffeisen-regensburgwenzenbach-password",
       "displayName": "Raiffeisenbank Regensburg-Wenzenbach",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -45280,7 +44497,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-nürnberg-mittelfr-password",
+      "name": "de-volksraiffeisenknoblauchslandnürnberg-mittelfr-password",
       "displayName": "Raiffeisenbank Knoblauchsland Nürnberg-Buch",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -45388,7 +44605,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-berching-password",
+      "name": "de-volksraiffeisenplankstetten-password",
       "displayName": "Raiffeisenbank Plankstetten",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -46576,7 +45793,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-aschaffenburg-password",
+      "name": "de-volksraiffeisenrfaschaffenburg-password",
       "displayName": "Raiffeisenbank Aschaffenburg eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -46901,7 +46118,7 @@
     },
     {
       "name": "de-volksraiffeisen-sebnitz-sachs-password",
-      "displayName": "Raiffeisenbank Neustadt",
+      "displayName": "Raiffeisenbank Neustadt Sebnitz Sachs",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -47062,8 +46279,8 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-pinneberg-halstenbek-schenef-password",
-      "displayName": "VR Bank Pinneberg eG",
+      "name": "de-volksraiffeisenpinneberghalstenbekschenef-password",
+      "displayName": "Volksbank Pinneberg-Elmshorn",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -47143,35 +46360,8 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-paffrath-password",
-      "displayName": "VR Bank eG Bergisch Gladbach",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "37062600 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-rhein-sieg-password",
-      "displayName": "VR Bank Rhein-Sieg eG.",
+      "displayName": "VR Bank Rhein-Sieg eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -47197,7 +46387,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-büdingen-hess-password",
+      "name": "de-volksraiffeisen-knbüdingen-hess-password",
       "displayName": "VR Bank Main-Kinzig-Büdingen",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -47441,7 +46631,7 @@
     },
     {
       "name": "de-volksraiffeisen-homburg-saar-password",
-      "displayName": "VR Bank Saarpfalz 59491114",
+      "displayName": "VR Bank Saarpfalz BLZ: 59491114",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -47467,8 +46657,8 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-homburg-saar-password",
-      "displayName": "VR Bank Saarpfalz 59491114",
+      "name": "de-volksraiffeisenhomburgpassword",
+      "displayName": "VR Bank Saarpfalz -alt- BLZ: 59491300",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -47629,7 +46819,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-rosenheim-oberbay-password",
+      "name": "de-volksraiffeisen-rosenheim-chiemsee-password",
       "displayName": "VR Bank Rosenheim-Chiemsee",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -47712,33 +46902,6 @@
     {
       "name": "de-volksraiffeisen-dinkelsbühl-password",
       "displayName": "VR Bank Dinkelsbühl",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "76591000 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-dinkelsbühl-password",
-      "displayName": "VR Bank Dinkelsbühl eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -48763,8 +47926,8 @@
       ]
     },
     {
-      "name": "de-psdbankköln-password",
-      "displayName": "PSD Bank Köln",
+      "name": "de-psdbankkölntrierniederlassung-password",
+      "displayName": "PSD Bank Trier Niederlassung der PSD Bank Köln",
       "groupDisplayName": "PSD Bank",
       "popular": false,
       "type": "BANK",
@@ -51383,7 +50546,7 @@
     },
     {
       "name": "de-volksraiffeisenraibaasbachnustadt-password",
-      "displayName": "Raiffeisenbank Neustadt",
+      "displayName": "Raiffeisenbank Asbach-Neustadt",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -52273,7 +51436,7 @@
       ]
     },
     {
-      "name": "de-mlpfinanzdienstleistungen-password",
+      "name": "de-mlpfinanzdienstleistungensiesloch-password",
       "displayName": "MLP Banking Wiesloch",
       "groupDisplayName": "MLP Banking",
       "popular": false,
@@ -52408,8 +51571,8 @@
       ]
     },
     {
-      "name": "de-fürstfuggerprivatbank-password",
-      "displayName": "Fürst Fugger Privatbank",
+      "name": "de-fürstfuggerprivatbank70030014-password",
+      "displayName": "Fürst Fugger Privatbank BLZ: 70030014",
       "groupDisplayName": "Fürst Fugger Privatbank",
       "popular": false,
       "type": "BANK",
@@ -52678,8 +51841,8 @@
       ]
     },
     {
-      "name": "de-fürstfuggerprivatbank-password",
-      "displayName": "Fürst Fugger Privatbank",
+      "name": "de-fürstfuggerprivatbank72030014-password",
+      "displayName": "Fürst Fugger Privatbank BLZ: 72030014",
       "groupDisplayName": "Fürst Fugger Privatbank",
       "popular": false,
       "type": "BANK",
@@ -53029,7 +52192,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisengenobankrhöngrabfeld-password",
+      "name": "de-volksraiffeisengenorhongrabfeld-password",
       "displayName": "Genobank Rhön-Grabfeld",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
