@@ -109,6 +109,40 @@
       "status": "ENABLED",
       "transactional": true,
       "type": "CREDIT_CARD"
+    },
+    {
+      "name": "fr-creditagricoleidf-password",
+      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+      "credentialsType": "PASSWORD",
+      "displayName": "Crédit Agricole",
+      "fields": [
+        {
+          "description": "Account number (11 digits)",
+          "immutable": false,
+          "pattern": "[0-9]{11}",
+          "name": "accountNumber",
+          "patternError": "Your account number was incorrect. Please try again."
+        },
+        {
+          "description": "Personal code (6 digits)",
+          "immutable": false,
+          "pattern": "[0-9]{6}",
+          "name": "accountCode",
+          "patternError": "Your personal code was incorrect. Please try again."
+        },
+        {
+          "description": "App passcode (4 digits)",
+          "immutable": false,
+          "pattern": "[0-9]{4}",
+          "name": "appCode",
+          "patternError": "App passcode was incorrect. Please try again."
+        }
+      ],
+      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+      "status": "ENABLED",
+      "payload": "882",
+      "transactional": true,
+      "type": "BANK"
     }
   ]
 }
