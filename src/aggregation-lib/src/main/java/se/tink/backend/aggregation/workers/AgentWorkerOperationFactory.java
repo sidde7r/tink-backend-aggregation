@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.workers.AgentWorkerOperation.AgentWorkerOperationState;
 import se.tink.backend.aggregation.workers.commands.CircuitBreakerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.CircuitBreakerAgentWorkerCommand.CircuitBreakerAgentWorkerCommandState;
+import se.tink.backend.aggregation.workers.commands.ClearSensitiveInformationCommand;
 import se.tink.backend.aggregation.workers.commands.DebugAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DebugAgentWorkerCommand.DebugAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.DecryptAgentWorkerCommand;
@@ -295,6 +296,8 @@ public class AgentWorkerOperationFactory {
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
+        commands.add(new ClearSensitiveInformationCommand(context));
+
         // acquire lock to avoid encryption/decryption race conditions
         commands.add(new LockAgentWorkerCommand(context));
 
@@ -328,6 +331,8 @@ public class AgentWorkerOperationFactory {
                 useAggregationController, aggregationControllerAggregationClient, clusterInfo);
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
+
+        commands.add(new ClearSensitiveInformationCommand(context));
 
         // acquire lock to avoid encryption/decryption race conditions
         commands.add(new LockAgentWorkerCommand(context));
