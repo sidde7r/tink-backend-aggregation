@@ -7,8 +7,12 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.core.AccountFlag;
 import se.tink.backend.core.Amount;
 import se.tink.libraries.account.AccountIdentifier;
+
+import java.util.Collection;
+import java.util.Collections;
 
 @JsonObject
 public class AgreementDto implements GeneralAccountEntity {
@@ -167,12 +171,22 @@ public class AgreementDto implements GeneralAccountEntity {
 
     public TransactionalAccount toTransactionalAccount() {
         return TransactionalAccount.builder(getAccountType(), agreementNo.getValue(), getAmount())
-                .setAccountNumber(agreementNo.getValue())
                 .setName(agreementMakeUp.getName().getValue())
                 .setHolderName(new HolderName(agreementName.getValue()))
                 .setBankIdentifier(agreementNo.getValue())
+                .setAccountNumber(agreementNo.getValue())
+                .setUniqueIdentifier(agreementNo.getValue())
                 .addIdentifier(generalGetAccountIdentifier())
+                .addAccountFlags(getAccountFlags())
                 .build();
+    }
+
+    private Collection<AccountFlag> getAccountFlags() {
+        return getIsBusinessAccount() ? Collections.singletonList(AccountFlag.BUSINESS) : Collections.EMPTY_LIST;
+    }
+
+    private boolean getIsBusinessAccount() {
+        return isBusiness != null && Boolean.valueOf(isBusiness.getValue());
     }
 
     @Override
