@@ -24,10 +24,8 @@ import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.rpc.FetchProductInformationParameterKey;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
-import se.tink.backend.aggregation.rpc.ProductType;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
@@ -36,12 +34,10 @@ import se.tink.backend.aggregation.rpc.UserProfile;
 import se.tink.backend.aggregation.utils.CookieContainer;
 import se.tink.backend.aggregation.utils.StringMasker;
 import se.tink.backend.common.config.AggregationWorkerConfiguration;
-import se.tink.backend.core.application.RefreshApplicationParameterKey;
 import se.tink.backend.core.signableoperation.SignableOperation;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.utils.StringUtils;
-import se.tink.libraries.application.GenericApplication;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigurationBase {
@@ -665,30 +661,6 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
                                 + ")"), signableOperation.getStatus() == SignableOperationStatuses.FAILED);
     }
 
-    protected void testFetchProductInformation(Credentials credentials, ProductType productType,
-            UUID productInstanceId, Map<FetchProductInformationParameterKey, Object> parameters) throws Exception {
-
-        testContext = new AgentTestContext(credentials);
-
-        Agent agent = instantiateAgent(createRefreshInformationRequest(credentials));
-
-        Assert.assertTrue("Agent does not implement create product executor", agent instanceof CreateProductExecutor);
-
-        ((CreateProductExecutor)agent).fetchProductInformation(productType, productInstanceId, parameters);
-    }
-
-    protected void testRefreshApplication(Credentials credentials, ProductType type, UUID applicationId,
-            Map<RefreshApplicationParameterKey, Object> parameters) throws Exception {
-
-        testContext = new AgentTestContext(credentials);
-
-        Agent agent = instantiateAgent(createRefreshInformationRequest(credentials));
-
-        Assert.assertTrue("Agent does not implement create product executor", agent instanceof CreateProductExecutor);
-
-        ((CreateProductExecutor)agent).refreshApplication(type, applicationId, parameters);
-    }
-
     private ClientFilterFactory getHttpLogFilter(Credentials credentials, HttpLoggableExecutor transferExecutor) {
         AggregationLogger log = new AggregationLogger(getClass());
         return new HttpLoggingFilterFactory(log, "TRANSFER", ImmutableList.<StringMasker>of(), transferExecutor.getClass());
@@ -696,36 +668,6 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
 
     public AgentTestContext getTestContext() {
         return testContext;
-    }
-
-    protected void testCreateAccount(Credentials credentials, GenericApplication application) throws Exception {
-        testCreateAccount(credentials, application, false);
-    }
-
-    protected void testCreateAccount(Credentials credentials, GenericApplication application, boolean loginBefore)
-            throws Exception {
-        Agent agent = instantiateAgent(createRefreshInformationRequest(credentials));
-
-        if (loginBefore) {
-            login(agent);
-        }
-
-        testCreateAccount(agent, application);
-
-        log.info("Created account");
-    }
-
-    private void testCreateAccount(Agent agent, GenericApplication application) throws Exception {
-        if (agent instanceof CreateProductExecutor) {
-            CreateProductExecutor productExecutor = (CreateProductExecutor) agent;
-
-            try {
-                productExecutor.create(application);
-            } catch (Exception e) {
-                log.warn("Caught exception while creating account", e);
-                throw e;
-            }
-        }
     }
 
     private Agent instantiateAgent(CredentialsRequest request) throws Exception {

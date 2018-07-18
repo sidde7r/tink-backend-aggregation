@@ -14,15 +14,12 @@ import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
 import se.tink.backend.aggregation.rpc.CreateCredentialsRequest;
-import se.tink.backend.aggregation.rpc.CreateProductRequest;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.DeleteCredentialsRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsDecryptRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsReencryptRequest;
-import se.tink.backend.aggregation.rpc.ProductInformationRequest;
 import se.tink.backend.aggregation.rpc.ReencryptionRequest;
-import se.tink.backend.aggregation.rpc.RefreshApplicationRequest;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.SupplementInformationRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
@@ -176,22 +173,6 @@ public class AggregationServiceResource implements AggregationService, Managed {
     public void updateRateLimits(ChangeProviderRateLimitsRequest request) {
         agentWorker.getRateLimitedExecutorService().setRateLimiterFactory(
                 constructProviderRateLimiterFactoryFromRequest(request));
-    }
-
-    @Override
-    public void createProduct(final CreateProductRequest request) throws Exception {
-        agentWorker.execute(agentWorkerCommandFactory.createCreateProductOperation(getClusterInfo(), request));
-    }
-
-    @Override
-    public void fetchProductInformation(ProductInformationRequest request) throws Exception {
-        agentWorker.execute(agentWorkerCommandFactory.createFetchProductInformationOperation(getClusterInfo(), request));
-
-    }
-
-    @Override
-    public void refreshApplication(RefreshApplicationRequest request) throws Exception {
-        agentWorker.execute(agentWorkerCommandFactory.createRefreshApplicationOperation(getClusterInfo(), request));
     }
 
     @Override

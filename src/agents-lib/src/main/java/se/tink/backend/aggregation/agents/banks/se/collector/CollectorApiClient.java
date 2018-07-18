@@ -12,14 +12,10 @@ import java.util.List;
 import java.util.Objects;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.banks.se.collector.models.AccountEntities;
 import se.tink.backend.aggregation.agents.banks.se.collector.models.AccountEntity;
 import se.tink.backend.aggregation.agents.banks.se.collector.models.CollectAuthenticationResponse;
 import se.tink.backend.aggregation.agents.banks.se.collector.models.CollectBankIdResponse;
-import se.tink.backend.aggregation.agents.banks.se.collector.models.CreateAccountRequest;
-import se.tink.backend.aggregation.agents.banks.se.collector.models.CreateSavingsAccountResponse;
-import se.tink.backend.aggregation.agents.banks.se.collector.models.GeneratePdfAgreementRequest;
 import se.tink.backend.aggregation.agents.banks.se.collector.models.InitBankIdRequest;
 import se.tink.backend.aggregation.agents.banks.se.collector.models.InitBankIdResponse;
 import se.tink.backend.aggregation.agents.banks.se.collector.models.InitSignRequest;
@@ -30,11 +26,9 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.system.rpc.Transaction;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.backend.core.transfer.Transfer;
-import se.tink.backend.rpc.TinkMediaType;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 class CollectorApiClient {
@@ -61,8 +55,6 @@ class CollectorApiClient {
     private static final String COLLECT_AUTH_URI = BANKID_AUTH_URI + "/%s";
     private static final String COLLECT_SIGN_URI = BANKID_SIGN_URI + "/%s";
     private static final String REFRESH_ACCESS_URI = BANKID_AUTH_URI + "/refresh/%s";
-
-    private static final String GENERATE_PDF_URI = "/pdfservice/generator/CollectorSave.pdf";
 
     private static final String BRIDGE_URI = String.format("/tink-bridge-%s", ENV);
     private static final String ACCOUNTS_URI = BRIDGE_URI + "/v1/accounts";
@@ -207,25 +199,6 @@ class CollectorApiClient {
         }
     }
 
-    String createSavingsAccount(CreateAccountRequest request) {
-        CreateSavingsAccountResponse response = post(ACCOUNTS_URI, request, CreateSavingsAccountResponse.class);
-        return response.getAccountId();
-    }
-
-    Optional<AccountEntity> fetchAccount(String accountId) {
-        fetchAccounts();
-
-        return Optional.ofNullable(accounts.find(accountId));
-    }
-
-    DocumentContainer generatePdfAgreement(GeneratePdfAgreementRequest request) {
-        ClientResponse response = createClientRequest(GENERATE_PDF_URI)
-                .accept(MediaType.MULTIPART_FORM_DATA)
-                .post(ClientResponse.class, request);
-
-        return new DocumentContainer(TinkMediaType.APPLICATION_PDF, response.getEntityInputStream());
-    }
-
     private <R> R get(String url, Class<R> responseClass) {
         return createClientRequest(url).get(responseClass);
     }
@@ -233,7 +206,6 @@ class CollectorApiClient {
     private <R> R post(String url, Object requestData, Class<R> responseClass) {
         return createClientRequest(url).post(responseClass, requestData);
     }
-
 
     private WebResource.Builder createClientRequest(String uri) {
         WebResource.Builder builder = client.resource(BASE_URL + uri)

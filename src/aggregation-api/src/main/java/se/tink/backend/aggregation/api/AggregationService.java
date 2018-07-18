@@ -12,15 +12,12 @@ import se.tink.api.annotations.Team;
 import se.tink.api.annotations.TeamOwnership;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
 import se.tink.backend.aggregation.rpc.CreateCredentialsRequest;
-import se.tink.backend.aggregation.rpc.CreateProductRequest;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.DeleteCredentialsRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsDecryptRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsReencryptRequest;
-import se.tink.backend.aggregation.rpc.ProductInformationRequest;
 import se.tink.backend.aggregation.rpc.ReencryptionRequest;
-import se.tink.backend.aggregation.rpc.RefreshApplicationRequest;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.SupplementInformationRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
@@ -93,30 +90,6 @@ public interface AggregationService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     void updateRateLimits(ChangeProviderRateLimitsRequest request);
-
-    @POST
-    @Path("product")
-    @TeamOwnership(Team.INTEGRATION)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Deprecated
-    void createProduct(CreateProductRequest request) throws Exception;
-
-    @POST
-    @Path("product/information")
-    @TeamOwnership(Team.INTEGRATION)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Deprecated
-    void fetchProductInformation(ProductInformationRequest request) throws Exception;
-
-    @POST
-    @Path("application/refresh")
-    @TeamOwnership(Team.INTEGRATION)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Deprecated
-    void refreshApplication(RefreshApplicationRequest request) throws Exception;
 
     @POST
     @Path("supplemental")
