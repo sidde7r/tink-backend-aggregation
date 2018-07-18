@@ -84,6 +84,10 @@ public class SwedbankDefaultApiClient {
         return buildAbstractRequest(url).put(responseClass, requestObject);
     }
 
+    private <T> T makeDeleteRequest(URL url, Object requestObject, Class<T> responseClass) {
+        return buildAbstractRequest(url).delete(responseClass, requestObject);
+    }
+
     private <T> T makeRequest(LinkEntity linkEntity, Class<T> responseClass) {
         return makeRequest(linkEntity, null, responseClass);
     }
@@ -109,6 +113,10 @@ public class SwedbankDefaultApiClient {
                     SwedbankBaseConstants.Url.createDynamicUrl(linkEntity.getUri(), parameters), responseClass);
         case PUT:
             return makePutRequest(
+                    SwedbankBaseConstants.Url.createDynamicUrl(linkEntity.getUri(), parameters), requestObject,
+                    responseClass);
+        case DELETE:
+            return makeDeleteRequest(
                     SwedbankBaseConstants.Url.createDynamicUrl(linkEntity.getUri(), parameters), requestObject,
                     responseClass);
         default:
@@ -276,6 +284,10 @@ public class SwedbankDefaultApiClient {
         return makeMenuItemRequest(
                 SwedbankBaseConstants.MenuItemKey.PAYMENTS_CONFIRMED,
                 PaymentsConfirmedResponse.class);
+    }
+
+    public HttpResponse deleteTransfer(LinkEntity linkEntity) {
+        return makeRequest(linkEntity, HttpResponse.class);
     }
 
     public PaymentDetailsResponse paymentDetails(LinkEntity linkEntity) {

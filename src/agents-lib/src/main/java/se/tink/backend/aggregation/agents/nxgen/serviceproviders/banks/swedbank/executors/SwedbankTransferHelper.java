@@ -35,7 +35,7 @@ public class SwedbankTransferHelper {
                     return bankIdSignResponse.getLinks();
                 case CANCELLED:
                     throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                            .setEndUserMessage(TransferExecutionException.EndUserMessage.BANKID_TRANSFER_FAILED)
+                            .setEndUserMessage(TransferExecutionException.EndUserMessage.BANKID_CANCELLED)
                             .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_CANCELLED).build();
                 case TIMEOUT:
                 default:

@@ -7,9 +7,8 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankDefaultApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.BaseTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.SwedbankTransferHelper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.ConfirmTransferResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.InitiateSignTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.RegisterTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.RegisteredTransfersResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.einvoice.rpc.EInvoiceDetailsResponse;
@@ -23,16 +22,11 @@ import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.core.transfer.TransferPayloadType;
 import se.tink.libraries.account.AccountIdentifier;
 
-public class SwedbankDefaultApproveEInvoiceExecutor implements ApproveEInvoiceExecutor {
-    private static final String EMPTY_STRING = "";
-
-    private final SwedbankDefaultApiClient apiClient;
-    private final SwedbankTransferHelper transferHelper;
+public class SwedbankDefaultApproveEInvoiceExecutor extends BaseTransferExecutor implements ApproveEInvoiceExecutor {
 
     public SwedbankDefaultApproveEInvoiceExecutor(SwedbankDefaultApiClient apiClient,
             SwedbankTransferHelper transferHelper) {
-        this.apiClient = apiClient;
-        this.transferHelper = transferHelper;
+        super(apiClient, transferHelper);
     }
 
     @Override
@@ -44,22 +38,8 @@ public class SwedbankDefaultApproveEInvoiceExecutor implements ApproveEInvoiceEx
         registeredTransfers.noUnsignedTransfersOrThrow();
 
         RegisteredTransfersResponse registeredTransfersResponse = registerEInvoice(transfer);
-        LinksEntity links = registeredTransfersResponse.getLinks();
 
-        SwedbankTransferHelper.ensureLinksNotNull(links,
-                TransferExecutionException.EndUserMessage.TRANSFER_CONFIRM_FAILED,
-                SwedbankBaseConstants.ErrorMessage.TRANSFER_CONFIRM_FAILED);
-
-        InitiateSignTransferResponse initiateSignTransfer = apiClient.signExternalTransfer(links.getSignOrThrow());
-        links = transferHelper.collectBankId(initiateSignTransfer);
-
-        SwedbankTransferHelper.ensureLinksNotNull(links,
-                TransferExecutionException.EndUserMessage.TRANSFER_CONFIRM_FAILED,
-                SwedbankBaseConstants.ErrorMessage.TRANSFER_CONFIRM_FAILED);
-
-        ConfirmTransferResponse confirmTransferResponse = apiClient.confirmTransfer(links.getNextOrThrow());
-        SwedbankTransferHelper.confirmSuccessfulTransfer(confirmTransferResponse,
-                registeredTransfersResponse.getIdToConfirm().orElse(EMPTY_STRING));
+        signAndConfirmTransfer(registeredTransfersResponse);
     }
 
     private RegisteredTransfersResponse registerEInvoice(Transfer transfer) {
