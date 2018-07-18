@@ -109,6 +109,7 @@ public class DetailedPortfolioEntity extends AbstractInvestmentAccountEntity {
 
         return Optional.of(InvestmentAccount.builder(accountNumber, marketValue.toTinkAmount(defaultCurrency))
                 .setAccountNumber(accountNumber)
+                .setUniqueIdentifier(accountNumber)
                 .setName(name)
                 .setPortfolios(portfolios)
                 .build());

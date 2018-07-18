@@ -5,8 +5,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class ReferenceEntity {
-    private String value;
     private String type; // Seen: OCR and MESSAGE
+    private String value;
 
     public String getValue() {
         return value;

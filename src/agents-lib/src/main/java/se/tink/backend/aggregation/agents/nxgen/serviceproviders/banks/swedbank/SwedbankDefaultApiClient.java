@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -39,6 +38,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.BankEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.BankProfile;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.BankProfileHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.EngagementOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.EngagementTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinkEntity;
@@ -50,6 +50,7 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SwedbankDefaultApiClient {
     private static final Logger log = LoggerFactory.getLogger(SwedbankDefaultApiClient.class);
@@ -57,16 +58,17 @@ public class SwedbankDefaultApiClient {
     protected final TinkHttpClient client;
     private final SwedbankConfiguration configuration;
     private final String username;
+    private final SessionStorage sessionStorage;
     private Map<String, MenuItemLinkEntity> menuItems;
     private EngagementOverviewResponse engagementOverviewResponse;
     private PaymentBaseinfoResponse paymentBaseinfoResponse;
-    private List<BankProfile> bankProfiles = new ArrayList<>();
-    private BankProfile activeBankProfile;
+    private BankProfileHandler bankProfileHandler;
 
-    SwedbankDefaultApiClient(TinkHttpClient client, SwedbankConfiguration configuration, String username) {
+    SwedbankDefaultApiClient(TinkHttpClient client, SwedbankConfiguration configuration, String username, SessionStorage sessionStorage) {
         this.client = client;
         this.configuration = configuration;
         this.username = username;
+        this.sessionStorage = sessionStorage;
         ensureAuthorizationHeaderIsSet();
     }
 
@@ -80,6 +82,10 @@ public class SwedbankDefaultApiClient {
 
     private <T> T makePutRequest(URL url, Object requestObject, Class<T> responseClass) {
         return buildAbstractRequest(url).put(responseClass, requestObject);
+    }
+
+    private <T> T makeDeleteRequest(URL url, Object requestObject, Class<T> responseClass) {
+        return buildAbstractRequest(url).delete(responseClass, requestObject);
     }
 
     private <T> T makeRequest(LinkEntity linkEntity, Class<T> responseClass) {
@@ -107,6 +113,10 @@ public class SwedbankDefaultApiClient {
                     SwedbankBaseConstants.Url.createDynamicUrl(linkEntity.getUri(), parameters), responseClass);
         case PUT:
             return makePutRequest(
+                    SwedbankBaseConstants.Url.createDynamicUrl(linkEntity.getUri(), parameters), requestObject,
+                    responseClass);
+        case DELETE:
+            return makeDeleteRequest(
                     SwedbankBaseConstants.Url.createDynamicUrl(linkEntity.getUri(), parameters), requestObject,
                     responseClass);
         default:
@@ -241,7 +251,7 @@ public class SwedbankDefaultApiClient {
             String sourceAccountId) {
         return makeMenuItemRequest(
                 SwedbankBaseConstants.MenuItemKey.REGISTER_PAYMENT,
-                RegisterPaymentRequest.create(amount, message, referenceType, date, destinationAccountId,
+                RegisterPaymentRequest.createPayment(amount, message, referenceType, date, destinationAccountId,
                         sourceAccountId),
                 RegisterTransferResponse.class);
     }
@@ -251,8 +261,8 @@ public class SwedbankDefaultApiClient {
             String destinationAccountId, String sourceAccountId) {
         return makeMenuItemRequest(
                 SwedbankBaseConstants.MenuItemKey.REGISTER_PAYMENT,
-                RegisterPaymentRequest.create(amount, message, referenceType, date, destinationAccountId,
-                        sourceAccountId),
+                RegisterPaymentRequest.createEinvoicePayment(amount, message, referenceType, date, destinationAccountId,
+                        sourceAccountId, eInvoiceId),
                 RegisterTransferResponse.class);
     }
 
@@ -276,6 +286,10 @@ public class SwedbankDefaultApiClient {
                 PaymentsConfirmedResponse.class);
     }
 
+    public HttpResponse deleteTransfer(LinkEntity linkEntity) {
+        return makeRequest(linkEntity, HttpResponse.class);
+    }
+
     public PaymentDetailsResponse paymentDetails(LinkEntity linkEntity) {
         return makeRequest(linkEntity, PaymentDetailsResponse.class);
     }
@@ -283,7 +297,7 @@ public class SwedbankDefaultApiClient {
     public RegisterTransferResponse updatePayment(LinkEntity linkEntity, double amount, String message,
             SwedbankBaseConstants.ReferenceType referenceType, Date date, String recipientId, String fromAccountId) {
         return makeRequest(linkEntity,
-                RegisterPaymentRequest.create(amount, message, referenceType, date, recipientId, fromAccountId),
+                RegisterPaymentRequest.createPayment(amount, message, referenceType, date, recipientId, fromAccountId),
                 RegisterTransferResponse.class);
     }
 
@@ -348,31 +362,43 @@ public class SwedbankDefaultApiClient {
     }
 
     public List<BankProfile> getBankProfiles() {
-        return bankProfiles;
+        return getBankProfileHandler().getBankProfiles();
     }
 
     public BankProfile selectProfile(BankProfile requestedBankProfile) {
-        if (requestedBankProfile.getBank().getBankId().equalsIgnoreCase(activeBankProfile.getBank().getBankId())) {
+        BankProfile activeBankProfile = getBankProfileHandler().getActiveBankProfile();
+        // check if we are active
+        if (activeBankProfile != null &&
+                requestedBankProfile.getBank().getBankId().equalsIgnoreCase(activeBankProfile.getBank().getBankId())) {
             return activeBankProfile;
         }
 
-        BankProfile foundBankProfile = bankProfiles.stream()
-                .filter(profile -> profile.getBank().getBankId().equalsIgnoreCase(requestedBankProfile.getBank().getBankId()))
-                .findFirst()
-                .orElseThrow(IllegalStateException::new);
+        BankProfile foundBankProfile = getBankProfileHandler().findProfile(requestedBankProfile);
 
         return activateProfile(foundBankProfile);
     }
 
     public void selectTransferProfile() {
-        int transferProfileIndex = bankProfiles.size() -1;
-
-        BankProfile transferProfile = bankProfiles.get(transferProfileIndex);
+        BankProfile transferProfile = getBankProfileHandler().findTransferProfile();
 
         selectProfile(transferProfile);
     }
 
+    // activate a profile at backend
+    private BankProfile activateProfile(BankProfile bankProfile) {
+
+        Map<String, MenuItemLinkEntity> profileMenuItems =
+                fetchProfile(bankProfile.getBank().getPrivateProfile().getLinks().getNextOrThrow());
+
+        getBankProfileHandler().setActiveBankProfile(bankProfile);
+
+        return getBankProfileHandler().getActiveBankProfile();
+    }
+
+    // setup and store bank profiles
     private void setupProfiles(ProfileResponse profileResponse) {
+        bankProfileHandler = new BankProfileHandler();
+
         for (BankEntity bank : profileResponse.getBanks()) {
             // fetch all profile details
             Map<String, MenuItemLinkEntity> profileMenuItems = fetchProfile(bank.getPrivateProfile().getLinks().getNextOrThrow());
@@ -380,28 +406,22 @@ public class SwedbankDefaultApiClient {
             PaymentBaseinfoResponse paymentBaseinfoResponse = fetchPaymentBaseinfo();
             // create and add profile
             BankProfile bankProfile = new BankProfile(bank, profileMenuItems, engagementOverViewResponse, paymentBaseinfoResponse);
-            bankProfiles.add(bankProfile);
-
-            setActiveBankProfile(bankProfile);
+            bankProfileHandler.addBankProfile(bankProfile);
+            // profile is already activated
+            bankProfileHandler.setActiveBankProfile(bankProfile);
         }
+
+        sessionStorage.put(SwedbankBaseConstants.StorageKey.BANK_PROFILE_HANDLER, bankProfileHandler);
     }
 
-    private BankProfile activateProfile(BankProfile bankProfile) {
+    private BankProfileHandler getBankProfileHandler() {
+        if (bankProfileHandler == null) {
+            bankProfileHandler = sessionStorage.get(SwedbankBaseConstants.StorageKey.BANK_PROFILE_HANDLER,
+                    BankProfileHandler.class)
+                    .orElseThrow(IllegalStateException::new);
+        }
 
-        SelectedProfileResponse selectedProfileResponse = makeRequest(
-                bankProfile.getBank().getPrivateProfile().getLinks().getNextOrThrow(),
-                SelectedProfileResponse.class);
-
-        setActiveBankProfile(bankProfile);
-
-        return activeBankProfile;
-    }
-
-    private void setActiveBankProfile(BankProfile bankProfile) {
-        menuItems = bankProfile.getMenuItems();
-        engagementOverviewResponse = bankProfile.getEngagementOverViewResponse();
-        paymentBaseinfoResponse = bankProfile.getPaymentBaseinfoResponse();
-        activeBankProfile = bankProfile;
+        return bankProfileHandler;
     }
 
     private Map<String, MenuItemLinkEntity> fetchProfile(LinkEntity linkEntity) {
@@ -429,7 +449,9 @@ public class SwedbankDefaultApiClient {
     }
 
     private boolean hasValidProfile(ProfileResponse profileResponse) {
-        return configuration.isSavingsBank() ? profileResponse.isHasSavingbankProfile() :
+        boolean hasValidBank = configuration.isSavingsBank() ? profileResponse.isHasSavingbankProfile() :
                 profileResponse.isHasSwedbankProfile();
+
+        return hasValidBank && profileResponse.getBanks().size() > 0;
     }
 }

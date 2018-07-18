@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.ReferenceEntity;
@@ -14,30 +15,50 @@ public class RegisterPaymentRequest {
 
     private final String amount;
     private final ReferenceEntity reference;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String einvoiceReference;
     private final String ocrScanned;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Stockholm")
     private final Date date;
-    private final String type;
     private final String recipientId;
+    private final String type;
     private final String fromAccountId;
 
     private RegisterPaymentRequest(String amount, ReferenceEntity reference, Date date, String recipientId,
-            String fromAccountId) {
+            String fromAccountId, String type, String eInvoiceReference) {
         this.amount = amount;
         this.reference = reference;
         this.ocrScanned = "NO";
         this.date = date;
-        this.type = "DOMESTIC";
+        this.type = type;
         this.recipientId = recipientId;
         this.fromAccountId = fromAccountId;
+        this.einvoiceReference = eInvoiceReference;
     }
 
-    public static RegisterPaymentRequest create(double amount, String message,
+    public static RegisterPaymentRequest createEinvoicePayment(double amount, String message,
+            SwedbankBaseConstants.ReferenceType referenceType, Date date, String recipientId,
+            String fromAccountId, String eInvoiceReference) {
+
+
+        return RegisterPaymentRequest.create(amount, message, referenceType, date, recipientId, fromAccountId,
+                SwedbankBaseConstants.PaymentType.EINVOICE, eInvoiceReference);
+    }
+
+    public static RegisterPaymentRequest createPayment(double amount, String message,
             SwedbankBaseConstants.ReferenceType referenceType, Date date, String recipientId, String fromAccountId) {
+
+        return RegisterPaymentRequest.create(amount, message, referenceType, date, recipientId, fromAccountId,
+                SwedbankBaseConstants.PaymentType.DOMESTIC, null);
+    }
+
+    private static RegisterPaymentRequest create(double amount, String message,
+            SwedbankBaseConstants.ReferenceType referenceType, Date date, String recipientId,
+            String fromAccountId, String type, String eInvoiceReference) {
 
         return new RegisterPaymentRequest(
                 String.valueOf(amount).replace(".", ","),
                 ReferenceEntity.create(message, referenceType),
-                date, recipientId, fromAccountId);
+                date, recipientId, fromAccountId, type, eInvoiceReference);
     }
 }
