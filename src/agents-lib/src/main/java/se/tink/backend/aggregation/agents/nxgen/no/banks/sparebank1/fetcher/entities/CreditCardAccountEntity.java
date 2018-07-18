@@ -47,6 +47,7 @@ public class CreditCardAccountEntity {
                 Sparebank1AmountUtils.constructAmount(creditLimitInteger, creditLimitFraction))
                 .setAccountNumber(formattedNumber)
                 .setName(name)
+                .setBankIdentifier(id)
                 .build();
     }
 
