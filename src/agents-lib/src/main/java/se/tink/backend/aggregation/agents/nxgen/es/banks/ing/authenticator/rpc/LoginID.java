@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.authenticator.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.IngConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -12,7 +13,12 @@ public class LoginID {
 
     public LoginID(String document, String birthday) {
         loginDocument.setDocument(document);
-        this.birthday = birthday;
+        this.birthday = getFormattedBirthday(birthday);
+    }
+
+    @JsonIgnore
+    private String getFormattedBirthday(String birthday) {
+        return new StringBuilder(birthday).insert(4, "/").insert(2, "/").toString();
     }
 
     public String getDevice() {
