@@ -18,7 +18,8 @@ public class ClusterId {
     private ClusterId(String name, String environment, String aggregator) {
         this.name = name;
         this.environment = environment;
-        this.aggregator = Aggregator.of(aggregator);
+        this.aggregator = (Objects.isNull(aggregator) || aggregator.equals("")) ?
+                Aggregator.of(getAggregatorFromEnvironment()) : Aggregator.of(aggregator);
     }
 
     public MetricId.MetricLabels metricLabels() {
@@ -49,6 +50,14 @@ public class ClusterId {
 
     public Aggregator getAggregator(){
         return aggregator;
+    }
+
+    public String getAggregatorFromEnvironment(){
+        //if environment is oxford, ignore this
+        if(environment.toLowerCase().contains("oxford")){
+            return aggregator.DEFAULT;
+        }
+        return "Aggregator: " + environment;
     }
 
     public static ClusterId createFromHttpServletRequest(HttpServletRequest request) {
