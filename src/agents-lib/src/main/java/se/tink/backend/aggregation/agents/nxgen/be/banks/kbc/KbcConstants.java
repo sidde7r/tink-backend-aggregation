@@ -50,7 +50,7 @@ public class KbcConstants {
 
         @Override
         public URL get() {
-            return url;
+            return url.queryParam("version", VERSION);
         }
 
         @Override
@@ -64,6 +64,7 @@ public class KbcConstants {
         }
 
         public static final String HOST = "https://mobile.kbc-group.com";
+        public static final String VERSION = "1805";
 
         private static String createUrlWithHost(String uri) {
             return HOST + uri;
@@ -81,7 +82,7 @@ public class KbcConstants {
 
     public static class RequestInput {
         public static final String APP_FAMILY = "PHNIOSV1";
-        public static final String VERSION_NUMBER = "18.2.1";
+        public static final String VERSION_NUMBER = "18.5.0";
         public static final String APPLICATION_ID = "3700";
         public static final String COMPANY_ID = "0001";
 
