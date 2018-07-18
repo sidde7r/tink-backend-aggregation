@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.accounts;
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsAccountTypeConverter;
+import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.rpc.AccountTypes;
@@ -27,7 +29,6 @@ public class SEPAAccount {
     private String balance;
 
     public String getBalance() {
-
         return balance;
     }
 
@@ -152,12 +153,49 @@ public class SEPAAccount {
                 getType(),
                 getAccountNo(),
                 new Amount(getCurrency(), StringUtils.parseAmount(getBalance())))
-                .setAccountNumber(getAccountNo())
                 .setHolderName(new HolderName(getHolderName()))
                 .setName(getProductName())
+                .setAccountNumber(getAccountNo())
                 .setBankIdentifier(getBlz() + getAccountNo())
                 .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, getIban()))
                 .build();
+    }
+
+    public CreditCardAccount toTinkCreditCardAccount() {
+        verifyCreditCardAccount();
+
+        CreditCardAccount.Builder<?, ?> builder = CreditCardAccount.builder(
+                getAccountNo(),
+                getAmount(getCurrency(), getBalance()),
+                getAmount(getCurrency(), getAccountLimit()))
+                .setHolderName(new HolderName(getHolderName()))
+                .setName(getProductName())
+                .setAccountNumber(getAccountNo())
+                .setBankIdentifier(getBlz() + getAccountNo())
+                .setUniqueIdentifier(getBlz() + getAccountNo());
+
+        if (iban != null && !iban.isEmpty())
+            builder.addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, getIban()));
+
+        return builder.build();
+
+    }
+
+    private Amount getAmount(String currency, String amount) {
+        Double value;
+        if (amount == null || amount.isEmpty()) {
+            value = 0.0;
+        } else {
+            value = StringUtils.parseAmount(amount);
+        }
+        return new Amount(currency, value);
+    }
+
+    private void verifyCreditCardAccount() {
+        if (!AccountTypes.CREDIT_CARD.equals(FinTsAccountTypeConverter.getAccountTypeFor(accountType)))
+        {
+            throw new IllegalStateException(String.format("Invalid accountType %d for credit card account", accountType));
+        }
     }
 
     private String getHolderName() {
@@ -170,11 +208,10 @@ public class SEPAAccount {
 
     // Only consider transactional types for now
     private AccountTypes getType() {
-
-        if (accountType > 0 && accountType < 10) {
-            return AccountTypes.CHECKING;
-        } else if (accountType >= 10 && accountType < 20) {
-            return AccountTypes.SAVINGS;
+        if(AccountTypes.CHECKING.equals(FinTsAccountTypeConverter.getAccountTypeFor(accountType)) ||
+                AccountTypes.SAVINGS.equals(FinTsAccountTypeConverter.getAccountTypeFor(accountType)))
+        {
+            return FinTsAccountTypeConverter.getAccountTypeFor(accountType);
         } else {
             throw new IllegalStateException("Invalid accountType for transactional account");
         }
