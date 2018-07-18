@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.authenticator;
 
+import com.google.common.base.Strings;
 import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.authenticator.rpc.LoginID;
@@ -32,12 +33,17 @@ public class IngAuthenticator implements Authenticator {
 
         String username = credentials.getField(Field.Key.USERNAME);
         String dateOfBirth = credentials.getField(IngConstants.DATE_OF_BIRTH);
+        String pin = credentials.getField(Field.Key.PASSWORD);
+
+        if (Strings.isNullOrEmpty(username) || Strings.isNullOrEmpty(dateOfBirth) || Strings.isNullOrEmpty(pin)) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
 
         LoginID userID = new LoginID(username, dateOfBirth);
 
         LoginPinPad pinpad = apiClient.postLoginRestSession(userID);
 
-        LoginPinPositions positions = this.positions(pinpad, credentials);
+        LoginPinPositions positions = this.positions(pinpad, pin);
 
         LoginTicket loginTicket = apiClient.putLoginRestSession(positions);
 
@@ -50,10 +56,7 @@ public class IngAuthenticator implements Authenticator {
         }
     }
 
-    private LoginPinPositions positions(LoginPinPad pinPad, Credentials credentials) throws LoginException {
-
-        // A string of 6 digits
-        String pin = credentials.getField(Field.Key.PASSWORD);
+    private LoginPinPositions positions(LoginPinPad pinPad, String pin) {
 
         // 1-based positions of the pin digits to respond with
         List<Integer> positionsOfDigitsToIdentify = pinPad.getPinPositions();
