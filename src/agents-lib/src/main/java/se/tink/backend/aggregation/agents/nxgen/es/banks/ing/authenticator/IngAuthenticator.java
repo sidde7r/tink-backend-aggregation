@@ -60,7 +60,6 @@ public class IngAuthenticator implements Authenticator {
 
         // 1-based positions of the pin digits to respond with
         List<Integer> positionsOfDigitsToIdentify = pinPad.getPinPositions();
-        int numberOfDigitsToIdentify = positionsOfDigitsToIdentify.size();
 
         // The pin pad (keyboard) on which we shall identify the digits
         List<Integer> pinPadNumbers = pinPad.getPinPadNumbers();
@@ -68,7 +67,7 @@ public class IngAuthenticator implements Authenticator {
         // List of indices pointing to where on the pin pad the digits are
         List<Integer> identifiedPositions = positionsOfDigitsToIdentify.stream()
                 .map(endIndex -> Integer.valueOf(pin.substring(endIndex - 1, endIndex)))
-                .map(digitToFind -> pinPadNumbers.indexOf(digitToFind))
+                .map(pinPadNumbers::indexOf)
                 .collect(Collectors.toList());
 
         return new LoginPinPositions(identifiedPositions);
