@@ -94,14 +94,6 @@
           "numeric": true,
           "minLength": 1,
           "sensitive": true
-        },
-        {
-          "description": "Response code",
-          "name": "otp",
-          "numeric": true,
-          "minLength": 1,
-          "sensitive": true,
-          "helpText": "1  Insert your ING bank card into the ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png)\n<br>ING Card Reader\n2  Press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_IDENTIFY.png)\n3  Enter your PIN\n4  Press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png)\nEnter the respond code"
         }
       ],
       "multiFactor": true,

@@ -11,13 +11,11 @@ public class IngAgentTest {
 
     private static final String USERNAME = "";
     private static final String CARD_ID = "";
-    private static final String OTP = "";
 
     private static final AgentIntegrationTest.Builder builder =
             new AgentIntegrationTest.Builder("be", "be-ing-cardreader")
                     .addCredentialField(Field.Key.USERNAME, USERNAME)
                     .addCredentialField("cardId", CARD_ID)
-                    .addCredentialField("otp", OTP)
                     .loadCredentialsBefore(true)
                     .saveCredentialsAfter(true);
 

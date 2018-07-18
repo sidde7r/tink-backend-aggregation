@@ -45,7 +45,9 @@ public class IngCardReaderAuthenticationController implements MultiFactorAuthent
 
         String username = credentials.getField(Field.Key.USERNAME);
         String cardNumber = credentials.getField(CARD_ID_FIELD);
-        String otp = credentials.getField(OTP_FIELD);
+
+        Map<String, String> supplementalInformation = supplementalInformationController.askSupplementalInformation(getOTPField());
+        String otp = supplementalInformation.get(OTP_FIELD);
 
         if (Strings.isNullOrEmpty(username)
                 || Strings.isNullOrEmpty(cardNumber)
@@ -55,7 +57,7 @@ public class IngCardReaderAuthenticationController implements MultiFactorAuthent
 
         ChallengeExchangeValues challengeExchangeValues = authenticator.initEnroll(username, cardNumber, otp);
 
-        Map<String, String> supplementalInformation = supplementalInformationController
+        supplementalInformation = supplementalInformationController
                 .askSupplementalInformation(
                         getChallengeField(challengeExchangeValues.getChallenge()),
                         getChallengeResponseField()
@@ -68,6 +70,20 @@ public class IngCardReaderAuthenticationController implements MultiFactorAuthent
         );
 
         authenticator.authenticate(username);
+    }
+
+    private Field getOTPField(){
+     Field otpField = new Field();
+     otpField.setDescription("Response code");
+     otpField.setName(OTP_FIELD);
+     otpField.setNumeric(true);
+     otpField.setSensitive(true);
+     otpField.setHelpText("1  Insert your ING bank card into the ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png)\n<br>ING Card Reader\n"
+             + "2  Press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_IDENTIFY.png)\n"
+             + "3  Enter your PIN\n"
+             + "4  Press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png)\n"
+             + "Enter the respond code");
+     return otpField;
     }
 
     private Field getChallengeField(String challenge) {
