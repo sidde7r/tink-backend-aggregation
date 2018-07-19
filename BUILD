@@ -673,3 +673,59 @@ junit_test(
         "//third_party:net_sourceforge_tess4j",
     ],
 )
+
+java_library(
+     name = "provider-service",
+     srcs = glob(["src/provider-service/src/main/**/*.java"]),
+     data = [
+         "//data",
+     ],
+     deps = [
+         ":common-lib",
+          "//src/libraries/auth:auth",
+          "//src/libraries/discovery:discovery",
+          "//src/libraries/dropwizard_utils:dropwizard-utils",
+          "//src/libraries/metrics:metrics",
+          "//src/libraries/cluster:cluster",
+
+         "//third_party:com_google_guava_guava",
+         "//third_party:com_google_inject_guice",
+         "//third_party:com_netflix_governator",
+         "//third_party:io_dropwizard_dropwizard_core",
+     ],
+)
+
+java_binary(
+    name = "provider",
+    srcs = glob(["src/provider-service/src/main/**/*.java"]),
+    data = [
+        "etc/development-provider-server.yml",
+        "//data",
+    ],
+    main_class = "se.tink.backend.aggregation.provider.ProviderServiceContainer",
+    visibility = ["//visibility:public"],
+    runtime_deps = [
+        "//third_party:mysql_mysql_connector_java",
+    ],
+    deps = [
+        ":common-lib",
+          "//src/libraries/auth:auth",
+          "//src/libraries/discovery:discovery",
+          "//src/libraries/dropwizard_utils:dropwizard-utils",
+          "//src/libraries/metrics:metrics",
+          "//src/libraries/cluster:cluster",
+
+         "//third_party:com_google_guava_guava",
+         "//third_party:com_google_inject_guice",
+         "//third_party:com_netflix_governator",
+         "//third_party:io_dropwizard_dropwizard_core",
+    ],
+)
+
+genrule(
+    name = "renamed-provider-deploy-jar",
+    srcs = [":provider_deploy.jar"],
+    outs = ["provider-service.jar"],
+    cmd = "cp $(location :provider_deploy.jar) \"$(@)\"",
+    visibility = ["//visibility:public"],
+)
