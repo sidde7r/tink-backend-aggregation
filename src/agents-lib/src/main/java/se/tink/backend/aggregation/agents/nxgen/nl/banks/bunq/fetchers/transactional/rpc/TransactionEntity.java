@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import java.util.Date;
+import javax.ws.rs.HEAD;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
@@ -76,8 +77,9 @@ public class TransactionEntity {
     }
 
     private String getTinkDescription() {
-        if (counterpartyAlias != null && !Strings.isNullOrEmpty(counterpartyAlias.getDisplayName()))
+        if (counterpartyAlias != null && !Strings.isNullOrEmpty(counterpartyAlias.getDisplayName())) {
             return counterpartyAlias.getDisplayName();
+        }
         return description;
     }
 }
