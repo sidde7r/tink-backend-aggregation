@@ -175,7 +175,6 @@ public class AgreementDto implements GeneralAccountEntity {
                 .setHolderName(new HolderName(agreementName.getValue()))
                 .setBankIdentifier(agreementNo.getValue())
                 .setAccountNumber(agreementNo.getValue())
-                .setUniqueIdentifier(agreementNo.getValue())
                 .addIdentifier(generalGetAccountIdentifier())
                 .addAccountFlags(getAccountFlags())
                 .build();
