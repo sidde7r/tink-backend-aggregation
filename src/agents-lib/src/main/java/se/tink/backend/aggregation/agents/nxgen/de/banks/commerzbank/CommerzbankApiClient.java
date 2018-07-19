@@ -41,7 +41,7 @@ public class CommerzbankApiClient {
                 .header(CommerzbankConstants.HEADERS.CONTENT_TYPE, CommerzbankConstants.VALUES.JSON)
                 .header(CommerzbankConstants.HEADERS.COOKIE, storage.get(CommerzbankConstants.HEADERS.COOKIE))
                 .header(CommerzbankConstants.HEADERS.CCB_CLIENT_VERSION, CommerzbankConstants.VALUES.CCB_VALUE)
-                .header(CommerzbankConstants.HEADERS.USER_AGENT, AbstractAgent.DEFAULT_USER_AGENT);
+                .header(CommerzbankConstants.HEADERS.USER_AGENT, CommerzbankConstants.VALUES.USER_AGENT_VALUE);
     }
 
     public HttpResponse login(String username, String password) throws JsonProcessingException {
