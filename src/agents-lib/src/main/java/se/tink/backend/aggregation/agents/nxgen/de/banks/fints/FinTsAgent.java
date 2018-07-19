@@ -27,7 +27,7 @@ import java.util.Optional;
 
 public class FinTsAgent extends NextGenerationAgent {
 
-    private se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsApiClient apiClient;
+    private FinTsApiClient apiClient;
 
     public FinTsAgent(CredentialsRequest request, AgentContext context) {
         super(request, context);
@@ -39,7 +39,7 @@ public class FinTsAgent extends NextGenerationAgent {
                         request.getCredentials().getField(Field.Key.USERNAME),
                         request.getCredentials().getField(Field.Key.PASSWORD));
 
-        this.apiClient = new se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsApiClient(this.client, configuration);
+        this.apiClient = new FinTsApiClient(this.client, configuration);
     }
 
     @Override

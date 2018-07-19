@@ -1,6 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.accounts;
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
+import io.netty.util.internal.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsAccountTypeConverter;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
@@ -11,6 +15,7 @@ import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.account.AccountIdentifier;
 
 public class SEPAAccount {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SEPAAccount.class);
 
     private String iban;
     private String bic;
@@ -61,7 +66,7 @@ public class SEPAAccount {
     }
 
     public String getCurrency() {
-        return currency;
+        return StringUtil.isNullOrEmpty(currency) ? FinTsConstants.CURRENCY : currency;
     }
 
     public void setCurrency(String currency) {
@@ -164,6 +169,8 @@ public class SEPAAccount {
     public CreditCardAccount toTinkCreditCardAccount() {
         verifyCreditCardAccount();
 
+        logCreditCardInformation();
+
         CreditCardAccount.Builder<?, ?> builder = CreditCardAccount.builder(
                 getAccountNo(),
                 getAmount(getCurrency(), getBalance()),
@@ -171,24 +178,23 @@ public class SEPAAccount {
                 .setHolderName(new HolderName(getHolderName()))
                 .setName(getProductName())
                 .setAccountNumber(getAccountNo())
-                .setBankIdentifier(getBlz() + getAccountNo())
                 .setUniqueIdentifier(getBlz() + getAccountNo());
 
-        if (iban != null && !iban.isEmpty())
+        if (!StringUtil.isNullOrEmpty(getIban())) {
             builder.addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, getIban()));
+        }
 
         return builder.build();
 
     }
 
+    private void logCreditCardInformation() {
+        LOGGER.info("{} Accounttype: {}, account limit \"{}\", balance \"{}\"", FinTsConstants.LogTags.CREDIT_CARD_INFORMATION, accountType, accountLimit, balance);
+    }
+
     private Amount getAmount(String currency, String amount) {
-        Double value;
-        if (amount == null || amount.isEmpty()) {
-            value = 0.0;
-        } else {
-            value = StringUtils.parseAmount(amount);
-        }
-        return new Amount(currency, value);
+        Double amountValue = StringUtil.isNullOrEmpty(amount) ? 0.0 : StringUtils.parseAmount(amount);
+        return new Amount(currency, amountValue);
     }
 
     private void verifyCreditCardAccount() {
