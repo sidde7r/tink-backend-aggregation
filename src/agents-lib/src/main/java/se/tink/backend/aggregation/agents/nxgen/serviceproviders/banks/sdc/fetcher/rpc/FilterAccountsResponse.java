@@ -20,7 +20,7 @@ public class FilterAccountsResponse extends ArrayList<SdcAccount> {
     @JsonIgnore
     public Collection<TransactionalAccount> getTinkAccounts(SdcConfiguration agentConfiguration) {
         return stream()
-                .filter(a -> !a.isLoanAccount() && !a.isCreditCardAccount())
+                .filter(a -> a.isTransactionalAccount() && !a.isLoanAccount() && !a.isCreditCardAccount())
                 .map(a -> a.toTinkAccount(agentConfiguration))
                 .collect(Collectors.toList());
     }

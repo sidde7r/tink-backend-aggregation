@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetc
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConstants;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.agents.utils.typeguesser.TypeGuesser;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.rpc.AccountTypes;
@@ -72,8 +72,25 @@ public class SdcAccount {
     }
 
     @JsonIgnore
+    public boolean isTransactionalAccount() {
+        return isAccountType(AccountTypes.SAVINGS) ||
+                isAccountType(AccountTypes.CHECKING) ||
+                isAccountType(AccountTypes.OTHER);
+    }
+
+    @JsonIgnore
     public boolean isCreditCardAccount() {
         return isAccountType(SdcConstants.AccountType.CREDIT_CARD);
+    }
+
+    @JsonIgnore
+    private boolean isAccountType(AccountTypes type) {
+        if (productElementType != null) {
+            SdcConstants.AccountType accountType = SdcConstants.AccountType.fromProductType(productElementType);
+            return type == accountType.getTinkAccountType();
+        }
+
+        return false;
     }
 
     @JsonIgnore
