@@ -1,5 +1,8 @@
 banner:default	NULL
 default	NULL
+icon:be-belfius-cardreader https://cdn.tink.se/provider-images/be-belfius-cardreader.png
+icon:be-ing-cardreader https://cdn.tink.se/provider-images/be-ing-cardreader.png
+icon:be-kbc-cardreader https://cdn.tink.se/provider-images/be-kbc-cardreader.png
 icon:alandsbanken	https://cdn.tink.se/provider-images/alandsbanken_v2.png
 icon:americanexpress	https://cdn.tink.se/provider-images/americanexpress.png
 icon:amfabank	https://cdn.tink.se/provider-images/amfabank.png
