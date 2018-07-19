@@ -307,10 +307,12 @@ public class ProductsEntity {
     }
 
     public AccountTypes getType() {
-        if (getProductId().getProductType().equals(CommerzbankConstants.VALUES.CURRENT_ACCOUNT)) {
-            return AccountTypes.CHECKING;
-        } else
-            return AccountTypes.OTHER;
+        switch (getProductId().getProductType()){
+            case CommerzbankConstants.VALUES.CURRENT_ACCOUNT:
+                return AccountTypes.CHECKING;
+            default:
+                return AccountTypes.OTHER;
+        }
     }
 
     public Amount getTinkBalance() {
@@ -320,11 +322,13 @@ public class ProductsEntity {
     public TransactionalAccount toTransactionalAccount() {
 
         return TransactionalAccount.builder(getType(), getInternalAccountNumber(), getTinkBalance())
+                .setAccountNumber(getProductNumber())
                 .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
                 .addToTemporaryStorage(CommerzbankConstants.HEADERS.IDENTIFIER, getProductId().getIdentifier())
                 .addToTemporaryStorage(CommerzbankConstants.HEADERS.PRODUCT_TYPE, getProductId().getProductType())
                 .build();
     }
+
 
     public Object getConvertedBalance() {
         return convertedBalance;
