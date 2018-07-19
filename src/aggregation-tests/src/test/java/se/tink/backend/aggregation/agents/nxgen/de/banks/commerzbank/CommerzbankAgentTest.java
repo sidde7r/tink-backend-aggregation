@@ -13,7 +13,7 @@ public class CommerzbankAgentTest {
 
     @Test
     public void refresh() throws Exception {
-        new AgentIntegrationTest.Builder("de", "commerzbank-password")
+        new AgentIntegrationTest.Builder("de", "de-commerzbank-password")
                 .addCredentialField(Field.Key.USERNAME, USERNAME)
                 .addCredentialField(Field.Key.PASSWORD, PASSWORD)
                 .loadCredentialsBefore(false)
