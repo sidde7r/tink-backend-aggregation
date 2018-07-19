@@ -15,11 +15,22 @@ public class ClusterId {
     private final String environment;
     private final Aggregator aggregator;
 
-    private ClusterId(String name, String environment, String aggregator) {
+    private ClusterId(String name, String environment, String aggregatorHeader) {
         this.name = name;
         this.environment = environment;
-        this.aggregator = (Objects.isNull(aggregator) || aggregator.equals("")) ?
-                Aggregator.of(getAggregatorFromEnvironment()) : Aggregator.of(aggregator);
+        this.aggregator = initAggregator(aggregatorHeader);
+    }
+
+    private Aggregator initAggregator(String aggregatorHeader){
+        if(!(Objects.isNull(aggregatorHeader) || aggregatorHeader.equals(""))){
+            return Aggregator.of(aggregatorHeader);
+        }
+
+        if(!environment.toLowerCase().contains("oxford")){
+            return Aggregator.of("Aggregator: " + environment);
+        }
+
+        return  Aggregator.of(aggregator.DEFAULT);
     }
 
     public MetricId.MetricLabels metricLabels() {
