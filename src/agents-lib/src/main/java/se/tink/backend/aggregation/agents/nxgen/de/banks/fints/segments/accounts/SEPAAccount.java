@@ -1,6 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.accounts;
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
+import io.netty.util.internal.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsAccountTypeConverter;
+import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.rpc.AccountTypes;
@@ -9,6 +15,7 @@ import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.account.AccountIdentifier;
 
 public class SEPAAccount {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SEPAAccount.class);
 
     private String iban;
     private String bic;
@@ -27,7 +34,6 @@ public class SEPAAccount {
     private String balance;
 
     public String getBalance() {
-
         return balance;
     }
 
@@ -60,7 +66,7 @@ public class SEPAAccount {
     }
 
     public String getCurrency() {
-        return currency;
+        return StringUtil.isNullOrEmpty(currency) ? FinTsConstants.CURRENCY : currency;
     }
 
     public void setCurrency(String currency) {
@@ -152,12 +158,50 @@ public class SEPAAccount {
                 getType(),
                 getAccountNo(),
                 new Amount(getCurrency(), StringUtils.parseAmount(getBalance())))
-                .setAccountNumber(getAccountNo())
                 .setHolderName(new HolderName(getHolderName()))
                 .setName(getProductName())
+                .setAccountNumber(getAccountNo())
                 .setBankIdentifier(getBlz() + getAccountNo())
                 .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, getIban()))
                 .build();
+    }
+
+    public CreditCardAccount toTinkCreditCardAccount() {
+        verifyCreditCardAccount();
+
+        logCreditCardInformation();
+
+        CreditCardAccount.Builder<?, ?> builder = CreditCardAccount.builder(
+                getAccountNo(),
+                getAmount(getCurrency(), getBalance()),
+                getAmount(getCurrency(), getAccountLimit()))
+                .setHolderName(new HolderName(getHolderName()))
+                .setName(getProductName())
+                .setAccountNumber(getAccountNo())
+                .setUniqueIdentifier(getBlz() + getAccountNo());
+
+        if (!StringUtil.isNullOrEmpty(getIban())) {
+            builder.addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, getIban()));
+        }
+
+        return builder.build();
+
+    }
+
+    private void logCreditCardInformation() {
+        LOGGER.info("{} Accounttype: {}, account limit \"{}\", balance \"{}\"", FinTsConstants.LogTags.CREDIT_CARD_INFORMATION, accountType, accountLimit, balance);
+    }
+
+    private Amount getAmount(String currency, String amount) {
+        Double amountValue = StringUtil.isNullOrEmpty(amount) ? 0.0 : StringUtils.parseAmount(amount);
+        return new Amount(currency, amountValue);
+    }
+
+    private void verifyCreditCardAccount() {
+        if (!AccountTypes.CREDIT_CARD.equals(FinTsAccountTypeConverter.getAccountTypeFor(accountType)))
+        {
+            throw new IllegalStateException(String.format("Invalid accountType %d for credit card account", accountType));
+        }
     }
 
     private String getHolderName() {
@@ -170,11 +214,10 @@ public class SEPAAccount {
 
     // Only consider transactional types for now
     private AccountTypes getType() {
-
-        if (accountType > 0 && accountType < 10) {
-            return AccountTypes.CHECKING;
-        } else if (accountType >= 10 && accountType < 20) {
-            return AccountTypes.SAVINGS;
+        if(AccountTypes.CHECKING.equals(FinTsAccountTypeConverter.getAccountTypeFor(accountType)) ||
+                AccountTypes.SAVINGS.equals(FinTsAccountTypeConverter.getAccountTypeFor(accountType)))
+        {
+            return FinTsAccountTypeConverter.getAccountTypeFor(accountType);
         } else {
             throw new IllegalStateException("Invalid accountType for transactional account");
         }

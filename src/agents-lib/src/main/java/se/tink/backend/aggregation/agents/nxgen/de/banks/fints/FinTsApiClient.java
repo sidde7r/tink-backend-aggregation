@@ -1,6 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints;
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.accounts.HKSPA;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.accounts.SEPAAccount;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.auth.HKIDN;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.auth.HKSYN;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.auth.HKVVB;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.dialog.HKEND;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.saldo.HKSAL;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.statement.HKKAZ;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.statement.MT940Statement;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsParser;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -13,17 +25,6 @@ import java.util.Objects;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.accounts.HKSPA;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.accounts.SEPAAccount;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.auth.HKIDN;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.auth.HKSYN;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.auth.HKVVB;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.dialog.HKEND;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.saldo.HKSAL;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.statement.HKKAZ;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.statement.MT940Statement;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsParser;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
 public class FinTsApiClient {
     private final TinkHttpClient apiClient;
@@ -51,7 +52,7 @@ public class FinTsApiClient {
         String plainResponse = new String(Base64.getDecoder().decode(b64Response.replaceAll("\\R", "")));
         FinTsResponse response = new FinTsResponse(plainResponse);
 
-        this.increaseMessageNumber(response);
+        this.messageNumber++;
 
         return response;
     }
@@ -197,12 +198,6 @@ public class FinTsApiClient {
         this.dialogId = initResponse.getDialogId();
     }
 
-    private void increaseMessageNumber(FinTsResponse response) {
-        if (response.isSuccess()) {
-            this.messageNumber++;
-        }
-    }
-
     public boolean keepAlive() {
         FinTsRequest getAccountRequest =
                 new FinTsRequest(
@@ -296,7 +291,9 @@ public class FinTsApiClient {
         String segment = response.findSegment(FinTsConstants.Segments.HIKAZ);
 
         Map<String, String> status = response.getLocalStatus();
-        if (status.containsValue(FinTsConstants.StatusCode.NO_ENTRY) ||
+
+        if (status.containsValue(FinTsConstants.StatusCode.ACCOUNT_NOT_ASSIGNED) ||
+                status.containsValue(FinTsConstants.StatusCode.NO_ENTRY) ||
                 status.containsValue(FinTsConstants.StatusCode.NO_DATA_AVAILABLE) ||
                 status.containsValue(FinTsConstants.StatusCode.TECHNICAL_ERROR) ||
                 Strings.isNullOrEmpty(segment)) {
