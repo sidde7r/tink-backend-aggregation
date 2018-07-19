@@ -44,7 +44,7 @@
       "multiFactor": true,
       "name": "be-bnppf-jwt",
       "popular": false,
-      "status": "ENABLED",
+      "status": "OBSOLETE",
       "transactional": true,
       "type": "BANK"
     },
