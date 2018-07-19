@@ -2,12 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.fetchers.transact
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
 public class TransactionEntity {
+    // Official SDK https://github.com/bunq/sdk_java/blob/develop/src/main/java/com/bunq/sdk/model/generated/endpoint/Payment.java
     @JsonProperty("id")
     private String transactionId;
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss.SSSSS")
@@ -69,6 +71,13 @@ public class TransactionEntity {
         return Transaction.builder()
                 .setDate(created)
                 .setAmount(amount.getAsTinkAmount())
-                .setDescription(description).build();
+                .setDescription(getTinkDescription())
+                .build();
+    }
+
+    private String getTinkDescription() {
+        if (counterpartyAlias != null && !Strings.isNullOrEmpty(counterpartyAlias.getDisplayName()))
+            return counterpartyAlias.getDisplayName();
+        return description;
     }
 }
