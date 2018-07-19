@@ -24,16 +24,11 @@ public class SupplementalInformationController {
     }
 
     public Map<String, String> askSupplementalInformation(Field... fields) throws SupplementalInfoException {
-        CredentialsStatus oldStatus = credentials.getStatus();
-        credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
+        credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
         String supplementalInformation =
                 Optional.ofNullable(Strings.emptyToNull(context.requestSupplementalInformation(credentials)))
                         .orElseThrow(SupplementalInfoError.NO_VALID_CODE::exception);
-
-        // we must reset the credential status in order to request supplemental info multiple times
-        credentials.setStatus(oldStatus);
-        context.updateStatus(oldStatus);
 
         return Optional.ofNullable(
                 SerializationUtils.deserializeFromString(
