@@ -5,12 +5,15 @@ import yaml
 import substring
 import sys
 import os
+import os, sys, select, subprocess
+import time
 
 
 #########################
 #Configuration Variables#
 #########################
 path = "../../../data/seeding/providers-" + sys.argv[1] + ".json"
+bazelRelativePath = "../../../"
 aggregatonConfigurationsFile = "../../../etc/development-minikube-aggregation-server.yml"
 
 #########################
@@ -30,6 +33,7 @@ clusterCryptoConfigurationDefaultValues = {
     "keyid": "1",
     "base64encodedkey":"'QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUE='"}
 
+deleteQuery = "delete from cluster_provider_configurations where (clusterid, providername) in (select 'local-development', name from provider_configurations); "
 joinQuery = "insert into cluster_provider_configurations (clusterid, providername) select 'local-development', name from provider_configurations;"
 
 host = ""
@@ -51,50 +55,10 @@ def join(columns, rowdict):
 
     return returnDict
 
-def formatInput(rowdict):
-    for row in rowdict:
-        if isinstance(rowdict[row], list) or isinstance(rowdict[row], dict): 
-            rowdict[row] = json.dumps(rowdict[row], ensure_ascii=False)
-
 def findPrimaryKey(definedColumns):
     for a in definedColumns:
         if a['Key']:
             return a['Field']
-
-def dataCheck(newDict):
-    if newDict['transactional'] and isinstance(newDict['transactional'], unicode):
-        newDict['transactional'] = True
-    if 'popular' not in newDict or isinstance(newDict['popular'], unicode):
-        newDict['popular'] = True
-    if 'multifactor' not in newDict: 
-        newDict['multifactor'] = 1
-    if 'refreshfrequency' not in newDict:
-        newDict['refreshfrequency'] = 1
-    if 'refreshfrequencyfactor' not in newDict:
-        newDict['refreshfrequencyfactor'] = 1
-    if 'market' not in newDict:
-        newDict['market'] = market
-    if 'currency' not in newDict:
-        newDict['currency'] = currency
-
-
-def add_row(db, tablename, rowdict):
-    cursor = db.cursor()
-    cursor.execute("describe %s" % tablename)
-    definedColumns = cursor.fetchall()
-    primaryKey = findPrimaryKey(definedColumns)
-
-    newDict = join(definedColumns, rowdict)
-    formatInput(newDict)
-    dataCheck(newDict)
-
-    if(rowExist(db, "*", tablename, primaryKey, newDict[primaryKey])):
-        print "Inserting: " + json.dumps(newDict) + "\n"
-        mysql_insert(db, tablename, newDict)
-        print "\n Inserted New Row \n"
-    else:
-        print "\n Row exists. UPDATE? \n"
-
 
 def mysql_insert(conn, table, row):
     cols = row.keys()
@@ -125,9 +89,11 @@ def insertLocalDevelopmentCrypto(conn):
 def insertIntoClusterHostConfiguration(conn):
     if rowExist(conn, "clusterid", clusterHostConfigurationTable, "clusterid", clusterHostDefaultValues['clusterid']):
         mysql_insert(conn, clusterHostConfigurationTable, clusterHostDefaultValues)
-        sqlExecutor(conn, joinQuery)
     else:
         print "cluster_configurations already up to date"
+    sqlExecutor(conn, deleteQuery)
+    sqlExecutor(conn, joinQuery)
+
 
 def sqlExecutor(conn, sql):
     cursor = conn.cursor()
@@ -158,21 +124,38 @@ def getConnection():
         except yaml.YAMLError as exc:
             print(exc)
 
- 
+def seedDatabase(os):
+    os.chdir(bazelRelativePath)
+    serverArgs = ['bazel run :aggregation seed-providers-for-market --jvmopt="-Dmarket=' + sys.argv[1].upper() + '" etc/development-minikube-aggregation-server.yml']
+    server = subprocess.Popen(serverArgs, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    
+    while True:
+        serverNextLine = server.stdout.readline()
+        if serverNextLine != '' :
+            if  '[' in serverNextLine and ']' in serverNextLine and 'INFO' not in serverNextLine: 
+                print "Building bazel seeder. \n Progress: " + serverNextLine.split(']')[0].split('[')[1]
+            elif 'INFO' in serverNextLine:
+                print "Seeding"
+            else:
+                sys.stdout.write(serverNextLine)
+                sys.stdout.flush
+        if server.poll() != None:
+            break
+
+
 filePath = os.path.abspath(__file__)
 os.chdir(os.path.dirname(filePath))
 
 db = getConnection()
-tablename = "provider_configurations"
 
+tablename = "provider_configurations"
 inputfile = file(path, "r")
 jsonString = inputfile.read()
 providers = json.loads(jsonString)
 market = providers['market']
 currency = providers['currency']
 
-for provider in providers['providers']:
-    add_row(db, tablename, provider)
+seedDatabase(os)
 
 insertLocalDevelopmentCrypto(db)
 insertIntoClusterHostConfiguration(db)
