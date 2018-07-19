@@ -675,8 +675,8 @@ junit_test(
 )
 
 java_library(
-     name = "provider-service",
-     srcs = glob(["src/provider-service/src/main/**/*.java"]),
+     name = "provider-configuration-service",
+     srcs = glob(["src/provider-configuration-service/src/main/**/*.java"]),
      data = [
          "//data",
      ],
@@ -696,13 +696,13 @@ java_library(
 )
 
 java_binary(
-    name = "provider",
-    srcs = glob(["src/provider-service/src/main/**/*.java"]),
+    name = "provider-configuration",
+    srcs = glob(["src/provider-configuration-service/src/main/**/*.java"]),
     data = [
-        "etc/development-provider-server.yml",
+        "etc/development-provider-configuration-server.yml",
         "//data",
     ],
-    main_class = "se.tink.backend.aggregation.provider.ProviderServiceContainer",
+    main_class = "se.tink.backend.aggregation.provider.ProviderConfigurationServiceContainer",
     visibility = ["//visibility:public"],
     runtime_deps = [
         "//third_party:mysql_mysql_connector_java",
@@ -723,9 +723,9 @@ java_binary(
 )
 
 genrule(
-    name = "renamed-provider-deploy-jar",
-    srcs = [":provider_deploy.jar"],
-    outs = ["provider-service.jar"],
-    cmd = "cp $(location :provider_deploy.jar) \"$(@)\"",
+    name = "renamed-provider-configuration-deploy-jar",
+    srcs = [":provider_configuration_deploy.jar"],
+    outs = ["provider-configuration-service.jar"],
+    cmd = "cp $(location :provider_configuration_deploy.jar) \"$(@)\"",
     visibility = ["//visibility:public"],
 )

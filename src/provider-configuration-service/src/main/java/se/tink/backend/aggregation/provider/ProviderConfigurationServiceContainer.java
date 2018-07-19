@@ -11,10 +11,10 @@ import se.tink.libraries.auth.ContainerAuthorizationResourceFilterFactory;
 import se.tink.libraries.auth.YubicoAuthorizationHeaderPredicate;
 import se.tink.libraries.dropwizard.DropwizardObjectMapperConfigurator;
 
-public class ProviderServiceContainer extends AbstractServiceContainer {
+public class ProviderConfigurationServiceContainer extends AbstractServiceContainer {
 
     public static void main(String[] args) throws Exception {
-        new ProviderServiceContainer().run(args);
+        new ProviderConfigurationServiceContainer().run(args);
     }
 
     @Override
