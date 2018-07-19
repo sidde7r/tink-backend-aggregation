@@ -10,8 +10,6 @@ import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import io.protostuff.Exclude;
-import io.protostuff.Tag;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,122 +36,46 @@ public class ProviderConfiguration {
     @SuppressWarnings("serial")
     private static class FieldsList extends ArrayList<Field> {}
 
-    @Tag(15)
+
     @Column(name = "`capabilities`")
     @Type(type = "text")
     @ApiModelProperty(name = "capabilitiesSerialized", hidden = true)
     private String capabilitiesSerialized;
-    @Exclude
     @ApiModelProperty(name = "className", hidden = true)
     private String className;
     @Enumerated(EnumType.STRING)
-    @Tag(5)
     private CredentialsTypes credentialsType;
-    @Exclude
     private String currency;
-    @Tag(2)
     private String displayName;
     @JsonProperty("fields")
     @Column(name = "`fields`")
     @Type(type = "text")
-    @Tag(9)
     private String fieldsSerialized;
-    @Tag(10)
     private String groupDisplayName;
-    @Exclude
     private String market;
-    @Exclude
     private boolean multiFactor;
     @Id
-    @Tag(1)
     private String name;
     @Type(type = "text")
-    @Tag(6)
     private String passwordHelpText;
     @Type(type = "text")
-    @Exclude
     @ApiModelProperty(name = "payload", hidden = true)
     private String payload;
-    @Tag(7)
     private boolean popular;
     @JsonIgnore
-    @Exclude
     @ApiModelProperty(name = "refreshFrequency", hidden = true)
     private double refreshFrequency;
     @JsonIgnore
-    @Exclude
     private double refreshFrequencyFactor;
     @Enumerated(EnumType.STRING)
-    @Tag(4)
     private ProviderStatuses status;
-    @Tag(8)
     private boolean transactional;
     @Enumerated(EnumType.STRING)
-    @Tag(3)
     private ProviderTypes type;
-    @Tag(13)
-    @Transient
-    private ImageUrls images;
-    @Tag(14)
     private String displayDescription;
     @Column(name = "`refreshschedule`")
     @Type(type = "text")
-    @Exclude
     private String refreshScheduleSerialized;
-
-
-    /*
-   Difference between fields in main and fields in aggregation.
-   These fields can be added later on to match the fields in main
-
-    @Exclude
-    private String email;
-
-    @Exclude
-    private String url;
-
-    @Tag(11)
-    @ApiModelProperty(name = "tutorialUrl", hidden = true)
-    private String tutorialUrl;
-
-    @Exclude
-    private String phone;
-
-
-    @ApiModelProperty(name = "email", value="The contact information email to the provider")
-    public String getEmail() {
-        return email;
-    }
-
-    public String getTutorialUrl() {
-        return tutorialUrl;
-    }
-
-    public void setTutorialUrl(String tutorialUrl) {
-        this.tutorialUrl = tutorialUrl;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    @ApiModelProperty(name = "url", value="The contact information URL to the provider")
-    public String getUrl() {
-        return url;
-    }
-
-    @ApiModelProperty(name = "phone", value="The contact information phone number to the provider")
-    public String getPhone() {
-        return phone;
-    }*/
 
     public ProviderConfiguration() {
         setFields(Lists.<Field> newArrayList());
@@ -191,14 +113,6 @@ public class ProviderConfiguration {
         return true;
     }
 
-    @Deprecated
-    @JsonProperty
-    @ApiModelProperty(name = "additionalInformationCaption", hidden = true)
-    public String getAdditionalInformationCaption() {
-        Field field = getField(Field.Key.ADDITIONAL_INFORMATION);
-
-        return (field != null ? field.getDescription() : null);
-    }
 
     @ApiModelProperty(name = "capabilities", hidden = true)
     @JsonProperty("capabilities")
@@ -273,43 +187,8 @@ public class ProviderConfiguration {
         return name;
     }
 
-    @Deprecated
-    @JsonProperty
-    @ApiModelProperty(name = "passwordCaption", hidden = true)
-    public String getPasswordCaption() {
-        Field field = getField(Field.Key.PASSWORD);
-
-        return (field != null ? field.getDescription() : null);
-    }
-
     public String getPasswordHelpText() {
         return passwordHelpText;
-    }
-
-    @Deprecated
-    @JsonProperty
-    @ApiModelProperty(name = "passwordIsPIN", hidden = true)
-    public boolean getPasswordIsPIN() {
-        Field field = getField(Field.Key.PASSWORD);
-
-        if (field == null) {
-            return false;
-        }
-
-        if (Objects.equal("PIN-kod", field.getDescription())) {
-            return true;
-        }
-
-        return false;
-    }
-
-    @Deprecated
-    @JsonProperty
-    @ApiModelProperty(name = "passwordLength", hidden = true)
-    public int getPasswordLength() {
-        Field field = getField(Field.Key.PASSWORD);
-
-        return ((field != null && field.getMaxLength() != null) ? field.getMaxLength() : 0);
     }
 
     public String getPayload() {
@@ -332,32 +211,6 @@ public class ProviderConfiguration {
     @ApiModelProperty(name = "type", value="The type of the provider")
     public ProviderTypes getType() {
         return type;
-    }
-
-    @Deprecated
-    @JsonProperty
-    @ApiModelProperty(name = "usernameCaption", hidden = true)
-    public String getUsernameCaption() {
-        Field field = getField(Field.Key.USERNAME);
-
-        return (field != null ? field.getDescription() : null);
-    }
-
-    @Deprecated
-    @JsonProperty
-    @ApiModelProperty(name = "usernameIsPersonnummer", hidden = true)
-    public boolean getUsernameIsPersonnummer() {
-        Field field = getField(Field.Key.USERNAME);
-
-        if (field == null) {
-            return false;
-        }
-
-        if (Objects.equal(field.getHint(), "ÅÅÅÅMMDDNNNN") || Objects.equal(field.getHint(), "ÅÅMMDDNNNN")) {
-            return true;
-        }
-
-        return false;
     }
 
     @Override
@@ -467,14 +320,6 @@ public class ProviderConfiguration {
 
     public void setType(ProviderTypes type) {
         this.type = type;
-    }
-
-    public ImageUrls getImages() {
-        return images;
-    }
-
-    public void setImages(ImageUrls images) {
-        this.images = images;
     }
 
     @Override
