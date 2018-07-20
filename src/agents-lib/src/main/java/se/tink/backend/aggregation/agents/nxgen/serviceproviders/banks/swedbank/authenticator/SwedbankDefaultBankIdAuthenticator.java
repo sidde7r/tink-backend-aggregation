@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 public class SwedbankDefaultBankIdAuthenticator implements BankIdAuthenticator<AbstractBankIdAuthResponse> {
     private static final Logger log = LoggerFactory.getLogger(SwedbankDefaultBankIdAuthenticator.class);
     private final SwedbankDefaultApiClient apiClient;
+    private SwedbankBaseConstants.BankIdResponseStatus previousStatus;
 
     public SwedbankDefaultBankIdAuthenticator(SwedbankDefaultApiClient apiClient) {
         this.apiClient = apiClient;
@@ -31,6 +32,7 @@ public class SwedbankDefaultBankIdAuthenticator implements BankIdAuthenticator<A
 
     @Override
     public AbstractBankIdAuthResponse init(String ssn) throws BankIdException, BankServiceException, AuthorizationException {
+        previousStatus = null;
         InitBankIdResponse initBankIdResponse = apiClient.initBankId(ssn);
 
         LinkEntity linkEntity = initBankIdResponse.getLinks().getNextOrThrow();
@@ -51,6 +53,8 @@ public class SwedbankDefaultBankIdAuthenticator implements BankIdAuthenticator<A
             CollectBankIdResponse collectBankIdResponse = apiClient.collectBankId(response.getLinks().getNextOrThrow());
             SwedbankBaseConstants.BankIdResponseStatus bankIdResponseStatus = collectBankIdResponse.getBankIdStatus();
 
+            previousStatus = bankIdResponseStatus;
+
             switch (bankIdResponseStatus) {
             case CLIENT_NOT_STARTED:
             case USER_SIGN:
@@ -70,10 +74,18 @@ public class SwedbankDefaultBankIdAuthenticator implements BankIdAuthenticator<A
         } catch (HttpResponseException hre) {
             HttpResponse httpResponse = hre.getResponse();
             // when timing out, this can also be the response
-            if (httpResponse.getStatus() == HttpStatus.SC_UNAUTHORIZED) {
+            int responseStatus = httpResponse.getStatus();
+            if (responseStatus == HttpStatus.SC_UNAUTHORIZED) {
                 ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
                 if (errorResponse.hasErrorCode(SwedbankBaseConstants.BankErrorMessage.LOGIN_FAILED)) {
                     return BankIdStatus.TIMEOUT;
+                }
+            } else if (responseStatus == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+                // This code is a temporary fix until Swedbank returns a better error message.
+                // What we belive to be the problem is that when multiple request are sent to bankid at the same time
+                // bankid cancels all requests.
+                if (previousStatus == SwedbankBaseConstants.BankIdResponseStatus.CLIENT_NOT_STARTED) {
+                    return BankIdStatus.INTERRUPTED;
                 }
             }
 
