@@ -64,7 +64,7 @@ public class FinTsApiClient {
         HKSYN segSync = new HKSYN(5);
 
         return new FinTsRequest(
-                configuration, dialogId, messageNumber, this.systemId, segIdentification, segPrepare, segSync);
+                configuration, dialogId, 1, this.systemId, segIdentification, segPrepare, segSync);
     }
 
     private FinTsRequest getMessageInit() {
