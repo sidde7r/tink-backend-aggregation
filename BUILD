@@ -724,8 +724,8 @@ java_binary(
 
 genrule(
     name = "renamed-provider-configuration-deploy-jar",
-    srcs = [":provider_configuration_deploy.jar"],
+    srcs = [":provider-configuration_deploy.jar"],
     outs = ["provider-configuration-service.jar"],
-    cmd = "cp $(location :provider_configuration_deploy.jar) \"$(@)\"",
+    cmd = "cp $(location :provider-configuration_deploy.jar) \"$(@)\"",
     visibility = ["//visibility:public"],
 )
