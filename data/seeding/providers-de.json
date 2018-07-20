@@ -32,7 +32,7 @@
       "name": "de-commerzbank-password",
       "displayName": "Commerzbank",
       "groupDisplayName": "Commerzbank",
-      "popular": false,
+      "popular": true,
       "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
