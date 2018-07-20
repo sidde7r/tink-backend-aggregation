@@ -178,7 +178,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
         this.aggregator = Objects.isNull(context) ? Aggregator.getDefault(): context.getAggregator();
 
-        setUserAgent(aggregator.getAggregatorIdentifier());
+        setUserAgent(getUserAgent());
         setTimeout(DEFAULTS.TIMEOUT_MS);
         setChunkedEncoding(DEFAULTS.CHUNKED_ENCODING);
         setMaxRedirects(DEFAULTS.MAX_REDIRECTS);
