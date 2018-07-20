@@ -149,8 +149,6 @@ public class SwedbankBaseConstants {
         public String getStatusCode() { return statusCode; }
 
         public static BankIdResponseStatus fromStatusCode(String statusCode) {
-            String code = Optional.ofNullable(statusCode).orElse("");
-
             return Arrays.stream(BankIdResponseStatus.values())
                     .filter(bankIdStatus -> bankIdStatus.getStatusCode().equalsIgnoreCase(statusCode))
                     .findFirst()
