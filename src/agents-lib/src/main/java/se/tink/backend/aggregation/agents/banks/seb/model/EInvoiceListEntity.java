@@ -8,22 +8,23 @@ import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils;
 import se.tink.backend.aggregation.agents.banks.seb.SebAccountIdentifierFormatter;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.core.Amount;
+import se.tink.backend.core.enums.TransferType;
+import se.tink.backend.core.transfer.Transfer;
+import se.tink.backend.core.transfer.TransferPayloadType;
+import se.tink.backend.utils.StringUtils;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.NonValidIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.backend.core.enums.TransferType;
-import se.tink.backend.core.transfer.Transfer;
-import se.tink.backend.core.transfer.TransferPayloadType;
 import se.tink.libraries.date.DateUtils;
-import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -235,7 +236,11 @@ public class EInvoiceListEntity implements MatchableTransferRequestEntity {
     @JsonIgnore
     public void setCurrentAmount(Amount amount) {
         Preconditions.checkArgument(amount.getCurrency().equals(currencyCode), "Amount not same currency as eInvoice");
-        this.amount = amount.getValue();
+        this.amount = roundCurrentAmountToTwoDecimalDouble(amount);
+    }
+
+    private double roundCurrentAmountToTwoDecimalDouble(Amount amount) {
+        return new BigDecimal(amount.getValue()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 
     @JsonIgnore
