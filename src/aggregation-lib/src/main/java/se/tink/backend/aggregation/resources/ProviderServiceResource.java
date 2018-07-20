@@ -28,7 +28,8 @@ public class ProviderServiceResource implements ProviderService {
     }
 
     private ClusterId getClusterId() {
-        ClusterId clusterId = ClusterId.createFromHttpServletRequest(httpRequest);
+
+        ClusterId clusterId = ClusterId.createFromRequest(httpRequest);
         if (!clusterId.isValidId()) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }

@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.resources;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import io.dropwizard.lifecycle.Managed;
+import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
@@ -9,6 +11,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.api.AggregationService;
+import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
@@ -47,6 +50,10 @@ public class AggregationServiceResource implements AggregationService, Managed {
     private SupplementalInformationController supplementalInformationController;
     private ClusterHostConfigurationRepository clusterHostConfigurationRepository;
     private final boolean isAggregationCluster;
+    private static final String CLUSTER_NAME_HEADER = "x-tink-cluster-name";
+    private static final String CLUSTER_ENVIRONMENT_HEADER = "x-tink-cluster-environment";
+    private static final String AGGREGATOR_NAME_HEADER = "x-tink-aggregator-header";
+
 
     /**
      * Constructor.
@@ -68,29 +75,68 @@ public class AggregationServiceResource implements AggregationService, Managed {
         this.isAggregationCluster = serviceContext.isAggregationCluster();
     }
 
+    private void validateClusterHostConfiguration(ClusterHostConfiguration configuration){
+        Preconditions.checkNotNull(configuration);
+        Preconditions.checkNotNull(configuration.getHost());
+        Preconditions.checkNotNull(configuration.getApiToken());
+        Preconditions.checkNotNull(configuration.getClientCertificate());
+        Preconditions.checkNotNull(configuration.getAggregatorIdentifier());
+    }
+
+    private ClusterHostConfiguration getValidClusterHost(HttpServletRequest request) {
+        String name = request.getHeader(CLUSTER_NAME_HEADER);
+        String environment = request.getHeader(CLUSTER_ENVIRONMENT_HEADER);
+
+        if(Strings.isNullOrEmpty(name) || Strings.isNullOrEmpty(environment)){
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        }
+
+        ClusterHostConfiguration configuration = clusterHostConfigurationRepository
+                .findOne(String.format("%s-%s", name, environment));
+
+        validateClusterHostConfiguration(configuration);
+
+        return configuration;
+    }
+
+
+    private Aggregator createAggregator(HttpServletRequest request, ClusterHostConfiguration configuration){
+        String customAggregator = request.getHeader(AGGREGATOR_NAME_HEADER);
+        if(!(Objects.isNull(customAggregator) || customAggregator.equals(""))){
+            return Aggregator.of(customAggregator);
+        }
+
+        if(!(Objects.isNull(configuration.getAggregatorIdentifier()) ||
+                configuration.getAggregatorIdentifier().equals(""))){
+            return Aggregator.of(configuration.getAggregatorIdentifier());
+        }
+
+        return Aggregator.of(Aggregator.DEFAULT);
+    }
+
+    private ClusterId createClustertId(HttpServletRequest request, Aggregator aggregator) {
+        return ClusterId.create(request.getHeader(CLUSTER_NAME_HEADER), request.getHeader(CLUSTER_ENVIRONMENT_HEADER), aggregator);
+    }
+
+
     private ClusterInfo getClusterInfo() {
         ClusterId clusterId;
-        if (isAggregationCluster) {
-            clusterId = ClusterId.createFromHttpServletRequest(httpRequest);
-            if (!clusterId.isValidId()) {
-                throw new WebApplicationException(Response.Status.BAD_REQUEST);
-            }
-        } else {
+        if (!isAggregationCluster) {
             clusterId = ClusterId.createEmpty();
-        }
-
-        if (isAggregationCluster) {
-            ClusterHostConfiguration configuration = clusterHostConfigurationRepository.findOne(clusterId.getId());
-            Preconditions.checkNotNull(configuration);
-
-            return ClusterInfo.createForAggregationCluster(clusterId,
-                    Preconditions.checkNotNull(configuration.getHost()),
-                    Preconditions.checkNotNull(configuration.getApiToken()),
-                    Preconditions.checkNotNull(configuration.getClientCertificate()),
-                    configuration.isDisableRequestCompression());
-        } else {
             return ClusterInfo.createForLegacyAggregation(clusterId);
+
         }
+
+        ClusterHostConfiguration configuration = getValidClusterHost(httpRequest);
+
+        Aggregator aggregator = createAggregator(httpRequest, configuration);
+        ClusterId clustertId = createClustertId(httpRequest, aggregator);
+
+        return ClusterInfo.createForAggregationCluster(clustertId,
+                configuration.getHost(),
+                configuration.getApiToken(),
+                configuration.getClientCertificate(),
+                configuration.isDisableRequestCompression());
     }
 
     @Override

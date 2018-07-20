@@ -15,22 +15,18 @@ public class ClusterId {
     private final String environment;
     private final Aggregator aggregator;
 
-    private ClusterId(String name, String environment, String aggregatorHeader) {
+    private ClusterId(String name, String environment, Aggregator aggregator) {
         this.name = name;
         this.environment = environment;
-        this.aggregator = initAggregator(aggregatorHeader);
+        this.aggregator = aggregator;
     }
 
-    private Aggregator initAggregator(String aggregatorHeader){
+    private static Aggregator initAggregator(String aggregatorHeader){
         if(!(Objects.isNull(aggregatorHeader) || aggregatorHeader.equals(""))){
             return Aggregator.of(aggregatorHeader);
         }
 
-        if(!environment.toLowerCase().contains("oxford")){
-            return Aggregator.of("Aggregator: " + environment);
-        }
-
-        return  Aggregator.of(aggregator.DEFAULT);
+        return  Aggregator.of(Aggregator.DEFAULT);
     }
 
     public MetricId.MetricLabels metricLabels() {
@@ -44,7 +40,7 @@ public class ClusterId {
     }
 
     public boolean isValidId() {
-        return !(Strings.isNullOrEmpty(name) || Strings.isNullOrEmpty(environment) /*|| Strings.isNullOrEmpty(aggregator.getAggregatorIdentifier())*/);
+        return !(Strings.isNullOrEmpty(name) || Strings.isNullOrEmpty(environment));
     }
 
     public String getName() {
@@ -59,19 +55,19 @@ public class ClusterId {
         return String.format("%s-%s", name, environment);
     }
 
+
+    public static String createClustertId(HttpServletRequest request) {
+        String clusterName = request.getHeader(CLUSTER_NAME_HEADER);
+        String clusterEnvironment = request.getHeader(CLUSTER_ENVIRONMENT_HEADER);
+        return String.format("%s-%s", clusterName, clusterEnvironment);
+    }
+
     public Aggregator getAggregator(){
         return aggregator;
     }
 
-    public String getAggregatorFromEnvironment(){
-        //if environment is oxford, ignore this
-        if(environment.toLowerCase().contains("oxford")){
-            return aggregator.DEFAULT;
-        }
-        return "Aggregator: " + environment;
-    }
 
-    public static ClusterId createFromHttpServletRequest(HttpServletRequest request) {
+    public static ClusterId createFromRequest(HttpServletRequest request) {
         if (Objects.isNull(request)) {
             return createEmpty();
         }
@@ -79,7 +75,8 @@ public class ClusterId {
         String clusterName = request.getHeader(CLUSTER_NAME_HEADER);
         String clusterEnvironment = request.getHeader(CLUSTER_ENVIRONMENT_HEADER);
         String aggregatorName = request.getHeader(AGGREGATOR_NAME_HEADER);
-        return create(clusterName, clusterEnvironment, aggregatorName);
+
+        return create(clusterName, clusterEnvironment, initAggregator(aggregatorName));
     }
 
     public static ClusterId createFromContainerRequest(ContainerRequest request) {
@@ -91,14 +88,14 @@ public class ClusterId {
         String clusterEnvironment = request.getHeaderValue(CLUSTER_ENVIRONMENT_HEADER);
         String aggregatorName = request.getHeaderValue(AGGREGATOR_NAME_HEADER);
 
-        return create(clusterName, clusterEnvironment, aggregatorName);
+        return create(clusterName, clusterEnvironment, initAggregator(aggregatorName));
     }
 
     public static ClusterId createEmpty() {
         return new ClusterId(null, null, null);
     }
 
-    public static ClusterId create(String name, String environment, String aggregator) {
+    public static ClusterId create(String name, String environment, Aggregator aggregator) {
         return new ClusterId(name, environment, aggregator);
     }
 }

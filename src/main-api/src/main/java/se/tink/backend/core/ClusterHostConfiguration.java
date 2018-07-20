@@ -20,6 +20,8 @@ public class ClusterHostConfiguration {
     @Type(type = "text")
     private String base64EncodedClientCertificate;
     private boolean disableRequestCompression;
+    @Type(type = "text")
+    private String aggregatorIdentifier;
 
     public String getClusterId() {
         return clusterId;
@@ -43,5 +45,9 @@ public class ClusterHostConfiguration {
 
     public boolean isDisableRequestCompression() {
         return disableRequestCompression;
+    }
+
+    public String getAggregatorIdentifier(){
+        return aggregatorIdentifier;
     }
 }
