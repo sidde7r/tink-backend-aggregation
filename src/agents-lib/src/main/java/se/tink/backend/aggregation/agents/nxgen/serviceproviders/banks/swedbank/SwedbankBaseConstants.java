@@ -140,6 +140,7 @@ public class SwedbankBaseConstants {
         COMPLETE("COMPLETE"),
         CANCELLED("CANCELLED"),
         TIMEOUT("TIMEOUT"),
+        ALREADY_IN_PROGRESS("OUTSTANDING_TRANSACTION"),
         UNKNOWN("");
 
         private String statusCode;

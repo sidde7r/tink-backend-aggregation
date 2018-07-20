@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator;
 
 import com.google.common.base.Preconditions;
-import java.util.Map;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,25 +9,17 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEConfiguration;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankDefaultApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.AbstractBankIdAuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.CollectBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.InitBankIdResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.BankProfile;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.EngagementOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinkEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.MenuItemLinkEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.ProfileResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.SelectedProfileResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SwedbankDefaultBankIdAuthenticator implements BankIdAuthenticator<AbstractBankIdAuthResponse> {
     private static final Logger log = LoggerFactory.getLogger(SwedbankDefaultBankIdAuthenticator.class);
@@ -46,6 +37,10 @@ public class SwedbankDefaultBankIdAuthenticator implements BankIdAuthenticator<A
         Preconditions.checkState(linkEntity.isValid(),
                 "Login failed - Cannot proceed without valid link entity - Method:[%s], Uri:[%s]",
                 linkEntity.getMethod(), linkEntity.getUri());
+
+        if (initBankIdResponse.getBankIdStatus() == SwedbankBaseConstants.BankIdResponseStatus.ALREADY_IN_PROGRESS) {
+            throw BankIdError.ALREADY_IN_PROGRESS.exception();
+        }
 
         return initBankIdResponse;
     }
