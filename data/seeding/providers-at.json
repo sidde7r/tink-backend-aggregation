@@ -1,59 +1,80 @@
 {
     "market": "AT",
     "currency": "EUR",
-    "providers":
-    [
+    "providers": [
         {
-            "name":"at-bawagpsk-password",
-            "displayName":"BAWAG P.S.K.",
-            "popular":true,
-            "type":"BANK",
-            "status":"ENABLED",
-            "credentialsType":"PASSWORD",
-            "multiFactor":false,
-            "className":"nxgen.at.banks.easybank.bawagpsk.BawagPskAgent",
-            "passwordHelpText":null,
-            "transactional":"true",
-            "payload":"ebanking.bawagpsk.com, BAWAG",
-            "tutorialUrl":null,
-            "fields":[
+            "name": "at-bawagpsk-password",
+            "displayName": "BAWAG P.S.K.",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.at.banks.easybank.bawagpsk.BawagPskAgent",
+            "passwordHelpText": null,
+            "transactional": "true",
+            "payload": "ebanking.bawagpsk.com, BAWAG",
+            "tutorialUrl": null,
+            "fields": [
                 {
-                    "name":"username",
-                    "description":"User code",
-                    "immutable":true
+                    "name": "username",
+                    "description": "User code",
+                    "immutable": true
                 },
                 {
-                    "name":"password",
-                    "description":"PIN",
-                    "masked":true,
-                    "numeric":true
+                    "name": "password",
+                    "description": "PIN",
+                    "masked": true,
+                    "numeric": true
                 }
             ]
         },
         {
-            "name":"at-easybank-password",
-            "displayName":"Easybank",
-            "popular":true,
-            "type":"BANK",
-            "status":"ENABLED",
-            "credentialsType":"PASSWORD",
-            "multiFactor":false,
-            "className":"nxgen.at.banks.easybank.bawagpsk.BawagPskAgent",
-            "passwordHelpText":null,
-            "transactional":"true",
-            "payload":"ebanking.easybank.at, EASYBANK",
-            "tutorialUrl":null,
-            "fields":[
+            "name": "at-easybank-password",
+            "displayName": "Easybank",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.at.banks.easybank.bawagpsk.BawagPskAgent",
+            "passwordHelpText": null,
+            "transactional": "true",
+            "payload": "ebanking.easybank.at, EASYBANK",
+            "tutorialUrl": null,
+            "fields": [
                 {
-                    "name":"username",
-                    "description":"User code",
-                    "immutable":true
+                    "name": "username",
+                    "description": "User code",
+                    "immutable": true
                 },
                 {
-                    "name":"password",
-                    "description":"PIN",
-                    "masked":true,
-                    "numeric":true
+                    "name": "password",
+                    "description": "PIN",
+                    "masked": true,
+                    "numeric": true
+                }
+            ]
+        },
+        {
+            "name": "at-erstebank-password",
+            "displayName": "Erste bank und Sparkasse",
+            "popular": true,
+            "status": "ENABLED",
+            "type": "BANK",
+            "credentialsType": "PASSWORD",
+            "className": "nxgen.at.banks.erstebank.ErsteBankAgent",
+            "transactional": "true",
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "User code",
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "Password",
+                    "masked": true
                 }
             ]
         }
