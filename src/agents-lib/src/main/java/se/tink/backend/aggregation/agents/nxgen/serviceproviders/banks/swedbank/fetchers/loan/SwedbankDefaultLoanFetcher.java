@@ -46,6 +46,10 @@ public class SwedbankDefaultLoanFetcher implements AccountFetcher<LoanAccount> {
             }
 
             for (LoanAccountEntity loanAccountEntity : loanAccountEntities) {
+                if (loanAccountEntity.getLinks() == null || loanAccountEntity.getLinks().getNext() == null) {
+                    continue;
+                }
+
                 LoanDetailsResponse loanDetailsResponse = apiClient.loanDetails(loanAccountEntity.getLinks().getNext());
                 Optional<String> interest = loanDetailsResponse.getInterest();
 
