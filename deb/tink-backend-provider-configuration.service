@@ -23,7 +23,7 @@ ExecStart=/usr/bin/xvfb-run --auto-servernum -s "-screen 0 1280x1024x16" \
           -Dnetworkaddress.cache.ttl=60 \
           -XX:-OmitStackTraceInFastThrow \
           -XX:+HeapDumpOnOutOfMemoryError \
-          -XX:HeapDumpPath=/var/tmp/tink/heapdumps/tink-backend-aggregation \
+          -XX:HeapDumpPath=/var/tmp/tink/heapdumps/tink-backend-provider-configuration \
           -XX:+ExitOnOutOfMemoryError \
           -jar /usr/share/tink-backend-provider-configuration/provider-configuration-service.jar \
           server /etc/tink/provider-configuration-server.yml
