@@ -17,10 +17,11 @@ public abstract class AbstractForm extends LinkedHashMap<String, String> {
                 .collect(Collectors.joining(JOINING_DELIMITER));
     }
 
-    protected String getValuePair(Map.Entry<String, String> parameter) {
+    public String getValuePair(Map.Entry<String, String> parameter) {
         try {
-            return String.format(NAME_VALUE_FORMAT, parameter.getKey(), URLEncoder.encode(parameter.getValue(),
-                    CreditAgricoleConstants.Form.CHARSET));
+            return String.format(NAME_VALUE_FORMAT,
+                    URLEncoder.encode(parameter.getKey(), CreditAgricoleConstants.Form.CHARSET),
+                    URLEncoder.encode(parameter.getValue(), CreditAgricoleConstants.Form.CHARSET));
         } catch(Exception e) {
             throw new IllegalStateException("Cannot create form body: " + e.getMessage());
         }

@@ -25,19 +25,20 @@ public class CreditAgricoleTransactionalAccountsFetcher implements AccountFetche
 
     @Override
     public Collection fetchAccounts() {
-        return handle(apiClient.contracts()).getAccount().stream()
+        return checkResponseErrors(apiClient.contracts()).getAccounts().stream()
+                .filter(AccountEntity::isKnownAccountType)
                 .map(AccountEntity::toTinkAccount)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<AggregationTransaction> fetchTransactionsFor(TransactionalAccount account) {
-        return handle(apiClient.operations(account.getAccountNumber())).getOperation().stream()
+        return checkResponseErrors(apiClient.operations(account.getAccountNumber())).getOperation().stream()
                 .map(OperationEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }
 
-    private <T extends DefaultResponse> T handle(T response) {
+    private <T extends DefaultResponse> T checkResponseErrors(T response) {
         if (response.getErrors().size() > 0) {
             StringBuilder sb = new StringBuilder();
             for (ErrorEntity e : response.getErrors()) {

@@ -118,22 +118,32 @@
       "fields": [
         {
           "description": "Account number (11 digits)",
-          "immutable": false,
+          "immutable": true,
           "pattern": "[0-9]{11}",
+          "minLength": 11,
+          "maxLength": 11,
           "name": "accountNumber",
           "patternError": "Your account number was incorrect. Please try again."
         },
         {
           "description": "Personal code (6 digits)",
           "immutable": false,
+          "sensitive": true,
+          "masked": true,
           "pattern": "[0-9]{6}",
+          "minLength": 6,
+          "maxLength": 6,
           "name": "accountCode",
           "patternError": "Your personal code was incorrect. Please try again."
         },
         {
           "description": "App passcode (4 digits)",
           "immutable": false,
+          "sensitive": true,
+          "masked": true,
           "pattern": "[0-9]{4}",
+          "minLength": 4,
+          "maxLength": 4,
           "name": "appCode",
           "patternError": "App passcode was incorrect. Please try again."
         }

@@ -39,18 +39,20 @@ public class AccountEntity {
         return TransactionalAccount.builder(getTinkAccounType(), accountNumber, new Amount(Currency.EUR, balance))
                 .setAccountNumber(accountNumber)
                 .setHolderName(new HolderName(holder))
+                .setName(label)
                 .build();
     }
 
-    private AccountTypes getTinkAccounType() {
-        // Default
-        AccountTypes accountType = AccountTypes.CHECKING;
+    public boolean isKnownAccountType() {
+        return productType.equalsIgnoreCase(AccountType.CHECKING);
+    }
 
+    private AccountTypes getTinkAccounType() {
         // Currently only has data on checking accounts, so this
         // statement is to show how future implementation could look
         if (productType.equalsIgnoreCase(AccountType.CHECKING)) {
-            accountType = AccountTypes.CHECKING;
+            return AccountTypes.CHECKING;
         }
-        return accountType;
+        return AccountTypes.OTHER;
     }
 }

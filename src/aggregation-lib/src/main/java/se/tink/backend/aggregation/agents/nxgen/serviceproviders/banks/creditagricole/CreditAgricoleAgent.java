@@ -42,10 +42,10 @@ public class CreditAgricoleAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-//        return Optional.empty();
+        CreditAgricoleTransactionalAccountsFetcher transactionalAccountsFetcher =
+                new CreditAgricoleTransactionalAccountsFetcher(apiClient);
         return Optional.of(new TransactionalAccountRefreshController(
-                metricRefreshController, updateController, new CreditAgricoleTransactionalAccountsFetcher(apiClient), new CreditAgricoleTransactionalAccountsFetcher(
-                apiClient)));
+                metricRefreshController, updateController, transactionalAccountsFetcher, transactionalAccountsFetcher));
     }
 
     @Override

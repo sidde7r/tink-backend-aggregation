@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole;
 
+import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.nxgen.http.HeaderEnum;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
@@ -57,11 +58,9 @@ public class CreditAgricoleConstants {
     }
 
     public enum ConstantHeader implements HeaderEnum {
-        ACCEPT_LANGUAGE("Accept-Language","en-SE;q=1, sv-SE;q=0.9"),
-        ACCEPT_ENCODING("Accept-Encoding", "gzip, deflate"),
-        USER_AGENT("User-Agent", "MonBudget_iOS/14.0.1.2 iOS/10.1.1 Apple/iPhone9,3 750x1334/2.00"),
-        CONTENT_TYPE_FORM("Content-Type", "application/x-www-form-urlencoded"),
-        ACCEPT("Accept", "application/json");
+        USER_AGENT("User-Agent", "MonBudget_iOS/14.0.1.2 iOS/10.1.1 Apple/iPhone9,3 750x1334/2.00"
+                + " Tink(+https://www.tink.se/;noc@tink.se)"),
+        CONTENT_TYPE_FORM("Content-Type", MediaType.APPLICATION_FORM_URLENCODED);
 
         private String key;
         private String value;
@@ -116,7 +115,7 @@ public class CreditAgricoleConstants {
     }
 
     public static final class AccountType {
-        public static final String CHECKING = "Compte courant".toUpperCase();
+        public static final String CHECKING = "Compte courant";
     }
 
     public static final class Currency {

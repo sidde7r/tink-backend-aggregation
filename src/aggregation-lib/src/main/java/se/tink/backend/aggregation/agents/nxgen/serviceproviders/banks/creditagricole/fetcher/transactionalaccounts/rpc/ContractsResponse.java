@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.fetcher.transactionalaccounts.rpc;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.fetcher.transactionalaccounts.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.fetcher.transactionalaccounts.entities.IncomeEntity;
@@ -13,7 +14,8 @@ public class ContractsResponse extends DefaultResponse {
     private String lastOperationRetrievalDate;
     private String lastSynchronizationDateTime;
     private boolean echecSynthesePredica;
-    private List<AccountEntity> account;
+    @JsonProperty("account")
+    private List<AccountEntity> accounts;
     private List<LifeInsuranceEntity> lifeInsurance;
     private List<IncomeEntity> income;
     private List<RetirementEntity> retirement;
@@ -30,8 +32,8 @@ public class ContractsResponse extends DefaultResponse {
         return echecSynthesePredica;
     }
 
-    public List<AccountEntity> getAccount() {
-        return account;
+    public List<AccountEntity> getAccounts() {
+        return accounts;
     }
 
     public List<LifeInsuranceEntity> getLifeInsurance() {

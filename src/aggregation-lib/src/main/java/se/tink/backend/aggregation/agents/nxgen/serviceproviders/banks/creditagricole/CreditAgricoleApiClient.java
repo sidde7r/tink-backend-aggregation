@@ -37,8 +37,6 @@ public class CreditAgricoleApiClient {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
-
-        client.setProxy("http://192.168.239.239:8888");
     }
 
     /* SIGN IN METHODS */

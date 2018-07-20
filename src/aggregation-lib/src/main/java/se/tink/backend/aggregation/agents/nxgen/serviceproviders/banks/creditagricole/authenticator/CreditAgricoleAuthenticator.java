@@ -45,18 +45,9 @@ public class CreditAgricoleAuthenticator implements Authenticator {
         String userAccountNumber = credentials.getField(StorageKey.USER_ACCOUNT_NUMBER);
         String userAccountCode = credentials.getField(StorageKey.USER_ACCOUNT_CODE);
         String appCode = credentials.getField(StorageKey.APP_CODE);
-        if (!persistentStorage.containsKey(StorageKey.USER_ACCOUNT_NUMBER)) {
-            authenticateFirstTime(userAccountNumber, userAccountCode, appCode);
-        } else {
-            authenticateFirstTime(userAccountNumber, userAccountCode, appCode);
-        }
-    }
-
-    private void authenticateFirstTime(String userAccountNumber, String userAccountCode, String appCode) throws LoginException {
-        handle(apiClient.selectRegion());
 
         String shuffledAccountCode = getShuffledAccountCode(apiClient.numberPad(), userAccountCode);
-        SignInResponse signInResponse = handle(apiClient.signIn(userAccountNumber, shuffledAccountCode));
+        SignInResponse signInResponse = checkResponseErrors(apiClient.signIn(userAccountNumber, shuffledAccountCode));
 
         // At this point we have authenticated the customer, and are safe to put details in persistent storage
         persistentStorage.put(StorageKey.USER_ACCOUNT_NUMBER, userAccountNumber);
@@ -73,9 +64,9 @@ public class CreditAgricoleAuthenticator implements Authenticator {
         String loginEmail = signInResponse.getEmailPart();
         persistentStorage.put(StorageKey.LOGIN_EMAIL, loginEmail);
 
-        handle(apiClient.appCode(appCode));
+        checkResponseErrors(apiClient.appCode(appCode));
 
-        StrongAuthenticationResponse strongAuthenticationResponse = handle(apiClient.strongAuthentication());
+        StrongAuthenticationResponse strongAuthenticationResponse = checkResponseErrors(apiClient.strongAuthentication());
         String llToken = strongAuthenticationResponse.getLlToken();
         sessionStorage.put(StorageKey.LL_TOKEN, llToken);
     }
@@ -83,7 +74,7 @@ public class CreditAgricoleAuthenticator implements Authenticator {
 
     /* HELPER METHODS */
 
-    private <T extends DefaultResponse> T handle(T response) throws LoginException {
+    private <T extends DefaultResponse> T checkResponseErrors(T response) throws LoginException {
         if (response.getErrors().size() > 0) {
             StringBuilder sb = new StringBuilder();
             for (ErrorEntity e : response.getErrors()) {
