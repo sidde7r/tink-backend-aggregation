@@ -45,6 +45,13 @@ PROJECTS = {
             'aggregation-staging',
         ],
     },
+    'tink-backend-credit-safe': {
+        'chart': True,
+        'salt': False,
+        'branches': [
+            'aggregation-staging',
+        ],
+    },
 }
 
 STEP = """
