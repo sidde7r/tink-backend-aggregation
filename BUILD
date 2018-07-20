@@ -729,3 +729,59 @@ genrule(
     cmd = "cp $(location :provider-configuration_deploy.jar) \"$(@)\"",
     visibility = ["//visibility:public"],
 )
+
+java_library(
+     name = "credit-safe-service",
+     srcs = glob(["src/credit-safe-service/src/main/**/*.java"]),
+     data = [
+         "//data",
+     ],
+     deps = [
+         ":common-lib",
+          "//src/libraries/auth:auth",
+          "//src/libraries/discovery:discovery",
+          "//src/libraries/dropwizard_utils:dropwizard-utils",
+          "//src/libraries/metrics:metrics",
+          "//src/libraries/cluster:cluster",
+
+         "//third_party:com_google_guava_guava",
+         "//third_party:com_google_inject_guice",
+         "//third_party:com_netflix_governator",
+         "//third_party:io_dropwizard_dropwizard_core",
+     ],
+)
+
+java_binary(
+    name = "credit-safe",
+    srcs = glob(["src/credit-safe-service/src/main/**/*.java"]),
+    data = [
+        "etc/development-credit-safe-server.yml",
+        "//data",
+    ],
+    main_class = "se.tink.backend.aggregation.credit.safe.CreditSafeServiceContainer",
+    visibility = ["//visibility:public"],
+    runtime_deps = [
+        "//third_party:mysql_mysql_connector_java",
+    ],
+    deps = [
+        ":common-lib",
+          "//src/libraries/auth:auth",
+          "//src/libraries/discovery:discovery",
+          "//src/libraries/dropwizard_utils:dropwizard-utils",
+          "//src/libraries/metrics:metrics",
+          "//src/libraries/cluster:cluster",
+
+         "//third_party:com_google_guava_guava",
+         "//third_party:com_google_inject_guice",
+         "//third_party:com_netflix_governator",
+         "//third_party:io_dropwizard_dropwizard_core",
+    ],
+)
+
+genrule(
+    name = "renamed-credit-safe-deploy-jar",
+    srcs = [":credit-safe_deploy.jar"],
+    outs = ["credit-safe-service.jar"],
+    cmd = "cp $(location :credit-safe_deploy.jar) \"$(@)\"",
+    visibility = ["//visibility:public"],
+)
