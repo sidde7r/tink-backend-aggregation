@@ -21,6 +21,13 @@ BRANCHES = {
 
 PROJECTS = {
     'tink-backend-aggregation': {'chart': False, 'salt': True},
+    'tink-backend-provider-configuration': {
+        'chart': True,
+        'salt': False,
+        'branches': [
+            'aggregation-staging',
+        ],
+    },
 }
 
 STEP = """
