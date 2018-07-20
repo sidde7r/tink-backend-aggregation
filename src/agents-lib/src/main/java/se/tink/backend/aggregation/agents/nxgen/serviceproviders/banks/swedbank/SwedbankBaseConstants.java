@@ -254,6 +254,10 @@ public class SwedbankBaseConstants {
         public static final String NOT_FOUND = "NOT_FOUND";
     }
 
+    public static class ErrorField {
+        public static final String DATE = "date";
+    }
+
     public static class TransactionType {
         public static final String TRANSFER = "transfer";
         public static final String PAYMENT = "payment";
