@@ -29,6 +29,32 @@
       ]
     },
     {
+      "name": "de-commerzbank-password",
+      "displayName": "Commerzbank",
+      "groupDisplayName": "Commerzbank",
+      "popular": true,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.commerzbank.CommerzbankAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+      "transactional": true,
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
       "name": "de-targobank-password",
       "displayName": "TargoBank",
       "groupDisplayName": "TargoBank",
