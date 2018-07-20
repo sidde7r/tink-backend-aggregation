@@ -125,6 +125,7 @@ public class TransferExecutionException extends RuntimeException {
         EXCESS_AMOUNT(new LocalizableKey("The transfer amount is larger than what is available on the account.")),
         INVALID_DESTINATION(new LocalizableKey("Invalid destination account")),
         INVALID_DUEDATE_NOT_BUSINESSDAY(new LocalizableKey("The payment date is not a business day")),
+        INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY(new LocalizableKey("The payment date is too soon or not a business day")),
         INVALID_DESTINATION_MESSAGE(new LocalizableKey("The destination message is not valid")),
         INVALID_OCR(new LocalizableKey("The destination message is not a valid OCR reference")),
         INVALID_MESSAGE(new LocalizableKey("The message given is not valid")),
