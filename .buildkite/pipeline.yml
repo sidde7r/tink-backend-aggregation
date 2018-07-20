@@ -24,6 +24,9 @@ steps:
 
       bazel build docker:bundle.tar;
       docker load -i bazel-bin/docker/bundle.tar;
+
+      docker tag gcr.io/tink-containers/tink-backend-provider-configuration:latest gcr.io/tink-containers/tink-backend-provider-configuration:$VERSION;
+      gcloud docker -- push gcr.io/tink-containers/tink-backend-provider-configuration:$VERSION;
     env:
       SSH_AUTH_SOCK:
       BUILDKITE_DOCKER_COMPOSE_CONTAINER: app
