@@ -20,7 +20,24 @@ BRANCHES = {
 }
 
 PROJECTS = {
-    'tink-backend-aggregation': {'chart': False, 'salt': True},
+    'tink-backend-aggregation': {
+        'chart': False,
+        'salt': True,
+        'branches': [
+            'oxford-production',
+            'oxford-staging',
+            'leeds-production',
+            'leeds-staging',
+            'cornwall-production',
+            'cornwall-testing',
+            'kirkby-production',
+            'kirkby-staging',
+            'newport-production',
+            'newport-staging',
+            'farnham-staging',
+            'aggregation-production',
+            'aggregation-staging'
+        ],},
     'tink-backend-provider-configuration': {
         'chart': True,
         'salt': False,
