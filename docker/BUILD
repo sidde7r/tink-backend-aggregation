@@ -17,7 +17,7 @@ container_image(
 container_image(
     name = "provider_configuration_image",
     base = "@openjdk-jdk8//image",
-    tars = ["//deb:aggregation_tar"],
+    tars = ["//deb:provider_configuration_tar"],
     cmd = ["java", "-jar", "-Xmx2560m", "/usr/share/tink-backend-provider-configuration/provider-configuration-service.jar", "server", "/etc/tink/provider-configuration-server.yml"],
     workdir = "/usr/share/tink-backend-provider-configuration"
 )
