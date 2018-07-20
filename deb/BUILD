@@ -37,6 +37,13 @@ pkg_tar(
     package_dir = "/lib/systemd/system",
 )
 
+pkg_tar(
+    name = "credit_safe_system_tar",
+    srcs = [":tink-backend-credit-safe.service"],
+    mode = "0444",
+    package_dir = "/lib/systemd/system",
+)
+
 # end service files
 
 # binary files
@@ -67,6 +74,13 @@ pkg_tar(
     mode = "0444",
     package_dir = "/usr/share/tink-backend-provider-configuration",
 )
+
+pkg_tar(
+    name = "credit_safe_bin_tar",
+    srcs = ["//:renamed-credit-safe-deploy-jar"],
+    mode = "0444",
+    package_dir = "/usr/share/tink-backend-credit-safe",
+)
 # end binary files
 
 # package tars
@@ -89,6 +103,16 @@ pkg_tar(
         ":provider_configuration_bin_tar",
         ":provider_configuration_data_tar",
         ":provider_configuration_system_tar",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+pkg_tar(
+    name = "credit_safe_tar",
+    deps = [
+        ":credit_safe_bin_tar",
+        ":credit_safe_data_tar",
+        ":credit_safe_system_tar",
     ],
     visibility = ["//visibility:public"],
 )
@@ -126,6 +150,20 @@ pkg_deb(
     homepage = "https://tink.se",
     maintainer = "Tink AB <support@tink.se>",
     package = "tink-backend-provider-configuration",
+    postinst = ":control/postinst",
+    preinst = ":control/preinst",
+    prerm = ":control/prerm",
+    version_file = ".version",
+)
+
+pkg_deb(
+    name = "credit-safe",
+    architecture = "amd64",
+    data = ":credit_safe_bin_tar",
+    description = "Tink Backend Credit Safe Service",
+    homepage = "https://tink.se",
+    maintainer = "Tink AB <support@tink.se>",
+    package = "tink-backend-credit-safe",
     postinst = ":control/postinst",
     preinst = ":control/preinst",
     prerm = ":control/prerm",
