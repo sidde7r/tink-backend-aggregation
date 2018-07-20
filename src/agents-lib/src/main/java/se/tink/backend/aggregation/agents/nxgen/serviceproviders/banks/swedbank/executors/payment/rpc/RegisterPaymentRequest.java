@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.math.BigDecimal;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.ReferenceEntity;
@@ -57,8 +58,13 @@ public class RegisterPaymentRequest {
             String fromAccountId, String type, String eInvoiceReference) {
 
         return new RegisterPaymentRequest(
-                String.valueOf(amount).replace(".", ","),
+                formatAmount(amount),
                 ReferenceEntity.create(message, referenceType),
                 date, recipientId, fromAccountId, type, eInvoiceReference);
+    }
+
+    private static String formatAmount(double amount) {
+        BigDecimal bigDecimalAmount = new BigDecimal(amount).setScale(2, BigDecimal.ROUND_HALF_UP);
+        return bigDecimalAmount.toString().replace(".", ","); // Swedbank uses comma-separator
     }
 }
