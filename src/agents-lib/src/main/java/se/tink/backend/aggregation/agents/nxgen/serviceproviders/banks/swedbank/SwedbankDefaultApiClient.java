@@ -41,6 +41,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.BankProfileHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.EngagementOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.EngagementTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.MenuItemLinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.ProfileResponse;
@@ -50,6 +51,7 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SwedbankDefaultApiClient {
@@ -157,8 +159,16 @@ public class SwedbankDefaultApiClient {
     // never assume anything in session storage is usable when authenticating, it is setup
     // after login
     public ProfileResponse completeBankId(LinkEntity linkEntity) throws AuthenticationException {
-        ProfileResponse profileResponse = makeRequest(linkEntity, ProfileResponse.class);
-
+        ProfileResponse profileResponse;
+        try {
+            profileResponse = makeRequest(linkEntity, ProfileResponse.class);
+        } catch (HttpResponseException hre) {
+            if (isUserNotACustomer(hre)) {
+                throw LoginError.NOT_CUSTOMER.exception();
+            }
+            // unknown error: rethrow
+            throw hre;
+        }
         if (!hasValidProfile(profileResponse)) {
             throw LoginError.NOT_CUSTOMER.exception();
         }
@@ -446,6 +456,20 @@ public class SwedbankDefaultApiClient {
     private PaymentBaseinfoResponse fetchPaymentBaseinfo() {
         return makeMenuItemRequest(SwedbankBaseConstants.MenuItemKey.PAYMENT_BASEINFO,
                     PaymentBaseinfoResponse.class);
+    }
+
+    private boolean isUserNotACustomer(HttpResponseException hre) {
+        // This method expects an response with the following charectaristics:
+        // - Http status: 404
+        // - Http body: `ErrorResponse` with `general` error code of "NOT_FOUND"
+
+        HttpResponse httpResponse = hre.getResponse();
+        if (httpResponse.getStatus() != HttpStatus.SC_NOT_FOUND) {
+            return false;
+        }
+
+        ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
+        return errorResponse.hasErrorCode(SwedbankBaseConstants.ErrorCode.NOT_FOUND);
     }
 
     private boolean hasValidProfile(ProfileResponse profileResponse) {

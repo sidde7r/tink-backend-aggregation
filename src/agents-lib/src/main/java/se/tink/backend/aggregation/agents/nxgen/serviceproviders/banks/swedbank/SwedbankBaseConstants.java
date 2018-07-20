@@ -251,6 +251,10 @@ public class SwedbankBaseConstants {
         public static final String EINVOICE_NO_MATCH = "Could not find a matching eInvoice.";
     }
 
+    public static class ErrorCode {
+        public static final String NOT_FOUND = "NOT_FOUND";
+    }
+
     public static class TransactionType {
         public static final String TRANSFER = "transfer";
         public static final String PAYMENT = "payment";
