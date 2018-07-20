@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authentica
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -17,6 +19,8 @@ public class CommerzbankPasswordAuthenticator implements PasswordAuthenticator {
 
     private CommerzbankApiClient apiClient;
     private SessionStorage sessionStorage;
+    private static final Logger logger = LoggerFactory.getLogger(CommerzbankPasswordAuthenticator.class);
+
 
     public CommerzbankPasswordAuthenticator(CommerzbankApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
@@ -36,10 +40,14 @@ public class CommerzbankPasswordAuthenticator implements PasswordAuthenticator {
 
         Optional<ErrorEntity> errorEntity = Optional.ofNullable(response.getBody(RootModel.class).getError());
         if (errorEntity.isPresent()) {
-            if (response.getBody(RootModel.class).getError().getCode().equalsIgnoreCase(CommerzbankConstants.ERRORS.PIN_ERROR) ){
+            if (response.getBody(RootModel.class).getError().getCode()
+                    .equalsIgnoreCase(CommerzbankConstants.ERRORS.PIN_ERROR)) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             } else {
-                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
+                final String message = String.format("Failed to login because: %s",
+                        response.getBody(RootModel.class).getError().getMessage());
+                logger.error(message);
+                throw new IllegalStateException(message);
             }
         }
         String cookie = response.getCookies().toString();
