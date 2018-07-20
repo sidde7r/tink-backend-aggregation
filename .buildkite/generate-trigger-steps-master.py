@@ -68,9 +68,6 @@ print(TRIGGER_ALL_PIPELINE_STEP.format(
 
 
 for project, project_settings in PROJECTS.items():
-    if len(sys.argv) >= 2 and sys.argv[1] != project:
-        continue
-
     for branch in project_settings['branches']:
         settings = BRANCHES[branch]
         if settings.get('block'):
