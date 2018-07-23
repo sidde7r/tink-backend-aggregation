@@ -69,7 +69,32 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
             savingsAccountNumbers = null;
         }
 
+        if (apiClient.getBankProfiles().size() > 1) {
+            debugLogAccounts(accounts);
+        }
+
         return accounts;
+    }
+
+    // DEBUG to see why refresh transactions fails
+    private void debugLogAccounts(ArrayList<TransactionalAccount> accounts) {
+        try {
+            for (TransactionalAccount account : accounts) {
+                String uniqueId = account.getUniqueIdentifier();
+                BankProfile bankProfile = account.getTemporaryStorage(SwedbankBaseConstants.StorageKey.PROFILE,
+                        BankProfile.class);
+
+                String bankProfileId = "N/A";
+                if (bankProfile != null && bankProfile.getBank() != null) {
+                    bankProfileId = bankProfile.getBank().getBankId();
+                }
+
+                log.info(String.format("Swedbank_multiprofile Account [%s], BankProfileId [%s]",
+                        uniqueId, bankProfileId));
+            }
+        } catch (Exception e) {
+            log.warn("Swedbank_multiprofile Failed to log info for multiprofile user");
+        }
     }
 
     @Override
