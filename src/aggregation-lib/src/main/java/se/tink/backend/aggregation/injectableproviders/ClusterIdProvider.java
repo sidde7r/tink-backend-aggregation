@@ -57,12 +57,11 @@ public class ClusterIdProvider extends AbstractHttpContextInjectable<ClusterInfo
 
     private Aggregator createAggregator(HttpRequestContext request, ClusterHostConfiguration configuration) {
         String customAggregator = request.getHeaderValue(AGGREGATOR_NAME_HEADER);
-        if (!(Objects.isNull(customAggregator) || customAggregator.equals(""))) {
+        if (!Strings.isNullOrEmpty(customAggregator)) {
             return Aggregator.of(customAggregator);
         }
 
-        if (!(Objects.isNull(configuration.getAggregatorIdentifier()) ||
-                configuration.getAggregatorIdentifier().equals(""))) {
+        if (!Strings.isNullOrEmpty(configuration.getAggregatorIdentifier())) {
             return Aggregator.of(configuration.getAggregatorIdentifier());
         }
 
