@@ -37,10 +37,6 @@ public class TransactionRecord {
                     .append(SantanderConstants.WHITESPACE);
         }
 
-        if(!Strings.isNullOrEmpty(description3)){
-            builder.append(description3.trim())
-                    .append(SantanderConstants.WHITESPACE);
-        }
         return builder.toString();
     }
 
