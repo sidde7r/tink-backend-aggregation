@@ -256,6 +256,7 @@ public class SwedbankBaseConstants {
 
     public static class ErrorField {
         public static final String DATE = "date";
+        public static final String USER_ID = "userid";
     }
 
     public static class TransactionType {
