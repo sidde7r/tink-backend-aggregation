@@ -165,12 +165,8 @@ public class PaymentBaseinfoResponse {
                 .filter(SwedbankBasePredicates.filterPayees(accountIdentifier))
                 .findFirst();
 
-        // Either it is an external or internal transfer
         if (!payeeEntity.isPresent()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_DESTINATION)
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_DESTINATION)
-                    .build();
+            return Optional.empty();
         }
 
         return Optional.ofNullable(payeeEntity.get().getId());

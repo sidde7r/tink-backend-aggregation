@@ -19,6 +19,8 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.CollectBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.InitBankIdRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.InitBankIdResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.payment.rpc.RegisterPayeeRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.payment.rpc.RegisterRecipientResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.payment.rpc.RegisterPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.CollectBankIdSignResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.ConfirmTransferResponse;
@@ -53,10 +55,13 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
 
 public class SwedbankDefaultApiClient {
     private static final Logger log = LoggerFactory.getLogger(SwedbankDefaultApiClient.class);
     private static final SecureRandom RANDOM = new SecureRandom();
+    private static final DefaultAccountIdentifierFormatter DEFAULT_ACCOUNT_IDENTIFIER_FORMATTER_FORMATTER =
+            new DefaultAccountIdentifierFormatter();
     protected final TinkHttpClient client;
     private final SwedbankConfiguration configuration;
     private final String username;
@@ -90,7 +95,7 @@ public class SwedbankDefaultApiClient {
         return buildAbstractRequest(url).delete(responseClass, requestObject);
     }
 
-    private <T> T makeRequest(LinkEntity linkEntity, Class<T> responseClass) {
+    public <T> T makeRequest(LinkEntity linkEntity, Class<T> responseClass) {
         return makeRequest(linkEntity, null, responseClass);
     }
 
@@ -246,6 +251,13 @@ public class SwedbankDefaultApiClient {
         }
 
         return this.paymentBaseinfoResponse;
+    }
+
+    public RegisterRecipientResponse registerPayee(RegisterPayeeRequest registerPayeeRequest) {
+        return makeMenuItemRequest(
+                SwedbankBaseConstants.MenuItemKey.REGISTER_PAYEE,
+                registerPayeeRequest,
+                RegisterRecipientResponse.class);
     }
 
     public RegisterTransferResponse registerTransfer(double amount, String destinationAccountId,

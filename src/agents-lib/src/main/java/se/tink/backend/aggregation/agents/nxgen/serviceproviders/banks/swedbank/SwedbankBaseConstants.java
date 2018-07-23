@@ -209,7 +209,7 @@ public class SwedbankBaseConstants {
         PORTFOLIOS("PortfolioHoldings"), FUND_MARKET_INFO("FundMarketinfo"), EINVOICES("EinvoiceIncoming"),
         PAYMENT_BASEINFO("PaymentBaseinfo"), PAYMENT_REGISTERED("PaymentRegistered"),
         REGISTER_TRANSFER("PaymentRegisterTransfer"), REGISTER_PAYMENT("PaymentRegisterPayment"),
-        PAYMENTS_CONFIRMED("PaymentConfirmed");
+        PAYMENTS_CONFIRMED("PaymentConfirmed"), REGISTER_PAYEE("PaymentRegisterPayee");
 
         private String key;
 
@@ -270,6 +270,11 @@ public class SwedbankBaseConstants {
     public static class PaymentType {
         public static final String DOMESTIC = "DOMESTIC";
         public static final String EINVOICE = "EINVOICE";
+    }
+
+    public static class PaymentAccountType {
+        public static final String BGACCOUNT = "BGACCOUNT";
+        public static final String PGACCOUNT = "PGACCOUNT";
     }
 
     public static class BankId {
