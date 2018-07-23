@@ -266,6 +266,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             }
         });
 
+        // Requires Accounts in list to have been "updated" towards System's UpdateService to get their real stored id
         List<String> accountIds = accounts.stream()
                 .map(Account::getId)
                 .collect(Collectors.toList());
