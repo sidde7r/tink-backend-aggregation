@@ -50,7 +50,7 @@ public class CollectorAgent extends AbstractAgent implements RefreshableItemExec
         credentials = request.getCredentials();
         catalog = context.getCatalog();
         httpClient = clientFactory.createCustomClient(context.getLogOutputStream());
-        apiClient = new CollectorApiClient(httpClient, getAggregator().getAggregatorIdentifier());
+        apiClient = new CollectorApiClient(httpClient, DEFAULT_USER_AGENT);
     }
 
     @Override

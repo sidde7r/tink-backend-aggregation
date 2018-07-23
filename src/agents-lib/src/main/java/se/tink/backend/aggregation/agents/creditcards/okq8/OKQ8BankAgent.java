@@ -92,7 +92,7 @@ public class OKQ8BankAgent extends AbstractAgent implements DeprecatedRefreshExe
 
     private LoginResponse loginAndFetchAllTransactions() throws LoginException {
         LoginRequest loginRequest = createLoginRequestForCredentials(credentials);
-        ClientResponse response = createClientRequest(LOGIN_URL, client, getAggregator().getAggregatorIdentifier())
+        ClientResponse response = createClientRequest(LOGIN_URL, client, DEFAULT_USER_AGENT)
                 .post(ClientResponse.class, loginRequest);
 
         ensureLoginSuccessful(response);

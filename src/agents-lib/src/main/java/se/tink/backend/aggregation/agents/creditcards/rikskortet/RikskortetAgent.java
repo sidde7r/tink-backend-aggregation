@@ -56,13 +56,13 @@ public class RikskortetAgent extends AbstractAgent implements DeprecatedRefreshE
 
     public RikskortetAgent(CredentialsRequest request, AgentContext context) {
         super(request, context);
-        userAgentHandler = new SOAPUserAgentHandler(getAggregator().getAggregatorIdentifier());
+        userAgentHandler = new SOAPUserAgentHandler(DEFAULT_USER_AGENT);
 
         try {
             credentials = request.getCredentials();
             service = new MobileWSV2(WSDL_FILE.toURI().toURL()).getMobileWSV2Soap();
 
-            addSoapHandlers(service, getAggregator().getAggregatorIdentifier());
+            addSoapHandlers(service, DEFAULT_USER_AGENT);
         } catch (Exception e) {
             log.error("Could not initialize client", e);
         }

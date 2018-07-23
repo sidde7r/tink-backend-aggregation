@@ -147,7 +147,7 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
         }
 
         httpClient = clientFactory.createBasicClient(context.getLogOutputStream());
-        this.apiClient = new DanskeBankApiClient(httpClient, getAggregator().getAggregatorIdentifier(), bankIdResourceHelper, providerCountry,
+        this.apiClient = new DanskeBankApiClient(httpClient, DEFAULT_USER_AGENT, bankIdResourceHelper, providerCountry,
                 sessionLanguage);
         catalog = context.getCatalog();
         transferMessageFormatter = new TransferMessageFormatter(catalog,

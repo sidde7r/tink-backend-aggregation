@@ -316,7 +316,7 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
     }
 
     private WebResource.Builder createClientRequest(String url) {
-        return client.resource(url).header("User-Agent", getAggregator().getAggregatorIdentifier()).accept(MediaType.APPLICATION_JSON);
+        return client.resource(url).header("User-Agent", DEFAULT_USER_AGENT).accept(MediaType.APPLICATION_JSON);
     }
 
     @Override
