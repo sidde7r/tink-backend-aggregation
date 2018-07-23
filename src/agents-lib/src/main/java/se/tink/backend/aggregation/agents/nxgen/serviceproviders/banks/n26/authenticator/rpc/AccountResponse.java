@@ -68,6 +68,8 @@ public class AccountResponse {
 
         return TransactionalAccount.builder(getType(), getId(), getTinkBalance())
                 .setAccountNumber(getId())
+                .setName(getBankName())
+                .setAccountNumber(getIban())
                 .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
                 .build();
     }
