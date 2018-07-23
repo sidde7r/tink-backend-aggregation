@@ -38,7 +38,7 @@ public class ProviderConfiguration {
 
 
     @Column(name = "`capabilities`")
-    @Type(type = "text")
+//    @Type(type = "text")
     @ApiModelProperty(name = "capabilitiesSerialized", hidden = true)
     private String capabilitiesSerialized;
     @ApiModelProperty(name = "className", hidden = true)
@@ -58,7 +58,7 @@ public class ProviderConfiguration {
     private String name;
     @Type(type = "text")
     private String passwordHelpText;
-    @Type(type = "text")
+//    @Type(type = "text")
     @ApiModelProperty(name = "payload", hidden = true)
     private String payload;
     private boolean popular;
