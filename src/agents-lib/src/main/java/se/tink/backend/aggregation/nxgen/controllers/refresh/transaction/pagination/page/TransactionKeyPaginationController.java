@@ -23,7 +23,8 @@ public class TransactionKeyPaginationController<A extends Account, T> implements
     @Override
     public Collection<? extends Transaction> fetchTransactionsFor(A account) {
         Preconditions.checkState(canFetchMoreFor(account),
-                "Fetching more transactions when canFetchMore() returns false is not allowed");
+                String.format("Fetching more transactions when canFetchMore() returns false is not allowed account [%s], current [%s]",
+                        account.getUniqueIdentifier(), getCurrentAccountUniqueId()));
 
         TransactionKeyPaginatorResponse<T> response = fetchTransactionsFor(account, nextKey);
         hasNext = response.hasNext();
@@ -50,5 +51,13 @@ public class TransactionKeyPaginationController<A extends Account, T> implements
             hasNext = true;
             nextKey = null;
         }
+    }
+
+    private String getCurrentAccountUniqueId() {
+        if (currentAccount != null) {
+            return currentAccount.getUniqueIdentifier();
+        }
+
+        return "N/A";
     }
 }
