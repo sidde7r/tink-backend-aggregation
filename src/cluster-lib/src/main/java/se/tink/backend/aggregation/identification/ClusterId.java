@@ -2,20 +2,13 @@ package se.tink.backend.aggregation.cluster.identification;
 
 import com.google.common.base.Strings;
 import com.sun.jersey.spi.container.ContainerRequest;
-import java.lang.annotation.Annotation;
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.util.Objects;
-import javax.servlet.http.HttpServletRequest;
 import se.tink.libraries.metrics.MetricId;
 
 public class ClusterId {
-    private static final String CLUSTER_NAME_HEADER = "x-tink-cluster-name";
-    private static final String CLUSTER_ENVIRONMENT_HEADER = "x-tink-cluster-environment";
-    private static final String AGGREGATOR_NAME_HEADER = "x-tink-aggregator-header";
+    public static final String CLUSTER_NAME_HEADER = "x-tink-cluster-name";
+    public static final String CLUSTER_ENVIRONMENT_HEADER = "x-tink-cluster-environment";
+    public static final String AGGREGATOR_NAME_HEADER = "x-tink-aggregator-header";
 
     private final String name;
     private final String environment;
@@ -25,14 +18,6 @@ public class ClusterId {
         this.name = name;
         this.environment = environment;
         this.aggregator = aggregator;
-    }
-
-    private static Aggregator initAggregator(String aggregatorHeader){
-        if(!(Objects.isNull(aggregatorHeader) || aggregatorHeader.equals(""))){
-            return Aggregator.of(aggregatorHeader);
-        }
-
-        return  Aggregator.of(Aggregator.DEFAULT);
     }
 
     public MetricId.MetricLabels metricLabels() {
@@ -61,28 +46,8 @@ public class ClusterId {
         return String.format("%s-%s", name, environment);
     }
 
-
-    public static String createClustertId(HttpServletRequest request) {
-        String clusterName = request.getHeader(CLUSTER_NAME_HEADER);
-        String clusterEnvironment = request.getHeader(CLUSTER_ENVIRONMENT_HEADER);
-        return String.format("%s-%s", clusterName, clusterEnvironment);
-    }
-
     public Aggregator getAggregator(){
         return aggregator;
-    }
-
-
-    public static ClusterId createFromRequest(HttpServletRequest request) {
-        if (Objects.isNull(request)) {
-            return createEmpty();
-        }
-
-        String clusterName = request.getHeader(CLUSTER_NAME_HEADER);
-        String clusterEnvironment = request.getHeader(CLUSTER_ENVIRONMENT_HEADER);
-        String aggregatorName = request.getHeader(AGGREGATOR_NAME_HEADER);
-
-        return create(clusterName, clusterEnvironment, initAggregator(aggregatorName));
     }
 
     public static ClusterId createFromContainerRequest(ContainerRequest request) {
@@ -94,7 +59,7 @@ public class ClusterId {
         String clusterEnvironment = request.getHeaderValue(CLUSTER_ENVIRONMENT_HEADER);
         String aggregatorName = request.getHeaderValue(AGGREGATOR_NAME_HEADER);
 
-        return create(clusterName, clusterEnvironment, initAggregator(aggregatorName));
+        return create(clusterName, clusterEnvironment, Aggregator.initAggregator(aggregatorName));
     }
 
     public static ClusterId createEmpty() {

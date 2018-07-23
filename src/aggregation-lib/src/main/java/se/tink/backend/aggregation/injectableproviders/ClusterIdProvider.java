@@ -11,25 +11,24 @@ import com.sun.jersey.server.impl.inject.AbstractHttpContextInjectable;
 import com.sun.jersey.spi.inject.Injectable;
 import com.sun.jersey.spi.inject.InjectableProvider;
 import java.util.Objects;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 import java.lang.reflect.Type;
 import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
+import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.common.repository.mysql.aggregation.ClusterHostConfigurationRepository;
 import se.tink.backend.core.ClusterHostConfiguration;
 
 @Provider
-public class ClusterIdProvider extends AbstractHttpContextInjectable<ClusterId>
+public class ClusterIdProvider extends AbstractHttpContextInjectable<ClusterInfo>
         implements InjectableProvider<ClusterContext, Type> {
 
-    private static final String CLUSTER_NAME_HEADER = "x-tink-cluster-name";
-    private static final String CLUSTER_ENVIRONMENT_HEADER = "x-tink-cluster-environment";
-    private static final String AGGREGATOR_NAME_HEADER = "x-tink-aggregator-header";
+    private static final String CLUSTER_NAME_HEADER = ClusterId.CLUSTER_NAME_HEADER;
+    private static final String CLUSTER_ENVIRONMENT_HEADER = ClusterId.CLUSTER_ENVIRONMENT_HEADER;
+    private static final String AGGREGATOR_NAME_HEADER = ClusterId.AGGREGATOR_NAME_HEADER;
     private ClusterHostConfigurationRepository clusterHostConfigurationRepository;
-    private HttpServletRequest httpRequest;
     private boolean isAggregationCluster;
 
     private void validateClusterHostConfiguration(ClusterHostConfiguration configuration) {
@@ -71,18 +70,25 @@ public class ClusterIdProvider extends AbstractHttpContextInjectable<ClusterId>
     }
 
 
-    private ClusterId getClusterId(HttpRequestContext request) {
+    private ClusterInfo getClusterId(HttpRequestContext request) {
+        ClusterId clusterId;
         if (!isAggregationCluster) {
-            return ClusterId.createEmpty();
+            clusterId = ClusterId.createEmpty();
+            return ClusterInfo.createForLegacyAggregation(clusterId);
         }
 
         ClusterHostConfiguration configuration = getValidClusterHost(request);
         Aggregator aggregator = createAggregator(request, configuration);
 
-        return ClusterId.create(request.getHeaderValue(CLUSTER_NAME_HEADER),
+         clusterId = ClusterId.create(request.getHeaderValue(CLUSTER_NAME_HEADER),
                 request.getHeaderValue(CLUSTER_ENVIRONMENT_HEADER),
                 aggregator);
 
+        return  ClusterInfo.createForAggregationCluster(clusterId,
+                configuration.getHost(),
+                configuration.getApiToken(),
+                configuration.getClientCertificate(),
+                configuration.isDisableRequestCompression());
     }
 
     public ClusterIdProvider(ClusterHostConfigurationRepository clusterHostConfigurationRepository, boolean isAggregationCluster) {
@@ -90,34 +96,24 @@ public class ClusterIdProvider extends AbstractHttpContextInjectable<ClusterId>
         this.isAggregationCluster = isAggregationCluster;
     }
 
-    /**
-     * From interface InjectableProvider
-     */
     @Override
-    public Injectable<ClusterId> getInjectable(ComponentContext ic, ClusterContext a, Type c) {
-        if (c.equals(ClusterId.class)) {
+    public Injectable<ClusterInfo> getInjectable(ComponentContext ic, ClusterContext a, Type c) {
+        if (c.equals(ClusterInfo.class)) {
             return this;
         }
         return null;
     }
 
-    /**
-     * From interface InjectableProvider
-     * A new Injectable is instanciated per request
-     */
     @Override
     public ComponentScope getScope() {
         return ComponentScope.PerRequest;
     }
 
-    /**
-     * From interface Injectable
-     * Get the logged User associated with the request
-     * Or throw an Unauthorized HTTP status code
-     */
     @Override
-    public ClusterId getValue(HttpContext c) {
+    public ClusterInfo getValue(HttpContext c) {
         HttpRequestContext request = c.getRequest();
+
+
         return getClusterId(request);
     }
 }

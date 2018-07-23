@@ -10,7 +10,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import se.tink.backend.aggregation.api.ProviderService;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
+import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.controllers.ProviderServiceController;
+import se.tink.backend.aggregation.injectableproviders.ClusterContext;
 import se.tink.backend.core.ProviderConfiguration;
 
 public class ProviderServiceResource implements ProviderService {
@@ -27,35 +29,27 @@ public class ProviderServiceResource implements ProviderService {
         this.isAggregationCluster = isAggregationCluster;
     }
 
-    private ClusterId getClusterId() {
-
-        ClusterId clusterId = ClusterId.createFromRequest(httpRequest);
-        if (!clusterId.isValidId()) {
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
-        }
-        return clusterId;
-    }
 
     @Override
-    public List<ProviderConfiguration> list(String lang) {
+    public List<ProviderConfiguration> list(String lang, @ClusterContext ClusterInfo clusterInfo) {
         if (isAggregationCluster) {
-            return providerController.list(Locale.forLanguageTag(lang), getClusterId());
+            return providerController.list(Locale.forLanguageTag(lang), clusterInfo.getClusterId());
         }
         return providerController.list(Locale.forLanguageTag(lang));
     }
 
     @Override
-    public List<ProviderConfiguration> listByMarket(String lang, String market) {
+    public List<ProviderConfiguration> listByMarket(String lang, String market, @ClusterContext ClusterInfo clusterInfo) {
         if (isAggregationCluster) {
-            return providerController.listByMarket(Locale.forLanguageTag(lang), getClusterId(), market);
+            return providerController.listByMarket(Locale.forLanguageTag(lang), clusterInfo.getClusterId(), market);
         }
         return providerController.listByMarket(Locale.forLanguageTag(lang), market);
     }
 
     @Override
-    public ProviderConfiguration getProviderByName(String lang, String providerName) {
+    public ProviderConfiguration getProviderByName(String lang, String providerName, @ClusterContext ClusterInfo clusterInfo) {
         if (isAggregationCluster) {
-            return providerController.getProviderByName(Locale.forLanguageTag(lang), getClusterId(), providerName)
+            return providerController.getProviderByName(Locale.forLanguageTag(lang), clusterInfo.getClusterId(), providerName)
                     .orElseThrow(() -> new WebApplicationException(Response.Status.BAD_REQUEST));
         }
 

@@ -7,12 +7,11 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import se.tink.api.annotations.Team;
 import se.tink.api.annotations.TeamOwnership;
-import se.tink.backend.aggregation.cluster.identification.ClusterId;
+import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
 import se.tink.backend.aggregation.rpc.CreateCredentialsRequest;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -36,56 +35,56 @@ public interface AggregationService {
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Credentials createCredentials(CreateCredentialsRequest request);
+    Credentials createCredentials(CreateCredentialsRequest request, ClusterInfo clusterInfo);
 
     @POST
     @Path("reencrypt")
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Credentials reencryptCredentials(ReencryptionRequest request);
+    Credentials reencryptCredentials(ReencryptionRequest request, ClusterInfo clusterInfo);
 
     @POST
     @Path("delete")
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    void deleteCredentials(DeleteCredentialsRequest request);
+    void deleteCredentials(DeleteCredentialsRequest request, ClusterInfo clusterInfo);
 
     @GET
     @Path("ping")
     @TeamOwnership(Team.INTEGRATION)
     @Produces(MediaType.TEXT_PLAIN)
     @AllowAnonymous
-    String ping(ClusterId clusterId);//, HttpHeaders request);
+    String ping();
 
     @POST
     @Path("refresh")
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    void refreshInformation(RefreshInformationRequest request) throws Exception;
+    void refreshInformation(RefreshInformationRequest request, ClusterInfo clusterInfo) throws Exception;
 
     @POST
     @Path("transfer")
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    void transfer(TransferRequest request) throws Exception;
+    void transfer(TransferRequest request, ClusterInfo clusterInfo) throws Exception;
 
     @POST
     @Path("keepalive")
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    void keepAlive(KeepAliveRequest request) throws Exception;
+    void keepAlive(KeepAliveRequest request, ClusterInfo clusterInfo) throws Exception;
 
     @PUT
     @Path("update")
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Credentials updateCredentials(UpdateCredentialsRequest request);
+    Credentials updateCredentials(UpdateCredentialsRequest request, ClusterInfo clusterInfo);
 
     @POST
     @Path("rateLimits/auto")
@@ -106,12 +105,12 @@ public interface AggregationService {
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Credentials migrateDecryptCredentials(MigrateCredentialsDecryptRequest request);
+    Credentials migrateDecryptCredentials(MigrateCredentialsDecryptRequest request, ClusterInfo clusterInfo);
 
     @POST
     @Path("migrate/reencrypt")
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response migrateReencryptCredentials(MigrateCredentialsReencryptRequest request);
+    Response migrateReencryptCredentials(MigrateCredentialsReencryptRequest request, ClusterInfo clusterInfo);
 }

@@ -11,6 +11,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import se.tink.api.annotations.Team;
 import se.tink.api.annotations.TeamOwnership;
+import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.core.ProviderConfiguration;
 
 @Path("/providers")
@@ -20,15 +21,20 @@ public interface ProviderService {
     @Path("/list")
     @GET
     @TeamOwnership(Team.INTEGRATION)
-    List<ProviderConfiguration> list(@DefaultValue("en") @QueryParam("lang") String lang);
+    List<ProviderConfiguration> list(@DefaultValue("en") @QueryParam("lang") String lang,
+            ClusterInfo clusterInfo);
 
     @Path("/{market}/list")
     @GET
     @TeamOwnership(Team.INTEGRATION)
-    List<ProviderConfiguration> listByMarket(@DefaultValue("en") @QueryParam("lang") String lang, @PathParam("market") String market);
+    List<ProviderConfiguration> listByMarket(@DefaultValue("en") @QueryParam("lang") String lang,
+            @PathParam("market") String market,
+            ClusterInfo clusterInfo);
 
     @Path("/{providerName}")
     @GET
     @TeamOwnership(Team.INTEGRATION)
-    ProviderConfiguration getProviderByName(@DefaultValue("en") @QueryParam("lang") String lang, @PathParam("providerName") String providerName);
+    ProviderConfiguration getProviderByName(@DefaultValue("en") @QueryParam("lang") String lang,
+            @PathParam("providerName") String providerName,
+            ClusterInfo clusterInfo);
 }
