@@ -1,29 +1,51 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors;
 
 import com.google.common.util.concurrent.Uninterruptibles;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankDefaultApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.payment.rpc.RegisterPayeeRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.payment.rpc.RegisterRecipientResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.AbstractBankIdSignResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.ConfirmTransferResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.InitiateSignTransferResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.AbstractPayeeEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.giro.validation.OcrValidationConfiguration;
+import se.tink.libraries.i18n.Catalog;
 
 public class SwedbankTransferHelper {
 
-    private SwedbankDefaultApiClient apiClient;
+    private final AgentContext context;
+    private final Catalog catalog;
+    private final SupplementalInformationController supplementalInformationController;
+    private final SwedbankDefaultApiClient apiClient;
 
-    public SwedbankTransferHelper(SwedbankDefaultApiClient apiClient) {
+    public SwedbankTransferHelper(AgentContext context, Catalog catalog,
+            SupplementalInformationController supplementalInformationController, SwedbankDefaultApiClient apiClient) {
+        this.context = context;
+        this.catalog = catalog;
+        this.supplementalInformationController = supplementalInformationController;
         this.apiClient = apiClient;
     }
 
     public LinksEntity collectBankId(AbstractBankIdSignResponse bankIdSignResponse) {
+        context.openBankId(null, false);
+
         for (int i = 0; i < SwedbankBaseConstants.BankId.MAX_ATTEMPTS; i++) {
             SwedbankBaseConstants.BankIdResponseStatus signingStatus = bankIdSignResponse.getBankIdStatus();
 
@@ -104,5 +126,82 @@ public class SwedbankTransferHelper {
                     .setEndUserMessage(endUserMessage)
                     .setMessage(message).build();
         }
+    }
+
+    public String getDestinationName(final Transfer transfer) {
+        return transfer.getDestination().getName()
+                .orElseGet(() -> requestRecipientNameSupplemental().orElseThrow(() -> TransferExecutionException
+                        .builder(SignableOperationStatuses.CANCELLED)
+                        .setMessage("Could not get recipient name from user")
+                        .setEndUserMessage(catalog
+                                .getString(TransferExecutionException.EndUserMessage.NEW_RECIPIENT_NAME_ABSENT))
+                        .build()));
+    }
+
+    private Optional<String> requestRecipientNameSupplemental() {
+        // If we're adding the recipient, we need to ask the user to name it.
+
+        Field nameField = getNameField();
+        try {
+            Map<String, String> answers = supplementalInformationController.askSupplementalInformation(nameField);
+            return Optional.ofNullable(answers.get("name"));
+        } catch (SupplementalInfoException e) {
+            return Optional.empty();
+        }
+    }
+
+    private Field getNameField() {
+        Field nameField = new Field();
+        nameField.setDescription(catalog.getString("Recipient name"));
+        nameField.setName("name");
+        nameField.setPattern(".+");
+        nameField.setHelpText(catalog.getString("Because this is the first time you transfer money to this"
+                + " account, you'll need to register a name for it."));
+        return nameField;
+    }
+
+    private Optional<PaymentBaseinfoResponse> getConfirmResponse(LinkEntity linkEntity) {
+        try {
+            return Optional.of(apiClient.confirmSignNewRecipient(linkEntity));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * Signs and confirms the creation of a new recipient or payee. Returns the created recipient or throws an exception
+     * if the creation failed.
+     */
+    public AbstractPayeeEntity signAndConfirmNewRecipient(RegisterRecipientResponse registerRecipientResponse,
+            Function<PaymentBaseinfoResponse, Optional<AbstractPayeeEntity>> findNewRecipientFunction) {
+
+        return signNewRecipient(registerRecipientResponse.getLinks().getSign())
+                .map(LinksEntity::getNext)
+                .flatMap(this::getConfirmResponse)
+                .flatMap(findNewRecipientFunction)
+                .orElseThrow(() -> TransferExecutionException.builder(SignableOperationStatuses.FAILED).setEndUserMessage(
+                        catalog.getString(TransferExecutionException.EndUserMessage.NEW_RECIPIENT_FAILED))
+                        .build());
+    }
+
+    private Optional<LinksEntity> signNewRecipient(LinkEntity signLink) {
+        InitiateSignTransferResponse initiateSignTransfer = apiClient.signExternalTransfer(signLink);
+        return Optional.ofNullable(collectBankId(initiateSignTransfer));
+    }
+
+    /**
+     * Returns a function that streams through all registered payees with a filter to find the newly added payee
+     * among them.
+     */
+    public Function<PaymentBaseinfoResponse, Optional<AbstractPayeeEntity>> findNewPayeeFromPaymentResponse(
+            RegisterPayeeRequest newPayee) {
+        String newPayeeType = newPayee.getType().toLowerCase();
+        String newPayeeAccountNumber = newPayee.getAccountNumber().replaceAll("[^0-9]", "");
+
+        return confirmResponse -> confirmResponse.getPayment().getPayees().stream()
+                .filter(payee -> payee.getType().toLowerCase().equals(newPayeeType)
+                        && payee.getAccountNumber().replaceAll("[^0-9]", "").equals(newPayeeAccountNumber))
+                .findFirst()
+                .map(AbstractPayeeEntity.class::cast);
     }
 }

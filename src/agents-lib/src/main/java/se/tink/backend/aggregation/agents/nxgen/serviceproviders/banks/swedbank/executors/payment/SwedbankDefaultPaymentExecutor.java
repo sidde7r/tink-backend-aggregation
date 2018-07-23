@@ -7,9 +7,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankDefaultApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.BaseTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.SwedbankTransferHelper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.payment.rpc.RegisterPayeeRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.payment.rpc.RegisterRecipientResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.RegisterTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.RegisteredTransfersResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.AbstractPayeeEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
@@ -17,10 +20,15 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.i18n.Catalog;
 
 public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor implements PaymentExecutor {
-    public SwedbankDefaultPaymentExecutor(SwedbankDefaultApiClient apiClient, SwedbankTransferHelper transferHelper) {
+    private final Catalog catalog;
+
+    public SwedbankDefaultPaymentExecutor(Catalog catalog, SwedbankDefaultApiClient apiClient,
+            SwedbankTransferHelper transferHelper) {
         super(apiClient, transferHelper);
+        this.catalog = catalog;
     }
 
     @Override
@@ -36,6 +44,17 @@ public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor impleme
         signAndConfirmTransfer(registeredTransfersResponse);
     }
 
+    private Optional<String> getDestinationAccountIdForPayment(Transfer transfer, PaymentBaseinfoResponse paymentBaseinfo) {
+        AccountIdentifier destinationAccount = SwedbankTransferHelper.getDestinationAccount(transfer);
+        Optional<String> destinationAccountId = paymentBaseinfo.getPaymentDestinationAccountId(destinationAccount);
+        if (destinationAccountId.isPresent()) {
+            return destinationAccountId;
+        }
+
+        AbstractPayeeEntity newDestinationAccount = createSignedPayee(transfer);
+        return Optional.ofNullable(newDestinationAccount.getId());
+    }
+
     private RegisteredTransfersResponse registerPayment(Transfer transfer) {
         PaymentBaseinfoResponse paymentBaseinfo = apiClient.paymentBaseinfo();
 
@@ -47,8 +66,7 @@ public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor impleme
                     .setMessage(SwedbankBaseConstants.ErrorMessage.SOURCE_NOT_FOUND).build();
         }
 
-        AccountIdentifier destinationAccount = SwedbankTransferHelper.getDestinationAccount(transfer);
-        Optional<String> destinationAccountId = paymentBaseinfo.getPaymentDestinationAccountId(destinationAccount);
+        Optional<String> destinationAccountId = getDestinationAccountIdForPayment(transfer, paymentBaseinfo);
         if (!destinationAccountId.isPresent()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_DESTINATION)
@@ -98,5 +116,22 @@ public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor impleme
 
             throw hre;
         }
+    }
+
+    private AbstractPayeeEntity createSignedPayee(final Transfer transfer) {
+        AccountIdentifier accountIdentifier = transfer.getDestination();
+        if (!accountIdentifier.is(AccountIdentifier.Type.SE_PG) && !accountIdentifier.is(AccountIdentifier.Type.SE_BG)) {
+            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                    .setEndUserMessage(catalog.getString("You can only make payments to Swedish destinations"))
+                    .build();
+        }
+
+        RegisterPayeeRequest registerPayeeRequest = RegisterPayeeRequest.create(accountIdentifier,
+                transferHelper.getDestinationName(transfer));
+
+        RegisterRecipientResponse registerRecipientResponse = apiClient.registerPayee(registerPayeeRequest);
+
+        return transferHelper.signAndConfirmNewRecipient(registerRecipientResponse,
+                transferHelper.findNewPayeeFromPaymentResponse(registerPayeeRequest));
     }
 }
