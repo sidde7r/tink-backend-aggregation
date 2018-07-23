@@ -115,21 +115,19 @@ public abstract class AgentContext {
 
     public abstract void openBankId(String autoStartToken, boolean wait);
 
-    public Account updateAccount(Account account) {
-        return updateAccount(account, AccountFeatures.createEmpty());
+    public void updateAccount(Account account) {
+        updateAccount(account, AccountFeatures.createEmpty());
     }
 
-    public Iterable<Account> updateAccounts(Iterable<Account> accounts) {
-        List<Account> updatedAccounts = Lists.newArrayList();
-
+    public void updateAccounts(Iterable<Account> accounts) {
         for (Account account : accounts) {
-            updatedAccounts.add(updateAccount(account));
+            updateAccount(account);
         }
-
-        return updatedAccounts;
     }
 
-    public abstract Account updateAccount(Account account, AccountFeatures accountFeatures);
+    public abstract Account sendAccountToUpdateService(String uniqueId);
+
+    public abstract void updateAccount(Account account, AccountFeatures accountFeatures);
 
     public abstract void updateTransferDestinationPatterns(Map<Account, List<TransferDestinationPattern>> map);
 

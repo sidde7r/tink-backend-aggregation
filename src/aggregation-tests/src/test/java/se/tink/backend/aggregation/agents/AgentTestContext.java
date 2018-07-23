@@ -147,7 +147,7 @@ public class AgentTestContext extends AgentContext {
     }
 
     @Override
-    public Account updateAccount(Account account, AccountFeatures accountFeatures) {
+    public void updateAccount(Account account, AccountFeatures accountFeatures) {
         log.info("Updating account");
 
         try {
@@ -158,8 +158,10 @@ public class AgentTestContext extends AgentContext {
         }
 
         accountsByBankId.put(account.getBankId(), account);
+    }
 
-        return account;
+    public Account sendAccountToUpdateService(String uniqueId) {
+        return accountsByBankId.get(uniqueId);
     }
 
     @Override
@@ -204,7 +206,8 @@ public class AgentTestContext extends AgentContext {
         } catch (Exception e) {
         }
 
-        account = updateAccount(account);
+        updateAccount(account);
+        account = sendAccountToUpdateService(account.getBankId());
 
         for (Transaction updatedTransaction : transactions) {
             updatedTransaction.setAccountId(account.getId());

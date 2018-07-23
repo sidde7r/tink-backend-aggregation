@@ -897,7 +897,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
                 .sortedCopy(transactionsList));
     }
 
-    private Account refreshLoan(Account account, ProductEntity product) throws IOException, ParseException {
+    private void refreshLoan(Account account, ProductEntity product) throws IOException, ParseException {
         String accountId = product.getNordeaAccountIdV2();
 
         String loanResponseContent = createClientRequest(this.market.getBankingEndpoint() + "/Loans/Details/" + accountId,
@@ -915,7 +915,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
             assets.setLoans(Lists.newArrayList(loan));
         }
 
-        return this.context.updateAccount(account, assets);
+        this.context.updateAccount(account, assets);
     }
 
     private void refreshInvestmentAccounts() throws IOException {

@@ -44,6 +44,7 @@ import se.tink.backend.common.mapper.CoreAccountMapper;
 import se.tink.backend.common.mapper.CoreCredentialsMapper;
 import se.tink.backend.common.repository.mysql.aggregation.AggregationCredentialsRepository;
 import se.tink.backend.common.utils.MetricsUtils;
+import se.tink.backend.common.utils.Pair;
 import se.tink.backend.core.AggregationCredentials;
 import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.core.FraudDetailsContent;
@@ -120,6 +121,9 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     private AggregationControllerAggregationClient aggregationControllerAggregationClient;
     //private final ClusterInfo clusterInfo;
     private boolean isAggregationCluster;
+
+    private Map<String, Pair<Account, AccountFeatures>> cachedAccountsByUniqueId;
+    private Map<String, Account> updatedAccountsByUniqueId;
 
     public AgentWorkerContext(CredentialsRequest request, ServiceContext serviceContext, MetricRegistry metricRegistry,
             boolean useAggregationController, AggregationControllerAggregationClient aggregationControllerAggregationClient,
@@ -534,14 +538,30 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     @Override
-    public Account updateAccount(Account account, AccountFeatures accountFeatures) {
+    public void updateAccount(Account account, AccountFeatures accountFeatures) {
 
         if (shouldNotAggregateDataForAccount(account)) {
             // Account marked to not aggregate data from.
             // Preferably we would not even download the data but this makes sure
             // we don't process further or store the account's data.
-            return account;
+            return;
         }
+
+        cachedAccountsByUniqueId.put(account.getBankId(), new Pair<>(account, accountFeatures));
+    }
+
+    public void sendAllCachedAccountsToUpdateService() {
+        for(String uniqueId : cachedAccountsByUniqueId.keySet()) {
+            sendAccountToUpdateService(uniqueId);
+        }
+    }
+
+    public Account sendAccountToUpdateService(String uniqueId) {
+
+        Pair<Account, AccountFeatures> pair = cachedAccountsByUniqueId.get(uniqueId);
+
+        Account account = pair.first;
+        AccountFeatures accountFeatures = pair.second;
 
         account.setCredentialsId(request.getCredentials().getId());
         account.setUserId(request.getCredentials().getUserId());
@@ -597,6 +617,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             updateAccountTimerContext.stop();
         }
 
+        updatedAccountsByUniqueId.put(updatedAccount.getBankId(), updatedAccount);
         accounts.add(updatedAccount);
 
         return updatedAccount;
@@ -710,7 +731,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             return account;
         }
 
-        final Account updatedAccount = updateAccount(account);
+        updateAccount(account);
+        final Account updatedAccount = sendAccountToUpdateService(account.getBankId());
 
         for (Transaction transaction : transactions) {
             transaction.setAccountId(updatedAccount.getId());

@@ -190,7 +190,8 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
     private void updateAccount(Account account) {
         // Update the account. This will call system which will subscribe the account towards ABN AMRO if it is
         // a new account.
-        account = context.updateAccount(account);
+        context.updateAccount(account);
+        account = context.sendAccountToUpdateService(account.getBankId());
 
         if (account.getType() == AccountTypes.CREDIT_CARD) {
             // TODO Move credit card accounts to ICS
