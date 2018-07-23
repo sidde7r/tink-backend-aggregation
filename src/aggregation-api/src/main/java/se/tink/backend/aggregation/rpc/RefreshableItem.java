@@ -78,6 +78,10 @@ public enum RefreshableItem {
         return REFRESHABLE_ITEM_ORDERING.sortedCopy(items);
     }
 
+    public static boolean isAccount(RefreshableItem item) {
+        return REFRESHABLE_ITEMS_ACCOUNTS.contains(item);
+    }
+
     public static boolean hasAccounts(List<RefreshableItem> items) {
         return !Collections.disjoint(items, REFRESHABLE_ITEMS_ACCOUNTS);
     }

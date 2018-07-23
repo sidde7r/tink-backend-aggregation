@@ -45,6 +45,7 @@ import se.tink.backend.aggregation.workers.commands.RefreshItemAgentWorkerComman
 import se.tink.backend.aggregation.workers.commands.ReportProviderMetricsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ReportProviderMetricsAgentWorkerCommand.ReportProviderMetricsAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.ReportProviderTransferMetricsAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.SendAccountsToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.TransferAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ValidateProviderAgentWorkerStatus;
@@ -185,6 +186,21 @@ public class AgentWorkerOperationFactory {
         for (RefreshableItem item : items) {
             commands.add(new RefreshItemAgentWorkerCommand(context, item, createMetricState(request)));
         }
+
+        // Go backwards in commands list to find place to inject SendAccountsToUpdateServiceAgentWorkerCommand.
+        // It should be right after last Account Refreshable Item.
+        if (commands.stream().anyMatch(c -> c instanceof RefreshItemAgentWorkerCommand)) {
+            for (int i = commands.size() - 1; i >= 0; i--) {
+                RefreshableItem item = RefreshItemAgentWorkerCommand.class.cast(commands.get(i)).getRefreshableItem();
+                if ( RefreshableItem.isAccount(item)) {
+                    commands.add(
+                            i + 1, // after first account type (when looking backwards)
+                            new SendAccountsToUpdateServiceAgentWorkerCommand(context, createMetricState(request)));
+                    break;
+                }
+            }
+        }
+
         // Post refresh processing. Only once per data type (accounts, transactions etcetera)
         if (RefreshableItem.hasAccounts(items)) {
             commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.ACCOUNTS,
