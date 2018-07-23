@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.libraries.account.AccountIdentifier;
 
 public class PayeeEntity extends AbstractPayeeEntity implements GeneralAccountEntity {
@@ -52,10 +53,10 @@ public class PayeeEntity extends AbstractPayeeEntity implements GeneralAccountEn
             return Optional.empty();
         }
 
-        switch (this.type.toLowerCase()) {
-        case "bgaccount":
+        switch (this.type.toUpperCase()) {
+        case SwedbankBaseConstants.PaymentAccountType.BGACCOUNT:
             return Optional.of(AccountIdentifier.Type.SE_BG);
-        case "pgaccount":
+        case SwedbankBaseConstants.PaymentAccountType.PGACCOUNT:
             return Optional.of(AccountIdentifier.Type.SE_PG);
         default:
             log.warn("Unknown payee entity type: {}", this.type);
