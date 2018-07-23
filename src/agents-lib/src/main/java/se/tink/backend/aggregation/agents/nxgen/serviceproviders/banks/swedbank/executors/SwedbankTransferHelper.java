@@ -160,9 +160,9 @@ public class SwedbankTransferHelper {
         return nameField;
     }
 
-    private Optional<PaymentBaseinfoResponse> getConfirmResponse(LinksEntity linksEntity) {
+    private Optional<PaymentBaseinfoResponse> getConfirmResponse(LinkEntity linkEntity) {
         try {
-            return Optional.of(apiClient.makeRequest(linksEntity.getNext(), PaymentBaseinfoResponse.class));
+            return Optional.of(apiClient.confirmSignNewRecipient(linkEntity));
         } catch (Exception e) {
             return Optional.empty();
         }
@@ -176,6 +176,7 @@ public class SwedbankTransferHelper {
             Function<PaymentBaseinfoResponse, Optional<AbstractPayeeEntity>> findNewRecipientFunction) {
 
         return signNewRecipient(registerRecipientResponse.getLinks().getSign())
+                .map(LinksEntity::getNext)
                 .flatMap(this::getConfirmResponse)
                 .flatMap(findNewRecipientFunction)
                 .orElseThrow(() -> TransferExecutionException.builder(SignableOperationStatuses.FAILED).setEndUserMessage(

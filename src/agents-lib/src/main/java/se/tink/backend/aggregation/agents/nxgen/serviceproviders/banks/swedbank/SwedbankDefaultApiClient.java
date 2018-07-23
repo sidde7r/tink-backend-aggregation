@@ -20,8 +20,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.InitBankIdRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.InitBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.payment.rpc.RegisterPayeeRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.payment.rpc.RegisterRecipientResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.payment.rpc.RegisterPaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.payment.rpc.RegisterRecipientResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.CollectBankIdSignResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.ConfirmTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.InitiateSignTransferRequest;
@@ -95,7 +95,7 @@ public class SwedbankDefaultApiClient {
         return buildAbstractRequest(url).delete(responseClass, requestObject);
     }
 
-    public <T> T makeRequest(LinkEntity linkEntity, Class<T> responseClass) {
+    private <T> T makeRequest(LinkEntity linkEntity, Class<T> responseClass) {
         return makeRequest(linkEntity, null, responseClass);
     }
 
@@ -158,6 +158,10 @@ public class SwedbankDefaultApiClient {
 
     public CollectBankIdResponse collectBankId(LinkEntity linkEntity) {
         return makeRequest(linkEntity, CollectBankIdResponse.class);
+    }
+
+    public PaymentBaseinfoResponse confirmSignNewRecipient(LinkEntity linkEntity) {
+        return makeRequest(linkEntity, PaymentBaseinfoResponse.class);
     }
 
     // this is where we handle the profiles, fetch all and store store in session storage
