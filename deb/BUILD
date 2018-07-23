@@ -111,7 +111,6 @@ pkg_tar(
     name = "credit_safe_tar",
     deps = [
         ":credit_safe_bin_tar",
-        ":credit_safe_data_tar",
         ":credit_safe_system_tar",
     ],
     visibility = ["//visibility:public"],
@@ -159,7 +158,7 @@ pkg_deb(
 pkg_deb(
     name = "credit-safe",
     architecture = "amd64",
-    data = ":credit_safe_bin_tar",
+    data = ":credit_safe_tar",
     description = "Tink Backend Credit Safe Service",
     homepage = "https://tink.se",
     maintainer = "Tink AB <support@tink.se>",
