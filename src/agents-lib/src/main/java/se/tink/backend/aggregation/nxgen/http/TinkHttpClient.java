@@ -88,7 +88,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     private final PersistentHeaderFilter persistentHeaderFilter = new PersistentHeaderFilter();
 
     private class DEFAULTS {
-
+        private final static String DEFAULT_USER_AGENT = "Tink (+https://www.tink.se/; noc@tink.se)";
         private final static int TIMEOUT_MS = 30000;
         private final static int MAX_REDIRECTS = 10;
         private final static boolean CHUNKED_ENCODING = false;
@@ -97,10 +97,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     }
 
     public String getUserAgent() {
-        if (this.userAgent == null) {
-            return getHeaderAggregatorIdentifier();
-        }
-
+        Preconditions.checkNotNull(userAgent);
         return this.userAgent;
     }
 
@@ -178,7 +175,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
         this.aggregator = Objects.isNull(context) ? Aggregator.getDefault(): context.getAggregator();
 
-        setUserAgent(getUserAgent());
+        setUserAgent(DEFAULTS.DEFAULT_USER_AGENT);
         setTimeout(DEFAULTS.TIMEOUT_MS);
         setChunkedEncoding(DEFAULTS.CHUNKED_ENCODING);
         setMaxRedirects(DEFAULTS.MAX_REDIRECTS);
