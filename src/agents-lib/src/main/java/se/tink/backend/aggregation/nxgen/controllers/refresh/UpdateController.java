@@ -52,7 +52,7 @@ public class UpdateController {
             log.warn("Updating an already updated account");
         }
 
-        baseContext.updateAccount(account.toSystemAccount(), accountFeatures);
+        baseContext.cacheAccount(account.toSystemAccount(), accountFeatures);
 
         accounts.add(account);
         return true;

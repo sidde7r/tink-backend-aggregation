@@ -342,7 +342,7 @@ public class AvanzaV2Agent extends AbstractAgent implements RefreshableItemExecu
             });
             portfolio.setInstruments(instruments);
 
-            context.updateAccount(account, AccountFeatures.createForPortfolios(portfolio));
+            context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
         });
     }
 

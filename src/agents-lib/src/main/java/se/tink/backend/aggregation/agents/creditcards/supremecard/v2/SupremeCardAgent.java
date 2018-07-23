@@ -342,7 +342,7 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshableItemEx
     public void refresh(RefreshableItem item) {
         switch (item) {
         case CREDITCARD_ACCOUNTS:
-            context.updateAccount(getAccount());
+            context.cacheAccount(getAccount());
             break;
 
         case CREDITCARD_TRANSACTIONS:

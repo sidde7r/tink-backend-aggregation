@@ -915,7 +915,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
             assets.setLoans(Lists.newArrayList(loan));
         }
 
-        this.context.updateAccount(account, assets);
+        this.context.cacheAccount(account, assets);
     }
 
     private void refreshInvestmentAccounts() throws IOException {
@@ -965,7 +965,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
                         });
                 portfolio.setInstruments(instruments);
 
-                this.context.updateAccount(account, AccountFeatures.createForPortfolios(portfolio));
+                this.context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
             } catch (Exception e) {
                 // Don't fail the whole refresh just because we failed updating investment data but log error.
                 this.log.error("Caught exception while updating investment data", e);
@@ -1052,7 +1052,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
     private void updateAccountsPerType(RefreshableItem type) {
         getAccounts().entrySet().stream()
                 .filter(set -> type.isAccountType(set.getValue().getType()))
-                .forEach(set -> context.updateAccount(set.getValue()));
+                .forEach(set -> context.cacheAccount(set.getValue()));
     }
 
     private void updateTransactionsPerAccountType(RefreshableItem type) {

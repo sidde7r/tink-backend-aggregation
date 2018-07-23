@@ -147,7 +147,7 @@ public class AgentTestContext extends AgentContext {
     }
 
     @Override
-    public void updateAccount(Account account, AccountFeatures accountFeatures) {
+    public void cacheAccount(Account account, AccountFeatures accountFeatures) {
         log.info("Updating account");
 
         try {
@@ -206,7 +206,7 @@ public class AgentTestContext extends AgentContext {
         } catch (Exception e) {
         }
 
-        updateAccount(account);
+        cacheAccount(account);
         account = sendAccountToUpdateService(account.getBankId());
 
         for (Transaction updatedTransaction : transactions) {

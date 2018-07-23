@@ -69,7 +69,7 @@ public class CoopV2Agent extends AbstractAgent implements RefreshableItemExecuto
     public void refresh(RefreshableItem item) {
         switch (item) {
         case CREDITCARD_ACCOUNTS:
-            getAccounts().forEach(accountEntity -> context.updateAccount(parseAccount(accountEntity)));
+            getAccounts().forEach(accountEntity -> context.cacheAccount(parseAccount(accountEntity)));
             break;
         case CREDITCARD_TRANSACTIONS:
             getAccounts().forEach(accountEntity -> {

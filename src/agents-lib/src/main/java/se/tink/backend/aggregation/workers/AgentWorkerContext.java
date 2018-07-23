@@ -538,7 +538,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     @Override
-    public void updateAccount(Account account, AccountFeatures accountFeatures) {
+    public void cacheAccount(Account account, AccountFeatures accountFeatures) {
 
         if (shouldNotAggregateDataForAccount(account)) {
             // Account marked to not aggregate data from.
@@ -731,7 +731,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             return account;
         }
 
-        updateAccount(account);
+        cacheAccount(account);
         final Account updatedAccount = sendAccountToUpdateService(account.getBankId());
 
         for (Transaction transaction : transactions) {

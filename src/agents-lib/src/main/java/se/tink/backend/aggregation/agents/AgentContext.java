@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
@@ -115,19 +114,19 @@ public abstract class AgentContext {
 
     public abstract void openBankId(String autoStartToken, boolean wait);
 
-    public void updateAccount(Account account) {
-        updateAccount(account, AccountFeatures.createEmpty());
+    public void cacheAccount(Account account) {
+        cacheAccount(account, AccountFeatures.createEmpty());
     }
 
-    public void updateAccounts(Iterable<Account> accounts) {
+    public void cacheAccounts(Iterable<Account> accounts) {
         for (Account account : accounts) {
-            updateAccount(account);
+            cacheAccount(account);
         }
     }
 
     public abstract Account sendAccountToUpdateService(String uniqueId);
 
-    public abstract void updateAccount(Account account, AccountFeatures accountFeatures);
+    public abstract void cacheAccount(Account account, AccountFeatures accountFeatures);
 
     public abstract void updateTransferDestinationPatterns(Map<Account, List<TransferDestinationPattern>> map);
 

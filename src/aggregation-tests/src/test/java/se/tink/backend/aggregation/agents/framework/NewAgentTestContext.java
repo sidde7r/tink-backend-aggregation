@@ -152,7 +152,7 @@ public class NewAgentTestContext extends AgentContext {
     }
 
     @Override
-    public void updateAccount(Account account, AccountFeatures accountFeatures) {
+    public void cacheAccount(Account account, AccountFeatures accountFeatures) {
         accountsByBankId.put(account.getBankId(), account);
         accountFeaturesByBankId.put(account.getBankId(), accountFeatures);
     }
@@ -194,7 +194,7 @@ public class NewAgentTestContext extends AgentContext {
 
     @Override
     public Account updateTransactions(Account account, List<Transaction> transactions) {
-        updateAccount(account);
+        cacheAccount(account);
         final Account updatedAccount = sendAccountToUpdateService(account.getBankId());
 
         for (Transaction updatedTransaction : transactions) {

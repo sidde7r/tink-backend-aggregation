@@ -151,7 +151,7 @@ public class CollectorAgent extends AbstractAgent implements RefreshableItemExec
         switch (item) {
         case SAVING_ACCOUNTS:
             List<Account> accounts = apiClient.getAccounts();
-            context.updateAccounts(accounts);
+            context.cacheAccounts(accounts);
             break;
 
         case SAVING_TRANSACTIONS:

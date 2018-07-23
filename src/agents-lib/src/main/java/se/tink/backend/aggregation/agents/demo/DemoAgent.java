@@ -167,7 +167,7 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
     private void updateAccountsPerType(RefreshableItem type) {
         getAccounts().stream()
                 .filter(account -> type.isAccountType(account.getType()))
-                .forEach(context::updateAccount);
+                .forEach(context::cacheAccount);
     }
 
     private void updateTransactionsPerType(RefreshableItem type) {
@@ -212,13 +212,13 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
         case LOAN_ACCOUNTS:
             getAccounts().stream()
                     .filter(account -> RefreshableItem.LOAN_ACCOUNTS.isAccountType(account.getType()))
-                    .forEach(account -> context.updateAccount(account, createAccountAsset()));
+                    .forEach(account -> context.cacheAccount(account, createAccountAsset()));
             break;
 
         case INVESTMENT_ACCOUNTS:
             getAccounts().stream()
                     .filter(account -> RefreshableItem.INVESTMENT_ACCOUNTS.isAccountType(account.getType()))
-                    .forEach(account -> context.updateAccount(account,
+                    .forEach(account -> context.cacheAccount(account,
                             AccountFeatures.createForPortfolios(generateFakePortolio(account))));
             break;
         }

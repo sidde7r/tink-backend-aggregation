@@ -57,7 +57,7 @@ public class NordnetAgent extends AbstractAgent implements RefreshableItemExecut
                 return;
             }
 
-            context.updateAccount(accountEntity.toAccount(AccountTypes.SAVINGS));
+            context.cacheAccount(accountEntity.toAccount(AccountTypes.SAVINGS));
         });
     }
 
@@ -75,7 +75,7 @@ public class NordnetAgent extends AbstractAgent implements RefreshableItemExecut
             Optional<PositionsResponse> positions = apiClient.getPositions(accountEntity.getAccountId());
 
             if (!positions.isPresent()) {
-                context.updateAccount(account, AccountFeatures.createForPortfolios(portfolio));
+                context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
                 return;
             }
 
@@ -83,7 +83,7 @@ public class NordnetAgent extends AbstractAgent implements RefreshableItemExecut
             positions.get().forEach(positionEntity -> positionEntity.toInstrument().ifPresent(instruments::add));
             portfolio.setInstruments(instruments);
 
-            context.updateAccount(account, AccountFeatures.createForPortfolios(portfolio));
+            context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
         });
     }
 

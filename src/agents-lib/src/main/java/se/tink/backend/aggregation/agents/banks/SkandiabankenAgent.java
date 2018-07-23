@@ -546,14 +546,14 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
             portfolio.setCashValue(StringUtils.parseAmount(
                     Optional.ofNullable(investmentResponse.getDisposableAmount()).orElse("0")));
             portfolio.setInstruments(instruments);
-            context.updateAccount(account, AccountFeatures.createForPortfolios(portfolio));
+            context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
         });
     }
 
     private void updateAccountsPerType(RefreshableItem type) {
         getAccounts().entrySet().stream()
                 .filter(set -> type.isAccountType(set.getValue().getType()))
-                .forEach(set -> context.updateAccount(set.getValue()));
+                .forEach(set -> context.cacheAccount(set.getValue()));
     }
 
     private void updateTransactionsPerAccountType(RefreshableItem type) {
