@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.authenticator.entities;
 
+import com.google.common.base.Strings;
 import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -148,12 +149,20 @@ public class TransactionEntity {
         return partnerEmail;
     }
 
+    private String getDescription(){
+        if(!Strings.isNullOrEmpty(getReferenceText().trim())){
+            return getReferenceText();
+        }
+
+        return partnerName;
+    }
+
     public Transaction toTinkTransaction() {
 
         return Transaction.builder()
                 .setAmount(new Amount(getCurrencyCode(),getAmount()))
                 .setDate(new Date(getCreatedTS()))
-                .setDescription(getReferenceText())
+                .setDescription(getDescription())
                 .setPending(isPending()).build();
     }
 }
