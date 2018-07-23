@@ -46,7 +46,7 @@ public class TransactionRecord {
 
     private Date toDate(){
         try {
-            return new SimpleDateFormat("yyyy-mm-dd").parse(transactionDate);
+            return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS").parse(transactionDate);
         } catch (ParseException e) {
             e.printStackTrace();
         }
