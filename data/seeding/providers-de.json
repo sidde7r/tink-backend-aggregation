@@ -49170,7 +49170,7 @@
       "name": "de-nationalbankessen-password",
       "displayName": "National-Bank Essen",
       "groupDisplayName": "National-Bank Essen",
-      "popular": true,
+      "popular": false,
       "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
