@@ -13,9 +13,13 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.utils.LogUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BunqSignatureHeaderFilter extends Filter {
+
+    private static final LogUtils log = new LogUtils(BunqSignatureHeaderFilter.class);
+
     private final PersistentStorage persistentStorage;
     private final String userAgent;
 
@@ -31,6 +35,9 @@ public class BunqSignatureHeaderFilter extends Filter {
     }
 
     private void addSignatureHeader(HttpRequest httpRequest) {
+
+        log.info("[For Bunq Debugging] User-Agent: "+userAgent);
+
         MultivaluedMap<String, Object> requestHeaders = httpRequest.getHeaders();
 
         String rawHeader = httpRequest.getMethod() + " " + getPathAndQuery(httpRequest) + "\n"
