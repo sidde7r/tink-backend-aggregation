@@ -37,16 +37,12 @@ public class TransactionRecord {
                     .append(SantanderConstants.WHITESPACE);
         }
 
-        if(!Strings.isNullOrEmpty(description3)){
-            builder.append(description3.trim())
-                    .append(SantanderConstants.WHITESPACE);
-        }
         return builder.toString();
     }
 
     private Date toDate(){
         try {
-            return new SimpleDateFormat("yyyy-mm-dd").parse(transactionDate);
+            return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS").parse(transactionDate);
         } catch (ParseException e) {
             e.printStackTrace();
         }
