@@ -8,6 +8,5 @@ java_library(
         "//src/libraries/metrics:metrics",
         "//third_party:org_eclipse_jetty_orbit_javax_servlet",
         "//third_party:com_sun_jersey_jersey_server",
-
     ]
 )

@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.client;
 import com.sun.jersey.api.client.ClientHandlerException;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.utils.StringUtils;
 
@@ -19,14 +20,21 @@ public class ClientAggregationServiceFactoryTest {
 
     @Test(expected = ClientHandlerException.class)
     public void testBasicPing() {
-        factory.getAggregationService().ping();
+        factory.getAggregationService().ping(ClusterId.createEmpty());
     }
 
     @Test(expected = ClientHandlerException.class)
     public void testBasicPingOfRouted() {
         User user = new User();
         user.setId(StringUtils.generateUUID());
-        factory.getAggregationService(user).ping();
+        factory.getAggregationService(user).ping(ClusterId.createEmpty());
+    }
+
+    @Test(expected = ClientHandlerException.class)
+    public void testClusterIdAsNull() {
+        User user = new User();
+        user.setId(StringUtils.generateUUID());
+        factory.getAggregationService(user).ping(null);
     }
 
 }

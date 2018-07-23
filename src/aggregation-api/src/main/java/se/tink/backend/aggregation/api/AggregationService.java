@@ -1,15 +1,18 @@
 package se.tink.backend.aggregation.api;
 
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import se.tink.api.annotations.Team;
 import se.tink.api.annotations.TeamOwnership;
+import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
 import se.tink.backend.aggregation.rpc.CreateCredentialsRequest;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -54,7 +57,7 @@ public interface AggregationService {
     @TeamOwnership(Team.INTEGRATION)
     @Produces(MediaType.TEXT_PLAIN)
     @AllowAnonymous
-    String ping();
+    String ping(ClusterId clusterId);//, HttpHeaders request);
 
     @POST
     @Path("refresh")

@@ -12,6 +12,7 @@ import javax.ws.rs.core.Response;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.api.AggregationService;
 import se.tink.backend.aggregation.cluster.identification.Aggregator;
+import se.tink.backend.aggregation.injectableproviders.ClusterContext;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
@@ -167,7 +168,7 @@ public class AggregationServiceResource implements AggregationService, Managed {
     }
 
     @Override
-    public String ping() {
+    public String ping(@ClusterContext ClusterId clusterid){
         return "pong";
     }
 

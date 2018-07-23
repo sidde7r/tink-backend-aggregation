@@ -18,10 +18,12 @@ import se.tink.backend.aggregation.client.AggregationServiceFactory;
 import se.tink.backend.aggregation.client.InProcessAggregationServiceFactory;
 import se.tink.backend.aggregation.guice.configuration.AggregationModuleFactory;
 import se.tink.backend.aggregation.resources.AggregationServiceResource;
+import se.tink.backend.aggregation.injectableproviders.ClusterIdProvider;
 import se.tink.backend.aggregation.resources.CreditSafeServiceResource;
 import se.tink.backend.common.AbstractServiceContainer;
 import se.tink.backend.common.ServiceContext;
 import se.tink.backend.common.config.ServiceConfiguration;
+import se.tink.backend.common.repository.mysql.aggregation.ClusterHostConfigurationRepository;
 import se.tink.libraries.auth.ApiTokenAuthorizationHeaderPredicate;
 import se.tink.libraries.auth.ContainerAuthorizationResourceFilterFactory;
 import se.tink.libraries.auth.YubicoAuthorizationHeaderPredicate;
@@ -77,6 +79,8 @@ public class AggregationServiceContainer extends AbstractServiceContainer {
 
         ServiceContext serviceContext = injector.getInstance(ServiceContext.class);
 
+
+
         buildContainer(configuration, environment, serviceContext, injector);
     }
 
@@ -95,6 +99,11 @@ public class AggregationServiceContainer extends AbstractServiceContainer {
                         configuration.getEndpoints().getAggregationcontroller(),
                         serviceContext.getCoordinationClient()));
         environment.lifecycle().manage(aggregationServiceResource);
+
+        ClusterHostConfigurationRepository repository = serviceContext
+                .getRepository(ClusterHostConfigurationRepository.class);
+        environment.jersey().register(new ClusterIdProvider(repository, serviceContext.isAggregationCluster()));
+
 
         CreditSafeServiceResource creditSafeServiceResource = new CreditSafeServiceResource(serviceContext);
 

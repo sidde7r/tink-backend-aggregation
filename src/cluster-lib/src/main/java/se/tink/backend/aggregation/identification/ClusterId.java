@@ -2,6 +2,12 @@ package se.tink.backend.aggregation.cluster.identification;
 
 import com.google.common.base.Strings;
 import com.sun.jersey.spi.container.ContainerRequest;
+import java.lang.annotation.Annotation;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import se.tink.libraries.metrics.MetricId;
