@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankDefaultApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.payment.rpc.RegisterRecipientResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.AbstractBankIdSignResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.ConfirmTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.InitiateSignTransferResponse;
@@ -171,10 +170,10 @@ public class SwedbankTransferHelper {
      * Signs and confirms the creation of a new recipient or payee. Returns the created recipient or throws an exception
      * if the creation failed.
      */
-    public AbstractPayeeEntity signAndConfirmNewRecipient(RegisterRecipientResponse registerRecipientResponse,
+    public AbstractPayeeEntity signAndConfirmNewRecipient(LinksEntity linksEntity,
             Function<PaymentBaseinfoResponse, Optional<AbstractPayeeEntity>> findNewRecipientFunction) {
 
-        return signNewRecipient(registerRecipientResponse.getLinks().getSign())
+        return signNewRecipient(linksEntity.getSign())
                 .map(LinksEntity::getNext)
                 .flatMap(this::getConfirmResponse)
                 .flatMap(findNewRecipientFunction)

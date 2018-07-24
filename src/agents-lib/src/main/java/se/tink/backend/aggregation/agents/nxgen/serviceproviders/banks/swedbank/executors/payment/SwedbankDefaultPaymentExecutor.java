@@ -132,7 +132,7 @@ public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor impleme
 
         RegisterRecipientResponse registerRecipientResponse = apiClient.registerPayee(registerPayeeRequest);
 
-        return transferHelper.signAndConfirmNewRecipient(registerRecipientResponse,
+        return transferHelper.signAndConfirmNewRecipient(registerRecipientResponse.getLinks(),
                 findNewPayeeFromPaymentResponse(registerPayeeRequest));
     }
 
