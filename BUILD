@@ -698,6 +698,7 @@ java_library(
      ],
      deps = [
          ":common-lib",
+         "provider-configuration-api",
           "//src/libraries/auth:auth",
           "//src/libraries/discovery:discovery",
           "//src/libraries/dropwizard_utils:dropwizard-utils",
