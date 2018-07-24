@@ -780,6 +780,7 @@ java_library(
      ],
      deps = [
          ":common-lib",
+         ":credit-safe-lib",
           "//src/libraries/auth:auth",
           "//src/libraries/discovery:discovery",
           "//src/libraries/dropwizard_utils:dropwizard-utils",
