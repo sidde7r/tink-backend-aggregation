@@ -9052,7 +9052,7 @@
       "credentialsType": "PASSWORD",
       "multiFactor": false,
       "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "passwordHelpText": "Use the same password as you would in your bank's web login. The account number shall be suffixed with three digit auth number, default 001",
       "transactional": true,
       "payload": "76030080 https://brokerage-hbci.consorsbank.de/hbci",
       "fields": [
@@ -9080,7 +9080,7 @@
       "credentialsType": "PASSWORD",
       "multiFactor": false,
       "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.. The account number shall be suffixed with three digit auth number, default 001",
       "transactional": true,
       "payload": "70120400 https://brokerage-hbci.consorsbank.de/hbci",
       "fields": [
