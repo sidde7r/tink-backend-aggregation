@@ -18,13 +18,10 @@ public class ProviderServiceResource implements ProviderService {
     private HttpServletRequest httpRequest;
 
     private final ProviderServiceController providerController;
-    private final boolean isAggregationCluster;
 
     @Inject
-    public ProviderServiceResource(ProviderServiceController providerController,
-            @Named("isAggregationCluster") boolean isAggregationCluster) {
+    public ProviderServiceResource(ProviderServiceController providerController) {
         this.providerController = providerController;
-        this.isAggregationCluster = isAggregationCluster;
     }
 
     private ClusterId getClusterId() {
@@ -37,28 +34,17 @@ public class ProviderServiceResource implements ProviderService {
 
     @Override
     public List<ProviderConfiguration> list(String lang) {
-        if (isAggregationCluster) {
-            return providerController.list(Locale.forLanguageTag(lang), getClusterId());
-        }
-        return providerController.list(Locale.forLanguageTag(lang));
+        return providerController.list(Locale.forLanguageTag(lang), getClusterId());
     }
 
     @Override
     public List<ProviderConfiguration> listByMarket(String lang, String market) {
-        if (isAggregationCluster) {
-            return providerController.listByMarket(Locale.forLanguageTag(lang), getClusterId(), market);
-        }
-        return providerController.listByMarket(Locale.forLanguageTag(lang), market);
+        return providerController.listByMarket(Locale.forLanguageTag(lang), getClusterId(), market);
     }
 
     @Override
     public ProviderConfiguration getProviderByName(String lang, String providerName) {
-        if (isAggregationCluster) {
-            return providerController.getProviderByName(Locale.forLanguageTag(lang), getClusterId(), providerName)
-                    .orElseThrow(() -> new WebApplicationException(Response.Status.BAD_REQUEST));
-        }
-
-        return providerController.getProviderByName(Locale.forLanguageTag(lang), providerName)
+        return providerController.getProviderByName(Locale.forLanguageTag(lang), getClusterId(), providerName)
                 .orElseThrow(() -> new WebApplicationException(Response.Status.BAD_REQUEST));
     }
 }

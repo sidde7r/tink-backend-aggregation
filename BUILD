@@ -720,6 +720,7 @@ java_library(
      deps = [
          ":common-lib",
          "provider-configuration-api",
+         ":provider-configuration-lib",
           "//src/libraries/auth:auth",
           "//src/libraries/discovery:discovery",
           "//src/libraries/dropwizard_utils:dropwizard-utils",
@@ -747,6 +748,7 @@ java_binary(
     ],
     deps = [
         ":common-lib",
+        "provider-configuration-lib",
           "//src/libraries/auth:auth",
           "//src/libraries/discovery:discovery",
           "//src/libraries/dropwizard_utils:dropwizard-utils",
