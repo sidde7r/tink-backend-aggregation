@@ -9,10 +9,9 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import se.tink.backend.aggregation.api.ProviderService;
-import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.controllers.ProviderServiceController;
-import se.tink.backend.aggregation.injectableproviders.ClusterContext;
+import se.tink.backend.aggregation.cluster.annotation.ClusterContext;
 import se.tink.backend.core.ProviderConfiguration;
 
 public class ProviderServiceResource implements ProviderService {
@@ -31,7 +30,7 @@ public class ProviderServiceResource implements ProviderService {
 
 
     @Override
-    public List<ProviderConfiguration> list(String lang, @ClusterContext ClusterInfo clusterInfo) {
+    public List<ProviderConfiguration> list(String lang, ClusterInfo clusterInfo) {
         if (isAggregationCluster) {
             return providerController.list(Locale.forLanguageTag(lang), clusterInfo.getClusterId());
         }
@@ -39,7 +38,7 @@ public class ProviderServiceResource implements ProviderService {
     }
 
     @Override
-    public List<ProviderConfiguration> listByMarket(String lang, String market, @ClusterContext ClusterInfo clusterInfo) {
+    public List<ProviderConfiguration> listByMarket(String lang, String market, ClusterInfo clusterInfo) {
         if (isAggregationCluster) {
             return providerController.listByMarket(Locale.forLanguageTag(lang), clusterInfo.getClusterId(), market);
         }
@@ -47,7 +46,7 @@ public class ProviderServiceResource implements ProviderService {
     }
 
     @Override
-    public ProviderConfiguration getProviderByName(String lang, String providerName, @ClusterContext ClusterInfo clusterInfo) {
+    public ProviderConfiguration getProviderByName(String lang, String providerName, ClusterInfo clusterInfo) {
         if (isAggregationCluster) {
             return providerController.getProviderByName(Locale.forLanguageTag(lang), clusterInfo.getClusterId(), providerName)
                     .orElseThrow(() -> new WebApplicationException(Response.Status.BAD_REQUEST));

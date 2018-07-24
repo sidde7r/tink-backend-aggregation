@@ -1,6 +1,5 @@
-package se.tink.backend.aggregation.injectableproviders;
+package se.tink.backend.aggregation.cluster.annotation;
 
-import com.sun.jersey.api.core.HttpContext;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
