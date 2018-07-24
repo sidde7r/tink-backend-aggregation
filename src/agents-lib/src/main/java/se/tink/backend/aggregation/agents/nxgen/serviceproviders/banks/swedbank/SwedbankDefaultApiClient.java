@@ -72,6 +72,7 @@ public class SwedbankDefaultApiClient {
     private final SessionStorage sessionStorage;
     // only use cached menu items for a profile
     private BankProfileHandler bankProfileHandler;
+    private Map<String, MenuItemLinkEntity> menuItems;
 
     SwedbankDefaultApiClient(TinkHttpClient client, SwedbankConfiguration configuration, String username, SessionStorage sessionStorage) {
         this.client = client;
@@ -375,7 +376,7 @@ public class SwedbankDefaultApiClient {
 
     private <T> T makeMenuItemRequest(SwedbankBaseConstants.MenuItemKey menuItemKey, Object requestObject,
             Class<T> responseClass, Map<String, String> parameters) {
-        Map<String, MenuItemLinkEntity> menuItems = bankProfileHandler.getActiveBankProfile().getMenuItems();
+        Map<String, MenuItemLinkEntity> menuItems = getMenuItems();
         Preconditions.checkNotNull(menuItemKey);
         Preconditions.checkNotNull(menuItems);
         Preconditions.checkState(menuItems.containsKey(menuItemKey.getKey()));
@@ -388,6 +389,15 @@ public class SwedbankDefaultApiClient {
         }
 
         return makeRequest(menuItem, requestObject, responseClass, parameters);
+    }
+
+    private Map<String, MenuItemLinkEntity> getMenuItems() {
+        if (bankProfileHandler != null && bankProfileHandler.getActiveBankProfile() != null) {
+            return bankProfileHandler.getActiveBankProfile().getMenuItems();
+        }
+
+        // this is for bootstrapping
+        return menuItems;
     }
 
     private void ensureAuthorizationHeaderIsSet() {
@@ -439,11 +449,11 @@ public class SwedbankDefaultApiClient {
 
         for (BankEntity bank : profileResponse.getBanks()) {
             // fetch all profile details
-            Map<String, MenuItemLinkEntity> profileMenuItems = fetchProfile(bank.getPrivateProfile().getLinks().getNextOrThrow());
+            menuItems = fetchProfile(bank.getPrivateProfile().getLinks().getNextOrThrow());
             EngagementOverviewResponse engagementOverViewResponse = fetchEngagementOverview();
             PaymentBaseinfoResponse paymentBaseinfoResponse = fetchPaymentBaseinfo();
             // create and add profile
-            BankProfile bankProfile = new BankProfile(bank, profileMenuItems, engagementOverViewResponse, paymentBaseinfoResponse);
+            BankProfile bankProfile = new BankProfile(bank, menuItems, engagementOverViewResponse, paymentBaseinfoResponse);
             bankProfileHandler.addBankProfile(bankProfile);
             // profile is already activated
             bankProfileHandler.setActiveBankProfile(bankProfile);
