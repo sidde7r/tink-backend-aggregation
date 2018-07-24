@@ -50,7 +50,17 @@ public class SwedbankDefaultLoanFetcher implements AccountFetcher<LoanAccount> {
                     continue;
                 }
 
-                LoanDetailsResponse loanDetailsResponse = apiClient.loanDetails(loanAccountEntity.getLinks().getNext());
+                // we get error sometimes from swedbank backend, log and continue as old agent did
+                // log to check if only error for 0 balance loans
+                LoanDetailsResponse loanDetailsResponse = null;
+                try {
+                    loanDetailsResponse = apiClient.loanDetails(loanAccountEntity.getLinks().getNext());
+                } catch (Exception e) {
+                    LOGGER.warnExtraLong(SerializationUtils.serializeToString(loanAccountEntity),
+                            SwedbankBaseConstants.LogTags.LOAN_DETAILS_ERROR, e);
+                    continue;
+                }
+
                 Optional<String> interest = loanDetailsResponse.getInterest();
 
                 if (!interest.isPresent()) {
