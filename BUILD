@@ -675,6 +675,37 @@ junit_test(
 )
 
 java_library(
+    name = "provider-configuration-api",
+    srcs = glob(["src/provider-configuration-api/src/main/**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        ":main-api",
+
+        "//src/libraries/metrics",
+        "//src/libraries/account_identifier:account-identifier",
+        "//src/libraries/http:http-annotations",
+        "//src/libraries/jersey_utils:jersey-utils",
+        "//src/libraries/http_client:http-client",
+        "//src/libraries/generic_application:generic-application",
+        "//src/libraries/serialization_utils:serialization-utils",
+        "//src/libraries/strings:strings",
+        "//src/libraries/uuid:uuid",
+        "//src/libraries/demo_credentials:demo-credentials",
+        "//src/api-annotations",
+
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:com_fasterxml_jackson_core_jackson_core",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:commons_codec_commons_codec",
+        "//third_party:joda_time_joda_time",
+        "//third_party:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
+        "//third_party:org_hibernate_hibernate_annotations",
+        "//third_party:javax_validation_validation_api",
+    ],
+)
+
+java_library(
      name = "provider-configuration-service",
      srcs = glob(["src/provider-configuration-service/src/main/**/*.java"]),
      data = [
@@ -682,6 +713,7 @@ java_library(
      ],
      deps = [
          ":common-lib",
+         ":provider-configuration",
           "//src/libraries/auth:auth",
           "//src/libraries/discovery:discovery",
           "//src/libraries/dropwizard_utils:dropwizard-utils",
