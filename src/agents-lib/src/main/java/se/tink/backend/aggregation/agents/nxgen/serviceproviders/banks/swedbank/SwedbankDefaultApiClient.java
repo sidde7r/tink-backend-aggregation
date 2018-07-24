@@ -66,9 +66,7 @@ public class SwedbankDefaultApiClient {
     private final SwedbankConfiguration configuration;
     private final String username;
     private final SessionStorage sessionStorage;
-    private Map<String, MenuItemLinkEntity> menuItems;
-    private EngagementOverviewResponse engagementOverviewResponse;
-    private PaymentBaseinfoResponse paymentBaseinfoResponse;
+    // only use cached menu items for a profile
     private BankProfileHandler bankProfileHandler;
 
     SwedbankDefaultApiClient(TinkHttpClient client, SwedbankConfiguration configuration, String username, SessionStorage sessionStorage) {
@@ -188,12 +186,7 @@ public class SwedbankDefaultApiClient {
     }
 
     public EngagementOverviewResponse engagementOverview() {
-        if (engagementOverviewResponse == null) {
-            engagementOverviewResponse = makeMenuItemRequest(
-                    SwedbankBaseConstants.MenuItemKey.ACCOUNTS, EngagementOverviewResponse.class);
-        }
-
-        return engagementOverviewResponse;
+        return fetchEngagementOverview();
     }
 
     public EngagementTransactionsResponse engagementTransactions(LinkEntity linkEntity) {
@@ -249,12 +242,7 @@ public class SwedbankDefaultApiClient {
     }
 
     public PaymentBaseinfoResponse paymentBaseinfo() {
-        if (this.paymentBaseinfoResponse == null) {
-            this.paymentBaseinfoResponse = makeMenuItemRequest(SwedbankBaseConstants.MenuItemKey.PAYMENT_BASEINFO,
-                    PaymentBaseinfoResponse.class);
-        }
-
-        return this.paymentBaseinfoResponse;
+        return fetchPaymentBaseinfo();
     }
 
     public RegisterRecipientResponse registerPayee(RegisterPayeeRequest registerPayeeRequest) {
@@ -364,6 +352,7 @@ public class SwedbankDefaultApiClient {
 
     private <T> T makeMenuItemRequest(SwedbankBaseConstants.MenuItemKey menuItemKey, Object requestObject,
             Class<T> responseClass, Map<String, String> parameters) {
+        Map<String, MenuItemLinkEntity> menuItems = bankProfileHandler.getActiveBankProfile().getMenuItems();
         Preconditions.checkNotNull(menuItemKey);
         Preconditions.checkNotNull(menuItems);
         Preconditions.checkState(menuItems.containsKey(menuItemKey.getKey()));
@@ -458,8 +447,6 @@ public class SwedbankDefaultApiClient {
         menuItemsMap.putAll(
                 Optional.ofNullable(selectedProfileResponse.getMenuItems())
                         .orElseThrow(IllegalStateException::new));
-
-        this.menuItems = menuItemsMap;
 
         return menuItemsMap;
     }
