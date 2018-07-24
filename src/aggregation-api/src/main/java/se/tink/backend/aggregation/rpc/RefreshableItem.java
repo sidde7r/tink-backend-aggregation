@@ -33,7 +33,7 @@ public enum RefreshableItem {
             .add(TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS)
             .build();
 
-    // Explicit order of refreshable items.
+    // Explicit order of refreshable items. Many subsequent places assumes Accounts will come first.
     private static final Ordering<RefreshableItem> REFRESHABLE_ITEM_ORDERING = Ordering.explicit(ImmutableList.of(
             RefreshableItem.CHECKING_ACCOUNTS,
             RefreshableItem.SAVING_ACCOUNTS,

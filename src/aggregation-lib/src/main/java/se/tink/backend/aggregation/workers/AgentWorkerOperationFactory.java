@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -183,22 +182,24 @@ public class AgentWorkerOperationFactory {
 
         commands.add(new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
 
-        for (RefreshableItem item : items) {
+        List<RefreshableItem> accountItems = items.stream()
+                .filter(RefreshableItem::isAccount)
+                .collect(Collectors.toList());
+
+        List<RefreshableItem> nonAccountItems = items.stream()
+                .filter(i -> !accountItems.contains(i))
+                .collect(Collectors.toList());
+
+        for (RefreshableItem item : accountItems) {
             commands.add(new RefreshItemAgentWorkerCommand(context, item, createMetricState(request)));
         }
 
-        // Go backwards in commands list to find place to inject SendAccountsToUpdateServiceAgentWorkerCommand.
-        // It should be right after last Account Refreshable Item.
-        if (commands.stream().anyMatch(c -> c instanceof RefreshItemAgentWorkerCommand)) {
-            for (int i = commands.size() - 1; i >= 0; i--) {
-                RefreshableItem item = RefreshItemAgentWorkerCommand.class.cast(commands.get(i)).getRefreshableItem();
-                if ( RefreshableItem.isAccount(item)) {
-                    commands.add(
-                            i + 1, // after first account type (when looking backwards)
-                            new SendAccountsToUpdateServiceAgentWorkerCommand(context, createMetricState(request)));
-                    break;
-                }
-            }
+        if (accountItems.size() > 0) {
+            commands.add(new SendAccountsToUpdateServiceAgentWorkerCommand(context, createMetricState(request)));
+        }
+
+        for (RefreshableItem item : nonAccountItems) {
+            commands.add(new RefreshItemAgentWorkerCommand(context, item, createMetricState(request)));
         }
 
         // Post refresh processing. Only once per data type (accounts, transactions etcetera)
