@@ -696,18 +696,32 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         ":main-api",
+
         ":provider-configuration-api",
         ":agents-lib",
 
         "//src/cluster-lib",
         "//src/api-annotations",
 
+        "//src/libraries/date",
+        "//src/libraries/serialization_utils:serialization-utils",
+        "//src/libraries/protobuf_serialization_utils:protobuf-serialization-utils",
+
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:javax_validation_validation_api",
-        "//third_party:com_google_inject_guice",
         "//third_party:org_eclipse_jetty_orbit_javax_servlet",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_google_inject_guice",
+        "//third_party:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
+        "//third_party:org_hibernate_hibernate_annotations",
+        "//third_party:org_springframework_data_spring_data_jpa",
+        "//third_party:io_swagger_swagger_annotations",
+        "//third_party:joda_time_joda_time",
+        "//third_party:io_protostuff_protostuff_api",
+        "//third_party:io_protostuff_protostuff_core",
+        "//third_party:io_protostuff_protostuff_runtime",
     ],
 )
 
@@ -721,6 +735,7 @@ java_library(
          ":common-lib",
          ":provider-configuration-api",
          ":provider-configuration-lib",
+
           "//src/libraries/auth:auth",
           "//src/libraries/discovery:discovery",
           "//src/libraries/dropwizard_utils:dropwizard-utils",
