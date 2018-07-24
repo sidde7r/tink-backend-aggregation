@@ -33,7 +33,7 @@ public class SwedbankDefaultBankIdAuthenticator implements BankIdAuthenticator<A
     @Override
     public AbstractBankIdAuthResponse init(String ssn) throws BankIdException, BankServiceException, AuthorizationException {
         previousStatus = null;
-        InitBankIdResponse initBankIdResponse = apiClient.initBankId(ssn);
+        InitBankIdResponse initBankIdResponse = initBankId(ssn);
 
         LinkEntity linkEntity = initBankIdResponse.getLinks().getNextOrThrow();
         Preconditions.checkState(linkEntity.isValid(),
@@ -96,5 +96,22 @@ public class SwedbankDefaultBankIdAuthenticator implements BankIdAuthenticator<A
 
     private void completeBankIdLogin(CollectBankIdResponse collectBankIdResponse) throws AuthenticationException {
         apiClient.completeBankId(collectBankIdResponse.getLinks().getNextOrThrow());
+    }
+
+    private InitBankIdResponse initBankId(String ssn) throws BankIdException {
+        try {
+            return apiClient.initBankId(ssn);
+        } catch (HttpResponseException hre) {
+            HttpResponse httpResponse = hre.getResponse();
+            if (httpResponse.getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
+
+                if (errorResponse.hasErrorField(SwedbankBaseConstants.ErrorField.USER_ID)) {
+                    throw BankIdError.USER_VALIDATION_ERROR.exception();
+                }
+            }
+
+            throw hre;
+        }
     }
 }
