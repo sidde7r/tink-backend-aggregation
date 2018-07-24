@@ -691,6 +691,27 @@ java_library(
 )
 
 java_library(
+    name = "provider-configuration-lib",
+    srcs = glob(["src/provider-configuration-lib/src/main/**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        ":main-api",
+        ":provider-configuration-api",
+        ":agents-lib",
+
+        "//src/cluster-lib",
+        "//src/api-annotations",
+
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:com_fasterxml_jackson_core_jackson_core",
+        "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:javax_validation_validation_api",
+        "//third_party:com_google_inject_guice",
+        "//third_party:org_eclipse_jetty_orbit_javax_servlet",
+    ],
+)
+
+java_library(
      name = "provider-configuration-service",
      srcs = glob(["src/provider-configuration-service/src/main/**/*.java"]),
      data = [
@@ -802,3 +823,4 @@ genrule(
     cmd = "cp $(location :credit-safe_deploy.jar) \"$(@)\"",
     visibility = ["//visibility:public"],
 )
+
