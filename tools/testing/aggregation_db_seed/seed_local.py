@@ -25,7 +25,8 @@ clusterHostDefaultValues = {
     "host":"http://127.0.0.1:5000",
     "apitoken": "devtoken",
     "base64encodedclientcertificate":"",
-    "disablerequestcompression": False}
+    "disablerequestcompression": False,
+    "aggregatoridentifier": "Tink (+https://www.tink.se/; noc@tink.se)"}
 
 clusterCryptoConfigurationTable = "cluster_crypto_configurations"
 clusterCryptoConfigurationDefaultValues = {
