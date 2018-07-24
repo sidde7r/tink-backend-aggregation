@@ -95,14 +95,14 @@ public class SwedbankDefaultBankTransferExecutor extends BaseTransferExecutor im
 
         String recipientName = transferHelper.getDestinationName(transfer);
 
-        RegisterTransferRecipientRequest registerRecipientResponse = RegisterTransferRecipientRequest.create(
+        RegisterTransferRecipientRequest registerTransferRecipientRequest = RegisterTransferRecipientRequest.create(
                 destination, recipientName);
 
         RegisterTransferRecipientResponse registerTransferRecipientResponse = apiClient.registerTransferRecipient(
-                registerRecipientResponse);
+                registerTransferRecipientRequest);
 
         return transferHelper.signAndConfirmNewRecipient(registerTransferRecipientResponse.getLinks(),
-                findNewRecipientFromPaymentResponse(registerRecipientResponse));
+                findNewRecipientFromPaymentResponse(registerTransferRecipientRequest));
     }
 
     /**
