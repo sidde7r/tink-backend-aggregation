@@ -29,10 +29,21 @@ public class MessageResponse extends ResponseEntity {
     public static void validate(BelfiusResponse response) throws IllegalStateException {
         MessageResponse messageResponse = response.filter(MessageResponse.class).findFirst().orElse(null);
         if (messageResponse != null
-                && messageResponse.getMessageType().equalsIgnoreCase(BelfiusConstants.ErrorCodes.ERROR_MESSAGE_TYPE)
-                && !messageResponse.getMessageDetail().contains(BelfiusConstants.ErrorCodes.WRONG_CREDENTIALS_CODE)) {
+                && (messageResponse.isWrongCredentialsMessage()
+                || messageResponse.isSessionExpiredMessage())) {
             throw new IllegalStateException(messageResponse.getMessageDetail());
         }
+    }
+
+    private boolean isWrongCredentialsMessage() {
+        return BelfiusConstants.ErrorCodes.ERROR_MESSAGE_TYPE.equalsIgnoreCase(messageType)
+                && !messageDetail.contains(BelfiusConstants.ErrorCodes.WRONG_CREDENTIALS_CODE);
+    }
+
+    private boolean isSessionExpiredMessage() {
+        return BelfiusConstants.ErrorCodes.FATAL_MESSAGE_TYPE.equalsIgnoreCase(messageType)
+                && (messageContent.contains(BelfiusConstants.ErrorCodes.SESSION_EXPIRED)
+                || messageContent.contains(BelfiusConstants.ErrorCodes.UNKNOWN_SESSION));
     }
 
     public static boolean containsError(MessageResponse messageResponse) {
