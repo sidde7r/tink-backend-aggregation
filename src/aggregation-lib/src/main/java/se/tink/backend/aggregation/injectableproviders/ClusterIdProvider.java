@@ -32,6 +32,14 @@ public class ClusterIdProvider extends AbstractHttpContextInjectable<ClusterInfo
     private static Map<String, ClusterHostConfiguration> clusterHostConfigurations;
     private boolean isAggregationCluster;
 
+    @Inject
+    public ClusterIdProvider(
+            @Named("clusterHostConfigurations") Map<String, ClusterHostConfiguration> clusterHostConfigurations,
+            @Named("isAggregationCluster") boolean isAggregationCluster) {
+        this.clusterHostConfigurations = clusterHostConfigurations;
+        this.isAggregationCluster = isAggregationCluster;
+    }
+
     private void validateClusterHostConfiguration(ClusterHostConfiguration configuration) {
         Preconditions.checkNotNull(configuration);
         Preconditions.checkNotNull(configuration.getHost());
@@ -48,9 +56,6 @@ public class ClusterIdProvider extends AbstractHttpContextInjectable<ClusterInfo
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
 
-        /*ClusterHostConfiguration configuration = clusterHostConfigurationRepository
-                .findOne(String.format("%s-%s", name, environment));
-        */
         ClusterHostConfiguration configuration = clusterHostConfigurations
                 .get(String.format("%s-%s", name, environment));
 
@@ -92,14 +97,6 @@ public class ClusterIdProvider extends AbstractHttpContextInjectable<ClusterInfo
                 configuration.getApiToken(),
                 configuration.getClientCertificate(),
                 configuration.isDisableRequestCompression());
-    }
-
-    @Inject
-    public ClusterIdProvider(
-            @Named("clusterHostConfigurations") Map<String, ClusterHostConfiguration> clusterHostConfigurations,
-            @Named("isAggregationCluster") boolean isAggregationCluster) {
-        this.clusterHostConfigurations = clusterHostConfigurations;
-        this.isAggregationCluster = isAggregationCluster;
     }
 
     @Override
