@@ -698,7 +698,7 @@ java_library(
         ":main-api",
 
         ":provider-configuration-api",
-        ":agents-lib",
+        ":common-lib",
 
         "//src/cluster-lib",
         "//src/api-annotations",
@@ -706,6 +706,7 @@ java_library(
         "//src/libraries/date",
         "//src/libraries/serialization_utils:serialization-utils",
         "//src/libraries/protobuf_serialization_utils:protobuf-serialization-utils",
+        "//src/libraries/i18n",
 
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
