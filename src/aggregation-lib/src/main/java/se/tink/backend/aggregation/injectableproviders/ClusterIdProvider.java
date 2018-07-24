@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.injectableproviders;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.inject.name.Named;
 import com.sun.jersey.api.core.HttpContext;
 import com.sun.jersey.api.core.HttpRequestContext;
 import com.sun.jersey.core.spi.component.ComponentContext;
@@ -11,7 +12,7 @@ import com.sun.jersey.server.impl.inject.AbstractHttpContextInjectable;
 import com.sun.jersey.spi.inject.Injectable;
 import com.sun.jersey.spi.inject.InjectableProvider;
 import java.util.Map;
-import java.util.Objects;
+import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
@@ -19,7 +20,6 @@ import java.lang.reflect.Type;
 import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
-import se.tink.backend.common.repository.mysql.aggregation.ClusterHostConfigurationRepository;
 import se.tink.backend.core.ClusterHostConfiguration;
 
 @Provider
@@ -94,7 +94,10 @@ public class ClusterIdProvider extends AbstractHttpContextInjectable<ClusterInfo
                 configuration.isDisableRequestCompression());
     }
 
-    public ClusterIdProvider(Map<String, ClusterHostConfiguration> clusterHostConfigurations, boolean isAggregationCluster) {
+    @Inject
+    public ClusterIdProvider(
+            @Named("clusterHostConfigurations") Map<String, ClusterHostConfiguration> clusterHostConfigurations,
+            @Named("isAggregationCluster") boolean isAggregationCluster) {
         this.clusterHostConfigurations = clusterHostConfigurations;
         this.isAggregationCluster = isAggregationCluster;
     }
