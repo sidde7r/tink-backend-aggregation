@@ -15,7 +15,6 @@ public abstract class AccountEntity extends AbstractAccountEntity {
     protected boolean selectedForQuickbalance;
     protected LinksEntity links;
     protected String priority;
-    protected String id;
     protected String currency;
     protected DetailsEntity details;
     protected String balance;
@@ -33,10 +32,6 @@ public abstract class AccountEntity extends AbstractAccountEntity {
 
     public String getPriority() {
         return priority;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public String getCurrency() {

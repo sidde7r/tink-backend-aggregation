@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.ConfirmTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.InitiateSignTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.AbstractPayeeEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.AbstractAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
@@ -170,8 +170,8 @@ public class SwedbankTransferHelper {
      * Signs and confirms the creation of a new recipient or payee. Returns the created recipient or throws an exception
      * if the creation failed.
      */
-    public AbstractPayeeEntity signAndConfirmNewRecipient(LinksEntity linksEntity,
-            Function<PaymentBaseinfoResponse, Optional<AbstractPayeeEntity>> findNewRecipientFunction) {
+    public AbstractAccountEntity signAndConfirmNewRecipient(LinksEntity linksEntity,
+            Function<PaymentBaseinfoResponse, Optional<AbstractAccountEntity>> findNewRecipientFunction) {
 
         return signNewRecipient(linksEntity.getSign())
                 .map(LinksEntity::getNext)
