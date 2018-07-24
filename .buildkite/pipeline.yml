@@ -27,6 +27,9 @@ steps:
 
       docker tag gcr.io/tink-containers/tink-backend-provider-configuration:latest gcr.io/tink-containers/tink-backend-provider-configuration:$VERSION;
       gcloud docker -- push gcr.io/tink-containers/tink-backend-provider-configuration:$VERSION;
+
+      docker tag gcr.io/tink-containers/tink-backend-credit-safe:latest gcr.io/tink-containers/tink-backend-credit-safe:$VERSION;
+      gcloud docker -- push gcr.io/tink-containers/tink-backend-credit-safe:$VERSION;
     env:
       SSH_AUTH_SOCK:
       BUILDKITE_DOCKER_COMPOSE_CONTAINER: app

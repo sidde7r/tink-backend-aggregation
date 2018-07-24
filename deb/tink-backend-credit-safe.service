@@ -1,17 +1,17 @@
 [Unit]
-Description=tink-backend-provider-configuration
+Description=tink-backend-credit-safe
 
 [Service]
-User=tink-backend-provider-configuration
-Group=tink-backend-provider-configuration
+User=tink-backend-credit-safe
+Group=tink-backend-credit-safe
 KillSignal=SIGINT
 # See shutdown timeouts in AgentWorker#stop method.
 TimeoutStopSec=400
 Restart=on-failure
 RestartSec=10
 Environment=MAX_HEAP_SIZE=2G
-EnvironmentFile=-/etc/default/tink-backend-provider-configuration
-WorkingDirectory=/usr/share/tink-backend-provider-configuration
+EnvironmentFile=-/etc/default/tink-backend-credit-safe
+WorkingDirectory=/usr/share/tink-backend-credit-safe
 
 ExecStart=/usr/bin/xvfb-run --auto-servernum -s "-screen 0 1280x1024x16" \
           /usr/bin/java \
@@ -23,10 +23,10 @@ ExecStart=/usr/bin/xvfb-run --auto-servernum -s "-screen 0 1280x1024x16" \
           -Dnetworkaddress.cache.ttl=60 \
           -XX:-OmitStackTraceInFastThrow \
           -XX:+HeapDumpOnOutOfMemoryError \
-          -XX:HeapDumpPath=/var/tmp/tink/heapdumps/tink-backend-provider-configuration \
+          -XX:HeapDumpPath=/var/tmp/tink/heapdumps/tink-backend-credit-safe \
           -XX:+ExitOnOutOfMemoryError \
-          -jar /usr/share/tink-backend-provider-configuration/provider-configuration-service.jar \
-          server /etc/tink/provider-configuration-server.yml
+          -jar /usr/share/tink-backend-credit-safe/credit-safe-service.jar \
+          server /etc/tink/credit-safe-server.yml
 
 [Install]
 WantedBy=multi-user.target
