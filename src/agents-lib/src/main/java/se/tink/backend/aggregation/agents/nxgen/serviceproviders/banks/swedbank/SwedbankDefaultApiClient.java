@@ -457,6 +457,7 @@ public class SwedbankDefaultApiClient {
             bankProfileHandler = sessionStorage.get(SwedbankBaseConstants.StorageKey.BANK_PROFILE_HANDLER,
                     BankProfileHandler.class)
                     .orElseThrow(IllegalStateException::new);
+            bankProfileHandler.setActiveBankProfile(bankProfileHandler.findTransferProfile());
         }
 
         return bankProfileHandler;
