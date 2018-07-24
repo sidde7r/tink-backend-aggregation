@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
@@ -19,6 +20,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
@@ -71,7 +74,20 @@ public class SwedbankTransferHelper {
                         .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_FAILED).build();
             }
 
-            bankIdSignResponse = apiClient.collectSignBankId(links.getNextOrThrow());
+            try {
+                bankIdSignResponse = apiClient.collectSignBankId(links.getNextOrThrow());
+            } catch (HttpResponseException hre) {
+                HttpResponse response = hre.getResponse();
+                if (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+                    // This means that another BankId session was started WHILE polling
+                    throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                            .setEndUserMessage(TransferExecutionException.EndUserMessage.BANKID_ANOTHER_IN_PROGRESS)
+                            .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_CANCELLED).build();
+                }
+
+                // Re-throw unknown exception.
+                throw hre;
+            }
             Uninterruptibles.sleepUninterruptibly(SwedbankBaseConstants.BankId.BANKID_SLEEP_INTERVAL, TimeUnit.MILLISECONDS);
         }
 
