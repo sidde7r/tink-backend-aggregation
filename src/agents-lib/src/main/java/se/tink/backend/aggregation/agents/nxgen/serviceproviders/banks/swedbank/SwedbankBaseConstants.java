@@ -226,6 +226,7 @@ public class SwedbankBaseConstants {
         public static final LogTag LOAN_RESPONSE = LogTag.from("Swedbank loan response");
         public static final LogTag MORTGAGE_OVERVIEW_RESPONSE = LogTag.from("Swedbank mortgage overview");
         public static final LogTag LOAN_DETAILS_RESPONSE = LogTag.from("Swedbank loan details response");
+        public static final LogTag LOAN_DETAILS_ERROR = LogTag.from("Swedbank loan details error");
         public static final LogTag DETAILED_PORTFOLIO_RESPONSE = LogTag.from(
                 "Swedbank detailed portfolio - type:[{}] - response: {}");
         public static final LogTag PORTFOLIO_HOLDINGS_RESPONSE = LogTag.from("Portfolio holdings response: {}");

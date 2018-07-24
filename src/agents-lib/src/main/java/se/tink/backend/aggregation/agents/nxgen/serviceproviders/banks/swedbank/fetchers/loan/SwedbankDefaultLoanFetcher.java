@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
-import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SwedbankDefaultLoanFetcher implements AccountFetcher<LoanAccount> {
@@ -57,9 +56,8 @@ public class SwedbankDefaultLoanFetcher implements AccountFetcher<LoanAccount> {
                 try {
                     loanDetailsResponse = apiClient.loanDetails(loanAccountEntity.getLinks().getNext());
                 } catch (Exception e) {
-                    LOGGER.warn(String.format("Couldn't fetch loan data! %s with balance %.2f",
-                            loanAccountEntity.getFullyFormattedNumber(),
-                            StringUtils.parseAmount(loanAccountEntity.getBalance())), e);
+                    LOGGER.warnExtraLong(SerializationUtils.serializeToString(loanAccountEntity),
+                            SwedbankBaseConstants.LogTags.LOAN_DETAILS_ERROR, e);
                     continue;
                 }
 
