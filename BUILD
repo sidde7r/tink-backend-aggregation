@@ -675,6 +675,22 @@ junit_test(
 )
 
 java_library(
+    name = "provider-configuration-api",
+    srcs = glob(["src/provider-configuration-api/src/main/**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        ":main-api",
+
+        "//src/api-annotations",
+
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:com_fasterxml_jackson_core_jackson_core",
+        "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:javax_validation_validation_api",
+    ],
+)
+
+java_library(
      name = "provider-configuration-service",
      srcs = glob(["src/provider-configuration-service/src/main/**/*.java"]),
      data = [
@@ -682,6 +698,7 @@ java_library(
      ],
      deps = [
          ":common-lib",
+         "provider-configuration-api",
           "//src/libraries/auth:auth",
           "//src/libraries/discovery:discovery",
           "//src/libraries/dropwizard_utils:dropwizard-utils",
