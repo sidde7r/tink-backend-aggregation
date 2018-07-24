@@ -102,7 +102,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     private final Counter refreshTotal;
     private final Counter noTransferDestinationFetched;
     private final MetricId.MetricLabels defaultMetricLabels;
-    private List<Account> accounts = Lists.newArrayList();
     private Agent agent;
     private Catalog catalog;
     private CuratorFramework coordinationClient;
@@ -122,14 +121,19 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     //private final ClusterInfo clusterInfo;
     private boolean isAggregationCluster;
 
+    //Cached accounts have not been sent to system side yet.
     private Map<String, Pair<Account, AccountFeatures>> cachedAccountsByUniqueId;
-    private Map<String, Account> updatedAccountsByUniqueId;
+    //Updated accounts have been sent to System side and has been updated with their stored Tink Id
+    private Map<String, Account> updatedAccountsByTinkId;
 
     public AgentWorkerContext(CredentialsRequest request, ServiceContext serviceContext, MetricRegistry metricRegistry,
             boolean useAggregationController, AggregationControllerAggregationClient aggregationControllerAggregationClient,
             ClusterInfo clusterInfo) {
 
         final ClusterId clusterId = clusterInfo.getClusterId();
+
+        this.cachedAccountsByUniqueId = Maps.newHashMap();
+        this.updatedAccountsByTinkId = Maps.newHashMap();
 
         this.request = request;
         this.serviceContext = serviceContext;
@@ -195,7 +199,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     @Override
     public void clear() {
         transactionsByAccount.clear();
-        accounts.clear();
+        cachedAccountsByUniqueId.clear();
     }
 
     public Agent getAgent() {
@@ -257,7 +261,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         // Metrics
         refreshTotal.inc();
         TARGET_ACCOUNT_TYPES.forEach(accountType -> {
-            if (accounts.stream().noneMatch(account -> account.getType() == accountType)) {
+            if (cachedAccountsByUniqueId.values().stream().noneMatch(pair-> pair.first.getType() == accountType)) {
                 metricRegistry.meter(
                         MetricId.newId("no_accounts_fetched")
                                 .label(defaultMetricLabels)
@@ -267,9 +271,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         });
 
         // Requires Accounts in list to have been "updated" towards System's UpdateService to get their real stored id
-        List<String> accountIds = accounts.stream()
-                .map(Account::getId)
-                .collect(Collectors.toList());
+        List<String> accountIds = Lists.newArrayList(updatedAccountsByTinkId.keySet());
 
         if (useAggregationController) {
             se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest processAccountsRequest =
@@ -323,9 +325,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     private Optional<Account> getAccount(String accountId) {
-        return accounts.stream()
-                .filter(a -> Objects.equals(a.getId(), accountId))
-                .findFirst();
+        return Optional.ofNullable(updatedAccountsByTinkId.get(accountId));
     }
 
     @Override
@@ -617,10 +617,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             updateAccountTimerContext.stop();
         }
 
-        updatedAccountsByUniqueId.put(updatedAccount.getBankId(), updatedAccount);
-        accounts.add(updatedAccount);
-
-        return updatedAccount;
+        return updatedAccountsByTinkId.put(updatedAccount.getId(), updatedAccount);
     }
 
     @Override
@@ -902,7 +899,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
     @Override
     public List<Account> getAccounts() {
-        return accounts;
+        return Lists.newArrayList(updatedAccountsByTinkId.values());
     }
 
     @Override
