@@ -719,7 +719,7 @@ java_library(
      ],
      deps = [
          ":common-lib",
-         "provider-configuration-api",
+         ":provider-configuration-api",
          ":provider-configuration-lib",
           "//src/libraries/auth:auth",
           "//src/libraries/discovery:discovery",
@@ -748,12 +748,14 @@ java_binary(
     ],
     deps = [
         ":common-lib",
-        "provider-configuration-lib",
-          "//src/libraries/auth:auth",
-          "//src/libraries/discovery:discovery",
-          "//src/libraries/dropwizard_utils:dropwizard-utils",
-          "//src/libraries/metrics:metrics",
-          "//src/libraries/cluster:cluster",
+        ":provider-configuration-lib",
+        ":provider-configuration-api",
+
+        "//src/libraries/auth:auth",
+        "//src/libraries/discovery:discovery",
+        "//src/libraries/dropwizard_utils:dropwizard-utils",
+        "//src/libraries/metrics:metrics",
+        "//src/libraries/cluster:cluster",
 
          "//third_party:com_google_guava_guava",
          "//third_party:com_google_inject_guice",
