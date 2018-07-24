@@ -5,6 +5,7 @@ import com.google.common.base.Predicates;
 import com.google.inject.Injector;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import se.tink.backend.aggregation.provider.configuration.config.ProviderModuleFactory;
 import se.tink.backend.common.AbstractServiceContainer;
 import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.libraries.auth.ApiTokenAuthorizationHeaderPredicate;
