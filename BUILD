@@ -748,12 +748,19 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         ":main-api",
-
         ":provider-configuration-api",
         ":common-lib",
 
         "//src/cluster-lib",
         "//src/api-annotations",
+        "//src/libraries/auth:auth",
+        "//src/libraries/jersey_log:jersey-log",
+        "//src/libraries/jersey_guice:jersey-guice",
+        "//src/libraries/dropwizard_utils:dropwizard-utils",
+        "//src/libraries/discovery:discovery",
+        "//third_party:io_dropwizard_dropwizard_jersey",
+
+
 
         "//src/libraries/date",
         "//src/libraries/serialization_utils:serialization-utils",
