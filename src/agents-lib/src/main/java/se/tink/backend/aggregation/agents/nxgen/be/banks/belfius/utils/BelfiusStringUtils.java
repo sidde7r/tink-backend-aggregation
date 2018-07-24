@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils;
 
+import java.util.Locale;
 import java.util.Optional;
 import se.tink.backend.core.Amount;
 
@@ -42,8 +43,8 @@ public class BelfiusStringUtils {
      * @param amount
      * @return a formatted amount
      */
-    public static String getFormattedAmount(Amount amount){
-        String form = String.format("%,.2f", amount.getValue());
+    public static String getFormattedAmount(Amount amount) {
+        String form = String.format(Locale.US, "%,.2f", amount.getValue());
         String[] decimal = form.split("\\.");
         decimal[0] = decimal[0].replace(",", ".");
         return decimal[0] + "," + decimal[1];
