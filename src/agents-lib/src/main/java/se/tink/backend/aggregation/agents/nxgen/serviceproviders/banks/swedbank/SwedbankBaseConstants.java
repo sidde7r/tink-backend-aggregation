@@ -20,6 +20,7 @@ public class SwedbankBaseConstants {
     public static class TransferScope {
         public static final String PAYMENT_FROM = "PAYMENT_FROM";
         public static final String TRANSFER_FROM = "TRANSFER_FROM";
+        public static final String TRANSFER_TO = "TRANSFER_TO";
     }
 
     public static class Description {
@@ -209,7 +210,8 @@ public class SwedbankBaseConstants {
         PORTFOLIOS("PortfolioHoldings"), FUND_MARKET_INFO("FundMarketinfo"), EINVOICES("EinvoiceIncoming"),
         PAYMENT_BASEINFO("PaymentBaseinfo"), PAYMENT_REGISTERED("PaymentRegistered"),
         REGISTER_TRANSFER("PaymentRegisterTransfer"), REGISTER_PAYMENT("PaymentRegisterPayment"),
-        PAYMENTS_CONFIRMED("PaymentConfirmed"), REGISTER_PAYEE("PaymentRegisterPayee");
+        PAYMENTS_CONFIRMED("PaymentConfirmed"), REGISTER_PAYEE("PaymentRegisterPayee"),
+        REGISTER_EXTERNAL_TRANSFER_RECIPIENT("PaymentRegisterExternalRecipient");
 
         private String key;
 
@@ -258,6 +260,7 @@ public class SwedbankBaseConstants {
     public static class ErrorField {
         public static final String DATE = "date";
         public static final String USER_ID = "userid";
+        public static final String RECIPIENT_NUMBER = "recipientnumber";
     }
 
     public static class TransactionType {
@@ -277,6 +280,10 @@ public class SwedbankBaseConstants {
     public static class PaymentAccountType {
         public static final String BGACCOUNT = "BGACCOUNT";
         public static final String PGACCOUNT = "PGACCOUNT";
+    }
+
+    public static class TransferRecipientType {
+        public static final String BANKACCOUNT = "BANKACCOUNT";
     }
 
     public static class BankId {

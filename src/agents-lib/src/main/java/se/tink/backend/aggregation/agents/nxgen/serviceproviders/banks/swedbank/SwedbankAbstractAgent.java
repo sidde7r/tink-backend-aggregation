@@ -122,7 +122,7 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent {
         SwedbankTransferHelper transferHelper = new SwedbankTransferHelper(context, catalog,
                 supplementalInformationController, apiClient);
         SwedbankDefaultBankTransferExecutor transferExecutor = new SwedbankDefaultBankTransferExecutor(
-                apiClient, transferHelper);
+                catalog, apiClient, transferHelper);
         SwedbankDefaultPaymentExecutor paymentExecutor = new SwedbankDefaultPaymentExecutor(catalog, apiClient,
                 transferHelper);
         SwedbankDefaultApproveEInvoiceExecutor approveEInvoiceExecutor = new SwedbankDefaultApproveEInvoiceExecutor(
