@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankDefaultApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.payment.rpc.RegisterPayeeRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.payment.rpc.RegisterRecipientResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.AbstractBankIdSignResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.ConfirmTransferResponse;
@@ -187,21 +186,5 @@ public class SwedbankTransferHelper {
     private Optional<LinksEntity> signNewRecipient(LinkEntity signLink) {
         InitiateSignTransferResponse initiateSignTransfer = apiClient.signExternalTransfer(signLink);
         return Optional.ofNullable(collectBankId(initiateSignTransfer));
-    }
-
-    /**
-     * Returns a function that streams through all registered payees with a filter to find the newly added payee
-     * among them.
-     */
-    public Function<PaymentBaseinfoResponse, Optional<AbstractPayeeEntity>> findNewPayeeFromPaymentResponse(
-            RegisterPayeeRequest newPayee) {
-        String newPayeeType = newPayee.getType().toLowerCase();
-        String newPayeeAccountNumber = newPayee.getAccountNumber().replaceAll("[^0-9]", "");
-
-        return confirmResponse -> confirmResponse.getPayment().getPayees().stream()
-                .filter(payee -> payee.getType().toLowerCase().equals(newPayeeType)
-                        && payee.getAccountNumber().replaceAll("[^0-9]", "").equals(newPayeeAccountNumber))
-                .findFirst()
-                .map(AbstractPayeeEntity.class::cast);
     }
 }

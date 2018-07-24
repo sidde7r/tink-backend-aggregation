@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.payment;
 
 import java.util.Optional;
+import java.util.function.Function;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
@@ -132,6 +133,22 @@ public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor impleme
         RegisterRecipientResponse registerRecipientResponse = apiClient.registerPayee(registerPayeeRequest);
 
         return transferHelper.signAndConfirmNewRecipient(registerRecipientResponse,
-                transferHelper.findNewPayeeFromPaymentResponse(registerPayeeRequest));
+                findNewPayeeFromPaymentResponse(registerPayeeRequest));
+    }
+
+    /**
+     * Returns a function that streams through all registered payees with a filter to find the newly added payee
+     * among them.
+     */
+    private Function<PaymentBaseinfoResponse, Optional<AbstractPayeeEntity>> findNewPayeeFromPaymentResponse(
+            RegisterPayeeRequest newPayee) {
+        String newPayeeType = newPayee.getType().toLowerCase();
+        String newPayeeAccountNumber = newPayee.getAccountNumber().replaceAll("[^0-9]", "");
+
+        return confirmResponse -> confirmResponse.getPayment().getPayees().stream()
+                .filter(payee -> payee.getType().toLowerCase().equals(newPayeeType)
+                        && payee.getAccountNumber().replaceAll("[^0-9]", "").equals(newPayeeAccountNumber))
+                .findFirst()
+                .map(AbstractPayeeEntity.class::cast);
     }
 }
