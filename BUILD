@@ -619,6 +619,58 @@ junit_test(
     ],
 )
 
+junit_test(
+    name = "agents-lib-test",
+    srcs = glob(["src/agents-lib/src/test/**/*.java"]),
+    data = [
+        "//data:agents",
+        "//tools:phantomjs_mac",
+        "//tools:libkbc_wbaes_linux",
+        "//tools:libkbc_wbaes_mac",
+    ],
+    runtime_deps = [
+        "//third_party:ch_qos_logback_logback_classic",
+        "//third_party:net_bytebuddy_byte_buddy",
+        "//third_party:org_objenesis_objenesis",
+    ],
+    deps = [
+        ":aggregation-api",
+        ":common-lib",
+        ":common-lib-testlib",
+        ":main-api",
+        ":system-api",
+        ":agents-lib",
+
+        "//src/cluster-lib:cluster-lib",
+        "//src/libraries/serialization_utils:serialization-utils",
+        "//src/libraries/metrics:metrics",
+        "//src/libraries/date:date",
+        "//src/libraries/giro_validation:giro-validation",
+        "//src/libraries/account_identifier:account-identifier",
+        "//src/libraries/generic_application:generic-application",
+        "//src/libraries/net",
+        "//src/libraries/i18n",
+        "//src/libraries/strings:strings",
+        "//src/libraries/abnamro:abn_amro",
+
+        "//third_party:com_github_tomakehurst_wiremock",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_google_http_client_google_http_client",
+        "//third_party:com_google_inject_guice",
+        "//third_party:com_sun_jersey_jersey_client",
+        "//third_party:commons_io_commons_io",
+        "//third_party:commons_lang_commons_lang",
+        "//third_party:joda_time_joda_time",
+        "//third_party:org_assertj_assertj_core",
+        "//third_party:org_jsoup_jsoup",
+        "//third_party:org_mockito_mockito_core",
+        "//third_party:org_apache_pdfbox_pdfbox",
+        "//third_party:pl_pragmatists_junitparams",
+        "//third_party:com_nimbusds_srp6a",
+        "//third_party:org_bouncycastle_bcprov_jdk15on",
+    ],
+)
+
 
 junit_test(
     name = "aggregation-test",
