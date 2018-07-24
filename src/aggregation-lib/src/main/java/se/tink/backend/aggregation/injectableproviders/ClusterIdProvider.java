@@ -10,6 +10,7 @@ import com.sun.jersey.core.spi.component.ComponentScope;
 import com.sun.jersey.server.impl.inject.AbstractHttpContextInjectable;
 import com.sun.jersey.spi.inject.Injectable;
 import com.sun.jersey.spi.inject.InjectableProvider;
+import java.util.Map;
 import java.util.Objects;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -28,7 +29,7 @@ public class ClusterIdProvider extends AbstractHttpContextInjectable<ClusterInfo
     private static final String CLUSTER_NAME_HEADER = ClusterId.CLUSTER_NAME_HEADER;
     private static final String CLUSTER_ENVIRONMENT_HEADER = ClusterId.CLUSTER_ENVIRONMENT_HEADER;
     private static final String AGGREGATOR_NAME_HEADER = ClusterId.AGGREGATOR_NAME_HEADER;
-    private ClusterHostConfigurationRepository clusterHostConfigurationRepository;
+    private static Map<String, ClusterHostConfiguration> clusterHostConfigurations;
     private boolean isAggregationCluster;
 
     private void validateClusterHostConfiguration(ClusterHostConfiguration configuration) {
@@ -47,8 +48,11 @@ public class ClusterIdProvider extends AbstractHttpContextInjectable<ClusterInfo
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
 
-        ClusterHostConfiguration configuration = clusterHostConfigurationRepository
+        /*ClusterHostConfiguration configuration = clusterHostConfigurationRepository
                 .findOne(String.format("%s-%s", name, environment));
+        */
+        ClusterHostConfiguration configuration = clusterHostConfigurations
+                .get(String.format("%s-%s", name, environment));
 
         validateClusterHostConfiguration(configuration);
 
@@ -90,8 +94,8 @@ public class ClusterIdProvider extends AbstractHttpContextInjectable<ClusterInfo
                 configuration.isDisableRequestCompression());
     }
 
-    public ClusterIdProvider(ClusterHostConfigurationRepository clusterHostConfigurationRepository, boolean isAggregationCluster) {
-        this.clusterHostConfigurationRepository = clusterHostConfigurationRepository;
+    public ClusterIdProvider(Map<String, ClusterHostConfiguration> clusterHostConfigurations, boolean isAggregationCluster) {
+        this.clusterHostConfigurations = clusterHostConfigurations;
         this.isAggregationCluster = isAggregationCluster;
     }
 

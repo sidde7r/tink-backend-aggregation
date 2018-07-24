@@ -7,7 +7,11 @@ import com.google.inject.Injector;
 import io.dropwizard.cli.Command;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import javax.ws.rs.Path;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.cli.provider.ChangeProviderRefreshFrequencyFactorCommand;
@@ -24,6 +28,7 @@ import se.tink.backend.common.AbstractServiceContainer;
 import se.tink.backend.common.ServiceContext;
 import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.backend.common.repository.mysql.aggregation.ClusterHostConfigurationRepository;
+import se.tink.backend.core.ClusterHostConfiguration;
 import se.tink.libraries.auth.ApiTokenAuthorizationHeaderPredicate;
 import se.tink.libraries.auth.ContainerAuthorizationResourceFilterFactory;
 import se.tink.libraries.auth.YubicoAuthorizationHeaderPredicate;
@@ -102,7 +107,13 @@ public class AggregationServiceContainer extends AbstractServiceContainer {
 
         ClusterHostConfigurationRepository repository = serviceContext
                 .getRepository(ClusterHostConfigurationRepository.class);
-        environment.jersey().register(new ClusterIdProvider(repository, serviceContext.isAggregationCluster()));
+
+
+        Map<String, ClusterHostConfiguration> clusterHostConfigurations = repository.findAll().stream().collect(
+                Collectors.toMap(x -> x.getClusterId(), x -> x)
+        );
+
+        environment.jersey().register(new ClusterIdProvider(clusterHostConfigurations, serviceContext.isAggregationCluster()));
 
 
         CreditSafeServiceResource creditSafeServiceResource = new CreditSafeServiceResource(serviceContext);
