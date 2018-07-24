@@ -713,8 +713,8 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
 
         case TRANSFER_DESTINATIONS:
             TransferDestinationsResponse response = new TransferDestinationsResponse();
-            response.addDestinations(getTransferAccountDestinations(context.getAccounts()));
-            response.addDestinations(getPaymentAccountDestinations(context.getAccounts()));
+            response.addDestinations(getTransferAccountDestinations(context.getUpdatedAccounts()));
+            response.addDestinations(getPaymentAccountDestinations(context.getUpdatedAccounts()));
             context.updateTransferDestinationPatterns(response.getDestinations());
             break;
 

@@ -164,7 +164,7 @@ public class CollectorAgent extends AbstractAgent implements RefreshableItemExec
 
         case TRANSFER_DESTINATIONS:
             TransferDestinationsResponse response = new TransferDestinationsResponse();
-            for (Account account : context.getAccounts()) {
+            for (Account account : context.getUpdatedAccounts()) {
                 SwedishIdentifier withdrawalIdentifier = apiClient.getWithdrawalIdentifierFor(account);
 
                 if (withdrawalIdentifier == null) {

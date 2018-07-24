@@ -35,7 +35,7 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
     @Test
     public void testLoginWithMobileBankIdAndRefreshAccounts() throws Exception {
         testAgent(credentials);
-        System.out.println(MAPPER.writeValueAsString(testContext.getAccounts()));
+        System.out.println(MAPPER.writeValueAsString(testContext.getUpdatedAccounts()));
         System.out.println(MAPPER.writeValueAsString(testContext.getTransactions()));
         System.out.println(MAPPER.writeValueAsString(testContext.getTransfers()));
     }

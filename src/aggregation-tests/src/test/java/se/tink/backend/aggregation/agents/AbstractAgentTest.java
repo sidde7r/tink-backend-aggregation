@@ -310,10 +310,10 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
             Assert.assertTrue("Status not valid: " + credentials.getStatus(),
                     validStatuses.contains(credentials.getStatus()));
 
-            Assert.assertTrue(testContext.getAccounts().size() > 0);
+            Assert.assertTrue(testContext.getUpdatedAccounts().size() > 0);
 
             boolean atLeastOneAccountWithMoney = false;
-            for (Account account : testContext.getAccounts()) {
+            for (Account account : testContext.getUpdatedAccounts()) {
                 Assert.assertNotNull("account#bankId must not be null or empty: " + account.getBankId(),
                         StringUtils.trimToNull(account.getBankId()));
 
@@ -328,7 +328,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
                 }
             }
 
-            Assert.assertTrue("No accounts had any money on them. Expected?", testContext.getAccounts().isEmpty()
+            Assert.assertTrue("No accounts had any money on them. Expected?", testContext.getUpdatedAccounts().isEmpty()
                     || atLeastOneAccountWithMoney);
 
             if (expectsTransactions) {

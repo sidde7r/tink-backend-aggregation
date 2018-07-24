@@ -80,6 +80,6 @@ public class UpdateController {
 
     public Collection<se.tink.backend.aggregation.rpc.Account> getAccounts() {
         // Must be rpc.Accounts, because those are 'properly' updated with userId and the like.
-        return baseContext.getAccounts();
+        return baseContext.getUpdatedAccounts();
     }
 }

@@ -1204,7 +1204,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         TransferDestinationsResponse response = new TransferDestinationsResponse();
 
         Map<Account, List<TransferDestinationPattern>> internalOnly = new TransferDestinationPatternBuilder()
-                .setTinkAccounts(context.getAccounts())
+                .setTinkAccounts(context.getUpdatedAccounts())
                 .setSourceAccounts(internalOnlySourceAccounts)
                 .setDestinationAccounts(internalOnlyDestinationAccounts)
                 .build();
@@ -1212,7 +1212,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         response.addDestinations(internalOnly);
 
         Map<Account, List<TransferDestinationPattern>> external = new TransferDestinationPatternBuilder()
-                .setTinkAccounts(context.getAccounts())
+                .setTinkAccounts(context.getUpdatedAccounts())
                 .setSourceAccounts(sourceAccounts)
                 .setDestinationAccounts(destinationAccounts)
                 .addMultiMatchPattern(AccountIdentifier.Type.SE, TransferDestinationPattern.ALL)
@@ -1221,7 +1221,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         response.addDestinations(external);
 
         Map<Account, List<TransferDestinationPattern>> payments = new TransferDestinationPatternBuilder()
-                .setTinkAccounts(context.getAccounts())
+                .setTinkAccounts(context.getUpdatedAccounts())
                 .setSourceAccounts(paymentSourceAccounts)
                 .setDestinationAccounts(paymentDestinationAccounts)
                 .addMultiMatchPattern(AccountIdentifier.Type.SE_PG, TransferDestinationPattern.ALL)

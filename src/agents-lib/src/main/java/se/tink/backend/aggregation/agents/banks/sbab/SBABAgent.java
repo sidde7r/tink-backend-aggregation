@@ -424,7 +424,7 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
         Map<Account, List<TransferDestinationPattern>> transferPatterns = new TransferDestinationPatternBuilder()
                 .setSourceAccounts(accountEntities)
                 .setDestinationAccounts(recipientEntities)
-                .setTinkAccounts(context.getAccounts())
+                .setTinkAccounts(context.getUpdatedAccounts())
                 .addMultiMatchPattern(AccountIdentifier.Type.SE, TransferDestinationPattern.ALL)
                 .build();
 

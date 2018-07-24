@@ -1915,7 +1915,7 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
 
             try {
                 TransferDestinationsResponse profileDestinationResponse = getActivatedProfileTransferDestinations(
-                        profileMenu, context.getAccounts());
+                        profileMenu, context.getUpdatedAccounts());
                 response.addDestinations(profileDestinationResponse.getDestinations());
             } catch (Exception e) {
                 throw new IllegalStateException(e);

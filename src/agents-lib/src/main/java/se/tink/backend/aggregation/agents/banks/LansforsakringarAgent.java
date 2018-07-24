@@ -1672,8 +1672,8 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
 
             TransferDestinationsResponse response = new TransferDestinationsResponse();
 
-            response.addDestinations(getTransferAccountDestinations(accountEntities, context.getAccounts()));
-            response.addDestinations(getPaymentAccountDestinations(accountEntities, context.getAccounts()));
+            response.addDestinations(getTransferAccountDestinations(accountEntities, context.getUpdatedAccounts()));
+            response.addDestinations(getPaymentAccountDestinations(accountEntities, context.getUpdatedAccounts()));
 
             context.updateTransferDestinationPatterns(response.getDestinations());
         } catch (Exception e) {

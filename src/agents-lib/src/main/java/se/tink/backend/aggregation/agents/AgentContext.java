@@ -192,7 +192,7 @@ public abstract class AgentContext {
 
     public abstract UpdateDocumentResponse updateDocument(DocumentContainer container);
 
-    public abstract List<Account> getAccounts();
+    public abstract List<Account> getUpdatedAccounts();
 
     public abstract void updateEinvoices(List<Transfer> transfers);
 

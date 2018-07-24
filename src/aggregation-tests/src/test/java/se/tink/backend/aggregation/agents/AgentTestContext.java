@@ -62,7 +62,7 @@ public class AgentTestContext extends AgentContext {
         transfers.clear();
     }
 
-    public List<Account> getAccounts() {
+    public List<Account> getUpdatedAccounts() {
         return Lists.newArrayList(accountsByBankId.values());
     }
 

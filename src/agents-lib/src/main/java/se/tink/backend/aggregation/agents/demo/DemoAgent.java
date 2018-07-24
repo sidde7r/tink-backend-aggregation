@@ -182,7 +182,7 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
         case TRANSFER_DESTINATIONS:
             TransferDestinationsResponse response = new TransferDestinationsResponse();
 
-            for (Account account : context.getAccounts()) {
+            for (Account account : context.getUpdatedAccounts()) {
                 response.addDestination(account, TransferDestinationPattern.createForMultiMatch(
                         AccountIdentifier.Type.SE, TransferDestinationPattern.ALL));
                 response.addDestination(account, TransferDestinationPattern.createForMultiMatch(

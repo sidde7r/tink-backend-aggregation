@@ -1005,9 +1005,9 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
 
         try {
             response.addDestinations(
-                    getTransferAccountDestinations(context.getAccounts(), accountEntities, recipientEntities));
+                    getTransferAccountDestinations(context.getUpdatedAccounts(), accountEntities, recipientEntities));
             response.addDestinations(
-                    getPaymentAccountDestinations(context.getAccounts(), accountEntities, recipientEntities));
+                    getPaymentAccountDestinations(context.getUpdatedAccounts(), accountEntities, recipientEntities));
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }

@@ -1726,8 +1726,8 @@ public class HandelsbankenV6Agent extends AbstractAgent
         TransferDestinationsResponse response = new TransferDestinationsResponse();
 
         try {
-            response.addDestinations(getTransferAccountDestinations(context.getAccounts()));
-            response.addDestinations(getPaymentAccountDestinations(context.getAccounts()));
+            response.addDestinations(getTransferAccountDestinations(context.getUpdatedAccounts()));
+            response.addDestinations(getPaymentAccountDestinations(context.getUpdatedAccounts()));
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
