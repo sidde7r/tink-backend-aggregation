@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.payment;
 
 import java.util.Optional;
+import java.util.function.Function;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
@@ -12,7 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.RegisterTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.RegisteredTransfersResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.AbstractPayeeEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.AbstractAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
@@ -51,7 +52,7 @@ public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor impleme
             return destinationAccountId;
         }
 
-        AbstractPayeeEntity newDestinationAccount = createSignedPayee(transfer);
+        AbstractAccountEntity newDestinationAccount = createSignedPayee(transfer);
         return Optional.ofNullable(newDestinationAccount.getId());
     }
 
@@ -118,7 +119,7 @@ public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor impleme
         }
     }
 
-    private AbstractPayeeEntity createSignedPayee(final Transfer transfer) {
+    private AbstractAccountEntity createSignedPayee(final Transfer transfer) {
         AccountIdentifier accountIdentifier = transfer.getDestination();
         if (!accountIdentifier.is(AccountIdentifier.Type.SE_PG) && !accountIdentifier.is(AccountIdentifier.Type.SE_BG)) {
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
@@ -131,7 +132,23 @@ public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor impleme
 
         RegisterRecipientResponse registerRecipientResponse = apiClient.registerPayee(registerPayeeRequest);
 
-        return transferHelper.signAndConfirmNewRecipient(registerRecipientResponse,
-                transferHelper.findNewPayeeFromPaymentResponse(registerPayeeRequest));
+        return transferHelper.signAndConfirmNewRecipient(registerRecipientResponse.getLinks(),
+                findNewPayeeFromPaymentResponse(registerPayeeRequest));
+    }
+
+    /**
+     * Returns a function that streams through all registered payees with a filter to find the newly added payee
+     * among them.
+     */
+    private Function<PaymentBaseinfoResponse, Optional<AbstractAccountEntity>> findNewPayeeFromPaymentResponse(
+            RegisterPayeeRequest newPayee) {
+        String newPayeeType = newPayee.getType().toLowerCase();
+        String newPayeeAccountNumber = newPayee.getAccountNumber().replaceAll("[^0-9]", "");
+
+        return confirmResponse -> confirmResponse.getPayment().getPayees().stream()
+                .filter(payee -> payee.getType().toLowerCase().equals(newPayeeType)
+                        && payee.getAccountNumber().replaceAll("[^0-9]", "").equals(newPayeeAccountNumber))
+                .findFirst()
+                .map(AbstractAccountEntity.class::cast);
     }
 }

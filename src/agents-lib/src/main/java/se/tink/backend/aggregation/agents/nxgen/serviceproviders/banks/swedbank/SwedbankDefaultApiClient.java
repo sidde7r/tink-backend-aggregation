@@ -14,6 +14,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.CollectBankIdResponse;
@@ -28,6 +29,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.InitiateSignTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.RegisterTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.RegisteredTransfersResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.transfer.rpc.RegisterTransferRecipientRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.transfer.rpc.RegisterTransferRecipientResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.transfer.rpc.RegisterTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.updatepayment.rpc.PaymentDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.updatepayment.rpc.PaymentsConfirmedResponse;
@@ -55,6 +58,7 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
 
 public class SwedbankDefaultApiClient {
@@ -250,6 +254,25 @@ public class SwedbankDefaultApiClient {
                 SwedbankBaseConstants.MenuItemKey.REGISTER_PAYEE,
                 registerPayeeRequest,
                 RegisterRecipientResponse.class);
+    }
+
+    public RegisterTransferRecipientResponse registerTransferRecipient(RegisterTransferRecipientRequest request) throws
+            TransferExecutionException {
+        try {
+            return makeMenuItemRequest(
+                    SwedbankBaseConstants.MenuItemKey.REGISTER_EXTERNAL_TRANSFER_RECIPIENT,
+                    request,
+                    RegisterTransferRecipientResponse.class);
+        } catch (HttpResponseException hre) {
+            if (isAccountNumberInvalid(hre)) {
+                throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                        .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_DESTINATION)
+                        .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_DESTINATION).build();
+            }
+
+            // unknown error: rethrow
+            throw hre;
+        }
     }
 
     public RegisterTransferResponse registerTransfer(double amount, String destinationAccountId,
@@ -473,6 +496,20 @@ public class SwedbankDefaultApiClient {
 
         ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
         return errorResponse.hasErrorCode(SwedbankBaseConstants.ErrorCode.NOT_FOUND);
+    }
+
+    private boolean isAccountNumberInvalid(HttpResponseException hre) {
+        // This method expects an response with the following charectaristics:
+        // - Http status: 400
+        // - Http body: `ErrorResponse` with error field of "RECIPIENT_NUMBER"
+
+        HttpResponse httpResponse = hre.getResponse();
+        if (httpResponse.getStatus() != HttpStatus.SC_BAD_REQUEST) {
+            return false;
+        }
+
+        ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
+        return errorResponse.hasErrorField(SwedbankBaseConstants.ErrorField.RECIPIENT_NUMBER);
     }
 
     private boolean hasValidProfile(ProfileResponse profileResponse) {

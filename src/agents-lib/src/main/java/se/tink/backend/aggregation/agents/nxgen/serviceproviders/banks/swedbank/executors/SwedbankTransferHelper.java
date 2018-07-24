@@ -10,13 +10,11 @@ import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankDefaultApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.payment.rpc.RegisterPayeeRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.payment.rpc.RegisterRecipientResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.AbstractBankIdSignResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.ConfirmTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.InitiateSignTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.AbstractPayeeEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.AbstractAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
@@ -172,10 +170,10 @@ public class SwedbankTransferHelper {
      * Signs and confirms the creation of a new recipient or payee. Returns the created recipient or throws an exception
      * if the creation failed.
      */
-    public AbstractPayeeEntity signAndConfirmNewRecipient(RegisterRecipientResponse registerRecipientResponse,
-            Function<PaymentBaseinfoResponse, Optional<AbstractPayeeEntity>> findNewRecipientFunction) {
+    public AbstractAccountEntity signAndConfirmNewRecipient(LinksEntity linksEntity,
+            Function<PaymentBaseinfoResponse, Optional<AbstractAccountEntity>> findNewRecipientFunction) {
 
-        return signNewRecipient(registerRecipientResponse.getLinks().getSign())
+        return signNewRecipient(linksEntity.getSign())
                 .map(LinksEntity::getNext)
                 .flatMap(this::getConfirmResponse)
                 .flatMap(findNewRecipientFunction)
@@ -187,21 +185,5 @@ public class SwedbankTransferHelper {
     private Optional<LinksEntity> signNewRecipient(LinkEntity signLink) {
         InitiateSignTransferResponse initiateSignTransfer = apiClient.signExternalTransfer(signLink);
         return Optional.ofNullable(collectBankId(initiateSignTransfer));
-    }
-
-    /**
-     * Returns a function that streams through all registered payees with a filter to find the newly added payee
-     * among them.
-     */
-    public Function<PaymentBaseinfoResponse, Optional<AbstractPayeeEntity>> findNewPayeeFromPaymentResponse(
-            RegisterPayeeRequest newPayee) {
-        String newPayeeType = newPayee.getType().toLowerCase();
-        String newPayeeAccountNumber = newPayee.getAccountNumber().replaceAll("[^0-9]", "");
-
-        return confirmResponse -> confirmResponse.getPayment().getPayees().stream()
-                .filter(payee -> payee.getType().toLowerCase().equals(newPayeeType)
-                        && payee.getAccountNumber().replaceAll("[^0-9]", "").equals(newPayeeAccountNumber))
-                .findFirst()
-                .map(AbstractPayeeEntity.class::cast);
     }
 }
