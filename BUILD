@@ -792,6 +792,24 @@ java_library(
          "//third_party:io_dropwizard_dropwizard_core",
      ],
 )
+java_library(
+    name = "credit-safe-lib",
+    srcs = glob(["src/credit-safe-lib/src/main/**/*.java"]),
+    deps = [
+        ":agents-lib",
+        ":aggregation-api",
+        ":common-lib",
+        ":main-api",
+        "//src/libraries/date",
+        "//src/libraries/demo_credentials:demo-credentials",
+        "//src/libraries/i18n",
+        "//third_party:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
+        "//third_party:com_google_http_client_google_http_client",
+        "//third_party:commons_httpclient_commons_httpclient",
+        "//third_party:org_apache_velocity_velocity",
+        "//third_party:org_seleniumhq_selenium_selenium_java",
+    ],
+)
 
 java_binary(
     name = "credit-safe",
@@ -807,6 +825,7 @@ java_binary(
     ],
     deps = [
         ":common-lib",
+        ":credit-safe-lib",
           "//src/libraries/auth:auth",
           "//src/libraries/discovery:discovery",
           "//src/libraries/dropwizard_utils:dropwizard-utils",
