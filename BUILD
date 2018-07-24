@@ -698,7 +698,6 @@ java_library(
         ":main-api",
 
         ":provider-configuration-api",
-        ":agents-lib",
         ":common-lib",
 
         "//src/cluster-lib",
