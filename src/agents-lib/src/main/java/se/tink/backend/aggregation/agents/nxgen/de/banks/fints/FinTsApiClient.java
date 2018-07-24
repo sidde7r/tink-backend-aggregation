@@ -62,9 +62,9 @@ public class FinTsApiClient {
                 new HKIDN(3, configuration.getBlz(), configuration.getUsername(), "0");
         HKVVB segPrepare = new HKVVB(4);
         HKSYN segSync = new HKSYN(5);
-
+        this.messageNumber = 1;
         return new FinTsRequest(
-                configuration, dialogId, 1, this.systemId, segIdentification, segPrepare, segSync);
+                configuration, dialogId, this.messageNumber, this.systemId, segIdentification, segPrepare, segSync);
     }
 
     private FinTsRequest getMessageInit() {
