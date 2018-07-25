@@ -21,6 +21,7 @@ public class HandelsbankenFIAccount extends HandelsbankenAccount {
                 .setAccountNumber(number)
                 .setName(displayName)
                 .addIdentifier(new FinnishIdentifier(unformattedNumber))
+                .setBankIdentifier(unformattedNumber)
                 .build();
     }
 
@@ -30,6 +31,6 @@ public class HandelsbankenFIAccount extends HandelsbankenAccount {
 
     @Override
     public boolean is(Account account) {
-        return unformattedNumber != null && unformattedNumber.equals(account.getUniqueIdentifier());
+        return account.isUniqueIdentifierEqual(unformattedNumber);
     }
 }

@@ -140,6 +140,7 @@ public class AccountEntity {
         return LoanAccount.builder(accountNoInt, new Amount(currency, balance))
                 .setAccountNumber(accountNoExt)
                 .setName(accountName)
+                .setBankIdentifier(accountNoInt)
                 .build();
     }
 
@@ -148,6 +149,7 @@ public class AccountEntity {
         return CreditCardAccount.builder(accountNoInt, new Amount(currency, balance), availableCredit)
                 .setAccountNumber(accountNoExt)
                 .setName(accountName)
+                .setBankIdentifier(accountNoInt)
                 .build();
     }
 
@@ -155,6 +157,7 @@ public class AccountEntity {
         return CheckingAccount.builder(accountNoInt, new Amount(currency, balance))
                 .setAccountNumber(accountNoExt)
                 .setName(accountName)
+                .setBankIdentifier(accountNoInt)
                 .build();
     }
 
@@ -162,6 +165,7 @@ public class AccountEntity {
         return SavingsAccount.builder(accountNoInt, new Amount(currency, balance))
                 .setAccountNumber(accountNoExt)
                 .setName(accountName)
+                .setBankIdentifier(accountNoInt)
                 .build();
     }
 

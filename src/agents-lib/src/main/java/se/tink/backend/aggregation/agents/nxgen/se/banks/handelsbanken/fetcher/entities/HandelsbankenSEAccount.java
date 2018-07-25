@@ -30,6 +30,7 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
         final String accountNumber = applicationEntryPoint.getClearingNumber() + "-" + numberFormatted;
 
         return CheckingAccount.builder(number, findBalanceAmount().asAmount())
+                .setBankIdentifier(number)
                 .setAccountNumber(accountNumber)
                 .setName(name)
                 .addIdentifier(new SwedishIdentifier(accountNumber))

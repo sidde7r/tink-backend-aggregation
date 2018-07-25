@@ -12,8 +12,7 @@ public class SavingsAccount extends TransactionalAccount {
     }
 
     public static Builder<?, ?> builder(String uniqueIdentifier) {
-        return new DefaultSavingAccountsBuilder()
-                .setUniqueIdentifier(uniqueIdentifier);
+        return new DefaultSavingAccountsBuilder(uniqueIdentifier);
     }
 
     public static Builder<?, ?> builder(String uniqueIdentifier, Amount balance) {
@@ -35,6 +34,10 @@ public class SavingsAccount extends TransactionalAccount {
             extends TransactionalAccount.Builder<SavingsAccount, Builder<A, T>> {
         private Double interestRate;
 
+        public Builder(String uniqueIdentifier) {
+            super(uniqueIdentifier);
+        }
+
         public Double getInterestRate() {
             return this.interestRate;
         }
@@ -47,6 +50,11 @@ public class SavingsAccount extends TransactionalAccount {
 
     private static class DefaultSavingAccountsBuilder
             extends SavingsAccount.Builder<SavingsAccount, DefaultSavingAccountsBuilder> {
+
+        public DefaultSavingAccountsBuilder(String uniqueIdentifier) {
+            super(uniqueIdentifier);
+        }
+
         @Override
         protected DefaultSavingAccountsBuilder self() {
             return this;

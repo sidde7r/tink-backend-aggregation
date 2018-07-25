@@ -80,7 +80,7 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
     private void debugLogAccounts(ArrayList<TransactionalAccount> accounts) {
         try {
             for (TransactionalAccount account : accounts) {
-                String uniqueId = account.getUniqueIdentifier();
+                String accountNumber = account.getAccountNumber();
                 BankProfile bankProfile = account.getTemporaryStorage(SwedbankBaseConstants.StorageKey.PROFILE,
                         BankProfile.class);
 
@@ -90,7 +90,7 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
                 }
 
                 log.info(String.format("Swedbank_multiprofile Account [%s], BankProfileId [%s]",
-                        uniqueId, bankProfileId));
+                        accountNumber, bankProfileId));
             }
         } catch (Exception e) {
             log.warn("Swedbank_multiprofile Failed to log info for multiprofile user");

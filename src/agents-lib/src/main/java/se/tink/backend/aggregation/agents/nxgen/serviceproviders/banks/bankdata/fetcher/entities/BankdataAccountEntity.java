@@ -42,6 +42,7 @@ public class BankdataAccountEntity {
         return CheckingAccount.builder(constructUniqueIdentifier(), new Amount(currencyCode, balance))
                 .setAccountNumber(iban)
                 .setName(name)
+                .setBankIdentifier(constructUniqueIdentifier())
                 .build();
     }
 

@@ -20,7 +20,7 @@ public class OpBankAccountEntityTest {
         assertEquals(EXPECTED_ACCOUNT_NUMBER, account.toTransactionalAccount().getBankIdentifier());
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void getNormalizedBankIdWhenEmpty() {
         account.setAccountNumber("");
         account.toTransactionalAccount();

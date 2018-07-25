@@ -34,7 +34,7 @@ public class NextGenerationDemoFetcher implements AccountFetcher<TransactionalAc
 
     private final String userPath;
 
-    private final Set<String> finishedAccountIds = Sets.newHashSet();
+    private final Set<String> finishedAccountNumbers = Sets.newHashSet();
 
     private final DemoCredentials demoCredentials;
     private final Credentials credentials;
@@ -57,7 +57,8 @@ public class NextGenerationDemoFetcher implements AccountFetcher<TransactionalAc
                         TransactionalAccount.Builder builder = TransactionalAccount.builder(a.getType(),
                                 a.getBankId(), Amount.inSEK(a.getBalance()))
                                 .setAccountNumber(a.getAccountNumber())
-                                .setName(a.getName());
+                                .setName(a.getName())
+                                .setBankIdentifier(a.getBankId());
 
                         a.getIdentifiers().forEach(builder::addIdentifier);
 
@@ -70,13 +71,13 @@ public class NextGenerationDemoFetcher implements AccountFetcher<TransactionalAc
 
     @Override
     public Collection<Transaction> getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
-        if (account.getType() == AccountTypes.LOAN || finishedAccountIds.contains(account.getUniqueIdentifier())) {
+        if (account.getType() == AccountTypes.LOAN || finishedAccountNumbers.contains(account.getAccountNumber())) {
             return Collections.emptyList();
         }
 
         try {
             File transactionsFile = new File(userPath + File.separator + account.getBankIdentifier() + ".txt");
-            finishedAccountIds.add(account.getUniqueIdentifier());
+            finishedAccountNumbers.add(account.getAccountNumber());
 
             if (demoCredentials != null && demoCredentials
                     .hasFeature(DemoCredentials.DemoUserFeature.RANDOMIZE_TRANSACTIONS)) {

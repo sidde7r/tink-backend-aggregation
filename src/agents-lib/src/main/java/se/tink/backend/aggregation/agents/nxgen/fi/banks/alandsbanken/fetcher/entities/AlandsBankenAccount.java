@@ -71,6 +71,7 @@ public class AlandsBankenAccount {
                 .setName(accountNickname)
                 .addIdentifier(new IbanIdentifier(bic, accountNumber))
                 .addIdentifier(new FinnishIdentifier(bban))
+                .setBankIdentifier(accountId)
                 .build();
     }
 

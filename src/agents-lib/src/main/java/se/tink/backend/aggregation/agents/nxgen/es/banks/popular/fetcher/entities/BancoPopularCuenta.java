@@ -59,6 +59,7 @@ public class BancoPopularCuenta {
         return CheckingAccount.builder(iban, Amount.inEUR(posicion))
                 .setAccountNumber(formatAccountNumber())
                 .setName(tipoContrato)
+                .setBankIdentifier(iban)
                 .build();
     }
 

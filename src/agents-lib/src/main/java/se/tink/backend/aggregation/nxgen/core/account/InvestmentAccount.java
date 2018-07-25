@@ -22,8 +22,7 @@ public class InvestmentAccount extends Account {
     }
 
     public static Builder<InvestmentAccount, DefaultInvestmentAccountsBuilder> builder(String uniqueIdentifier) {
-        return new DefaultInvestmentAccountsBuilder()
-                .setUniqueIdentifier(uniqueIdentifier);
+        return new DefaultInvestmentAccountsBuilder(uniqueIdentifier);
     }
 
     public static Builder<InvestmentAccount, DefaultInvestmentAccountsBuilder> builder(
@@ -48,6 +47,10 @@ public class InvestmentAccount extends Account {
             extends Account.Builder<InvestmentAccount, Builder<A, T>> {
         private List<Portfolio> portfolios;
 
+        public Builder(String uniqueIdentifier) {
+            super(uniqueIdentifier);
+        }
+
         public List<Portfolio> getPortfolios() {
             return this.portfolios != null ? this.portfolios : Collections.emptyList();
         }
@@ -60,6 +63,11 @@ public class InvestmentAccount extends Account {
 
     private static class DefaultInvestmentAccountsBuilder
             extends InvestmentAccount.Builder<InvestmentAccount, DefaultInvestmentAccountsBuilder> {
+
+        public DefaultInvestmentAccountsBuilder(String uniqueIdentifier) {
+            super(uniqueIdentifier);
+        }
+
         @Override
         protected DefaultInvestmentAccountsBuilder self() {
             return this;

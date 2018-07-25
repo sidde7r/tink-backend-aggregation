@@ -38,15 +38,15 @@ public class TransactionDatePaginationController<A extends Account> implements T
         Collection<? extends Transaction> transactions = paginator.getTransactionsFor(account, fromDate, toDate);
 
         if (transactions == null || transactions.isEmpty()) {
-            log.info(String.format("Couldn't find any transactions for account with bankIdentifier: %s",
-                    account.getBankIdentifier()));
+            log.info(String.format("Couldn't find any transactions for account with accountNumber: %s",
+                    account.getAccountNumber()));
             consecutiveEmptyPages++;
 
             return Collections.emptyList();
         }
 
-        log.info(String.format("Fetched %s transactions for account with bankIdentifier: %s", transactions.size(),
-                account.getBankIdentifier()));
+        log.info(String.format("Fetched %s transactions for account with accountNumber: %s", transactions.size(),
+                account.getAccountNumber()));
 
         consecutiveEmptyPages = 0;
         return transactions;

@@ -72,6 +72,7 @@ public class SdcCreditCardEntity {
     public CreditCardAccount toTinkCard(SdcAccount creditCardAccount) {
         return CreditCardAccount.builder(constructUniqueIdentifier(),
                 creditCardAccount.getAmount().toTinkAmount(), creditCardAccount.getAvailableAmount().toTinkAmount())
+                .setBankIdentifier(constructUniqueIdentifier())
                 .setAccountNumber(creditcardNumber.replaceAll(" ", ""))
                 .setName(creditCardAccount.getName())
                 .build();

@@ -73,6 +73,7 @@ public class MastercardAgreementEntity {
                 constructUniqueIdentifier(), Amount.inDKK(balance), Amount.inDKK(maxBalance))
                 .setAccountNumber(mastercardEntity.getCardNo())
                 .setName(mastercardEntity.getCardName())
+                .setBankIdentifier(constructUniqueIdentifier())
                 .build());
     }
 

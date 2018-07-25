@@ -37,8 +37,8 @@ public class TransactionalAccount extends Account {
     public abstract static class Builder<A extends TransactionalAccount, T extends Builder<A, T>>
             extends Account.Builder<A, T> {
 
-        protected Builder() {
-            super();
+        public Builder(String uniqueIdentifier) {
+            super(uniqueIdentifier);
         }
 
         @Override
