@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.dialog.H
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.saldo.HKSAL;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.statement.HKKAZ;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.statement.MT940Statement;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsAccountTypeConverter;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsParser;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
@@ -26,6 +27,7 @@ import java.util.Objects;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import se.tink.backend.aggregation.rpc.AccountTypes;
 
 public class FinTsApiClient {
     private final TinkHttpClient apiClient;
@@ -50,7 +52,8 @@ public class FinTsApiClient {
         String b64Response =
                 apiClient.request(configuration.getEndpoint()).post(String.class, b64Request);
 
-        String plainResponse = new String(Base64.getDecoder().decode(b64Response.replaceAll("\\R", "")), StandardCharsets.ISO_8859_1);
+        String plainResponse = new String(Base64.getDecoder().decode(b64Response.replaceAll("\\R", "")),
+                StandardCharsets.ISO_8859_1);
         FinTsResponse response = new FinTsResponse(plainResponse);
 
         this.messageNumber++;
@@ -234,7 +237,22 @@ public class FinTsApiClient {
             List<String> elements = FinTsParser.getDataGroupElements(account);
             // Sometimes we got accounts with same accountNo. That's why we need some special handling here.
             SEPAAccount targetAccount = this.sepaAccounts.stream()
-                    .filter(sepaAccount -> Objects.equals(sepaAccount.getAccountNo(), elements.get(3)))
+                    .filter(sepaAccount -> {
+                        switch (hksalVersion) {
+                        case 1:
+                        case 2:
+                        case 3:
+                        case 4:
+                        case 5:
+                        case 6:
+                            return Objects.equals(sepaAccount.getAccountNo(), elements.get(3));
+                        case 7:
+                            return Objects.equals(sepaAccount.getIban(), elements.get(1));
+                        default:
+                            throw new IllegalArgumentException("Invalid hVersion found!");
+                        }
+
+                    })
                     .filter(sepaAccount -> sepaAccount.getBic() == null)
                     .findFirst()
                     .orElseThrow(IllegalStateException::new);
@@ -284,6 +302,8 @@ public class FinTsApiClient {
     public List<MT940Statement> getTransactions(String accountNo, Date start, Date end) {
         SEPAAccount targetAccount = this.sepaAccounts.stream()
                 .filter(sepaAccount -> Objects.equals(sepaAccount.getAccountNo(), accountNo))
+                .filter(sepaAccount -> FinTsAccountTypeConverter.getAccountTypeFor(sepaAccount.getAccountType())
+                        != AccountTypes.OTHER)
                 .findFirst()
                 .orElseThrow(IllegalStateException::new);
         FinTsRequest getTransactionRequest = this.createStatementRequest(targetAccount, start, end, null);
