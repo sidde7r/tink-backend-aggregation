@@ -55,6 +55,7 @@ public class HandelsbankenFILoan {
                 .setName(loanName)
                 .setInterestRate(getInterest())
                 .setDetails(details)
+                .setBankIdentifier(loanNumber)
                 .build();
     }
 

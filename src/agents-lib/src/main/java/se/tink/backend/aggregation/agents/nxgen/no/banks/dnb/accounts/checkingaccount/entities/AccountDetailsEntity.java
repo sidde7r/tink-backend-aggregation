@@ -153,6 +153,7 @@ public class AccountDetailsEntity {
         return TransactionalAccount.builder(getType(), number, Amount.inNOK(availableBalanceNok))
                 .setAccountNumber(number)
                 .setName(getTinkAccountName())
+                .setBankIdentifier(number)
                 .build();
     }
 

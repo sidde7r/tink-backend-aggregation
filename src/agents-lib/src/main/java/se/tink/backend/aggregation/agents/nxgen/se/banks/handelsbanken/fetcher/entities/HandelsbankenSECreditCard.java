@@ -25,6 +25,7 @@ public class HandelsbankenSECreditCard extends HandelsbankenCreditCard {
                 Amount.inSEK(cardTransactions.findSpendable(amountAvailable)))
                 .setAccountNumber(numberMasked)
                 .setName(name)
+                .setBankIdentifier(numberMasked)
                 .build();
     }
 

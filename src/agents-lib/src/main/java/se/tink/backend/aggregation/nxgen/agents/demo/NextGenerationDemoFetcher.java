@@ -57,7 +57,8 @@ public class NextGenerationDemoFetcher implements AccountFetcher<TransactionalAc
                         TransactionalAccount.Builder builder = TransactionalAccount.builder(a.getType(),
                                 a.getBankId(), Amount.inSEK(a.getBalance()))
                                 .setAccountNumber(a.getAccountNumber())
-                                .setName(a.getName());
+                                .setName(a.getName())
+                                .setBankIdentifier(a.getBankId());
 
                         a.getIdentifiers().forEach(builder::addIdentifier);
 

@@ -63,6 +63,7 @@ public class OpBankAccountEntity implements TransactionKeyPaginatorResponse<OpBa
         return TransactionalAccount.builder(getTinkAccountType(), accountNumber, Amount.inEUR(balance))
                 .setAccountNumber(accountNumber)
                 .setName(getAccountName())
+                .setBankIdentifier(accountNumber)
                 .build();
     }
 
