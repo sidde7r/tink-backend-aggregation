@@ -16,8 +16,8 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 @JsonObject
 public class AccountTransactionResponse implements TransactionPagePaginatorResponse{
 
-    List<TransactionEntity> transactions;
-    boolean moreDataAvaliable;
+    private List<TransactionEntity> transactions;
+    private boolean moreDataAvaliable;
 
     // Using this setter to avoid creating several layers of wrapper entities because of JSON tree structure
     @JsonProperty("listaMovimientos")
@@ -28,6 +28,10 @@ public class AccountTransactionResponse implements TransactionPagePaginatorRespo
         moreDataAvaliable = m.get("masDatos").asBoolean();
         transactions = new ObjectMapper().readValue(m.get("movimiento").traverse(),
                 new TypeReference <List<TransactionEntity>>(){});
+    }
+
+    public List<TransactionEntity> getTransactions() {
+        return transactions;
     }
 
     @Override
