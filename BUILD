@@ -795,15 +795,15 @@ java_library(
          "//data",
      ],
      deps = [
+
          ":common-lib",
          ":provider-configuration-api",
          ":provider-configuration-lib",
-
-          "//src/libraries/auth:auth",
-          "//src/libraries/discovery:discovery",
-          "//src/libraries/dropwizard_utils:dropwizard-utils",
-          "//src/libraries/metrics:metrics",
-          "//src/libraries/cluster:cluster",
+         "//src/libraries/auth:auth",
+         "//src/libraries/discovery:discovery",
+         "//src/libraries/dropwizard_utils:dropwizard-utils",
+         "//src/libraries/metrics:metrics",
+         "//src/libraries/cluster:cluster",
 
          "//third_party:com_google_guava_guava",
          "//third_party:com_google_inject_guice",
@@ -825,15 +825,15 @@ java_binary(
         "//third_party:mysql_mysql_connector_java",
     ],
     deps = [
-        ":common-lib",
-        ":provider-configuration-lib",
-        ":provider-configuration-api",
+         ":common-lib",
+         ":provider-configuration-lib",
+         ":provider-configuration-api",
 
-        "//src/libraries/auth:auth",
-        "//src/libraries/discovery:discovery",
-        "//src/libraries/dropwizard_utils:dropwizard-utils",
-        "//src/libraries/metrics:metrics",
-        "//src/libraries/cluster:cluster",
+         "//src/libraries/auth:auth",
+         "//src/libraries/discovery:discovery",
+         "//src/libraries/dropwizard_utils:dropwizard-utils",
+         "//src/libraries/metrics:metrics",
+         "//src/libraries/cluster:cluster",
 
          "//third_party:com_google_guava_guava",
          "//third_party:com_google_inject_guice",
