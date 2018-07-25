@@ -90,7 +90,7 @@ public abstract class Account {
     }
 
     public boolean isUniqueIdentifierEqual(String otherUniqueIdentifier) {
-        if (!Strings.isNullOrEmpty(otherUniqueIdentifier)) {
+        if (Strings.isNullOrEmpty(otherUniqueIdentifier)) {
             return false;
         }
 
