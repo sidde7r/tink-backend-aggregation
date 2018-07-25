@@ -39,6 +39,8 @@ endpoints:
     url: http://localhost:9090/
   fasttext:
     url: http://localhost:9090/
+  providerConfiguration:
+    url: http://localhost:9047/
 
 cluster: TINK
 
