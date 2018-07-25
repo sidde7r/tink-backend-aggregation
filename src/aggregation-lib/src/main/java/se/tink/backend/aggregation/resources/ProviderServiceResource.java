@@ -11,7 +11,6 @@ import javax.ws.rs.core.Response;
 import se.tink.backend.aggregation.api.ProviderService;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.controllers.ProviderServiceController;
-import se.tink.backend.aggregation.cluster.annotation.ClusterContext;
 import se.tink.backend.core.ProviderConfiguration;
 
 public class ProviderServiceResource implements ProviderService {
