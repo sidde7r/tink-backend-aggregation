@@ -55,6 +55,7 @@ public class HandelsbankenFILoanFetcherTest extends HandelsbankenFIAuthenticated
     }
 
     private void assertAccountAndLoanMatch(LoanAccount account, Loan loan) {
+        assertTrue("Account uniqueId and loan number must match", account.isUniqueIdentifierEqual(loan.getLoanNumber()));
         assertEquals("Account and loan must match on balance", account.getBalance().getValue(), loan.getBalance(), 0.000001);
         assertEquals("Account and loan must match on name", account.getName(), loan.getName());
     }
