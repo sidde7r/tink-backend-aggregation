@@ -16,13 +16,18 @@ server:
     - type: http
       port: 8047
 
+cluster: TINK
+
+coordination:
+  hosts: 192.168.99.100:31003
+
 database:
   driverClass: com.mysql.jdbc.Driver
   username: tink
   password: tink
   url: jdbc:mysql://172.16.42.2/tink?useLocalSessionState=true&rewriteBatchedStatements=true&useSSL=true&verifyServerCertificate=false
   showSql: false
-  persistenceUnitName: tink-aggregation-api
+  persistenceUnitName: tink-provider-api
   generateDdl: true
 
 serviceAuthentication:
