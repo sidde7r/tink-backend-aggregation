@@ -252,10 +252,14 @@ public class BelfiusConstants {
         public static final String SCREEN_UPDATE = "ScreenUpdate";
         public static final String EXECUTE_METHOD_RESPONSE = "ExecuteMethodResponse";
         public static final String MESSAGE_RESPONSE = "MessageResponse";
+        public static final String TECHNICAL_RESPONSE = "TechnicalResponse";
         public static final String RESPONSE_CHALLENGE = "lb_Challenge";
         public static final String REUSE_SIGNATURE = "reuse_signature@rep_scenarios";
         public static final String CARD_READER_ALLOWED = "mlb_CardReaderAllowed";
         public static final String BENEFICIARY_WIDGET = "Container@reuse_BeneficiaryManagement@rep_BenefiariesContacts";
+
+        // TechnicalResponse
+        public static final String TYPE_HEARTBEAT = "heartbeat";
 
         public static class Attribute {
             public static final String OPEN_SESSION = "OpenSession";
@@ -286,6 +290,9 @@ public class BelfiusConstants {
     }
 
     public static class ErrorCodes {
+        public static final String FATAL_MESSAGE_TYPE = "fatal";
+        public static final String SESSION_EXPIRED = "SESSION DOESN'T EXIST";
+        public static final String UNKNOWN_SESSION = "UNKNOWN SESSION";
         public static final String ERROR_MESSAGE_TYPE = "error";
         public static final String WRONG_CREDENTIALS_CODE = "GE9KT60O/90AC/1307";
         public static final String ERROR_SIGN_CODE = "90AC/1300";
