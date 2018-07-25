@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.stateme
 
 import java.util.Arrays;
 import java.util.Date;
+import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsParser;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -28,19 +29,16 @@ public class MT940Statement {
     }
 
     private double getAmount() {
-
-
-
         return FinTsParser.getMT940Amount(tag_61);
     }
 
     private String getDescription() {
         String[] elements = tag_86.split("\\?");
         // TODO heuristic search for the description until got more samples to look at
-        return Arrays.stream(elements).filter(s -> s.startsWith("32")).findFirst().orElse(
-                Arrays.stream(elements).filter(s -> s.startsWith("21")).findFirst().orElse(
-                Arrays.stream(elements).filter(s -> s.startsWith("20")).findFirst().orElse(
-                        Arrays.stream(elements).filter(s -> s.startsWith("00")).findFirst().orElse("")
+        return Arrays.stream(elements).filter(s -> hasField(s, "32")).findFirst().orElse(
+                Arrays.stream(elements).filter(s -> hasField(s, "21")).findFirst().orElse(
+                Arrays.stream(elements).filter(s -> hasField(s, "20")).findFirst().orElse(
+                        Arrays.stream(elements).filter(s -> hasField(s, "00")).findFirst().orElse("")
                 ))).substring(2);
     }
 
@@ -53,5 +51,8 @@ public class MT940Statement {
                 .build();
     }
 
+    private boolean hasField(String str, String tag) {
+        return str.startsWith(tag) && !Strings.isNullOrEmpty(str.substring(2).trim());
+    }
 
 }
