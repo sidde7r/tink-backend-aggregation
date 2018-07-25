@@ -33,7 +33,7 @@ public class EndpointsConfiguration extends Configuration {
     @JsonProperty
     private EndpointConfiguration executor;
     @JsonProperty
-    private EndpointConfiguration providerConfiguration;
+    private EndpointConfiguration providerConfiguration = new EndpointConfiguration();
 
     public EndpointConfiguration getAggregation() {
         return aggregation;
