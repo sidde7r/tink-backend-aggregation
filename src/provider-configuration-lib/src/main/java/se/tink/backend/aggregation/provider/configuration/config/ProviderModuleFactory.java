@@ -12,9 +12,9 @@ public class ProviderModuleFactory {
     public static ImmutableList<Module> build(ServiceConfiguration configuration,
                                               JerseyEnvironment jersey) {
         return ImmutableList.of(
-                new CommonModule(),
                 new CoordinationModule(),
                 new ConfigurationModule(configuration),
-                new ProviderServiceModule(jersey));
+                new ProviderServiceModule(jersey),
+                new ProviderRepositoryModule(configuration.getDatabase()));
     }
 }
