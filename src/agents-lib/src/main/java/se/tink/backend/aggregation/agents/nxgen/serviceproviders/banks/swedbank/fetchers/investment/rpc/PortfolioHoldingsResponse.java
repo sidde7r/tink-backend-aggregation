@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.investment.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.ImmutableList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.AbstractAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.AmountEntity;
@@ -53,14 +55,22 @@ public class PortfolioHoldingsResponse {
                 (investmentSavings != null && !investmentSavings.isEmpty());
     }
     @JsonIgnore
-    // extract all account numbers for the savings accounts
-    // let savings account be fetch by transactional account fetcher
-    public List<String> getSavingsAccountNumbers() {
-        if (savingsAccounts == null) {
+    // extract all account numbers for the investment accounts,
+    // i.e. not savings accounts.
+    // These accounts will be fetched by the investment fetcher,
+    // all other can be handled by transactional account fetcher
+    public List<String> investmentAccountNumbers() {
+        if (!hasInvestments()) {
             return Collections.emptyList();
         }
 
-        return savingsAccounts.stream()
+        return ImmutableList.of(Optional.ofNullable(fundAccounts),
+            Optional.ofNullable(endowmentInsurances),
+            Optional.ofNullable(equityTraders),
+            Optional.ofNullable(investmentSavings)).stream()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .flatMap(accounts -> accounts.stream())
                 .map(AbstractAccountEntity::getFullyFormattedNumber)
                 .collect(Collectors.toList());
     }
