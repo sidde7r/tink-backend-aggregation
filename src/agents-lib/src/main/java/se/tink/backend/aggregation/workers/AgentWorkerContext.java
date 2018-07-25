@@ -617,7 +617,9 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             updateAccountTimerContext.stop();
         }
 
-        return updatedAccountsByTinkId.put(updatedAccount.getId(), updatedAccount);
+        updatedAccountsByTinkId.put(updatedAccount.getId(), updatedAccount);
+
+        return updatedAccount;
     }
 
     @Override
