@@ -80,7 +80,6 @@ public abstract class NextGenerationAgent extends AbstractAgent implements Refre
         this.metricRefreshController = new MetricRefreshController(context.getMetricRegistry(), request.getProvider(), credentials,
                 request.isManual(), request.getType());
 
-        client.setUserAgent(DEFAULT_USER_AGENT);
         configureHttpClient(client);
     }
 

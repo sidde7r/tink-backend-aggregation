@@ -42,6 +42,7 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.params.CoreConnectionPNames;
+import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
 import se.tink.backend.aggregation.cluster.identification.Aggregator;
@@ -88,7 +89,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     private final PersistentHeaderFilter persistentHeaderFilter = new PersistentHeaderFilter();
 
     private class DEFAULTS {
-        private final static String DEFAULT_USER_AGENT = "Tink (+https://www.tink.se/; noc@tink.se)";
+        private final static String DEFAULT_USER_AGENT = AbstractAgent.DEFAULT_USER_AGENT;
         private final static int TIMEOUT_MS = 30000;
         private final static int MAX_REDIRECTS = 10;
         private final static boolean CHUNKED_ENCODING = false;
@@ -175,13 +176,13 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
         this.aggregator = Objects.isNull(context) ? Aggregator.getDefault(): context.getAggregator();
 
-        setUserAgent(DEFAULTS.DEFAULT_USER_AGENT);
         setTimeout(DEFAULTS.TIMEOUT_MS);
         setChunkedEncoding(DEFAULTS.CHUNKED_ENCODING);
         setMaxRedirects(DEFAULTS.MAX_REDIRECTS);
         setFollowRedirects(DEFAULTS.FOLLOW_REDIRECTS);
         setDebugOutput(DEFAULTS.DEBUG_OUTPUT);
         addPersistentHeader("X-Aggregator", getHeaderAggregatorIdentifier());
+        setUserAgent(DEFAULTS.DEFAULT_USER_AGENT);
     }
 
     private void constructInternalClient() {
