@@ -814,6 +814,7 @@ java_binary(
     srcs = glob(["src/provider-configuration-service/src/main/**/*.java"]),
     data = [
         "etc/development-provider-configuration-server.yml",
+        "etc/development-minikube-provider-configuration-server.yml",
         "//data",
     ],
     main_class = "se.tink.backend.aggregation.provider.ProviderConfigurationServiceContainer",
