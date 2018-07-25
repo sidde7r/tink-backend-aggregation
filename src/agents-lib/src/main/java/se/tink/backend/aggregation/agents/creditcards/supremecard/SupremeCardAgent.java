@@ -54,7 +54,7 @@ public class SupremeCardAgent extends AbstractAgent implements DeprecatedRefresh
     private boolean hasRefreshed = false;
 
     protected Builder createClientRequest(String uri) {
-        return client.resource(uri).header("User-Agent", getAggregator().getAggregatorIdentifier()).accept("*/*").acceptLanguage("sv-se");
+        return client.resource(uri).header("User-Agent", DEFAULT_USER_AGENT).accept("*/*").acceptLanguage("sv-se");
     }
 
     private Client client;

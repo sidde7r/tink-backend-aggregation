@@ -1367,7 +1367,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
     }
 
     private Builder resource(String url) {
-        return client.resource(BASE_URL + url).header("User-Agent", getAggregator().getAggregatorIdentifier());
+        return client.resource(BASE_URL + url).header("User-Agent", DEFAULT_USER_AGENT);
     }
 
     @Override

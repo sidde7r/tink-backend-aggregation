@@ -37,7 +37,7 @@ public class LysaAgent extends AbstractAgent implements RefreshableItemExecutor 
         ApacheHttpClient4Config clientConfig = new DefaultApacheHttpClient4Config();
         clientConfig.getProperties().put(ApacheHttpClient4Config.PROPERTY_ENABLE_BUFFERING, true);
 
-        client = new LysaClient(clientFactory.createCustomClient(context.getLogOutputStream(), clientConfig), getAggregator().getAggregatorIdentifier());
+        client = new LysaClient(clientFactory.createCustomClient(context.getLogOutputStream(), clientConfig), DEFAULT_USER_AGENT);
     }
 
     @Override

@@ -5,7 +5,6 @@ import com.sun.jersey.api.client.WebResource;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.requests.RegisterCardRequest;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.bankIdReference.BankIdReference;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.bankIdSession.BankIdSession;
@@ -40,15 +39,15 @@ public class IkanoApiClient {
     private CardEntities cardsAndTransactionsResponse = null;
     private static final int DEFAULT_LIMIT = 200;
     private int limit = DEFAULT_LIMIT;
-    private final String aggregator;
+    private final String userAgent;
 
-    public IkanoApiClient(Client client, Credentials credentials, String payload, String aggregator) throws NoSuchAlgorithmException {
+    public IkanoApiClient(Client client, Credentials credentials, String payload, String userAgent) throws NoSuchAlgorithmException {
         this.client = client;
         this.credentials = credentials;
         cardType = CardType.valueOf(payload);
         deviceId = IkanoCrypt.findOrGenerateDeviceIdFor(credentials);
         deviceAuth = IkanoCrypt.generateDeviceAuth(deviceId);
-        this.aggregator = aggregator;
+        this.userAgent = userAgent;
     }
 
     public String authenticateWithBankId() throws Exception {
@@ -154,7 +153,7 @@ public class IkanoApiClient {
     }
 
     private WebResource.Builder createClientRequest(String uri) {
-        return client.resource(ROOT_URL + uri).header("User-Agent", aggregator)
+        return client.resource(ROOT_URL + uri).header("User-Agent", userAgent)
                 .header("DeviceId", deviceId)
                 .header("DeviceAuth", deviceAuth)
                 .type(MediaType.APPLICATION_JSON)

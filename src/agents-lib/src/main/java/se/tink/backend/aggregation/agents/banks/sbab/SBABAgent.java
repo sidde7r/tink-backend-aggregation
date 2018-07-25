@@ -94,15 +94,15 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
 
         if (payload != null && Objects.equal(payload.get("isSwitchMortgageProviderTest"), "true")) {
             clientWithoutSSL = clientFactory.createCookieClientWithoutSSL();
-            bankIdSignClient = new BankIdSignClient(clientWithoutSSL, credentials, getAggregator());
+            bankIdSignClient = new BankIdSignClient(clientWithoutSSL, credentials, DEFAULT_USER_AGENT);
         } else {
             clientWithoutSSL = null;
-            bankIdSignClient = new BankIdSignClient(client, credentials, getAggregator());
+            bankIdSignClient = new BankIdSignClient(client, credentials, DEFAULT_USER_AGENT);
         }
 
-        authenticationClient = new AuthenticationClient(client, credentials, getAggregator());
-        userDataClient = new UserDataClient(client, credentials, getAggregator());
-        transferClient = new TransferClient(client, credentials, catalog, getAggregator());
+        authenticationClient = new AuthenticationClient(client, credentials, DEFAULT_USER_AGENT);
+        userDataClient = new UserDataClient(client, credentials, DEFAULT_USER_AGENT);
+        transferClient = new TransferClient(client, credentials, catalog, DEFAULT_USER_AGENT);
     }
 
     @Override

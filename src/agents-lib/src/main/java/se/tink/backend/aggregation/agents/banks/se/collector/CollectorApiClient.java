@@ -66,13 +66,13 @@ class CollectorApiClient {
     private final Client client;
     private String subscriptionKey;
     private String accessToken;
-    private final String aggregator;
+    private final String userAgent;
 
     private AccountEntities accounts = new AccountEntities();
 
-    CollectorApiClient(Client client, String aggregator) {
+    CollectorApiClient(Client client, String userAgent) {
         this.client = client;
-        this.aggregator = aggregator;
+        this.userAgent = userAgent;
     }
 
     void setSubscriptionKey(String subscriptionKey) {
@@ -212,7 +212,7 @@ class CollectorApiClient {
                 .type(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .header("Ocp-Apim-Subscription-Key", subscriptionKey)
-                .header("User-Agent", aggregator);
+                .header("User-Agent", userAgent);
 
         if (!Strings.isNullOrEmpty(accessToken)) {
             builder.header("Authorization", String.format("Bearer %s", accessToken));

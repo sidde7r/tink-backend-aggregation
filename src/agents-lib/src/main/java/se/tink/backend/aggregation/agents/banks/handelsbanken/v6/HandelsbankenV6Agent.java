@@ -276,7 +276,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
         client.setFollowRedirects(true);
 //        client.addFilter(new LoggingFilter(new PrintStream(System.out, true)));
 
-        apiClient = new HandelsbankenAPIAgent(client, getAggregator().getAggregatorIdentifier());
+        apiClient = new HandelsbankenAPIAgent(client, DEFAULT_USER_AGENT);
     }
 
     /**

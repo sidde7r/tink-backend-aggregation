@@ -56,7 +56,7 @@ public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExe
                 clientFactory.createCookieClient(context.getLogOutputStream()),
                 credentials,
                 log,
-                getAggregator());
+                DEFAULT_USER_AGENT);
     }
 
     /**
