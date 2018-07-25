@@ -9057,7 +9057,7 @@
       "payload": "76030080 https://brokerage-hbci.consorsbank.de/hbci",
       "fields": [
         {
-          "description": "Username",
+          "description": "Username (suffixed with auth number, default is 001)",
           "name": "username",
           "hint": "Account number suffixed with three digit auth number, default 001",
           "immutable": true
@@ -9085,7 +9085,7 @@
       "payload": "70120400 https://brokerage-hbci.consorsbank.de/hbci",
       "fields": [
         {
-          "description": "Username",
+          "description": "Username (suffixed with auth number, default is 001)",
           "name": "username",
           "hint": "Account number suffixed with three digit auth number, default 001",
           "immutable": true
