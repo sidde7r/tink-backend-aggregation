@@ -46,7 +46,11 @@ public class ClusterIdProvider extends AbstractHttpContextInjectable<ClusterInfo
         Preconditions.checkNotNull(configuration.getHost());
         Preconditions.checkNotNull(configuration.getApiToken());
         Preconditions.checkNotNull(configuration.getClientCertificate());
+        /*
+        Uncomment this as soon as the databases are updated with the new aggregator identifier
+
         Preconditions.checkNotNull(configuration.getAggregatorIdentifier());
+        */
     }
 
     private ClusterHostConfiguration getValidClusterHost(HttpRequestContext request) {
@@ -71,9 +75,14 @@ public class ClusterIdProvider extends AbstractHttpContextInjectable<ClusterInfo
             return Aggregator.of(customAggregator);
         }
 
+
+        /*
+        Uncomment this as soon as the databases are updated with the new aggregator identifier
+
         if (!Strings.isNullOrEmpty(configuration.getAggregatorIdentifier())) {
             return Aggregator.of(configuration.getAggregatorIdentifier());
         }
+        */
 
         return Aggregator.of(Aggregator.DEFAULT);
     }
