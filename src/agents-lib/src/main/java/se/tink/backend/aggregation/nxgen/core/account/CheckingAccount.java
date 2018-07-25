@@ -10,8 +10,7 @@ public class CheckingAccount extends TransactionalAccount {
     }
 
     public static Builder<?, ?> builder(String uniqueIdentifier) {
-        return new DefaultCheckingAccountBuilder()
-                .setUniqueIdentifier(uniqueIdentifier);
+        return new DefaultCheckingAccountBuilder(uniqueIdentifier);
     }
 
     public static Builder<?, ?> builder(String uniqueIdentifier, Amount balance) {
@@ -26,10 +25,18 @@ public class CheckingAccount extends TransactionalAccount {
 
     public abstract static class Builder<A extends CheckingAccount, T extends CheckingAccount.Builder<A, T>>
             extends TransactionalAccount.Builder<CheckingAccount, Builder<A, T>> {
+
+        public Builder(String uniqueIdentifier) {
+            super(uniqueIdentifier);
+        }
     }
 
     public static class DefaultCheckingAccountBuilder
             extends CheckingAccount.Builder<CheckingAccount, DefaultCheckingAccountBuilder> {
+
+        public DefaultCheckingAccountBuilder(String uniqueIdentifier) {
+            super(uniqueIdentifier);
+        }
 
         @Override
         protected Builder self() {

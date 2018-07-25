@@ -155,8 +155,12 @@ public abstract class Account {
         protected HolderName holderName;
         private T thisObj;
 
-        protected Builder() {
+        protected Builder(String uniqueIdentifier) {
             this.thisObj = self();
+
+            Preconditions.checkArgument(!Strings.isNullOrEmpty(uniqueIdentifier),
+                    "Unique identifier is null or empty.");
+            this.thisObj.uniqueIdentifier = uniqueIdentifier;
         }
 
         protected abstract T self();

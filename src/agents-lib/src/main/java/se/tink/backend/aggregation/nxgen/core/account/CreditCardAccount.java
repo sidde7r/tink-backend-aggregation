@@ -12,8 +12,7 @@ public class CreditCardAccount extends Account {
     }
 
     public static Builder<?, ?> builder(String uniqueIdentifier) {
-        return new DefaultCreditCardBuilder()
-                .setUniqueIdentifier(uniqueIdentifier);
+        return new DefaultCreditCardBuilder(uniqueIdentifier);
     }
 
     public static Builder<?, ?> builder(String uniqueIdentifier, Amount balance, Amount availableCredit) {
@@ -46,6 +45,10 @@ public class CreditCardAccount extends Account {
 
         private Amount availableCredit;
 
+        public Builder(String uniqueIdentifier) {
+            super(uniqueIdentifier);
+        }
+
         public Amount getAvailableCredit() {
             return Amount.createFromAmount(this.availableCredit).orElseThrow(NullPointerException::new);
         }
@@ -58,6 +61,10 @@ public class CreditCardAccount extends Account {
 
     private static class DefaultCreditCardBuilder
             extends CreditCardAccount.Builder<CreditCardAccount, DefaultCreditCardBuilder> {
+
+        public DefaultCreditCardBuilder(String uniqueIdentifier) {
+            super(uniqueIdentifier);
+        }
 
         @Override
         protected DefaultCreditCardBuilder self() {
