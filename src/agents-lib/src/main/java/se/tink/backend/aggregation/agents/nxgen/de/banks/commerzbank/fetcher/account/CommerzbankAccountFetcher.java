@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.ResultEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.account.entities.ProductsEntity;
@@ -26,14 +27,14 @@ public class CommerzbankAccountFetcher implements AccountFetcher<TransactionalAc
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
 
-        Collection<TransactionalAccount> accounts = new ArrayList<>();
         ResultEntity resultEntity = apiClient.financialOverview();
 
-        Optional<ProductsEntity> productsEntity;
-        productsEntity = Optional.ofNullable(resultEntity.getItems().get(0).getProducts().get(0));
-
-        Preconditions.checkState(productsEntity != null, Collections.EMPTY_LIST);
-        accounts.add(productsEntity.get().toTransactionalAccount());
-        return accounts;
+        Preconditions.checkState(resultEntity != null, Collections.EMPTY_LIST);
+        return resultEntity.getItems().get(0).getProducts().stream()
+                .filter(productsEntity -> productsEntity
+                        .getProductType()
+                        .getDisplayCategoryIndex() == 1)
+                .map(ProductsEntity::toTransactionalAccount)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }

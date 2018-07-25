@@ -7,6 +7,7 @@ public class CommerzbankConstants {
         public static final String LOGIN = "/app/lp/v4/applogin";
         public static final String OVERVIEW = "/app/rest/v3/financeoverview";
         public static final String TRANSACTIONS = "/app/rest/transactionoverview";
+        public static final String LOGOUT = "/app/lp/v3/logout";
 
     }
 
@@ -29,6 +30,7 @@ public class CommerzbankConstants {
         public static final String CURRENCY_VALUE = "EUR";
         public static final String PRODUCT_BRANCH = "100";
         public static final String AMOUNT_TYPE = "ALL";
+        public static final String LOGOUT_OK = "logoutText.ok";
     }
 
     public static class ERRORS {
