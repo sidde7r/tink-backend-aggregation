@@ -50,6 +50,7 @@ public class AccountEntity {
     @JsonIgnore
     private AccountTypes getTinkAccountType() {
         switch (description.toUpperCase()) {
+        case SabadellConstants.AccountTypes.SALARY_ACCOUNT:
         case SabadellConstants.AccountTypes.CUENTA_RELACION:
             return AccountTypes.CHECKING;
         default:
