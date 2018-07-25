@@ -37,6 +37,10 @@ public abstract class Account {
         this.bankIdentifier = builder.getBankIdentifier();
         this.holderName = builder.getHolderName();
         this.temporaryStorage = ImmutableMap.copyOf(builder.getTemporaryStorage());
+
+        // Safe-guard against uniqueIdentifiers containing only formatting characters (e.g. '*' or '-').
+        Preconditions.checkState(!Strings.isNullOrEmpty(uniqueIdentifier),
+                "Unique identifier was empty after sanitation.");
     }
 
     public static Builder<? extends Account, ?> builder(AccountTypes type, String uniqueIdentifier) {
