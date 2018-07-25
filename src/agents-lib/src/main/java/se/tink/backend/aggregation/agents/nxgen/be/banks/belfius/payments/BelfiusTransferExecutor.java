@@ -166,7 +166,10 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
     public void addBeneficiary(Transfer transfer, boolean isStructuredMessage) throws TransferExecutionException {
         String response = "";
         try {
-            String name = addBeneficiaryName();
+            String name = transfer.getDestination().getName().orElse(null);
+            if (name == null) {
+                name = addBeneficiaryName();
+            }
             SignProtocolResponse signProtocolResponse = apiClient.addBeneficiary(transfer, isStructuredMessage, name);
             response = waitForSignCode(signProtocolResponse.getChallenge(), signProtocolResponse.getSignType());
         } catch (SupplementalInfoException e) {
