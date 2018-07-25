@@ -30,6 +30,6 @@ public class HandelsbankenFIAccount extends HandelsbankenAccount {
 
     @Override
     public boolean is(Account account) {
-        return unformattedNumber != null && unformattedNumber.equals(account.getUniqueIdentifier());
+        return account.isUniqueIdentifierEqual(unformattedNumber);
     }
 }

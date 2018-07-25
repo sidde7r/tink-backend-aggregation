@@ -37,7 +37,6 @@ public class HandelsbankenFILoanFetcherTest extends HandelsbankenFIAuthenticated
     }
 
     private void assertAccountAttributes(LoanAccount account) {
-        assertThat("Account must have bank id", account.getUniqueIdentifier(), notNullValue());
         assertThat("Account must have account number", account.getAccountNumber(), notNullValue());
         assertThat("Account must have name", account.getName(), notNullValue());
         assertThat("Account must have loan type", account.getType(), is(AccountTypes.LOAN));
@@ -56,7 +55,6 @@ public class HandelsbankenFILoanFetcherTest extends HandelsbankenFIAuthenticated
     }
 
     private void assertAccountAndLoanMatch(LoanAccount account, Loan loan) {
-        assertEquals("Account and loan must match on number", account.getUniqueIdentifier(), loan.getLoanNumber());
         assertEquals("Account and loan must match on balance", account.getBalance().getValue(), loan.getBalance(), 0.000001);
         assertEquals("Account and loan must match on name", account.getName(), loan.getName());
     }

@@ -82,7 +82,7 @@ public class TransactionPaginationHelper {
         }
 
         return request.getAccounts().stream()
-                .filter(a -> a.getBankId().equals(account.getUniqueIdentifier()) && a.getCertainDate() != null)
+                .filter(a -> account.isUniqueIdentifierEqual(a.getBankId()) && a.getCertainDate() != null)
                 .map(se.tink.backend.aggregation.rpc.Account::getCertainDate)
                 .findFirst();
     }

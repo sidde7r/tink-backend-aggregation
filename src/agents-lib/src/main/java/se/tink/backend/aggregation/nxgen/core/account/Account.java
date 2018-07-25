@@ -81,8 +81,16 @@ public abstract class Account {
         return Lists.newArrayList(this.identifiers);
     }
 
-    public String getUniqueIdentifier() {
+    private String getUniqueIdentifier() {
         return this.uniqueIdentifier;
+    }
+
+    public boolean isUniqueIdentifierEqual(String otherUniqueIdentifier) {
+        if (!Strings.isNullOrEmpty(otherUniqueIdentifier)) {
+            return false;
+        }
+
+        return this.uniqueIdentifier.equals(sanitizeUniqueIdentifier(otherUniqueIdentifier));
     }
 
     public String getBankIdentifier() {

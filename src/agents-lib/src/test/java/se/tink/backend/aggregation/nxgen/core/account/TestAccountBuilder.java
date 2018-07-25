@@ -41,11 +41,6 @@ public class TestAccountBuilder<T extends Account> {
         return this;
     }
 
-    public TestAccountBuilder setUniqueIdentifier(String uniqueIdentifier) {
-        Mockito.when(account.getUniqueIdentifier()).thenReturn(uniqueIdentifier);
-        return this;
-    }
-
     public TestAccountBuilder setBankIdentifier(String bankIdentifier) {
         Mockito.when(account.getBankIdentifier()).thenReturn(bankIdentifier);
         return this;

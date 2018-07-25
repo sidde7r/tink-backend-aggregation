@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.fetcher;
 
 import com.google.common.collect.ImmutableSet;
-
-import static org.hamcrest.CoreMatchers.hasItems;
-import static org.hamcrest.core.IsCollectionContaining.hasItem;
-
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -27,11 +27,8 @@ import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.core.Amount;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.core.IsCollectionContaining.hasItem;
 
 public class BawagPskTransactionalAccountFetcherTest {
     private BawagPskPasswordAuthenticator authenticator;
@@ -71,11 +68,6 @@ public class BawagPskTransactionalAccountFetcherTest {
         Assert.assertThat(
                 accounts.stream().map(TransactionalAccount::getType).collect(Collectors.toSet()),
                 hasItems(AccountTypes.CHECKING)
-        );
-
-        // Unique identifier
-        Assert.assertThat(accounts.stream().map(Account::getUniqueIdentifier).collect(Collectors.toSet()),
-                hasItems(TestConfig.Account1.NUMBER, TestConfig.Account2.NUMBER)
         );
 
         // Holder name
