@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.regex.Pattern;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.codec.binary.Hex;
@@ -26,6 +27,7 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 public class BbvaApiClient {
 
     private static final int RANDOM_HEX_LENGTH = 64;
+    private static final Pattern NON_NATIONAL_USERNAME_PATTERN = Pattern.compile("(?i)^X.+F$");
 
     private TinkHttpClient client;
     private String userAgent;
@@ -38,8 +40,20 @@ public class BbvaApiClient {
                 generateRandomHex());
     }
 
+    // Users who are not ES nationals will have usernames in the format "^X.+F$" (regex).
+    // ES nationals' usernames must be prepended with '0' (based on ambassador credentials) while non-national
+    // usernames are passed along as-is.
+    private static String formatUsername(String username) {
+        if (NON_NATIONAL_USERNAME_PATTERN.matcher(username).matches()) {
+            return username;
+        }
+
+        // ES national username must be prepended with '0'.
+        return String.format("0%s", username);
+    }
+
     public HttpResponse login(String username, String password) {
-        String loginBody = UrlEncodedFormBody.createLoginRequest(username, password);
+        String loginBody = UrlEncodedFormBody.createLoginRequest(formatUsername(username), password);
 
         return client.request(BbvaConstants.Url.LOGIN)
                 .type(BbvaConstants.Header.CONTENT_TYPE_URLENCODED_UTF8)
