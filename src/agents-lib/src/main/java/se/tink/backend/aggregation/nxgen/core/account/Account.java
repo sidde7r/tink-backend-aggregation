@@ -214,7 +214,7 @@ public abstract class Account {
             String bankIdentifier = getTemporaryStorage().get(BANK_IDENTIFIER_KEY);
             return java.util.Objects.nonNull(bankIdentifier)
                     ? SerializationUtils.deserializeFromString(bankIdentifier, String.class)
-                    : getUniqueIdentifier();
+                    : null;
         }
 
         public T setBankIdentifier(String bankIdentifier) {
