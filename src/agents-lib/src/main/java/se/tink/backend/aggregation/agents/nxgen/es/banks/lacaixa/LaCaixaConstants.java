@@ -16,7 +16,7 @@ public class LaCaixaConstants {
         public static final String CREDIT_CARDS_PATH = "tarjetas/listadoTarjetasGenerica";
     }
 
-    public static class Urls{
+    public static class Urls {
         private static final String BASE = "https://loapp.caixabank.es/xmlapps/rest/";
 
         public static final URL INIT_LOGIN = new URL(BASE + ApiService.LOGIN_INIT_PATH); // Gets session id. Needed before login.
@@ -29,12 +29,11 @@ public class LaCaixaConstants {
         public static final URL FETCH_CREDIT_CARDS = new URL(BASE + ApiService.CREDIT_CARDS_PATH);
     }
 
-    public static class DefaultRequestParams{
+    public static class DefaultRequestParams {
         public static final String LANGUAGE_EN = "en"; // English TODO: Language constants already exists somewhere?
         public static final String ORIGIN = "4024"; // Can seemingly be anything as long as it exists, purpose unknown.
         public static final String CHANNEL = "O"; // Only some valid values (1, 2, O, ...), purpose unknown.
         public static final String INSTALLATION_ID = "CIAPPLPh7,2CakrHGsSyjX1nakKcEk6dOc3gHc="; // App install ID?
-
 
         public static final int NUM_CARDS = 0;
         public static final String OPTION_FILTER = "02";
@@ -43,26 +42,24 @@ public class LaCaixaConstants {
         public static final String LIQUIDATION_FILTER = "S";
     }
 
-    public static class QueryParams{
+    public static class QueryParams {
         public static final String FROM_BEGIN = "inicio";
         public static final String ACCOUNT_REFERENCE = "numeroCuenta";
-
     }
 
-    public static class TemporaryStorage{
+    public static class TemporaryStorage {
         public static final String ACCOUNT_REFERENCE = "accountRef";
     }
 
-    public static class StatusCodes{
-
+    public static class StatusCodes {
         public static final int INCORRECT_USERNAME_PASSWORD = 409; // Conflict
     }
 
-    public static class UserData{
+    public static class UserData {
         public static final String FULL_HOLDER_NAME = "linkNombreEmp";
     }
 
-    public static class LogTags{
+    public static class LogTags {
         public static final LogTag CREDIT_CARDS = LogTag.from("es_lacaixa_creditcards");
     }
 }
