@@ -355,7 +355,7 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
     }
 
     private void updateAccounts() {
-        context.updateAccounts(toTinkAccounts(getAccounts()));
+        context.cacheAccounts(toTinkAccounts(getAccounts()));
     }
 
     private List<Account> toTinkAccounts(List<AccountEntity> sbabAccounts) {
@@ -380,7 +380,7 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
 
         for (Account account : loanAccountMapping.keySet()) {
             Loan loan = loanAccountMapping.get(account);
-            context.updateAccount(account, AccountFeatures.createForLoan(loan));
+            context.cacheAccount(account, AccountFeatures.createForLoan(loan));
 
             if (updateAmortizationDocument) {
                 context.updateDocument(getAmortizationDocumentation(loan.getLoanNumber()));
@@ -424,7 +424,7 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
         Map<Account, List<TransferDestinationPattern>> transferPatterns = new TransferDestinationPatternBuilder()
                 .setSourceAccounts(accountEntities)
                 .setDestinationAccounts(recipientEntities)
-                .setTinkAccounts(context.getAccounts())
+                .setTinkAccounts(context.getUpdatedAccounts())
                 .addMultiMatchPattern(AccountIdentifier.Type.SE, TransferDestinationPattern.ALL)
                 .build();
 

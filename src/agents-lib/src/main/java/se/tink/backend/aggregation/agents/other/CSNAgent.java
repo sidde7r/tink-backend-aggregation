@@ -111,7 +111,7 @@ public class CSNAgent extends HttpClientAgent implements DeprecatedRefreshExecut
                                     "\\d{12}: Lån före 1989 \\(studiemedel\\)")),
                     "Unexpected account.bankid '%s'. Reformatted?", account.getBankId());
 
-            this.context.updateAccount(account);
+            this.context.cacheAccount(account);
         } while (matcher.find());
     }
 

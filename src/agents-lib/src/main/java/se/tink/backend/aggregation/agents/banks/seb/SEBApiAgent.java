@@ -279,7 +279,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
     private void updateAccountsPerType(RefreshableItem type) {
         getAccounts().entrySet().stream()
                 .filter(set -> type.isAccountType(set.getValue().getType()))
-                .forEach(set -> context.updateAccount(set.getValue()));
+                .forEach(set -> context.cacheAccount(set.getValue()));
 
     }
 
@@ -375,7 +375,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
 
             account.setBalance(portfolio.getTotalValue());
 
-            context.updateAccount(account, AccountFeatures.createForPortfolios(portfolio));
+            context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
         });
     }
 
@@ -431,7 +431,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
             });
             portfolio.setInstruments(instruments);
 
-            context.updateAccount(account, AccountFeatures.createForPortfolios(portfolio));
+            context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
         });
     }
 
@@ -1205,7 +1205,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
 
         if (bankId.isPresent()) {
             account.setBankId(bankId.get());
-            context.updateAccount(account);
+            context.cacheAccount(account);
         }
     }
 
@@ -1257,7 +1257,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
                         Account account = pcbw2591.toAccount();
                         Loan loan = pcbw2591.toLoan();
 
-                        context.updateAccount(account, AccountFeatures.createForLoan(loan));
+                        context.cacheAccount(account, AccountFeatures.createForLoan(loan));
                     }
                 }
             }
@@ -1269,7 +1269,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
                         continue;
                     }
 
-                    context.updateAccount(blancoLoan.toAccount(), AccountFeatures.createForLoan(blancoLoan.toLoan()));
+                    context.cacheAccount(blancoLoan.toAccount(), AccountFeatures.createForLoan(blancoLoan.toLoan()));
                 }
             }
         }
@@ -1278,8 +1278,8 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
     public void updateTransferDestinations() {
         TransferDestinationsResponse response = new TransferDestinationsResponse();
 
-        response.addDestinations(getTransferAccountDestinations(context.getAccounts()));
-        response.addDestinations(getPaymentAccountDestinations(context.getAccounts()));
+        response.addDestinations(getTransferAccountDestinations(context.getUpdatedAccounts()));
+        response.addDestinations(getPaymentAccountDestinations(context.getUpdatedAccounts()));
 
         context.updateTransferDestinationPatterns(response.getDestinations());
     }

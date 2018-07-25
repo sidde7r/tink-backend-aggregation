@@ -166,14 +166,14 @@ public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExe
                 }
                 if (loanDetails == null) {
                     // something went wrong when we tried to fetch loanDetails
-                    context.updateAccount(tinkAccount);
+                    context.cacheAccount(tinkAccount);
                     continue;
                 }
                 Loan loan = loanDetails.toTinkLoan();
-                context.updateAccount(tinkAccount, AccountFeatures.createForLoan(loan));
+                context.cacheAccount(tinkAccount, AccountFeatures.createForLoan(loan));
             } else {
                 tinkAccounts.add(tinkAccount);
-                context.updateAccount(tinkAccount);
+                context.cacheAccount(tinkAccount);
             }
         }
         return tinkAccounts;

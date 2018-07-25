@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -45,6 +44,7 @@ import se.tink.backend.aggregation.workers.commands.RefreshItemAgentWorkerComman
 import se.tink.backend.aggregation.workers.commands.ReportProviderMetricsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ReportProviderMetricsAgentWorkerCommand.ReportProviderMetricsAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.ReportProviderTransferMetricsAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.SendAccountsToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.TransferAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ValidateProviderAgentWorkerStatus;
@@ -182,9 +182,26 @@ public class AgentWorkerOperationFactory {
 
         commands.add(new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
 
-        for (RefreshableItem item : items) {
+        List<RefreshableItem> accountItems = items.stream()
+                .filter(RefreshableItem::isAccount)
+                .collect(Collectors.toList());
+
+        List<RefreshableItem> nonAccountItems = items.stream()
+                .filter(i -> !accountItems.contains(i))
+                .collect(Collectors.toList());
+
+        for (RefreshableItem item : accountItems) {
             commands.add(new RefreshItemAgentWorkerCommand(context, item, createMetricState(request)));
         }
+
+        if (accountItems.size() > 0) {
+            commands.add(new SendAccountsToUpdateServiceAgentWorkerCommand(context, createMetricState(request)));
+        }
+
+        for (RefreshableItem item : nonAccountItems) {
+            commands.add(new RefreshItemAgentWorkerCommand(context, item, createMetricState(request)));
+        }
+
         // Post refresh processing. Only once per data type (accounts, transactions etcetera)
         if (RefreshableItem.hasAccounts(items)) {
             commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.ACCOUNTS,

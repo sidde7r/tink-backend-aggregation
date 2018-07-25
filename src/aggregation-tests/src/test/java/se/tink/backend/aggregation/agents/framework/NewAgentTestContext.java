@@ -77,7 +77,7 @@ public class NewAgentTestContext extends AgentContext {
         transfers.clear();
     }
 
-    public List<Account> getAccounts() {
+    public List<Account> getUpdatedAccounts() {
         return Lists.newArrayList(accountsByBankId.values());
     }
 
@@ -152,10 +152,13 @@ public class NewAgentTestContext extends AgentContext {
     }
 
     @Override
-    public Account updateAccount(Account account, AccountFeatures accountFeatures) {
+    public void cacheAccount(Account account, AccountFeatures accountFeatures) {
         accountsByBankId.put(account.getBankId(), account);
         accountFeaturesByBankId.put(account.getBankId(), accountFeatures);
-        return account;
+    }
+
+    public Account sendAccountToUpdateService(String uniqueId) {
+        return accountsByBankId.get(uniqueId);
     }
 
     @Override
@@ -191,7 +194,8 @@ public class NewAgentTestContext extends AgentContext {
 
     @Override
     public Account updateTransactions(Account account, List<Transaction> transactions) {
-        final Account updatedAccount = updateAccount(account);
+        cacheAccount(account);
+        final Account updatedAccount = sendAccountToUpdateService(account.getBankId());
 
         for (Transaction updatedTransaction : transactions) {
             updatedTransaction.setAccountId(updatedAccount.getId());

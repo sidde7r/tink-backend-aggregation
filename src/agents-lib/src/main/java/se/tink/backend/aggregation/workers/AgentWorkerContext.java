@@ -11,14 +11,12 @@ import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.apache.curator.framework.CuratorFramework;
@@ -27,7 +25,6 @@ import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.AgentEventListener;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
-import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
@@ -47,6 +44,7 @@ import se.tink.backend.common.mapper.CoreAccountMapper;
 import se.tink.backend.common.mapper.CoreCredentialsMapper;
 import se.tink.backend.common.repository.mysql.aggregation.AggregationCredentialsRepository;
 import se.tink.backend.common.utils.MetricsUtils;
+import se.tink.backend.common.utils.Pair;
 import se.tink.backend.core.AggregationCredentials;
 import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.core.FraudDetailsContent;
@@ -104,7 +102,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     private final Counter refreshTotal;
     private final Counter noTransferDestinationFetched;
     private final MetricId.MetricLabels defaultMetricLabels;
-    private List<Account> accounts = Lists.newArrayList();
     private Agent agent;
     private Catalog catalog;
     private CuratorFramework coordinationClient;
@@ -119,17 +116,24 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     private List<AgentEventListener> eventListeners = Lists.newArrayList();
     private SystemServiceFactory systemServiceFactory;
     private SupplementalInformationController supplementalInformationController;
-    private boolean supplementalOnAggregation;
     private boolean useAggregationController;
     private AggregationControllerAggregationClient aggregationControllerAggregationClient;
     //private final ClusterInfo clusterInfo;
     private boolean isAggregationCluster;
+
+    //Cached accounts have not been sent to system side yet.
+    private Map<String, Pair<Account, AccountFeatures>> cachedAccountsByUniqueId;
+    //Updated accounts have been sent to System side and has been updated with their stored Tink Id
+    private Map<String, Account> updatedAccountsByTinkId;
 
     public AgentWorkerContext(CredentialsRequest request, ServiceContext serviceContext, MetricRegistry metricRegistry,
             boolean useAggregationController, AggregationControllerAggregationClient aggregationControllerAggregationClient,
             ClusterInfo clusterInfo) {
 
         final ClusterId clusterId = clusterInfo.getClusterId();
+
+        this.cachedAccountsByUniqueId = Maps.newHashMap();
+        this.updatedAccountsByTinkId = Maps.newHashMap();
 
         this.request = request;
         this.serviceContext = serviceContext;
@@ -195,7 +199,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     @Override
     public void clear() {
         transactionsByAccount.clear();
-        accounts.clear();
+        cachedAccountsByUniqueId.clear();
     }
 
     public Agent getAgent() {
@@ -257,7 +261,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         // Metrics
         refreshTotal.inc();
         TARGET_ACCOUNT_TYPES.forEach(accountType -> {
-            if (accounts.stream().noneMatch(account -> account.getType() == accountType)) {
+            if (cachedAccountsByUniqueId.values().stream().noneMatch(pair-> pair.first.getType() == accountType)) {
                 metricRegistry.meter(
                         MetricId.newId("no_accounts_fetched")
                                 .label(defaultMetricLabels)
@@ -266,9 +270,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             }
         });
 
-        List<String> accountIds = accounts.stream()
-                .map(Account::getId)
-                .collect(Collectors.toList());
+        // Requires Accounts in list to have been "updated" towards System's UpdateService to get their real stored id
+        List<String> accountIds = Lists.newArrayList(updatedAccountsByTinkId.keySet());
 
         if (useAggregationController) {
             se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest processAccountsRequest =
@@ -322,9 +325,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     private Optional<Account> getAccount(String accountId) {
-        return accounts.stream()
-                .filter(a -> Objects.equals(a.getId(), accountId))
-                .findFirst();
+        return Optional.ofNullable(updatedAccountsByTinkId.get(accountId));
     }
 
     @Override
@@ -537,14 +538,30 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     @Override
-    public Account updateAccount(Account account, AccountFeatures accountFeatures) {
+    public void cacheAccount(Account account, AccountFeatures accountFeatures) {
 
         if (shouldNotAggregateDataForAccount(account)) {
             // Account marked to not aggregate data from.
             // Preferably we would not even download the data but this makes sure
             // we don't process further or store the account's data.
-            return account;
+            return;
         }
+
+        cachedAccountsByUniqueId.put(account.getBankId(), new Pair<>(account, accountFeatures));
+    }
+
+    public void sendAllCachedAccountsToUpdateService() {
+        for(String uniqueId : cachedAccountsByUniqueId.keySet()) {
+            sendAccountToUpdateService(uniqueId);
+        }
+    }
+
+    public Account sendAccountToUpdateService(String uniqueId) {
+
+        Pair<Account, AccountFeatures> pair = cachedAccountsByUniqueId.get(uniqueId);
+
+        Account account = pair.first;
+        AccountFeatures accountFeatures = pair.second;
 
         account.setCredentialsId(request.getCredentials().getId());
         account.setUserId(request.getCredentials().getUserId());
@@ -600,9 +617,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             updateAccountTimerContext.stop();
         }
 
-        accounts.add(updatedAccount);
-
-        return updatedAccount;
+        return updatedAccountsByTinkId.put(updatedAccount.getId(), updatedAccount);
     }
 
     @Override
@@ -713,7 +728,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             return account;
         }
 
-        final Account updatedAccount = updateAccount(account);
+        cacheAccount(account);
+        final Account updatedAccount = sendAccountToUpdateService(account.getBankId());
 
         for (Transaction transaction : transactions) {
             transaction.setAccountId(updatedAccount.getId());
@@ -882,8 +898,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     @Override
-    public List<Account> getAccounts() {
-        return accounts;
+    public List<Account> getUpdatedAccounts() {
+        return Lists.newArrayList(updatedAccountsByTinkId.values());
     }
 
     @Override

@@ -664,7 +664,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
                 Account account = details.toAccount();
                 Loan loan = details.toLoan(detailsString);
 
-                context.updateAccount(account, AccountFeatures.createForLoan(loan));
+                context.cacheAccount(account, AccountFeatures.createForLoan(loan));
             } catch (Exception e) {
                 log.warn("Was not able to retrieve loan: " + e.getMessage());
             }
@@ -1437,7 +1437,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
 
             portfolio.setInstruments(instruments);
 
-            context.updateAccount(account, AccountFeatures.createForPortfolios(portfolio));
+            context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
         }
     }
 
@@ -1480,7 +1480,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
         });
         portfolio.setInstruments(instruments);
 
-        context.updateAccount(account, AccountFeatures.createForPortfolios(portfolio));
+        context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
     }
 
     private <T> T createGetRequestFromUrlAndDepotNumber(Class<T> responseClass, String url, String depotNumber)
@@ -1570,7 +1570,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
         });
         portfolio.setInstruments(instruments);
 
-        context.updateAccount(account.get(), AccountFeatures.createForPortfolios(portfolio));
+        context.cacheAccount(account.get(), AccountFeatures.createForPortfolios(portfolio));
     }
 
     private InstrumentDetailsResponse getInstrumentDetails(String depotNumber, String isin)
@@ -1611,7 +1611,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
     private void updateAccountPerType(RefreshableItem type) {
         getAccounts().entrySet().stream()
                 .filter(set -> type.isAccountType(set.getValue().getType()))
-                .forEach(set -> context.updateAccount(set.getValue()));
+                .forEach(set -> context.cacheAccount(set.getValue()));
     }
 
     @Override
@@ -1672,8 +1672,8 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
 
             TransferDestinationsResponse response = new TransferDestinationsResponse();
 
-            response.addDestinations(getTransferAccountDestinations(accountEntities, context.getAccounts()));
-            response.addDestinations(getPaymentAccountDestinations(accountEntities, context.getAccounts()));
+            response.addDestinations(getTransferAccountDestinations(accountEntities, context.getUpdatedAccounts()));
+            response.addDestinations(getPaymentAccountDestinations(accountEntities, context.getUpdatedAccounts()));
 
             context.updateTransferDestinationPatterns(response.getDestinations());
         } catch (Exception e) {
@@ -1695,7 +1695,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
         List<AccountEntity> accountEntities = fetchAccountEntities();
 
         for (AccountEntity accountEntity : accountEntities) {
-            context.updateAccount(accountEntity.toAccount());
+            context.cacheAccount(accountEntity.toAccount());
         }
     }
 
@@ -1706,12 +1706,12 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
             if (cardEntity.getCardType().equals("DEBIT")) {
                 /*
                  * Cards of type DEBIT are connected to an account
-                 *  Handled by: updateAccounts()
+                 *  Handled by: cacheAccounts()
                  */
                 continue;
             }
 
-            context.updateAccount(cardEntity.getAccount());
+            context.cacheAccount(cardEntity.getAccount());
         }
     }
 

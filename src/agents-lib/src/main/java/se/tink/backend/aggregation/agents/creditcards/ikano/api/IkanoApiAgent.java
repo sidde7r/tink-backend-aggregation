@@ -108,7 +108,7 @@ public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExe
 
         try {
             List<Account> accounts = apiClient.fetchAccounts();
-            context.updateAccounts(accounts);
+            context.cacheAccounts(accounts);
 
             for (Account account : accounts) {
                 List<Transaction> transactions = apiClient.getTransactionsFor(account);

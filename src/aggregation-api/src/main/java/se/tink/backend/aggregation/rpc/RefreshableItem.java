@@ -33,7 +33,7 @@ public enum RefreshableItem {
             .add(TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS)
             .build();
 
-    // Explicit order of refreshable items.
+    // Explicit order of refreshable items. Many subsequent places assumes Accounts will come first.
     private static final Ordering<RefreshableItem> REFRESHABLE_ITEM_ORDERING = Ordering.explicit(ImmutableList.of(
             RefreshableItem.CHECKING_ACCOUNTS,
             RefreshableItem.SAVING_ACCOUNTS,
@@ -76,6 +76,10 @@ public enum RefreshableItem {
 
     public static List<RefreshableItem> sort(Set<RefreshableItem> items) {
         return REFRESHABLE_ITEM_ORDERING.sortedCopy(items);
+    }
+
+    public static boolean isAccount(RefreshableItem item) {
+        return REFRESHABLE_ITEMS_ACCOUNTS.contains(item);
     }
 
     public static boolean hasAccounts(List<RefreshableItem> items) {
