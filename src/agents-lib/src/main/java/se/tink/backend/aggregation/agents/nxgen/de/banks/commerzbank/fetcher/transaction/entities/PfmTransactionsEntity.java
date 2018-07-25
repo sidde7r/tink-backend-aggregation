@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.tr
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import java.util.List;
+import org.apache.commons.lang3.StringEscapeUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.core.Amount;
@@ -125,7 +126,7 @@ public class PfmTransactionsEntity {
     }
 
     public String getOriginalText() {
-        return originalText;
+        return StringEscapeUtils.unescapeHtml4(originalText);
     }
 
     public String getParentIdentifier() {
