@@ -53,7 +53,7 @@ public class AccountEntity {
         case SabadellConstants.AccountTypes.CUENTA_RELACION:
             return AccountTypes.CHECKING;
         default:
-            log.warn("%s: Unknown type: %s", SabadellConstants.Tags.UNKNOWN_ACCOUNT_TYPE, description);
+            log.warn("{}: Unknown type: {}", SabadellConstants.Tags.UNKNOWN_ACCOUNT_TYPE, description);
             return AccountTypes.OTHER;
         }
     }
