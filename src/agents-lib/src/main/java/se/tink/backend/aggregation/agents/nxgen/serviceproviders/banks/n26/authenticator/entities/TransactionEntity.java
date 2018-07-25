@@ -36,6 +36,7 @@ public class TransactionEntity {
     private String partnerBankName;
     private String referenceToOriginalOperation;
     private String partnerEmail;
+    private String merchantName;
 
     public String getId() {
         return id;
@@ -149,12 +150,19 @@ public class TransactionEntity {
         return partnerEmail;
     }
 
+    public String getMerchantName() {return merchantName;}
+
     private String getDescription(){
-        if(!Strings.isNullOrEmpty(getReferenceText().trim())){
-            return getReferenceText();
+
+        if(!Strings.isNullOrEmpty(getMerchantName())){
+            return merchantName;
         }
 
-        return partnerName;
+        if(!Strings.isNullOrEmpty(getPartnerName())){
+            return partnerName;
+        }
+
+        return referenceText;
     }
 
     public Transaction toTinkTransaction() {
