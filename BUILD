@@ -841,30 +841,42 @@ genrule(
 )
 
 java_library(
-     name = "credit-safe-service",
-     srcs = glob(["src/credit-safe-service/src/main/**/*.java"]),
-     data = [
-         "//data",
-     ],
-     deps = [
-         ":common-lib",
-         ":credit-safe-lib",
-          "//src/libraries/auth:auth",
-          "//src/libraries/discovery:discovery",
-          "//src/libraries/dropwizard_utils:dropwizard-utils",
-          "//src/libraries/metrics:metrics",
-          "//src/libraries/cluster:cluster",
-
-         "//third_party:com_google_guava_guava",
-         "//third_party:com_google_inject_guice",
-         "//third_party:com_netflix_governator",
-         "//third_party:io_dropwizard_dropwizard_core",
-     ],
+    name = "credit-safe-api",
+    srcs = glob(["src/credit-safe-api/src/main/**/*.java"]),
+    deps = [
+        ":aggregation-api",
+        "//src/api-annotations",
+        "//third_party:com_sun_jersey_jersey_core",
+    ],
 )
+
+java_library(
+    name = "credit-safe-service",
+    srcs = glob(["src/credit-safe-service/src/main/**/*.java"]),
+    data = [
+        "//data",
+    ],
+    deps = [
+        "credit-safe-api",
+        ":common-lib",
+        ":credit-safe-lib",
+        "//src/libraries/auth",
+        "//src/libraries/cluster",
+        "//src/libraries/discovery",
+        "//src/libraries/dropwizard_utils:dropwizard-utils",
+        "//src/libraries/metrics",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_google_inject_guice",
+        "//third_party:com_netflix_governator",
+        "//third_party:io_dropwizard_dropwizard_core",
+    ],
+)
+
 java_library(
     name = "credit-safe-lib",
     srcs = glob(["src/credit-safe-lib/src/main/**/*.java"]),
     deps = [
+        "credit-safe-api",
         ":agents-lib",
         ":aggregation-api",
         ":common-lib",
@@ -894,17 +906,18 @@ java_binary(
     ],
     deps = [
         ":common-lib",
+        ":credit-safe-api",
         ":credit-safe-lib",
-          "//src/libraries/auth:auth",
-          "//src/libraries/discovery:discovery",
-          "//src/libraries/dropwizard_utils:dropwizard-utils",
-          "//src/libraries/metrics:metrics",
-          "//src/libraries/cluster:cluster",
-
-         "//third_party:com_google_guava_guava",
-         "//third_party:com_google_inject_guice",
-         "//third_party:com_netflix_governator",
-         "//third_party:io_dropwizard_dropwizard_core",
+        ":credit-safe-service",
+        "//src/libraries/auth",
+        "//src/libraries/cluster",
+        "//src/libraries/discovery",
+        "//src/libraries/dropwizard_utils:dropwizard-utils",
+        "//src/libraries/metrics",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_google_inject_guice",
+        "//third_party:com_netflix_governator",
+        "//third_party:io_dropwizard_dropwizard_core",
     ],
 )
 
