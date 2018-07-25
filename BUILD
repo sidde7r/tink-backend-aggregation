@@ -735,6 +735,7 @@ java_library(
     deps = [
         ":main-api",
 
+        "//src/cluster-lib",
         "//src/api-annotations",
 
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
