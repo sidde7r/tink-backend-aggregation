@@ -748,12 +748,19 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         ":main-api",
-
         ":provider-configuration-api",
         ":common-lib",
 
         "//src/cluster-lib",
         "//src/api-annotations",
+        "//src/libraries/auth:auth",
+        "//src/libraries/jersey_log:jersey-log",
+        "//src/libraries/jersey_guice:jersey-guice",
+        "//src/libraries/dropwizard_utils:dropwizard-utils",
+        "//src/libraries/discovery:discovery",
+        "//third_party:io_dropwizard_dropwizard_jersey",
+
+
 
         "//src/libraries/date",
         "//src/libraries/serialization_utils:serialization-utils",
@@ -769,7 +776,10 @@ java_library(
         "//third_party:com_google_inject_guice",
         "//third_party:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
         "//third_party:org_hibernate_hibernate_annotations",
+        "//third_party:org_springframework_spring_expression",
+        "//third_party:org_springframework_spring_core",
         "//third_party:org_springframework_data_spring_data_jpa",
+        "//third_party:org_springframework_data_spring_data_commons",
         "//third_party:io_swagger_swagger_annotations",
         "//third_party:joda_time_joda_time",
         "//third_party:io_protostuff_protostuff_api",
@@ -785,15 +795,15 @@ java_library(
          "//data",
      ],
      deps = [
+
          ":common-lib",
          ":provider-configuration-api",
          ":provider-configuration-lib",
-
-          "//src/libraries/auth:auth",
-          "//src/libraries/discovery:discovery",
-          "//src/libraries/dropwizard_utils:dropwizard-utils",
-          "//src/libraries/metrics:metrics",
-          "//src/libraries/cluster:cluster",
+         "//src/libraries/auth:auth",
+         "//src/libraries/discovery:discovery",
+         "//src/libraries/dropwizard_utils:dropwizard-utils",
+         "//src/libraries/metrics:metrics",
+         "//src/libraries/cluster:cluster",
 
          "//third_party:com_google_guava_guava",
          "//third_party:com_google_inject_guice",
@@ -815,15 +825,15 @@ java_binary(
         "//third_party:mysql_mysql_connector_java",
     ],
     deps = [
-        ":common-lib",
-        ":provider-configuration-lib",
-        ":provider-configuration-api",
+         ":common-lib",
+         ":provider-configuration-lib",
+         ":provider-configuration-api",
 
-        "//src/libraries/auth:auth",
-        "//src/libraries/discovery:discovery",
-        "//src/libraries/dropwizard_utils:dropwizard-utils",
-        "//src/libraries/metrics:metrics",
-        "//src/libraries/cluster:cluster",
+         "//src/libraries/auth:auth",
+         "//src/libraries/discovery:discovery",
+         "//src/libraries/dropwizard_utils:dropwizard-utils",
+         "//src/libraries/metrics:metrics",
+         "//src/libraries/cluster:cluster",
 
          "//third_party:com_google_guava_guava",
          "//third_party:com_google_inject_guice",

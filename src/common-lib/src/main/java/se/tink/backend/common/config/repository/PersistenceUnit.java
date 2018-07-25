@@ -4,6 +4,7 @@ public enum PersistenceUnit {
     // !!!  Make sure that all PersistenceUnit names exist in `persistence.xml`  !!!
     AGGREGATION("tink-aggregation-api", AggregationRepositoryConfiguration.class, false),
     COMBINED("tink-combined-api", CombinedRepositoryConfiguration.class, true),
+    PROVIDER("tink-provider-api", ProviderRepositoryConfiguration.class, true),
     MAIN("tink-main-api", MainRepositoryConfiguration.class, true);
 
     public static PersistenceUnit fromName(String name) {

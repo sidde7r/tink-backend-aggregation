@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.provider.api;
+package se.tink.backend.aggregation.provider.configuration.api;
 
 import java.util.List;
 import javax.ws.rs.Consumes;

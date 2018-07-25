@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.controllers;
+package se.tink.backend.aggregation.provider.configuration.controllers;
 
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
@@ -10,7 +10,7 @@ import javax.persistence.NoResultException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
-import se.tink.backend.common.repository.mysql.aggregation.ProviderConfigurationRepository;
+import se.tink.backend.aggregation.provider.configuration.repositories.mysql.ProviderConfigurationRepository;
 import se.tink.backend.core.Field;
 import se.tink.backend.core.ProviderConfiguration;
 import se.tink.libraries.i18n.Catalog;

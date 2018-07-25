@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.repositories.mysql;
+package se.tink.backend.aggregation.provider.configuration.repositories.mysql;
 
 import java.util.List;
 import se.tink.backend.core.ProviderConfiguration;

@@ -1,7 +1,6 @@
-package se.tink.backend.aggregation.provider;
+package se.tink.backend.aggregation.provider.configuration.resources;
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import java.util.List;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
@@ -9,8 +8,8 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
-import se.tink.backend.aggregation.controllers.ProviderServiceController;
-import se.tink.backend.aggregation.provider.api.ProviderService;
+import se.tink.backend.aggregation.provider.configuration.controllers.ProviderServiceController;
+import se.tink.backend.aggregation.provider.configuration.api.ProviderService;
 import se.tink.backend.core.ProviderConfiguration;
 
 public class ProviderServiceResource implements ProviderService {
