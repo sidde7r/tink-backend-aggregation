@@ -172,13 +172,12 @@ public class SEPAAccount {
         logCreditCardInformation();
 
         CreditCardAccount.Builder<?, ?> builder = CreditCardAccount.builder(
-                getAccountNo(),
+                getBlz() + getAccountNo(),
                 getAmount(getCurrency(), getBalance()),
                 getAmount(getCurrency(), getAccountLimit()))
                 .setHolderName(new HolderName(getHolderName()))
                 .setName(getProductName())
-                .setAccountNumber(getAccountNo())
-                .setUniqueIdentifier(getBlz() + getAccountNo());
+                .setAccountNumber(getAccountNo());
 
         if (!StringUtil.isNullOrEmpty(getIban())) {
             builder.addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, getIban()));

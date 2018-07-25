@@ -130,7 +130,6 @@ public class NordeaDkParser extends NordeaV20Parser {
                 .builder(custodyAccount.getAccountId(), Amount.inDKK(custodyAccount.getMarketValue()))
                 .setAccountNumber(custodyAccount.getAccountNumber())
                 .setName(custodyAccount.getName())
-                .setUniqueIdentifier(custodyAccount.getAccountId())
                 .setPortfolios(Collections.singletonList(parsePortfolio(custodyAccount)))
                 .build();
     }

@@ -210,11 +210,6 @@ public abstract class Account {
             return Preconditions.checkNotNull(thisObj.uniqueIdentifier, "Unique identifier must be set.");
         }
 
-        public T setUniqueIdentifier(String uniqueIdentifier) {
-            thisObj.uniqueIdentifier = uniqueIdentifier;
-            return self();
-        }
-
         public String getBankIdentifier() {
             String bankIdentifier = getTemporaryStorage().get(BANK_IDENTIFIER_KEY);
             return java.util.Objects.nonNull(bankIdentifier)
