@@ -307,8 +307,8 @@ public class ProductsEntity {
     }
 
     public AccountTypes getType() {
-        switch (getProductId().getProductType()){
-            case CommerzbankConstants.VALUES.CURRENT_ACCOUNT:
+        switch (productType.getDisplayCategoryIndex()){
+            case 1:
                 return AccountTypes.CHECKING;
             default:
                 return AccountTypes.OTHER;
@@ -322,7 +322,8 @@ public class ProductsEntity {
     public TransactionalAccount toTransactionalAccount() {
 
         return TransactionalAccount.builder(getType(), getInternalAccountNumber(), getTinkBalance())
-                .setAccountNumber(getProductNumber())
+                .setName(getProductType().getProductName())
+                .setAccountNumber(getInternalAccountNumber())
                 .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
                 .addToTemporaryStorage(CommerzbankConstants.HEADERS.IDENTIFIER, getProductId().getIdentifier())
                 .addToTemporaryStorage(CommerzbankConstants.HEADERS.PRODUCT_TYPE, getProductId().getProductType())

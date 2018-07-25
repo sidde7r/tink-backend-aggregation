@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.LoginRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.ResultEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.RootModel;
@@ -11,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.tra
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.transaction.rpc.Identifier;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.transaction.rpc.SearchCriteriaDto;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.transaction.rpc.TransactionRequestBody;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.session.entities.SessionModel;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -56,6 +56,10 @@ public class CommerzbankApiClient {
 
     public ResultEntity financialOverview() {
         return makeRequest(CommerzbankConstants.URLS.OVERVIEW).post(RootModel.class).getResult();
+    }
+
+    public SessionModel logout() {
+        return makeRequest(CommerzbankConstants.URLS.LOGOUT).get(SessionModel.class);
     }
 
     public HttpResponse keepAlive() {

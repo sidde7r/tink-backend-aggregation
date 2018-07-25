@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ProductTypeEntity {
     private String category;
     private String displayCategory;
-    private String displayCategoryIndex;
+    private int displayCategoryIndex;
     private String ccbId;
     private String productName;
     private String productBranch;
@@ -19,7 +19,7 @@ public class ProductTypeEntity {
         return displayCategory;
     }
 
-    public String getDisplayCategoryIndex() {
+    public int getDisplayCategoryIndex() {
         return displayCategoryIndex;
     }
 
