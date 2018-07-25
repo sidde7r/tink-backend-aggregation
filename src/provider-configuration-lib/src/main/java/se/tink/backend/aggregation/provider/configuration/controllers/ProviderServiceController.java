@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.controllers;
+package se.tink.backend.aggregation.provider.configuration.controllers;
 
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
