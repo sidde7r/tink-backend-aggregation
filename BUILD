@@ -760,8 +760,6 @@ java_library(
         "//src/libraries/discovery:discovery",
         "//third_party:io_dropwizard_dropwizard_jersey",
 
-
-
         "//src/libraries/date",
         "//src/libraries/serialization_utils:serialization-utils",
         "//src/libraries/protobuf_serialization_utils:protobuf-serialization-utils",
@@ -795,7 +793,6 @@ java_library(
          "//data",
      ],
      deps = [
-
          ":common-lib",
          ":provider-configuration-api",
          ":provider-configuration-lib",
