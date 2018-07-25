@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints;
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
+import java.nio.charset.StandardCharsets;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.accounts.HKSPA;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.accounts.SEPAAccount;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.auth.HKIDN;
@@ -49,7 +50,7 @@ public class FinTsApiClient {
         String b64Response =
                 apiClient.request(configuration.getEndpoint()).post(String.class, b64Request);
 
-        String plainResponse = new String(Base64.getDecoder().decode(b64Response.replaceAll("\\R", "")));
+        String plainResponse = new String(Base64.getDecoder().decode(b64Response.replaceAll("\\R", "")), StandardCharsets.ISO_8859_1);
         FinTsResponse response = new FinTsResponse(plainResponse);
 
         this.messageNumber++;
