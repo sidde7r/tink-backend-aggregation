@@ -33,7 +33,7 @@ public abstract class Account {
         this.accountNumber = builder.getAccountNumber();
         this.balance = builder.getBalance();
         this.identifiers = ImmutableList.copyOf(builder.getIdentifiers());
-        this.uniqueIdentifier = builder.getUniqueIdentifier();
+        this.uniqueIdentifier = sanitizeUniqueIdentifier(builder.getUniqueIdentifier());
         this.bankIdentifier = builder.getBankIdentifier();
         this.holderName = builder.getHolderName();
         this.temporaryStorage = ImmutableMap.copyOf(builder.getTemporaryStorage());
@@ -55,6 +55,10 @@ public abstract class Account {
             throw new IllegalStateException(
                     String.format("Unknown Account type (%s)", type));
         }
+    }
+
+    private String sanitizeUniqueIdentifier(String uniqueIdentifier) {
+        return uniqueIdentifier.replaceAll("[^\\dA-Za-z]", "");
     }
 
     public AccountTypes getType() {
@@ -103,7 +107,7 @@ public abstract class Account {
         account.setAccountNumber(this.accountNumber);
         account.setBalance(this.balance.getValue());
         account.setIdentifiers(this.identifiers);
-        account.setBankId(this.uniqueIdentifier.replaceAll("[^\\dA-Za-z]", ""));
+        account.setBankId(this.uniqueIdentifier);
         account.setHolderName(HolderName.toString(this.holderName));
 
         return account;
