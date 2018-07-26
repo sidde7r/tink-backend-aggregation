@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.Field;
-import se.tink.backend.aggregation.rpc.OptInRefreshInformationRequest;
+import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
@@ -22,10 +22,10 @@ import se.tink.backend.aggregation.workers.AgentWorkerContext;
 public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerCommand{
     private static final Logger log = LoggerFactory.getLogger(RequestUserOptInAccountsAgentWorkerCommand.class);
     private final AgentWorkerContext context;
-    private final OptInRefreshInformationRequest request;
+    private final RefreshWhitelistInformationRequest request;
     private final SupplementalInformationController supplementalInformationController;
 
-    public RequestUserOptInAccountsAgentWorkerCommand(AgentWorkerContext context, OptInRefreshInformationRequest request) {
+    public RequestUserOptInAccountsAgentWorkerCommand(AgentWorkerContext context, RefreshWhitelistInformationRequest request) {
         this.context = context;
         this.request = request;
         this.supplementalInformationController = new SupplementalInformationController(context , request.getCredentials());

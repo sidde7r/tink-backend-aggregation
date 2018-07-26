@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.workers;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsDecryptRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsReencryptRequest;
-import se.tink.backend.aggregation.rpc.OptInRefreshInformationRequest;
+import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.ReencryptionRequest;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
@@ -194,8 +194,8 @@ public class AgentWorkerOperationFactory {
                 .collect(Collectors.toList());
 
         // if it is a follow up update, we do not refresh the accounts again
-        if(!(request instanceof OptInRefreshInformationRequest
-                && ((OptInRefreshInformationRequest) request).isOptIn())) {
+        if(!(request instanceof RefreshWhitelistInformationRequest
+                && ((RefreshWhitelistInformationRequest) request).isOptIn())) {
             for (RefreshableItem item : accountItems) {
                 commands.add(new RefreshItemAgentWorkerCommand(context, item, createMetricState(request)));
             }
@@ -274,10 +274,10 @@ public class AgentWorkerOperationFactory {
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)));
 
-        if(request instanceof  OptInRefreshInformationRequest && ((OptInRefreshInformationRequest) request).isOptIn()){
-            OptInRefreshInformationRequest optInRequest = (OptInRefreshInformationRequest) request;
-            commands.addAll(createRefreshAccountsCommandChain(optInRequest, context));;
-            commands.add(new RequestUserOptInAccountsAgentWorkerCommand(context, optInRequest));
+        if(request instanceof RefreshWhitelistInformationRequest && ((RefreshWhitelistInformationRequest) request).isOptIn()){
+            RefreshWhitelistInformationRequest refreshWhiteList = (RefreshWhitelistInformationRequest) request;
+            commands.addAll(createRefreshAccountsCommandChain(refreshWhiteList, context));;
+            commands.add(new RequestUserOptInAccountsAgentWorkerCommand(context, refreshWhiteList));
         }
 
         commands.addAll(createRefreshableItemsChain(request, context, request.getItemsToRefresh()));
@@ -453,7 +453,7 @@ public class AgentWorkerOperationFactory {
      *  when the opt-in flag is false, we refresh and update all white listed accounts
      **/
     public AgentWorkerOperation createOptInRefreshOperation(ClusterInfo clusterInfo,
-            OptInRefreshInformationRequest request) {
+            RefreshWhitelistInformationRequest request) {
         return createRefreshOperation(clusterInfo, request);
     }
 }

@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.resources;
 
 import io.dropwizard.lifecycle.Managed;
-import java.util.ArrayList;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.rpc.DeleteCredentialsRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsDecryptRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsReencryptRequest;
-import se.tink.backend.aggregation.rpc.OptInRefreshInformationRequest;
+import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.ReencryptionRequest;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
@@ -128,7 +128,7 @@ public class AggregationServiceResource implements AggregationService, Managed {
     }
 
     @Override
-    public void optInRefreshInformation(OptInRefreshInformationRequest request) throws Exception {
+    public void refreshWhitelistInformation(RefreshWhitelistInformationRequest request) throws Exception {
         // if it is opt-in (where user is asked to select the accounts to aggregate, we return a bad request
         if (request.isOptIn() && !RefreshableItem.hasAccounts(Lists.newArrayList(request.getItemsToRefresh()))){
             throw new WebApplicationException(Response.Status.BAD_REQUEST);

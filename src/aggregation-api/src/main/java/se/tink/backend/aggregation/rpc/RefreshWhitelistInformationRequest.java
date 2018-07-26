@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class OptInRefreshInformationRequest extends RefreshInformationRequest{
+public class RefreshWhitelistInformationRequest extends RefreshInformationRequest{
     @JsonProperty
     private boolean optIn;
 
