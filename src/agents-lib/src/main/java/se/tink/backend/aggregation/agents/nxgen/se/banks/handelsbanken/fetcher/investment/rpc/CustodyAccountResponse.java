@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -15,10 +16,12 @@ import se.tink.backend.core.Amount;
 import se.tink.backend.system.rpc.Instrument;
 import se.tink.backend.system.rpc.Portfolio;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CustodyAccountResponse extends BaseResponse {
 
     private HandelsbankenPerformance performance;
     private HandelsbankenAmount marketValue;
+    private HandelsbankenAmount mainDepositAccountBalance;
     private String accountNumberFormatted;
     private String custodyAccountNumber;
     private String iskAccountNumber;
@@ -55,6 +58,9 @@ public class CustodyAccountResponse extends BaseResponse {
         portfolio.setTotalValue(toMarketValue());
         portfolio.setUniqueIdentifier(constructUniqueIdentifier());
         portfolio.setInstruments(toInstruments(client));
+        portfolio.setCashValue(mainDepositAccountBalance != null ?
+                mainDepositAccountBalance.asDouble() : null);
+
         return portfolio;
     }
 
