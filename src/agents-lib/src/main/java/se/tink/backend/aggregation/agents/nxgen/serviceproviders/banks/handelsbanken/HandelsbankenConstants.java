@@ -96,7 +96,7 @@ public class HandelsbankenConstants {
         public static final String X_SHB_DEVICE_NAME = "X-SHB-DEVICE-NAME";
         public static final String DEVICE_NAME = "iOS;Tink;Tink";
         public static final String X_SHB_DEVICE_MODEL = "X-SHB-DEVICE-MODEL";
-        public static final String DEVICE_MODEL = "IOS-10.1.1,7.4.0,iPhone9.3,FIPRIV";
+        public static final String DEVICE_MODEL = "IOS-11.4.1,8.0.1,iPhone9.3,FIPRIV";
         public static final String X_SHB_DEVICE_CLASS = "X-SHB-DEVICE-CLASS";
         public static final String DEVICE_CLASS = "APP";
         public static final String X_SHB_APP_VERSION = "X-SHB-APP-VERSION";
