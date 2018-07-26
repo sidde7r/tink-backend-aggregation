@@ -5,7 +5,7 @@ import com.google.common.base.Strings;
 public class Aggregator {
 
     private final String aggregatorIdentifier;
-    public final static String DEFAULT = "Tink (+https://www.tink.se/; noc@tink.se)";
+    public final static String DEFAULT = "Tink";
 
     public Aggregator(String aggregatorIdentifier){
         this.aggregatorIdentifier = aggregatorIdentifier;
