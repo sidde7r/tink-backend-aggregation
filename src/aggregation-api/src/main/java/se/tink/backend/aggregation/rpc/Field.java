@@ -24,6 +24,7 @@ public class Field {
     private String patternError; // If the input doesn't match the pattern this is the error message displayed
     private String value; // The value of the input
     private boolean sensitive; // If the field is sensitive. A sensitive field will be stored in the encrypted credential.
+    private boolean checkbox; // if the field should be a boolean value displayed as a checkbox
 
     public String getDescription() {
         return description;
@@ -143,6 +144,14 @@ public class Field {
 
     public static Builder builder() {
         return new Builder();
+    }
+
+    public boolean isCheckbox() {
+        return checkbox;
+    }
+
+    public void setCheckbox(boolean checkbox) {
+        this.checkbox = checkbox;
     }
 
     public static class Builder {
