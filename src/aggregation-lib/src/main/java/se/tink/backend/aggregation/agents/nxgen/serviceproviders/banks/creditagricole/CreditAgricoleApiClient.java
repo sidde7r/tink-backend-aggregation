@@ -76,8 +76,7 @@ public class CreditAgricoleApiClient {
                     .parameter(StorageKey.USER_ID, persistentStorage.get(StorageKey.USER_ID))
                     .parameter(StorageKey.REGION_ID, persistentStorage.get(StorageKey.REGION_ID))
                     .parameter(StorageKey.PARTNER_ID, persistentStorage.get(StorageKey.PARTNER_ID)))
-                .header(ConstantHeader.CONTENT_TYPE_FORM)
-                .body(appCodeForm.getBodyValue())
+                .body(appCodeForm)
                 .post(DefaultResponse.class);
     }
 
@@ -89,9 +88,8 @@ public class CreditAgricoleApiClient {
 
         return client.request(Url.STRONG_AUTHENTICATION
                     .parameter(StorageKey.REGION_ID, persistentStorage.get(StorageKey.REGION_ID)))
-                .header(ConstantHeader.CONTENT_TYPE_FORM)
                 .header(Authorization.HEADER, basicAuth())
-                .body(strongAuthenticationForm.getBodyValue())
+                .body(strongAuthenticationForm)
                 .post(StrongAuthenticationResponse.class);
     }
 
@@ -100,9 +98,8 @@ public class CreditAgricoleApiClient {
         return client.request(Url.KEEP_ALIVE
                     .parameter(StorageKey.USER_ID, persistentStorage.get(StorageKey.USER_ID))
                     .parameter(StorageKey.REGION_ID, persistentStorage.get(StorageKey.REGION_ID)))
-                .header(ConstantHeader.CONTENT_TYPE_FORM)
                 .header(Authorization.HEADER, basicAuth())
-                .body(keepAliveForm.getBodyValue())
+                .body(keepAliveForm)
                 .post(DefaultResponse.class);
     }
 

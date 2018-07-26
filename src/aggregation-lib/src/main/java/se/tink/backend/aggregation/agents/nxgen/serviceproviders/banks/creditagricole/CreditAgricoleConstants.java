@@ -59,8 +59,7 @@ public class CreditAgricoleConstants {
 
     public enum ConstantHeader implements HeaderEnum {
         USER_AGENT("User-Agent", "MonBudget_iOS/14.0.1.2 iOS/10.1.1 Apple/iPhone9,3 750x1334/2.00"
-                + " Tink(+https://www.tink.se/;noc@tink.se)"),
-        CONTENT_TYPE_FORM("Content-Type", MediaType.APPLICATION_FORM_URLENCODED);
+                + " Tink(+https://www.tink.se/;noc@tink.se)");
 
         private String key;
         private String value;
@@ -109,9 +108,6 @@ public class CreditAgricoleConstants {
         public static final String APP_CODE = "password";
         public static final String LOGIN_EMAIL = "login";
         public static final String LL_TOKEN = "llToken";
-
-        public static final int APP_CODE_LENGTH = 4;
-        public static final String CHARSET = "UTF-8";
     }
 
     public static final class AccountType {
