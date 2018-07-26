@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.aggregation.rpc.CredentialsRequestType;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.User;
@@ -136,7 +137,14 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
 
         AgentWorkerCommandResult result;
         try {
-            if (isLoggedIn()) {
+            if (context.getRequest().getType() == CredentialsRequestType.TRANSFER
+                    && credentials.getStatus() == CredentialsStatus.AUTHENTICATION_ERROR) {
+
+                context.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR, context.getCatalog().getString(
+                        "Invalid credentials status. Update the credentials before retrying the operation."));
+                result = AgentWorkerCommandResult.ABORT;
+
+            } else if (isLoggedIn()) {
                 result = AgentWorkerCommandResult.CONTINUE;
             } else if (!acquireLock()) {
                 // If this is a BankID credentials, we need to take a lock around the login method.
