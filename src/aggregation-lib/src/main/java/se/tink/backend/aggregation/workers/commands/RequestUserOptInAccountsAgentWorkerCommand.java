@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -36,7 +38,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
     public AgentWorkerCommandResult execute() throws Exception {
 
         // accounts are put in context by refresh information command
-        List<Account> accountsInContext = context.getAllCachedAccounts();
+        List<Account> accountsInContext = context.getCachedAccounts();
         // create fields for supplemental information
         // each field contains the account number as name, and a boolean as value indicating if the account is white
         // listed currently
@@ -54,7 +56,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
             return AgentWorkerCommandResult.ABORT;
         }
 
-        context.filterNoneOptInAccounts(supplementalResponse);
+        context.addOptInAccountNumbers(supplementalResponse.entrySet().stream().filter(e -> Objects.equals(e.getValue(), "true")).map(Map.Entry::getKey).collect(Collectors.toList()));
 
         return AgentWorkerCommandResult.CONTINUE;
     }
