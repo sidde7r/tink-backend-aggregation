@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagina
 
 import java.time.Month;
 import java.time.Year;
+import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Collections;
 import org.junit.Assert;
@@ -22,7 +23,7 @@ public class TransactionMonthPaginationControllerTest {
     @Before
     public void setup() {
         paginator = Mockito.mock(TransactionMonthPaginator.class);
-        paginationController = new TransactionMonthPaginationController<>(paginator);
+        paginationController = new TransactionMonthPaginationController<>(paginator, ZoneId.of("Europe/Stockholm"));
     }
 
     @Test(expected = NullPointerException.class)
