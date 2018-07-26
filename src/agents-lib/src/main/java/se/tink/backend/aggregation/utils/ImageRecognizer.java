@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.utils;
 
 import com.sun.jersey.core.util.Base64;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -47,5 +48,26 @@ public class ImageRecognizer {
         } catch (TesseractException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    // Use when image transparency causes ocr to fail
+    public static String ocr(byte[] byteImage, Color fillColor) {
+        BufferedImage bufferedImage;
+        ByteArrayInputStream bis = new ByteArrayInputStream(byteImage);
+        try {
+            bufferedImage = ImageIO.read(bis);
+            bis.close();
+            return ocr(bufferedImage, fillColor);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    // Use when image transparency causes ocr to fail
+    public static String ocr(BufferedImage bufferedImage, Color fillColor) {
+        BufferedImage nonTransparentImage = new BufferedImage(bufferedImage.getWidth(),
+                bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+        nonTransparentImage.createGraphics().drawImage(bufferedImage, 0, 0, fillColor, null);
+        return ocr(nonTransparentImage);
     }
 }

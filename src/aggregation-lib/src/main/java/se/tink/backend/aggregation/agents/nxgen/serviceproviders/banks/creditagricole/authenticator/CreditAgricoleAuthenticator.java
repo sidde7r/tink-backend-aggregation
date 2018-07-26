@@ -90,10 +90,9 @@ public class CreditAgricoleAuthenticator implements Authenticator {
     }
 
     private String getShuffledAccountCode(byte[] numberPadBytes, String accountCode) {
-        BufferedImage numberPad = getImageFromBytes(numberPadBytes);
 
         int digits = 10;
-        String parsedDigits = ImageRecognizer.ocr(numberPad).replaceAll("\\s","");
+        String parsedDigits = ImageRecognizer.ocr(numberPadBytes, Color.WHITE).replaceAll("\\s","");
 
         if (parsedDigits.length() != digits) {
             throw new RuntimeException("Couldn't parse numerical pad correctly.");
@@ -115,21 +114,5 @@ public class CreditAgricoleAuthenticator implements Authenticator {
         }
 
         return sb.toString();
-    }
-
-    private BufferedImage getImageFromBytes(byte[] bytes) {
-        BufferedImage image;
-        ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-        try {
-            image = ImageIO.read(bis);
-            bis.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
-        }
-
-        // Convert to jpg to remove transparency
-        BufferedImage jpgImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_RGB);
-        jpgImage.createGraphics().drawImage(image, 0, 0, Color.WHITE, null);
-        return jpgImage;
     }
 }
