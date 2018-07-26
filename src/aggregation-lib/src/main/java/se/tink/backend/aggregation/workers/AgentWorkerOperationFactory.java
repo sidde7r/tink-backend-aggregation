@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.workers;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -15,6 +16,7 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsDecryptRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsReencryptRequest;
+import se.tink.backend.aggregation.rpc.OptInRefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.ReencryptionRequest;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
@@ -44,6 +46,7 @@ import se.tink.backend.aggregation.workers.commands.RefreshItemAgentWorkerComman
 import se.tink.backend.aggregation.workers.commands.ReportProviderMetricsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ReportProviderMetricsAgentWorkerCommand.ReportProviderMetricsAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.ReportProviderTransferMetricsAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.RequestUserOptInAccountsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.TransferAgentWorkerCommand;
@@ -190,8 +193,12 @@ public class AgentWorkerOperationFactory {
                 .filter(i -> !accountItems.contains(i))
                 .collect(Collectors.toList());
 
-        for (RefreshableItem item : accountItems) {
-            commands.add(new RefreshItemAgentWorkerCommand(context, item, createMetricState(request)));
+        // if it is a follow up update, we do not refresh the accounts again
+        if(!(request instanceof OptInRefreshInformationRequest
+                && ((OptInRefreshInformationRequest) request).isOptIn())) {
+            for (RefreshableItem item : accountItems) {
+                commands.add(new RefreshItemAgentWorkerCommand(context, item, createMetricState(request)));
+            }
         }
 
         if (accountItems.size() > 0) {
@@ -266,6 +273,12 @@ public class AgentWorkerOperationFactory {
         commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState));
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)));
+
+        if(request instanceof  OptInRefreshInformationRequest && ((OptInRefreshInformationRequest) request).isOptIn()){
+            OptInRefreshInformationRequest optInRequest = (OptInRefreshInformationRequest) request;
+            commands.addAll(createRefreshAccountsCommandChain(optInRequest, context));;
+            commands.add(new RequestUserOptInAccountsAgentWorkerCommand(context, optInRequest));
+        }
 
         commands.addAll(createRefreshableItemsChain(request, context, request.getItemsToRefresh()));
 
@@ -413,5 +426,34 @@ public class AgentWorkerOperationFactory {
                         aggregationControllerAggregationClient, context));
 
         return new AgentWorkerOperation(agentWorkerOperationState, "migrate-reencrypt", request, commands, context);
+    }
+
+    // for each account type,
+    private List<AgentWorkerCommand> createRefreshAccountsCommandChain(OptInRefreshInformationRequest request,
+            AgentWorkerContext context) {
+
+        Set<RefreshableItem> itemsToRefresh = convertLegacyItems(request.getItemsToRefresh());
+
+        List<AgentWorkerCommand> commands = Lists.newArrayList();
+
+        for (RefreshableItem item : itemsToRefresh) {
+            if (RefreshableItem.isAccount(item)) {
+                commands.add(new RefreshItemAgentWorkerCommand(context, item, createMetricState(request)));
+            }
+        }
+
+        return commands;
+    }
+
+    /**
+     *  the endpoint opt-in supports the initial refresh with opt-in, aka, display all accounts for user to select the
+     *  accounts to aggregate to. it also supports refreshing and updating only white-flagged accounts and the data.
+     *  when the opt-in flag is true, it indicates that we need user to select accounts again, therefore we fetch
+     *  only account data. after fetching, we set the flag into false, and put all white listed accounts in refresh.
+     *  when the opt-in flag is false, we refresh and update all white listed accounts
+     **/
+    public AgentWorkerOperation createOptInRefreshOperation(ClusterInfo clusterInfo,
+            OptInRefreshInformationRequest request) {
+        return createRefreshOperation(clusterInfo, request);
     }
 }
