@@ -41,7 +41,6 @@ public class ClusterIdProvider {
     private ClusterHostConfiguration getValidClusterHost(String clusterName, String clusterEnvironment) throws ClusterNotValid {
         if (Strings.isNullOrEmpty(clusterName) || Strings.isNullOrEmpty(clusterEnvironment)) {
             throw new ClusterNotValid();
-//            throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
 
         ClusterHostConfiguration configuration = clusterHostConfigurations
