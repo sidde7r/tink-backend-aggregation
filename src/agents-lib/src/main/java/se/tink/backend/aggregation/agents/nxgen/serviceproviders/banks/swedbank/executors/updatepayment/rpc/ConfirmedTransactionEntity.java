@@ -71,6 +71,9 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
         if (date == null) {
             return Optional.empty();
         }
+        if (shouldSkipPayment()) {
+            return Optional.empty();
+        }
 
         UpcomingTransaction.Builder upcomingTransactionBuilder = UpcomingTransaction.builder()
                 .setAmount(amount)
@@ -83,6 +86,12 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
         }
 
         return Optional.of(upcomingTransactionBuilder.build());
+    }
+
+    // Skip if the transactions are already in the normal transaction list.
+    private boolean shouldSkipPayment() {
+        return SwedbankBaseConstants.PaymentDateDependency.DIRECT.equalsIgnoreCase(payment.getDateDependency()) ||
+                SwedbankBaseConstants.PaymentStatus.UNDER_WAY.equalsIgnoreCase(payment.getStatus());
     }
 
     @JsonIgnore

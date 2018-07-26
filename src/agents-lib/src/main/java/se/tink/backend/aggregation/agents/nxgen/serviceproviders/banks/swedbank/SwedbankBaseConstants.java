@@ -279,6 +279,14 @@ public class SwedbankBaseConstants {
         public static final String EINVOICE = "EINVOICE";
     }
 
+    public static class PaymentStatus {
+        public static final String UNDER_WAY = "UNDER_WAY";
+    }
+
+    public static class PaymentDateDependency {
+        public static final String DIRECT = "DIRECT";
+    }
+
     public static class PaymentAccountType {
         public static final String BGACCOUNT = "BGACCOUNT";
         public static final String PGACCOUNT = "PGACCOUNT";
