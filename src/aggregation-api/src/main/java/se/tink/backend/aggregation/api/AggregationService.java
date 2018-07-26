@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.rpc.DeleteCredentialsRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsDecryptRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsReencryptRequest;
+import se.tink.backend.aggregation.rpc.OptInRefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.ReencryptionRequest;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.SupplementInformationRequest;
@@ -57,6 +58,13 @@ public interface AggregationService {
     @Produces(MediaType.TEXT_PLAIN)
     @AllowAnonymous
     String ping();
+
+    @POST
+    @Path("opt-in")
+    @TeamOwnership(Team.INTEGRATION)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    void optInRefreshInformation(OptInRefreshInformationRequest request) throws Exception;
 
     @POST
     @Path("refresh")
