@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq;
 
+import com.google.common.base.Strings;
 import java.security.PublicKey;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator.rpc.CreateSessionRequest;
@@ -14,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator.rpc.
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.fetchers.transactional.rpc.AccountsResponseWrapper;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.fetchers.transactional.rpc.TransactionsResponseWrapper;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
+import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
@@ -47,9 +49,13 @@ public class BunqApiClient {
                 .orElseThrow(() -> new IllegalStateException("Could not deserialize InstallResponse"));
     }
 
-    public RegisterDeviceResponse registerDevice(String apiKey) {
+    public RegisterDeviceResponse registerDevice(String apiKey, Aggregator aggregator) {
+        String aggregatorName = Strings.isNullOrEmpty(aggregator.getAggregatorIdentifier()) ?
+                BunqConstants.DEVICE_NAME :
+                aggregator.getAggregatorIdentifier();
+
         RegisterDeviceResponseWrapper response = client.request(getUrl(BunqConstants.Url.REGISTER_DEVICE))
-                .post(RegisterDeviceResponseWrapper.class, RegisterDeviceRequest.createFromApiKey(apiKey));
+                .post(RegisterDeviceResponseWrapper.class, RegisterDeviceRequest.createFromApiKey(aggregatorName, apiKey));
 
         return Optional.ofNullable(response.getResponse())
                 .map(BunqResponse::getResponseBody)

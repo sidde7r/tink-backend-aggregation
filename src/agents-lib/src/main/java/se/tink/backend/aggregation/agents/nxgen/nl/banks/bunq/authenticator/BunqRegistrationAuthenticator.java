@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator.rpc.
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator.rpc.RegisterDeviceResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.error.ErrorResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
+import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
@@ -25,12 +26,14 @@ public class BunqRegistrationAuthenticator implements Authenticator {
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
     private final BunqApiClient apiClient;
+    private final Aggregator aggregator;
 
     public BunqRegistrationAuthenticator(PersistentStorage persistentStorage, SessionStorage sessionStorage,
-            BunqApiClient apiClient) {
+            BunqApiClient apiClient, Aggregator aggregator) {
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
         this.apiClient = apiClient;
+        this.aggregator = aggregator;
     }
 
     @Override
@@ -47,7 +50,7 @@ public class BunqRegistrationAuthenticator implements Authenticator {
 
             // This is just to make it obvious that it's a api key we're using
             String apiKey = credentials.getField(Field.Key.PASSWORD);
-            RegisterDeviceResponse registerDeviceResponse = apiClient.registerDevice(apiKey);
+            RegisterDeviceResponse registerDeviceResponse = apiClient.registerDevice(apiKey, aggregator);
 
             // Persist everything we need need to save
             persistentStorage.put(BunqConstants.StorageKeys.BUNQ_PUBLIC_KEY, installationResponse.getServerPublicKey());
