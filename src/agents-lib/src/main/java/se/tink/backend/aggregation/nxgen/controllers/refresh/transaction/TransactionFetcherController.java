@@ -6,11 +6,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
-import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 
 public class TransactionFetcherController<A extends Account> implements TransactionFetcher<A> {
@@ -40,12 +40,14 @@ public class TransactionFetcherController<A extends Account> implements Transact
         transactions.addAll(fetchUpcomingTransactionsFor(account));
 
         do {
-            Collection<? extends Transaction> batchTransactions = paginator.fetchTransactionsFor(account);
-            if (batchTransactions != null) {
-                transactions.addAll(batchTransactions);
+            PaginatorResponse response = paginator.fetchTransactionsFor(account);
+            transactions.addAll(response.getTinkTransactions());
+
+            if (!response.canFetchMore().orElseThrow(() ->
+                    new IllegalStateException("Pagee must indicate canFetchMore!"))) {
+                break;
             }
-        } while (paginator.canFetchMoreFor(account)
-                && !paginationHelper.isContentWithRefresh(account, transactions));
+        } while (!paginationHelper.isContentWithRefresh(account, transactions));
 
         return transactions;
     }
