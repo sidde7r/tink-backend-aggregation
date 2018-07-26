@@ -65,6 +65,8 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
         if (amount.isEmpty()) {
             return Optional.empty();
         }
+        // negate amount when presented as upcoming transaction
+        amount.setValue(-amount.getValue());
 
         if (date == null) {
             return Optional.empty();

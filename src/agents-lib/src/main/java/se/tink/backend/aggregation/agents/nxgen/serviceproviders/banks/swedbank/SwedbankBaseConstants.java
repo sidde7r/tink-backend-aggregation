@@ -231,6 +231,8 @@ public class SwedbankBaseConstants {
         public static final LogTag LOAN_DETAILS_ERROR = LogTag.from("Swedbank loan details error");
         public static final LogTag DETAILED_PORTFOLIO_RESPONSE = LogTag.from(
                 "Swedbank detailed portfolio - type:[{}] - response: {}");
+        public static final LogTag ENDOWMENT_DETAILED_PORTFOLIO_RESPONSE = LogTag.from(
+                "Swedbank detailed portfolio - type: ENDOWMENT");
         public static final LogTag PORTFOLIO_HOLDINGS_RESPONSE = LogTag.from("Portfolio holdings response: {}");
     }
 
