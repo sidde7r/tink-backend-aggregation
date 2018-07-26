@@ -7,6 +7,7 @@ public class BankAustriaConstants {
 
     public static final String NOT_OK = "ko";
     public static final String OK = "ok";
+    public static final String CURRENT = "CURRENT";
 
 
     public static final class Urls {
