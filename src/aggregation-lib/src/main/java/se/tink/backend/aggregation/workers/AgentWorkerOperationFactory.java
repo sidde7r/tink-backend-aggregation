@@ -275,9 +275,9 @@ public class AgentWorkerOperationFactory {
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)));
 
+            commands.addAll(createRefreshAccountsCommandChain(request, context));
         if(request instanceof RefreshWhitelistInformationRequest && ((RefreshWhitelistInformationRequest) request).isOptIn()){
             RefreshWhitelistInformationRequest refreshWhiteList = (RefreshWhitelistInformationRequest) request;
-            commands.addAll(createRefreshAccountsCommandChain(refreshWhiteList, context));;
             commands.add(new RequestUserOptInAccountsAgentWorkerCommand(context, refreshWhiteList));
         }
 
@@ -432,7 +432,7 @@ public class AgentWorkerOperationFactory {
     }
 
     // for each account type,
-    private List<AgentWorkerCommand> createRefreshAccountsCommandChain(RefreshWhitelistInformationRequest request,
+    private List<AgentWorkerCommand> createRefreshAccountsCommandChain(RefreshInformationRequest request,
             AgentWorkerContext context) {
 
         Set<RefreshableItem> itemsToRefresh = convertLegacyItems(request.getItemsToRefresh());
