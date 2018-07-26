@@ -36,8 +36,6 @@ public class BunqSignatureHeaderFilter extends Filter {
 
     private void addSignatureHeader(HttpRequest httpRequest) {
 
-        log.info("[For Bunq Debugging] User-Agent: "+userAgent);
-
         MultivaluedMap<String, Object> requestHeaders = httpRequest.getHeaders();
 
         String rawHeader = httpRequest.getMethod() + " " + getPathAndQuery(httpRequest) + "\n"
