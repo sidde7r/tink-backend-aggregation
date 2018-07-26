@@ -90,8 +90,14 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
 
     // Skip if the transactions are already in the normal transaction list.
     private boolean shouldSkipPayment() {
-        return SwedbankBaseConstants.PaymentDateDependency.DIRECT.equalsIgnoreCase(payment.getDateDependency()) ||
-                SwedbankBaseConstants.PaymentStatus.UNDER_WAY.equalsIgnoreCase(payment.getStatus());
+        if (SwedbankBaseConstants.TransactionType.TRANSFER.equalsIgnoreCase(type)) {
+            return SwedbankBaseConstants.PaymentDateDependency.DIRECT.equalsIgnoreCase(transfer.getDateDependency());
+        } else if (SwedbankBaseConstants.TransactionType.PAYMENT.equalsIgnoreCase(type)) {
+            return SwedbankBaseConstants.PaymentDateDependency.DIRECT.equalsIgnoreCase(payment.getDateDependency()) ||
+                    SwedbankBaseConstants.PaymentStatus.UNDER_WAY.equalsIgnoreCase(payment.getStatus());
+        }
+
+        return false;
     }
 
     @JsonIgnore
