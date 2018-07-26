@@ -1,14 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken;
 
-import com.google.common.collect.Lists;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.entities.Link;
 
 public class StorageTestHelper {
-    static List<Link> createLinks(HandelsbankenConstants.URLS.Links entryPoint, String href) {
-        return Lists.newArrayList(new Link()
-                .setHref(href)
-                .setRel(entryPoint.getName())
-        );
+    static Map<String, Link> createLinks(HandelsbankenConstants.URLS.Links entryPoint, String href) {
+        Map<String, Link> links = new HashMap<>();
+        links.put(entryPoint.getName(), new Link().setHref(href));
+        return links;
     }
 }

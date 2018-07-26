@@ -42,7 +42,7 @@ public class PendingTransaction extends BaseResponse {
     }
 
     private boolean doesNotHaveLinkWith(String parameter) {
-        return !getLinks().stream().anyMatch(link -> link.hasParameter(parameter));
+        return !getLinks().values().stream().anyMatch(link -> link.hasParameter(parameter));
     }
 
     public Optional<URL> paymentDetails() {
