@@ -125,4 +125,6 @@ public class CreditAgricoleConstants {
     public static class ErrorCode {
         public static String INCORRECT_CREDENTIALS = "fr.mabanque.auth.wrongpassword";
     }
+
+    public static final String DATE_FORMAT = "yyyyMMdd";
 }
