@@ -76,7 +76,6 @@ public class AggregationServiceContainer extends AbstractServiceContainer {
                 AggregationModuleFactory.build(configuration, environment.jersey()));
 
         ServiceContext serviceContext = injector.getInstance(ServiceContext.class);
-
         buildContainer(configuration, environment, serviceContext, injector);
     }
 

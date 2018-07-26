@@ -3,22 +3,21 @@ package se.tink.backend.aggregation.cluster.identification;
 import com.google.common.base.Strings;
 import com.sun.jersey.spi.container.ContainerRequest;
 import java.util.Objects;
-import javax.servlet.http.HttpServletRequest;
 import se.tink.libraries.metrics.MetricId;
 
 public class ClusterId {
-    private static final String CLUSTER_NAME_HEADER = "x-tink-cluster-name";
-    private static final String CLUSTER_ENVIRONMENT_HEADER = "x-tink-cluster-environment";
-    private static final String AGGREGATOR_NAME_HEADER = "x-tink-aggregator-header";
+    public static final String CLUSTER_NAME_HEADER = "x-tink-cluster-name";
+    public static final String CLUSTER_ENVIRONMENT_HEADER = "x-tink-cluster-environment";
+    public static final String AGGREGATOR_NAME_HEADER = "x-tink-aggregator-header";
 
     private final String name;
     private final String environment;
     private final Aggregator aggregator;
 
-    private ClusterId(String name, String environment, String aggregator) {
+    private ClusterId(String name, String environment, Aggregator aggregator) {
         this.name = name;
         this.environment = environment;
-        this.aggregator = Aggregator.of(aggregator);
+        this.aggregator = aggregator;
     }
 
     public MetricId.MetricLabels metricLabels() {
@@ -32,7 +31,7 @@ public class ClusterId {
     }
 
     public boolean isValidId() {
-        return !(Strings.isNullOrEmpty(name) || Strings.isNullOrEmpty(environment) /*|| Strings.isNullOrEmpty(aggregator.getAggregatorIdentifier())*/);
+        return !(Strings.isNullOrEmpty(name) || Strings.isNullOrEmpty(environment));
     }
 
     public String getName() {
@@ -51,17 +50,6 @@ public class ClusterId {
         return aggregator;
     }
 
-    public static ClusterId createFromHttpServletRequest(HttpServletRequest request) {
-        if (Objects.isNull(request)) {
-            return createEmpty();
-        }
-
-        String clusterName = request.getHeader(CLUSTER_NAME_HEADER);
-        String clusterEnvironment = request.getHeader(CLUSTER_ENVIRONMENT_HEADER);
-        String aggregatorName = request.getHeader(AGGREGATOR_NAME_HEADER);
-        return create(clusterName, clusterEnvironment, aggregatorName);
-    }
-
     public static ClusterId createFromContainerRequest(ContainerRequest request) {
         if (Objects.isNull(request)) {
             return createEmpty();
@@ -71,14 +59,14 @@ public class ClusterId {
         String clusterEnvironment = request.getHeaderValue(CLUSTER_ENVIRONMENT_HEADER);
         String aggregatorName = request.getHeaderValue(AGGREGATOR_NAME_HEADER);
 
-        return create(clusterName, clusterEnvironment, aggregatorName);
+        return create(clusterName, clusterEnvironment, Aggregator.initAggregator(aggregatorName));
     }
 
     public static ClusterId createEmpty() {
         return new ClusterId(null, null, null);
     }
 
-    public static ClusterId create(String name, String environment, String aggregator) {
+    public static ClusterId create(String name, String environment, Aggregator aggregator) {
         return new ClusterId(name, environment, aggregator);
     }
 }

@@ -36,6 +36,7 @@ java_library(
         "//src/libraries/uuid:uuid",
         "//src/libraries/demo_credentials:demo-credentials",
         "//src/api-annotations",
+        "//src/cluster-lib:cluster-lib",
 
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
@@ -557,6 +558,7 @@ junit_test(
         ":main-api",
 
         "//src/api-annotations-testlib",
+        "//src/cluster-lib:cluster-lib",
 
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
@@ -733,6 +735,7 @@ java_library(
     deps = [
         ":main-api",
 
+        "//src/cluster-lib",
         "//src/api-annotations",
 
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",

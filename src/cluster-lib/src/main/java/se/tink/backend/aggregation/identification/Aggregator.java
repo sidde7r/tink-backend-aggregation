@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.cluster.identification;
 
+import com.google.common.base.Strings;
+
 public class Aggregator {
 
     private final String aggregatorIdentifier;
@@ -19,6 +21,14 @@ public class Aggregator {
 
     public static Aggregator of(String aggregatorIdentifier) {
         return new Aggregator(aggregatorIdentifier);
+    }
+
+    public static Aggregator initAggregator(String aggregatorHeader){
+        if(!Strings.isNullOrEmpty(aggregatorHeader)){
+            return Aggregator.of(aggregatorHeader);
+        }
+
+        return  Aggregator.of(Aggregator.DEFAULT);
     }
 
 }
