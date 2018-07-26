@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.workers.commands.DeleteAgentWorkerCommand.Del
 import se.tink.backend.aggregation.workers.commands.EncryptAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.EncryptAgentWorkerCommand.EncryptAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.EncryptCredentialsWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.SelectAccountsToBeUpdated;
 import se.tink.backend.aggregation.workers.commands.InstantiateAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.InstantiateAgentWorkerCommand.InstantiateAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.KeepAliveAgentWorkerCommand;
@@ -280,6 +281,8 @@ public class AgentWorkerOperationFactory {
             commands.add(new RequestUserOptInAccountsAgentWorkerCommand(context, refreshWhiteList));
         }
 
+        commands.add(new SelectAccountsToBeUpdated(context));
+
         commands.addAll(createRefreshableItemsChain(request, context, request.getItemsToRefresh()));
 
         log.debug("Created refresh operation chain for credential");
@@ -429,7 +432,7 @@ public class AgentWorkerOperationFactory {
     }
 
     // for each account type,
-    private List<AgentWorkerCommand> createRefreshAccountsCommandChain(OptInRefreshInformationRequest request,
+    private List<AgentWorkerCommand> createRefreshAccountsCommandChain(RefreshWhitelistInformationRequest request,
             AgentWorkerContext context) {
 
         Set<RefreshableItem> itemsToRefresh = convertLegacyItems(request.getItemsToRefresh());
