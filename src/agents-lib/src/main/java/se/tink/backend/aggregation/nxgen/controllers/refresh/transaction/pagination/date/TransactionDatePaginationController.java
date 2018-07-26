@@ -2,10 +2,11 @@ package se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagina
 
 import com.google.common.base.Preconditions;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Objects;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -28,36 +29,36 @@ public class TransactionDatePaginationController<A extends Account> implements T
     }
 
     @Override
-    public Collection<? extends Transaction> fetchTransactionsFor(A account) {
-        Preconditions.checkState(canFetchMoreFor(account),
-                "Fetching more transactions when canFetchMore() returns false is not allowed");
+    public PaginatorResponse fetchTransactionsFor(A account) {
+        resetStateIfAccountChanged(account);
 
         toDate = calculateToDate();
         fromDate = DateUtils.addMonths(toDate, -MONTHS_TO_FETCH);
 
-        Collection<? extends Transaction> transactions = paginator.getTransactionsFor(account, fromDate, toDate);
+        PaginatorResponse response = paginator.getTransactionsFor(account, fromDate, toDate);
 
-        if (transactions == null || transactions.isEmpty()) {
+        Collection<? extends Transaction> transactions = response.getTinkTransactions();
+        if (transactions.isEmpty() && !response.canFetchMore().isPresent()) {
+            // Override canFetchMore with consecutive check.
+
             log.info(String.format("Couldn't find any transactions for account with accountNumber: %s",
                     account.getAccountNumber()));
-            consecutiveEmptyPages++;
 
-            return Collections.emptyList();
+            consecutiveEmptyPages++;
+            return PaginatorResponseImpl.createEmpty(consecutiveEmptyPages < MAX_CONSECUTIVE_EMPTY_PAGES);
         }
 
         log.info(String.format("Fetched %s transactions for account with accountNumber: %s", transactions.size(),
                 account.getAccountNumber()));
 
         consecutiveEmptyPages = 0;
-        return transactions;
-    }
 
-    @Override
-    public boolean canFetchMoreFor(A account) {
+        if (!response.canFetchMore().isPresent()) {
+            // If canFetchMore is not defined we assume we always can fetch more (until we reach an empty page).
+            return PaginatorResponseImpl.create(transactions, true);
+        }
 
-        resetStateIfAccountChanged(account);
-
-        return consecutiveEmptyPages < MAX_CONSECUTIVE_EMPTY_PAGES;
+        return response;
     }
 
     private void resetStateIfAccountChanged(Account account) {
