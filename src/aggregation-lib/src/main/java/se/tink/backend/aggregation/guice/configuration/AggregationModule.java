@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAg
 import se.tink.backend.aggregation.api.ProviderService;
 import se.tink.backend.aggregation.client.AggregationServiceFactory;
 import se.tink.backend.aggregation.client.InProcessAggregationServiceFactory;
+import se.tink.backend.aggregation.cluster.JerseyClusterIdProvider;
 import se.tink.backend.aggregation.controllers.ProviderServiceController;
 import se.tink.backend.aggregation.injectableproviders.ClusterIdProvider;
 import se.tink.backend.aggregation.log.AggregationLoggerRequestFilter;
@@ -42,6 +43,7 @@ public class AggregationModule extends AbstractModule {
 
         bind(ProviderService.class).to(ProviderServiceResource.class).in(Scopes.SINGLETON);
         bind(ProviderServiceController.class).in(Scopes.SINGLETON);
+        bind(ClusterIdProvider.class).in(Scopes.SINGLETON);
 
         // TODO Remove these lines after getting rid of dependencies on ServiceContext
         bind(ServiceContext.class).in(Scopes.SINGLETON);
@@ -54,7 +56,7 @@ public class AggregationModule extends AbstractModule {
                 .addResponseFilters(AccessLoggingFilter.class)
                 .addResources(ProviderService.class)
                 //This is not a resource, but a provider
-                .addResources(ClusterIdProvider.class)
+                .addResources(JerseyClusterIdProvider.class)
                 .bind();
 
     }

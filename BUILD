@@ -356,7 +356,7 @@ java_library(
         ":encryption-api",
         ":main-api",
         ":system-api",
-        "agents-lib",
+        ":agents-lib",
         ":aggregationcontroller-api",
 
         "//src/libraries/uuid:uuid",
@@ -418,6 +418,7 @@ java_library(
         "//third_party:net_sourceforge_cssparser_cssparser",
 
         "//src/cluster-lib:cluster-lib",
+        "//src/cluster-lib-jersey:cluster-lib-jersey",
     ],
 )
 
