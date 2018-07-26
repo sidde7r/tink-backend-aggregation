@@ -120,11 +120,12 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     private AggregationControllerAggregationClient aggregationControllerAggregationClient;
     //private final ClusterInfo clusterInfo;
     private boolean isAggregationCluster;
-
     //Cached accounts have not been sent to system side yet.
     private Map<String, Pair<Account, AccountFeatures>> cachedAccountsByUniqueId;
     //Updated accounts have been sent to System side and has been updated with their stored Tink Id
     private Map<String, Account> updatedAccountsByTinkId;
+    //White listed accounts for accounts to aggregate with
+    private List<Account> whiteListedAccounts;
 
     public AgentWorkerContext(CredentialsRequest request, ServiceContext serviceContext, MetricRegistry metricRegistry,
             boolean useAggregationController, AggregationControllerAggregationClient aggregationControllerAggregationClient,
@@ -134,6 +135,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         this.cachedAccountsByUniqueId = Maps.newHashMap();
         this.updatedAccountsByTinkId = Maps.newHashMap();
+        this.whiteListedAccounts = Lists.newArrayList();
 
         this.request = request;
         this.serviceContext = serviceContext;
