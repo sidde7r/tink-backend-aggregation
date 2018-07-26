@@ -82,7 +82,7 @@ import se.tink.libraries.metrics.Timer;
 import se.tink.libraries.metrics.Timer.Context;
 import se.tink.libraries.uuid.UUIDUtils;
 
-public class AgentWorkerContext extends AgentContext implements Managed {
+public class AgentWorkerContext extends AgentContext implements Managed, SetAccountsToAggregateContext {
     private static final AggregationLogger log = new AggregationLogger(AgentWorkerContext.class);
 
     private static final Set<AccountTypes> TARGET_ACCOUNT_TYPES = new HashSet<>(Arrays.asList(
@@ -963,5 +963,10 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     public boolean isCredentialDeleted(String credentialsId) {
         Preconditions.checkState(!Strings.isNullOrEmpty(credentialsId), "CredentialsId must not be null or empty.");
         return aggregationCredentialsRepository.findOne(credentialsId) == null;
+    }
+
+    @Override
+    public void setAccounts(List<Account> accounts) {
+        whiteListedAccounts = accounts;
     }
 }
