@@ -555,8 +555,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
 
         Account account = pair.first;
         AccountFeatures accountFeatures = pair.second;
-        account.setCredentialsId(request.getCredentials().getId());
-        account.setUserId(request.getCredentials().getUserId());
 
         if (!shouldAggregateDataForAccount(account)) {
             // Account marked to not aggregate data from.
@@ -564,7 +562,9 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
             // we don't process further or store the account's data.
             return account;
         }
-
+        
+        account.setCredentialsId(request.getCredentials().getId());
+        account.setUserId(request.getCredentials().getUserId());
 
         Account updatedAccount;
         if (useAggregationController) {
