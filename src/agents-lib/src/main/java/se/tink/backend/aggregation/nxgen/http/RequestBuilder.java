@@ -384,7 +384,6 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
     public RequestBuilder body(Object body) {
         if (body instanceof AbstractForm) {
             this.body = ((AbstractForm) body).getBodyValue();
-            type(MediaType.APPLICATION_FORM_URLENCODED);
         } else {
             this.body = body;
         }
