@@ -16,8 +16,8 @@ public class RegisterDeviceRequest {
         this.apiKey = apiKey;
     }
 
-    public static RegisterDeviceRequest createFromApiKey(String apiKey) {
-        return new RegisterDeviceRequest(BunqConstants.DEVICE_NAME, apiKey);
+    public static RegisterDeviceRequest createFromApiKey(String deviceName, String apiKey) {
+        return new RegisterDeviceRequest(deviceName, apiKey);
     }
 
     public String getDeviceName() {
