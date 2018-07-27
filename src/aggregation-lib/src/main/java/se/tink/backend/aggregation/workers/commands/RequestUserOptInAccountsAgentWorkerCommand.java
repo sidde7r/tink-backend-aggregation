@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
@@ -52,7 +53,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
 
         // check if user send back the accounts
         if (supplementalResponse == null || supplementalResponse.isEmpty()) {
-            log.error("no accounts are returned, is there somehting wrong during the parsing?");
+            context.getRequest().getCredentials().setStatus(CredentialsStatus.AUTHENTICATION_ERROR);
             return AgentWorkerCommandResult.ABORT;
         }
 
