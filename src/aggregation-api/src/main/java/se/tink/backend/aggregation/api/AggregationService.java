@@ -64,7 +64,7 @@ public interface AggregationService {
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    void refreshWhitelistInformation(RefreshWhitelistInformationRequest request) throws Exception;
+    void refreshWhitelistInformation(RefreshWhitelistInformationRequest request, @ClusterContext ClusterInfo clusterInfo) throws Exception;
 
     @POST
     @Path("refresh")
