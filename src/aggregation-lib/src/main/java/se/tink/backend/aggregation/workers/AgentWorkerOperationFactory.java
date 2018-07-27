@@ -428,6 +428,7 @@ public class AgentWorkerOperationFactory {
             AgentWorkerContext context) {
 
         Set<RefreshableItem> itemsToRefresh = convertLegacyItems(request.getItemsToRefresh());
+        List<RefreshableItem> items = RefreshableItem.sort(itemsToRefresh);
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
