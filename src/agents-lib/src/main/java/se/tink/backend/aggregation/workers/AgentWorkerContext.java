@@ -562,7 +562,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
             // we don't process further or store the account's data.
             return account;
         }
-        
+
         account.setCredentialsId(request.getCredentials().getId());
         account.setUserId(request.getCredentials().getUserId());
 

@@ -267,7 +267,7 @@ public class AgentWorkerOperationFactory {
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)));
 
-            commands.addAll(createRefreshAccountsCommandChain(request, context));
+        commands.addAll(createRefreshAccountsCommandChain(request, context));
         if(request instanceof RefreshWhitelistInformationRequest && ((RefreshWhitelistInformationRequest) request).isOptIn()){
             RefreshWhitelistInformationRequest refreshWhiteList = (RefreshWhitelistInformationRequest) request;
             commands.add(new RequestUserOptInAccountsAgentWorkerCommand(context, refreshWhiteList));
