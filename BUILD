@@ -755,7 +755,6 @@ java_library(
         ":main-api",
         ":provider-configuration-api",
         ":common-lib",
-        ":aggregation-lib",
 
         "//src/cluster-lib",
         "//src/api-annotations",

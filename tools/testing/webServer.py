@@ -34,7 +34,8 @@ app = Flask(__name__)
 
 ### START - CONSTANTS ###
 
-AGGREGATION_HOST = 'http://127.0.0.1:9095'
+AGGREGATION_HOST = 'http://127.0.0.1:9057'
+PROVIDER_HOST = 'http://127.0.0.1:9047'
 
 DATA_BASE = None
 CREDENTIALS_TABLE = None
@@ -133,7 +134,7 @@ def list_credentials():
 @app.route("/providers/list/<market>", methods = ['GET'])
 def list_provider_by_market(market):
 	print market
-	return requests.get(AGGREGATION_HOST + '/providers/' + market + '/list', headers=GET_HEADERS).text
+	return requests.get(PROVIDER_HOST + '/providers/' + market + '/list', headers=GET_HEADERS).text
 
 @app.route("/providers/<providername>", methods = ['GET'])
 def list_provider(providername):
@@ -152,7 +153,7 @@ def list_accounts(credentialsid):
 
 @app.route("/providers/list", methods = ['GET'])
 def list_providers(*args):
-	return requests.get(AGGREGATION_HOST + '/providers/list', headers=GET_HEADERS).text
+	return requests.get(PROVIDER_HOST + '/providers/list', headers=GET_HEADERS).text
 
 @app.route("/credentials/status/<id>", methods = ['GET'])
 def get_credential(id):
@@ -229,7 +230,7 @@ def credentials_sensitive():
 def get_provider(providerName):
 	if not providerName:
 		abort(400, 'Provider name is missing.')
-	r = requests.get(AGGREGATION_HOST + '/providers/' + providerName, headers=GET_HEADERS)
+	r = requests.get(PROVIDER_HOST + '/providers/' + providerName, headers=GET_HEADERS)
 	if not r.text:
 		abort(400, 'Invalid provider name')
 	return json.loads(r.text)
@@ -366,3 +367,4 @@ def main(argv):
 
 if __name__ == "__main__":
     app.run(main(sys.argv))
+	
