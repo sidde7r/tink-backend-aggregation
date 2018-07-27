@@ -21,7 +21,7 @@ public final class BankiaSessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
-        if (!apiClient.getGlobalPositionClientScenario()) {
+        if (!apiClient.authorizeSession()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }

@@ -30,6 +30,6 @@ public final class BankiaAuthenticator implements PasswordAuthenticator {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
-        apiClient.getGlobalPositionClientScenario();
+        apiClient.authorizeSession();
     }
 }

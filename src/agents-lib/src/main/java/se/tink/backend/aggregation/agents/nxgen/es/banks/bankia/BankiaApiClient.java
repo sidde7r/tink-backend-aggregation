@@ -157,7 +157,7 @@ public final class BankiaApiClient {
      *
      * @return true if the user is properly logged in, otherwise false
      */
-    public boolean getGlobalPositionClientScenario() {
+    public boolean authorizeSession() {
         try {
             client.request(BankiaConstants.Url.GLOBAL_POSITION_CLIENT_SCENARIO)
                     .queryParam(BankiaConstants.Query.J_GID_COD_APP, BankiaConstants.Default.O3)
