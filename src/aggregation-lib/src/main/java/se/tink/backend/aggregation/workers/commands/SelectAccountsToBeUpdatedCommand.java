@@ -29,7 +29,7 @@ public class SelectAccountsToBeUpdatedCommand extends AgentWorkerCommand {
     @Override
     public AgentWorkerCommandResult execute() throws Exception {
         List<Account> allAccounts = context.getCachedAccounts();
-        List<String> optInAccountNumbers = context.getOptInAccountNumbers();
+        List<String> optInAccountNumbers = context.getAccountNumbersOfUserSelectedAccounts();
         List<Account> accountsFromRequest = refreshInformationRequest.getAccounts();
 
         List<Account> allExceptForBlacklisted = allAccounts.stream().filter(x -> !shouldNotAggregateDataForAccount(accountsFromRequest, x)).collect(Collectors.toList());

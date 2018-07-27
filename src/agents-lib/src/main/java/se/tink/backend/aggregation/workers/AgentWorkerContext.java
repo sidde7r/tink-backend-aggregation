@@ -124,9 +124,11 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
     private Map<String, Pair<Account, AccountFeatures>> allAvailableAccountsByUniqueId;
     //Updated accounts have been sent to System side and has been updated with their stored Tink Id
     private Map<String, Account> updatedAccountsByTinkId;
-    //White listed accounts for accounts to aggregate with
+    // a collection of account to keep a record of what accounts we should aggregate data after opt-in flow,
+    // selecting white listed accounts and eliminating blacklisted accounts
     private List<Account> accountsToAggregate;
-    private List<String> optInAccountNumbers;
+    // a collection of account numbers that the Opt-in user selected during the opt-in flow
+    private List<String> accountNumbersOfUserSelectedAccounts;
 
     public AgentWorkerContext(CredentialsRequest request, ServiceContext serviceContext, MetricRegistry metricRegistry,
             boolean useAggregationController, AggregationControllerAggregationClient aggregationControllerAggregationClient,
@@ -137,7 +139,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         this.allAvailableAccountsByUniqueId = Maps.newHashMap();
         this.updatedAccountsByTinkId = Maps.newHashMap();
         this.accountsToAggregate = Lists.newArrayList();
-        this.optInAccountNumbers = Lists.newArrayList();
+        this.accountNumbersOfUserSelectedAccounts = Lists.newArrayList();
 
         this.request = request;
         this.serviceContext = serviceContext;
@@ -972,11 +974,11 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
     }
 
     @Override
-    public List<String> getOptInAccountNumbers() {
-        return optInAccountNumbers;
+    public List<String> getAccountNumbersOfUserSelectedAccounts() {
+        return accountNumbersOfUserSelectedAccounts;
     }
 
     public void addOptInAccountNumbers(List<String> optInAccountNumbers) {
-        this.optInAccountNumbers = optInAccountNumbers;
+        this.accountNumbersOfUserSelectedAccounts = optInAccountNumbers;
     }
 }
