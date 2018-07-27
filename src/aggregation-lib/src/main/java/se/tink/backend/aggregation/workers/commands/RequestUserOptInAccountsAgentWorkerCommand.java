@@ -65,6 +65,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
         boolean isIncluded = existingAccounts.stream()
                 .anyMatch(a -> Objects.equals(a.getBankId(), account.getBankId()));
         Field field = new Field();
+        field.setDescription(account.getAccountNumber() + " " + account.getName());
         field.setMasked(false);
         field.setName(account.getBankId());
         field.setCheckbox(true);
