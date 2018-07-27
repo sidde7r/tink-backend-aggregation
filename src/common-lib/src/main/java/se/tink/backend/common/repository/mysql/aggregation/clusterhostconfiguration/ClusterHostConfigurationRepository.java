@@ -1,4 +1,4 @@
-package se.tink.backend.common.repository.mysql.aggregation.repositories;
+package se.tink.backend.common.repository.mysql.aggregation.clusterhostconfiguration;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import se.tink.backend.core.ClusterHostConfiguration;

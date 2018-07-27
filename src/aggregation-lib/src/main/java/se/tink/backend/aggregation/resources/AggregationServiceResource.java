@@ -29,7 +29,7 @@ import se.tink.backend.aggregation.workers.ratelimit.DefaultProviderRateLimiterF
 import se.tink.backend.aggregation.workers.ratelimit.OverridingProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.ratelimit.ProviderRateLimiterFactory;
 import se.tink.backend.common.ServiceContext;
-import se.tink.backend.common.repository.mysql.aggregation.repositories.ClusterHostConfigurationRepository;
+import se.tink.backend.common.repository.mysql.aggregation.clusterhostconfiguration.ClusterHostConfigurationRepository;
 import se.tink.libraries.http.utils.HttpResponseHelper;
 import se.tink.libraries.metrics.MetricRegistry;
 

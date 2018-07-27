@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
 import se.tink.backend.common.ServiceContext;
-import se.tink.backend.common.repository.mysql.aggregation.AggregationCredentialsRepository;
+import se.tink.backend.common.repository.mysql.aggregation.aggregationcredentials.AggregationCredentialsRepository;
 
 @Deprecated
 public class DeleteAgentWorkerCommand extends AgentWorkerCommand {

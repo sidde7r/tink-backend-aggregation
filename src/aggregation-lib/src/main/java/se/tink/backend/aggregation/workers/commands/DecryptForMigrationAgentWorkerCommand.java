@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
-import se.tink.backend.common.repository.mysql.aggregation.AggregationCredentialsRepository;
+import se.tink.backend.common.repository.mysql.aggregation.aggregationcredentials.AggregationCredentialsRepository;
 import se.tink.backend.core.AggregationCredentials;
 import se.tink.backend.encryption.api.EncryptionService;
 import se.tink.backend.encryption.rpc.DecryptionRequest;

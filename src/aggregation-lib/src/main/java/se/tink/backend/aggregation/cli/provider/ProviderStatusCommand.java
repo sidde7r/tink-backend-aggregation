@@ -8,7 +8,7 @@ import net.sourceforge.argparse4j.inf.Subparser;
 import net.sourceforge.argparse4j.inf.Subparsers;
 import se.tink.backend.aggregation.cli.AggregationServiceContextCommand;
 import se.tink.backend.common.config.ServiceConfiguration;
-import se.tink.backend.common.repository.mysql.aggregation.ProviderConfigurationRepository;
+import se.tink.backend.common.repository.mysql.aggregation.providerconfiguration.ProviderConfigurationRepository;
 import se.tink.backend.core.ProviderStatuses;
 import se.tink.libraries.cli.printutils.CliPrintUtils;
 

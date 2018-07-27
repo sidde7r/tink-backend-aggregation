@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.provider.configuration.repositories.mysql.ProviderConfigurationRepository;
 import se.tink.backend.common.config.DatabaseConfiguration;
-import se.tink.backend.common.repository.mysql.aggregation.repositories.ClusterHostConfigurationRepository;
+import se.tink.backend.common.repository.mysql.aggregation.clusterhostconfiguration.ClusterHostConfigurationRepository;
 import se.tink.backend.core.ClusterHostConfiguration;
 import se.tink.backend.guice.configuration.RepositoryModule;
 

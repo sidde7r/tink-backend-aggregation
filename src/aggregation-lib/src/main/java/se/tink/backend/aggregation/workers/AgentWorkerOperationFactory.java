@@ -53,7 +53,7 @@ import se.tink.backend.aggregation.workers.metrics.MetricCacheLoader;
 import se.tink.backend.aggregation.workers.refresh.ProcessableItem;
 import se.tink.backend.common.ServiceContext;
 import se.tink.backend.common.cache.CacheClient;
-import se.tink.backend.common.repository.mysql.aggregation.ClusterCryptoConfigurationRepository;
+import se.tink.backend.common.repository.mysql.aggregation.clustercryptoconfiguration.ClusterCryptoConfigurationRepository;
 import se.tink.libraries.metrics.MetricRegistry;
 
 public class AgentWorkerOperationFactory {

@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.cli.provider;
 
-import se.tink.backend.common.repository.mysql.aggregation.ProviderConfigurationRepository;
+import se.tink.backend.common.repository.mysql.aggregation.providerconfiguration.ProviderConfigurationRepository;
 import se.tink.backend.core.ProviderConfiguration;
 import se.tink.backend.core.ProviderStatuses;
 import se.tink.backend.aggregation.log.AggregationLogger;

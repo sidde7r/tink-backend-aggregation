@@ -764,6 +764,7 @@ java_library(
         "//src/libraries/jersey_guice:jersey-guice",
         "//src/libraries/dropwizard_utils:dropwizard-utils",
         "//src/libraries/discovery:discovery",
+        "//src/cluster-lib-jersey:cluster-lib-jersey",
         "//third_party:io_dropwizard_dropwizard_jersey",
 
         "//src/libraries/date",

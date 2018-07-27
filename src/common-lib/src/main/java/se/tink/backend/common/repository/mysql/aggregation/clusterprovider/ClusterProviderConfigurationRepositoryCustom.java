@@ -1,4 +1,4 @@
-package se.tink.backend.common.repository.mysql.aggregation;
+package se.tink.backend.common.repository.mysql.aggregation.clusterprovider;
 
 import java.util.List;
 import se.tink.backend.core.ClusterProviderConfiguration;
