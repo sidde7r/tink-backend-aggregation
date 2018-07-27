@@ -25,6 +25,6 @@ public class CreditAgricoleAgentTest {
     }
 
     private static class Providers {
-        private static final String IDF = "fr-creditagricoleidf-password";
+        private static final String IDF = "fr-creditagricoleiledefrance-password";
     }
 }
