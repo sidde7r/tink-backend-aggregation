@@ -67,6 +67,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
         Field field = new Field();
         field.setDescription(account.getAccountNumber() + " " + account.getName());
         field.setMasked(false);
+        field.setPattern("(true|false)");
         field.setName(account.getBankId());
         field.setCheckbox(true);
         field.setValue(String.valueOf(isIncluded));
