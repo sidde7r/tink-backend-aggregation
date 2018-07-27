@@ -51,6 +51,14 @@ public class TransactionEntity {
         return surcharge / 100.0;
     }
 
+    public long getStartedDate() {
+        return startedDate;
+    }
+
+    public long getUpdatedDate() {
+        return updatedDate;
+    }
+
     public Transaction toTinkTransaction() {
         return Transaction.builder()
                 .setAmount(new Amount(currency.toUpperCase(), getAmount()))

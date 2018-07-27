@@ -24,20 +24,21 @@ public class RevolutTransactionFetcher implements TransactionKeyPaginator<Transa
         int count = RevolutConstants.Pagination.COUNT;
         String toDateMillis = (key != null ? key : Long.toString(System.currentTimeMillis()));
 
-        Collection<Transaction> transactions = apiClient.fetchTransactions(count, toDateMillis).stream()
-                .map(TransactionEntity::toTinkTransaction)
-                .collect(Collectors.toList());
+        Collection<TransactionEntity> transactionEntities = apiClient.fetchTransactions(count, toDateMillis);
 
         TransactionKeyPaginatorResponseImpl<String> response = new TransactionKeyPaginatorResponseImpl<>();
-        response.setTransactions(transactions);
 
-        if (transactions.size() > 0) {
-            String nextKey = Long.toString(transactions.stream()
-                    .map(t -> t.getDate().getTime())
-                    .min(Comparator.comparing(t -> t))
-                    .get());
-            response.setNext(nextKey);
-        }
+        response.setTransactions(transactionEntities.stream()
+                .map(TransactionEntity::toTinkTransaction)
+                .collect(Collectors.toList())
+        );
+
+        response.setNext(transactionEntities.stream()
+                .map(TransactionEntity::getStartedDate)
+                .min(Comparator.comparing(t -> t))
+                .map(t -> Long.toString(t))
+                .orElse(null)
+        );
 
         return response;
     }
