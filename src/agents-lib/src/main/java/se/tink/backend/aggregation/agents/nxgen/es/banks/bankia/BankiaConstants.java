@@ -12,7 +12,6 @@ public abstract class BankiaConstants {
     public static final ZoneId ZONE_ID = ZoneId.of("Europe/Madrid");
     public static final String PROVIDER_NAME = "es-bankia-password";
     public static final String MARKET = "ES";
-    public static final String CURRENCY = "EUR";
     public static final String LANGUAGE = "en";
     private static final String URL_BASE_M = "https://m.bankia.es";
     private static final String URL_BASE_OIP = "https://oip.bankia.es";
