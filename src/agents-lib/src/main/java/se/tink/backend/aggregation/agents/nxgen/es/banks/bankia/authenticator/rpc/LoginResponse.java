@@ -21,7 +21,7 @@ public class LoginResponse {
     @JsonProperty("mostrarZonaGestorAceptacionApps")
     private boolean showZoneManagerAcceptanceApps;
     @JsonProperty("mostrarBandejaDeTareasPG")
-    private boolean showTaskTraypg;
+    private boolean showTaskTrayPg;
     @JsonProperty("mostrarGestorBpApps")
     private boolean showGestorBpApps;
     @JsonProperty("nombreUsuario")
@@ -72,8 +72,8 @@ public class LoginResponse {
         return showZoneManagerAcceptanceApps;
     }
 
-    public boolean isShowTaskTraypg() {
-        return showTaskTraypg;
+    public boolean isShowTaskTrayPg() {
+        return showTaskTrayPg;
     }
 
     public boolean isShowGestorBpApps() {
