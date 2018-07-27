@@ -382,7 +382,11 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
 
     // RequestBuilder
     public RequestBuilder body(Object body) {
-        this.body = body;
+        if (body instanceof AbstractForm) {
+            this.body = ((AbstractForm) body).getBodyValue();
+        } else {
+            this.body = body;
+        }
         return this;
     }
 
