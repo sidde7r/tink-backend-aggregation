@@ -18,6 +18,8 @@ server:
 
 cluster: TINK
 
+isAggregationCluster: true
+
 coordination:
   hosts: 192.168.99.100:31003
 

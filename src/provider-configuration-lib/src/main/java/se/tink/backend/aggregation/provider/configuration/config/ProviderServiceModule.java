@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
 import se.tink.backend.aggregation.provider.configuration.api.MonitoringService;
+import se.tink.backend.aggregation.injectableproviders.ClusterIdProvider;
 import se.tink.backend.aggregation.provider.configuration.api.ProviderService;
 import se.tink.backend.aggregation.provider.configuration.controllers.ProviderServiceController;
 import se.tink.backend.aggregation.provider.configuration.resources.MonitoringServiceResource;
@@ -33,6 +34,7 @@ public class ProviderServiceModule extends AbstractModule {
                 .addResponseFilters(AccessLoggingFilter.class)
                 .addResources(ProviderService.class)
                 .addResources(MonitoringService.class)
+                .addResources(ClusterIdProvider.class)
                 .bind();
     }
 }
