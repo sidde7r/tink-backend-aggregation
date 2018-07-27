@@ -193,15 +193,7 @@ public class AgentWorkerOperationFactory {
         List<RefreshableItem> nonAccountItems = items.stream()
                 .filter(i -> !accountItems.contains(i))
                 .collect(Collectors.toList());
-
-        // if it is a follow up update, we do not refresh the accounts again
-        if(!(request instanceof RefreshWhitelistInformationRequest
-                && ((RefreshWhitelistInformationRequest) request).isOptIn())) {
-            for (RefreshableItem item : accountItems) {
-                commands.add(new RefreshItemAgentWorkerCommand(context, item, createMetricState(request)));
-            }
-        }
-
+        
         if (accountItems.size() > 0) {
             commands.add(new SendAccountsToUpdateServiceAgentWorkerCommand(context, createMetricState(request)));
         }
