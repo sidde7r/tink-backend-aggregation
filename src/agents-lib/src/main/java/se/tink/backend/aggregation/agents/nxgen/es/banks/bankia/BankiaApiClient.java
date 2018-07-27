@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia;
 
-import com.sun.jersey.core.util.MultivaluedMapImpl;
 import java.time.LocalDate;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.RsaKeyResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entities.DateEntity;
@@ -110,24 +109,8 @@ public final class BankiaApiClient {
 
         String encryptedPassword = BankiaCrypto.encryptPassword(password, encryptionKey);
 
-        MultivaluedMap<String, String> formBody = new MultivaluedMapImpl();
-
-        formBody.putSingle(BankiaConstants.Form.J_GID_ID_DISPOSITIVO,
-                persistentStorage.get(BankiaConstants.StorageKey.DEVICE_ID_BASE_64));
-        formBody.putSingle(BankiaConstants.Form.ID_DISPOSITIVO,
-                persistentStorage.get(BankiaConstants.StorageKey.DEVICE_ID_BASE_64_URL));
-        formBody.putSingle(BankiaConstants.Form.J_GID_COD_APP, BankiaConstants.Default.OMP);
-        formBody.putSingle(BankiaConstants.Form.J_GID_COD_DS, BankiaConstants.Default.UPPER_CASE_OIP);
-        formBody.putSingle(BankiaConstants.Form.J_GID_ACTION, BankiaConstants.Default.LOGIN);
-        formBody.putSingle(BankiaConstants.Form.J_GID_PASSWORD, encryptedPassword);
-        formBody.putSingle(BankiaConstants.Form.CONTRASENA, password);
-        formBody.putSingle(BankiaConstants.Form.EVENT_ID, BankiaConstants.Default.COMPROBAR_IDENTIFICACION);
-        formBody.putSingle(BankiaConstants.Form.ORIGEN, BankiaConstants.Default.OM);
-        formBody.putSingle(BankiaConstants.Form.J_GID_NUM_DOCUMENTO, username);
-        formBody.putSingle(BankiaConstants.Form.IDENTIFICADOR, username);
-        formBody.putSingle(BankiaConstants.Form.EXECUTION, execution);
-        formBody.putSingle(BankiaConstants.Form.VERSION, BankiaConstants.Default._5_0);
-        formBody.putSingle(BankiaConstants.Form.TIPO, BankiaConstants.Default.ANDROID_PHONE);
+        LoginRequest formBody = LoginRequest.create(persistentStorage, username, password, execution,
+                encryptedPassword);
 
         return client.request(BankiaConstants.Url.LOGIN)
                 .queryParam(BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
