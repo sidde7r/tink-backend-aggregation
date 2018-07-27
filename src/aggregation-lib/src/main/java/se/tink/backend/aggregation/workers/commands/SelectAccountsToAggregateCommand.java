@@ -50,7 +50,6 @@ public class SelectAccountsToAggregateCommand extends AgentWorkerCommand {
         RefreshWhitelistInformationRequest whiteListRequest = (RefreshWhitelistInformationRequest) refreshInformationRequest;
         if (whiteListRequest.isOptIn()) {
             context.setAccountsToAggregate(
-                    // TODO: move from account number to bankId
                     allExceptForBlacklisted.stream().filter(a -> uniqueIdOfUserSelectedAccounts.contains(a.getBankId())).collect
                             (Collectors.toList())
             );
