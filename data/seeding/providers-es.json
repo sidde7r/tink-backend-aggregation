@@ -29,6 +29,36 @@
             ]
         },
         {
+            "name":"es-bankia-password",
+            "displayName":"Bankia",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"nxgen.es.banks.bankia.BankiaAgent",
+            "passwordHelpText":"Use the same credentials as when using the mobile bank app.",
+            "transactional":true,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"DNI/NIE ID number",
+                    "immutable":true
+                },
+                {
+                    "name":"password",
+                    "description":"Password",
+                    "masked":true,
+                    "sensitive":true,
+                    "pattern":"([0-9]{8})",
+                    "numeric":true,
+                    "minLength":8,
+                    "maxLength":8,
+                    "helpText":"Your 8 digit online PIN"
+                }
+            ]
+        },
+        {
             "name":"es-bancosabadell-password",
             "displayName":"Banco de Sabadell",
             "popular":true,
