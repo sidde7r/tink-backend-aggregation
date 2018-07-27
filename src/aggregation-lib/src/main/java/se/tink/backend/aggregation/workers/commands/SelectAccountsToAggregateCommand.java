@@ -29,7 +29,7 @@ public class SelectAccountsToAggregateCommand extends AgentWorkerCommand {
     @Override
     public AgentWorkerCommandResult execute() throws Exception {
         List<Account> allAccounts = context.getCachedAccounts();
-        List<String> optInAccountNumbers = context.getAccountNumbersOfUserSelectedAccounts();
+        List<String> uniqueIdOfUserSelectedAccounts = context.getUniqueIdOfUserSelectedAccounts();
         List<Account> accountsFromRequest = refreshInformationRequest.getAccounts();
 
         List<Account> allExceptForBlacklisted = allAccounts.stream().filter(x -> !shouldNotAggregateDataForAccount(accountsFromRequest, x)).collect(Collectors.toList());
@@ -43,7 +43,8 @@ public class SelectAccountsToAggregateCommand extends AgentWorkerCommand {
         if (whiteListRequest.isOptIn()) {
             context.setAccountsToAggregate(
                     // TODO: move from account number to bankId
-                    allExceptForBlacklisted.stream().filter(a -> optInAccountNumbers.contains(a.getAccountNumber())).collect(Collectors.toList())
+                    allExceptForBlacklisted.stream().filter(a -> uniqueIdOfUserSelectedAccounts.contains(a.getBankId())).collect
+                            (Collectors.toList())
             );
             return AgentWorkerCommandResult.CONTINUE;
         }

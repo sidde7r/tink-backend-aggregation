@@ -128,7 +128,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
     // selecting white listed accounts and eliminating blacklisted accounts
     private List<Account> accountsToAggregate;
     // a collection of account numbers that the Opt-in user selected during the opt-in flow
-    private List<String> accountNumbersOfUserSelectedAccounts;
+    private List<String> uniqueIdOfUserSelectedAccounts;
 
     public AgentWorkerContext(CredentialsRequest request, ServiceContext serviceContext, MetricRegistry metricRegistry,
             boolean useAggregationController, AggregationControllerAggregationClient aggregationControllerAggregationClient,
@@ -139,7 +139,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         this.allAvailableAccountsByUniqueId = Maps.newHashMap();
         this.updatedAccountsByTinkId = Maps.newHashMap();
         this.accountsToAggregate = Lists.newArrayList();
-        this.accountNumbersOfUserSelectedAccounts = Lists.newArrayList();
+        this.uniqueIdOfUserSelectedAccounts = Lists.newArrayList();
 
         this.request = request;
         this.serviceContext = serviceContext;
@@ -974,11 +974,11 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
     }
 
     @Override
-    public List<String> getAccountNumbersOfUserSelectedAccounts() {
-        return accountNumbersOfUserSelectedAccounts;
+    public List<String> getUniqueIdOfUserSelectedAccounts() {
+        return uniqueIdOfUserSelectedAccounts;
     }
 
-    public void addOptInAccountNumbers(List<String> optInAccountNumbers) {
-        this.accountNumbersOfUserSelectedAccounts = optInAccountNumbers;
+    public void addOptInAccountUniqueId(List<String> optInAccountUniqueId) {
+        this.uniqueIdOfUserSelectedAccounts = optInAccountUniqueId;
     }
 }

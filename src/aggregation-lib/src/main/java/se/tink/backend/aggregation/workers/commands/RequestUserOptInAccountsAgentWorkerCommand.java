@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.workers.commands;
 
-import com.google.api.client.util.Lists;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -57,7 +55,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
             return AgentWorkerCommandResult.ABORT;
         }
 
-        context.addOptInAccountNumbers(supplementalResponse.entrySet().stream().filter(e -> Objects.equals(e.getValue(), "true")).map(Map.Entry::getKey).collect(Collectors.toList()));
+        context.addOptInAccountUniqueId(supplementalResponse.entrySet().stream().filter(e -> Objects.equals(e.getValue(), "true")).map(Map.Entry::getKey).collect(Collectors.toList()));
 
         return AgentWorkerCommandResult.CONTINUE;
     }
@@ -68,7 +66,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
                 .anyMatch(a -> Objects.equals(a.getBankId(), account.getBankId()));
         Field field = new Field();
         field.setMasked(false);
-        field.setName(account.getAccountNumber());
+        field.setName(account.getBankId());
         field.setCheckbox(true);
         field.setValue(String.valueOf(isIncluded));
         return field;

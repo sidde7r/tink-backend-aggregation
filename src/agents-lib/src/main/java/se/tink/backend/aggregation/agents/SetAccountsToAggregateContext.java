@@ -6,5 +6,5 @@ import java.util.List;
 public interface SetAccountsToAggregateContext {
     void setAccountsToAggregate(List<Account> accounts);
     List<Account> getCachedAccounts();
-    List<String> getAccountNumbersOfUserSelectedAccounts();
+    List<String> getUniqueIdOfUserSelectedAccounts();
 }
