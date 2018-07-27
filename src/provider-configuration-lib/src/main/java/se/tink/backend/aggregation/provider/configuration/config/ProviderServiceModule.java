@@ -3,8 +3,10 @@ package se.tink.backend.aggregation.provider.configuration.config;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
+import se.tink.backend.aggregation.provider.configuration.api.MonitoringService;
 import se.tink.backend.aggregation.provider.configuration.api.ProviderService;
 import se.tink.backend.aggregation.provider.configuration.controllers.ProviderServiceController;
+import se.tink.backend.aggregation.provider.configuration.resources.MonitoringServiceResource;
 import se.tink.backend.aggregation.provider.configuration.resources.ProviderServiceResource;
 import se.tink.libraries.jersey.guice.JerseyResourceRegistrar;
 import se.tink.libraries.jersey.logging.AccessLoggingFilter;
@@ -20,6 +22,7 @@ public class ProviderServiceModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(ProviderService.class).to(ProviderServiceResource.class).in(Scopes.SINGLETON);
+        bind(MonitoringService.class).to(MonitoringServiceResource.class).in(Scopes.SINGLETON);
         bind(ProviderServiceController.class).in(Scopes.SINGLETON);
 
         JerseyResourceRegistrar.build()
@@ -29,6 +32,7 @@ public class ProviderServiceModule extends AbstractModule {
                 .addRequestFilters(AccessLoggingFilter.class)
                 .addResponseFilters(AccessLoggingFilter.class)
                 .addResources(ProviderService.class)
+                .addResources(MonitoringService.class)
                 .bind();
     }
 }
