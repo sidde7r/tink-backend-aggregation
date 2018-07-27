@@ -201,7 +201,7 @@
       "type": "BANK"
     },
     {
-      "name": "fr-caanjoumaine-password",
+      "name": "fr-creditagricoleanjoumaine-password",
       "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
       "credentialsType": "PASSWORD",
       "groupDisplayName": "Crédit Agricole",
