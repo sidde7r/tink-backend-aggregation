@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 public class RevolutTransactionFetcher implements TransactionKeyPaginator<TransactionalAccount, String> {
     private final RevolutApiClient apiClient;
@@ -28,7 +27,10 @@ public class RevolutTransactionFetcher implements TransactionKeyPaginator<Transa
 
         TransactionKeyPaginatorResponseImpl<String> response = new TransactionKeyPaginatorResponseImpl<>();
 
+        String accountCurrency = account.getTemporaryStorage(RevolutConstants.Storage.CURRENCY, String.class);
+
         response.setTransactions(transactionEntities.stream()
+                .filter(t -> t.getCurrency().equalsIgnoreCase(accountCurrency))
                 .map(TransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList())
         );

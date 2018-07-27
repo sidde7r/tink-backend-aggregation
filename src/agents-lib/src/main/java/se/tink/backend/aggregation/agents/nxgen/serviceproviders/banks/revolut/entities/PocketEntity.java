@@ -39,6 +39,8 @@ public class PocketEntity {
                     RevolutConstants.Accounts.REQUIRED_REFERENCE,
                     accountEntity.getRequiredReference());
         }
+
+        builder.addToTemporaryStorage(RevolutConstants.Storage.CURRENCY, currency);
         
         return builder.build();
     }

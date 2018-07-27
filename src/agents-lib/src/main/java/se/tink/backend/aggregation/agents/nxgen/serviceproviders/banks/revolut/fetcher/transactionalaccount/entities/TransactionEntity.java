@@ -51,6 +51,10 @@ public class TransactionEntity {
         return surcharge / 100.0;
     }
 
+    public String getCurrency() {
+        return currency;
+    }
+
     public long getStartedDate() {
         return startedDate;
     }
