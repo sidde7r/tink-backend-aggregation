@@ -83,16 +83,6 @@ public class SdcAccount {
     }
 
     @JsonIgnore
-    private boolean isAccountType(AccountTypes type) {
-        if (productElementType != null) {
-            SdcConstants.AccountType accountType = SdcConstants.AccountType.fromProductType(productElementType);
-            return type == accountType.getTinkAccountType();
-        }
-
-        return false;
-    }
-
-    @JsonIgnore
     private boolean isAccountType(SdcConstants.AccountType type) {
         if (productElementType != null) {
             SdcConstants.AccountType accountType = SdcConstants.AccountType.fromProductType(productElementType);
