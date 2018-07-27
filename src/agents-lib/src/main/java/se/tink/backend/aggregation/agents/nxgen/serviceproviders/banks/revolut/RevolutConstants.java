@@ -22,6 +22,7 @@ public class RevolutConstants {
         public static final String USER_ID = "userId";
         public static final String ACCESS_TOKEN = "accessToken";
         public static final String DEVICE_ID = "deviceId";
+        public static final String CURRENCY = "currency";
     }
 
     public static final class Tags {
