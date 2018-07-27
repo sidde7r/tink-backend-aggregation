@@ -72,10 +72,9 @@ public class SdcAccount {
     }
 
     @JsonIgnore
-    public boolean isTransactionalAccount() {
-        return isAccountType(AccountTypes.SAVINGS) ||
-                isAccountType(AccountTypes.CHECKING) ||
-                isAccountType(AccountTypes.OTHER);
+    public boolean isTransactionalAccount(SdcConfiguration agentConfiguration) {
+        AccountTypes tinkAccountType = convertAccountType(name, agentConfiguration.getTypeGuesser());
+        return TransactionalAccount.ALLOWED_ACCOUNT_TYPES.contains(tinkAccountType);
     }
 
     @JsonIgnore
