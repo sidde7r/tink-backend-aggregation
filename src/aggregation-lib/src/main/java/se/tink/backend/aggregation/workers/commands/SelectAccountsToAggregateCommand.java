@@ -15,12 +15,12 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class SelectAccountsToBeUpdatedCommand extends AgentWorkerCommand {
+public class SelectAccountsToAggregateCommand extends AgentWorkerCommand {
     private static final Logger log = LoggerFactory.getLogger(RequestUserOptInAccountsAgentWorkerCommand.class);
     private final SetAccountsToAggregateContext context;
     private final RefreshInformationRequest refreshInformationRequest;
 
-    public SelectAccountsToBeUpdatedCommand(SetAccountsToAggregateContext context, RefreshInformationRequest request) {
+    public SelectAccountsToAggregateCommand(SetAccountsToAggregateContext context, RefreshInformationRequest request) {
         this.context = context;
         this.refreshInformationRequest = request;
     }
