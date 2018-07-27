@@ -859,6 +859,7 @@ java_library(
     deps = [
         ":aggregation-api",
         "//src/api-annotations",
+        "//src/libraries/http:http-annotations",
         "//third_party:com_sun_jersey_jersey_core",
     ],
 )
