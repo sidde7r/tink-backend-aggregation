@@ -7,6 +7,8 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transac
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.rpc.FetchUpcomingTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -39,7 +41,7 @@ public class BelfiusTransactionalAccountFetcher implements
     }
 
     @Override
-    public List<Transaction> fetchTransactionsFor(TransactionalAccount account) {
+    public PaginatorResponse fetchTransactionsFor(TransactionalAccount account) {
         List<Transaction> transactionsAll = new ArrayList<>();
         String key = account.getBankIdentifier();
         boolean initialRequest = true;
@@ -58,14 +60,8 @@ public class BelfiusTransactionalAccountFetcher implements
 
         } while (response.hasNext());
 
-        return transactionsAll;
+        return PaginatorResponseImpl.create(transactionsAll, false);
     }
-
-    @Override
-    public boolean canFetchMoreFor(TransactionalAccount account) {
-        return false;
-    }
-
 
     @Override
     public Collection<UpcomingTransaction> fetchUpcomingTransactionsFor(TransactionalAccount account) {
