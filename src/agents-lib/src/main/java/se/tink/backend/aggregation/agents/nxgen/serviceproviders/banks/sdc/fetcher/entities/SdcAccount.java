@@ -72,25 +72,14 @@ public class SdcAccount {
     }
 
     @JsonIgnore
-    public boolean isTransactionalAccount() {
-        return isAccountType(AccountTypes.SAVINGS) ||
-                isAccountType(AccountTypes.CHECKING) ||
-                isAccountType(AccountTypes.OTHER);
+    public boolean isTransactionalAccount(SdcConfiguration agentConfiguration) {
+        AccountTypes tinkAccountType = convertAccountType(name, agentConfiguration.getTypeGuesser());
+        return TransactionalAccount.ALLOWED_ACCOUNT_TYPES.contains(tinkAccountType);
     }
 
     @JsonIgnore
     public boolean isCreditCardAccount() {
         return isAccountType(SdcConstants.AccountType.CREDIT_CARD);
-    }
-
-    @JsonIgnore
-    private boolean isAccountType(AccountTypes type) {
-        if (productElementType != null) {
-            SdcConstants.AccountType accountType = SdcConstants.AccountType.fromProductType(productElementType);
-            return type == accountType.getTinkAccountType();
-        }
-
-        return false;
     }
 
     @JsonIgnore
