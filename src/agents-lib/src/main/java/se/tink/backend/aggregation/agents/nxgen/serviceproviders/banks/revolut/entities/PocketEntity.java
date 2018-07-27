@@ -17,10 +17,10 @@ public class PocketEntity {
     private String type;
     private String state;
     private String currency;
-    private int balance;
-    private int blockedAmount;
+    private int balance; // expressed in cents
+    private int blockedAmount;  // expressed in cents
     private boolean closed;
-    private int creditLimit;
+    private int creditLimit;    // expressed in cents
     private String name;
 
     @JsonIgnore
@@ -31,7 +31,7 @@ public class PocketEntity {
                 .builder(
                     getTinkAccountType(),
                     accountNumber,
-                    new Amount(currency.toUpperCase(), (double) balance))
+                    new Amount(currency.toUpperCase(), getBalance()))
                 .setAccountNumber(accountNumber);
 
         if (accountEntity.getRequiredReference() != null) {
@@ -81,20 +81,20 @@ public class PocketEntity {
         return currency;
     }
 
-    public int getBalance() {
-        return balance;
+    public double getBalance() {
+        return balance / 100.0;
     }
 
-    public int getBlockedAmount() {
-        return blockedAmount;
+    public double getBlockedAmount() {
+        return blockedAmount / 100.0;
     }
 
     public boolean isClosed() {
         return closed;
     }
 
-    public int getCreditLimit() {
-        return creditLimit;
+    public double getCreditLimit() {
+        return creditLimit / 100.0;
     }
 
     public String getName() {
