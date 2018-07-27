@@ -16,6 +16,11 @@ public class TransactionEntity {
     @JsonUnwrapped
     private BalanceEntity amount;
 
+    // These are used to get transaction details. I'm not sure how to translate them.
+    private String indComunicados;
+    private String accesoDetalleMov;
+    private String refValConsultaCom;
+
     @JsonProperty("concepto")
     private String description;
 
@@ -28,6 +33,26 @@ public class TransactionEntity {
         String dateFormat = node.get("formato");
 
         date = LocalDate.parse(dateString, DateTimeFormatter.ofPattern(dateFormat));
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getIndComunicados() {
+        return indComunicados;
+    }
+
+    public String getAccesoDetalleMov() {
+        return accesoDetalleMov;
+    }
+
+    public String getRefValConsultaCom() {
+        return refValConsultaCom;
     }
 
     public Transaction toTinkTransaction(){
