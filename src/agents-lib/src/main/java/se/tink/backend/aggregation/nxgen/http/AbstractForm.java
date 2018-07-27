@@ -17,7 +17,7 @@ public abstract class AbstractForm extends LinkedHashMap<String, String> {
                 .collect(Collectors.joining(JOINING_DELIMITER));
     }
 
-    public String getValuePair(Map.Entry<String, String> parameter) {
+    private String getValuePair(Map.Entry<String, String> parameter) {
         try {
             return String.format(NAME_VALUE_FORMAT,
                     URLEncoder.encode(parameter.getKey(), CHARSET),
