@@ -14,7 +14,7 @@ public class AcountTransactionsResponse implements TransactionPagePaginatorRespo
     @JsonProperty("indicadorPaginacion")
     private boolean paginacionIndicator;
     @JsonProperty("movimientos")
-    private List<se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.entities.TransactionEntity> transactions;
+    private List<TransactionEntity> transactions;
     @JsonProperty("indicadorMasRegistros")
     private boolean moreRecordsIndicator;
 
