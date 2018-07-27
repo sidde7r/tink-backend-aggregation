@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transac
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entity.AmountEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entity.DateEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entities.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entities.DateEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 

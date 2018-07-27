@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entity;
+package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
