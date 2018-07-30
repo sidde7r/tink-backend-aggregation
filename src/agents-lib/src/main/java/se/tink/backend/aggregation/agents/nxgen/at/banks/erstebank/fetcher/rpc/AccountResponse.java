@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.rpc;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,7 +68,7 @@ public class AccountResponse {
                 .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, getIban()))
                 .build();
 
-        return Arrays.asList(account);
+        return Collections.singletonList(account);
     }
 
 }
