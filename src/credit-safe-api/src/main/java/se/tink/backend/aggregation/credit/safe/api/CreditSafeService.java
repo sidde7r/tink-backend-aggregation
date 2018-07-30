@@ -10,14 +10,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import se.tink.api.annotations.Team;
 import se.tink.api.annotations.TeamOwnership;
-import se.tink.backend.aggregation.rpc.AddMonitoredConsumerCreditSafeRequest;
-import se.tink.backend.aggregation.rpc.ChangedConsumerCreditSafeRequest;
-import se.tink.backend.aggregation.rpc.PageableConsumerCreditSafeRequest;
-import se.tink.backend.aggregation.rpc.PageableConsumerCreditSafeResponse;
-import se.tink.backend.aggregation.rpc.PortfolioListResponse;
-import se.tink.backend.aggregation.rpc.RemoveMonitoredConsumerCreditSafeRequest;
-import se.tink.backend.aggregation.rpc.SeedPersonDataRequest;
-import se.tink.backend.aggregation.rpc.SeedPersonDataResponse;
+import se.tink.backend.aggregation.credit.safe.rpc.AddMonitoredConsumerCreditSafeRequest;
+import se.tink.backend.aggregation.credit.safe.rpc.ChangedConsumerCreditSafeRequest;
+import se.tink.backend.aggregation.credit.safe.rpc.PageableConsumerCreditSafeRequest;
+import se.tink.backend.aggregation.credit.safe.rpc.PageableConsumerCreditSafeResponse;
+import se.tink.backend.aggregation.credit.safe.rpc.PortfolioListResponse;
+import se.tink.backend.aggregation.credit.safe.rpc.RemoveMonitoredConsumerCreditSafeRequest;
+import se.tink.backend.aggregation.credit.safe.rpc.SeedPersonDataRequest;
+import se.tink.backend.aggregation.credit.safe.rpc.SeedPersonDataResponse;
 
 @Path("/creditsafe")
 @Consumes({
