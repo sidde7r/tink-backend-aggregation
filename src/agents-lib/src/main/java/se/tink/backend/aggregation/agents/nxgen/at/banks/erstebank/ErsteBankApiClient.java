@@ -112,13 +112,11 @@ public class ErsteBankApiClient {
         String bearer = ErsteBankConstants.HEADERS.BEARER + token.getToken();
         String resource = getTransactionUrl(storage.get(ErsteBankConstants.STORAGE.TRANSACTIONSURL));
 
-        TransactionsResponse response = getRequestWithHeaders(ErsteBankConstants.URLS.GEORGE_GO_BASE, resource,
+        return getRequestWithHeaders(ErsteBankConstants.URLS.GEORGE_GO_BASE, resource,
                 ErsteBankConstants.HEADERS.ACCEPT, bearer)
                 .queryParam(ErsteBankConstants.QUERYPARAMS.PAGE, Integer.toString(page))
                 .queryParam(ErsteBankConstants.QUERYPARAMS.FEATURES, ErsteBankConstants.QUERYPARAMS.FEATURES_ORDERS)
                 .get(TransactionsResponse.class);
-
-        return response;
     }
 
     public void logout(){
