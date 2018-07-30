@@ -92,7 +92,7 @@ public class SwedbankDefaultLoanFetcher implements AccountFetcher<LoanAccount> {
                 LoanOverviewResponse loanOverviewResponse = SerializationUtils
                         .deserializeFromString(loanResponse, LoanOverviewResponse.class);
                 LinksEntity links = loanOverviewResponse.getLinks();
-                if (links != null) {
+                if (links != null && links.getNext() != null) {
                     LOGGER.infoExtraLong(apiClient.optionalRequest(links.getNext()),
                             SwedbankBaseConstants.LogTags.MORTGAGE_OVERVIEW_RESPONSE);
                 }
@@ -118,7 +118,9 @@ public class SwedbankDefaultLoanFetcher implements AccountFetcher<LoanAccount> {
         try {
             if (loans != null) {
                 loans.stream()
+                        .filter(loanEntity -> loanEntity.getLinks() != null)
                         .map(LoanEntity::getLinks)
+                        .filter(linksEntity -> linksEntity.getNext() != null)
                         .map(LinksEntity::getNext)
                         .map(apiClient::optionalRequest)
                         .forEach(response ->
