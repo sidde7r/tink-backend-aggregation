@@ -60,7 +60,7 @@ public class AccountResponse {
 
     public List<TransactionalAccount> toTransactionalAccount(){
 
-        TransactionalAccount account = TransactionalAccount.builder(getType(), getId(), getTinkBalance())
+        TransactionalAccount account = TransactionalAccount.builder(getType(), getIban(), getTinkBalance())
                 .setAccountNumber(getAccountNumber())
                 .setName(getName())
                 .setHolderName(getHolderName())
