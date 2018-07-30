@@ -7,8 +7,8 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.JyskeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.accounts.checking.entities.TransactionsEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.accounts.checking.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 
@@ -22,7 +22,7 @@ public class JyskeTransactionFetcher implements TransactionPagePaginator<Transac
     }
 
     @Override
-    public TransactionPagePaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
+    public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
         return apiClient.fetchTransactions(account, page);
     }
 

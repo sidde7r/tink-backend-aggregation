@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher;
 
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.ErsteBankApiClient;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 
 public class ErsteBankTransactionFetcher implements TransactionPagePaginator<TransactionalAccount> {
@@ -14,7 +14,7 @@ public class ErsteBankTransactionFetcher implements TransactionPagePaginator<Tra
     }
 
     @Override
-    public TransactionPagePaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
+    public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
         return this.ersteBankApiClient.fetchTransactions(page);
     }
 }

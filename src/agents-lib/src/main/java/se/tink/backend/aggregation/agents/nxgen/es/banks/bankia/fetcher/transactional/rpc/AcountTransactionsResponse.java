@@ -3,14 +3,15 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transac
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.entities.TransactionEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
-public class AcountTransactionsResponse implements TransactionPagePaginatorResponse {
+public class AcountTransactionsResponse implements PaginatorResponse {
     @JsonProperty("indicadorPaginacion")
     private boolean paginacionIndicator;
     @JsonProperty("movimientos")
@@ -26,7 +27,7 @@ public class AcountTransactionsResponse implements TransactionPagePaginatorRespo
     }
 
     @Override
-    public boolean canFetchMore() {
-        return moreRecordsIndicator;
+    public Optional<Boolean> canFetchMore() {
+        return Optional.of(moreRecordsIndicator);
     }
 }
