@@ -27,7 +27,7 @@ public class AccountResponse {
     private AccountTypes getType(){
         String accountType = productListEntity.get(0).getType().toUpperCase();
         switch(accountType){
-        case "GIRO":
+        case ErsteBankConstants.ACCOUNTYPE.CHECKING:
             return AccountTypes.CHECKING;
         default:
             logger.warn("{} {}", ErsteBankConstants.LOGTAG.UNKNOWN_ACCOUNT_TYPE, accountType);

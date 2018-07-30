@@ -7,9 +7,13 @@ public class ErsteBankConstants {
 
     public static String LOCATION = "Location";
 
+    public static class ACCOUNTYPE{
+        public static final String CHECKING = "GIRO";
+    }
+
     public static class ENCRYPTION {
-        public static String RSA = "RSA";
-        public static String HEX_DIGITS = "0123456789ABCDEF";
+        public static final String RSA = "RSA";
+        public static final String HEX_DIGITS = "0123456789ABCDEF";
     }
 
     public static class URLS {
@@ -22,16 +26,16 @@ public class ErsteBankConstants {
     }
 
     public static class HEADERS {
-        public static String ACCEPT = "*/*";
-        public static String X_MOBILE_APP_ID = "x-mobile-app-id";
-        public static String X_MOBILE_APP_ID_IOS = "georgego-ios";
-        public static String ENVIROMENT = "Environment";
-        public static String ENVIROMENT_PROD = "AUSTRIA_PROD";
-        public static String X_APP_ID = "X-App-Id";
-        public static String X_APP_ID_TRANSACTIONAPP = "transactionapp";
-        public static String X_REQUEST_ID = "X-REQUEST-ID";
-        public static String AUTHORIZATION = "Authorization";
-        public static String BEARER = "Bearer ";
+        public static final String ACCEPT = "*/*";
+        public static final String X_MOBILE_APP_ID = "x-mobile-app-id";
+        public static final String X_MOBILE_APP_ID_IOS = "georgego-ios";
+        public static final String ENVIROMENT = "Environment";
+        public static final String ENVIROMENT_PROD = "AUSTRIA_PROD";
+        public static final String X_APP_ID = "X-App-Id";
+        public static final String X_APP_ID_TRANSACTIONAPP = "transactionapp";
+        public static final String X_REQUEST_ID = "X-REQUEST-ID";
+        public static final String AUTHORIZATION = "Authorization";
+        public static final String BEARER = "Bearer ";
     }
 
     public static class QUERYPARAMS {
@@ -48,8 +52,8 @@ public class ErsteBankConstants {
     }
 
     public static class STORAGE {
-        public static String TOKEN_ENTITY = "TOKEN_ENTITY";
-        public static String TRANSACTIONSURL = "ACCOUNT_URL";
+        public static final String TOKEN_ENTITY = "TOKEN_ENTITY";
+        public static final String TRANSACTIONSURL = "ACCOUNT_URL";
     }
 
     public static class PATTERN {
@@ -61,14 +65,14 @@ public class ErsteBankConstants {
         public static final Pattern TOKEN_TYPE = Pattern.compile("token_type=(.*)&expires_in");
         public static final Pattern EXPIRES_IN = Pattern.compile("expires_in=(.*)&scope");
 
-        public static String DATE_FORMAT = "M/d/y";
+        public static final String DATE_FORMAT = "M/d/y";
         public static final String TRANSACTION_FORMAT = "/bff/b/products/%s/transactions";
     }
 
     public static class BODY {
-        public static String USERNAME = "j_username=";
-        public static String JAVASCRIPT_ENABLED = "javaScript=jsOK";
-        public static String RSA_ENCRYPTED = "rsaEncrypted=";
+        public static final String USERNAME = "j_username=";
+        public static final String JAVASCRIPT_ENABLED = "javaScript=jsOK";
+        public static final String RSA_ENCRYPTED = "rsaEncrypted=";
     }
 
     public static class LOGTAG {
