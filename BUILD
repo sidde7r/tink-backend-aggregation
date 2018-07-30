@@ -858,9 +858,21 @@ java_library(
     srcs = glob(["src/credit-safe-api/src/main/**/*.java"]),
     deps = [
         ":aggregation-api",
+        ":main-api",
         "//src/api-annotations",
+        "//src/cluster-lib",
+        "//src/libraries/account_identifier:account-identifier",
+        "//src/libraries/cluster",
+        "//src/libraries/demo_credentials:demo-credentials",
         "//src/libraries/http:http-annotations",
+        "//src/libraries/serialization_utils:serialization-utils",
+        "//src/libraries/strings",
+        "//src/libraries/uuid",
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:com_fasterxml_jackson_core_jackson_core",
+        "//third_party:com_google_guava_guava",
         "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:commons_codec_commons_codec",
     ],
 )
 
