@@ -52,10 +52,13 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
         // check if user send back the accounts
         if (supplementalResponse == null || supplementalResponse.isEmpty()) {
             context.getRequest().getCredentials().setStatus(CredentialsStatus.AUTHENTICATION_ERROR);
+            context.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR);
             return AgentWorkerCommandResult.ABORT;
         }
 
-        context.addOptInAccountUniqueId(supplementalResponse.entrySet().stream().filter(e -> Objects.equals(e.getValue(), "true")).map(Map.Entry::getKey).collect(Collectors.toList()));
+        context.addOptInAccountUniqueId(supplementalResponse.entrySet().stream()
+                .filter(e -> Objects.equals(e.getValue(), "true"))
+                .map(Map.Entry::getKey).collect(Collectors.toList()));
 
         return AgentWorkerCommandResult.CONTINUE;
     }
