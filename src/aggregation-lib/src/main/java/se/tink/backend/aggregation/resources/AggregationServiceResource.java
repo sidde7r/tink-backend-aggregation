@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.resources;
 
+import com.google.api.client.util.Lists;
 import io.dropwizard.lifecycle.Managed;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Path;
@@ -19,6 +20,8 @@ import se.tink.backend.aggregation.rpc.MigrateCredentialsDecryptRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsReencryptRequest;
 import se.tink.backend.aggregation.rpc.ReencryptionRequest;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
+import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
+import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.rpc.SupplementInformationRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.rpc.UpdateCredentialsRequest;
@@ -96,6 +99,21 @@ public class AggregationServiceResource implements AggregationService, Managed {
     @Override
     public String ping(){
         return "pong";
+    }
+
+    @Override
+    public void refreshWhitelistInformation(final RefreshWhitelistInformationRequest request, ClusterInfo clusterInfo)
+            throws
+            Exception {
+        // if it is opt-in (where user is asked to select the accounts to aggregate, we return a bad request
+        if (request.isOptIn() && !RefreshableItem.hasAccounts(Lists.newArrayList(request.getItemsToRefresh()))){
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        }
+        // if it is refreshing white listed accounts, we return bad request if no accounts are white listed
+        if (!request.isOptIn() && (request.getAccounts()==null || request.getAccounts().isEmpty())){
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        }
+        agentWorker.execute(agentWorkerCommandFactory.createOptInRefreshOperation(clusterInfo, request));
     }
 
     @Override

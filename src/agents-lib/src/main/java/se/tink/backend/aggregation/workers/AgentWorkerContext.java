@@ -24,6 +24,7 @@ import org.apache.curator.framework.recipes.barriers.DistributedBarrier;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.AgentEventListener;
+import se.tink.backend.aggregation.agents.SetAccountsToAggregateContext;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
@@ -50,7 +51,6 @@ import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.core.FraudDetailsContent;
 import se.tink.backend.core.StatisticMode;
 import se.tink.backend.core.account.TransferDestinationPattern;
-import se.tink.backend.core.enums.TinkFeature;
 import se.tink.backend.core.signableoperation.SignableOperation;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.encryption.api.EncryptionService;
@@ -82,7 +82,7 @@ import se.tink.libraries.metrics.Timer;
 import se.tink.libraries.metrics.Timer.Context;
 import se.tink.libraries.uuid.UUIDUtils;
 
-public class AgentWorkerContext extends AgentContext implements Managed {
+public class AgentWorkerContext extends AgentContext implements Managed, SetAccountsToAggregateContext {
     private static final AggregationLogger log = new AggregationLogger(AgentWorkerContext.class);
 
     private static final Set<AccountTypes> TARGET_ACCOUNT_TYPES = new HashSet<>(Arrays.asList(
@@ -120,11 +120,15 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     private AggregationControllerAggregationClient aggregationControllerAggregationClient;
     //private final ClusterInfo clusterInfo;
     private boolean isAggregationCluster;
-
     //Cached accounts have not been sent to system side yet.
-    private Map<String, Pair<Account, AccountFeatures>> cachedAccountsByUniqueId;
+    private Map<String, Pair<Account, AccountFeatures>> allAvailableAccountsByUniqueId;
     //Updated accounts have been sent to System side and has been updated with their stored Tink Id
     private Map<String, Account> updatedAccountsByTinkId;
+    // a collection of account to keep a record of what accounts we should aggregate data after opt-in flow,
+    // selecting white listed accounts and eliminating blacklisted accounts
+    private List<Account> accountsToAggregate;
+    // a collection of account numbers that the Opt-in user selected during the opt-in flow
+    private List<String> uniqueIdOfUserSelectedAccounts;
 
     public AgentWorkerContext(CredentialsRequest request, ServiceContext serviceContext, MetricRegistry metricRegistry,
             boolean useAggregationController, AggregationControllerAggregationClient aggregationControllerAggregationClient,
@@ -132,8 +136,10 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         final ClusterId clusterId = clusterInfo.getClusterId();
 
-        this.cachedAccountsByUniqueId = Maps.newHashMap();
+        this.allAvailableAccountsByUniqueId = Maps.newHashMap();
         this.updatedAccountsByTinkId = Maps.newHashMap();
+        this.accountsToAggregate = Lists.newArrayList();
+        this.uniqueIdOfUserSelectedAccounts = Lists.newArrayList();
 
         this.request = request;
         this.serviceContext = serviceContext;
@@ -199,7 +205,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     @Override
     public void clear() {
         transactionsByAccount.clear();
-        cachedAccountsByUniqueId.clear();
+        allAvailableAccountsByUniqueId.clear();
     }
 
     public Agent getAgent() {
@@ -261,7 +267,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         // Metrics
         refreshTotal.inc();
         TARGET_ACCOUNT_TYPES.forEach(accountType -> {
-            if (cachedAccountsByUniqueId.values().stream().noneMatch(pair-> pair.first.getType() == accountType)) {
+            if (allAvailableAccountsByUniqueId.values().stream().noneMatch(pair-> pair.first.getType() == accountType)) {
                 metricRegistry.meter(
                         MetricId.newId("no_accounts_fetched")
                                 .label(defaultMetricLabels)
@@ -339,7 +345,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                     .filter(a -> Objects.equals(a.getId(), accountId))
                     .findFirst();
 
-            if (account.isPresent() && shouldNotAggregateDataForAccount(account.get())) {
+            if (account.isPresent() && !shouldAggregateDataForAccount(account.get())) {
                 // Account marked to not aggregate data from.
                 // Preferably we would not even download the data but this makes sure
                 // we don't process further or store the account's data.
@@ -528,40 +534,34 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         requestSupplementalInformation(credentials, wait);
     }
 
-    private boolean shouldNotAggregateDataForAccount(Account account) {
-        Optional<Account> existingAccount = request.getAccounts().stream()
-                .filter(a -> Objects.equals(a.getBankId(), account.getBankId()))
-                .findFirst();
-
-        return existingAccount.isPresent() &&
-                existingAccount.get().getAccountExclusion().excludedFeatures.contains(TinkFeature.AGGREGATION);
+    private boolean shouldAggregateDataForAccount(Account account) {
+        return accountsToAggregate.stream().map(Account::getBankId).collect(Collectors.toList()).contains(account.getBankId());
     }
 
     @Override
     public void cacheAccount(Account account, AccountFeatures accountFeatures) {
-
-        if (shouldNotAggregateDataForAccount(account)) {
-            // Account marked to not aggregate data from.
-            // Preferably we would not even download the data but this makes sure
-            // we don't process further or store the account's data.
-            return;
-        }
-
-        cachedAccountsByUniqueId.put(account.getBankId(), new Pair<>(account, accountFeatures));
+        allAvailableAccountsByUniqueId.put(account.getBankId(), new Pair<>(account, accountFeatures));
     }
 
     public void sendAllCachedAccountsToUpdateService() {
-        for(String uniqueId : cachedAccountsByUniqueId.keySet()) {
+        for(String uniqueId : allAvailableAccountsByUniqueId.keySet()) {
             sendAccountToUpdateService(uniqueId);
         }
     }
 
     public Account sendAccountToUpdateService(String uniqueId) {
 
-        Pair<Account, AccountFeatures> pair = cachedAccountsByUniqueId.get(uniqueId);
+        Pair<Account, AccountFeatures> pair = allAvailableAccountsByUniqueId.get(uniqueId);
 
         Account account = pair.first;
         AccountFeatures accountFeatures = pair.second;
+
+        if (!shouldAggregateDataForAccount(account)) {
+            // Account marked to not aggregate data from.
+            // Preferably we would not even download the data but this makes sure
+            // we don't process further or store the account's data.
+            return account;
+        }
 
         account.setCredentialsId(request.getCredentials().getId());
         account.setUserId(request.getCredentials().getUserId());
@@ -723,7 +723,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     @Override
     public Account updateTransactions(final Account account, List<Transaction> transactions) {
 
-        if (shouldNotAggregateDataForAccount(account)) {
+        if (!shouldAggregateDataForAccount(account)) {
             // Account marked to not aggregate data from.
             // Preferably we would not even download the data but this makes sure
             // we don't process further or store the account's data.
@@ -961,5 +961,24 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     public boolean isCredentialDeleted(String credentialsId) {
         Preconditions.checkState(!Strings.isNullOrEmpty(credentialsId), "CredentialsId must not be null or empty.");
         return aggregationCredentialsRepository.findOne(credentialsId) == null;
+    }
+
+    @Override
+    public void setAccountsToAggregate(List<Account> accounts) {
+        accountsToAggregate = accounts;
+    }
+
+    @Override
+    public List<Account> getCachedAccounts() {
+        return allAvailableAccountsByUniqueId.values().stream().map(p -> p.first).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> getUniqueIdOfUserSelectedAccounts() {
+        return uniqueIdOfUserSelectedAccounts;
+    }
+
+    public void addOptInAccountUniqueId(List<String> optInAccountUniqueId) {
+        this.uniqueIdOfUserSelectedAccounts = optInAccountUniqueId;
     }
 }

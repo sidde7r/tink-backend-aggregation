@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.workers;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -15,6 +16,7 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsDecryptRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsReencryptRequest;
+import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.ReencryptionRequest;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
@@ -33,6 +35,7 @@ import se.tink.backend.aggregation.workers.commands.DeleteAgentWorkerCommand.Del
 import se.tink.backend.aggregation.workers.commands.EncryptAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.EncryptAgentWorkerCommand.EncryptAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.EncryptCredentialsWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.SelectAccountsToAggregateCommand;
 import se.tink.backend.aggregation.workers.commands.InstantiateAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.InstantiateAgentWorkerCommand.InstantiateAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.KeepAliveAgentWorkerCommand;
@@ -44,6 +47,7 @@ import se.tink.backend.aggregation.workers.commands.RefreshItemAgentWorkerComman
 import se.tink.backend.aggregation.workers.commands.ReportProviderMetricsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ReportProviderMetricsAgentWorkerCommand.ReportProviderMetricsAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.ReportProviderTransferMetricsAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.RequestUserOptInAccountsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.TransferAgentWorkerCommand;
@@ -189,11 +193,7 @@ public class AgentWorkerOperationFactory {
         List<RefreshableItem> nonAccountItems = items.stream()
                 .filter(i -> !accountItems.contains(i))
                 .collect(Collectors.toList());
-
-        for (RefreshableItem item : accountItems) {
-            commands.add(new RefreshItemAgentWorkerCommand(context, item, createMetricState(request)));
-        }
-
+        
         if (accountItems.size() > 0) {
             commands.add(new SendAccountsToUpdateServiceAgentWorkerCommand(context, createMetricState(request)));
         }
@@ -266,6 +266,14 @@ public class AgentWorkerOperationFactory {
         commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState));
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)));
+
+        commands.addAll(createRefreshAccountsCommandChain(request, context));
+        if(request instanceof RefreshWhitelistInformationRequest && ((RefreshWhitelistInformationRequest) request).isOptIn()){
+            RefreshWhitelistInformationRequest refreshWhiteList = (RefreshWhitelistInformationRequest) request;
+            commands.add(new RequestUserOptInAccountsAgentWorkerCommand(context, refreshWhiteList));
+        }
+
+        commands.add(new SelectAccountsToAggregateCommand(context, request));
 
         commands.addAll(createRefreshableItemsChain(request, context, request.getItemsToRefresh()));
 
@@ -413,5 +421,35 @@ public class AgentWorkerOperationFactory {
                         aggregationControllerAggregationClient, context));
 
         return new AgentWorkerOperation(agentWorkerOperationState, "migrate-reencrypt", request, commands, context);
+    }
+
+    // for each account type,
+    private List<AgentWorkerCommand> createRefreshAccountsCommandChain(RefreshInformationRequest request,
+            AgentWorkerContext context) {
+
+        Set<RefreshableItem> itemsToRefresh = convertLegacyItems(request.getItemsToRefresh());
+        List<RefreshableItem> items = RefreshableItem.sort(itemsToRefresh);
+
+        List<AgentWorkerCommand> commands = Lists.newArrayList();
+
+        for (RefreshableItem item : itemsToRefresh) {
+            if (RefreshableItem.isAccount(item)) {
+                commands.add(new RefreshItemAgentWorkerCommand(context, item, createMetricState(request)));
+            }
+        }
+
+        return commands;
+    }
+
+    /**
+     *  the endpoint opt-in supports the initial refresh with opt-in, aka, display all accounts for user to select the
+     *  accounts to aggregate to. it also supports refreshing and updating only white-flagged accounts and the data.
+     *  when the opt-in flag is true, it indicates that we need user to select accounts again, therefore we fetch
+     *  only account data. after fetching, we set the flag into false, and put all white listed accounts in refresh.
+     *  when the opt-in flag is false, we refresh and update all white listed accounts
+     **/
+    public AgentWorkerOperation createOptInRefreshOperation(ClusterInfo clusterInfo,
+            RefreshWhitelistInformationRequest request) {
+        return createRefreshOperation(clusterInfo, request);
     }
 }
