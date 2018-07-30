@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +15,6 @@ import se.tink.backend.core.Amount;
 import se.tink.backend.system.rpc.Instrument;
 import se.tink.backend.system.rpc.Portfolio;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class CustodyAccountResponse extends BaseResponse {
 
     private HandelsbankenPerformance performance;
