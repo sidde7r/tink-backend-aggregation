@@ -8,6 +8,8 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularApi
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularPersistenStorage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.entities.BancoPopularContract;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.rpc.FetchTransactionsRequest;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -25,7 +27,7 @@ public class BancoPopularTransactionFetcher implements TransactionDatePaginator<
     }
 
     @Override
-    public Collection<Transaction> getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
+    public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
         BancoPopularContract contract = persistentStorage.getLoginContracts().getFirstContract();
 
         FetchTransactionsRequest fetchTransactionsRequest = new FetchTransactionsRequest()
@@ -36,7 +38,12 @@ public class BancoPopularTransactionFetcher implements TransactionDatePaginator<
                 .setFechaHasta(formatDate(toDate))
                 .updateCccFields(account.getAccountNumber());
 
-        return bankClient.fetchTransactions(fetchTransactionsRequest).getTinkTransactions();
+        Collection<Transaction> transactions = bankClient.fetchTransactions(fetchTransactionsRequest)
+                .getTinkTransactions();
+
+        // NOTE/Todo: The response contain a field called `hayMas` which means `there is more`. Which should be used
+        // as `canFetchMore()`.
+        return PaginatorResponseImpl.create(transactions);
     }
 
     private String intToZeroFilledString(int i) {

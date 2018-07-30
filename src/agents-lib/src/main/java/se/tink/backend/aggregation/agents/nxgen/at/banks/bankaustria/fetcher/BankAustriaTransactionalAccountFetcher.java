@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.fetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.BankAustriaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.otml.OtmlResponseConverter;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -38,7 +40,10 @@ public class BankAustriaTransactionalAccountFetcher implements
 
 
     @Override
-    public Collection<? extends Transaction> getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
-        return otmlResponseConverter.getTransactions(apiClient.getTransactionsForDatePeriod(account, fromDate, toDate).getDataSources());
+    public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
+        Collection<? extends Transaction> transactions = otmlResponseConverter.getTransactions(
+                apiClient.getTransactionsForDatePeriod(account, fromDate, toDate).getDataSources());
+
+        return PaginatorResponseImpl.create(transactions);
     }
 }

@@ -25,6 +25,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetch
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.SearchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.parser.SdcTransactionParser;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -71,7 +73,7 @@ public class SdcCreditCardFetcher extends SdcAgreementFetcher implements Account
     }
 
     @Override
-    public Collection<? extends Transaction> getTransactionsFor(CreditCardAccount account, Date fromDate, Date toDate) {
+    public PaginatorResponse getTransactionsFor(CreditCardAccount account, Date fromDate, Date toDate) {
         SessionStorageAgreements agreements = getAgreements();
         SessionStorageAgreement agreement = agreements.findAgreementForAccountBankId(account.getBankIdentifier());
 
@@ -88,7 +90,9 @@ public class SdcCreditCardFetcher extends SdcAgreementFetcher implements Account
         SearchTransactionsResponse creditCardTransactions = this.bankClient
                 .searchCreditCardTransactions(searchTransactionsRequest);
 
-        return creditCardTransactions.getTinkCreditCardTransactions(account, this.transactionParser);
+        Collection<? extends Transaction> transactions = creditCardTransactions.getTinkCreditCardTransactions(account,
+                this.transactionParser);
+        return PaginatorResponseImpl.create(transactions);
     }
 
     private void fetchCreditCardProviderAccountList(List<CreditCardAccount> creditCards, SessionStorageAgreement agreement) {

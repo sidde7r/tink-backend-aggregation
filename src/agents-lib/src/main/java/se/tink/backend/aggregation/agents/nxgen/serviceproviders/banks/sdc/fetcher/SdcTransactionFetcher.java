@@ -12,6 +12,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.SearchTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.SearchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.parser.SdcTransactionParser;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -29,7 +31,7 @@ public class SdcTransactionFetcher extends SdcAgreementFetcher implements Transa
     }
 
     @Override
-    public Collection<Transaction> getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
+    public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
         SessionStorageAgreements agreements = getAgreements();
         SessionStorageAgreement agreement = agreements.findAgreementForAccountBankId(account.getBankIdentifier());
 
@@ -44,7 +46,8 @@ public class SdcTransactionFetcher extends SdcAgreementFetcher implements Transa
 
         SearchTransactionsResponse response = bankClient.searchTransactions(searchTransactionsRequest);
 
-        return response.getTinkTransactions(transactionParser);
+        Collection<Transaction> transactions = response.getTinkTransactions(transactionParser);
+        return PaginatorResponseImpl.create(transactions);
     }
 
     // only fetch reservations when asking for most current transactions

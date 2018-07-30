@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.fetcher.transact
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,9 +13,9 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.fetcher.transacti
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginatorResponse;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -51,26 +52,23 @@ public class OmaspTransactionalAccountFetcher implements AccountFetcher<Transact
     }
 
     @Override
-    public TransactionPagePaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
-        TransactionPagePaginatorResponseImpl response = new TransactionPagePaginatorResponseImpl();
+    public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
 
         List<TransactionsEntity> transactionsEntities = this.accountTransactions.getOrDefault(account, null);
         if (transactionsEntities == null) {
             // should not happen
-            return response;
+            return PaginatorResponseImpl.createEmpty(false);
         }
 
         if (transactionsEntities.size() <= page) {
-            return response;
+            return PaginatorResponseImpl.createEmpty(false);
         }
 
         TransactionsEntity transactionsEntity = transactionsEntities.get(page);
         TransactionDetailsResponse transactionDetailsResponse = this.apiClient.getTransactionDetails(
                 account.getBankIdentifier(), transactionsEntity.getId());
 
-        response.setCanFetchMore(page+1 < transactionsEntities.size());
-        response.addTransaction(transactionDetailsResponse.toTinkTransaction());
-
-        return response;
+        return PaginatorResponseImpl.create(Collections.singletonList(transactionDetailsResponse.toTinkTransaction()),
+                page+1 < transactionsEntities.size());
     }
 }

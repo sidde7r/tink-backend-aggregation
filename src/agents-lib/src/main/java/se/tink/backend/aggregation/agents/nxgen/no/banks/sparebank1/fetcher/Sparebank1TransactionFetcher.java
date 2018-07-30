@@ -26,7 +26,7 @@ public class Sparebank1TransactionFetcher implements TransactionPaginator<Transa
                 Sparebank1Constants.Keys.TRANSACTIONS_LINK, LinkEntity.class);
 
         if (transactionsLink == null || Strings.isNullOrEmpty(transactionsLink.getHref())) {
-            return PaginatorResponseImpl.createEmpty();
+            return PaginatorResponseImpl.createEmpty(false);
         }
 
         List<Transaction> transactions = apiClient.fetchTransactions(transactionsLink.getHref())

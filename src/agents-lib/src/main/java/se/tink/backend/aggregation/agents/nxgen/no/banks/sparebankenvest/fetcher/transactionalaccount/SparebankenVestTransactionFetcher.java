@@ -10,9 +10,9 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.transactionalaccount.entities.TransactionsListResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginatorResponse;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
@@ -36,21 +36,16 @@ public class SparebankenVestTransactionFetcher implements TransactionPagePaginat
     }
 
     @Override
-    public TransactionPagePaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
-        TransactionPagePaginatorResponseImpl response = new TransactionPagePaginatorResponseImpl();
-
+    public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
         String rangeString = getRangeString(page);
         TransactionsListResponse transactionsList = apiClient.fetchTransactions(account.getBankIdentifier(), rangeString);
-
-        response.setCanFetchMore(!(transactionsList.size() < SparebankenVestConstants.PagePagination.MAX_TRANSACTIONS_IN_BATCH));
 
         List<Transaction> tinkTransactions = transactionsList.stream()
                 .map(TransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
 
-        response.setTransactions(tinkTransactions);
-
-        return response;
+        return PaginatorResponseImpl.create(tinkTransactions,
+                !(transactionsList.size() < SparebankenVestConstants.PagePagination.MAX_TRANSACTIONS_IN_BATCH));
     }
 
     @Override

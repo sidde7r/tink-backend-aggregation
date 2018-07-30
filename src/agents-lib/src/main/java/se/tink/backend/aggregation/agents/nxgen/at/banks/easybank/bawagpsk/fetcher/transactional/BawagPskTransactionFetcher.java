@@ -11,6 +11,8 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entit
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.ProductID;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.GetAccountStatementItemsRequest;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.GetAccountStatementItemsResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -33,7 +35,7 @@ public class BawagPskTransactionFetcher implements TransactionDatePaginator<Tran
     }
 
     @Override
-    public Collection<? extends Transaction> getTransactionsFor(
+    public PaginatorResponse getTransactionsFor(
             final TransactionalAccount account,
             final Date fromDate,
             final Date toDate) {
@@ -66,7 +68,7 @@ public class BawagPskTransactionFetcher implements TransactionDatePaginator<Tran
         final GetAccountStatementItemsResponse response = bawagPskApiClient
                 .getGetAccountStatementItemsResponse(requestString);
 
-        return response.getAccountStatementItemList().stream()
+        Collection<? extends Transaction> transactions = response.getAccountStatementItemList().stream()
                 .map(statement -> Transaction.builder()
                         .setAmount(new Amount(statement.getAmountEntity().getCurrency(),
                                 statement.getAmountEntity().getAmount()))
@@ -74,5 +76,7 @@ public class BawagPskTransactionFetcher implements TransactionDatePaginator<Tran
                         .setDescription(String.join(" ", statement.getTextLines()))
                         .build()
                 ).collect(Collectors.toSet());
+
+        return PaginatorResponseImpl.create(transactions);
     }
 }

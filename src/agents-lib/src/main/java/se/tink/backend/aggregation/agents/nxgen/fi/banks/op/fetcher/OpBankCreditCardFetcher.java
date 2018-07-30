@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities.OpBankCardEntity;
@@ -20,14 +19,14 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities.OpB
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.rpc.FetchCardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.rpc.FetchCreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.rpc.FetchCreditsResponse;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
-import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
@@ -62,12 +61,12 @@ public class OpBankCreditCardFetcher implements AccountFetcher<CreditCardAccount
     }
 
     @Override
-    public Collection<? extends Transaction> getTransactionsFor(CreditCardAccount account, Date fromDate, Date toDate) {
+    public PaginatorResponse getTransactionsFor(CreditCardAccount account, Date fromDate, Date toDate) {
         List<CreditCardTransaction> creditTransactions = Lists.newArrayList();
 
         Optional<OpBankCardEntity> currentCard = getCurrentCard(account);
         if (!currentCard.isPresent()) {
-            return Collections.emptyList();
+            return PaginatorResponseImpl.createEmpty();
         }
 
         OpBankCardEntity card = currentCard.get();
@@ -83,7 +82,7 @@ public class OpBankCreditCardFetcher implements AccountFetcher<CreditCardAccount
             creditTransactions.addAll(moreTransactions);
         } while (moreTransactions.size() > 0);
 
-        return creditTransactions;
+        return PaginatorResponseImpl.create(creditTransactions);
     }
 
     private List<CreditCardTransaction> fetchMoreTransactions(CreditCardAccount account, OpBankCardEntity card, Date fromDate, Date toDate) {

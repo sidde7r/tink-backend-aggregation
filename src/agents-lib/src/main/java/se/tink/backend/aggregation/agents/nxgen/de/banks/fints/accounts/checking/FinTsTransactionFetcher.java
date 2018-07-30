@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.accounts.checkin
 
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.statement.MT940Statement;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -19,11 +21,14 @@ public class FinTsTransactionFetcher implements TransactionDatePaginator<Transac
     }
 
     @Override
-    public Collection<? extends Transaction> getTransactionsFor(TransactionalAccount account, Date fromDate,
+    public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate,
             Date toDate) {
-        return apiClient.getTransactions(account.getAccountNumber(), fromDate, toDate).stream()
+        Collection<? extends Transaction> transactions = apiClient.getTransactions(
+                account.getAccountNumber(), fromDate, toDate).stream()
                 .map(MT940Statement::toTinkTransaction)
                 .collect(Collectors.toList());
+
+        return PaginatorResponseImpl.create(transactions);
     }
 
     // TODO upcoming transactions

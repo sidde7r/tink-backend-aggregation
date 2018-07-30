@@ -7,6 +7,8 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.alandsbanken.AlandsBank
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.alandsbanken.fetcher.creditcard.entities.CreditCardTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.alandsbanken.fetcher.entities.AlandsBankenCard;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -27,9 +29,12 @@ public class AlandsBankenCreditCardFetcher implements AccountFetcher<CreditCardA
     }
 
     @Override
-    public Collection<? extends Transaction> getTransactionsFor(CreditCardAccount account, Date fromDate, Date toDate) {
-        return this.client.fetchCreditCardTransactions(account.getBankIdentifier(), fromDate, toDate).stream()
+    public PaginatorResponse getTransactionsFor(CreditCardAccount account, Date fromDate, Date toDate) {
+        Collection<? extends Transaction> transactions = this.client.fetchCreditCardTransactions(
+                account.getBankIdentifier(), fromDate, toDate).stream()
                 .map(CreditCardTransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
+
+        return PaginatorResponseImpl.create(transactions);
     }
 }
