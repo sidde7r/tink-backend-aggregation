@@ -51,7 +51,6 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
 
         // check if user send back the accounts
         if (supplementalResponse == null || supplementalResponse.isEmpty()) {
-            context.getRequest().getCredentials().setStatus(CredentialsStatus.AUTHENTICATION_ERROR);
             context.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR);
             return AgentWorkerCommandResult.ABORT;
         }
@@ -79,10 +78,6 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
 
     @Override
     public void postProcess() {
-        // clear out supplemental information to not contain any sensitive information
-        Credentials credentials = context.getRequest().getCredentials();
-        credentials.setSupplementalInformation(null);
-        context.updateCredentialsExcludingSensitiveInformation(credentials);
     }
 
 }
