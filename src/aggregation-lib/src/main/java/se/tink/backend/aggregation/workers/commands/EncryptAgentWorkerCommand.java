@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.base.Preconditions;
-import se.tink.backend.common.repository.mysql.aggregation.AggregationCredentialsRepository;
+import se.tink.backend.common.repository.mysql.aggregation.aggregationcredentials.AggregationCredentialsRepository;
 import se.tink.backend.core.AggregationCredentials;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;

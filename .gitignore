@@ -6,6 +6,7 @@
 ######################
 *.log
 /tools/testing/*.json
+/tools/testing/my_project/*
 
 # OS generated files #
 ######################

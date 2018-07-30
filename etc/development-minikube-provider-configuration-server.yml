@@ -24,6 +24,8 @@ serviceAuthentication:
 
 developmentMode: true
 
+isAggregationCluster: true
+
 database:
   driverClass: com.mysql.jdbc.Driver
   username: tink

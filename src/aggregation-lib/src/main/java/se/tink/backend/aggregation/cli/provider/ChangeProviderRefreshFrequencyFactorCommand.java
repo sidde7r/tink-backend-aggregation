@@ -8,7 +8,7 @@ import java.util.Optional;
 import net.sourceforge.argparse4j.inf.Namespace;
 import se.tink.backend.aggregation.cli.AggregationServiceContextCommand;
 import se.tink.backend.common.config.ServiceConfiguration;
-import se.tink.backend.common.repository.mysql.aggregation.ProviderConfigurationRepository;
+import se.tink.backend.common.repository.mysql.aggregation.providerconfiguration.ProviderConfigurationRepository;
 import se.tink.backend.core.ProviderConfiguration;
 
 public class ChangeProviderRefreshFrequencyFactorCommand extends

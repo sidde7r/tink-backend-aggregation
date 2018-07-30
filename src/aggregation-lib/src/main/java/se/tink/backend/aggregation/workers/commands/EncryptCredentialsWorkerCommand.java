@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
 import se.tink.backend.aggregation.workers.encryption.CredentialsCrypto;
 import se.tink.backend.common.cache.CacheClient;
-import se.tink.backend.common.repository.mysql.aggregation.ClusterCryptoConfigurationRepository;
+import se.tink.backend.common.repository.mysql.aggregation.clustercryptoconfiguration.ClusterCryptoConfigurationRepository;
 
 public class EncryptCredentialsWorkerCommand extends AgentWorkerCommand {
 

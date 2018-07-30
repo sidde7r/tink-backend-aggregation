@@ -42,7 +42,7 @@ import se.tink.backend.common.ServiceContext;
 import se.tink.backend.common.coordination.BarrierName;
 import se.tink.backend.common.mapper.CoreAccountMapper;
 import se.tink.backend.common.mapper.CoreCredentialsMapper;
-import se.tink.backend.common.repository.mysql.aggregation.AggregationCredentialsRepository;
+import se.tink.backend.common.repository.mysql.aggregation.aggregationcredentials.AggregationCredentialsRepository;
 import se.tink.backend.common.utils.MetricsUtils;
 import se.tink.backend.common.utils.Pair;
 import se.tink.backend.core.AggregationCredentials;

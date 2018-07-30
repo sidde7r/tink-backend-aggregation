@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import org.assertj.core.util.Strings;
-import se.tink.backend.common.repository.mysql.aggregation.ProviderConfigurationRepository;
+import se.tink.backend.common.repository.mysql.aggregation.providerconfiguration.ProviderConfigurationRepository;
 import se.tink.backend.core.ProviderConfiguration;
 import se.tink.backend.aggregation.log.AggregationLogger;
 

@@ -1,4 +1,4 @@
-package se.tink.backend.common.repository.mysql.aggregation;
+package se.tink.backend.common.repository.mysql.aggregation.clustercryptoconfiguration;
 
 import java.util.List;
 import javax.persistence.EntityManager;
