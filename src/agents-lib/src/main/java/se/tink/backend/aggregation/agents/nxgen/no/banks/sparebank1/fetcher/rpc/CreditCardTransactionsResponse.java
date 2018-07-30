@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.LinkEntity;
@@ -49,13 +50,13 @@ public class CreditCardTransactionsResponse implements TransactionKeyPaginatorRe
     }
 
     @Override
-    public boolean hasNext() {
-        return links.containsKey(Sparebank1Constants.Keys.MORE_TRANSACTIONS_KEY);
+    public Optional<Boolean> canFetchMore() {
+        return Optional.of(links.containsKey(Sparebank1Constants.Keys.MORE_TRANSACTIONS_KEY));
     }
 
     @Override
     public String nextKey() {
-        if (hasNext()) {
+        if (canFetchMore().isPresent()) {
             return links.get(Sparebank1Constants.Keys.MORE_TRANSACTIONS_KEY).getHref();
         }
 

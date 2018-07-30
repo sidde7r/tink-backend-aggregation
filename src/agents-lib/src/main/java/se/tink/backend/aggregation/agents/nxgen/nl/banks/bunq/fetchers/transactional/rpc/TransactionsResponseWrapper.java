@@ -39,8 +39,8 @@ public class TransactionsResponseWrapper implements TransactionKeyPaginatorRespo
 
     @JsonIgnore
     @Override
-    public boolean hasNext() {
-        return getMoreTransactions().isPresent();
+    public Optional<Boolean> canFetchMore() {
+        return Optional.of(getMoreTransactions().isPresent());
     }
 
     @JsonIgnore

@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto;
 import com.google.common.base.Strings;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeValuePair;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.HeaderResponse;
@@ -61,8 +62,8 @@ public class TransactionsHistoryResponse extends HeaderResponse implements Trans
     }
 
     @Override
-    public boolean hasNext() {
-        return !Strings.isNullOrEmpty(repositioningKey.getValue());
+    public Optional<Boolean> canFetchMore() {
+        return Optional.of(!Strings.isNullOrEmpty(repositioningKey.getValue()));
     }
 
     @Override
