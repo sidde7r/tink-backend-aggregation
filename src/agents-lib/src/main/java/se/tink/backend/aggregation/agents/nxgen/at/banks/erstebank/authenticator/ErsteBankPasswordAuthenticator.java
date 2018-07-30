@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.ErsteBankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.ErsteBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.ErsteBankCryptoUtil;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.authenticator.entity.EncryptionValuesEntity;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.authenticator.entity.TokenEntity;
@@ -46,7 +47,7 @@ public class ErsteBankPasswordAuthenticator implements PasswordAuthenticator {
     }
 
     private boolean containsToken(HttpResponse response){
-        return response.getStatus() == 302 && response.getHeaders().containsKey("Location");
+        return response.getStatus() == 302 && response.getHeaders().containsKey(ErsteBankConstants.LOCATION);
     }
 
 }

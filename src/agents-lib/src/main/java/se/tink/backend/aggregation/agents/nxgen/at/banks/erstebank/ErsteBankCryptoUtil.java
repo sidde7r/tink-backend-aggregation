@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 public class ErsteBankCryptoUtil {
 
     public static TokenEntity getTokenFromResponse(HttpResponse response){
-        String location = response.getHeaders().getFirst("Location");
+        String location = response.getHeaders().getFirst(ErsteBankConstants.LOCATION);
         String accessToken = match(ErsteBankConstants.PATTERN.ACCESS_TOKEN, location);
         String tokenType = match(ErsteBankConstants.PATTERN.TOKEN_TYPE, location);
         String expiresIn = match(ErsteBankConstants.PATTERN.EXPIRES_IN, location);
@@ -67,8 +67,8 @@ public class ErsteBankCryptoUtil {
         String var1 = builder.toString();
 
         PublicKey publicKey = KeyFactory
-                .getInstance("RSA").generatePublic((KeySpec)(new RSAPublicKeySpec(new BigInteger(privateExponent, 16), new BigInteger(publicModulus, 16))));
-        Cipher cipher = Cipher.getInstance("RSA");
+                .getInstance(ErsteBankConstants.ENCRYPTION.RSA).generatePublic((KeySpec)(new RSAPublicKeySpec(new BigInteger(privateExponent, 16), new BigInteger(publicModulus, 16))));
+        Cipher cipher = Cipher.getInstance(ErsteBankConstants.ENCRYPTION.RSA);
         cipher.init(Cipher.ENCRYPT_MODE, (Key)publicKey);
 
         byte[] var6 = var1.getBytes(StandardCharsets.UTF_8);
@@ -78,7 +78,7 @@ public class ErsteBankCryptoUtil {
 
     private static final String shift(byte[] var1) {
         int var2 = 0;
-        char[] var0 = "0123456789ABCDEF".toCharArray();
+        char[] var0 = ErsteBankConstants.ENCRYPTION.HEX_DIGITS.toCharArray();
 
         char[] var6 = new char[var1.length * 2];
 

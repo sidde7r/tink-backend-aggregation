@@ -5,6 +5,13 @@ import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
 public class ErsteBankConstants {
 
+    public static String LOCATION = "Location";
+
+    public static class ENCRYPTION {
+        public static String RSA = "RSA";
+        public static String HEX_DIGITS = "0123456789ABCDEF";
+    }
+
     public static class URLS {
        public static final String LOGIN_BASE = "https://login.sparkasse.at";
        public static final String OAUTH = "/sts/oauth/authorize";
