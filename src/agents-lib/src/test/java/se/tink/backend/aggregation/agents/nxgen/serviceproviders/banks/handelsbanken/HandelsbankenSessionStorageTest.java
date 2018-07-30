@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken;
 
-import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.handelsbanken.HandelsbankenFIConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.handelsbanken.fetcher.rpc.AccountListFIResponse;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.handelsbanken.fetcher.transactionalaccount.rpc.AccountListFIResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.rpc.AccountListSEResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.rpc.AccountListSEResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.entities.Link;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.ApplicationEntryPointResponse;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -18,8 +18,8 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.ha
 
 public class HandelsbankenSessionStorageTest {
 
-    public static final List<Link> TRANSACTIONS_LINK = createLinks(TRANSACTIONS, "https://safe.transactions.com");
-    public static final List<Link> ACCOUNTS_LINK = createLinks(ACCOUNTS, "http://unsafe.accounts.com");
+    public static final Map<String, Link> TRANSACTIONS_LINK = createLinks(TRANSACTIONS, "https://safe.transactions.com");
+    public static final Map<String, Link> ACCOUNTS_LINK = createLinks(ACCOUNTS, "http://unsafe.accounts.com");
     private HandelsbankenSessionStorage sessionStorage;
 
     @Test

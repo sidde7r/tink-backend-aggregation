@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken;
 
-import com.google.common.collect.Lists;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -33,10 +33,10 @@ public class HandelsbankenSessionHandlerTest extends HandelsbankenSEAuthenticate
         new HandelsbankenSessionHandler(client, persistentStorage, credentials, sessionStorage).keepAlive();
     }
 
-    private static List<Link> createLink() {
-        return Lists.newArrayList(new Link()
-                .setHref("https://m2.handelsbanken.se/fipriv/session")
-                .setRel(HandelsbankenConstants.URLS.Links.APPLICATION_ENTRY_POINT.getName())
-        );
+    private static Map<String, Link> createLink() {
+        Map<String, Link> links = new HashMap<>();
+        links.put(HandelsbankenConstants.URLS.Links.APPLICATION_ENTRY_POINT.getName(),
+                new Link().setHref("https://m2.handelsbanken.se/fipriv/session"));
+        return links;
     }
 }
