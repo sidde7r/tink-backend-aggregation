@@ -21,7 +21,7 @@ cluster: TINK
 isAggregationCluster: true
 
 coordination:
-  hosts: 192.168.99.100:31003
+  hosts: 172.16.42.2:2181
 
 database:
   driverClass: com.mysql.jdbc.Driver
