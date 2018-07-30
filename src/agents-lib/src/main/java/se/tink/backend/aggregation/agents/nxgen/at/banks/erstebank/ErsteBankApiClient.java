@@ -59,8 +59,8 @@ public class ErsteBankApiClient {
                 ErsteBankConstants.QUERYPARAMS.REDIRECT_URI_AUTHENTICATION).get(HttpResponse.class);
     }
 
-    private HttpResponse sendJavascriptEnabled(){
-        return getRequest(ErsteBankConstants.URLS.LOGIN_BASE, ErsteBankConstants.URLS.OAUTH, ErsteBankConstants.QUERYPARAMS.SPARKASSE_ACCEPT,
+    private void sendJavascriptEnabled(){
+         getRequest(ErsteBankConstants.URLS.LOGIN_BASE, ErsteBankConstants.URLS.OAUTH, ErsteBankConstants.QUERYPARAMS.SPARKASSE_ACCEPT,
                 ErsteBankConstants.QUERYPARAMS.REDIRECT_URI_AUTHENTICATION)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                 .post(HttpResponse.class, ErsteBankConstants.BODY.JAVASCRIPT_ENABLED);
