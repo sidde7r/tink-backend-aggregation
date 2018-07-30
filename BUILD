@@ -764,13 +764,14 @@ java_library(
         "//src/libraries/dropwizard_utils:dropwizard-utils",
         "//src/libraries/discovery:discovery",
         "//src/cluster-lib-jersey:cluster-lib-jersey",
-        "//third_party:io_dropwizard_dropwizard_jersey",
-
+        "//src/libraries/metrics:metrics",
         "//src/libraries/date",
         "//src/libraries/serialization_utils:serialization-utils",
         "//src/libraries/protobuf_serialization_utils:protobuf-serialization-utils",
         "//src/libraries/i18n",
-
+        
+        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:io_dropwizard_dropwizard_jersey",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_sun_jersey_jersey_core",
@@ -789,6 +790,8 @@ java_library(
         "//third_party:io_protostuff_protostuff_api",
         "//third_party:io_protostuff_protostuff_core",
         "//third_party:io_protostuff_protostuff_runtime",
+        "//third_party:net_sourceforge_tess4j",
+
     ],
 )
 
@@ -802,12 +805,18 @@ java_library(
          ":common-lib",
          ":provider-configuration-api",
          ":provider-configuration-lib",
+         ":main-api",
          "//src/libraries/auth:auth",
          "//src/libraries/discovery:discovery",
          "//src/libraries/dropwizard_utils:dropwizard-utils",
          "//src/libraries/metrics:metrics",
          "//src/libraries/cluster:cluster",
 
+         "//src/libraries/cli_print_utils:cli_print_utils",
+         "//src/libraries/serialization_utils:serialization-utils",
+
+         "//third_party:org_springframework_spring_expression",
+         "//third_party:org_springframework_data_spring_data_jpa",
          "//third_party:com_google_guava_guava",
          "//third_party:com_google_inject_guice",
          "//third_party:com_netflix_governator",
@@ -832,13 +841,18 @@ java_binary(
          ":common-lib",
          ":provider-configuration-lib",
          ":provider-configuration-api",
+         ":main-api",
 
          "//src/libraries/auth:auth",
          "//src/libraries/discovery:discovery",
          "//src/libraries/dropwizard_utils:dropwizard-utils",
          "//src/libraries/metrics:metrics",
          "//src/libraries/cluster:cluster",
+         "//src/libraries/cli_print_utils:cli_print_utils",
+         "//src/libraries/serialization_utils:serialization-utils",
 
+         "//third_party:org_springframework_spring_expression",
+         "//third_party:org_springframework_data_spring_data_jpa",
          "//third_party:com_google_guava_guava",
          "//third_party:com_google_inject_guice",
          "//third_party:com_netflix_governator",
