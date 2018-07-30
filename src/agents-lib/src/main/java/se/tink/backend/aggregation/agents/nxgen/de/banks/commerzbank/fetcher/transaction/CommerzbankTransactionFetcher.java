@@ -14,6 +14,8 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.Commerzbank
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.transaction.entities.PfmTransactionsEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.transaction.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.transaction.entities.TransactionResultEntity;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.index.TransactionIndexPaginator;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -27,7 +29,7 @@ public class CommerzbankTransactionFetcher implements TransactionIndexPaginator<
     }
 
     @Override
-    public Collection<? extends Transaction> getTransactionsFor(TransactionalAccount account, int numberOfTransactions,
+    public PaginatorResponse getTransactionsFor(TransactionalAccount account, int numberOfTransactions,
             int startIndex) {
 
         Collection<Transaction> transactions = new ArrayList<>();
@@ -51,6 +53,7 @@ public class CommerzbankTransactionFetcher implements TransactionIndexPaginator<
         transactions = pfmTransactionsEntities.stream()
                 .map(PfmTransactionsEntity::toTinkTransaction).collect(Collectors
                         .toList());
-        return transactions;
+
+        return PaginatorResponseImpl.create(transactions);
     }
 }
