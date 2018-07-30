@@ -1,7 +1,6 @@
-package se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.entities;
+package se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.transactionalaccount.entities;
 
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.transactionalaccount.entities.TransactionEntity;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TransactionEntityTest {
