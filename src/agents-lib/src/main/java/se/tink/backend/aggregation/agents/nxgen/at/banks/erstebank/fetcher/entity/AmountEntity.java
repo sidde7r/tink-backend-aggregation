@@ -28,6 +28,12 @@ public class AmountEntity {
             return new Amount(getCurrency(), Double.parseDouble(value));
         }
 
+        else if(value.length() == 2){
+            value = new StringBuffer(value).insert(3-getPrecision(), ".").toString();
+            double doubleValue = Double.parseDouble(value);
+            return new Amount(getCurrency(), doubleValue);
+        }
+
         value = new StringBuffer(value).insert(value.length()-getPrecision(), ".").toString();
         double doubleValue = Double.parseDouble(value);
         return new Amount(getCurrency(), doubleValue);
