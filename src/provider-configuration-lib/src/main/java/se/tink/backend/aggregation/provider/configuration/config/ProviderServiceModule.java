@@ -5,8 +5,6 @@ import com.google.inject.Scopes;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
 import se.tink.backend.aggregation.cluster.JerseyClusterIdProvider;
 import se.tink.backend.aggregation.cluster.provider.ClusterIdProvider;
-
-//import se.tink.backend.aggregation.injectableproviders.ClusterIdProvider;
 import se.tink.backend.aggregation.provider.configuration.api.MonitoringService;
 import se.tink.backend.aggregation.provider.configuration.api.ProviderService;
 import se.tink.backend.aggregation.provider.configuration.controllers.ProviderServiceController;
