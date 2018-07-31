@@ -14,7 +14,7 @@ server:
       validateCerts: false
   adminConnectors:
     - type: http
-      port: 8095
+      port: 8047
 
 cluster: TINK
 
