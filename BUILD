@@ -817,6 +817,8 @@ java_library(
 
          "//third_party:org_springframework_spring_expression",
          "//third_party:org_springframework_data_spring_data_jpa",
+         "//third_party:org_apache_curator_curator_framework",
+         "//third_party:org_apache_curator_curator_x_discovery",
          "//third_party:com_google_guava_guava",
          "//third_party:com_google_inject_guice",
          "//third_party:com_netflix_governator",
@@ -853,6 +855,8 @@ java_binary(
 
          "//third_party:org_springframework_spring_expression",
          "//third_party:org_springframework_data_spring_data_jpa",
+         "//third_party:org_apache_curator_curator_framework",
+         "//third_party:org_apache_curator_curator_x_discovery",
          "//third_party:com_google_guava_guava",
          "//third_party:com_google_inject_guice",
          "//third_party:com_netflix_governator",
