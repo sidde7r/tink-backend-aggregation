@@ -170,6 +170,7 @@ public class SEPAAccount {
         verifyCreditCardAccount();
 
         logCreditCardInformation();
+        logCreditCardPermittedTransactions();
 
         CreditCardAccount.Builder<?, ?> builder = CreditCardAccount.builder(
                 getBlz() + getAccountNo(),
@@ -189,6 +190,10 @@ public class SEPAAccount {
 
     private void logCreditCardInformation() {
         LOGGER.info("{} Accounttype: {}, account limit \"{}\", balance \"{}\"", FinTsConstants.LogTags.CREDIT_CARD_INFORMATION, accountType, accountLimit, balance);
+    }
+
+    private void logCreditCardPermittedTransactions(){
+        LOGGER.info("{} permitted business transactions: \"{}\"  extensions: \"{}\"", FinTsConstants.LogTags.CREDIT_CARD_PERMITTED_BUSINESS_TRANSACTIONS, this.permittedBusinessTransactions, this.extensions);
     }
 
     private Amount getAmount(String currency, String amount) {

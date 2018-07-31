@@ -87,5 +87,6 @@ public class FinTsConstants {
     public static class LogTags {
         public static final LogTag ERROR_CODE = LogTag.from("#fints_login_error_types");
         public static final LogTag CREDIT_CARD_INFORMATION = LogTag.from("#fints_credit_card_information");
+        public static final LogTag CREDIT_CARD_PERMITTED_BUSINESS_TRANSACTIONS= LogTag.from("#fints_credit_card_permitted_transactions");
     }
 }
