@@ -99,7 +99,7 @@ public class FinTsResponse {
         String hirm = FinTsParser.getStatus(this.response);
         Map<String, String> result = new HashMap<>();
         List<String> splits = FinTsParser.getSegmentDataGroups(hirm);
-        if(!splits.isEmpty()){
+        if (!splits.isEmpty()) {
             List<String> parts = splits.subList(1, splits.size());
 
             for (String part : parts) {
@@ -116,7 +116,7 @@ public class FinTsResponse {
         Map<String, String> result = new HashMap<>();
         String seg = this.findSegment(FinTsConstants.Segments.HIRMS);
         List<String> splits = FinTsParser.getSegmentDataGroups(seg);
-        if(!splits.isEmpty()){
+        if (!splits.isEmpty()) {
             List<String> parts = splits.subList(1, splits.size());
 
             for (String part : parts) {
