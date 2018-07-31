@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.rpc.Account;
@@ -37,7 +38,7 @@ public class SelectAccountsToAggregateCommand extends AgentWorkerCommand {
     public AgentWorkerCommandResult execute() throws Exception {
         List<Account> allAccounts = context.getCachedAccounts();
         List<String> uniqueIdOfUserSelectedAccounts = context.getUniqueIdOfUserSelectedAccounts();
-        List<Account> accountsFromRequest = refreshInformationRequest.getAccounts();
+        List<Account> accountsFromRequest = refreshInformationRequest.getAccounts() == null? Lists.newArrayList(): refreshInformationRequest.getAccounts();
 
         // handle black list removal
         List<Account> allExceptForBlacklisted = allAccounts.stream().filter(x -> !shouldNotAggregateDataForAccount(accountsFromRequest, x)).collect(Collectors.toList());
