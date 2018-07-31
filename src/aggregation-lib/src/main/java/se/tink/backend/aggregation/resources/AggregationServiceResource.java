@@ -106,7 +106,7 @@ public class AggregationServiceResource implements AggregationService, Managed {
             throws
             Exception {
         // if it is opt-in (where user is asked to select the accounts to aggregate, we return a bad request
-        if (request.isOptIn() && !RefreshableItem.hasAccounts(Lists.newArrayList(request.getItemsToRefresh()))){
+        if (request.isOptIn() && request.getItemsToRefresh()!=null && request.getItemsToRefresh() == null && !RefreshableItem.hasAccounts(Lists.newArrayList(request.getItemsToRefresh()))){
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
         // if it is refreshing white listed accounts, we return bad request if no accounts are white listed
