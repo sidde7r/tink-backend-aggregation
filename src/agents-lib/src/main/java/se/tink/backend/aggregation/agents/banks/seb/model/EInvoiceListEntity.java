@@ -13,6 +13,7 @@ import java.text.ParseException;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils;
 import se.tink.backend.aggregation.agents.banks.seb.SebAccountIdentifierFormatter;
+import se.tink.backend.aggregation.annotations.JsonDouble;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.core.Amount;
 import se.tink.backend.core.enums.TransferType;
@@ -77,8 +78,10 @@ public class EInvoiceListEntity implements MatchableTransferRequestEntity {
     public String reference;
     @JsonProperty("TIMESTAMP")
     public String timestamp;
+    @JsonDouble
     @JsonProperty("BELOPP")
     public Double amount;
+    @JsonDouble
     @JsonProperty("BELOPP_URSPR")
     public Double originalAmount;
     @JsonProperty("FF_DATUM")
