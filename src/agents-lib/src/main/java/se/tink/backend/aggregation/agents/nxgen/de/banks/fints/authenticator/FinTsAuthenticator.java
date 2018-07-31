@@ -36,7 +36,7 @@ public class FinTsAuthenticator implements PasswordAuthenticator {
                     status.contains(FinTsConstants.StatusCode.LOGIN_FAILED)) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             } else {
-                LOGGER.warn(FinTsConstants.LogTags.ERROR_CODE.toString(), status);
+                LOGGER.warn("{} error status: {}",FinTsConstants.LogTags.ERROR_CODE.toString(), status);
             }
         }
 
