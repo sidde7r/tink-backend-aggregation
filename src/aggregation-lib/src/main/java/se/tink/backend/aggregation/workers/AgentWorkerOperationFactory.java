@@ -432,7 +432,7 @@ public class AgentWorkerOperationFactory {
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
-        for (RefreshableItem item : itemsToRefresh) {
+        for (RefreshableItem item : items) {
             if (RefreshableItem.isAccount(item)) {
                 commands.add(new RefreshItemAgentWorkerCommand(context, item, createMetricState(request)));
             }
