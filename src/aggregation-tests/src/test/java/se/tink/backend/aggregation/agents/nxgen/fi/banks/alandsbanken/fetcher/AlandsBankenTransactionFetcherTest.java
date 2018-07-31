@@ -13,6 +13,7 @@ public class AlandsBankenTransactionFetcherTest extends AlandsBankenTest {
         Collection<TransactionalAccount> accounts = new AlandsBankenTransactionalAccountFetcher(client).fetchAccounts();
         accounts.forEach( account ->
             new AlandsBankenTransactionFetcher(client).getTransactionsFor(account, null, null)
+                    .getTinkTransactions()
                 .forEach(transaction -> {
                     assertNotNull(transaction);
                     assertNotNull(transaction.getDescription());

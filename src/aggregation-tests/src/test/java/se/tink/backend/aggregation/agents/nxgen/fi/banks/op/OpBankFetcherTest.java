@@ -76,7 +76,7 @@ public class OpBankFetcherTest {
                 Collection<? extends Transaction> tx = response.getTinkTransactions();
 
                 transactions.addAll(Optional.ofNullable(tx).orElse(Collections.emptyList()));
-           } while (response.hasNext());
+           } while (response.canFetchMore().get());
 
             for (Transaction tinkTransaction : transactions) {
                 assertNotNull("Date is null", tinkTransaction.getDate());

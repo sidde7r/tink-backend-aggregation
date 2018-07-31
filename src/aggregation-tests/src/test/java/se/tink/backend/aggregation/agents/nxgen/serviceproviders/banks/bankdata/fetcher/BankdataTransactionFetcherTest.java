@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.AgentTestContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataTestConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.BankdataPinAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -51,11 +51,11 @@ public class BankdataTransactionFetcherTest {
             boolean fetchmore = false;
             do {
                 System.out.println("Account: " + account.getName());
-                TransactionPagePaginatorResponse response = transactionFetcher.getTransactionsFor(account, startPage);
+                PaginatorResponse response = transactionFetcher.getTransactionsFor(account, startPage);
                 for (Transaction transaction : response.getTinkTransactions()) {
                     System.out.println("Transaction: " + transaction.getDescription());
                 }
-                fetchmore = response.canFetchMore();
+                fetchmore = response.canFetchMore().get();
             } while (fetchmore);
 
         }

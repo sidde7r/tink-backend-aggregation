@@ -31,7 +31,9 @@ public class BancoPopularTransactionFetcherTest extends BancoPopularTestBase {
         c.add(Calendar.YEAR, -365);
         Date fromDate = c.getTime();
         for (TransactionalAccount account : accounts) {
-            Collection<Transaction> transactions = transactionFetcher.getTransactionsFor(account, fromDate, toDate);
+            Collection<? extends Transaction> transactions = transactionFetcher
+                    .getTransactionsFor(account, fromDate, toDate)
+                    .getTinkTransactions();
             assertNotNull(transactions);
             System.out.println("From date " + fromDate);
             System.out.println("To date " + toDate);
