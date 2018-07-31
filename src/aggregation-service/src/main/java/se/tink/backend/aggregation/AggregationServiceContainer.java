@@ -105,7 +105,7 @@ public class AggregationServiceContainer extends AbstractServiceContainer {
 
         environment.jersey().register(inProcessAggregationServiceFactory.getAggregationService());
 
-        if (Objects.equals(Cluster.TINK, configuration.getCluster())) {
+        if (Objects.equals(Cluster.TINK, configuration.getCluster()) && !configuration.isAggregationCluster()) {
             environment.jersey().register(inProcessAggregationServiceFactory.getCreditSafeService());
         }
 
