@@ -99,14 +99,16 @@ public class FinTsResponse {
         String hirm = FinTsParser.getStatus(this.response);
         Map<String, String> result = new HashMap<>();
         List<String> splits = FinTsParser.getSegmentDataGroups(hirm);
-        List<String> parts = splits.subList(1, splits.size());
+        if(!splits.isEmpty()){
+            List<String> parts = splits.subList(1, splits.size());
 
-        for (String part : parts) {
-            List<String> dge = FinTsParser.getDataGroupElements(part);
-            result.put(dge.get(2), dge.get(0));
+            for (String part : parts) {
+                List<String> dge = FinTsParser.getDataGroupElements(part);
+                result.put(dge.get(2), dge.get(0));
+            }
         }
-        return result;
 
+        return result;
     }
 
     public Map<String, String> getLocalStatus() {
@@ -114,12 +116,15 @@ public class FinTsResponse {
         Map<String, String> result = new HashMap<>();
         String seg = this.findSegment(FinTsConstants.Segments.HIRMS);
         List<String> splits = FinTsParser.getSegmentDataGroups(seg);
-        List<String> parts = splits.subList(1, splits.size());
+        if(!splits.isEmpty()){
+            List<String> parts = splits.subList(1, splits.size());
 
-        for (String part : parts) {
-            List<String> dge = FinTsParser.getDataGroupElements(part);
-            result.put(dge.get(2), dge.get(0));
+            for (String part : parts) {
+                List<String> dge = FinTsParser.getDataGroupElements(part);
+                result.put(dge.get(2), dge.get(0));
+            }
         }
+
         return result;
     }
 
