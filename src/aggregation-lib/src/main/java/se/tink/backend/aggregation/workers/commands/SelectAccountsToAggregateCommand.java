@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.rpc.Account;
+import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
@@ -19,9 +20,9 @@ import java.util.stream.Collectors;
 public class SelectAccountsToAggregateCommand extends AgentWorkerCommand {
     private static final Logger log = LoggerFactory.getLogger(RequestUserOptInAccountsAgentWorkerCommand.class);
     private final SetAccountsToAggregateContext context;
-    private final RefreshInformationRequest refreshInformationRequest;
+    private final CredentialsRequest refreshInformationRequest;
 
-    public SelectAccountsToAggregateCommand(SetAccountsToAggregateContext context, RefreshInformationRequest request) {
+    public SelectAccountsToAggregateCommand(SetAccountsToAggregateContext context, CredentialsRequest request) {
         this.context = context;
         this.refreshInformationRequest = request;
     }
