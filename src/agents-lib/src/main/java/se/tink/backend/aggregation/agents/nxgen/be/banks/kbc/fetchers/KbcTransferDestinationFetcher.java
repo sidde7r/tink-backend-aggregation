@@ -4,9 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
-import se.tink.backend.aggregation.agents.general.GeneralUtils;
 import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuilder;
-import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.AgreementDto;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.BeneficiaryDto;
@@ -25,24 +23,32 @@ public class KbcTransferDestinationFetcher implements TransferDestinationFetcher
     }
 
     @Override
-    public TransferDestinationsResponse fetchTransferDestinationsFor(Collection<Account> accounts) {
-        List<GeneralAccountEntity> sourceAccounts = getAllSourceAccounts();
-        List<BeneficiaryDto> destinationAccounts = apiClient.beneficiariesHistory().getBeneficiaries();
-
-        return new TransferDestinationsResponse(
-                getTransferAccountDestinations(sourceAccounts, destinationAccounts, accounts));
+    public TransferDestinationsResponse fetchTransferDestinationsFor(Collection<Account> tinkAccounts) {
+        TransferDestinationsResponse transferDestinations = new TransferDestinationsResponse();
+        transferDestinations.addDestinations(getToOwnAccountsDestinations(tinkAccounts));
+        transferDestinations.addDestinations(getToOtherAccountsDestinations(tinkAccounts));
+        return transferDestinations;
     }
 
-    private List<GeneralAccountEntity> getAllSourceAccounts() {
-        List<AgreementDto> accountsForTransferToOwn = apiClient.accountsForTransferToOwn().getAgreements();
-        List<AgreementDto> accountsForTransferToOther = apiClient.accountsForTransferToOther().getAgreements();
-
-        return GeneralUtils.concat(accountsForTransferToOwn, accountsForTransferToOther);
-    }
-
-    private Map<Account, List<TransferDestinationPattern>> getTransferAccountDestinations(
-            List<GeneralAccountEntity> sourceAccounts, List<BeneficiaryDto> destinationAccounts,
+    private Map<Account, List<TransferDestinationPattern>> getToOwnAccountsDestinations(
             Collection<Account> tinkAccounts) {
+
+        List<AgreementDto> sourceAccounts = apiClient.accountsForTransferToOwn().getAgreements();
+        List<AgreementDto> destinationAccounts = apiClient.fetchAccounts().getAgreements();
+
+        return new TransferDestinationPatternBuilder()
+                .setSourceAccounts(sourceAccounts)
+                .setDestinationAccounts(destinationAccounts)
+                .setTinkAccounts(tinkAccounts)
+                .matchDestinationAccountsOn(AccountIdentifier.Type.BE, BelgianIdentifier.class)
+                .build();
+    }
+
+    private Map<Account, List<TransferDestinationPattern>> getToOtherAccountsDestinations(
+            Collection<Account> tinkAccounts) {
+
+        List<AgreementDto> sourceAccounts = apiClient.accountsForTransferToOther().getAgreements();
+        List<BeneficiaryDto> destinationAccounts = apiClient.beneficiariesHistory().getBeneficiaries();
 
         return new TransferDestinationPatternBuilder()
                 .setSourceAccounts(sourceAccounts)
