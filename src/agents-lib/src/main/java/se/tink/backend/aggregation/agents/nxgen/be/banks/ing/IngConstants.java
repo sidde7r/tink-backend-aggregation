@@ -14,11 +14,20 @@ public class IngConstants {
         static final URL MOBILE_HELLO = new URL(HOST + "/hb_mp/eb/ebmp/MobileHello?rootRef=/eb");
         static final URL MENU_ITEMS = new URL(HOST + "/api/homebank/sl-menu/items/en");
         public static final String BASE_SSO_REQUEST = HOST + "/hb_ms/eb/MobileSSORequest?";
+
     }
 
     public static final class Headers {
         public static final String USER_AGENT = "Mozilla/5.0 (iPhone8,1; U; CPU OS 10.3.1 like Mac OS X; en-us) "
                 + "AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10; MyING.be/8.4";
+    }
+
+    public static final class Helptext {
+        public static final String OTP_HELPTEXT = "1  Insert your ING bank card into the ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png)\n<br>ING Card Reader\n"
+                + "2  Press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_IDENTIFY.png)\n"
+                + "3  Enter your PIN\n"
+                + "4  Press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png)\n"
+                + "Enter the respond code";
     }
 
     static final class Crypto {

@@ -7,6 +7,7 @@ import java.util.Objects;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngCardReaderAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -78,11 +79,7 @@ public class IngCardReaderAuthenticationController implements MultiFactorAuthent
      otpField.setName(OTP_FIELD);
      otpField.setNumeric(true);
      otpField.setSensitive(true);
-     otpField.setHelpText("1  Insert your ING bank card into the ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png)\n<br>ING Card Reader\n"
-             + "2  Press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_IDENTIFY.png)\n"
-             + "3  Enter your PIN\n"
-             + "4  Press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png)\n"
-             + "Enter the respond code");
+     otpField.setHelpText(IngConstants.Helptext.OTP_HELPTEXT);
      return otpField;
     }
 
