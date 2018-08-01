@@ -89,5 +89,6 @@ public class FinTsConstants {
         public static final LogTag NUMBER_OF_FETCHED_TRANSACTIONS = LogTag.from("#fints_number_of_fetched_transactions");
         public static final LogTag CREDIT_CARD_INFORMATION = LogTag.from("#fints_credit_card_information");
         public static final LogTag CREDIT_CARD_PERMITTED_BUSINESS_TRANSACTIONS= LogTag.from("#fints_credit_card_permitted_transactions");
+        public static final LogTag CREDIT_CARD_NUMBER_OF_FETCHED_TRANSACTIONS = LogTag.from("#fints_credit_card_fetched_transactions");
     }
 }
