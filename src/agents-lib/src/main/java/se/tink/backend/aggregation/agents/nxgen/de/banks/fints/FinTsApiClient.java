@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.fints;
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import java.nio.charset.StandardCharsets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.accounts.HKSPA;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.accounts.SEPAAccount;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.auth.HKIDN;
@@ -40,6 +42,7 @@ public class FinTsApiClient {
     private int hkkazVersion = 6;
     // We need to get full information of account in two calls, so need to cache here.
     private List<SEPAAccount> sepaAccounts;
+    private static final Logger LOGGER = LoggerFactory.getLogger(FinTsApiClient.class);
 
     public FinTsApiClient(TinkHttpClient apiClient, FinTsConfiguration configuration) {
         this.apiClient = apiClient;
@@ -329,6 +332,8 @@ public class FinTsApiClient {
         String mt940 = FinTsParser.getMT940Content(segment);
         Map<String, String> touchdowns = response.getTouchDowns(getTransactionRequest);
         List<MT940Statement> transactions = new ArrayList<>(this.parseMt940Transactions(mt940));
+
+        LOGGER.info("{} number of fetched transactions: {} startDate: {} endDate: {}", FinTsConstants.LogTags.NUMBER_OF_FETCHED_TRANSACTIONS, transactions.size(), start.toString(), end.toString());
 
         // Process with touchdowns
         while (touchdowns.containsKey(FinTsConstants.Segments.HKKAZ)) {
