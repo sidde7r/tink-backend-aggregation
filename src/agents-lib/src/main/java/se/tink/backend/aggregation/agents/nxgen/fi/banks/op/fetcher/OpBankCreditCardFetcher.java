@@ -66,7 +66,7 @@ public class OpBankCreditCardFetcher implements AccountFetcher<CreditCardAccount
 
         Optional<OpBankCardEntity> currentCard = getCurrentCard(account);
         if (!currentCard.isPresent()) {
-            return PaginatorResponseImpl.createEmpty();
+            return PaginatorResponseImpl.createEmpty(false);
         }
 
         OpBankCardEntity card = currentCard.get();
