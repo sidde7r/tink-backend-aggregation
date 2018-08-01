@@ -45,7 +45,7 @@ public class SparebankenVestTransactionFetcher implements TransactionPagePaginat
                 .collect(Collectors.toList());
 
         return PaginatorResponseImpl.create(tinkTransactions,
-                !(transactionsList.size() < SparebankenVestConstants.PagePagination.MAX_TRANSACTIONS_IN_BATCH));
+                transactionsList.size() >= SparebankenVestConstants.PagePagination.MAX_TRANSACTIONS_IN_BATCH);
     }
 
     @Override
