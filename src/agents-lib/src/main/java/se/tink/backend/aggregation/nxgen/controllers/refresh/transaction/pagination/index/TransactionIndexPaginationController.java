@@ -29,9 +29,9 @@ public class TransactionIndexPaginationController<A extends Account> implements 
         Collection<? extends Transaction> transactions = response.getTinkTransactions();
 
         if (transactions.size() < NUMBER_OF_TRANSACTIONS_PER_PAGE && !response.canFetchMore().isPresent()) {
-            // If we return an empty list AND the pagee doesn't implement canFetchMore we
-            // abort (i.e. we've reached the last page).
-            return PaginatorResponseImpl.createEmpty(false);
+            // If we return less transactions than we asked for AND the pagee doesn't implement canFetchMore we
+            // abort (i.e. we've reached the last page). However, we return the transactions we managed to fetch.
+            return PaginatorResponseImpl.create(transactions, false);
         }
 
         if (!response.canFetchMore().isPresent()) {
