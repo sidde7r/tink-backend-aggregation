@@ -12,28 +12,32 @@ public class ApplicationEntryPointResponse extends BaseResponse {
     private String authToken;
     private EmbeddedConfiguration embedded;
 
-    public URL toKeepAlive() {
-        return findLink(HandelsbankenConstants.URLS.Links.KEEP_ALIVE);
-    }
-
     public URL toAccounts() {
         return findLink(HandelsbankenConstants.URLS.Links.ACCOUNTS);
-    }
-
-    public URL toPendingTransactions() {
-        return findLink(HandelsbankenConstants.URLS.Links.PENDING_TRANSACTIONS);
-    }
-
-    public URL toCardsV3() {
-        return findLink(HandelsbankenConstants.URLS.Links.CARDS_V3);
     }
 
     public URL toCards() {
         return findLink(HandelsbankenConstants.URLS.Links.CARDS);
     }
 
+    public URL toCardsV3() {
+        return findLink(HandelsbankenConstants.URLS.Links.CARDS_V3);
+    }
+
+    public URL toKeepAlive() {
+        return findLink(HandelsbankenConstants.URLS.Links.KEEP_ALIVE);
+    }
+
     public URL toLoans() {
         return findLink(HandelsbankenConstants.URLS.Links.LOANS);
+    }
+
+    public URL toPaymentContext() {
+        return findLink(HandelsbankenConstants.URLS.Links.PAYMENT_CONTEXT);
+    }
+
+    public URL toPendingTransactions() {
+        return findLink(HandelsbankenConstants.URLS.Links.PENDING_TRANSACTIONS);
     }
 
     public URL toSecuritiesHoldings() {
@@ -42,10 +46,6 @@ public class ApplicationEntryPointResponse extends BaseResponse {
 
     public URL toTransferContext() {
         return findLink(HandelsbankenConstants.URLS.Links.TRANSFER_CONTEXT);
-    }
-
-    public URL toPaymentContext() {
-        return findLink(HandelsbankenConstants.URLS.Links.PAYMENT_CONTEXT);
     }
 
     @JsonIgnore
