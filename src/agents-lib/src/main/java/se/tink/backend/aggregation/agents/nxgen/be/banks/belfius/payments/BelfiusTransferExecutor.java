@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -160,7 +159,7 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         return false;
     }
 
-    public boolean containsAccount(String accountNum, ArrayList<BeneficiariesContacts> beneficiaries) {
+    public boolean containsAccount(String accountNum, List<BeneficiariesContacts> beneficiaries) {
         return beneficiaries.stream()
                 .anyMatch(beneficiary -> beneficiary.isAccount(accountNum));
     }

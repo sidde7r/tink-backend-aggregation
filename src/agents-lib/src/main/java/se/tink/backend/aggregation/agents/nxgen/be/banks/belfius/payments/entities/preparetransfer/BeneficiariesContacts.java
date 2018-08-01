@@ -196,8 +196,7 @@ public class BeneficiariesContacts implements GeneralAccountEntity {
 
     @Override
     public AccountIdentifier generalGetAccountIdentifier() {
-        BelgianIdentifier bi = new BelgianIdentifier(mlbAccount.getText().replace(" ", ""));
-        return bi;
+        return new BelgianIdentifier(mlbAccount.getText().replace(" ", ""));
     }
 
     @Override
