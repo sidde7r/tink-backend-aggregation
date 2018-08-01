@@ -41,7 +41,9 @@ public class TransactionFetcherController<A extends Account> implements Transact
 
         do {
             PaginatorResponse response = paginator.fetchTransactionsFor(account);
-            transactions.addAll(response.getTinkTransactions());
+            if (response != null && response.getTinkTransactions() != null) {
+                transactions.addAll(response.getTinkTransactions());
+            }
 
             if (!response.canFetchMore().orElseThrow(() ->
                     new IllegalStateException("Pagee must indicate canFetchMore!"))) {
