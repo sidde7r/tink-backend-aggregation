@@ -36,6 +36,10 @@ public class ApplicationEntryPointResponse extends BaseResponse {
         return findLink(HandelsbankenConstants.URLS.Links.PAYMENT_CONTEXT);
     }
 
+    public URL toPendingEInvoices() {
+        return findLink(HandelsbankenConstants.URLS.Links.PENDING_EINVOICES);
+    }
+
     public URL toPendingTransactions() {
         return findLink(HandelsbankenConstants.URLS.Links.PENDING_TRANSACTIONS);
     }

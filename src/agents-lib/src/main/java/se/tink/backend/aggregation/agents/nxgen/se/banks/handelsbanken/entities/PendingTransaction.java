@@ -1,9 +1,10 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.entities;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.entities.HandelsbankenRecipient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.rpc.PaymentDetails;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAmount;
@@ -45,7 +46,7 @@ public class PendingTransaction extends BaseResponse {
         return !getLinks().values().stream().anyMatch(link -> link.hasParameter(parameter));
     }
 
-    public Optional<URL> paymentDetails() {
+    public Optional<URL> toPaymentDetails() {
         return searchLink(HandelsbankenConstants.URLS.Links.PAYMENT_DETAIL);
     }
 }

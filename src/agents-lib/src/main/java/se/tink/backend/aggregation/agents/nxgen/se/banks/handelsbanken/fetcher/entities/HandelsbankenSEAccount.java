@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.entities;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.entities;
 
 import com.google.common.annotations.VisibleForTesting;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.validators.BankIdValidator;
@@ -23,6 +23,10 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
     //private boolean displayBalance;
     //private String holderName;
     //private boolean isCard;
+
+    public String getNumber() {
+        return number;
+    }
 
     public TransactionalAccount toTransactionalAccount(
             ApplicationEntryPointResponse applicationEntryPoint) {

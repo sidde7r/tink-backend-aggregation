@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.
 
 import java.util.List;
 import java.util.stream.Stream;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.entities.HandelsbankenSEAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.ApplicationEntryPointResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAccount;
 import se.tink.backend.aggregation.annotations.JsonObject;

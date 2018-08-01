@@ -40,6 +40,7 @@ public class HandelsbankenConstants {
             ACTIVATE_PROFILE("activateProfile"),
             APPLICATION_ENTRY_POINT("application-entry-point"),
             APPLICATION_EXIT_POINT("application-exit-point"),
+            APPROVAL("approval"),
             AUTHENTICATE("authenticate"),
             AUTHORIZE("authorize"),
             BANKID_LOGIN("bankid-login_2_0"),
@@ -52,14 +53,17 @@ public class HandelsbankenConstants {
             CREATE_PINCODE("createPincode"),
             CREATE_PROFILE("createProfile"),
             CUSTODY_ACCOUNT("custody-account"),
+            EINVOICE_DETAIL("einvoice-detail"),
             FUND_HOLDINGS("fund-holdings"),
             FUND_HOLDING_DETAILS("fund-holding-details"),
             GET_CHALLENGE("getChallenge"),
             GET_SERVER_PROFILE("getServerProfile"),
             KEEP_ALIVE("keepalive"),
             LOANS("loans"),
+            LOOKUP_RECIPIENT("lookup-recipient"),
             PAYMENT_CONTEXT("payment-context"),
             PAYMENT_DETAIL("payment-detail"),
+            PENDING_EINVOICES("einvoice-pending-v4"),
             PENDING_TRANSACTIONS("pending-transactions-v4"),
             PENSION_DETAILS("pension-detail"),
             PINNED_ACTIVATION("pinned-activation"),
@@ -70,6 +74,7 @@ public class HandelsbankenConstants {
             TRANSACTIONS("transactions"),
             TRANSFER_CONTEXT("transfer-context-v2"),
             TRANSINFO("transinfo"),
+            UPDATE("update"),
             VALIDATE_SIGNATURE("validateSignature"),
             VERIFY_SECURITY_CODE("verifySecurityCode"),
             VALIDATE_RECIPIENT("validate-recipient");
@@ -89,6 +94,10 @@ public class HandelsbankenConstants {
 
         public static final class KeepAlive {
             public static final LogTag LOG_TAG = LogTag.from("#Handelsbanken_keep_alive");
+        }
+
+        public static final class Parameters {
+            public static final String GIRO_NUMBER = "bgPgNumber";
         }
     }
 

@@ -5,7 +5,10 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.HandelsbankenBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.HandelsbankenSECardDeviceAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.ExecutorExceptionResolver;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.einvoice.HandelsbankenSEEInvoiceExecutor;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.payment.HandelsbankenSEPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.HandelsbankenSEBankTransferExecutor;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.einvoice.HandelsbankenSEEInvoiceFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.HandelsbankenSEInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transferdestination.HandelsbankenSETransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenAgent;
@@ -13,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
@@ -62,14 +66,36 @@ public class HandelsbankenSEAgent extends HandelsbankenAgent<HandelsbankenSEApiC
     }
 
     @Override
+    protected Optional<EInvoiceRefreshController> constructEInvoiceRefreshController(HandelsbankenSEApiClient client,
+            HandelsbankenSessionStorage sessionStorage) {
+        return Optional.of(new EInvoiceRefreshController(
+                metricRefreshController,
+                updateController,
+                new HandelsbankenSEEInvoiceFetcher(client, sessionStorage)
+        ));
+    }
+
+    @Override
     protected Optional<TransferController> constructTranferController(HandelsbankenSEApiClient client,
             HandelsbankenSessionStorage sessionStorage, AgentContext context) {
+
+        HandelsbankenSEPaymentExecutor paymentExecutor = new HandelsbankenSEPaymentExecutor(client, sessionStorage);
+
         Catalog catalog = context.getCatalog();
-        return Optional.of(new TransferController(null, new HandelsbankenSEBankTransferExecutor(client,
-                sessionStorage, new ExecutorExceptionResolver(catalog),
-                new TransferMessageFormatter(catalog,
-                        TransferMessageLengthConfig.createWithMaxLength(14, 12),
-                new StringNormalizerSwedish(",.-?!/+"))), null, null));
+        return Optional.of(new TransferController(
+                paymentExecutor,
+                new HandelsbankenSEBankTransferExecutor(
+                        client,
+                        sessionStorage,
+                        new ExecutorExceptionResolver(catalog),
+                        new TransferMessageFormatter(
+                                catalog,
+                                TransferMessageLengthConfig.createWithMaxLength(
+                                        14,
+                                        12),
+                                new StringNormalizerSwedish(",.-?!/+"))),
+                new HandelsbankenSEEInvoiceExecutor(client, sessionStorage),
+                paymentExecutor));
     }
 
     @Override
