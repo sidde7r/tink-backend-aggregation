@@ -43,8 +43,8 @@ public class OpBankAccountEntity implements TransactionKeyPaginatorResponse<OpBa
     }
 
     @Override
-    public boolean hasNext() {
-        return hasMore;
+    public Optional<Boolean> canFetchMore() {
+        return Optional.of(hasMore);
     }
 
     // this is a way to handle the need for two keys when paginating for OPBanken

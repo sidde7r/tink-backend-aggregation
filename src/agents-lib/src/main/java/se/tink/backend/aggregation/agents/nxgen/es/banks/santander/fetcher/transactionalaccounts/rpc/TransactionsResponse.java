@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.tran
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.xml.bind.annotation.XmlRootElement;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.AmountEntity;
@@ -90,8 +91,8 @@ public class TransactionsResponse implements TransactionKeyPaginatorResponse<Rep
     }
 
     @Override
-    public boolean hasNext() {
-        return reposition.getTransactionNumber() > 1;
+    public Optional<Boolean> canFetchMore() {
+        return Optional.of(reposition.getTransactionNumber() > 1);
     }
 
     @Override

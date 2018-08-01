@@ -3,15 +3,16 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.accounts.checkin
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.accounts.checking.entities.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.accounts.checking.entities.TransactionsEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
-public class GetTransactionsResponse implements TransactionPagePaginatorResponse{
+public class GetTransactionsResponse implements PaginatorResponse {
     private Integer numOfTransactions;
     private List<TransactionsEntity> lstTransactions;
     private Double reservedAmount;
@@ -50,7 +51,7 @@ public class GetTransactionsResponse implements TransactionPagePaginatorResponse
     }
 
     @Override
-    public boolean canFetchMore() {
-        return moreTransactionsAvailable;
+    public Optional<Boolean> canFetchMore() {
+        return Optional.of(moreTransactionsAvailable);
     }
 }

@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.auth
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.authenticator.entities.TransactionEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
@@ -18,8 +19,8 @@ public class TransactionResponse extends ArrayList<TransactionEntity> implements
     }
 
     @Override
-    public boolean hasNext() {
-        return false;
+    public Optional<Boolean> canFetchMore() {
+        return Optional.of(false);
     }
 
     @Override

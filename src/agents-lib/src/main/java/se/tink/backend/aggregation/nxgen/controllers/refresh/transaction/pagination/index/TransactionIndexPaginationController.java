@@ -2,50 +2,45 @@ package se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagina
 
 import com.google.common.base.Preconditions;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Objects;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 public class TransactionIndexPaginationController<A extends Account> implements TransactionPaginator<A> {
     private final TransactionIndexPaginator<A> paginator;
-    static int NUMBER_OF_TRANSACTIONS_PER_PAGE = 30;
-    int numberOfTransactionsFetched = 0;
+    private static final int NUMBER_OF_TRANSACTIONS_PER_PAGE = 30;
+    private int numberOfTransactionsFetched = 0;
     private Account currentAccount;
 
-    public TransactionIndexPaginationController(
-            TransactionIndexPaginator<A> paginator) {
+    public TransactionIndexPaginationController(TransactionIndexPaginator<A> paginator) {
         this.paginator = Preconditions.checkNotNull(paginator);
     }
 
     @Override
-    public Collection<? extends Transaction> fetchTransactionsFor(A account) {
-        Preconditions.checkState(canFetchMoreFor(account),
-                "Fetching more transactions when canFetchMore() returns false is not allowed");
-        Collection<? extends Transaction> transactions = paginator.getTransactionsFor(account,
-                NUMBER_OF_TRANSACTIONS_PER_PAGE, numberOfTransactionsFetched);
+    public PaginatorResponse fetchTransactionsFor(A account) {
+        resetStateIfAccountChanged(account);
 
-        if (transactions == null || transactions.isEmpty()){
-            /*
-                In the case of total number of transaction is multiple of number of transaction per page,
-                e.g. total of 60 transactions when fetch 30 each time,
-                the last transaction will return an empty list.
-                therefore number of transactions fetch need to be set to NOT multiple of number of transaction
-                per page. in this case, it is set to -1.
-             */
-            numberOfTransactionsFetched = -1;
-            return Collections.emptyList();
+        PaginatorResponse response = paginator.getTransactionsFor(account, NUMBER_OF_TRANSACTIONS_PER_PAGE,
+                numberOfTransactionsFetched);
+
+        Collection<? extends Transaction> transactions = response.getTinkTransactions();
+
+        if (transactions.size() < NUMBER_OF_TRANSACTIONS_PER_PAGE && !response.canFetchMore().isPresent()) {
+            // If we return less transactions than we asked for AND the pagee doesn't implement canFetchMore we
+            // abort (i.e. we've reached the last page). However, we return the transactions we managed to fetch.
+            return PaginatorResponseImpl.create(transactions, false);
         }
 
-        numberOfTransactionsFetched += transactions.size();
-        return transactions;
-    }
+        if (!response.canFetchMore().isPresent()) {
+            // If canFetchMore is not defined we assume we always can fetch more (until we reach a page with less
+            // transactions than what we asked for).
+            return PaginatorResponseImpl.create(transactions, true);
+        }
 
-    @Override
-    public boolean canFetchMoreFor(A account) {
-        resetStateIfAccountChanged(account);
-        return numberOfTransactionsFetched % NUMBER_OF_TRANSACTIONS_PER_PAGE == 0;
+        return response;
     }
 
     private void resetStateIfAccountChanged(Account account) {

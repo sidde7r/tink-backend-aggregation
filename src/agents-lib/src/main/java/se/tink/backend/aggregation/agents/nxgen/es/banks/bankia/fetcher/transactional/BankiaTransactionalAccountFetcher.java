@@ -12,8 +12,8 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.entities.AccountEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 
 public class BankiaTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount>,
@@ -49,7 +49,7 @@ public class BankiaTransactionalAccountFetcher implements AccountFetcher<Transac
     }
 
     @Override
-    public TransactionPagePaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
+    public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
         // NOTE: this code was taken from the TransactionMonthPaginationController in order to leverage
         // the canFetchMore() functionality.
         // Todo: refactor this when the `TransactionMonthPaginationController` can handle canFetchMore.

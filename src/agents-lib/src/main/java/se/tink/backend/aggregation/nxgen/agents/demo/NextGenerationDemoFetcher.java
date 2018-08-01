@@ -5,12 +5,14 @@ import com.google.common.collect.Sets;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.utils.demo.DemoDataUtils;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.DemoData;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
@@ -18,7 +20,6 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.Field;
-import se.tink.backend.aggregation.agents.utils.demo.DemoDataUtils;
 import se.tink.backend.core.Amount;
 import se.tink.credentials.demo.DemoCredentials;
 
@@ -70,24 +71,27 @@ public class NextGenerationDemoFetcher implements AccountFetcher<TransactionalAc
     }
 
     @Override
-    public Collection<Transaction> getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
+    public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
         if (account.getType() == AccountTypes.LOAN || finishedAccountNumbers.contains(account.getAccountNumber())) {
-            return Collections.emptyList();
+            return PaginatorResponseImpl.createEmpty();
         }
 
+        Collection<Transaction> transactions;
         try {
             File transactionsFile = new File(userPath + File.separator + account.getBankIdentifier() + ".txt");
             finishedAccountNumbers.add(account.getAccountNumber());
 
             if (demoCredentials != null && demoCredentials
                     .hasFeature(DemoCredentials.DemoUserFeature.RANDOMIZE_TRANSACTIONS)) {
-                return DemoData.readTransactionsWithRandomization(demoCredentials, transactionsFile,
+                transactions = DemoData.readTransactionsWithRandomization(demoCredentials, transactionsFile,
                         account.toSystemAccount(), NUMBER_OF_TRANSACTIONS_TO_RANDOMIZE);
             } else {
-                return DemoData.readTransactions(demoCredentials, transactionsFile, account.toSystemAccount());
+                transactions = DemoData.readTransactions(demoCredentials, transactionsFile, account.toSystemAccount());
             }
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
+
+        return PaginatorResponseImpl.create(transactions);
     }
 }

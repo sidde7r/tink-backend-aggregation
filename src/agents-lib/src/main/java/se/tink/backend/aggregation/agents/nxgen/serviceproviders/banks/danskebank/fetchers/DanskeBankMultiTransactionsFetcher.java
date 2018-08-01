@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -16,9 +15,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.TransactionEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
@@ -37,7 +37,7 @@ public class DanskeBankMultiTransactionsFetcher<A extends Account> implements Tr
     }
 
     @Override
-    public Collection<Transaction> getTransactionsFor(A account, Date fromDate, Date toDate) {
+    public PaginatorResponse getTransactionsFor(A account, Date fromDate, Date toDate) {
         String from = fromDate.toInstant().atZone(TIMEZONE).toLocalDate().format(DateTimeFormatter.BASIC_ISO_DATE);
         String to = toDate.toInstant().atZone(TIMEZONE).toLocalDate().format(DateTimeFormatter.BASIC_ISO_DATE);
 
@@ -53,7 +53,7 @@ public class DanskeBankMultiTransactionsFetcher<A extends Account> implements Tr
             // If we are able to deserialize the response we can be certain that we have made a successful
             // request but Danske Bank limits how far back we can fetch.
             e.getResponse().getBody(ListTransactionsResponse.class);
-            return Collections.emptyList();
+            return PaginatorResponseImpl.createEmpty();
         }
 
         List<Transaction> transactions = Lists.newArrayList();
@@ -74,7 +74,7 @@ public class DanskeBankMultiTransactionsFetcher<A extends Account> implements Tr
                             .collect(Collectors.toList()));
         }
 
-        return transactions;
+        return PaginatorResponseImpl.create(transactions);
     }
 
     @Override

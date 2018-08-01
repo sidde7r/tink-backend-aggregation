@@ -253,6 +253,11 @@ public class SwedbankBaseConstants {
         public static final String UNSIGNED_TRANFERS = "Existing unsigned transfers - Cancelling to not sign more than one transfer.";
         public static final String EINVOICE_NO_UNIQUE_ID = "Could not get unique id from transfer object.";
         public static final String EINVOICE_NO_MATCH = "Could not find a matching eInvoice.";
+        public static final String NEEDS_EXTENDED_USE = "Activation of extended use for BankId required";
+    }
+
+    public static class UserMessage {
+        public static final String STRONGER_AUTHENTICATION_NEEDED = "In order to add new recipients you need to activate Mobile BankID for extended use. This is done in the Internet bank on the page BankID (found in the tab Tillval).";
     }
 
     public static class ErrorCode {

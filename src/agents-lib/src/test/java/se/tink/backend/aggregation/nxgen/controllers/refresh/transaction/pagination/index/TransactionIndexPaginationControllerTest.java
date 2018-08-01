@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagina
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,9 +9,13 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -28,47 +31,42 @@ public class TransactionIndexPaginationControllerTest {
     private TransactionIndexPaginationController<Account> paginationController;
 
     @Before
-    public void setup(){
+    public void setup() {
         paginationController = new TransactionIndexPaginationController<>(paginator);
     }
 
     @Test(expected = NullPointerException.class)
-    public void ensureExceptionIsThrown_whenTransactionIndexPaginator_isNull(){
+    public void ensureExceptionIsThrown_whenTransactionIndexPaginator_isNull() {
         new TransactionIndexPaginationController<>(null);
     }
 
     @Test(expected = NullPointerException.class)
-    public void ensureExceptionIsThrown_whenAccount_isNull(){
+    public void ensureExceptionIsThrown_whenAccount_isNull() {
         paginationController.fetchTransactionsFor(null);
     }
 
     @Test
-    public void ensureStopFetching_whenNumberOfTransactionsFetched_isLess_thanNumberOfTransactionsToFetch(){
+    public void ensureStopFetching_whenNumberOfTransactionsFetched_isLess_thanNumberOfTransactionsToFetch() {
         Collection<Transaction> mockTransactions = new ArrayList<>();
         mockTransactions.add(transaction);
-        doReturn(mockTransactions).when(paginator).getTransactionsFor(Mockito.any(Account.class), Mockito.anyInt(),
-                Mockito.anyInt());
-        Assert.assertTrue(paginationController.canFetchMoreFor(account));
+
+        when(paginator.getTransactionsFor(Mockito.any(Account.class), Mockito.anyInt(), Mockito.anyInt()))
+                .thenReturn(PaginatorResponseImpl.create(mockTransactions));
+
         paginationController.fetchTransactionsFor(account);
-        Assert.assertFalse(paginationController.canFetchMoreFor(account));
+
+        verify(paginator, times(1))
+                .getTransactionsFor(any(Account.class), Mockito.anyInt(), Mockito.anyInt());
     }
 
     @Test
-    public void ensureEmptyCollection_isReturned_andCanFetchMore_isFalse_whenPaginatorReturnsNull(){
+    public void ensureEmptyCollection_isReturned_andCanFetchMore_isFalse_whenListOfFetchedTransactionIsEmpty() {
         when(paginator.getTransactionsFor(Mockito.any(Account.class), Mockito.anyInt(), Mockito.anyInt()))
-                .thenReturn(null);
-        Assert.assertTrue(paginationController.canFetchMoreFor(account));
-        Assert.assertTrue(paginationController.fetchTransactionsFor(account).isEmpty());
-        Assert.assertFalse(paginationController.canFetchMoreFor(account));
-    }
+                .thenReturn(PaginatorResponseImpl.createEmpty());
 
-    // Edge case test when fetching 0 transactions
-    @Test
-    public void ensureEmptyCollection_isReturned_andCanFetchMore_isFalse_whenListOfFetchedTransactionIsEmpty(){
-        when(paginator.getTransactionsFor(Mockito.any(Account.class), Mockito.anyInt(), Mockito.anyInt()))
-                .thenReturn(Collections.emptyList());
-        Assert.assertTrue(paginationController.canFetchMoreFor(account));
-        Assert.assertTrue(paginationController.fetchTransactionsFor(account).isEmpty());
-        Assert.assertFalse(paginationController.canFetchMoreFor(account));
+        PaginatorResponse response = paginationController.fetchTransactionsFor(account);
+
+        Assert.assertTrue(response.getTinkTransactions().isEmpty());
+        Assert.assertFalse(response.canFetchMore().get());
     }
 }

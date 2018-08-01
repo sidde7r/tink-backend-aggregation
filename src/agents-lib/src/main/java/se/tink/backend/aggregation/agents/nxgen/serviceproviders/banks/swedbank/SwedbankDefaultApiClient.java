@@ -250,7 +250,10 @@ public class SwedbankDefaultApiClient {
         return fetchPaymentBaseinfo();
     }
 
-    public RegisterRecipientResponse registerPayee(RegisterPayeeRequest registerPayeeRequest) {
+    public RegisterRecipientResponse registerPayee(RegisterPayeeRequest registerPayeeRequest) throws TransferExecutionException {
+
+        throwIfNotAuthorizedForRegisterAction(SwedbankBaseConstants.MenuItemKey.REGISTER_PAYEE);
+
         return makeMenuItemRequest(
                 SwedbankBaseConstants.MenuItemKey.REGISTER_PAYEE,
                 registerPayeeRequest,
@@ -259,6 +262,9 @@ public class SwedbankDefaultApiClient {
 
     public RegisterTransferRecipientResponse registerTransferRecipient(RegisterTransferRecipientRequest request) throws
             TransferExecutionException {
+
+        throwIfNotAuthorizedForRegisterAction(SwedbankBaseConstants.MenuItemKey.REGISTER_EXTERNAL_TRANSFER_RECIPIENT);
+
         try {
             return makeMenuItemRequest(
                     SwedbankBaseConstants.MenuItemKey.REGISTER_EXTERNAL_TRANSFER_RECIPIENT,
@@ -273,6 +279,14 @@ public class SwedbankDefaultApiClient {
 
             // unknown error: rethrow
             throw hre;
+        }
+    }
+
+    private void throwIfNotAuthorizedForRegisterAction(SwedbankBaseConstants.MenuItemKey menuItemKey) throws TransferExecutionException {
+        if (!isAuthorizedForAction(menuItemKey)) {
+            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                    .setEndUserMessage(SwedbankBaseConstants.UserMessage.STRONGER_AUTHENTICATION_NEEDED)
+                    .setMessage(SwedbankBaseConstants.ErrorMessage.NEEDS_EXTENDED_USE).build();
         }
     }
 
@@ -376,19 +390,27 @@ public class SwedbankDefaultApiClient {
 
     private <T> T makeMenuItemRequest(SwedbankBaseConstants.MenuItemKey menuItemKey, Object requestObject,
             Class<T> responseClass, Map<String, String> parameters) {
+
+        Map<String, MenuItemLinkEntity> menuItems = getMenuItems();
+
+        if (!isAuthorizedForAction(menuItemKey)) {
+            MenuItemLinkEntity menuItem = menuItems.get(menuItemKey.getKey());
+            log.warn("User not authorized to perform request with key: [{}], name: [{}], authorization: [{}]",
+                    menuItemKey, menuItem.getName(), menuItem.getAuthorization());
+            throw new IllegalStateException();
+        }
+
+        return makeRequest(menuItems.get(menuItemKey.getKey()), requestObject, responseClass, parameters);
+    }
+
+    private boolean isAuthorizedForAction(SwedbankBaseConstants.MenuItemKey menuItemKey) {
         Map<String, MenuItemLinkEntity> menuItems = getMenuItems();
         Preconditions.checkNotNull(menuItemKey);
         Preconditions.checkNotNull(menuItems);
         Preconditions.checkState(menuItems.containsKey(menuItemKey.getKey()));
         MenuItemLinkEntity menuItem = menuItems.get(menuItemKey.getKey());
 
-        if (!menuItem.isAuthorized()) {
-            log.warn("User not authorized to perform request with key: [{}], name: [{}], authorization: [{}]",
-                    menuItemKey, menuItem.getName(), menuItem.getAuthorization());
-            throw new IllegalStateException();
-        }
-
-        return makeRequest(menuItem, requestObject, responseClass, parameters);
+        return menuItem.isAuthorized();
     }
 
     private Map<String, MenuItemLinkEntity> getMenuItems() {

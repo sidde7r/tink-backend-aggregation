@@ -5,6 +5,8 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.accounts
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.statement.MT940Statement;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsAccountTypeConverter;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -33,9 +35,12 @@ public class FinTsCreditCardFetcher implements AccountFetcher<CreditCardAccount>
 
 
     @Override
-    public Collection<? extends Transaction> getTransactionsFor(CreditCardAccount account, Date fromDate, Date toDate) {
-            return apiClient.getTransactions(account.getAccountNumber(), fromDate, toDate).stream()
+    public PaginatorResponse getTransactionsFor(CreditCardAccount account, Date fromDate, Date toDate) {
+        Collection<? extends Transaction> transactions = apiClient.getTransactions(
+                account.getAccountNumber(), fromDate, toDate).stream()
                     .map(MT940Statement::toTinkTransaction)
                     .collect(Collectors.toList());
+
+        return PaginatorResponseImpl.create(transactions);
     }
 }

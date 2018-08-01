@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.trans
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.entities.PeriodMovementModelListEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.entities.TransactionEntity;
@@ -32,8 +33,8 @@ public class AccountTransactionsResponse implements TransactionKeyPaginatorRespo
     }
 
     @Override
-    public boolean hasNext() {
-        return moreElements;
+    public Optional<Boolean> canFetchMore() {
+        return Optional.of(moreElements);
     }
 
     @Override

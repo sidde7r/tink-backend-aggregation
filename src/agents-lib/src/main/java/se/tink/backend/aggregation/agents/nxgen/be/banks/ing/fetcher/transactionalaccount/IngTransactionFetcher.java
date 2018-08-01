@@ -9,8 +9,8 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transaction
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities.PendingPaymentsResponseEntity;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -30,7 +30,7 @@ public class IngTransactionFetcher implements TransactionPagePaginator<Transacti
     }
 
     @Override
-    public TransactionPagePaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
+    public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
         String transactionsUrl = ingHelper.getUrl(IngConstants.RequestNames.GET_TRANSACTIONS);
 
         return apiClient.getTransactions(

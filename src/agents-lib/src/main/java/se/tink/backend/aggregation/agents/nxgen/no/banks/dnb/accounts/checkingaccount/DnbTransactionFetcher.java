@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.checkingaccount;
 
 import com.google.common.util.concurrent.Uninterruptibles;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -9,6 +8,8 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.DnbApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.checkingaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.checkingaccount.rpc.TransactionResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -34,7 +35,7 @@ public class DnbTransactionFetcher implements TransactionPaginator<Transactional
     }
 
     @Override
-    public List<Transaction> fetchTransactionsFor(TransactionalAccount account) {
+    public PaginatorResponse fetchTransactionsFor(TransactionalAccount account) {
 
         // Reset trasactionsToFetch for new account
         if (!Objects.equals(targetAccount, account.getBankIdentifier())) {
@@ -54,7 +55,7 @@ public class DnbTransactionFetcher implements TransactionPaginator<Transactional
             transactionEntityList = transactionResponse.getTransactionList();
             if (transactionEntityList.isEmpty()) {
                 resetState();
-                return Collections.emptyList();
+                return PaginatorResponseImpl.createEmpty(canFetchMore);
             }
             List<Transaction> transactions = transactionEntityList
                     .subList(transactionsToFetch - DEFAULT_COUNT_INCREMENT,
@@ -66,7 +67,7 @@ public class DnbTransactionFetcher implements TransactionPaginator<Transactional
             canFetchMore =
                     transactionResponse.getPosition() != null && transactionsToFetch != MAXIMUM_TRANSACTIONS_TO_FETCH;
 
-            return transactions;
+            return PaginatorResponseImpl.create(transactions, canFetchMore);
         } catch (HttpResponseException e) {
             // Even it return 400, we bypass it as a temporary error and increase the delay progressively.
             if (e.getResponse().getStatus() != BAD_REQUEST_CODE) {
@@ -82,16 +83,11 @@ public class DnbTransactionFetcher implements TransactionPaginator<Transactional
                 Uninterruptibles.sleepUninterruptibly(DELAY_MILLISECONDS + (badRequestCounter * DELAY_MILLISECONDS),
                         TimeUnit.MILLISECONDS);
                 transactionsToFetch -= DEFAULT_COUNT_INCREMENT;
-                return Collections.emptyList();
+                return PaginatorResponseImpl.createEmpty(canFetchMore);
             }
         } finally {
             increaseTransactionsToFetch();
         }
-    }
-
-    @Override
-    public boolean canFetchMoreFor(TransactionalAccount account) {
-        return canFetchMore;
     }
 
     private void increaseTransactionsToFetch() {

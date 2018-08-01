@@ -8,13 +8,13 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities.TransactionsResponseEntity;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginatorResponse;
+import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
-public class TransactionsResponse implements TransactionPagePaginatorResponse {
+public class TransactionsResponse implements PaginatorResponse {
     private static final AggregationLogger LOGGER = new AggregationLogger(TransactionsResponse.class);
 
     private TransactionsResponseEntity mobileResponse;
@@ -35,8 +35,8 @@ public class TransactionsResponse implements TransactionPagePaginatorResponse {
     }
 
     @Override
-    public boolean canFetchMore() {
-        return fetchedInsideAllowedRange() && !fetchedLessThanFullBatch();
+    public Optional<Boolean> canFetchMore() {
+        return Optional.of(fetchedInsideAllowedRange() && !fetchedLessThanFullBatch());
     }
 
     private boolean fetchedInsideAllowedRange() {

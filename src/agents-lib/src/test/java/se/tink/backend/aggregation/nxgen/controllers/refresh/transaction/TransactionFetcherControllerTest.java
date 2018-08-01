@@ -8,13 +8,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
-import se.tink.backend.core.Amount;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.atLeastOnce;
@@ -35,12 +35,18 @@ public class TransactionFetcherControllerTest {
     private UpcomingTransactionFetcher upcomingTransactionFetcher;
     @Mock
     private TransactionalAccount account;
+    @Mock
+    private CreditCardAccount creditCardAccount;
 
     private TransactionFetcherController<TransactionalAccount> fetcherController;
 
     @Before
     public void setup() {
-        when(transactionalAccountPaginator.canFetchMoreFor(account)).thenReturn(false);
+        when(transactionalAccountPaginator.fetchTransactionsFor(account))
+                .thenReturn(PaginatorResponseImpl.createEmpty(false));
+        when(creditCardAccountPaginator.fetchTransactionsFor(creditCardAccount))
+                .thenReturn(PaginatorResponseImpl.createEmpty(false));
+
         when(upcomingTransactionFetcher.fetchUpcomingTransactionsFor(account)).thenReturn(Collections.emptyList());
         fetcherController = new TransactionFetcherController<>(
                 paginationHelper, transactionalAccountPaginator, upcomingTransactionFetcher
@@ -74,35 +80,31 @@ public class TransactionFetcherControllerTest {
 
     @Test
     public void ensureFetchTransactionsFor_isCalledUntil_canFetchMore_isFalse() {
-        when(transactionalAccountPaginator.canFetchMoreFor(account)).thenReturn(true).thenReturn(false);
+        when(transactionalAccountPaginator.fetchTransactionsFor(account))
+                .thenReturn(PaginatorResponseImpl.createEmpty(true))
+                .thenReturn(PaginatorResponseImpl.createEmpty(false));
+
         // Never content with refresh
         when(paginationHelper.isContentWithRefresh(any(Account.class), anyList()))
                 .thenReturn(false);
 
         fetcherController.fetchTransactionsFor(account);
 
-        verify(transactionalAccountPaginator, times(2)).canFetchMoreFor(account);
+        verify(transactionalAccountPaginator, times(2)).fetchTransactionsFor(account);
     }
 
     @Test
     public void ensureFetchTransactionsFor_isCalledUntil_isContentWithRefresh_isTrue() {
         // Can always fetch more transactions
-        when(transactionalAccountPaginator.canFetchMoreFor(account)).thenReturn(true);
+        when(transactionalAccountPaginator.fetchTransactionsFor(account))
+                .thenReturn(PaginatorResponseImpl.createEmpty(true));
+
         when(paginationHelper.isContentWithRefresh(any(Account.class), anyList()))
                 .thenReturn(false).thenReturn(true);
 
         fetcherController.fetchTransactionsFor(account);
 
-        verify(transactionalAccountPaginator, times(2)).canFetchMoreFor(account);
-    }
-
-    @Test
-    public void ensureEmptyList_isReturned_ifPaginatorReturn_null() {
-        when(transactionalAccountPaginator.fetchTransactionsFor(account)).thenReturn(null);
-
-        Collection<AggregationTransaction> transactions = fetcherController.fetchTransactionsFor(account);
-
-        Assert.assertTrue(transactions.isEmpty());
+        verify(transactionalAccountPaginator, times(2)).fetchTransactionsFor(account);
     }
 
     @Test
@@ -117,12 +119,6 @@ public class TransactionFetcherControllerTest {
 
     @Test
     public void ensureUpcomingTransactions_areFetched_whenAccountType_isCreditCard() {
-        CreditCardAccount creditCardAccount = CreditCardAccount.builder("uniqueIdentifier", Amount.inSEK(-2500.0),
-                Amount.inSEK(7500.0))
-                .setAccountNumber("0123456789")
-                .setName("Credit-card")
-                .build();
-
         new TransactionFetcherController<>(paginationHelper, creditCardAccountPaginator, upcomingTransactionFetcher)
                 .fetchTransactionsFor(creditCardAccount);
 

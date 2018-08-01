@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.fetcher.transa
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,6 +10,8 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.fetcher.transac
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.fetcher.transactionalaccount.entities.TransactionsEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.fetcher.transactionalaccount.rpc.ReservationsResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -25,7 +26,7 @@ public class SpankkiTransactionFetcher implements TransactionDatePaginator<Trans
     }
 
     @Override
-    public Collection<? extends Transaction> getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
+    public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
         List<Transaction> transactions = new ArrayList<>();
 
         if (shouldIncludeReservations(toDate)) {
@@ -44,7 +45,7 @@ public class SpankkiTransactionFetcher implements TransactionDatePaginator<Trans
                     .collect(Collectors.toList()));
         }
 
-        return transactions;
+        return PaginatorResponseImpl.create(transactions);
     }
 
     // only fetch reservations when asking for most current transactions

@@ -1,15 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transactions;
 
-import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transactions.entities.RootTransactionModel;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transactions.entities.TransactionsEntity;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -25,13 +25,13 @@ public class IcaBankenTransactionFetcher implements TransactionDatePaginator<Tra
     }
 
     @Override
-    public Collection<? extends Transaction> getTransactionsFor(TransactionalAccount account, Date fromDate,
+    public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate,
             Date toDate) {
         RootTransactionModel transactionResponse = apiClient
                 .fetchTransactions(account.getBankIdentifier(), dateFormatter(fromDate), dateFormatter(toDate));
 
         if (transactionResponse == null) {
-            return Collections.emptyList();
+            return PaginatorResponseImpl.createEmpty();
         }
 
         List<TransactionsEntity> transactions = transactionResponse.getBody().getTransactions();
@@ -43,7 +43,11 @@ public class IcaBankenTransactionFetcher implements TransactionDatePaginator<Tra
 
         }
 
-        return transactions.stream().map(TransactionsEntity::toTinkTransaction).collect(Collectors.toList());
+        Collection<? extends Transaction> tinkTransactions = transactions.stream()
+                .map(TransactionsEntity::toTinkTransaction)
+                .collect(Collectors.toList());
+
+        return PaginatorResponseImpl.create(tinkTransactions);
     }
 
     private boolean includeReservations(Date toDate) {

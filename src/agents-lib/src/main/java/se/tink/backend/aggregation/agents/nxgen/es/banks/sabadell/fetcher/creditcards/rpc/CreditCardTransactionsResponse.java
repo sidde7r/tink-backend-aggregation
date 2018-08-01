@@ -2,14 +2,15 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.credi
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.entities.CreditCardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.entities.GenericGroupedMovementEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.entities.PaginatorEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.entities.AmountEntity;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginatorResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.entities.PaginatorEntity;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
-public class CreditCardTransactionsResponse implements TransactionPagePaginatorResponse {
+public class CreditCardTransactionsResponse implements PaginatorResponse {
     private String contractNumber;
     private String contractOwner;
     private String paymentType;
@@ -31,10 +32,10 @@ public class CreditCardTransactionsResponse implements TransactionPagePaginatorR
     }
 
     @Override
-    public boolean canFetchMore() {
+    public Optional<Boolean> canFetchMore() {
         // Always return false until we can parse transactions, makes no sense to paginate until then.
         // When we know how to parse transactions we can use genericGroupedMovement.hasMoreElements()
-        return false;
+        return Optional.of(false);
     }
 
     public String getContractNumber() {

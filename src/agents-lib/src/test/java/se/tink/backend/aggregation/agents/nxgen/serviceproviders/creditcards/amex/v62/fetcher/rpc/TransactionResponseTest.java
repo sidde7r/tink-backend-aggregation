@@ -35,7 +35,8 @@ public class TransactionResponseTest {
     public void parseResponse_errorPageOfTransactionList() throws IOException {
         TransactionResponse transactionResponse = TransactionResponseTestDataHelper
                 .buildResponse(TransactionResponseTestDataHelper.ResponseType.ERROR_LIST);
-        boolean canFetchMore = transactionResponse.getPaginatorResponse(config, Collections.emptyList()).canFetchMore();
+        boolean canFetchMore = transactionResponse.getPaginatorResponse(config, Collections.emptyList()).canFetchMore()
+                .get();
 
         assertFalse(canFetchMore);
     }
@@ -44,7 +45,8 @@ public class TransactionResponseTest {
     public void canFetchMore_emptyTransactionListForPeriod() throws IOException {
         TransactionResponse transactionResponse = TransactionResponseTestDataHelper
                 .buildResponse(TransactionResponseTestDataHelper.ResponseType.NO_TRANSACTIONS_FOR_PERIOD);
-        boolean canFetchMore = transactionResponse.getPaginatorResponse(config, Collections.emptyList()).canFetchMore();
+        boolean canFetchMore = transactionResponse.getPaginatorResponse(config, Collections.emptyList()).canFetchMore()
+                .get();
         assertTrue(canFetchMore);
     }
 
@@ -52,7 +54,8 @@ public class TransactionResponseTest {
     public void canFetchMore_properTransactionList() throws IOException {
         TransactionResponse transactionResponse = TransactionResponseTestDataHelper
                 .buildResponse(TransactionResponseTestDataHelper.ResponseType.PROPER_TRANSACTION_LIST);
-        boolean canFetchMore = transactionResponse.getPaginatorResponse(config, Collections.emptyList()).canFetchMore();
+        boolean canFetchMore = transactionResponse.getPaginatorResponse(config, Collections.emptyList()).canFetchMore()
+                .get();
         assertTrue(canFetchMore);
     }
 }
