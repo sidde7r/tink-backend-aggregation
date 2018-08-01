@@ -4,6 +4,9 @@ icon:alandsbanken	https://cdn.tink.se/provider-images/alandsbanken_v2.png
 icon:americanexpress	https://cdn.tink.se/provider-images/americanexpress.png
 icon:amfabank	https://cdn.tink.se/provider-images/amfabank.png
 icon:avanza	https://cdn.tink.se/provider-images/avanza.png
+icon:be-belfius-cardreader	https://www.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_Logo.png
+icon:be-ing-cardreader	https://www.bnpparibasfortis.be/rsc/serv/bank/ING/ING_Logo.png
+icon:be-kbc-cardreader	https://www.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_Logo.png
 icon:bluestep	https://cdn.tink.se/provider-images/bluestep.png
 icon:chevroletmastercard	https://cdn.tink.se/provider-images/chevroletbigcardplus.png
 icon:choicemastercard	https://cdn.tink.se/provider-images/nordicchoice.png
