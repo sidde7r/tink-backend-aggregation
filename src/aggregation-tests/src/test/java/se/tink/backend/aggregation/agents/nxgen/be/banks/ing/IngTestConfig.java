@@ -48,7 +48,6 @@ public class IngTestConfig {
         credentials.setType(CredentialsTypes.PASSWORD);
         credentials.setField(Field.Key.USERNAME, "");
         credentials.setField("cardId", "");
-        credentials.setField("otp", "Change me!");
         return credentials;
     }
 

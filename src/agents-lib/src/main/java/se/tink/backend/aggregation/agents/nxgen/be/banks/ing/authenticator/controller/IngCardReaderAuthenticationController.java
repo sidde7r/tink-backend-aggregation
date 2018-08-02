@@ -7,6 +7,7 @@ import java.util.Objects;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngCardReaderAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -45,7 +46,9 @@ public class IngCardReaderAuthenticationController implements MultiFactorAuthent
 
         String username = credentials.getField(Field.Key.USERNAME);
         String cardNumber = credentials.getField(CARD_ID_FIELD);
-        String otp = credentials.getField(OTP_FIELD);
+
+        Map<String, String> supplementalInformation = supplementalInformationController.askSupplementalInformation(getOTPField());
+        String otp = supplementalInformation.get(OTP_FIELD);
 
         if (Strings.isNullOrEmpty(username)
                 || Strings.isNullOrEmpty(cardNumber)
@@ -55,7 +58,7 @@ public class IngCardReaderAuthenticationController implements MultiFactorAuthent
 
         ChallengeExchangeValues challengeExchangeValues = authenticator.initEnroll(username, cardNumber, otp);
 
-        Map<String, String> supplementalInformation = supplementalInformationController
+        supplementalInformation = supplementalInformationController
                 .askSupplementalInformation(
                         getChallengeField(challengeExchangeValues.getChallenge()),
                         getChallengeResponseField()
@@ -68,6 +71,16 @@ public class IngCardReaderAuthenticationController implements MultiFactorAuthent
         );
 
         authenticator.authenticate(username);
+    }
+
+    private Field getOTPField(){
+     Field otpField = new Field();
+     otpField.setDescription("Response code");
+     otpField.setName(OTP_FIELD);
+     otpField.setNumeric(true);
+     otpField.setSensitive(true);
+     otpField.setHelpText(IngConstants.Helptext.OTP_HELPTEXT);
+     return otpField;
     }
 
     private Field getChallengeField(String challenge) {
