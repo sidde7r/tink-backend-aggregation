@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc;
 
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.ContentListEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.preparetransfer.BeneficiariesContacts;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -9,7 +10,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class PropertiesEntity {
     private String text;
     private ContentListEntity contentList;
-
 
     public String getText() {
         return text;
@@ -32,8 +32,8 @@ public class PropertiesEntity {
         return contentList == null ? "" : contentList.getSignType();
     }
 
-    public ArrayList<BeneficiariesContacts> getBeneficiaries(){
-        return contentList == null ? new ArrayList<>() : contentList.getBeneficiaries();
+    public List<BeneficiariesContacts> getBeneficiaries(){
+        return contentList == null ? Collections.emptyList() : contentList.getBeneficiaries();
     }
 
 }
