@@ -22,6 +22,10 @@ public class FinTsConstants {
 
     }
 
+    public static class StatusMessage {
+        public static final String END_DATE_NOT_SUPPORTED = "Angabe eines Endedatums nicht unterstützt.";
+    }
+
     public static class Segments {
         public static final String HKSAL = "HKSAL"; // Balance Request
         public static final String HISAL = "HISAL"; // Balance Response

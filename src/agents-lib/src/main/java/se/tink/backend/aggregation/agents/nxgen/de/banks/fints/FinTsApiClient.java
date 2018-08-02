@@ -44,6 +44,9 @@ public class FinTsApiClient {
     private List<SEPAAccount> sepaAccounts;
     private static final Logger LOGGER = LoggerFactory.getLogger(FinTsApiClient.class);
 
+    private boolean endDateSupported = true;
+    private int fetchedTransactions = -1;
+
     public FinTsApiClient(TinkHttpClient apiClient, FinTsConfiguration configuration) {
         this.apiClient = apiClient;
         this.configuration = configuration;
@@ -309,12 +312,25 @@ public class FinTsApiClient {
                         != AccountTypes.OTHER)
                 .findFirst()
                 .orElseThrow(IllegalStateException::new);
+
+        if(!endDateSupported){
+            end = new Date();
+        }
+
         FinTsRequest getTransactionRequest = this.createStatementRequest(targetAccount, start, end, null);
 
         FinTsResponse response = sendMessage(getTransactionRequest);
         String segment = response.findSegment(FinTsConstants.Segments.HIKAZ);
 
         Map<String, String> status = response.getLocalStatus();
+
+        //Comdirect do not support getting transactions with an end date
+        if(status.containsKey(FinTsConstants.StatusMessage.END_DATE_NOT_SUPPORTED)){
+            endDateSupported = false;
+            getTransactionRequest = this.createStatementRequest(targetAccount, start, new Date(), null);
+            response = sendMessage(getTransactionRequest);
+            status = response.getLocalStatus();
+        }
 
         if (status.containsValue(FinTsConstants.StatusCode.ACCOUNT_NOT_ASSIGNED) ||
                 status.containsValue(FinTsConstants.StatusCode.NO_ENTRY) ||
@@ -346,8 +362,15 @@ public class FinTsApiClient {
             touchdowns = furtherTransactionsResponse.getTouchDowns(getFurtherTransactionRequest);
         }
 
+        Date endDate = end;
         // Some banks does not take the end date in to account, here we check
-        if (transactions.stream().anyMatch(transaction -> transaction.getDate().after(end))) {
+        if(!endDateSupported){
+            if(fetchedTransactions == transactions.size()){
+                return Collections.emptyList();
+            }
+            fetchedTransactions = transactions.size();
+        }
+        else if (endDateSupported && transactions.stream().anyMatch(transaction -> transaction.getDate().after(endDate))) {
             return Collections.emptyList();
         }
 
