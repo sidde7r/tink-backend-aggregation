@@ -341,7 +341,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         List<Transaction> transactions = Lists.newArrayList();
 
         for (String bankId : transactionsByAccountBankId.keySet()) {
-            Optional<Account> account = request.getAccounts().stream()
+            Optional<Account> account = getUpdatedAccounts().stream()
                     .filter(a -> Objects.equals(a.getBankId(), bankId))
                     .findFirst();
             if (account.isPresent() && !shouldAggregateDataForAccount(account.get())) {
@@ -353,8 +353,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
 
             String accountId = account.get().getId();
             List<Transaction> accountTransactions = transactionsByAccountBankId.get(bankId);
-
-
 
             for (Transaction transaction : accountTransactions) {
                 transaction.setAccountId(account.get().getId());
