@@ -14,10 +14,20 @@ import se.tink.backend.aggregation.annotations.serializers.DoubleSerializer;
  * converting to String and setting grouping separator, prefix, etc),
  * by attaching to "getter" methods, or fields.
  * <p>
+ * Example of default annotation behaviour:
+ *<pre>
+ *     &#64;JsonDouble
+ *     double amount = 89.9899999999999;
+ *</pre>
+ * which will be serialized as
+ * <pre>
+ *     "amount": 89.99
+ * </pre>
+ *
  * Example when setting decimals and trailingZeros:
  *<pre>
- *     &#64;JsonDouble(trailingZeros=false)
- *     double amount = 89.99;
+ *     &#64;JsonDouble(decimals=0, trailingZeros=false)
+ *     double amount = 89.9899999999999;
  *</pre>
  * which will be serialized as
  * <pre>
@@ -31,11 +41,11 @@ import se.tink.backend.aggregation.annotations.serializers.DoubleSerializer;
  *          decimalSeparator=',',
  *          suffix=" SEK"
  *     )
- *     double amount = 20.189999999989;
+ *     double amount = 89.9899999999999;
  * </pre>
  * which will be serialized as
  * <pre>
- *     "amount": "20,19 SEK"
+ *     "amount": "89,99 SEK"
  * </pre>
  *
  */
