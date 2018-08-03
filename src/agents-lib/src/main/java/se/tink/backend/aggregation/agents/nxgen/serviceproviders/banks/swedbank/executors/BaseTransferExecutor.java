@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank
 import com.google.api.client.http.HttpStatusCodes;
 import java.util.List;
 import java.util.Optional;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
@@ -17,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 
 public class BaseTransferExecutor {
@@ -75,6 +77,24 @@ public class BaseTransferExecutor {
             }
             throw e;
         }
+    }
+
+    // convert HttpResponseException to TransferExecutionException if response indicates bad date for payment
+    // used by EInvoice and Payment
+    protected RuntimeException convertExceptionIfBadPaymentDate(HttpResponseException hre) throws TransferExecutionException {
+        HttpResponse httpResponse = hre.getResponse();
+        // swedbank doesn't allow payment with due date today
+        if (httpResponse.getStatus() == HttpStatus.SC_BAD_REQUEST) {
+            ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
+
+            if (errorResponse.hasErrorField(SwedbankBaseConstants.ErrorField.DATE)) {
+                return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                        .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY)
+                        .setMessage(SwedbankBaseConstants.ErrorMessage.TRANSFER_REGISTER_FAILED).build();
+            }
+        }
+
+        return hre;
     }
 
     /**

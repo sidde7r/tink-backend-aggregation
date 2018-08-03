@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.ApproveEInvoiceExecutor;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.core.transfer.TransferPayloadType;
@@ -78,14 +79,8 @@ public class SwedbankDefaultApproveEInvoiceExecutor extends BaseTransferExecutor
                     .setMessage(SwedbankBaseConstants.ErrorMessage.EINVOICE_NO_MATCH).build();
         }
 
-        RegisterTransferResponse registerTransferResponse = apiClient.registerEInvoice(
-                transfer.getAmount().getValue(),
-                transfer.getDestinationMessage(),
-                SwedbankTransferHelper.getReferenceTypeFor(transfer),
-                transfer.getDueDate(),
-                eInvoicePaymentEntity.get().getEinvoiceReference(),
-                eInvoicePaymentEntity.get().getPayee().getId(),
-                sourceAccountId.get());
+        RegisterTransferResponse registerTransferResponse = getRegisterEinvoice(transfer, sourceAccountId,
+                eInvoicePaymentEntity);
 
         RegisteredTransfersResponse registeredTransfers = apiClient.registeredTransfers(
                 registerTransferResponse.getLinks().getNextOrThrow());
@@ -100,5 +95,22 @@ public class SwedbankDefaultApproveEInvoiceExecutor extends BaseTransferExecutor
         }
 
         return registeredTransfers;
+    }
+
+    private RegisterTransferResponse getRegisterEinvoice(Transfer transfer, Optional<String> sourceAccountId,
+            Optional<EInvoicePaymentEntity> eInvoicePaymentEntity) {
+
+        try {
+            return apiClient.registerEInvoice(
+                    transfer.getAmount().getValue(),
+                    transfer.getDestinationMessage(),
+                    SwedbankTransferHelper.getReferenceTypeFor(transfer),
+                    transfer.getDueDate(),
+                    eInvoicePaymentEntity.get().getEinvoiceReference(),
+                    eInvoicePaymentEntity.get().getPayee().getId(),
+                    sourceAccountId.get());
+        } catch (HttpResponseException hre) {
+            throw convertExceptionIfBadPaymentDate(hre);
+        }
     }
 }

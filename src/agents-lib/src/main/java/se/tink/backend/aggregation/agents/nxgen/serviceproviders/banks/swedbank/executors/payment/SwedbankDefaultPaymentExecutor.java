@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank
 
 import java.util.Optional;
 import java.util.function.Function;
-import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankDefaultApiClient;
@@ -14,9 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.RegisteredTransfersResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.AbstractAccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.PaymentExecutor;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
@@ -103,19 +100,7 @@ public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor impleme
                         destinationAccountId.get(),
                         sourceAccountId.get());
         } catch (HttpResponseException hre) {
-            HttpResponse httpResponse = hre.getResponse();
-            // swedbank doesn't allow payment with due date today
-            if (httpResponse.getStatus() == HttpStatus.SC_BAD_REQUEST) {
-                ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
-
-                if (errorResponse.hasErrorField(SwedbankBaseConstants.ErrorField.DATE)) {
-                    throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                            .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY)
-                            .setMessage(SwedbankBaseConstants.ErrorMessage.TRANSFER_REGISTER_FAILED).build();
-                }
-            }
-
-            throw hre;
+            throw convertExceptionIfBadPaymentDate(hre);
         }
     }
 
