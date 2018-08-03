@@ -368,7 +368,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
                 }
             }
 
-
             if (!credentials.isDemoCredentials()) {
                 String accountType = getAccountTypeFor(accountId).name();
                 boolean isFullRefresh = getCertainDateFor(accountId) == null;
