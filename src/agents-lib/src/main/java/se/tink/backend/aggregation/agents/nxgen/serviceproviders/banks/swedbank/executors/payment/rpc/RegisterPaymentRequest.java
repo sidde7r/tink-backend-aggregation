@@ -3,10 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import java.math.BigDecimal;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.ReferenceEntity;
+import se.tink.backend.aggregation.annotations.JsonDouble;
+import se.tink.backend.aggregation.annotations.JsonDouble.JsonType;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -14,7 +15,8 @@ public class RegisterPaymentRequest {
     @JsonIgnore
     private static final String EMPTY_STRING = "";
 
-    private final String amount;
+    @JsonDouble(outputType=JsonType.STRING, decimalSeparator=',')
+    private final double amount;
     private final ReferenceEntity reference;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String einvoiceReference;
@@ -25,7 +27,7 @@ public class RegisterPaymentRequest {
     private final String type;
     private final String fromAccountId;
 
-    private RegisterPaymentRequest(String amount, ReferenceEntity reference, Date date, String recipientId,
+    private RegisterPaymentRequest(double amount, ReferenceEntity reference, Date date, String recipientId,
             String fromAccountId, String type, String eInvoiceReference) {
         this.amount = amount;
         this.reference = reference;
@@ -58,13 +60,8 @@ public class RegisterPaymentRequest {
             String fromAccountId, String type, String eInvoiceReference) {
 
         return new RegisterPaymentRequest(
-                formatAmount(amount),
+                amount,
                 ReferenceEntity.create(message, referenceType),
                 date, recipientId, fromAccountId, type, eInvoiceReference);
-    }
-
-    private static String formatAmount(double amount) {
-        BigDecimal bigDecimalAmount = new BigDecimal(amount).setScale(2, BigDecimal.ROUND_HALF_UP);
-        return bigDecimalAmount.toString().replace(".", ","); // Swedbank uses comma-separator
     }
 }
