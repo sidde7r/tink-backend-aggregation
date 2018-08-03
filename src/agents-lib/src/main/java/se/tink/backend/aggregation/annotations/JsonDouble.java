@@ -13,24 +13,31 @@ import se.tink.backend.aggregation.annotations.serializers.DoubleSerializer;
  * way (e.g. by limiting number of decimals, trailing zeros, or by
  * converting to String and setting grouping separator, prefix, etc),
  * by attaching to "getter" methods, or fields.
- *
- * When annotating value classes, configuration is used for instances
- * of the value class but can be overridden by more specific annotations
- * (ones that attach to methods or fields).
- *
- *<p>
- * An example annotation would be:
+ * <p>
+ * Example when setting decimals and trailingZeros:
  *<pre>
- *  &#64;JsonDouble(outputType=JsonType.NUMERIC,
- *    decimals=2,
- *    decimalSeparator=',',
- *    prefix="€"
- *  )
+ *     &#64;JsonDouble(trailingZeros=false)
+ *     double amount = 89.99;
  *</pre>
+ * which will be serialized as
+ * <pre>
+ *     "amount": 90
+ * </pre>
  *
- * (which would be redundant, since outputType and decimals are set like
- * this by default, and decimalSeparator and prefix are disregarded when
- * outputType is JsonType.NUMERIC (since this could result in invalid JSON).
+ * Example annotation when serializing to a string:
+ * <pre>
+ *     &#64;JsonDouble(
+ *          outputType=JsonType.STRING
+ *          decimalSeparator=',',
+ *          suffix=" SEK"
+ *     )
+ *     double amount = 20.189999999989;
+ * </pre>
+ * which will be serialized as
+ * <pre>
+ *     "amount": "20,19 SEK"
+ * </pre>
+ *
  */
 @JacksonAnnotationsInside
 @JsonSerialize(using = DoubleSerializer.class)
