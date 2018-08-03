@@ -48,7 +48,7 @@ public class SelectAccountsToAggregateCommand extends AgentWorkerCommand {
             return AgentWorkerCommandResult.CONTINUE;
         }
 
-        // handle white list inclusion
+        // handle opt-in inclusion
         RefreshWhitelistInformationRequest whiteListRequest = (RefreshWhitelistInformationRequest) refreshInformationRequest;
         if (whiteListRequest.isOptIn()) {
             context.setAccountsToAggregate(
@@ -58,7 +58,7 @@ public class SelectAccountsToAggregateCommand extends AgentWorkerCommand {
             return AgentWorkerCommandResult.CONTINUE;
         }
 
-        // handle opt-in inclusion
+        // handle whitelist-only inclusion
         List<String> accountIdsFromRequest = accountsFromRequest.stream().map(Account::getBankId).collect(Collectors.toList());
         context.setAccountsToAggregate(
                 allExceptForBlacklisted.stream().filter(a -> accountIdsFromRequest.contains(a.getBankId())).collect(Collectors.toList())

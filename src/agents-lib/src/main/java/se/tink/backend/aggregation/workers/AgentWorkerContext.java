@@ -109,7 +109,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
     private ServiceContext serviceContext;
     private long timeLeavingQueue;
     private long timePutOnQueue;
-    private Map<String, List<Transaction>> transactionsByAccount = Maps.newHashMap();
+    private Map<String, List<Transaction>> transactionsByAccountBankId = Maps.newHashMap();
     private Map<Account, List<TransferDestinationPattern>> transferDestinationPatternsByAccount = Maps.newHashMap();
     private List<Transfer> transfers = Lists.newArrayList();
     private AggregationCredentialsRepository aggregationCredentialsRepository;
@@ -204,7 +204,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
 
     @Override
     public void clear() {
-        transactionsByAccount.clear();
+        transactionsByAccountBankId.clear();
         allAvailableAccountsByUniqueId.clear();
     }
 
@@ -340,11 +340,10 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
 
         List<Transaction> transactions = Lists.newArrayList();
 
-        for (String accountId : transactionsByAccount.keySet()) {
-            Optional<Account> account = request.getAccounts().stream()
-                    .filter(a -> Objects.equals(a.getId(), accountId))
+        for (String bankId : transactionsByAccountBankId.keySet()) {
+            Optional<Account> account = getUpdatedAccounts().stream()
+                    .filter(a -> Objects.equals(a.getBankId(), bankId))
                     .findFirst();
-
             if (account.isPresent() && !shouldAggregateDataForAccount(account.get())) {
                 // Account marked to not aggregate data from.
                 // Preferably we would not even download the data but this makes sure
@@ -352,7 +351,22 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
                 continue;
             }
 
-            List<Transaction> accountTransactions = transactionsByAccount.get(accountId);
+            String accountId = account.get().getId();
+            List<Transaction> accountTransactions = transactionsByAccountBankId.get(bankId);
+
+            for (Transaction transaction : accountTransactions) {
+                transaction.setAccountId(account.get().getId());
+                transaction.setCredentialsId(request.getCredentials().getId());
+                transaction.setUserId(request.getCredentials().getUserId());
+
+                if (!Strings.isNullOrEmpty(transaction.getDescription())) {
+                    transaction.setDescription(transaction.getDescription().replace("<", "").replace(">", ""));
+                }
+
+                if (transaction.getType() == null) {
+                    transaction.setType(TransactionTypes.DEFAULT);
+                }
+            }
 
             if (!credentials.isDemoCredentials()) {
                 String accountType = getAccountTypeFor(accountId).name();
@@ -723,33 +737,10 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
     @Override
     public Account updateTransactions(final Account account, List<Transaction> transactions) {
 
-        if (!shouldAggregateDataForAccount(account)) {
-            // Account marked to not aggregate data from.
-            // Preferably we would not even download the data but this makes sure
-            // we don't process further or store the account's data.
-            return account;
-        }
-
         cacheAccount(account);
-        final Account updatedAccount = sendAccountToUpdateService(account.getBankId());
+        transactionsByAccountBankId.put(account.getBankId(), transactions);
 
-        for (Transaction transaction : transactions) {
-            transaction.setAccountId(updatedAccount.getId());
-            transaction.setCredentialsId(request.getCredentials().getId());
-            transaction.setUserId(request.getCredentials().getUserId());
-
-            if (!Strings.isNullOrEmpty(transaction.getDescription())) {
-                transaction.setDescription(transaction.getDescription().replace("<", "").replace(">", ""));
-            }
-
-            if (transaction.getType() == null) {
-                transaction.setType(TransactionTypes.DEFAULT);
-            }
-        }
-
-        transactionsByAccount.put(updatedAccount.getId(), transactions);
-
-        return updatedAccount;
+        return account;
     }
 
     @Override
