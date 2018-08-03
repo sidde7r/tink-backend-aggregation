@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.Payment;
 
-import java.util.ArrayList;
+import java.util.List;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusTest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.BelfiusPaymentResponse;
@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entiti
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.preparetransfer.BeneficiariesContacts;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertFalse;
 
 public class ParseTest  extends BelfiusTest {
 
@@ -1214,7 +1213,7 @@ public class ParseTest  extends BelfiusTest {
             + "}";
 
 
-    public boolean isBeneficiary(String accountNum, ArrayList<BeneficiariesContacts> beneficiaries){
+    public boolean isBeneficiary(String accountNum, List<BeneficiariesContacts> beneficiaries){
         boolean ret = false;
         for(BeneficiariesContacts beneficiary : beneficiaries){
             ret = ret || beneficiary.isAccount(accountNum);
@@ -1225,7 +1224,7 @@ public class ParseTest  extends BelfiusTest {
     @Test
     public void parseResponseTest() throws Exception{
         PrepareRoot pr = SerializationUtils.deserializeFromString(beneficiaryResponse, PrepareRoot.class);
-        ArrayList<BeneficiariesContacts> beneficiaries = pr.getBeneficiaries();
+        List<BeneficiariesContacts> beneficiaries = pr.getBeneficiaries();
 
         assertTrue(isBeneficiary("BE11111111111111", beneficiaries));
         BelfiusPaymentResponse bpr = SerializationUtils.deserializeFromString(signRequire, BelfiusPaymentResponse.class);
