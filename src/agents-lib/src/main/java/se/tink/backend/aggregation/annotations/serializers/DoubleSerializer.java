@@ -37,6 +37,14 @@ public class DoubleSerializer extends StdSerializer<Double> implements Contextua
         this.suffix = suffix;
     }
 
+    public DoubleSerializer() {
+        super(Double.class);
+    }
+
+    public DoubleSerializer(Class<Double> t) {
+        super(t);
+    }
+
     @Override
     public void serialize(Double value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
         switch (outputType) {
@@ -61,7 +69,8 @@ public class DoubleSerializer extends StdSerializer<Double> implements Contextua
     }
 
     private String getStringValue(Double value) {
-        DecimalFormat formatter = new DecimalFormat(String.format("0.%s",
+        DecimalFormat formatter = new DecimalFormat(String.format("0%s%s",
+                (decimals > 0 ? "." : ""),
                 CharBuffer.allocate(decimals).toString().replace('\0', (trailingZeros ? '0' : '#'))));
 
         DecimalFormatSymbols symbols = formatter.getDecimalFormatSymbols();
