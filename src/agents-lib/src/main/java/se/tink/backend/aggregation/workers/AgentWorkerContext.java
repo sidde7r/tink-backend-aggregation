@@ -346,6 +346,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
                     .findFirst();
 
             if (!account.isPresent()) {
+                log.info("Account has not been updated towards system.");
                 continue;
             }
             
