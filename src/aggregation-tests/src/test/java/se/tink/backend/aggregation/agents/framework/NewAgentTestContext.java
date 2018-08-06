@@ -193,6 +193,7 @@ public class NewAgentTestContext extends AgentContext {
     }
 
     @Override
+    @Deprecated // Use cacheTransactions instead
     public Account updateTransactions(Account account, List<Transaction> transactions) {
         cacheAccount(account);
         final Account updatedAccount = sendAccountToUpdateService(account.getBankId());
@@ -205,6 +206,11 @@ public class NewAgentTestContext extends AgentContext {
 
         transactionsByAccountBankId.put(updatedAccount.getBankId(), transactions);
         return updatedAccount;
+    }
+
+    @Override
+    public void cacheTransactions(String accountUniqueId, List<Transaction> transactions) {
+        transactionsByAccountBankId.put(accountUniqueId, transactions);
     }
 
     @Override

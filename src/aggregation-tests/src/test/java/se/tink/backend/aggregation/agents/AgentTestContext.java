@@ -200,6 +200,7 @@ public class AgentTestContext extends AgentContext {
     }
 
     @Override
+    @Deprecated // Use cacheTransactions instead
     public Account updateTransactions(Account account, List<Transaction> transactions) {
         try {
             log.info("Updating transactions for account: " + mapper.writeValueAsString(account));
@@ -218,6 +219,11 @@ public class AgentTestContext extends AgentContext {
         transactionsByAccountBankId.put(account.getBankId(), transactions);
 
         return account;
+    }
+
+    @Override
+    public void cacheTransactions(String accountUniqueId, List<Transaction> transactions) {
+        transactionsByAccountBankId.put(accountUniqueId, transactions);
     }
 
     @Override
