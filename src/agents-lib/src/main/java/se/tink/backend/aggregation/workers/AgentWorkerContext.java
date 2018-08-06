@@ -561,7 +561,18 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
 
     @Override
     public void cacheAccount(Account account, AccountFeatures accountFeatures) {
-        allAvailableAccountsByUniqueId.put(account.getBankId(), new Pair<>(account, accountFeatures));
+        AccountFeatures accountFeaturesToCache = accountFeatures;
+
+        if (allAvailableAccountsByUniqueId.containsKey(account.getBankId())) {
+            // FIXME This whole if-case is a result of having Agents calling cacheAccounts multiple times. Sometimes
+            // FIXME with accountFeatures and sometimes without.
+            Pair<Account, AccountFeatures> pair = allAvailableAccountsByUniqueId.get(account.getBankId());
+            if (accountFeatures.isEmpty() && !pair.second.isEmpty()) {
+                accountFeaturesToCache = pair.second;
+            }
+        }
+
+        allAvailableAccountsByUniqueId.put(account.getBankId(), new Pair<>(account, accountFeaturesToCache));
     }
 
     public void sendAllCachedAccountsToUpdateService() {
