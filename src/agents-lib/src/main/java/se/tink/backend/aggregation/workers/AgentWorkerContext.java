@@ -346,7 +346,8 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
                     .findFirst();
 
             if (!account.isPresent()) {
-                log.info("Account has not been updated towards system.");
+                log.error("Account not found in updated Accounts list. "
+                        + "This should not happen and might mean that Agent is not updating all Accounts separately.");
                 continue;
             }
             
