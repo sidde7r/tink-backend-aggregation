@@ -192,13 +192,22 @@ public class AgentWorkerOperationFactory {
         List<RefreshableItem> nonAccountItems = items.stream()
                 .filter(i -> !accountItems.contains(i))
                 .collect(Collectors.toList());
-        
+
         if (accountItems.size() > 0) {
             commands.add(new SendAccountsToUpdateServiceAgentWorkerCommand(context, createMetricState(request)));
         }
 
         for (RefreshableItem item : nonAccountItems) {
             commands.add(new RefreshItemAgentWorkerCommand(context, item, createMetricState(request)));
+        }
+
+        // FIXME: remove when Handelsbanken and Avanza have been moved to the nextgen agents. (TOP PRIO)
+        // Due to the agents depending on updateTransactions to populate the the Accounts list
+        // We need to reselect and send accounts to system
+        List<String> hackishFixProviders = ImmutableList.of("avanza-bankid", "handelsbanken", "handelsbanken-bankid");
+        if (hackishFixProviders.contains(request.getProvider().getName())) {
+            commands.add(new SelectAccountsToAggregateCommand(context, request));
+            commands.add(new SendAccountsToUpdateServiceAgentWorkerCommand(context, createMetricState(request)));
         }
 
         // Post refresh processing. Only once per data type (accounts, transactions etcetera)
