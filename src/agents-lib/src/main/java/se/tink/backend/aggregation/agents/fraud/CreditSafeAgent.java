@@ -34,19 +34,12 @@ import se.tink.backend.aggregation.agents.fraud.creditsafe.soap.GetDataSoap;
 import se.tink.backend.aggregation.agents.fraud.creditsafe.soap.GetDataTest;
 import se.tink.backend.aggregation.agents.fraud.creditsafe.soap.Language;
 import se.tink.backend.aggregation.agents.utils.soap.SOAPLoggingHandler;
-import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.AddMonitoredConsumerCreditSafeRequest;
-import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.ChangedConsumerCreditSafeRequest;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.Field;
-import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PageableConsumerCreditSafeRequest;
-import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PageableConsumerCreditSafeResponse;
-import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PortfolioListResponse;
-import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.RemoveMonitoredConsumerCreditSafeRequest;
 import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.common.bankid.signicat.SignicatBankIdAuthenticator;
-import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.backend.core.FraudAddressContent;
 import se.tink.backend.core.FraudCompanyContent;
 import se.tink.backend.core.FraudCompanyDirector;
@@ -59,7 +52,6 @@ import se.tink.backend.core.FraudIdentityContent;
 import se.tink.backend.core.FraudIncomeContent;
 import se.tink.backend.core.FraudNonPaymentContent;
 import se.tink.backend.core.FraudRealEstateEngagementContent;
-import se.tink.backend.idcontrol.creditsafe.consumermonitoring.ConsumerMonitoringWrapper;
 import se.tink.backend.utils.StringUtils;
 import se.tink.credentials.demo.DemoCredentials;
 import se.tink.libraries.date.ThreadSafeDateFormat;
@@ -87,7 +79,6 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
     private Account account;
     private final User user;
     private Splitter splitter = Splitter.on(" ");
-    private ConsumerMonitoringWrapper consumerMonitoringWrapper;
     private boolean hasRefreshed = false;
 
     public CreditSafeAgent(CredentialsRequest request, AgentContext context) {
@@ -95,16 +86,6 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
 
         credentials = request.getCredentials();
         user = request.getUser();
-    }
-
-    @Override
-    public void setConfiguration(ServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
-        String user = configuration.getCreditSafe().getUsername();
-        String pass = configuration.getCreditSafe().getPassword();
-        boolean logTraffic = configuration.getCreditSafe().isLogConsumerMonitoringTraffic();
-
-        consumerMonitoringWrapper = new ConsumerMonitoringWrapper(user, pass, logTraffic);
     }
 
     @Override
@@ -825,26 +806,6 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
 
         handlerChain.add(new SOAPLoggingHandler());
         binding.setHandlerChain(handlerChain);
-    }
-
-    public void addConsumerMonitoring(AddMonitoredConsumerCreditSafeRequest request) {
-        consumerMonitoringWrapper.addMonitoring(request);
-    }
-
-    public void removeConsumerMonitoring(RemoveMonitoredConsumerCreditSafeRequest request) {
-        consumerMonitoringWrapper.removeMonitoring(request);
-    }
-
-    public PageableConsumerCreditSafeResponse listChangedConsumers(ChangedConsumerCreditSafeRequest request) {
-        return consumerMonitoringWrapper.listChangedConsumers(request);
-    }
-
-    public PageableConsumerCreditSafeResponse listMonitoredConsumers(PageableConsumerCreditSafeRequest request) {
-        return consumerMonitoringWrapper.listMonitoredConsumers(request);
-    }
-
-    public PortfolioListResponse listPortfolios() {
-        return consumerMonitoringWrapper.listPortfolios();
     }
 
     private String parseErrorMessageKnown(Catalog catalog, Error error) {
