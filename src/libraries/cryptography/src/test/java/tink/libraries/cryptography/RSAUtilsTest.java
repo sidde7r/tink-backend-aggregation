@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,14 +15,14 @@ public class RSAUtilsTest {
 
     @Test
     public void testReadPrivateKey() throws IOException {
-        PrivateKey key = RSAUtils.getPrivateKey(PRIVATE_KEY_PATH);
+        RSAPrivateKey key = RSAUtils.getPrivateKey(PRIVATE_KEY_PATH);
 
         assertThat(key).isNotNull();
     }
 
     @Test
     public void testReadPublicKey() throws IOException {
-        PublicKey key = RSAUtils.getPublicKey(PUBLIC_KEY_PATH);
+        RSAPublicKey key = RSAUtils.getPublicKey(PUBLIC_KEY_PATH);
 
         assertThat(key).isNotNull();
     }
