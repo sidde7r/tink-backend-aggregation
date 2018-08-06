@@ -35,6 +35,7 @@ java_library(
         "//src/libraries/strings:strings",
         "//src/libraries/uuid:uuid",
         "//src/libraries/demo_credentials:demo-credentials",
+        "//src/libraries/creditsafe_consumer_monitoring:creditsafe_consumer_monitoring",
         "//src/api-annotations",
         "//src/cluster-lib:cluster-lib",
 
@@ -385,6 +386,7 @@ java_library(
         "//src/libraries/jersey_utils:jersey-utils",
         "//src/api-annotations",
         "//src/libraries/cli_print_utils:cli_print_utils",
+        "//src/libraries/creditsafe_consumer_monitoring:creditsafe_consumer_monitoring",
 
         "//third_party:org_springframework_spring_expression",
         "//third_party:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
@@ -442,6 +444,7 @@ java_library(
 
         "//src/cluster-lib:cluster-lib",
         "//src/libraries/uuid:uuid",
+        "//src/libraries/creditsafe_consumer_monitoring:creditsafe_consumer_monitoring",
         "//src/libraries/http:http-utils",
         "//src/libraries/serialization_utils:serialization-utils",
         "//src/libraries/discovery:discovery",
