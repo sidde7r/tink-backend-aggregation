@@ -51,6 +51,7 @@ container_bundle(
     images = {
         "gcr.io/tink-containers/tink-backend-aggregation:latest": ":aggregation_image",
         "gcr.io/tink-containers/tink-backend-provider-configuration:latest": ":provider_configuration_image",
-        "gcr.io/tink-containers/tink-backend-credit-safe:latest": ":credit_safe_image",
+        # Remove comment when credit-safe project resumes
+        # "gcr.io/tink-containers/tink-backend-credit-safe:latest": ":credit_safe_image",
     }
 )
