@@ -21,12 +21,12 @@ import se.tink.backend.aggregation.credit.safe.agent.creditsafe.soap.consumermon
 import se.tink.backend.aggregation.credit.safe.agent.creditsafe.soap.consumermonitoring.PortfolioObject;
 import se.tink.backend.aggregation.credit.safe.agent.creditsafe.soap.consumermonitoring.ResultCountersReqObject;
 import se.tink.backend.aggregation.credit.safe.agent.creditsafe.soap.consumermonitoring.STATUS;
+import se.tink.backend.aggregation.credit.safe.rpc.AddMonitoredConsumerCreditSafeRequest;
+import se.tink.backend.aggregation.credit.safe.rpc.ChangedConsumerCreditSafeRequest;
+import se.tink.backend.aggregation.credit.safe.rpc.PageableConsumerCreditSafeRequest;
+import se.tink.backend.aggregation.credit.safe.rpc.PageableConsumerCreditSafeResponse;
+import se.tink.backend.aggregation.credit.safe.rpc.RemoveMonitoredConsumerCreditSafeRequest;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.rpc.AddMonitoredConsumerCreditSafeRequest;
-import se.tink.backend.aggregation.rpc.ChangedConsumerCreditSafeRequest;
-import se.tink.backend.aggregation.rpc.PageableConsumerCreditSafeRequest;
-import se.tink.backend.aggregation.rpc.PageableConsumerCreditSafeResponse;
-import se.tink.backend.aggregation.rpc.RemoveMonitoredConsumerCreditSafeRequest;
 
 public class ConsumerMonitoringWrapper {
 
