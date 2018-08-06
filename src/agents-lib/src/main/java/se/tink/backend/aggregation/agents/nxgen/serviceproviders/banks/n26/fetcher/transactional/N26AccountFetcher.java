@@ -14,7 +14,7 @@ public class N26AccountFetcher implements AccountFetcher<TransactionalAccount> {
     private final N26ApiClient n26ApiClient;
     private static final Logger logger = LoggerFactory.getLogger(N26ApiClient.class);
 
-    public N26AccountFetcher(N26ApiClient n26ApiClient){
+    public N26AccountFetcher(N26ApiClient n26ApiClient) {
         this.n26ApiClient = n26ApiClient;
     }
 
@@ -24,12 +24,12 @@ public class N26AccountFetcher implements AccountFetcher<TransactionalAccount> {
         return Arrays.asList(n26ApiClient.fetchAccounts().toTransactionalAccount());
     }
 
-    private void fetchAndLogSavingsAccounts(){
+    private void fetchAndLogSavingsAccounts() {
         try {
             String result = n26ApiClient.testFetchSavingsAccounts();
-            logger.info(result, N26Constants.Logging.SAVINGS_ACCOUNT_LOGGING);
-        } catch (Exception e){
-            logger.warn(e.toString(), "Error occurred during savings account fetching:", N26Constants.Logging.SAVINGS_ACCOUNT_LOGGING);
+            logger.info("{} result: {}", N26Constants.Logging.SAVINGS_ACCOUNT_LOGGING, result);
+        } catch (Exception e) {
+            logger.warn("{} error: {}", N26Constants.Logging.SAVINGS_ACCOUNT_LOGGING, e.toString());
         }
     }
 }
