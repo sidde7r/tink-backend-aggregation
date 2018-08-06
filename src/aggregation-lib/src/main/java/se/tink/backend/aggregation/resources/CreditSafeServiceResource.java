@@ -11,8 +11,6 @@ import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PageableConsu
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PageableConsumerCreditSafeResponse;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PortfolioListResponse;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.RemoveMonitoredConsumerCreditSafeRequest;
-import se.tink.backend.aggregation.rpc.SeedPersonDataRequest;
-import se.tink.backend.aggregation.rpc.SeedPersonDataResponse;
 import se.tink.backend.common.ServiceContext;
 import se.tink.backend.common.i18n.SocialSecurityNumber;
 import se.tink.libraries.http.utils.HttpResponseHelper;
@@ -80,16 +78,5 @@ public class CreditSafeServiceResource implements CreditSafeService {
         agent.setConfiguration(serviceContext.getConfiguration());
 
         return agent.listMonitoredConsumers(request);
-    }
-
-    @Override
-    public SeedPersonDataResponse seedPersonData(SeedPersonDataRequest request) {
-        CreditSafeAgent agent = createCreditSafeAgent();
-        agent.setConfiguration(serviceContext.getConfiguration());
-
-        SeedPersonDataResponse response = new SeedPersonDataResponse();
-        response.setFraudDetailsContent(agent.seedPersonData(request.getPersonNumner()));
-
-        return response;
     }
 }

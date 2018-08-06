@@ -10,8 +10,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import se.tink.api.annotations.Team;
 import se.tink.api.annotations.TeamOwnership;
-import se.tink.backend.aggregation.rpc.SeedPersonDataRequest;
-import se.tink.backend.aggregation.rpc.SeedPersonDataResponse;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.AddMonitoredConsumerCreditSafeRequest;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.ChangedConsumerCreditSafeRequest;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PageableConsumerCreditSafeRequest;
@@ -79,15 +77,4 @@ public interface CreditSafeService {
         MediaType.APPLICATION_JSON
     })
     public PageableConsumerCreditSafeResponse listChangedConsumers(ChangedConsumerCreditSafeRequest request);
-    
-    @POST
-    @Path("seedPersonData")
-    @TeamOwnership(Team.PFM)
-    @Consumes({
-        MediaType.APPLICATION_JSON
-    })
-    @Produces({
-        MediaType.APPLICATION_JSON
-    })
-    public SeedPersonDataResponse seedPersonData(SeedPersonDataRequest request);
 }
