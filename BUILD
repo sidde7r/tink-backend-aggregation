@@ -710,6 +710,7 @@ junit_test(
         "//src/libraries/demo_credentials:demo-credentials",
         "//src/libraries/i18n",
         "//src/libraries/strings:strings",
+        "//src/libraries/creditsafe_consumer_monitoring:creditsafe_consumer_monitoring",
 
         "//third_party:com_google_guava_guava",
         "//third_party:com_sun_jersey_jersey_client",
