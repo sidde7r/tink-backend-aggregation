@@ -344,7 +344,12 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
             Optional<Account> account = getUpdatedAccounts().stream()
                     .filter(a -> Objects.equals(a.getBankId(), bankId))
                     .findFirst();
-            if (account.isPresent() && !shouldAggregateDataForAccount(account.get())) {
+
+            if (!account.isPresent()) {
+                continue;
+            }
+            
+            if (!shouldAggregateDataForAccount(account.get())) {
                 // Account marked to not aggregate data from.
                 // Preferably we would not even download the data but this makes sure
                 // we don't process further or store the account's data.
