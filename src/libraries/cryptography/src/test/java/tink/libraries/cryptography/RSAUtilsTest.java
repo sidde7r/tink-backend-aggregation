@@ -14,14 +14,14 @@ public class RSAUtilsTest {
     private static final String PUBLIC_KEY_PATH = "data/test/cryptography/public_rsa_key.pub";
 
     @Test
-    public void testReadPrivateKey() throws IOException {
+    public void testReadPrivateKey() {
         RSAPrivateKey key = RSAUtils.getPrivateKey(PRIVATE_KEY_PATH);
 
         assertThat(key).isNotNull();
     }
 
     @Test
-    public void testReadPublicKey() throws IOException {
+    public void testReadPublicKey() {
         RSAPublicKey key = RSAUtils.getPublicKey(PUBLIC_KEY_PATH);
 
         assertThat(key).isNotNull();
