@@ -95,9 +95,15 @@ public class ConsumerMonitoringWrapper {
         if (debug) {
             try {
                 String requestAsString = XML_MAPPER.writeValueAsString(request);
-                requestAsString = requestAsString.replace(request.getAccount().getPassword(), "***");
-                requestAsString = requestAsString.replace(request.getAccount().getUserID(), "***");
-                requestAsString = requestAsString.replace(request.getPnr(), "***");
+                if (request.getAccount().getPassword() != null) {
+                    requestAsString = requestAsString.replace(request.getAccount().getPassword(), "***");
+                }
+                if (request.getAccount().getUserID() != null) {
+                    requestAsString = requestAsString.replace(request.getAccount().getUserID(), "***");
+                }
+                if (request.getPnr() != null) {
+                    requestAsString = requestAsString.replace(request.getPnr(), "***");
+                }
 
                 log.debug("Traffic with CreditSafe > " + name + " > " + requestAsString);
 
