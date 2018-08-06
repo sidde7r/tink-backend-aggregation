@@ -63,9 +63,7 @@ public class CreditSafeServiceResource implements CreditSafeService {
         CreditSafeAgent agent = createCreditSafeAgent();
         agent.setConfiguration(serviceContext.getConfiguration());
 
-        PortfolioListResponse response = new PortfolioListResponse();
-        response.setPortfolios(agent.listPortfolios());
-        return response;
+        return agent.listPortfolios();
     }
 
     @Override

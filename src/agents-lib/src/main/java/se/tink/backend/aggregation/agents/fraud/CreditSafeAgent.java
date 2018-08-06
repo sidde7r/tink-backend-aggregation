@@ -843,7 +843,7 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
         return consumerMonitoringWrapper.listMonitoredConsumers(request);
     }
 
-    public List<String> listPortfolios() {
+    public PortfolioListResponse listPortfolios() {
         return consumerMonitoringWrapper.listPortfolios();
     }
 

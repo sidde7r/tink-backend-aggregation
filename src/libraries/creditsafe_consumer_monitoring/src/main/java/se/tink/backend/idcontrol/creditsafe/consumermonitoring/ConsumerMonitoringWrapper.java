@@ -11,6 +11,7 @@ import javax.annotation.Nullable;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.HandlerResolver;
 import javax.xml.ws.handler.PortInfo;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PortfolioListResponse;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.soap.Account;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.soap.LANGUAGE;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.soap.MonitoredObject;
@@ -117,7 +118,7 @@ public class ConsumerMonitoringWrapper {
         }
     }
 
-    public List<String> listPortfolios() {
+    public PortfolioListResponse listPortfolios() {
         MonitoringRequest request = createRequest(null);
         MonitoringResponse response = client.getPortfolioList(request);
 
@@ -138,7 +139,9 @@ public class ConsumerMonitoringWrapper {
             }
         }
 
-        return getPortfolioList(portfolios);
+        PortfolioListResponse portfolioListResponse = new PortfolioListResponse();
+        portfolioListResponse.setPortfolios(getPortfolioList(portfolios));
+        return portfolioListResponse;
     }
 
     public PageableConsumerCreditSafeResponse listMonitoredConsumers(
