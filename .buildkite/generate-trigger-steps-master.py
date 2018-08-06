@@ -45,13 +45,15 @@ PROJECTS = {
             'aggregation-staging',
         ],
     },
-    'tink-backend-credit-safe': {
-        'chart': True,
-        'salt': False,
-        'branches': [
-            'aggregation-staging',
-        ],
-    },
+
+    # Remove comments when project starts again.
+    #'tink-backend-credit-safe': {
+    #    'chart': True,
+    #    'salt': False,
+    #    'branches': [
+    #        'aggregation-staging',
+    #    ],
+    #},
 }
 
 STEP = """
