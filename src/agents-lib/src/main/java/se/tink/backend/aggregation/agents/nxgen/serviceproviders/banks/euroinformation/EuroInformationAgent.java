@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 public class EuroInformationAgent extends NextGenerationAgent {
-    private final EuroInformationApiClient apiClient;
+    protected final EuroInformationApiClient apiClient;
 
     protected EuroInformationAgent(CredentialsRequest request,
             AgentContext context, EuroInformationConfiguration config) {

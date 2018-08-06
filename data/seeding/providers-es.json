@@ -264,6 +264,32 @@
                     "sensitive": true
                 }
             ]
-        }
+        },
+      {
+        "name": "es-targobank-password",
+        "displayName": "TargoBank",
+        "groupDisplayName": "TargoBank",
+        "popular": false,
+        "type": "BANK",
+        "status": "ENABLED",
+        "credentialsType": "PASSWORD",
+        "multiFactor": false,
+        "className": "nxgen.es.banks.targo.TargoBankESAgent",
+        "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+        "transactional": true,
+        "fields": [
+          {
+            "description": "Username",
+            "name": "username",
+            "immutable": true
+          },
+          {
+            "description": "Password",
+            "masked": true,
+            "name": "password",
+            "sensitive": true
+          }
+        ]
+      }
     ]
 }
