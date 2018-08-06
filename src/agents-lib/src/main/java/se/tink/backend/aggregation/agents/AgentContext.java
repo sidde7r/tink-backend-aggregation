@@ -151,7 +151,10 @@ public abstract class AgentContext {
 
     public abstract void updateStatus(CredentialsStatus status, String statusPayload, boolean statusFromProvider);
 
+    @Deprecated // Use cacheTransactions instead
     public abstract Account updateTransactions(Account account, List<Transaction> transactions);
+
+    public abstract void cacheTransactions(String accountUniqueId, List<Transaction> transactions);
 
     public abstract void updateCredentialsExcludingSensitiveInformation(Credentials credentials);
 

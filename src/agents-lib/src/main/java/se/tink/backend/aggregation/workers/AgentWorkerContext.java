@@ -742,12 +742,20 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
     }
 
     @Override
+    @Deprecated // Use cacheTransactions instead
     public Account updateTransactions(final Account account, List<Transaction> transactions) {
 
         cacheAccount(account);
         transactionsByAccountBankId.put(account.getBankId(), transactions);
 
         return account;
+    }
+
+    @Override
+    public void cacheTransactions(String accountUniqueId, List<Transaction> transactions) {
+        // This crashes if agent is implemented incorrectly. You have to cache Account before you cache Transactions
+        Preconditions.checkArgument(allAvailableAccountsByUniqueId.containsKey(accountUniqueId));
+        transactionsByAccountBankId.put(accountUniqueId, transactions);
     }
 
     @Override
