@@ -6,20 +6,17 @@ import se.tink.libraries.http.client.BasicWebServiceClassBuilder;
 import se.tink.libraries.http.client.ServiceClassBuilder;
 import se.tink.libraries.jersey.utils.InterContainerJerseyClientFactory;
 
+import java.util.List;
+
 public class ClientProviderServiceFactory implements ProviderServiceFactory{
 
     private ServiceClassBuilder builder;
 
-    public static ClientProviderServiceFactory buildWithoutPinning(String url) {
-        return new ClientProviderServiceFactory(url);
+    public ClientProviderServiceFactory(List<String> pinnedCertificates, String url){
+        this(new BasicWebServiceClassBuilder(new InterContainerJerseyClientFactory(pinnedCertificates).build().resource(url)));
     }
 
-    private ClientProviderServiceFactory(String url) {
-        this(new BasicWebServiceClassBuilder(
-                InterContainerJerseyClientFactory.withoutPinning().build().resource(url)));
-    }
-
-    public ClientProviderServiceFactory(ServiceClassBuilder builder) {
+    private ClientProviderServiceFactory(ServiceClassBuilder builder) {
         this.builder = builder;
     }
 
