@@ -64,9 +64,9 @@ serviceAuthentication:
 
 developmentMode: true
 
-useAggregationController: true
+useAggregationController: false
 
-isAggregationCluster: true
+isAggregationCluster: false
 
 distributedDatabase:
   seeds:
