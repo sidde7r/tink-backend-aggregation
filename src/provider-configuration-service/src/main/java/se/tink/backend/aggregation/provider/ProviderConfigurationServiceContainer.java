@@ -5,7 +5,6 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Injector;
 import io.dropwizard.cli.Command;
-import io.dropwizard.server.DefaultServerFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import se.tink.backend.aggregation.provider.configuration.cli.ChangeProviderRefreshFrequencyFactorCommand;
