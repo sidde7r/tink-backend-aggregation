@@ -350,6 +350,7 @@ java_library(
         "//tools:libkbc_wbaes_linux",
         "//tools:libkbc_wbaes_mac",
         "//data:tesseract-training-set",
+        "//data:cryptography-test"
     ],
     deps = [
         ":aggregation-api",
@@ -634,6 +635,7 @@ junit_test(
         "//tools:phantomjs_mac",
         "//tools:libkbc_wbaes_linux",
         "//tools:libkbc_wbaes_mac",
+        "//data:cryptography-test",
     ],
     runtime_deps = [
         "//third_party:ch_qos_logback_logback_classic",
@@ -689,6 +691,7 @@ junit_test(
         "etc/development.yml",
         "//data:aggregation-test",
         "//data:tesseract-training-set",
+        "//data:cryptography-test",
     ],
     tags = [
         "external",
