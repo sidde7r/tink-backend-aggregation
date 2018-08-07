@@ -151,7 +151,8 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
             }
         }
     }
-    public TinkHttpClient(@Nullable AgentContext context, @Nullable Credentials credentials) {
+    public TinkHttpClient(@Nullable AgentContext context, @Nullable Credentials credentials,
+            @Nullable String signatureKeyPath) {
         this.context = context;
         this.credentials = credentials;
 
@@ -159,7 +160,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         this.internalCookieStore = new BasicCookieStore();
         this.internalRequestConfigBuilder = RequestConfig.custom();
         this.internalHttpClientBuilder = HttpClientBuilder.create()
-                                        .setRequestExecutor(new TinkApacheHttpRequestExecutor())
+                                        .setRequestExecutor(new TinkApacheHttpRequestExecutor(signatureKeyPath))
                                         .setDefaultCookieStore(this.internalCookieStore);
 
         this.internalSslContextBuilder = new SSLContextBuilder()
@@ -183,6 +184,10 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         setDebugOutput(DEFAULTS.DEBUG_OUTPUT);
         addPersistentHeader("X-Aggregator", getHeaderAggregatorIdentifier());
         setUserAgent(DEFAULTS.DEFAULT_USER_AGENT);
+    }
+
+    public TinkHttpClient(@Nullable AgentContext context, @Nullable Credentials credentials) {
+        this(context, credentials, null);
     }
 
     private void constructInternalClient() {

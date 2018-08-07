@@ -4,8 +4,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
 import java.io.IOException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -43,9 +41,14 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
 
     private Algorithm algorithm;
 
-    public TinkApacheHttpRequestExecutor() {
+    public TinkApacheHttpRequestExecutor(String signatureKeyPath) {
         try {
-            algorithm = Algorithm.RSA256(null, RSAUtils.getPrivateKey(PRIVATE_KEY_PATH));
+            if (signatureKeyPath == null) {
+                algorithm = Algorithm.RSA256(null, RSAUtils.getPrivateKey(PRIVATE_KEY_PATH));
+                return;
+            }
+
+            algorithm = Algorithm.RSA256(null, RSAUtils.getPrivateKey(signatureKeyPath));
         } catch (Exception e) {
             log.error("No signature header will be added to requests.", e);
         }
