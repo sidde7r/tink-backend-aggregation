@@ -64,7 +64,4 @@ public class ProviderConfigurationServiceContainer extends AbstractServiceContai
                 ProviderModuleFactory.build(configuration, environment.jersey()));
 
     }
-
-
-
 }
