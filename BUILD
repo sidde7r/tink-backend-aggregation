@@ -739,6 +739,8 @@ java_library(
         "//src/cluster-lib",
         "//src/api-annotations",
         "//src/libraries/http:http-annotations",
+        "//src/libraries/http_client:http-client",
+        "//src/libraries/jersey_utils:jersey-utils",
 
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
@@ -861,6 +863,28 @@ java_binary(
          "//third_party:com_google_inject_guice",
          "//third_party:com_netflix_governator",
          "//third_party:io_dropwizard_dropwizard_core",
+    ],
+)
+
+junit_test(
+    name = "provider-configuration-api-test",
+    srcs = glob(["src/provider-configuration-api/src/test/**/*.java"]) + [
+    ],
+    data = ["//data:tink-ca"],
+    runtime_deps = [
+        "//third_party:ch_qos_logback_logback_classic",
+    ],
+    deps = [
+        ":provider-configuration-api",
+        ":main-api",
+
+        "//src/api-annotations-testlib",
+
+        "//third_party:com_fasterxml_jackson_core_jackson_core",
+        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_sun_jersey_jersey_client",
+        "//third_party:org_assertj_assertj_core",
     ],
 )
 
