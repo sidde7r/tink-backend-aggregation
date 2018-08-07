@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.stateme
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsParser;
@@ -42,7 +43,7 @@ public class MT940Statement {
                         ))).substring(2);
     }
 
-    public HashMap<String, String> getRawDetailsString() {
+    public Map<String, String> getRawDetails() {
         HashMap<String, String> result = new HashMap<>();
         String[] elements = tag_86.split("\\?");
 
@@ -64,7 +65,7 @@ public class MT940Statement {
                 .setAmount(new Amount(FinTsConstants.CURRENCY, getAmount()))
                 .setDate(getDate())
                 .setDescription(getDescription())
-                .setRawDetails(getRawDetailsString())
+                .setRawDetails(getRawDetails())
                 .build();
     }
 
