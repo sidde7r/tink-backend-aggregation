@@ -25,10 +25,12 @@ public class MT940Statement {
 
 
     public Date getDate() {
+        String date = null;
         try {
-            return ThreadSafeDateFormat.FORMATTER_INTEGER_DATE_COMPACT.parse(tag_61.substring(0, 6));
+            date = tag_61.substring(0, 6);
+            return ThreadSafeDateFormat.FORMATTER_INTEGER_DATE_COMPACT.parse(date);
         } catch (Exception e) {
-            LOGGER.error("{} tag_61: {}", FinTsConstants.LogTags.DATE_PARSING_ERROR, tag_61);
+            LOGGER.error("{} tag_61: {} date: {}", FinTsConstants.LogTags.DATE_PARSING_ERROR, tag_61, date);
             throw new IllegalStateException("parsing date failed");
         }
     }
