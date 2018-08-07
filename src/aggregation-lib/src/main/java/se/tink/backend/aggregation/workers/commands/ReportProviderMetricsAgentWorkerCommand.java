@@ -1,71 +1,18 @@
 package se.tink.backend.aggregation.workers.commands;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.LoadingCache;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
-import se.tink.backend.aggregation.workers.metrics.MeterCacheLoader;
-import se.tink.backend.aggregation.workers.metrics.TimerCacheLoader;
-import se.tink.libraries.metrics.Counter;
+import se.tink.backend.aggregation.workers.commands.state.ReportProviderMetricsAgentWorkerCommandState;
 import se.tink.libraries.metrics.MetricId;
-import se.tink.libraries.metrics.MetricRegistry;
-import se.tink.libraries.metrics.Timer;
 import se.tink.backend.common.utils.MetricsUtils;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.log.AggregationLogger;
 
 public class ReportProviderMetricsAgentWorkerCommand extends AgentWorkerCommand {
-    public static class ReportProviderMetricsAgentWorkerCommandState {
-        private LoadingCache<MetricId.MetricLabels, Counter> authenticationErrorMeters;
-        private LoadingCache<MetricId.MetricLabels, Counter> executionsMeters;
-        private LoadingCache<MetricId.MetricLabels, Timer> queuedTimers;
-        private LoadingCache<MetricId.MetricLabels, Counter> temporaryErrorMeters;
-        private LoadingCache<MetricId.MetricLabels, Timer> executionsTimers;
-        private LoadingCache<MetricId.MetricLabels, Timer> globalExecutionsTimers;
-
-        public ReportProviderMetricsAgentWorkerCommandState(MetricRegistry metricRegistry) {
-            CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.newBuilder();
-
-            executionsMeters = cacheBuilder.build(new MeterCacheLoader(metricRegistry, "executions"));
-            temporaryErrorMeters = cacheBuilder.build(new MeterCacheLoader(metricRegistry, "temporary_errors"));
-            authenticationErrorMeters = cacheBuilder
-                    .build(new MeterCacheLoader(metricRegistry, "authentication_errors"));
-
-            queuedTimers = cacheBuilder.build(new TimerCacheLoader(metricRegistry, "queue_duration"));
-            executionsTimers = cacheBuilder.build(new TimerCacheLoader(metricRegistry, "executions_duration"));
-            globalExecutionsTimers = cacheBuilder
-                    .build(new TimerCacheLoader(metricRegistry, "executions_global_duration"));
-        }
-
-        public LoadingCache<MetricId.MetricLabels, Counter> getAuthenticationErrorMeters() {
-            return authenticationErrorMeters;
-        }
-
-        public LoadingCache<MetricId.MetricLabels, Counter> getExecutionsMeters() {
-            return executionsMeters;
-        }
-
-        public LoadingCache<MetricId.MetricLabels, Timer> getQueuedTimers() {
-            return queuedTimers;
-        }
-
-        public LoadingCache<MetricId.MetricLabels, Counter> getTemporaryErrorMeters() {
-            return temporaryErrorMeters;
-        }
-
-        public LoadingCache<MetricId.MetricLabels, Timer> getExecutionsTimers() {
-            return executionsTimers;
-        }
-
-        public LoadingCache<MetricId.MetricLabels, Timer> getGlobalExecutionsTimers() {
-            return globalExecutionsTimers;
-        }
-    }
-
     private static final AggregationLogger log = new AggregationLogger(ReportProviderMetricsAgentWorkerCommand.class);
 
     private String operationName;
