@@ -21,14 +21,6 @@ container_image(
     workdir = "/usr/share/tink-backend-provider-configuration"
 )
 
-container_image(
-    name = "credit_safe_image",
-    base = "@openjdk-jdk8//image",
-    tars = ["//deb:provider_configuration_tar"],
-    cmd = ["java", "-jar", "-Xmx2560m", "/usr/share/tink-backend-credit-safe/credit-safe-service.jar", "server", "/etc/tink/credit-safe-server.yml"],
-    workdir = "/usr/share/tink-backend-credit-safe"
-)
-
 # You need to have python installed in your PATH and python 2 is currently
 # required to build the docker images:
 #   $ brew install python2
@@ -51,6 +43,5 @@ container_bundle(
     images = {
         "gcr.io/tink-containers/tink-backend-aggregation:latest": ":aggregation_image",
         "gcr.io/tink-containers/tink-backend-provider-configuration:latest": ":provider_configuration_image",
-        "gcr.io/tink-containers/tink-backend-credit-safe:latest": ":credit_safe_image",
     }
 )
