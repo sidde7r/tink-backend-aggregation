@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.workers.commands;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
@@ -27,13 +25,10 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
 import se.tink.backend.aggregation.workers.AgentWorkerOperationMetricType;
+import se.tink.backend.aggregation.workers.commands.state.LoginAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
 import se.tink.backend.aggregation.workers.metrics.MetricAction;
-import se.tink.backend.aggregation.workers.metrics.TimerCacheLoader;
-import se.tink.backend.common.ServiceContext;
 import se.tink.libraries.metrics.MetricId;
-import se.tink.libraries.metrics.MetricRegistry;
-import se.tink.libraries.metrics.Timer;
 import se.tink.libraries.metrics.Timer.Context;
 
 public class LoginAgentWorkerCommand extends AgentWorkerCommand implements MetricsCommand {
@@ -57,53 +52,6 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         private static final ImmutableList<Double> LOGIN_PASSWORD = ImmutableList.of(0.0, .025, .05, .1, .2, 0.4, 0.8, 1.6, 3.2, 6.4);
         private static final ImmutableList<Integer> LOGIN_BANKID = ImmutableList.of(0, 2, 4, 8, 16, 32, 64, 128, 256);
         private static final ImmutableList<Double> ACQUIRE_LOCK = ImmutableList.of(0.0, .025, .05, .1, .2, 0.4, 0.8, 1.6, 3.2, 6.4);
-    }
-
-    private static final String LOAD_PERSISTENT_SESSION_TIMER_NAME = "load_persistent_session_duration";
-    private static final String LOCK_TIMER_NAME = "acquire_lock_duration";
-    private static final String RELEASE_LOCK_TIMER_NAME = "release_lock_duration";
-    private static final String LOGIN_TIMER_NAME = "login_duration";
-    private static final String LOGOOUT_TIMER_NAME = "logout_duration";
-
-    public static class LoginAgentWorkerCommandState {
-
-        private LoadingCache<MetricId.MetricLabels, Timer> loadPersistentSessionTimer;
-        private LoadingCache<MetricId.MetricLabels, Timer> lockTimer;
-        private LoadingCache<MetricId.MetricLabels, Timer> releaseLockTimer;
-        private LoadingCache<MetricId.MetricLabels, Timer> loginTimer;
-        private LoadingCache<MetricId.MetricLabels, Timer> logoutTimer;
-
-        public LoginAgentWorkerCommandState(ServiceContext serviceContext,
-                MetricRegistry metricRegistry) {
-            CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.newBuilder();
-
-            loadPersistentSessionTimer = cacheBuilder
-                    .build(new TimerCacheLoader(metricRegistry, LOAD_PERSISTENT_SESSION_TIMER_NAME));
-            lockTimer = cacheBuilder.build(new TimerCacheLoader(metricRegistry, LOCK_TIMER_NAME));
-            releaseLockTimer = cacheBuilder.build(new TimerCacheLoader(metricRegistry, RELEASE_LOCK_TIMER_NAME));
-            loginTimer = cacheBuilder.build(new TimerCacheLoader(metricRegistry, LOGIN_TIMER_NAME));
-            logoutTimer = cacheBuilder.build(new TimerCacheLoader(metricRegistry, LOGOOUT_TIMER_NAME));
-        }
-
-        private LoadingCache<MetricId.MetricLabels, Timer> getLockTimers() {
-            return lockTimer;
-        }
-
-        private LoadingCache<MetricId.MetricLabels, Timer> getReleaseLockTimers() {
-            return releaseLockTimer;
-        }
-
-        private LoadingCache<MetricId.MetricLabels, Timer> getLoginTimers() {
-            return loginTimer;
-        }
-
-        private LoadingCache<MetricId.MetricLabels, Timer> getLogoutTimers() {
-            return logoutTimer;
-        }
-
-        private LoadingCache<MetricId.MetricLabels, Timer> getLoadPersistentSessionTimers() {
-            return loadPersistentSessionTimer;
-        }
     }
 
     private final AgentWorkerCommandMetricState metrics;
@@ -174,7 +122,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         }
 
         MetricAction action = metrics.buildAction(metricForAction(MetricName.IS_LOGGED_IN));
-        ArrayList<Context> loadPersistentSessionTimerContexts = getTimerContexts(LOAD_PERSISTENT_SESSION_TIMER_NAME);
+        ArrayList<Context> loadPersistentSessionTimerContexts = state.getTimerContexts(state.LOAD_PERSISTENT_SESSION_TIMER_NAME, credentials.getType());
 
         PersistentLogin persistentAgent = (PersistentLogin) agent;
 
@@ -206,7 +154,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
 
     private boolean acquireLock() throws Exception {
         if (Objects.equals(credentials.getType(), CredentialsTypes.MOBILE_BANKID)) {
-            ArrayList<Context> lockTimerContext = getTimerContexts(LOCK_TIMER_NAME);
+            ArrayList<Context> lockTimerContext = state.getTimerContexts(state.LOCK_TIMER_NAME, credentials.getType());
             MetricAction action = metrics.buildAction(metricForAction(MetricName.ACQUIRE_LOCK));
 
             try {
@@ -236,7 +184,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
     }
 
     private AgentWorkerCommandResult login() throws Exception {
-        ArrayList<Context> loginTimerContext = getTimerContexts(LOGIN_TIMER_NAME);
+        ArrayList<Context> loginTimerContext = state.getTimerContexts(state.LOGIN_TIMER_NAME, credentials.getType());
         MetricAction action = metrics.buildAction(metricForAction(MetricName.LOGIN));
 
         try {
@@ -285,7 +233,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
 
     private void releaseLock() throws Exception {
         if (lock != null && lock.isAcquiredInThisProcess()) {
-            ArrayList<Context> releaseLockTimer = getTimerContexts(RELEASE_LOCK_TIMER_NAME);
+            ArrayList<Context> releaseLockTimer = state.getTimerContexts(state.RELEASE_LOCK_TIMER_NAME, credentials.getType());
             MetricAction action = metrics.buildAction(metricForAction(MetricName.RELEASE_LOCK));
 
             try {
@@ -344,7 +292,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
     }
 
     private void logout() throws Exception {
-        ArrayList<Context> logoutTimerContext = getTimerContexts(LOGOOUT_TIMER_NAME);
+        ArrayList<Context> logoutTimerContext = state.getTimerContexts(state.LOGOOUT_TIMER_NAME, credentials.getType());
         MetricAction action = metrics.buildAction(metricForAction(MetricName.LOGOUT));
 
         try {
@@ -359,41 +307,6 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             action.stop();
             stopCommandContexts(logoutTimerContext);
         }
-    }
-
-    private ArrayList<Context> getTimerContexts(String metric) throws ExecutionException {
-        MetricId.MetricLabels globalName = new MetricId.MetricLabels()
-                .add("class", LoginAgentWorkerCommand.class.getSimpleName())
-                .add("credential_type", "global")
-                .add("command", AgentWorkerOperationMetricType.EXECUTE_COMMAND.getMetricName());
-
-        MetricId.MetricLabels typeName = new MetricId.MetricLabels()
-                .add("class", LoginAgentWorkerCommand.class.getSimpleName())
-                .add("credential_type", credentials.getType().name().toLowerCase())
-                .add("command", AgentWorkerOperationMetricType.EXECUTE_COMMAND.getMetricName());
-
-        switch (metric) {
-        case LOCK_TIMER_NAME:
-            return Lists.newArrayList(state.getLockTimers().get(typeName).time(),
-                    state.getLockTimers().get(globalName).time());
-        case RELEASE_LOCK_TIMER_NAME:
-            return Lists.newArrayList(state.getReleaseLockTimers().get(typeName).time(), state
-                    .getReleaseLockTimers().get(globalName).time());
-        case LOGIN_TIMER_NAME:
-            return Lists.newArrayList(state.getLoginTimers().get(typeName).time(), state
-                    .getLoginTimers().get(globalName).time());
-        case LOAD_PERSISTENT_SESSION_TIMER_NAME:
-            return Lists.newArrayList(state.getLoadPersistentSessionTimers().get(typeName).time(), state
-                    .getLoadPersistentSessionTimers().get(globalName).time());
-        case LOGOOUT_TIMER_NAME:
-            typeName = new MetricId.MetricLabels()
-                    .add("class", LoginAgentWorkerCommand.class.getSimpleName())
-                    .add("credential_type", credentials.getType().name().toLowerCase())
-                    .add("command", AgentWorkerOperationMetricType.POST_PROCESS_COMMAND.getMetricName());
-            return Lists.newArrayList(state.getLogoutTimers().get(typeName).time(), state
-                    .getLogoutTimers().get(globalName).time());
-        }
-        return Lists.newArrayList();
     }
 
     private void stopCommandContexts(List<Context> contexts) {

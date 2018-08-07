@@ -1,13 +1,12 @@
 package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.base.Preconditions;
-import se.tink.backend.common.repository.mysql.aggregation.aggregationcredentials.AggregationCredentialsRepository;
+import se.tink.backend.aggregation.workers.commands.state.EncryptAgentWorkerCommandState;
 import se.tink.backend.core.AggregationCredentials;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
-import se.tink.backend.common.ServiceContext;
 import se.tink.backend.encryption.api.EncryptionService;
 import se.tink.backend.encryption.rpc.EncryptionKeySet;
 
@@ -25,18 +24,6 @@ public class EncryptAgentWorkerCommand extends AgentWorkerCommand {
     public EncryptAgentWorkerCommand withOverwriteSecretKey(boolean overwriteSecretKey) {
         this.overwriteSecretKey = overwriteSecretKey;
         return this;
-    }
-
-    public static class EncryptAgentWorkerCommandState {
-        private AggregationCredentialsRepository aggregationCredentialsRepository;
-
-        public EncryptAgentWorkerCommandState(ServiceContext serviceContext) {
-            aggregationCredentialsRepository = serviceContext.getRepository(AggregationCredentialsRepository.class);
-        }
-
-        public AggregationCredentialsRepository getAggregationCredentialsRepository() {
-            return aggregationCredentialsRepository;
-        }
     }
 
     @Override

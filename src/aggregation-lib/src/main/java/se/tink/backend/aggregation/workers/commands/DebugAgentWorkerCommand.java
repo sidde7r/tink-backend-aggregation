@@ -13,33 +13,13 @@ import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
-import se.tink.backend.common.ServiceContext;
+import se.tink.backend.aggregation.workers.commands.state.DebugAgentWorkerCommandState;
 import se.tink.libraries.uuid.UUIDUtils;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class DebugAgentWorkerCommand extends AgentWorkerCommand {
-    public static class DebugAgentWorkerCommandState {
-        private File debugDirectory;
-
-        public DebugAgentWorkerCommandState(ServiceContext serviceContext) {
-            debugDirectory = new File(serviceContext.getConfiguration().getAggregationWorker()
-                    .getDebugLogDir());
-            try {
-                if (debugDirectory.mkdirs()) {
-                    log.info("Log directory was created: " + debugDirectory.getAbsolutePath());
-                }
-            } catch (Exception e) {
-                throw new RuntimeException("Could not make sure log directory was created: "
-                        + debugDirectory.getAbsolutePath(), e);
-            }
-        }
-
-        public File getDebugDirectory() {
-            return debugDirectory;
-        }
-    }
 
     private static final AggregationLogger log = new AggregationLogger(DebugAgentWorkerCommand.class);
 
