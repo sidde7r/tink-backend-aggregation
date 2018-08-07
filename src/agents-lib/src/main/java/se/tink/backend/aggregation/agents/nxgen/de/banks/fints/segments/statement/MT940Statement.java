@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.stateme
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import org.assertj.core.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +25,6 @@ public class MT940Statement {
     private String tag_61;
     private String tag_86;
 
-
     public Date getDate() {
         String date = null;
         try {
@@ -44,9 +45,25 @@ public class MT940Statement {
         // TODO heuristic search for the description until got more samples to look at
         return Arrays.stream(elements).filter(s -> hasField(s, "32")).findFirst().orElse(
                 Arrays.stream(elements).filter(s -> hasField(s, "21")).findFirst().orElse(
-                Arrays.stream(elements).filter(s -> hasField(s, "20")).findFirst().orElse(
-                        Arrays.stream(elements).filter(s -> hasField(s, "00")).findFirst().orElse("")
-                ))).substring(2);
+                        Arrays.stream(elements).filter(s -> hasField(s, "20")).findFirst().orElse(
+                                Arrays.stream(elements).filter(s -> hasField(s, "00")).findFirst().orElse("")
+                        ))).substring(2);
+    }
+
+    public Map<String, String> getRawDetails() {
+        HashMap<String, String> result = new HashMap<>();
+        String[] elements = tag_86.split("\\?");
+
+        for (String s : elements) {
+            if (s.length() < 2) {
+                continue;
+            }
+            String key = s.substring(0, 2);
+            String value = s.substring(2);
+            result.put(key, value);
+        }
+
+        return result;
     }
 
     public Transaction toTinkTransaction() {
@@ -55,6 +72,7 @@ public class MT940Statement {
                 .setAmount(new Amount(FinTsConstants.CURRENCY, getAmount()))
                 .setDate(getDate())
                 .setDescription(getDescription())
+                .setRawDetails(getRawDetails())
                 .build();
     }
 
