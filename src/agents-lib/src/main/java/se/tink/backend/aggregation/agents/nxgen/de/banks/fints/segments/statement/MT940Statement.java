@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.stateme
 import java.util.Arrays;
 import java.util.Date;
 import org.assertj.core.util.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsParser;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -10,6 +12,8 @@ import se.tink.backend.core.Amount;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class MT940Statement {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MT940Statement.class);
 
     public MT940Statement(String tag_61, String tag_86) {
         this.tag_61 = tag_61;
@@ -24,6 +28,7 @@ public class MT940Statement {
         try {
             return ThreadSafeDateFormat.FORMATTER_INTEGER_DATE_COMPACT.parse(tag_61.substring(0, 6));
         } catch (Exception e) {
+            LOGGER.error("{} tag_61: {}", FinTsConstants.LogTags.DATE_PARSING_ERROR, tag_61);
             throw new IllegalStateException("parsing date failed");
         }
     }
