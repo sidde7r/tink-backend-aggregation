@@ -28,6 +28,8 @@ kind: Service
 metadata:
   name: provider-configuration-api-loadbalancer
   namespace: provider-configuration
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: "kubernetes-ingress.internal.{{.Values.Environment}}.{{.Values.Cluster}}.tink.network"
 spec:
   type: LoadBalancer
   ports:
