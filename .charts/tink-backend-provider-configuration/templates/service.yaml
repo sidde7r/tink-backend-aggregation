@@ -28,8 +28,6 @@ kind: Service
 metadata:
   name: provider-configuration-api-loadbalancer
   namespace: provider-configuration
-  annotations:
-    service.beta.kubernetes.io/aws-load-balancer-internal: "true"
 spec:
   type: LoadBalancer
   ports:
