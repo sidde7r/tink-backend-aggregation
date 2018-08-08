@@ -88,6 +88,11 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
             return;
         }
 
+        // TODO: Create a webpage with info on how to verify signature.
+        // This header needs to be added before we fetch the headers to create the signature.
+        request.addHeader("X-Signature-Info",
+                "Visit https://developers.tink.se/request-signature-verification for more info.");
+
         RequestLine requestLine = request.getRequestLine();
         Header[] allHeaders = request.getAllHeaders();
 
@@ -109,10 +114,6 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         }
 
         request.addHeader("X-Signature", requestSignatureHeader.sign(algorithm));
-
-        // TODO: Create a webpage with info on how to verify signature.
-        // request.addHeader("X-Signature-Info",
-        //        "Visit https://developers.tink.se/request-signature-verification for more info.");
     }
 
     private static String toSignatureFormat(Header[] headers) {
