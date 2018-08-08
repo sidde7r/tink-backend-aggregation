@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.http.legacy;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.google.common.base.Strings;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,14 +38,15 @@ import se.tink.libraries.cryptography.RSAUtils;
  */
 public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private static final Logger log = LoggerFactory.getLogger(TinkApacheHttpRequestExecutor.class);
-    private static final String PRIVATE_KEY_PATH = "data/test/cryptography/private_rsa_key.pem";
+    private static final String TEST_PRIVATE_KEY_PATH = "data/test/cryptography/private_rsa_key.pem";
 
     private Algorithm algorithm;
 
     public TinkApacheHttpRequestExecutor(String signatureKeyPath) {
         try {
-            if (signatureKeyPath == null) {
-                algorithm = Algorithm.RSA256(null, RSAUtils.getPrivateKey(PRIVATE_KEY_PATH));
+            if (Strings.isNullOrEmpty(signatureKeyPath)) {
+                log.warn("Signature key path was empty, using the test key as a fallback.");
+                algorithm = Algorithm.RSA256(null, RSAUtils.getPrivateKey(TEST_PRIVATE_KEY_PATH));
                 return;
             }
 
