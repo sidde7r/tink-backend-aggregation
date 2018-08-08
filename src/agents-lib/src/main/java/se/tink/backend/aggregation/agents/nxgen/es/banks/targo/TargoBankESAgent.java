@@ -7,9 +7,8 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 public class TargoBankESAgent extends EuroInformationAgent {
-    public TargoBankESAgent(CredentialsRequest request,
-            AgentContext context) {
-        super(request, context, new TargoBankESConfiguration());
+    public TargoBankESAgent(CredentialsRequest request, String signatureKeyPath, AgentContext context) {
+        super(request, context, signatureKeyPath, new TargoBankESConfiguration());
     }
 
     @Override
