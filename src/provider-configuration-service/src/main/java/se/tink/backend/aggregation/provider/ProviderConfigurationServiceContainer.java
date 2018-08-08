@@ -11,14 +11,12 @@ import se.tink.backend.aggregation.provider.configuration.cli.ChangeProviderRefr
 import se.tink.backend.aggregation.provider.configuration.cli.DebugProviderCommand;
 import se.tink.backend.aggregation.provider.configuration.cli.ProviderStatusCommand;
 import se.tink.backend.aggregation.provider.configuration.cli.SeedProvidersForMarketCommand;
-import org.apache.curator.framework.CuratorFramework;
 import se.tink.backend.aggregation.provider.configuration.config.ProviderModuleFactory;
 import se.tink.backend.common.AbstractServiceContainer;
 import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.libraries.auth.ApiTokenAuthorizationHeaderPredicate;
 import se.tink.libraries.auth.ContainerAuthorizationResourceFilterFactory;
 import se.tink.libraries.auth.YubicoAuthorizationHeaderPredicate;
-import se.tink.libraries.discovery.ServiceDiscoveryHelper;
 import se.tink.libraries.dropwizard.DropwizardLifecycleInjectorFactory;
 import se.tink.libraries.dropwizard.DropwizardObjectMapperConfigurator;
 
@@ -60,12 +58,9 @@ public class ProviderConfigurationServiceContainer extends AbstractServiceContai
                             .add(new ContainerAuthorizationResourceFilterFactory(authorizationAuthorizers));
         }
 
-        Injector injector = DropwizardLifecycleInjectorFactory.build(
+        DropwizardLifecycleInjectorFactory.build(
                 environment.lifecycle(),
                 ProviderModuleFactory.build(configuration, environment.jersey()));
 
-        ServiceDiscoveryHelper serviceDiscoveryHelper = constructServiceDiscoveryHelperFromConfiguration(
-                injector.getInstance(CuratorFramework.class), configuration, getName());
-        environment.lifecycle().manage(serviceDiscoveryHelper);
     }
 }
