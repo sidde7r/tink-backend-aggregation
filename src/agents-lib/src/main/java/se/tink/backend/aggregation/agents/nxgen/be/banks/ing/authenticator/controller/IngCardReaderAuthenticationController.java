@@ -79,7 +79,11 @@ public class IngCardReaderAuthenticationController implements MultiFactorAuthent
      otpField.setName(OTP_FIELD);
      otpField.setNumeric(true);
      otpField.setSensitive(true);
-     otpField.setHelpText(IngConstants.Helptext.OTP_HELPTEXT);
+     otpField.setHelpText(catalog.getString("1  Insert your ING bank card into the ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png)\n<br>ING Card Reader\n"
+             + "2  Press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_IDENTIFY.png)\n"
+             + "3  Enter your PIN\n"
+             + "4  Press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png)\n"
+             + "Enter the respond code"));
      return otpField;
     }
 
