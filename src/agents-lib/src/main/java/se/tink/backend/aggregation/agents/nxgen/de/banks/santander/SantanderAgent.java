@@ -19,17 +19,14 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 public class SantanderAgent extends NextGenerationAgent {
 
     private final SantanderApiClient santanderApiClient;
-    private final SessionStorage sessionStorage;
 
     public SantanderAgent(CredentialsRequest request, AgentContext context){
         super(request, context);
-        sessionStorage = new SessionStorage();
         santanderApiClient = new SantanderApiClient(this.client, sessionStorage);
     }
 

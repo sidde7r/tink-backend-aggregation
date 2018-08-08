@@ -20,17 +20,14 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 public class FidorAgent extends NextGenerationAgent{
 
     private final FidorApiClient fidorApiClient;
-    private final PersistentStorage persistentStorage;
 
     public FidorAgent(CredentialsRequest request, AgentContext context) {
         super(request, context);
-        persistentStorage = new PersistentStorage();
         fidorApiClient = new FidorApiClient(this.client, persistentStorage);
     }
 
