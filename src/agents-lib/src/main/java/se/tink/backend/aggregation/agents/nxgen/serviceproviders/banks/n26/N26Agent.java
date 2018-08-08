@@ -26,7 +26,7 @@ public class N26Agent extends NextGenerationAgent {
 
     private final N26ApiClient n26APiClient;
 
-    public N26Agent(CredentialsRequest request, AgentContext context){
+    public N26Agent(CredentialsRequest request, AgentContext context) {
         super(request, context);
         this.n26APiClient = new N26ApiClient(this.client, sessionStorage);
     }
@@ -48,7 +48,7 @@ public class N26Agent extends NextGenerationAgent {
                 updateController,
                 new N26AccountFetcher(n26APiClient),
                 new TransactionFetcherController<>(this.transactionPaginationHelper,
-                       new TransactionKeyPaginationController<>(new N26TransactionFetcher(n26APiClient)))));
+                        new TransactionKeyPaginationController<>(new N26TransactionFetcher(n26APiClient)))));
     }
 
     @Override

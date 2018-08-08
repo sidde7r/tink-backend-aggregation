@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
-public class FidorAgent extends NextGenerationAgent{
+public class FidorAgent extends NextGenerationAgent {
 
     private final FidorApiClient fidorApiClient;
 

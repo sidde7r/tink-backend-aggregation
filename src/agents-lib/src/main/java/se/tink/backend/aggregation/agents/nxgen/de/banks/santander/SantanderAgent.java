@@ -25,13 +25,14 @@ public class SantanderAgent extends NextGenerationAgent {
 
     private final SantanderApiClient santanderApiClient;
 
-    public SantanderAgent(CredentialsRequest request, AgentContext context){
+    public SantanderAgent(CredentialsRequest request, AgentContext context) {
         super(request, context);
         santanderApiClient = new SantanderApiClient(this.client, sessionStorage);
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {}
+    protected void configureHttpClient(TinkHttpClient client) {
+    }
 
     @Override
     protected Authenticator constructAuthenticator() {
@@ -45,9 +46,10 @@ public class SantanderAgent extends NextGenerationAgent {
                 metricRefreshController,
                 updateController,
                 new SantanderAccountFetcher(santanderApiClient),
-                        new TransactionFetcherController<>(
+                new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
-                new TransactionDatePaginationController<>(new SantanderTransactionFetcher(santanderApiClient)))));
+                        new TransactionDatePaginationController<>(
+                                new SantanderTransactionFetcher(santanderApiClient)))));
     }
 
     @Override
