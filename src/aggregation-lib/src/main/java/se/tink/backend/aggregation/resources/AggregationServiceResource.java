@@ -27,7 +27,7 @@ import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.rpc.UpdateCredentialsRequest;
 import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.backend.aggregation.workers.AgentWorkerOperation;
-import se.tink.backend.aggregation.workers.AgentWorkerOperationCreatorWrapper;
+import se.tink.backend.aggregation.workers.AgentWorkerRefreshOperationCreatorWrapper;
 import se.tink.backend.aggregation.workers.AgentWorkerOperationFactory;
 import se.tink.backend.aggregation.workers.ratelimit.DefaultProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.ratelimit.OverridingProviderRateLimiterFactory;
@@ -122,7 +122,7 @@ public class AggregationServiceResource implements AggregationService, Managed {
         if (request.isManual()) {
             agentWorker.execute(agentWorkerCommandFactory.createRefreshOperation(clusterInfo, request));
         } else {
-            agentWorker.executeAutomaticRefresh(AgentWorkerOperationCreatorWrapper.of(agentWorkerCommandFactory, request, clusterInfo));
+            agentWorker.executeAutomaticRefresh(AgentWorkerRefreshOperationCreatorWrapper.of(agentWorkerCommandFactory, request, clusterInfo));
         }
 
     }

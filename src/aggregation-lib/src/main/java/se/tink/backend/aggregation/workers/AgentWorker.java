@@ -99,7 +99,7 @@ public class AgentWorker implements Managed {
         instrumentedRunnable.submitted();
     }
 
-    public void executeAutomaticRefresh(AgentWorkerOperationCreatorWrapper agentWorkerOperationCreatorRunnable) throws Exception {
+    public void executeAutomaticRefresh(AgentWorkerRefreshOperationCreatorWrapper agentWorkerOperationCreatorRunnable) throws Exception {
 
         InstrumentedRunnable instrumentedRunnable = new InstrumentedRunnable(
                 metricRegistry,

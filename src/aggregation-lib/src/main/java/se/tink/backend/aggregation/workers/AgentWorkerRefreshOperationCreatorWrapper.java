@@ -4,13 +4,13 @@ import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 
-public class AgentWorkerOperationCreatorWrapper implements Runnable {
+public class AgentWorkerRefreshOperationCreatorWrapper implements Runnable {
 
     private AgentWorkerOperationFactory agentWorkerCommandFactory;
     private RefreshInformationRequest request;
     private ClusterInfo clusterInfo;
 
-    AgentWorkerOperationCreatorWrapper(AgentWorkerOperationFactory agentWorkerCommandFactory, RefreshInformationRequest request, ClusterInfo clusterInfo) {
+    AgentWorkerRefreshOperationCreatorWrapper(AgentWorkerOperationFactory agentWorkerCommandFactory, RefreshInformationRequest request, ClusterInfo clusterInfo) {
         this.agentWorkerCommandFactory = agentWorkerCommandFactory;
         this.request = request;
         this.clusterInfo = clusterInfo;
@@ -22,8 +22,8 @@ public class AgentWorkerOperationCreatorWrapper implements Runnable {
         agentWorkerOperation.run();
     }
 
-    public static AgentWorkerOperationCreatorWrapper of(AgentWorkerOperationFactory agentWorkerOperationFactory, RefreshInformationRequest refreshInformationRequest, ClusterInfo clusterInfo) {
-        return new AgentWorkerOperationCreatorWrapper(agentWorkerOperationFactory, refreshInformationRequest, clusterInfo);
+    public static AgentWorkerRefreshOperationCreatorWrapper of(AgentWorkerOperationFactory agentWorkerOperationFactory, RefreshInformationRequest refreshInformationRequest, ClusterInfo clusterInfo) {
+        return new AgentWorkerRefreshOperationCreatorWrapper(agentWorkerOperationFactory, refreshInformationRequest, clusterInfo);
     }
 
     public Provider getProvider() {
