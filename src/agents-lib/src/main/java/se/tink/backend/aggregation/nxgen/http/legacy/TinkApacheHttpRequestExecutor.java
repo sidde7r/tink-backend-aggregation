@@ -108,10 +108,10 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
             log.error("Could not get the request body from the entity content", e);
         }
 
-        request.addHeader("X-Aggregator-Signature", requestSignatureHeader.sign(algorithm));
+        request.addHeader("X-Signature", requestSignatureHeader.sign(algorithm));
 
         // TODO: Create a webpage with info on how to verify signature.
-        // request.addHeader("X-Aggregator-Signature-Info",
+        // request.addHeader("X-Signature-Info",
         //        "Visit https://developers.tink.se/request-signature-verification for more info.");
     }
 
