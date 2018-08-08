@@ -5,16 +5,16 @@ import com.google.common.collect.Lists;
 import io.dropwizard.configuration.ConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.AbstractConfigurationBase;
-import se.tink.backend.aggregation.agents.fraud.creditsafe.ConsumerMonitoringWrapper;
-import se.tink.backend.aggregation.rpc.AddMonitoredConsumerCreditSafeRequest;
-import se.tink.backend.aggregation.rpc.ChangedConsumerCreditSafeRequest;
-import se.tink.backend.aggregation.rpc.PageableConsumerCreditSafeRequest;
-import se.tink.backend.aggregation.rpc.PageableConsumerCreditSafeResponse;
-import se.tink.backend.aggregation.rpc.RemoveMonitoredConsumerCreditSafeRequest;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.ConsumerMonitoringWrapper;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.AddMonitoredConsumerCreditSafeRequest;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.ChangedConsumerCreditSafeRequest;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PageableConsumerCreditSafeRequest;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PageableConsumerCreditSafeResponse;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PortfolioListResponse;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.RemoveMonitoredConsumerCreditSafeRequest;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -37,18 +37,18 @@ public class ConsumerMonitoringTest extends AbstractConfigurationBase {
 
     @Test
     public void testListPortfolio() {
-        List<String> list = consumerMonitorWrapper.listPortfolios();
+        PortfolioListResponse response = consumerMonitorWrapper.listPortfolios();
 
-        assertTrue(list != null);
-        assertEquals(3, list.size());
+        assertTrue(response != null && response.getPortfolios() != null);
+        assertEquals(3, response.getPortfolios().size());
     }
 
     @Test
     public void testNotOKResponse() {
         ConsumerMonitoringWrapper nonWorking = new ConsumerMonitoringWrapper("", "", false);
-        List<String> list = nonWorking.listPortfolios();
+        PortfolioListResponse response = nonWorking.listPortfolios();
 
-        assertNull(list);
+        assertNull(response.getPortfolios());
     }
 
     @Test
@@ -62,9 +62,9 @@ public class ConsumerMonitoringTest extends AbstractConfigurationBase {
 
     @Test
     public void printPortfolioStatus() throws JsonProcessingException {
-        List<String> list = consumerMonitorWrapper.listPortfolios();
+        PortfolioListResponse portfolioListResponse = consumerMonitorWrapper.listPortfolios();
 
-        for (String portfolio : list) {
+        for (String portfolio : portfolioListResponse.getPortfolios()) {
             PageableConsumerCreditSafeRequest request = new PageableConsumerCreditSafeRequest(portfolio, 100, 1);
             PageableConsumerCreditSafeResponse response = consumerMonitorWrapper.listMonitoredConsumers(request);
 

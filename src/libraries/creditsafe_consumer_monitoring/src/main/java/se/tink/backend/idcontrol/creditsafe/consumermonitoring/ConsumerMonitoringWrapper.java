@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.credit.safe.agent.creditsafe;
+package se.tink.backend.idcontrol.creditsafe.consumermonitoring;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
@@ -11,27 +11,27 @@ import javax.annotation.Nullable;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.HandlerResolver;
 import javax.xml.ws.handler.PortInfo;
-import se.tink.backend.aggregation.credit.safe.agent.creditsafe.soap.consumermonitoring.Account;
-import se.tink.backend.aggregation.credit.safe.agent.creditsafe.soap.consumermonitoring.LANGUAGE;
-import se.tink.backend.aggregation.credit.safe.agent.creditsafe.soap.consumermonitoring.MonitoredObject;
-import se.tink.backend.aggregation.credit.safe.agent.creditsafe.soap.consumermonitoring.Monitoring;
-import se.tink.backend.aggregation.credit.safe.agent.creditsafe.soap.consumermonitoring.MonitoringRequest;
-import se.tink.backend.aggregation.credit.safe.agent.creditsafe.soap.consumermonitoring.MonitoringResponse;
-import se.tink.backend.aggregation.credit.safe.agent.creditsafe.soap.consumermonitoring.MonitoringSoap;
-import se.tink.backend.aggregation.credit.safe.agent.creditsafe.soap.consumermonitoring.PortfolioObject;
-import se.tink.backend.aggregation.credit.safe.agent.creditsafe.soap.consumermonitoring.ResultCountersReqObject;
-import se.tink.backend.aggregation.credit.safe.agent.creditsafe.soap.consumermonitoring.STATUS;
-import se.tink.backend.aggregation.credit.safe.rpc.AddMonitoredConsumerCreditSafeRequest;
-import se.tink.backend.aggregation.credit.safe.rpc.ChangedConsumerCreditSafeRequest;
-import se.tink.backend.aggregation.credit.safe.rpc.PageableConsumerCreditSafeRequest;
-import se.tink.backend.aggregation.credit.safe.rpc.PageableConsumerCreditSafeResponse;
-import se.tink.backend.aggregation.credit.safe.rpc.RemoveMonitoredConsumerCreditSafeRequest;
-import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PortfolioListResponse;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.soap.Account;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.soap.LANGUAGE;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.soap.MonitoredObject;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.soap.Monitoring;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.soap.MonitoringRequest;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.soap.MonitoringResponse;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.soap.MonitoringSoap;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.soap.PortfolioObject;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.soap.ResultCountersReqObject;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.soap.STATUS;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.AddMonitoredConsumerCreditSafeRequest;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.ChangedConsumerCreditSafeRequest;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PageableConsumerCreditSafeRequest;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PageableConsumerCreditSafeResponse;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.RemoveMonitoredConsumerCreditSafeRequest;
+import se.tink.libraries.log.LogUtils;
 
 public class ConsumerMonitoringWrapper {
 
-    private static final AggregationLogger log = new AggregationLogger(
-            ConsumerMonitoringWrapper.class);
+    private static final LogUtils log = new LogUtils(ConsumerMonitoringWrapper.class);
     private static final int PAGE_SIZE = 8000;
 
     private static final ObjectMapper XML_MAPPER = new XmlMapper();
@@ -95,9 +95,15 @@ public class ConsumerMonitoringWrapper {
         if (debug) {
             try {
                 String requestAsString = XML_MAPPER.writeValueAsString(request);
-                requestAsString = requestAsString.replace(request.getAccount().getPassword(), "***");
-                requestAsString = requestAsString.replace(request.getAccount().getUserID(), "***");
-                requestAsString = requestAsString.replace(request.getPnr(), "***");
+                if (request.getAccount().getPassword() != null) {
+                    requestAsString = requestAsString.replace(request.getAccount().getPassword(), "***");
+                }
+                if (request.getAccount().getUserID() != null) {
+                    requestAsString = requestAsString.replace(request.getAccount().getUserID(), "***");
+                }
+                if (request.getPnr() != null) {
+                    requestAsString = requestAsString.replace(request.getPnr(), "***");
+                }
 
                 log.debug("Traffic with CreditSafe > " + name + " > " + requestAsString);
 
@@ -118,7 +124,7 @@ public class ConsumerMonitoringWrapper {
         }
     }
 
-    public List<String> listPortfolios() {
+    public PortfolioListResponse listPortfolios() {
         MonitoringRequest request = createRequest(null);
         MonitoringResponse response = client.getPortfolioList(request);
 
@@ -139,7 +145,9 @@ public class ConsumerMonitoringWrapper {
             }
         }
 
-        return getPortfolioList(portfolios);
+        PortfolioListResponse portfolioListResponse = new PortfolioListResponse();
+        portfolioListResponse.setPortfolios(getPortfolioList(portfolios));
+        return portfolioListResponse;
     }
 
     public PageableConsumerCreditSafeResponse listMonitoredConsumers(
