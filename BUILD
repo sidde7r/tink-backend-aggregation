@@ -742,6 +742,8 @@ java_library(
         "//src/cluster-lib",
         "//src/api-annotations",
         "//src/libraries/http:http-annotations",
+        "//src/libraries/http_client:http-client",
+        "//src/libraries/jersey_utils:jersey-utils",
 
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
