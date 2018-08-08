@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 public class SpAgent extends SamlinkAgent {
 
-    public SpAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context, new SamlinkConfiguration(SpConstants.Url.BASE));
+    public SpAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath, new SamlinkConfiguration(SpConstants.Url.BASE));
     }
 }

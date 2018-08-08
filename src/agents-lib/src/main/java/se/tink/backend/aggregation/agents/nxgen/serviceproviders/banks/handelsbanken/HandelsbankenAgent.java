@@ -33,9 +33,9 @@ public abstract class HandelsbankenAgent<A extends HandelsbankenApiClient, C ext
     private final HandelsbankenSessionStorage handelsbankenSessionStorage;
     private final C handelsbankenConfiguration;
 
-    public HandelsbankenAgent(CredentialsRequest request, AgentContext context,
+    public HandelsbankenAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath,
             C handelsbankenConfiguration) {
-        super(request, context);
+        super(request, context, signatureKeyPath);
         this.handelsbankenConfiguration = handelsbankenConfiguration;
         this.handelsbankenPersistentStorage = new HandelsbankenPersistentStorage(this.persistentStorage);
         this.bankClient = constructApiClient(handelsbankenConfiguration);

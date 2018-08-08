@@ -22,8 +22,8 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 public class MultiSupplementalAgent extends NextGenerationAgent {
 
-    public MultiSupplementalAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public MultiSupplementalAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
     }
 
     @Override

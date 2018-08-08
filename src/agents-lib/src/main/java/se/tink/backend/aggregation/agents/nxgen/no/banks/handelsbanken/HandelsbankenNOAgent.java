@@ -31,8 +31,8 @@ public class HandelsbankenNOAgent extends NextGenerationAgent {
     private final HandelsbankenNOApiClient apiClient;
     private EncapClient encapClient;
 
-    public HandelsbankenNOAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public HandelsbankenNOAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
         apiClient = new HandelsbankenNOApiClient(client, sessionStorage);
         encapClient = new EncapClient(new HandelsbankenNOEncapConfiguration(), persistentStorage, client, true,
                 credentials.getField(Field.Key.USERNAME));

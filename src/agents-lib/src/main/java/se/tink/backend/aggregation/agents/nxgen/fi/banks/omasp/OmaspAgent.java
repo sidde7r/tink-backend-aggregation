@@ -28,8 +28,8 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 public class OmaspAgent extends NextGenerationAgent {
     private final OmaspApiClient apiClient;
 
-    public OmaspAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public OmaspAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
 
         apiClient = new OmaspApiClient(client, sessionStorage);
     }

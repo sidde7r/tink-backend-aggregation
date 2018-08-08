@@ -28,9 +28,9 @@ public class AmericanExpressV62Agent extends NextGenerationAgent {
     private final AmericanExpressV62ApiClient apiClient;
     private final AmericanExpressV62Configuration config;
 
-    protected AmericanExpressV62Agent(
-            CredentialsRequest request, AgentContext context, AmericanExpressV62Configuration config) {
-        super(request, context);
+    protected AmericanExpressV62Agent(CredentialsRequest request, AgentContext context, String signatureKeyPath,
+            AmericanExpressV62Configuration config) {
+        super(request, context, signatureKeyPath);
         this.apiClient = new AmericanExpressV62ApiClient(client, sessionStorage, persistentStorage, config);
         this.config = config;
     }

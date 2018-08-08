@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents;
 import com.google.common.base.Objects;
 import java.lang.reflect.Constructor;
 import se.tink.backend.aggregation.agents.demo.DemoAgent;
+import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Provider;
@@ -41,11 +42,21 @@ public class AgentFactory {
 
     public Agent create(CredentialsRequest request, AgentContext context) throws Exception {
         Class<? extends Agent> agentClass = getAgentClass(request.getCredentials(), request.getProvider());
-        
+
         return create(agentClass, request, context);
     }
 
     public Agent create(Class<? extends Agent> agentClass, CredentialsRequest request, AgentContext context) throws Exception {
+        if (NextGenerationAgent.class.isAssignableFrom(agentClass)) {
+            Constructor<?> nextGenConstructor =
+                    agentClass.getConstructor(CredentialsRequest.class, AgentContext.class, String.class);
+
+            Agent agent = (Agent) nextGenConstructor.newInstance(request, context, configuration.getSignatureKeyPath());
+            agent.setConfiguration(configuration);
+
+            return agent;
+        }
+
         Constructor<?> agentConstructor = agentClass.getConstructor(CredentialsRequest.class, AgentContext.class);
         
         Agent agent = (Agent) agentConstructor.newInstance(request, context);

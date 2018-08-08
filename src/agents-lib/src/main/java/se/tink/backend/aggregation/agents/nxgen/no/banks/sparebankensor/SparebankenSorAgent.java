@@ -45,8 +45,8 @@ import se.tink.backend.aggregation.rpc.Field;
 public class SparebankenSorAgent extends NextGenerationAgent {
     private final SparebankenSorApiClient apiClient;
 
-    public SparebankenSorAgent (CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public SparebankenSorAgent (CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
         apiClient = new SparebankenSorApiClient(client, sessionStorage);
     }
 

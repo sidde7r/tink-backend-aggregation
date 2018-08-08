@@ -7,8 +7,8 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 public class SwedbankSEAgent extends SwedbankAbstractAgent {
 
-    public SwedbankSEAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context, new SwedbankSEConfiguration(request.getProvider().getPayload()));
+    public SwedbankSEAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath, new SwedbankSEConfiguration(request.getProvider().getPayload()));
     }
 
     @Override

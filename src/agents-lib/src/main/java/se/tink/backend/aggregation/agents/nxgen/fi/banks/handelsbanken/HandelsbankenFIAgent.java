@@ -15,9 +15,8 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 public class HandelsbankenFIAgent extends HandelsbankenAgent<HandelsbankenFIApiClient, HandelsbankenFIConfiguration> {
-    public HandelsbankenFIAgent(CredentialsRequest request,
-            AgentContext context) {
-        super(request, context, new HandelsbankenFIConfiguration());
+    public HandelsbankenFIAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath, new HandelsbankenFIConfiguration());
     }
 
     @Override

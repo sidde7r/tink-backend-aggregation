@@ -36,8 +36,8 @@ public class IcaBankenAgent extends NextGenerationAgent {
     private final TransferMessageFormatter transferMessageFormatter = new TransferMessageFormatter(catalog,
             TransferMessageLengthConfig.createWithMaxLength(14, 12), new StringNormalizerSwedish(",.-?!/+"));
 
-    public IcaBankenAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public IcaBankenAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
         this.apiClient = new IcaBankenApiClient(client);
     }
 

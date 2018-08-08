@@ -30,8 +30,8 @@ import se.tink.backend.aggregation.rpc.Field;
 public class AktiaAgent extends NextGenerationAgent {
     private final AktiaApiClient apiClient;
 
-    public AktiaAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public AktiaAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
         this.apiClient = AktiaApiClient.createApiClient(client, credentials);
     }
 

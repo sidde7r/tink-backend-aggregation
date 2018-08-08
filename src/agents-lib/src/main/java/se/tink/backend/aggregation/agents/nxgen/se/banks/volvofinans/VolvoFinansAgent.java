@@ -25,8 +25,8 @@ public class VolvoFinansAgent extends NextGenerationAgent {
 
     private final VolvoFinansApiClient apiClient;
 
-    public VolvoFinansAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public VolvoFinansAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
         apiClient = new VolvoFinansApiClient(client, sessionStorage);
     }
 

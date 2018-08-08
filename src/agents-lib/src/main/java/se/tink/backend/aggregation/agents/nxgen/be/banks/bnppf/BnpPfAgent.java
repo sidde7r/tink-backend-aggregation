@@ -28,8 +28,8 @@ public class BnpPfAgent extends NextGenerationAgent {
 
     private final BnpPfApiClient apiClient;
 
-    public BnpPfAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public BnpPfAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
         apiClient = new BnpPfApiClient(client);
     }
 

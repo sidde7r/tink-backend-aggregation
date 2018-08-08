@@ -26,8 +26,8 @@ public class FidorAgent extends NextGenerationAgent {
 
     private final FidorApiClient fidorApiClient;
 
-    public FidorAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public FidorAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
         fidorApiClient = new FidorApiClient(this.client, persistentStorage);
     }
 

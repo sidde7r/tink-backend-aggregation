@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 public class BankdataDkAgent extends BankdataAgent {
 
-    public BankdataDkAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public BankdataDkAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
     }
 }

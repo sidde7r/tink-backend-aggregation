@@ -6,8 +6,7 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 public class AmericanExpressSEAgent extends AmericanExpressAgent {
 
-    public AmericanExpressSEAgent(CredentialsRequest request,
-            AgentContext context) {
-        super(request, context, new AmericanExpressSEConfiguration());
+    public AmericanExpressSEAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath, new AmericanExpressSEConfiguration());
     }
 }

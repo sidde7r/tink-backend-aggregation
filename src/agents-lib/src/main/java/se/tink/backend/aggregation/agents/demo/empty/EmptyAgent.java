@@ -17,8 +17,8 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 public class EmptyAgent extends NextGenerationAgent {
-    public EmptyAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public EmptyAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
     }
 
     @Override

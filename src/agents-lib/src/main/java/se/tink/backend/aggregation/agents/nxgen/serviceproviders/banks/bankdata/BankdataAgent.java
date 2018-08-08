@@ -30,8 +30,8 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 public class BankdataAgent extends NextGenerationAgent {
     private BankdataApiClient bankClient;
 
-    public BankdataAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public BankdataAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
 
         bankClient = new BankdataApiClient(client, request.getProvider());
     }

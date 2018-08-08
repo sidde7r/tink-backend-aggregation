@@ -27,9 +27,9 @@ public class AmericanExpressAgent extends NextGenerationAgent {
     private final AmericanExpressApiClient apiClient;
     private final AmericanExpressConfiguration config;
 
-    protected AmericanExpressAgent(
-            CredentialsRequest request, AgentContext context, AmericanExpressConfiguration config) {
-        super(request, context);
+    protected AmericanExpressAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath,
+            AmericanExpressConfiguration config) {
+        super(request, context, signatureKeyPath);
         generateDeviceId();
         this.apiClient = new AmericanExpressApiClient(client, sessionStorage, config);
         this.config = config;

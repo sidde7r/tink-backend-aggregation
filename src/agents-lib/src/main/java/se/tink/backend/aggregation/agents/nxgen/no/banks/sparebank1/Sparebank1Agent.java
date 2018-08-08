@@ -36,8 +36,8 @@ public class Sparebank1Agent extends NextGenerationAgent {
     private final Sparebank1ApiClient apiClient;
     private final RestRootResponse restRootResponse;
 
-    public Sparebank1Agent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public Sparebank1Agent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
 
         String bankId = request.getProvider().getPayload();
         apiClient = new Sparebank1ApiClient(client, bankId);

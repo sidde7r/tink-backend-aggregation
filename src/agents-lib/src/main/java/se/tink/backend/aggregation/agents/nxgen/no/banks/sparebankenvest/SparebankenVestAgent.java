@@ -36,8 +36,8 @@ import se.tink.backend.aggregation.rpc.Field;
 public class SparebankenVestAgent extends NextGenerationAgent {
     private final SparebankenVestApiClient apiClient;
 
-    public SparebankenVestAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public SparebankenVestAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
         this.apiClient = new SparebankenVestApiClient(client);
     }
 

@@ -26,8 +26,8 @@ public class CommerzbankAgent extends NextGenerationAgent {
 
     private final CommerzbankApiClient apiClient;
 
-    public CommerzbankAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public CommerzbankAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
         apiClient = new CommerzbankApiClient(client, sessionStorage);
     }
 

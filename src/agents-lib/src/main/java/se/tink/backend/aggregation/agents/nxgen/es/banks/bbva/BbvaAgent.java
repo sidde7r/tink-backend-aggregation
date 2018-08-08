@@ -29,8 +29,8 @@ public class BbvaAgent extends NextGenerationAgent {
 
     private BbvaApiClient apiClient;
 
-    public BbvaAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public BbvaAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
         this.apiClient = new BbvaApiClient(client);
     }
 

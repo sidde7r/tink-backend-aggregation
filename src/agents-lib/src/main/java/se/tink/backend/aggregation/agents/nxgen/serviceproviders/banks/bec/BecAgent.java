@@ -30,8 +30,8 @@ public class BecAgent extends NextGenerationAgent {
     private final BecApiClient apiClient;
     private final BecAccountTransactionsFetcher transactionFetcher;
 
-    public BecAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public BecAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
         this.apiClient = new BecApiClient(this.client, new BecUrlConfiguration(request.getProvider().getPayload()));
         this.transactionFetcher = new BecAccountTransactionsFetcher(this.apiClient);
     }

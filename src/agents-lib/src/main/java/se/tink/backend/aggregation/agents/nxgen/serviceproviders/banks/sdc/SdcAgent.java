@@ -31,9 +31,9 @@ public abstract class SdcAgent extends NextGenerationAgent {
     protected SdcSessionStorage sdcSessionStorage;
     protected SdcPersistentStorage sdcPersistentStorage;
 
-    public SdcAgent(CredentialsRequest request, AgentContext context,
+    public SdcAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath,
             SdcConfiguration agentConfiguration, SdcTransactionParser parser) {
-        super(request, context);
+        super(request, context, signatureKeyPath);
         this.parser = parser;
         this.agentConfiguration = agentConfiguration;
         this.sdcSessionStorage = new SdcSessionStorage(this.sessionStorage);

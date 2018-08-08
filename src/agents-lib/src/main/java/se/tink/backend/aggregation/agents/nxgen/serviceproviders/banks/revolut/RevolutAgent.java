@@ -28,8 +28,8 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 public class RevolutAgent extends NextGenerationAgent {
     private final RevolutApiClient apiClient;
 
-    public RevolutAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public RevolutAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
         this.apiClient = new RevolutApiClient(client, persistentStorage);
     }
 

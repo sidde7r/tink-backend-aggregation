@@ -67,14 +67,14 @@ public abstract class NextGenerationAgent extends AbstractAgent implements Refre
     private boolean hasRefreshedCheckingAccounts = false;
     private boolean hasRefreshedCheckingTransactions = false;
 
-    protected NextGenerationAgent(CredentialsRequest request, AgentContext context) {
+    protected NextGenerationAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
         super(request, context);
         this.catalog = context.getCatalog();
         this.persistentStorage = new PersistentStorage();
         this.sessionStorage = new SessionStorage();
         this.credentials = request.getCredentials();
         this.updateController = new UpdateController(context, credentials, request.getProvider().getCurrency());
-        this.client = new TinkHttpClient(context, credentials);
+        this.client = new TinkHttpClient(context, credentials, signatureKeyPath);
         this.transactionPaginationHelper = new TransactionPaginationHelper(request);
         this.supplementalInformationController = new SupplementalInformationController(context, credentials);
         this.metricRefreshController = new MetricRefreshController(context.getMetricRegistry(), request.getProvider(), credentials,

@@ -24,8 +24,8 @@ public class NextGenerationDemoAgent extends NextGenerationAgent {
     private final NextGenerationDemoAuthenticator authenticator;
     private final NextGenerationDemoFetcher fetcher;
 
-    public NextGenerationDemoAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public NextGenerationDemoAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
 
         this.authenticator = new NextGenerationDemoAuthenticator(credentials);
         this.fetcher = new NextGenerationDemoFetcher(credentials);

@@ -31,9 +31,8 @@ public class AlandsBankenAgent extends NextGenerationAgent {
 
     private final AlandsBankenApiClient bankClient;
 
-    public AlandsBankenAgent(CredentialsRequest request,
-            AgentContext context) {
-        super(request, context);
+    public AlandsBankenAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
         this.bankClient = new AlandsBankenApiClient(this.client);
     }
 

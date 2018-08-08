@@ -30,8 +30,8 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 public class JyskeAgent extends NextGenerationAgent {
     private final JyskeApiClient apiClient;
 
-    public JyskeAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public JyskeAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
         this.apiClient = new JyskeApiClient(client);
     }
 

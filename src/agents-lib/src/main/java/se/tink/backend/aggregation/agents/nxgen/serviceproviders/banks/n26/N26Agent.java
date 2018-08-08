@@ -26,8 +26,8 @@ public class N26Agent extends NextGenerationAgent {
 
     private final N26ApiClient n26APiClient;
 
-    public N26Agent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public N26Agent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
         this.n26APiClient = new N26ApiClient(this.client, sessionStorage);
     }
 

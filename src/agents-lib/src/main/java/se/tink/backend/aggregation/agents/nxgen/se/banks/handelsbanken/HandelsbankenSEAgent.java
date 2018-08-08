@@ -25,8 +25,8 @@ import se.tink.libraries.i18n.Catalog;
 
 public class HandelsbankenSEAgent extends HandelsbankenAgent<HandelsbankenSEApiClient, HandelsbankenSEConfiguration> {
 
-    public HandelsbankenSEAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context, new HandelsbankenSEConfiguration());
+    public HandelsbankenSEAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath, new HandelsbankenSEConfiguration());
     }
 
     @Override

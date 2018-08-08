@@ -28,8 +28,8 @@ public final class BankiaAgent extends NextGenerationAgent {
 
     private final BankiaApiClient apiClient;
 
-    public BankiaAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public BankiaAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
 
         apiClient = new BankiaApiClient(client, persistentStorage);
 

@@ -29,8 +29,8 @@ public class BancoPopularAgent extends NextGenerationAgent {
     private final BancoPopularApiClient bankClient;
     private final BancoPopularPersistenStorage popularPersistentStorage;
 
-    public BancoPopularAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public BancoPopularAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
         bankClient = new BancoPopularApiClient(client, sessionStorage, credentials);
         popularPersistentStorage = new BancoPopularPersistenStorage(persistentStorage);
     }

@@ -22,8 +22,8 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 public class SdcNoAgent extends SdcAgent {
     private static Logger LOG = LoggerFactory.getLogger(SdcNoAgent.class);
 
-    public SdcNoAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context,
+    public SdcNoAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath,
                 new SdcNoConfiguration(request.getProvider()),
                 new SdcNoTransactionParser());
     }

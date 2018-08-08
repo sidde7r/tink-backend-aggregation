@@ -32,8 +32,8 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 public class SabadellAgent extends NextGenerationAgent {
     private final SabadellApiClient apiClient;
 
-    public SabadellAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public SabadellAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
         this.apiClient = new SabadellApiClient(client);
     }
 

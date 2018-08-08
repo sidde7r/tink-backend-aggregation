@@ -32,8 +32,8 @@ public class SpankkiAgent extends NextGenerationAgent {
     private final SpankkiPersistentStorage spankkiPersistentStorage;
     private final SpankkiApiClient apiClient;
 
-    public SpankkiAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public SpankkiAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
         this.spankkiSessionStorage = new SpankkiSessionStorage(this.sessionStorage);
         this.spankkiPersistentStorage = new SpankkiPersistentStorage(this.persistentStorage);
         this.apiClient = new SpankkiApiClient(this.client, this.spankkiSessionStorage,

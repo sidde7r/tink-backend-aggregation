@@ -22,8 +22,8 @@ public class NordeaDkAgent  extends NordeaV20Agent {
     private NordeaDkApiClient nordeaClient;
     private NordeaDkSessionStorage nordeaSessionStorage;
 
-    public NordeaDkAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context,
+    public NordeaDkAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath,
                 new NordeaDkParser(new NordeaDkTransactionParser(), request.getCredentials()));
     }
 

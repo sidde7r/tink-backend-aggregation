@@ -30,8 +30,9 @@ public abstract class SamlinkAgent extends NextGenerationAgent {
     private final SamlinkApiClient apiClient;
     private final SamlinkPersistentStorage samlinkPersistentStorage;
 
-    public SamlinkAgent(CredentialsRequest request, AgentContext context, SamlinkConfiguration agentConfiguration) {
-        super(request, context);
+    public SamlinkAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath,
+            SamlinkConfiguration agentConfiguration) {
+        super(request, context, signatureKeyPath);
         apiClient = new SamlinkApiClient(client, new SamlinkSessionStorage(sessionStorage), agentConfiguration);
         samlinkPersistentStorage = new SamlinkPersistentStorage(persistentStorage);
     }

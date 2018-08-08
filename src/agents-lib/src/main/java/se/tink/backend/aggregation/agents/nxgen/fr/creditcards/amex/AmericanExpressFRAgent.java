@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 public class AmericanExpressFRAgent extends AmericanExpressAgent {
 
-    public AmericanExpressFRAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context, new AmericanExpressFRConfiguration());
+    public AmericanExpressFRAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath, new AmericanExpressFRConfiguration());
     }
 }

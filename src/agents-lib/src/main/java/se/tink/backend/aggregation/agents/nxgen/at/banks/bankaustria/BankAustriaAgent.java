@@ -30,8 +30,8 @@ public class BankAustriaAgent extends NextGenerationAgent {
     private final BankAustriaSessionStorage bankAustriaSessionStorage;
     private BankAustriaApiClient apiClient;
 
-    public BankAustriaAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public BankAustriaAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
         this.bankAustriaSessionStorage = new BankAustriaSessionStorage(this.sessionStorage, BankAustriaConstants.Device.IPHONE7_OTML_LAYOUT_INITIAL);
         this.apiClient = new BankAustriaApiClient(this.client, bankAustriaSessionStorage);
         this.otmlResponseConverter = new OtmlResponseConverter();

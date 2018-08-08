@@ -5,8 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinfor
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 public class CicBankAgent extends EuroInformationAgent {
-    public CicBankAgent(CredentialsRequest request,
-            AgentContext context) {
-        super(request, context, new CicBankconfiguration());
+    public CicBankAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath, new CicBankconfiguration());
     }
 }

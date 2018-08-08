@@ -34,8 +34,8 @@ public class IngAgent extends NextGenerationAgent {
     private final IngApiClient apiClient;
     private final IngHelper ingHelper;
 
-    public IngAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public IngAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
         this.apiClient = new IngApiClient(client);
         this.ingHelper = new IngHelper(sessionStorage);
     }

@@ -19,8 +19,8 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 public class NordeaFiAgent extends NordeaV21Agent {
     private NordeaFiApiClient fiApiClient;
 
-    public NordeaFiAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context,
+    public NordeaFiAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath,
                 new NordeaFiParser(new NordeaFiTransactionParser(), request.getCredentials()));
     }
 

@@ -26,8 +26,8 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 public class SantanderEsAgent extends NextGenerationAgent {
     private final SantanderEsApiClient apiClient;
 
-    public SantanderEsAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public SantanderEsAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
         this.apiClient = new SantanderEsApiClient(client);
     }
 

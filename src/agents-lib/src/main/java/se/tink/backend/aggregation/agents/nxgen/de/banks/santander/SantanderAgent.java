@@ -25,8 +25,8 @@ public class SantanderAgent extends NextGenerationAgent {
 
     private final SantanderApiClient santanderApiClient;
 
-    public SantanderAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public SantanderAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
         santanderApiClient = new SantanderApiClient(this.client, sessionStorage);
     }
 

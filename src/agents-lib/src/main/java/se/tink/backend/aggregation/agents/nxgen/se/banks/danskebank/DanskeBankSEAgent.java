@@ -15,8 +15,8 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 public class DanskeBankSEAgent extends DanskeBankAgent {
-    public DanskeBankSEAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context, new DanskeBankSEConfiguration());
+    public DanskeBankSEAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath, new DanskeBankSEConfiguration());
     }
 
     @Override

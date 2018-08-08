@@ -2,8 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.op;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.OpBankCreditCardFetcher;
@@ -37,9 +35,8 @@ public class OpBankAgent extends NextGenerationAgent {
     private OpBankPersistentStorage opBankPersistentStorage;
 
 
-    public OpBankAgent(CredentialsRequest request,
-            AgentContext context) {
-        super(request, context);
+    public OpBankAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
         bankClient = new OpBankApiClient(client);
         this.opBankPersistentStorage = new OpBankPersistentStorage(credentials, persistentStorage);;
     }

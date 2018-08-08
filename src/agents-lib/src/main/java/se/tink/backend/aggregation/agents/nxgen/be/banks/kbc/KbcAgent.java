@@ -28,8 +28,8 @@ public class KbcAgent extends NextGenerationAgent {
     private final KbcApiClient apiClient;
     private KbcHttpFilter httpFilter;
 
-    public KbcAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public KbcAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
         this.apiClient = KbcApiClient.create(sessionStorage, client);
     }
 

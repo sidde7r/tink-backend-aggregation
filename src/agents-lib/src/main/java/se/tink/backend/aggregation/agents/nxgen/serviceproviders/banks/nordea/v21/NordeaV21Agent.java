@@ -23,9 +23,9 @@ public abstract class NordeaV21Agent extends NextGenerationAgent {
     protected final NordeaV21ApiClient nordeaClient;
     protected final NordeaV21Parser parser;
 
-    protected NordeaV21Agent(CredentialsRequest request, AgentContext context,
+    protected NordeaV21Agent(CredentialsRequest request, AgentContext context, String signatureKeyPath,
             NordeaV21Parser parser) {
-        super(request, context);
+        super(request, context, signatureKeyPath);
 
         this.parser = parser;
         this.nordeaClient = constructNordeaClient();

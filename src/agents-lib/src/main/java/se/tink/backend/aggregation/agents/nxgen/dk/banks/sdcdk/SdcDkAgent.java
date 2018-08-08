@@ -15,8 +15,8 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
  */
 public class SdcDkAgent extends SdcAgent {
 
-    public SdcDkAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context,
+    public SdcDkAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath,
                 new SdcDkConfiguration(request.getProvider()),
                 new SdcDkTransactionParser());
     }

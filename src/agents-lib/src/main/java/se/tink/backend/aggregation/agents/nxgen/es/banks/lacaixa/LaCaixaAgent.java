@@ -27,8 +27,8 @@ public class LaCaixaAgent extends NextGenerationAgent {
 
     private final LaCaixaApiClient bankClient;
 
-    public LaCaixaAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public LaCaixaAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
         bankClient = new LaCaixaApiClient(client);
     }
 

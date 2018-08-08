@@ -26,9 +26,9 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 public class EuroInformationAgent extends NextGenerationAgent {
     protected final EuroInformationApiClient apiClient;
 
-    protected EuroInformationAgent(CredentialsRequest request,
-            AgentContext context, EuroInformationConfiguration config) {
-        super(request, context);
+    protected EuroInformationAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath,
+            EuroInformationConfiguration config) {
+        super(request, context, signatureKeyPath);
         this.apiClient = new EuroInformationApiClient(this.client, sessionStorage, config);
     }
 

@@ -59,6 +59,9 @@ public class ServiceConfiguration extends Configuration {
     @JsonProperty
     private boolean isProvidersOnAggregation = false;
 
+    @JsonProperty
+    private String signatureKeyPath = "";
+
     public AbnAmroConfiguration getAbnAmro() {
         return abnAmro;
     }
@@ -138,5 +141,9 @@ public class ServiceConfiguration extends Configuration {
 
     public boolean isProvidersOnAggregation() {
         return isProvidersOnAggregation;
+    }
+
+    public String getSignatureKeyPath() {
+        return signatureKeyPath;
     }
 }

@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 public class PopPankkiAgent extends SamlinkAgent {
 
-    public PopPankkiAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context, new SamlinkConfiguration(PopPankkiConstants.Url.BASE));
+    public PopPankkiAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath, new SamlinkConfiguration(PopPankkiConstants.Url.BASE));
     }
 }

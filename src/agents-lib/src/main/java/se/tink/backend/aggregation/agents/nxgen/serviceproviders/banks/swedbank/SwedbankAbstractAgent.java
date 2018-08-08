@@ -38,8 +38,9 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent {
     protected final SwedbankConfiguration configuration;
     private final SwedbankDefaultApiClient apiClient;
 
-    public SwedbankAbstractAgent(CredentialsRequest request, AgentContext context, SwedbankConfiguration configuration) {
-        super(request, context);
+    public SwedbankAbstractAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath,
+            SwedbankConfiguration configuration) {
+        super(request, context, signatureKeyPath);
         this.configuration = configuration;
         this.apiClient = new SwedbankDefaultApiClient(client, configuration, credentials.getField(Field.Key.USERNAME),
                 sessionStorage);

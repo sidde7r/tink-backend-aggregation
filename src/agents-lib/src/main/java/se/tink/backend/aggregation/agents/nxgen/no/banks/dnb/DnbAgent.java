@@ -34,8 +34,8 @@ public class DnbAgent extends NextGenerationAgent {
     private final DnbCreditCardFetcher creditCardFetcher;
     private final DnbCreditTransactionFetcher creditTransactionFetcher;
 
-    public DnbAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public DnbAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
         this.apiClient = new DnbApiClient(client);
         this.authenticator = new DnbAuthenticator(apiClient);
         this.accountFetcher = new DnbAccountFetcher(apiClient);

@@ -28,8 +28,8 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 public class BunqAgent extends NextGenerationAgent {
     private final BunqApiClient apiClient;
 
-    public BunqAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public BunqAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
 
         String backendHost = Preconditions.checkNotNull(request.getProvider().getPayload());
         BunqConfiguration agentConfiguration = new BunqConfiguration(backendHost);

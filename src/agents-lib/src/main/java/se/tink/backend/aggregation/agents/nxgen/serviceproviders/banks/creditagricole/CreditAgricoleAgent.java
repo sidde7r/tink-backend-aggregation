@@ -23,8 +23,8 @@ public class CreditAgricoleAgent extends NextGenerationAgent {
 
     private final CreditAgricoleApiClient apiClient;
 
-    public CreditAgricoleAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public CreditAgricoleAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
         persistentStorage.put(StorageKey.REGION_ID, request.getProvider().getPayload());
         apiClient = new CreditAgricoleApiClient(client, persistentStorage, sessionStorage);
     }

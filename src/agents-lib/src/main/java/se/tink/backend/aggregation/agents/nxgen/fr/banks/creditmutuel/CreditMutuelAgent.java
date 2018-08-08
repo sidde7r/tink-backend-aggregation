@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 public class CreditMutuelAgent extends EuroInformationAgent {
 
-    public CreditMutuelAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context, new CreditMutuelConfiguration());
+    public CreditMutuelAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath, new CreditMutuelConfiguration());
     }
 }

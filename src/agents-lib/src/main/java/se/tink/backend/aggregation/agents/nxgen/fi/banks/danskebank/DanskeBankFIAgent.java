@@ -13,8 +13,8 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 public class DanskeBankFIAgent extends DanskeBankAgent {
-    public DanskeBankFIAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context, new DanskeBankFIConfiguration());
+    public DanskeBankFIAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath, new DanskeBankFIConfiguration());
     }
 
     @Override

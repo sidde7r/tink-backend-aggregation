@@ -26,8 +26,8 @@ public class BawagPskAgent extends NextGenerationAgent {
 
     private final BawagPskApiClient apiClient;
 
-    public BawagPskAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public BawagPskAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
         this.apiClient = new BawagPskApiClient(this.client, sessionStorage, request.getProvider());
     }
 

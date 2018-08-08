@@ -30,8 +30,8 @@ public class BelfiusAgent extends NextGenerationAgent {
     private final BelfiusApiClient apiClient;
     private final BelfiusSessionStorage belfiusSessionStorage;
 
-    public BelfiusAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public BelfiusAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
+        super(request, context, signatureKeyPath);
         this.belfiusSessionStorage = new BelfiusSessionStorage(this.sessionStorage);
         this.apiClient = new BelfiusApiClient(this.client, belfiusSessionStorage);
     }

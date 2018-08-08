@@ -29,8 +29,9 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
     protected final DanskeBankConfiguration configuration;
     protected final String deviceId;
 
-    public DanskeBankAgent(CredentialsRequest request, AgentContext context, DanskeBankConfiguration configuration) {
-        super(request, context);
+    public DanskeBankAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath,
+            DanskeBankConfiguration configuration) {
+        super(request, context, signatureKeyPath);
         this.apiClient = createApiClient(this.client, configuration);
         this.configuration = configuration;
         this.deviceId = Hash.sha1AsHex(this.credentials.getField(Field.Key.USERNAME) + "-TINK");
