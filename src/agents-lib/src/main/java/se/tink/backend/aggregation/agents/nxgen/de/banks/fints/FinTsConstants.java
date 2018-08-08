@@ -23,6 +23,7 @@ public class FinTsConstants {
 
     public static class StatusMessage {
         public static final String END_DATE_NOT_SUPPORTED = "Angabe eines Endedatums nicht unterstützt.";
+        public static final String NO_ACTIVE_PHONE_NUMBER_WARNING = "Keine aktive Mobilfunknr.Bitte wenden Sie sich an Ihren Berater";
     }
 
     public static class Segments {
@@ -94,5 +95,6 @@ public class FinTsConstants {
         public static final LogTag CREDIT_CARD_PERMITTED_BUSINESS_TRANSACTIONS= LogTag.from("#fints_credit_card_permitted_transactions");
         public static final LogTag CREDIT_CARD_NUMBER_OF_FETCHED_TRANSACTIONS = LogTag.from("#fints_credit_card_fetched_transactions");
         public static final LogTag DATE_PARSING_ERROR = LogTag.from("#fints_date_parsing_error");
+        public static final LogTag SPARKASSE_NO_PHONE_NUMBER_ATTACHED_WARNING = LogTag.from("#fints_sparkasse_no_phone_attached");
     }
 }
