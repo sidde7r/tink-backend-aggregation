@@ -62,5 +62,11 @@ public class ProviderConfigurationServiceContainer extends AbstractServiceContai
                 environment.lifecycle(),
                 ProviderModuleFactory.build(configuration, environment.jersey()));
 
+<<<<<<< HEAD
+=======
+        ServiceDiscoveryHelper serviceDiscoveryHelper = constructServiceDiscoveryHelperFromConfiguration(
+                injector.getInstance(CuratorFramework.class), configuration, getName());
+        environment.lifecycle().manage(serviceDiscoveryHelper);
+>>>>>>> fix(Provider) ProviderClient can now add filters to requests
     }
 }
