@@ -29,7 +29,7 @@ metadata:
   name: provider-configuration-api-loadbalancer
   namespace: provider-configuration
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: "provider-service.external.{{.Values.Environment}}.{{.Values.Cluster}}.tink.network"
+    external-dns.alpha.kubernetes.io/hostname: "provider.{{.Values.Environment}}.{{.Values.Cluster}}.tink.se"
 spec:
   type: LoadBalancer
   ports:
