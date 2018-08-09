@@ -20,16 +20,14 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 public class N26Agent extends NextGenerationAgent {
 
     private final N26ApiClient n26APiClient;
 
-    public N26Agent(CredentialsRequest request, AgentContext context){
+    public N26Agent(CredentialsRequest request, AgentContext context) {
         super(request, context);
-        SessionStorage sessionStorage = new SessionStorage();
         this.n26APiClient = new N26ApiClient(this.client, sessionStorage);
     }
 
@@ -50,7 +48,7 @@ public class N26Agent extends NextGenerationAgent {
                 updateController,
                 new N26AccountFetcher(n26APiClient),
                 new TransactionFetcherController<>(this.transactionPaginationHelper,
-                       new TransactionKeyPaginationController<>(new N26TransactionFetcher(n26APiClient)))));
+                        new TransactionKeyPaginationController<>(new N26TransactionFetcher(n26APiClient)))));
     }
 
     @Override

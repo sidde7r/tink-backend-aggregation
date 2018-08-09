@@ -98,4 +98,22 @@ public class AgentWorker implements Managed {
         }
         instrumentedRunnable.submitted();
     }
+
+    public void executeAutomaticRefresh(AgentWorkerRefreshOperationCreatorWrapper agentWorkerOperationCreatorRunnable) throws Exception {
+
+        InstrumentedRunnable instrumentedRunnable = new InstrumentedRunnable(
+                metricRegistry,
+                "aggregation_operation_tasks",
+                new MetricId.MetricLabels()
+                        .add("provider", agentWorkerOperationCreatorRunnable.getProviderName())
+                        .add("request_type", "automatic"),
+                agentWorkerOperationCreatorRunnable);
+
+        NamedRunnable namedRunnable = new NamedRunnable(instrumentedRunnable,
+                String.format(MONITOR_THREAD_NAME_FORMAT,
+                        agentWorkerOperationCreatorRunnable.getCredentialsId()));
+
+        rateLimitedExecutorService.execute(namedRunnable, agentWorkerOperationCreatorRunnable.getProvider());
+        instrumentedRunnable.submitted();
+    }
 }

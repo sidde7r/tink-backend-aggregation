@@ -144,6 +144,10 @@ public class IngCardReaderAuthenticator {
         String virtualCardNumber = split[0];
         String psn = split[1];
 
+        LOGGER.debug("Checking OTP HEX value to save to Persistent Storage: " +  EncodingUtils.encodeHexAsString
+                (otpKey));
+        LOGGER.debug("ING values to save to Persistent Storage: " +  ingId);
+
         this.persistentStorage.put(IngConstants.Storage.ING_ID, ingId);
         this.persistentStorage.put(IngConstants.Storage.DEVICE_ID, cryptoInitValues.getDeviceId());
         this.ingHelper.setCardNumber(virtualCardNumber);
@@ -169,9 +173,11 @@ public class IngCardReaderAuthenticator {
     }
 
     private int calcOtp(int otpCounter) {
+
         byte[] otpKey = EncodingUtils.decodeHexString(this.persistentStorage.get(IngConstants.Storage.OTP_KEY_HEX));
         int otp = IngCryptoUtils.calculateOtpForAuthentication(otpKey, otpCounter);
         otpCounter++;
+        LOGGER.debug("Checking OTP value to save to Persistent Storage: " +  otpCounter);
         this.persistentStorage.put(IngConstants.Storage.OTP_COUNTER, otpCounter);
 
         return otp;

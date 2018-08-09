@@ -131,27 +131,27 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
 
     private String waitForLoginCode(String challenge) throws SupplementalInfoException {
     return waitForSupplementalInformation(
-        createDescriptionField(
+        createDescriptionField(catalog.getString(
             "1  Sign using your Belfius Card Reader ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_CardReader.png)\n"
                 + "2  Press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_LOGIN.png)\n"
-                + "3  Enter the security code []  ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png)",
+                + "3  Enter the security code []  ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png)"),
             challenge),
-        createInputField(
+        createInputField(catalog.getString(
             "4  Enter your PIN ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png)\n"
-                    + "5  Enter the login code"));
+                    + "5  Enter the login code")));
     }
 
     private String waitForSignCode(String challenge) throws SupplementalInfoException {
     return waitForSupplementalInformation(
-        createDescriptionField(
+        createDescriptionField(catalog.getString(
             "1  Sign using your Belfius Card Reader ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_CardReader.png)\n"
                 + "2  Press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_SIGN.png)\n"
-                + "3   Enter the security code [] ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png)",
+                + "3   Enter the security code [] ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png)"),
             challenge),
-        createInputField(
+        createInputField(catalog.getString(
             "4  Want to register your device? ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png)\n"
                     + "5  Enter your PIN ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png)\n"
-                    + "6  Enter the signature code"));
+                    + "6  Enter the signature code")));
     }
 
     private String waitForSupplementalInformation(Field... fields)
@@ -166,7 +166,7 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
         field.setDescription(challenge);
         field.setValue(challenge);
         field.setName("description");
-        field.setHelpText(catalog.getString(helpText));
+        field.setHelpText(helpText);
         field.setImmutable(true);
         return field;
     }
@@ -176,7 +176,7 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
         field.setMasked(false);
         field.setDescription(catalog.getString("Input"));
         field.setName(BelfiusConstants.MultiFactorAuthentication.CODE);
-        field.setHelpText(catalog.getString(helpText));
+        field.setHelpText(helpText);
         field.setNumeric(true);
         field.setHint("NNNNNNN");
         return field;

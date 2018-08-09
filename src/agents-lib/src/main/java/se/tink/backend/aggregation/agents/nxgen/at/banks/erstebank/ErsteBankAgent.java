@@ -20,18 +20,15 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
-public class ErsteBankAgent extends NextGenerationAgent{
+public class ErsteBankAgent extends NextGenerationAgent {
 
     private final ErsteBankApiClient ersteBankApiClient;
-    private final SessionStorage storage;
 
-    public ErsteBankAgent(CredentialsRequest request, AgentContext context){
+    public ErsteBankAgent(CredentialsRequest request, AgentContext context) {
         super(request, context);
-        storage = new SessionStorage();
-        this.ersteBankApiClient = new ErsteBankApiClient(this.client, storage);
+        this.ersteBankApiClient = new ErsteBankApiClient(this.client, sessionStorage);
     }
 
     @Override
@@ -49,7 +46,8 @@ public class ErsteBankAgent extends NextGenerationAgent{
                 new TransactionalAccountRefreshController(metricRefreshController, updateController,
                         new ErsteBankAccountFetcher(ersteBankApiClient),
                         new TransactionFetcherController<>(transactionPaginationHelper,
-                                new TransactionPagePaginationController<>(new ErsteBankTransactionFetcher(ersteBankApiClient), 0))));
+                                new TransactionPagePaginationController<>(
+                                        new ErsteBankTransactionFetcher(ersteBankApiClient), 0))));
     }
 
     @Override
