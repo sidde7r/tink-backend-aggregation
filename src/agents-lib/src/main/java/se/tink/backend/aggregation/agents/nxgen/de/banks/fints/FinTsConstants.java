@@ -96,6 +96,7 @@ public class FinTsConstants {
         public static final LogTag CREDIT_CARD_NUMBER_OF_FETCHED_TRANSACTIONS = LogTag.from("#fints_credit_card_fetched_transactions");
         public static final LogTag DATE_PARSING_ERROR = LogTag.from("#fints_date_parsing_error");
         public static final LogTag SPARKASSE_NO_PHONE_NUMBER_ATTACHED_WARNING = LogTag.from("#fints_sparkasse_no_phone_attached");
+        public static final LogTag TRANSACTION_STATUS = LogTag.from("#fints_transaction_status");
         public static final LogTag SCANNER_PARSING_ERROR = LogTag.from("#fints_scanner_parsing_error");
     }
 }
