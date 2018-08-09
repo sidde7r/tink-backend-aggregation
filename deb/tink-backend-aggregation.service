@@ -9,7 +9,7 @@ KillSignal=SIGINT
 TimeoutStopSec=400
 Restart=on-failure
 RestartSec=10
-Environment=MAX_HEAP_SIZE=2G
+Environment=MAX_HEAP_SIZE=4G
 EnvironmentFile=-/etc/default/tink-backend-aggregation
 WorkingDirectory=/usr/share/tink-backend-aggregation
 
