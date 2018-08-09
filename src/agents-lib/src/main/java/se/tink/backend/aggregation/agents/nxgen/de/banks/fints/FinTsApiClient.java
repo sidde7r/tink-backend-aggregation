@@ -366,14 +366,23 @@ public class FinTsApiClient {
                 end.toString());
 
         // Process with touchdowns
+        String seg = null;
+        String mt940Content = null;
         while (touchdowns.containsKey(FinTsConstants.Segments.HKKAZ)) {
-            FinTsRequest getFurtherTransactionRequest = this
-                    .createStatementRequest(targetAccount, start, end, touchdowns.get(FinTsConstants.Segments.HKKAZ));
-            FinTsResponse furtherTransactionsResponse = sendMessage(getFurtherTransactionRequest);
-            String seg = furtherTransactionsResponse.findSegment(FinTsConstants.Segments.HIKAZ);
-            String mt940Content = FinTsParser.getMT940Content(seg);
-            transactions.addAll(this.parseMt940Transactions(mt940Content));
-            touchdowns = furtherTransactionsResponse.getTouchDowns(getFurtherTransactionRequest);
+            try {
+                FinTsRequest getFurtherTransactionRequest =
+                        this.createStatementRequest(targetAccount, start, end,
+                                touchdowns.get(FinTsConstants.Segments.HKKAZ));
+                FinTsResponse furtherTransactionsResponse = sendMessage(getFurtherTransactionRequest);
+                seg = furtherTransactionsResponse.findSegment(FinTsConstants.Segments.HIKAZ);
+                mt940Content = FinTsParser.getMT940Content(seg);
+                transactions.addAll(this.parseMt940Transactions(mt940Content));
+                touchdowns = furtherTransactionsResponse.getTouchDowns(getFurtherTransactionRequest);
+            } catch (Exception e) {
+                LOGGER.error("{} error: {}", FinTsConstants.LogTags.SCANNER_PARSING_ERROR, e.toString(), seg, mt940Content);
+                continue;
+            }
+
         }
 
         Date endDate = end;
