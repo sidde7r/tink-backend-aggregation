@@ -32,8 +32,35 @@ public class MT940Statement {
             return ThreadSafeDateFormat.FORMATTER_INTEGER_DATE_COMPACT.parse(date);
         } catch (Exception e) {
             LOGGER.error("{} tag_61: {} date: {}", FinTsConstants.LogTags.DATE_PARSING_ERROR, tag_61, date);
-            throw new IllegalStateException("parsing date failed");
+            if (isDateInvalid(date)) {
+                return dateFallback(date);
+            }
         }
+        return null;
+    }
+
+    public Date dateFallback(String date) {
+        String correctDate = getCorrectDateString(date);
+        try {
+            return ThreadSafeDateFormat.FORMATTER_INTEGER_DATE_COMPACT.parse(correctDate);
+        } catch (Exception e) {
+            throw new IllegalStateException("parsing date failed, date: " + date.toString());
+        }
+    }
+
+    //Sparkasse sometimes sends invalid dates such as 180229
+    //This date is not valid since 2018 is not a leap year, and February 29 is a leap day
+    private boolean isDateInvalid(String date) {
+        int year = Integer.parseInt("20" + date.substring(0, 2));
+        return !isLeapYear(year) && date.endsWith("0229");
+    }
+
+    private boolean isLeapYear(int year) {
+        return (year % 400 == 0) || ((year % 4 == 0) && (year % 100 != 0));
+    }
+
+    private String getCorrectDateString(String date) {
+        return date.substring(0, 2) + "0228";
     }
 
     private double getAmount() {
