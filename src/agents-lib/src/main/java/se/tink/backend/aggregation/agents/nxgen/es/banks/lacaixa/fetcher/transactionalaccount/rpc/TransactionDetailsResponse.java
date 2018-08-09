@@ -12,6 +12,10 @@ public class TransactionDetailsResponse {
     private List<TransactionDetailsEntity> additionalInfo;
 
     public Optional<String> getDetailedDescription(String key) {
+        if (additionalInfo == null) {
+            return Optional.empty();
+        }
+
         return additionalInfo.stream()
                 .filter(details -> key.equalsIgnoreCase(details.getType()))
                 .map(TransactionDetailsEntity::getValue)
