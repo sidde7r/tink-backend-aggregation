@@ -15,7 +15,7 @@ public class AccountConverterTest {
     public void testMappings() {
         PfmContractEntity pfmContract = createPfmContract();
 
-        List<Account> accounts = new AccountConverter(true).convert(Lists.newArrayList(pfmContract));
+        List<Account> accounts = new AccountConverter().convert(Lists.newArrayList(pfmContract));
 
         assertThat(!accounts.isEmpty());
         assertThat(accounts.size()).isEqualTo(1);
@@ -34,7 +34,7 @@ public class AccountConverterTest {
         PfmContractEntity pfmContract = createPfmContract();
         pfmContract.setProductGroup(null);
 
-        Account account = new AccountConverter(true).convert(Lists.newArrayList(pfmContract)).get(0);
+        Account account = new AccountConverter().convert(Lists.newArrayList(pfmContract)).get(0);
 
         assertThat(pfmContract.getProductGroup()).isNull();
         assertThat(account.getType()).isEqualByComparingTo(AccountTypes.CHECKING);
