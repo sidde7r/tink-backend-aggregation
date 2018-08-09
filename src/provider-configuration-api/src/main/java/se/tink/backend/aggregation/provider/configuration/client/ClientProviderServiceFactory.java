@@ -15,12 +15,12 @@ import se.tink.libraries.jersey.utils.JerseyUtils;
 public class ClientProviderServiceFactory implements ProviderServiceFactory{
     private ServiceClassBuilder builder;
 
-    public ClientProviderServiceFactory(byte[] pinnedCertificates, String host, int port, ClientFilter clientFilter){
-        this(new BasicWebServiceClassBuilder(createResource(pinnedCertificates, host,clientFilter)));
+    public ClientProviderServiceFactory(byte[] pinnedCertificates, String host, ClientFilter clientFilter, String accessToken){
+        this(new BasicWebServiceClassBuilder(createResource(pinnedCertificates, host, clientFilter, accessToken)));
     }
 
     private static WebResource createResource(byte[] pinnedCertificates,
-            String host, ClientFilter clientFilter){
+            String host, ClientFilter clientFilter, String accessToken){
 
         Preconditions.checkState(!Strings.isNullOrEmpty(host),
                 "Host cannot be empty");
@@ -29,6 +29,7 @@ public class ClientProviderServiceFactory implements ProviderServiceFactory{
 
         Client client = JerseyUtils.getClusterClient(pinnedCertificates, "",false);
         client.addFilter(clientFilter);
+        JerseyUtils.registerAPIAccessToken(client,accessToken);
         return client.resource(host);
     }
 
