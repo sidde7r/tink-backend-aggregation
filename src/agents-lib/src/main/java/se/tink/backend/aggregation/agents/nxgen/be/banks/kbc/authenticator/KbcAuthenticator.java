@@ -196,30 +196,30 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
 
     private String waitForLoginCode(String challenge) throws SupplementalInfoException {
     return waitForSupplementalInformation(
-        createDescriptionField(
-            "1  Insert your bank card into the card reader ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_CardReader.png)\n"
+        createDescriptionField(catalog.getString(
+                "1  Insert your bank card into the card reader ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_CardReader.png)\n"
                 + "2  Tap ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_LOGIN.png) + ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_LOGIN.png)\n"
-                + "3  Enter the start code []",
+                + "3  Enter the start code []"),
             challenge),
-        createInputField(
-            "4  Tap ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png)\n"
+        createInputField(catalog.getString(
+                "4  Tap ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png)\n"
                     + "5  Enter your secret code\n"
                     + "6  Tap ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png)\n"
-                    + "7  Enter the login code"));
+                    + "7  Enter the login code")));
     }
 
     private String waitForSignCode(String challenge) throws SupplementalInfoException {
     return waitForSupplementalInformation(
-        createDescriptionField(
+        createDescriptionField(catalog.getString(
             "1  Insert your bank card into the card reader ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_CardReader.png)\n"
                 + "2  Tap ![]https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN.png) + ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN.png)\n"
-                + "3  Enter the start code []",
+                + "3  Enter the start code []"),
             challenge),
-        createInputField(
+        createInputField(catalog.getString(
             "4  Tap ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) + ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png)\n"
                     + "5  Enter your PIN\n"
                     + "6  Tap ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png)\n"
-                    + "7  Enter the sign code"));
+                    + "7  Enter the sign code")));
     }
 
     private String waitForSupplementalInformation(Field... fields)
@@ -235,7 +235,7 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
         field.setDescription(formattedChallenge);
         field.setValue(formattedChallenge);
         field.setName("description");
-        field.setHelpText(catalog.getString(helpText));
+        field.setHelpText(helpText);
         field.setImmutable(true);
         return field;
     }
@@ -245,7 +245,7 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
         field.setMasked(false);
         field.setDescription(catalog.getString("Input"));
         field.setName(KbcConstants.MultiFactorAuthentication.CODE);
-        field.setHelpText(catalog.getString(helpText));
+        field.setHelpText(helpText);
         field.setNumeric(true);
         field.setHint("NNNNNNN");
         return field;
