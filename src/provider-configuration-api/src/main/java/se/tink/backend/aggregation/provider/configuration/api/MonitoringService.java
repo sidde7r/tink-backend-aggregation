@@ -16,7 +16,7 @@ import javax.ws.rs.core.MediaType;
 @Produces(MediaType.APPLICATION_JSON)
 public interface MonitoringService {
     @GET
-    @Path("ping")
+    @Path("/ping")
     @TeamOwnership(Team.INTEGRATION)
     @Produces(MediaType.TEXT_PLAIN)
     @AllowAnonymous
