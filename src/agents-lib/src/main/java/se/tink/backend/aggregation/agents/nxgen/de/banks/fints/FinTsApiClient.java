@@ -304,17 +304,6 @@ public class FinTsApiClient {
         }
     }
 
-    // Sparkasse sometimes sends FinTsConstants.StatusCode.NO_ENTRY if a phone number is not active on account
-    private boolean noEntry(Map<String, String> status) {
-        if (status.containsValue(FinTsConstants.StatusCode.NO_ENTRY) &&
-                status.containsKey(FinTsConstants.StatusMessage.NO_ACTIVE_PHONE_NUMBER_WARNING)) {
-            LOGGER.info("{} Status: {}", FinTsConstants.LogTags.SPARKASSE_NO_PHONE_NUMBER_ATTACHED_WARNING,
-                    status.toString());
-            return false;
-        }
-        return status.containsValue(FinTsConstants.StatusCode.NO_ENTRY);
-    }
-
     public List<MT940Statement> getTransactions(String accountNo, Date start, Date end) {
         SEPAAccount targetAccount = this.sepaAccounts.stream()
                 .filter(sepaAccount -> Objects.equals(sepaAccount.getAccountNo(), accountNo))
@@ -342,9 +331,11 @@ public class FinTsApiClient {
             status = response.getLocalStatus();
         }
 
+        LOGGER.info("{} statuses: {}", FinTsConstants.LogTags.TRANSACTION_STATUS, status.toString());
+
         //TODO: Need to start checking key AND value
         if (status.containsValue(FinTsConstants.StatusCode.ACCOUNT_NOT_ASSIGNED) ||
-                noEntry(status) ||
+                status.containsValue(FinTsConstants.StatusCode.NO_ENTRY) ||
                 status.containsValue(FinTsConstants.StatusCode.NO_DATA_AVAILABLE) ||
                 status.containsValue(FinTsConstants.StatusCode.TECHNICAL_ERROR) ||
                 Strings.isNullOrEmpty(segment)
