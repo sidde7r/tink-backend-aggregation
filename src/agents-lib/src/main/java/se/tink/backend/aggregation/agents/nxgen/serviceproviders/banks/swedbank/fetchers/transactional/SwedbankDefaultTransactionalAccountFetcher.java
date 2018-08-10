@@ -42,7 +42,7 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        ArrayList<TransactionalAccount> accounts = new ArrayList<>();
+        List<TransactionalAccount> accounts = new ArrayList<>();
 
         for (BankProfile bankProfile : apiClient.getBankProfiles()) {
             apiClient.selectProfile(bankProfile);
@@ -77,7 +77,7 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
     }
 
     // DEBUG to see why refresh transactions fails
-    private void debugLogAccounts(ArrayList<TransactionalAccount> accounts) {
+    private void debugLogAccounts(List<TransactionalAccount> accounts) {
         try {
             for (TransactionalAccount account : accounts) {
                 String accountNumber = account.getAccountNumber();
