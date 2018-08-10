@@ -40,6 +40,7 @@ import se.tink.libraries.cryptography.RSAUtils;
 public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private static final Logger log = LoggerFactory.getLogger(TinkApacheHttpRequestExecutor.class);
     private static final String TEST_PRIVATE_KEY_PATH = "data/test/cryptography/private_rsa_key.pem";
+    private static final String SIGNATURE_HEADER_KEY = "X-Signature";
 
     private final SignatureKeyPair signatureKeyPair;
 
@@ -108,18 +109,27 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
                 .withClaim("uri", requestLine.getUri())
                 .withClaim("headers", toSignatureFormat(allHeaders));
 
+        if (!(request instanceof HttpEntityEnclosingRequest)) {
+            request.addHeader(SIGNATURE_HEADER_KEY, requestSignatureHeader.sign(algorithm));
+            return;
+        }
+
         try {
-            if (request instanceof HttpEntityEnclosingRequest) {
-                HttpEntity entity = ((HttpEntityEnclosingRequest) request).getEntity();
-                String requestBody = IOUtils.toString(entity.getContent(), "UTF-8");
-                byte[] hashedRequestBody = Hash.sha256(requestBody);
-                requestSignatureHeader.withClaim("body", EncodingUtils.encodeAsBase64String(hashedRequestBody));
+            HttpEntity entity = ((HttpEntityEnclosingRequest) request).getEntity();
+
+            if (entity == null) {
+                request.addHeader(SIGNATURE_HEADER_KEY, requestSignatureHeader.sign(algorithm));
+                return;
             }
+
+            String requestBody = IOUtils.toString(entity.getContent(), "UTF-8");
+            byte[] hashedRequestBody = Hash.sha256(requestBody);
+            requestSignatureHeader.withClaim("body", EncodingUtils.encodeAsBase64String(hashedRequestBody));
         } catch (IOException e) {
             log.error("Could not get the request body from the entity content", e);
         }
 
-        request.addHeader("X-Signature", requestSignatureHeader.sign(algorithm));
+        request.addHeader(SIGNATURE_HEADER_KEY, requestSignatureHeader.sign(algorithm));
     }
 
     private static String toSignatureFormat(Header[] headers) {
