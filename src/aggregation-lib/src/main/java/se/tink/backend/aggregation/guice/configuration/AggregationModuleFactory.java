@@ -16,6 +16,7 @@ public class AggregationModuleFactory {
                 new CoordinationModule(),
                 new AggregationRepositoryModule(configuration.getDatabase()),
                 new ConfigurationModule(configuration),
-                new AggregationModule(configuration, jersey));
+                new AggregationModule(configuration, jersey),
+                new QueueModule());
     }
 }
