@@ -32,10 +32,9 @@ public class MetricActionTest {
     private AgentWorkerCommandMetricState mockMetricState() {
         Provider provider = mock(Provider.class);
         Credentials credentials = mockCredentials();
-        boolean isManual = false;
         CredentialsRequestType requestType = CredentialsRequestType.UPDATE;
 
-        return new AgentWorkerCommandMetricState(provider, credentials, isManual, loader, requestType);
+        return new AgentWorkerCommandMetricState(provider, credentials, loader, requestType);
     }
 
     private Credentials mockCredentials() {

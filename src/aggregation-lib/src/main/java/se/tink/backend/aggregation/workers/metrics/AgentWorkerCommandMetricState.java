@@ -18,18 +18,16 @@ public class AgentWorkerCommandMetricState {
     private final MetricCacheLoader metricCacheLoader;
     private final Provider provider;
     private final Credentials credentials;
-    private final boolean isManual;
     private MetricsCommand command;
     private CredentialsRequestType requestType;
 
     private final List<MetricAction> actions = Lists.newArrayList();
     private MetricAction baseAction;
 
-    public AgentWorkerCommandMetricState(Provider provider, Credentials credentials, boolean isManual,
+    public AgentWorkerCommandMetricState(Provider provider, Credentials credentials,
             MetricCacheLoader metricCacheLoader, CredentialsRequestType requestType) {
         this.provider = provider;
         this.credentials = credentials;
-        this.isManual = isManual;
         this.metricCacheLoader = metricCacheLoader;
         this.requestType = requestType;
     }
@@ -57,11 +55,6 @@ public class AgentWorkerCommandMetricState {
 
         baseAction = new MetricAction(this, metricCacheLoader, credentials,
                 MetricId.newId("agent_command")
-                        .label("provider_type", provider.getMetricTypeName())
-                        .label("provider", provider.getName())
-                        .label("market", provider.getMarket())
-                        .label("className", provider.getClassName())
-                        .label("credential", credentials.getMetricTypeName())
                         .label("operation_type", operationType.getMetricName()));
 
         baseAction.start();
@@ -143,7 +136,6 @@ public class AgentWorkerCommandMetricState {
                         .label("provider", provider.getName())
                         .label("market", provider.getMarket())
                         .label("className", provider.getClassName())
-                        .label("manual", String.valueOf(isManual))
                         .label("credential", credentials.getMetricTypeName())
                         .label("request_type", requestType.name()));
     }
