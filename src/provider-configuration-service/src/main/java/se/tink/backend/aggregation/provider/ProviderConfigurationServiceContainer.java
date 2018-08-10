@@ -61,6 +61,5 @@ public class ProviderConfigurationServiceContainer extends AbstractServiceContai
         DropwizardLifecycleInjectorFactory.build(
                 environment.lifecycle(),
                 ProviderModuleFactory.build(configuration, environment.jersey()));
-
     }
 }
