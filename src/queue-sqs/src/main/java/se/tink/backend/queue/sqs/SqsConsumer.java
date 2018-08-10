@@ -47,6 +47,8 @@ public class SqsConsumer implements Managed, QueueConsumer {
             }
 
         };
+
+        // TODO introduce metrics
     }
 
     @Override

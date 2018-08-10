@@ -53,6 +53,8 @@ public class SqsQueue {
         GetQueueUrlRequest getQueueUrlRequest = new GetQueueUrlRequest(configuration.getQueueName());
         GetQueueUrlResult getQueueUrlResult = sqs.getQueueUrl(getQueueUrlRequest);
         this.url = getQueueUrlResult.getQueueUrl();
+
+        // TODO: introrduce metrics
     }
 
     public AmazonSQS getSqs() {

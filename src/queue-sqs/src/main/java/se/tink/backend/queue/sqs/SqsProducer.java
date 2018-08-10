@@ -38,11 +38,13 @@ public class SqsProducer implements QueueProducer {
             sendMessageStandardQueue = new SendMessageRequest()
                     .withQueueUrl(sqsQueue.getUrl())
                     .withMessageBody(Base64.getEncoder().encodeToString(Snappy.compress(SerializationUtils.serializeToBinary(t))))
-                    .withMessageAttributes(null);
+                    .withMessageAttributes(null); // FIXME: probably we want to use that in the future
             sqsQueue.getSqs().sendMessage(sendMessageStandardQueue);
         } catch (IOException e) {
             logger.error("Could not send message");
         }
+        // TODO introduce metrics
+
     }
 
     @Override
