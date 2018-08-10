@@ -14,7 +14,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class SqsConsumer  implements Managed, QueueConsumer {
+public class SqsConsumer implements Managed, QueueConsumer {
 
     private final AbstractExecutionThreadService service;
     private final SqsQueue sqsQueue;
@@ -23,31 +23,31 @@ public class SqsConsumer  implements Managed, QueueConsumer {
     private final int MAX_NUMBER_OF_MESSAGES = 1;
 
     @Inject
-        public SqsConsumer(SqsQueue sqsQueue, MessageHandler messageHandler) {
-            this.sqsQueue = sqsQueue;
-            this.messageHandler = messageHandler;
-            this.service = new AbstractExecutionThreadService() {
+    public SqsConsumer(SqsQueue sqsQueue, MessageHandler messageHandler) {
+        this.sqsQueue = sqsQueue;
+        this.messageHandler = messageHandler;
+        this.service = new AbstractExecutionThreadService() {
 
-                @Override
-                protected void run() throws Exception {
-                    try {
-                        while (true) {
-                            ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest(sqsQueue.getUrl())
-                                    .withWaitTimeSeconds(WAIT_TIME_SECONDS)
-                                    .withMaxNumberOfMessages(MAX_NUMBER_OF_MESSAGES);
-                            List<Message> sqsMessages = sqsQueue.getSqs().receiveMessage(receiveMessageRequest).getMessages();
-                            for (Message sqsMessage : sqsMessages) {
-                                consume(sqsMessage.getBody());
-                                sqsQueue.getSqs().deleteMessage(new DeleteMessageRequest(sqsQueue.getUrl(), sqsMessage.getReceiptHandle()));
-                            }
+            @Override
+            protected void run() throws Exception {
+                try {
+                    while (true) {
+                        ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest(sqsQueue.getUrl())
+                                .withWaitTimeSeconds(WAIT_TIME_SECONDS)
+                                .withMaxNumberOfMessages(MAX_NUMBER_OF_MESSAGES);
+                        List<Message> sqsMessages = sqsQueue.getSqs().receiveMessage(receiveMessageRequest).getMessages();
+                        for (Message sqsMessage : sqsMessages) {
+                            consume(sqsMessage.getBody());
+                            sqsQueue.getSqs().deleteMessage(new DeleteMessageRequest(sqsQueue.getUrl(), sqsMessage.getReceiptHandle()));
                         }
-                    } catch (Exception e) {
-                        System.out.println("Could not query for queue items.");
                     }
+                } catch (Exception e) {
+                    System.out.println("Could not query for queue items.");
                 }
+            }
 
-            };
-        }
+        };
+    }
 
     @Override
     public void start() throws Exception {
