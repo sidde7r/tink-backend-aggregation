@@ -72,12 +72,13 @@ public class AggregationServiceContainer extends AbstractServiceContainer {
                     .add(new ContainerAuthorizationResourceFilterFactory(authorizationAuthorizers));
         }
 
-
-
         Injector injector = DropwizardLifecycleInjectorFactory.build(
                 environment.lifecycle(),
                 AggregationModuleFactory.build(configuration, environment.jersey()));
-        environment.lifecycle().manage(injector.getInstance(SqsConsumer.class));
+
+        if (configuration.getSqsQueueConfiguration().isEnabled()){
+            environment.lifecycle().manage(injector.getInstance(SqsConsumer.class));
+        }
         ServiceContext serviceContext = injector.getInstance(ServiceContext.class);
         buildContainer(configuration, environment, serviceContext, injector);
     }

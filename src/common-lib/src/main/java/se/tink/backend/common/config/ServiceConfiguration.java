@@ -64,7 +64,7 @@ public class ServiceConfiguration extends Configuration {
     private SignatureKeyPair signatureKeyPair = new SignatureKeyPair();
 
     @JsonProperty
-    private SqsQueueConfiguration sqsQueueConfiguration;
+    private SqsQueueConfiguration sqsQueueConfiguration = new SqsQueueConfiguration();
 
     public AbnAmroConfiguration getAbnAmro() {
         return abnAmro;

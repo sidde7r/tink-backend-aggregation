@@ -5,6 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown =  true)
 public class SqsQueueConfiguration {
+
+    @JsonProperty
+    private boolean enabled = false;
+
     @JsonProperty
     private String url;
 
@@ -69,5 +73,13 @@ public class SqsQueueConfiguration {
 
     public void setQueueName(String queueName) {
         this.queueName = queueName;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

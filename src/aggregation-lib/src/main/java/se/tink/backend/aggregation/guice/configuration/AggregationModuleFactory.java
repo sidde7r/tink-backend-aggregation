@@ -10,13 +10,14 @@ import se.tink.libraries.discovery.CoordinationModule;
 
 public class AggregationModuleFactory {
     public static ImmutableList<Module> build(ServiceConfiguration configuration,
-            JerseyEnvironment jersey) {
+                                              JerseyEnvironment jersey) {
         return ImmutableList.of(
                 new CommonModule(),
                 new CoordinationModule(),
                 new AggregationRepositoryModule(configuration.getDatabase()),
                 new ConfigurationModule(configuration),
                 new AggregationModule(configuration, jersey),
-                new QueueModule());
+                new QueueModule(configuration.getSqsQueueConfiguration())
+        );
     }
 }

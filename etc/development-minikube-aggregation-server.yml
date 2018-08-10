@@ -103,6 +103,7 @@ integrations:
 
 
 sqsQueueConfiguration:
+  enabled: false
   url: http://localhost:4576/
   region: local
   awsAccessKeyId: foobar
