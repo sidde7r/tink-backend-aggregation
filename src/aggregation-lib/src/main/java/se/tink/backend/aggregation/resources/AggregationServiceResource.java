@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAg
 import se.tink.backend.aggregation.api.AggregationService;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
+import se.tink.backend.aggregation.models.RefreshInformation;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
 import se.tink.backend.aggregation.rpc.CreateCredentialsRequest;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -34,11 +35,13 @@ import se.tink.backend.aggregation.workers.ratelimit.OverridingProviderRateLimit
 import se.tink.backend.aggregation.workers.ratelimit.ProviderRateLimiterFactory;
 import se.tink.backend.common.ServiceContext;
 import se.tink.backend.common.repository.mysql.aggregation.clusterhostconfiguration.ClusterHostConfigurationRepository;
+import se.tink.backend.queue.QueueProducer;
 import se.tink.libraries.http.utils.HttpResponseHelper;
 import se.tink.libraries.metrics.MetricRegistry;
 
 @Path("/aggregation")
 public class AggregationServiceResource implements AggregationService, Managed {
+    private final QueueProducer producer;
     @Context
     private HttpServletRequest httpRequest;
 
@@ -67,6 +70,7 @@ public class AggregationServiceResource implements AggregationService, Managed {
                 serviceContext.getCoordinationClient());
         this.clusterHostConfigurationRepository = serviceContext.getRepository(ClusterHostConfigurationRepository.class);
         this.isAggregationCluster = serviceContext.isAggregationCluster();
+        this.producer = this.serviceContext.getProducer();
     }
 
 
@@ -119,18 +123,21 @@ public class AggregationServiceResource implements AggregationService, Managed {
 
     @Override
     public void refreshInformation(final RefreshInformationRequest request, ClusterInfo clusterInfo) throws Exception {
+        RefreshInformation refreshInformation = new RefreshInformation(request, clusterInfo);
         if (request.isManual()) {
             agentWorker.execute(agentWorkerCommandFactory.createRefreshOperation(clusterInfo, request));
         } else {
-            agentWorker.executeAutomaticRefresh(AgentWorkerRefreshOperationCreatorWrapper.of(agentWorkerCommandFactory, request, clusterInfo));
+            if (producer.isAvailable()) {
+                producer.send(refreshInformation);
+            } else {
+                agentWorker.executeAutomaticRefresh(AgentWorkerRefreshOperationCreatorWrapper.of(agentWorkerCommandFactory, request, clusterInfo));
+            }
         }
-
     }
 
     @Override
     public void transfer(final TransferRequest request, ClusterInfo clusterInfo) throws Exception {
         agentWorker.execute(agentWorkerCommandFactory.createExecuteTransferOperation(clusterInfo, request));
-
     }
 
     @Override
