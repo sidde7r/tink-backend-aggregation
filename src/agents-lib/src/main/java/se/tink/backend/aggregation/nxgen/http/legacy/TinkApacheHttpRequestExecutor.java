@@ -117,6 +117,7 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         try {
             HttpEntity entity = ((HttpEntityEnclosingRequest) request).getEntity();
 
+            // Handle the case of a empty post request
             if (entity == null) {
                 request.addHeader(SIGNATURE_HEADER_KEY, requestSignatureHeader.sign(algorithm));
                 return;
