@@ -83,7 +83,7 @@ public final class SignatureKeyPair {
 
         if (this.keyId == null) {
             // Changing algorithm will change all keyIds
-            byte[] digest = sha("SHA-1", getPublicKey().getEncoded());
+            byte[] digest = sha("SHA-256", getPublicKey().getEncoded());
             this.keyId = Hex.encodeHexString(digest).toLowerCase();
         }
 
