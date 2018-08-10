@@ -4,21 +4,20 @@ import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xerial.snappy.Snappy;
 import se.tink.backend.queue.QueueProducer;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 import java.io.IOException;
-import java.util.Base64;
 
 public class SqsProducer implements QueueProducer {
 
     private SqsQueue sqsQueue;
+    private EncodingHandler encodingHandler;
     private Logger logger = LoggerFactory.getLogger(SqsProducer.class);
 
     @Inject
-    public SqsProducer(SqsQueue sqsQueue) {
+    public SqsProducer(SqsQueue sqsQueue, EncodingHandler encodingHandler) {
         this.sqsQueue = sqsQueue;
+        this.encodingHandler = encodingHandler;
     }
 
     @Override
@@ -37,7 +36,7 @@ public class SqsProducer implements QueueProducer {
         try {
             sendMessageStandardQueue = new SendMessageRequest()
                     .withQueueUrl(sqsQueue.getUrl())
-                    .withMessageBody(Base64.getEncoder().encodeToString(Snappy.compress(SerializationUtils.serializeToBinary(t))))
+                    .withMessageBody(encodingHandler.encode(t))
                     .withMessageAttributes(null); // FIXME: probably we want to use that in the future
             sqsQueue.getSqs().sendMessage(sendMessageStandardQueue);
         } catch (IOException e) {

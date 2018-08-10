@@ -6,11 +6,9 @@ import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
 import com.google.inject.Inject;
 import io.dropwizard.lifecycle.Managed;
-import org.xerial.snappy.Snappy;
 import se.tink.backend.queue.QueueConsumer;
 
 import java.io.IOException;
-import java.util.Base64;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -63,7 +61,7 @@ public class SqsConsumer implements Managed, QueueConsumer {
     }
 
     public void consume(String message) throws IOException {
-        messageHandler.handle(Snappy.uncompress(Base64.getDecoder().decode(message)));
+        messageHandler.handle(message);
     }
 
 }

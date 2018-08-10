@@ -10,8 +10,6 @@ java_library(
          "//third_party:com_google_inject_guice",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:io_dropwizard_dropwizard_core",
-        "//src/libraries/serialization_utils:serialization-utils",
-        "//third_party:org_xerial_snappy_snappy_java",
 
      ]
  )
