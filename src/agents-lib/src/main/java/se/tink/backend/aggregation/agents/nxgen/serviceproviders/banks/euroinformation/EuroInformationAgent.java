@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.authentication.EuroInformationPasswordAuthenticator;
@@ -21,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.common.config.SignatureKeyPair;
 
@@ -31,6 +33,26 @@ public class EuroInformationAgent extends NextGenerationAgent {
             EuroInformationConfiguration config) {
         super(request, context, signatureKeyPair);
         this.apiClient = new EuroInformationApiClient(this.client, sessionStorage, config);
+    }
+
+    protected EuroInformationAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair,
+            EuroInformationConfiguration config, Class<? extends EuroInformationApiClient> apiClientClass) {
+        super(request, context, signatureKeyPair);
+
+        try {
+            this.apiClient = apiClientClass
+                    .getConstructor(TinkHttpClient.class, SessionStorage.class, EuroInformationConfiguration.class)
+                    .newInstance(this.client, sessionStorage, config);
+        } catch (NoSuchMethodException
+                | IllegalAccessException
+                | InstantiationException
+                | InvocationTargetException
+                e) {
+            throw new IllegalArgumentException(String.format(
+                    "The submitted apiClient-class %s caused the following error: \n%s",
+                    apiClientClass.getName(), e.getMessage())
+            );
+        }
     }
 
     @Override
