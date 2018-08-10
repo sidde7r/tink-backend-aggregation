@@ -363,9 +363,9 @@ public class FinTsApiClient {
         Map<String, String> touchdowns = response.getTouchDowns(getTransactionRequest);
         List<MT940Statement> transactions = new ArrayList<>(this.parseMt940Transactions(mt940));
 
-        LOGGER.info("{} number of fetched transactions: {} startDate: {} endDate: {}",
+        LOGGER.info("{} number of fetched transactions: {} startDate: {} endDate: {} accountNumber: {}",
                 FinTsConstants.LogTags.NUMBER_OF_FETCHED_TRANSACTIONS, transactions.size(), start.toString(),
-                end.toString());
+                end.toString(), accountNo);
 
         // Process with touchdowns
         String seg = null;
