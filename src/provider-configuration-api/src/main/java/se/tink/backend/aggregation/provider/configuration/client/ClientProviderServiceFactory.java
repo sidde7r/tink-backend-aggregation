@@ -26,11 +26,11 @@ public class ClientProviderServiceFactory implements ProviderServiceFactory{
         Preconditions.checkState(!Strings.isNullOrEmpty(host),
                 "Host cannot be empty");
         Preconditions.checkState(!Objects.isNull(clientFilter),
-                "The provider service requires ");
+                "The provider service requires");
 
-        Client client = JerseyUtils.getClusterClient(pinnedCertificates, "",false);
+        Client client = JerseyUtils.getClusterClient(pinnedCertificates, "", false);
         client.addFilter(clientFilter);
-        JerseyUtils.registerAPIAccessToken(client,accessToken);
+        JerseyUtils.registerAPIAccessToken(client, accessToken);
         return client.resource(host);
     }
 
