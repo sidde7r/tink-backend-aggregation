@@ -381,7 +381,8 @@ public class FinTsApiClient {
                 transactions.addAll(this.parseMt940Transactions(mt940Content));
                 touchdowns = furtherTransactionsResponse.getTouchDowns(getFurtherTransactionRequest);
             } catch (Exception e) {
-                LOGGER.error("{} error: {}", FinTsConstants.LogTags.SCANNER_PARSING_ERROR, e.toString(), seg, mt940Content);
+                LOGGER.error("{} error: {}", FinTsConstants.LogTags.SCANNER_PARSING_ERROR, e.toString(), seg,
+                        mt940Content);
                 continue;
             }
 
@@ -417,7 +418,7 @@ public class FinTsApiClient {
     private String process_61_86elements(String nextLine, Scanner mt940Scanner, List<MT940Statement> transactions) {
         String tag61 = nextLine.substring(4);
         StringBuilder tag86 = new StringBuilder();
-        if(!mt940Scanner.hasNextLine()){
+        if (!mt940Scanner.hasNextLine()) {
             return "";
         }
         nextLine = mt940Scanner.nextLine();
