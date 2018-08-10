@@ -1,4 +1,6 @@
 package se.tink.backend.queue.sqs;
 
-public class EncodingHandler {
+public interface EncodingHandler<T> {
+    byte[] encode(T t);
+    T decode(byte[] message);
 }
