@@ -22,7 +22,6 @@ import se.tink.backend.aggregation.resources.CreditSafeServiceResource;
 import se.tink.backend.common.AbstractServiceContainer;
 import se.tink.backend.common.ServiceContext;
 import se.tink.backend.common.config.ServiceConfiguration;
-import se.tink.backend.queue.sqs.SqsConsumer;
 import se.tink.libraries.auth.ApiTokenAuthorizationHeaderPredicate;
 import se.tink.libraries.auth.ContainerAuthorizationResourceFilterFactory;
 import se.tink.libraries.auth.YubicoAuthorizationHeaderPredicate;
@@ -74,11 +73,8 @@ public class AggregationServiceContainer extends AbstractServiceContainer {
 
         Injector injector = DropwizardLifecycleInjectorFactory.build(
                 environment.lifecycle(),
-                AggregationModuleFactory.build(configuration, environment.jersey()));
+                AggregationModuleFactory.build(configuration, environment));
 
-        if (configuration.getSqsQueueConfiguration().isEnabled()){
-            environment.lifecycle().manage(injector.getInstance(SqsConsumer.class));
-        }
         ServiceContext serviceContext = injector.getInstance(ServiceContext.class);
         buildContainer(configuration, environment, serviceContext, injector);
     }
