@@ -64,6 +64,6 @@ public class SqsQueue {
     }
 
     public boolean isAvailable() {
-        return true;
+        return isAvailable;
     }
 }
