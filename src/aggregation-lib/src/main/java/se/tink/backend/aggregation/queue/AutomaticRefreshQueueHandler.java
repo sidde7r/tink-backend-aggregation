@@ -28,15 +28,17 @@ public class AutomaticRefreshQueueHandler implements MessageHandler {
 
     @Override
     public void handle(byte[] message) {
-        RefreshInformation m = SerializationUtils.deserializeFromBinary(message, RefreshInformation.class);
+        RefreshInformation refreshInformation = SerializationUtils.deserializeFromBinary(message, RefreshInformation.class);
         try {
             agentWorker.executeAutomaticRefresh(AgentWorkerRefreshOperationCreatorWrapper.of(
-                    agentWorkerCommandFactory, m.getRequest(), ClusterInfo.createForAggregationCluster(
-                            ClusterId.create(m.getName(), m.getEnvironment(), m.getAggregator()),
-                            m.getAggregationControllerHost(),
-                            m.getApiToken(),
-                            m.getClientCertificate(),
-                            m.isDisableRequestCompression()
+                    agentWorkerCommandFactory,
+                    refreshInformation.getRequest(),
+                    ClusterInfo.createForAggregationCluster(
+                            ClusterId.create(refreshInformation.getName(), refreshInformation.getEnvironment(), refreshInformation.getAggregator()),
+                            refreshInformation.getAggregationControllerHost(),
+                            refreshInformation.getApiToken(),
+                            refreshInformation.getClientCertificate(),
+                            refreshInformation.isDisableRequestCompression()
                     )));
         } catch (Exception e) {
             logger.error("Something went wrong with an automatic refresh from sqs.");
