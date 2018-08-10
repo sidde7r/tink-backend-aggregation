@@ -3,6 +3,32 @@
   "currency": "EUR",
   "providers": [
     {
+      "name": "fr-banquetransatlantique-password",
+      "displayName": "Banque Transatlantique",
+      "popular": true,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.fr.banks.banquetransatlantique.BanqueTransatlantiqueAgent",
+      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in Banque Transatlantique's mobile banking app.",
+      "transactional": "true",
+      "tutorialUrl": null,
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "sensitive": true,
+          "masked": true,
+          "name": "password"
+        }
+      ]
+    },
+    {
       "name": "fr-creditmutuel-password",
       "displayName": "Credit Mutuel",
       "popular": true,

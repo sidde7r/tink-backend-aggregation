@@ -190,7 +190,7 @@ public class EuroInformationApiClient {
 
     //Seems it's not obligatory call so use it for keep-alive
     public InitResponse actionInit(String body) {
-        return buildRequestHeaders(EuroInformationConstants.Url.INIT)
+        return buildRequestHeaders(config.getLoginInit())
                 .body(body)
                 .post(InitResponse.class);
     }

@@ -12,4 +12,8 @@ public interface EuroInformationConfiguration {
         return EuroInformationConstants.Url.LOGIN;
     }
 
+    public default String getLoginInit() {
+        return EuroInformationConstants.Url.INIT;
+    }
+
 }
