@@ -10,10 +10,11 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class DanskeBankDKAgent extends DanskeBankAgent {
-    public DanskeBankDKAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
-        super(request, context, signatureKeyPath, new DanskeBankDKConfiguration());
+    public DanskeBankDKAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair, new DanskeBankDKConfiguration());
     }
 
     @Override

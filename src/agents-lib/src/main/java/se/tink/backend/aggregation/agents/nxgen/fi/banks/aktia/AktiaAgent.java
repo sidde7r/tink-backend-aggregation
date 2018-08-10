@@ -26,12 +26,13 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.Field;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class AktiaAgent extends NextGenerationAgent {
     private final AktiaApiClient apiClient;
 
-    public AktiaAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
-        super(request, context, signatureKeyPath);
+    public AktiaAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
         this.apiClient = AktiaApiClient.createApiClient(client, credentials);
     }
 

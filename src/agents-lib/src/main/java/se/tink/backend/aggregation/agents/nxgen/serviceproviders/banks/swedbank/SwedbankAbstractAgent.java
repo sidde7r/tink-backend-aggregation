@@ -33,14 +33,15 @@ import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.Field;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public abstract class SwedbankAbstractAgent extends NextGenerationAgent {
     protected final SwedbankConfiguration configuration;
     private final SwedbankDefaultApiClient apiClient;
 
-    public SwedbankAbstractAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath,
+    public SwedbankAbstractAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair,
             SwedbankConfiguration configuration) {
-        super(request, context, signatureKeyPath);
+        super(request, context, signatureKeyPair);
         this.configuration = configuration;
         this.apiClient = new SwedbankDefaultApiClient(client, configuration, credentials.getField(Field.Key.USERNAME),
                 sessionStorage);

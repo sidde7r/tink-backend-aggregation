@@ -17,15 +17,16 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public abstract class NordeaV17Agent extends NextGenerationAgent {
 
     protected final NordeaV17ApiClient nordeaClient;
     protected final NordeaV17Parser parser;
 
-    protected NordeaV17Agent(CredentialsRequest request, AgentContext context, String signatureKeyPath,
+    protected NordeaV17Agent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair,
             NordeaV17Parser parser) {
-        super(request, context, signatureKeyPath);
+        super(request, context, signatureKeyPair);
 
         this.parser = parser;
         this.nordeaClient = constructNordeaClient();

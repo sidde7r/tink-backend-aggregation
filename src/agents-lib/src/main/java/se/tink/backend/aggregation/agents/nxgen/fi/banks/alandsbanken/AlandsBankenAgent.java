@@ -26,13 +26,14 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class AlandsBankenAgent extends NextGenerationAgent {
 
     private final AlandsBankenApiClient bankClient;
 
-    public AlandsBankenAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
-        super(request, context, signatureKeyPath);
+    public AlandsBankenAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
         this.bankClient = new AlandsBankenApiClient(this.client);
     }
 

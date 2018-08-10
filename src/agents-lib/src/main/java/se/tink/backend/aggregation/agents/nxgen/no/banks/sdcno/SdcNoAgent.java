@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.smsotp.SmsOtpAuthenticationPasswordController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 /*
  * Configure market specific client, this is NO
@@ -22,8 +23,8 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 public class SdcNoAgent extends SdcAgent {
     private static Logger LOG = LoggerFactory.getLogger(SdcNoAgent.class);
 
-    public SdcNoAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
-        super(request, context, signatureKeyPath,
+    public SdcNoAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair,
                 new SdcNoConfiguration(request.getProvider()),
                 new SdcNoTransactionParser());
     }

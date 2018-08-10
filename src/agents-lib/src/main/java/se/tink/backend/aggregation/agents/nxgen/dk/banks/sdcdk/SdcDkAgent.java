@@ -9,14 +9,15 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authe
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 /*
  * Configure market specific client, this is DK
  */
 public class SdcDkAgent extends SdcAgent {
 
-    public SdcDkAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
-        super(request, context, signatureKeyPath,
+    public SdcDkAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair,
                 new SdcDkConfiguration(request.getProvider()),
                 new SdcDkTransactionParser());
     }

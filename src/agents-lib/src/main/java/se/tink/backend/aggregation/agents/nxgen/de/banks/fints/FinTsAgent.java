@@ -24,13 +24,14 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.Field;
 
 import java.util.Optional;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class FinTsAgent extends NextGenerationAgent {
 
     private FinTsApiClient apiClient;
 
-    public FinTsAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
-        super(request, context, signatureKeyPath);
+    public FinTsAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
         String[] payload = request.getProvider().getPayload().split(" ");
         se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConfiguration configuration =
                 new se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConfiguration(

@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.libraries.cryptography.RSAUtils;
 
 /*
@@ -40,17 +41,21 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private static final Logger log = LoggerFactory.getLogger(TinkApacheHttpRequestExecutor.class);
     private static final String TEST_PRIVATE_KEY_PATH = "data/test/cryptography/private_rsa_key.pem";
 
+    private final SignatureKeyPair signatureKeyPair;
+
     private Algorithm algorithm;
 
-    public TinkApacheHttpRequestExecutor(String signatureKeyPath) {
+    public TinkApacheHttpRequestExecutor(SignatureKeyPair signatureKeyPair) {
+        this.signatureKeyPair = signatureKeyPair;
+
         try {
-            if (Strings.isNullOrEmpty(signatureKeyPath)) {
+            if (signatureKeyPair == null || signatureKeyPair.getPrivateKey() == null) {
                 log.warn("Signature key path was empty, using the test key as a fallback.");
                 algorithm = Algorithm.RSA256(null, RSAUtils.getPrivateKey(TEST_PRIVATE_KEY_PATH));
                 return;
             }
 
-            algorithm = Algorithm.RSA256(null, RSAUtils.getPrivateKey(signatureKeyPath));
+            algorithm = Algorithm.RSA256(null, signatureKeyPair.getPrivateKey());
         } catch (Exception e) {
             log.error("No signature header will be added to requests.", e);
         }
@@ -98,6 +103,7 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
 
         JWTCreator.Builder requestSignatureHeader = JWT.create()
                 .withIssuedAt(new Date())
+                .withKeyId(signatureKeyPair.getKeyId())
                 .withClaim("method", requestLine.getMethod())
                 .withClaim("uri", requestLine.getUri())
                 .withClaim("headers", toSignatureFormat(allHeaders));

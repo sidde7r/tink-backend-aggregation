@@ -30,14 +30,15 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class IcaBankenAgent extends NextGenerationAgent {
     private final IcaBankenApiClient apiClient;
     private final TransferMessageFormatter transferMessageFormatter = new TransferMessageFormatter(catalog,
             TransferMessageLengthConfig.createWithMaxLength(14, 12), new StringNormalizerSwedish(",.-?!/+"));
 
-    public IcaBankenAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
-        super(request, context, signatureKeyPath);
+    public IcaBankenAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
         this.apiClient = new IcaBankenApiClient(client);
     }
 

@@ -21,12 +21,13 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.libraries.i18n.Catalog;
 
 public class HandelsbankenSEAgent extends HandelsbankenAgent<HandelsbankenSEApiClient, HandelsbankenSEConfiguration> {
 
-    public HandelsbankenSEAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
-        super(request, context, signatureKeyPath, new HandelsbankenSEConfiguration());
+    public HandelsbankenSEAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair, new HandelsbankenSEConfiguration());
     }
 
     @Override

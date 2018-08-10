@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.Field;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 /**
  * WIP!
@@ -45,8 +46,8 @@ import se.tink.backend.aggregation.rpc.Field;
 public class SparebankenSorAgent extends NextGenerationAgent {
     private final SparebankenSorApiClient apiClient;
 
-    public SparebankenSorAgent (CredentialsRequest request, AgentContext context, String signatureKeyPath) {
-        super(request, context, signatureKeyPath);
+    public SparebankenSorAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
         apiClient = new SparebankenSorApiClient(client, sessionStorage);
     }
 

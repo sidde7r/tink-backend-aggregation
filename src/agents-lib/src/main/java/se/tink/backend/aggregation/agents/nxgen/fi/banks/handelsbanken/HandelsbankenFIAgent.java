@@ -13,10 +13,11 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class HandelsbankenFIAgent extends HandelsbankenAgent<HandelsbankenFIApiClient, HandelsbankenFIConfiguration> {
-    public HandelsbankenFIAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
-        super(request, context, signatureKeyPath, new HandelsbankenFIConfiguration());
+    public HandelsbankenFIAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair, new HandelsbankenFIConfiguration());
     }
 
     @Override

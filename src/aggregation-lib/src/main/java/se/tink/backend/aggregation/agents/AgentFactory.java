@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class AgentFactory {
     private ServiceConfiguration configuration;
@@ -49,9 +50,9 @@ public class AgentFactory {
     public Agent create(Class<? extends Agent> agentClass, CredentialsRequest request, AgentContext context) throws Exception {
         if (NextGenerationAgent.class.isAssignableFrom(agentClass)) {
             Constructor<?> nextGenConstructor =
-                    agentClass.getConstructor(CredentialsRequest.class, AgentContext.class, String.class);
+                    agentClass.getConstructor(CredentialsRequest.class, AgentContext.class, SignatureKeyPair.class);
 
-            Agent agent = (Agent) nextGenConstructor.newInstance(request, context, configuration.getSignatureKeyPath());
+            Agent agent = (Agent) nextGenConstructor.newInstance(request, context, configuration.getSignatureKeyPair());
             agent.setConfiguration(configuration);
 
             return agent;

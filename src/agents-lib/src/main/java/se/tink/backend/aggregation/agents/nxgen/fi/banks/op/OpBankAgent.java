@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class OpBankAgent extends NextGenerationAgent {
 
@@ -35,8 +36,8 @@ public class OpBankAgent extends NextGenerationAgent {
     private OpBankPersistentStorage opBankPersistentStorage;
 
 
-    public OpBankAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
-        super(request, context, signatureKeyPath);
+    public OpBankAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
         bankClient = new OpBankApiClient(client);
         this.opBankPersistentStorage = new OpBankPersistentStorage(credentials, persistentStorage);;
     }

@@ -23,15 +23,16 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.Field;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBankApiClient> extends NextGenerationAgent {
     protected final MarketSpecificApiClient apiClient;
     protected final DanskeBankConfiguration configuration;
     protected final String deviceId;
 
-    public DanskeBankAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath,
+    public DanskeBankAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair,
             DanskeBankConfiguration configuration) {
-        super(request, context, signatureKeyPath);
+        super(request, context, signatureKeyPair);
         this.apiClient = createApiClient(this.client, configuration);
         this.configuration = configuration;
         this.deviceId = Hash.sha1AsHex(this.credentials.getField(Field.Key.USERNAME) + "-TINK");

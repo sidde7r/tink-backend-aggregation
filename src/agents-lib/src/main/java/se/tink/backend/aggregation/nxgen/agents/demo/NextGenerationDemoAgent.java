@@ -19,13 +19,14 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class NextGenerationDemoAgent extends NextGenerationAgent {
     private final NextGenerationDemoAuthenticator authenticator;
     private final NextGenerationDemoFetcher fetcher;
 
-    public NextGenerationDemoAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
-        super(request, context, signatureKeyPath);
+    public NextGenerationDemoAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
 
         this.authenticator = new NextGenerationDemoAuthenticator(credentials);
         this.fetcher = new NextGenerationDemoFetcher(credentials);

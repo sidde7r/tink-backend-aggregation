@@ -25,14 +25,15 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.Field;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class HandelsbankenNOAgent extends NextGenerationAgent {
 
     private final HandelsbankenNOApiClient apiClient;
     private EncapClient encapClient;
 
-    public HandelsbankenNOAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
-        super(request, context, signatureKeyPath);
+    public HandelsbankenNOAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
         apiClient = new HandelsbankenNOApiClient(client, sessionStorage);
         encapClient = new EncapClient(new HandelsbankenNOEncapConfiguration(), persistentStorage, client, true,
                 credentials.getField(Field.Key.USERNAME));

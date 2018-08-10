@@ -209,6 +209,7 @@ java_library(
         "//src/libraries/identity:identity",
         "//src/libraries/strings:strings",
         "//src/api-annotations",
+        "//src/libraries/cryptography:cryptography",
 
         "//src/api-headers",
 
@@ -284,6 +285,9 @@ java_library(
         include = ["src/common-lib/src/test/**/*.java"],
         exclude = ["src/common-lib/src/test/**/*Test.java"],
     ),
+    data = [
+             "//data:cryptography-test",
+         ],
     runtime_deps = [
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",

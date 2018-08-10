@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public abstract class SdcAgent extends NextGenerationAgent {
 
@@ -31,9 +32,9 @@ public abstract class SdcAgent extends NextGenerationAgent {
     protected SdcSessionStorage sdcSessionStorage;
     protected SdcPersistentStorage sdcPersistentStorage;
 
-    public SdcAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath,
+    public SdcAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair,
             SdcConfiguration agentConfiguration, SdcTransactionParser parser) {
-        super(request, context, signatureKeyPath);
+        super(request, context, signatureKeyPair);
         this.parser = parser;
         this.agentConfiguration = agentConfiguration;
         this.sdcSessionStorage = new SdcSessionStorage(this.sessionStorage);

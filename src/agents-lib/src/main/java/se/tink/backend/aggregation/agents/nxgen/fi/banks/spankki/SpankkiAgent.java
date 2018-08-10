@@ -26,14 +26,15 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class SpankkiAgent extends NextGenerationAgent {
     private final SpankkiSessionStorage spankkiSessionStorage;
     private final SpankkiPersistentStorage spankkiPersistentStorage;
     private final SpankkiApiClient apiClient;
 
-    public SpankkiAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
-        super(request, context, signatureKeyPath);
+    public SpankkiAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
         this.spankkiSessionStorage = new SpankkiSessionStorage(this.sessionStorage);
         this.spankkiPersistentStorage = new SpankkiPersistentStorage(this.persistentStorage);
         this.apiClient = new SpankkiApiClient(this.client, this.spankkiSessionStorage,

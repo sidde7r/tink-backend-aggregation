@@ -60,7 +60,7 @@ public class ServiceConfiguration extends Configuration {
     private boolean isProvidersOnAggregation = false;
 
     @JsonProperty
-    private String signatureKeyPath = "";
+    private SignatureKeyPair signatureKeyPair = new SignatureKeyPair();
 
     public AbnAmroConfiguration getAbnAmro() {
         return abnAmro;
@@ -143,7 +143,7 @@ public class ServiceConfiguration extends Configuration {
         return isProvidersOnAggregation;
     }
 
-    public String getSignatureKeyPath() {
-        return signatureKeyPath;
+    public SignatureKeyPair getSignatureKeyPair() {
+        return signatureKeyPair;
     }
 }

@@ -18,13 +18,14 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class CreditAgricoleAgent extends NextGenerationAgent {
 
     private final CreditAgricoleApiClient apiClient;
 
-    public CreditAgricoleAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
-        super(request, context, signatureKeyPath);
+    public CreditAgricoleAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
         persistentStorage.put(StorageKey.REGION_ID, request.getProvider().getPayload());
         apiClient = new CreditAgricoleApiClient(client, persistentStorage, sessionStorage);
     }

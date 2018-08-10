@@ -3,9 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.monabanq;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationAgent;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class MonaBanqAgent extends EuroInformationAgent {
-    public MonaBanqAgent(CredentialsRequest request, AgentContext context, String signatureKeyPath) {
-        super(request, context, signatureKeyPath, new MonaBanqConfiguration());
+    public MonaBanqAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair, new MonaBanqConfiguration());
     }
 }
