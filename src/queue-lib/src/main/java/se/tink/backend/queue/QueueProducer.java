@@ -5,5 +5,7 @@ public interface QueueProducer {
 
     void stop();
 
-    void send(String message);
+    void send(Object t);
+
+    boolean isAvailable();
 }
