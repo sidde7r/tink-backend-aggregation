@@ -24,14 +24,16 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public abstract class SamlinkAgent extends NextGenerationAgent {
 
     private final SamlinkApiClient apiClient;
     private final SamlinkPersistentStorage samlinkPersistentStorage;
 
-    public SamlinkAgent(CredentialsRequest request, AgentContext context, SamlinkConfiguration agentConfiguration) {
-        super(request, context);
+    public SamlinkAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair,
+            SamlinkConfiguration agentConfiguration) {
+        super(request, context, signatureKeyPair);
         apiClient = new SamlinkApiClient(client, new SamlinkSessionStorage(sessionStorage), agentConfiguration);
         samlinkPersistentStorage = new SamlinkPersistentStorage(persistentStorage);
     }

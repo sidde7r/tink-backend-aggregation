@@ -23,13 +23,14 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class KbcAgent extends NextGenerationAgent {
     private final KbcApiClient apiClient;
     private KbcHttpFilter httpFilter;
 
-    public KbcAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public KbcAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
         this.apiClient = KbcApiClient.create(sessionStorage, client);
     }
 

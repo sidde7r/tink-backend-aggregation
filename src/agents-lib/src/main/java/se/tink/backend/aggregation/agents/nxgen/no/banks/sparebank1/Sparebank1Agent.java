@@ -31,13 +31,14 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class Sparebank1Agent extends NextGenerationAgent {
     private final Sparebank1ApiClient apiClient;
     private final RestRootResponse restRootResponse;
 
-    public Sparebank1Agent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public Sparebank1Agent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
 
         String bankId = request.getProvider().getPayload();
         apiClient = new Sparebank1ApiClient(client, bankId);

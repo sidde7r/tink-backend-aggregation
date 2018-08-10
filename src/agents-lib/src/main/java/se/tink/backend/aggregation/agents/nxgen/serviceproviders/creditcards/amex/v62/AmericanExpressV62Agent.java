@@ -22,15 +22,16 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class AmericanExpressV62Agent extends NextGenerationAgent {
 
     private final AmericanExpressV62ApiClient apiClient;
     private final AmericanExpressV62Configuration config;
 
-    protected AmericanExpressV62Agent(
-            CredentialsRequest request, AgentContext context, AmericanExpressV62Configuration config) {
-        super(request, context);
+    protected AmericanExpressV62Agent(CredentialsRequest request, AgentContext context,
+            SignatureKeyPair signatureKeyPair, AmericanExpressV62Configuration config) {
+        super(request, context, signatureKeyPair);
         this.apiClient = new AmericanExpressV62ApiClient(client, sessionStorage, persistentStorage, config);
         this.config = config;
     }

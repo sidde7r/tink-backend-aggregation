@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public abstract class HandelsbankenAgent<A extends HandelsbankenApiClient, C extends HandelsbankenConfiguration>
         extends NextGenerationAgent {
@@ -33,9 +34,9 @@ public abstract class HandelsbankenAgent<A extends HandelsbankenApiClient, C ext
     private final HandelsbankenSessionStorage handelsbankenSessionStorage;
     private final C handelsbankenConfiguration;
 
-    public HandelsbankenAgent(CredentialsRequest request, AgentContext context,
+    public HandelsbankenAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair,
             C handelsbankenConfiguration) {
-        super(request, context);
+        super(request, context, signatureKeyPair);
         this.handelsbankenConfiguration = handelsbankenConfiguration;
         this.handelsbankenPersistentStorage = new HandelsbankenPersistentStorage(this.persistentStorage);
         this.bankClient = constructApiClient(handelsbankenConfiguration);

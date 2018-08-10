@@ -10,7 +10,7 @@ import ch.qos.logback.classic.Level;
 
 @RunWith(ClasspathSuite.class)
 @ClasspathSuite.IncludeJars(true)
-@ClasspathSuite.ClassnameFilters("se.tink.backend.aggregation.*")
+@ClasspathSuite.ClassnameFilters("se.tink.*")
 public class %s {
     @BeforeClass
     public static void setLogLevelForTests() {

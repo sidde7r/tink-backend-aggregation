@@ -10,7 +10,6 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -62,7 +61,7 @@ import se.tink.backend.aggregation.nxgen.http.redirect.FixRedirectHandler;
 import se.tink.backend.aggregation.nxgen.http.redirect.RedirectHandler;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
-import se.tink.libraries.jersey.utils.InterClusterJerseyClientFactory;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class TinkHttpClient extends Filterable<TinkHttpClient> {
@@ -151,7 +150,8 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
             }
         }
     }
-    public TinkHttpClient(@Nullable AgentContext context, @Nullable Credentials credentials) {
+    public TinkHttpClient(@Nullable AgentContext context, @Nullable Credentials credentials,
+            @Nullable SignatureKeyPair signatureKeyPair) {
         this.context = context;
         this.credentials = credentials;
 
@@ -159,7 +159,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         this.internalCookieStore = new BasicCookieStore();
         this.internalRequestConfigBuilder = RequestConfig.custom();
         this.internalHttpClientBuilder = HttpClientBuilder.create()
-                                        .setRequestExecutor(new TinkApacheHttpRequestExecutor())
+                                        .setRequestExecutor(new TinkApacheHttpRequestExecutor(signatureKeyPair))
                                         .setDefaultCookieStore(this.internalCookieStore);
 
         this.internalSslContextBuilder = new SSLContextBuilder()
@@ -183,6 +183,10 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         setDebugOutput(DEFAULTS.DEBUG_OUTPUT);
         addPersistentHeader("X-Aggregator", getHeaderAggregatorIdentifier());
         setUserAgent(DEFAULTS.DEFAULT_USER_AGENT);
+    }
+
+    public TinkHttpClient(@Nullable AgentContext context, @Nullable Credentials credentials) {
+        this(context, credentials, null);
     }
 
     private void constructInternalClient() {

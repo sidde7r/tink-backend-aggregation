@@ -22,13 +22,14 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class EuroInformationAgent extends NextGenerationAgent {
     protected final EuroInformationApiClient apiClient;
 
-    protected EuroInformationAgent(CredentialsRequest request,
-            AgentContext context, EuroInformationConfiguration config) {
-        super(request, context);
+    protected EuroInformationAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair,
+            EuroInformationConfiguration config) {
+        super(request, context, signatureKeyPair);
         this.apiClient = new EuroInformationApiClient(this.client, sessionStorage, config);
     }
 

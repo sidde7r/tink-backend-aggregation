@@ -21,13 +21,14 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class N26Agent extends NextGenerationAgent {
 
     private final N26ApiClient n26APiClient;
 
-    public N26Agent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public N26Agent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
         this.n26APiClient = new N26ApiClient(this.client, sessionStorage);
     }
 

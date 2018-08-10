@@ -24,14 +24,15 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 import java.util.Optional;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class BelfiusAgent extends NextGenerationAgent {
 
     private final BelfiusApiClient apiClient;
     private final BelfiusSessionStorage belfiusSessionStorage;
 
-    public BelfiusAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public BelfiusAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
         this.belfiusSessionStorage = new BelfiusSessionStorage(this.sessionStorage);
         this.apiClient = new BelfiusApiClient(this.client, belfiusSessionStorage);
     }

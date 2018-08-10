@@ -21,13 +21,14 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class ErsteBankAgent extends NextGenerationAgent {
 
     private final ErsteBankApiClient ersteBankApiClient;
 
-    public ErsteBankAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public ErsteBankAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
         this.ersteBankApiClient = new ErsteBankApiClient(this.client, sessionStorage);
     }
 

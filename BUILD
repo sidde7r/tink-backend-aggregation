@@ -209,6 +209,7 @@ java_library(
         "//src/libraries/identity:identity",
         "//src/libraries/strings:strings",
         "//src/api-annotations",
+        "//src/libraries/cryptography:cryptography",
 
         "//src/api-headers",
 
@@ -284,6 +285,9 @@ java_library(
         include = ["src/common-lib/src/test/**/*.java"],
         exclude = ["src/common-lib/src/test/**/*Test.java"],
     ),
+    data = [
+             "//data:cryptography-test",
+         ],
     runtime_deps = [
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
@@ -350,6 +354,7 @@ java_library(
         "//tools:libkbc_wbaes_linux",
         "//tools:libkbc_wbaes_mac",
         "//data:tesseract-training-set",
+        "//data:cryptography-test"
     ],
     deps = [
         ":aggregation-api",
@@ -469,6 +474,7 @@ java_library(
         "//src/libraries/jersey_utils:jersey-utils",
         "//src/api-annotations",
         "//src/libraries/cli_print_utils:cli_print_utils",
+        "//src/libraries/cryptography:cryptography",
 
         "//third_party:org_springframework_spring_expression",
         "//third_party:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
@@ -499,6 +505,7 @@ java_library(
         "//third_party:org_assertj_assertj_core",
         "//third_party:net_sourceforge_tess4j",
         "//third_party:net_sourceforge_cssparser_cssparser",
+        "//third_party:com_auth0_java_jwt",
 
     ],
 )
@@ -632,6 +639,7 @@ junit_test(
         "//tools:phantomjs_mac",
         "//tools:libkbc_wbaes_linux",
         "//tools:libkbc_wbaes_mac",
+        "//data:cryptography-test",
     ],
     runtime_deps = [
         "//third_party:ch_qos_logback_logback_classic",
@@ -657,6 +665,7 @@ junit_test(
         "//src/libraries/i18n",
         "//src/libraries/strings:strings",
         "//src/libraries/abnamro:abn_amro",
+        "//src/libraries/cryptography:cryptography",
 
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_google_guava_guava",
@@ -673,6 +682,7 @@ junit_test(
         "//third_party:pl_pragmatists_junitparams",
         "//third_party:com_nimbusds_srp6a",
         "//third_party:org_bouncycastle_bcprov_jdk15on",
+        "//third_party:com_auth0_java_jwt",
     ],
 )
 
@@ -685,6 +695,7 @@ junit_test(
         "etc/development.yml",
         "//data:aggregation-test",
         "//data:tesseract-training-set",
+        "//data:cryptography-test",
     ],
     tags = [
         "external",

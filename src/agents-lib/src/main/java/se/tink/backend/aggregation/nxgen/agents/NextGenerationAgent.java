@@ -38,6 +38,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.i18n.Catalog;
 
@@ -67,14 +68,14 @@ public abstract class NextGenerationAgent extends AbstractAgent implements Refre
     private boolean hasRefreshedCheckingAccounts = false;
     private boolean hasRefreshedCheckingTransactions = false;
 
-    protected NextGenerationAgent(CredentialsRequest request, AgentContext context) {
+    protected NextGenerationAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
         this.catalog = context.getCatalog();
         this.persistentStorage = new PersistentStorage();
         this.sessionStorage = new SessionStorage();
         this.credentials = request.getCredentials();
         this.updateController = new UpdateController(context, credentials, request.getProvider().getCurrency());
-        this.client = new TinkHttpClient(context, credentials);
+        this.client = new TinkHttpClient(context, credentials, signatureKeyPair);
         this.transactionPaginationHelper = new TransactionPaginationHelper(request);
         this.supplementalInformationController = new SupplementalInformationController(context, credentials);
         this.metricRefreshController = new MetricRefreshController(context.getMetricRegistry(), request.getProvider(), credentials,

@@ -23,13 +23,14 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public final class BankiaAgent extends NextGenerationAgent {
 
     private final BankiaApiClient apiClient;
 
-    public BankiaAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public BankiaAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
 
         apiClient = new BankiaApiClient(client, persistentStorage);
 

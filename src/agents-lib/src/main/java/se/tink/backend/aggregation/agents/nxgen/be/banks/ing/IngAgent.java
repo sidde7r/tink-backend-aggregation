@@ -28,14 +28,15 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 import static se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Headers.USER_AGENT;
 
 public class IngAgent extends NextGenerationAgent {
     private final IngApiClient apiClient;
     private final IngHelper ingHelper;
 
-    public IngAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public IngAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
         this.apiClient = new IngApiClient(client);
         this.ingHelper = new IngHelper(sessionStorage);
     }
