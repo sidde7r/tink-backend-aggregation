@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.workers;
 
 import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.google.inject.Inject;
 import io.dropwizard.lifecycle.Managed;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadFactory;
@@ -16,6 +17,8 @@ import se.tink.backend.common.utils.ExecutorServiceUtils;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
+
+import javax.annotation.PostConstruct;
 
 public class AgentWorker implements Managed {
     public static final String DEFAULT_AGENT_PACKAGE_CLASS_PREFIX =
@@ -44,11 +47,13 @@ public class AgentWorker implements Managed {
     private static final ThreadFactory threadFactory = new ThreadFactoryBuilder()
             .setNameFormat("aggregation-worker-agent-thread-%d").build();
 
+    @Inject
     public AgentWorker(MetricRegistry metricRegistry) {
         this.metricRegistry = metricRegistry;
     }
 
     @Override
+    @PostConstruct
     public void start() throws Exception {
         BlockingQueue<WrappedRunnableListenableFutureTask<Runnable, ?>> executorServiceQueue = Queues
                 .newLinkedBlockingQueue();
