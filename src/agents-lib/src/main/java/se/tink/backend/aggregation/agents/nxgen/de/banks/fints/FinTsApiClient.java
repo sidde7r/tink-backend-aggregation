@@ -417,6 +417,9 @@ public class FinTsApiClient {
     private String process_61_86elements(String nextLine, Scanner mt940Scanner, List<MT940Statement> transactions) {
         String tag61 = nextLine.substring(4);
         StringBuilder tag86 = new StringBuilder();
+        if(!mt940Scanner.hasNextLine()){
+            return "";
+        }
         nextLine = mt940Scanner.nextLine();
         if (nextLine.startsWith(FinTsConstants.SegData.MT940_MULTIPURPOSE_FIELD)) {
             tag86.append(nextLine.substring(4));
