@@ -3,6 +3,7 @@ package se.tink.backend.common.config;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
+import se.tink.backend.queue.sqs.configuration.SqsQueueConfiguration;
 import se.tink.libraries.abnamro.config.AbnAmroConfiguration;
 import se.tink.libraries.cluster.Cluster;
 import se.tink.libraries.endpoints.EndpointsConfiguration;
@@ -61,6 +62,9 @@ public class ServiceConfiguration extends Configuration {
 
     @JsonProperty
     private SignatureKeyPair signatureKeyPair = new SignatureKeyPair();
+
+    @JsonProperty
+    private SqsQueueConfiguration sqsQueueConfiguration;
 
     public AbnAmroConfiguration getAbnAmro() {
         return abnAmro;
@@ -145,5 +149,13 @@ public class ServiceConfiguration extends Configuration {
 
     public SignatureKeyPair getSignatureKeyPair() {
         return signatureKeyPair;
+    }
+
+    public SqsQueueConfiguration getSqsQueueConfiguration() {
+        return sqsQueueConfiguration;
+    }
+
+    public void setSqsQueueConfiguration(SqsQueueConfiguration sqsQueueConfiguration) {
+        this.sqsQueueConfiguration = sqsQueueConfiguration;
     }
 }
