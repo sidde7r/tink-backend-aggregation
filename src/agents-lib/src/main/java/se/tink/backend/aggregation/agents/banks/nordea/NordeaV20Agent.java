@@ -171,9 +171,6 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
     private static final TransferMessageLengthConfig TRANSFER_MESSAGE_LENGTH_CONFIG = TransferMessageLengthConfig
             .createWithMaxLength(50, 12, 50);
 
-    private static final MetricId NORDEA_FETCH_TRANSACTIONS = MetricId.newId(
-            "nordea_fetch_transactions");
-
     private String securityToken;
     private final Client client;
     private final Credentials credentials;
@@ -759,17 +756,9 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
                 this.log.warn("Failed fetching transactions. Retrying...");
                 transactionListResponse = fetchTransactions(accountId, continueKey);
 
-                if (transactionListResponse.getAccountTransactions() == null) {
-                    this.register.meter(NORDEA_FETCH_TRANSACTIONS.label("outcome", "retry_fail")).inc();
-                } else {
-                    this.register.meter(NORDEA_FETCH_TRANSACTIONS.label("outcome", "retry_successful")).inc();
-                }
-
                 Preconditions.checkNotNull(transactionListResponse.getAccountTransactions(),
                         "Failed retry fetching transactions.");
 
-            } else {
-                this.register.meter(NORDEA_FETCH_TRANSACTIONS.label("outcome", "successful")).inc();
             }
 
             continueKey = (transactionListResponse.getAccountTransactions().getContinueKey().get("$") == null ? null
