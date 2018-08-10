@@ -542,7 +542,6 @@ java_binary(
         ":main-api",
         ":agents-lib",
         ":aggregationcontroller-api",
-        "//src/queue-sqs:queue-sqs",
 
         "//src/libraries/auth:auth",
         "//src/libraries/cluster:cluster",
