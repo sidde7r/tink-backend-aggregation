@@ -96,7 +96,7 @@ public class EuroInformationAgent extends NextGenerationAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return EuroInformationSessionHandler.create(apiClient, sessionStorage);
+        return EuroInformationSessionHandler.create(apiClient);
     }
 
     @Override

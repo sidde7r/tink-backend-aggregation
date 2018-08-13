@@ -1,14 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.session;
 
-import java.net.URISyntaxException;
 import java.util.Optional;
-import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.authentication.rpc.LogoutResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.session.rpc.InitResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationUtils;
@@ -18,15 +15,13 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 public class EuroInformationSessionHandler implements SessionHandler {
     private final Logger LOGGER = LoggerFactory.getLogger(EuroInformationSessionHandler.class);
     private final EuroInformationApiClient apiClient;
-    private final SessionStorage sessionStorage;
 
-    private EuroInformationSessionHandler(EuroInformationApiClient apiClient, SessionStorage sessionStorage) {
+    private EuroInformationSessionHandler(EuroInformationApiClient apiClient) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
     }
 
-    public static EuroInformationSessionHandler create(EuroInformationApiClient apiClient, SessionStorage sessionStorage) {
-        return new EuroInformationSessionHandler(apiClient, sessionStorage);
+    public static EuroInformationSessionHandler create(EuroInformationApiClient apiClient) {
+        return new EuroInformationSessionHandler(apiClient);
     }
 
     @Override
@@ -39,23 +34,8 @@ public class EuroInformationSessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
-        InitResponse response = apiClient.actionInit(buildInitRequestBody());
+        InitResponse response = apiClient.actionInit();
         Optional.ofNullable(response).filter(o -> EuroInformationUtils.isSuccess(o.getReturnCode()))
                 .orElseThrow(() -> SessionError.SESSION_EXPIRED.exception());
-    }
-
-    private String buildInitRequestBody() {
-        URIBuilder uriBuilder = new URIBuilder();
-        try {
-            return uriBuilder
-                    .addParameter(EuroInformationConstants.RequestBodyValues.ACTION,
-                            EuroInformationConstants.RequestBodyValues.INIT)
-                    .addParameter(EuroInformationConstants.RequestBodyValues.MEDIA,
-                            EuroInformationConstants.RequestBodyValues.MEDIA_VALUE)
-                    .build().getQuery();
-        } catch (URISyntaxException e) {
-            LOGGER.error("Error building init request body\n", e);
-            throw new RuntimeException(e);
-        }
     }
 }

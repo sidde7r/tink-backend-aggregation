@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinfor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.AccountSummaryResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.transactional.rpc.TransactionSummaryRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.transactional.rpc.TransactionSummaryResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.session.rpc.InitRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.session.rpc.InitResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -78,10 +79,9 @@ public class EuroInformationApiClient {
     }
 
     //Seems it's not obligatory call so use it for keep-alive
-    public InitResponse actionInit(String body) {
+    public InitResponse actionInit() {
         return buildRequestHeaders(EuroInformationConstants.Url.INIT)
-                .body(body)
-                .post(InitResponse.class);
+                .post(InitResponse.class, new InitRequest());
     }
 
 }
