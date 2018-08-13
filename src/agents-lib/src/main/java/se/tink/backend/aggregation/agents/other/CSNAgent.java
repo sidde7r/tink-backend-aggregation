@@ -15,12 +15,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.utils.httpclient.HttpClientAgent;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.readers.CharacterEncodedMessageBodyReader;
 import se.tink.backend.aggregation.rpc.Account;
@@ -28,7 +28,7 @@ import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
-public class CSNAgent extends HttpClientAgent implements DeprecatedRefreshExecutor {
+public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
 
     private static final File TRUST_STORE = new File("data/security/csn.truststore");
     private static final char[] TRUST_STORE_PASSWORD = "changeme".toCharArray();
