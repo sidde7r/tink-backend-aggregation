@@ -58,8 +58,12 @@ public abstract class AccountEntity extends AbstractAccountEntity {
         return type;
     }
 
+    private boolean isBalanceUndefined() {
+        return balance == null || balance.replaceAll("[^0-9]", "").isEmpty();
+    }
+
     protected Optional<TransactionalAccount> toTransactionalAccount(BankProfile bankProfile, @Nonnull AccountTypes type) {
-        if (fullyFormattedNumber == null || currency == null || balance == null) {
+        if (fullyFormattedNumber == null || currency == null || balance == null || isBalanceUndefined()) {
             return Optional.empty();
         }
 
