@@ -9,6 +9,8 @@ import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.io.File;
 import java.io.IOException;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -56,6 +58,8 @@ import se.tink.credentials.demo.DemoCredentials.DemoUserFeature;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.uuid.UUIDUtils;
+import static java.time.temporal.TemporalAdjusters.next;
+import static java.util.Calendar.SUNDAY;
 
 public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor, TransferExecutor {
     private static final String BASE_PATH = "data/demo";
@@ -360,6 +364,9 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
 
         einvoices.add(DemoDataUtils.createFakeTransfer("Centrala Studiestödsnämnd", "4027809501", 2406, "55803084",
                 SwedishGiroType.BG, 14, TransferType.EINVOICE));
+        einvoices.add(DemoDataUtils
+                .createFakeTransferInComingSunday("Centrala Studiestödsnämnd 2", "4027809502", 3500, "55803084",
+                        SwedishGiroType.BG, TransferType.EINVOICE));
 
         // pendingEinvoices.add(createEinvoice("American Express 3757", "37578468440200734", 144.69, "7308596",
         // SwedishGiroType.BG, 15, TransferType.EINVOICE));
