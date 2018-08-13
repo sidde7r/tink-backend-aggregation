@@ -62,7 +62,6 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         MetricAction metricAction = metrics.buildAction(
                 new MetricId.MetricLabels()
                         .add("action", transferRequest.isUpdate() ? MetricName.UPDATE_TRANSFER : MetricName.EXECUTE_TRANSFER));
-        metricAction.start();
 
         HttpLoggableExecutor httpLoggableExecutor = (HttpLoggableExecutor)agent;
         ClientFilterFactory loggingFilterFactory = createHttpLoggingFilterFactory(
@@ -156,7 +155,6 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
 
             return AgentWorkerCommandResult.ABORT;
         } finally {
-            metricAction.stop();
             // Disable the logging filter when we're done with the transfer execute command.
             loggingFilterFactory.removeClientFilters();
             resetCredentialsStatus();
