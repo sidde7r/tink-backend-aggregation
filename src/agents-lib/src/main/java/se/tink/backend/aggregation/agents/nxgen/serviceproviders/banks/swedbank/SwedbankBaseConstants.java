@@ -112,6 +112,10 @@ public class SwedbankBaseConstants {
         public static final String BANK_PROFILE_HANDLER = "BANK_PROFILES";
     }
 
+    public static class SavingAccountTypes {
+        public static final String PENSION = "pension";
+    }
+
     public enum InvestmentAccountType {
         EQUITY_TRADER("EQUITY_TRADER"),
         SAVINGSACCOUNT("SAVINGSACCOUNT"),
