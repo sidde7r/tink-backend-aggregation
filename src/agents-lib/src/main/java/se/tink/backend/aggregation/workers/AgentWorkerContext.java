@@ -92,10 +92,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
             AccountTypes.LOAN,
             AccountTypes.INVESTMENT));
 
-    private static final List<Integer> TRANSACTION_DATE_HISTORY_BUCKETS = ImmutableList.of(0, 30, 90, 182, 365, 730);
-    private static final List<Integer> TRANSACTION_COUNT_HISTORY_BUCKETS = ImmutableList.of(0, 50, 100, 250, 500, 1000,
-            2000, 5000, 10000);
-
     private static final String EMPTY_CLASS_NAME = "";
     private final MetricRegistry metricRegistry;
     private final Counter refreshTotal;
@@ -290,14 +286,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         }
     }
 
-    private int countDaysFromOldestTransaction(List<Transaction> transactions) {
-        Optional<Date> oldestTransactionDate = transactions.stream()
-                .min(Comparator.comparing(Transaction::getDate))
-                .map(Transaction::getDate);
-
-        return oldestTransactionDate.map(date -> DateUtils.daysBetween(date, new Date())).orElse(0);
-    }
-
     private int countNumberOfTransactionsOlderThanToday(List<Transaction> transactions) {
         final Date today = new Date();
         return (int) transactions.stream()
@@ -360,35 +348,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
                 if (transaction.getType() == null) {
                     transaction.setType(TransactionTypes.DEFAULT);
                 }
-            }
-
-            if (!credentials.isDemoCredentials()) {
-                String accountType = getAccountTypeFor(accountId).name();
-                boolean isFullRefresh = getCertainDateFor(accountId) == null;
-                MetricId.MetricLabels labels = defaultMetricLabels.add("account_type", accountType)
-                        .add("full_refresh", Boolean.toString(isFullRefresh));
-
-                String stringifiedLabels = String.format(
-                        "{\"request_type\": %s, \"full_refresh\": %s, \"provider\": %s, \"account_type\": %s}",
-                        request.getType().name(), isFullRefresh, request.getProvider().getName(), accountType);
-
-                // Metric for days between oldest & most recent transaction
-                Histogram transactionDateHistory = metricRegistry
-                        .histogram(MetricId.newId("transaction_history_days_total")
-                                .label(labels), TRANSACTION_DATE_HISTORY_BUCKETS);
-                int daysFromOldestTransaction = countDaysFromOldestTransaction(accountTransactions);
-                transactionDateHistory.update(daysFromOldestTransaction);
-                log.info(String.format("Days between oldest & most recent transaction: %s | %s",
-                        daysFromOldestTransaction, stringifiedLabels));
-
-                // Metric for number of transactions
-                Histogram transactionCountHistory = metricRegistry
-                        .histogram(MetricId.newId("transaction_history_count_total")
-                                .label(labels), TRANSACTION_COUNT_HISTORY_BUCKETS);
-                int numberOfTransactions = countNumberOfTransactionsOlderThanToday(accountTransactions);
-                transactionCountHistory.update(numberOfTransactions);
-                log.info(String.format("Number of fetched transactions: %s | %s",
-                        numberOfTransactions, stringifiedLabels));
             }
 
             transactions.addAll(accountTransactions);
