@@ -97,10 +97,8 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
             2000, 5000, 10000);
 
     private static final String EMPTY_CLASS_NAME = "";
-    private final Timer providerUpdateAccountTimer;
     private final MetricRegistry metricRegistry;
     private final Counter refreshTotal;
-    private final Counter noTransferDestinationFetched;
     private final MetricId.MetricLabels defaultMetricLabels;
     private Agent agent;
     private Catalog catalog;
@@ -169,21 +167,10 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
 
         defaultMetricLabels = new MetricId.MetricLabels()
                 .addAll(clusterId.metricLabels())
-                .add("provider_type", provider.getMetricTypeName())
                 .add("provider", MetricsUtils.cleanMetricName(provider.getName()))
                 .add("market", provider.getMarket())
                 .add("agent", Optional.ofNullable(provider.getClassName()).orElse(EMPTY_CLASS_NAME))
-                .add("manual", String.valueOf(request.isManual()))
-                .add("credential", request.getCredentials().getMetricTypeName())
                 .add("request_type", request.getType().name());
-
-        providerUpdateAccountTimer = metricRegistry.timer(
-                MetricId.newId("update_account")
-                        .label(defaultMetricLabels));
-
-        noTransferDestinationFetched = metricRegistry.meter(
-                MetricId.newId("no_transfer_destination_fetched")
-                        .label(defaultMetricLabels));
 
         refreshTotal = metricRegistry.meter(
                 MetricId.newId("accounts_refresh")
@@ -609,8 +596,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
             updateAccountRequest.setAccountFeatures(accountFeatures);
             updateAccountRequest.setCredentialsId(request.getCredentials().getId());
 
-            Context updateAccountTimerContext = providerUpdateAccountTimer.time();
-
             try {
                 if (isAggregationCluster) {
                     updatedAccount = aggregationControllerAggregationClient.updateAccount(getClusterInfo(),
@@ -624,8 +609,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
                         (e.getResponse().hasEntity() ? e.getResponse().getEntity(String.class) : ""));
                 throw e;
             }
-
-            updateAccountTimerContext.stop();
         } else {
             UpdateAccountRequest updateAccountsRequest = new UpdateAccountRequest();
 
@@ -634,9 +617,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
             updateAccountsRequest.setAccount(CoreAccountMapper.fromAggregation(account));
             updateAccountsRequest.setAccountFeatures(accountFeatures);
             updateAccountsRequest.setCredentialsId(request.getCredentials().getId());
-
-            Context updateAccountTimerContext = providerUpdateAccountTimer.time();
-
             try {
                 updatedAccount = CoreAccountMapper.toAggregation(
                         systemServiceFactory.getUpdateService().updateAccount(updateAccountsRequest));
@@ -645,8 +625,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
                         (e.getResponse().hasEntity() ? e.getResponse().getEntity(String.class) : ""));
                 throw e;
             }
-
-            updateAccountTimerContext.stop();
         }
 
         updatedAccountsByTinkId.put(updatedAccount.getId(), updatedAccount);
@@ -798,8 +776,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
                 } else {
                     aggregationControllerAggregationClient.updateTransferDestinationPatterns(request);
                 }
-            } else {
-                noTransferDestinationFetched.inc();
             }
         } else {
             UpdateTransferDestinationPatternsRequest request = new UpdateTransferDestinationPatternsRequest();
@@ -808,8 +784,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
 
             if (!transferDestinationPatternsByAccount.isEmpty()) {
                 systemServiceFactory.getUpdateService().updateTransferDestinationPatterns(request);
-            } else {
-                noTransferDestinationFetched.inc();
             }
         }
     }
