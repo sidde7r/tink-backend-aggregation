@@ -54,7 +54,6 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                             .add("item", item.name())
             );
             try {
-                action.start();
                 log.info("Refreshing item: {}", item.name());
 
                 Agent agent = context.getAgent();
@@ -69,8 +68,6 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                 log.warn("Couldn't refresh RefreshableItem({})", item);
 
                 throw e;
-            } finally {
-                action.stop();
             }
         } finally {
             metrics.stop();
