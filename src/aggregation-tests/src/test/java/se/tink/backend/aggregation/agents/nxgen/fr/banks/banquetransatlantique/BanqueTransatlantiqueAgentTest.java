@@ -5,7 +5,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.rpc.Field;
 
-//@Ignore
+@Ignore
 public class BanqueTransatlantiqueAgentTest {
     private static final String USERNAME = "<username>";
     private static final String PASSWORD = "<password>";
