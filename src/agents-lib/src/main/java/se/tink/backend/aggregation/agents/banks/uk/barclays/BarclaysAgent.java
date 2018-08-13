@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -34,7 +35,7 @@ public class BarclaysAgent extends AbstractAgent implements RefreshableItemExecu
 
     static { Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider()); }
 
-    public BarclaysAgent(CredentialsRequest request, AgentContext context) {
+    public BarclaysAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         credentials = request.getCredentials();

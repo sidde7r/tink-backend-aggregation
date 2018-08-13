@@ -56,6 +56,7 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.system.rpc.AccountFeatures;
 import se.tink.backend.system.rpc.Instrument;
 import se.tink.backend.system.rpc.Portfolio;
@@ -85,7 +86,7 @@ public class AvanzaV2Agent extends AbstractAgent implements RefreshableItemExecu
     private AccountOverviewEntity accountOverview;
     private Session session;
 
-    public AvanzaV2Agent(CredentialsRequest request, AgentContext context) {
+    public AvanzaV2Agent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         credentials = request.getCredentials();

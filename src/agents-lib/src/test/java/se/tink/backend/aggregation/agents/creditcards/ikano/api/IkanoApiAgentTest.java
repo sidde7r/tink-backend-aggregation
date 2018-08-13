@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.Credentials;
 
 import javax.naming.LimitExceededException;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class IkanoApiAgentTest {
 
@@ -29,6 +30,6 @@ public class IkanoApiAgentTest {
         when(request.getCredentials()).thenReturn(new Credentials());
         when(apiClient.fetchBankIdSession(any(String.class))).thenReturn(false);
 
-        return new IkanoApiAgent(request, context, apiClient, 1);
+        return new IkanoApiAgent(request, context, new SignatureKeyPair(), apiClient, 1);
     }
 }

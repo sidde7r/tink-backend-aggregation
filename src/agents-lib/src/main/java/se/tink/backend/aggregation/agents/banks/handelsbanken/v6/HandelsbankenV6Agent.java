@@ -118,6 +118,7 @@ import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.enums.FeatureFlags;
 import se.tink.backend.core.enums.TransferType;
@@ -256,7 +257,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
     private final Credentials credentials;
     private final TransferMessageFormatter transferMessageFormatter;
 
-    public HandelsbankenV6Agent(CredentialsRequest request, AgentContext context) {
+    public HandelsbankenV6Agent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         credentials = request.getCredentials();

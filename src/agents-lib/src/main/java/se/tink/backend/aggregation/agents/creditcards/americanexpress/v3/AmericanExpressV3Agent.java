@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.system.rpc.Transaction;
 
 public class AmericanExpressV3Agent extends AbstractAgent implements DeprecatedRefreshExecutor {
@@ -42,7 +43,7 @@ public class AmericanExpressV3Agent extends AbstractAgent implements DeprecatedR
     private final Map<String, SubCard> subCardsByCardNumber = Maps.newHashMap();
     private boolean hasRefreshed = false;
 
-    public AmericanExpressV3Agent(CredentialsRequest request, AgentContext context) {
+    public AmericanExpressV3Agent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         this.credentials = request.getCredentials();
@@ -55,7 +56,7 @@ public class AmericanExpressV3Agent extends AbstractAgent implements DeprecatedR
         // client.addFilter(new LoggingFilter(System.out));
     }
 
-    public AmericanExpressV3Agent(CredentialsRequest request, AgentContext context,
+    public AmericanExpressV3Agent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair,
             AmericanExpressV3ApiClient apiClient) {
         super(request, context);
 

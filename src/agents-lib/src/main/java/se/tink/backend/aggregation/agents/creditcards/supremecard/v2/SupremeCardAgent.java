@@ -40,6 +40,7 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.utils.SupplementalInformationUtils;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.system.rpc.Transaction;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
@@ -55,7 +56,7 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshableItemEx
     private AccountInfoEntity accountInfoEntity = null;
     private Account account = null;
 
-    public SupremeCardAgent(CredentialsRequest request, AgentContext context) {
+    public SupremeCardAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         this.apiAgent = createApiAgent();

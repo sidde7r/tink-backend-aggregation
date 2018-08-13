@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.common.config.ServiceConfiguration;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
@@ -44,7 +45,7 @@ public class CollectorAgent extends AbstractAgent implements RefreshableItemExec
     private final Catalog catalog;
     private final TinkApacheHttpClient4 httpClient;
 
-    public CollectorAgent(CredentialsRequest request, AgentContext context) {
+    public CollectorAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         credentials = request.getCredentials();

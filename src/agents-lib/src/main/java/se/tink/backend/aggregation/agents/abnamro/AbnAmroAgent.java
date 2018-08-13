@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.common.config.ServiceConfiguration;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.libraries.abnamro.client.EnrollmentClient;
 import se.tink.libraries.abnamro.client.IBSubscriptionClient;
 import se.tink.libraries.abnamro.client.model.PfmContractEntity;
@@ -47,7 +48,7 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
     private AbnAmroConfiguration abnAmroConfiguration;
     private List<Account> accounts = null;
 
-    public AbnAmroAgent(CredentialsRequest request, AgentContext context) {
+    public AbnAmroAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         this.user = request.getUser();

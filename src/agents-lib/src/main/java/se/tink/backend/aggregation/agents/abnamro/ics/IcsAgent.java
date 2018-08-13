@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.common.config.ServiceConfiguration;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.common.retry.RetryerBuilder;
 import se.tink.backend.system.rpc.Transaction;
 import se.tink.backend.utils.LogUtils;
@@ -53,7 +54,7 @@ public class IcsAgent extends AbstractAgent implements RefreshableItemExecutor {
     private Retryer<List<CreditCardAccountContainerEntity>> retryer;
     private boolean hasRefreshed = false;
 
-    public IcsAgent(CredentialsRequest request, AgentContext context) {
+    public IcsAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         this.credentials = request.getCredentials();
