@@ -346,7 +346,7 @@ public class FinTsApiClient {
             status = response.getLocalStatus();
         }
 
-        LOGGER.info("{} statuses: {}", FinTsConstants.LogTags.TRANSACTION_STATUS, status.toString());
+        LOGGER.info("{} statuses: {} accountNumber: {}", FinTsConstants.LogTags.TRANSACTION_STATUS, status.toString(), accountNo);
 
         //TODO: Need to start checking key AND value
         if (status.containsValue(FinTsConstants.StatusCode.ACCOUNT_NOT_ASSIGNED) ||
