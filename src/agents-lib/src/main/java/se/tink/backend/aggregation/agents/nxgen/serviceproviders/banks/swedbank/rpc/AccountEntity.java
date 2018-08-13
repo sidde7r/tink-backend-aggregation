@@ -63,7 +63,7 @@ public abstract class AccountEntity extends AbstractAccountEntity {
     }
 
     protected Optional<TransactionalAccount> toTransactionalAccount(BankProfile bankProfile, @Nonnull AccountTypes type) {
-        if (fullyFormattedNumber == null || currency == null || balance == null || isBalanceUndefined()) {
+        if (fullyFormattedNumber == null || currency == null || isBalanceUndefined()) {
             return Optional.empty();
         }
 
