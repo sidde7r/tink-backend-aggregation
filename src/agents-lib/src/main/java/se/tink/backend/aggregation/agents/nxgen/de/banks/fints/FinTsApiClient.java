@@ -304,7 +304,7 @@ public class FinTsApiClient {
         }
     }
 
-    private boolean isBalancePositive(String balanceSegment){
+    private boolean isBalancePositive(String balanceSegment) {
         return balanceSegment.startsWith("C");
     }
 
@@ -346,7 +346,8 @@ public class FinTsApiClient {
             status = response.getLocalStatus();
         }
 
-        LOGGER.info("{} statuses: {} accountNumber: {}", FinTsConstants.LogTags.TRANSACTION_STATUS, status.toString(), accountNo);
+        LOGGER.info("{} statuses: {} accountNumber: {}", FinTsConstants.LogTags.TRANSACTION_STATUS, status.toString(),
+                accountNo);
 
         //TODO: Need to start checking key AND value
         if (status.containsValue(FinTsConstants.StatusCode.ACCOUNT_NOT_ASSIGNED) ||
