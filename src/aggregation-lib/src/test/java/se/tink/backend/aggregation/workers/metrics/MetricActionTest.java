@@ -93,7 +93,6 @@ public class MetricActionTest {
 
     private MetricId markerName(String name) {
         return ACTION_NAME
-                .label("outcome", name)
-                .label("status", credentials.getStatus().name());
+                .label("outcome", name);
     }
 }
