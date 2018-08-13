@@ -5,7 +5,7 @@
     {
       "name": "fr-banquetransatlantique-password",
       "displayName": "Banque Transatlantique",
-      "popular": true,
+      "popular": false,
       "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
