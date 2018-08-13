@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.http.legacy;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,27 +40,19 @@ import se.tink.libraries.cryptography.RSAUtils;
  */
 public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private static final Logger log = LoggerFactory.getLogger(TinkApacheHttpRequestExecutor.class);
-    private static final String TEST_PRIVATE_KEY_PATH = "data/test/cryptography/private_rsa_key.pem";
     private static final String SIGNATURE_HEADER_KEY = "X-Signature";
 
-    private final SignatureKeyPair signatureKeyPair;
-
+    private SignatureKeyPair signatureKeyPair;
     private Algorithm algorithm;
 
     public TinkApacheHttpRequestExecutor(SignatureKeyPair signatureKeyPair) {
+        if (signatureKeyPair == null || signatureKeyPair.getPrivateKey() == null) {
+            return;
+        }
+
         this.signatureKeyPair = signatureKeyPair;
 
-        try {
-            if (signatureKeyPair == null || signatureKeyPair.getPrivateKey() == null) {
-                log.warn("Signature key path was empty, using the test key as a fallback.");
-                algorithm = Algorithm.RSA256(null, RSAUtils.getPrivateKey(TEST_PRIVATE_KEY_PATH));
-                return;
-            }
-
-            algorithm = Algorithm.RSA256(null, signatureKeyPair.getPrivateKey());
-        } catch (Exception e) {
-            log.error("No signature header will be added to requests.", e);
-        }
+        algorithm = Algorithm.RSA256(signatureKeyPair.getPublicKey(), signatureKeyPair.getPrivateKey());
     }
 
     @Override
@@ -90,7 +83,7 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     }
 
     private void addRequestSignature(HttpRequest request) {
-        if (algorithm == null) {
+        if (signatureKeyPair == null || algorithm == null) {
             return;
         }
 
