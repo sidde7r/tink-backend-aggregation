@@ -45,7 +45,6 @@ public class ProcessItemAgentWorkerCommand extends AgentWorkerCommand implements
                             .add("item", item.name())
             );
             try {
-                action.start();
                 log.info("Processing item: {}", item.name());
 
                 switch (item) {
@@ -70,8 +69,6 @@ public class ProcessItemAgentWorkerCommand extends AgentWorkerCommand implements
                 log.warn("Couldn't process ProcessableItem({})", item);
 
                 throw e;
-            } finally {
-                action.stop();
             }
         } finally {
             metrics.stop();
