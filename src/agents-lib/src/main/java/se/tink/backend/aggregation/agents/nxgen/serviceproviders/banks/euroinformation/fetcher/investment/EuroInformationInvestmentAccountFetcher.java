@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.investment;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.entities.SecurityAccountListEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.InvestmentAccountOverviewResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.InvestmentAccountsListResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.investment.rpc.InvestmentAccountOverviewResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.investment.rpc.InvestmentAccountsListResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationUtils;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
@@ -23,7 +23,6 @@ import se.tink.backend.core.Amount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class EuroInformationInvestmentAccountFetcher implements AccountFetcher<InvestmentAccount> {
-    public static final String MAX_ELEMENTS = "25";
     private static final Logger LOGGER = LoggerFactory.getLogger(EuroInformationInvestmentAccountFetcher.class);
     private static final AggregationLogger AGGREGATION_LOGGER = new AggregationLogger(
             EuroInformationInvestmentAccountFetcher.class);
