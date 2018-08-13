@@ -14,7 +14,6 @@ public class SwedbankSEAgent extends SwedbankAbstractAgent {
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
-        client.setProxy("http://127.0.0.1:8888");
         super.configureHttpClient(client);
     }
 }
