@@ -104,10 +104,14 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
 
         JWTCreator.Builder requestSignatureHeader = JWT.create()
                 .withIssuedAt(new Date())
-                .withKeyId(signatureKeyPair.getKeyId())
                 .withClaim("method", requestLine.getMethod())
                 .withClaim("uri", requestLine.getUri())
                 .withClaim("headers", toSignatureFormat(allHeaders));
+
+        // Only add keyId for request where we use signatureKeyPair
+        if (signatureKeyPair != null) {
+            requestSignatureHeader.withKeyId(signatureKeyPair.getKeyId());
+        }
 
         if (!(request instanceof HttpEntityEnclosingRequest)) {
             request.addHeader(SIGNATURE_HEADER_KEY, requestSignatureHeader.sign(algorithm));
