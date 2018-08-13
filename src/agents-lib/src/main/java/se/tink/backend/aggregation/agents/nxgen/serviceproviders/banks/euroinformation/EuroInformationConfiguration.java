@@ -11,9 +11,4 @@ public interface EuroInformationConfiguration {
     public default String getLoginSubpage() {
         return EuroInformationConstants.Url.LOGIN;
     }
-
-    public default String getLoginInit() {
-        return EuroInformationConstants.Url.INIT;
-    }
-
 }
