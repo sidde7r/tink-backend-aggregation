@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinfor
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public interface ApiClientFactory {
+public interface EuroInformationApiClientFactory {
     <T extends EuroInformationApiClient> T getApiClient(TinkHttpClient client,
             SessionStorage sessionStorage,
             EuroInformationConfiguration config);
