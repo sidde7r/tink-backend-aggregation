@@ -37,8 +37,13 @@ public class SEPAAccount {
         return balance;
     }
 
-    public void setBalance(String balance) {
-        this.balance = balance;
+    public void setBalance(String balance, boolean isPositive) {
+        if(!isPositive){
+            this.balance = "-" + balance;
+        }
+        else {
+            this.balance = balance;
+        }
     }
 
     public String getPermittedBusinessTransactions() {
