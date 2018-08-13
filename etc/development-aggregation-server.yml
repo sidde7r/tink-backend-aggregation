@@ -118,3 +118,7 @@ logging:
       archivedFileCount: 5
       timeZone: Europe/Stockholm
       logFormat: '%date{"yyyy-MM-dd HH:mm:ss,SSSXXX"} %level [%thread] R:%X{requestId} %logger %message%n%xException'
+
+signatureKeyPair:
+  privateKeyPath: "data/test/cryptography/private_rsa_key.pem"
+  publicKeyPath: "data/test/cryptography/public_rsa_key.pub"
