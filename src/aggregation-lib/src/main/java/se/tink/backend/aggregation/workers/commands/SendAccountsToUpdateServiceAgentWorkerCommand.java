@@ -41,7 +41,6 @@ public class SendAccountsToUpdateServiceAgentWorkerCommand extends AgentWorkerCo
                             .add("action", METRIC_ACTION)
             );
             try {
-                action.start();
                 log.info("Sending accounts to UpdateService");
 
                 context.sendAllCachedAccountsToUpdateService();
@@ -52,8 +51,6 @@ public class SendAccountsToUpdateServiceAgentWorkerCommand extends AgentWorkerCo
                 log.warn("Couldn't send Accounts to UpdateService");
 
                 throw e;
-            } finally {
-                action.stop();
             }
         } finally {
             metrics.stop();
