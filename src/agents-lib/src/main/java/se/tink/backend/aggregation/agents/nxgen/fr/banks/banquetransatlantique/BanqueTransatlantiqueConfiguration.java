@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.banquetransatlantique;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationConfiguration;
+import static se.tink.backend.aggregation.agents.nxgen.fr.banks.banquetransatlantique.BanqueTransatlantiqueConstants.FORM_DATA.APP_VERSION_KEY;
 import static se.tink.backend.aggregation.agents.nxgen.fr.banks.banquetransatlantique.BanqueTransatlantiqueConstants.FORM_DATA.APP_VERSION_VALUE;
 import static se.tink.backend.aggregation.agents.nxgen.fr.banks.banquetransatlantique.BanqueTransatlantiqueConstants.FORM_DATA.TARGET_VALUE;
 import static se.tink.backend.aggregation.agents.nxgen.fr.banks.banquetransatlantique.BanqueTransatlantiqueConstants.URL.BASE_URL;
@@ -19,6 +20,11 @@ public class BanqueTransatlantiqueConfiguration implements EuroInformationConfig
     @Override
     public String getAppVersion() {
         return APP_VERSION_VALUE;
+    }
+
+    @Override
+    public String getAppVersionKey() {
+        return APP_VERSION_KEY;
     }
 
 }

@@ -43,7 +43,7 @@ public class EuroInformationApiClient {
 
     public LoginResponse logon(String username, String password) {
         return buildRequestHeaders(config.getLoginSubpage())
-                .body(new LoginRequest(username, password, config.getAppVersion(), config.getTarget()))
+                .body(new LoginRequest(username, password, config.getAppVersionKey(), config.getAppVersion(), config.getTarget()))
                 .post(LoginResponse.class);
     }
 

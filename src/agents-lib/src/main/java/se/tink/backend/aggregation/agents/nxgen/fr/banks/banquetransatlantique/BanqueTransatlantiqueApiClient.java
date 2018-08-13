@@ -20,6 +20,7 @@ public class BanqueTransatlantiqueApiClient extends EuroInformationApiClient {
                 .body(new BanqueTranatlantiqueLoginRequest(
                         username,
                         password,
+                        config.getAppVersionKey(),
                         config.getAppVersion(),
                         config.getTarget()))
                 .post(LoginResponse.class);

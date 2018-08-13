@@ -8,12 +8,8 @@ import static se.tink.backend.aggregation.agents.nxgen.fr.banks.banquetransatlan
 import static se.tink.backend.aggregation.agents.nxgen.fr.banks.banquetransatlantique.BanqueTransatlantiqueConstants.FORM_DATA.APP_VERSION_VALUE;
 
 public class BanqueTranatlantiqueLoginRequest extends LoginRequest {
-    public BanqueTranatlantiqueLoginRequest(String username, String password, String appVersion, String target) {
-        super(username, password, appVersion, target);
-        // The LoginRequest used by Banque Transatlantique has an underscore at the beginning of the app version key
-        this.remove(EuroInformationConstants.RequestBodyValues.APP_VERSION, appVersion);
-        this.put(APP_VERSION_KEY, APP_VERSION_VALUE);
+    public BanqueTranatlantiqueLoginRequest(String username, String password, String appVersionKey,  String appVersion, String target) {
+        super(username, password, appVersionKey, appVersion, target);
         this.put(APPLICATION_CODE_KEY, APPLICATION_CODE_VALUE);
-
     }
 }
