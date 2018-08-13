@@ -21,10 +21,10 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class EuroInformationApiClient {
-    private final TinkHttpClient client;
-    private final SessionStorage sessionStorage;
-    private final EuroInformationConfiguration config;
-    private final Logger LOGGER = LoggerFactory.getLogger(EuroInformationApiClient.class);
+    protected final TinkHttpClient client;
+    protected final SessionStorage sessionStorage;
+    protected final EuroInformationConfiguration config;
+    protected final Logger LOGGER = LoggerFactory.getLogger(EuroInformationApiClient.class);
 
     public EuroInformationApiClient(TinkHttpClient client,
             SessionStorage sessionStorage, EuroInformationConfiguration config) {
@@ -33,7 +33,7 @@ public class EuroInformationApiClient {
         this.config = config;
     }
 
-    private RequestBuilder buildRequestHeaders(String urlString) {
+    protected RequestBuilder buildRequestHeaders(String urlString) {
         URL url = new URL(config.getUrl() + urlString);
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_XML_TYPE,

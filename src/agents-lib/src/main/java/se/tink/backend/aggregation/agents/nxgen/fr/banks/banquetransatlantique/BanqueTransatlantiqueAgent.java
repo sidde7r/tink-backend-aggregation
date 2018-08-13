@@ -10,6 +10,6 @@ public class BanqueTransatlantiqueAgent extends EuroInformationAgent {
     public BanqueTransatlantiqueAgent(CredentialsRequest request, AgentContext context,
             SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair,
-                new BanqueTransatlantiqueConfiguration());
+                new BanqueTransatlantiqueConfiguration(), BanqueTransatlantiqueApiClient.class);
     }
 }
