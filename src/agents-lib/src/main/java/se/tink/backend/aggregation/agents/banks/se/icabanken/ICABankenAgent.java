@@ -109,6 +109,7 @@ import se.tink.backend.aggregation.utils.TransactionOrdering;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.core.Amount;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.enums.TransferType;
@@ -196,7 +197,7 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
     // cache
     private List<AccountEntity> accountEntities = null;
 
-    public ICABankenAgent(CredentialsRequest request, AgentContext context) {
+    public ICABankenAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         this.catalog = context.getCatalog();

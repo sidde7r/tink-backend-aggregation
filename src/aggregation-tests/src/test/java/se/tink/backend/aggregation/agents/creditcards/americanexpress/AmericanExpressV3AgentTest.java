@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.common.mapper.CoreUserMapper;
 import se.tink.backend.core.User;
 import se.tink.backend.system.rpc.Transaction;
@@ -97,7 +98,7 @@ public class AmericanExpressV3AgentTest extends AbstractAgentTest<AmericanExpres
                 true);
         AmericanExpressV3ApiClient apiClient = new AmericanExpressV3ApiClient(client, "SE", "Tink", credentials);
 
-        return new AmericanExpressV3Agent(request, context, apiClient);
+        return new AmericanExpressV3Agent(request, context, new SignatureKeyPair(), apiClient);
     }
 
     private String mockTransactionsResponse(int sortedIndex, int billingIndex) {

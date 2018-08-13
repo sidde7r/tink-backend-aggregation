@@ -125,6 +125,7 @@ import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.common.i18n.SocialSecurityNumber;
 import se.tink.backend.common.i18n.SocialSecurityNumber.Sweden;
 import se.tink.backend.core.account.TransferDestinationPattern;
@@ -277,7 +278,7 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
     private static final int MAX_RETRY_ATTEMPTS = 4;
     private ProfilesHandler profilesHandler = new ProfilesHandler();
 
-    public SwedbankAgent(CredentialsRequest request, AgentContext context) {
+    public SwedbankAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         credentials = request.getCredentials();

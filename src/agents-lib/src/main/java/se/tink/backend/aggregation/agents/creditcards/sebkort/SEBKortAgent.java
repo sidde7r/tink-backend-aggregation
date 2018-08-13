@@ -39,6 +39,7 @@ import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.system.rpc.Transaction;
 import se.tink.libraries.i18n.Catalog;
 
@@ -60,7 +61,7 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
     private final String product;
     private boolean hasRefreshed = false;
 
-    public SEBKortAgent(CredentialsRequest request, AgentContext context) {
+    public SEBKortAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         client = setupClient();

@@ -81,6 +81,7 @@ import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.core.SwedishGiroType;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
@@ -131,7 +132,7 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
 
     private Map<AccountEntity, Account> accountMap = null;
 
-    public DanskeBankV2Agent(CredentialsRequest request, AgentContext context) {
+    public DanskeBankV2Agent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         String providerCountry = getProviderCountry();

@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 // - DEPRECATED AGENT -
 // This agent is not used by customers. But it's referenced by our provider configuration
@@ -11,7 +12,7 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 // It is left as an empty shell until all credentials that use this agent are removed.
 public class IkanoCardAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
 
-    public IkanoCardAgent(CredentialsRequest request, AgentContext context) {
+    public IkanoCardAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
     }
 

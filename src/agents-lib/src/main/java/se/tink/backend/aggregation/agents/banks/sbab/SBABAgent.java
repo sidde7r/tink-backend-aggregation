@@ -50,6 +50,7 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.common.config.SbabIntegrationConfiguration;
 import se.tink.backend.common.config.ServiceConfiguration;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.core.DocumentIdentifier;
 import se.tink.backend.core.account.TransferDestinationPattern;
@@ -81,7 +82,7 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
     // cache
     private List<AccountEntity> accountEntities = null;
 
-    public SBABAgent(CredentialsRequest request, AgentContext context) {
+    public SBABAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
         this.catalog = context.getCatalog();
         credentials = request.getCredentials();

@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.system.rpc.Transaction;
 
 public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
@@ -22,7 +23,7 @@ public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExe
     private final int bankIdPollIntervalMS;
     private boolean hasRefreshed = false;
 
-    public IkanoApiAgent(CredentialsRequest request, AgentContext context) throws NoSuchAlgorithmException {
+    public IkanoApiAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) throws NoSuchAlgorithmException {
         super(request, context);
 
         bankIdPollIntervalMS = 2000;
@@ -38,7 +39,8 @@ public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExe
     /**
      *  This constructor is used for unit tests
      */
-    public IkanoApiAgent(CredentialsRequest request, AgentContext context, IkanoApiClient apiClient, int pollIntervalMS) {
+    public IkanoApiAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair,
+            IkanoApiClient apiClient, int pollIntervalMS) {
         super(request, context);
 
         bankIdPollIntervalMS = pollIntervalMS;

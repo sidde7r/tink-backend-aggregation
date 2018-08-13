@@ -118,6 +118,7 @@ import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
 import se.tink.backend.common.config.ServiceConfiguration;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.common.i18n.SocialSecurityNumber;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.enums.TransferType;
@@ -226,7 +227,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
     // cache
     private Map<AccountEntity, Account> accountEntityAccountMap = null;
 
-    public SEBApiAgent(CredentialsRequest request, AgentContext context) {
+    public SEBApiAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         credentials = request.getCredentials();

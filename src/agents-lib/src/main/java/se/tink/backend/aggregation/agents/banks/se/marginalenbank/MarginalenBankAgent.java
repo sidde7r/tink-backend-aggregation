@@ -3,10 +3,11 @@ package se.tink.backend.aggregation.agents.banks.se.marginalenbank;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.banks.crosskey.CrossKeyAgent;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class MarginalenBankAgent extends CrossKeyAgent {
-    public MarginalenBankAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context, new MarginalenBankConfig());
+    public MarginalenBankAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair, new MarginalenBankConfig());
 
         apiClient.setRootUrl("https://secure5.marginalen.se/cbs-inet-json-api-mba-v1/api/");
         apiClient.setErrorHandler(new MarginalenBankErrorHandler());

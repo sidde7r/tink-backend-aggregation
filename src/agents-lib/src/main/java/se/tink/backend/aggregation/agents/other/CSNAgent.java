@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
 
@@ -46,7 +47,7 @@ public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor
     private String loginResponse;
     private boolean hasRefreshed = false;
 
-    public CSNAgent(CredentialsRequest request, AgentContext context) {
+    public CSNAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         this.credentials = request.getCredentials();

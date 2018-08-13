@@ -117,6 +117,7 @@ import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.enums.TransferType;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
@@ -185,7 +186,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
     private Map<ProductEntity, Account> productEntityAccountMap = null;
     private InitialContextResponse initialContextResponse = null;
 
-    public NordeaV20Agent(CredentialsRequest request, AgentContext context) {
+    public NordeaV20Agent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         this.client = this.clientFactory.createCustomClient(context.getLogOutputStream());

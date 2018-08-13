@@ -48,19 +48,10 @@ public class AgentFactory {
     }
 
     public Agent create(Class<? extends Agent> agentClass, CredentialsRequest request, AgentContext context) throws Exception {
-        if (NextGenerationAgent.class.isAssignableFrom(agentClass)) {
-            Constructor<?> nextGenConstructor =
-                    agentClass.getConstructor(CredentialsRequest.class, AgentContext.class, SignatureKeyPair.class);
-
-            Agent agent = (Agent) nextGenConstructor.newInstance(request, context, configuration.getSignatureKeyPair());
-            agent.setConfiguration(configuration);
-
-            return agent;
-        }
-
-        Constructor<?> agentConstructor = agentClass.getConstructor(CredentialsRequest.class, AgentContext.class);
+        Constructor<?> agentConstructor = agentClass.getConstructor(
+                CredentialsRequest.class, AgentContext.class, SignatureKeyPair.class);
         
-        Agent agent = (Agent) agentConstructor.newInstance(request, context);
+        Agent agent = (Agent) agentConstructor.newInstance(request, context, configuration.getSignatureKeyPair());
         agent.setConfiguration(configuration);
 
         return agent;

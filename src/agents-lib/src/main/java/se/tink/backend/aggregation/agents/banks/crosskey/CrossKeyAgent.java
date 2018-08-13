@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.utils.SupplementalInformationUtils;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.system.rpc.AccountFeatures;
 import se.tink.backend.system.rpc.Loan;
 import se.tink.backend.system.rpc.Transaction;
@@ -46,7 +47,7 @@ public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExe
     private final CrossKeyConfig config;
     private boolean hasRefreshed = false;
 
-    public CrossKeyAgent(CredentialsRequest request, AgentContext context,
+    public CrossKeyAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair,
             CrossKeyConfig config) {
         super(request, context);
 

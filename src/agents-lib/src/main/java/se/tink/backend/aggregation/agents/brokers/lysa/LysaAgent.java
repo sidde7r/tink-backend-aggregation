@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.system.rpc.Transaction;
 
 public class LysaAgent extends AbstractAgent implements RefreshableItemExecutor {
@@ -29,7 +30,7 @@ public class LysaAgent extends AbstractAgent implements RefreshableItemExecutor 
     private final LysaClient client;
     private DetailsEntity details;
 
-    public LysaAgent(CredentialsRequest request, AgentContext context) {
+    public LysaAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         // The Lysa API needs fully buffered message bodies with content length.

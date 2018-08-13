@@ -106,6 +106,7 @@ import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.enums.TransferType;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
@@ -214,7 +215,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
     // cache
     private Map<AccountEntity, Account> accounts = null;
 
-    public LansforsakringarAgent(CredentialsRequest request, AgentContext context) {
+    public LansforsakringarAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         catalog = context.getCatalog();
