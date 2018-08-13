@@ -15,8 +15,6 @@ import se.tink.libraries.metrics.MetricId;
 
 public class ProcessItemAgentWorkerCommand extends AgentWorkerCommand implements MetricsCommand {
     private static final Logger log = LoggerFactory.getLogger(ProcessItemAgentWorkerCommand.class);
-    private static final MetricId.MetricLabels GLOBAL_METRIC_STUB = new MetricId.MetricLabels()
-            .add("credential_type", "global");
 
     private static final String METRIC_NAME = "agent_refresh";
     private static final String METRIC_ACTION = "process";
@@ -47,7 +45,6 @@ public class ProcessItemAgentWorkerCommand extends AgentWorkerCommand implements
                             .add("item", item.name())
             );
             try {
-                action.start();
                 log.info("Processing item: {}", item.name());
 
                 switch (item) {
@@ -72,8 +69,6 @@ public class ProcessItemAgentWorkerCommand extends AgentWorkerCommand implements
                 log.warn("Couldn't process ProcessableItem({})", item);
 
                 throw e;
-            } finally {
-                action.stop();
             }
         } finally {
             metrics.stop();
@@ -89,18 +84,11 @@ public class ProcessItemAgentWorkerCommand extends AgentWorkerCommand implements
 
     @Override
     public List<MetricId.MetricLabels> getCommandTimerName(AgentWorkerOperationMetricType type) {
-
-        MetricId.MetricLabels globalName = GLOBAL_METRIC_STUB
-                .add("class", ProcessItemAgentWorkerCommand.class.getSimpleName())
-                .add("item", item.asMetricValue())
-                .add("command", type.getMetricName());
-
         MetricId.MetricLabels typeName = new MetricId.MetricLabels()
                 .add("class", ProcessItemAgentWorkerCommand.class.getSimpleName())
-                .add("credential_type", context.getRequest().getCredentials().getType().name().toLowerCase())
                 .add("item", item.asMetricValue())
                 .add("command", type.getMetricName());
 
-        return Lists.newArrayList(globalName, typeName);
+        return Lists.newArrayList(typeName);
     }
 }

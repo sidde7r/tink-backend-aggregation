@@ -48,12 +48,6 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         private static final String PERSIST_LOGIN_SESSION = "persist-login-session";
     }
 
-    private static class MetricBuckets {
-        private static final ImmutableList<Double> LOGIN_PASSWORD = ImmutableList.of(0.0, .025, .05, .1, .2, 0.4, 0.8, 1.6, 3.2, 6.4);
-        private static final ImmutableList<Integer> LOGIN_BANKID = ImmutableList.of(0, 2, 4, 8, 16, 32, 64, 128, 256);
-        private static final ImmutableList<Double> ACQUIRE_LOCK = ImmutableList.of(0.0, .025, .05, .1, .2, 0.4, 0.8, 1.6, 3.2, 6.4);
-    }
-
     private final AgentWorkerCommandMetricState metrics;
     private final LoginAgentWorkerCommandState state;
     private final AgentWorkerContext context;
@@ -127,7 +121,6 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         PersistentLogin persistentAgent = (PersistentLogin) agent;
 
         try {
-            action.start();
             persistentAgent.loadLoginSession();
 
             if (persistentAgent.isLoggedIn()) {
@@ -145,7 +138,6 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             action.failed();
             throw e;
         } finally {
-            action.stop();
             stopCommandContexts(loadPersistentSessionTimerContexts);
         }
 
@@ -158,7 +150,6 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             MetricAction action = metrics.buildAction(metricForAction(MetricName.ACQUIRE_LOCK));
 
             try {
-                action.start(MetricBuckets.ACQUIRE_LOCK);
                 lock = new InterProcessSemaphoreMutex(context.getCoordinationClient(), String.format(
                         LOCK_FORMAT_BANKID_REFRESH, user.getId()));
 
@@ -175,7 +166,6 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                 action.failed();
                 throw e;
             } finally {
-                action.stop();
                 stopCommandContexts(lockTimerContext);
             }
         }
@@ -188,9 +178,6 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         MetricAction action = metrics.buildAction(metricForAction(MetricName.LOGIN));
 
         try {
-            action.start(credentials.getType() == CredentialsTypes.MOBILE_BANKID ?
-                    MetricBuckets.LOGIN_BANKID : MetricBuckets.LOGIN_PASSWORD);
-
             if (agent.login()) {
                 action.completed();
                 return AgentWorkerCommandResult.CONTINUE;
@@ -223,7 +210,6 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             return AgentWorkerCommandResult.ABORT;
 
         } finally {
-            action.stop();
             stopCommandContexts(loginTimerContext);
 
             // If we have a lock, release it.
@@ -237,7 +223,6 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             MetricAction action = metrics.buildAction(metricForAction(MetricName.RELEASE_LOCK));
 
             try {
-                action.start();
                 lock.release();
 
                 action.completed();
@@ -245,7 +230,6 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                 action.failed();
                 throw e;
             } finally {
-                action.stop();
                 stopCommandContexts(releaseLockTimer);
             }
         }
@@ -279,15 +263,12 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         MetricAction action = metrics.buildAction(metricForAction(MetricName.PERSIST_LOGIN_SESSION));
 
         try {
-            action.start();
             agent.persistLoginSession();
 
             action.completed();
         } catch(Exception e) {
             action.failed();
             throw e;
-        } finally {
-            action.stop();
         }
     }
 
@@ -296,7 +277,6 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         MetricAction action = metrics.buildAction(metricForAction(MetricName.LOGOUT));
 
         try {
-            action.start();
             agent.logout();
 
             action.completed();
@@ -304,7 +284,6 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             action.failed();
             throw e;
         } finally {
-            action.stop();
             stopCommandContexts(logoutTimerContext);
         }
     }

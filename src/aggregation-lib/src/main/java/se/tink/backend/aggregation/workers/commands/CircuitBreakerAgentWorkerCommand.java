@@ -58,12 +58,6 @@ public class CircuitBreakerAgentWorkerCommand extends AgentWorkerCommand {
             return AgentWorkerCommandResult.CONTINUE;
         }
 
-        state.getMetricRegistry().meter(MetricId.newId("circuit_breaker")
-                .label("broken", String.valueOf(circuitBreakerStatus.isCircuitBroken()))
-                .label("consecutive_operations", String.valueOf(circuitBreakerStatus.getConsecutiveOperationsCounter()))
-                .label("provider_type", provider.getType().name().toLowerCase())
-                .label("provider", MetricsUtils.cleanMetricName(provider.getName()))).inc();
-
         if (circuitBreakerStatus.isCircuitBroken()) {
             state.setRateLimiterRate(provider.getName(), circuitBreakerStatus.getRateLimitMultiplicationFactor());
             RateLimiter rateLimiter = state.getRateLimiter(provider.getName());

@@ -92,15 +92,9 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
             AccountTypes.LOAN,
             AccountTypes.INVESTMENT));
 
-    private static final List<Integer> TRANSACTION_DATE_HISTORY_BUCKETS = ImmutableList.of(0, 30, 90, 182, 365, 730);
-    private static final List<Integer> TRANSACTION_COUNT_HISTORY_BUCKETS = ImmutableList.of(0, 50, 100, 250, 500, 1000,
-            2000, 5000, 10000);
-
     private static final String EMPTY_CLASS_NAME = "";
-    private final Timer providerUpdateAccountTimer;
     private final MetricRegistry metricRegistry;
     private final Counter refreshTotal;
-    private final Counter noTransferDestinationFetched;
     private final MetricId.MetricLabels defaultMetricLabels;
     private Agent agent;
     private Catalog catalog;
@@ -169,21 +163,10 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
 
         defaultMetricLabels = new MetricId.MetricLabels()
                 .addAll(clusterId.metricLabels())
-                .add("provider_type", provider.getMetricTypeName())
                 .add("provider", MetricsUtils.cleanMetricName(provider.getName()))
                 .add("market", provider.getMarket())
                 .add("agent", Optional.ofNullable(provider.getClassName()).orElse(EMPTY_CLASS_NAME))
-                .add("manual", String.valueOf(request.isManual()))
-                .add("credential", request.getCredentials().getMetricTypeName())
                 .add("request_type", request.getType().name());
-
-        providerUpdateAccountTimer = metricRegistry.timer(
-                MetricId.newId("update_account")
-                        .label(defaultMetricLabels));
-
-        noTransferDestinationFetched = metricRegistry.meter(
-                MetricId.newId("no_transfer_destination_fetched")
-                        .label(defaultMetricLabels));
 
         refreshTotal = metricRegistry.meter(
                 MetricId.newId("accounts_refresh")
@@ -303,14 +286,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         }
     }
 
-    private int countDaysFromOldestTransaction(List<Transaction> transactions) {
-        Optional<Date> oldestTransactionDate = transactions.stream()
-                .min(Comparator.comparing(Transaction::getDate))
-                .map(Transaction::getDate);
-
-        return oldestTransactionDate.map(date -> DateUtils.daysBetween(date, new Date())).orElse(0);
-    }
-
     private int countNumberOfTransactionsOlderThanToday(List<Transaction> transactions) {
         final Date today = new Date();
         return (int) transactions.stream()
@@ -373,35 +348,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
                 if (transaction.getType() == null) {
                     transaction.setType(TransactionTypes.DEFAULT);
                 }
-            }
-
-            if (!credentials.isDemoCredentials()) {
-                String accountType = getAccountTypeFor(accountId).name();
-                boolean isFullRefresh = getCertainDateFor(accountId) == null;
-                MetricId.MetricLabels labels = defaultMetricLabels.add("account_type", accountType)
-                        .add("full_refresh", Boolean.toString(isFullRefresh));
-
-                String stringifiedLabels = String.format(
-                        "{\"request_type\": %s, \"full_refresh\": %s, \"provider\": %s, \"account_type\": %s}",
-                        request.getType().name(), isFullRefresh, request.getProvider().getName(), accountType);
-
-                // Metric for days between oldest & most recent transaction
-                Histogram transactionDateHistory = metricRegistry
-                        .histogram(MetricId.newId("transaction_history_days_total")
-                                .label(labels), TRANSACTION_DATE_HISTORY_BUCKETS);
-                int daysFromOldestTransaction = countDaysFromOldestTransaction(accountTransactions);
-                transactionDateHistory.update(daysFromOldestTransaction);
-                log.info(String.format("Days between oldest & most recent transaction: %s | %s",
-                        daysFromOldestTransaction, stringifiedLabels));
-
-                // Metric for number of transactions
-                Histogram transactionCountHistory = metricRegistry
-                        .histogram(MetricId.newId("transaction_history_count_total")
-                                .label(labels), TRANSACTION_COUNT_HISTORY_BUCKETS);
-                int numberOfTransactions = countNumberOfTransactionsOlderThanToday(accountTransactions);
-                transactionCountHistory.update(numberOfTransactions);
-                log.info(String.format("Number of fetched transactions: %s | %s",
-                        numberOfTransactions, stringifiedLabels));
             }
 
             transactions.addAll(accountTransactions);
@@ -609,8 +555,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
             updateAccountRequest.setAccountFeatures(accountFeatures);
             updateAccountRequest.setCredentialsId(request.getCredentials().getId());
 
-            Context updateAccountTimerContext = providerUpdateAccountTimer.time();
-
             try {
                 if (isAggregationCluster) {
                     updatedAccount = aggregationControllerAggregationClient.updateAccount(getClusterInfo(),
@@ -624,8 +568,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
                         (e.getResponse().hasEntity() ? e.getResponse().getEntity(String.class) : ""));
                 throw e;
             }
-
-            updateAccountTimerContext.stop();
         } else {
             UpdateAccountRequest updateAccountsRequest = new UpdateAccountRequest();
 
@@ -634,9 +576,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
             updateAccountsRequest.setAccount(CoreAccountMapper.fromAggregation(account));
             updateAccountsRequest.setAccountFeatures(accountFeatures);
             updateAccountsRequest.setCredentialsId(request.getCredentials().getId());
-
-            Context updateAccountTimerContext = providerUpdateAccountTimer.time();
-
             try {
                 updatedAccount = CoreAccountMapper.toAggregation(
                         systemServiceFactory.getUpdateService().updateAccount(updateAccountsRequest));
@@ -645,8 +584,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
                         (e.getResponse().hasEntity() ? e.getResponse().getEntity(String.class) : ""));
                 throw e;
             }
-
-            updateAccountTimerContext.stop();
         }
 
         updatedAccountsByTinkId.put(updatedAccount.getId(), updatedAccount);
@@ -798,8 +735,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
                 } else {
                     aggregationControllerAggregationClient.updateTransferDestinationPatterns(request);
                 }
-            } else {
-                noTransferDestinationFetched.inc();
             }
         } else {
             UpdateTransferDestinationPatternsRequest request = new UpdateTransferDestinationPatternsRequest();
@@ -808,8 +743,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
 
             if (!transferDestinationPatternsByAccount.isEmpty()) {
                 systemServiceFactory.getUpdateService().updateTransferDestinationPatterns(request);
-            } else {
-                noTransferDestinationFetched.inc();
             }
         }
     }

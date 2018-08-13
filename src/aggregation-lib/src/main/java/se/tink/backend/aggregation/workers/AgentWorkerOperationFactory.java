@@ -139,8 +139,8 @@ public class AgentWorkerOperationFactory {
     }
 
     private AgentWorkerCommandMetricState createMetricState(CredentialsRequest request) {
-        return new AgentWorkerCommandMetricState(request.getProvider(), request.getCredentials(), request.isManual(),
-                metricCacheLoader, request.getType());
+        return new AgentWorkerCommandMetricState(request.getProvider(), request.getCredentials(), metricCacheLoader,
+                request.getType());
     }
 
     public AgentWorkerOperation createDeleteCredentialsOperation(ClusterInfo clusterInfo, CredentialsRequest request) {
