@@ -43,6 +43,7 @@ public class EuroInformationConstants {
         public static final String WS_VERSION = "_wsversion";
         public static final String WS_VERSION_VALUE_1 = "1";
         public static final String WS_VERSION_VALUE_2 = "2";
+        public static final String WS_VERSION_VALUE_7 = "7";
         public static final String MEDIA = "_media";
         public static final String MEDIA_VALUE = "AN";
         public static final String CATEGORIZE = "categorize";
