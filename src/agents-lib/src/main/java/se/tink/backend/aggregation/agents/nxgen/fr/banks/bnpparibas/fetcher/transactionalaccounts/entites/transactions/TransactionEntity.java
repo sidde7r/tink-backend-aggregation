@@ -51,7 +51,6 @@ public class TransactionEntity {
         }
 
         return getTransactionLabel();
-
     }
 
     public String getCategory() {
