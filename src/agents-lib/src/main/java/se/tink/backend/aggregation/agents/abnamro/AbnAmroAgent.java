@@ -164,7 +164,7 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
             break;
         case CREDITCARD_ACCOUNTS:
         case CREDITCARD_TRANSACTIONS:
-            updateAllCreditCardAccounts();
+            updateAllCreditCardAccounts(item);
             break;
         default:
             // Info instead of warn because the ABN agent only is responsible to fetch new user accounts.
@@ -179,10 +179,10 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
                 .forEach(this::updateAccount);
     }
 
-    private void updateAllCreditCardAccounts() {
+    private void updateAllCreditCardAccounts(RefreshableItem type) {
         getAccounts().stream()
                 .filter(a -> Objects.equals(a.getType(), AccountTypes.CREDIT_CARD))
-                .forEach(this::updateCreditCardAccount);
+                .forEach(a -> updateCreditCardAccount(a, type));
     }
 
     private List<Account> getAccounts() {
@@ -216,7 +216,7 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
         }
     }
 
-    private void updateCreditCardAccount(Account account) {
+    private void updateCreditCardAccount(Account account, RefreshableItem item) {
         String bcNumber = credentials.getPayload();
 
         String fullBankId = account.getBankId();
@@ -226,7 +226,9 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
         context.sendAccountToUpdateService(account.getBankId());
 
         try {
-            refreshCreditCardTransactions(bcNumber, fullBankId);
+            if (Objects.equals(item, RefreshableItem.CREDITCARD_TRANSACTIONS)) {
+                refreshCreditCardTransactions(bcNumber, fullBankId);
+            }
         } catch (IcsException e) {
             if (abnAmroConfiguration.shouldIgnoreCreditCardErrors()) {
                 log.warn("Ignoring error from ICS", e);
