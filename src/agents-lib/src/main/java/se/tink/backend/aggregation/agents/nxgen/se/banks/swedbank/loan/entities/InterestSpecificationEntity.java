@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class IntrestSpecificationEntity {
+public class InterestSpecificationEntity {
     private AmountEntity interest;
     private AmountEntity amount;
     private String interestRate;

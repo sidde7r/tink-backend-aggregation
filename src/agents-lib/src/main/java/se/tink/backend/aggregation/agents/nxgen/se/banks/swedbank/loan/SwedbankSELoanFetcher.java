@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.intermediate.CarLoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.intermediate.CollateralsLoanEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.intermediate.ConspumptionLoanEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.intermediate.ConsumptionLoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.DetailedLoanResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.LoanOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.loan.SwedbankDefaultLoanFetcher;
@@ -68,10 +68,10 @@ public class SwedbankSELoanFetcher extends SwedbankDefaultLoanFetcher {
         List<LoanAccount> consumptionLoans = loanOverviewResponse.getConsumptionLoans().stream()
                 .map(loan -> {
                     DetailedLoanResponse loanDetails = getLoanDetails(loan);
-                    return Optional.ofNullable(loanDetails).map(ld -> ConspumptionLoanEntity.create(loan, ld))
-                            .orElseGet(() -> ConspumptionLoanEntity.create(loan));
+                    return Optional.ofNullable(loanDetails).map(ld -> ConsumptionLoanEntity.create(loan, ld))
+                            .orElseGet(() -> ConsumptionLoanEntity.create(loan));
                 })
-                .map(ConspumptionLoanEntity::toTinkLoan)
+                .map(ConsumptionLoanEntity::toTinkLoan)
                 .collect(Collectors.toList());
         loanAccounts.addAll(consumptionLoans);
 

@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc;
 
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.AmountEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.IntrestSpecificationEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.InterestSpecificationEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.LoanDetailsAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.LoanInfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.UpcomingInvoiceEntity;
@@ -16,7 +16,7 @@ public class DetailedLoanResponse {
     private UpcomingInvoiceEntity upcomingInvoice;
     private LinkEntity links;
     private String loanLender;
-    private List<IntrestSpecificationEntity> interestSpecifications;
+    private List<InterestSpecificationEntity> interestSpecifications;
     private AmountEntity debt;
     private LoanInfoEntity loan;
 
@@ -44,7 +44,7 @@ public class DetailedLoanResponse {
         return loanLender;
     }
 
-    public List<IntrestSpecificationEntity> getInterestSpecifications() {
+    public List<InterestSpecificationEntity> getInterestSpecifications() {
         return interestSpecifications;
     }
 

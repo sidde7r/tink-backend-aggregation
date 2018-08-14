@@ -6,25 +6,25 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.Detai
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.LoanDetails;
 
-public class ConspumptionLoanEntity extends BaseAbstractLoanDetailedEntity {
+public class ConsumptionLoanEntity extends BaseAbstractLoanDetailedEntity {
 
     public static final String MEMBERSHIP_LOAN = "Medlemslån";
 
-    private ConspumptionLoanEntity(
+    private ConsumptionLoanEntity(
             DetailedLoanResponse loanDetails, LoanEntity loanOverview) {
         super(loanDetails, loanOverview);
     }
 
-    public ConspumptionLoanEntity(LoanEntity loanOverview) {
+    public ConsumptionLoanEntity(LoanEntity loanOverview) {
         super(loanOverview);
     }
 
-    public static ConspumptionLoanEntity create(LoanEntity loanOverview, DetailedLoanResponse loanDetails) {
-        return new ConspumptionLoanEntity(loanDetails, loanOverview);
+    public static ConsumptionLoanEntity create(LoanEntity loanOverview, DetailedLoanResponse loanDetails) {
+        return new ConsumptionLoanEntity(loanDetails, loanOverview);
     }
 
-    public static ConspumptionLoanEntity create(LoanEntity loanOverview) {
-        return new ConspumptionLoanEntity(loanOverview);
+    public static ConsumptionLoanEntity create(LoanEntity loanOverview) {
+        return new ConsumptionLoanEntity(loanOverview);
     }
 
     @Override
