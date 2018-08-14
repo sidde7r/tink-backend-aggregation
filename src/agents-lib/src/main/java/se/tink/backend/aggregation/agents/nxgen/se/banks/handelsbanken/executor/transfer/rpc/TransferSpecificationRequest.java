@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.account.identifiers.SwedishIdentifier;
 
 @JsonObject
 public class TransferSpecificationRequest {
@@ -18,6 +19,7 @@ public class TransferSpecificationRequest {
     private TransferAmount toAccount;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date transferDate;
+    private String toClearingNo;
 
     private TransferSpecificationRequest() {
     }
@@ -31,6 +33,7 @@ public class TransferSpecificationRequest {
         request.annotation = messages.getSourceMessage();
         request.fromAccount = source.toTransferAmount();
         request.toAccount = destination.toTransferAmount();
+        request.toClearingNo = ((SwedishIdentifier) transfer.getDestination()).getClearingNumber();
         return request;
     }
 
