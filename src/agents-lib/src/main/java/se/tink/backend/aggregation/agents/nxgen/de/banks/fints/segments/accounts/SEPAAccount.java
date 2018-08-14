@@ -38,10 +38,9 @@ public class SEPAAccount {
     }
 
     public void setBalance(String balance, boolean isPositive) {
-        if(!isPositive){
+        if (!isPositive) {
             this.balance = "-" + balance;
-        }
-        else {
+        } else {
             this.balance = balance;
         }
     }
@@ -194,11 +193,14 @@ public class SEPAAccount {
     }
 
     private void logCreditCardInformation() {
-        LOGGER.info("{} Accounttype: {}, account limit \"{}\", balance \"{}\"", FinTsConstants.LogTags.CREDIT_CARD_INFORMATION, accountType, accountLimit, balance);
+        LOGGER.info("{} Accounttype: {}, account limit \"{}\", balance \"{}\"",
+                FinTsConstants.LogTags.CREDIT_CARD_INFORMATION, accountType, accountLimit, balance);
     }
 
-    private void logCreditCardPermittedTransactions(){
-        LOGGER.info("{} permitted business transactions: \"{}\"  extensions: \"{}\"", FinTsConstants.LogTags.CREDIT_CARD_PERMITTED_BUSINESS_TRANSACTIONS, this.permittedBusinessTransactions, this.extensions);
+    private void logCreditCardPermittedTransactions() {
+        LOGGER.info("{} permitted business transactions: \"{}\"  extensions: \"{}\"",
+                FinTsConstants.LogTags.CREDIT_CARD_PERMITTED_BUSINESS_TRANSACTIONS, this.permittedBusinessTransactions,
+                this.extensions);
     }
 
     private Amount getAmount(String currency, String amount) {
@@ -207,9 +209,9 @@ public class SEPAAccount {
     }
 
     private void verifyCreditCardAccount() {
-        if (!AccountTypes.CREDIT_CARD.equals(FinTsAccountTypeConverter.getAccountTypeFor(accountType)))
-        {
-            throw new IllegalStateException(String.format("Invalid accountType %d for credit card account", accountType));
+        if (!AccountTypes.CREDIT_CARD.equals(FinTsAccountTypeConverter.getAccountTypeFor(accountType))) {
+            throw new IllegalStateException(
+                    String.format("Invalid accountType %d for credit card account", accountType));
         }
     }
 
@@ -223,9 +225,8 @@ public class SEPAAccount {
 
     // Only consider transactional types for now
     private AccountTypes getType() {
-        if(AccountTypes.CHECKING.equals(FinTsAccountTypeConverter.getAccountTypeFor(accountType)) ||
-                AccountTypes.SAVINGS.equals(FinTsAccountTypeConverter.getAccountTypeFor(accountType)))
-        {
+        if (AccountTypes.CHECKING.equals(FinTsAccountTypeConverter.getAccountTypeFor(accountType)) ||
+                AccountTypes.SAVINGS.equals(FinTsAccountTypeConverter.getAccountTypeFor(accountType))) {
             return FinTsAccountTypeConverter.getAccountTypeFor(accountType);
         } else {
             throw new IllegalStateException("Invalid accountType for transactional account");
