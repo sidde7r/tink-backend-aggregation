@@ -319,7 +319,7 @@ public class FinTsApiClient {
         return status.containsValue(FinTsConstants.StatusCode.NO_ENTRY);
     }
 
-    public List<MT940Statement> getTransactions(String accountNo, Date start, Date end) {
+    public Collection<MT940Statement> getTransactions(String accountNo, Date start, Date end) {
         SEPAAccount targetAccount = this.sepaAccounts.stream()
                 .filter(sepaAccount -> Objects.equals(sepaAccount.getAccountNo(), accountNo))
                 .filter(sepaAccount -> FinTsAccountTypeConverter.getAccountTypeFor(sepaAccount.getAccountType())
