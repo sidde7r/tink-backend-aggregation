@@ -16,6 +16,7 @@ import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.core.transfer.TransferPayloadType;
 import static se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_AMOUNT;
+import static se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_DESTINATION;
 import static se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_DESTINATION_MESSAGE;
 import static se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_DUEDATE;
 import static se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_FAILED;
@@ -99,6 +100,7 @@ public class HandelsbankenSEEInvoiceExecutor implements ApproveEInvoiceExecutor 
         case PAYMENT_UPDATE_SOURCE_MESSAGE:
             throw exception(EINVOICE_MODIFY_SOURCE_MESSAGE);
         case PAYMENT_UPDATE_DESTINATION:
+            throw exception(EINVOICE_MODIFY_DESTINATION);
         default:
             return exception(EINVOICE_MODIFY_FAILED);
         }
