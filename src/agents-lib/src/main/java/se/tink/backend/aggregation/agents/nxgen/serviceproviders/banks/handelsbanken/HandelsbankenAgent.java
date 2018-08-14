@@ -63,14 +63,21 @@ public abstract class HandelsbankenAgent<A extends HandelsbankenApiClient, C ext
             C handelsbankenConfiguration, HandelsbankenPersistentStorage handelsbankenPersistentStorage,
             HandelsbankenSessionStorage handelsbankenSessionStorage);
 
+    protected AutoAuthenticationController constructAutoAuthenticationController(
+            MultiFactorAuthenticator cardDeviceAuthenticator, HandelsbankenAutoAuthenticator autoAuthenticator) {
+        return new AutoAuthenticationController(this.request, this.context,
+                cardDeviceAuthenticator, autoAuthenticator);
+    }
+
     protected AutoAuthenticationController constructAutoAuthenticationController(MultiFactorAuthenticator
             cardDeviceAuthenticator) {
-        return new AutoAuthenticationController(this.request, this.context,
-                cardDeviceAuthenticator,
-                new HandelsbankenAutoAuthenticator(this.bankClient, this.handelsbankenPersistentStorage,
-                        this.credentials,
-                        this.handelsbankenSessionStorage, this.handelsbankenConfiguration)
-        );
+        return constructAutoAuthenticationController(cardDeviceAuthenticator, constructAutoAuthenticator());
+    }
+
+    protected HandelsbankenAutoAuthenticator constructAutoAuthenticator() {
+        return new HandelsbankenAutoAuthenticator(this.bankClient, this.handelsbankenPersistentStorage,
+                this.credentials,
+                this.handelsbankenSessionStorage, this.handelsbankenConfiguration);
     }
 
     protected abstract Optional<InvestmentRefreshController> constructInvestmentRefreshController(A bankClient,

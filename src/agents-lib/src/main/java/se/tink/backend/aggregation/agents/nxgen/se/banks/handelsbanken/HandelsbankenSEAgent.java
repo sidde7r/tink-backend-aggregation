@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.t
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.HandelsbankenAutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
@@ -44,12 +45,15 @@ public class HandelsbankenSEAgent extends HandelsbankenAgent<HandelsbankenSEApiC
             HandelsbankenSEConfiguration handelsbankenConfiguration,
             HandelsbankenPersistentStorage handelsbankenPersistentStorage,
             HandelsbankenSessionStorage handelsbankenSessionStorage) {
+
+        HandelsbankenAutoAuthenticator autoAuthenticator = constructAutoAuthenticator();
+
         return new TypedAuthenticator[] {
                 constructAutoAuthenticationController(
                         new HandelsbankenSECardDeviceAuthenticator(bankClient, handelsbankenPersistentStorage,
                                 new SupplementalInformationController(context, credentials),
-                                handelsbankenConfiguration
-                        )),
+                                handelsbankenConfiguration, autoAuthenticator),
+                        autoAuthenticator),
                 new BankIdAuthenticationController<>(context, new HandelsbankenBankIdAuthenticator(bankClient,
                         credentials, handelsbankenPersistentStorage, handelsbankenSessionStorage))
         };
