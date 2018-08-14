@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -67,7 +66,8 @@ public class SwedbankSELoanFetcherTest {
         List<LoanAccount> loanAccounts = fetcher.fetchAccounts().stream()
                 .filter(l -> LoanDetails.Type.MORTGAGE.equals(l.getDetails().getType())).collect(Collectors.toList());
         assertEquals(5, loanAccounts.size());
-        LoanAccount loanAccount = loanAccounts.stream().filter(l -> !l.getDetails().getApplicants().isEmpty()).findFirst().get();
+        LoanAccount loanAccount = loanAccounts.stream().filter(l -> !l.getDetails().getApplicants().isEmpty())
+                .findFirst().get();
 
         assertEquals(Double.valueOf(-333000.0d), loanAccount.getBalance().getValue());
         assertEquals("SEK", loanAccount.getBalance().getCurrency());
