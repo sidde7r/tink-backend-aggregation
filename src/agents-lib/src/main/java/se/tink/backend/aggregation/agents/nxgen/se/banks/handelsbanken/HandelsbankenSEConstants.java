@@ -123,6 +123,11 @@ public class HandelsbankenSEConstants {
             public static final LogTag LOG_TAG = LogTag.from("#se_handelsbanken_payment_context");
             public static final String UNDER_16 = "10573";
         }
+
+        public static class Accounts {
+            public static final String NAME_SAVINGS_1 = "Sparkonto";
+            public static final String NAME_SAVINGS_2 = "e-kapitalkonto";
+        }
     }
 
     public static class Executor {
