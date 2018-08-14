@@ -47,7 +47,6 @@ public abstract class HandelsbankenAgent<A extends HandelsbankenApiClient, C ext
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
-        client.setProxy("http://192.168.239.239:8888");
     }
 
     @Override
