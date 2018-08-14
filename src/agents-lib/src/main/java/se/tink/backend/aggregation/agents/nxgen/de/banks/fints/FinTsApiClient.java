@@ -300,8 +300,12 @@ public class FinTsApiClient {
                                     .equals(this.getAccountString(acc, this.hksalVersion), deg.get(1)))
                             .findFirst()
                             .orElseThrow(IllegalStateException::new);
-            sepaAccount.setBalance(FinTsParser.getDataGroupElements(deg.get(4)).get(1));
+            sepaAccount.setBalance(FinTsParser.getDataGroupElements(deg.get(4)).get(1), isBalancePositive(deg.get(4)));
         }
+    }
+
+    private boolean isBalancePositive(String balanceSegment) {
+        return balanceSegment.startsWith("C");
     }
 
     // Sparkasse sometimes sends FinTsConstants.StatusCode.NO_ENTRY if a phone number is not active on account
@@ -342,7 +346,8 @@ public class FinTsApiClient {
             status = response.getLocalStatus();
         }
 
-        LOGGER.info("{} statuses: {}", FinTsConstants.LogTags.TRANSACTION_STATUS, status.toString());
+        LOGGER.info("{} statuses: {} accountNumber: {}", FinTsConstants.LogTags.TRANSACTION_STATUS, status.toString(),
+                accountNo);
 
         //TODO: Need to start checking key AND value
         if (status.containsValue(FinTsConstants.StatusCode.ACCOUNT_NOT_ASSIGNED) ||
