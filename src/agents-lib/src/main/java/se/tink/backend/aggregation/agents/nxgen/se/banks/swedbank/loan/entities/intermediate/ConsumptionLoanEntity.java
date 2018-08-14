@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.intermediate;
 
 import java.util.List;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.DetailedLoanResponse;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
@@ -8,7 +9,6 @@ import se.tink.backend.aggregation.nxgen.core.account.LoanDetails;
 
 public class ConsumptionLoanEntity extends BaseAbstractLoanDetailedEntity {
 
-    public static final String MEMBERSHIP_LOAN = "Medlemslån";
 
     private ConsumptionLoanEntity(
             DetailedLoanResponse loanDetails, LoanEntity loanOverview) {
@@ -37,7 +37,7 @@ public class ConsumptionLoanEntity extends BaseAbstractLoanDetailedEntity {
                 .setInterestRate(getInterest())
                 .setDetails(
                         LoanDetails.builder()
-                                .setType(getName().contains(MEMBERSHIP_LOAN) ?
+                                .setType(getName().contains(SwedbankSEConstants.MEMBERSHIP_LOAN) ?
                                         LoanDetails.Type.MEMBERSHIP :
                                         LoanDetails.Type.BLANCO)
                                 .setMonthlyAmortization(getMonthlyAmortization())

@@ -3,13 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.SwedbankSeSerializationUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.DetailedLoanResponse;
 import se.tink.backend.core.Amount;
 
 public abstract class BaseAbstractLoanDetailedEntity extends BaseAbstractLoanEntity {
-    public static final String AMORTIZATION = "Amorteringsbelopp";
 
     protected BaseAbstractLoanDetailedEntity(LoanEntity loanOverview) {
         super(loanOverview);
@@ -33,7 +33,7 @@ public abstract class BaseAbstractLoanDetailedEntity extends BaseAbstractLoanEnt
     protected Amount getMonthlyAmortization() {
         return allLoanDetails
                 .map(ld -> ld.getUpcomingInvoice().getExpenses().stream()
-                        .filter(ex -> AMORTIZATION.equals(ex.getDescription()))
+                        .filter(ex -> SwedbankSEConstants.AMORTIZATION.equals(ex.getDescription()))
                         .map(ex -> ex.getAmount().getTinkAmount()).findFirst().orElseGet(() -> null))
                 .orElseGet(() -> null);
     }

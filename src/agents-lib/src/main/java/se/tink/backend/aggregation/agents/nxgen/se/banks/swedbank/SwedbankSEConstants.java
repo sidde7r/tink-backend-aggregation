@@ -10,6 +10,8 @@ public class SwedbankSEConstants {
     public static final String BANK_NAME = "Swedbank AB (publ)";
 */
 
+    public static final String MEMBERSHIP_LOAN = "Medlemslån";
+    public static final String AMORTIZATION = "Amorteringsbelopp";
     public static final ImmutableMap<String, ProfileParameters> PROFILE_PARAMETERS =
             new ImmutableMap.Builder<String, ProfileParameters>()
                     .put("swedbank",
