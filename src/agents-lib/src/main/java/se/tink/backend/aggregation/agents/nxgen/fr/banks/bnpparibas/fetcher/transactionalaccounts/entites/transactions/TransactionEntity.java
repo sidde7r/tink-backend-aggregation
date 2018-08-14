@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.BnpParibasConstants;
@@ -86,7 +87,7 @@ public class TransactionEntity {
     }
 
     public String getTransactionLabel() {
-        return transactionLabel == null ? "" : transactionLabel;
+        return Optional.ofNullable(transactionLabel).orElse("");
     }
 
     public void setTransactionLabel(String transactionLabel) {
