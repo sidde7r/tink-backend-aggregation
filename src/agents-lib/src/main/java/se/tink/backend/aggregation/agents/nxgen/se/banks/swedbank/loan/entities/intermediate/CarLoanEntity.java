@@ -16,11 +16,11 @@ public class CarLoanEntity extends BaseAbstractLoanEntity {
         super(loan);
     }
 
-    public static CarLoanEntity create(LoanEntity loanOverview, DetailedLoanResponse loanDetails) {
+    protected static CarLoanEntity create(LoanEntity loanOverview, DetailedLoanResponse loanDetails) {
         return new CarLoanEntity(loanDetails, loanOverview);
     }
 
-    public static CarLoanEntity create(LoanEntity loan) {
+    protected static CarLoanEntity create(LoanEntity loan) {
         return new CarLoanEntity(loan);
     }
 

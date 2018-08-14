@@ -10,22 +10,22 @@ import se.tink.backend.aggregation.nxgen.core.account.LoanDetails;
 
 public class CollateralsLoanEntity extends BaseAbstractLoanDetailedEntity {
 
-    protected CollateralsLoanEntity(
+    private CollateralsLoanEntity(
             LoanEntity loanOverview) {
         super(loanOverview);
     }
 
-    protected CollateralsLoanEntity(
+    private CollateralsLoanEntity(
             DetailedLoanResponse loanDetails,
             LoanEntity loanOverview) {
         super(loanDetails, loanOverview);
     }
 
-    public static CollateralsLoanEntity create(LoanEntity loanOverview, DetailedLoanResponse loanDetails) {
+    protected static CollateralsLoanEntity create(LoanEntity loanOverview, DetailedLoanResponse loanDetails) {
         return new CollateralsLoanEntity(loanDetails, loanOverview);
     }
 
-    public static CollateralsLoanEntity create(LoanEntity loanOverview) {
+    protected static CollateralsLoanEntity create(LoanEntity loanOverview) {
         return new CollateralsLoanEntity(loanOverview);
     }
 

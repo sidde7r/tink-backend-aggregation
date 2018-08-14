@@ -15,15 +15,15 @@ public class ConsumptionLoanEntity extends BaseAbstractLoanDetailedEntity {
         super(loanDetails, loanOverview);
     }
 
-    public ConsumptionLoanEntity(LoanEntity loanOverview) {
+    private ConsumptionLoanEntity(LoanEntity loanOverview) {
         super(loanOverview);
     }
 
-    public static ConsumptionLoanEntity create(LoanEntity loanOverview, DetailedLoanResponse loanDetails) {
+    protected static ConsumptionLoanEntity create(LoanEntity loanOverview, DetailedLoanResponse loanDetails) {
         return new ConsumptionLoanEntity(loanDetails, loanOverview);
     }
 
-    public static ConsumptionLoanEntity create(LoanEntity loanOverview) {
+    protected static ConsumptionLoanEntity create(LoanEntity loanOverview) {
         return new ConsumptionLoanEntity(loanOverview);
     }
 
