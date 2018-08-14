@@ -2,13 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.tra
 
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.BnpParibasConstants;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.utils.BnpParibasFormatUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @JsonObject
 public class TransactionalAccountTransactionsRequest {
-    public static final ThreadSafeDateFormat DATE_FORMATTER = new ThreadSafeDateFormat("ddMMyyyy");
-
     private String triAV;
     private String startDate;
     private String pastOrPending;
@@ -25,8 +23,8 @@ public class TransactionalAccountTransactionsRequest {
 
     public static TransactionalAccountTransactionsRequest create(Date fromDate, Date toDate,
             String ibanKey) {
-        String startDate = DATE_FORMATTER.format(fromDate);
-        String endDate = DATE_FORMATTER.format(toDate);
+        String startDate = BnpParibasFormatUtils.TRANSACTION_DATE_FORMATTER.format(fromDate);
+        String endDate = BnpParibasFormatUtils.TRANSACTION_DATE_FORMATTER.format(toDate);
 
         return new TransactionalAccountTransactionsRequest(startDate, endDate, ibanKey);
     }

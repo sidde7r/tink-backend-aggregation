@@ -6,16 +6,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import java.util.Optional;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.BnpParibasConstants;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.utils.BnpParibasFormatUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
 public class TransactionEntity {
-    private static final Pattern DESCRIPTION_PATTERN = Pattern.compile(
-            BnpParibasConstants.TransactionDescriptionFormatting.REGEX);
-
     @JsonProperty("categorie")
     private String category;
     @JsonFormat(pattern = "dd-MM-yyyy")
@@ -45,7 +42,7 @@ public class TransactionEntity {
 
     @JsonIgnore
     private String getFormattedDescription() {
-        Matcher matcher = DESCRIPTION_PATTERN.matcher(getTransactionLabel());
+        Matcher matcher = BnpParibasFormatUtils.TRANSACTION_DESCRIPTION_PATTERN.matcher(getTransactionLabel());
 
         if (matcher.find()) {
             return matcher.group(BnpParibasConstants.TransactionDescriptionFormatting.MERCHANT_NAME);
