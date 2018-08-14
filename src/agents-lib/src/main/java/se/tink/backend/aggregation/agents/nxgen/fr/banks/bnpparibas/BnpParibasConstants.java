@@ -15,8 +15,8 @@ public class BnpParibasConstants {
     }
 
     public static final class Storage {
-        public static final String IDFA = "idfa";
-        public static final String IDFV = "idfv";
+        public static final String IDFA_UUID = "idfa";
+        public static final String IDFV_UUID = "idfv";
         public static final String LOGIN_ID = "loginId";
         public static final String IBAN_KEY = "ibanKey";
     }

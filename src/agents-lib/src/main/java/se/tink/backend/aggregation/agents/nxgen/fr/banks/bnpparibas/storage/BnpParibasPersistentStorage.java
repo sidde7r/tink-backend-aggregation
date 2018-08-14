@@ -24,15 +24,15 @@ public class BnpParibasPersistentStorage {
     }
 
     public void createAndSaveIdfaAndIdfvValues() {
-        persistentStorage.put(BnpParibasConstants.Storage.IDFA, UUID.randomUUID().toString().toUpperCase());
-        persistentStorage.put(BnpParibasConstants.Storage.IDFV, UUID.randomUUID().toString().toUpperCase());
+        persistentStorage.put(BnpParibasConstants.Storage.IDFA_UUID, UUID.randomUUID().toString().toUpperCase());
+        persistentStorage.put(BnpParibasConstants.Storage.IDFV_UUID, UUID.randomUUID().toString().toUpperCase());
     }
 
     public String getIdfaValue() {
-        return persistentStorage.get(BnpParibasConstants.Storage.IDFA);
+        return persistentStorage.get(BnpParibasConstants.Storage.IDFA_UUID);
     }
 
     public String getIdfVValue() {
-        return persistentStorage.get(BnpParibasConstants.Storage.IDFV);
+        return persistentStorage.get(BnpParibasConstants.Storage.IDFV_UUID);
     }
 }
