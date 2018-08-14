@@ -402,7 +402,8 @@ public class FinTsApiClient {
             fetchedTransactions = transactions.size();
         } else if (endDateSupported && transactions.stream()
                 .anyMatch(transaction -> transaction.getDate().after(endDate))) {
-            return Collections.emptyList();
+            return transactions.stream().filter(transaction -> transaction.getDate().before(endDate))
+                    .collect(Collectors.toList());
         }
 
         return transactions;
