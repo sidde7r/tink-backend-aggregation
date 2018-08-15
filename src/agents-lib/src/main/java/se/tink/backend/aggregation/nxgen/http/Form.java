@@ -37,6 +37,13 @@ public final class Form {
 
         private final LinkedHashMap<String, String> parameters = new LinkedHashMap<>();
 
+        public Builder() {
+        }
+
+        public Builder(Form form) {
+            parameters.putAll(form.parameters);
+        }
+
         /**
          * Add key-value parameter.
          */
