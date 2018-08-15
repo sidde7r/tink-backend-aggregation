@@ -75,15 +75,16 @@ public class MT940Statement {
             builder.append(elements.get("20") + " ");
         }
 
-        if(elements.containsKey("21")){
-            builder.append(elements.get("21") + " ");
-        }
-
         //Deutche - "24" -> "SVWZ+SUBWAY RESTAURANT PASS"
         //Comdirect - "24" -> "NICHT ANGEGEBEN"
         //Postbank - "22" -> "To own account"
         if(elements.containsKey("24")){
             builder.append(elements.get("24") + " ");
+        }
+
+        //Comdirect - "22" -> "LIDL VILNIUS NAUJININKAI//V"
+        if(elements.containsKey("22")){
+            builder.append(elements.get("22") + " ");
         }
 
         //Deutche - "32" -> "SG-CardProcess GmbH"
