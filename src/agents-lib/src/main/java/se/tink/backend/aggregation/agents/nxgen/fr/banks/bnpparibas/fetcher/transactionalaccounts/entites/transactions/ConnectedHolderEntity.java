@@ -7,7 +7,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ConnectedHolderEntity {
     @JsonProperty("civilite")
     private String civilState;
-    private int idCivilite;
+    @JsonProperty("idCivilite")
+    private int civilStateId;
     private String ikpi;
     @JsonProperty("nomComplet")
     private String fullName;
@@ -18,8 +19,8 @@ public class ConnectedHolderEntity {
         return civilState;
     }
 
-    public int getIdCivilite() {
-        return idCivilite;
+    public int getCivilStateId() {
+        return civilStateId;
     }
 
     public String getIkpi() {

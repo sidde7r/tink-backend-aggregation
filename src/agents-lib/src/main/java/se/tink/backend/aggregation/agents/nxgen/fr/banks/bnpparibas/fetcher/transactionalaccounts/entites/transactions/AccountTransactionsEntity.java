@@ -24,7 +24,7 @@ public class AccountTransactionsEntity {
     @JsonProperty("soldeAVenir")
     private double soldeaVenir;
     @JsonProperty("soldeDispo")
-    private double balanceDispo;
+    private double disposableBalance;
 
     @JsonIgnore
     public Collection<Transaction> toTinkTransactions(){
@@ -58,7 +58,7 @@ public class AccountTransactionsEntity {
         return soldeaVenir;
     }
 
-    public double getBalanceDispo() {
-        return balanceDispo;
+    public double getDisposableBalance() {
+        return disposableBalance;
     }
 }
