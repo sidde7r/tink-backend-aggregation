@@ -559,7 +559,7 @@
                 "TRANSFERS",
                 "MORTGAGE_AGGREGATION"
             ],
-            "className": "banks.handelsbanken.v6.HandelsbankenV6Agent",
+            "className": "nxgen.se.banks.handelsbanken.HandelsbankenSEAgent",
             "credentialsType": "PASSWORD",
             "currency": "SEK",
             "displayDescription": "Kortläsare",
@@ -606,7 +606,7 @@
                 "TRANSFERS",
                 "MORTGAGE_AGGREGATION"
             ],
-            "className": "banks.handelsbanken.v6.HandelsbankenV6Agent",
+            "className": "nxgen.se.banks.handelsbanken.HandelsbankenSEAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayDescription": "Mobilt BankID",
@@ -634,26 +634,6 @@
             "status": "ENABLED",
             "transactional": true,
             "type": "BANK"
-        },
-        {
-            "name": "se-handelsbanken-bankid",
-            "credentialsType": "MOBILE_BANKID",
-            "className": "nxgen.se.banks.handelsbanken.HandelsbankenSEAgent",
-            "fields": [
-                {
-                    "hint": "ÅÅÅÅMMDDNNNN",
-                    "name": "username",
-                    "numeric": true,
-                    "pattern": "(19|20)[0-9]{10}",
-                    "immutable": true,
-                    "maxLength": 12,
-                    "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
-                }
-            ],
-            "type": "BANK",
-            "status": "ENABLED"
         },
         {
             "name": "icabanken-bankid",

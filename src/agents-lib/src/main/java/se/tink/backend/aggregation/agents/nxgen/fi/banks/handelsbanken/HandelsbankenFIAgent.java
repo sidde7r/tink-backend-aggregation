@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.HandelsbankenAutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
@@ -47,6 +48,12 @@ public class HandelsbankenFIAgent extends HandelsbankenAgent<HandelsbankenFIApiC
     @Override
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController(HandelsbankenFIApiClient bankClient,
             HandelsbankenSessionStorage handelsbankenSessionStorage) {
+        return Optional.empty();
+    }
+
+    @Override
+    protected Optional<EInvoiceRefreshController> constructEInvoiceRefreshController(HandelsbankenFIApiClient client,
+            HandelsbankenSessionStorage sessionStorage) {
         return Optional.empty();
     }
 

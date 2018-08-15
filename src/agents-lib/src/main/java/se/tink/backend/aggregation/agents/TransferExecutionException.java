@@ -157,6 +157,13 @@ public class TransferExecutionException extends RuntimeException {
         PAYMENT_NO_MATCHES(new LocalizableKey("The payment could not be found at your bank")),
         PAYMENT_CREATE_FAILED(new LocalizableKey("Could not create payment")),
         PAYMENT_UPDATE_FAILED(new LocalizableKey("Could not update payment")),
+        PAYMENT_UPDATE_NOT_ALLOWED(new LocalizableKey("It's not possible to modify this payment")),
+        PAYMENT_UPDATE_AMOUNT(new LocalizableKey("It's not possible to modify the amount of this payment")),
+        PAYMENT_UPDATE_DESTINATION(new LocalizableKey("It's not possible to modify the destination of this payment")),
+        PAYMENT_UPDATE_SOURCE(new LocalizableKey("It's not possible to modify the source account of this payment")),
+        PAYMENT_UPDATE_DUEDATE(new LocalizableKey("It's not possible to modify the payment date of this payment")),
+        PAYMENT_UPDATE_DESTINATION_MESSAGE(new LocalizableKey("It's not possible to modify OCR/message of this payment")),
+        PAYMENT_UPDATE_SOURCE_MESSAGE(new LocalizableKey("It's not possible to modify the source message of this payment")),
         MISSING_MESSAGE_TYPE(new LocalizableKey("Missing message type")),
         INVALID_STRUCTURED_MESSAGE(new LocalizableKey("The entered structured message is invalid"));
 

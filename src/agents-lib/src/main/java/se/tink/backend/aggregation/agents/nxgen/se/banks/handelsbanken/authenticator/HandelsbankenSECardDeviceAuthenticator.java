@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authentic
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenPersistentStorage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.HandelsbankenAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.encryption.LibTFA;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.EntryPointResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.UserCredentialsRequest;
@@ -32,15 +33,18 @@ public class HandelsbankenSECardDeviceAuthenticator implements MultiFactorAuthen
     private final HandelsbankenPersistentStorage persistentStorage;
     private final SupplementalInformationController supplementalInformationController;
     private final HandelsbankenConfiguration configuration;
+    private final HandelsbankenAutoAuthenticator autoAuthenticator;
 
     public HandelsbankenSECardDeviceAuthenticator(HandelsbankenSEApiClient client,
             HandelsbankenPersistentStorage persistentStorage,
             SupplementalInformationController supplementalInformationController,
-            HandelsbankenConfiguration configuration) {
+            HandelsbankenConfiguration configuration,
+            HandelsbankenAutoAuthenticator autoAuthenticator) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.supplementalInformationController = supplementalInformationController;
         this.configuration = configuration;
+        this.autoAuthenticator = autoAuthenticator;
     }
 
     @Override
@@ -91,6 +95,8 @@ public class HandelsbankenSECardDeviceAuthenticator implements MultiFactorAuthen
 
         persistentStorage.persist(activateProfile);
         persistentStorage.persist(tfa);
+
+        autoAuthenticator.autoAuthenticate();
     }
 
     private Field challengeField(InitNewProfileResponse initNewProfile) {

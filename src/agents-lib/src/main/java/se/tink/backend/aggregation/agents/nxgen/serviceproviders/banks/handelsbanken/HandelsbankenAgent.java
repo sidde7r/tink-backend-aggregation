@@ -3,10 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsb
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.HandelsbankenAutoAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.transactionalaccount.HandelsbankenAccountTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.creditcard.HandelsbankenCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.creditcard.HandelsbankenCreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.loan.HandelsbankenLoanFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.transactionalaccount.HandelsbankenAccountTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.transactionalaccount.HandelsbankenTransactionalAccountFetcher;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -63,18 +63,28 @@ public abstract class HandelsbankenAgent<A extends HandelsbankenApiClient, C ext
             C handelsbankenConfiguration, HandelsbankenPersistentStorage handelsbankenPersistentStorage,
             HandelsbankenSessionStorage handelsbankenSessionStorage);
 
+    protected AutoAuthenticationController constructAutoAuthenticationController(
+            MultiFactorAuthenticator cardDeviceAuthenticator, HandelsbankenAutoAuthenticator autoAuthenticator) {
+        return new AutoAuthenticationController(this.request, this.context,
+                cardDeviceAuthenticator, autoAuthenticator);
+    }
+
     protected AutoAuthenticationController constructAutoAuthenticationController(MultiFactorAuthenticator
             cardDeviceAuthenticator) {
-        return new AutoAuthenticationController(this.request, this.context,
-                cardDeviceAuthenticator,
-                new HandelsbankenAutoAuthenticator(this.bankClient, this.handelsbankenPersistentStorage,
-                        this.credentials,
-                        this.handelsbankenSessionStorage, this.handelsbankenConfiguration)
-        );
+        return constructAutoAuthenticationController(cardDeviceAuthenticator, constructAutoAuthenticator());
+    }
+
+    protected HandelsbankenAutoAuthenticator constructAutoAuthenticator() {
+        return new HandelsbankenAutoAuthenticator(this.bankClient, this.handelsbankenPersistentStorage,
+                this.credentials,
+                this.handelsbankenSessionStorage, this.handelsbankenConfiguration);
     }
 
     protected abstract Optional<InvestmentRefreshController> constructInvestmentRefreshController(A bankClient,
             HandelsbankenSessionStorage handelsbankenSessionStorage);
+
+    protected abstract Optional<EInvoiceRefreshController> constructEInvoiceRefreshController(A client,
+            HandelsbankenSessionStorage sessionStorage);
 
     protected abstract Optional<TransferController> constructTranferController(A client,
             HandelsbankenSessionStorage sessionStorage, AgentContext context);
@@ -120,7 +130,7 @@ public abstract class HandelsbankenAgent<A extends HandelsbankenApiClient, C ext
 
     @Override
     protected Optional<EInvoiceRefreshController> constructEInvoiceRefreshController() {
-        return Optional.empty();
+        return constructEInvoiceRefreshController(this.bankClient, this.handelsbankenSessionStorage);
     }
 
     @Override
