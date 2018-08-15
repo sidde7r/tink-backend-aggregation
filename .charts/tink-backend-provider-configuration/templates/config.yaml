@@ -1,3 +1,5 @@
+{{ $aggregationdb := .Values.aggregationdb | default dict }}
+
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -39,6 +41,22 @@ data:
           timeZone: Europe/Stockholm
           logFormat: '%date{"yyyy-MM-dd HH:mm:ss,SSSXXX"} %level [%thread] R:%X{requestId} %logger %message%n%xException'
 
+    coordination:
+      hosts: {{ default "coordination.provider.svc.cluster.local:2181" .Values.coordinationHosts }}
+
+    database:
+      driverClass: com.mysql.jdbc.Driver
+      username: {{ default "tink-provider-configuration" $aggregationdb.username }}
+      {{- if eq "local" .Values.Cluster }}
+      password: {{ default "password" $aggregationdb.password }}
+      {{- else }}
+      password: MYSQL_PASSWORD # Is added via Kubernetes Secrets
+      {{- end }}
+      url: jdbc:mysql://{{ default "aggregationdb.provider.svc.cluster.local" $aggregationdb.host }}/tink?useLocalSessionState=true&rewriteBatchedStatements=true&useSSL=true&verifyServerCertificate=false
+      showSql: false
+      persistenceUnitName: tink-provider-api
+      generateDdl: true
+    cluster: TINK
 
     prometheus:
       port: 9130
@@ -52,6 +70,7 @@ metadata:
   namespace: provider-configuration
 type: Opaque
 data:
+  aggregationdb-password: ZGV2dG9rZW4=
   # Is set to changeme for the development keystore
   keystore-password: Y2hhbmdlbWU=
   system-access-token: ZGV2dG9rZW4=
