@@ -23,7 +23,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SwedbankDefaultLoanFetcher implements AccountFetcher<LoanAccount> {
     private static final AggregationLogger LOGGER = new AggregationLogger(SwedbankDefaultLoanFetcher.class);
-    private final SwedbankDefaultApiClient apiClient;
+    protected final SwedbankDefaultApiClient apiClient;
 
     public SwedbankDefaultLoanFetcher(SwedbankDefaultApiClient apiClient) {
         this.apiClient = apiClient;
@@ -85,7 +85,7 @@ public class SwedbankDefaultLoanFetcher implements AccountFetcher<LoanAccount> {
             // Swedbank has endpoint with more loan information.
             // Currently we only know a part of this endpoints.
             // TODO: Implement and use this endpoint when we have information how all entities look
-            String loanResponse = apiClient.loanOverview();
+            String loanResponse = apiClient.loanOverviewAsString();
             if (!Strings.isNullOrEmpty(loanResponse)) {
                 LOGGER.infoExtraLong(loanResponse, SwedbankBaseConstants.LogTags.LOAN_RESPONSE);
 

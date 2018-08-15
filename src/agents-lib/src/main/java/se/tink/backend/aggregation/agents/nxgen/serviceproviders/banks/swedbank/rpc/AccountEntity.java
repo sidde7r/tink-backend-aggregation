@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.SwedbankSeSerializationUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
@@ -44,6 +46,11 @@ public abstract class AccountEntity extends AbstractAccountEntity {
 
     public String getBalance() {
         return balance;
+    }
+
+    @JsonIgnore
+    public Amount getTinkAmount() {
+        return SwedbankSeSerializationUtils.parseAmountForInput(balance, currency);
     }
 
     public boolean isAvailableForFavouriteAccount() {
