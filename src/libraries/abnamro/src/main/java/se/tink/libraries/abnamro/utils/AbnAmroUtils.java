@@ -45,6 +45,8 @@ public class AbnAmroUtils {
     public static final int ABN_AMRO_ICS_SUFFIX_LENGTH = 5;
     public static final int ABN_AMRO_ICS_HAS_SUFFIX_MIN_LENGTH = 15;
 
+    public static final String ABN_AMRO_ICS_ACCOUNT_CONTRACT_PAYLOAD = "contract_number";
+
     public static boolean isAggregationCredentials(Credentials credentials) {
         return Objects.equals(credentials.getProviderName(), ABN_AMRO_ICS_PROVIDER_NAME) ||
                 Objects.equals(credentials.getProviderName(), ABN_AMRO_PROVIDER_NAME_V2);

@@ -28,7 +28,9 @@ public class AccountConverter {
 
     private Account toCreditCardAccount(Account account, PfmContractEntity contract) {
         account.setName(contract.getName().replaceFirst("ABN AMRO\\s*", ""));
+        account.setBankId(AbnAmroUtils.creditCardIdToAccountId(account.getBankId()));
         account.setAccountNumber(AbnAmroUtils.maskCreditCardContractNumber(contract.getContractNumber()));
+        account.putPayload(AbnAmroUtils.ABN_AMRO_ICS_ACCOUNT_CONTRACT_PAYLOAD, contract.getContractNumber());
 
         return account;
     }
