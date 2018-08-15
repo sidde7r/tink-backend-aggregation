@@ -59,16 +59,34 @@ public final class InvokeResponse {
     }
 
     /**
-     * @return true if there is evidence that account is locked
+     * @return true iff there is evidence that account is locked
      */
     public boolean isAccountLocked() {
+        return isAccountTemporarilyLocked() || isAccountPermanentlyLocked();
+    }
+
+    /**
+     * @return true iff the account is temporarily locked but can be unlocked with a TAN number
+     */
+    private boolean isAccountTemporarilyLocked() {
         // Observed error message:
         // Der Zugang zu Ihren Online-Konten ist zur Zeit gesperrt.
-        // Bitte geben Sie Ihr Kennwort und eine gültige Transaktionsnummer ein, um den Zugang zu entsperren.
-
+        // Bitte geben Sie Ihr Kennwort und eine gültige Transaktionsnummer ein, um den Zugang zu entsperren. (Z9909)
         return Optional.ofNullable(securityServiceLoginError)
                 .orElse("")
                 .replace("\n", " ")
-                .matches(WLConstants.Regex.ACCOUNT_LOCKED);
+                .matches(WLConstants.Regex.ACCOUNT_LOCKED_TEMPORARILY);
+    }
+
+    /**
+     * @return true iff the account is locked "permanently", i.e. in a way that necessitates contacting the bank
+     */
+    private boolean isAccountPermanentlyLocked() {
+        // Observed error message:
+        // Der Zugang zu Ihren Online-Konten ist gesperrt. Bitte wenden Sie sich an Ihre Filiale. (Z1159)
+        return Optional.ofNullable(securityServiceLoginError)
+                .orElse("")
+                .replace("\n", " ")
+                .matches(WLConstants.Regex.ACCOUNT_LOCKED_PERMANENTLY);
     }
 }

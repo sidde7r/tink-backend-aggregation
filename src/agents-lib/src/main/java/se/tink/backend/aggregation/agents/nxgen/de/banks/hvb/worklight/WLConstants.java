@@ -41,7 +41,8 @@ public final class WLConstants {
 
     public static class Regex {
         public static final String INCORRECT_PASSWORD = ".*Z1110.*";
-        public static final String ACCOUNT_LOCKED = ".*Z9909.*";
+        public static final String ACCOUNT_LOCKED_TEMPORARILY = ".*Z9909.*";
+        public static final String ACCOUNT_LOCKED_PERMANENTLY = ".*Z1159.*";
         public static final Pattern ENCLOSED_JSON = Pattern.compile("\\/\\*-secure-\\s*(.*)\\s*\\*\\/");
     }
 
