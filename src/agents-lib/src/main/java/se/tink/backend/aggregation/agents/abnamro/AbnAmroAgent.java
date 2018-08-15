@@ -219,14 +219,13 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
     private void updateCreditCardAccount(Account account, RefreshableItem item) {
         String bcNumber = credentials.getPayload();
 
-        String fullBankId = account.getBankId();
-        account.setBankId(AbnAmroUtils.creditCardIdToAccountId(account.getBankId()));
 
         context.cacheAccount(account);
         context.sendAccountToUpdateService(account.getBankId());
 
         try {
             if (Objects.equals(item, RefreshableItem.CREDITCARD_TRANSACTIONS)) {
+                String fullBankId = account.getPayload(AbnAmroUtils.ABN_AMRO_ICS_ACCOUNT_CONTRACT_PAYLOAD);
                 if (credentials.isDebug()) {
                     log.info(account, String.format("Updating credit card transactions with contract number: %s",
                             fullBankId));
