@@ -422,7 +422,7 @@ public class SwedbankDefaultApiClient {
     }
 
     private Map<String, MenuItemLinkEntity> getMenuItems() {
-        bankProfileHandler = getBankProfileHandler();
+//        bankProfileHandler = getBankProfileHandler();
         if (bankProfileHandler != null && bankProfileHandler.getActiveBankProfile() != null) {
             return bankProfileHandler.getActiveBankProfile().getMenuItems();
         }
