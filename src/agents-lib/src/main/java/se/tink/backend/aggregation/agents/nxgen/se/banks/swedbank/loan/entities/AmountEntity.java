@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.core.Amount;
 
 @JsonObject
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class AmountEntity {
     protected String amount;
     protected String currencyCode;
