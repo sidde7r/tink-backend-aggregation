@@ -545,8 +545,8 @@ maven_jar(
 
 maven_jar(
     name = "org_apache_httpcomponents_httpclient",
-    artifact = "org.apache.httpcomponents:httpclient:4.3.4",
-    sha1 = "a9a1fef2faefed639ee0d0fba5b3b8e4eb2ff2d8",
+    artifact = "org.apache.httpcomponents:httpclient:4.5.5",
+    sha1 = "1603dfd56ebcd583ccdf337b6c3984ac55d89e58",
 )
 
 maven_jar(

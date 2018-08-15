@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.workers.AgentWorkerOperationFactory;
 import se.tink.backend.aggregation.workers.AgentWorkerRefreshOperationCreatorWrapper;
 import se.tink.backend.queue.sqs.EncodingHandler;
 import se.tink.backend.queue.sqs.MessageHandler;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 import java.io.IOException;
 
@@ -29,24 +28,29 @@ public class AutomaticRefreshQueueHandler implements MessageHandler {
         this.encodingHandler = encodingHandler;
     }
 
+    //boolean
     @Override
-    public void handle(String message) throws IOException {
+    public AgentWorkerRefreshOperationCreatorWrapper handle(String message) throws IOException {
         RefreshInformation refreshInformation = encodingHandler.decode(message);
         try {
-            agentWorker.executeAutomaticRefresh(AgentWorkerRefreshOperationCreatorWrapper.of(
+            AgentWorkerRefreshOperationCreatorWrapper agentWorkerRefreshOperationCreatorWrapper = AgentWorkerRefreshOperationCreatorWrapper.of(
                     agentWorkerCommandFactory,
                     refreshInformation.getRequest(),
                     ClusterInfo.createForAggregationCluster(
-                            ClusterId.create(refreshInformation.getName(), refreshInformation.getEnvironment(), refreshInformation.getAggregator()),
+                            ClusterId.create(refreshInformation.getName(), refreshInformation.getEnvironment(),
+                                    refreshInformation.getAggregator()),
                             refreshInformation.getAggregationControllerHost(),
                             refreshInformation.getApiToken(),
                             refreshInformation.getClientCertificate(),
                             refreshInformation.isDisableRequestCompression()
-                    )));
+                    ));
+            agentWorker.executeAutomaticRefresh(agentWorkerRefreshOperationCreatorWrapper);
+
+            return agentWorkerRefreshOperationCreatorWrapper;
         } catch (Exception e) {
             logger.error("Something went wrong with an automatic refresh from sqs.");
+            throw new IOException(e);
         }
-
     }
 
 }
