@@ -227,6 +227,10 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
 
         try {
             if (Objects.equals(item, RefreshableItem.CREDITCARD_TRANSACTIONS)) {
+                if (credentials.isDebug()) {
+                    log.info(account, String.format("Updating credit card transactions with contract number: %s",
+                            fullBankId));
+                }
                 refreshCreditCardTransactions(bcNumber, fullBankId);
             }
         } catch (IcsException e) {
