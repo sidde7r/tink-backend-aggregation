@@ -3,6 +3,32 @@
   "currency": "EUR",
   "providers": [
     {
+      "name": "fr-bnpparibas-password",
+      "displayName": "BNP Paribas",
+      "popular": true,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.fr.banks.bnpparibas.BnpParibasAgent",
+      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your mobile banking app.",
+      "transactional": "true",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "numeric": true,
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "sensitive": true,
+          "masked": true,
+          "name": "password"
+        }
+      ]
+    },
+    {
       "name": "fr-banquetransatlantique-password",
       "displayName": "Banque Transatlantique",
       "popular": false,
