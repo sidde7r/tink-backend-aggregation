@@ -18,12 +18,11 @@ import se.tink.backend.queue.sqs.SqsQueue;
 import se.tink.backend.queue.sqs.configuration.SqsQueueConfiguration;
 
 
-public class QueueModule  extends AbstractModule {
+public class QueueModule extends AbstractModule {
     private SqsQueueConfiguration sqsQueueConfiguration;
     private LifecycleEnvironment lifecycle;
 
     public QueueModule(SqsQueueConfiguration sqsQueueConfiguration, LifecycleEnvironment lifecycle) {
-
         this.sqsQueueConfiguration = sqsQueueConfiguration;
         this.lifecycle = lifecycle;
     }

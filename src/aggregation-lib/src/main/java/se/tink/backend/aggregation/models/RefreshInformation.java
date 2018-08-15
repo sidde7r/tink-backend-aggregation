@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 
 public class RefreshInformation {
 
-
     private RefreshInformationRequest request;
 
     private String aggregationControllerHost;
@@ -22,7 +21,6 @@ public class RefreshInformation {
     }
 
     public RefreshInformation(RefreshInformationRequest request, ClusterInfo clusterInfo) {
-
         this.request = request;
         this.aggregationControllerHost = clusterInfo.getAggregationControllerHost();
         this.apiToken = clusterInfo.getApiToken();

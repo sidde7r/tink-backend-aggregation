@@ -43,7 +43,6 @@ public class SqsProducer implements QueueProducer {
             logger.error("Could not send message");
         }
         // TODO introduce metrics
-
     }
 
     @Override

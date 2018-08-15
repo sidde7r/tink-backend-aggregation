@@ -15,11 +15,10 @@ import se.tink.backend.queue.sqs.MessageHandler;
 import java.io.IOException;
 
 public class AutomaticRefreshQueueHandler implements MessageHandler {
-
     private AgentWorker agentWorker;
     private AgentWorkerOperationFactory agentWorkerCommandFactory;
     private EncodingHandler<RefreshInformation> encodingHandler;
-    private Logger logger = LoggerFactory.getLogger(AutomaticRefreshQueueHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(AutomaticRefreshQueueHandler.class);
 
     @Inject
     public AutomaticRefreshQueueHandler(AgentWorker agentWorker, AgentWorkerOperationFactory agentWorkerOperationFactory, EncodingHandler encodingHandler) {
@@ -28,7 +27,6 @@ public class AutomaticRefreshQueueHandler implements MessageHandler {
         this.encodingHandler = encodingHandler;
     }
 
-    //boolean
     @Override
     public AgentWorkerRefreshOperationCreatorWrapper handle(String message) throws IOException {
         RefreshInformation refreshInformation = encodingHandler.decode(message);
@@ -52,5 +50,4 @@ public class AutomaticRefreshQueueHandler implements MessageHandler {
             throw new IOException(e);
         }
     }
-
 }
