@@ -1,24 +1,30 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.transactional.rpc;
 
 import java.util.Date;
 import java.util.List;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.entities.SecurityAccountListEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationMsgDateDeserializer;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.entities.TransactionEntity;
 
 @XmlRootElement(name = "root")
-public class InvestmentAccountsListResponse {
+@XmlAccessorType(XmlAccessType.FIELD)
+public class TransactionSummaryResponse {
+
     @XmlElement(name = "code_retour")
     private String returnCode;
+
     @XmlElement(name = "date_msg")
     @XmlJavaTypeAdapter(EuroInformationMsgDateDeserializer.class)
     private Date date;
-    @XmlElementWrapper(name = "SecurityAccountList")
-    @XmlElement(name = "SecurityAccount")
-    private List<SecurityAccountListEntity> securityAccountList;
+
+    @XmlElement(name = "ligmvt")
+    @XmlElementWrapper(name = "tabmvt")
+    private List<TransactionEntity> transactions;
 
     public String getReturnCode() {
         return returnCode;
@@ -28,7 +34,7 @@ public class InvestmentAccountsListResponse {
         return date;
     }
 
-    public List<SecurityAccountListEntity> getSecurityAccountList() {
-        return securityAccountList;
+    public List<TransactionEntity> getTransactions() {
+        return transactions;
     }
 }

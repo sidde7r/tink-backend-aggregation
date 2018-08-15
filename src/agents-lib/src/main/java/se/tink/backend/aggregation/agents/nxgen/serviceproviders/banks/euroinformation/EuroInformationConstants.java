@@ -41,6 +41,9 @@ public class EuroInformationConstants {
         public static final String APP_VERSION = "appversion";
         public static final String TARGET = "_cible";
         public static final String WS_VERSION = "_wsversion";
+        public static final String WS_VERSION_VALUE_1 = "1";
+        public static final String WS_VERSION_VALUE_2 = "2";
+        public static final String WS_VERSION_VALUE_7 = "7";
         public static final String MEDIA = "_media";
         public static final String MEDIA_VALUE = "AN";
         public static final String CATEGORIZE = "categorize";
@@ -52,6 +55,8 @@ public class EuroInformationConstants {
 
         public static final String CURRENT_PAGE = "CurrentPage";
         public static final String MAX_ELEMENTS = "NbElemMaxByPage";
+        public static final String MAX_ELEMENTS_VALUE = "25";
+        public static final String SECURITY_ACCOUNT = "SecurityAccount";
     }
 
     public static class Url {

@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationConstants.RequestBodyValues.APP_VERSION;
+
 public interface EuroInformationConfiguration {
 
     public String getUrl();
@@ -8,8 +10,11 @@ public interface EuroInformationConfiguration {
 
     public String getAppVersion();
 
+    public default String getAppVersionKey() {
+        return APP_VERSION;
+    }
+
     public default String getLoginSubpage() {
         return EuroInformationConstants.Url.LOGIN;
     }
-
 }
