@@ -559,7 +559,7 @@
                 "TRANSFERS",
                 "MORTGAGE_AGGREGATION"
             ],
-            "className": "banks.handelsbanken.v6.HandelsbankenV6Agent",
+            "className": "nxgen.se.banks.handelsbanken.HandelsbankenSEAgent",
             "credentialsType": "PASSWORD",
             "currency": "SEK",
             "displayDescription": "Kortläsare",
@@ -606,7 +606,7 @@
                 "TRANSFERS",
                 "MORTGAGE_AGGREGATION"
             ],
-            "className": "banks.handelsbanken.v6.HandelsbankenV6Agent",
+            "className": "nxgen.se.banks.handelsbanken.HandelsbankenSEAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayDescription": "Mobilt BankID",
