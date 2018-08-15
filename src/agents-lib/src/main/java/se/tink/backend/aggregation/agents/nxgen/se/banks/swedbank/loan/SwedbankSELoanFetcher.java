@@ -56,6 +56,7 @@ public class SwedbankSELoanFetcher extends SwedbankDefaultLoanFetcher {
         List<CollateralsEntity> collaterals = loanOverviewResponse.getCollaterals();
         List<LoanAccount> collateralsLoans = Optional.ofNullable(collaterals).orElseGet(Collections::emptyList)
                 .stream()
+                .flatMap(collateral -> collateral.getLoans().stream())
                 .map(l -> createLoanAccountFromLoanInformation(l, CollateralsLoanEntity.class))
                 .collect(Collectors.toList());
         loanAccounts.addAll(collateralsLoans);
