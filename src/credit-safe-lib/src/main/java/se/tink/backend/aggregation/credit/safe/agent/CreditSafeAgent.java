@@ -610,7 +610,7 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
      * @return
      */
     public FraudCompanyContent seedCompanyData(String orgNumber) {
-        log.info("Seeding compnay data for " + orgNumber);
+        log.info("Seeding company data for " + orgNumber);
         GetData client = new GetData();
         GetDataSoap service = client.getGetDataSoap();
 
