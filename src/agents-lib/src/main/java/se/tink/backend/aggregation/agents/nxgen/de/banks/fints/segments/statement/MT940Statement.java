@@ -34,7 +34,6 @@ public class MT940Statement {
             date = tag_61.substring(0, 6);
             return ThreadSafeDateFormat.FORMATTER_INTEGER_DATE_COMPACT.parse(date);
         } catch (Exception e) {
-            LOGGER.error("{} tag_61: {} date: {}", FinTsConstants.LogTags.DATE_PARSING_ERROR, tag_61, date);
             return dateFallback(date);
         }
     }
