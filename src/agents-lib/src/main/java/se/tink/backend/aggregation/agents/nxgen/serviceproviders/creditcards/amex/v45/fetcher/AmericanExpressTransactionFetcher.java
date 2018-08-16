@@ -26,7 +26,6 @@ public class AmericanExpressTransactionFetcher implements TransactionFetcher<Cre
     public final AggregationLogger LOGGER;
     protected final AmericanExpressApiClient apiClient;
     protected final AmericanExpressConfiguration config;
-    //    private CreditCardAccount account;
 
     public AmericanExpressTransactionFetcher(
             AmericanExpressApiClient apiClient,
@@ -38,7 +37,6 @@ public class AmericanExpressTransactionFetcher implements TransactionFetcher<Cre
 
     @Override
     public List<AggregationTransaction> fetchTransactionsFor(CreditCardAccount account) {
-        //        this.account = account;
         List<AggregationTransaction> transactions = new ArrayList<>();
         Integer cardIndex = Integer.valueOf(account.getBankIdentifier());
 
