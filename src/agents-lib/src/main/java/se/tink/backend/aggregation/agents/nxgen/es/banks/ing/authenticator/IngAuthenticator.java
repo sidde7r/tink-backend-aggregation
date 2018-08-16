@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.authenticator;
 import com.google.common.base.Strings;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -21,12 +22,24 @@ import se.tink.backend.aggregation.rpc.Field;
 
 public class IngAuthenticator implements Authenticator {
 
+    private static final Pattern NON_NATIONAL_USERNAME_PATTERN = Pattern.compile("(?i)^X.+F$");
+
     private final IngApiClient apiClient;
     private final SessionStorage sessionStorage;
 
     public IngAuthenticator(IngApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
+    }
+
+    // Users who are not ES nationals will have usernames in the format "^X.+F$" (regex).
+    // Non-nationals have the type 1 and the rest have type 0.
+    private static int getUsernameType(String username) {
+        if (NON_NATIONAL_USERNAME_PATTERN.matcher(username).matches()) {
+            return IngConstants.UsernameType.NON_NATIONAL;
+        }
+
+        return IngConstants.UsernameType.NATIONAL;
     }
 
     @Override
@@ -40,7 +53,7 @@ public class IngAuthenticator implements Authenticator {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
-        LoginID loginId = LoginID.create(username, dateOfBirth, IngConstants.Default.LOGIN_DOCUMENT_TYPE);
+        LoginID loginId = LoginID.create(username, dateOfBirth, getUsernameType(username));
 
         LoginPinPad pinpad = apiClient.postLoginRestSession(loginId);
         if (pinpad.hasError()) {
