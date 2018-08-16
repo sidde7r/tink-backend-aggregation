@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class AmericanExpressTransactionFetcher implements TransactionFetcher<CreditCardAccount> {
     public final AggregationLogger LOGGER;
@@ -75,8 +76,8 @@ public class AmericanExpressTransactionFetcher implements TransactionFetcher<Cre
         Integer cartSupOnCurrentPage = response.getTransactionDetails().getCardList().stream()
                 // Comparing 4 last digits of card
                 // Temporary hack solution - agent needs rewrite for a proper one
-                .filter(c -> c.getCardProductName().split("-")[1].trim()
-                        .equals(card.getName().split("-")[1].trim()))
+                .filter(c -> getLast4DigitsOfTheAccountFromName(c.getCardProductName())
+                        .equals(getLast4DigitsOfTheAccountFromName(card.getName())))
                 .findFirst()
                 .map(c -> c.getSortedIndex()).orElseGet(() -> -1);
 
@@ -85,7 +86,7 @@ public class AmericanExpressTransactionFetcher implements TransactionFetcher<Cre
             availableBilling =
                     response.getTransactionDetails().getBillingInfo().getBillingInfoDetails();
         } catch (NullPointerException e) {
-            LOGGER.error("Can not fetch transaction for account: " + card);
+            LOGGER.error("Can not fetch transaction for account: " + SerializationUtils.serializeToString(card));
             return;
         }
 
@@ -102,7 +103,8 @@ public class AmericanExpressTransactionFetcher implements TransactionFetcher<Cre
                             activityListEntity.getTransactionList().stream()
                                     .filter(transaction -> {
                                                 try {
-                                                    return Integer.valueOf(transaction.getSuppIndex()).equals(cartSupOnCurrentPage);
+                                                    return Integer.valueOf(transaction.getSuppIndex())
+                                                            .equals(cartSupOnCurrentPage);
                                                 } catch (IllegalStateException e) {
                                                     LOGGER.warn(e.toString());
                                                     return false;
@@ -172,5 +174,11 @@ public class AmericanExpressTransactionFetcher implements TransactionFetcher<Cre
         }
 
         return false;
+    }
+
+    // Names of account may not be identical because of white spaces, so we use only last 4 digits from the card number to compare them
+    // ex. <name> - <number>, <name>-<number>
+    private String getLast4DigitsOfTheAccountFromName(String name) {
+        return name.split("-")[1].trim();
     }
 }
