@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.authenticator;
 
 import com.google.common.base.Strings;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -42,6 +43,14 @@ public class IngAuthenticator implements Authenticator {
         LoginID userID = new LoginID(username, dateOfBirth);
 
         LoginPinPad pinpad = apiClient.postLoginRestSession(userID);
+        if (pinpad.hasError()) {
+            if (pinpad.hasErrorCode(IngConstants.ErrorCode.INVALID_LOGIN_DOCUMENT_TYPE)) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+
+            Optional<String> errorSummary = pinpad.getErrorSummary();
+            throw new IllegalStateException(String.format("Unknown login error: %s", errorSummary.orElse("null")));
+        }
 
         LoginPinPositions positions = this.positions(pinpad, pin);
 

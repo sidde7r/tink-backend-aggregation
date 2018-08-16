@@ -33,6 +33,10 @@ public abstract class IngConstants {
         public static final String OPERATION_NAME_EMPTY = "";
     }
 
+    public static class ErrorCode {
+        public static final String INVALID_LOGIN_DOCUMENT_TYPE = "ESValidLoginDocument.loginDocument";
+    }
+
     public static class ProductType {
         /** Tarjeta Débito */
         public static final int DEBIT_CARD = 1;

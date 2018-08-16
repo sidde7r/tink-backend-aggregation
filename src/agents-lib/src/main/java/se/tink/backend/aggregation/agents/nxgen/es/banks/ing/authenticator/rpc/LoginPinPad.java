@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.authenticator.rpc;
 
 import java.util.List;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.rpc.BaseResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public final class LoginPinPad {
+public final class LoginPinPad extends BaseResponse {
 
     /** 1-based indices of the digits that should be given */
     private List<Integer> pinPositions;
