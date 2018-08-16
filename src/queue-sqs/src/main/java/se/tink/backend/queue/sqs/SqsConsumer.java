@@ -80,14 +80,14 @@ public class SqsConsumer implements Managed, QueueConsumer {
     }
 
     public void removedFinishedJobs(){
-        for(QueuableJob job : inProgress.keySet()){
-            if(job.getStatus() == AutomaticRefreshStatus.SUCESS){
+        for (QueuableJob job : inProgress.keySet()){
+            if (job.getStatus() == AutomaticRefreshStatus.SUCCESS) {
                 deleteJob(job);
             }
 
             //Handle failures as before to not change behaviour. This should be changed at a further point
             //Add a timer for the job too, before removing
-            if(job.getStatus() == AutomaticRefreshStatus.FAILED){
+            if (job.getStatus() == AutomaticRefreshStatus.FAILED) {
                 deleteJob(job);
             }
         }

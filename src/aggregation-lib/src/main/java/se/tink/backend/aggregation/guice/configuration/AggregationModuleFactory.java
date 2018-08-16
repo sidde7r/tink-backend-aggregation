@@ -20,6 +20,7 @@ public class AggregationModuleFactory {
                 new ConfigurationModule(configuration),
                 new AggregationModule(configuration, environment.jersey()),
                 new QueueModule(configuration.getSqsQueueConfiguration(), environment.lifecycle())
+
         );
     }
 }

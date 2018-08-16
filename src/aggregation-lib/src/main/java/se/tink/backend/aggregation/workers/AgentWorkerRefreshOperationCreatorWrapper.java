@@ -23,13 +23,13 @@ public class AgentWorkerRefreshOperationCreatorWrapper implements Runnable, Queu
 
     @Override
     public void run() {
-
         AgentWorkerOperation agentWorkerOperation = agentWorkerCommandFactory
                 .createRefreshOperation(clusterInfo, request);
         try {
             this.status = AutomaticRefreshStatus.RUNNING;
             agentWorkerOperation.run();
-        }catch(Exception e){
+            this.status = AutomaticRefreshStatus.SUCCESS;
+        } catch (Exception e) {
             this.status = AutomaticRefreshStatus.FAILED;
             this.status.setError(e.getMessage());
         }
