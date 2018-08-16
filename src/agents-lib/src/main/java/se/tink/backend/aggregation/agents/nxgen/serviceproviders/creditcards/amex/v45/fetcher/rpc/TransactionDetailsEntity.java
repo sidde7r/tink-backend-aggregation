@@ -8,6 +8,11 @@ public class TransactionDetailsEntity extends ResponseStatusEntity {
 
     private BillingInfoEntity billingInfo;
     private List<ActivityListEntity> activityList;
+    private List<ShortCardEntitySummary> cardList;
+
+    public List<ShortCardEntitySummary> getCardList() {
+        return cardList;
+    }
 
     public BillingInfoEntity getBillingInfo() {
         return billingInfo;
