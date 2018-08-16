@@ -20,6 +20,11 @@ public class SantanderEsConstants {
     public static final class NodeTags {
         public static final String METHOD_RESULT = "methodResult";
         public static final String TOKEN_CREDENTIAL = "tokenCredential";
+        public static final String CODIGO_ERROR = "codigoError";
+    }
+
+    public static final class ErrorCodes {
+        public static final String INCORRECT_CREDENTIALS = "SBAMOV_00002";
     }
 
     public static final class Storage {
