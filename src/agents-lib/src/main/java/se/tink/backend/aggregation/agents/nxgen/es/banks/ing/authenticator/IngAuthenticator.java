@@ -40,9 +40,9 @@ public class IngAuthenticator implements Authenticator {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
-        LoginID userID = new LoginID(username, dateOfBirth);
+        LoginID loginId = LoginID.create(username, dateOfBirth, IngConstants.Default.LOGIN_DOCUMENT_TYPE);
 
-        LoginPinPad pinpad = apiClient.postLoginRestSession(userID);
+        LoginPinPad pinpad = apiClient.postLoginRestSession(loginId);
         if (pinpad.hasError()) {
             if (pinpad.hasErrorCode(IngConstants.ErrorCode.INVALID_LOGIN_DOCUMENT_TYPE)) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
