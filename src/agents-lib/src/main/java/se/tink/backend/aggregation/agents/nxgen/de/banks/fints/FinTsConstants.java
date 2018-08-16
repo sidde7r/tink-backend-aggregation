@@ -19,6 +19,7 @@ public class FinTsConstants {
         public static final String LOGIN_FAILED = "9210";
         public static final String ACTION_LOCKED = "9010";
         public static final String ACCOUNT_NOT_ASSIGNED = "9010";
+        public static final String ING_DIBA_ACCOUNT_BLOCKED = "9931";
     }
 
     public static class StatusMessage {
