@@ -636,7 +636,8 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
         Error error = response.getError();
 
         if (error != null) {
-            log.info("Error from Creditsafe: " + error.getRejectText());
+            log.info(String.format("Error from Creditsafe: %s, %s, %s.", error.getRejectText(),
+                    error.getCauseOfReject(), error.getRejectComment()));
             return null;
         }
 
