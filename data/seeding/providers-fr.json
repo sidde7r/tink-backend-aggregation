@@ -1916,6 +1916,32 @@
       "payload": "844",
       "transactional": true,
       "type": "BANK"
+    },
+    {
+      "name": "fr-societegenerale-password",
+      "className": "nxgen.fr.banks.societegenerale.SocieteGeneraleAgent",
+      "displayName": "Société Générale",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your mobile banking app.",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "numeric": true,
+          "immutable": true,
+          "pattern": "[0-9]{8}"
+        },
+        {
+          "description": "Password",
+          "sensitive": true,
+          "masked": true,
+          "name": "password",
+          "pattern": "[0-9]{6}"
+        }
+      ],
+      "type": "BANK",
+      "status": "ENABLED"
     }
   ]
 }
