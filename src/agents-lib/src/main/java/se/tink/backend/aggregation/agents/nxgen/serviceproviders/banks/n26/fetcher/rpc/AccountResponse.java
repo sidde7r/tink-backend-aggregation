@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.authenticator.rpc;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.rpc;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.N26Constants;
 import se.tink.backend.aggregation.annotations.JsonObject;
