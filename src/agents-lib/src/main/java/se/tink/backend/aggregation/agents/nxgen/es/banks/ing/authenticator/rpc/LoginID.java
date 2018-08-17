@@ -9,39 +9,19 @@ public class LoginID {
 
     private String device = IngConstants.Default.MOBILE_PHONE;
     private String birthday;
-    private LoginDocument loginDocument = new LoginDocument();
+    private final LoginDocument loginDocument;
 
-    public LoginID(String document, String birthday) {
-        loginDocument.setDocument(document);
+    private LoginID(String username, String birthday, int usernameType) {
+        loginDocument = LoginDocument.create(username, usernameType);
         this.birthday = getFormattedBirthday(birthday);
+    }
+
+    public static LoginID create(String username, String birthday, int usernameType) {
+        return new LoginID(username, birthday, usernameType);
     }
 
     @JsonIgnore
     private String getFormattedBirthday(String birthday) {
         return new StringBuilder(birthday).insert(4, "/").insert(2, "/").toString();
-    }
-
-    public String getDevice() {
-        return device;
-    }
-
-    public void setDevice(String device) {
-        this.device = device;
-    }
-
-    public void setBirthday(String birthday) {
-        this.birthday = birthday;
-    }
-
-    public void setLoginDocument(LoginDocument loginDocument) {
-        this.loginDocument = loginDocument;
-    }
-
-    public String getBirthday() {
-        return birthday;
-    }
-
-    public LoginDocument getLoginDocument() {
-        return loginDocument;
     }
 }

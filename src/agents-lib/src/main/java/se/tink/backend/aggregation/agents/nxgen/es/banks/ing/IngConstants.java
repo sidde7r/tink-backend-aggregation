@@ -33,6 +33,23 @@ public abstract class IngConstants {
         public static final String OPERATION_NAME_EMPTY = "";
     }
 
+    public static class UsernameType {
+        // These types might need to be made more granular at a later time.
+
+        // The following formats of usernames matches (regex) NATIONAL (0):
+        //  [0-9]+z
+        //  [0-9]+y
+        public static final int NATIONAL = 0;
+
+        // The following formats of usernames matches (regex) NON_NATIONAL (1):
+        //  x[0-9]+f
+        public static final int NON_NATIONAL = 1;
+    }
+
+    public static class ErrorCode {
+        public static final String INVALID_LOGIN_DOCUMENT_TYPE = "ESValidLoginDocument.loginDocument";
+    }
+
     public static class ProductType {
         /** Tarjeta Débito */
         public static final int DEBIT_CARD = 1;
