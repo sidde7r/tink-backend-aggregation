@@ -25,6 +25,8 @@ public abstract class BankiaConstants {
         public static final String SERVICES_CONTRACTS = URL_BASE_OIP + "/api/1.0/servicios/contratos/4.0/contratos";
         public static final String SERVICES_ACCOUNT_MOVEMENT =
                 URL_BASE_OIP + "/api/1.0/servicios/cuenta.movimiento/3.0/cuenta/movimiento";
+        public static final String CREDIT_CARD_TRANSACTIONS =
+                URL_BASE_OIP + "/api/1.0/operativas/2.0/tarjetas/movimientos";
     }
 
     public static class Query {
@@ -79,6 +81,7 @@ public abstract class BankiaConstants {
         public static final String DEVICE_ID_BASE_64_URL = "DEVICE_ID_BASE64_URL";
         public static final String COUNTRY = "country";
         public static final String CONTROL_DIGITS = "control_digits";
+
     }
 
     public static class AccountType {
@@ -92,6 +95,10 @@ public abstract class BankiaConstants {
             }
             return Optional.ofNullable(ACCOUNT_TYPES_MAP.getOrDefault(bankiaProductCode.toLowerCase(), null));
         }
+    }
+
+    public static class Regex {
+        public static final String CARD_NUMBER_UNMASKED = "[0-9]{16}";
     }
 
     public static class Logging {

@@ -6,14 +6,16 @@ import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.RsaKeyResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.creditcard.rpc.CardTransactionsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.creditcard.rpc.CardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entities.DateEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.entities.AccountIdentifierEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.entities.CardEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.creditcard.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.entities.SearchCriteriaEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.rpc.AccountTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.rpc.AcountTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.rpc.ContractsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.rpc.ContractsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
@@ -35,6 +37,18 @@ public final class BankiaApiClient {
 
     public List<CardEntity> getCards() {
         return getServicesContracts().getCards();
+    }
+
+    public CardTransactionsResponse getCardTransactions(String cardNumberUnmasked, int limit) {
+        CardTransactionsRequest request = CardTransactionsRequest.create(cardNumberUnmasked, limit);
+        return client.request(BankiaConstants.Url.CREDIT_CARD_TRANSACTIONS)
+                .queryParam(BankiaConstants.Query.J_GID_COD_APP, BankiaConstants.Default.O3)
+                .queryParam(BankiaConstants.Query.J_GID_COD_DS, BankiaConstants.Default.LOWER_CASE_OIP)
+                .queryParam(BankiaConstants.Query.X_J_GID_COD_APP, BankiaConstants.Default.LOWER_CASE_AM)
+                .queryParam(BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .body(request, MediaType.APPLICATION_JSON)
+                .post(CardTransactionsResponse.class);
     }
 
     private ContractsResponse getServicesContracts() {
