@@ -1,13 +1,17 @@
 package se.tink.backend.queue.sqs;
 
 import com.amazonaws.services.sqs.model.DeleteMessageRequest;
+import com.amazonaws.services.sqs.model.GetQueueAttributesRequest;
+import com.amazonaws.services.sqs.model.GetQueueAttributesResult;
 import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
 import com.google.inject.Inject;
 import io.dropwizard.lifecycle.Managed;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.queue.AutomaticRefreshStatus;
 import se.tink.backend.queue.QueuableJob;
 import se.tink.backend.queue.QueueConsumer;
@@ -25,6 +29,7 @@ public class SqsConsumer implements Managed, QueueConsumer {
     private final int MAX_NUMBER_OF_MESSAGES = 1;
     private final Map<QueuableJob, Message> inProgress;
     private final int VISIBILITY_TIMEOUT_SECONDS = 300;
+    private static final AggregationLogger log = new AggregationLogger(SqsConsumer.class);
 
 
     @Inject
@@ -40,8 +45,10 @@ public class SqsConsumer implements Managed, QueueConsumer {
                     while (true) {
                         ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest(sqsQueue.getUrl())
                                 .withWaitTimeSeconds(WAIT_TIME_SECONDS)
-                                .withMaxNumberOfMessages(MAX_NUMBER_OF_MESSAGES);
+                                .withMaxNumberOfMessages(MAX_NUMBER_OF_MESSAGES)
+                                .withVisibilityTimeout(VISIBILITY_TIMEOUT_SECONDS);
                         List<Message> sqsMessages = sqsQueue.getSqs().receiveMessage(receiveMessageRequest).getMessages();
+
                         for (Message sqsMessage : sqsMessages) {
                             //Prevent this message from being consumed by other clients until its removed or timeout
                             sqsQueue.getSqs().changeMessageVisibility(sqsQueue.getUrl(),
@@ -52,10 +59,9 @@ public class SqsConsumer implements Managed, QueueConsumer {
                         }
 
                         removedFinishedJobs();
-
                     }
                 } catch (Exception e) {
-                    System.out.println("Could not query for queue items.");
+                    log.error("Could not query for queue items: " + e.getMessage());
                 }
             }
 
@@ -80,9 +86,13 @@ public class SqsConsumer implements Managed, QueueConsumer {
     }
 
     public void removedFinishedJobs(){
-        for (QueuableJob job : inProgress.keySet()){
+        Iterator<Map.Entry<QueuableJob, Message>> jobIterator = inProgress.entrySet().iterator();
+        while(jobIterator.hasNext()){
+            Map.Entry<QueuableJob, Message> next = jobIterator.next();
+            QueuableJob job = next.getKey();
             if (job.getStatus() == AutomaticRefreshStatus.SUCCESS) {
                 deleteJob(job);
+                break;
             }
 
             //Handle failures as before to not change behaviour. This should be changed at a further point

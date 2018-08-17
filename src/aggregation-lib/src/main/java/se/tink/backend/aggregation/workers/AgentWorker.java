@@ -33,6 +33,8 @@ public class AgentWorker implements Managed {
             .newId("aggregation_operation_tasks");
     private static final String MONITOR_THREAD_NAME_FORMAT = "agent-worker-operation-thread-%s";
     private final MetricRegistry metricRegistry;
+    private static final int MAX_QUEUED_UP = 180000;
+    private static final int MAX_QUEUE_AUTOMATIC = 10;
 
     /**
      * The time in minutes we wait until we forcefully shut down all agent work. Wirst case scenario is that an
@@ -43,6 +45,7 @@ public class AgentWorker implements Managed {
             .newId("aggregation_executor_service");
 
     private RateLimitedExecutorService rateLimitedExecutorService;
+    private RateLimitedExecutorService automaticRefreshRateLimitedExecutorService;
     private ListenableThreadPoolExecutor<Runnable> aggregationExecutorService;
     private static final ThreadFactory threadFactory = new ThreadFactoryBuilder()
             .setNameFormat("aggregation-worker-agent-thread-%d").build();
@@ -64,8 +67,10 @@ public class AgentWorker implements Managed {
                 .withMetric(metricRegistry, "aggregation_executor_service")
                 .build();
 
-        rateLimitedExecutorService = new RateLimitedExecutorService(aggregationExecutorService, metricRegistry);
+        rateLimitedExecutorService = new RateLimitedExecutorService(aggregationExecutorService, metricRegistry, MAX_QUEUED_UP);
+        automaticRefreshRateLimitedExecutorService = new RateLimitedExecutorService(aggregationExecutorService, metricRegistry, MAX_QUEUE_AUTOMATIC);
 
+        automaticRefreshRateLimitedExecutorService.start();
         rateLimitedExecutorService.start();
     }
 
@@ -118,7 +123,7 @@ public class AgentWorker implements Managed {
                 String.format(MONITOR_THREAD_NAME_FORMAT,
                         agentWorkerOperationCreatorRunnable.getCredentialsId()));
 
-        rateLimitedExecutorService.execute(namedRunnable, agentWorkerOperationCreatorRunnable.getProvider());
+        automaticRefreshRateLimitedExecutorService.execute(namedRunnable, agentWorkerOperationCreatorRunnable.getProvider());
         instrumentedRunnable.submitted();
     }
 }

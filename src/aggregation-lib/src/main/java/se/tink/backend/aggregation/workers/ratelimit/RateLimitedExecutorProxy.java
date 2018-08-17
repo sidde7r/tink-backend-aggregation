@@ -24,7 +24,6 @@ public class RateLimitedExecutorProxy extends AbstractExecutorService {
     // said, we should not be piling up this many requests on an aggregation instance.
     //
     // If we hit this limit, #submit and #execute will throw RejectedExecutionException.
-    private static final int MAX_QUEUED_UP = 180000;
 
     private final MetricRegistry metricRegistry;
     private final MetricId.MetricLabels metricLabels;
@@ -63,10 +62,11 @@ public class RateLimitedExecutorProxy extends AbstractExecutorService {
     public RateLimitedExecutorProxy(Supplier<RateLimiter> rateLimiter,
             ListenableThreadPoolExecutor<Runnable> delegate,
             ThreadFactory threadFactory, MetricRegistry metricRegistry,
-            MetricId.MetricLabels metricLabels) {
+            MetricId.MetricLabels metricLabels,
+            int maxQueueableItems) {
         this.delegate = Preconditions.checkNotNull(delegate);
         this.rateLimiter = Preconditions.checkNotNull(rateLimiter);
-        this.rateLimittedQueue = new LinkedBlockingQueue<>(MAX_QUEUED_UP);
+        this.rateLimittedQueue = new LinkedBlockingQueue<>(maxQueueableItems);
         this.rateLimitedExecutorService = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, rateLimittedQueue,
                 threadFactory);
         this.metricRegistry = metricRegistry;
