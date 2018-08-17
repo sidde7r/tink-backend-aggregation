@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.transactional;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.transactionalaccount;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,8 +23,8 @@ public class N26AccountFetcher implements AccountFetcher<TransactionalAccount> {
         Collection<TransactionalAccount> result = new ArrayList<>();
         result.add(n26ApiClient.fetchAccounts().toTransactionalAccount());
         SavingsAccountResponse res = n26ApiClient.fetchSavingsAccounts();
-        if (!res.isEmpty()) {
-            result.add(res.toSavingsAccount());
+        if(!res.isEmpty()){
+            result.addAll(res.toSavingsAccounts());
         }
         return result;
     }
