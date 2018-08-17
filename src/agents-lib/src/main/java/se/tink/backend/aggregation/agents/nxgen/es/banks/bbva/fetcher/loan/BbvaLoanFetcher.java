@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard;
+package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan;
 
 import java.util.Collection;
 import java.util.Collections;
