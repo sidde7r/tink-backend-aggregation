@@ -97,7 +97,7 @@ public abstract class BankiaConstants {
         }
     }
 
-    public static class regex {
+    public static class Regex {
         public static final String CARD_NUMBER_UNMASKED = "[0-9]{16}";
     }
 
