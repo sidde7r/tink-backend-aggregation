@@ -13,12 +13,12 @@ public class SavingsAccountResponse {
     @JsonProperty("accounts")
     private List<SavingsAccountEntity> savingsAccountList;
 
-    public boolean isEmpty(){
-        return savingsAccountList.isEmpty();
+    public boolean isEmpty() {
+        return savingsAccountList == null || savingsAccountList.isEmpty();
     }
 
-    public List<TransactionalAccount> toSavingsAccounts(){
-       return savingsAccountList.stream()
+    public List<TransactionalAccount> toSavingsAccounts() {
+        return savingsAccountList.stream()
                 .filter(savingsAccountEntity -> savingsAccountEntity.isValid())
                 .map(SavingsAccountEntity::toSavingsAccount)
                 .collect(Collectors.toList());
