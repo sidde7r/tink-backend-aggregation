@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transacti
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
+import java.util.Objects;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
@@ -41,6 +42,13 @@ public class AccountEntity {
                 .addToTemporaryStorage(BbvaConstants.Storage.ACCOUNT_ID, id)
                 .addIdentifier(AccountIdentifier.create(IBAN, normalizedIban))
                 .build();
+    }
+
+    @JsonIgnore
+    // This is a temporary method until we have figured out how to get the balance on accounts that don't have it set
+    // in this model.
+    public boolean hasBalance() {
+        return Objects.nonNull(availableBalance);
     }
 
     @JsonIgnore

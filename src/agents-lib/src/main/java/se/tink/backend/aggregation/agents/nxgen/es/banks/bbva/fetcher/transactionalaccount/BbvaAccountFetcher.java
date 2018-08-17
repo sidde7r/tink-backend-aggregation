@@ -34,6 +34,7 @@ public class BbvaAccountFetcher implements AccountFetcher<TransactionalAccount> 
 
         return productsResponse.getAccounts().stream()
                 .filter(AccountEntity::isKnownAccountType)
+                .filter(AccountEntity::hasBalance)
                 .map(AccountEntity::toTinkAccount)
                 .collect(Collectors.toList());
     }
