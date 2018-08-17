@@ -31,7 +31,7 @@ public class QueueModule extends AbstractModule {
     protected void configure() {
         if (sqsQueueConfiguration.isEnabled()) {
             bind(MessageHandler.class).to(AutomaticRefreshQueueHandler.class).in(Scopes.SINGLETON);
-            //bind(QueueProducer.class).to(SqsProducer.class).in(Scopes.SINGLETON);
+            bind(QueueProducer.class).to(SqsProducer.class).in(Scopes.SINGLETON);
             bind(SqsQueue.class).in(Scopes.SINGLETON);
             bind(EncodingHandler.class).to(AutomaticRefreshQueueEncoder.class).in(Scopes.SINGLETON);
         } else {

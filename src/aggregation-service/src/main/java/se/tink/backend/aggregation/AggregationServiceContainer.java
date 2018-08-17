@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.client.InProcessAggregationServiceFactory;
 import se.tink.backend.aggregation.guice.configuration.AggregationModuleFactory;
 import se.tink.backend.aggregation.resources.AggregationServiceResource;
 import se.tink.backend.aggregation.resources.CreditSafeServiceResource;
+import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.backend.common.AbstractServiceContainer;
 import se.tink.backend.common.ServiceContext;
 import se.tink.backend.common.config.ServiceConfiguration;
@@ -92,8 +93,11 @@ public class AggregationServiceContainer extends AbstractServiceContainer {
                 injector.getInstance(MetricRegistry.class), configuration.isUseAggregationController(),
                 new AggregationControllerAggregationClient(
                         configuration.getEndpoints().getAggregationcontroller(),
-                        serviceContext.getCoordinationClient()));
+                        serviceContext.getCoordinationClient()),
+                injector.getInstance(AgentWorker.class));
+
         environment.lifecycle().manage(aggregationServiceResource);
+        environment.lifecycle().manage(injector.getInstance(AgentWorker.class));
 
         CreditSafeServiceResource creditSafeServiceResource = new CreditSafeServiceResource(serviceContext);
 

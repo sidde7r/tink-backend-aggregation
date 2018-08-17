@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.guice.configuration;
 
 import com.google.common.collect.ImmutableList;
-import com.google.inject.AbstractModule;
 import com.google.inject.Module;
-import io.dropwizard.jersey.setup.JerseyEnvironment;
 import io.dropwizard.setup.Environment;
 import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.backend.guice.configuration.CommonModule;
@@ -20,7 +18,6 @@ public class AggregationModuleFactory {
                 new ConfigurationModule(configuration),
                 new AggregationModule(configuration, environment.jersey()),
                 new QueueModule(configuration.getSqsQueueConfiguration(), environment.lifecycle())
-
         );
     }
 }

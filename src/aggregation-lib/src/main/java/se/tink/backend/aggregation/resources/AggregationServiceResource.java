@@ -60,10 +60,10 @@ public class AggregationServiceResource implements AggregationService, Managed {
      */
     public AggregationServiceResource(ServiceContext context, MetricRegistry metricRegistry,
             boolean useAggregationController,
-            AggregationControllerAggregationClient aggregationControllerAggregationClient) {
+            AggregationControllerAggregationClient aggregationControllerAggregationClient,
+            AgentWorker agentWorker) {
         this.serviceContext = context;
-
-        this.agentWorker = new AgentWorker(metricRegistry);
+        this.agentWorker = agentWorker;
         this.agentWorkerCommandFactory = new AgentWorkerOperationFactory(serviceContext, metricRegistry,
                 useAggregationController, aggregationControllerAggregationClient);
         this.supplementalInformationController = new SupplementalInformationController(serviceContext.getCacheClient(),
@@ -159,12 +159,12 @@ public class AggregationServiceResource implements AggregationService, Managed {
 
     @Override
     public void start() throws Exception {
-        agentWorker.start();
+        //agentWorker.start();
     }
 
     @Override
     public void stop() throws Exception {
-        agentWorker.stop();
+        //agentWorker.stop();
     }
 
     private static ProviderRateLimiterFactory constructProviderRateLimiterFactoryFromRequest(

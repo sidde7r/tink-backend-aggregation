@@ -24,9 +24,6 @@ import se.tink.backend.common.repository.RepositoryFactory;
 import se.tink.backend.common.utils.ExecutorServiceUtils;
 import se.tink.backend.encryption.client.EncryptionServiceFactory;
 import se.tink.backend.queue.QueueProducer;
-import se.tink.backend.queue.sqs.EncodingHandler;
-import se.tink.backend.queue.sqs.SqsProducer;
-import se.tink.backend.queue.sqs.SqsQueue;
 import se.tink.backend.system.client.SystemServiceFactory;
 import se.tink.backend.utils.LogUtils;
 import se.tink.libraries.metrics.MetricRegistry;
@@ -92,8 +89,7 @@ public class ServiceContext implements Managed, RepositoryFactory {
         this.trackingExecutorService = trackingExecutorService;
         this.isAggregationCluster = isAggregationCluster;
         this.isProvidersOnAggregation = isProvidersOnAggregation;
-        //this.producer = producer;
-        this.producer = new SqsProducer(queue,handler);
+        this.producer = producer;
     }
 
     public QueueProducer getProducer() {
