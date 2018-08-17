@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.Random;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.BankiaAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.creditcard.BankiaCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.BankiaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.session.BankiaSessionHandler;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
@@ -84,7 +85,12 @@ public final class BankiaAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.empty();
+        BankiaCreditCardFetcher creditCardFetcher = new BankiaCreditCardFetcher(apiClient);
+        return Optional.of(new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                creditCardFetcher,
+                creditCardFetcher));
     }
 
     @Override

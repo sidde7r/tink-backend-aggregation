@@ -13,13 +13,23 @@ public class AmountEntity {
     private int scale = 0;
     private CurrencyEntity coin = null;
 
+    // they use different names on different places in the api, but they do EXACTLY the same thing
     @JsonProperty("importeConSigno")
     public void setAmountWithSign(int amountWithSign) {
         this.unscaledValue = amountWithSign;
     }
 
+    @JsonProperty("importe")
+    public void setAmount(int amountWithSign) {
+        this.unscaledValue = amountWithSign;
+    }
+
     @JsonProperty("numeroDecimales")
     public void setDecimalsNumber(int decimalsNumber) {
+        this.scale = decimalsNumber;
+    }
+    @JsonProperty("decimales")
+    public void setDecimals(int decimalsNumber) {
         this.scale = decimalsNumber;
     }
 
