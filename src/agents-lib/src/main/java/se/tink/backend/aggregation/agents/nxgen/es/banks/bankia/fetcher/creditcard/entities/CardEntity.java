@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.creditcard.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Preconditions;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entities.ContractEntity;
@@ -23,7 +24,10 @@ public class CardEntity {
         Amount balance = getBalance();
 
         String cardNumberUnmasked = contract.getIdentifierProductContract().substring(1);
-        assert(cardNumberUnmasked.matches(BankiaConstants.regex.CARD_NUMBER_UNMASKED));
+        Preconditions.checkState(
+                cardNumberUnmasked.matches(BankiaConstants.Regex.CARD_NUMBER_UNMASKED),
+                "Card number provided by bank is not of expected format (16 digits unformatted)"
+        );
 
         String firstFour = cardNumberUnmasked.substring(0, 4);
         String lastFour = cardNumberUnmasked.substring(cardNumberUnmasked.length() - 4);
