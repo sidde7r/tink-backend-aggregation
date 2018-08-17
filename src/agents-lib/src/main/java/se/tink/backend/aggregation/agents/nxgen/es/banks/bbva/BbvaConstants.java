@@ -16,6 +16,7 @@ public final class BbvaConstants {
         public static final String LOGIN = BASE_URL + "/DFAUTH/slod/DFServletXML";
         public static final String SESSION = BASE_URL + "/ENPP/enpp_mult_web_mobility_02/sessions/v1";
         public static final String PRODUCTS = BASE_URL + "/ENPP/enpp_mult_web_mobility_02/products/v2";
+        public static final String ACCOUNT_BALANCE = BASE_URL + "/ASO/accountTransactions/V02/updateAccountTransactions";
         public static final String ACCOUNT_TRANSACTION = BASE_URL + "/ASO/accountTransactions/V02/accountTransactionsAdvancedSearch";
         public static final String LOAN_DETAILS = BASE_URL + "/ASO/loans/V01/{" + PARAM_ID + "}";
         public static final String CARD_TRANSACTIONS = BASE_URL + "/ASO/cardTransactions/V01/{" + PARAM_ID + "}";
