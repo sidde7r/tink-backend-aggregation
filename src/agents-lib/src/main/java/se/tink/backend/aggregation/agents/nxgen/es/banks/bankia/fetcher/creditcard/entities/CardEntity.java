@@ -27,7 +27,7 @@ public class CardEntity {
 
         String firstFour = cardNumberUnmasked.substring(0, 4);
         String lastFour = cardNumberUnmasked.substring(cardNumberUnmasked.length() - 4);
-        String accountNumber = String.format("**** **** **** %s", lastFour);
+        String accountNumber = String.format("%s **** **** %s", firstFour, lastFour);
         String uniqueIdentifier = String.format("%s%s", firstFour, lastFour);
         String name = String.format("%s *%s", contract.getAlias(), lastFour);
 
