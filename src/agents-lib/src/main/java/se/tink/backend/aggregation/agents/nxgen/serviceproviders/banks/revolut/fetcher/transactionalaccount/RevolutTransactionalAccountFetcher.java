@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.RevolutApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.RevolutConstants;
@@ -33,6 +34,7 @@ public class RevolutTransactionalAccountFetcher implements AccountFetcher<Transa
         return wallet.getPockets().stream()
                 .filter(this::isActive)
                 .map(pocket -> convertToTinkAccount(pocket, accountsResponse))
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
@@ -42,14 +44,18 @@ public class RevolutTransactionalAccountFetcher implements AccountFetcher<Transa
                 .filter(accountEntity -> sameCurrencyAsPocket(pocket, accountEntity))
                 .collect(Collectors.toList());
 
-        if (accountsWithSameCurrencyAsPocket.size() == 1) {
+        if (accountsWithSameCurrencyAsPocket.isEmpty()) {
+            return null;
+        } else if (accountsWithSameCurrencyAsPocket.size() == 1) {
             return pocket.toTinkAccount(accountsWithSameCurrencyAsPocket.get(0));
         } else if (accountsWithSameCurrencyAsPocket.size() == 2) {
             return pocket.toTinkAccount(accountsWithSameCurrencyAsPocket);
         }
 
-        throw new IllegalStateException(
-                "There should be 1 or 2 accounts matching the pocket, we can't handle other cases.");
+        throw new IllegalStateException(String.format(
+                "There are %d accounts matching the pocket. We can only handle cases of 0, 1 or 2 accounts.",
+                accountsWithSameCurrencyAsPocket.size())
+        );
     }
 
     private boolean isActive(PocketEntity pocket) {
