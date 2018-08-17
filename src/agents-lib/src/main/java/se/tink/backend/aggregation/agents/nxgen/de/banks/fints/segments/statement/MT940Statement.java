@@ -51,10 +51,16 @@ public class MT940Statement {
     }
 
     private String getDescription() {
-        Map<String, String> elements = getRawDetails();
-        return getDescriptionFromRaw(elements);
+        String[] elements = tag_86.split("\\?");
+        // TODO heuristic search for the description until got more samples to look at
+        return Arrays.stream(elements).filter(s -> hasField(s, "32")).findFirst().orElse(
+                Arrays.stream(elements).filter(s -> hasField(s, "21")).findFirst().orElse(
+                        Arrays.stream(elements).filter(s -> hasField(s, "20")).findFirst().orElse(
+                                Arrays.stream(elements).filter(s -> hasField(s, "00")).findFirst().orElse("")
+                        ))).substring(2);
     }
 
+    //TODO: Write custom rules for each provider
     private String getDescriptionFromRaw(Map<String, String> elements) {
         StringBuilder builder = new StringBuilder();
 
