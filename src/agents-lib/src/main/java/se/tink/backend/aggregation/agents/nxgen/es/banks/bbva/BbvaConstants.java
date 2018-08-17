@@ -75,6 +75,7 @@ public final class BbvaConstants {
 
     public static class Logging {
         public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("bbva_unknown_account_type");
+        public static final LogTag NULL_ACCOUNT_BALANCE = LogTag.from("bbva_null_account_balance");
         public static final LogTag CREDIT_CARD = LogTag.from("bbva_credit_card");
         public static final LogTag INVESTMENT_INTERNATIONAL_PORTFOLIO = LogTag.from("bbva_investment_international_portfolio");
         public static final LogTag INVESTMENT_MANAGED_FUNDS = LogTag.from("bbva_investment_managed_funds");
