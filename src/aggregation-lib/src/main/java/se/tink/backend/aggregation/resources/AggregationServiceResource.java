@@ -123,12 +123,11 @@ public class AggregationServiceResource implements AggregationService, Managed {
 
     @Override
     public void refreshInformation(final RefreshInformationRequest request, ClusterInfo clusterInfo) throws Exception {
-        RefreshInformation refreshInformation = new RefreshInformation(request, clusterInfo);
         if (request.isManual()) {
             agentWorker.execute(agentWorkerCommandFactory.createRefreshOperation(clusterInfo, request));
         } else {
             if (producer.isAvailable()) {
-                producer.send(refreshInformation);
+                producer.send(new RefreshInformation(request, clusterInfo));
             } else {
                 agentWorker.executeAutomaticRefresh(AgentWorkerRefreshOperationCreatorWrapper.of(agentWorkerCommandFactory, request, clusterInfo));
             }

@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.queue;
 
 import com.google.inject.Inject;
-import java.util.concurrent.RejectedExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
@@ -11,10 +10,10 @@ import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.backend.aggregation.workers.AgentWorkerOperationFactory;
 import se.tink.backend.aggregation.workers.AgentWorkerRefreshOperationCreatorWrapper;
 import se.tink.backend.queue.sqs.EncodingHandler;
-import se.tink.backend.queue.sqs.MessageHandler;
+import se.tink.backend.queue.sqs.QueueMesssageAction;
 import java.io.IOException;
 
-public class AutomaticRefreshQueueHandler implements MessageHandler {
+public class AutomaticRefreshQueueHandler implements QueueMesssageAction {
     private AgentWorker agentWorker;
     private AgentWorkerOperationFactory agentWorkerCommandFactory;
     private EncodingHandler<RefreshInformation> encodingHandler;

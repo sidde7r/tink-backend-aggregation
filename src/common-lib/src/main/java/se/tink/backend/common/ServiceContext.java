@@ -277,8 +277,4 @@ public class ServiceContext implements Managed, RepositoryFactory {
         return isProvidersOnAggregation;
     }
 
-    public void setQueueProducer (QueueProducer queueProducer) {
-        this.producer = queueProducer;
-    }
-
 }

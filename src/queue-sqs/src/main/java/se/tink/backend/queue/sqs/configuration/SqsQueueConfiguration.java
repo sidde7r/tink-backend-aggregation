@@ -27,14 +27,6 @@ public class SqsQueueConfiguration {
     public SqsQueueConfiguration() {
     }
 
-    public SqsQueueConfiguration(String url, String region, String awsAccessKeyId, String awsSecretKey, String queueName) {
-        this.url = url;
-        this.region = region;
-        this.awsAccessKeyId = awsAccessKeyId;
-        this.awsSecretKey = awsSecretKey;
-        this.queueName = queueName;
-    }
-
     public String getUrl() {
         return url;
     }

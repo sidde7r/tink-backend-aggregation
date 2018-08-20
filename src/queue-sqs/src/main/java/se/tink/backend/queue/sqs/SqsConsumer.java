@@ -7,7 +7,6 @@ import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
 import com.google.inject.Inject;
 import io.dropwizard.lifecycle.Managed;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -22,7 +21,7 @@ public class SqsConsumer implements Managed, QueueConsumer {
 
     private final AbstractExecutionThreadService service;
     private final SqsQueue sqsQueue;
-    private MessageHandler messageHandler;
+    private QueueMesssageAction queueMesssageAction;
     private final int WAIT_TIME_SECONDS = 1;
     private final int MAX_NUMBER_OF_MESSAGES = 1;
     private final Map<QueuableJob, Message> inProgress;
@@ -32,9 +31,9 @@ public class SqsConsumer implements Managed, QueueConsumer {
     private static final String HIDDEN_ITEMS_ATTRIBUTE = "ApproximateNumberOfMessagesNotVisible";
 
     @Inject
-    public SqsConsumer(SqsQueue sqsQueue, MessageHandler messageHandler) {
+    public SqsConsumer(SqsQueue sqsQueue, QueueMesssageAction queueMesssageAction) {
         this.sqsQueue = sqsQueue;
-        this.messageHandler = messageHandler;
+        this.queueMesssageAction = queueMesssageAction;
         this.inProgress = new HashMap<QueuableJob, Message>();
         this.service = new AbstractExecutionThreadService() {
 
@@ -47,11 +46,9 @@ public class SqsConsumer implements Managed, QueueConsumer {
                                 .withMaxNumberOfMessages(MAX_NUMBER_OF_MESSAGES)
                                 .withVisibilityTimeout(VISIBILITY_TIMEOUT_SECONDS);
                         List<Message> sqsMessages = sqsQueue.getSqs().receiveMessage(receiveMessageRequest).getMessages();
-
+                        getQueuedItems(VISIBLE_ITEMS_ATTRIBUTE);
+                        getQueuedItems(HIDDEN_ITEMS_ATTRIBUTE);
                         for (Message sqsMessage : sqsMessages) {
-                            /*sqsQueue.getSqs().changeMessageVisibility(sqsQueue.getUrl(),
-                                    sqsMessage.getReceiptHandle(),
-                                    VISIBILITY_TIMEOUT_SECONDS);*/
                             QueuableJob consume = consume(sqsMessage.getBody());
                             inProgress.put(consume, sqsMessage);
                         }
@@ -67,13 +64,12 @@ public class SqsConsumer implements Managed, QueueConsumer {
         // TODO introduce metrics
     }
 
-
     public int getQueuedItems(String attribute){
         GetQueueAttributesRequest attributeRequest = new GetQueueAttributesRequest(sqsQueue.getUrl())
                 .withAttributeNames(attribute);
         String result = sqsQueue.getSqs().getQueueAttributes(attributeRequest)
                 .getAttributes().get(attribute);
-        
+
         try{
             return Integer.parseInt(result);
         }catch(Exception e){
@@ -93,7 +89,7 @@ public class SqsConsumer implements Managed, QueueConsumer {
     }
 
     public QueuableJob consume(String message) throws Exception {
-        return messageHandler.handle(message);
+        return queueMesssageAction.handle(message);
     }
 
     //Ensure sync
@@ -104,11 +100,12 @@ public class SqsConsumer implements Managed, QueueConsumer {
             QueuableJob job = next.getKey();
 
             //Will try again, once the visibility timer expires
-            //Should get rejected within 10 minutes
+            //Should get rejected within 5 minutes
             //Request comes in --> tries to put on queue, if queue is empty it will execute with/without errors
             // --> if request is rejected, it will be deleted from "inProgress" but not from the message queue
-            // The queue can be consumed 10 minutes later
+            // The queue can be consumed 5 minutes later
             // Thus, it can try to queue another provider refresh, which might not have a full queue
+            // Will continue to fill other provider queues
             if (job.getStatus() == AutomaticRefreshStatus.REJECTED_BY_QUEUE) {
                 jobIterator.remove();
             } else if (job.getStatus() == AutomaticRefreshStatus.SUCCESS) {

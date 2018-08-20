@@ -21,20 +21,9 @@ public class SqsProducer implements QueueProducer {
     }
 
     @Override
-    public void start() {
-    }
-
-    @Override
-    public void stop() {
-        // not sure if it does what it implies
-        sqsQueue.getSqs().shutdown();
-    }
-
-    @Override
     public void send(Object t) {
-        SendMessageRequest sendMessageStandardQueue = null;
         try {
-            sendMessageStandardQueue = new SendMessageRequest()
+            SendMessageRequest sendMessageStandardQueue = new SendMessageRequest()
                     .withQueueUrl(sqsQueue.getUrl())
                     .withMessageBody(encodingHandler.encode(t))
                     .withMessageAttributes(null); // FIXME: probably we want to use that in the future
