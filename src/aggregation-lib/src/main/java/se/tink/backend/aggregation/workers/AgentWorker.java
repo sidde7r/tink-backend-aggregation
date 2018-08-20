@@ -49,6 +49,7 @@ public class AgentWorker implements Managed {
     private RateLimitedExecutorService rateLimitedExecutorService;
     private RateLimitedExecutorService automaticRefreshRateLimitedExecutorService;
     private ListenableThreadPoolExecutor<Runnable> aggregationExecutorService;
+    private ListenableThreadPoolExecutor<Runnable> automaticRefreshExecutorService;
     private static final ThreadFactory threadFactory = new ThreadFactoryBuilder()
             .setNameFormat("aggregation-worker-agent-thread-%d").build();
 
@@ -70,11 +71,22 @@ public class AgentWorker implements Managed {
                 .build();
 
         rateLimitedExecutorService = new RateLimitedExecutorService(aggregationExecutorService, metricRegistry, MAX_QUEUED_UP);
-        automaticRefreshRateLimitedExecutorService = new RateLimitedExecutorService(aggregationExecutorService, metricRegistry, MAX_QUEUE_AUTOMATIC);
-
-        automaticRefreshRateLimitedExecutorService.start();
         rateLimitedExecutorService.start();
+
+        //Build executionservices for automatic refreshes
+        BlockingQueue<WrappedRunnableListenableFutureTask<Runnable, ?>> automaticExecutorServiceQueue = Queues
+                .newLinkedBlockingQueue(MAX_QUEUE_AUTOMATIC);
+
+        automaticRefreshExecutorService = ListenableThreadPoolExecutor.builder(
+                automaticExecutorServiceQueue,
+                new TypedThreadPoolBuilder(NUMBER_OF_THREADS, threadFactory))
+                .withMetric(metricRegistry, "aggregation_executor_service")
+                .build();
+
+        automaticRefreshRateLimitedExecutorService = new RateLimitedExecutorService(automaticRefreshExecutorService, metricRegistry, MAX_QUEUE_AUTOMATIC);
+        automaticRefreshRateLimitedExecutorService.start();
     }
+
 
     public RateLimitedExecutorService getRateLimitedExecutorService() {
         return rateLimitedExecutorService;
@@ -126,8 +138,12 @@ public class AgentWorker implements Managed {
                         agentWorkerOperationCreatorRunnable.getCredentialsId()));
 
         try{
-            automaticRefreshRateLimitedExecutorService.execute(namedRunnable, agentWorkerOperationCreatorRunnable.getProvider());
-            instrumentedRunnable.submitted();
+            if(automaticRefreshExecutorService.isQueueFull()){
+                agentWorkerOperationCreatorRunnable.setStatus(AutomaticRefreshStatus.REJECTED_BY_QUEUE);
+            } else {
+                automaticRefreshRateLimitedExecutorService.execute(namedRunnable, agentWorkerOperationCreatorRunnable.getProvider());
+                instrumentedRunnable.submitted();
+            }
         } catch (RejectedExecutionException e) {
             agentWorkerOperationCreatorRunnable.setStatus(AutomaticRefreshStatus.REJECTED_BY_QUEUE);
         }

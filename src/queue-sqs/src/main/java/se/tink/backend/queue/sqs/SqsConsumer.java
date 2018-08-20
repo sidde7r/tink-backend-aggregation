@@ -10,6 +10,7 @@ import io.dropwizard.lifecycle.Managed;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import se.tink.backend.queue.AutomaticRefreshStatus;
 import se.tink.backend.queue.QueuableJob;
 import se.tink.backend.queue.QueueConsumer;
@@ -24,7 +25,7 @@ public class SqsConsumer implements Managed, QueueConsumer {
     private QueueMesssageAction queueMesssageAction;
     private final int WAIT_TIME_SECONDS = 1;
     private final int MAX_NUMBER_OF_MESSAGES = 1;
-    private final Map<QueuableJob, Message> inProgress;
+    private final ConcurrentHashMap<QueuableJob, Message> inProgress;
     private final int VISIBILITY_TIMEOUT_SECONDS = 300; //5 minutes
     private static final LogUtils log = new LogUtils(SqsConsumer.class);
     private static final String VISIBLE_ITEMS_ATTRIBUTE = "ApproximateNumberOfMessages";
@@ -34,7 +35,7 @@ public class SqsConsumer implements Managed, QueueConsumer {
     public SqsConsumer(SqsQueue sqsQueue, QueueMesssageAction queueMesssageAction) {
         this.sqsQueue = sqsQueue;
         this.queueMesssageAction = queueMesssageAction;
-        this.inProgress = new HashMap<QueuableJob, Message>();
+        this.inProgress = new ConcurrentHashMap<QueuableJob, Message>();
         this.service = new AbstractExecutionThreadService() {
 
             @Override
@@ -46,8 +47,6 @@ public class SqsConsumer implements Managed, QueueConsumer {
                                 .withMaxNumberOfMessages(MAX_NUMBER_OF_MESSAGES)
                                 .withVisibilityTimeout(VISIBILITY_TIMEOUT_SECONDS);
                         List<Message> sqsMessages = sqsQueue.getSqs().receiveMessage(receiveMessageRequest).getMessages();
-                        getQueuedItems(VISIBLE_ITEMS_ATTRIBUTE);
-                        getQueuedItems(HIDDEN_ITEMS_ATTRIBUTE);
                         for (Message sqsMessage : sqsMessages) {
                             QueuableJob consume = consume(sqsMessage.getBody());
                             inProgress.put(consume, sqsMessage);
@@ -92,34 +91,29 @@ public class SqsConsumer implements Managed, QueueConsumer {
         return queueMesssageAction.handle(message);
     }
 
-    //Ensure sync
-    public void removedFinishedJobs(){
-        Iterator<Map.Entry<QueuableJob, Message>> jobIterator = inProgress.entrySet().iterator();
-        while(jobIterator.hasNext()){
-            Map.Entry<QueuableJob, Message> next = jobIterator.next();
-            QueuableJob job = next.getKey();
+    public void removedFinishedJobs() {
+        //Will try again, once the visibility timer expires
+        //Should get rejected within 5 minutes
+        //Request comes in --> tries to put on queue, if queue is empty it will execute with/without errors
+        // --> if request is rejected, it will be deleted from "inProgress" but not from the message queue
+        // The queue can be consumed 5 minutes later
+        // Thus, it can try to queue another provider refresh, which might not have a full queue
+        // Will continue to fill other provider queues
 
-            //Will try again, once the visibility timer expires
-            //Should get rejected within 5 minutes
-            //Request comes in --> tries to put on queue, if queue is empty it will execute with/without errors
-            // --> if request is rejected, it will be deleted from "inProgress" but not from the message queue
-            // The queue can be consumed 5 minutes later
-            // Thus, it can try to queue another provider refresh, which might not have a full queue
-            // Will continue to fill other provider queues
+        for(QueuableJob job : inProgress.keySet()) {
             if (job.getStatus() == AutomaticRefreshStatus.REJECTED_BY_QUEUE) {
-                jobIterator.remove();
+                inProgress.remove(job);
             } else if (job.getStatus() == AutomaticRefreshStatus.SUCCESS) {
-                deleteJob(job, jobIterator);
+                deleteJob(job);
             } else if (job.getStatus() == AutomaticRefreshStatus.FAILED) {
-                deleteJob(job, jobIterator);
+                deleteJob(job);
             }
         }
     }
 
-    public void deleteJob(QueuableJob job, Iterator<Map.Entry<QueuableJob, Message>> jobIterator){
+    public void deleteJob(QueuableJob job){
         Message message = inProgress.get(job);
         sqsQueue.getSqs().deleteMessage(new DeleteMessageRequest(sqsQueue.getUrl(), message.getReceiptHandle()));
-        jobIterator.remove();
+        inProgress.remove(job);
     }
-
 }
