@@ -56,6 +56,7 @@ public class Sparebank1Agent extends NextGenerationAgent {
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
+        client.setUserAgent(Sparebank1Constants.Headers.USER_AGENT);
         AddRefererFilter filter = new AddRefererFilter();
         client.addFilter(filter);
     }
