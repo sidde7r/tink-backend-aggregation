@@ -7,7 +7,7 @@ import java.util.List;
 import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils.encodeAsBase64String;
+import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 
 public final class AuthenticityChallengeHandler {
     private static final Logger logger = LoggerFactory.getLogger(AuthenticityChallengeHandler.class);
@@ -89,6 +89,6 @@ public final class AuthenticityChallengeHandler {
     private static String bsod(final List<Byte> buffer) {
         final Byte[] bufferArray = new Byte[buffer.size()];
         buffer.toArray(bufferArray);
-        return encodeAsBase64String(ArrayUtils.toPrimitive(bufferArray));
+        return EncodingUtils.encodeAsBase64String(ArrayUtils.toPrimitive(bufferArray));
     }
 }

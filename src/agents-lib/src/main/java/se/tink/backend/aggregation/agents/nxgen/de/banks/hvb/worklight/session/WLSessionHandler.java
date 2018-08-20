@@ -9,11 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.WLConfig;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.WLConstants;
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
-import static se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.WLConstants.Forms.REALM;
-import static se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.WLConstants.Forms.REALM_VALUE;
-import static se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.WLConstants.Headers.X_WL_APP_VERSION;
-import static se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.WLConstants.Url.HEARTBEAT;
-import static se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.WLConstants.Url.LOGOUT;
 
 public final class WLSessionHandler {
     private final WLApiClient client;
@@ -35,11 +30,11 @@ public final class WLSessionHandler {
 
     public HttpResponse logout() {
         final Form form = new Form.Builder()
-                .put(REALM, REALM_VALUE)
+                .put(WLConstants.Forms.REALM, WLConstants.Forms.REALM_VALUE)
                 .build();
-        final HttpResponse response = client.getClient().request(getApiUrl(LOGOUT))
+        final HttpResponse response = client.getClient().request(getApiUrl(WLConstants.Url.LOGOUT))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                .header(X_WL_APP_VERSION, WLConstants.WL_APP_VERSION)
+                .header(WLConstants.Headers.X_WL_APP_VERSION, WLConstants.WL_APP_VERSION)
                 .header(WLConstants.Storage.WL_INSTANCE_ID, storage.getOptionalWlInstanceId().orElse(""))
                 .body(form.serialize())
                 .post(HttpResponse.class);
@@ -49,9 +44,9 @@ public final class WLSessionHandler {
     public HttpResponse heartbeat() throws SessionException {
         final String wlInstanceId = storage.getOptionalWlInstanceId()
                 .orElseThrow(SessionError.SESSION_EXPIRED::exception);
-        return client.getClient().request(getApiUrl(HEARTBEAT))
+        return client.getClient().request(getApiUrl(WLConstants.Url.HEARTBEAT))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                .header(X_WL_APP_VERSION, WLConstants.WL_APP_VERSION)
+                .header(WLConstants.Headers.X_WL_APP_VERSION, WLConstants.WL_APP_VERSION)
                 .header(WLConstants.Storage.WL_INSTANCE_ID, wlInstanceId)
                 .post(HttpResponse.class);
     }

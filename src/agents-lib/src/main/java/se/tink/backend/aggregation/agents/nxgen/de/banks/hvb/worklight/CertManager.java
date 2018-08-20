@@ -8,7 +8,7 @@ import java.security.interfaces.RSAPrivateKey;
 import java.util.Base64;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.authenticator.entities.JoseHeaderEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.authenticator.entities.JwtPayloadEntity;
-import static se.tink.libraries.serialization.utils.SerializationUtils.serializeToString;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public final class CertManager {
     private CertManager() {
@@ -32,8 +32,8 @@ public final class CertManager {
 
         final String signedData = String.format(
                 "%s.%s",
-                Base64.getUrlEncoder().encodeToString(serializeToString(joseHeader).getBytes()),
-                Base64.getUrlEncoder().encodeToString(serializeToString(payload).getBytes())
+                Base64.getUrlEncoder().encodeToString(SerializationUtils.serializeToString(joseHeader).getBytes()),
+                Base64.getUrlEncoder().encodeToString(SerializationUtils.serializeToString(payload).getBytes())
         );
 
         final byte[] jwtSignature = algorithm.sign(signedData.getBytes());
