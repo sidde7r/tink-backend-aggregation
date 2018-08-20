@@ -55,4 +55,9 @@ public class AgentWorkerRefreshOperationCreatorWrapper implements Runnable, Queu
     public AutomaticRefreshStatus getStatus() {
         return this.status;
     }
+
+    @Override
+    public void setStatus(AutomaticRefreshStatus status) {
+        this.status = status;
+    }
 }

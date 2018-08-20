@@ -5,6 +5,7 @@ java_library(
      visibility = ["//visibility:public"],
      deps = [
          "//src/queue-lib:queue-lib",
+         "//src/libraries/log",
          "//third_party:com_google_guava_guava",
          "//third_party:com_amazonaws_aws_java_sdk_sqs",
          "//third_party:com_google_inject_guice",

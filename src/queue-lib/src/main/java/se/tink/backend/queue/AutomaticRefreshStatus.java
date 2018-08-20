@@ -1,7 +1,7 @@
 package se.tink.backend.queue;
 
 public enum AutomaticRefreshStatus {
-    NOT_INITIALIZED, RUNNING, FAILED, SUCCESS;
+    NOT_INITIALIZED, RUNNING, FAILED, SUCCESS, REJECTED_BY_QUEUE;
 
     private String error = "";
 

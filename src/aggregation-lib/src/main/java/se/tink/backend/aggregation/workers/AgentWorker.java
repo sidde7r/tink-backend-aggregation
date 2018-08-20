@@ -5,6 +5,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.inject.Inject;
 import io.dropwizard.lifecycle.Managed;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.workers.ratelimit.RateLimitedExecutorService;
@@ -15,6 +16,7 @@ import se.tink.backend.common.concurrency.TypedThreadPoolBuilder;
 import se.tink.backend.common.concurrency.WrappedRunnableListenableFutureTask;
 import se.tink.backend.common.utils.ExecutorServiceUtils;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.queue.AutomaticRefreshStatus;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 
@@ -123,7 +125,12 @@ public class AgentWorker implements Managed {
                 String.format(MONITOR_THREAD_NAME_FORMAT,
                         agentWorkerOperationCreatorRunnable.getCredentialsId()));
 
-        automaticRefreshRateLimitedExecutorService.execute(namedRunnable, agentWorkerOperationCreatorRunnable.getProvider());
-        instrumentedRunnable.submitted();
+        try{
+            automaticRefreshRateLimitedExecutorService.execute(namedRunnable, agentWorkerOperationCreatorRunnable.getProvider());
+            instrumentedRunnable.submitted();
+        } catch (RejectedExecutionException e) {
+            agentWorkerOperationCreatorRunnable.setStatus(AutomaticRefreshStatus.REJECTED_BY_QUEUE);
+        }
+
     }
 }
