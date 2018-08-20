@@ -8,18 +8,17 @@ import com.sun.jersey.api.client.ClientRequest;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.filter.ClientFilter;
 import org.apache.curator.framework.CuratorFramework;
+import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.provider.configuration.client.ClientProviderServiceFactory;
 import se.tink.backend.aggregation.provider.configuration.client.ProviderServiceFactory;
 import se.tink.backend.guice.annotations.ProviderConfiguration;
 import se.tink.libraries.endpoints.EndpointConfiguration;
 
+// TODO decide what should be in cluster name and environment when requesting from aggregation service
 public class ProviderServiceFactoryProvider implements Provider<ProviderServiceFactory> {
     private final EndpointConfiguration endpointConfiguration;
     private final String clusterName;
     private final String clusterEnvironment;
-
-    protected static final String CLUSTER_NAME_HEADER = "x-tink-cluster-name";
-    protected static final String CLUSTER_ENVIRONMENT_HEADER = "x-tink-cluster-environment";
 
     @Inject
     public ProviderServiceFactoryProvider(@ProviderConfiguration EndpointConfiguration providerConfiguration,
@@ -56,8 +55,8 @@ public class ProviderServiceFactoryProvider implements Provider<ProviderServiceF
 
         @Override
         public ClientResponse handle(ClientRequest cr) throws ClientHandlerException {
-            cr.getHeaders().add(CLUSTER_NAME_HEADER, clusterName);
-            cr.getHeaders().add(CLUSTER_ENVIRONMENT_HEADER, clusterEnvironment);
+            cr.getHeaders().add(ClusterId.CLUSTER_NAME_HEADER, clusterName);
+            cr.getHeaders().add(ClusterId.CLUSTER_ENVIRONMENT_HEADER, clusterEnvironment);
             return getNext().handle(cr);
         }
     }
