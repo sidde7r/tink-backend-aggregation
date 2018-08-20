@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class BaseResponse {
+public class ErrorResponse {
     private List<MessageEntity> message;
 
     public boolean hasError() {
