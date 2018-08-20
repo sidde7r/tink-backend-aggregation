@@ -26,8 +26,6 @@ public abstract class IngConstants {
 
     public static class Default {
         public static final String MOBILE_PHONE = "mobilePhone";
-        /** Probably used to identify how the user identifies herself: 1 == username/DNI/NIE */
-        public static final int LOGIN_DOCUMENT_TYPE = 1;
         public static final String SESSION_NAME_ALL = "all";
         public static final String ACTION_NAME_LOGOUT = "logout";
         public static final String OPERATION_NAME_EMPTY = "";
