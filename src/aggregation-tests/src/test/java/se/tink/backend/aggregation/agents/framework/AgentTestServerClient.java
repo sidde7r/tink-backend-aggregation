@@ -18,6 +18,7 @@ public class AgentTestServerClient {
     private static final TinkHttpClient client = constructHttpClient();
 
     private enum Urls {
+        OPEN_THIRDPARTYAPP("thirdparty/open"),
         INITIATE_SUPPLEMENTAL(String.format("supplemental/{%s}", SUPPLEMENTAL_KEY_KEY)),
         WAIT_FOR_SUPPLEMENTAL(String.format("supplemental/{%s}/{%s}", SUPPLEMENTAL_KEY_KEY, SUPPLEMENTAL_TIMEOUT_KEY)),
         CREDENTIAL(String.format("credential/{%s}/{%s}", PROVIDER_NAME_KEY, CREDENTIAL_ID_KEY));
@@ -39,6 +40,12 @@ public class AgentTestServerClient {
         TinkHttpClient client = new TinkHttpClient(null, null);
         client.setTimeout(TIMEOUT_MS);
         return client;
+    }
+
+    public static void openThirdPartyApp(String fields) {
+        client.request(Urls.OPEN_THIRDPARTYAPP.getUrl())
+                .type(MediaType.APPLICATION_JSON)
+                .post(fields);
     }
 
     public static void initiateSupplementalInformation(String key, String fields) {
