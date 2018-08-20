@@ -29,7 +29,8 @@ spec:
           - "-c"
           - "cp /mnt/config-volume/* /mnt/altered-config-volume && \
              sed -i \"s/KEYSTORE_PASSWORD/$KEYSTORE_PWD/g\" /mnt/altered-config-volume/provider-configuration-server.yml && \
-             sed -i \"s/SYSTEM_ACCESS_TOKEN/$SYSTEM_TOKEN/g\" /mnt/altered-config-volume/provider-configuration-server.yml"
+             sed -i \"s/SYSTEM_ACCESS_TOKEN/$SYSTEM_TOKEN/g\" /mnt/altered-config-volume/provider-configuration-server.yml && \
+             sed -i \"s/MYSQL_PASSWORD/$MYSQL_PWD/g\" /mnt/altered-config-volume/provider-configuration-server.yml"
         image: gcr.io/tink-containers/debian:stretch
         imagePullPolicy: IfNotPresent
         volumeMounts:
@@ -48,6 +49,11 @@ spec:
             secretKeyRef:
               name: provider-configuration-secrets
               key: system-access-token
+        - name: MYSQL_PWD
+          valueFrom:
+            secretKeyRef:
+              name: provider-configuration-secrets
+              key: aggregationdb-password
       containers:
       - name: tink-backend-provider-configuration
         resources:
@@ -81,7 +87,9 @@ spec:
         {{- end }}
         - name: metrics
           containerPort: 9130
-
+        volumeMounts:
+        - name: altered-config-volume
+          mountPath: /etc/tink
       # add readiness/liveness probes
       volumes:
       - name: config-volume
