@@ -26,7 +26,7 @@ import se.tink.backend.aggregation.rpc.Field;
 
 public class IngAuthenticator implements Authenticator {
 
-    private static final Pattern NON_NATIONAL_USERNAME_PATTERN = Pattern.compile("(?i)^X.+F$");
+    private static final Pattern NIE_PATTERN = Pattern.compile("(?i)^X.+[A-Z]$");
 
     private final IngApiClient apiClient;
     private final SessionStorage sessionStorage;
@@ -36,14 +36,13 @@ public class IngAuthenticator implements Authenticator {
         this.sessionStorage = sessionStorage;
     }
 
-    // Users who are not ES nationals will have usernames in the format "^X.+F$" (regex).
-    // Non-nationals have the type 1 and the rest have type 0.
+    // Currently only know the difference between NIE and NON_NIE types (NON_NIE might contain more types).
     private static int getUsernameType(String username) {
-        if (NON_NATIONAL_USERNAME_PATTERN.matcher(username).matches()) {
-            return IngConstants.UsernameType.NON_NATIONAL;
+        if (NIE_PATTERN.matcher(username).matches()) {
+            return IngConstants.UsernameType.NIE;
         }
 
-        return IngConstants.UsernameType.NATIONAL;
+        return IngConstants.UsernameType.NON_NIE;
     }
 
     @Override
