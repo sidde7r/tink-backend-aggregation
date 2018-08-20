@@ -421,11 +421,13 @@ java_library(
         "//third_party:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
         "//third_party:org_assertj_assertj_core",
         "//third_party:net_sourceforge_tess4j",
+        "//third_party:com_auth0_java_jwt",
 
         "//third_party:net_sourceforge_cssparser_cssparser",
 
         "//src/cluster-lib:cluster-lib",
         "//src/cluster-lib-jersey:cluster-lib-jersey",
+
     ],
 )
 
