@@ -5,6 +5,8 @@ import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import org.apache.curator.framework.CuratorFramework;
 import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
@@ -101,6 +103,8 @@ public abstract class AgentContext {
     public abstract void processTransferDestinationPatterns();
 
     public abstract void processEinvoices();
+
+    public abstract Optional<String> waitForSupplementalInformation(String key, long waitFor, TimeUnit unit);
 
     public String requestSupplementalInformation(Credentials credentials) {
         return requestSupplementalInformation(credentials, true);
