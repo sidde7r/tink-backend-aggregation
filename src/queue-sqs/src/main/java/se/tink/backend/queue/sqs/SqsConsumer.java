@@ -1,11 +1,13 @@
 package se.tink.backend.queue.sqs;
 
 import com.amazonaws.services.sqs.model.DeleteMessageRequest;
+import com.amazonaws.services.sqs.model.GetQueueAttributesRequest;
 import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
 import com.google.inject.Inject;
 import io.dropwizard.lifecycle.Managed;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -24,8 +26,10 @@ public class SqsConsumer implements Managed, QueueConsumer {
     private final int WAIT_TIME_SECONDS = 1;
     private final int MAX_NUMBER_OF_MESSAGES = 1;
     private final Map<QueuableJob, Message> inProgress;
-    private final int VISIBILITY_TIMEOUT_SECONDS = 600;
+    private final int VISIBILITY_TIMEOUT_SECONDS = 300; //5 minutes
     private static final LogUtils log = new LogUtils(SqsConsumer.class);
+    private static final String VISIBLE_ITEMS_ATTRIBUTE = "ApproximateNumberOfMessages";
+    private static final String HIDDEN_ITEMS_ATTRIBUTE = "ApproximateNumberOfMessagesNotVisible";
 
     @Inject
     public SqsConsumer(SqsQueue sqsQueue, MessageHandler messageHandler) {
@@ -61,6 +65,20 @@ public class SqsConsumer implements Managed, QueueConsumer {
         };
 
         // TODO introduce metrics
+    }
+
+
+    public int getQueuedItems(String attribute){
+        GetQueueAttributesRequest attributeRequest = new GetQueueAttributesRequest(sqsQueue.getUrl())
+                .withAttributeNames(attribute);
+        String result = sqsQueue.getSqs().getQueueAttributes(attributeRequest)
+                .getAttributes().get(attribute);
+        
+        try{
+            return Integer.parseInt(result);
+        }catch(Exception e){
+            return 0;
+        }
     }
 
     @Override
