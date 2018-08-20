@@ -87,10 +87,9 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
             return;
         }
 
-        // TODO: Create a webpage with info on how to verify signature.
         // This header needs to be added before we fetch the headers to create the signature.
         request.addHeader("X-Signature-Info",
-                "Visit https://developers.tink.se/request-signature-verification for more info.");
+                "Visit https://cdn.tink.se/aggregation-signature/how-to-verify.txt for more info.");
 
         RequestLine requestLine = request.getRequestLine();
         Header[] allHeaders = request.getAllHeaders();
