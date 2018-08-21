@@ -6,6 +6,6 @@ import se.tink.backend.aggregation.provider.configuration.api.ProviderService;
 public interface ProviderServiceFactory {
     String SERVICE_NAME = "provider-configuration";
 
-    ProviderService getProviderSerive();
-    MonitoringService getMonitoringService();
+    ProviderService getProviderSerive(String clusterName, String clusterEnvironment);
+    MonitoringService getMonitoringService(String clusterName, String clusterEnvirontment);
 }

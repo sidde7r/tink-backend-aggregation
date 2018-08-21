@@ -17,17 +17,10 @@ import se.tink.libraries.endpoints.EndpointConfiguration;
 // TODO decide what should be in cluster name and environment when requesting from aggregation service
 public class ProviderServiceFactoryProvider implements Provider<ProviderServiceFactory> {
     private final EndpointConfiguration endpointConfiguration;
-    private final String clusterName;
-    private final String clusterEnvironment;
 
     @Inject
-    public ProviderServiceFactoryProvider(@ProviderConfiguration EndpointConfiguration providerConfiguration,
-                                          CuratorFramework coordinationClient,
-                                          @Named("clusterName") String clusterName,
-                                          @Named("clusterEnvironment") String clusterEnvironment){
+    public ProviderServiceFactoryProvider(@ProviderConfiguration EndpointConfiguration providerConfiguration){
         this.endpointConfiguration = providerConfiguration;
-        this.clusterName = clusterName;
-        this.clusterEnvironment = clusterEnvironment;
     }
 
     @Override
@@ -39,25 +32,7 @@ public class ProviderServiceFactoryProvider implements Provider<ProviderServiceF
         return new ClientProviderServiceFactory(
                 endpointConfiguration.getPinnedCertificates(),
                 endpointConfiguration.getUrl(),
-                new ClusterIdFilter(clusterName, clusterEnvironment),
                 endpointConfiguration.getAccessToken()
         );
-    }
-
-    public class ClusterIdFilter extends ClientFilter {
-        private final String clusterName;
-        private final String clusterEnvironment;
-
-        public ClusterIdFilter(String clusterName, String clusterEnvironment) {
-            this.clusterName = clusterName;
-            this.clusterEnvironment = clusterEnvironment;
-        }
-
-        @Override
-        public ClientResponse handle(ClientRequest cr) throws ClientHandlerException {
-            cr.getHeaders().add(ClusterId.CLUSTER_NAME_HEADER, clusterName);
-            cr.getHeaders().add(ClusterId.CLUSTER_ENVIRONMENT_HEADER, clusterEnvironment);
-            return getNext().handle(cr);
-        }
     }
 }
