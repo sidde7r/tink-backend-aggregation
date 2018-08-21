@@ -26,6 +26,7 @@ public class N26AccountFetcher implements AccountFetcher<TransactionalAccount> {
         if(!res.isEmpty()){
             result.addAll(res.toSavingsAccounts());
         }
+        n26ApiClient.fetchAndLogCreditInfo();
         return result;
     }
 
