@@ -1166,6 +1166,9 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
             MortgageListEntity mortgageList = loansResponseBody.getMortgageList();
 
             if (loansList.getLoans() != null) {
+
+                logLoansIfNotEmpty(loansList.getLoans());
+
                 for (LoanEntity loanEntity : loansList.getLoans()) {
                     updateAccount(loanEntity);
                 }
@@ -1176,6 +1179,14 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
                     updateAccount(mortgageEntity);
                 }
             }
+        }
+    }
+
+    private void logLoansIfNotEmpty(List<LoanEntity> loansList) {
+        if (!loansList.isEmpty()) {
+            log.infoExtraLong(
+                    SerializationUtils.serializeToString(loansList),
+                    LogTag.from("icabanken-blanco-loans"));
         }
     }
 
