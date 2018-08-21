@@ -96,7 +96,6 @@ public class AggregationServiceContainer extends AbstractServiceContainer {
                         serviceContext.getCoordinationClient()),
                 injector.getInstance(AgentWorker.class));
 
-        environment.lifecycle().manage(aggregationServiceResource);
         environment.lifecycle().manage(injector.getInstance(AgentWorker.class));
 
         CreditSafeServiceResource creditSafeServiceResource = new CreditSafeServiceResource(serviceContext);

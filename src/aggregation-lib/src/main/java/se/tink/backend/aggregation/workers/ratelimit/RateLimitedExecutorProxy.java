@@ -18,13 +18,6 @@ import se.tink.libraries.metrics.MetricRegistry;
 
 public class RateLimitedExecutorProxy extends AbstractExecutorService {
 
-    // On Leeds (running 3g heap size), we started GC:ing aggressively when above 180k elements in the queue here. At
-    // 300k elements we ran out of memory entirely and all aggregation deadlocked (note that they did not restart). The
-    // reason we queued up was because our rate limitters were limitting us to process at the incoming rate. That
-    // said, we should not be piling up this many requests on an aggregation instance.
-    //
-    // If we hit this limit, #submit and #execute will throw RejectedExecutionException.
-
     private final MetricRegistry metricRegistry;
     private final MetricId.MetricLabels metricLabels;
 

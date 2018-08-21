@@ -158,12 +158,10 @@ public class AggregationServiceResource implements AggregationService, Managed {
 
     @Override
     public void start() throws Exception {
-        //agentWorker.start();
     }
 
     @Override
     public void stop() throws Exception {
-        //agentWorker.stop();
     }
 
     private static ProviderRateLimiterFactory constructProviderRateLimiterFactoryFromRequest(

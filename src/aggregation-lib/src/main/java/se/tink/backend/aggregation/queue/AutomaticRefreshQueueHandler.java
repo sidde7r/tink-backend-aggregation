@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.queue;
 
 import com.google.inject.Inject;
+import java.util.concurrent.RejectedExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
@@ -28,7 +29,7 @@ public class AutomaticRefreshQueueHandler implements QueueMesssageAction {
     }
 
     @Override
-    public AgentWorkerRefreshOperationCreatorWrapper handle(String message) throws IOException {
+    public void handle(String message) throws IOException, RejectedExecutionException {
         RefreshInformation refreshInformation = encodingHandler.decode(message);
         try {
             AgentWorkerRefreshOperationCreatorWrapper agentWorkerRefreshOperationCreatorWrapper = AgentWorkerRefreshOperationCreatorWrapper.of(
@@ -44,10 +45,10 @@ public class AutomaticRefreshQueueHandler implements QueueMesssageAction {
                     ));
 
             agentWorker.executeAutomaticRefresh(agentWorkerRefreshOperationCreatorWrapper);
-            return agentWorkerRefreshOperationCreatorWrapper;
+        } catch (RejectedExecutionException rejectedExecution) {
+            throw rejectedExecution;
         } catch (Exception e) {
             logger.error("Something went wrong with an automatic refresh from sqs.");
-            throw new IOException(e);
         }
     }
 }

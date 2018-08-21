@@ -1,21 +1,16 @@
 package se.tink.backend.queue.sqs;
 
 import com.amazonaws.services.sqs.model.DeleteMessageRequest;
-import com.amazonaws.services.sqs.model.GetQueueAttributesRequest;
 import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
 import com.google.inject.Inject;
 import io.dropwizard.lifecycle.Managed;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import se.tink.backend.queue.AutomaticRefreshStatus;
-import se.tink.backend.queue.QueuableJob;
-import se.tink.backend.queue.QueueConsumer;
 import java.util.List;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import se.tink.backend.queue.QueueConsumer;
 import se.tink.libraries.log.LogUtils;
 
 public class SqsConsumer implements Managed, QueueConsumer {
@@ -25,37 +20,31 @@ public class SqsConsumer implements Managed, QueueConsumer {
     private QueueMesssageAction queueMesssageAction;
     private final int WAIT_TIME_SECONDS = 1;
     private final int MAX_NUMBER_OF_MESSAGES = 1;
-    private final ConcurrentHashMap<QueuableJob, Message> inProgress;
     private final int VISIBILITY_TIMEOUT_SECONDS = 300; //5 minutes
     private static final LogUtils log = new LogUtils(SqsConsumer.class);
-    private static final String VISIBLE_ITEMS_ATTRIBUTE = "ApproximateNumberOfMessages";
-    private static final String HIDDEN_ITEMS_ATTRIBUTE = "ApproximateNumberOfMessagesNotVisible";
+    private AtomicBoolean running = new AtomicBoolean(false);
+
 
     @Inject
     public SqsConsumer(SqsQueue sqsQueue, QueueMesssageAction queueMesssageAction) {
         this.sqsQueue = sqsQueue;
         this.queueMesssageAction = queueMesssageAction;
-        this.inProgress = new ConcurrentHashMap<QueuableJob, Message>();
         this.service = new AbstractExecutionThreadService() {
 
             @Override
             protected void run() {
                 try {
-                    while (true) {
-                        ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest(sqsQueue.getUrl())
-                                .withWaitTimeSeconds(WAIT_TIME_SECONDS)
-                                .withMaxNumberOfMessages(MAX_NUMBER_OF_MESSAGES)
-                                .withVisibilityTimeout(VISIBILITY_TIMEOUT_SECONDS);
-                        List<Message> sqsMessages = sqsQueue.getSqs().receiveMessage(receiveMessageRequest).getMessages();
-                        for (Message sqsMessage : sqsMessages) {
-                            QueuableJob consume = consume(sqsMessage.getBody());
-                            inProgress.put(consume, sqsMessage);
-                        }
+                    while (running.get()) {
+                        ReceiveMessageRequest request = createReceiveMessagesRequest();
+                        List<Message> messages = readMessagesFromQueue(request);
 
-                        removedFinishedJobs();
+                        for (Message message : messages) { // MAX_NUMBER_OF_MESSAGES is 1
+                            delete(message);
+                            tryConsumeUntilNotRejected(message);
+                        }
                     }
                 } catch (Exception e) {
-                    log.error("Could not query for queue items: " + e.getMessage());
+                    log.error("Could not query, delete or consume for queue items: " + e.getMessage());
                 }
             }
         };
@@ -63,21 +52,50 @@ public class SqsConsumer implements Managed, QueueConsumer {
         // TODO introduce metrics
     }
 
-    public int getQueuedItems(String attribute){
-        GetQueueAttributesRequest attributeRequest = new GetQueueAttributesRequest(sqsQueue.getUrl())
-                .withAttributeNames(attribute);
-        String result = sqsQueue.getSqs().getQueueAttributes(attributeRequest)
-                .getAttributes().get(attribute);
+    private List<Message> readMessagesFromQueue(ReceiveMessageRequest request) {
+        return sqsQueue.getSqs().receiveMessage(request).getMessages();
+    }
 
-        try{
-            return Integer.parseInt(result);
-        }catch(Exception e){
-            return 0;
+    private ReceiveMessageRequest createReceiveMessagesRequest() {
+        return new ReceiveMessageRequest(sqsQueue.getUrl())
+                .withWaitTimeSeconds(WAIT_TIME_SECONDS)
+                .withMaxNumberOfMessages(MAX_NUMBER_OF_MESSAGES)
+                .withVisibilityTimeout(VISIBILITY_TIMEOUT_SECONDS);
+    }
+
+    private void tryConsumeUntilNotRejected(Message sqsMessage) throws Exception {
+        int tries = 0;
+
+        boolean consumed = false;
+        while(!consumed) {
+            try {
+                consume(sqsMessage.getBody());
+                consumed = true;
+            } catch (RejectedExecutionException e) {
+                Thread.sleep(50); // Wait 50ms to not spam either system
+                log.info("" + sqsMessage.getMessageId());
+                if (!running.get() && tries > 100) {
+                    // If we are about to shutdown, don't retry-adding for more than 5000ms (sleep of 50ms times 100)
+                    break;
+                }
+            }
+
+            tries++;
         }
+    }
+
+
+    public void consume(String message) throws Exception {
+        queueMesssageAction.handle(message);
+    }
+
+    public void delete(Message message){
+        sqsQueue.getSqs().deleteMessage(new DeleteMessageRequest(sqsQueue.getUrl(), message.getReceiptHandle()));
     }
 
     @Override
     public void start() throws Exception {
+        running.set(true);
         service.startAsync();
         service.awaitRunning(1, TimeUnit.MINUTES);
     }
@@ -85,35 +103,6 @@ public class SqsConsumer implements Managed, QueueConsumer {
     @Override
     public void stop() throws Exception {
         service.awaitTerminated(30, TimeUnit.SECONDS);
-    }
-
-    public QueuableJob consume(String message) throws Exception {
-        return queueMesssageAction.handle(message);
-    }
-
-    public void removedFinishedJobs() {
-        //Will try again, once the visibility timer expires
-        //Should get rejected within 5 minutes
-        //Request comes in --> tries to put on queue, if queue is empty it will execute with/without errors
-        // --> if request is rejected, it will be deleted from "inProgress" but not from the message queue
-        // The queue can be consumed 5 minutes later
-        // Thus, it can try to queue another provider refresh, which might not have a full queue
-        // Will continue to fill other provider queues
-
-        for(QueuableJob job : inProgress.keySet()) {
-            if (job.getStatus() == AutomaticRefreshStatus.REJECTED_BY_QUEUE) {
-                inProgress.remove(job);
-            } else if (job.getStatus() == AutomaticRefreshStatus.SUCCESS) {
-                deleteJob(job);
-            } else if (job.getStatus() == AutomaticRefreshStatus.FAILED) {
-                deleteJob(job);
-            }
-        }
-    }
-
-    public void deleteJob(QueuableJob job){
-        Message message = inProgress.get(job);
-        sqsQueue.getSqs().deleteMessage(new DeleteMessageRequest(sqsQueue.getUrl(), message.getReceiptHandle()));
-        inProgress.remove(job);
+        running.set(false);
     }
 }

@@ -5,7 +5,6 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.inject.Inject;
 import io.dropwizard.lifecycle.Managed;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.workers.ratelimit.RateLimitedExecutorService;
@@ -16,11 +15,8 @@ import se.tink.backend.common.concurrency.TypedThreadPoolBuilder;
 import se.tink.backend.common.concurrency.WrappedRunnableListenableFutureTask;
 import se.tink.backend.common.utils.ExecutorServiceUtils;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.queue.AutomaticRefreshStatus;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
-
-import javax.annotation.PostConstruct;
 
 public class AgentWorker implements Managed {
     public static final String DEFAULT_AGENT_PACKAGE_CLASS_PREFIX =
@@ -35,8 +31,17 @@ public class AgentWorker implements Managed {
             .newId("aggregation_operation_tasks");
     private static final String MONITOR_THREAD_NAME_FORMAT = "agent-worker-operation-thread-%s";
     private final MetricRegistry metricRegistry;
+
+    // On Leeds (running 3g heap size), we started GC:ing aggressively when above 180k elements in the queue here. At
+    // 300k elements we ran out of memory entirely and all aggregation deadlocked (note that they did not restart). The
+    // reason we queued up was because our rate limitters were limitting us to process at the incoming rate. That
+    // said, we should not be piling up this many requests on an aggregation instance.
+    //
+    // If we hit this limit, #submit and #execute will throw RejectedExecutionException.
     private static final int MAX_QUEUED_UP = 180000;
-    private static final int MAX_QUEUE_AUTOMATIC = 10;
+
+    // Automatic Refreshes will be put on a persistent queue. This queue will be used as a buffer only.
+    private static final int MAX_QUEUE_AUTOMATIC_REFRESH = 1;
 
     /**
      * The time in minutes we wait until we forcefully shut down all agent work. Wirst case scenario is that an
@@ -59,7 +64,6 @@ public class AgentWorker implements Managed {
     }
 
     @Override
-    @PostConstruct
     public void start() throws Exception {
         BlockingQueue<WrappedRunnableListenableFutureTask<Runnable, ?>> executorServiceQueue = Queues
                 .newLinkedBlockingQueue();
@@ -70,12 +74,14 @@ public class AgentWorker implements Managed {
                 .withMetric(metricRegistry, "aggregation_executor_service")
                 .build();
 
-        rateLimitedExecutorService = new RateLimitedExecutorService(aggregationExecutorService, metricRegistry, MAX_QUEUED_UP);
+        rateLimitedExecutorService = new RateLimitedExecutorService(aggregationExecutorService,
+                metricRegistry,
+                MAX_QUEUED_UP);
         rateLimitedExecutorService.start();
 
         //Build executionservices for automatic refreshes
         BlockingQueue<WrappedRunnableListenableFutureTask<Runnable, ?>> automaticExecutorServiceQueue = Queues
-                .newLinkedBlockingQueue(MAX_QUEUE_AUTOMATIC);
+                .newLinkedBlockingQueue(MAX_QUEUE_AUTOMATIC_REFRESH);
 
         automaticRefreshExecutorService = ListenableThreadPoolExecutor.builder(
                 automaticExecutorServiceQueue,
@@ -83,7 +89,9 @@ public class AgentWorker implements Managed {
                 .withMetric(metricRegistry, "aggregation_executor_service")
                 .build();
 
-        automaticRefreshRateLimitedExecutorService = new RateLimitedExecutorService(automaticRefreshExecutorService, metricRegistry, MAX_QUEUE_AUTOMATIC);
+        automaticRefreshRateLimitedExecutorService = new RateLimitedExecutorService(automaticRefreshExecutorService,
+                metricRegistry,
+                MAX_QUEUE_AUTOMATIC_REFRESH);
         automaticRefreshRateLimitedExecutorService.start();
     }
 
@@ -137,16 +145,7 @@ public class AgentWorker implements Managed {
                 String.format(MONITOR_THREAD_NAME_FORMAT,
                         agentWorkerOperationCreatorRunnable.getCredentialsId()));
 
-        try{
-            if(automaticRefreshExecutorService.isQueueFull()){
-                agentWorkerOperationCreatorRunnable.setStatus(AutomaticRefreshStatus.REJECTED_BY_QUEUE);
-            } else {
-                automaticRefreshRateLimitedExecutorService.execute(namedRunnable, agentWorkerOperationCreatorRunnable.getProvider());
-                instrumentedRunnable.submitted();
-            }
-        } catch (RejectedExecutionException e) {
-            agentWorkerOperationCreatorRunnable.setStatus(AutomaticRefreshStatus.REJECTED_BY_QUEUE);
-        }
-
+        automaticRefreshRateLimitedExecutorService.execute(namedRunnable, agentWorkerOperationCreatorRunnable.getProvider());
+        instrumentedRunnable.submitted();
     }
 }
