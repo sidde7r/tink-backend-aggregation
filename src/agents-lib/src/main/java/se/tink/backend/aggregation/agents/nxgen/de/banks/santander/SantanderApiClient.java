@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.santander;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Date;
 import java.util.regex.Matcher;
 import javax.ws.rs.core.HttpHeaders;
@@ -16,6 +18,7 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SantanderApiClient {
 
@@ -76,6 +79,12 @@ public class SantanderApiClient {
 
         FetchAccountsResponse response = getRequest(SantanderConstants.URL.BASEURL, SantanderConstants.URL.ACCOUNT, token, requestData)
                 .post(FetchAccountsResponse.class);
+
+        try {
+            logger.info("{} response: {}", SantanderConstants.LOGTAG.SANTANDER_ACCOUNT_LOGGING, SerializationUtils.serializeToString(response));
+        } catch (Exception e) {
+            logger.warn("{} error: {}", SantanderConstants.LOGTAG.SANTANDER_ACCOUNT_PARSING_ERROR, e.toString());
+        }
 
         storage.put(SantanderConstants.STORAGE.LOCAL_CONTRACT_DETAIL, response.getAccountResultEntity().getLocalContractDetail());
         storage.put(SantanderConstants.STORAGE.LOCAL_CONTRACT_TYPE, response.getAccountResultEntity().getLocalContractType());
