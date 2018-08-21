@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SantanderApiClient {
 
@@ -80,8 +81,8 @@ public class SantanderApiClient {
                 .post(FetchAccountsResponse.class);
 
         try {
-            logger.info("{} response: {}", SantanderConstants.LOGTAG.SANTANDER_ACCOUNT_LOGGING, new ObjectMapper().writeValueAsString(response));
-        } catch (JsonProcessingException e) {
+            logger.info("{} response: {}", SantanderConstants.LOGTAG.SANTANDER_ACCOUNT_LOGGING, SerializationUtils.serializeToString(response));
+        } catch (Exception e) {
             logger.warn("{} error: {}", SantanderConstants.LOGTAG.SANTANDER_ACCOUNT_PARSING_ERROR, e.toString());
         }
 
