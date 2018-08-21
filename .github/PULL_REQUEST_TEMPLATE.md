@@ -11,22 +11,24 @@ This is a guideline for the reviewer on what to check to ensure that the quality
 
 _Put an `x` in the boxes that have been checked and fullfiled_ 
 
-- [ ] The code packages follow the [Tink structure](https://docs.google.com/document/d/18pSzbRPlHYbKJtCDntMYE_4TqNWFdyTFuETq6lyNZBk/edit#heading=h.f3ao0xse8vu5)
+- [ ] The code packages follow the [Tink structure](https://github.com/tink-ab/tink-backend-aggregation/wiki/Development-and-Code#package-structure)
 - [ ] The code is clean from `development-only` code (`client.setDebugOutput`, `println`, `client.setProxy()`) 
 - [ ] The known errors are being handled and unknown logged:
 	- [ ] The Authenticator throws an AuthenticationException (e.g the password is incorrect)
 	- [ ] The Authenticator throws an AuthorizationException if the user attempts to access a resource it does not have privileges to (e.g. if the account has been blocked).
 	 You may want to throw this exception if the http status code is 401/403
 - [ ] The `JSON/XML` values are sanitized (Not hardcoded from string concatenation of input values; Use `Jackson`!) 
-- [ ] The code uses a [`Constants Class`](https://docs.google.com/document/d/18pSzbRPlHYbKJtCDntMYE_4TqNWFdyTFuETq6lyNZBk/edit#heading=h.6tr2fkwudh2m) for constants 
+- [ ] The code uses a [`Constants Class`](https://github.com/tink-ab/tink-backend-aggregation/wiki/Code-Structure#constants) for constants 
 - [ ] The code uses insensitive comparison of constants (`equalsIgnoreCase`)
 - [ ] The code uses `Catalog` for translatable strings
-- [ ] The code follows the naming conventions of [Tink](https://docs.google.com/document/d/18pSzbRPlHYbKJtCDntMYE_4TqNWFdyTFuETq6lyNZBk/edit#heading=h.hxfhn3yt7me0)
+- [ ] The code follows the naming conventions of [Tink](https://github.com/tink-ab/tink-backend-aggregation/wiki/Development-and-Code)
 - [ ] The identifiers are understandable (e.g. nationalId instead of ssn/nId or any other non desciptive/appropiate name)
 - [ ] The `Amounts` have the correct sign (positive/negative) 
 - [ ] The code follows the coding style and format of [Tink](https://docs.google.com/document/d/1GirwFcub-0q2RK1zXLzKJt_dUTXEkhpPWJGKozPVias/edit#) (space after if-statment, newlines at EOF, etc)
 - [ ] The code does not return `null` from methods. `Optional<>` is used in case of potential absent resource needed as return value
 - [ ] The commits and the code changes are correctly labeled based on the [contributing guidelines](https://github.com/tink-ab/tink-backend-aggregation/blob/master/CONTRIBUTING.md)
+- [ ] The code does not use static imports in production code
+- [ ] The code uses `equals` to compare objects instead of `==` (to avoid cofusion and possible bugs)
 
 ---------------------------------------
 ## Further comments
