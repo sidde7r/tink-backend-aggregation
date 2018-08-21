@@ -51,7 +51,7 @@ public class N26ApiClient {
         }
     }
 
-    public RequestBuilder getRequest(String resource, String token) {
+    private RequestBuilder getRequest(String resource, String token) {
         return client.request(getUrl(resource))
                 .header(HttpHeaders.AUTHORIZATION, token);
     }
