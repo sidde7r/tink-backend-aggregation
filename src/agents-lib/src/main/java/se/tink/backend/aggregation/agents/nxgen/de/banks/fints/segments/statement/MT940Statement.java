@@ -60,7 +60,7 @@ public class MT940Statement {
                                 Arrays.stream(elements).filter(s -> hasField(s, "00")).findFirst().orElse("")
                         )));
 
-        if (result.length() > 2) {
+        if (result.length() >= 2) {
             return result.substring(2);
         }
 
