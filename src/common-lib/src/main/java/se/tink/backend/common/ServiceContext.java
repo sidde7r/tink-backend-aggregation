@@ -12,7 +12,7 @@ import javax.annotation.PreDestroy;
 import org.apache.curator.framework.CuratorFramework;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import se.tink.backend.aggregation.client.AggregationServiceFactory;
-import se.tink.backend.aggregation.provider.configuration.client.ProviderServiceFactory;
+import se.tink.backend.aggregation.provider.configuration.client.InterContainerProviderServiceFactory;
 import se.tink.backend.client.ServiceFactory;
 import se.tink.backend.common.cache.CacheClient;
 import se.tink.backend.common.concurrency.ListenableThreadPoolExecutor;
@@ -45,7 +45,7 @@ public class ServiceContext implements Managed, RepositoryFactory {
     private final MetricRegistry metricRegistry;
     private final ServiceFactory serviceFactory;
     private final SystemServiceFactory systemServiceFactory;
-    private final ProviderServiceFactory providerServiceFactory;
+    private final InterContainerProviderServiceFactory providerServiceFactory;
     private LoadingCache<Class<?>, Object> DAOs;
     private final boolean isAggregationCluster;
     private final boolean isProvidersOnAggregation;
@@ -63,7 +63,7 @@ public class ServiceContext implements Managed, RepositoryFactory {
             final ServiceConfiguration configuration, MetricRegistry metricRegistry,
             CacheClient cacheClient, CuratorFramework zookeeperClient,
             ServiceFactory serviceFactory, SystemServiceFactory systemServiceFactory,
-            ProviderServiceFactory providerServiceFactory,
+            InterContainerProviderServiceFactory providerServiceFactory,
             AggregationServiceFactory aggregationServiceFactory,
             EncryptionServiceFactory encryptionServiceFactory,
             @Named("executor") ListenableThreadPoolExecutor<Runnable> executorService,
@@ -153,7 +153,7 @@ public class ServiceContext implements Managed, RepositoryFactory {
         return systemServiceFactory;
     }
 
-    public ProviderServiceFactory getProviderServiceFactory() {
+    public InterContainerProviderServiceFactory getProviderServiceFactory() {
         return providerServiceFactory;
     }
 

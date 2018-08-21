@@ -19,13 +19,13 @@ import se.tink.libraries.http.client.BasicWebServiceClassBuilder;
 import se.tink.libraries.http.client.ServiceClassBuilder;
 import se.tink.libraries.jersey.utils.JerseyUtils;
 
-public class ClientProviderServiceFactory implements ProviderServiceFactory{
+public class InterContainerClientProviderServiceFactory implements InterContainerProviderServiceFactory {
 
     private List<String> pinnedCertificate;
     private String host;
     private String accessToken;
 
-    public ClientProviderServiceFactory(List<String> pinnedCertificates, String host, String accessToken){
+    public InterContainerClientProviderServiceFactory(List<String> pinnedCertificates, String host, String accessToken){
         this.pinnedCertificate = pinnedCertificates;
         this.host = host;
         this.accessToken = accessToken;
