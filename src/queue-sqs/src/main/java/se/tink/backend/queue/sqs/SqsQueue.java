@@ -21,6 +21,7 @@ public class SqsQueue {
     private final boolean isAvailable;
     private final String url;
     private Logger logger = LoggerFactory.getLogger(SqsQueue.class);
+    private final static String LOCAL_REGION = "local";
 
     @Inject
     public SqsQueue(SqsQueueConfiguration configuration) {
@@ -29,13 +30,19 @@ public class SqsQueue {
                 .withQueueName(configuration.getQueueName())
                 .addAttributesEntry("ReceiveMessageWaitTimeSeconds", "20");
 
-        sqs = AmazonSQSClientBuilder.standard()
-                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(configuration.getUrl(), configuration.getRegion()))
-                .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(
-                        configuration.getAwsAccessKeyId(),
-                        configuration.getAwsSecretKey()
-                )))
-                .build();
+        if(configuration.getRegion().equals(LOCAL_REGION)){
+            sqs = AmazonSQSClientBuilder.standard()
+                    .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(configuration.getUrl(), configuration.getRegion()))
+                    .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(
+                            configuration.getAwsAccessKeyId(),
+                            configuration.getAwsSecretKey()
+                    )))
+                    .build();
+        } else {
+            sqs = AmazonSQSClientBuilder.standard()
+                    .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(configuration.getUrl(), configuration.getRegion())).build();
+        }
+
         try {
             sqs.createQueue(create_request);
         } catch (AmazonSQSException e) {
