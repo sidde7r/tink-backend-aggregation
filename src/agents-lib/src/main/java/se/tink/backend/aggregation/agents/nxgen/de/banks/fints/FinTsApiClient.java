@@ -149,7 +149,7 @@ public class FinTsApiClient {
 
     public Collection<String> sync() {
         FinTsResponse syncResponse = sendMessage(getMessageSync());
-        if (!syncResponse.isSuccess()) {
+        if (!syncResponse.isSuccess() || syncResponse.isAccountBlocked()) {
             Collection<String> rmg = syncResponse.getGlobalStatus().values();
             Collection<String> rms = syncResponse.getLocalStatus().values();
 
