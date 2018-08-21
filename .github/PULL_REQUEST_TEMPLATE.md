@@ -22,7 +22,7 @@ _Put an `x` in the boxes that have been checked and fullfiled_
 - [ ] The code uses insensitive comparison of constants (`equalsIgnoreCase`)
 - [ ] The code uses `Catalog` for translatable strings
 - [ ] The code follows the naming conventions of [Tink](https://github.com/tink-ab/tink-backend-aggregation/wiki/Development-and-Code)
-- [ ] The identifiers are understandable (e.g. nationalId instead of ssn/nId or any other non desciptive/appropiate name)
+- [ ] The identifiers are understandable (e.g. nationalId instead of ssn/nId or any other nondesciptive/appropriate name)
 - [ ] The `Amounts` have the correct sign (positive/negative) 
 - [ ] The code follows the coding style and format of [Tink](https://docs.google.com/document/d/1GirwFcub-0q2RK1zXLzKJt_dUTXEkhpPWJGKozPVias/edit#) (space after if-statment, newlines at EOF, etc)
 - [ ] The code does not return `null` from methods. `Optional<>` is used in case of potential absent resource needed as return value
