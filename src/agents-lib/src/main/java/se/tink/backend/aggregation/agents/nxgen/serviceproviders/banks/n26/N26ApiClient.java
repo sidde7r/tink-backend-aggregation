@@ -46,7 +46,7 @@ public class N26ApiClient {
 
     private void validateToken(TokenEntity token) {
         if (!token.isValid()) {
-            logger.error("Token is not valid!", token);
+            logger.error("Token is not valid! {}", token);
             throw new IllegalStateException("Token is not valid!");
         }
     }
@@ -74,14 +74,14 @@ public class N26ApiClient {
                     .post(AuthenticationResponse.class, request.getBody());
 
         } catch (UnsupportedEncodingException e) {
-            logger.error("Unable to encode ", e);
+            logger.error("Unable to encode {}", e);
             throw new IllegalStateException("Unable to encode ", e);
         } catch (HttpResponseException e) {
             AuthenticationResponse errResponse = e.getResponse().getBody(AuthenticationResponse.class);
             if (N26Constants.AUTHENTICATION_ERROR.equalsIgnoreCase(errResponse.getError())) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             }
-            logger.error("Unable to authenticate error %s description %s", errResponse.getError(),
+            logger.error("Unable to authenticate error {} description {} {}", errResponse.getError(),
                     errResponse.getErrorDescription(), e);
             throw e;
         }
