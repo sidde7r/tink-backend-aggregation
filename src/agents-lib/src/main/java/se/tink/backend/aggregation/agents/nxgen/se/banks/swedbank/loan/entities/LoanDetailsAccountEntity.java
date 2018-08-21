@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class LoanDetailsAccountEntity {
-    private LoanDetailsTypeEnum type;
+    private String type;
     private InterestRateEntity interestRate;
     private AmountEntity amortizationOnDueDate;
     private String amortizationPlan;
