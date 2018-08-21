@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.provider.configuration.client;
 
-
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.sun.jersey.api.client.Client;
@@ -51,7 +50,7 @@ public class InterContainerClientProviderServiceFactory implements InterContaine
     }
 
     @Override
-    public ProviderService getProviderSerive(String clusterName, String clusterEnvironment){
+    public ProviderService getProviderService(String clusterName, String clusterEnvironment){
         return builder(clusterName, clusterEnvironment).build(ProviderService.class);
     }
 
