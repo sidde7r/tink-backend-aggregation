@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26;
 
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class N26Constants {
 
@@ -23,10 +22,20 @@ public class N26Constants {
         public static final String SAVINGS_FIXEDTERMS = "/api/hub/savings/fixedterms/accounts";
         public static final String SAVINGS_OPTIONS = "/api/hub/savings/options";
         public static final String LOGOUT = "/api/me/logout";
+        public static final String CREDIT_DRAFTS = "/api/hub/credit/drafts";
+        public static final String CREDIT_ELIGIBILITY = "/api/hub/credit/eligibility";
+        public static final String USER_FULL_INFO = "/api/me";
     }
 
     public static class Storage {
         public static final String TOKEN_ENTITY = "TOKEN_ENTITY";
+    }
+
+    public static class Queryparams {
+        public static final String FLOW_VERSION = "flowVersion";
+        public static final String FLOW_VERSION_V2 = "V2";
+        public static final String FULL = "full";
+        public static final String FULL_TRUE = "true";
     }
     
     public static class Body {
@@ -35,6 +44,9 @@ public class N26Constants {
     }
 
     public static class Logging {
-        public static final LogTag SAVINGS_ACCOUNT_LOGGING = LogTag.from("n26_savings_account");
+        public static final LogTag CREDIT_DRAFT = LogTag.from("#n26_credit_draft");
+        public static final LogTag CREDIT_ELIGIBILITY = LogTag.from("#n26_credit_eligibility");
+        public static final LogTag FULL_USER_INFO = LogTag.from("#n26_user_full_info");
+        public static final LogTag CREDIT_ERROR = LogTag.from("#n26_credit_error");
     }
 }

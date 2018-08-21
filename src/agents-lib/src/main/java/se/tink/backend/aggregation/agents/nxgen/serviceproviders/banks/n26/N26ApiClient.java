@@ -27,16 +27,16 @@ public class N26ApiClient {
     private final SessionStorage storage;
     Logger logger = LoggerFactory.getLogger(N26ApiClient.class);
 
-    public N26ApiClient(TinkHttpClient client, SessionStorage storage){
+    public N26ApiClient(TinkHttpClient client, SessionStorage storage) {
         this.client = client;
         this.storage = storage;
     }
 
-    public boolean tokenExists(){
+    public boolean tokenExists() {
         return storage.containsKey(N26Constants.Storage.TOKEN_ENTITY);
     }
 
-    private TokenEntity getToken(){
+    private TokenEntity getToken() {
         TokenEntity token = storage.get(N26Constants.Storage.TOKEN_ENTITY, TokenEntity.class)
                 .orElseThrow(() -> new NoSuchElementException("Token missing"));
 
@@ -44,46 +44,51 @@ public class N26ApiClient {
         return token;
     }
 
-    private void validateToken(TokenEntity token){
+    private void validateToken(TokenEntity token) {
         if (!token.isValid()) {
             logger.error("Token is not valid!", token);
             throw new IllegalStateException("Token is not valid!");
         }
     }
 
-    private RequestBuilder getRequest(String resource, MediaType mediaType, String token){
+    public RequestBuilder getRequest(String resource, String token) {
         return client.request(getUrl(resource))
-                .header(HttpHeaders.CONTENT_TYPE, mediaType)
                 .header(HttpHeaders.AUTHORIZATION, token);
     }
 
-    private URL getUrl(String resource){
+    private RequestBuilder getRequest(String resource, MediaType mediaType, String token) {
+        return getRequest(resource, token)
+                .header(HttpHeaders.CONTENT_TYPE, mediaType);
+    }
+
+    private URL getUrl(String resource) {
         return new URL(N26Constants.URLS.HOST + resource);
     }
 
-    public void login(String username, String password) throws LoginException{
+    public void login(String username, String password) throws LoginException {
         AuthenticationRequest request = new AuthenticationRequest(username, password);
         AuthenticationResponse response;
         try {
-            response = getRequest(N26Constants.URLS.AUTHENTICATION, MediaType.APPLICATION_FORM_URLENCODED_TYPE, N26Constants.BASIC_AUTHENTICATION_TOKEN)
+            response = getRequest(N26Constants.URLS.AUTHENTICATION, MediaType.APPLICATION_FORM_URLENCODED_TYPE,
+                    N26Constants.BASIC_AUTHENTICATION_TOKEN)
                     .post(AuthenticationResponse.class, request.getBody());
 
         } catch (UnsupportedEncodingException e) {
             logger.error("Unable to encode ", e);
             throw new IllegalStateException("Unable to encode ", e);
-        }
-        catch (HttpResponseException e){
+        } catch (HttpResponseException e) {
             AuthenticationResponse errResponse = e.getResponse().getBody(AuthenticationResponse.class);
-            if(N26Constants.AUTHENTICATION_ERROR.equalsIgnoreCase(errResponse.getError())){
+            if (N26Constants.AUTHENTICATION_ERROR.equalsIgnoreCase(errResponse.getError())) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             }
-            logger.error("Unable to authenticate error %s description %s", errResponse.getError(), errResponse.getErrorDescription(), e);
+            logger.error("Unable to authenticate error %s description %s", errResponse.getError(),
+                    errResponse.getErrorDescription(), e);
             throw e;
         }
         storage.put(N26Constants.Storage.TOKEN_ENTITY, response.getToken());
     }
 
-    public AccountResponse fetchAccounts(){
+    public AccountResponse fetchAccounts() {
         TokenEntity token = getToken();
         String bearer = N26Constants.BEARER_TOKEN + token.getAccessToken();
 
@@ -91,7 +96,7 @@ public class N26ApiClient {
                 .get(AccountResponse.class);
     }
 
-    public HttpResponse checkIfSessionAlive(){
+    public HttpResponse checkIfSessionAlive() {
         TokenEntity token = getToken();
         String bearer = N26Constants.BEARER_TOKEN + token.getAccessToken();
 
@@ -99,7 +104,7 @@ public class N26ApiClient {
                 .get(HttpResponse.class);
     }
 
-    public TransactionResponse fetchTransactions(){
+    public TransactionResponse fetchTransactions() {
         TokenEntity token = getToken();
         String bearer = N26Constants.BEARER_TOKEN + token.getAccessToken();
 
@@ -107,7 +112,7 @@ public class N26ApiClient {
                 .get(TransactionResponse.class);
     }
 
-    public SavingsAccountResponse fetchSavingsAccounts(){
+    public SavingsAccountResponse fetchSavingsAccounts() {
         TokenEntity token = getToken();
         String bearer = N26Constants.BEARER_TOKEN + token.getAccessToken();
 
@@ -115,7 +120,29 @@ public class N26ApiClient {
                 .get(SavingsAccountResponse.class);
     }
 
-    public HttpResponse logout(){
+    public void fetchAndLogCreditInfo() {
+        TokenEntity tokenEntity = getToken();
+        String bearer = N26Constants.BEARER_TOKEN + tokenEntity.getAccessToken();
+        try {
+            String creditEg = getRequest(N26Constants.URLS.CREDIT_ELIGIBILITY, bearer)
+                    .get(String.class);
+            String creditDraft = getRequest(N26Constants.URLS.CREDIT_DRAFTS, bearer)
+                    .queryParam(N26Constants.Queryparams.FLOW_VERSION, N26Constants.Queryparams.FLOW_VERSION_V2)
+                    .get(String.class);
+            String fullInfo = getRequest(N26Constants.URLS.USER_FULL_INFO, bearer)
+                    .queryParam(N26Constants.Queryparams.FULL, N26Constants.Queryparams.FULL_TRUE)
+                    .get(String.class);
+
+            logger.info("{} response: {}", N26Constants.Logging.CREDIT_ELIGIBILITY, creditEg);
+            logger.info("{} response: {}", N26Constants.Logging.CREDIT_DRAFT, creditDraft);
+            logger.info("{} response: {}", N26Constants.Logging.FULL_USER_INFO, fullInfo);
+
+        } catch (Exception e) {
+            logger.warn("{} error: {}", N26Constants.Logging.CREDIT_ERROR, e.toString());
+        }
+    }
+
+    public HttpResponse logout() {
         TokenEntity token = getToken();
         String bearer = N26Constants.BEARER_TOKEN + token.getAccessToken();
         HttpResponse result = getRequest(N26Constants.URLS.LOGOUT, MediaType.APPLICATION_JSON_TYPE, bearer)
