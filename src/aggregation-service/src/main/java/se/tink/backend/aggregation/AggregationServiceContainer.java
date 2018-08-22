@@ -89,14 +89,16 @@ public class AggregationServiceContainer extends AbstractServiceContainer {
             serviceContext.getEncryptionServiceFactory().getEncryptionService().ping();
         }
 
+        AgentWorker agentWorker = injector.getInstance(AgentWorker.class);
+
         final AggregationServiceResource aggregationServiceResource = new AggregationServiceResource(serviceContext,
                 injector.getInstance(MetricRegistry.class), configuration.isUseAggregationController(),
                 new AggregationControllerAggregationClient(
                         configuration.getEndpoints().getAggregationcontroller(),
                         serviceContext.getCoordinationClient()),
-                injector.getInstance(AgentWorker.class));
+                        agentWorker);
 
-        environment.lifecycle().manage(injector.getInstance(AgentWorker.class));
+        environment.lifecycle().manage(agentWorker);
 
         CreditSafeServiceResource creditSafeServiceResource = new CreditSafeServiceResource(serviceContext);
 

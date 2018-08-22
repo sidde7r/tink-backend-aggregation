@@ -115,11 +115,6 @@ public class ListenableThreadPoolExecutor<T extends Runnable> implements Termina
         }
     }
 
-
-    public boolean isQueueFull(){
-        return queue.remainingCapacity() == 0;
-    }
-
     /**
      * Package private Constructor.
      * You probably want to use {@code ListenableThreadPoolExecutorBuilder} instead.
