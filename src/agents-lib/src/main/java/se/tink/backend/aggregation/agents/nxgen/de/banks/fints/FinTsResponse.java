@@ -11,6 +11,7 @@ import java.util.Objects;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.FinTsSegment;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsEscape;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsParser;
+import static se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants.StatusCode.PIN_TEMP_BLOCKED;
 
 public class FinTsResponse {
 
@@ -91,6 +92,11 @@ public class FinTsResponse {
     public boolean isSuccess() {
         Map<String, String> summary = this.getGlobalStatus();
         return summary.values().stream().noneMatch(status -> status.matches("^9.*"));
+    }
+
+    public boolean isAccountBlocked() {
+        Map<String, String> summary = this.getLocalStatus();
+        return summary.values().stream().anyMatch(status -> status.matches(PIN_TEMP_BLOCKED));
     }
 
     // <Message, StatusCode>
