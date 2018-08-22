@@ -1,20 +1,24 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale.authenticator.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale.authenticator.entities.LoginGridData;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale.entities.CommonEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale.authenticator.entities.DataEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class LoginGridResponse {
+public class AuthenticationResponse {
 
     @JsonProperty("commun")
-    private CommonEntity metaData;
+    private CommonEntity common;
     @JsonProperty("donnees")
-    private LoginGridData data;
+    private DataEntity data;
 
-    public LoginGridData getData() {
+    public CommonEntity getCommon() {
+        return common;
+    }
+
+    public DataEntity getData() {
         return data;
     }
-    
+
 }

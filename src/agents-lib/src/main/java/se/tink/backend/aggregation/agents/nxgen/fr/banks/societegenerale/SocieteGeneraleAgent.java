@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.common.config.SignatureKeyPair;
+import se.tink.libraries.uuid.UUIDUtils;
 
 public class SocieteGeneraleAgent extends NextGenerationAgent {
 
@@ -24,18 +25,22 @@ public class SocieteGeneraleAgent extends NextGenerationAgent {
     public SocieteGeneraleAgent(CredentialsRequest request,
             AgentContext context,
             SignatureKeyPair signatureKeyPair) {
+
         super(request, context, signatureKeyPair);
-        apiClient = new SocieteGeneraleApiClient(client);
+
+        apiClient = new SocieteGeneraleApiClient(client, persistentStorage);
+
+        checkDeviceId();
     }
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
-        client.setProxy("http://192.168.239.239:8888");
+
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new SocieteGeneraleAuthenticator(apiClient);
+        return new SocieteGeneraleAuthenticator(apiClient, persistentStorage);
     }
 
     @Override
@@ -70,11 +75,21 @@ public class SocieteGeneraleAgent extends NextGenerationAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new SocieteGeneraleSessionHandler();
+        return new SocieteGeneraleSessionHandler(apiClient);
     }
 
     @Override
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
+    }
+
+    private void checkDeviceId() {
+
+        String deviceId = persistentStorage.get(SocieteGeneraleConstants.StorageKey.DEVICE_ID);
+
+        if (deviceId == null) {
+            deviceId = UUIDUtils.generateUUID();
+            persistentStorage.put(SocieteGeneraleConstants.StorageKey.DEVICE_ID, deviceId);
+        }
     }
 }

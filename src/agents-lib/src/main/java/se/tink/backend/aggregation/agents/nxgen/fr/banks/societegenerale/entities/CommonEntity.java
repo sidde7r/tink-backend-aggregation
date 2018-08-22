@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class MetaData {
+public class CommonEntity {
+
     @JsonProperty("statut")
     private String status;
     @JsonProperty("raison")
@@ -12,4 +13,9 @@ public class MetaData {
     private String action;
     @JsonProperty("origine")
     private String origin;
+
+    public String getStatus() {
+        return status;
+    }
+
 }
