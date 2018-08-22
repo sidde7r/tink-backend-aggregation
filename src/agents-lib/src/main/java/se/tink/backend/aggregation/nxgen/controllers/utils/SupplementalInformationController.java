@@ -5,6 +5,7 @@ import com.google.common.base.Strings;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
@@ -21,6 +22,20 @@ public class SupplementalInformationController {
     public SupplementalInformationController(AgentContext context, Credentials credentials) {
         this.context = context;
         this.credentials = credentials;
+    }
+
+    public Optional<Map<String, String>> waitForSupplementalInformation(String key, long waitFor, TimeUnit unit) {
+        Optional<String> supplementalInformation = context.waitForSupplementalInformation(key, waitFor, unit);
+        if (!supplementalInformation.isPresent()) {
+            return Optional.empty();
+        }
+
+        return Optional.ofNullable(
+                SerializationUtils.deserializeFromString(
+                        supplementalInformation.get(),
+                        new TypeReference<HashMap<String, String>>() { }
+                )
+        );
     }
 
     public Map<String, String> askSupplementalInformation(Field... fields) throws SupplementalInfoException {
