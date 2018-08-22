@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.SwedbankSeSerializationUtils;
@@ -32,6 +33,7 @@ public abstract class BaseAbstractLoanDetailedEntity extends BaseAbstractLoanEnt
 
     protected Amount getMonthlyAmortization() {
         return allLoanDetails
+                .filter(ld -> Objects.nonNull(ld.getUpcomingInvoice()))
                 .map(ld -> ld.getUpcomingInvoice().getExpenses().stream()
                         .filter(ex -> SwedbankSEConstants.AMORTIZATION.equals(ex.getDescription()))
                         .map(ex -> ex.getAmount().getTinkAmount()).findFirst().orElseGet(() -> null))
