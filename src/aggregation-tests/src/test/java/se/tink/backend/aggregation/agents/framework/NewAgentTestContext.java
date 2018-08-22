@@ -154,6 +154,9 @@ public class NewAgentTestContext extends AgentContext {
                     TimeUnit.MINUTES);
 
             return supplementalInformation.orElse(null);
+        case AWAITING_MOBILE_BANKID_AUTHENTICATION:
+            // Do nothing as we cannot communicate to the app to open BankId.
+            return null;
         default:
             Assert.fail(String.format("Cannot handle credentials status: %s", credentials.getStatus()));
             return null;
