@@ -7,15 +7,17 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.core.AccountFlag;
+import se.tink.backend.core.Amount;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.serialization.utils.SerializationUtils;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.core.Amount;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public abstract class Account {
     private static final String BANK_IDENTIFIER_KEY = "bankIdentifier";
@@ -27,6 +29,7 @@ public abstract class Account {
     private String bankIdentifier;
     private HolderName holderName;
     private Map<String, String> temporaryStorage;
+    private List<AccountFlag> accountFlags;
 
     protected Account(Builder<? extends Account, ? extends Account.Builder> builder) {
         this.name = builder.getName();
@@ -37,7 +40,7 @@ public abstract class Account {
         this.bankIdentifier = builder.getBankIdentifier();
         this.holderName = builder.getHolderName();
         this.temporaryStorage = ImmutableMap.copyOf(builder.getTemporaryStorage());
-
+        this.accountFlags = ImmutableList.copyOf(builder.getAccountFlags());
         // Safe-guard against uniqueIdentifiers containing only formatting characters (e.g. '*' or '-').
         Preconditions.checkState(!Strings.isNullOrEmpty(uniqueIdentifier),
                 "Unique identifier was empty after sanitation.");
@@ -85,6 +88,10 @@ public abstract class Account {
         return Lists.newArrayList(this.identifiers);
     }
 
+    public List<AccountFlag> getAccountFlags() {
+        return Lists.newArrayList(this.accountFlags);
+    }
+
     private String getUniqueIdentifier() {
         return this.uniqueIdentifier;
     }
@@ -121,6 +128,7 @@ public abstract class Account {
         account.setIdentifiers(this.identifiers);
         account.setBankId(this.uniqueIdentifier);
         account.setHolderName(HolderName.toString(this.holderName));
+        account.setFlags(this.accountFlags);
 
         return account;
     }
@@ -147,6 +155,7 @@ public abstract class Account {
 
     public abstract static class Builder<A extends Account, T extends Builder<A, T>> {
         protected final List<AccountIdentifier> identifiers = Lists.newArrayList();
+        protected final List<AccountFlag> accountFlags = Lists.newArrayList();
         protected final Map<String, String> temporaryStorage = Maps.newHashMap();
         protected String name;
         protected String accountNumber;
@@ -203,6 +212,21 @@ public abstract class Account {
 
         public T addIdentifiers(Collection<AccountIdentifier> identifiers){
             thisObj.identifiers.addAll(identifiers);
+            return self();
+        }
+
+        public List<AccountFlag> getAccountFlags() {
+            return thisObj.accountFlags != null ? thisObj.accountFlags : Collections.emptyList();
+        }
+
+        public T addAccountFlag(AccountFlag accountFlag) {
+            thisObj.accountFlags.add(accountFlag);
+            return self();
+        }
+
+
+        public T addAccountFlags(Collection<AccountFlag> accountFlags){
+            thisObj.accountFlags.addAll(accountFlags);
             return self();
         }
 
