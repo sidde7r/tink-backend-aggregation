@@ -476,8 +476,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
             Optional<String> supplementalInformation = waitForSupplementalInformation(credentials.getId(), 2,
                     TimeUnit.MINUTES);
 
-            credentials.setSupplementalInformation(supplementalInformation.orElse(null));
-
             return supplementalInformation.orElse(null);
         } else {
             updateStatus(credentials.getStatus());
