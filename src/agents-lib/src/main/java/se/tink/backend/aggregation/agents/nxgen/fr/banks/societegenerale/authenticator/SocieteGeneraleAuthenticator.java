@@ -76,7 +76,6 @@ public class SocieteGeneraleAuthenticator implements Authenticator {
             indices.set(digit, i);
         }
 
-        StringBuilder sb = new StringBuilder();
         int[] encryptedPasscode = new int[passCode.length()];
         for (int i = 0; i < passCode.length(); i++) {
             int digit = Integer.parseInt(passCode.substring(i, i + 1));
