@@ -1,12 +1,16 @@
 import sys
 import argparse
 import os
-from gevent.pywsgi import WSGIServer
 from flask import Flask, jsonify, request, abort, Response
+from functools import wraps
+
+from memqueue import MemoryMessageQueue
+
+queue = MemoryMessageQueue()
 
 app = Flask(__name__)
 
-CREDENTIALS_PATH = "./credentials/"
+CREDENTIALS_PATH = os.path.dirname(os.path.realpath(__file__)) + "/credentials/"
 
 class SupplementalStdin(object):
     def __init__(self, fields):
@@ -65,7 +69,7 @@ def save_credential(provider, credentialId):
     with open(filename, "wb") as f:
         f.write(request.get_data())
 
-    return ('', 204)
+    return ("", 204)
 
 
 @app.route("/api/v1/credential/<provider>/<credentialId>", methods=("GET",))
@@ -79,13 +83,25 @@ def load_credential(provider, credentialId):
         abort(404, "credential not found")
 
 
-@app.route("/api/v1/supplemental", methods=("POST",))
-def supplemental():
+@app.route("/api/v1/supplemental/<key>", methods=("POST",))
+def request_supplemental(key):
     if not request.json:
         return None
 
     fields = request.get_json()
+
     answers = ask_user_for_data(fields)
+
+    # Put the answers on the queue so that it can be picked up
+    # when the agent asks for the supplemental information.
+    queue.put(key, answers)
+
+    return ("", 204)
+
+
+@app.route("/api/v1/supplemental/<key>/<timeout_seconds>", methods=("GET",))
+def get_supplemental(key, timeout_seconds):
+    answers = queue.get(key, int(timeout_seconds))
     return jsonify(answers)
 
 
@@ -106,11 +122,7 @@ def main():
     )
     args = parser.parse_args()
 
-    print("Agent test server listening on %s:%u" % (args.bind, args.port))
-
-    http_server = WSGIServer((args.bind, args.port), app, log=None)
-    http_server.serve_forever()
-
+    app.run(threaded=True, host=args.bind, port=args.port, load_dotenv=False)
     return 0
 
 

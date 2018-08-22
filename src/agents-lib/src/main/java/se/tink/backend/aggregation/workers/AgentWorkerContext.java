@@ -2,14 +2,12 @@ package se.tink.backend.aggregation.workers;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import io.dropwizard.lifecycle.Managed;
 import java.util.AbstractMap;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -75,11 +73,8 @@ import se.tink.libraries.cluster.Cluster;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.Counter;
-import se.tink.libraries.metrics.Histogram;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
-import se.tink.libraries.metrics.Timer;
-import se.tink.libraries.metrics.Timer.Context;
 import se.tink.libraries.uuid.UUIDUtils;
 
 public class AgentWorkerContext extends AgentContext implements Managed, SetAccountsToAggregateContext {
@@ -443,52 +438,52 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
     }
 
     @Override
-    public String requestSupplementalInformation(Credentials credentials, boolean wait) {
-        String supplementalInformation = null;
+    public Optional<String> waitForSupplementalInformation(String key, long waitFor, TimeUnit unit) {
+        DistributedBarrier lock = new DistributedBarrier(coordinationClient,
+                BarrierName.build(BarrierName.Prefix.SUPPLEMENTAL_INFORMATION, key));
+        try {
+            // Reset barrier.
+            lock.removeBarrier();
+            lock.setBarrier();
 
-        if (wait) {
-            DistributedBarrier lock = new DistributedBarrier(coordinationClient,
-                    BarrierName.build(BarrierName.Prefix.SUPPLEMENTAL_INFORMATION, request.getCredentials().getId()));
+            if (lock.waitOnBarrier(waitFor, unit)) {
+                String supplementalInformation = supplementalInformationController.getSupplementalInformation(key);
 
-            try {
-                // Reset barrier.
-
-                lock.removeBarrier();
-                lock.setBarrier();
-
-                updateCredentialsExcludingSensitiveInformation(credentials);
-
-                // Wait for the barrier and the supplemental information.
-
-                if (lock.waitOnBarrier(2, TimeUnit.MINUTES)) {
-
-                    supplementalInformation = supplementalInformationController.getSupplementalInformation(
-                                credentials.getId());
-
-                    credentials.setSupplementalInformation(supplementalInformation);
-                    // TODO: We've noticed that we get app crashes for Sparbanken Syd and we believe the reason is that
-                    //       we trigger an new bank id without supplemental information as null.
-                    //       Let's remove comment this out. If we haven't noticed any problems remove the code
-                    //       and this comment.
-                    // updateCredentialsExcludingSensitiveInformation(credentials);
-
-                    if (Objects.equals(supplementalInformation, "null")) {
-                        log.info("Supplemental information request was cancelled by client (returned null)");
-                        supplementalInformation = null;
-                    }
-                } else {
-                    log.info("Supplemental information request timed out");
-                    // Did not get lock, release anyways and return.
-                    lock.removeBarrier();
+                if (Objects.equals(supplementalInformation, "null")) {
+                    log.info("Supplemental information request was cancelled by client (returned null)");
+                    return Optional.empty();
                 }
-            } catch (Exception e) {
-                log.error("Caught exception while waiting for supplemental information", e);
+
+                return Optional.of(supplementalInformation);
+            } else {
+                log.info("Supplemental information request timed out");
+                // Did not get lock, release anyways and return.
+                lock.removeBarrier();
             }
+
+        } catch (Exception e) {
+            log.error("Caught exception while waiting for supplemental information", e);
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
+    public String requestSupplementalInformation(Credentials credentials, boolean wait) {
+        if (wait) {
+            updateCredentialsExcludingSensitiveInformation(credentials);
+
+            Optional<String> supplementalInformation = waitForSupplementalInformation(credentials.getId(), 2,
+                    TimeUnit.MINUTES);
+
+            credentials.setSupplementalInformation(supplementalInformation.orElse(null));
+
+            return supplementalInformation.orElse(null);
         } else {
             updateStatus(credentials.getStatus());
         }
 
-        return supplementalInformation;
+        return null;
     }
 
     @Override
