@@ -6,6 +6,9 @@ import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
@@ -112,8 +115,9 @@ public class AgentWorkerOperationFactory {
 
     private MetricRegistry metricRegistry;
 
+    @Inject
     public AgentWorkerOperationFactory(ServiceContext serviceContext, MetricRegistry metricRegistry,
-            boolean useAggregationController, AggregationControllerAggregationClient aggregationControllerAggregationClient) {
+                                       @Named("useAggregationController") boolean useAggregationController, AggregationControllerAggregationClient aggregationControllerAggregationClient) {
         this.serviceContext = serviceContext;
 
         // Initialize agent worker command states.

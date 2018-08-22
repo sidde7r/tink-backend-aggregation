@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.client.InProcessAggregationServiceFactory;
 import se.tink.backend.aggregation.guice.configuration.AggregationModuleFactory;
 import se.tink.backend.aggregation.resources.AggregationServiceResource;
 import se.tink.backend.aggregation.resources.CreditSafeServiceResource;
+import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.backend.common.AbstractServiceContainer;
 import se.tink.backend.common.ServiceContext;
 import se.tink.backend.common.config.ServiceConfiguration;
@@ -73,7 +74,7 @@ public class AggregationServiceContainer extends AbstractServiceContainer {
 
         Injector injector = DropwizardLifecycleInjectorFactory.build(
                 environment.lifecycle(),
-                AggregationModuleFactory.build(configuration, environment.jersey()));
+                AggregationModuleFactory.build(configuration, environment));
 
         ServiceContext serviceContext = injector.getInstance(ServiceContext.class);
         buildContainer(configuration, environment, serviceContext, injector);
@@ -88,12 +89,16 @@ public class AggregationServiceContainer extends AbstractServiceContainer {
             serviceContext.getEncryptionServiceFactory().getEncryptionService().ping();
         }
 
+        AgentWorker agentWorker = injector.getInstance(AgentWorker.class);
+
         final AggregationServiceResource aggregationServiceResource = new AggregationServiceResource(serviceContext,
                 injector.getInstance(MetricRegistry.class), configuration.isUseAggregationController(),
                 new AggregationControllerAggregationClient(
                         configuration.getEndpoints().getAggregationcontroller(),
-                        serviceContext.getCoordinationClient()));
-        environment.lifecycle().manage(aggregationServiceResource);
+                        serviceContext.getCoordinationClient()),
+                        agentWorker);
+
+        environment.lifecycle().manage(agentWorker);
 
         CreditSafeServiceResource creditSafeServiceResource = new CreditSafeServiceResource(serviceContext);
 

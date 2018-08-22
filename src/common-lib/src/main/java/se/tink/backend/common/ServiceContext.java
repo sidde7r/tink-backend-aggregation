@@ -23,6 +23,7 @@ import se.tink.backend.common.config.repository.SingletonRepositoryConfiguration
 import se.tink.backend.common.repository.RepositoryFactory;
 import se.tink.backend.common.utils.ExecutorServiceUtils;
 import se.tink.backend.encryption.client.EncryptionServiceFactory;
+import se.tink.backend.queue.QueueProducer;
 import se.tink.backend.system.client.SystemServiceFactory;
 import se.tink.backend.utils.LogUtils;
 import se.tink.libraries.metrics.MetricRegistry;
@@ -49,6 +50,7 @@ public class ServiceContext implements Managed, RepositoryFactory {
     private LoadingCache<Class<?>, Object> DAOs;
     private final boolean isAggregationCluster;
     private final boolean isProvidersOnAggregation;
+    private QueueProducer producer;
 
     private ListenableThreadPoolExecutor<Runnable> trackingExecutorService;
 
@@ -60,6 +62,7 @@ public class ServiceContext implements Managed, RepositoryFactory {
 
     @Inject
     public ServiceContext(@Named("useAggregationController") boolean isUseAggregationController,
+
             final ServiceConfiguration configuration, MetricRegistry metricRegistry,
             CacheClient cacheClient, CuratorFramework zookeeperClient,
             ServiceFactory serviceFactory, SystemServiceFactory systemServiceFactory,
@@ -69,7 +72,8 @@ public class ServiceContext implements Managed, RepositoryFactory {
             @Named("executor") ListenableThreadPoolExecutor<Runnable> executorService,
             @Named("trackingExecutor") ListenableThreadPoolExecutor<Runnable> trackingExecutorService,
             @Named("isAggregationCluster") boolean isAggregationCluster,
-            @Named("isProvidersOnAggregation") boolean isProvidersOnAggregation) {
+            @Named("isProvidersOnAggregation") boolean isProvidersOnAggregation,
+            QueueProducer producer) {
 
         this.isUseAggregationController = isUseAggregationController;
         this.serviceFactory = serviceFactory;
@@ -85,6 +89,11 @@ public class ServiceContext implements Managed, RepositoryFactory {
         this.trackingExecutorService = trackingExecutorService;
         this.isAggregationCluster = isAggregationCluster;
         this.isProvidersOnAggregation = isProvidersOnAggregation;
+        this.producer = producer;
+    }
+
+    public QueueProducer getProducer() {
+        return producer;
     }
 
     public AggregationServiceFactory getAggregationServiceFactory() {
@@ -267,4 +276,5 @@ public class ServiceContext implements Managed, RepositoryFactory {
     public boolean isProvidersOnAggregation() {
         return isProvidersOnAggregation;
     }
+
 }
