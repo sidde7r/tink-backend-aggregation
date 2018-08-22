@@ -26,13 +26,11 @@ public class RateLimitedExecutorService implements Managed {
     private LoadingCache<Provider, RateLimitedExecutorProxy> rateLimitedRefreshInformationRequestExecutorByProvider;
     private ListenableThreadPoolExecutor<Runnable> executorService;
     private final AtomicReference<ProviderRateLimiterFactory> rateLimiterFactory;
-    private int maxQueuedItems;
 
     public RateLimitedExecutorService(ListenableThreadPoolExecutor<Runnable> executorService,
-            MetricRegistry metricRegistry, int maxQueuedItems) {
+            MetricRegistry metricRegistry) {
         this.executorService = executorService;
         this.metricRegistry = metricRegistry;
-        this.maxQueuedItems = maxQueuedItems;
 
         this.rateLimiterFactory = new AtomicReference<ProviderRateLimiterFactory>(
                 new CachingProviderRateLimiterFactory(new LoggingProviderRateLimiterFactory(
@@ -74,8 +72,7 @@ public class RateLimitedExecutorService implements Managed {
                                         .setNameFormat(provider.getName() + "-rate-limiter-%d")
                                         .build(),
                                 metricRegistry,
-                                labels,
-                                maxQueuedItems
+                                labels
                         );
                     }
                 });

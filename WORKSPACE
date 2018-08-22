@@ -1002,8 +1002,8 @@ maven_jar(
 
 maven_jar(
     name = "commons_codec_commons_codec",
-    artifact = "commons-codec:commons-codec:1.10",
-    sha1 = "4b95f4897fa13f2cd904aee711aeafc0c5295cd8",
+    artifact = "commons-codec:commons-codec:1.6",
+    sha1 = "b7f0fc8f61ecadeb3695f0b9464755eee44374d4",
 )
 
 maven_jar(
@@ -1293,30 +1293,6 @@ maven_jar(
     artifact = "com.amazonaws:aws-java-sdk:1.4.4.2",
     sha1 = "aed880d0fc444c0d147c58dc337ec94204042b58",
 )
-
-maven_jar(
-    name = "com_amazonaws_jmespath_java",
-    artifact = "com.amazonaws:jmespath-java:1.11.381",
-    sha1 = "c428e44fa35032bbc89c6aaab15f1f3857c2afbe"
-    )
-
-maven_jar(
-    name = "com_amazonaws_aws_java_sdk_core",
-    artifact = "com.amazonaws:aws-java-sdk-core:1.11.381",
-    sha1 = "7540dfa848acd7770e21ef982d67fbb612b33d7f"
-    )
-
-maven_jar(
-    name = "com_amazonaws_aws_java_sdk_code_generator",
-    artifact = "com.amazonaws:aws-java-sdk-code-generator:1.11.381",
-    sha1 = "d8ed76e95c0313e3b9898c7cc5cc40b935d0c32b"
-    )
-
-maven_jar(
-    name = "com_amazonaws_aws_java_sdk_sqs",
-    artifact = "com.amazonaws:aws-java-sdk-sqs:1.11.381",
-    sha1 = "4ea1ad090c04fde806eb4fa24b10fa5748900ef1"
-    )
 
 maven_jar(
     name = "org_springframework_data_spring_data_jpa",

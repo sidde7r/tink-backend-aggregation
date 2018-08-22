@@ -101,15 +101,6 @@ integrations:
   sbab:
     signBaseUrl: https://secure.sbab.se
 
-
-sqsQueueConfiguration:
-  enabled: false
-  url: http://localhost:4576/
-  region: local
-  awsAccessKeyId: foobar
-  awsSecretKey: foobar
-  queueName: queue
-
 logging:
   level: INFO
   loggers:
