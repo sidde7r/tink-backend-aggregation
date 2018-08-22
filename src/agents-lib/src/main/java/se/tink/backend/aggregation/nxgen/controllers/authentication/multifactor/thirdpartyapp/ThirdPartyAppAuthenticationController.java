@@ -5,38 +5,37 @@ import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.common.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.libraries.i18n.LocalizableKey;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class ThirdPartyAppAuthenticationController<T> implements MultiFactorAuthenticator {
 
     private final ThirdPartyAppAuthenticator<T> authenticator;
-    private final AgentContext context;
+    private final SupplementalInformationController supplementalInformationController;
     private final int maxPollAttempts;
 
     private static final int DEFAULT_MAX_ATTEMPTS = 90;
     private static final long SLEEP_SECONDS = TimeUnit.SECONDS.toSeconds(2);
 
-    public ThirdPartyAppAuthenticationController(ThirdPartyAppAuthenticator<T> authenticator, AgentContext context) {
-        this(authenticator, context, DEFAULT_MAX_ATTEMPTS);
+    public ThirdPartyAppAuthenticationController(ThirdPartyAppAuthenticator<T> authenticator,
+            SupplementalInformationController supplementalInformationController) {
+        this(authenticator, supplementalInformationController, DEFAULT_MAX_ATTEMPTS);
     }
 
-    public ThirdPartyAppAuthenticationController(ThirdPartyAppAuthenticator<T> authenticator, AgentContext context,
-            int maxPollAttempts) {
+    public ThirdPartyAppAuthenticationController(ThirdPartyAppAuthenticator<T> authenticator,
+            SupplementalInformationController supplementalInformationController, int maxPollAttempts) {
         Preconditions.checkArgument(maxPollAttempts > 0);
         this.authenticator = authenticator;
-        this.context = context;
+        this.supplementalInformationController = supplementalInformationController;
         this.maxPollAttempts = maxPollAttempts;
     }
 
@@ -46,13 +45,11 @@ public class ThirdPartyAppAuthenticationController<T> implements MultiFactorAuth
         return CredentialsTypes.MOBILE_BANKID;
     }
 
-    private void openThirdPartyApp(Credentials credentials) {
+    private void openThirdPartyApp() {
         ThirdPartyAppAuthenticationPayload payload = authenticator.getAppPayload();
         Preconditions.checkNotNull(payload);
 
-        credentials.setSupplementalInformation(SerializationUtils.serializeToString(payload));
-        credentials.setStatus(CredentialsStatus.AWAITING_THIRD_PARTY_APP_AUTHENTICATION);
-        context.requestSupplementalInformation(credentials, false);
+        supplementalInformationController.openThirdPartyApp(payload);
     }
 
     private ThirdPartyAppException decorateException(ThirdPartyAppStatus status, ThirdPartyAppError error) {
@@ -82,7 +79,7 @@ public class ThirdPartyAppAuthenticationController<T> implements MultiFactorAuth
         NotImplementedException.throwIf(!Objects.equals(credentials.getType(), getType()),
                 String.format("Authentication method not implemented for CredentialsType: %s", credentials.getType()));
 
-        openThirdPartyApp(credentials);
+        openThirdPartyApp();
 
         ThirdPartyAppResponse<T> response = authenticator.init();
 

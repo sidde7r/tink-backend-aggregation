@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.utils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +13,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoErro
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.Field;
+import se.tink.backend.common.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SupplementalInformationController {
@@ -51,5 +53,13 @@ public class SupplementalInformationController {
                         }
                 ))
                 .orElseThrow(() -> new IllegalStateException("SupplementalInformationResponse cannot be deserialized"));
+    }
+
+    public void openThirdPartyApp(ThirdPartyAppAuthenticationPayload payload) {
+        Preconditions.checkNotNull(payload);
+
+        credentials.setSupplementalInformation(SerializationUtils.serializeToString(payload));
+        credentials.setStatus(CredentialsStatus.AWAITING_THIRD_PARTY_APP_AUTHENTICATION);
+        context.requestSupplementalInformation(credentials, false);
     }
 }
