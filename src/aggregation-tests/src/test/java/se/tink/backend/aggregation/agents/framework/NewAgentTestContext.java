@@ -157,6 +157,9 @@ public class NewAgentTestContext extends AgentContext {
         case AWAITING_MOBILE_BANKID_AUTHENTICATION:
             // Do nothing as we cannot communicate to the app to open BankId.
             return null;
+        case AWAITING_THIRD_PARTY_APP_AUTHENTICATION:
+            AgentTestServerClient.openThirdPartyApp(credentials.getSupplementalInformation());
+            return null;
         default:
             Assert.fail(String.format("Cannot handle credentials status: %s", credentials.getStatus()));
             return null;

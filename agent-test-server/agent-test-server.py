@@ -3,6 +3,7 @@ import argparse
 import os
 from flask import Flask, jsonify, request, abort, Response
 from functools import wraps
+import webbrowser
 
 from memqueue import MemoryMessageQueue
 
@@ -103,6 +104,27 @@ def request_supplemental(key):
 def get_supplemental(key, timeout_seconds):
     answers = queue.get(key, int(timeout_seconds))
     return jsonify(answers)
+
+
+# only support web browser as app.
+@app.route("/api/v1/thirdparty/open", methods=("POST",))
+def thirdparty_open():
+
+    def get_ios_url(payload):
+        return payload.get("ios", {}).get("deepLinkUrl", None)
+
+    if not request.json:
+        return None
+
+    payload = request.get_json()
+
+    url = get_ios_url(payload)
+    if not url:
+        return ("invalid payload", 500)
+
+    webbrowser.open_new_tab(url)
+
+    return ("", 204)
 
 
 def main():
