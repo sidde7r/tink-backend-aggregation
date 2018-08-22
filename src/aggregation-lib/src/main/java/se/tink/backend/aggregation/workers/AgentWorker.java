@@ -41,7 +41,7 @@ public class AgentWorker implements Managed {
     private static final int MAX_QUEUED_UP = 180000;
 
     // Automatic Refreshes will be put on a persistent queue. This queue will be used as a buffer only.
-    private static final int MAX_QUEUE_AUTOMATIC_REFRESH = 1;
+    private static final int MAX_QUEUE_AUTOMATIC_REFRESH = 10;
 
     /**
      * The time in minutes we wait until we forcefully shut down all agent work. Wirst case scenario is that an
@@ -86,7 +86,7 @@ public class AgentWorker implements Managed {
         automaticRefreshExecutorService = ListenableThreadPoolExecutor.builder(
                 automaticExecutorServiceQueue,
                 new TypedThreadPoolBuilder(NUMBER_OF_THREADS, threadFactory))
-                .withMetric(metricRegistry, "aggregation_executor_service")
+                .withMetric(metricRegistry, "automatic_refresh_aggregation_executor_service")
                 .build();
 
         automaticRefreshRateLimitedExecutorService = new RateLimitedExecutorService(automaticRefreshExecutorService,
@@ -94,7 +94,6 @@ public class AgentWorker implements Managed {
                 MAX_QUEUE_AUTOMATIC_REFRESH);
         automaticRefreshRateLimitedExecutorService.start();
     }
-
 
     public RateLimitedExecutorService getRateLimitedExecutorService() {
         return rateLimitedExecutorService;

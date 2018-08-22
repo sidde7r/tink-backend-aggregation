@@ -10,7 +10,6 @@ public class AgentWorkerRefreshOperationCreatorWrapper implements Runnable {
     private RefreshInformationRequest request;
     private ClusterInfo clusterInfo;
 
-
     AgentWorkerRefreshOperationCreatorWrapper(AgentWorkerOperationFactory agentWorkerCommandFactory, RefreshInformationRequest request, ClusterInfo clusterInfo) {
         this.agentWorkerCommandFactory = agentWorkerCommandFactory;
         this.request = request;

@@ -40,7 +40,7 @@ import se.tink.libraries.http.utils.HttpResponseHelper;
 import se.tink.libraries.metrics.MetricRegistry;
 
 @Path("/aggregation")
-public class AggregationServiceResource implements AggregationService, Managed {
+public class AggregationServiceResource implements AggregationService {
     private final QueueProducer producer;
     @Context
     private HttpServletRequest httpRequest;
@@ -154,14 +154,6 @@ public class AggregationServiceResource implements AggregationService, Managed {
         // TODO: Add commands appropriate for doing an inline refresh here in next iteration.
 
         return updateCredentialsOperation.getRequest().getCredentials();
-    }
-
-    @Override
-    public void start() throws Exception {
-    }
-
-    @Override
-    public void stop() throws Exception {
     }
 
     private static ProviderRateLimiterFactory constructProviderRateLimiterFactoryFromRequest(

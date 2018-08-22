@@ -73,7 +73,7 @@ public class SqsConsumer implements Managed, QueueConsumer {
                 consumed = true;
             } catch (RejectedExecutionException e) {
                 Thread.sleep(50); // Wait 50ms to not spam either system
-                log.info("" + sqsMessage.getMessageId());
+                log.info("Attempt (" + tries + ") to queue with message_id: " + sqsMessage.getMessageId());
                 if (!running.get() && tries > 100) {
                     // If we are about to shutdown, don't retry-adding for more than 5000ms (sleep of 50ms times 100)
                     break;
@@ -106,3 +106,5 @@ public class SqsConsumer implements Managed, QueueConsumer {
         running.set(false);
     }
 }
+
+
