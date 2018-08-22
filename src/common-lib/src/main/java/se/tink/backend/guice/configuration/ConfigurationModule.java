@@ -11,6 +11,7 @@ import se.tink.backend.guice.annotations.AggregationControllerConfiguration;
 import se.tink.backend.guice.annotations.EncryptionConfiguration;
 import se.tink.backend.guice.annotations.MainConfiguration;
 import se.tink.backend.guice.annotations.SystemConfiguration;
+import se.tink.backend.guice.annotations.ProviderConfiguration;
 import se.tink.libraries.abnamro.config.AbnAmroConfiguration;
 import se.tink.libraries.cluster.Cluster;
 import se.tink.libraries.discovery.CoordinationConfiguration;
@@ -40,6 +41,8 @@ public class ConfigurationModule extends AbstractModule {
                 .toProvider(Providers.of(configuration.getEndpoints().getCategorization()));
         bind(EndpointConfiguration.class).annotatedWith(AggregationControllerConfiguration.class)
                 .toProvider(Providers.of(configuration.getEndpoints().getAggregationcontroller()));
+        bind(EndpointConfiguration.class).annotatedWith(ProviderConfiguration.class)
+                .toProvider(Providers.of(configuration.getEndpoints().getProviderConfiguration()));
         bind(EndpointsConfiguration.class).toProvider(Providers.of(configuration.getEndpoints()));
 
         bindConstant().annotatedWith(Names.named("developmentMode")).to(configuration.isDevelopmentMode());

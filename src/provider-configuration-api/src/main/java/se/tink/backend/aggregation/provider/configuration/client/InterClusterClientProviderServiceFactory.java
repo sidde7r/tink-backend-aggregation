@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.provider.configuration.client;
 
-
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.sun.jersey.api.client.Client;
@@ -13,20 +12,20 @@ import se.tink.libraries.http.client.BasicWebServiceClassBuilder;
 import se.tink.libraries.http.client.ServiceClassBuilder;
 import se.tink.libraries.jersey.utils.JerseyUtils;
 
-public class ClientProviderServiceFactory implements ProviderServiceFactory{
+public class InterClusterClientProviderServiceFactory implements InterClusterProviderServiceFactory {
     private ServiceClassBuilder builder;
 
-    public ClientProviderServiceFactory(byte[] pinnedCertificates, String host, ClientFilter clientFilter, String accessToken){
+    public InterClusterClientProviderServiceFactory(byte[] pinnedCertificates, String host, ClientFilter
+            clientFilter, String accessToken){
         this(new BasicWebServiceClassBuilder(createResource(pinnedCertificates, host, clientFilter, accessToken)));
     }
 
-    private static WebResource createResource(byte[] pinnedCertificates,
-            String host, ClientFilter clientFilter, String accessToken){
+    private InterClusterClientProviderServiceFactory(ServiceClassBuilder builder){ this.builder = builder; }
 
-        Preconditions.checkState(!Strings.isNullOrEmpty(host),
-                "Host cannot be empty");
-        Preconditions.checkState(!Objects.isNull(clientFilter),
-                "The provider service requires");
+    private static WebResource createResource(byte[] pinnedCertificates, String host, ClientFilter clientFilter,
+            String accessToken){
+        Preconditions.checkState(!Strings.isNullOrEmpty(host), "Host cannot be empty");
+        Preconditions.checkState(!Objects.isNull(clientFilter), "Cluster info missing");
 
         Client client = JerseyUtils.getClusterClient(pinnedCertificates, "", false);
         client.addFilter(clientFilter);
@@ -34,12 +33,8 @@ public class ClientProviderServiceFactory implements ProviderServiceFactory{
         return client.resource(host);
     }
 
-    private ClientProviderServiceFactory(ServiceClassBuilder builder) {
-        this.builder = builder;
-    }
-
     @Override
-    public ProviderService getProviderSerive() {
+    public ProviderService getProviderService() {
         return builder.build(ProviderService.class);
     }
 

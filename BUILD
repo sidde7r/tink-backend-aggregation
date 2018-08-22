@@ -181,6 +181,7 @@ java_library(
         ":encryption-api",
         ":main-api",
         ":system-api",
+        ":provider-configuration-api",
 
         "//src/libraries/http:http-annotations",
         "//src/libraries/http:http-utils",
@@ -364,6 +365,7 @@ java_library(
         ":system-api",
         ":agents-lib",
         ":aggregationcontroller-api",
+        ":provider-configuration-api",
 
         "//src/libraries/uuid:uuid",
         "//src/libraries/http:http-utils",
