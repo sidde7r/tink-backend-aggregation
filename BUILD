@@ -182,8 +182,7 @@ java_library(
         ":main-api",
         ":system-api",
         ":provider-configuration-api",
-        "//src/queue-lib:queue-lib",
-        "//src/queue-sqs:queue-sqs",
+
         "//src/libraries/http:http-annotations",
         "//src/libraries/http:http-utils",
         "//src/libraries/auth:auth",
@@ -368,10 +367,6 @@ java_library(
         ":aggregationcontroller-api",
         ":provider-configuration-api",
 
-
-        "//src/queue-lib:queue-lib",
-        "//src/queue-sqs:queue-sqs",
-        "//third_party:com_amazonaws_aws_java_sdk_sqs",
         "//src/libraries/uuid:uuid",
         "//src/libraries/http:http-utils",
         "//src/libraries/serialization_utils:serialization-utils",
@@ -429,7 +424,6 @@ java_library(
         "//third_party:org_assertj_assertj_core",
         "//third_party:net_sourceforge_tess4j",
         "//third_party:com_auth0_java_jwt",
-        "//third_party:org_xerial_snappy_snappy_java",
 
         "//third_party:net_sourceforge_cssparser_cssparser",
 

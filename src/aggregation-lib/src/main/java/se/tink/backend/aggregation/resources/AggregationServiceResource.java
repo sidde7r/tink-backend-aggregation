@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAg
 import se.tink.backend.aggregation.api.AggregationService;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
-import se.tink.backend.aggregation.models.RefreshInformation;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
 import se.tink.backend.aggregation.rpc.CreateCredentialsRequest;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -35,13 +34,11 @@ import se.tink.backend.aggregation.workers.ratelimit.OverridingProviderRateLimit
 import se.tink.backend.aggregation.workers.ratelimit.ProviderRateLimiterFactory;
 import se.tink.backend.common.ServiceContext;
 import se.tink.backend.common.repository.mysql.aggregation.clusterhostconfiguration.ClusterHostConfigurationRepository;
-import se.tink.backend.queue.QueueProducer;
 import se.tink.libraries.http.utils.HttpResponseHelper;
 import se.tink.libraries.metrics.MetricRegistry;
 
 @Path("/aggregation")
-public class AggregationServiceResource implements AggregationService {
-    private final QueueProducer producer;
+public class AggregationServiceResource implements AggregationService, Managed {
     @Context
     private HttpServletRequest httpRequest;
 
@@ -60,17 +57,16 @@ public class AggregationServiceResource implements AggregationService {
      */
     public AggregationServiceResource(ServiceContext context, MetricRegistry metricRegistry,
             boolean useAggregationController,
-            AggregationControllerAggregationClient aggregationControllerAggregationClient,
-            AgentWorker agentWorker) {
+            AggregationControllerAggregationClient aggregationControllerAggregationClient) {
         this.serviceContext = context;
-        this.agentWorker = agentWorker;
+
+        this.agentWorker = new AgentWorker(metricRegistry);
         this.agentWorkerCommandFactory = new AgentWorkerOperationFactory(serviceContext, metricRegistry,
                 useAggregationController, aggregationControllerAggregationClient);
         this.supplementalInformationController = new SupplementalInformationController(serviceContext.getCacheClient(),
                 serviceContext.getCoordinationClient());
         this.clusterHostConfigurationRepository = serviceContext.getRepository(ClusterHostConfigurationRepository.class);
         this.isAggregationCluster = serviceContext.isAggregationCluster();
-        this.producer = this.serviceContext.getProducer();
     }
 
 
@@ -126,17 +122,15 @@ public class AggregationServiceResource implements AggregationService {
         if (request.isManual()) {
             agentWorker.execute(agentWorkerCommandFactory.createRefreshOperation(clusterInfo, request));
         } else {
-            if (producer.isAvailable()) {
-                producer.send(new RefreshInformation(request, clusterInfo));
-            } else {
-                agentWorker.executeAutomaticRefresh(AgentWorkerRefreshOperationCreatorWrapper.of(agentWorkerCommandFactory, request, clusterInfo));
-            }
+            agentWorker.executeAutomaticRefresh(AgentWorkerRefreshOperationCreatorWrapper.of(agentWorkerCommandFactory, request, clusterInfo));
         }
+
     }
 
     @Override
     public void transfer(final TransferRequest request, ClusterInfo clusterInfo) throws Exception {
         agentWorker.execute(agentWorkerCommandFactory.createExecuteTransferOperation(clusterInfo, request));
+
     }
 
     @Override
@@ -154,6 +148,16 @@ public class AggregationServiceResource implements AggregationService {
         // TODO: Add commands appropriate for doing an inline refresh here in next iteration.
 
         return updateCredentialsOperation.getRequest().getCredentials();
+    }
+
+    @Override
+    public void start() throws Exception {
+        agentWorker.start();
+    }
+
+    @Override
+    public void stop() throws Exception {
+        agentWorker.stop();
     }
 
     private static ProviderRateLimiterFactory constructProviderRateLimiterFactoryFromRequest(

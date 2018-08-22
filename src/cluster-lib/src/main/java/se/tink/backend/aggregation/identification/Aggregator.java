@@ -4,11 +4,8 @@ import com.google.common.base.Strings;
 
 public class Aggregator {
 
-    private String aggregatorIdentifier;
+    private final String aggregatorIdentifier;
     public final static String DEFAULT = "Tink";
-
-    public Aggregator() {
-    }
 
     public Aggregator(String aggregatorIdentifier){
         this.aggregatorIdentifier = aggregatorIdentifier;
@@ -34,7 +31,4 @@ public class Aggregator {
         return  Aggregator.of(Aggregator.DEFAULT);
     }
 
-    public void setAggregatorIdentifier(String aggregatorIdentifier) {
-        this.aggregatorIdentifier = aggregatorIdentifier;
-    }
 }
