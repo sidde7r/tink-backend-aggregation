@@ -62,12 +62,6 @@ public class ServiceConfiguration extends Configuration {
     @JsonProperty
     private SignatureKeyPair signatureKeyPair = new SignatureKeyPair();
 
-    @JsonProperty
-    private String clusterName = null;
-
-    @JsonProperty
-    private String clusterEnvironment = null;
-
     public AbnAmroConfiguration getAbnAmro() {
         return abnAmro;
     }
@@ -151,13 +145,5 @@ public class ServiceConfiguration extends Configuration {
 
     public SignatureKeyPair getSignatureKeyPair() {
         return signatureKeyPair;
-    }
-
-    public String getClusterEnvironment() {
-        return clusterEnvironment;
-    }
-
-    public String getClusterName() {
-        return clusterName;
     }
 }

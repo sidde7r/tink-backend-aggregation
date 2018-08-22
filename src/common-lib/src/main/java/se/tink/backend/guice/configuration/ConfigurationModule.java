@@ -53,8 +53,6 @@ public class ConfigurationModule extends AbstractModule {
                 .to(configuration.isAggregationCluster());
         bindConstant().annotatedWith(Names.named("isProvidersOnAggregation"))
                 .to(configuration.isProvidersOnAggregation());
-        bindConstant().annotatedWith(Names.named("clusterName")).to(configuration.getClusterName());
-        bindConstant().annotatedWith(Names.named("clusterEnvironment")).to(configuration.getClusterEnvironment());
 
         // Tink monolith (common-lib and main-api) configurations
         bind(AbnAmroConfiguration.class).toProvider(Providers.of(configuration.getAbnAmro()));
