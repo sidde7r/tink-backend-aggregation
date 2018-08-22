@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints;
 
+import com.google.common.collect.ImmutableList;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
 public class FinTsConstants {
@@ -88,6 +89,13 @@ public class FinTsConstants {
 
         public final static String MT940_TURNOVER_FIELD = ":61:";
         public final static String MT940_MULTIPURPOSE_FIELD = ":86:";
+    }
+
+    public static class SepaAccountIdentifiers {
+        public static final ImmutableList<String> KNOWN_SAVINGS_ACCOUNT_NAMES = ImmutableList.of("extra-konto", "sparbrief", "vl-sparen");
+        public static final ImmutableList<String> ACCOUNT_TYPE_SAVINGS_TOKENS = ImmutableList.of("spar");
+        public static final ImmutableList<String> KNOWN_INVESTMENT_ACCOUNT_NAMES = ImmutableList.of("direkt-depot");
+        public static final ImmutableList<String> ACCOUNT_TYPE_INVESTMENT_TOKENS = ImmutableList.of("depot");
     }
 
     public static class LogTags {
