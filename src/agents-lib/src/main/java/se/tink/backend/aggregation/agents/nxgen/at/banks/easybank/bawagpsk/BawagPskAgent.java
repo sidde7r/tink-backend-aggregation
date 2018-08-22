@@ -20,16 +20,15 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class BawagPskAgent extends NextGenerationAgent {
 
     private final BawagPskApiClient apiClient;
 
-    public BawagPskAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
-        SessionStorage sessionStorage = new SessionStorage();
+    public BawagPskAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
         this.apiClient = new BawagPskApiClient(this.client, sessionStorage, request.getProvider());
     }
 

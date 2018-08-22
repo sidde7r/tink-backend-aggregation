@@ -32,7 +32,7 @@ public class TransactionEntity {
     @JsonIgnore
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setAmount(balance.parseToTinkAmount())
+                .setAmount(amount.parseToTinkAmount())
                 .setDate(date)
                 .setDescription(concept)
                 .build();

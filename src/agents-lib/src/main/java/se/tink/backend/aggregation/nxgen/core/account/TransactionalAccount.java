@@ -17,18 +17,17 @@ public class TransactionalAccount extends Account {
     }
 
     public static Builder<?, ?> builder(AccountTypes type, String uniqueIdentifier, Amount balance) {
-        return builder(type)
-                .setUniqueIdentifier(uniqueIdentifier)
+        return builder(type, uniqueIdentifier)
                 .setBalance(balance);
     }
 
-    public static Builder<? extends Account, ?> builder(AccountTypes type) {
+    public static Builder<? extends Account, ?> builder(AccountTypes type, String uniqueIdentifier) {
         switch (type) {
         case SAVINGS:
-            return SavingsAccount.builder();
+            return SavingsAccount.builder(uniqueIdentifier);
         case CHECKING:
         case OTHER:
-            return CheckingAccount.builder();
+            return CheckingAccount.builder(uniqueIdentifier);
         default:
             throw new IllegalStateException(
                     String.format("Unknown TransactionalAccount type (%s)", type));
@@ -38,8 +37,8 @@ public class TransactionalAccount extends Account {
     public abstract static class Builder<A extends TransactionalAccount, T extends Builder<A, T>>
             extends Account.Builder<A, T> {
 
-        protected Builder() {
-            super();
+        public Builder(String uniqueIdentifier) {
+            super(uniqueIdentifier);
         }
 
         @Override

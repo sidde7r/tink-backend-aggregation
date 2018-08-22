@@ -29,14 +29,16 @@ public class FinTsAuthenticator implements PasswordAuthenticator {
         if (!status.isEmpty()) {
             // Different banks use different status code for invalid password, makes it difficult to filter the error cause.
             if (status.contains(FinTsConstants.StatusCode.PIN_TEMP_BLOCKED) ||
-                    status.contains(FinTsConstants.StatusCode.ACTION_LOCKED)) {
+                    status.contains(FinTsConstants.StatusCode.ACTION_LOCKED) ||
+                    status.contains(FinTsConstants.StatusCode.ING_DIBA_ACCOUNT_BLOCKED)) {
                 throw AuthorizationError.ACCOUNT_BLOCKED.exception();
             } else if (status.contains(FinTsConstants.StatusCode.INVALID_USER) ||
                     status.contains(FinTsConstants.StatusCode.INVALID_PIN) ||
-                    status.contains(FinTsConstants.StatusCode.LOGIN_FAILED)) {
+                    status.contains(FinTsConstants.StatusCode.LOGIN_FAILED) ||
+                    status.contains(FinTsConstants.StatusCode.INVALID_USERNAME_FORMAT)) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             } else {
-                LOGGER.warn(FinTsConstants.LogTags.ERROR_CODE.toString(), status);
+                LOGGER.warn("{} error status: {}", FinTsConstants.LogTags.ERROR_CODE.toString(), status);
             }
         }
 

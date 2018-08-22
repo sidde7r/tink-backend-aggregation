@@ -12,10 +12,15 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class ConfirmTransferResponse {
     private List<TransferTransactionEntity> confirmedTransactions;
+    private List<TransferTransactionEntity> rejectedTransactions;
     private AmountEntity confirmedTotalAmount;
 
     public List<TransferTransactionEntity> getConfirmedTransactions() {
         return confirmedTransactions;
+    }
+
+    public List<TransferTransactionEntity> getRejectedTransactions() {
+        return rejectedTransactions;
     }
 
     public AmountEntity getConfirmedTotalAmount() {

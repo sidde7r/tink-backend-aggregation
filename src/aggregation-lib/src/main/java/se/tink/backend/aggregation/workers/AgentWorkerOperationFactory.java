@@ -4,62 +4,59 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
-import se.tink.backend.aggregation.rpc.CreateProductRequest;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsDecryptRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsReencryptRequest;
-import se.tink.backend.aggregation.rpc.ProductInformationRequest;
 import se.tink.backend.aggregation.rpc.ReencryptionRequest;
-import se.tink.backend.aggregation.rpc.RefreshApplicationRequest;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
+import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.workers.AgentWorkerOperation.AgentWorkerOperationState;
 import se.tink.backend.aggregation.workers.commands.CircuitBreakerAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.CircuitBreakerAgentWorkerCommand.CircuitBreakerAgentWorkerCommandState;
-import se.tink.backend.aggregation.workers.commands.CreateProductAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.ClearSensitiveInformationCommand;
 import se.tink.backend.aggregation.workers.commands.DebugAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.DebugAgentWorkerCommand.DebugAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.DecryptAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DecryptCredentialsWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DecryptForMigrationAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DeleteAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.DeleteAgentWorkerCommand.DeleteAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.EncryptAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.EncryptAgentWorkerCommand.EncryptAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.EncryptCredentialsWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.FetchProductInformationAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.InstantiateAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.InstantiateAgentWorkerCommand.InstantiateAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.KeepAliveAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LockAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LoginAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.LoginAgentWorkerCommand.LoginAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.ProcessItemAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.RefreshApplicationAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.RefreshItemAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ReportProviderMetricsAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.ReportProviderMetricsAgentWorkerCommand.ReportProviderMetricsAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.ReportProviderTransferMetricsAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.RequestUserOptInAccountsAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.SelectAccountsToAggregateCommand;
+import se.tink.backend.aggregation.workers.commands.SendAccountsToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.TransferAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ValidateProviderAgentWorkerStatus;
+import se.tink.backend.aggregation.workers.commands.state.CircuitBreakerAgentWorkerCommandState;
+import se.tink.backend.aggregation.workers.commands.state.DebugAgentWorkerCommandState;
+import se.tink.backend.aggregation.workers.commands.state.DeleteAgentWorkerCommandState;
+import se.tink.backend.aggregation.workers.commands.state.EncryptAgentWorkerCommandState;
+import se.tink.backend.aggregation.workers.commands.state.InstantiateAgentWorkerCommandState;
+import se.tink.backend.aggregation.workers.commands.state.LoginAgentWorkerCommandState;
+import se.tink.backend.aggregation.workers.commands.state.ReportProviderMetricsAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
 import se.tink.backend.aggregation.workers.metrics.MetricCacheLoader;
 import se.tink.backend.aggregation.workers.refresh.ProcessableItem;
 import se.tink.backend.common.ServiceContext;
 import se.tink.backend.common.cache.CacheClient;
-import se.tink.backend.common.repository.mysql.aggregation.ClusterCryptoConfigurationRepository;
-import se.tink.libraries.application.ApplicationType;
+import se.tink.backend.common.repository.mysql.aggregation.clustercryptoconfiguration.ClusterCryptoConfigurationRepository;
 import se.tink.libraries.metrics.MetricRegistry;
 
 public class AgentWorkerOperationFactory {
@@ -142,8 +139,8 @@ public class AgentWorkerOperationFactory {
     }
 
     private AgentWorkerCommandMetricState createMetricState(CredentialsRequest request) {
-        return new AgentWorkerCommandMetricState(request.getProvider(), request.getCredentials(), request.isManual(),
-                metricCacheLoader, request.getType());
+        return new AgentWorkerCommandMetricState(request.getProvider(), request.getCredentials(), metricCacheLoader,
+                request.getType());
     }
 
     public AgentWorkerOperation createDeleteCredentialsOperation(ClusterInfo clusterInfo, CredentialsRequest request) {
@@ -188,9 +185,31 @@ public class AgentWorkerOperationFactory {
 
         commands.add(new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
 
-        for (RefreshableItem item : items) {
+        List<RefreshableItem> accountItems = items.stream()
+                .filter(RefreshableItem::isAccount)
+                .collect(Collectors.toList());
+
+        List<RefreshableItem> nonAccountItems = items.stream()
+                .filter(i -> !accountItems.contains(i))
+                .collect(Collectors.toList());
+
+        if (accountItems.size() > 0) {
+            commands.add(new SendAccountsToUpdateServiceAgentWorkerCommand(context, createMetricState(request)));
+        }
+
+        for (RefreshableItem item : nonAccountItems) {
             commands.add(new RefreshItemAgentWorkerCommand(context, item, createMetricState(request)));
         }
+
+        // FIXME: remove when Handelsbanken and Avanza have been moved to the nextgen agents. (TOP PRIO)
+        // Due to the agents depending on updateTransactions to populate the the Accounts list
+        // We need to reselect and send accounts to system
+        List<String> hackishFixProviders = ImmutableList.of("avanza-bankid", "handelsbanken", "handelsbanken-bankid");
+        if (hackishFixProviders.contains(request.getProvider().getName())) {
+            commands.add(new SelectAccountsToAggregateCommand(context, request));
+            commands.add(new SendAccountsToUpdateServiceAgentWorkerCommand(context, createMetricState(request)));
+        }
+
         // Post refresh processing. Only once per data type (accounts, transactions etcetera)
         if (RefreshableItem.hasAccounts(items)) {
             commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.ACCOUNTS,
@@ -256,6 +275,14 @@ public class AgentWorkerOperationFactory {
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)));
 
+        commands.addAll(createRefreshAccountsCommandChain(request, context, request.getItemsToRefresh()));
+        if(request instanceof RefreshWhitelistInformationRequest && ((RefreshWhitelistInformationRequest) request).isOptIn()){
+            RefreshWhitelistInformationRequest refreshWhiteList = (RefreshWhitelistInformationRequest) request;
+            commands.add(new RequestUserOptInAccountsAgentWorkerCommand(context, refreshWhiteList));
+        }
+
+        commands.add(new SelectAccountsToAggregateCommand(context, request));
+
         commands.addAll(createRefreshableItemsChain(request, context, request.getItemsToRefresh()));
 
         log.debug("Created refresh operation chain for credential");
@@ -289,6 +316,8 @@ public class AgentWorkerOperationFactory {
         commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)));
         commands.add(new TransferAgentWorkerCommand(context, request, createMetricState(request)));
 
+        commands.addAll(createRefreshAccountsCommandChain(request, context, REFRESHABLE_ITEMS_ALL));
+        commands.add(new SelectAccountsToAggregateCommand(context, request));
         // Refresh everything
         commands.addAll(createRefreshableItemsChain(request, context, REFRESHABLE_ITEMS_ALL));
 
@@ -301,6 +330,8 @@ public class AgentWorkerOperationFactory {
                 useAggregationController, aggregationControllerAggregationClient, clusterInfo);
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
+
+        commands.add(new ClearSensitiveInformationCommand(context));
 
         // acquire lock to avoid encryption/decryption race conditions
         commands.add(new LockAgentWorkerCommand(context));
@@ -335,6 +366,8 @@ public class AgentWorkerOperationFactory {
                 useAggregationController, aggregationControllerAggregationClient, clusterInfo);
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
+
+        commands.add(new ClearSensitiveInformationCommand(context));
 
         // acquire lock to avoid encryption/decryption race conditions
         commands.add(new LockAgentWorkerCommand(context));
@@ -375,111 +408,6 @@ public class AgentWorkerOperationFactory {
         return new AgentWorkerOperation(agentWorkerOperationState, "keep-alive", request, commands, context);
     }
 
-    public AgentWorkerOperation createCreateProductOperation(ClusterInfo clusterInfo, CreateProductRequest request) {
-        AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
-                useAggregationController, aggregationControllerAggregationClient, clusterInfo);
-
-        List<AgentWorkerCommand> commands = Lists.newArrayList();
-
-        commands.add(new ValidateProviderAgentWorkerStatus(context, useAggregationController,
-                aggregationControllerAggregationClient, isAggregationCluster, clusterInfo));
-        commands.add(new ReportProviderMetricsAgentWorkerCommand(context, "create-product",
-                reportMetricsAgentWorkerCommandState));
-
-        commands.add(new LockAgentWorkerCommand(context));
-
-        if (isAggregationCluster) {
-            commands.add(new DecryptCredentialsWorkerCommand(clusterInfo, cacheClient,
-                    clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context));
-        } else {
-            commands.add(new DecryptAgentWorkerCommand(context, useAggregationController,
-                    aggregationControllerAggregationClient));
-        }
-
-        commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState));
-        commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
-        commands.add(new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.AUTHENTICATING));
-
-        if (Objects.equals(ApplicationType.OPEN_SAVINGS_ACCOUNT, request.getApplication().getType()) &&
-                Objects.equals(request.getProvider().getName(), "collector-bankid")) {
-            // Utilize login command for collector in order to get persistent login and error handling
-            commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState,
-                    createMetricState(request)));
-        }
-
-        commands.add(new CreateProductAgentWorkerCommand(context, request));
-        commands.add(new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
-
-        // FIXME: Temporary hack to process the accounts after a new savings account has been established.
-        if (Objects.equals(ApplicationType.OPEN_SAVINGS_ACCOUNT, request.getApplication().getType())) {
-
-            if (Objects.equals(request.getProvider().getName(), "sbab-bankid")) {
-                // Special treatment for SBAB
-                commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.ACCOUNTS,
-                        createMetricState(request)));
-                commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.TRANSFER_DESTINATIONS,
-                        createMetricState(request)));
-            } else {
-                // Normal case
-                commands.add(new RefreshItemAgentWorkerCommand(context, RefreshableItem.ACCOUNTS,
-                        createMetricState(request)));
-                commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.ACCOUNTS,
-                        createMetricState(request)));
-
-                commands.add(new RefreshItemAgentWorkerCommand(context, RefreshableItem.TRANSFER_DESTINATIONS,
-                        createMetricState(request)));
-                commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.TRANSFER_DESTINATIONS,
-                        createMetricState(request)));
-            }
-        }
-
-        commands.add(new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATED));
-
-        return new AgentWorkerOperation(agentWorkerOperationState, "create-product", request, commands, context);
-    }
-
-    public AgentWorkerOperation createRefreshApplicationOperation(ClusterInfo clusterInfo,
-            RefreshApplicationRequest request) {
-        AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
-                useAggregationController, aggregationControllerAggregationClient, clusterInfo);
-
-        // FIXME: Do we need locks etc on this refresh call?
-        List<AgentWorkerCommand> commands = Lists.newArrayList();
-        commands.add(new ValidateProviderAgentWorkerStatus(context, useAggregationController,
-                aggregationControllerAggregationClient, isAggregationCluster, clusterInfo));
-        commands.add(new ReportProviderMetricsAgentWorkerCommand(context, "refresh-application",
-                reportMetricsAgentWorkerCommandState));
-        commands.add(new LockAgentWorkerCommand(context));
-        commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
-        commands.add(new RefreshApplicationAgentWorkerCommand(context, request));
-
-        return new AgentWorkerOperation(agentWorkerOperationState, "refresh-application", request, commands, context);
-    }
-
-    /**
-     * Note: ProductInformationRequest inherits FakedCredentialsRequest, since this operation should not operate on
-     * credential dependent information and no Credentials will be sent in to this method.
-     *
-     * So mind that when adding new commands to the Operation, that `Credentials` should not be used.
-     */
-    public AgentWorkerOperation createFetchProductInformationOperation(ClusterInfo clusterInfo,
-            ProductInformationRequest request) {
-        AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
-                useAggregationController, aggregationControllerAggregationClient, clusterInfo);
-
-        List<AgentWorkerCommand> commands = Lists.newArrayList();
-
-        commands.add(new ValidateProviderAgentWorkerStatus(context, useAggregationController,
-                aggregationControllerAggregationClient, isAggregationCluster, clusterInfo));
-        commands.add(new ReportProviderMetricsAgentWorkerCommand(context, "fetch-product-information",
-                reportMetricsAgentWorkerCommandState));
-        commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
-        commands.add(new FetchProductInformationAgentWorkerCommand(context, request));
-
-        return new AgentWorkerOperation(
-                agentWorkerOperationState, "fetch-product-information", request, commands, context);
-    }
-
     public AgentWorkerOperation createDecryptCredentialsOperation(ClusterInfo clusterInfo,
             MigrateCredentialsDecryptRequest request) {
         AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
@@ -503,5 +431,34 @@ public class AgentWorkerOperationFactory {
                         aggregationControllerAggregationClient, context));
 
         return new AgentWorkerOperation(agentWorkerOperationState, "migrate-reencrypt", request, commands, context);
+    }
+
+    // for each account type,
+    private List<AgentWorkerCommand> createRefreshAccountsCommandChain(CredentialsRequest request,
+            AgentWorkerContext context, Set<RefreshableItem> itemsToRefresh) {
+
+        List<RefreshableItem> items = RefreshableItem.sort(convertLegacyItems(itemsToRefresh));
+
+        List<AgentWorkerCommand> commands = Lists.newArrayList();
+
+        for (RefreshableItem item : items) {
+            if (RefreshableItem.isAccount(item)) {
+                commands.add(new RefreshItemAgentWorkerCommand(context, item, createMetricState(request)));
+            }
+        }
+
+        return commands;
+    }
+
+    /**
+     *  the endpoint opt-in supports the initial refresh with opt-in, aka, display all accounts for user to select the
+     *  accounts to aggregate to. it also supports refreshing and updating only white-flagged accounts and the data.
+     *  when the opt-in flag is true, it indicates that we need user to select accounts again, therefore we fetch
+     *  only account data. after fetching, we set the flag into false, and put all white listed accounts in refresh.
+     *  when the opt-in flag is false, we refresh and update all white listed accounts
+     **/
+    public AgentWorkerOperation createOptInRefreshOperation(ClusterInfo clusterInfo,
+            RefreshWhitelistInformationRequest request) {
+        return createRefreshOperation(clusterInfo, request);
     }
 }

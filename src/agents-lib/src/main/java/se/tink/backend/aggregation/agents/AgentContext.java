@@ -1,13 +1,10 @@
 package se.tink.backend.aggregation.agents;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.io.ByteArrayOutputStream;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 import org.apache.curator.framework.CuratorFramework;
 import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
@@ -17,8 +14,6 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.core.FraudDetailsContent;
 import se.tink.backend.core.account.TransferDestinationPattern;
-import se.tink.backend.core.application.ApplicationState;
-import se.tink.backend.core.product.ProductPropertyKey;
 import se.tink.backend.core.signableoperation.SignableOperation;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
@@ -119,21 +114,19 @@ public abstract class AgentContext {
 
     public abstract void openBankId(String autoStartToken, boolean wait);
 
-    public Account updateAccount(Account account) {
-        return updateAccount(account, AccountFeatures.createEmpty());
+    public void cacheAccount(Account account) {
+        cacheAccount(account, AccountFeatures.createEmpty());
     }
 
-    public Iterable<Account> updateAccounts(Iterable<Account> accounts) {
-        List<Account> updatedAccounts = Lists.newArrayList();
-
+    public void cacheAccounts(Iterable<Account> accounts) {
         for (Account account : accounts) {
-            updatedAccounts.add(updateAccount(account));
+            cacheAccount(account);
         }
-
-        return updatedAccounts;
     }
 
-    public abstract Account updateAccount(Account account, AccountFeatures accountFeatures);
+    public abstract Account sendAccountToUpdateService(String uniqueId);
+
+    public abstract void cacheAccount(Account account, AccountFeatures accountFeatures);
 
     public abstract void updateTransferDestinationPatterns(Map<Account, List<TransferDestinationPattern>> map);
 
@@ -158,7 +151,10 @@ public abstract class AgentContext {
 
     public abstract void updateStatus(CredentialsStatus status, String statusPayload, boolean statusFromProvider);
 
+    @Deprecated // Use cacheTransactions instead
     public abstract Account updateTransactions(Account account, List<Transaction> transactions);
+
+    public abstract void cacheTransactions(String accountUniqueId, List<Transaction> transactions);
 
     public abstract void updateCredentialsExcludingSensitiveInformation(Credentials credentials);
 
@@ -197,14 +193,9 @@ public abstract class AgentContext {
 
     public abstract void updateSignableOperation(SignableOperation signableOperation);
 
-    public abstract void updateProductInformation(UUID productInstanceId,
-            HashMap<ProductPropertyKey, Object> productProperties);
-
-    public abstract void updateApplication(UUID applicationId, ApplicationState applicationState);
-
     public abstract UpdateDocumentResponse updateDocument(DocumentContainer container);
 
-    public abstract List<Account> getAccounts();
+    public abstract List<Account> getUpdatedAccounts();
 
     public abstract void updateEinvoices(List<Transfer> transfers);
 

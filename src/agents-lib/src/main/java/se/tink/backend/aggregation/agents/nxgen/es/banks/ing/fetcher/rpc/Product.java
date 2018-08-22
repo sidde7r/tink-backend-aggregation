@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.fetcher.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collections;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.IngConstants;
@@ -56,6 +57,11 @@ public final class Product {
     private boolean isRealTimeData;
     private String codConTar;
     private double availableCreditAmount;
+
+    @JsonIgnore
+    public String getUniqueIdentifier() {
+        return iban.replaceAll(" ", "").toLowerCase();
+    }
 
     public String getProductNumber() {
         return productNumber;

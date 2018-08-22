@@ -46,6 +46,7 @@ public class Sparebank1Constants {
     }
 
     public static class Headers {
+        public static final String USER_AGENT = "Mobilbank/4.5.2; mobileOS/iOS; iOSVersion/10.3.1; deviceManufacturer/Apple; deviceType/iPhone; deviceModel/iPhone-6s; requestType/rest";
         public static final String ORIGIN = "Origin";
         public static final String REFERER = "Referer";
         public static final String APPLICATION_JSON_CHARSET_UTF8 = "application/json; charset=utf-8";

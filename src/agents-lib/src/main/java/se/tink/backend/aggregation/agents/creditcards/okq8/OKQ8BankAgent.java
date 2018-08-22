@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.system.rpc.Transaction;
 
 public class OKQ8BankAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
@@ -48,7 +49,7 @@ public class OKQ8BankAgent extends AbstractAgent implements DeprecatedRefreshExe
                 .acceptLanguage("sv-se");
     }
 
-    public OKQ8BankAgent(CredentialsRequest request, AgentContext context) {
+    public OKQ8BankAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         client = clientFactory.createCookieClient(context.getLogOutputStream());
@@ -92,7 +93,7 @@ public class OKQ8BankAgent extends AbstractAgent implements DeprecatedRefreshExe
 
     private LoginResponse loginAndFetchAllTransactions() throws LoginException {
         LoginRequest loginRequest = createLoginRequestForCredentials(credentials);
-        ClientResponse response = createClientRequest(LOGIN_URL, client, getAggregator().getAggregatorIdentifier())
+        ClientResponse response = createClientRequest(LOGIN_URL, client, DEFAULT_USER_AGENT)
                 .post(ClientResponse.class, loginRequest);
 
         ensureLoginSuccessful(response);

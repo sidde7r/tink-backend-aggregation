@@ -15,20 +15,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.utils.httpclient.HttpClientAgent;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.readers.CharacterEncodedMessageBodyReader;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
-public class CSNAgent extends HttpClientAgent implements DeprecatedRefreshExecutor {
+public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
 
     private static final File TRUST_STORE = new File("data/security/csn.truststore");
     private static final char[] TRUST_STORE_PASSWORD = "changeme".toCharArray();
@@ -46,7 +47,7 @@ public class CSNAgent extends HttpClientAgent implements DeprecatedRefreshExecut
     private String loginResponse;
     private boolean hasRefreshed = false;
 
-    public CSNAgent(CredentialsRequest request, AgentContext context) {
+    public CSNAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         this.credentials = request.getCredentials();
@@ -111,7 +112,7 @@ public class CSNAgent extends HttpClientAgent implements DeprecatedRefreshExecut
                                     "\\d{12}: Lån före 1989 \\(studiemedel\\)")),
                     "Unexpected account.bankid '%s'. Reformatted?", account.getBankId());
 
-            this.context.updateAccount(account);
+            this.context.cacheAccount(account);
         } while (matcher.find());
     }
 

@@ -18,7 +18,14 @@ public class FinTsConstants {
         public static final String INVALID_PIN = "9942";
         public static final String LOGIN_FAILED = "9210";
         public static final String ACTION_LOCKED = "9010";
+        public static final String ACCOUNT_NOT_ASSIGNED = "9010";
+        public static final String INVALID_USERNAME_FORMAT = "9130";
+        public static final String ING_DIBA_ACCOUNT_BLOCKED = "9931";
+    }
 
+    public static class StatusMessage {
+        public static final String END_DATE_NOT_SUPPORTED = "Angabe eines Endedatums nicht unterstützt.";
+        public static final String NO_ACTIVE_PHONE_NUMBER_WARNING = "Keine aktive Mobilfunknr.Bitte wenden Sie sich an Ihren Berater";
     }
 
     public static class Segments {
@@ -44,6 +51,19 @@ public class FinTsConstants {
         public static final String HISALS = "HISALS"; // Balance query parameter
         public static final String HIKAZS = "HIKAZS"; // Account sales/period parameter
         public static final String HIUPD = "HIUPD"; // Account information
+    }
+
+    public static class AccountType {
+        public final static int CHECKING_ACCOUNT_CURSOR = 1; //  Kontokorrent-/Girokonto 1 - 9
+        public final static int SAVINGS_ACCOUNT_CURSOR = 10; //  Sparkonto 10 - 19
+        public final static int TIME_DEPOSIT_ACCOUNT_CURSOR = 20; // Festgeldkonto(Termineinlagen) 20 - 29
+        public final static int SECURITES_ACCOUNT_CURSOR = 30; // Werpapierdpot 30 - 39
+        public final static int LOAN_ACCOUNT_CURSOR = 40; //Kredit-/Darlehenskonto 40 - 49
+        public final static int CREDIT_CARD_CURSOR = 50; // Kreditkartenkonto 50 - 59
+        public final static int FUND_DEPOSIT_ACCOUNT_CURSOR = 60; // Fonds-Depot bei einer Kapitalanlagegesellschaft 60 - 69
+        public final static int BAUSPAR_ACCOUNT_CURSOR = 70; //  Bausparvertrag 70 - 79
+        public final static int INSURANCE_CONTRACT_CURSOR = 80; // Versicherungsvertrag 80 - 89
+        public final static int OTHER_NOT_ASSIGNABLE_CURSOR = 90; // Sonstige (nicht zuordenbar) 90 - 99
     }
 
     public static class SegData {
@@ -72,5 +92,12 @@ public class FinTsConstants {
 
     public static class LogTags {
         public static final LogTag ERROR_CODE = LogTag.from("#fints_login_error_types");
+        public static final LogTag NUMBER_OF_FETCHED_TRANSACTIONS = LogTag.from("#fints_number_of_fetched_transactions");
+        public static final LogTag CREDIT_CARD_INFORMATION = LogTag.from("#fints_credit_card_information");
+        public static final LogTag CREDIT_CARD_PERMITTED_BUSINESS_TRANSACTIONS= LogTag.from("#fints_credit_card_permitted_transactions");
+        public static final LogTag CREDIT_CARD_NUMBER_OF_FETCHED_TRANSACTIONS = LogTag.from("#fints_credit_card_fetched_transactions");
+        public static final LogTag SPARKASSE_NO_PHONE_NUMBER_ATTACHED_WARNING = LogTag.from("#fints_sparkasse_no_phone_attached");
+        public static final LogTag TRANSACTION_STATUS = LogTag.from("#fints_transaction_status");
+        public static final LogTag SCANNER_PARSING_ERROR = LogTag.from("#fints_scanner_parsing_error");
     }
 }

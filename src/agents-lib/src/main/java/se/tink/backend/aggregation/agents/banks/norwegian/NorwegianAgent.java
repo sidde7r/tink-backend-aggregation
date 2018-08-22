@@ -45,6 +45,7 @@ import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.Field;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.system.rpc.Transaction;
 
 /**
@@ -68,7 +69,7 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
     private final ApacheHttpClient4 client;
     private boolean hasRefreshed = false;
 
-    public NorwegianAgent(CredentialsRequest request, AgentContext context) {
+    public NorwegianAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         client = clientFactory.createCookieClient(context.getLogOutputStream());
@@ -316,7 +317,7 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
     }
 
     private WebResource.Builder createClientRequest(String url) {
-        return client.resource(url).header("User-Agent", getAggregator().getAggregatorIdentifier()).accept(MediaType.APPLICATION_JSON);
+        return client.resource(url).header("User-Agent", DEFAULT_USER_AGENT).accept(MediaType.APPLICATION_JSON);
     }
 
     @Override

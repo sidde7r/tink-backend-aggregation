@@ -8,19 +8,28 @@ import se.tink.libraries.date.DateUtils;
 @JsonObject
 public class AccountTransactionEntity {
     private String id;
-    private String name;
+    private ContractEntity contract;
+    private ConceptEntity concept;
+    private BranchEntity branch;
     private String extendedName;
+    private OriginEntity origin;
     private String transactionDate;
     private String valueDate;
     private AmountEntity amount;
-    private ConceptEntity concept;
+    private ExtendedDateEntity extendedDate;
+    private CategoryEntity humanCategory;
+    private CategoryEntity humanSubcategory;
+    private String humanConceptName;
+    private String humanExtendedConceptName;
+    private DocumentEntity document;
+    private String name;
 
     @JsonIgnore
     public Transaction toTransaction() {
         return Transaction.builder()
                 .setAmount(amount.getTinkAmount())
                 .setDate(DateUtils.parseDate(transactionDate))
-                .setDescription(name)
+                .setDescription(humanConceptName)
                 .build();
     }
 

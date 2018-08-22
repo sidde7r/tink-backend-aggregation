@@ -36,43 +36,48 @@ public class HandelsbankenConstants {
     public static final class URLS {
 
         public enum Links implements Linkable {
+            ACCOUNTS("accounts"),
             ACTIVATE_PROFILE("activateProfile"),
+            APPLICATION_ENTRY_POINT("application-entry-point"),
+            APPLICATION_EXIT_POINT("application-exit-point"),
+            APPROVAL("approval"),
             AUTHENTICATE("authenticate"),
             AUTHORIZE("authorize"),
-            CHECK_AGREEMENT("checkAgreement"),
-            COMMIT_PROFILE("commitProfile"),
-            CREATE_PINCODE("createPincode"),
-            CREATE_PROFILE("createProfile"),
-            GET_CHALLENGE("getChallenge"),
-            GET_SERVER_PROFILE("getServerProfile"),
-            PINNED_ACTIVATION("pinned-activation"),
-            PINNED_LOGIN("pinned-login"),
-            VALIDATE_SIGNATURE("validateSignature"),
-            APPLICATION_ENTRY_POINT("application-entry-point"),
-            KEEP_ALIVE("keepalive"),
-            ACCOUNTS("accounts"),
-            TRANSACTIONS("transactions"),
-            PENDING_TRANSACTIONS("pending-transactions-v4"),
-            PAYMENT_DETAIL("payment-detail"),
             BANKID_LOGIN("bankid-login_2_0"),
-            APPLICATION_EXIT_POINT("application-exit-point"),
-            VERIFY_SECURITY_CODE("verifySecurityCode"),
-            CARDS_V3("cards-v3"),
             CARD_TRANSACTIONS("card-transactions"),
             CARDS("cards"),
-            TRANSINFO("transinfo"),
-            LOANS("loans"),
-            SECURITIES_HOLDINGS("securities-holdings-v2"),
-            FUND_HOLDINGS("fund-holdings"),
-            CUSTODY_ACCOUNT("custody-account"),
-            PENSION_DETAILS("pension-detail"),
-            SECURITY_HOLDING("security-holding"),
-            FUND_HOLDING_DETAILS("fund-holding-details"),
-            TRANSFER_CONTEXT("transfer-context-v2"),
+            CARDS_V3("cards-v3"),
+            CHECK_AGREEMENT("checkAgreement"),
+            COMMIT_PROFILE("commitProfile"),
             CREATE("create"),
+            CREATE_PINCODE("createPincode"),
+            CREATE_PROFILE("createProfile"),
+            CUSTODY_ACCOUNT("custody-account"),
+            EINVOICE_DETAIL("einvoice-detail"),
+            FUND_HOLDINGS("fund-holdings"),
+            FUND_HOLDING_DETAILS("fund-holding-details"),
+            GET_CHALLENGE("getChallenge"),
+            GET_SERVER_PROFILE("getServerProfile"),
+            KEEP_ALIVE("keepalive"),
+            LOANS("loans"),
+            LOOKUP_RECIPIENT("lookup-recipient"),
+            PAYMENT_CONTEXT("payment-context"),
+            PAYMENT_DETAIL("payment-detail"),
+            PENDING_EINVOICES("einvoice-pending-v4"),
+            PENDING_TRANSACTIONS("pending-transactions-v4"),
+            PENSION_DETAILS("pension-detail"),
+            PINNED_ACTIVATION("pinned-activation"),
+            PINNED_LOGIN("pinned-login"),
+            SECURITIES_HOLDINGS("securities-holdings-v2"),
+            SECURITY_HOLDING("security-holding"),
             SIGNATURE("signature"),
-            VALIDATE_RECIPIENT("validate-recipient"),
-            PAYMENT_CONTEXT("payment-context");
+            TRANSACTIONS("transactions"),
+            TRANSFER_CONTEXT("transfer-context-v2"),
+            TRANSINFO("transinfo"),
+            UPDATE("update"),
+            VALIDATE_SIGNATURE("validateSignature"),
+            VERIFY_SECURITY_CODE("verifySecurityCode"),
+            VALIDATE_RECIPIENT("validate-recipient");
 
             private final String name;
 
@@ -90,13 +95,17 @@ public class HandelsbankenConstants {
         public static final class KeepAlive {
             public static final LogTag LOG_TAG = LogTag.from("#Handelsbanken_keep_alive");
         }
+
+        public static final class Parameters {
+            public static final String GIRO_NUMBER = "bgPgNumber";
+        }
     }
 
     public static final class Headers {
         public static final String X_SHB_DEVICE_NAME = "X-SHB-DEVICE-NAME";
         public static final String DEVICE_NAME = "iOS;Tink;Tink";
         public static final String X_SHB_DEVICE_MODEL = "X-SHB-DEVICE-MODEL";
-        public static final String DEVICE_MODEL = "IOS-10.1.1,7.4.0,iPhone9.3,FIPRIV";
+        public static final String DEVICE_MODEL = "IOS-11.4.1,8.0.1,iPhone9.3,FIPRIV";
         public static final String X_SHB_DEVICE_CLASS = "X-SHB-DEVICE-CLASS";
         public static final String DEVICE_CLASS = "APP";
         public static final String X_SHB_APP_VERSION = "X-SHB-APP-VERSION";

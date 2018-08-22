@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.resources;
 
-import com.google.common.base.Preconditions;
+import com.google.api.client.util.Lists;
 import io.dropwizard.lifecycle.Managed;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Path;
@@ -9,33 +9,31 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.api.AggregationService;
-import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
 import se.tink.backend.aggregation.rpc.CreateCredentialsRequest;
-import se.tink.backend.aggregation.rpc.CreateProductRequest;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.DeleteCredentialsRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsDecryptRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsReencryptRequest;
-import se.tink.backend.aggregation.rpc.ProductInformationRequest;
 import se.tink.backend.aggregation.rpc.ReencryptionRequest;
-import se.tink.backend.aggregation.rpc.RefreshApplicationRequest;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
+import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
+import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.rpc.SupplementInformationRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.rpc.UpdateCredentialsRequest;
 import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.backend.aggregation.workers.AgentWorkerOperation;
+import se.tink.backend.aggregation.workers.AgentWorkerRefreshOperationCreatorWrapper;
 import se.tink.backend.aggregation.workers.AgentWorkerOperationFactory;
 import se.tink.backend.aggregation.workers.ratelimit.DefaultProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.ratelimit.OverridingProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.ratelimit.ProviderRateLimiterFactory;
 import se.tink.backend.common.ServiceContext;
-import se.tink.backend.common.repository.mysql.aggregation.ClusterHostConfigurationRepository;
-import se.tink.backend.core.ClusterHostConfiguration;
+import se.tink.backend.common.repository.mysql.aggregation.clusterhostconfiguration.ClusterHostConfigurationRepository;
 import se.tink.libraries.http.utils.HttpResponseHelper;
 import se.tink.libraries.metrics.MetricRegistry;
 
@@ -71,35 +69,11 @@ public class AggregationServiceResource implements AggregationService, Managed {
         this.isAggregationCluster = serviceContext.isAggregationCluster();
     }
 
-    private ClusterInfo getClusterInfo() {
-        ClusterId clusterId;
-        if (isAggregationCluster) {
-            clusterId = ClusterId.createFromHttpServletRequest(httpRequest);
-            if (!clusterId.isValidId()) {
-                throw new WebApplicationException(Response.Status.BAD_REQUEST);
-            }
-        } else {
-            clusterId = ClusterId.createEmpty();
-        }
-
-        if (isAggregationCluster) {
-            ClusterHostConfiguration configuration = clusterHostConfigurationRepository.findOne(clusterId.getId());
-            Preconditions.checkNotNull(configuration);
-
-            return ClusterInfo.createForAggregationCluster(clusterId,
-                    Preconditions.checkNotNull(configuration.getHost()),
-                    Preconditions.checkNotNull(configuration.getApiToken()),
-                    Preconditions.checkNotNull(configuration.getClientCertificate()),
-                    configuration.isDisableRequestCompression());
-        } else {
-            return ClusterInfo.createForLegacyAggregation(clusterId);
-        }
-    }
 
     @Override
-    public Credentials createCredentials(CreateCredentialsRequest request) {
+    public Credentials createCredentials(CreateCredentialsRequest request, ClusterInfo clusterInfo) {
         AgentWorkerOperation createCredentialsOperation = agentWorkerCommandFactory
-                .createCreateCredentialsOperation(getClusterInfo(), request);
+                .createCreateCredentialsOperation(clusterInfo, request);
 
         createCredentialsOperation.run();
 
@@ -109,9 +83,9 @@ public class AggregationServiceResource implements AggregationService, Managed {
     }
 
     @Override
-    public Credentials reencryptCredentials(ReencryptionRequest request) {
+    public Credentials reencryptCredentials(ReencryptionRequest request, ClusterInfo clusterInfo) {
         AgentWorkerOperation reencryptCredentialsOperation = agentWorkerCommandFactory
-                .reencryptCredentialsOperation(getClusterInfo(), request);
+                .reencryptCredentialsOperation(clusterInfo, request);
 
         reencryptCredentialsOperation.run();
 
@@ -119,35 +93,55 @@ public class AggregationServiceResource implements AggregationService, Managed {
     }
 
     @Override
-    public void deleteCredentials(DeleteCredentialsRequest request) {
-        agentWorkerCommandFactory.createDeleteCredentialsOperation(getClusterInfo(), request).run();
+    public void deleteCredentials(DeleteCredentialsRequest request, ClusterInfo clusterInfo) {
+        agentWorkerCommandFactory.createDeleteCredentialsOperation(clusterInfo, request).run();
     }
 
     @Override
-    public String ping() {
+    public String ping(){
         return "pong";
     }
 
     @Override
-    public void refreshInformation(final RefreshInformationRequest request) throws Exception {
-        agentWorker.execute(agentWorkerCommandFactory.createRefreshOperation(getClusterInfo(), request));
+    public void refreshWhitelistInformation(final RefreshWhitelistInformationRequest request, ClusterInfo clusterInfo)
+            throws
+            Exception {
+        // if it is opt-in (where user is asked to select the accounts to aggregate, we return a bad request
+        if (request.isOptIn() && request.getItemsToRefresh()!=null && request.getItemsToRefresh() == null && !RefreshableItem.hasAccounts(Lists.newArrayList(request.getItemsToRefresh()))){
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        }
+        // if it is refreshing white listed accounts, we return bad request if no accounts are white listed
+        if (!request.isOptIn() && (request.getAccounts()==null || request.getAccounts().isEmpty())){
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        }
+        agentWorker.execute(agentWorkerCommandFactory.createOptInRefreshOperation(clusterInfo, request));
     }
 
     @Override
-    public void transfer(final TransferRequest request) throws Exception {
-        agentWorker.execute(agentWorkerCommandFactory.createExecuteTransferOperation(getClusterInfo(), request));
+    public void refreshInformation(final RefreshInformationRequest request, ClusterInfo clusterInfo) throws Exception {
+        if (request.isManual()) {
+            agentWorker.execute(agentWorkerCommandFactory.createRefreshOperation(clusterInfo, request));
+        } else {
+            agentWorker.executeAutomaticRefresh(AgentWorkerRefreshOperationCreatorWrapper.of(agentWorkerCommandFactory, request, clusterInfo));
+        }
 
     }
 
     @Override
-    public void keepAlive(KeepAliveRequest request) throws Exception {
-        agentWorker.execute(agentWorkerCommandFactory.createKeepAliveOperation(getClusterInfo(), request));
+    public void transfer(final TransferRequest request, ClusterInfo clusterInfo) throws Exception {
+        agentWorker.execute(agentWorkerCommandFactory.createExecuteTransferOperation(clusterInfo, request));
+
     }
 
     @Override
-    public Credentials updateCredentials(UpdateCredentialsRequest request) {
+    public void keepAlive(KeepAliveRequest request, ClusterInfo clusterInfo) throws Exception {
+        agentWorker.execute(agentWorkerCommandFactory.createKeepAliveOperation(clusterInfo, request));
+    }
+
+    @Override
+    public Credentials updateCredentials(UpdateCredentialsRequest request, ClusterInfo clusterInfo) {
         AgentWorkerOperation updateCredentialsOperation = agentWorkerCommandFactory
-                .createUpdateOperation(getClusterInfo(), request);
+                .createUpdateOperation(clusterInfo, request);
 
         updateCredentialsOperation.run();
 
@@ -179,29 +173,13 @@ public class AggregationServiceResource implements AggregationService, Managed {
     }
 
     @Override
-    public void createProduct(final CreateProductRequest request) throws Exception {
-        agentWorker.execute(agentWorkerCommandFactory.createCreateProductOperation(getClusterInfo(), request));
-    }
-
-    @Override
-    public void fetchProductInformation(ProductInformationRequest request) throws Exception {
-        agentWorker.execute(agentWorkerCommandFactory.createFetchProductInformationOperation(getClusterInfo(), request));
-
-    }
-
-    @Override
-    public void refreshApplication(RefreshApplicationRequest request) throws Exception {
-        agentWorker.execute(agentWorkerCommandFactory.createRefreshApplicationOperation(getClusterInfo(), request));
-    }
-
-    @Override
     public void setSupplementalInformation(SupplementInformationRequest request) {
         supplementalInformationController.setSupplementalInformation(request.getCredentialsId(),
                 request.getSupplementalInformation());
     }
 
     @Override
-    public Credentials migrateDecryptCredentials(MigrateCredentialsDecryptRequest request) {
+    public Credentials migrateDecryptCredentials(MigrateCredentialsDecryptRequest request, ClusterInfo clusterInfo) {
         // There is not any encryption service in the aggregation cluster
         if (isAggregationCluster) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
@@ -214,7 +192,7 @@ public class AggregationServiceResource implements AggregationService, Managed {
         }
 
         AgentWorkerOperation updateCredentialsOperation = agentWorkerCommandFactory
-                .createDecryptCredentialsOperation(getClusterInfo(), request);
+                .createDecryptCredentialsOperation(clusterInfo, request);
 
         updateCredentialsOperation.run();
 
@@ -222,7 +200,7 @@ public class AggregationServiceResource implements AggregationService, Managed {
     }
 
     @Override
-    public Response migrateReencryptCredentials(MigrateCredentialsReencryptRequest request) {
+    public Response migrateReencryptCredentials(MigrateCredentialsReencryptRequest request, ClusterInfo clusterInfo) {
         // Only aggregation cluster can encrypt with the new encryption method
         if (!isAggregationCluster) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
@@ -230,7 +208,7 @@ public class AggregationServiceResource implements AggregationService, Managed {
 
         try {
             agentWorker.execute(agentWorkerCommandFactory.createReencryptCredentialsOperation(
-                    getClusterInfo(), request));
+                    clusterInfo, request));
             return HttpResponseHelper.ok();
         } catch (Exception e) {
             throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);

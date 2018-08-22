@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: provider-configuration
+  namespace: provider-configuration
+  labels:
+    app: provider-configuration-service
+spec:
+  replicas: {{ default "2" .Values.replicas }}
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: provider-configuration-service
+  template:
+    metadata:
+      labels:
+        app: provider-configuration-service
+      annotations:
+        # Force rollout of new pods if the config has changed
+        checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
+        prometheus.io/port: '9130'
+        prometheus.io/scrape: 'true'
+    spec:
+      initContainers:
+      # Script to replace placeholder passwords with the real passwords
+      - name: add-secrets-to-config
+        command:
+          - "bash"
+          - "-c"
+          - "cp /mnt/config-volume/* /mnt/altered-config-volume && \
+             sed -i \"s/KEYSTORE_PASSWORD/$KEYSTORE_PWD/g\" /mnt/altered-config-volume/provider-configuration-server.yml && \
+             sed -i \"s/SYSTEM_ACCESS_TOKEN/$SYSTEM_TOKEN/g\" /mnt/altered-config-volume/provider-configuration-server.yml && \
+             sed -i \"s/MYSQL_PASSWORD/$MYSQL_PWD/g\" /mnt/altered-config-volume/provider-configuration-server.yml"
+        image: gcr.io/tink-containers/debian:stretch
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: config-volume
+          mountPath: /mnt/config-volume
+        - name: altered-config-volume
+          mountPath: /mnt/altered-config-volume
+        env:
+        - name: KEYSTORE_PWD
+          valueFrom:
+            secretKeyRef:
+              name: provider-configuration-secrets
+              key: keystore-password
+        - name: SYSTEM_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: provider-configuration-secrets
+              key: system-access-token
+        - name: MYSQL_PWD
+          valueFrom:
+            secretKeyRef:
+              name: provider-configuration-secrets
+              key: aggregationdb-password
+      containers:
+      - name: tink-backend-provider-configuration
+        resources:
+          requests:
+            memory: {{ default "700Mi" .Values.podMemoryRequest }}
+            cpu: {{ default "500m" .Values.podCpuRequest }}
+          limits:
+            memory: {{ default "1Gi" .Values.podMemoryLimit }}
+            cpu: {{ default "1000m" .Values.podCpuLimit }}
+
+        image: gcr.io/tink-containers/tink-backend-provider-configuration:{{ .Files.Get "tink-versions/tink-backend-provider-configuration.txt" | default "latest" }}
+        imagePullPolicy: IfNotPresent
+
+        command:
+        - "java"
+        - "-jar"
+        - "-Xmx{{ default "256m" .Values.heapSize }}"
+        - "-XX:-OmitStackTraceInFastThrow"
+        - "-Dnetworkaddress.cache.ttl=60"
+        - "-XX:+ExitOnOutOfMemoryError"
+        - "/usr/share/tink-backend-provider-configuration/provider-configuration-service.jar"
+        - "server"
+        - "/etc/tink/provider-configuration-server.yml"
+
+        ports:
+        - name: https-api
+          containerPort: 443
+        {{- if .Values.insecureHttpServer }}
+        - name: http-api
+          containerPort: 80
+        {{- end }}
+        - name: metrics
+          containerPort: 9130
+        volumeMounts:
+        - name: altered-config-volume
+          mountPath: /etc/tink
+      # add readiness/liveness probes
+      volumes:
+      - name: config-volume
+        configMap:
+          name: provider-configuration-configuration
+      # ConfigMaps are mounted as a read-only filesystem.
+      # Before we can edit the config in rumtime we need to copy the files
+      # to a fs with read-write permissions.
+      - name: altered-config-volume
+        emptyDir: {}
+      imagePullSecrets:
+        - name: tink-containers
+
+{{- if eq "local" .Values.Cluster }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: provider-configuration
+{{ end }}

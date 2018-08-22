@@ -238,7 +238,7 @@ public class IBClient extends Client {
                 .map(ContractContainer::getContract)
                 .filter(AbnAmroUtils.Predicates.IS_VALID_CONTRACT_ENTITY::apply)
                 .distinct() // to only include unique contracts
-                .map(a -> IBClient.getAccount(a, cleanBankId))
+                .map(IBClient::getAccount)
                 .collect(Collectors.toList());
     }
 
@@ -316,7 +316,7 @@ public class IBClient extends Client {
         return response.getUserPreferenceList().getUserPreferences();
     }
 
-    private static Account getAccount(ContractEntity contractEntity, boolean cleanBankId) {
+    private static Account getAccount(ContractEntity contractEntity) {
         Account account = new Account();
 
         String accountNumber = contractEntity.getContractNumber();
@@ -327,9 +327,6 @@ public class IBClient extends Client {
         }
 
         account.setBankId(accountNumber);
-        if (cleanBankId) {
-            account.setBankId(AbnAmroUtils.getIcsShortBankId(account));
-        }
 
         account.setType(getAccountType(contractEntity.getProduct()));
 

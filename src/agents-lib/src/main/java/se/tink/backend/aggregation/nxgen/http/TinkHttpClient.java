@@ -10,7 +10,6 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -42,6 +41,7 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.params.CoreConnectionPNames;
+import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
 import se.tink.backend.aggregation.cluster.identification.Aggregator;
@@ -61,7 +61,7 @@ import se.tink.backend.aggregation.nxgen.http.redirect.FixRedirectHandler;
 import se.tink.backend.aggregation.nxgen.http.redirect.RedirectHandler;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
-import se.tink.libraries.jersey.utils.InterClusterJerseyClientFactory;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class TinkHttpClient extends Filterable<TinkHttpClient> {
@@ -88,7 +88,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     private final PersistentHeaderFilter persistentHeaderFilter = new PersistentHeaderFilter();
 
     private class DEFAULTS {
-
+        private final static String DEFAULT_USER_AGENT = AbstractAgent.DEFAULT_USER_AGENT;
         private final static int TIMEOUT_MS = 30000;
         private final static int MAX_REDIRECTS = 10;
         private final static boolean CHUNKED_ENCODING = false;
@@ -97,10 +97,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     }
 
     public String getUserAgent() {
-        if (this.userAgent == null) {
-            return getHeaderAggregatorIdentifier();
-        }
-
+        Preconditions.checkNotNull(userAgent);
         return this.userAgent;
     }
 
@@ -153,7 +150,8 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
             }
         }
     }
-    public TinkHttpClient(@Nullable AgentContext context, @Nullable Credentials credentials) {
+    public TinkHttpClient(@Nullable AgentContext context, @Nullable Credentials credentials,
+            @Nullable SignatureKeyPair signatureKeyPair) {
         this.context = context;
         this.credentials = credentials;
 
@@ -161,7 +159,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         this.internalCookieStore = new BasicCookieStore();
         this.internalRequestConfigBuilder = RequestConfig.custom();
         this.internalHttpClientBuilder = HttpClientBuilder.create()
-                                        .setRequestExecutor(new TinkApacheHttpRequestExecutor())
+                                        .setRequestExecutor(new TinkApacheHttpRequestExecutor(signatureKeyPair))
                                         .setDefaultCookieStore(this.internalCookieStore);
 
         this.internalSslContextBuilder = new SSLContextBuilder()
@@ -178,13 +176,17 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
         this.aggregator = Objects.isNull(context) ? Aggregator.getDefault(): context.getAggregator();
 
-        setUserAgent(aggregator.getAggregatorIdentifier());
         setTimeout(DEFAULTS.TIMEOUT_MS);
         setChunkedEncoding(DEFAULTS.CHUNKED_ENCODING);
         setMaxRedirects(DEFAULTS.MAX_REDIRECTS);
         setFollowRedirects(DEFAULTS.FOLLOW_REDIRECTS);
         setDebugOutput(DEFAULTS.DEBUG_OUTPUT);
         addPersistentHeader("X-Aggregator", getHeaderAggregatorIdentifier());
+        setUserAgent(DEFAULTS.DEFAULT_USER_AGENT);
+    }
+
+    public TinkHttpClient(@Nullable AgentContext context, @Nullable Credentials credentials) {
+        this(context, credentials, null);
     }
 
     private void constructInternalClient() {

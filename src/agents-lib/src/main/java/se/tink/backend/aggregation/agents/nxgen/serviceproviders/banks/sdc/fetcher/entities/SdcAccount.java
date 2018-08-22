@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetc
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConstants;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.agents.utils.typeguesser.TypeGuesser;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.rpc.AccountTypes;
@@ -69,6 +69,12 @@ public class SdcAccount {
         }
 
         return isAccountType(SdcConstants.AccountType.LOAN);
+    }
+
+    @JsonIgnore
+    public boolean isTransactionalAccount(SdcConfiguration agentConfiguration) {
+        AccountTypes tinkAccountType = convertAccountType(name, agentConfiguration.getTypeGuesser());
+        return TransactionalAccount.ALLOWED_ACCOUNT_TYPES.contains(tinkAccountType);
     }
 
     @JsonIgnore

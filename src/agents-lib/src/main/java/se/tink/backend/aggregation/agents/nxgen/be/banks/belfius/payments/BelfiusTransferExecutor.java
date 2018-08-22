@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusApiClient;
@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.core.enums.MessageType;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.BelgianIdentifier;
 import se.tink.libraries.date.CountryDateUtils;
 import se.tink.libraries.i18n.Catalog;
@@ -56,7 +57,7 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
     @Override
     public void executeTransfer(Transfer transfer) throws TransferExecutionException {
         validateDates(transfer);
-        boolean ownAccount = isOwnAccount(transfer.getDestination().getIdentifier());
+        boolean ownAccount = isOwnAccount(transfer.getDestination());
 
         if (transfer.getMessageType().equals(MessageType.STRUCTURED)) {
             transfer.setDestinationMessage(formatStructuredMessage(transfer.getDestinationMessage()));
@@ -158,7 +159,7 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         return false;
     }
 
-    public boolean containsAccount(String accountNum, ArrayList<BeneficiariesContacts> beneficiaries) {
+    public boolean containsAccount(String accountNum, List<BeneficiariesContacts> beneficiaries) {
         return beneficiaries.stream()
                 .anyMatch(beneficiary -> beneficiary.isAccount(accountNum));
     }
@@ -166,7 +167,10 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
     public void addBeneficiary(Transfer transfer, boolean isStructuredMessage) throws TransferExecutionException {
         String response = "";
         try {
-            String name = addBeneficiaryName();
+            String name = transfer.getDestination().getName().orElse(null);
+            if (name == null) {
+                name = addBeneficiaryName();
+            }
             SignProtocolResponse signProtocolResponse = apiClient.addBeneficiary(transfer, isStructuredMessage, name);
             response = waitForSignCode(signProtocolResponse.getChallenge(), signProtocolResponse.getSignType());
         } catch (SupplementalInfoException e) {
@@ -187,12 +191,14 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         }
     }
 
-    private boolean isOwnAccount(String account) {
+    private boolean isOwnAccount(AccountIdentifier accountIdentifier) {
         BelfiusTransactionalAccountFetcher accountFetcher = new BelfiusTransactionalAccountFetcher(apiClient);
         Collection<TransactionalAccount> transactionalAccounts = accountFetcher.fetchAccounts();
 
         return transactionalAccounts.stream()
-                .anyMatch(ta -> ta.getUniqueIdentifier().contains(account));
+                .map(TransactionalAccount::getIdentifiers)
+                .flatMap(List::stream)
+                .anyMatch(identifier -> identifier.equals(accountIdentifier));
     }
 
     public String createClientSha(Transfer transfer) {

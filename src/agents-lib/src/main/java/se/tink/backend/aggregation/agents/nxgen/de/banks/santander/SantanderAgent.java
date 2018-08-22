@@ -19,22 +19,21 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class SantanderAgent extends NextGenerationAgent {
 
     private final SantanderApiClient santanderApiClient;
-    private final SessionStorage sessionStorage;
 
-    public SantanderAgent(CredentialsRequest request, AgentContext context){
-        super(request, context);
-        sessionStorage = new SessionStorage();
+    public SantanderAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
         santanderApiClient = new SantanderApiClient(this.client, sessionStorage);
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {}
+    protected void configureHttpClient(TinkHttpClient client) {
+    }
 
     @Override
     protected Authenticator constructAuthenticator() {
@@ -48,9 +47,10 @@ public class SantanderAgent extends NextGenerationAgent {
                 metricRefreshController,
                 updateController,
                 new SantanderAccountFetcher(santanderApiClient),
-                        new TransactionFetcherController<>(
+                new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
-                new TransactionDatePaginationController<>(new SantanderTransactionFetcher(santanderApiClient)))));
+                        new TransactionDatePaginationController<>(
+                                new SantanderTransactionFetcher(santanderApiClient)))));
     }
 
     @Override

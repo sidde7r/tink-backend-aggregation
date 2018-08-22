@@ -20,6 +20,7 @@ public class Sparebank1CreditCardFetcher implements AccountFetcher<CreditCardAcc
     public Collection<CreditCardAccount> fetchAccounts() {
         return apiClient.getAccounts(Sparebank1Constants.Urls.CREDITCARDS, CreditCardAccountsListResponse.class)
                 .getCreditCards().stream()
+                .filter(creditCardAccountEntity -> !creditCardAccountEntity.isAccountClosed())
                 .map(CreditCardAccountEntity::toAccount)
                 .collect(Collectors.toList());
     }

@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.utils.SupplementalInformationUtils;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.system.rpc.AccountFeatures;
 import se.tink.backend.system.rpc.Loan;
 import se.tink.backend.system.rpc.Transaction;
@@ -46,7 +47,7 @@ public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExe
     private final CrossKeyConfig config;
     private boolean hasRefreshed = false;
 
-    public CrossKeyAgent(CredentialsRequest request, AgentContext context,
+    public CrossKeyAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair,
             CrossKeyConfig config) {
         super(request, context);
 
@@ -56,7 +57,7 @@ public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExe
                 clientFactory.createCookieClient(context.getLogOutputStream()),
                 credentials,
                 log,
-                getAggregator());
+                DEFAULT_USER_AGENT);
     }
 
     /**
@@ -166,14 +167,14 @@ public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExe
                 }
                 if (loanDetails == null) {
                     // something went wrong when we tried to fetch loanDetails
-                    context.updateAccount(tinkAccount);
+                    context.cacheAccount(tinkAccount);
                     continue;
                 }
                 Loan loan = loanDetails.toTinkLoan();
-                context.updateAccount(tinkAccount, AccountFeatures.createForLoan(loan));
+                context.cacheAccount(tinkAccount, AccountFeatures.createForLoan(loan));
             } else {
                 tinkAccounts.add(tinkAccount);
-                context.updateAccount(tinkAccount);
+                context.cacheAccount(tinkAccount);
             }
         }
         return tinkAccounts;

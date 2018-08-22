@@ -8,19 +8,17 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.r
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.SessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.SessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.CreditCardRequest;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.CreditCardResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.AccountTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.ListAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.TransactionDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.UserDataRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.UserDataResponse;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class LaCaixaApiClient {
 
@@ -85,12 +83,24 @@ public class LaCaixaApiClient {
 
         return createRequest(LaCaixaConstants.Urls.FETCH_ACCOUNT_TRANSACTION)
                 .queryParam(LaCaixaConstants.QueryParams.FROM_BEGIN, Boolean.toString(fromBegin))
-                .queryParam(LaCaixaConstants.QueryParams.ACCOUNT_REFERENCE, accountReference)
+                .queryParam(LaCaixaConstants.QueryParams.ACCOUNT_NUMBER, accountReference)
                 .get(AccountTransactionResponse.class);
     }
 
+    public TransactionDetailsResponse fetchTransactionDetails(String accountReference, TransactionEntity transaction) {
+        return createRequest(LaCaixaConstants.Urls.FETCH_TRANSACTION_DETAILS)
+                .queryParam(LaCaixaConstants.QueryParams.ACCOUNT_REFERENCE, accountReference)
+                .queryParam(LaCaixaConstants.QueryParams.TRANSACTION_DETAILS_CONSULTACOM,
+                        transaction.getRefValConsultaCom())
+                .queryParam(LaCaixaConstants.QueryParams.TRANSACTION_DETAILS_COMMUNICADOS,
+                        transaction.getIndComunicados())
+                .queryParam(LaCaixaConstants.QueryParams.TRANSACTION_DETAILS_ACCESODETALLEMOV,
+                        transaction.getAccesoDetalleMov())
+                .get(TransactionDetailsResponse.class);
+    }
+
     public String fetchCreditCards(){
-        
+
         // TODO: Implement properly when logging is done.
         return createRequest(LaCaixaConstants.Urls.FETCH_CREDIT_CARDS)
                 .post(String.class,

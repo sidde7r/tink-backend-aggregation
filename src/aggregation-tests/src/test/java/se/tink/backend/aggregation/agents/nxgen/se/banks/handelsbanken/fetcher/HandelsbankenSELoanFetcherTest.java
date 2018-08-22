@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher;
 import java.util.Collection;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEAuthenticatedTest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.HandelsbankenLoanFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.loan.HandelsbankenLoanFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.system.rpc.Loan;
@@ -13,6 +13,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static se.tink.backend.aggregation.utils.IsNot0Matcher.isNot0;
 
 public class HandelsbankenSELoanFetcherTest extends HandelsbankenSEAuthenticatedTest {
@@ -35,7 +36,6 @@ public class HandelsbankenSELoanFetcherTest extends HandelsbankenSEAuthenticated
     }
 
     private void assertAccountAttributes(LoanAccount account) {
-        assertThat("Account must have bank id", account.getUniqueIdentifier(), notNullValue());
         assertThat("Account must have account number", account.getAccountNumber(), notNullValue());
         assertThat("Account must have name", account.getName(), notNullValue());
         assertThat("Account must have loan type", account.getType(), is(AccountTypes.LOAN));
@@ -54,7 +54,7 @@ public class HandelsbankenSELoanFetcherTest extends HandelsbankenSEAuthenticated
     }
 
     private void assertAccountAndLoanMatch(LoanAccount account, Loan loan) {
-        assertEquals("Account and loan must match on number", account.getUniqueIdentifier(), loan.getLoanNumber());
+        assertTrue("Account uniqueId and loan number must match", account.isUniqueIdentifierEqual(loan.getLoanNumber()));
         assertEquals("Account and loan must match on balance", account.getBalance().getValue(), loan.getBalance(), 0.000001);
         assertEquals("Account and loan must match on name", account.getName(), loan.getName());
     }

@@ -1,9 +1,6 @@
 package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.base.Objects;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import com.google.common.util.concurrent.RateLimiter;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
@@ -11,14 +8,12 @@ import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
+import se.tink.backend.aggregation.workers.commands.state.CircuitBreakerAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.concurrency.CircuitBreakerStatistics;
-import se.tink.backend.aggregation.workers.ratelimit.CachingProviderRateLimiterFactory;
-import se.tink.backend.aggregation.workers.ratelimit.DefaultProviderRateLimiterFactory;
 import se.tink.backend.common.config.CircuitBreakerConfiguration;
 import se.tink.backend.common.config.CircuitBreakerMode;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.MetricId;
-import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.backend.common.utils.MetricsUtils;
 import se.tink.backend.aggregation.rpc.Credentials;
 
@@ -37,7 +32,6 @@ import se.tink.backend.aggregation.rpc.Credentials;
  */
 public class CircuitBreakerAgentWorkerCommand extends AgentWorkerCommand {
     private static final AggregationLogger log = new AggregationLogger(CircuitBreakerAgentWorkerCommand.class);
-    private static final MetricId CIRCUIT_BROKEN_PROVIDERS = MetricId.newId("circuit_broken_providers");
 
     private CircuitBreakerAgentWorkerCommandState state;
     private AgentWorkerContext context;
@@ -46,54 +40,6 @@ public class CircuitBreakerAgentWorkerCommand extends AgentWorkerCommand {
     public CircuitBreakerAgentWorkerCommand(AgentWorkerContext context, CircuitBreakerAgentWorkerCommandState state) {
         this.context = context;
         this.state = state;
-    }
-
-    public static class CircuitBreakerAgentWorkerCommandState {
-        private final CachingProviderRateLimiterFactory cachingProviderRateLimiterFactory;
-        private final double originalRate;
-        private final MetricRegistry metricRegistry;
-        private LoadingCache<Provider, CircuitBreakerStatistics> statisticsByProvider;
-
-        public CircuitBreakerAgentWorkerCommandState(CircuitBreakerConfiguration configuration,
-                MetricRegistry metricRegistry) {
-            this.originalRate = configuration.getRateLimitRate();
-            this.metricRegistry = metricRegistry;
-            this.cachingProviderRateLimiterFactory = new CachingProviderRateLimiterFactory(
-                    new DefaultProviderRateLimiterFactory(originalRate));
-            statisticsByProvider = CacheBuilder.newBuilder()
-                    .build(
-                            new CacheLoader<Provider, CircuitBreakerStatistics>() {
-                                @Override
-                                public CircuitBreakerStatistics load(Provider provider) throws Exception {
-                                    return new CircuitBreakerStatistics(
-                                            configuration.getResetInterval(),
-                                            configuration.getResetIntervalTimeUnit(),
-                                            configuration.getRateLimitMultiplicationFactors(),
-                                            configuration.getFailRatioThreshold(),
-                                            configuration.getCircuitBreakerThreshold(),
-                                            configuration.getBreakCircuitBreakerThreshold(),
-                                            metricRegistry,
-                                            provider.getName(),
-                                            provider.getClassName());
-                                }
-                            });
-        }
-
-        RateLimiter getRateLimiter(String providerName) {
-            return cachingProviderRateLimiterFactory.buildFor(providerName);
-        }
-
-        void setRateLimiterRate(String providerName, int rateMultiplier) {
-            cachingProviderRateLimiterFactory.buildFor(providerName).setRate(originalRate * rateMultiplier);
-        }
-
-        LoadingCache<Provider, CircuitBreakerStatistics> getCircuitBreakerStatistics() {
-            return statisticsByProvider;
-        }
-
-        MetricRegistry getMetricRegistry() {
-            return metricRegistry;
-        }
     }
 
     @Override
@@ -111,12 +57,6 @@ public class CircuitBreakerAgentWorkerCommand extends AgentWorkerCommand {
         if (Objects.equal(circuitBreakerConfiguration.getMode(), CircuitBreakerMode.DISABLED)) {
             return AgentWorkerCommandResult.CONTINUE;
         }
-
-        state.getMetricRegistry().meter(MetricId.newId("circuit_breaker")
-                .label("broken", String.valueOf(circuitBreakerStatus.isCircuitBroken()))
-                .label("consecutive_operations", String.valueOf(circuitBreakerStatus.getConsecutiveOperationsCounter()))
-                .label("provider_type", provider.getType().name().toLowerCase())
-                .label("provider", MetricsUtils.cleanMetricName(provider.getName()))).inc();
 
         if (circuitBreakerStatus.isCircuitBroken()) {
             state.setRateLimiterRate(provider.getName(), circuitBreakerStatus.getRateLimitMultiplicationFactor());

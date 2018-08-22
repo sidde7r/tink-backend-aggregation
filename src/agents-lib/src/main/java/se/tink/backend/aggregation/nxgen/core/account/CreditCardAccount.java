@@ -6,22 +6,19 @@ import se.tink.backend.core.Amount;
 public class CreditCardAccount extends Account {
     private final Amount availableCredit;
 
-    public CreditCardAccount(Builder builder) {
+    private CreditCardAccount(Builder<CreditCardAccount, DefaultCreditCardBuilder> builder) {
         super(builder);
         this.availableCredit = builder.getAvailableCredit();
     }
 
-    public static Builder<?, ?> builder(String uniqueIdentifier, Amount balance, Amount availableCredit) {
-        DefaultCreditCardBuilder defaultCreditCardBuilder = new DefaultCreditCardBuilder();
-        defaultCreditCardBuilder
-                .setUniqueIdentifier(uniqueIdentifier)
-                .setBalance(balance)
-                .setAvailableCredit(availableCredit);
-        return defaultCreditCardBuilder;
+    public static Builder<?, ?> builder(String uniqueIdentifier) {
+        return new DefaultCreditCardBuilder(uniqueIdentifier);
     }
 
-    public static Builder<?, ?> builder() {
-        return new DefaultCreditCardBuilder();
+    public static Builder<?, ?> builder(String uniqueIdentifier, Amount balance, Amount availableCredit) {
+        return builder(uniqueIdentifier)
+                .setBalance(balance)
+                .setAvailableCredit(availableCredit);
     }
 
     public Amount getAvailableCredit() {
@@ -48,6 +45,10 @@ public class CreditCardAccount extends Account {
 
         private Amount availableCredit;
 
+        public Builder(String uniqueIdentifier) {
+            super(uniqueIdentifier);
+        }
+
         public Amount getAvailableCredit() {
             return Amount.createFromAmount(this.availableCredit).orElseThrow(NullPointerException::new);
         }
@@ -60,6 +61,10 @@ public class CreditCardAccount extends Account {
 
     private static class DefaultCreditCardBuilder
             extends CreditCardAccount.Builder<CreditCardAccount, DefaultCreditCardBuilder> {
+
+        public DefaultCreditCardBuilder(String uniqueIdentifier) {
+            super(uniqueIdentifier);
+        }
 
         @Override
         protected DefaultCreditCardBuilder self() {

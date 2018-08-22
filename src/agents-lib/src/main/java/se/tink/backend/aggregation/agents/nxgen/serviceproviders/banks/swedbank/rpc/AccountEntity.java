@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.SwedbankSeSerializationUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
@@ -15,7 +17,6 @@ public abstract class AccountEntity extends AbstractAccountEntity {
     protected boolean selectedForQuickbalance;
     protected LinksEntity links;
     protected String priority;
-    protected String id;
     protected String currency;
     protected DetailsEntity details;
     protected String balance;
@@ -35,10 +36,6 @@ public abstract class AccountEntity extends AbstractAccountEntity {
         return priority;
     }
 
-    public String getId() {
-        return id;
-    }
-
     public String getCurrency() {
         return currency;
     }
@@ -49,6 +46,11 @@ public abstract class AccountEntity extends AbstractAccountEntity {
 
     public String getBalance() {
         return balance;
+    }
+
+    @JsonIgnore
+    public Amount getTinkAmount() {
+        return SwedbankSeSerializationUtils.parseAmountForInput(balance, currency);
     }
 
     public boolean isAvailableForFavouriteAccount() {
@@ -63,8 +65,12 @@ public abstract class AccountEntity extends AbstractAccountEntity {
         return type;
     }
 
+    private boolean isBalanceUndefined() {
+        return balance == null || balance.replaceAll("[^0-9]", "").isEmpty();
+    }
+
     protected Optional<TransactionalAccount> toTransactionalAccount(BankProfile bankProfile, @Nonnull AccountTypes type) {
-        if (fullyFormattedNumber == null || currency == null || balance == null) {
+        if (fullyFormattedNumber == null || currency == null || isBalanceUndefined()) {
             return Optional.empty();
         }
 

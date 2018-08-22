@@ -11,6 +11,14 @@ pkg_tar(
     strip_prefix = "/data",
 )
 
+pkg_tar(
+    name = "provider_configuration_data_tar",
+    srcs = ["//data"],
+    mode = "0444",
+    package_dir = "/usr/share/tink-backend-provider-configuration/data",
+    strip_prefix = "/data",
+)
+
 # end data pkgs
 
 # service files
@@ -18,6 +26,13 @@ pkg_tar(
 pkg_tar(
     name = "aggregation_system_tar",
     srcs = [":tink-backend-aggregation.service"],
+    mode = "0444",
+    package_dir = "/lib/systemd/system",
+)
+
+pkg_tar(
+    name = "provider_configuration_system_tar",
+    srcs = [":tink-backend-provider-configuration.service"],
     mode = "0444",
     package_dir = "/lib/systemd/system",
 )
@@ -45,6 +60,14 @@ pkg_tar(
     mode = "0444",
     package_dir = "/usr/share/tink-backend-aggregation",
 )
+
+pkg_tar(
+    name = "provider_configuration_bin_tar",
+    srcs = ["//:renamed-provider-configuration-deploy-jar"],
+    mode = "0444",
+    package_dir = "/usr/share/tink-backend-provider-configuration",
+)
+
 # end binary files
 
 # package tars
@@ -57,6 +80,16 @@ pkg_tar(
         ":aggregation_system_tar",
         ":phantomjs_bin_tar",
         ":libkbc_wbaes_bin_tar",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+pkg_tar(
+    name = "provider_configuration_tar",
+    deps = [
+        ":provider_configuration_bin_tar",
+        ":provider_configuration_data_tar",
+        ":provider_configuration_system_tar",
     ],
     visibility = ["//visibility:public"],
 )
@@ -85,4 +118,19 @@ pkg_deb(
     prerm = ":control/prerm",
     version_file = ".version",
 )
+
+pkg_deb(
+    name = "provider-configuration",
+    architecture = "amd64",
+    data = ":provider_configuration_tar",
+    description = "Tink Backend Provider Configuration Service",
+    homepage = "https://tink.se",
+    maintainer = "Tink AB <support@tink.se>",
+    package = "tink-backend-provider-configuration",
+    postinst = ":control/postinst",
+    preinst = ":control/preinst",
+    prerm = ":control/prerm",
+    version_file = ".version",
+)
+
 # end package debs

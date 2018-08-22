@@ -23,30 +23,30 @@ public class CreditCardAccountEntity {
     private String balanceAmountFraction;
     private String creditLimitInteger;
     private String creditLimitFraction;
-    private Boolean accountClosed;
+    private boolean accountClosed;
     private String status;
-    private Boolean closed;
-    private Boolean supplementaryCard;
-    private Boolean transferFromEnabled;
-    private Boolean transferToEnabled;
-    private Boolean paymentFromEnabled;
-    private Boolean active;
-    private Boolean mainCard;
-    private Boolean statusNormal;
-    private Boolean statusReplaced;
-    private Boolean statusBlocked;
-    private Boolean statusBlockedAndReplaced;
-    private Boolean statusClosed;
+    private boolean supplementaryCard;
+    private boolean transferFromEnabled;
+    private boolean transferToEnabled;
+    private boolean paymentFromEnabled;
+    private boolean active;
+    private boolean mainCard;
+    private boolean statusNormal;
+    private boolean statusReplaced;
+    private boolean statusBlocked;
+    private boolean statusBlockedAndReplaced;
+    private boolean statusClosed;
     @JsonProperty("_links")
     private HashMap<String, LinkEntity> links;
 
     @JsonIgnore
     public CreditCardAccount toAccount() {
-        return CreditCardAccount.builder(id,
+        return CreditCardAccount.builder(formattedNumber,
                 Sparebank1AmountUtils.constructAmount(balanceAmountInteger, balanceAmountFraction),
                 Sparebank1AmountUtils.constructAmount(creditLimitInteger, creditLimitFraction))
                 .setAccountNumber(formattedNumber)
                 .setName(name)
+                .setBankIdentifier(id)
                 .build();
     }
 
@@ -102,7 +102,7 @@ public class CreditCardAccountEntity {
         return creditLimitFraction;
     }
 
-    public Boolean getAccountClosed() {
+    public boolean isAccountClosed() {
         return accountClosed;
     }
 
@@ -110,51 +110,47 @@ public class CreditCardAccountEntity {
         return status;
     }
 
-    public Boolean getClosed() {
-        return closed;
-    }
-
-    public Boolean getSupplementaryCard() {
+    public boolean getSupplementaryCard() {
         return supplementaryCard;
     }
 
-    public Boolean getTransferFromEnabled() {
+    public boolean getTransferFromEnabled() {
         return transferFromEnabled;
     }
 
-    public Boolean getTransferToEnabled() {
+    public boolean getTransferToEnabled() {
         return transferToEnabled;
     }
 
-    public Boolean getPaymentFromEnabled() {
+    public boolean getPaymentFromEnabled() {
         return paymentFromEnabled;
     }
 
-    public Boolean getActive() {
+    public boolean getActive() {
         return active;
     }
 
-    public Boolean getMainCard() {
+    public boolean getMainCard() {
         return mainCard;
     }
 
-    public Boolean getStatusNormal() {
+    public boolean getStatusNormal() {
         return statusNormal;
     }
 
-    public Boolean getStatusReplaced() {
+    public boolean getStatusReplaced() {
         return statusReplaced;
     }
 
-    public Boolean getStatusBlocked() {
+    public boolean getStatusBlocked() {
         return statusBlocked;
     }
 
-    public Boolean getStatusBlockedAndReplaced() {
+    public boolean getStatusBlockedAndReplaced() {
         return statusBlockedAndReplaced;
     }
 
-    public Boolean getStatusClosed() {
+    public boolean getStatusClosed() {
         return statusClosed;
     }
 

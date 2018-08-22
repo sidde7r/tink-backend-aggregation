@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.common.mapper.CoreUserMapper;
 import se.tink.backend.common.utils.TestSSN;
 import se.tink.backend.core.FraudDetailsContent;
@@ -128,7 +129,7 @@ public class CreditSafeAgentTest extends AbstractAgentTest<CreditSafeAgent> {
                 CoreUserMapper.toAggregationUser(user), constructProvider(), credentials, true);
         AgentTestContext testContext = new AgentTestContext(credentials);
 
-        CreditSafeAgent creditSafeAgent = new CreditSafeAgent(informationRefreshRequest, testContext);
+        CreditSafeAgent creditSafeAgent = new CreditSafeAgent(informationRefreshRequest, testContext, new SignatureKeyPair());
         creditSafeAgent.setConfiguration(configuration);
 
         creditSafeAgent.login();

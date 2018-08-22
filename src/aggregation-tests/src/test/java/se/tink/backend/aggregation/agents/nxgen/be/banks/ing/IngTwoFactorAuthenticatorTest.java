@@ -44,6 +44,7 @@ public class IngTwoFactorAuthenticatorTest {
         SupplementalInformationController supplementalInformationController = mock(
                 SupplementalInformationController.class);
         when(supplementalInformationController.askSupplementalInformation(any()))
+                .thenReturn(ImmutableMap.of("otp", "OTP!"))
                 .thenReturn(ImmutableMap.of("challengeResponse", "Challenge me!"));
         new IngCardReaderAuthenticationController(mock(Catalog.class), supplementalInformationController,
                 authenticator).authenticate(credentials);

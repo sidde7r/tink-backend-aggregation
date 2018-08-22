@@ -14,16 +14,13 @@ public class LoanAccount extends Account {
         this.details = builder.getDetails();
     }
 
-    public static Builder<?, ?> builder() {
-        return new DefaultLoanBuilder();
+    public static Builder<?, ?> builder(String uniqueIdentifier) {
+        return new DefaultLoanBuilder(uniqueIdentifier);
     }
 
     public static Builder<?, ?> builder(String uniqueIdentifier, Amount balance) {
-        DefaultLoanBuilder defaultLoanBuilder = new DefaultLoanBuilder();
-        defaultLoanBuilder
-                .setUniqueIdentifier(uniqueIdentifier)
+        return builder(uniqueIdentifier)
                 .setBalance(balance);
-        return defaultLoanBuilder;
     }
 
     private static Amount ensureNegativeSign(Amount amount) {
@@ -54,6 +51,10 @@ public class LoanAccount extends Account {
     private static class DefaultLoanBuilder
             extends LoanAccount.Builder<LoanAccount, DefaultLoanBuilder> {
 
+        public DefaultLoanBuilder(String uniqueIdentifier) {
+            super(uniqueIdentifier);
+        }
+
         @Override
         protected DefaultLoanBuilder self() {
             return this;
@@ -69,6 +70,10 @@ public class LoanAccount extends Account {
             extends Account.Builder<LoanAccount, T> {
         private Double interestRate;
         private LoanDetails details;
+
+        public Builder(String uniqueIdentifier) {
+            super(uniqueIdentifier);
+        }
 
         public Double getInterestRate() {
             return this.interestRate;

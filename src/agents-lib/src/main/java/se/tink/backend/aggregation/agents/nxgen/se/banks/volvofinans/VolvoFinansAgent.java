@@ -20,13 +20,14 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class VolvoFinansAgent extends NextGenerationAgent {
 
     private final VolvoFinansApiClient apiClient;
 
-    public VolvoFinansAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public VolvoFinansAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
         apiClient = new VolvoFinansApiClient(client, sessionStorage);
     }
 

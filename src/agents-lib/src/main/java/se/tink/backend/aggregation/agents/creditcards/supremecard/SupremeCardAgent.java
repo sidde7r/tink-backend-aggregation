@@ -43,6 +43,7 @@ import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.system.rpc.Transaction;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.utils.StringUtils;
@@ -54,12 +55,12 @@ public class SupremeCardAgent extends AbstractAgent implements DeprecatedRefresh
     private boolean hasRefreshed = false;
 
     protected Builder createClientRequest(String uri) {
-        return client.resource(uri).header("User-Agent", getAggregator().getAggregatorIdentifier()).accept("*/*").acceptLanguage("sv-se");
+        return client.resource(uri).header("User-Agent", DEFAULT_USER_AGENT).accept("*/*").acceptLanguage("sv-se");
     }
 
     private Client client;
 
-    public SupremeCardAgent(CredentialsRequest request, AgentContext context) {
+    public SupremeCardAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         client = clientFactory.createCookieClient(context.getLogOutputStream());

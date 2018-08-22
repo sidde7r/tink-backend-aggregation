@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.common.cache.CacheClient;
 import se.tink.backend.common.cache.CacheScope;
-import se.tink.backend.common.repository.mysql.aggregation.ClusterCryptoConfigurationRepository;
+import se.tink.backend.common.repository.mysql.aggregation.clustercryptoconfiguration.ClusterCryptoConfigurationRepository;
 import se.tink.backend.core.ClusterCryptoConfiguration;
 import se.tink.backend.core.CryptoId;
 import se.tink.libraries.serialization.utils.SerializationUtils;

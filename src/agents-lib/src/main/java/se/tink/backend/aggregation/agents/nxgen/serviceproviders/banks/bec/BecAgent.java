@@ -25,13 +25,14 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class BecAgent extends NextGenerationAgent {
     private final BecApiClient apiClient;
     private final BecAccountTransactionsFetcher transactionFetcher;
 
-    public BecAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public BecAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
         this.apiClient = new BecApiClient(this.client, new BecUrlConfiguration(request.getProvider().getPayload()));
         this.transactionFetcher = new BecAccountTransactionsFetcher(this.apiClient);
     }

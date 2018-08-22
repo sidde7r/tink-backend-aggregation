@@ -91,7 +91,7 @@ public class AmericanExpressFIAgentTest extends NextGenerationBaseAgentTest<Amer
             refreshExecutor.refresh(item);
         }
 
-        List<Account> accounts = this.testContext.getAccounts();
+        List<Account> accounts = this.testContext.getUpdatedAccounts();
         List<Transaction> transactions = this.testContext.getTransactions();
         System.out.println("account size is " + accounts.size());
         System.out.println("transaction size is " + transactions.size());

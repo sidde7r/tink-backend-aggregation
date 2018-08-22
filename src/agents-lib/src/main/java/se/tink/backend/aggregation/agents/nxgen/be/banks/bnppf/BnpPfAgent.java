@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.Field;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class BnpPfAgent extends NextGenerationAgent {
 
@@ -28,8 +29,8 @@ public class BnpPfAgent extends NextGenerationAgent {
 
     private final BnpPfApiClient apiClient;
 
-    public BnpPfAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public BnpPfAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
         apiClient = new BnpPfApiClient(client);
     }
 

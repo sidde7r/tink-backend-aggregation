@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.authenticator.N26PasswordAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.transactional.N26AccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.transactional.N26TransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.transactionalaccount.N26AccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.transactionalaccount.N26TransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.session.N26SessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -20,16 +20,15 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class N26Agent extends NextGenerationAgent {
 
     private final N26ApiClient n26APiClient;
 
-    public N26Agent(CredentialsRequest request, AgentContext context){
-        super(request, context);
-        SessionStorage sessionStorage = new SessionStorage();
+    public N26Agent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
         this.n26APiClient = new N26ApiClient(this.client, sessionStorage);
     }
 
@@ -50,7 +49,7 @@ public class N26Agent extends NextGenerationAgent {
                 updateController,
                 new N26AccountFetcher(n26APiClient),
                 new TransactionFetcherController<>(this.transactionPaginationHelper,
-                       new TransactionKeyPaginationController<>(new N26TransactionFetcher(n26APiClient)))));
+                        new TransactionKeyPaginationController<>(new N26TransactionFetcher(n26APiClient)))));
     }
 
     @Override

@@ -1,10 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page;
 
-import java.util.Collection;
-import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 
-public interface TransactionKeyPaginatorResponse<T> {
-    Collection<? extends Transaction> getTinkTransactions();
-    boolean hasNext();
+public interface TransactionKeyPaginatorResponse<T> extends PaginatorResponse {
     T nextKey();
 }

@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.serializer.ScreenUpdateResponseDeserializer;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -28,6 +29,12 @@ public class ScreenUpdateResponse extends ResponseEntity {
                 .flatMap(r -> r.getWidgets().stream())
                 .filter(widget -> widgetId.equalsIgnoreCase(widget.getWidgetId()))
                 .findFirst();
+    }
+
+    public static Stream<Widget> streamWidgetsWithId(BelfiusResponse response, String widgetId) {
+        return response.filter(ScreenUpdateResponse.class)
+                .flatMap(r -> r.getWidgets().stream())
+                .filter(widget -> widgetId.equalsIgnoreCase(widget.getWidgetId()));
     }
 
     public static Widget findWidgetOrElseThrow(BelfiusResponse response, String widgetId) {

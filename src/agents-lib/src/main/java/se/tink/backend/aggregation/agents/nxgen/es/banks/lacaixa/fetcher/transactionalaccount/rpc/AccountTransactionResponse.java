@@ -7,17 +7,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
-public class AccountTransactionResponse implements TransactionPagePaginatorResponse{
+public class AccountTransactionResponse implements PaginatorResponse {
 
-    List<TransactionEntity> transactions;
-    boolean moreDataAvaliable;
+    private List<TransactionEntity> transactions;
+    private boolean moreDataAvaliable;
 
     // Using this setter to avoid creating several layers of wrapper entities because of JSON tree structure
     @JsonProperty("listaMovimientos")
@@ -30,6 +31,10 @@ public class AccountTransactionResponse implements TransactionPagePaginatorRespo
                 new TypeReference <List<TransactionEntity>>(){});
     }
 
+    public List<TransactionEntity> getTransactions() {
+        return transactions;
+    }
+
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
         return transactions.stream()
@@ -38,7 +43,7 @@ public class AccountTransactionResponse implements TransactionPagePaginatorRespo
     }
 
     @Override
-    public boolean canFetchMore() {
-        return moreDataAvaliable;
+    public Optional<Boolean> canFetchMore() {
+        return Optional.of(moreDataAvaliable);
     }
 }

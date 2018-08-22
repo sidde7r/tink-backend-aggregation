@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.workers.commands;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
-import se.tink.backend.common.repository.mysql.aggregation.AggregationCredentialsRepository;
+import se.tink.backend.common.repository.mysql.aggregation.aggregationcredentials.AggregationCredentialsRepository;
 import se.tink.backend.core.AggregationCredentials;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;

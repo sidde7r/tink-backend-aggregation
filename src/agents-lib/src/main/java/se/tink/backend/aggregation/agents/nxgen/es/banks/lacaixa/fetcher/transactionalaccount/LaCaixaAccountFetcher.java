@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 
 public class LaCaixaAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
-    LaCaixaApiClient apiClient;
+    private final LaCaixaApiClient apiClient;
 
     public LaCaixaAccountFetcher(LaCaixaApiClient apiClient) {
         this.apiClient = apiClient;

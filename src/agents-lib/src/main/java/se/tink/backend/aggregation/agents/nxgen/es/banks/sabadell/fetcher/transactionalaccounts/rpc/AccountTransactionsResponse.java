@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.rpc;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.entities.PeriodMovementModelListEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.entities.TransactionEntity;
@@ -24,7 +26,8 @@ public class AccountTransactionsResponse implements TransactionKeyPaginatorRespo
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        return periodMovementModelList.stream()
+        return Optional.ofNullable(periodMovementModelList).orElseGet(Collections::emptyList)
+                .stream()
                 .flatMap(periodMovementModelListEntity ->
                         periodMovementModelListEntity.getGenericMovementWrapperList().getMovements().stream())
                 .map(TransactionEntity::toTinkTransaction)
@@ -32,8 +35,8 @@ public class AccountTransactionsResponse implements TransactionKeyPaginatorRespo
     }
 
     @Override
-    public boolean hasNext() {
-        return moreElements;
+    public Optional<Boolean> canFetchMore() {
+        return Optional.of(moreElements);
     }
 
     @Override

@@ -5,8 +5,8 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConsta
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.entities.CreditCardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -19,7 +19,7 @@ public class SabadellCreditCardTransactionFetcher implements TransactionPagePagi
     }
 
     @Override
-    public TransactionPagePaginatorResponse getTransactionsFor(CreditCardAccount account, int page) {
+    public PaginatorResponse getTransactionsFor(CreditCardAccount account, int page) {
         CreditCardEntity creditCardEntity = account
                 .getTemporaryStorage(account.getBankIdentifier(), CreditCardEntity.class);
 

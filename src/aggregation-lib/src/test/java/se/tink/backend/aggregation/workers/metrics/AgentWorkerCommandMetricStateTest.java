@@ -21,7 +21,6 @@ public class AgentWorkerCommandMetricStateTest {
     private MetricCacheLoader loader;
     private Provider provider;
     private Credentials credentials;
-    private boolean isManual;
     private CredentialsRequestType requestType;
 
     @Before
@@ -31,10 +30,9 @@ public class AgentWorkerCommandMetricStateTest {
         loader = mock(MetricCacheLoader.class);
         provider = mockProvider();
         credentials = mockCredentials();
-        isManual = false;
         requestType = CredentialsRequestType.UPDATE;
 
-        metrics = new AgentWorkerCommandMetricState(provider, credentials, isManual, loader, requestType);
+        metrics = new AgentWorkerCommandMetricState(provider, credentials, loader, requestType);
         metrics.init(command);
     }
 
@@ -74,7 +72,7 @@ public class AgentWorkerCommandMetricStateTest {
 
     @Test(expected = IllegalStateException.class)
     public void ensureExceptionIsThrown_whenMetricsState_notInitiatedByCommand_onStart() {
-        metrics = new AgentWorkerCommandMetricState(provider, credentials, isManual, loader, requestType);
+        metrics = new AgentWorkerCommandMetricState(provider, credentials, loader, requestType);
         metrics.start(AgentWorkerOperationMetricType.EXECUTE_COMMAND);
     }
 
@@ -86,7 +84,7 @@ public class AgentWorkerCommandMetricStateTest {
 
     @Test(expected = IllegalStateException.class)
     public void ensureExceptionIsThrown_whenMetricsState_notInitiatedByCommand_onGetAction() {
-        metrics = new AgentWorkerCommandMetricState(provider, credentials, isManual, loader, requestType);
+        metrics = new AgentWorkerCommandMetricState(provider, credentials, loader, requestType);
         buildAction("should-throw-exception");
     }
 

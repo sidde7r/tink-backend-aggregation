@@ -5,26 +5,36 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authentic
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.bankid.InitBankIdRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.bankid.InitBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.device.CheckAgreementResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.rpc.HandelsbankenSETransferContext;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.rpc.TransferSignatureResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.rpc.TransferSpecificationRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.rpc.TransferSpecificationResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.rpc.ValidateRecipientRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.rpc.ValidateRecipientResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.entities.CustodyAccount;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.entities.HandelsbankenSEPensionFund;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.entities.PendingTransaction;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.entities.SecurityHolding;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.entities.SecurityHoldingContainer;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.rpc.CreditCardSETransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.rpc.CustodyAccountResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.rpc.FundHoldingsResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.rpc.HandelsbankenSEFundAccountHoldingDetail;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.rpc.HandelsbankenSEPaymentContext;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.rpc.PaymentDetails;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.rpc.PendingTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.rpc.PensionDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.rpc.SecurityHoldingsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.entities.EInvoice;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.entities.PendingTransaction;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.einvoice.rpc.ApproveEInvoiceRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.einvoice.rpc.ApproveEInvoiceResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.einvoice.rpc.EInvoiceDetails;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.einvoice.rpc.SignEInvoicesResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.rpc.UpdatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.HandelsbankenSETransferContext;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.TransferSignatureResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.TransferSpecificationRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.TransferSpecificationResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.ValidateRecipientRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.ValidateRecipientResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.creditcard.rpc.CreditCardSETransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.einvoice.rpc.PendingEInvoicesResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.CustodyAccount;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.HandelsbankenSEPensionFund;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.SecurityHolding;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.SecurityHoldingContainer;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc.CustodyAccountResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc.FundHoldingsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc.HandelsbankenSEFundAccountHoldingDetail;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc.PensionDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc.SecurityHoldingsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.rpc.PaymentDetails;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.interfaces.UpdatablePayment;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.HandelsbankenSEPaymentContext;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.PaymentRecipient;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.PendingTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.ApplicationEntryPointResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.EntryPointResponse;
@@ -34,10 +44,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.device.CreateProfileResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.device.EncryptedUserCredentialsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.device.InitNewProfileResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.entities.HandelsbankenCreditCard;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.creditcard.entities.HandelsbankenCreditCard;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants.URLS.Parameters.GIRO_NUMBER;
 
 public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
 
@@ -78,13 +89,48 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
         return createRequest(applicationEntryPoint.toPendingTransactions()).get(PendingTransactionsResponse.class);
     }
 
+    public PendingEInvoicesResponse pendingEInvoices(ApplicationEntryPointResponse applicationEntryPoint) {
+        return createRequest(applicationEntryPoint.toPendingEInvoices()).get(PendingEInvoicesResponse.class);
+    }
+
+    public Optional<EInvoiceDetails> eInvoiceDetails(EInvoice eInvoice) {
+        return eInvoice.toEInvoiceDetails().map(url -> createRequest(url).get(EInvoiceDetails.class));
+    }
+
+    public Optional<ApproveEInvoiceResponse> approveEInvoice(EInvoiceDetails eInvoiceDetails,
+            ApproveEInvoiceRequest request) {
+        return eInvoiceDetails.toApproval()
+                .map(url -> createPostRequest(url).post(ApproveEInvoiceResponse.class, request));
+    }
+
+    public Optional<SignEInvoicesResponse> signEInvoice(ApproveEInvoiceResponse approveEInvoiceResponse) {
+        return approveEInvoiceResponse.toSignature().map(url -> createPostRequest(url).post(SignEInvoicesResponse.class));
+    }
+
+    public HandelsbankenSEPaymentContext paymentContext(UpdatablePayment updatablePayment) {
+        return createRequest(updatablePayment.toPaymentContext()).get(HandelsbankenSEPaymentContext.class);
+    }
+
+    public Optional<PaymentDetails> createPayment(HandelsbankenSEPaymentContext paymentContext,
+            CreatePaymentRequest request) {
+        return paymentContext.toCreate().map(url -> createPostRequest(url).post(PaymentDetails.class, request));
+    }
+
+    public Optional<UpdatablePayment> updatePayment(UpdatablePayment updatablePayment, UpdatePaymentRequest request) {
+        return updatablePayment.toUpdate().map(url -> createPostRequest(url).put(updatablePayment.getClass(), request));
+    }
+
+    public Optional<PaymentDetails> signPayment(PaymentDetails paymentDetails) {
+        return paymentDetails.toSignature().map(url -> createPostRequest(url).post(PaymentDetails.class));
+    }
+
     @Override
     public CreditCardSETransactionsResponse creditCardTransactions(HandelsbankenCreditCard creditCard) {
         return createRequest(creditCard.toCardTransactions()).get(CreditCardSETransactionsResponse.class);
     }
 
     public Optional<PaymentDetails> paymentDetails(PendingTransaction pendingTransaction) {
-        return pendingTransaction.paymentDetails().map(url -> createRequest(url).get(PaymentDetails.class));
+        return pendingTransaction.toPaymentDetails().map(url -> createRequest(url).get(PaymentDetails.class));
     }
 
     public SecurityHoldingsResponse securitiesHoldings(ApplicationEntryPointResponse applicationEntryPoint) {
@@ -136,6 +182,12 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
             ValidateRecipientRequest validateRecipient) {
         return createPostRequest(transferContext.toValidateRecipient())
                 .post(ValidateRecipientResponse.class, validateRecipient);
+    }
+
+    public PaymentRecipient lookupRecipient(HandelsbankenSEPaymentContext paymentContext,
+            String giroNumberFormatted) {
+        return createRequest(paymentContext.toLookupRecipient().parameter(GIRO_NUMBER, giroNumberFormatted))
+                .get(PaymentRecipient.class);
     }
 
     public HandelsbankenSEPaymentContext paymentContext(ApplicationEntryPointResponse applicationEntryPoint) {

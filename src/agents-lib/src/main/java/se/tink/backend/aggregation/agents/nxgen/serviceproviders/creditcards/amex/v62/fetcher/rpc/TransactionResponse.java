@@ -10,8 +10,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.ActivityListEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.TransactionDetailsEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginatorResponse;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginatorResponseImpl;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
@@ -25,23 +25,19 @@ public class TransactionResponse {
     }
 
     @JsonIgnore
-    public TransactionPagePaginatorResponse getPaginatorResponse(AmericanExpressV62Configuration config) {
+    public PaginatorResponse getPaginatorResponse(AmericanExpressV62Configuration config) {
         return getPaginatorResponse(config, Collections.emptyList());
     }
 
     @JsonIgnore
-    public TransactionPagePaginatorResponse getPaginatorResponse(AmericanExpressV62Configuration config, List<Transaction> pendingTransactions) {
+    public PaginatorResponse getPaginatorResponse(AmericanExpressV62Configuration config, List<Transaction> pendingTransactions) {
         this.config = config;
 
         List<Transaction> transactions = new ArrayList<>();
         transactions.addAll(pendingTransactions);
         transactions.addAll(parseResponse());
 
-        TransactionPagePaginatorResponseImpl response = new TransactionPagePaginatorResponseImpl();
-        response.setTransactions(transactions);
-        response.setCanFetchMore(hasMoreTransactions());
-
-        return response;
+        return PaginatorResponseImpl.create(transactions, hasMoreTransactions());
     }
 
     // If this page contains error we can't fetch more pages.

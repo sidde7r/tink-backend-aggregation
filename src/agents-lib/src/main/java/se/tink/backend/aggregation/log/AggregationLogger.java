@@ -29,7 +29,7 @@ import se.tink.libraries.uuid.UUIDUtils;
 public class AggregationLogger extends se.tink.libraries.log.LogUtils {
 
     @VisibleForTesting
-    static final int EXTRA_LONG_LIMIT = 1750;
+    static final int EXTRA_LONG_LIMIT = 1550;
 
     public AggregationLogger(Class clazz) {
         super(clazz);

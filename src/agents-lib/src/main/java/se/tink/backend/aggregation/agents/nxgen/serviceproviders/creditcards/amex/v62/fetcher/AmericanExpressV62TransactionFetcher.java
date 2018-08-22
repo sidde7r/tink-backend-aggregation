@@ -13,8 +13,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc.TimelineRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc.TimelineResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc.TransactionsRequest;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
@@ -35,7 +35,7 @@ public class AmericanExpressV62TransactionFetcher
     }
 
     @Override
-    public TransactionPagePaginatorResponse getTransactionsFor(CreditCardAccount account, int page) {
+    public PaginatorResponse getTransactionsFor(CreditCardAccount account, int page) {
         TransactionsRequest request = new TransactionsRequest();
         request.setSortedIndex(Integer.parseInt(account.getBankIdentifier()))
                 .setBillingIndexList(ImmutableList.of(page));

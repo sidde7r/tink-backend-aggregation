@@ -51,6 +51,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.MessageResp
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.SessionOpenedResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.StartFlowRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.sessionhandler.rpc.KeepAliveRequest;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.sessionhandler.rpc.TechnicalResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusSecurityUtils;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -83,7 +84,9 @@ public class BelfiusApiClient {
     }
 
     public void keepAlive() {
-        post(BelfiusConstants.Url.GEPA_RENDERING_URL, BelfiusResponse.class, KeepAliveRequest.create());
+        post(BelfiusConstants.Url.GEPA_RENDERING_URL,
+                BelfiusResponse.class, KeepAliveRequest.create())
+                .filter(TechnicalResponse.class).forEach(TechnicalResponse::checkSessionExpired);
     }
 
     public void startFlow() {

@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.accounts.checking.FinTsAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.accounts.checking.FinTsCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.accounts.checking.FinTsTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.authenticator.FinTsAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.session.FinTsSessionHandler;
@@ -23,15 +23,18 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.Field;
 
+import java.util.Optional;
+import se.tink.backend.common.config.SignatureKeyPair;
+
 public class FinTsAgent extends NextGenerationAgent {
 
     private FinTsApiClient apiClient;
 
-    public FinTsAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public FinTsAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
         String[] payload = request.getProvider().getPayload().split(" ");
-        FinTsConfiguration configuration =
-                new FinTsConfiguration(
+        se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConfiguration configuration =
+                new se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConfiguration(
                         payload[0],
                         payload[1],
                         request.getCredentials().getField(Field.Key.USERNAME),
@@ -61,7 +64,16 @@ public class FinTsAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.empty();
+        FinTsCreditCardFetcher creditCardFetcher = new FinTsCreditCardFetcher(apiClient);
+
+        return Optional.of(
+                new CreditCardRefreshController(
+                        this.metricRefreshController,
+                        this.updateController,
+                        creditCardFetcher, new TransactionFetcherController<>(
+                        this.transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(creditCardFetcher))));
+
     }
 
     @Override

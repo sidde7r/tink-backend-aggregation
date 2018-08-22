@@ -52,18 +52,18 @@ public class CrossKeyApiClient {
     private String appId;
     private String language;
     private final Credentials credentials;
-    private final Aggregator aggregator;
+    private final String userAgent;
 
     //Constant Values
     private static final String VERSION_1_4_0 = "1.4.0-iOS";
 
     private final AggregationLogger log;
 
-    public CrossKeyApiClient(Client client, Credentials credentials, AggregationLogger log, Aggregator aggregator) {
+    public CrossKeyApiClient(Client client, Credentials credentials, AggregationLogger log, String userAgent) {
         this.client = client;
         this.credentials = credentials;
         this.log = log;
-        this.aggregator = aggregator;
+        this.userAgent = userAgent;
     }
 
     public void setErrorHandler(CrossKeyErrorHandler errorHandler) {
@@ -265,7 +265,7 @@ public class CrossKeyApiClient {
     }
 
     private WebResource.Builder createClientRequest(String uri) {
-        return client.resource(rootUrl + uri).header("User-Agent", aggregator.getAggregatorIdentifier())
+        return client.resource(rootUrl + uri).header("User-Agent", userAgent)
                 .type(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON_TYPE);
     }

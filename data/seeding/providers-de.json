@@ -3,6 +3,32 @@
   "currency": "EUR",
   "providers": [
     {
+      "name": "de-hvb-password",
+      "displayName": "HypoVereinsbank",
+      "groupDisplayName": "HypoVereinsbank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.hvb.HVBAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+      "transactional": true,
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
       "name": "de-n26-password",
       "displayName": "N26",
       "groupDisplayName": "N26",
@@ -12,6 +38,32 @@
       "credentialsType": "PASSWORD",
       "multiFactor": false,
       "className": "nxgen.serviceproviders.banks.n26.N26Agent",
+      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+      "transactional": true,
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "de-commerzbank-password",
+      "displayName": "Commerzbank",
+      "groupDisplayName": "Commerzbank",
+      "popular": true,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.commerzbank.CommerzbankAgent",
       "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
       "transactional": true,
       "fields": [
@@ -1243,7 +1295,7 @@
     {
       "name": "de-deutsche-25070077-password",
       "displayName": "BLZ: 25070077",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -1270,7 +1322,7 @@
     {
       "name": "de-deutsche-25070084-password",
       "displayName": "BLZ: 25070084",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -1297,7 +1349,7 @@
     {
       "name": "de-deutsche-25070086-password",
       "displayName": "BLZ: 25070086",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -1324,7 +1376,7 @@
     {
       "name": "de-deutsche-25470024-password",
       "displayName": "BLZ: 25470024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -1351,7 +1403,7 @@
     {
       "name": "de-deutsche-25470073-password",
       "displayName": "BLZ: 25470073",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -1378,7 +1430,7 @@
     {
       "name": "de-deutsche-25471024-password",
       "displayName": "BLZ: 25471024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -1405,7 +1457,7 @@
     {
       "name": "de-deutsche-25471073-password",
       "displayName": "BLZ: 25471073",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -1432,7 +1484,7 @@
     {
       "name": "de-deutsche-25770024-password",
       "displayName": "BLZ: 25770024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -1459,7 +1511,7 @@
     {
       "name": "de-deutsche-25770069-password",
       "displayName": "BLZ: 25770069",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -1486,7 +1538,7 @@
     {
       "name": "de-deutsche-25970024-password",
       "displayName": "BLZ: 25970024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -1513,7 +1565,7 @@
     {
       "name": "de-deutsche-25970074-password",
       "displayName": "BLZ: 25970074",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -1540,7 +1592,7 @@
     {
       "name": "de-deutsche-25971024-password",
       "displayName": "BLZ: 25971024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -1567,7 +1619,7 @@
     {
       "name": "de-deutsche-25971071-password",
       "displayName": "BLZ: 25971071",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -1594,7 +1646,7 @@
     {
       "name": "de-deutsche-26070024-password",
       "displayName": "BLZ: 26070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -1621,7 +1673,7 @@
     {
       "name": "de-deutsche-26070072-password",
       "displayName": "BLZ: 26070072",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -1648,7 +1700,7 @@
     {
       "name": "de-deutsche-26271424-password",
       "displayName": "BLZ: 26271424",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -1675,7 +1727,7 @@
     {
       "name": "de-deutsche-26271471-password",
       "displayName": "BLZ: 26271471",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -1702,7 +1754,7 @@
     {
       "name": "de-deutsche-26570024-password",
       "displayName": "BLZ: 26570024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -1729,7 +1781,7 @@
     {
       "name": "de-deutsche-26570090-password",
       "displayName": "BLZ: 26570090",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -1756,7 +1808,7 @@
     {
       "name": "de-deutsche-26770024-password",
       "displayName": "BLZ: 26770024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -1783,7 +1835,7 @@
     {
       "name": "de-deutsche-26770095-password",
       "displayName": "BLZ: 26770095",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -1810,7 +1862,7 @@
     {
       "name": "de-deutsche-26870024-password",
       "displayName": "BLZ: 26870024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -1837,7 +1889,7 @@
     {
       "name": "de-deutsche-26870032-password",
       "displayName": "BLZ: 26870032",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -1864,7 +1916,7 @@
     {
       "name": "de-deutsche-26971024-password",
       "displayName": "BLZ: 26971024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -1891,7 +1943,7 @@
     {
       "name": "de-deutsche-26971038-password",
       "displayName": "BLZ: 26971038",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -1918,7 +1970,7 @@
     {
       "name": "de-deutsche-27070024-password",
       "displayName": "BLZ: 27070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -1945,7 +1997,7 @@
     {
       "name": "de-deutsche-27070030-password",
       "displayName": "BLZ: 27070030",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -1972,7 +2024,7 @@
     {
       "name": "de-deutsche-27070031-password",
       "displayName": "BLZ: 27070031",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -1999,7 +2051,7 @@
     {
       "name": "de-deutsche-27070034-password",
       "displayName": "BLZ: 27070034",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2026,7 +2078,7 @@
     {
       "name": "de-deutsche-27070041-password",
       "displayName": "BLZ: 27070041",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2053,7 +2105,7 @@
     {
       "name": "de-deutsche-27070042-password",
       "displayName": "BLZ: 27070042",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2080,7 +2132,7 @@
     {
       "name": "de-deutsche-27070043-password",
       "displayName": "BLZ: 27070043",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2107,7 +2159,7 @@
     {
       "name": "de-deutsche-27070079-password",
       "displayName": "BLZ: 27070079",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2134,7 +2186,7 @@
     {
       "name": "de-deutsche-27072524-password",
       "displayName": "BLZ: 27072524",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2161,7 +2213,7 @@
     {
       "name": "de-deutsche-27072537-password",
       "displayName": "BLZ: 27072537",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2188,7 +2240,7 @@
     {
       "name": "de-deutsche-27072724-password",
       "displayName": "BLZ: 27072724",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2215,7 +2267,7 @@
     {
       "name": "de-deutsche-27072736-password",
       "displayName": "BLZ: 27072736",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2242,7 +2294,7 @@
     {
       "name": "de-deutsche-28070024-password",
       "displayName": "BLZ: 28070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2269,7 +2321,7 @@
     {
       "name": "de-deutsche-28070057-password",
       "displayName": "BLZ: 28070057",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2296,7 +2348,7 @@
     {
       "name": "de-deutsche-28270024-password",
       "displayName": "BLZ: 28270024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2323,7 +2375,7 @@
     {
       "name": "de-deutsche-28270056-password",
       "displayName": "BLZ: 28270056",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2350,7 +2402,7 @@
     {
       "name": "de-deutsche-28470024-password",
       "displayName": "BLZ: 28470024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2377,7 +2429,7 @@
     {
       "name": "de-deutsche-28470091-password",
       "displayName": "BLZ: 28470091",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2404,7 +2456,7 @@
     {
       "name": "de-deutsche-28570024-password",
       "displayName": "BLZ: 28570024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2431,7 +2483,7 @@
     {
       "name": "de-deutsche-28570092-password",
       "displayName": "BLZ: 28570092",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2458,7 +2510,7 @@
     {
       "name": "de-deutsche-29070024-password",
       "displayName": "BLZ: 29070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2485,7 +2537,7 @@
     {
       "name": "de-deutsche-29070050-password",
       "displayName": "BLZ: 29070050",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2512,7 +2564,7 @@
     {
       "name": "de-deutsche-29070051-password",
       "displayName": "BLZ: 29070051",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2539,7 +2591,7 @@
     {
       "name": "de-deutsche-29070052-password",
       "displayName": "BLZ: 29070052",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2566,7 +2618,7 @@
     {
       "name": "de-deutsche-29070058-password",
       "displayName": "BLZ: 29070058",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2593,7 +2645,7 @@
     {
       "name": "de-deutsche-29070059-password",
       "displayName": "BLZ: 29070059",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2620,7 +2672,7 @@
     {
       "name": "de-deutsche-29172624-password",
       "displayName": "BLZ: 29172624",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2647,7 +2699,7 @@
     {
       "name": "de-deutsche-29172655-password",
       "displayName": "BLZ: 29172655",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2674,7 +2726,7 @@
     {
       "name": "de-deutsche-30060601-password",
       "displayName": "BLZ: 30060601",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2701,7 +2753,7 @@
     {
       "name": "de-deutsche-30070010-password",
       "displayName": "BLZ: 30070010",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2728,7 +2780,7 @@
     {
       "name": "de-deutsche-30070024-password",
       "displayName": "BLZ: 30070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2755,7 +2807,7 @@
     {
       "name": "de-deutsche-31070001-password",
       "displayName": "BLZ: 31070001",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2782,7 +2834,7 @@
     {
       "name": "de-deutsche-31070024-password",
       "displayName": "BLZ: 31070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2809,7 +2861,7 @@
     {
       "name": "de-deutsche-31470004-password",
       "displayName": "BLZ: 31470004",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2836,7 +2888,7 @@
     {
       "name": "de-deutsche-31470024-password",
       "displayName": "BLZ: 31470024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2863,7 +2915,7 @@
     {
       "name": "de-deutsche-32070024-password",
       "displayName": "BLZ: 32070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2890,7 +2942,7 @@
     {
       "name": "de-deutsche-32070080-password",
       "displayName": "BLZ: 32070080",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2917,7 +2969,7 @@
     {
       "name": "de-deutsche-32470024-password",
       "displayName": "BLZ: 32470024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2944,7 +2996,7 @@
     {
       "name": "de-deutsche-32470077-password",
       "displayName": "BLZ: 32470077",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2971,7 +3023,7 @@
     {
       "name": "de-deutsche-33070024-password",
       "displayName": "BLZ: 33070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -2998,7 +3050,7 @@
     {
       "name": "de-deutsche-33070090-password",
       "displayName": "BLZ: 33070090",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3025,7 +3077,7 @@
     {
       "name": "de-deutsche-34070024-password",
       "displayName": "BLZ: 34070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3052,7 +3104,7 @@
     {
       "name": "de-deutsche-34070093-password",
       "displayName": "BLZ: 34070093",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3079,7 +3131,7 @@
     {
       "name": "de-deutsche-34270024-password",
       "displayName": "BLZ: 34270024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3106,7 +3158,7 @@
     {
       "name": "de-deutsche-34270094-password",
       "displayName": "BLZ: 34270094",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3133,7 +3185,7 @@
     {
       "name": "de-deutsche-35070024-password",
       "displayName": "BLZ: 35070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3160,34 +3212,7 @@
     {
       "name": "de-deutsche-35070030-password",
       "displayName": "BLZ: 35070030",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "35070030 https://fints.deutsche-bank.de/",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-deutsche-35070030-password",
-      "displayName": "BLZ: 35070030",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3214,7 +3239,7 @@
     {
       "name": "de-deutsche-36070024-password",
       "displayName": "BLZ: 36070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3241,7 +3266,7 @@
     {
       "name": "de-deutsche-36070050-password",
       "displayName": "BLZ: 36070050",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3268,7 +3293,7 @@
     {
       "name": "de-deutsche-36270024-password",
       "displayName": "BLZ: 36270024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3295,7 +3320,7 @@
     {
       "name": "de-deutsche-36270048-password",
       "displayName": "BLZ: 36270048",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3322,7 +3347,7 @@
     {
       "name": "de-deutsche-36570024-password",
       "displayName": "BLZ: 36570024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3349,7 +3374,7 @@
     {
       "name": "de-deutsche-36570049-password",
       "displayName": "BLZ: 36570049",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3376,7 +3401,7 @@
     {
       "name": "de-deutsche-37070024-password",
       "displayName": "BLZ: 37070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3403,7 +3428,7 @@
     {
       "name": "de-deutsche-37070060-password",
       "displayName": "BLZ: 37070060",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3430,7 +3455,7 @@
     {
       "name": "de-deutsche-37570024-password",
       "displayName": "BLZ: 37570024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3457,7 +3482,7 @@
     {
       "name": "de-deutsche-37570064-password",
       "displayName": "BLZ: 37570064",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3484,7 +3509,7 @@
     {
       "name": "de-deutsche-38070024-password",
       "displayName": "BLZ: 38070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3511,7 +3536,7 @@
     {
       "name": "de-deutsche-38070059-password",
       "displayName": "BLZ: 38070059",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3538,7 +3563,7 @@
     {
       "name": "de-deutsche-38070724-password",
       "displayName": "BLZ: 38070724",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3565,7 +3590,7 @@
     {
       "name": "de-deutsche-38077724-password",
       "displayName": "BLZ: 38077724",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3592,7 +3617,7 @@
     {
       "name": "de-deutsche-38470024-password",
       "displayName": "BLZ: 38470024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3619,7 +3644,7 @@
     {
       "name": "de-deutsche-38470091-password",
       "displayName": "BLZ: 38470091",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3646,7 +3671,7 @@
     {
       "name": "de-deutsche-39070020-password",
       "displayName": "BLZ: 39070020",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3673,7 +3698,7 @@
     {
       "name": "de-deutsche-39070024-password",
       "displayName": "BLZ: 39070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3700,7 +3725,7 @@
     {
       "name": "de-deutsche-39570024-password",
       "displayName": "BLZ: 39570024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3727,7 +3752,7 @@
     {
       "name": "de-deutsche-39570061-password",
       "displayName": "BLZ: 39570061",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3754,7 +3779,7 @@
     {
       "name": "de-deutsche-40070024-password",
       "displayName": "BLZ: 40070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3781,7 +3806,7 @@
     {
       "name": "de-deutsche-40070080-password",
       "displayName": "BLZ: 40070080",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3808,7 +3833,7 @@
     {
       "name": "de-deutsche-40370024-password",
       "displayName": "BLZ: 40370024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3835,7 +3860,7 @@
     {
       "name": "de-deutsche-40370079-password",
       "displayName": "BLZ: 40370079",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3862,7 +3887,7 @@
     {
       "name": "de-deutsche-41070024-password",
       "displayName": "BLZ: 41070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3889,7 +3914,7 @@
     {
       "name": "de-deutsche-41070049-password",
       "displayName": "BLZ: 41070049",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3916,7 +3941,7 @@
     {
       "name": "de-deutsche-41670024-password",
       "displayName": "BLZ: 41670024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3943,7 +3968,7 @@
     {
       "name": "de-deutsche-41670027-password",
       "displayName": "BLZ: 41670027",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3970,7 +3995,7 @@
     {
       "name": "de-deutsche-41670028-password",
       "displayName": "BLZ: 41670028",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -3997,7 +4022,7 @@
     {
       "name": "de-deutsche-41670029-password",
       "displayName": "BLZ: 41670029",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4024,7 +4049,7 @@
     {
       "name": "de-deutsche-41670030-password",
       "displayName": "BLZ: 41670030",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4051,7 +4076,7 @@
     {
       "name": "de-deutsche-42070024-password",
       "displayName": "BLZ: 42070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4078,7 +4103,7 @@
     {
       "name": "de-deutsche-42070062-password",
       "displayName": "BLZ: 42070062",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4105,7 +4130,7 @@
     {
       "name": "de-deutsche-42870024-password",
       "displayName": "BLZ: 42870024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4132,7 +4157,7 @@
     {
       "name": "de-deutsche-42870077-password",
       "displayName": "BLZ: 42870077",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4159,7 +4184,7 @@
     {
       "name": "de-deutsche-43070024-password",
       "displayName": "BLZ: 43070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4186,7 +4211,7 @@
     {
       "name": "de-deutsche-43070061-password",
       "displayName": "BLZ: 43070061",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4213,7 +4238,7 @@
     {
       "name": "de-deutsche-44070024-password",
       "displayName": "BLZ: 44070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4240,7 +4265,7 @@
     {
       "name": "de-deutsche-44070050-password",
       "displayName": "BLZ: 44070050",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4267,7 +4292,7 @@
     {
       "name": "de-deutsche-44570004-password",
       "displayName": "BLZ: 44570004",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4294,7 +4319,7 @@
     {
       "name": "de-deutsche-44570024-password",
       "displayName": "BLZ: 44570024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4321,7 +4346,7 @@
     {
       "name": "de-deutsche-45070002-password",
       "displayName": "BLZ: 45070002",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4348,7 +4373,7 @@
     {
       "name": "de-deutsche-45070024-password",
       "displayName": "BLZ: 45070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4375,7 +4400,7 @@
     {
       "name": "de-deutsche-46070024-password",
       "displayName": "BLZ: 46070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4402,7 +4427,7 @@
     {
       "name": "de-deutsche-46070090-password",
       "displayName": "BLZ: 46070090",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4429,7 +4454,7 @@
     {
       "name": "de-deutsche-46670007-password",
       "displayName": "BLZ: 46670007",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4456,7 +4481,7 @@
     {
       "name": "de-deutsche-46670024-password",
       "displayName": "BLZ: 46670024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4483,7 +4508,7 @@
     {
       "name": "de-deutsche-47270024-password",
       "displayName": "BLZ: 47270024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4510,7 +4535,7 @@
     {
       "name": "de-deutsche-47270029-password",
       "displayName": "BLZ: 47270029",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4537,7 +4562,7 @@
     {
       "name": "de-deutsche-47670023-password",
       "displayName": "BLZ: 47670023",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4564,7 +4589,7 @@
     {
       "name": "de-deutsche-47670024-password",
       "displayName": "BLZ: 47670024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4591,7 +4616,7 @@
     {
       "name": "de-deutsche-48070020-password",
       "displayName": "BLZ: 48070020",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4618,7 +4643,7 @@
     {
       "name": "de-deutsche-48070024-password",
       "displayName": "BLZ: 48070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4645,7 +4670,7 @@
     {
       "name": "de-deutsche-48070040-password",
       "displayName": "BLZ: 48070040",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4672,7 +4697,7 @@
     {
       "name": "de-deutsche-48070042-password",
       "displayName": "BLZ: 48070042",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4699,7 +4724,7 @@
     {
       "name": "de-deutsche-48070043-password",
       "displayName": "BLZ: 48070043",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4726,7 +4751,7 @@
     {
       "name": "de-deutsche-48070044-password",
       "displayName": "BLZ: 48070044",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4753,7 +4778,7 @@
     {
       "name": "de-deutsche-48070045-password",
       "displayName": "BLZ: 48070045",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4780,7 +4805,7 @@
     {
       "name": "de-deutsche-48070050-password",
       "displayName": "BLZ: 48070050",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4807,7 +4832,7 @@
     {
       "name": "de-deutsche-48070052-password",
       "displayName": "BLZ: 48070052",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4834,7 +4859,7 @@
     {
       "name": "de-deutsche-49070024-password",
       "displayName": "BLZ: 49070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4861,7 +4886,7 @@
     {
       "name": "de-deutsche-49070028-password",
       "displayName": "BLZ: 49070028",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4888,7 +4913,7 @@
     {
       "name": "de-deutsche-50070010-password",
       "displayName": "BLZ: 50070010",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4915,7 +4940,7 @@
     {
       "name": "de-deutsche-50070024-password",
       "displayName": "BLZ: 50070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4942,7 +4967,7 @@
     {
       "name": "de-deutsche-50073019-password",
       "displayName": "BLZ: 50073019",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4969,7 +4994,7 @@
     {
       "name": "de-deutsche-50073024-password",
       "displayName": "BLZ: 50073024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -4996,7 +5021,7 @@
     {
       "name": "de-deutsche-50570018-password",
       "displayName": "BLZ: 50570018",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5023,7 +5048,7 @@
     {
       "name": "de-deutsche-50570024-password",
       "displayName": "BLZ: 50570024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5050,7 +5075,7 @@
     {
       "name": "de-deutsche-50670009-password",
       "displayName": "BLZ: 50670009",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5077,7 +5102,7 @@
     {
       "name": "de-deutsche-50670024-password",
       "displayName": "BLZ: 50670024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5104,7 +5129,7 @@
     {
       "name": "de-deutsche-50870005-password",
       "displayName": "BLZ: 50870005",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5131,7 +5156,7 @@
     {
       "name": "de-deutsche-50870024-password",
       "displayName": "BLZ: 50870024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5158,7 +5183,7 @@
     {
       "name": "de-deutsche-50970004-password",
       "displayName": "BLZ: 50970004",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5185,7 +5210,7 @@
     {
       "name": "de-deutsche-50970024-password",
       "displayName": "BLZ: 50970024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5212,7 +5237,7 @@
     {
       "name": "de-deutsche-51070021-password",
       "displayName": "BLZ: 51070021",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5239,7 +5264,7 @@
     {
       "name": "de-deutsche-51070024-password",
       "displayName": "BLZ: 51070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5266,7 +5291,7 @@
     {
       "name": "de-deutsche-51170010-password",
       "displayName": "BLZ: 51170010",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5293,7 +5318,7 @@
     {
       "name": "de-deutsche-51170024-password",
       "displayName": "BLZ: 51170024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5320,7 +5345,7 @@
     {
       "name": "de-deutsche-51370008-password",
       "displayName": "BLZ: 51370008",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5347,7 +5372,7 @@
     {
       "name": "de-deutsche-51370024-password",
       "displayName": "BLZ: 51370024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5374,7 +5399,7 @@
     {
       "name": "de-deutsche-51570008-password",
       "displayName": "BLZ: 51570008",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5401,7 +5426,7 @@
     {
       "name": "de-deutsche-51570024-password",
       "displayName": "BLZ: 51570024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5428,7 +5453,7 @@
     {
       "name": "de-deutsche-52070012-password",
       "displayName": "BLZ: 52070012",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5455,7 +5480,7 @@
     {
       "name": "de-deutsche-52070024-password",
       "displayName": "BLZ: 52070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5482,7 +5507,7 @@
     {
       "name": "de-deutsche-52071212-password",
       "displayName": "BLZ: 52071212",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5509,7 +5534,7 @@
     {
       "name": "de-deutsche-52071224-password",
       "displayName": "BLZ: 52071224",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5536,7 +5561,7 @@
     {
       "name": "de-deutsche-52270012-password",
       "displayName": "BLZ: 52270012",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5563,7 +5588,7 @@
     {
       "name": "de-deutsche-52270024-password",
       "displayName": "BLZ: 52270024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5590,7 +5615,7 @@
     {
       "name": "de-deutsche-53070007-password",
       "displayName": "BLZ: 53070007",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5617,7 +5642,7 @@
     {
       "name": "de-deutsche-53070024-password",
       "displayName": "BLZ: 53070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5644,7 +5669,7 @@
     {
       "name": "de-deutsche-53270012-password",
       "displayName": "BLZ: 53270012",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5671,7 +5696,7 @@
     {
       "name": "de-deutsche-53270024-password",
       "displayName": "BLZ: 53270024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5698,7 +5723,7 @@
     {
       "name": "de-deutsche-53370008-password",
       "displayName": "BLZ: 53370008",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5725,7 +5750,7 @@
     {
       "name": "de-deutsche-53370024-password",
       "displayName": "BLZ: 53370024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5752,7 +5777,7 @@
     {
       "name": "de-deutsche-54070024-password",
       "displayName": "BLZ: 54070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5779,7 +5804,7 @@
     {
       "name": "de-deutsche-54070092-password",
       "displayName": "BLZ: 54070092",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5806,7 +5831,7 @@
     {
       "name": "de-deutsche-54270024-password",
       "displayName": "BLZ: 54270024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5833,7 +5858,7 @@
     {
       "name": "de-deutsche-54270096-password",
       "displayName": "BLZ: 54270096",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5860,7 +5885,7 @@
     {
       "name": "de-deutsche-54570024-password",
       "displayName": "BLZ: 54570024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5887,7 +5912,7 @@
     {
       "name": "de-deutsche-54570094-password",
       "displayName": "BLZ: 54570094",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5914,7 +5939,7 @@
     {
       "name": "de-deutsche-54670024-password",
       "displayName": "BLZ: 54670024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5941,7 +5966,7 @@
     {
       "name": "de-deutsche-54670095-password",
       "displayName": "BLZ: 54670095",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5968,7 +5993,7 @@
     {
       "name": "de-deutsche-55070024-password",
       "displayName": "BLZ: 55070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -5995,7 +6020,7 @@
     {
       "name": "de-deutsche-55070040-password",
       "displayName": "BLZ: 55070040",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6022,7 +6047,7 @@
     {
       "name": "de-deutsche-56070024-password",
       "displayName": "BLZ: 56070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6049,7 +6074,7 @@
     {
       "name": "de-deutsche-56070040-password",
       "displayName": "BLZ: 56070040",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6076,7 +6101,7 @@
     {
       "name": "de-deutsche-56270024-password",
       "displayName": "BLZ: 56270024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6103,7 +6128,7 @@
     {
       "name": "de-deutsche-56270044-password",
       "displayName": "BLZ: 56270044",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6130,7 +6155,7 @@
     {
       "name": "de-deutsche-57070024-password",
       "displayName": "BLZ: 57070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6157,7 +6182,7 @@
     {
       "name": "de-deutsche-57070045-password",
       "displayName": "BLZ: 57070045",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6184,7 +6209,7 @@
     {
       "name": "de-deutsche-57470024-password",
       "displayName": "BLZ: 57470024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6211,7 +6236,7 @@
     {
       "name": "de-deutsche-57470047-password",
       "displayName": "BLZ: 57470047",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6238,7 +6263,7 @@
     {
       "name": "de-deutsche-58570024-password",
       "displayName": "BLZ: 58570024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6265,7 +6290,7 @@
     {
       "name": "de-deutsche-58570048-password",
       "displayName": "BLZ: 58570048",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6292,7 +6317,7 @@
     {
       "name": "de-deutsche-58771224-password",
       "displayName": "BLZ: 58771224",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6319,7 +6344,7 @@
     {
       "name": "de-deutsche-58771242-password",
       "displayName": "BLZ: 58771242",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6346,7 +6371,7 @@
     {
       "name": "de-deutsche-59070070-password",
       "displayName": "BLZ: 59070070",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6373,7 +6398,7 @@
     {
       "name": "de-deutsche-60070024-password",
       "displayName": "BLZ: 60070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6400,7 +6425,7 @@
     {
       "name": "de-deutsche-60070070-password",
       "displayName": "BLZ: 60070070",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6427,7 +6452,7 @@
     {
       "name": "de-deutsche-60270024-password",
       "displayName": "BLZ: 60270024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6454,7 +6479,7 @@
     {
       "name": "de-deutsche-60270073-password",
       "displayName": "BLZ: 60270073",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6481,7 +6506,7 @@
     {
       "name": "de-deutsche-60470024-password",
       "displayName": "BLZ: 60470024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6508,7 +6533,7 @@
     {
       "name": "de-deutsche-60470082-password",
       "displayName": "BLZ: 60470082",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6535,7 +6560,7 @@
     {
       "name": "de-deutsche-60670024-password",
       "displayName": "BLZ: 60670024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6562,7 +6587,7 @@
     {
       "name": "de-deutsche-60670070-password",
       "displayName": "BLZ: 60670070",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6589,7 +6614,7 @@
     {
       "name": "de-deutsche-61070024-password",
       "displayName": "BLZ: 61070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6616,7 +6641,7 @@
     {
       "name": "de-deutsche-61070078-password",
       "displayName": "BLZ: 61070078",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6643,7 +6668,7 @@
     {
       "name": "de-deutsche-61170024-password",
       "displayName": "BLZ: 61170024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6670,7 +6695,7 @@
     {
       "name": "de-deutsche-61170076-password",
       "displayName": "BLZ: 61170076",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6697,7 +6722,7 @@
     {
       "name": "de-deutsche-61370024-password",
       "displayName": "BLZ: 61370024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6724,7 +6749,7 @@
     {
       "name": "de-deutsche-61370086-password",
       "displayName": "BLZ: 61370086",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6751,7 +6776,7 @@
     {
       "name": "de-deutsche-62070024-password",
       "displayName": "BLZ: 62070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6778,7 +6803,7 @@
     {
       "name": "de-deutsche-62070081-password",
       "displayName": "BLZ: 62070081",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6805,7 +6830,7 @@
     {
       "name": "de-deutsche-63070024-password",
       "displayName": "BLZ: 63070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6832,7 +6857,7 @@
     {
       "name": "de-deutsche-63070088-password",
       "displayName": "BLZ: 63070088",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6859,7 +6884,7 @@
     {
       "name": "de-deutsche-64070024-password",
       "displayName": "BLZ: 64070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6886,7 +6911,7 @@
     {
       "name": "de-deutsche-64070085-password",
       "displayName": "BLZ: 64070085",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6913,7 +6938,7 @@
     {
       "name": "de-deutsche-65070024-password",
       "displayName": "BLZ: 65070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6940,7 +6965,7 @@
     {
       "name": "de-deutsche-65070084-password",
       "displayName": "BLZ: 65070084",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6967,7 +6992,7 @@
     {
       "name": "de-deutsche-65370024-password",
       "displayName": "BLZ: 65370024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -6994,7 +7019,7 @@
     {
       "name": "de-deutsche-65370075-password",
       "displayName": "BLZ: 65370075",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7021,7 +7046,7 @@
     {
       "name": "de-deutsche-66070004-password",
       "displayName": "BLZ: 66070004",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7048,7 +7073,7 @@
     {
       "name": "de-deutsche-66070024-password",
       "displayName": "BLZ: 66070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7075,7 +7100,7 @@
     {
       "name": "de-deutsche-66270001-password",
       "displayName": "BLZ: 66270001",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7102,7 +7127,7 @@
     {
       "name": "de-deutsche-66270024-password",
       "displayName": "BLZ: 66270024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7129,7 +7154,7 @@
     {
       "name": "de-deutsche-66470024-password",
       "displayName": "BLZ: 66470024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7156,7 +7181,7 @@
     {
       "name": "de-deutsche-66470035-password",
       "displayName": "BLZ: 66470035",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7183,7 +7208,7 @@
     {
       "name": "de-deutsche-66670006-password",
       "displayName": "BLZ: 66670006",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7210,7 +7235,7 @@
     {
       "name": "de-deutsche-66670024-password",
       "displayName": "BLZ: 66670024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7237,7 +7262,7 @@
     {
       "name": "de-deutsche-67070010-password",
       "displayName": "BLZ: 67070010",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7264,7 +7289,7 @@
     {
       "name": "de-deutsche-67070024-password",
       "displayName": "BLZ: 67070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7291,7 +7316,7 @@
     {
       "name": "de-deutsche-67270003-password",
       "displayName": "BLZ: 67270003",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7318,7 +7343,7 @@
     {
       "name": "de-deutsche-67270024-password",
       "displayName": "BLZ: 67270024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7345,7 +7370,7 @@
     {
       "name": "de-deutsche-68070024-password",
       "displayName": "BLZ: 68070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7372,7 +7397,7 @@
     {
       "name": "de-deutsche-68070030-password",
       "displayName": "BLZ: 68070030",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7399,7 +7424,7 @@
     {
       "name": "de-deutsche-68270024-password",
       "displayName": "BLZ: 68270024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7426,7 +7451,7 @@
     {
       "name": "de-deutsche-68270033-password",
       "displayName": "BLZ: 68270033",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7453,7 +7478,7 @@
     {
       "name": "de-deutsche-68370024-password",
       "displayName": "BLZ: 68370024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7480,7 +7505,7 @@
     {
       "name": "de-deutsche-68370034-password",
       "displayName": "BLZ: 68370034",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7507,7 +7532,7 @@
     {
       "name": "de-deutsche-69070024-password",
       "displayName": "BLZ: 69070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7534,7 +7559,7 @@
     {
       "name": "de-deutsche-69070032-password",
       "displayName": "BLZ: 69070032",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7561,7 +7586,7 @@
     {
       "name": "de-deutsche-69270024-password",
       "displayName": "BLZ: 69270024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7588,7 +7613,7 @@
     {
       "name": "de-deutsche-69270038-password",
       "displayName": "BLZ: 69270038",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7615,7 +7640,7 @@
     {
       "name": "de-deutsche-69470024-password",
       "displayName": "BLZ: 69470024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7642,7 +7667,7 @@
     {
       "name": "de-deutsche-69470039-password",
       "displayName": "BLZ: 69470039",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7669,7 +7694,7 @@
     {
       "name": "de-deutsche-70070010-password",
       "displayName": "BLZ: 70070010",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7696,7 +7721,7 @@
     {
       "name": "de-deutsche-70070024-password",
       "displayName": "BLZ: 70070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7723,7 +7748,7 @@
     {
       "name": "de-deutsche-72070001-password",
       "displayName": "BLZ: 72070001",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7750,7 +7775,7 @@
     {
       "name": "de-deutsche-72070024-password",
       "displayName": "BLZ: 72070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7777,7 +7802,7 @@
     {
       "name": "de-deutsche-72170007-password",
       "displayName": "BLZ: 72170007",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7804,7 +7829,7 @@
     {
       "name": "de-deutsche-72170024-password",
       "displayName": "BLZ: 72170024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7831,7 +7856,7 @@
     {
       "name": "de-deutsche-73370008-password",
       "displayName": "BLZ: 73370008",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7858,7 +7883,7 @@
     {
       "name": "de-deutsche-73370024-password",
       "displayName": "BLZ: 73370024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7885,7 +7910,7 @@
     {
       "name": "de-deutsche-75070013-password",
       "displayName": "BLZ: 75070013",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7912,7 +7937,7 @@
     {
       "name": "de-deutsche-75070024-password",
       "displayName": "BLZ: 75070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7939,7 +7964,7 @@
     {
       "name": "de-deutsche-76070012-password",
       "displayName": "BLZ: 76070012",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7966,7 +7991,7 @@
     {
       "name": "de-deutsche-76070024-password",
       "displayName": "BLZ: 76070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -7993,7 +8018,7 @@
     {
       "name": "de-deutsche-79070016-password",
       "displayName": "BLZ: 79070016",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -8020,7 +8045,7 @@
     {
       "name": "de-deutsche-79070024-password",
       "displayName": "BLZ: 79070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -8047,7 +8072,7 @@
     {
       "name": "de-deutsche-79570024-password",
       "displayName": "BLZ: 79570024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -8074,7 +8099,7 @@
     {
       "name": "de-deutsche-79570051-password",
       "displayName": "BLZ: 79570051",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -8101,7 +8126,7 @@
     {
       "name": "de-deutsche-81070000-password",
       "displayName": "BLZ: 81070000",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -8128,7 +8153,7 @@
     {
       "name": "de-deutsche-81070024-password",
       "displayName": "BLZ: 81070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -8155,7 +8180,7 @@
     {
       "name": "de-deutsche-82070000-password",
       "displayName": "BLZ: 82070000",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -8182,7 +8207,7 @@
     {
       "name": "de-deutsche-82070024-password",
       "displayName": "BLZ: 82070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -8209,7 +8234,7 @@
     {
       "name": "de-deutsche-83065410-password",
       "displayName": "BLZ: 83065410",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -8236,7 +8261,7 @@
     {
       "name": "de-deutsche-86070000-password",
       "displayName": "BLZ: 86070000",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -8263,7 +8288,7 @@
     {
       "name": "de-deutsche-86070024-password",
       "displayName": "BLZ: 86070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -8290,7 +8315,7 @@
     {
       "name": "de-deutsche-87070000-password",
       "displayName": "BLZ: 87070000",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -8317,7 +8342,7 @@
     {
       "name": "de-deutsche-87070024-password",
       "displayName": "BLZ: 87070024",
-      "groupDisplayName": "Deutsche Bank (Privat und Geschaftskunden)",
+      "groupDisplayName": "Deutsche Bank (Privat und Geschäftskunden)",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -8372,7 +8397,7 @@
       "name": "de-comdirect20041111-password",
       "displayName": "BLZ: 20041111",
       "groupDisplayName": "Comdirect Bank AG",
-      "popular": false,
+      "popular": true,
       "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
@@ -8399,7 +8424,7 @@
       "name": "de-comdirect20041133-password",
       "displayName": "BLZ: 20041133",
       "groupDisplayName": "Comdirect Bank AG",
-      "popular": false,
+      "popular": true,
       "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
@@ -8426,7 +8451,7 @@
       "name": "de-comdirect20041144-password",
       "displayName": "BLZ: 20041144",
       "groupDisplayName": "Comdirect Bank AG",
-      "popular": false,
+      "popular": true,
       "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
@@ -8453,7 +8478,7 @@
       "name": "de-comdirect20041155-password",
       "displayName": "BLZ: 20041155",
       "groupDisplayName": "Comdirect Bank AG",
-      "popular": false,
+      "popular": true,
       "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
@@ -8480,7 +8505,7 @@
       "name": "de-noris10077777-password",
       "displayName": "BLZ: 10077777",
       "groupDisplayName": "Norisbank GmbH",
-      "popular": false,
+      "popular": true,
       "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
@@ -8507,7 +8532,7 @@
       "name": "de-noris76026000-password",
       "displayName": "BLZ: 76026000",
       "groupDisplayName": "Norisbank GmbH",
-      "popular": false,
+      "popular": true,
       "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
@@ -9053,12 +9078,12 @@
       "credentialsType": "PASSWORD",
       "multiFactor": false,
       "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "passwordHelpText": "Use the same password as you would in your bank's web login. The account number shall be suffixed with three digit auth number, default 001",
       "transactional": true,
       "payload": "76030080 https://brokerage-hbci.consorsbank.de/hbci",
       "fields": [
         {
-          "description": "Username",
+          "description": "Username (suffixed with auth number, default is 001)",
           "name": "username",
           "hint": "Account number suffixed with three digit auth number, default 001",
           "immutable": true
@@ -9081,12 +9106,12 @@
       "credentialsType": "PASSWORD",
       "multiFactor": false,
       "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.. The account number shall be suffixed with three digit auth number, default 001",
       "transactional": true,
       "payload": "70120400 https://brokerage-hbci.consorsbank.de/hbci",
       "fields": [
         {
-          "description": "Username",
+          "description": "Username (suffixed with auth number, default is 001)",
           "name": "username",
           "hint": "Account number suffixed with three digit auth number, default 001",
           "immutable": true
@@ -9103,7 +9128,7 @@
       "name": "de-spardaberlin-password",
       "displayName": "Sparda-Bank Berlin eG",
       "groupDisplayName": "Sparda-Bank",
-      "popular": false,
+      "popular": true,
       "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
@@ -9130,7 +9155,7 @@
       "name": "de-spardahamburg-password",
       "displayName": "Sparda-Bank Hamburg eG",
       "groupDisplayName": "Sparda-Bank",
-      "popular": false,
+      "popular": true,
       "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
@@ -9157,7 +9182,7 @@
       "name": "de-spardahannover-password",
       "displayName": "Sparda-Bank Hannover eG",
       "groupDisplayName": "Sparda-Bank",
-      "popular": false,
+      "popular": true,
       "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
@@ -9184,7 +9209,7 @@
       "name": "de-spardawuppertal-password",
       "displayName": "Sparda-Bank West eG Wuppertal",
       "groupDisplayName": "Sparda-Bank",
-      "popular": false,
+      "popular": true,
       "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
@@ -9211,7 +9236,7 @@
       "name": "de-spardaessen-password",
       "displayName": "Sparda-Bank West eG Essen",
       "groupDisplayName": "Sparda-Bank",
-      "popular": false,
+      "popular": true,
       "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
@@ -9238,7 +9263,7 @@
       "name": "de-spardaköln-password",
       "displayName": "Sparda-Bank West eG Köln",
       "groupDisplayName": "Sparda-Bank",
-      "popular": false,
+      "popular": true,
       "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
@@ -9265,7 +9290,7 @@
       "name": "de-spardamünster-password",
       "displayName": "Sparda-Bank Münster eG",
       "groupDisplayName": "Sparda-Bank",
-      "popular": false,
+      "popular": true,
       "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
@@ -9292,7 +9317,7 @@
       "name": "de-spardahessen-password",
       "displayName": "Sparda-Bank Hessen eG",
       "groupDisplayName": "Sparda-Bank",
-      "popular": false,
+      "popular": true,
       "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
@@ -9319,7 +9344,7 @@
       "name": "de-spardasüdwest-password",
       "displayName": "Sparda-Bank Südwest eG",
       "groupDisplayName": "Sparda-Bank",
-      "popular": false,
+      "popular": true,
       "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
@@ -9346,7 +9371,7 @@
       "name": "de-spardabaden-password",
       "displayName": "Sparda-Bank Baden-Württemberg eG",
       "groupDisplayName": "Sparda-Bank",
-      "popular": false,
+      "popular": true,
       "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
@@ -9373,7 +9398,7 @@
       "name": "de-spardamünchen-password",
       "displayName": "Sparda-Bank München eG",
       "groupDisplayName": "Sparda-Bank",
-      "popular": false,
+      "popular": true,
       "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
@@ -9400,7 +9425,7 @@
       "name": "de-spardaaugsburg-password",
       "displayName": "Sparda-Bank Augsburg eG",
       "groupDisplayName": "Sparda-Bank",
-      "popular": false,
+      "popular": true,
       "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
@@ -9427,7 +9452,7 @@
       "name": "de-spardaregensburg-password",
       "displayName": "Sparda-Bank Regensburg eG",
       "groupDisplayName": "Sparda-Bank",
-      "popular": false,
+      "popular": true,
       "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
@@ -9454,7 +9479,7 @@
       "name": "de-spardanürnberg-password",
       "displayName": "Sparda-Bank Nürnberg eG",
       "groupDisplayName": "Sparda-Bank",
-      "popular": false,
+      "popular": true,
       "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
@@ -10720,33 +10745,6 @@
       ]
     },
     {
-      "name": "de-sparkassestadhilchenbach-password",
-      "displayName": "Stadtsparkasse Hilchenbach",
-      "groupDisplayName": "Sparkasse",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "46051875 https://banking-wl4.s-fints-pt-wl.de/fints30",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-sparkassestadschmallenberg-password",
       "displayName": "Stadtsparkasse Schmallenberg",
       "groupDisplayName": "Sparkasse",
@@ -10948,33 +10946,6 @@
       "passwordHelpText": "Use the same password as you would in your bank's web login.",
       "transactional": true,
       "payload": "49051285 https://banking-wl2.s-fints-pt-wl.de/fints30",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-sparkassestadportawestfalica-password",
-      "displayName": "Stadtsparkasse Porta Westfalica",
-      "groupDisplayName": "Sparkasse",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "49051990 https://banking-wl6.s-fints-pt-wl.de/fints30",
       "fields": [
         {
           "description": "Username",
@@ -16174,33 +16145,6 @@
       ]
     },
     {
-      "name": "de-sparkasse-westfalica-password",
-      "displayName": "Sparkasse Bad Oeynhausen-Porta",
-      "groupDisplayName": "Sparkasse",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "49051285 https://banking-wl2.s-fints-pt-wl.de/fints30",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-sparkasse-herford-password",
       "displayName": "Sparkasse Herford",
       "groupDisplayName": "Sparkasse",
@@ -20224,33 +20168,6 @@
       ]
     },
     {
-      "name": "de-sparkasse-münchen-password",
-      "displayName": "Stadtsparkasse München",
-      "groupDisplayName": "Sparkasse",
-      "popular": false,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "70150000 https://banking-by6.s-fints-pt-by.de/fints30",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisenhamburgervolksbank-password",
       "displayName": "Hamburger Volksbank",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -23005,33 +22922,6 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-hamburg-password",
-      "displayName": "Hamburger Bank von 1861 Volksbank eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "20190003 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-stormarn-password",
       "displayName": "Volksbank Stormarn eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -23125,33 +23015,6 @@
       "passwordHelpText": "Use the same password as you would in your bank's web login.",
       "transactional": true,
       "payload": "21092023 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-neumünster-password",
-      "displayName": "Volksbank Neumünster eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "21290016 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
       "fields": [
         {
           "description": "Username",
@@ -23329,33 +23192,6 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-pinneberg-uetersen-password",
-      "displayName": "Volksbank Pinneberg-Uetersen eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "22191405 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-itzehoe-password",
       "displayName": "Volksbank Itzehoe eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -23518,8 +23354,8 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-celle-password",
-      "displayName": "Volksbank Südheide",
+      "name": "de-volksraiffeisenalleroker-password",
+      "displayName": "Volksbank Aller-Oker",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -23708,7 +23544,7 @@
     },
     {
       "name": "de-volksraiffeisen-hoya-verden-password",
-      "displayName": "Volksbank Aller-Weser eG",
+      "displayName": "Volksbank Aller-Weser (Grafschaft Hoya eG)",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -24247,33 +24083,6 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-grafeld-nortrup-password",
-      "displayName": "Raiffeisen-Volksbank Grafeld-Nortrup eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "26567943 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-osnabrück-password",
       "displayName": "Volksbank Osnabrück eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -24355,8 +24164,8 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-geeste-password",
-      "displayName": "Emsländische Volksbank eG",
+      "name": "de-volksraiffeisenemslandische-password",
+      "displayName": "Emsländische Volksbank Meppen",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -24463,35 +24272,8 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-braunschweig-wolfsburg-password",
-      "displayName": "Volksbank eG Braunschweig Wolfsburg ",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "26991066 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-wolfsburg-password",
-      "displayName": "Volksbank eG Wolfsburg",
+      "name": "de-volksraiffeisenbraunschweigwolfsburg-password",
+      "displayName": "Volksbank Braunschweig Wolfsburg",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -25246,33 +25028,6 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-veldhausen-neuenhaus-password",
-      "displayName": "Volksbank Veldhausen-Neuenhaus eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "28069956 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-emstal-rütenbrock-lathen-password",
       "displayName": "Volksbank Emstal Rütenbrock-Lathen eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -25285,33 +25040,6 @@
       "passwordHelpText": "Use the same password as you would in your bank's web login.",
       "transactional": true,
       "payload": "28069991 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-spelle-freren-password",
-      "displayName": "Volksbank Spelle-Freren eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "28069994 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
       "fields": [
         {
           "description": "Username",
@@ -25759,33 +25487,6 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-mönchengladbach-password",
-      "displayName": "Volksbank Mönchengladbach eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "31060517 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-brüggen-nettetal-password",
       "displayName": "Volksbank Brüggen-Nettetal eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -25896,33 +25597,6 @@
     {
       "name": "de-volksraiffeisen-geldern-password",
       "displayName": "Volksbank an der Niers",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "32061384 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-gelderland-password",
-      "displayName": "Volksbank Gelderland eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -26245,36 +25919,9 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-heinsberg-password",
-      "displayName": "Volksbank Heinsberg eG",
+      "name": "de-volksraiffeisenrheinsieg-password",
+      "displayName": "Volksbank Köln Bonn",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "37069412 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-rhein-sieg-password",
-      "displayName": "Volksbank Bonn Rhein-Sieg eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken Bonn",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -27055,8 +26702,8 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-ahlen-password",
-      "displayName": "Volksbank Ahlen Sassenberg Warendorf eG",
+      "name": "de-volksraiffeisenoeldeennigerlohneubeckum-password",
+      "displayName": "Volksbank Oelde-Ennigerloh-Neubeckum -alt-",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -27325,33 +26972,6 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-gelsenkirchen-password",
-      "displayName": "Volksbank eG Gelsenkirchen-Buer",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "42260001 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-dorsten-kirchhhellen-bottrop-password",
       "displayName": "Vereinte Volksbank eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -27434,7 +27054,7 @@
     },
     {
       "name": "de-volksraiffeisen-waltrop-password",
-      "displayName": "Volksbank eG",
+      "displayName": "Volksbank Waltrop",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -27472,33 +27092,6 @@
       "passwordHelpText": "Use the same password as you would in your bank's web login.",
       "transactional": true,
       "payload": "42860003 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-borken-password",
-      "displayName": "Borkener Volksbank eG.",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "42861387 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
       "fields": [
         {
           "description": "Username",
@@ -27649,8 +27242,8 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-dortmund-password",
-      "displayName": "Volksbank Dortmund-Nordwest eG",
+      "name": "de-volksraiffeisen-dortmundnordwest-password",
+      "displayName": "Volksbank Dortmund-Nordwest",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -27677,7 +27270,7 @@
     },
     {
       "name": "de-volksraiffeisen-dortmund-password",
-      "displayName": "Dortmunder Volksbank eG.",
+      "displayName": "Dortmunder Volksbank",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -27892,34 +27485,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-siegerland-password",
-      "displayName": "Volksbank im Siegerland eG.",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "46060040 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-siegerland-password",
+      "name": "de-volksraiffeisensiegerland-password",
       "displayName": "Volksbank Siegerland eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -27931,60 +27497,6 @@
       "passwordHelpText": "Use the same password as you would in your bank's web login.",
       "transactional": true,
       "payload": "46060040 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-siegen-littfeld-password",
-      "displayName": "Volksbank Siegerland eG.",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "46060040 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-freudenberg-password",
-      "displayName": "Volksbank Freudenberg eG.",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "46061724 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
       "fields": [
         {
           "description": "Username",
@@ -28066,33 +27578,6 @@
       "passwordHelpText": "Use the same password as you would in your bank's web login.",
       "transactional": true,
       "payload": "46260023 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-grevenbrück-password",
-      "displayName": "Volksbank Grevenbrück eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "46261607 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
       "fields": [
         {
           "description": "Username",
@@ -28567,34 +28052,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-bielefeld-password",
-      "displayName": "Volksbank Bielefeld eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "48060036 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-halle-password",
+      "name": "de-volksraiffeisen-hallewestf-password",
       "displayName": "Volksbank Halle/Westf. eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -28606,33 +28064,6 @@
       "passwordHelpText": "Use the same password as you would in your bank's web login.",
       "transactional": true,
       "payload": "48062051 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-bad-salzuflen-password",
-      "displayName": "Volksbank Bad Salzuflen eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "48291490 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
       "fields": [
         {
           "description": "Username",
@@ -29161,7 +28592,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-büdingen-hess-password",
+      "name": "de-volksraiffeisenbüdingen-hess-password",
       "displayName": "Volksbank Büdingen",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -29389,33 +28820,6 @@
       "passwordHelpText": "Use the same password as you would in your bank's web login.",
       "transactional": true,
       "payload": "50864322 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-eppertshausen-password",
-      "displayName": "Volksbank Eppertshausen",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "50865503 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
       "fields": [
         {
           "description": "Username",
@@ -30052,33 +29456,6 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-kassel-hess-password",
-      "displayName": "Volksbank Kassel Göttingen eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "52090000 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-schlüchtern-password",
       "displayName": "Volksbank Raiffeisenbank Schlüchtern",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -30214,7 +29591,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-mainz-a-rhein-password",
+      "name": "de-volksraiffeisenmainzfinthen-password",
       "displayName": "Volksbank Mainz-Finthen",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -30592,33 +29969,6 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-kirchberg-password",
-      "displayName": "Volksbank Kirchberg-Hunsrück eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "56061472 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-rheinböllen-password",
       "displayName": "Volksbank Rheinböllen eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -30862,33 +30212,6 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-bitburg-password",
-      "displayName": "Volksbank Bitburg eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "58660101 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-sulzbach-saar-password",
       "displayName": "Vereinigte Volksbank eG Dillingen*Dudweiler*Sulzbach/Saar",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -30970,8 +30293,8 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-homburg-saar-password",
-      "displayName": "Volksbank Saarpfalz",
+      "name": "de-volksraiffeisensaarpfalz-password",
+      "displayName": "Volks- und Raiffeisenbank Saarpfalz BLZ: 59291200",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -31213,7 +30536,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-baiersbronn-password",
+      "name": "de-volksraiffeisenmurgtalbaiersbronn-password",
       "displayName": "Volksbank Murgtal Baiersbr-Klosterreichenbach",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -31618,7 +30941,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-ludwigsburg-württ-password",
+      "name": "de-volksraiffeisen-freibergumgebung-password",
       "displayName": "Volksbank Freiberg und Umgebung",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -32509,8 +31832,8 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-horb-am-neckar-password",
-      "displayName": "Volksbank Horb -alt-",
+      "name": "de-volksraiffeisen-horbalt-password",
+      "displayName": "Volksbank Horb -alt- BLZ: 64191700",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -32536,8 +31859,8 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-baiersbronn-password",
-      "displayName": "Volksbank Baiersbronn",
+      "name": "de-volksraiffeisenbaiersbronn-password",
+      "displayName": "Volksbank Baiersbronn Murgtal",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -32968,7 +32291,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-albstadt-württ-password",
+      "name": "de-volksraiffeisentailfingen-password",
       "displayName": "Volksbank Tailfingen",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -33454,7 +32777,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-mannheim-password",
+      "name": "de-volksraiffeisensandhofenmannheim-password",
       "displayName": "Volksbank Sandhofen",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -33844,33 +33167,6 @@
       "passwordHelpText": "Use the same password as you would in your bank's web login.",
       "transactional": true,
       "payload": "68090000 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-müllheim-baden-password",
-      "displayName": "Volksbank Müllheim",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "68091900 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
       "fields": [
         {
           "description": "Username",
@@ -34561,7 +33857,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-rosenheim-oberbay-password",
+      "name": "de-volksraiffeisenrosenheimalt-password",
       "displayName": "Volksbank Rosenheim -alt-",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -34939,7 +34235,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-vilshofen-an-der-donau-password",
+      "name": "de-volksraiffeisen-vilshofen--password",
       "displayName": "Volksbank Vilshofen",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -34966,7 +34262,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-straubing-password",
+      "name": "de-volksraiffeisen-vbstraubing-password",
       "displayName": "Volksbank Straubing",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -35102,7 +34398,7 @@
     },
     {
       "name": "de-volksraiffeisen-nürnberg-mittelfr-password",
-      "displayName": "Volksbank Raiffeisenbank",
+      "displayName": "Volksbank Raiffeisenbank (Nürnberg, Mittelfr)",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -35318,7 +34614,7 @@
     },
     {
       "name": "de-volksraiffeisen-würzburg-password",
-      "displayName": "Volksbank Raiffeisenbank",
+      "displayName": "Volksbank Raiffeisenbank (Würzburg)",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -35371,7 +34667,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-aschaffenburg-password",
+      "name": "de-volksraiffeisenaschaffenburg-password",
       "displayName": "Volksbank Aschaffenburg",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -36289,33 +35585,6 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-wismar-password",
-      "displayName": "Volks- und Raiffeisenbank eG Wismar",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "13061078 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-bad-doberan-password",
       "displayName": "Raiffeisenbank Bad Doberan eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -36398,34 +35667,7 @@
     },
     {
       "name": "de-volksraiffeisen-waren-password",
-      "displayName": "Raiffeisenbank Waren eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "15061618 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-neubrandenburg-waren-password",
-      "displayName": "Raiffeisenbank Waren eG Neubrandenburg",
+      "displayName": "Raiffeisenbank Mecklenburger Seenplatte im Waren",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -36964,33 +36206,6 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-leezen-password",
-      "displayName": "Raiffeisenbank Leezen eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "23061220 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-bargteheide-password",
       "displayName": "Raiffeisenbank Bargteheide eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -37030,33 +36245,6 @@
       "passwordHelpText": "Use the same password as you would in your bank's web login.",
       "transactional": true,
       "payload": "23064107 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-eime-password",
-      "displayName": "Volks- und Raiffeisenbank eG Leinebergland",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "25069168 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
       "fields": [
         {
           "description": "Username",
@@ -37477,33 +36665,6 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-frechen-hürth-password",
-      "displayName": "Raiffeisenbank Frechen-Hürth",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "37062365 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-kürten-odenthal-password",
       "displayName": "Raiffeisenbank Kürten-Odenthal eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -37775,7 +36936,7 @@
     },
     {
       "name": "de-volksraiffeisen-oberursel-raiffeisenbank-oberursel-password",
-      "displayName": "(Taunus)",
+      "displayName": "Raiffeisenbank Oberursel (Taunus)",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -37936,7 +37097,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-offenbach-am-main-password",
+      "name": "de-volksraiffeisen-offenbach-am-mainbieber-password",
       "displayName": "Raiffeisenbank Offenbach/M.-Bieber",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -38044,7 +37205,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-birstein-password",
+      "name": "de-volksraiffeisen-birsteinvogelsberg-password",
       "displayName": "Raiffeisenbank Vogelsberg",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -38666,7 +37827,7 @@
     },
     {
       "name": "de-volksraiffeisen-heidesheim-raiffeisenbank-password",
-      "displayName": "am Rhein",
+      "displayName": "VR-Bank Mainz -alt-",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -39097,7 +38258,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-reutlingen-password",
+      "name": "de-volksraiffeisen-sondelfingen-password",
       "displayName": "Raiffeisenbank Sondelfingen",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -39125,7 +38286,7 @@
     },
     {
       "name": "de-volksraiffeisen-steinheim-raiffeisenbank-steinheim-password",
-      "displayName": "am Albuch",
+      "displayName": "Raiffeisenbank Steinheim",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -39367,7 +38528,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-göppingen-password",
+      "name": "de-volksraiffeisenmaitis-password",
       "displayName": "Raiffeisenbank Maitis",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -39394,7 +38555,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-laupheim-password",
+      "name": "de-volksraiffeisenrißtal-password",
       "displayName": "Raiffeisenbank Rißtal",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -40204,7 +39365,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-schwäbisch-hall-password",
+      "name": "de-volksraiffeisen-tungerntal-password",
       "displayName": "Raiffeisenbank Tüngental",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -40231,7 +39392,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-heilbronn-neckar-password",
+      "name": "de-volksraiffeisenbollingertal-password",
       "displayName": "Raiffeisenbank Böllingertal",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -40297,33 +39458,6 @@
       "passwordHelpText": "Use the same password as you would in your bank's web login.",
       "transactional": true,
       "payload": "60261818 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-weissach-württ-password",
-      "displayName": "Raiffeisenbank Weissach",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "60361923 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
       "fields": [
         {
           "description": "Username",
@@ -40610,7 +39744,7 @@
     },
     {
       "name": "de-volksraiffeisen-bad-raiffeisenbank-bad-saulgau-password",
-      "displayName": "Saulgau",
+      "displayName": "Raiffeisenbank Bad Saulgau",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -40798,7 +39932,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-bühl-baden-password",
+      "name": "de-volksraiffeisen-altschweierl-password",
       "displayName": "Raiffeisenbank Altschweier",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -40960,7 +40094,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-wiesloch-password",
+      "name": "de-volksraiffeisenbaiertal-password",
       "displayName": "Raiffeisenbank Baiertal",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -41635,7 +40769,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-unterschleißheim-password",
+      "name": "de-volksraiffeisenmünchennord-password",
       "displayName": "Raiffeisenbank München-Nord",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -41674,33 +40808,6 @@
       "passwordHelpText": "Use the same password as you would in your bank's web login.",
       "transactional": true,
       "payload": "70169466 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-neumarkt-sankt-veit-password",
-      "displayName": "Raiffbk Neumarkt-St. Veit - Niederbergkirchen",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "70169474 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
       "fields": [
         {
           "description": "Username",
@@ -43174,7 +42281,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-langenmosen-password",
+      "name": "de-volksraiffeisen-bergimgaulangenmosen-password",
       "displayName": "Raiffeisenbank Berg im Gau-Langenmosen -alt-",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -43795,7 +42902,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-tiefenbach-kr-passau-password",
+      "name": "de-volksraiffeisenilkr-passau-password",
       "displayName": "Raiffeisenbank i Lkr Passau-Nord",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -44283,7 +43390,7 @@
     {
       "name": "de-volksraiffeisen-essenbach-niederbay-password",
       "displayName": "Raiffeisenbank Essenbach Niederbay",
-      "groupDisplayName": "Volks- and Raiffeisenbanken Essenbach Niederbay",
+      "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
       "status": "ENABLED",
@@ -44389,7 +43496,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-regensburg-password",
+      "name": "de-volksraiffeisen-regensburgwenzenbach-password",
       "displayName": "Raiffeisenbank Regensburg-Wenzenbach",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -44509,33 +43616,6 @@
       "passwordHelpText": "Use the same password as you would in your bank's web login.",
       "transactional": true,
       "payload": "75069014 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-neustadt-a.d.donau-password",
-      "displayName": "Raiffeisenbank Bad Gögging",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "75069015 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
       "fields": [
         {
           "description": "Username",
@@ -45280,7 +44360,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-nürnberg-mittelfr-password",
+      "name": "de-volksraiffeisenknoblauchslandnürnberg-mittelfr-password",
       "displayName": "Raiffeisenbank Knoblauchsland Nürnberg-Buch",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -45388,7 +44468,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-berching-password",
+      "name": "de-volksraiffeisenplankstetten-password",
       "displayName": "Raiffeisenbank Plankstetten",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -46198,33 +45278,6 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-hammelburg-password",
-      "displayName": "Raiffeisenbank Hammelburg",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "79062106 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-estenfeld-password",
       "displayName": "Raiffeisenbank Estenfeld-Bergtheim",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -46576,7 +45629,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-aschaffenburg-password",
+      "name": "de-volksraiffeisenrfaschaffenburg-password",
       "displayName": "Raiffeisenbank Aschaffenburg eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -46901,7 +45954,7 @@
     },
     {
       "name": "de-volksraiffeisen-sebnitz-sachs-password",
-      "displayName": "Raiffeisenbank Neustadt",
+      "displayName": "Raiffeisenbank Neustadt Sebnitz Sachs",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -47062,8 +46115,8 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-pinneberg-halstenbek-schenef-password",
-      "displayName": "VR Bank Pinneberg eG",
+      "name": "de-volksraiffeisenpinneberghalstenbekschenef-password",
+      "displayName": "Volksbank Pinneberg-Elmshorn",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -47143,35 +46196,8 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-paffrath-password",
-      "displayName": "VR Bank eG Bergisch Gladbach",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "37062600 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-rhein-sieg-password",
-      "displayName": "VR Bank Rhein-Sieg eG.",
+      "displayName": "VR Bank Rhein-Sieg eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -47197,7 +46223,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-büdingen-hess-password",
+      "name": "de-volksraiffeisen-knbüdingen-hess-password",
       "displayName": "VR Bank Main-Kinzig-Büdingen",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -47441,7 +46467,7 @@
     },
     {
       "name": "de-volksraiffeisen-homburg-saar-password",
-      "displayName": "VR Bank Saarpfalz 59491114",
+      "displayName": "VR Bank Saarpfalz BLZ: 59491114",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -47467,8 +46493,8 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-homburg-saar-password",
-      "displayName": "VR Bank Saarpfalz 59491114",
+      "name": "de-volksraiffeisenhomburgpassword",
+      "displayName": "VR Bank Saarpfalz -alt- BLZ: 59491300",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -47629,7 +46655,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-rosenheim-oberbay-password",
+      "name": "de-volksraiffeisen-rosenheim-chiemsee-password",
       "displayName": "VR Bank Rosenheim-Chiemsee",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
@@ -47712,33 +46738,6 @@
     {
       "name": "de-volksraiffeisen-dinkelsbühl-password",
       "displayName": "VR Bank Dinkelsbühl",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "76591000 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-dinkelsbühl-password",
-      "displayName": "VR Bank Dinkelsbühl eG",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -48763,8 +47762,8 @@
       ]
     },
     {
-      "name": "de-psdbankköln-password",
-      "displayName": "PSD Bank Köln",
+      "name": "de-psdbankkölntrierniederlassung-password",
+      "displayName": "PSD Bank Trier Niederlassung der PSD Bank Köln",
       "groupDisplayName": "PSD Bank",
       "popular": false,
       "type": "BANK",
@@ -49816,8 +48815,8 @@
       ]
     },
     {
-      "name": "de-nordhannover-password",
-      "displayName": "Norddeutsche Landesbank Girozentrale",
+      "name": "de-nordhannover25050000-password",
+      "displayName": "Norddeutsche Landesbank Girozentrale Hannover",
       "groupDisplayName": "Norddeutsche Landesbank Girozentrale",
       "popular": false,
       "type": "BANK",
@@ -49924,9 +48923,9 @@
       ]
     },
     {
-      "name": "de-bremerlandesbank-password",
-      "displayName": "Norddeutsche Landesbank - Girozentrale -",
-      "groupDisplayName": "Norddeutsche Landesbank - Girozentrale -",
+      "name": "de-bremerlandesbank29050000-password",
+      "displayName": "Norddeutsche Landesbank Girozentrale Bremen",
+      "groupDisplayName": "Norddeutsche Landesbank Girozentrale",
       "popular": false,
       "type": "BANK",
       "status": "ENABLED",
@@ -50197,7 +49196,7 @@
       "name": "de-nationalbankessen-password",
       "displayName": "National-Bank Essen",
       "groupDisplayName": "National-Bank Essen",
-      "popular": true,
+      "popular": false,
       "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
@@ -50314,33 +49313,6 @@
       "passwordHelpText": "Use the same password as you would in your bank's web login.",
       "transactional": true,
       "payload": "37069153 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisenspardakahoengen-password",
-      "displayName": "Spar- und Darlehnskasse Hoengen",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "37069355 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
       "fields": [
         {
           "description": "Username",
@@ -51060,7 +50032,7 @@
     {
       "name": "de-vrbkuntertaunus-password",
       "displayName": "vr bank Untertaunus",
-      "groupDisplayName": "vr bank Untertaunus",
+      "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": false,
       "type": "BANK",
       "status": "ENABLED",
@@ -51383,7 +50355,7 @@
     },
     {
       "name": "de-volksraiffeisenraibaasbachnustadt-password",
-      "displayName": "Raiffeisenbank Neustadt",
+      "displayName": "Raiffeisenbank Asbach-Neustadt",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,
       "type": "BANK",
@@ -52165,33 +51137,6 @@
       ]
     },
     {
-      "name": "de-genossenschaftsbank-password",
-      "displayName": "Genossenschaftsbank Meckenbeuren",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "65161497 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-winterlingerbank-password",
       "displayName": "Winterlinger Bank",
       "groupDisplayName": "Winterlinger Bank",
@@ -52273,7 +51218,7 @@
       ]
     },
     {
-      "name": "de-mlpfinanzdienstleistungen-password",
+      "name": "de-mlpfinanzdienstleistungensiesloch-password",
       "displayName": "MLP Banking Wiesloch",
       "groupDisplayName": "MLP Banking",
       "popular": false,
@@ -52408,8 +51353,8 @@
       ]
     },
     {
-      "name": "de-fürstfuggerprivatbank-password",
-      "displayName": "Fürst Fugger Privatbank",
+      "name": "de-fürstfuggerprivatbank70030014-password",
+      "displayName": "Fürst Fugger Privatbank BLZ: 70030014",
       "groupDisplayName": "Fürst Fugger Privatbank",
       "popular": false,
       "type": "BANK",
@@ -52678,8 +51623,8 @@
       ]
     },
     {
-      "name": "de-fürstfuggerprivatbank-password",
-      "displayName": "Fürst Fugger Privatbank",
+      "name": "de-fürstfuggerprivatbank72030014-password",
+      "displayName": "Fürst Fugger Privatbank BLZ: 72030014",
       "groupDisplayName": "Fürst Fugger Privatbank",
       "popular": false,
       "type": "BANK",
@@ -53029,7 +51974,7 @@
       ]
     },
     {
-      "name": "de-volksraiffeisengenobankrhöngrabfeld-password",
+      "name": "de-volksraiffeisengenorhongrabfeld-password",
       "displayName": "Genobank Rhön-Grabfeld",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
       "popular": true,

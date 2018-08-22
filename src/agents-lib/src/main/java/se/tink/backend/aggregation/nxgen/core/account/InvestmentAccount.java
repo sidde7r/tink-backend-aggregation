@@ -21,18 +21,14 @@ public class InvestmentAccount extends Account {
         this.portfolios = builder.getPortfolios();
     }
 
-    public static Builder<InvestmentAccount, DefaultInvestmentAccountsBuilder> builder(
-            String uniqueIdentifier, Amount balance) {
-        DefaultInvestmentAccountsBuilder defaultInvestmentAccountsBuilder =
-                new DefaultInvestmentAccountsBuilder();
-        defaultInvestmentAccountsBuilder
-                .setUniqueIdentifier(uniqueIdentifier)
-                .setBalance(balance);
-        return defaultInvestmentAccountsBuilder;
+    public static Builder<InvestmentAccount, DefaultInvestmentAccountsBuilder> builder(String uniqueIdentifier) {
+        return new DefaultInvestmentAccountsBuilder(uniqueIdentifier);
     }
 
-    public static Builder<InvestmentAccount, DefaultInvestmentAccountsBuilder> builder() {
-        return new DefaultInvestmentAccountsBuilder();
+    public static Builder<InvestmentAccount, DefaultInvestmentAccountsBuilder> builder(
+            String uniqueIdentifier, Amount balance) {
+        return builder(uniqueIdentifier)
+                .setBalance(balance);
     }
 
     public List<Portfolio> getPortfolios() {
@@ -51,6 +47,10 @@ public class InvestmentAccount extends Account {
             extends Account.Builder<InvestmentAccount, Builder<A, T>> {
         private List<Portfolio> portfolios;
 
+        public Builder(String uniqueIdentifier) {
+            super(uniqueIdentifier);
+        }
+
         public List<Portfolio> getPortfolios() {
             return this.portfolios != null ? this.portfolios : Collections.emptyList();
         }
@@ -63,6 +63,11 @@ public class InvestmentAccount extends Account {
 
     private static class DefaultInvestmentAccountsBuilder
             extends InvestmentAccount.Builder<InvestmentAccount, DefaultInvestmentAccountsBuilder> {
+
+        public DefaultInvestmentAccountsBuilder(String uniqueIdentifier) {
+            super(uniqueIdentifier);
+        }
+
         @Override
         protected DefaultInvestmentAccountsBuilder self() {
             return this;

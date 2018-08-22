@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator;
 
 import com.google.common.base.Preconditions;
-import java.util.Map;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,29 +9,22 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEConfiguration;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankDefaultApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.AbstractBankIdAuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.CollectBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.InitBankIdResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.BankProfile;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.EngagementOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinkEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.MenuItemLinkEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.ProfileResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.SelectedProfileResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SwedbankDefaultBankIdAuthenticator implements BankIdAuthenticator<AbstractBankIdAuthResponse> {
     private static final Logger log = LoggerFactory.getLogger(SwedbankDefaultBankIdAuthenticator.class);
     private final SwedbankDefaultApiClient apiClient;
+    private SwedbankBaseConstants.BankIdResponseStatus previousStatus;
 
     public SwedbankDefaultBankIdAuthenticator(SwedbankDefaultApiClient apiClient) {
         this.apiClient = apiClient;
@@ -40,12 +32,17 @@ public class SwedbankDefaultBankIdAuthenticator implements BankIdAuthenticator<A
 
     @Override
     public AbstractBankIdAuthResponse init(String ssn) throws BankIdException, BankServiceException, AuthorizationException {
-        InitBankIdResponse initBankIdResponse = apiClient.initBankId(ssn);
+        previousStatus = null;
+        InitBankIdResponse initBankIdResponse = initBankId(ssn);
 
         LinkEntity linkEntity = initBankIdResponse.getLinks().getNextOrThrow();
         Preconditions.checkState(linkEntity.isValid(),
                 "Login failed - Cannot proceed without valid link entity - Method:[%s], Uri:[%s]",
                 linkEntity.getMethod(), linkEntity.getUri());
+
+        if (initBankIdResponse.getBankIdStatus() == SwedbankBaseConstants.BankIdResponseStatus.ALREADY_IN_PROGRESS) {
+            throw BankIdError.ALREADY_IN_PROGRESS.exception();
+        }
 
         return initBankIdResponse;
     }
@@ -55,6 +52,8 @@ public class SwedbankDefaultBankIdAuthenticator implements BankIdAuthenticator<A
         try {
             CollectBankIdResponse collectBankIdResponse = apiClient.collectBankId(response.getLinks().getNextOrThrow());
             SwedbankBaseConstants.BankIdResponseStatus bankIdResponseStatus = collectBankIdResponse.getBankIdStatus();
+
+            previousStatus = bankIdResponseStatus;
 
             switch (bankIdResponseStatus) {
             case CLIENT_NOT_STARTED:
@@ -75,10 +74,18 @@ public class SwedbankDefaultBankIdAuthenticator implements BankIdAuthenticator<A
         } catch (HttpResponseException hre) {
             HttpResponse httpResponse = hre.getResponse();
             // when timing out, this can also be the response
-            if (httpResponse.getStatus() == HttpStatus.SC_UNAUTHORIZED) {
+            int responseStatus = httpResponse.getStatus();
+            if (responseStatus == HttpStatus.SC_UNAUTHORIZED) {
                 ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
                 if (errorResponse.hasErrorCode(SwedbankBaseConstants.BankErrorMessage.LOGIN_FAILED)) {
                     return BankIdStatus.TIMEOUT;
+                }
+            } else if (responseStatus == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+                // This code is a temporary fix until Swedbank returns a better error message.
+                // What we belive to be the problem is that when multiple request are sent to bankid at the same time
+                // bankid cancels all requests.
+                if (previousStatus == SwedbankBaseConstants.BankIdResponseStatus.CLIENT_NOT_STARTED) {
+                    return BankIdStatus.INTERRUPTED;
                 }
             }
 
@@ -89,5 +96,22 @@ public class SwedbankDefaultBankIdAuthenticator implements BankIdAuthenticator<A
 
     private void completeBankIdLogin(CollectBankIdResponse collectBankIdResponse) throws AuthenticationException {
         apiClient.completeBankId(collectBankIdResponse.getLinks().getNextOrThrow());
+    }
+
+    private InitBankIdResponse initBankId(String ssn) throws BankIdException {
+        try {
+            return apiClient.initBankId(ssn);
+        } catch (HttpResponseException hre) {
+            HttpResponse httpResponse = hre.getResponse();
+            if (httpResponse.getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
+
+                if (errorResponse.hasErrorField(SwedbankBaseConstants.ErrorField.USER_ID)) {
+                    throw BankIdError.USER_VALIDATION_ERROR.exception();
+                }
+            }
+
+            throw hre;
+        }
     }
 }

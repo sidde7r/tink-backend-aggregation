@@ -918,6 +918,7 @@ java_library(
         "@org_slf4j_jcl_over_slf4j//jar",
         "@org_slf4j_jul_to_slf4j//jar",
         "@org_slf4j_slf4j_api//jar",
+        "@org_yaml_snakeyaml//jar",
     ],
 )
 

@@ -94,7 +94,7 @@ public class AgentWorkerOperation implements Runnable {
                         operationMetricName));
 
                 List<Context> contexts = startCommandTimerContexts(command,
-                        AgentWorkerOperationMetricType.EXECUTE_COMMAND, credentials);
+                        AgentWorkerOperationMetricType.EXECUTE_COMMAND);
 
                 commandResult = command.execute();
 
@@ -157,10 +157,8 @@ public class AgentWorkerOperation implements Runnable {
                 log.info(String.format("Finalizing command '%s' for operation '%s'", command.toString(),
                         operationMetricName));
 
-                List<Context> contexts = startCommandTimerContexts(
-                        command,
-                        AgentWorkerOperationMetricType.POST_PROCESS_COMMAND,
-                        credentials);
+                List<Context> contexts = startCommandTimerContexts(command,
+                        AgentWorkerOperationMetricType.POST_PROCESS_COMMAND);
 
                 command.postProcess();
 
@@ -189,8 +187,8 @@ public class AgentWorkerOperation implements Runnable {
     /**
      * Report both global and a credentials type specific metrics.
      */
-    private List<Context> startCommandTimerContexts(AgentWorkerCommand command, AgentWorkerOperationMetricType type,
-            Credentials credentials) throws ExecutionException {
+    private List<Context> startCommandTimerContexts(AgentWorkerCommand command, AgentWorkerOperationMetricType type)
+            throws ExecutionException {
 
         List<MetricId.MetricLabels> timerNames = command.getCommandTimerName(type);
 
@@ -198,11 +196,6 @@ public class AgentWorkerOperation implements Runnable {
             // Default
             timerNames.add(new MetricId.MetricLabels()
                     .add("class", command.getClass().getSimpleName())
-                    .add("credential_type", credentials.getType().name().toLowerCase())
-                    .add("command", type.getMetricName()));
-            timerNames.add(new MetricId.MetricLabels()
-                    .add("class", command.getClass().getSimpleName())
-                    .add("credential_type", "global")
                     .add("command", type.getMetricName()));
         }
 

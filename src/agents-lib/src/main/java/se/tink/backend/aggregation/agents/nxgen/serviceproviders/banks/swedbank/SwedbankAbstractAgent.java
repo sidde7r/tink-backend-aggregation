@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transactional.SwedbankDefaultTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transferdestination.SwedbankDefaultTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.filters.SwedbankBaseHttpFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.interfaces.SwedbankApiClientProvider;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
@@ -32,16 +33,23 @@ import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
-import se.tink.backend.aggregation.rpc.Field;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public abstract class SwedbankAbstractAgent extends NextGenerationAgent {
     protected final SwedbankConfiguration configuration;
-    private final SwedbankDefaultApiClient apiClient;
+    protected final SwedbankDefaultApiClient apiClient;
 
-    public SwedbankAbstractAgent(CredentialsRequest request, AgentContext context, SwedbankConfiguration configuration) {
-        super(request, context);
+    public SwedbankAbstractAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair,
+            SwedbankConfiguration configuration) {
+        this(request, context, signatureKeyPair, configuration, new SwedbankDefaultApiClientProvider());
+    }
+
+    protected SwedbankAbstractAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair,
+            SwedbankConfiguration configuration, SwedbankApiClientProvider apiClientProvider) {
+        super(request, context, signatureKeyPair);
         this.configuration = configuration;
-        this.apiClient = new SwedbankDefaultApiClient(client, configuration, credentials.getField(Field.Key.USERNAME));
+        this.apiClient = apiClientProvider.getApiAgent(client, configuration, credentials,
+                sessionStorage);
     }
 
     @Override
@@ -76,7 +84,6 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent {
         TransactionFetcherController<CreditCardAccount> transactionFetcherController =
                 new TransactionFetcherController<>(transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(creditCardFetcher));
-
 
         return Optional.of(new CreditCardRefreshController(metricRefreshController, updateController,
                 creditCardFetcher, transactionFetcherController));
@@ -118,10 +125,12 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransferController> constructTransferController() {
-        SwedbankTransferHelper transferHelper = new SwedbankTransferHelper(apiClient);
+        SwedbankTransferHelper transferHelper = new SwedbankTransferHelper(context, catalog,
+                supplementalInformationController, apiClient);
         SwedbankDefaultBankTransferExecutor transferExecutor = new SwedbankDefaultBankTransferExecutor(
-                apiClient, transferHelper);
-        SwedbankDefaultPaymentExecutor paymentExecutor = new SwedbankDefaultPaymentExecutor(apiClient, transferHelper);
+                catalog, apiClient, transferHelper);
+        SwedbankDefaultPaymentExecutor paymentExecutor = new SwedbankDefaultPaymentExecutor(catalog, apiClient,
+                transferHelper);
         SwedbankDefaultApproveEInvoiceExecutor approveEInvoiceExecutor = new SwedbankDefaultApproveEInvoiceExecutor(
                 apiClient, transferHelper);
         SwedbankDefaultUpdatePaymentExecutor updatePaymentExecutor = new SwedbankDefaultUpdatePaymentExecutor(

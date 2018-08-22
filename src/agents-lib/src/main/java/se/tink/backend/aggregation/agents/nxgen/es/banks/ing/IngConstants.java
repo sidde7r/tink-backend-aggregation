@@ -1,15 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing;
 
-import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
 public abstract class IngConstants {
 
     public static final String DATE_PATTERN = "dd/MM/yyyy";
-    public static final String DATE_OF_BIRTH = "DoB";
+    public static final String DATE_OF_BIRTH = "date-of-birth";
     public static final String ORIGINAL_ENTITY = "originalEntity";
     public static final ZoneId ZONE_ID = ZoneId.of("Europe/Madrid");
     public static final String PROVIDER_NAME = "es-ing-password";
@@ -29,11 +26,26 @@ public abstract class IngConstants {
 
     public static class Default {
         public static final String MOBILE_PHONE = "mobilePhone";
-        /** Probably used to identify how the user identifies herself: 1 == username/DNI/NIE */
-        public static final int LOGIN_DOCUMENT_TYPE = 1;
         public static final String SESSION_NAME_ALL = "all";
         public static final String ACTION_NAME_LOGOUT = "logout";
         public static final String OPERATION_NAME_EMPTY = "";
+    }
+
+    public static class UsernameType {
+        // These types might need to be made more granular at a later time.
+
+        // The following formats of usernames matches (regex) NON_NIE (0):
+        //  [0-9]+z
+        //  [0-9]+y
+        public static final int NON_NIE = 0;
+
+        // The following formats of usernames matches (regex) NIE (1):
+        //  x[0-9]+[A-Z]
+        public static final int NIE = 1;
+    }
+
+    public static class ErrorCode {
+        public static final String INVALID_LOGIN_DOCUMENT_TYPE = "ESValidLoginDocument.loginDocument";
     }
 
     public static class ProductType {

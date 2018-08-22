@@ -32,10 +32,10 @@
 			<property name="hibernate.connection.useUnicode" value="true" />
 		</properties>
 	</persistence-unit>
-	
+
 	<!-- !!! make sure to map persistence unit names in PersistenceUnit enum. !!! -->
 	<persistence-unit name="tink-aggregation-api"
-		transaction-type="RESOURCE_LOCAL">
+					  transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<class>se.tink.backend.core.AggregationCredentials</class>
 		<class>se.tink.backend.core.ClusterHostConfiguration</class>
@@ -46,12 +46,32 @@
 		<properties>
 			<property name="hibernate.hbm2ddl.auto" value="validate" />
 			<property name="hibernate.ejb.naming_strategy"
-				value="org.hibernate.cfg.DefaultComponentSafeNamingStrategy" />
+					  value="org.hibernate.cfg.DefaultComponentSafeNamingStrategy" />
 
 			<property name="hibernate.connection.CharSet" value="utf8" />
 			<property name="hibernate.connection.characterEncoding" value="UTF-8" />
 			<property name="hibernate.connection.useUnicode" value="true" />
 		</properties>
 	</persistence-unit>
-	
+
+
+	<!-- !!! make sure to map persistence unit names in PersistenceUnit enum. !!! -->
+	<persistence-unit name="tink-provider-api"
+					  transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<class>se.tink.backend.core.ClusterHostConfiguration</class>
+		<class>se.tink.backend.core.ClusterCryptoConfiguration</class>
+		<class>se.tink.backend.core.ClusterProviderConfiguration</class>
+		<class>se.tink.backend.core.ProviderConfiguration</class>
+		<exclude-unlisted-classes>true</exclude-unlisted-classes>
+		<properties>
+			<property name="hibernate.hbm2ddl.auto" value="validate" />
+			<property name="hibernate.ejb.naming_strategy"
+					  value="org.hibernate.cfg.DefaultComponentSafeNamingStrategy" />
+
+			<property name="hibernate.connection.CharSet" value="utf8" />
+			<property name="hibernate.connection.characterEncoding" value="UTF-8" />
+			<property name="hibernate.connection.useUnicode" value="true" />
+		</properties>
+	</persistence-unit>
 </persistence>

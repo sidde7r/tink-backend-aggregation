@@ -33,7 +33,8 @@ public class BelfiusTransactionalAccountFetcherTest extends BelfiusTest {
         assertFalse(accounts.isEmpty());
 
         accounts.forEach(account -> {
-            Collection<Transaction> transactions = fetcher.fetchTransactionsFor(account);
+            Collection<? extends Transaction> transactions = fetcher.fetchTransactionsFor(account)
+                    .getTinkTransactions();
             assertNotNull(transactions);
             assertFalse(transactions.isEmpty());
         });

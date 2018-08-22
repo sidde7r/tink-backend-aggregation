@@ -6,8 +6,8 @@ java_library(
     deps = [
         "//third_party:com_google_guava_guava",
         "//src/libraries/metrics:metrics",
-        "//third_party:org_eclipse_jetty_orbit_javax_servlet",
-        "//third_party:com_sun_jersey_jersey_server",
-
+        "//third_party:com_google_inject_guice",
+        "//:main-api",
+        "//third_party:com_sun_jersey_jersey_server",  
     ]
 )

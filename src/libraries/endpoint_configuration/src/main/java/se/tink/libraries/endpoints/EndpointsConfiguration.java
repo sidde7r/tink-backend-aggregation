@@ -32,6 +32,8 @@ public class EndpointsConfiguration extends Configuration {
     private EndpointConfiguration aggregationController = new EndpointConfiguration();
     @JsonProperty
     private EndpointConfiguration executor;
+    @JsonProperty
+    private EndpointConfiguration providerConfiguration = new EndpointConfiguration();
 
     public EndpointConfiguration getAggregation() {
         return aggregation;
@@ -122,6 +124,8 @@ public class EndpointsConfiguration extends Configuration {
     public EndpointConfiguration getAggregationcontroller() {
         return aggregationController;
     }
+
+    public EndpointConfiguration getProviderConfiguration() { return providerConfiguration; }
 
     public void setAggregationController(EndpointConfiguration aggregationController) {
         this.aggregationController = aggregationController;

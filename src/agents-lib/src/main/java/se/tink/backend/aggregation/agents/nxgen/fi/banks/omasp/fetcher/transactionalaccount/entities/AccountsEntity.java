@@ -48,6 +48,7 @@ public class AccountsEntity {
     public TransactionalAccount toTransactionalAccount(AccountTypes accountType) {
         return TransactionalAccount.builder(accountType, this.id, Amount.inEUR(this.availableBalance.getValue()))
                 .setAccountNumber(this.id)
+                .setBankIdentifier(this.id)
                 .setName(this.name)
                 .build();
     }

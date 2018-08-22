@@ -21,6 +21,13 @@ public class ClusterHostConfiguration {
     private String base64EncodedClientCertificate;
     private boolean disableRequestCompression;
 
+    /*
+    Uncomment this as soon as the databases are updated with the new aggregator identifier
+
+    @Type(type = "text")
+    private String aggregatorIdentifier;
+    */
+
     public String getClusterId() {
         return clusterId;
     }
@@ -44,4 +51,12 @@ public class ClusterHostConfiguration {
     public boolean isDisableRequestCompression() {
         return disableRequestCompression;
     }
+
+    /*
+    Uncomment this as soon as the databases are updated with the new aggregator identifier
+
+    public String getAggregatorIdentifier(){
+        return aggregatorIdentifier;
+    }
+    */
 }

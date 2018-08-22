@@ -2,15 +2,16 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transacti
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.AccountTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.PaginationEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
-public class FetchAccountTransactionsResponse implements TransactionPagePaginatorResponse {
+public class FetchAccountTransactionsResponse implements PaginatorResponse {
 
     private List<AccountTransactionEntity> accountTransactions;
     private PaginationEntity pagination;
@@ -25,8 +26,8 @@ public class FetchAccountTransactionsResponse implements TransactionPagePaginato
     }
 
     @Override
-    public boolean canFetchMore() {
-        return getPagination().getPage() < getPagination().getNumPages();
+    public Optional<Boolean> canFetchMore() {
+        return Optional.of(getPagination().getPage() < getPagination().getNumPages());
     }
 
     public PaginationEntity getPagination() {

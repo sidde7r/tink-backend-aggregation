@@ -1,27 +1,23 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.authenticator.rpc;
 
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.IngConstants;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public final class LoginDocument {
 
-    private String document;
-    private int documentType = IngConstants.Default.LOGIN_DOCUMENT_TYPE;
+    @JsonProperty("document")
+    private String username;
 
-    public int getDocumentType() {
-        return documentType;
+    @JsonProperty("documentType")
+    private int usernameType;
+
+    private LoginDocument(String username, int usernameType) {
+        this.username = username;
+        this.usernameType = usernameType;
     }
 
-    public void setDocument(String document) {
-        this.document = document;
-    }
-
-    public void setDocumentType(int documentType) {
-        this.documentType = documentType;
-    }
-
-    public String getDocument() {
-        return document;
+    public static LoginDocument create(String username, int usernameType) {
+        return new LoginDocument(username, usernameType);
     }
 }

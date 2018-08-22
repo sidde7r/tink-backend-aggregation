@@ -6,17 +6,17 @@ import java.time.Month;
 import java.time.Year;
 import java.time.ZoneId;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Objects;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 public class TransactionMonthPaginationController<A extends Account> implements TransactionPaginator<A> {
     /** Needs to be set to 1 + 'the minimum number of months check'. On the first day of the month 3 months and 1 day will be checked. */
-    protected static final int MAX_CONSECUTIVE_EMPTY_PAGES = 4;
+    private static final int MAX_CONSECUTIVE_EMPTY_PAGES = 4;
     protected static final int MAX_TOTAL_EMPTY_PAGES = 25;
-    private static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("Europe/Stockholm");
     private final LocalDate nowInLocalDate;
     private final TransactionMonthPaginator paginator;
     private A currentAccount;
@@ -25,41 +25,40 @@ public class TransactionMonthPaginationController<A extends Account> implements 
     private int totalEmptyFetches = 0;
     private boolean foundSomething;
 
-    public TransactionMonthPaginationController(TransactionMonthPaginator paginator) {
-        this(paginator, DEFAULT_ZONE_ID);
-    }
-
     public TransactionMonthPaginationController(TransactionMonthPaginator paginator, ZoneId zoneId) {
         this.paginator = Preconditions.checkNotNull(paginator);
-        nowInLocalDate = LocalDate.now(zoneId);
+        this.nowInLocalDate = LocalDate.now(zoneId);
     }
 
     @Override
-    public Collection<? extends Transaction> fetchTransactionsFor(A account) {
-        Preconditions.checkState(canFetchMoreFor(account),
-                "Fetching more transactions when canFetchMore() returns false is not allowed");
+    public PaginatorResponse fetchTransactionsFor(A account) {
         resetStateIfAccountChanged(account);
 
-        Collection<? extends Transaction> transactions = paginator.getTransactionsFor(
-                account, Year.from(dateToFetch), Month.from(dateToFetch));
+        PaginatorResponse response = paginator.getTransactionsFor(account, Year.from(dateToFetch),
+                Month.from(dateToFetch));
+
+        Collection<? extends Transaction> transactions = response.getTinkTransactions();
 
         dateToFetch = dateToFetch.minusMonths(1);
 
-        if (transactions == null || transactions.isEmpty()) {
+        if (transactions.isEmpty() && !response.canFetchMore().isPresent()) {
             consecutiveEmptyFetches++;
             totalEmptyFetches++;
-            return Collections.emptyList();
+
+            return PaginatorResponseImpl.createEmpty(foundSomething ?
+                    consecutiveEmptyFetches < MAX_CONSECUTIVE_EMPTY_PAGES :
+                    totalEmptyFetches < MAX_TOTAL_EMPTY_PAGES);
         }
 
         consecutiveEmptyFetches = 0;
         foundSomething = true;
-        return transactions;
-    }
 
-    @Override
-    public boolean canFetchMoreFor(A account) {
-        resetStateIfAccountChanged(account);
-        return foundSomething ? consecutiveEmptyFetches < MAX_CONSECUTIVE_EMPTY_PAGES : totalEmptyFetches < MAX_TOTAL_EMPTY_PAGES;
+        if (!response.canFetchMore().isPresent()) {
+            // If canFetchMore is not defined we assume we always can fetch more (until we reach an empty page).
+            return PaginatorResponseImpl.create(transactions, true);
+        }
+
+        return response;
     }
 
     private void resetStateIfAccountChanged(A account) {

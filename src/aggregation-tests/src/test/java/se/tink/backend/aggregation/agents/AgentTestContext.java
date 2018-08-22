@@ -2,12 +2,10 @@ package se.tink.backend.aggregation.agents;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -20,12 +18,9 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
-import se.tink.backend.core.ClusterHostConfiguration;
 import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.core.FraudDetailsContent;
 import se.tink.backend.core.account.TransferDestinationPattern;
-import se.tink.backend.core.application.ApplicationState;
-import se.tink.backend.core.product.ProductPropertyKey;
 import se.tink.backend.core.signableoperation.SignableOperation;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.system.rpc.AccountFeatures;
@@ -55,7 +50,7 @@ public class AgentTestContext extends AgentContext {
 
     public AgentTestContext(Credentials credentials) {
         this.credentials = credentials;
-        setClusterInfo(ClusterInfo.createForLegacyAggregation(ClusterId.create("test", "local-development", "TINK-Testing")));
+        setClusterInfo(ClusterInfo.createForLegacyAggregation(ClusterId.create("test", "local-development", Aggregator.of(Aggregator.DEFAULT))));
         setAggregator(Aggregator.getDefault());
     }
 
@@ -67,7 +62,7 @@ public class AgentTestContext extends AgentContext {
         transfers.clear();
     }
 
-    public List<Account> getAccounts() {
+    public List<Account> getUpdatedAccounts() {
         return Lists.newArrayList(accountsByBankId.values());
     }
 
@@ -152,7 +147,7 @@ public class AgentTestContext extends AgentContext {
     }
 
     @Override
-    public Account updateAccount(Account account, AccountFeatures accountFeatures) {
+    public void cacheAccount(Account account, AccountFeatures accountFeatures) {
         log.info("Updating account");
 
         try {
@@ -163,8 +158,10 @@ public class AgentTestContext extends AgentContext {
         }
 
         accountsByBankId.put(account.getBankId(), account);
+    }
 
-        return account;
+    public Account sendAccountToUpdateService(String uniqueId) {
+        return accountsByBankId.get(uniqueId);
     }
 
     @Override
@@ -203,13 +200,15 @@ public class AgentTestContext extends AgentContext {
     }
 
     @Override
+    @Deprecated // Use cacheTransactions instead
     public Account updateTransactions(Account account, List<Transaction> transactions) {
         try {
             log.info("Updating transactions for account: " + mapper.writeValueAsString(account));
         } catch (Exception e) {
         }
 
-        account = updateAccount(account);
+        cacheAccount(account);
+        account = sendAccountToUpdateService(account.getBankId());
 
         for (Transaction updatedTransaction : transactions) {
             updatedTransaction.setAccountId(account.getId());
@@ -220,6 +219,11 @@ public class AgentTestContext extends AgentContext {
         transactionsByAccountBankId.put(account.getBankId(), transactions);
 
         return account;
+    }
+
+    @Override
+    public void cacheTransactions(String accountUniqueId, List<Transaction> transactions) {
+        transactionsByAccountBankId.put(accountUniqueId, transactions);
     }
 
     @Override
@@ -291,35 +295,6 @@ public class AgentTestContext extends AgentContext {
         log.info(
                 "-------------------------------------------------------DOCUMENT---------------------------------------------------------------------");
         return UpdateDocumentResponse.createSuccessful(contianer.getIdentifier(), UUID.randomUUID(), "url");
-    }
-
-    @Override
-    public void updateProductInformation(UUID productInstanceId,
-            HashMap<ProductPropertyKey, Object> productProperties) {
-        try {
-            log.info(
-                    "-------------------------------------------------------PRODUCT INFORMATION---------------------------------------------------------------------");
-            log.info(String.format("Product ID: %s", productInstanceId));
-            log.info(mapper.writeValueAsString(productProperties));
-            log.info(
-                    "-------------------------------------------------------PRODUCT INFORMATION---------------------------------------------------------------------");
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void updateApplication(UUID applicationId, ApplicationState applicationState) {
-        try {
-            log.info(
-                    "-----------------------------------------------------------APPLICATION-------------------------------------------------------------------------");
-            log.info(String.format("Product ID: %s", applicationId));
-            log.info(mapper.writeValueAsString(applicationState));
-            log.info(
-                    "-----------------------------------------------------------APPLICATION-------------------------------------------------------------------------");
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

@@ -22,7 +22,7 @@ public class IngTransactionalAccountFetcher extends ProductMovementsFetcher<Tran
     private static TransactionalAccount toTransactionalAccount(Product product) {
 
         TransactionalAccount.Builder<? extends Account, ?> builder = TransactionalAccount
-                .builder(mapToKnownType(product).get());
+                .builder(mapToKnownType(product).get(), product.getUniqueIdentifier());
 
         copyCommonAttributes(product, builder);
 

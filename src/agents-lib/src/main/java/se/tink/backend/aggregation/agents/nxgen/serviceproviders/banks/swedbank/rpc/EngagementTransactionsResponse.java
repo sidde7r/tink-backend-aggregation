@@ -103,24 +103,24 @@ public class EngagementTransactionsResponse implements TransactionKeyPaginatorRe
     }
 
     @Override
-    public boolean hasNext() {
+    public Optional<Boolean> canFetchMore() {
         if (!moreTransactionsAvailable) {
-            return false;
+            return Optional.of(false);
         }
 
         if (links == null) {
-            return false;
+            return Optional.of(false);
         }
 
         if (links.getNext() == null) {
-            return false;
+            return Optional.of(false);
         }
 
         if (!links.getNext().isValid()) {
-            return false;
+            return Optional.of(false);
         }
 
-        return true;
+        return Optional.of(true);
     }
 
     @Override

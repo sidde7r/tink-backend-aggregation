@@ -1,8 +1,5 @@
 package se.tink.backend.aggregation.agents.banks;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import java.util.Map;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.AgentTestContext;
@@ -10,8 +7,6 @@ import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.banks.sbab.SBABAgent;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.rpc.FetchProductInformationParameterKey;
-import se.tink.backend.aggregation.rpc.ProductType;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.backend.common.utils.TestAccount;
@@ -20,8 +15,6 @@ import se.tink.backend.core.Amount;
 import se.tink.backend.core.enums.TransferType;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.application.ApplicationType;
-import se.tink.libraries.application.GenericApplication;
 import se.tink.libraries.date.DateUtils;
 
 public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
@@ -42,7 +35,7 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
     @Test
     public void testLoginWithMobileBankIdAndRefreshAccounts() throws Exception {
         testAgent(credentials);
-        System.out.println(MAPPER.writeValueAsString(testContext.getAccounts()));
+        System.out.println(MAPPER.writeValueAsString(testContext.getUpdatedAccounts()));
         System.out.println(MAPPER.writeValueAsString(testContext.getTransactions()));
         System.out.println(MAPPER.writeValueAsString(testContext.getTransfers()));
     }
@@ -230,104 +223,6 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
         // This will result in a TransferMessageException.
 
         testTransferException(credentials, transfer);
-    }
-
-    @Test
-    public void testFetchProductInformation() throws Exception {
-
-        Map<FetchProductInformationParameterKey, Object> parameters = Maps.newHashMap();
-        parameters.put(FetchProductInformationParameterKey.MARKET_VALUE, 3000000);
-        parameters.put(FetchProductInformationParameterKey.MORTGAGE_AMOUNT, 2000000);
-        parameters.put(FetchProductInformationParameterKey.NUMBER_OF_APPLICANTS, 1);
-
-        agent.fetchProductInformation(ProductType.MORTGAGE, null, parameters);
-    }
-
-    @Test
-    public void testSendMortgageApplicationWithSuneSkogApplicant() throws Exception {
-        String ssn = SBABAgentTestBase.SSN_SUNE_SKOG;
-        switchToMortgageTestAgent(ssn);
-        GenericApplication application = SBABAgentTestBase.createApplication(ApplicationType.SWITCH_MORTGAGE_PROVIDER);
-
-        application.setPersonalNumber(ssn);
-
-        application.setFieldGroups(Lists.newArrayList(
-                SBABAgentTestBase.createSwitchMortageProviderApplicantsGroup(ssn),
-                SBABAgentTestBase.createMortgageApartmentSecurityGroup(),
-                SBABAgentTestBase.createHouseholdGroup(),
-                SBABAgentTestBase.createCurrentMortgageGroup(),
-                SBABAgentTestBase.createProductGroup()));
-
-        agent.create(application);
-    }
-
-    @Test
-    public void testSendMortgageApplicationWithJadwigaJensenApplicant() throws Exception {
-        String ssn = SBABAgentTestBase.SSN_JADWIGA_JENSEN;
-        switchToMortgageTestAgent(ssn);
-        GenericApplication application = SBABAgentTestBase.createApplication(ApplicationType.SWITCH_MORTGAGE_PROVIDER);
-
-        application.setPersonalNumber(ssn);
-
-        application.setFieldGroups(Lists.newArrayList(
-                SBABAgentTestBase.createSwitchMortageProviderApplicantsGroup(ssn),
-                SBABAgentTestBase.createMortgageHouseSecurityGroup(),
-                SBABAgentTestBase.createHouseholdGroup(),
-                SBABAgentTestBase.createCurrentMortgageGroup(),
-                SBABAgentTestBase.createProductGroup()));
-
-        agent.create(application);
-    }
-
-    @Test
-    public void testSendMortgageApplicationWithMaudLidenApplicant() throws Exception {
-        String ssn = SBABAgentTestBase.SSN_MAUD_LIDEN;
-        switchToMortgageTestAgent(ssn);
-        GenericApplication application = SBABAgentTestBase.createApplication(ApplicationType.SWITCH_MORTGAGE_PROVIDER);
-
-        application.setPersonalNumber(ssn);
-
-        application.setFieldGroups(Lists.newArrayList(
-                SBABAgentTestBase.createSwitchMortageProviderApplicantsGroup(ssn),
-                SBABAgentTestBase.createMortgageApartmentSecurityGroup(),
-                SBABAgentTestBase.createHouseholdGroup(),
-                SBABAgentTestBase.createCurrentMortgageGroup(),
-                SBABAgentTestBase.createProductGroup()));
-
-        agent.create(application);
-    }
-
-    @Test
-    public void testSendMortgageApplicationWithCarlJonssonApplicant() throws Exception {
-        String ssn = SBABAgentTestBase.SSN_CARL_JONSSON;
-        switchToMortgageTestAgent(ssn);
-        GenericApplication application = SBABAgentTestBase.createApplication(ApplicationType.SWITCH_MORTGAGE_PROVIDER);
-
-        application.setPersonalNumber(ssn);
-
-        application.setFieldGroups(Lists.newArrayList(
-                SBABAgentTestBase.createSwitchMortageProviderApplicantsGroup(ssn),
-                SBABAgentTestBase.createMortgageApartmentSecurityGroup(),
-                SBABAgentTestBase.createHouseholdGroup()));
-
-        agent.create(application);
-    }
-
-    @Test
-    public void testCreateAndSignNewSavingsAccountApplication() {
-        try {
-            GenericApplication application = SBABAgentTestBase.createApplication(ApplicationType.OPEN_SAVINGS_ACCOUNT);
-
-            application.setFieldGroups(Lists.newArrayList(
-                    SBABAgentTestBase.createOpenSavingsAccountApplicantsGroup(),
-                    SBABAgentTestBase.createKYCGroup()));
-
-            agent.create(application);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        writeToDebugFile(credentials);
     }
 
     /**

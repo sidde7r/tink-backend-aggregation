@@ -117,6 +117,7 @@ import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.enums.TransferType;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
@@ -171,9 +172,6 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
     private static final TransferMessageLengthConfig TRANSFER_MESSAGE_LENGTH_CONFIG = TransferMessageLengthConfig
             .createWithMaxLength(50, 12, 50);
 
-    private static final MetricId NORDEA_FETCH_TRANSACTIONS = MetricId.newId(
-            "nordea_fetch_transactions");
-
     private String securityToken;
     private final Client client;
     private final Credentials credentials;
@@ -188,7 +186,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
     private Map<ProductEntity, Account> productEntityAccountMap = null;
     private InitialContextResponse initialContextResponse = null;
 
-    public NordeaV20Agent(CredentialsRequest request, AgentContext context) {
+    public NordeaV20Agent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         this.client = this.clientFactory.createCustomClient(context.getLogOutputStream());
@@ -581,7 +579,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         int requestId = ThreadLocalRandom.current().nextInt(100000);
 
         Builder request = this.client.resource(url).accept("*/*")
-                .header("User-Agent", getAggregator().getAggregatorIdentifier())
+                .header("User-Agent", DEFAULT_USER_AGENT)
                 .header("x-Request-Id", Integer.toString(requestId))
                 .header("x-Platform-Version", "8.1.3")
                 .header("x-App-Country", this.market.getMarketCode())
@@ -759,17 +757,9 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
                 this.log.warn("Failed fetching transactions. Retrying...");
                 transactionListResponse = fetchTransactions(accountId, continueKey);
 
-                if (transactionListResponse.getAccountTransactions() == null) {
-                    this.register.meter(NORDEA_FETCH_TRANSACTIONS.label("outcome", "retry_fail")).inc();
-                } else {
-                    this.register.meter(NORDEA_FETCH_TRANSACTIONS.label("outcome", "retry_successful")).inc();
-                }
-
                 Preconditions.checkNotNull(transactionListResponse.getAccountTransactions(),
                         "Failed retry fetching transactions.");
 
-            } else {
-                this.register.meter(NORDEA_FETCH_TRANSACTIONS.label("outcome", "successful")).inc();
             }
 
             continueKey = (transactionListResponse.getAccountTransactions().getContinueKey().get("$") == null ? null
@@ -897,7 +887,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
                 .sortedCopy(transactionsList));
     }
 
-    private Account refreshLoan(Account account, ProductEntity product) throws IOException, ParseException {
+    private void refreshLoan(Account account, ProductEntity product) throws IOException, ParseException {
         String accountId = product.getNordeaAccountIdV2();
 
         String loanResponseContent = createClientRequest(this.market.getBankingEndpoint() + "/Loans/Details/" + accountId,
@@ -915,7 +905,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
             assets.setLoans(Lists.newArrayList(loan));
         }
 
-        return this.context.updateAccount(account, assets);
+        this.context.cacheAccount(account, assets);
     }
 
     private void refreshInvestmentAccounts() throws IOException {
@@ -965,7 +955,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
                         });
                 portfolio.setInstruments(instruments);
 
-                this.context.updateAccount(account, AccountFeatures.createForPortfolios(portfolio));
+                this.context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
             } catch (Exception e) {
                 // Don't fail the whole refresh just because we failed updating investment data but log error.
                 this.log.error("Caught exception while updating investment data", e);
@@ -1052,7 +1042,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
     private void updateAccountsPerType(RefreshableItem type) {
         getAccounts().entrySet().stream()
                 .filter(set -> type.isAccountType(set.getValue().getType()))
-                .forEach(set -> context.updateAccount(set.getValue()));
+                .forEach(set -> context.cacheAccount(set.getValue()));
     }
 
     private void updateTransactionsPerAccountType(RefreshableItem type) {
@@ -1204,7 +1194,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         TransferDestinationsResponse response = new TransferDestinationsResponse();
 
         Map<Account, List<TransferDestinationPattern>> internalOnly = new TransferDestinationPatternBuilder()
-                .setTinkAccounts(context.getAccounts())
+                .setTinkAccounts(context.getUpdatedAccounts())
                 .setSourceAccounts(internalOnlySourceAccounts)
                 .setDestinationAccounts(internalOnlyDestinationAccounts)
                 .build();
@@ -1212,7 +1202,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         response.addDestinations(internalOnly);
 
         Map<Account, List<TransferDestinationPattern>> external = new TransferDestinationPatternBuilder()
-                .setTinkAccounts(context.getAccounts())
+                .setTinkAccounts(context.getUpdatedAccounts())
                 .setSourceAccounts(sourceAccounts)
                 .setDestinationAccounts(destinationAccounts)
                 .addMultiMatchPattern(AccountIdentifier.Type.SE, TransferDestinationPattern.ALL)
@@ -1221,7 +1211,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         response.addDestinations(external);
 
         Map<Account, List<TransferDestinationPattern>> payments = new TransferDestinationPatternBuilder()
-                .setTinkAccounts(context.getAccounts())
+                .setTinkAccounts(context.getUpdatedAccounts())
                 .setSourceAccounts(paymentSourceAccounts)
                 .setDestinationAccounts(paymentDestinationAccounts)
                 .addMultiMatchPattern(AccountIdentifier.Type.SE_PG, TransferDestinationPattern.ALL)

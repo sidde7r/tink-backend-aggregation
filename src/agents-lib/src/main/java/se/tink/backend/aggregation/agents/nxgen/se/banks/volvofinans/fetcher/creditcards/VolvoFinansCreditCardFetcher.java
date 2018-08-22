@@ -12,6 +12,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.VolvoFinans
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.creditcards.entities.CreditCardEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.creditcards.entities.CreditCardTransactionEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
@@ -34,7 +36,7 @@ public class VolvoFinansCreditCardFetcher implements AccountFetcher<CreditCardAc
     }
 
     @Override
-    public Collection<CreditCardTransaction> getTransactionsFor(CreditCardAccount account, Date fromDate, Date toDate) {
+    public PaginatorResponse getTransactionsFor(CreditCardAccount account, Date fromDate, Date toDate) {
 
         LocalDate localStartDate = fromDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate localToDate = toDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -49,7 +51,7 @@ public class VolvoFinansCreditCardFetcher implements AccountFetcher<CreditCardAc
             localToDate = localFromDate.minusDays(1);
         }
 
-        return transactions;
+        return PaginatorResponseImpl.create(transactions);
     }
 
     private List<CreditCardTransaction> getTransactionsBatch(CreditCardAccount account, LocalDate localFromDate,

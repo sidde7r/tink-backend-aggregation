@@ -6,12 +6,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
 import se.tink.backend.aggregation.agents.abnamro.converters.AccountConverter;
+import se.tink.backend.aggregation.agents.abnamro.ics.mappers.TransactionMapper;
 import se.tink.backend.aggregation.agents.abnamro.utils.AbnAmroAgentUtils;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
@@ -21,9 +23,15 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.common.config.ServiceConfiguration;
+import se.tink.backend.common.config.SignatureKeyPair;
+import se.tink.backend.system.rpc.Transaction;
 import se.tink.libraries.abnamro.client.EnrollmentClient;
 import se.tink.libraries.abnamro.client.IBSubscriptionClient;
+import se.tink.libraries.abnamro.client.exceptions.IcsException;
 import se.tink.libraries.abnamro.client.model.PfmContractEntity;
+import se.tink.libraries.abnamro.client.model.creditcards.CreditCardAccountContainerEntity;
+import se.tink.libraries.abnamro.client.model.creditcards.CreditCardAccountEntity;
+import se.tink.libraries.abnamro.client.model.creditcards.TransactionContainerEntity;
 import se.tink.libraries.abnamro.client.rpc.enrollment.CollectEnrollmentResponse;
 import se.tink.libraries.abnamro.client.rpc.enrollment.InitiateEnrollmentResponse;
 import se.tink.libraries.abnamro.config.AbnAmroConfiguration;
@@ -47,7 +55,7 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
     private AbnAmroConfiguration abnAmroConfiguration;
     private List<Account> accounts = null;
 
-    public AbnAmroAgent(CredentialsRequest request, AgentContext context) {
+    public AbnAmroAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         this.user = request.getUser();
@@ -152,8 +160,11 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
         switch (item) {
         case CHECKING_ACCOUNTS:
         case SAVING_ACCOUNTS:
-        case CREDITCARD_ACCOUNTS:
             updateAccountPerType(item);
+            break;
+        case CREDITCARD_ACCOUNTS:
+        case CREDITCARD_TRANSACTIONS:
+            updateAllCreditCardAccounts(item);
             break;
         default:
             // Info instead of warn because the ABN agent only is responsible to fetch new user accounts.
@@ -164,9 +175,14 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
 
     private void updateAccountPerType(RefreshableItem type) {
         getAccounts().stream()
-                .filter(this::isNotCreditCardAccount)
                 .filter(account -> type.isAccountType(account.getType()))
                 .forEach(this::updateAccount);
+    }
+
+    private void updateAllCreditCardAccounts(RefreshableItem type) {
+        getAccounts().stream()
+                .filter(a -> Objects.equals(a.getType(), AccountTypes.CREDIT_CARD))
+                .forEach(a -> updateCreditCardAccount(a, type));
     }
 
     private List<Account> getAccounts() {
@@ -179,8 +195,7 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
         Preconditions.checkState(AbnAmroUtils.isValidBcNumberFormat(bcNumber));
         try {
             List<PfmContractEntity> contracts = subscriptionClient.getContracts(bcNumber);
-            accounts = new AccountConverter(AbnAmroUtils.shouldUseNewIcsAccountFormat(user.getFlags()))
-                    .convert(contracts);
+            accounts = new AccountConverter().convert(contracts);
             return accounts;
         } catch (Exception e) {
             throw new IllegalStateException(e);
@@ -190,11 +205,10 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
     private void updateAccount(Account account) {
         // Update the account. This will call system which will subscribe the account towards ABN AMRO if it is
         // a new account.
-        account = context.updateAccount(account);
+        context.cacheAccount(account);
+        account = context.sendAccountToUpdateService(account.getBankId());
 
-        if (account.getType() == AccountTypes.CREDIT_CARD) {
-            // TODO Move credit card accounts to ICS
-        } else if (AbnAmroAgentUtils.isSubscribed(account)) {
+        if (AbnAmroAgentUtils.isSubscribed(account)) {
             // This is a new account that was subscribed towards ABN AMRO. Tell aggregation that we are waiting
             // on getting transactions ingested in the connector.
             log.info(account, "Waiting for updates from the connector...");
@@ -202,12 +216,53 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
         }
     }
 
+    private void updateCreditCardAccount(Account account, RefreshableItem item) {
+        String bcNumber = credentials.getPayload();
+
+
+        context.cacheAccount(account);
+        context.sendAccountToUpdateService(account.getBankId());
+
+        try {
+            if (Objects.equals(item, RefreshableItem.CREDITCARD_TRANSACTIONS)) {
+                String fullBankId = account.getPayload(AbnAmroUtils.ABN_AMRO_ICS_ACCOUNT_CONTRACT_PAYLOAD);
+                if (credentials.isDebug()) {
+                    log.info(account, String.format("Updating credit card transactions with contract number: %s",
+                            fullBankId));
+                }
+                refreshCreditCardTransactions(bcNumber, fullBankId);
+            }
+        } catch (IcsException e) {
+            if (abnAmroConfiguration.shouldIgnoreCreditCardErrors()) {
+                log.warn("Ignoring error from ICS", e);
+            } else {
+                throw new IllegalStateException(e);
+            }
+        }
+    }
+
+    private void refreshCreditCardTransactions(String bcNumber, String accountNumber) throws IcsException {
+        List<CreditCardAccountContainerEntity> entities = subscriptionClient.getCreditCardAccountAndTransactions(
+                bcNumber, Long.valueOf(accountNumber));
+
+        entities.stream()
+                .map(CreditCardAccountContainerEntity::getCreditCardAccount)
+                .forEach(account -> storeCreditCardTransactions(accountNumber, account));
+    }
+
+    private void storeCreditCardTransactions(String accountNumber, CreditCardAccountEntity accountEntity) {
+        String shortAccountNumber = AbnAmroUtils.creditCardIdToAccountId(accountNumber);
+
+        List<Transaction> transactions = accountEntity.getTransactions().stream()
+                .filter(TransactionContainerEntity::isInEUR)
+                .map(TransactionMapper::toTransaction)
+                .collect(Collectors.toList());
+
+        context.cacheTransactions(shortAccountNumber, transactions);
+    }
+
     @Override
     public void logout() throws Exception {
         // NOP
-    }
-
-    private boolean isNotCreditCardAccount(Account account) {
-        return !Objects.equals(account.getType(), AccountTypes.CREDIT_CARD);
     }
 }

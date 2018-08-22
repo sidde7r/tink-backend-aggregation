@@ -8,6 +8,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecAp
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.entities.RecordEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.rpc.FetchUpcomingPaymentsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -23,11 +25,14 @@ public class BecAccountTransactionsFetcher implements TransactionDatePaginator<T
     }
 
     @Override
-    public Collection<? extends Transaction> getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
-        return Optional.of(this.apiClient.fetchAccountTransactions(account, fromDate, toDate).getRecord())
+    public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
+        Collection<? extends Transaction> transactions = Optional.of(
+                this.apiClient.fetchAccountTransactions(account, fromDate, toDate).getRecord())
                 .orElseThrow(() -> new IllegalStateException("No records")).stream()
                 .map(RecordEntity::toTinkTransaction)
                 .collect(Collectors.toList());
+
+        return PaginatorResponseImpl.create(transactions);
     }
 
     @Override

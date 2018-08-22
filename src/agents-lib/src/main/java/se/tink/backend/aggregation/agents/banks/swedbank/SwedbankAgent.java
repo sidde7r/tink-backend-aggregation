@@ -125,6 +125,7 @@ import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.common.i18n.SocialSecurityNumber;
 import se.tink.backend.common.i18n.SocialSecurityNumber.Sweden;
 import se.tink.backend.core.account.TransferDestinationPattern;
@@ -277,7 +278,7 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
     private static final int MAX_RETRY_ATTEMPTS = 4;
     private ProfilesHandler profilesHandler = new ProfilesHandler();
 
-    public SwedbankAgent(CredentialsRequest request, AgentContext context) {
+    public SwedbankAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         credentials = request.getCredentials();
@@ -461,7 +462,7 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
 
         String uri = UriBuilder.fromUri(url).queryParam("dsid", dsid).build().toString();
 
-        Builder request = client.resource(uri).header("User-Agent", getAggregator().getAggregatorIdentifier())
+        Builder request = client.resource(uri).header("User-Agent", DEFAULT_USER_AGENT)
                 .cookie(new NewCookie("dsid", dsid)).accept("*/*").acceptLanguage("sv-se")
                 .header("Authorization", authorization);
 
@@ -1556,7 +1557,7 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
             });
             portfolio.setInstruments(instruments);
 
-            context.updateAccount(account.get(), AccountFeatures.createForPortfolios(portfolio));
+            context.cacheAccount(account.get(), AccountFeatures.createForPortfolios(portfolio));
         });
     }
 
@@ -1615,7 +1616,7 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
             });
             portfolio.setInstruments(instruments);
 
-            context.updateAccount(account.get(), AccountFeatures.createForPortfolios(portfolio));
+            context.cacheAccount(account.get(), AccountFeatures.createForPortfolios(portfolio));
         });
     }
 
@@ -1675,7 +1676,7 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
             });
             portfolio.setInstruments(instruments);
 
-            context.updateAccount(account.get(), AccountFeatures.createForPortfolios(portfolio));
+            context.cacheAccount(account.get(), AccountFeatures.createForPortfolios(portfolio));
         });
     }
 
@@ -1732,7 +1733,7 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
 
             portfolio.setInstruments(instruments);
 
-            context.updateAccount(account.get(), AccountFeatures.createForPortfolios(portfolio));
+            context.cacheAccount(account.get(), AccountFeatures.createForPortfolios(portfolio));
         });
     }
 
@@ -1915,7 +1916,7 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
 
             try {
                 TransferDestinationsResponse profileDestinationResponse = getActivatedProfileTransferDestinations(
-                        profileMenu, context.getAccounts());
+                        profileMenu, context.getUpdatedAccounts());
                 response.addDestinations(profileDestinationResponse.getDestinations());
             } catch (Exception e) {
                 throw new IllegalStateException(e);
@@ -1971,7 +1972,7 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
                         isValidNonCreditCardAccountNumber(Preconditions.checkNotNull(account.getBankId())),
                         "Unexpected account.bankid '%s'. Reformatted?", account.getBankId());
 
-                context.updateAccount(account, assets);
+                context.cacheAccount(account, assets);
             }
         }
     }
@@ -2012,7 +2013,7 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
                         isValidCreditCardAccountNumber(Preconditions.checkNotNull(account.getBankId())),
                         "Unexpected account.bankid '%s'. Reformatted?", account.getBankId());
 
-                context.updateAccount(account);
+                context.cacheAccount(account);
             }
         }
     }
@@ -2416,7 +2417,7 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
                 isValidGenericSwedbankAccountNumber(account.getBankId()),
                 "Unexpected account.bankid '%s'. Reformatted?", account.getBankId());
 
-        context.updateAccount(account, assets);
+        context.cacheAccount(account, assets);
     }
 
     /**

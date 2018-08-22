@@ -386,6 +386,11 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
         return this;
     }
 
+    public RequestBuilder body(AbstractForm body) {
+        this.body = body.getBodyValue();
+        return this;
+    }
+
     public RequestBuilder body(Object body, MediaType type) {
         body(body);
         type(type);

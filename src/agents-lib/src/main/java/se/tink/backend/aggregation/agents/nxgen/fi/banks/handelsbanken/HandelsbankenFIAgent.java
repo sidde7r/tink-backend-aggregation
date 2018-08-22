@@ -8,16 +8,17 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.HandelsbankenAutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class HandelsbankenFIAgent extends HandelsbankenAgent<HandelsbankenFIApiClient, HandelsbankenFIConfiguration> {
-    public HandelsbankenFIAgent(CredentialsRequest request,
-            AgentContext context) {
-        super(request, context, new HandelsbankenFIConfiguration());
+    public HandelsbankenFIAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair, new HandelsbankenFIConfiguration());
     }
 
     @Override
@@ -47,6 +48,12 @@ public class HandelsbankenFIAgent extends HandelsbankenAgent<HandelsbankenFIApiC
     @Override
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController(HandelsbankenFIApiClient bankClient,
             HandelsbankenSessionStorage handelsbankenSessionStorage) {
+        return Optional.empty();
+    }
+
+    @Override
+    protected Optional<EInvoiceRefreshController> constructEInvoiceRefreshController(HandelsbankenFIApiClient client,
+            HandelsbankenSessionStorage sessionStorage) {
         return Optional.empty();
     }
 

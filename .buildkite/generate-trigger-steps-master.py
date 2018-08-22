@@ -20,12 +20,37 @@ BRANCHES = {
 }
 
 PROJECTS = {
-    'tink-backend-aggregation': {'chart': False, 'salt': True},
+    'tink-backend-aggregation': {
+        'chart': False,
+        'salt': True,
+        'branches': [
+            'oxford-production',
+            'oxford-staging',
+            'leeds-production',
+            'leeds-staging',
+            'cornwall-production',
+            'cornwall-testing',
+            'kirkby-production',
+            'kirkby-staging',
+            'newport-production',
+            'newport-staging',
+            'farnham-staging',
+            'aggregation-production',
+            'aggregation-staging'
+        ],},
+    'tink-backend-provider-configuration': {
+        'chart': True,
+        'salt': False,
+        'branches': [
+            'aggregation-staging',
+        ],
+    },
 }
 
 STEP = """
 - name: "Trigger release {branch} {project}"
   trigger: "{pipeline}"
+  branches: master
   async: true
   build:
     message: "Release {project} {version} to {branch}"
@@ -58,8 +83,10 @@ version = os.environ['VERSION']
 print(TRIGGER_ALL_PIPELINE_STEP.format(
     version=version, project='tink-backend-aggregation'))
 
+
 for project, project_settings in PROJECTS.items():
-    for branch, settings in BRANCHES.items():
+    for branch in project_settings['branches']:
+        settings = BRANCHES[branch]
         if settings.get('block'):
             block = 'true'
         else:

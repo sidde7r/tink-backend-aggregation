@@ -19,8 +19,6 @@ import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.cluster.identification.Aggregator;
-import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -30,8 +28,6 @@ import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.core.FraudDetailsContent;
 import se.tink.backend.core.account.TransferDestinationPattern;
-import se.tink.backend.core.application.ApplicationState;
-import se.tink.backend.core.product.ProductPropertyKey;
 import se.tink.backend.core.signableoperation.SignableOperation;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.system.rpc.AccountFeatures;
@@ -81,7 +77,7 @@ public class NewAgentTestContext extends AgentContext {
         transfers.clear();
     }
 
-    public List<Account> getAccounts() {
+    public List<Account> getUpdatedAccounts() {
         return Lists.newArrayList(accountsByBankId.values());
     }
 
@@ -156,10 +152,13 @@ public class NewAgentTestContext extends AgentContext {
     }
 
     @Override
-    public Account updateAccount(Account account, AccountFeatures accountFeatures) {
+    public void cacheAccount(Account account, AccountFeatures accountFeatures) {
         accountsByBankId.put(account.getBankId(), account);
         accountFeaturesByBankId.put(account.getBankId(), accountFeatures);
-        return account;
+    }
+
+    public Account sendAccountToUpdateService(String uniqueId) {
+        return accountsByBankId.get(uniqueId);
     }
 
     @Override
@@ -194,8 +193,10 @@ public class NewAgentTestContext extends AgentContext {
     }
 
     @Override
+    @Deprecated // Use cacheTransactions instead
     public Account updateTransactions(Account account, List<Transaction> transactions) {
-        final Account updatedAccount = updateAccount(account);
+        cacheAccount(account);
+        final Account updatedAccount = sendAccountToUpdateService(account.getBankId());
 
         for (Transaction updatedTransaction : transactions) {
             updatedTransaction.setAccountId(updatedAccount.getId());
@@ -205,6 +206,11 @@ public class NewAgentTestContext extends AgentContext {
 
         transactionsByAccountBankId.put(updatedAccount.getBankId(), transactions);
         return updatedAccount;
+    }
+
+    @Override
+    public void cacheTransactions(String accountUniqueId, List<Transaction> transactions) {
+        transactionsByAccountBankId.put(accountUniqueId, transactions);
     }
 
     @Override
@@ -260,17 +266,6 @@ public class NewAgentTestContext extends AgentContext {
     public UpdateDocumentResponse updateDocument(DocumentContainer contianer) {
         // Not in scope for this test
         return UpdateDocumentResponse.createSuccessful(contianer.getIdentifier(), UUID.randomUUID(), "url");
-    }
-
-    @Override
-    public void updateProductInformation(UUID productInstanceId,
-            HashMap<ProductPropertyKey, Object> productProperties) {
-        throw new NotImplementedException("Product executor cannot be tested.");
-    }
-
-    @Override
-    public void updateApplication(UUID applicationId, ApplicationState applicationState) {
-        throw new NotImplementedException("Product executor cannot be tested.");
     }
 
     @Override

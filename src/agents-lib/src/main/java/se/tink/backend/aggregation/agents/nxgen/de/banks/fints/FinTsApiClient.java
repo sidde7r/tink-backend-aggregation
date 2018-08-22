@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints;
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
+import java.nio.charset.StandardCharsets;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -13,6 +14,8 @@ import java.util.Objects;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.accounts.HKSPA;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.accounts.SEPAAccount;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.auth.HKIDN;
@@ -22,8 +25,10 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.dialog.H
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.saldo.HKSAL;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.statement.HKKAZ;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.statement.MT940Statement;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsAccountTypeConverter;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsParser;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.rpc.AccountTypes;
 
 public class FinTsApiClient {
     private final TinkHttpClient apiClient;
@@ -36,6 +41,10 @@ public class FinTsApiClient {
     private int hkkazVersion = 6;
     // We need to get full information of account in two calls, so need to cache here.
     private List<SEPAAccount> sepaAccounts;
+    private static final Logger LOGGER = LoggerFactory.getLogger(FinTsApiClient.class);
+
+    private boolean endDateSupported = true;
+    private int fetchedTransactions = -1;
 
     public FinTsApiClient(TinkHttpClient apiClient, FinTsConfiguration configuration) {
         this.apiClient = apiClient;
@@ -48,10 +57,11 @@ public class FinTsApiClient {
         String b64Response =
                 apiClient.request(configuration.getEndpoint()).post(String.class, b64Request);
 
-        String plainResponse = new String(Base64.getDecoder().decode(b64Response.replaceAll("\\R", "")));
+        String plainResponse = new String(Base64.getDecoder().decode(b64Response.replaceAll("\\R", "")),
+                StandardCharsets.ISO_8859_1);
         FinTsResponse response = new FinTsResponse(plainResponse);
 
-        this.increaseMessageNumber(response);
+        this.messageNumber++;
 
         return response;
     }
@@ -61,9 +71,9 @@ public class FinTsApiClient {
                 new HKIDN(3, configuration.getBlz(), configuration.getUsername(), "0");
         HKVVB segPrepare = new HKVVB(4);
         HKSYN segSync = new HKSYN(5);
-
+        this.messageNumber = 1;
         return new FinTsRequest(
-                configuration, dialogId, messageNumber, this.systemId, segIdentification, segPrepare, segSync);
+                configuration, dialogId, this.messageNumber, this.systemId, segIdentification, segPrepare, segSync);
     }
 
     private FinTsRequest getMessageInit() {
@@ -139,7 +149,7 @@ public class FinTsApiClient {
 
     public Collection<String> sync() {
         FinTsResponse syncResponse = sendMessage(getMessageSync());
-        if (!syncResponse.isSuccess()) {
+        if (!syncResponse.isSuccess() || syncResponse.isAccountBlocked()) {
             Collection<String> rmg = syncResponse.getGlobalStatus().values();
             Collection<String> rms = syncResponse.getLocalStatus().values();
 
@@ -197,12 +207,6 @@ public class FinTsApiClient {
         this.dialogId = initResponse.getDialogId();
     }
 
-    private void increaseMessageNumber(FinTsResponse response) {
-        if (response.isSuccess()) {
-            this.messageNumber++;
-        }
-    }
-
     public boolean keepAlive() {
         FinTsRequest getAccountRequest =
                 new FinTsRequest(
@@ -238,7 +242,22 @@ public class FinTsApiClient {
             List<String> elements = FinTsParser.getDataGroupElements(account);
             // Sometimes we got accounts with same accountNo. That's why we need some special handling here.
             SEPAAccount targetAccount = this.sepaAccounts.stream()
-                    .filter(sepaAccount -> Objects.equals(sepaAccount.getAccountNo(), elements.get(3)))
+                    .filter(sepaAccount -> {
+                        switch (hksalVersion) {
+                        case 1:
+                        case 2:
+                        case 3:
+                        case 4:
+                        case 5:
+                        case 6:
+                            return Objects.equals(sepaAccount.getAccountNo(), elements.get(3));
+                        case 7:
+                            return Objects.equals(sepaAccount.getIban(), elements.get(1));
+                        default:
+                            throw new IllegalArgumentException("Invalid hVersion found!");
+                        }
+
+                    })
                     .filter(sepaAccount -> sepaAccount.getBic() == null)
                     .findFirst()
                     .orElseThrow(IllegalStateException::new);
@@ -281,25 +300,62 @@ public class FinTsApiClient {
                                     .equals(this.getAccountString(acc, this.hksalVersion), deg.get(1)))
                             .findFirst()
                             .orElseThrow(IllegalStateException::new);
-            sepaAccount.setBalance(FinTsParser.getDataGroupElements(deg.get(4)).get(1));
+            sepaAccount.setBalance(FinTsParser.getDataGroupElements(deg.get(4)).get(1), isBalancePositive(deg.get(4)));
         }
     }
 
-    public List<MT940Statement> getTransactions(String accountNo, Date start, Date end) {
+    private boolean isBalancePositive(String balanceSegment) {
+        return balanceSegment.startsWith("C");
+    }
+
+    // Sparkasse sometimes sends FinTsConstants.StatusCode.NO_ENTRY if a phone number is not active on account
+    private boolean noEntry(Map<String, String> status) {
+        if (status.containsValue(FinTsConstants.StatusCode.NO_ENTRY) &&
+                status.containsKey(FinTsConstants.StatusMessage.NO_ACTIVE_PHONE_NUMBER_WARNING)) {
+            LOGGER.info("{} Status: {}", FinTsConstants.LogTags.SPARKASSE_NO_PHONE_NUMBER_ATTACHED_WARNING,
+                    status.toString());
+            return false;
+        }
+        return status.containsValue(FinTsConstants.StatusCode.NO_ENTRY);
+    }
+
+    public Collection<MT940Statement> getTransactions(String accountNo, Date start, Date end) {
         SEPAAccount targetAccount = this.sepaAccounts.stream()
                 .filter(sepaAccount -> Objects.equals(sepaAccount.getAccountNo(), accountNo))
+                .filter(sepaAccount -> FinTsAccountTypeConverter.getAccountTypeFor(sepaAccount.getAccountType())
+                        != AccountTypes.OTHER)
                 .findFirst()
                 .orElseThrow(IllegalStateException::new);
+
+        if (!endDateSupported) {
+            end = new Date();
+        }
+
         FinTsRequest getTransactionRequest = this.createStatementRequest(targetAccount, start, end, null);
 
         FinTsResponse response = sendMessage(getTransactionRequest);
         String segment = response.findSegment(FinTsConstants.Segments.HIKAZ);
 
         Map<String, String> status = response.getLocalStatus();
-        if (status.containsValue(FinTsConstants.StatusCode.NO_ENTRY) ||
+
+        //Comdirect do not support getting transactions with an end date
+        if (status.containsKey(FinTsConstants.StatusMessage.END_DATE_NOT_SUPPORTED)) {
+            endDateSupported = false;
+            getTransactionRequest = this.createStatementRequest(targetAccount, start, new Date(), null);
+            response = sendMessage(getTransactionRequest);
+            status = response.getLocalStatus();
+        }
+
+        LOGGER.info("{} statuses: {} accountNumber: {}", FinTsConstants.LogTags.TRANSACTION_STATUS, status.toString(),
+                accountNo);
+
+        //TODO: Need to start checking key AND value
+        if (status.containsValue(FinTsConstants.StatusCode.ACCOUNT_NOT_ASSIGNED) ||
+                noEntry(status) ||
                 status.containsValue(FinTsConstants.StatusCode.NO_DATA_AVAILABLE) ||
                 status.containsValue(FinTsConstants.StatusCode.TECHNICAL_ERROR) ||
-                Strings.isNullOrEmpty(segment)) {
+                Strings.isNullOrEmpty(segment)
+                ) {
             return Collections.emptyList();
         }
 
@@ -312,20 +368,42 @@ public class FinTsApiClient {
         Map<String, String> touchdowns = response.getTouchDowns(getTransactionRequest);
         List<MT940Statement> transactions = new ArrayList<>(this.parseMt940Transactions(mt940));
 
+        LOGGER.info("{} number of fetched transactions: {} startDate: {} endDate: {} accountNumber: {}",
+                FinTsConstants.LogTags.NUMBER_OF_FETCHED_TRANSACTIONS, transactions.size(), start.toString(),
+                end.toString(), accountNo);
+
         // Process with touchdowns
+        String seg = null;
+        String mt940Content = null;
         while (touchdowns.containsKey(FinTsConstants.Segments.HKKAZ)) {
-            FinTsRequest getFurtherTransactionRequest = this
-                    .createStatementRequest(targetAccount, start, end, touchdowns.get(FinTsConstants.Segments.HKKAZ));
-            FinTsResponse furtherTransactionsResponse = sendMessage(getFurtherTransactionRequest);
-            String seg = furtherTransactionsResponse.findSegment(FinTsConstants.Segments.HIKAZ);
-            String mt940Content = FinTsParser.getMT940Content(seg);
-            transactions.addAll(this.parseMt940Transactions(mt940Content));
-            touchdowns = furtherTransactionsResponse.getTouchDowns(getFurtherTransactionRequest);
+            try {
+                FinTsRequest getFurtherTransactionRequest =
+                        this.createStatementRequest(targetAccount, start, end,
+                                touchdowns.get(FinTsConstants.Segments.HKKAZ));
+                FinTsResponse furtherTransactionsResponse = sendMessage(getFurtherTransactionRequest);
+                seg = furtherTransactionsResponse.findSegment(FinTsConstants.Segments.HIKAZ);
+                mt940Content = FinTsParser.getMT940Content(seg);
+                transactions.addAll(this.parseMt940Transactions(mt940Content));
+                touchdowns = furtherTransactionsResponse.getTouchDowns(getFurtherTransactionRequest);
+            } catch (Exception e) {
+                LOGGER.error("{} error: {}", FinTsConstants.LogTags.SCANNER_PARSING_ERROR, e.toString(), seg,
+                        mt940Content);
+                continue;
+            }
+
         }
 
+        Date endDate = end;
         // Some banks does not take the end date in to account, here we check
-        if (transactions.stream().anyMatch(transaction -> transaction.getDate().after(end))) {
-            return Collections.emptyList();
+        if (!endDateSupported) {
+            if (fetchedTransactions == transactions.size()) {
+                return Collections.emptyList();
+            }
+            fetchedTransactions = transactions.size();
+        } else if (endDateSupported && transactions.stream()
+                .anyMatch(transaction -> transaction.getDate().after(endDate))) {
+            return transactions.stream().filter(transaction -> transaction.getDate().before(endDate))
+                    .collect(Collectors.toList());
         }
 
         return transactions;
@@ -346,6 +424,9 @@ public class FinTsApiClient {
     private String process_61_86elements(String nextLine, Scanner mt940Scanner, List<MT940Statement> transactions) {
         String tag61 = nextLine.substring(4);
         StringBuilder tag86 = new StringBuilder();
+        if (!mt940Scanner.hasNextLine()) {
+            return "";
+        }
         nextLine = mt940Scanner.nextLine();
         if (nextLine.startsWith(FinTsConstants.SegData.MT940_MULTIPURPOSE_FIELD)) {
             tag86.append(nextLine.substring(4));

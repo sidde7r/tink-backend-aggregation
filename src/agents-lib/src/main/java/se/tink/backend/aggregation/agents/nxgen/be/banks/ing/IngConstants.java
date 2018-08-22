@@ -14,6 +14,7 @@ public class IngConstants {
         static final URL MOBILE_HELLO = new URL(HOST + "/hb_mp/eb/ebmp/MobileHello?rootRef=/eb");
         static final URL MENU_ITEMS = new URL(HOST + "/api/homebank/sl-menu/items/en");
         public static final String BASE_SSO_REQUEST = HOST + "/hb_ms/eb/MobileSSORequest?";
+
     }
 
     public static final class Headers {

@@ -25,7 +25,6 @@ import se.tink.backend.aggregation.agents.bankid.CredentialsSignicatBankIdAuthen
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.fraud.creditsafe.ConsumerMonitoringWrapper;
 import se.tink.backend.aggregation.agents.fraud.creditsafe.soap.Account;
 import se.tink.backend.aggregation.agents.fraud.creditsafe.soap.Error;
 import se.tink.backend.aggregation.agents.fraud.creditsafe.soap.GetData;
@@ -35,18 +34,13 @@ import se.tink.backend.aggregation.agents.fraud.creditsafe.soap.GetDataSoap;
 import se.tink.backend.aggregation.agents.fraud.creditsafe.soap.GetDataTest;
 import se.tink.backend.aggregation.agents.fraud.creditsafe.soap.Language;
 import se.tink.backend.aggregation.agents.utils.soap.SOAPLoggingHandler;
-import se.tink.backend.aggregation.rpc.AddMonitoredConsumerCreditSafeRequest;
-import se.tink.backend.aggregation.rpc.ChangedConsumerCreditSafeRequest;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.Field;
-import se.tink.backend.aggregation.rpc.PageableConsumerCreditSafeRequest;
-import se.tink.backend.aggregation.rpc.PageableConsumerCreditSafeResponse;
-import se.tink.backend.aggregation.rpc.RemoveMonitoredConsumerCreditSafeRequest;
 import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.common.bankid.signicat.SignicatBankIdAuthenticator;
-import se.tink.backend.common.config.ServiceConfiguration;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.core.FraudAddressContent;
 import se.tink.backend.core.FraudCompanyContent;
 import se.tink.backend.core.FraudCompanyDirector;
@@ -86,24 +80,13 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
     private Account account;
     private final User user;
     private Splitter splitter = Splitter.on(" ");
-    private ConsumerMonitoringWrapper consumerMonitoringWrapper;
     private boolean hasRefreshed = false;
 
-    public CreditSafeAgent(CredentialsRequest request, AgentContext context) {
+    public CreditSafeAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         credentials = request.getCredentials();
         user = request.getUser();
-    }
-
-    @Override
-    public void setConfiguration(ServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
-        String user = configuration.getCreditSafe().getUsername();
-        String pass = configuration.getCreditSafe().getPassword();
-        boolean logTraffic = configuration.getCreditSafe().isLogConsumerMonitoringTraffic();
-
-        consumerMonitoringWrapper = new ConsumerMonitoringWrapper(user, pass, logTraffic);
     }
 
     @Override
@@ -824,26 +807,6 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
 
         handlerChain.add(new SOAPLoggingHandler());
         binding.setHandlerChain(handlerChain);
-    }
-
-    public void addConsumerMonitoring(AddMonitoredConsumerCreditSafeRequest request) {
-        consumerMonitoringWrapper.addMonitoring(request);
-    }
-
-    public void removeConsumerMonitoring(RemoveMonitoredConsumerCreditSafeRequest request) {
-        consumerMonitoringWrapper.removeMonitoring(request);
-    }
-
-    public PageableConsumerCreditSafeResponse listChangedConsumers(ChangedConsumerCreditSafeRequest request) {
-        return consumerMonitoringWrapper.listChangedConsumers(request);
-    }
-
-    public PageableConsumerCreditSafeResponse listMonitoredConsumers(PageableConsumerCreditSafeRequest request) {
-        return consumerMonitoringWrapper.listMonitoredConsumers(request);
-    }
-
-    public List<String> listPortfolios() {
-        return consumerMonitoringWrapper.listPortfolios();
     }
 
     private String parseErrorMessageKnown(Catalog catalog, Error error) {

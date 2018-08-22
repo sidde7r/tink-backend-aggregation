@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 import java.util.Optional;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class BankAustriaAgent extends NextGenerationAgent {
 
@@ -30,8 +31,8 @@ public class BankAustriaAgent extends NextGenerationAgent {
     private final BankAustriaSessionStorage bankAustriaSessionStorage;
     private BankAustriaApiClient apiClient;
 
-    public BankAustriaAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public BankAustriaAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
         this.bankAustriaSessionStorage = new BankAustriaSessionStorage(this.sessionStorage, BankAustriaConstants.Device.IPHONE7_OTML_LAYOUT_INITIAL);
         this.apiClient = new BankAustriaApiClient(this.client, bankAustriaSessionStorage);
         this.otmlResponseConverter = new OtmlResponseConverter();

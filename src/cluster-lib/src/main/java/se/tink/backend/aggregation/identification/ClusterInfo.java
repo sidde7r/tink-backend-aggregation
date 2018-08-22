@@ -7,6 +7,7 @@ public class ClusterInfo {
     private final byte[] clientCertificate;
     private final boolean disableRequestCompression;
 
+
     private ClusterInfo(ClusterId clusterId, String aggregationControllerHost, String apiToken,
             byte[] clientCertificate, boolean disableRequestCompression) {
         this.clusterId = clusterId;
@@ -14,14 +15,15 @@ public class ClusterInfo {
         this.apiToken = apiToken;
         this.clientCertificate = clientCertificate;
         this.disableRequestCompression = disableRequestCompression;
-
     }
+
 
     public static ClusterInfo createForAggregationCluster(ClusterId clusterId, String aggregationControllerHost,
             String apiToken, byte[] clientCertificate, boolean disableRequestCompression) {
         return new ClusterInfo(clusterId, aggregationControllerHost, apiToken, clientCertificate,
                 disableRequestCompression);
     }
+
 
     public static ClusterInfo createForLegacyAggregation(ClusterId clusterId) {
         return new ClusterInfo(clusterId, null, null, null, false);

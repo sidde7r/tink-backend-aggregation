@@ -26,7 +26,7 @@ public class AccountEntity {
     @JsonIgnore
     public TransactionalAccount toTinkAccount(HolderName holderName) {
         return TransactionalAccount.builder(AccountTypes.CHECKING, identifiers.getIban(), balance)
-                .setAccountNumber(identifiers.getAccountNumber())
+                .setAccountNumber(identifiers.getIban())
                 .setName(alias)
                 .addIdentifiers(identifiers.getIdentifiers())
                 .addToTemporaryStorage(LaCaixaConstants.TemporaryStorage.ACCOUNT_REFERENCE, identifiers.getAccountReference())

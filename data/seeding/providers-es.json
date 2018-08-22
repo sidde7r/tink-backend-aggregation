@@ -29,6 +29,36 @@
             ]
         },
         {
+            "name":"es-bankia-password",
+            "displayName":"Bankia",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"nxgen.es.banks.bankia.BankiaAgent",
+            "passwordHelpText":"Use the same credentials as when using the mobile bank app.",
+            "transactional":true,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"DNI/NIE ID number",
+                    "immutable":true
+                },
+                {
+                    "name":"password",
+                    "description":"Password",
+                    "masked":true,
+                    "sensitive":true,
+                    "pattern":"([0-9]{8})",
+                    "numeric":true,
+                    "minLength":8,
+                    "maxLength":8,
+                    "helpText":"Your 8 digit online PIN"
+                }
+            ]
+        },
+        {
             "name":"es-bancosabadell-password",
             "displayName":"Banco de Sabadell",
             "popular":true,
@@ -157,11 +187,12 @@
                 },
                 {
                     "name":"date-of-birth",
-                    "description":"Date of birth",
-                    "pattern":"[0-3][0-9]/[0-1][0-9]/[1-2][9|0][0-9][0-9]",
-                    "hint":"DD/MM/YYYY",
-                    "minLength":10,
-                    "maxLength":10,
+                    "description":"Date of birth (DDMMYYYY)",
+                    "pattern":"[0-3][0-9][0-1][0-9][1-2][9|0][0-9][0-9]",
+                    "hint":"DDMMYYYY",
+                    "numeric":true,
+                    "minLength":8,
+                    "maxLength":8,
                     "immutable":true
                 },
                 {
@@ -233,6 +264,32 @@
                     "sensitive": true
                 }
             ]
-        }
+        },
+      {
+        "name": "es-targobank-password",
+        "displayName": "TargoBank",
+        "groupDisplayName": "TargoBank",
+        "popular": false,
+        "type": "BANK",
+        "status": "ENABLED",
+        "credentialsType": "PASSWORD",
+        "multiFactor": false,
+        "className": "nxgen.es.banks.targo.TargoBankESAgent",
+        "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+        "transactional": true,
+        "fields": [
+          {
+            "description": "Username",
+            "name": "username",
+            "immutable": true
+          },
+          {
+            "description": "Password",
+            "masked": true,
+            "name": "password",
+            "sensitive": true
+          }
+        ]
+      }
     ]
 }

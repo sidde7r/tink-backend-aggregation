@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.Field;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.utils.StringUtils;
 
 public class AmericanExpressAgent extends NextGenerationAgent {
@@ -27,9 +28,9 @@ public class AmericanExpressAgent extends NextGenerationAgent {
     private final AmericanExpressApiClient apiClient;
     private final AmericanExpressConfiguration config;
 
-    protected AmericanExpressAgent(
-            CredentialsRequest request, AgentContext context, AmericanExpressConfiguration config) {
-        super(request, context);
+    protected AmericanExpressAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair,
+            AmericanExpressConfiguration config) {
+        super(request, context, signatureKeyPair);
         generateDeviceId();
         this.apiClient = new AmericanExpressApiClient(client, sessionStorage, config);
         this.config = config;

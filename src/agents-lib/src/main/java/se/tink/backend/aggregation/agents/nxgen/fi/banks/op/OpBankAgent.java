@@ -2,8 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.op;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.OpBankCreditCardFetcher;
@@ -30,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class OpBankAgent extends NextGenerationAgent {
 
@@ -37,9 +36,8 @@ public class OpBankAgent extends NextGenerationAgent {
     private OpBankPersistentStorage opBankPersistentStorage;
 
 
-    public OpBankAgent(CredentialsRequest request,
-            AgentContext context) {
-        super(request, context);
+    public OpBankAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
         bankClient = new OpBankApiClient(client);
         this.opBankPersistentStorage = new OpBankPersistentStorage(credentials, persistentStorage);;
     }

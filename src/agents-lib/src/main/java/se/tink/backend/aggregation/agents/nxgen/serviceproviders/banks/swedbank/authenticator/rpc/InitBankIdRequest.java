@@ -15,7 +15,7 @@ public class InitBankIdRequest {
     }
 
     public static InitBankIdRequest createFromUserId(String userId) {
-        return new InitBankIdRequest(false, userId, false);
+        return new InitBankIdRequest(true, userId, false);
     }
 
     public boolean isGenerateEasyLoginId() {

@@ -35,7 +35,9 @@ java_library(
         "//src/libraries/strings:strings",
         "//src/libraries/uuid:uuid",
         "//src/libraries/demo_credentials:demo-credentials",
+        "//src/libraries/creditsafe_consumer_monitoring:creditsafe_consumer_monitoring",
         "//src/api-annotations",
+        "//src/cluster-lib:cluster-lib",
 
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
@@ -207,6 +209,7 @@ java_library(
         "//src/libraries/identity:identity",
         "//src/libraries/strings:strings",
         "//src/api-annotations",
+        "//src/libraries/cryptography:cryptography",
 
         "//src/api-headers",
 
@@ -282,6 +285,9 @@ java_library(
         include = ["src/common-lib/src/test/**/*.java"],
         exclude = ["src/common-lib/src/test/**/*Test.java"],
     ),
+    data = [
+             "//data:cryptography-test",
+         ],
     runtime_deps = [
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
@@ -348,6 +354,7 @@ java_library(
         "//tools:libkbc_wbaes_linux",
         "//tools:libkbc_wbaes_mac",
         "//data:tesseract-training-set",
+        "//data:cryptography-test"
     ],
     deps = [
         ":aggregation-api",
@@ -355,7 +362,7 @@ java_library(
         ":encryption-api",
         ":main-api",
         ":system-api",
-        "agents-lib",
+        ":agents-lib",
         ":aggregationcontroller-api",
 
         "//src/libraries/uuid:uuid",
@@ -384,6 +391,7 @@ java_library(
         "//src/libraries/jersey_utils:jersey-utils",
         "//src/api-annotations",
         "//src/libraries/cli_print_utils:cli_print_utils",
+        "//src/libraries/creditsafe_consumer_monitoring:creditsafe_consumer_monitoring",
 
         "//third_party:org_springframework_spring_expression",
         "//third_party:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
@@ -413,10 +421,13 @@ java_library(
         "//third_party:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
         "//third_party:org_assertj_assertj_core",
         "//third_party:net_sourceforge_tess4j",
+        "//third_party:com_auth0_java_jwt",
 
         "//third_party:net_sourceforge_cssparser_cssparser",
 
         "//src/cluster-lib:cluster-lib",
+        "//src/cluster-lib-jersey:cluster-lib-jersey",
+
     ],
 )
 
@@ -465,6 +476,7 @@ java_library(
         "//src/libraries/jersey_utils:jersey-utils",
         "//src/api-annotations",
         "//src/libraries/cli_print_utils:cli_print_utils",
+        "//src/libraries/cryptography:cryptography",
 
         "//third_party:org_springframework_spring_expression",
         "//third_party:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
@@ -495,6 +507,7 @@ java_library(
         "//third_party:org_assertj_assertj_core",
         "//third_party:net_sourceforge_tess4j",
         "//third_party:net_sourceforge_cssparser_cssparser",
+        "//third_party:com_auth0_java_jwt",
 
     ],
 )
@@ -557,6 +570,7 @@ junit_test(
         ":main-api",
 
         "//src/api-annotations-testlib",
+        "//src/cluster-lib:cluster-lib",
 
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
@@ -619,6 +633,61 @@ junit_test(
     ],
 )
 
+junit_test(
+    name = "agents-lib-test",
+    srcs = glob(["src/agents-lib/src/test/**/*.java"]),
+    data = [
+        "//data:agents",
+        "//tools:phantomjs_mac",
+        "//tools:libkbc_wbaes_linux",
+        "//tools:libkbc_wbaes_mac",
+        "//data:cryptography-test",
+    ],
+    runtime_deps = [
+        "//third_party:ch_qos_logback_logback_classic",
+        "//third_party:net_bytebuddy_byte_buddy",
+        "//third_party:org_objenesis_objenesis",
+    ],
+    deps = [
+        ":aggregation-api",
+        ":common-lib",
+        ":common-lib-testlib",
+        ":main-api",
+        ":system-api",
+        ":agents-lib",
+
+        "//src/cluster-lib:cluster-lib",
+        "//src/libraries/serialization_utils:serialization-utils",
+        "//src/libraries/metrics:metrics",
+        "//src/libraries/date:date",
+        "//src/libraries/giro_validation:giro-validation",
+        "//src/libraries/account_identifier:account-identifier",
+        "//src/libraries/generic_application:generic-application",
+        "//src/libraries/net",
+        "//src/libraries/i18n",
+        "//src/libraries/strings:strings",
+        "//src/libraries/abnamro:abn_amro",
+        "//src/libraries/cryptography:cryptography",
+
+        "//third_party:com_github_tomakehurst_wiremock",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_google_http_client_google_http_client",
+        "//third_party:com_google_inject_guice",
+        "//third_party:com_sun_jersey_jersey_client",
+        "//third_party:commons_io_commons_io",
+        "//third_party:commons_lang_commons_lang",
+        "//third_party:joda_time_joda_time",
+        "//third_party:org_assertj_assertj_core",
+        "//third_party:org_jsoup_jsoup",
+        "//third_party:org_mockito_mockito_core",
+        "//third_party:org_apache_pdfbox_pdfbox",
+        "//third_party:pl_pragmatists_junitparams",
+        "//third_party:com_nimbusds_srp6a",
+        "//third_party:org_bouncycastle_bcprov_jdk15on",
+        "//third_party:com_auth0_java_jwt",
+    ],
+)
+
 
 junit_test(
     name = "aggregation-test",
@@ -628,6 +697,7 @@ junit_test(
         "etc/development.yml",
         "//data:aggregation-test",
         "//data:tesseract-training-set",
+        "//data:cryptography-test",
     ],
     tags = [
         "external",
@@ -652,6 +722,7 @@ junit_test(
         "//src/libraries/demo_credentials:demo-credentials",
         "//src/libraries/i18n",
         "//src/libraries/strings:strings",
+        "//src/libraries/creditsafe_consumer_monitoring:creditsafe_consumer_monitoring",
 
         "//third_party:com_google_guava_guava",
         "//third_party:com_sun_jersey_jersey_client",
@@ -673,3 +744,253 @@ junit_test(
         "//third_party:net_sourceforge_tess4j",
     ],
 )
+
+java_library(
+    name = "provider-configuration-api",
+    srcs = glob(["src/provider-configuration-api/src/main/**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        ":main-api",
+
+        "//src/cluster-lib",
+        "//src/api-annotations",
+        "//src/libraries/http:http-annotations",
+        "//src/libraries/http_client:http-client",
+        "//src/libraries/jersey_utils:jersey-utils",
+
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:com_fasterxml_jackson_core_jackson_core",
+        "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:javax_validation_validation_api",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_sun_jersey_jersey_client",
+    ],
+)
+
+java_library(
+    name = "provider-configuration-lib",
+    srcs = glob(["src/provider-configuration-lib/src/main/**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        ":main-api",
+        ":provider-configuration-api",
+        ":common-lib",
+
+        "//src/cluster-lib",
+        "//src/api-annotations",
+        "//src/libraries/auth:auth",
+        "//src/libraries/jersey_log:jersey-log",
+        "//src/libraries/jersey_guice:jersey-guice",
+        "//src/libraries/dropwizard_utils:dropwizard-utils",
+        "//src/libraries/discovery:discovery",
+        "//src/cluster-lib-jersey:cluster-lib-jersey",
+        "//src/libraries/metrics:metrics",
+        "//src/libraries/date",
+        "//src/libraries/serialization_utils:serialization-utils",
+        "//src/libraries/protobuf_serialization_utils:protobuf-serialization-utils",
+        "//src/libraries/i18n",
+        
+        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:io_dropwizard_dropwizard_jersey",
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:com_fasterxml_jackson_core_jackson_core",
+        "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:javax_validation_validation_api",
+        "//third_party:org_eclipse_jetty_orbit_javax_servlet",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_google_inject_guice",
+        "//third_party:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
+        "//third_party:org_hibernate_hibernate_annotations",
+        "//third_party:org_springframework_spring_expression",
+        "//third_party:org_springframework_spring_core",
+        "//third_party:org_springframework_data_spring_data_jpa",
+        "//third_party:org_springframework_data_spring_data_commons",
+        "//third_party:io_swagger_swagger_annotations",
+        "//third_party:joda_time_joda_time",
+        "//third_party:io_protostuff_protostuff_api",
+        "//third_party:io_protostuff_protostuff_core",
+        "//third_party:io_protostuff_protostuff_runtime",
+        "//third_party:net_sourceforge_tess4j",
+
+    ],
+)
+
+java_library(
+     name = "provider-configuration-service",
+     srcs = glob(["src/provider-configuration-service/src/main/**/*.java"]),
+     data = [
+         "//data",
+     ],
+     deps = [
+         ":common-lib",
+         ":provider-configuration-api",
+         ":provider-configuration-lib",
+         ":main-api",
+         "//src/libraries/auth:auth",
+         "//src/libraries/discovery:discovery",
+         "//src/libraries/dropwizard_utils:dropwizard-utils",
+         "//src/libraries/metrics:metrics",
+         "//src/libraries/cluster:cluster",
+
+         "//src/libraries/cli_print_utils:cli_print_utils",
+         "//src/libraries/serialization_utils:serialization-utils",
+
+         "//third_party:org_springframework_spring_expression",
+         "//third_party:org_springframework_data_spring_data_jpa",
+         "//third_party:org_apache_curator_curator_framework",
+         "//third_party:org_apache_curator_curator_x_discovery",
+         "//third_party:com_google_guava_guava",
+         "//third_party:com_google_inject_guice",
+         "//third_party:com_netflix_governator",
+         "//third_party:io_dropwizard_dropwizard_core",
+     ],
+)
+
+java_binary(
+    name = "provider-configuration",
+    srcs = glob(["src/provider-configuration-service/src/main/**/*.java"]),
+    data = [
+        "etc/development-provider-configuration-server.yml",
+        "etc/development-minikube-provider-configuration-server.yml",
+        "//data",
+    ],
+    main_class = "se.tink.backend.aggregation.provider.ProviderConfigurationServiceContainer",
+    visibility = ["//visibility:public"],
+    runtime_deps = [
+        "//third_party:mysql_mysql_connector_java",
+    ],
+    deps = [
+         ":common-lib",
+         ":provider-configuration-lib",
+         ":provider-configuration-api",
+         ":main-api",
+
+         "//src/libraries/auth:auth",
+         "//src/libraries/discovery:discovery",
+         "//src/libraries/dropwizard_utils:dropwizard-utils",
+         "//src/libraries/metrics:metrics",
+         "//src/libraries/cluster:cluster",
+         "//src/libraries/cli_print_utils:cli_print_utils",
+         "//src/libraries/serialization_utils:serialization-utils",
+
+         "//third_party:org_springframework_spring_expression",
+         "//third_party:org_springframework_data_spring_data_jpa",
+         "//third_party:org_apache_curator_curator_framework",
+         "//third_party:org_apache_curator_curator_x_discovery",
+         "//third_party:com_google_guava_guava",
+         "//third_party:com_google_inject_guice",
+         "//third_party:com_netflix_governator",
+         "//third_party:io_dropwizard_dropwizard_core",
+    ],
+)
+
+genrule(
+    name = "renamed-provider-configuration-deploy-jar",
+    srcs = [":provider-configuration_deploy.jar"],
+    outs = ["provider-configuration-service.jar"],
+    cmd = "cp $(location :provider-configuration_deploy.jar) \"$(@)\"",
+    visibility = ["//visibility:public"],
+)
+
+java_library(
+    name = "credit-safe-api",
+    srcs = glob(["src/credit-safe-api/src/main/**/*.java"]),
+    deps = [
+        ":aggregation-api",
+        ":main-api",
+        "//src/api-annotations",
+        "//src/cluster-lib",
+        "//src/libraries/account_identifier:account-identifier",
+        "//src/libraries/cluster",
+        "//src/libraries/demo_credentials:demo-credentials",
+        "//src/libraries/http:http-annotations",
+        "//src/libraries/serialization_utils:serialization-utils",
+        "//src/libraries/strings",
+        "//src/libraries/uuid",
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:com_fasterxml_jackson_core_jackson_core",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:commons_codec_commons_codec",
+    ],
+)
+
+java_library(
+    name = "credit-safe-service",
+    srcs = glob(["src/credit-safe-service/src/main/**/*.java"]),
+    data = [
+        "//data",
+    ],
+    deps = [
+        "credit-safe-api",
+        ":common-lib",
+        ":credit-safe-lib",
+        "//src/libraries/auth",
+        "//src/libraries/cluster",
+        "//src/libraries/discovery",
+        "//src/libraries/dropwizard_utils:dropwizard-utils",
+        "//src/libraries/metrics",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_google_inject_guice",
+        "//third_party:com_netflix_governator",
+        "//third_party:io_dropwizard_dropwizard_core",
+    ],
+)
+
+java_library(
+    name = "credit-safe-lib",
+    srcs = glob(["src/credit-safe-lib/src/main/**/*.java"]),
+    deps = [
+        "credit-safe-api",
+        ":agents-lib",
+        ":aggregation-api",
+        ":common-lib",
+        ":main-api",
+        "//src/libraries/date",
+        "//src/libraries/demo_credentials:demo-credentials",
+        "//src/libraries/i18n",
+        "//third_party:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
+        "//third_party:com_google_http_client_google_http_client",
+        "//third_party:commons_httpclient_commons_httpclient",
+        "//third_party:org_apache_velocity_velocity",
+        "//third_party:org_seleniumhq_selenium_selenium_java",
+    ],
+)
+
+java_binary(
+    name = "credit-safe",
+    srcs = glob(["src/credit-safe-service/src/main/**/*.java"]),
+    data = [
+        "etc/development-credit-safe-server.yml",
+        "//data",
+    ],
+    main_class = "se.tink.backend.aggregation.credit.safe.CreditSafeServiceContainer",
+    visibility = ["//visibility:public"],
+    runtime_deps = [
+        "//third_party:mysql_mysql_connector_java",
+    ],
+    deps = [
+        ":common-lib",
+        ":credit-safe-api",
+        ":credit-safe-lib",
+        ":credit-safe-service",
+        "//src/libraries/auth",
+        "//src/libraries/cluster",
+        "//src/libraries/discovery",
+        "//src/libraries/dropwizard_utils:dropwizard-utils",
+        "//src/libraries/metrics",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_google_inject_guice",
+        "//third_party:com_netflix_governator",
+        "//third_party:io_dropwizard_dropwizard_core",
+    ],
+)
+
+genrule(
+    name = "renamed-credit-safe-deploy-jar",
+    srcs = [":credit-safe_deploy.jar"],
+    outs = ["credit-safe-service.jar"],
+    cmd = "cp $(location :credit-safe_deploy.jar) \"$(@)\"",
+    visibility = ["//visibility:public"],
+)
+

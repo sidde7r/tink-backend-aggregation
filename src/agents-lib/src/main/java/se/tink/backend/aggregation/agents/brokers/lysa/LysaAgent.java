@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.system.rpc.Transaction;
 
 public class LysaAgent extends AbstractAgent implements RefreshableItemExecutor {
@@ -29,7 +30,7 @@ public class LysaAgent extends AbstractAgent implements RefreshableItemExecutor 
     private final LysaClient client;
     private DetailsEntity details;
 
-    public LysaAgent(CredentialsRequest request, AgentContext context) {
+    public LysaAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         // The Lysa API needs fully buffered message bodies with content length.
@@ -37,14 +38,14 @@ public class LysaAgent extends AbstractAgent implements RefreshableItemExecutor 
         ApacheHttpClient4Config clientConfig = new DefaultApacheHttpClient4Config();
         clientConfig.getProperties().put(ApacheHttpClient4Config.PROPERTY_ENABLE_BUFFERING, true);
 
-        client = new LysaClient(clientFactory.createCustomClient(context.getLogOutputStream(), clientConfig), getAggregator().getAggregatorIdentifier());
+        client = new LysaClient(clientFactory.createCustomClient(context.getLogOutputStream(), clientConfig), DEFAULT_USER_AGENT);
     }
 
     @Override
     public void refresh(RefreshableItem item) {
         switch (item) {
         case INVESTMENT_ACCOUNTS:
-            details.getAccounts().forEach(accountEntity -> context.updateAccount(accountEntity.toAccount()));
+            details.getAccounts().forEach(accountEntity -> context.cacheAccount(accountEntity.toAccount()));
             break;
 
         case INVESTMENT_TRANSACTIONS:

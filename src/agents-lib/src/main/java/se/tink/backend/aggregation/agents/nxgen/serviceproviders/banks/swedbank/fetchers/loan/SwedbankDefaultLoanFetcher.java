@@ -23,7 +23,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SwedbankDefaultLoanFetcher implements AccountFetcher<LoanAccount> {
     private static final AggregationLogger LOGGER = new AggregationLogger(SwedbankDefaultLoanFetcher.class);
-    private final SwedbankDefaultApiClient apiClient;
+    protected final SwedbankDefaultApiClient apiClient;
 
     public SwedbankDefaultLoanFetcher(SwedbankDefaultApiClient apiClient) {
         this.apiClient = apiClient;
@@ -46,7 +46,21 @@ public class SwedbankDefaultLoanFetcher implements AccountFetcher<LoanAccount> {
             }
 
             for (LoanAccountEntity loanAccountEntity : loanAccountEntities) {
-                LoanDetailsResponse loanDetailsResponse = apiClient.loanDetails(loanAccountEntity.getLinks().getNext());
+                if (loanAccountEntity.getLinks() == null || loanAccountEntity.getLinks().getNext() == null) {
+                    continue;
+                }
+
+                // we get error sometimes from swedbank backend, log and continue as old agent did
+                // log to check if only error for 0 balance loans
+                LoanDetailsResponse loanDetailsResponse = null;
+                try {
+                    loanDetailsResponse = apiClient.loanDetails(loanAccountEntity.getLinks().getNext());
+                } catch (Exception e) {
+                    LOGGER.warnExtraLong(SerializationUtils.serializeToString(loanAccountEntity),
+                            SwedbankBaseConstants.LogTags.LOAN_DETAILS_ERROR, e);
+                    continue;
+                }
+
                 Optional<String> interest = loanDetailsResponse.getInterest();
 
                 if (!interest.isPresent()) {
@@ -71,14 +85,14 @@ public class SwedbankDefaultLoanFetcher implements AccountFetcher<LoanAccount> {
             // Swedbank has endpoint with more loan information.
             // Currently we only know a part of this endpoints.
             // TODO: Implement and use this endpoint when we have information how all entities look
-            String loanResponse = apiClient.loanOverview();
+            String loanResponse = apiClient.loanOverviewAsString();
             if (!Strings.isNullOrEmpty(loanResponse)) {
                 LOGGER.infoExtraLong(loanResponse, SwedbankBaseConstants.LogTags.LOAN_RESPONSE);
 
                 LoanOverviewResponse loanOverviewResponse = SerializationUtils
                         .deserializeFromString(loanResponse, LoanOverviewResponse.class);
                 LinksEntity links = loanOverviewResponse.getLinks();
-                if (links != null) {
+                if (links != null && links.getNext() != null) {
                     LOGGER.infoExtraLong(apiClient.optionalRequest(links.getNext()),
                             SwedbankBaseConstants.LogTags.MORTGAGE_OVERVIEW_RESPONSE);
                 }
@@ -104,7 +118,9 @@ public class SwedbankDefaultLoanFetcher implements AccountFetcher<LoanAccount> {
         try {
             if (loans != null) {
                 loans.stream()
+                        .filter(loanEntity -> loanEntity.getLinks() != null)
                         .map(LoanEntity::getLinks)
+                        .filter(linksEntity -> linksEntity.getNext() != null)
                         .map(LinksEntity::getNext)
                         .map(apiClient::optionalRequest)
                         .forEach(response ->

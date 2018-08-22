@@ -19,8 +19,6 @@ import se.tink.libraries.metrics.MetricId;
 
 public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements MetricsCommand {
     private static final Logger log = LoggerFactory.getLogger(RefreshItemAgentWorkerCommand.class);
-    private static final MetricId.MetricLabels GLOBAL_METRIC_STUB = new MetricId.MetricLabels()
-            .add("credential_type", "global");
 
     private static final String METRIC_NAME = "agent_refresh";
     private static final String METRIC_ACTION = "refresh";
@@ -35,6 +33,10 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
         this.context = context;
         this.item = item;
         this.metrics = metrics.init(this);
+    }
+
+    public RefreshableItem getRefreshableItem() {
+        return item;
     }
 
     @Override
@@ -52,7 +54,6 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                             .add("item", item.name())
             );
             try {
-                action.start();
                 log.info("Refreshing item: {}", item.name());
 
                 Agent agent = context.getAgent();
@@ -67,8 +68,6 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                 log.warn("Couldn't refresh RefreshableItem({})", item);
 
                 throw e;
-            } finally {
-                action.stop();
             }
         } finally {
             metrics.stop();
@@ -84,19 +83,11 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
 
     @Override
     public List<MetricId.MetricLabels> getCommandTimerName(AgentWorkerOperationMetricType type) {
-
-        MetricId.MetricLabels globalName = GLOBAL_METRIC_STUB
-                .add("class", RefreshItemAgentWorkerCommand.class.getSimpleName())
-                .add("item", RefreshMetricNameFactory.createCleanName(item))
-                .add("command", type.getMetricName());
-
         MetricId.MetricLabels typeName = new MetricId.MetricLabels()
                 .add("class", RefreshItemAgentWorkerCommand.class.getSimpleName())
-                .add("credential_type", context.getRequest().getCredentials().getType().name().toLowerCase())
                 .add("item", RefreshMetricNameFactory.createCleanName(item))
                 .add("command", type.getMetricName());
 
-        return Lists.newArrayList(globalName, typeName);
+        return Lists.newArrayList(typeName);
     }
-
 }

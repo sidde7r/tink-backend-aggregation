@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Preconditions;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -137,12 +138,8 @@ public class PaymentBaseinfoResponse {
                 .filter(SwedbankBasePredicates.filterTransferDestinationAccounts(accountIdentifier))
                 .findFirst();
 
-        // Either it is an external or internal transfer
         if (!accountEntity.isPresent() && !internalAccountEntity.isPresent()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_DESTINATION)
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_DESTINATION)
-                    .build();
+            return Optional.empty();
         }
 
         if (accountEntity.isPresent()) {
@@ -165,14 +162,19 @@ public class PaymentBaseinfoResponse {
                 .filter(SwedbankBasePredicates.filterPayees(accountIdentifier))
                 .findFirst();
 
-        // Either it is an external or internal transfer
         if (!payeeEntity.isPresent()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_DESTINATION)
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_DESTINATION)
-                    .build();
+            return Optional.empty();
         }
 
         return Optional.ofNullable(payeeEntity.get().getId());
+    }
+
+    @JsonIgnore
+    public List<? extends GeneralAccountEntity> getAllRecipientAccounts() {
+        List<GeneralAccountEntity> recipientAccounts = new ArrayList<>(
+                getSourceAccounts(SwedbankBaseConstants.TransferScope.TRANSFER_TO));
+        recipientAccounts.addAll(getTransferDestinations());
+
+        return recipientAccounts;
     }
 }

@@ -50,6 +50,11 @@ endpoints:
     accessToken: devtoken
     pinnedCertificates:
       - "CERTSHA256:A0A8FBAC442F4A58AC56CB1D0C185F93EE119A1B026BA3F046B0CA99EC165390"
+  providerConfiguration:
+    url: http://localhost:9047/
+    accessToken: devtoken
+    pinnedCertificates:
+      - "CERTSHA256:A0A8FBAC442F4A58AC56CB1D0C185F93EE119A1B026BA3F046B0CA99EC165390"
 
 cluster: TINK
 
@@ -59,11 +64,9 @@ serviceAuthentication:
 
 developmentMode: true
 
-supplementalOnAggregation: true
+useAggregationController: false
 
-useAggregationController: true
-
-isAggregationCluster: true
+isAggregationCluster: false
 
 distributedDatabase:
   seeds:
@@ -95,22 +98,8 @@ aggregationWorker:
   collectorSubscriptionKey: ASK_JOHANNES
 
 integrations:
-  seb:
-    mortgage:
-      https: false
-      targetHost: 10.1.18.10:10090
-      apiVersion: v1.0
-      httpHeaders:
-        Authorization: "Bearer ASK_JOHANNES"
-        Host: tink-api.seb.se:10443
   sbab:
     signBaseUrl: https://secure.sbab.se
-    mortgage:
-      https: false
-      targetHost: 10.10.1.120:10080
-      username: sys_tink
-      password: bytkod
-      signBaseUrl: https://testsign.sbab.se
 
 logging:
   level: INFO
@@ -131,3 +120,7 @@ logging:
       archivedFileCount: 5
       timeZone: Europe/Stockholm
       logFormat: '%date{"yyyy-MM-dd HH:mm:ss,SSSXXX"} %level [%thread] R:%X{requestId} %logger %message%n%xException'
+
+signatureKeyPair:
+  privateKeyPath: "data/test/cryptography/private_rsa_key.pem"
+  publicKeyPath: "data/test/cryptography/public_rsa_key.pub"

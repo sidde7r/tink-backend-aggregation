@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 public class RevolutTransactionFetcher implements TransactionKeyPaginator<TransactionalAccount, String> {
     private final RevolutApiClient apiClient;
@@ -24,20 +23,24 @@ public class RevolutTransactionFetcher implements TransactionKeyPaginator<Transa
         int count = RevolutConstants.Pagination.COUNT;
         String toDateMillis = (key != null ? key : Long.toString(System.currentTimeMillis()));
 
-        Collection<Transaction> transactions = apiClient.fetchTransactions(count, toDateMillis).stream()
-                .map(TransactionEntity::toTinkTransaction)
-                .collect(Collectors.toList());
+        Collection<TransactionEntity> transactionEntities = apiClient.fetchTransactions(count, toDateMillis);
 
         TransactionKeyPaginatorResponseImpl<String> response = new TransactionKeyPaginatorResponseImpl<>();
-        response.setTransactions(transactions);
 
-        if (transactions.size() > 0) {
-            String nextKey = Long.toString(transactions.stream()
-                    .map(t -> t.getDate().getTime())
-                    .min(Comparator.comparing(t -> t))
-                    .get());
-            response.setNext(nextKey);
-        }
+        String accountCurrency = account.getTemporaryStorage(RevolutConstants.Storage.CURRENCY, String.class);
+
+        response.setTransactions(transactionEntities.stream()
+                .filter(t -> t.getCurrency().equalsIgnoreCase(accountCurrency))
+                .map(TransactionEntity::toTinkTransaction)
+                .collect(Collectors.toList())
+        );
+
+        response.setNext(transactionEntities.stream()
+                .map(TransactionEntity::getStartedDate)
+                .min(Comparator.comparing(t -> t))
+                .map(t -> Long.toString(t))
+                .orElse(null)
+        );
 
         return response;
     }

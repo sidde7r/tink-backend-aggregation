@@ -81,6 +81,7 @@ import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.core.SwedishGiroType;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
@@ -131,7 +132,7 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
 
     private Map<AccountEntity, Account> accountMap = null;
 
-    public DanskeBankV2Agent(CredentialsRequest request, AgentContext context) {
+    public DanskeBankV2Agent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         String providerCountry = getProviderCountry();
@@ -147,7 +148,7 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
         }
 
         httpClient = clientFactory.createBasicClient(context.getLogOutputStream());
-        this.apiClient = new DanskeBankApiClient(httpClient, getAggregator().getAggregatorIdentifier(), bankIdResourceHelper, providerCountry,
+        this.apiClient = new DanskeBankApiClient(httpClient, DEFAULT_USER_AGENT, bankIdResourceHelper, providerCountry,
                 sessionLanguage);
         catalog = context.getCatalog();
         transferMessageFormatter = new TransferMessageFormatter(catalog,
@@ -691,7 +692,7 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
     private void updateAccountsPerType(RefreshableItem type) {
         getAccountMap().entrySet().stream()
                 .filter(set -> type.isAccountType(set.getValue().getType()))
-                .forEach(set -> context.updateAccount(set.getValue()));
+                .forEach(set -> context.cacheAccount(set.getValue()));
     }
 
     private void updateTransactionsPerType(RefreshableItem type) {
@@ -713,8 +714,8 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
 
         case TRANSFER_DESTINATIONS:
             TransferDestinationsResponse response = new TransferDestinationsResponse();
-            response.addDestinations(getTransferAccountDestinations(context.getAccounts()));
-            response.addDestinations(getPaymentAccountDestinations(context.getAccounts()));
+            response.addDestinations(getTransferAccountDestinations(context.getUpdatedAccounts()));
+            response.addDestinations(getPaymentAccountDestinations(context.getUpdatedAccounts()));
             context.updateTransferDestinationPatterns(response.getDestinations());
             break;
 
@@ -744,7 +745,7 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
             getAccountMap().entrySet().stream()
                     .filter(set -> RefreshableItem.LOAN_ACCOUNTS.isAccountType(set.getValue().getType()))
                     .forEach(set ->
-                            context.updateAccount(set.getValue(), AccountFeatures.createForLoan(set.getKey().toLoan()))
+                            context.cacheAccount(set.getValue(), AccountFeatures.createForLoan(set.getKey().toLoan()))
                     );
             break;
         }
@@ -831,14 +832,14 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
 
             if (portfolioPapers.getStatus().getStatusCode() != OK_STATUS_CODE ||
                     portfolioPapers.getPapers() == null) {
-                context.updateAccount(account, AccountFeatures.createForPortfolios(portfolio));
+                context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
             }
 
             List<Instrument> instruments = Lists.newArrayList();
             portfolioPapers.getPapers().forEach(paperEntity -> paperEntity.toInstrument().ifPresent(instruments::add));
             portfolio.setInstruments(instruments);
 
-            context.updateAccount(account, AccountFeatures.createForPortfolios(portfolio));
+            context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
         });
     }
 

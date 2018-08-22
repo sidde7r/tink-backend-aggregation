@@ -2,33 +2,28 @@ package se.tink.backend.aggregation.resources;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import se.tink.backend.aggregation.agents.fraud.CreditSafeAgent;
 import se.tink.backend.aggregation.api.CreditSafeService;
-import se.tink.backend.aggregation.rpc.AddMonitoredConsumerCreditSafeRequest;
-import se.tink.backend.aggregation.rpc.ChangedConsumerCreditSafeRequest;
-import se.tink.backend.aggregation.rpc.CreateCredentialsRequest;
-import se.tink.backend.aggregation.rpc.PageableConsumerCreditSafeRequest;
-import se.tink.backend.aggregation.rpc.PageableConsumerCreditSafeResponse;
-import se.tink.backend.aggregation.rpc.PortfolioListResponse;
-import se.tink.backend.aggregation.rpc.RemoveMonitoredConsumerCreditSafeRequest;
-import se.tink.backend.aggregation.rpc.SeedPersonDataRequest;
-import se.tink.backend.aggregation.rpc.SeedPersonDataResponse;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.ConsumerMonitoringWrapper;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.AddMonitoredConsumerCreditSafeRequest;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.ChangedConsumerCreditSafeRequest;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PageableConsumerCreditSafeRequest;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PageableConsumerCreditSafeResponse;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PortfolioListResponse;
+import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.RemoveMonitoredConsumerCreditSafeRequest;
 import se.tink.backend.common.ServiceContext;
 import se.tink.backend.common.i18n.SocialSecurityNumber;
 import se.tink.libraries.http.utils.HttpResponseHelper;
 
 public class CreditSafeServiceResource implements CreditSafeService {
-    /**
-     * Helper method to create a non-user/credentials-based agent instance for using the CreditSafe maintenance methods.
-     */
-    private static CreditSafeAgent createCreditSafeAgent() {
-        return new CreditSafeAgent(new CreateCredentialsRequest(null, null, null), null);
-    }
 
-    private ServiceContext serviceContext;
+    private ConsumerMonitoringWrapper consumerMonitoringWrapper;
 
     public CreditSafeServiceResource(ServiceContext serviceContext) {
-        this.serviceContext = serviceContext;
+        String user = serviceContext.getConfiguration().getCreditSafe().getUsername();
+        String pass = serviceContext.getConfiguration().getCreditSafe().getPassword();
+        boolean logTraffic = serviceContext.getConfiguration().getCreditSafe().isLogConsumerMonitoringTraffic();
+
+        consumerMonitoringWrapper = new ConsumerMonitoringWrapper(user, pass, logTraffic);
     }
 
     @Override
@@ -38,10 +33,7 @@ public class CreditSafeServiceResource implements CreditSafeService {
             HttpResponseHelper.error(Status.BAD_REQUEST);
         }
 
-        CreditSafeAgent agent = createCreditSafeAgent();
-        agent.setConfiguration(serviceContext.getConfiguration());
-
-        agent.removeConsumerMonitoring(request);
+        consumerMonitoringWrapper.removeMonitoring(request);
     }
 
     @Override
@@ -51,47 +43,22 @@ public class CreditSafeServiceResource implements CreditSafeService {
             HttpResponseHelper.error(Status.BAD_REQUEST);
         }
 
-        CreditSafeAgent agent = createCreditSafeAgent();
-        agent.setConfiguration(serviceContext.getConfiguration());
-
-        agent.addConsumerMonitoring(request);
+        consumerMonitoringWrapper.addMonitoring(request);
         return HttpResponseHelper.ok();
     }
 
     @Override
     public PortfolioListResponse listPortfolios() {
-        CreditSafeAgent agent = createCreditSafeAgent();
-        agent.setConfiguration(serviceContext.getConfiguration());
-
-        PortfolioListResponse response = new PortfolioListResponse();
-        response.setPortfolios(agent.listPortfolios());
-        return response;
+        return consumerMonitoringWrapper.listPortfolios();
     }
 
     @Override
     public PageableConsumerCreditSafeResponse listChangedConsumers(ChangedConsumerCreditSafeRequest request) {
-        CreditSafeAgent agent = createCreditSafeAgent();
-        agent.setConfiguration(serviceContext.getConfiguration());
-
-        return agent.listChangedConsumers(request);
+        return consumerMonitoringWrapper.listChangedConsumers(request);
     }
 
     @Override
     public PageableConsumerCreditSafeResponse listMonitoredConsumers(PageableConsumerCreditSafeRequest request) {
-        CreditSafeAgent agent = createCreditSafeAgent();
-        agent.setConfiguration(serviceContext.getConfiguration());
-
-        return agent.listMonitoredConsumers(request);
-    }
-
-    @Override
-    public SeedPersonDataResponse seedPersonData(SeedPersonDataRequest request) {
-        CreditSafeAgent agent = createCreditSafeAgent();
-        agent.setConfiguration(serviceContext.getConfiguration());
-
-        SeedPersonDataResponse response = new SeedPersonDataResponse();
-        response.setFraudDetailsContent(agent.seedPersonData(request.getPersonNumner()));
-
-        return response;
+        return consumerMonitoringWrapper.listMonitoredConsumers(request);
     }
 }

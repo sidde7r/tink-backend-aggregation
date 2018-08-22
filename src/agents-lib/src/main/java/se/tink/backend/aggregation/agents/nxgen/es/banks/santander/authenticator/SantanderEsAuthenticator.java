@@ -4,10 +4,13 @@ import com.google.common.base.Preconditions;
 import org.w3c.dom.Node;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsXmlUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SantanderEsAuthenticator implements PasswordAuthenticator {
@@ -21,7 +24,25 @@ public class SantanderEsAuthenticator implements PasswordAuthenticator {
 
     @Override
     public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
-        String responseString = apiClient.authenticateCredentials(username, password);
+        String responseString;
+        try {
+            responseString = apiClient.authenticateCredentials(username, password);
+        } catch (HttpResponseException e) {
+            String errorCode = SantanderEsXmlUtils
+                    .getTagNodeFromSoapString(e.getResponse().getBody(String.class),
+                            SantanderEsConstants.NodeTags.CODIGO_ERROR)
+                    .getFirstChild()
+                    .getTextContent()
+                    .trim()
+                    .toUpperCase();
+
+            switch (errorCode) {
+            case SantanderEsConstants.ErrorCodes.INCORRECT_CREDENTIALS:
+                throw new LoginException(LoginError.INCORRECT_CREDENTIALS);
+            default:
+                throw e;
+            }
+        }
 
         // Parse token credential and add it to api client to be used for future requests
         Node tokenCredentialNode = SantanderEsXmlUtils.getTagNodeFromSoapString(

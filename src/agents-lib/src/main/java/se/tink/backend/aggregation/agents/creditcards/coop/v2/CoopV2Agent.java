@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.system.rpc.Transaction;
 import se.tink.backend.utils.StringUtils;
 
@@ -28,7 +29,7 @@ public class CoopV2Agent extends AbstractAgent implements RefreshableItemExecuto
     private CoopApiClient apiClient;
     private List<AccountEntity> accounts = null;
 
-    public CoopV2Agent(CredentialsRequest request, AgentContext context) {
+    public CoopV2Agent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
         this.credentials = request.getCredentials();
         this.apiClient = new CoopApiClient(
@@ -69,7 +70,7 @@ public class CoopV2Agent extends AbstractAgent implements RefreshableItemExecuto
     public void refresh(RefreshableItem item) {
         switch (item) {
         case CREDITCARD_ACCOUNTS:
-            getAccounts().forEach(accountEntity -> context.updateAccount(parseAccount(accountEntity)));
+            getAccounts().forEach(accountEntity -> context.cacheAccount(parseAccount(accountEntity)));
             break;
         case CREDITCARD_TRANSACTIONS:
             getAccounts().forEach(accountEntity -> {

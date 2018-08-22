@@ -20,6 +20,11 @@ public class SantanderEsConstants {
     public static final class NodeTags {
         public static final String METHOD_RESULT = "methodResult";
         public static final String TOKEN_CREDENTIAL = "tokenCredential";
+        public static final String CODIGO_ERROR = "codigoError";
+    }
+
+    public static final class ErrorCodes {
+        public static final String INCORRECT_CREDENTIALS = "SBAMOV_00002";
     }
 
     public static final class Storage {
@@ -36,7 +41,8 @@ public class SantanderEsConstants {
     }
 
     public static final class AccountTypes {
-        public static final String CHECKING_ACCOUNT_PROD_NR = "201";
+        public static final String PROD_NR_300 = "300";
+        public static final String PROD_NR_301 = "301";
         public static final String DEBIT_CARD_TYPE = "débito";
     }
 

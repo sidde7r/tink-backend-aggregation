@@ -9,6 +9,8 @@ import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.io.File;
 import java.io.IOException;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -18,12 +20,10 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.CreateProductExecutor;
 import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutor;
-import se.tink.backend.aggregation.agents.UnsupportedApplicationException;
 import se.tink.backend.aggregation.agents.bankid.CredentialsSignicatBankIdAuthenticationHandler;
 import se.tink.backend.aggregation.agents.demo.generators.DemoTransactionsGenerator;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -34,20 +34,17 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.log.ClientFilterFactory;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.aggregation.rpc.CreateProductResponse;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.rpc.FetchProductInformationParameterKey;
 import se.tink.backend.aggregation.rpc.Field;
-import se.tink.backend.aggregation.rpc.ProductType;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.common.bankid.signicat.SignicatBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.utils.demo.DemoDataUtils;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.core.SwedishGiroType;
 import se.tink.backend.core.account.TransferDestinationPattern;
-import se.tink.backend.core.application.RefreshApplicationParameterKey;
 import se.tink.backend.core.enums.TransferType;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
@@ -60,12 +57,12 @@ import se.tink.backend.system.rpc.TransactionPayloadTypes;
 import se.tink.credentials.demo.DemoCredentials;
 import se.tink.credentials.demo.DemoCredentials.DemoUserFeature;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.application.GenericApplication;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.uuid.UUIDUtils;
+import static java.time.temporal.TemporalAdjusters.next;
+import static java.util.Calendar.SUNDAY;
 
-public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor, TransferExecutor,
-        CreateProductExecutor {
+public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor, TransferExecutor {
     private static final String BASE_PATH = "data/demo";
     private static final Integer NUMBER_OF_TRANSACTIONS_TO_RANDOMIZE = 3;
     private static final ObjectMapper MAPPER = new ObjectMapper();
@@ -76,7 +73,7 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
 
     private List<Account> accounts = null;
 
-    public DemoAgent(CredentialsRequest request, AgentContext context) {
+    public DemoAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         demoCredentials = DemoCredentials.byUsername(request.getCredentials().getUsername());
@@ -175,7 +172,7 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
     private void updateAccountsPerType(RefreshableItem type) {
         getAccounts().stream()
                 .filter(account -> type.isAccountType(account.getType()))
-                .forEach(context::updateAccount);
+                .forEach(context::cacheAccount);
     }
 
     private void updateTransactionsPerType(RefreshableItem type) {
@@ -190,7 +187,7 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
         case TRANSFER_DESTINATIONS:
             TransferDestinationsResponse response = new TransferDestinationsResponse();
 
-            for (Account account : context.getAccounts()) {
+            for (Account account : context.getUpdatedAccounts()) {
                 response.addDestination(account, TransferDestinationPattern.createForMultiMatch(
                         AccountIdentifier.Type.SE, TransferDestinationPattern.ALL));
                 response.addDestination(account, TransferDestinationPattern.createForMultiMatch(
@@ -220,13 +217,13 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
         case LOAN_ACCOUNTS:
             getAccounts().stream()
                     .filter(account -> RefreshableItem.LOAN_ACCOUNTS.isAccountType(account.getType()))
-                    .forEach(account -> context.updateAccount(account, createAccountAsset()));
+                    .forEach(account -> context.cacheAccount(account, createAccountAsset()));
             break;
 
         case INVESTMENT_ACCOUNTS:
             getAccounts().stream()
                     .filter(account -> RefreshableItem.INVESTMENT_ACCOUNTS.isAccountType(account.getType()))
-                    .forEach(account -> context.updateAccount(account,
+                    .forEach(account -> context.cacheAccount(account,
                             AccountFeatures.createForPortfolios(generateFakePortolio(account))));
             break;
         }
@@ -291,30 +288,6 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
     @Override
     public void update(Transfer transfer) throws Exception, TransferExecutionException {
 
-    }
-
-    @Override
-    public CreateProductResponse create(GenericApplication application) throws Exception {
-        switch (application.getType()) {
-        case SWITCH_MORTGAGE_PROVIDER:
-            return new CreateProductResponse(switchMortgageProvider(application));
-        case OPEN_SAVINGS_ACCOUNT:
-            return new CreateProductResponse(openSavingsAccount(application));
-        default:
-            throw new UnsupportedApplicationException(application.getType());
-        }
-    }
-
-    @Override
-    public void fetchProductInformation(ProductType type, UUID productInstanceId,
-            Map<FetchProductInformationParameterKey, Object> parameters) {
-        throw new IllegalStateException("Not implemented yet");
-    }
-
-    @Override
-    public void refreshApplication(ProductType type, UUID applicationId,
-            Map<RefreshApplicationParameterKey, Object> parameters) {
-        throw new IllegalStateException("Not implemented yet");
     }
 
     private Account findAccountForIdentifier(AccountIdentifier transferAccountIdentifier) throws IOException {
@@ -392,6 +365,9 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
 
         einvoices.add(DemoDataUtils.createFakeTransfer("Centrala Studiestödsnämnd", "4027809501", 2406, "55803084",
                 SwedishGiroType.BG, 14, TransferType.EINVOICE));
+        einvoices.add(DemoDataUtils
+                .createFakeTransferInComingSunday("Centrala Studiestödsnämnd 2", "4027809502", 3500, "55803084",
+                        SwedishGiroType.BG, TransferType.EINVOICE));
 
         // pendingEinvoices.add(createEinvoice("American Express 3757", "37578468440200734", 144.69, "7308596",
         // SwedishGiroType.BG, 15, TransferType.EINVOICE));
@@ -424,22 +400,6 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
         authenticator.run();
 
         return Objects.equal(CredentialsStatus.UPDATING, credentials.getStatus());
-    }
-
-    private String switchMortgageProvider(GenericApplication application) throws BankIdException {
-        if (!authenticateWithBankId(request.getCredentials())) {
-            throw BankIdError.CANCELLED.exception();
-        }
-
-        return "demo";
-    }
-
-    private String openSavingsAccount(GenericApplication application) throws BankIdException {
-        if (!authenticateWithBankId(request.getCredentials())) {
-            throw BankIdError.CANCELLED.exception();
-        }
-
-        return "demo";
     }
 
     private Portfolio generateFakePortolio(Account account) {

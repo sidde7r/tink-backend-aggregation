@@ -9,6 +9,10 @@ public class AccountFeatures {
     private List<Loan> loans;
     private List<Portfolio> portfolios;
 
+    public boolean isEmpty() {
+        return loans == null && portfolios == null;
+    }
+
     public static AccountFeatures createEmpty() {
         return new AccountFeatures();
     }

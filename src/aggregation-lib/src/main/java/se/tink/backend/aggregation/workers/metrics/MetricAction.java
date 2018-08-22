@@ -70,7 +70,7 @@ public class MetricAction {
 
     private void mark(Outcome outcome) {
         metricCacheLoader.mark(
-                metricPath.label("outcome", outcome.getMetricName()).label("status", credentials.getStatus().name()));
+                metricPath.label("outcome", outcome.getMetricName()));
     }
 
     private enum Outcome {

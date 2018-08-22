@@ -65,8 +65,13 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
         if (amount.isEmpty()) {
             return Optional.empty();
         }
+        // negate amount when presented as upcoming transaction
+        amount.setValue(-amount.getValue());
 
         if (date == null) {
+            return Optional.empty();
+        }
+        if (shouldSkipPayment()) {
             return Optional.empty();
         }
 
@@ -81,6 +86,18 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
         }
 
         return Optional.of(upcomingTransactionBuilder.build());
+    }
+
+    // Skip if the transactions are already in the normal transaction list.
+    private boolean shouldSkipPayment() {
+        if (SwedbankBaseConstants.TransactionType.TRANSFER.equalsIgnoreCase(type)) {
+            return SwedbankBaseConstants.PaymentDateDependency.DIRECT.equalsIgnoreCase(transfer.getDateDependency());
+        } else if (SwedbankBaseConstants.TransactionType.PAYMENT.equalsIgnoreCase(type)) {
+            return SwedbankBaseConstants.PaymentDateDependency.DIRECT.equalsIgnoreCase(payment.getDateDependency()) ||
+                    SwedbankBaseConstants.PaymentStatus.UNDER_WAY.equalsIgnoreCase(payment.getStatus());
+        }
+
+        return false;
     }
 
     @JsonIgnore

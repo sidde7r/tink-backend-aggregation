@@ -9,12 +9,6 @@ import se.tink.libraries.abnamro.client.model.PfmContractEntity;
 import se.tink.libraries.abnamro.utils.AbnAmroUtils;
 
 public class AccountConverter {
-    private final boolean shouldCleanBankId;
-
-    public AccountConverter(boolean shouldCleanBankId) {
-        this.shouldCleanBankId = shouldCleanBankId;
-    }
-
     public List<Account> convert(List<PfmContractEntity> contracts) {
         return contracts.stream().map(this::toAccount).collect(Collectors.toList());
     }
@@ -33,12 +27,10 @@ public class AccountConverter {
     }
 
     private Account toCreditCardAccount(Account account, PfmContractEntity contract) {
-        if (shouldCleanBankId) {
-            account.setBankId(AbnAmroUtils.creditCardIdToAccountId(account.getBankId()));
-        }
-
         account.setName(contract.getName().replaceFirst("ABN AMRO\\s*", ""));
+        account.setBankId(AbnAmroUtils.creditCardIdToAccountId(account.getBankId()));
         account.setAccountNumber(AbnAmroUtils.maskCreditCardContractNumber(contract.getContractNumber()));
+        account.putPayload(AbnAmroUtils.ABN_AMRO_ICS_ACCOUNT_CONTRACT_PAYLOAD, contract.getContractNumber());
 
         return account;
     }

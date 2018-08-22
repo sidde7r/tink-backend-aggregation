@@ -3,12 +3,14 @@ package se.tink.backend.aggregation.agents;
 import com.google.common.base.Objects;
 import java.lang.reflect.Constructor;
 import se.tink.backend.aggregation.agents.demo.DemoAgent;
+import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class AgentFactory {
     private ServiceConfiguration configuration;
@@ -41,14 +43,15 @@ public class AgentFactory {
 
     public Agent create(CredentialsRequest request, AgentContext context) throws Exception {
         Class<? extends Agent> agentClass = getAgentClass(request.getCredentials(), request.getProvider());
-        
+
         return create(agentClass, request, context);
     }
 
     public Agent create(Class<? extends Agent> agentClass, CredentialsRequest request, AgentContext context) throws Exception {
-        Constructor<?> agentConstructor = agentClass.getConstructor(CredentialsRequest.class, AgentContext.class);
+        Constructor<?> agentConstructor = agentClass.getConstructor(
+                CredentialsRequest.class, AgentContext.class, SignatureKeyPair.class);
         
-        Agent agent = (Agent) agentConstructor.newInstance(request, context);
+        Agent agent = (Agent) agentConstructor.newInstance(request, context, configuration.getSignatureKeyPair());
         agent.setConfiguration(configuration);
 
         return agent;

@@ -109,6 +109,7 @@ import se.tink.backend.aggregation.utils.TransactionOrdering;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.core.Amount;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.enums.TransferType;
@@ -196,7 +197,7 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
     // cache
     private List<AccountEntity> accountEntities = null;
 
-    public ICABankenAgent(CredentialsRequest request, AgentContext context) {
+    public ICABankenAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         this.catalog = context.getCatalog();
@@ -333,7 +334,7 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
      * Helper method to create a client request.
      */
     private Builder createClientRequest(String url) {
-        Builder request = client.resource(url).header("User-Agent", getAggregator().getAggregatorIdentifier())
+        Builder request = client.resource(url).header("User-Agent", DEFAULT_USER_AGENT)
                 .accept(MediaType.APPLICATION_JSON).header("ApiKey", API_KEY).header("ApiVersion", API_VERSION)
                 .header("ClientAppVersion", CLIENT_APP_VERSION).header("ClientHardware", CLIENT_HARDWARE)
                 .header("ClientOSVersion", CLIENT_OS_VERSION).header("ClientOS", CLIENT_OS);
@@ -1005,9 +1006,9 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
 
         try {
             response.addDestinations(
-                    getTransferAccountDestinations(context.getAccounts(), accountEntities, recipientEntities));
+                    getTransferAccountDestinations(context.getUpdatedAccounts(), accountEntities, recipientEntities));
             response.addDestinations(
-                    getPaymentAccountDestinations(context.getAccounts(), accountEntities, recipientEntities));
+                    getPaymentAccountDestinations(context.getUpdatedAccounts(), accountEntities, recipientEntities));
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -1033,7 +1034,7 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
         getAccounts().stream()
                 .map(AccountEntity::toAccount)
                 .filter(account -> type.isAccountType(account.getType()))
-                .forEach(context::updateAccount);
+                .forEach(context::cacheAccount);
     }
 
     private void updateTransactionsPerAccountType(RefreshableItem type) {
@@ -1114,7 +1115,7 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
 
             portfolio.setInstruments(instruments);
 
-            context.updateAccount(account, AccountFeatures.createForPortfolios(portfolio));
+            context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
         }
     }
     
@@ -1165,6 +1166,9 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
             MortgageListEntity mortgageList = loansResponseBody.getMortgageList();
 
             if (loansList.getLoans() != null) {
+
+                logLoansIfNotEmpty(loansList.getLoans());
+
                 for (LoanEntity loanEntity : loansList.getLoans()) {
                     updateAccount(loanEntity);
                 }
@@ -1178,18 +1182,26 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
         }
     }
 
+    private void logLoansIfNotEmpty(List<LoanEntity> loansList) {
+        if (!loansList.isEmpty()) {
+            log.infoExtraLong(
+                    SerializationUtils.serializeToString(loansList),
+                    LogTag.from("icabanken-blanco-loans"));
+        }
+    }
+
     private void updateAccount(LoanEntity loanEntity) throws Exception {
         Account account = loanEntity.toAccount();
         Loan loan = loanEntity.toLoan();
 
-        context.updateAccount(account, AccountFeatures.createForLoan(loan));
+        context.cacheAccount(account, AccountFeatures.createForLoan(loan));
     }
 
     private void updateAccount(MortgageEntity mortgageEntity) throws Exception {
         Account account = mortgageEntity.toAccount();
         Loan loan = mortgageEntity.toLoan();
 
-        context.updateAccount(account, AccountFeatures.createForLoan(loan));
+        context.cacheAccount(account, AccountFeatures.createForLoan(loan));
     }
 
     private Optional<RecipientEntity> tryFindRegisteredDestinationAccount(AccountIdentifier destination) {

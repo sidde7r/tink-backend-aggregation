@@ -11,7 +11,7 @@ public class N26SessionHandler implements SessionHandler {
 
     private N26ApiClient n26ApiClient;
 
-    public N26SessionHandler(N26ApiClient n26ApiClient){
+    public N26SessionHandler(N26ApiClient n26ApiClient) {
         this.n26ApiClient = n26ApiClient;
     }
 
@@ -22,13 +22,13 @@ public class N26SessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
-        if(!n26ApiClient.tokenExists()){
-            throw SessionError.SESSION_EXPIRED.exception();
-        }
+        try {
+            HttpResponse response = n26ApiClient.checkIfSessionAlive();
 
-        HttpResponse response = n26ApiClient.checkIfSessionAlive();
-
-        if (response.getStatus() != HttpStatusCodes.STATUS_CODE_OK) {
+            if (response.getStatus() != HttpStatusCodes.STATUS_CODE_OK) {
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
+        } catch (Exception e) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }

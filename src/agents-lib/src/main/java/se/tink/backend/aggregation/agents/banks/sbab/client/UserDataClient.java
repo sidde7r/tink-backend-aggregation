@@ -45,8 +45,8 @@ public class UserDataClient extends SBABClient {
     private static final String AMORTIZATION_DOCUMENTATION_URL = SECURE_BASE_URL + "/secure-rest/rest/amorteringskrav/ejomfattad/%s";
     private static final String LOAN_DETAILS_URL = SECURE_BASE_URL + "/privat/lan/mina_lan/detaljer.html?lanenummer=%s";
 
-    public UserDataClient(Client client, Credentials credentials, Aggregator aggregator) {
-        super(client, credentials, aggregator);
+    public UserDataClient(Client client, Credentials credentials, String userAgent) {
+        super(client, credentials, userAgent);
     }
 
     public List<AccountEntity> getAccounts() throws Exception {

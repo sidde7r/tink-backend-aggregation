@@ -18,13 +18,18 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.investment.rpc.InvestmentSavingsAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.investment.rpc.PortfolioHoldingsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.BankProfile;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.EngagementOverviewResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.SavingAccountEntity;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SwedbankDefaultInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
     private static final Logger log = LoggerFactory.getLogger(SwedbankDefaultInvestmentFetcher.class);
+    private static final AggregationLogger LOGGER = new AggregationLogger(SwedbankDefaultInvestmentFetcher.class);
     private static final String LIST_INPUT_ERROR_FORMAT_MESSAGE = "{} where null, expected at least an empty list.";
     private static final String FUND_ACCOUNTS_STRING = "Fund accounts";
     private static final String EQUITY_TRADERS_STRING = "Equity traders";
@@ -57,8 +62,9 @@ public class SwedbankDefaultInvestmentFetcher implements AccountFetcher<Investme
 
             investmentAccounts.addAll(fundAccountsToInvestmentAccounts(
                     portfolioHoldings.getFundAccounts()));
+            // temporary changed to debug
             investmentAccounts.addAll(endowmentInsurancesToTinkInvestmentAccounts(
-                    portfolioHoldings.getEndowmentInsurances()));
+                    portfolioHoldings.getEndowmentInsurances(), bankProfile.getEngagementOverViewResponse()));
             investmentAccounts.addAll(equityTradersToTinkInvestmentAccounts(
                     portfolioHoldings.getEquityTraders()));
             investmentAccounts.addAll(investmentSavingsToTinkInvestmentAccounts(
@@ -90,14 +96,14 @@ public class SwedbankDefaultInvestmentFetcher implements AccountFetcher<Investme
     }
 
     private List<InvestmentAccount> endowmentInsurancesToTinkInvestmentAccounts(
-            List<EndowmentInsuranceEntity> endowmentInsurances) {
+            List<EndowmentInsuranceEntity> endowmentInsurances, EngagementOverviewResponse engagementOverviewResponse) {
         if (endowmentInsurances == null) {
             log.warn(LIST_INPUT_ERROR_FORMAT_MESSAGE, ENDOWMENT_INSURANCE_STRING);
             return Collections.emptyList();
         }
 
         return defaultAccountToInvestmentAccount(getDetailedPortfolioResponseList(
-                endowmentInsurances, ENDOWMENT_INSURANCE_STRING));
+                endowmentInsurances, ENDOWMENT_INSURANCE_STRING, engagementOverviewResponse));
     }
 
     private List<InvestmentAccount> defaultAccountToInvestmentAccount(
@@ -145,5 +151,68 @@ public class SwedbankDefaultInvestmentFetcher implements AccountFetcher<Investme
                 .map(responseString -> SerializationUtils.deserializeFromString(
                         responseString, DetailedPortfolioResponse.class))
                 .collect(Collectors.toList());
+    }
+
+    // debug logging for Swedbank investments
+    // log errors for endowment insurance details, these are too common
+    // especially try to find out what type of insurance we get errors from and if possible try to figure out
+    // how to retrieve that data
+    private List<DetailedPortfolioResponse> getDetailedPortfolioResponseList(
+            List<? extends AbstractInvestmentAccountEntity> entityList, String type,
+            EngagementOverviewResponse engagementOverviewResponse) {
+
+        List<String> responseList = new ArrayList<>();
+        for (AbstractInvestmentAccountEntity accountEntity : entityList) {
+            LinkEntity selfLink = accountEntity.getLinks().getSelf();
+            try {
+                String detailedPortfolioResponse = apiClient.detailedPortfolioInfo(selfLink);
+                responseList.add(detailedPortfolioResponse);
+            } catch (Exception e) {
+                logFailedDetailedPortfolioFetch(accountEntity, engagementOverviewResponse);
+            }
+        }
+
+        for (String response : responseList) {
+            LOGGER.infoExtraLong(response, SwedbankBaseConstants.LogTags.ENDOWMENT_DETAILED_PORTFOLIO_RESPONSE);
+        }
+
+        return responseList.stream()
+                .map(responseString -> SerializationUtils.deserializeFromString(
+                        responseString, DetailedPortfolioResponse.class))
+                .collect(Collectors.toList());
+    }
+
+    // log why some fetches for detailed endowments fail
+    private void logFailedDetailedPortfolioFetch(AbstractInvestmentAccountEntity accountEntity,
+            EngagementOverviewResponse engagementOverviewResponse) {
+
+        try {
+            String endowmentAccountEntity = SerializationUtils.serializeToString(accountEntity);
+            String investmentInEngagement = serializeFailingAccountFromEngagements(accountEntity,
+                    engagementOverviewResponse.getSavingAccounts());
+
+            LOGGER.infoExtraLong(String.format("Failed to fetch details for engagement[%s], holdings[%s]",
+                    investmentInEngagement, endowmentAccountEntity),
+                    SwedbankBaseConstants.LogTags.ENDOWMENT_DETAILED_PORTFOLIO_RESPONSE);
+        } catch (Exception e) {
+            log.warn("Swedbank Failed to log endowment error", e);
+        }
+    }
+
+    private String serializeFailingAccountFromEngagements(AbstractInvestmentAccountEntity accountEntity,
+            List<SavingAccountEntity> savingAccounts) {
+
+        Optional<SavingAccountEntity> engagementAccount = savingAccounts.stream()
+                .filter(a -> a.getAccountNumber() != null &&
+                        a.getAccountNumber().equalsIgnoreCase(accountEntity.getAccountNumber()) &&
+                        a.getId() == null)
+                .findAny();
+
+        String investmentEngagement = "N/A";
+        if (engagementAccount.isPresent()) {
+            investmentEngagement = SerializationUtils.serializeToString(engagementAccount);
+        }
+
+        return investmentEngagement;
     }
 }

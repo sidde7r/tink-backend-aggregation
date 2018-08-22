@@ -45,7 +45,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
     private final ServiceFactory serviceFactory;
     private final SystemServiceFactory systemServiceFactory;
     private LoadingCache<Class<?>, Object> DAOs;
-    private final boolean supplementalOnAggregation;
     private final boolean isAggregationCluster;
     private final boolean isProvidersOnAggregation;
 
@@ -66,7 +65,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
             EncryptionServiceFactory encryptionServiceFactory,
             @Named("executor") ListenableThreadPoolExecutor<Runnable> executorService,
             @Named("trackingExecutor") ListenableThreadPoolExecutor<Runnable> trackingExecutorService,
-            @Named("isSupplementalOnAggregation") boolean supplementalOnAggregation,
             @Named("isAggregationCluster") boolean isAggregationCluster,
             @Named("isProvidersOnAggregation") boolean isProvidersOnAggregation) {
 
@@ -81,7 +79,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
         this.encryptionServiceFactory = encryptionServiceFactory;
         this.executorService = executorService;
         this.trackingExecutorService = trackingExecutorService;
-        this.supplementalOnAggregation = supplementalOnAggregation;
         this.isAggregationCluster = isAggregationCluster;
         this.isProvidersOnAggregation = isProvidersOnAggregation;
     }
@@ -249,10 +246,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
 
     public EncryptionServiceFactory getEncryptionServiceFactory() {
         return encryptionServiceFactory;
-    }
-
-    public boolean isSupplementalOnAggregation() {
-        return supplementalOnAggregation;
     }
 
     public boolean isUseAggregationController() {

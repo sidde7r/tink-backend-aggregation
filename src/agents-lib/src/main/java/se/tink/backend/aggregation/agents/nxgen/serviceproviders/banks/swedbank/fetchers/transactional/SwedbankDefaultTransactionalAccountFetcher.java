@@ -31,7 +31,7 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
 
     private final SwedbankDefaultApiClient apiClient;
     private final String defaultCurrency;
-    private List<String> savingsAccountNumbers;
+    private List<String> investmentAccountNumbers;
 
     private PaymentsConfirmedResponse paymentsConfirmedResponse;
 
@@ -42,7 +42,7 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        ArrayList<TransactionalAccount> accounts = new ArrayList<>();
+        List<TransactionalAccount> accounts = new ArrayList<>();
 
         for (BankProfile bankProfile : apiClient.getBankProfiles()) {
             apiClient.selectProfile(bankProfile);
@@ -60,16 +60,41 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
                     .map(Optional::get)
                     .collect(Collectors.toList()));
             accounts.addAll(engagementOverviewResponse.getSavingAccounts().stream()
-                    // have not found any other way to filter out investment accounts from
-                    .filter(account -> getSavingsAccountNumbers().contains(account.getFullyFormattedNumber()))
+                    // have not found any other way to filter out investment accounts from savings accounts
+                    .filter(account -> !getInvestmentAccountNumbers().contains(account.getFullyFormattedNumber()))
                     .map(account -> account.toTransactionalAccount(bankProfile))
                     .filter(Optional::isPresent)
                     .map(Optional::get)
                     .collect(Collectors.toList()));
-            savingsAccountNumbers = null;
+            investmentAccountNumbers = null;
+        }
+
+        if (apiClient.getBankProfiles().size() > 1) {
+            debugLogAccounts(accounts);
         }
 
         return accounts;
+    }
+
+    // DEBUG to see why refresh transactions fails
+    private void debugLogAccounts(List<TransactionalAccount> accounts) {
+        try {
+            for (TransactionalAccount account : accounts) {
+                String accountNumber = account.getAccountNumber();
+                BankProfile bankProfile = account.getTemporaryStorage(SwedbankBaseConstants.StorageKey.PROFILE,
+                        BankProfile.class);
+
+                String bankProfileId = "N/A";
+                if (bankProfile != null && bankProfile.getBank() != null) {
+                    bankProfileId = bankProfile.getBank().getBankId();
+                }
+
+                log.info(String.format("Swedbank_multiprofile Account [%s], BankProfileId [%s]",
+                        accountNumber, bankProfileId));
+            }
+        } catch (Exception e) {
+            log.warn("Swedbank_multiprofile Failed to log info for multiprofile user");
+        }
     }
 
     @Override
@@ -117,16 +142,16 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
 
     // fetch all account number from investment accounts BUT savings accounts, this is because we want savings accounts
     // to be fetched by transactional fetcher to get any transactions
-    private List<String> getSavingsAccountNumbers() {
+    private List<String> getInvestmentAccountNumbers() {
 
-        if (savingsAccountNumbers == null) {
+        if (investmentAccountNumbers == null) {
             String portfolioHoldingsString = apiClient.portfolioHoldings();
             PortfolioHoldingsResponse portfolioHoldings = SerializationUtils
                     .deserializeFromString(portfolioHoldingsString, PortfolioHoldingsResponse.class);
 
-            savingsAccountNumbers = portfolioHoldings.getSavingsAccountNumbers();
+            investmentAccountNumbers = portfolioHoldings.investmentAccountNumbers();
         }
 
-        return savingsAccountNumbers;
+        return investmentAccountNumbers;
     }
 }

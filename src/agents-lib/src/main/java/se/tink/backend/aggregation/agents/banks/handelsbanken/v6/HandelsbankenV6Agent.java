@@ -118,6 +118,7 @@ import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.enums.FeatureFlags;
 import se.tink.backend.core.enums.TransferType;
@@ -256,7 +257,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
     private final Credentials credentials;
     private final TransferMessageFormatter transferMessageFormatter;
 
-    public HandelsbankenV6Agent(CredentialsRequest request, AgentContext context) {
+    public HandelsbankenV6Agent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         credentials = request.getCredentials();
@@ -276,7 +277,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
         client.setFollowRedirects(true);
 //        client.addFilter(new LoggingFilter(new PrintStream(System.out, true)));
 
-        apiClient = new HandelsbankenAPIAgent(client, getAggregator().getAggregatorIdentifier());
+        apiClient = new HandelsbankenAPIAgent(client, DEFAULT_USER_AGENT);
     }
 
     /**
@@ -1680,11 +1681,11 @@ public class HandelsbankenV6Agent extends AbstractAgent
     private void updateAccountsPerType(RefreshableItem type) {
         getAccounts().entrySet().stream()
                 .filter(set -> type.isAccountType(set.getValue().getType()))
-                .forEach(set -> context.updateAccount(set.getValue()));
+                .forEach(set -> context.cacheAccount(set.getValue()));
     }
 
     private void updateCreditCards() {
-        getCreditCards().forEach((entity, account) -> context.updateAccount(account));
+        getCreditCards().forEach((entity, account) -> context.cacheAccount(account));
     }
 
     private void updateLoans() {
@@ -1693,7 +1694,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
                 Account account = entity.toAccount();
                 Loan loan = entity.toloan();
 
-                context.updateAccount(account, AccountFeatures.createForLoan(loan));
+                context.cacheAccount(account, AccountFeatures.createForLoan(loan));
             } catch (Exception e) {
                 log.error("Exception caught when updating loans", e);
                 throw new IllegalStateException(e);
@@ -1726,8 +1727,8 @@ public class HandelsbankenV6Agent extends AbstractAgent
         TransferDestinationsResponse response = new TransferDestinationsResponse();
 
         try {
-            response.addDestinations(getTransferAccountDestinations(context.getAccounts()));
-            response.addDestinations(getPaymentAccountDestinations(context.getAccounts()));
+            response.addDestinations(getTransferAccountDestinations(context.getUpdatedAccounts()));
+            response.addDestinations(getPaymentAccountDestinations(context.getUpdatedAccounts()));
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -1896,7 +1897,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
             fundHoldingsEntity.toInstrument().ifPresent(instruments::add));
         portfolio.setInstruments(instruments);
 
-        context.updateAccount(account, AccountFeatures.createForPortfolios(portfolio));
+        context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
     }
 
     private void updateCustodyAccount(CustodyAccountEntity custodyAccount) {
@@ -1941,7 +1942,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
                     });
             portfolio.setInstruments(instruments);
 
-            context.updateAccount(account, AccountFeatures.createForPortfolios(portfolio));
+            context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
         } catch (Exception e) {
             log.warnExtraLong("failed to update custody accounts" + custodyAccountResponseString,
                     LogTag.from("#shb"), e);
@@ -1970,7 +1971,7 @@ public class HandelsbankenV6Agent extends AbstractAgent
                             .map(Optional::get)
                             .collect(Collectors.toList())
             );
-            context.updateAccount(account, AccountFeatures.createForPortfolios(portfolio));
+            context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
         } catch (Exception e) {
             log.warn(String.format("%s: Could not fetch pension details", LOG_TAG_PENSION_DETAILS), e);
         }

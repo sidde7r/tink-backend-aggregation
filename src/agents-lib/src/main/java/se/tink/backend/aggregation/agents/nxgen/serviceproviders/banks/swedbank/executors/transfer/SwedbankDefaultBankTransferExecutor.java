@@ -1,31 +1,32 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.transfer;
 
 import java.util.Optional;
+import java.util.function.Function;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankDefaultApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.BaseTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.SwedbankTransferHelper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.ConfirmTransferResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.InitiateSignTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.RegisterTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.RegisteredTransfersResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.transfer.rpc.RegisterTransferRecipientRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.transfer.rpc.RegisterTransferRecipientResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.AbstractAccountEntity;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.i18n.Catalog;
 
-public class SwedbankDefaultBankTransferExecutor implements BankTransferExecutor {
-    private static final String EMPTY_STRING = "";
+public class SwedbankDefaultBankTransferExecutor extends BaseTransferExecutor implements BankTransferExecutor {
+    private final Catalog catalog;
 
-    private final SwedbankDefaultApiClient apiClient;
-    private final SwedbankTransferHelper transferHelper;
-
-    public SwedbankDefaultBankTransferExecutor(SwedbankDefaultApiClient apiClient,
+    public SwedbankDefaultBankTransferExecutor(Catalog catalog, SwedbankDefaultApiClient apiClient,
             SwedbankTransferHelper transferHelper) {
-        this.apiClient = apiClient;
-        this.transferHelper = transferHelper;
+        super(apiClient, transferHelper);
+        this.catalog = catalog;
     }
 
     @Override
@@ -37,24 +38,8 @@ public class SwedbankDefaultBankTransferExecutor implements BankTransferExecutor
         registeredTransfers.noUnsignedTransfersOrThrow();
 
         RegisteredTransfersResponse registeredTransfersResponse = registerTransfer(transfer);
-        LinksEntity links = registeredTransfersResponse.getLinks();
 
-        SwedbankTransferHelper.ensureLinksNotNull(links,
-                TransferExecutionException.EndUserMessage.TRANSFER_CONFIRM_FAILED,
-                SwedbankBaseConstants.ErrorMessage.TRANSFER_CONFIRM_FAILED);
-
-        if (links.getSign() != null) {
-            InitiateSignTransferResponse initiateSignTransfer = apiClient.signExternalTransfer(links.getSignOrThrow());
-            links = transferHelper.collectBankId(initiateSignTransfer);
-        }
-
-        SwedbankTransferHelper.ensureLinksNotNull(links,
-                TransferExecutionException.EndUserMessage.TRANSFER_CONFIRM_FAILED,
-                SwedbankBaseConstants.ErrorMessage.TRANSFER_CONFIRM_FAILED);
-
-        ConfirmTransferResponse confirmTransferResponse = apiClient.confirmTransfer(links.getNextOrThrow());
-        SwedbankTransferHelper.confirmSuccessfulTransfer(confirmTransferResponse,
-                registeredTransfersResponse.getIdToConfirm().orElse(EMPTY_STRING));
+        signAndConfirmTransfer(registeredTransfersResponse);
     }
 
     private RegisteredTransfersResponse registerTransfer(Transfer transfer) {
@@ -70,15 +55,19 @@ public class SwedbankDefaultBankTransferExecutor implements BankTransferExecutor
 
         AccountIdentifier destinationAccount = SwedbankTransferHelper.getDestinationAccount(transfer);
         Optional<String> destinationAccountId = paymentBaseinfo.getTransferDestinationAccountId(destinationAccount);
-        if (!destinationAccountId.isPresent()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_DESTINATION)
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_DESTINATION).build();
+
+        // If a registered recipient wasn't found for the destination account, try to register it.
+        String recipientAccountId;
+        if (destinationAccountId.isPresent()) {
+            recipientAccountId = destinationAccountId.get();
+        } else {
+            AbstractAccountEntity newDestinationAccount = createSignedRecipient(transfer);
+            recipientAccountId = newDestinationAccount.getId();
         }
 
         RegisterTransferResponse registerTransfer = apiClient.registerTransfer(
                 transfer.getAmount().getValue(),
-                destinationAccountId.get(),
+                recipientAccountId,
                 sourceAccountId.get());
 
         RegisteredTransfersResponse registeredTransfers = apiClient.registeredTransfers(
@@ -94,5 +83,42 @@ public class SwedbankDefaultBankTransferExecutor implements BankTransferExecutor
         }
 
         return registeredTransfers;
+    }
+
+    private AbstractAccountEntity createSignedRecipient(final Transfer transfer) {
+        AccountIdentifier accountIdentifier = transfer.getDestination();
+        if (accountIdentifier.getType() != AccountIdentifier.Type.SE) {
+            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED).setEndUserMessage(
+                    catalog.getString("You can only make transfers to Swedish accounts")).build();
+        }
+        SwedishIdentifier destination = accountIdentifier.to(SwedishIdentifier.class);
+
+        String recipientName = transferHelper.getDestinationName(transfer);
+
+        RegisterTransferRecipientRequest registerTransferRecipientRequest = RegisterTransferRecipientRequest.create(
+                destination, recipientName);
+
+        RegisterTransferRecipientResponse registerTransferRecipientResponse = apiClient.registerTransferRecipient(
+                registerTransferRecipientRequest);
+
+        return transferHelper.signAndConfirmNewRecipient(registerTransferRecipientResponse.getLinks(),
+                findNewRecipientFromPaymentResponse(registerTransferRecipientRequest));
+    }
+
+    /**
+     * Returns a function that streams through all registered recipients with a filter to find the newly added recipient
+     * among them.
+     */
+    private Function<PaymentBaseinfoResponse, Optional<AbstractAccountEntity>> findNewRecipientFromPaymentResponse(
+            RegisterTransferRecipientRequest newRecipientEntity) {
+
+        return confirmResponse -> confirmResponse.getAllRecipientAccounts().stream()
+                .filter(account ->
+                        account.generalGetAccountIdentifier()
+                                .getIdentifier()
+                                .replaceAll("[^0-9]", "")
+                                .equalsIgnoreCase(newRecipientEntity.getRecipientNumber()))
+                .findFirst()
+                .map(AbstractAccountEntity.class::cast);
     }
 }

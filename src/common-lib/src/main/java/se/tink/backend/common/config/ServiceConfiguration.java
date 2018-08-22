@@ -51,9 +51,6 @@ public class ServiceConfiguration extends Configuration {
     private PrometheusConfiguration prometheus = new PrometheusConfiguration();
 
     @JsonProperty
-    private boolean supplementalOnAggregation = false;
-
-    @JsonProperty
     private boolean useAggregationController = false;
 
     @JsonProperty
@@ -61,6 +58,9 @@ public class ServiceConfiguration extends Configuration {
 
     @JsonProperty
     private boolean isProvidersOnAggregation = false;
+
+    @JsonProperty
+    private SignatureKeyPair signatureKeyPair = new SignatureKeyPair();
 
     public AbnAmroConfiguration getAbnAmro() {
         return abnAmro;
@@ -131,10 +131,6 @@ public class ServiceConfiguration extends Configuration {
         return prometheus;
     }
 
-    public boolean isSupplementalOnAggregation() {
-        return supplementalOnAggregation;
-    }
-
     public boolean isUseAggregationController() {
         return useAggregationController;
     }
@@ -145,5 +141,9 @@ public class ServiceConfiguration extends Configuration {
 
     public boolean isProvidersOnAggregation() {
         return isProvidersOnAggregation;
+    }
+
+    public SignatureKeyPair getSignatureKeyPair() {
+        return signatureKeyPair;
     }
 }

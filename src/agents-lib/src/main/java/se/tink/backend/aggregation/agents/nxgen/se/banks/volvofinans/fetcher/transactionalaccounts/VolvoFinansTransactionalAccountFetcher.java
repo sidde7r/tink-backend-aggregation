@@ -10,9 +10,10 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.VolvoFinans
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import static org.apache.commons.lang3.ObjectUtils.max;
 
 public class VolvoFinansTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount>,
@@ -32,7 +33,7 @@ public class VolvoFinansTransactionalAccountFetcher implements AccountFetcher<Tr
     }
 
     @Override
-    public Collection<Transaction> getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
+    public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
         String accountId = account.getTemporaryStorage(VolvoFinansConstants.UrlParameters.ACCOUNT_ID, String.class);
         int limit = VolvoFinansConstants.Pagination.LIMIT;
 
@@ -43,6 +44,6 @@ public class VolvoFinansTransactionalAccountFetcher implements AccountFetcher<Tr
         int offset = 0;
         log.infoExtraLong(apiClient.savingsAccountTransactions(accountId, localFromDate, localToDate, limit, offset),
                 LogTag.from(VolvoFinansConstants.LogTags.SAVINGS_ACCOUNT_TRANSACTIONS));
-        return new ArrayList<>();
+        return PaginatorResponseImpl.createEmpty();
     }
 }

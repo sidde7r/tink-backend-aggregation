@@ -36,29 +36,36 @@ public abstract class Account {
         this.accountNumber = builder.getAccountNumber();
         this.balance = builder.getBalance();
         this.identifiers = ImmutableList.copyOf(builder.getIdentifiers());
-        this.uniqueIdentifier = builder.getUniqueIdentifier();
+        this.uniqueIdentifier = sanitizeUniqueIdentifier(builder.getUniqueIdentifier());
         this.bankIdentifier = builder.getBankIdentifier();
         this.holderName = builder.getHolderName();
         this.temporaryStorage = ImmutableMap.copyOf(builder.getTemporaryStorage());
         this.accountFlags = ImmutableList.copyOf(builder.getAccountFlags());
+        // Safe-guard against uniqueIdentifiers containing only formatting characters (e.g. '*' or '-').
+        Preconditions.checkState(!Strings.isNullOrEmpty(uniqueIdentifier),
+                "Unique identifier was empty after sanitation.");
     }
 
-    public static Builder<? extends Account, ?> builder(AccountTypes type) {
+    public static Builder<? extends Account, ?> builder(AccountTypes type, String uniqueIdentifier) {
         switch (type) {
         case SAVINGS:
         case OTHER:
         case CHECKING:
-            return TransactionalAccount.builder(type);
+            return TransactionalAccount.builder(type, uniqueIdentifier);
         case CREDIT_CARD:
-            return CreditCardAccount.builder();
+            return CreditCardAccount.builder(uniqueIdentifier);
         case INVESTMENT:
-            return InvestmentAccount.builder();
+            return InvestmentAccount.builder(uniqueIdentifier);
         case LOAN:
-            return LoanAccount.builder();
+            return LoanAccount.builder(uniqueIdentifier);
         default:
             throw new IllegalStateException(
                     String.format("Unknown Account type (%s)", type));
         }
+    }
+
+    private String sanitizeUniqueIdentifier(String uniqueIdentifier) {
+        return uniqueIdentifier.replaceAll("[^\\dA-Za-z]", "");
     }
 
     public AccountTypes getType() {
@@ -85,8 +92,16 @@ public abstract class Account {
         return Lists.newArrayList(this.accountFlags);
     }
 
-    public String getUniqueIdentifier() {
+    private String getUniqueIdentifier() {
         return this.uniqueIdentifier;
+    }
+
+    public boolean isUniqueIdentifierEqual(String otherUniqueIdentifier) {
+        if (Strings.isNullOrEmpty(otherUniqueIdentifier)) {
+            return false;
+        }
+
+        return this.uniqueIdentifier.equals(sanitizeUniqueIdentifier(otherUniqueIdentifier));
     }
 
     public String getBankIdentifier() {
@@ -111,7 +126,7 @@ public abstract class Account {
         account.setAccountNumber(this.accountNumber);
         account.setBalance(this.balance.getValue());
         account.setIdentifiers(this.identifiers);
-        account.setBankId(this.uniqueIdentifier.replaceAll("[^\\dA-Za-z]", ""));
+        account.setBankId(this.uniqueIdentifier);
         account.setHolderName(HolderName.toString(this.holderName));
         account.setFlags(this.accountFlags);
 
@@ -149,8 +164,12 @@ public abstract class Account {
         protected HolderName holderName;
         private T thisObj;
 
-        protected Builder() {
+        protected Builder(String uniqueIdentifier) {
             this.thisObj = self();
+
+            Preconditions.checkArgument(!Strings.isNullOrEmpty(uniqueIdentifier),
+                    "Unique identifier is null or empty.");
+            this.thisObj.uniqueIdentifier = uniqueIdentifier;
         }
 
         protected abstract T self();
@@ -215,16 +234,11 @@ public abstract class Account {
             return Preconditions.checkNotNull(thisObj.uniqueIdentifier, "Unique identifier must be set.");
         }
 
-        public T setUniqueIdentifier(String uniqueIdentifier) {
-            thisObj.uniqueIdentifier = uniqueIdentifier;
-            return self();
-        }
-
         public String getBankIdentifier() {
             String bankIdentifier = getTemporaryStorage().get(BANK_IDENTIFIER_KEY);
             return java.util.Objects.nonNull(bankIdentifier)
                     ? SerializationUtils.deserializeFromString(bankIdentifier, String.class)
-                    : getUniqueIdentifier();
+                    : null;
         }
 
         public T setBankIdentifier(String bankIdentifier) {

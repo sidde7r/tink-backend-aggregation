@@ -75,6 +75,7 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.common.i18n.SocialSecurityNumber;
 import se.tink.backend.system.rpc.AccountFeatures;
 import se.tink.backend.system.rpc.Instrument;
@@ -136,7 +137,7 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
     // cache
     private Map<AccountEntity, Account> accounts;
 
-    public SkandiabankenAgent(CredentialsRequest request, AgentContext context) {
+    public SkandiabankenAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         credentials = request.getCredentials();
@@ -342,7 +343,7 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
                 .header("x-smartrefill-api-version", "3").header("x-smartrefill-company", "SKANDIABANKEN")
                 .header("x-smartrefill-country", COUNTRY_CODE).header("x-smartrefill-marketing-version", "2.8.2")
                 .header("x-smartrefill-application", "se.skandiabanken.android.wallet")
-                .header("User-Agent", getAggregator().getAggregatorIdentifier());
+                .header("User-Agent", DEFAULT_USER_AGENT);
 
         if (customerId != null) {
             requestBuilder = requestBuilder.header("x-smartrefill-customer", Integer.toString(customerId));
@@ -546,14 +547,14 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
             portfolio.setCashValue(StringUtils.parseAmount(
                     Optional.ofNullable(investmentResponse.getDisposableAmount()).orElse("0")));
             portfolio.setInstruments(instruments);
-            context.updateAccount(account, AccountFeatures.createForPortfolios(portfolio));
+            context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
         });
     }
 
     private void updateAccountsPerType(RefreshableItem type) {
         getAccounts().entrySet().stream()
                 .filter(set -> type.isAccountType(set.getValue().getType()))
-                .forEach(set -> context.updateAccount(set.getValue()));
+                .forEach(set -> context.cacheAccount(set.getValue()));
     }
 
     private void updateTransactionsPerAccountType(RefreshableItem type) {

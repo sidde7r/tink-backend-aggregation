@@ -10,6 +10,10 @@ import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.Year;
+import java.time.YearMonth;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -33,6 +37,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.uuid.UUIDUtils;
+import static java.time.temporal.TemporalAdjusters.next;
 
 public class DemoDataUtils {
 
@@ -244,5 +249,17 @@ public class DemoDataUtils {
         transfer.setDueDate(org.apache.commons.lang3.time.DateUtils.addDays(new Date(), dueInDays));
 
         return transfer;
+    }
+
+    public static Transfer createFakeTransferInComingSunday(String name, String ocr, double amount, String giroNumber,
+            SwedishGiroType giroType, TransferType transferType) {
+        return createFakeTransfer(name, ocr, amount, giroNumber, giroType, daysToSunday(LocalDate.now()), transferType);
+    }
+
+    public static int daysToSunday(LocalDate date) {
+        final LocalDate nextSunday = date.with(next(DayOfWeek.SUNDAY));
+        return nextSunday.getDayOfYear() > date.getDayOfYear() ?
+                nextSunday.getDayOfYear() - date.getDayOfYear() :
+                nextSunday.getDayOfYear() + Year.of(date.getYear()).length() - date.getDayOfYear();
     }
 }

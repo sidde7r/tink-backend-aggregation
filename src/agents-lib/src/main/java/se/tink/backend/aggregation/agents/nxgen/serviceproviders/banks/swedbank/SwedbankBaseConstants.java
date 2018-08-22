@@ -20,6 +20,7 @@ public class SwedbankBaseConstants {
     public static class TransferScope {
         public static final String PAYMENT_FROM = "PAYMENT_FROM";
         public static final String TRANSFER_FROM = "TRANSFER_FROM";
+        public static final String TRANSFER_TO = "TRANSFER_TO";
     }
 
     public static class Description {
@@ -108,6 +109,11 @@ public class SwedbankBaseConstants {
         public static final String NEXT_LINK = "nextLink";
         public static final String PROFILE = "profile";
         public static final String CREDIT_CARD_RESPONSE = "creditCardResponse";
+        public static final String BANK_PROFILE_HANDLER = "BANK_PROFILES";
+    }
+
+    public static class SavingAccountTypes {
+        public static final String PENSION = "pension";
     }
 
     public enum InvestmentAccountType {
@@ -139,6 +145,7 @@ public class SwedbankBaseConstants {
         COMPLETE("COMPLETE"),
         CANCELLED("CANCELLED"),
         TIMEOUT("TIMEOUT"),
+        ALREADY_IN_PROGRESS("OUTSTANDING_TRANSACTION"),
         UNKNOWN("");
 
         private String statusCode;
@@ -148,8 +155,6 @@ public class SwedbankBaseConstants {
         public String getStatusCode() { return statusCode; }
 
         public static BankIdResponseStatus fromStatusCode(String statusCode) {
-            String code = Optional.ofNullable(statusCode).orElse("");
-
             return Arrays.stream(BankIdResponseStatus.values())
                     .filter(bankIdStatus -> bankIdStatus.getStatusCode().equalsIgnoreCase(statusCode))
                     .findFirst()
@@ -209,7 +214,8 @@ public class SwedbankBaseConstants {
         PORTFOLIOS("PortfolioHoldings"), FUND_MARKET_INFO("FundMarketinfo"), EINVOICES("EinvoiceIncoming"),
         PAYMENT_BASEINFO("PaymentBaseinfo"), PAYMENT_REGISTERED("PaymentRegistered"),
         REGISTER_TRANSFER("PaymentRegisterTransfer"), REGISTER_PAYMENT("PaymentRegisterPayment"),
-        PAYMENTS_CONFIRMED("PaymentConfirmed");
+        PAYMENTS_CONFIRMED("PaymentConfirmed"), REGISTER_PAYEE("PaymentRegisterPayee"),
+        REGISTER_EXTERNAL_TRANSFER_RECIPIENT("PaymentRegisterExternalRecipient");
 
         private String key;
 
@@ -226,8 +232,11 @@ public class SwedbankBaseConstants {
         public static final LogTag LOAN_RESPONSE = LogTag.from("Swedbank loan response");
         public static final LogTag MORTGAGE_OVERVIEW_RESPONSE = LogTag.from("Swedbank mortgage overview");
         public static final LogTag LOAN_DETAILS_RESPONSE = LogTag.from("Swedbank loan details response");
+        public static final LogTag LOAN_DETAILS_ERROR = LogTag.from("Swedbank loan details error");
         public static final LogTag DETAILED_PORTFOLIO_RESPONSE = LogTag.from(
                 "Swedbank detailed portfolio - type:[{}] - response: {}");
+        public static final LogTag ENDOWMENT_DETAILED_PORTFOLIO_RESPONSE = LogTag.from(
+                "Swedbank detailed portfolio - type: ENDOWMENT");
         public static final LogTag PORTFOLIO_HOLDINGS_RESPONSE = LogTag.from("Portfolio holdings response: {}");
     }
 
@@ -248,6 +257,21 @@ public class SwedbankBaseConstants {
         public static final String UNSIGNED_TRANFERS = "Existing unsigned transfers - Cancelling to not sign more than one transfer.";
         public static final String EINVOICE_NO_UNIQUE_ID = "Could not get unique id from transfer object.";
         public static final String EINVOICE_NO_MATCH = "Could not find a matching eInvoice.";
+        public static final String NEEDS_EXTENDED_USE = "Activation of extended use for BankId required";
+    }
+
+    public static class UserMessage {
+        public static final String STRONGER_AUTHENTICATION_NEEDED = "In order to add new recipients you need to activate Mobile BankID for extended use. This is done in the Internet bank on the page BankID (found in the tab Tillval).";
+    }
+
+    public static class ErrorCode {
+        public static final String NOT_FOUND = "NOT_FOUND";
+    }
+
+    public static class ErrorField {
+        public static final String DATE = "date";
+        public static final String USER_ID = "userid";
+        public static final String RECIPIENT_NUMBER = "recipientnumber";
     }
 
     public static class TransactionType {
@@ -257,6 +281,28 @@ public class SwedbankBaseConstants {
 
     public enum ReferenceType {
         OCR, MESSAGE
+    }
+
+    public static class PaymentType {
+        public static final String DOMESTIC = "DOMESTIC";
+        public static final String EINVOICE = "EINVOICE";
+    }
+
+    public static class PaymentStatus {
+        public static final String UNDER_WAY = "UNDER_WAY";
+    }
+
+    public static class PaymentDateDependency {
+        public static final String DIRECT = "DIRECT";
+    }
+
+    public static class PaymentAccountType {
+        public static final String BGACCOUNT = "BGACCOUNT";
+        public static final String PGACCOUNT = "PGACCOUNT";
+    }
+
+    public static class TransferRecipientType {
+        public static final String BANKACCOUNT = "BANKACCOUNT";
     }
 
     public static class BankId {

@@ -98,7 +98,8 @@ public class AccountDetailsEntity {
     @JsonIgnore
     public Account.Builder<? extends Account, ?> getAccountBuilder() {
         Amount amount = EuroInformationUtils.parseAmount(amountToParse, currency);
-        return Account.builder(getTinkTypeByTypeNumber().getTinkType()).setAccountNumber(accountNumber)
+        return Account.builder(getTinkTypeByTypeNumber().getTinkType(), getIban().toLowerCase())
+                .setAccountNumber(accountNumber)
                 .setBalance(amount);
     }
 

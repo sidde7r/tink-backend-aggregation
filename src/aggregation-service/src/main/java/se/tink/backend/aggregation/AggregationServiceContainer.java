@@ -76,7 +76,6 @@ public class AggregationServiceContainer extends AbstractServiceContainer {
                 AggregationModuleFactory.build(configuration, environment.jersey()));
 
         ServiceContext serviceContext = injector.getInstance(ServiceContext.class);
-
         buildContainer(configuration, environment, serviceContext, injector);
     }
 
@@ -106,7 +105,7 @@ public class AggregationServiceContainer extends AbstractServiceContainer {
 
         environment.jersey().register(inProcessAggregationServiceFactory.getAggregationService());
 
-        if (Objects.equals(Cluster.TINK, configuration.getCluster())) {
+        if (Objects.equals(Cluster.TINK, configuration.getCluster()) && !configuration.isAggregationCluster()) {
             environment.jersey().register(inProcessAggregationServiceFactory.getCreditSafeService());
         }
 

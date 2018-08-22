@@ -16,9 +16,14 @@ public final class BbvaConstants {
         public static final String LOGIN = BASE_URL + "/DFAUTH/slod/DFServletXML";
         public static final String SESSION = BASE_URL + "/ENPP/enpp_mult_web_mobility_02/sessions/v1";
         public static final String PRODUCTS = BASE_URL + "/ENPP/enpp_mult_web_mobility_02/products/v2";
+        public static final String ACCOUNT_BALANCE = BASE_URL + "/ASO/accountTransactions/V02/updateAccountTransactions";
         public static final String ACCOUNT_TRANSACTION = BASE_URL + "/ASO/accountTransactions/V02/accountTransactionsAdvancedSearch";
         public static final String LOAN_DETAILS = BASE_URL + "/ASO/loans/V01/{" + PARAM_ID + "}";
         public static final String CARD_TRANSACTIONS = BASE_URL + "/ASO/cardTransactions/V01/{" + PARAM_ID + "}";
+    }
+
+    public static final class Storage {
+        public static final String ACCOUNT_ID = "accountId";
     }
 
     public final class Header {
@@ -70,6 +75,7 @@ public final class BbvaConstants {
 
     public static class Logging {
         public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("bbva_unknown_account_type");
+        public static final LogTag NULL_ACCOUNT_BALANCE = LogTag.from("bbva_null_account_balance");
         public static final LogTag CREDIT_CARD = LogTag.from("bbva_credit_card");
         public static final LogTag INVESTMENT_INTERNATIONAL_PORTFOLIO = LogTag.from("bbva_investment_international_portfolio");
         public static final LogTag INVESTMENT_MANAGED_FUNDS = LogTag.from("bbva_investment_managed_funds");

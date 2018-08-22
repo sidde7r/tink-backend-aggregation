@@ -20,6 +20,8 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.fetcher.rpc.Movemen
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.fetcher.rpc.Product;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionMonthPaginator;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
@@ -52,7 +54,7 @@ abstract class ProductMovementsFetcher<A extends Account, T extends Transaction>
     }
 
     @Override
-    public Collection<T> getTransactionsFor(A account, Year year, Month month) {
+    public PaginatorResponse getTransactionsFor(A account, Year year, Month month) {
 
         Product product = account.getTemporaryStorage(IngConstants.ORIGINAL_ENTITY, Product.class);
 
@@ -76,7 +78,7 @@ abstract class ProductMovementsFetcher<A extends Account, T extends Transaction>
             page++;
         } while (movements.getTotal() > movements.getOffset() + movements.getCount());
 
-        return transactions;
+        return PaginatorResponseImpl.create(transactions);
     }
 
     protected abstract Predicate<Product> productType();
@@ -102,8 +104,7 @@ abstract class ProductMovementsFetcher<A extends Account, T extends Transaction>
     }
 
     protected static void copyCommonAttributes(Product product, Account.Builder builder) {
-        builder.setUniqueIdentifier(product.getProductNumber())
-                .setAccountNumber(product.getProductNumber())
+        builder.setAccountNumber(product.getIban())
                 .setName(product.getName())
                 .setBankIdentifier(product.getBank())
                 .setBalance(new Amount(product.getCurrency(), product.getBalance()))

@@ -1,9 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -15,10 +20,10 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 @JsonObject
 public abstract class BaseResponse {
 
-    //other fields:
-    // _links
-
-    private List<Link> links;
+    @JsonProperty("_links")
+    private Map<String, Link> links;
+    @JsonProperty("links")
+    private List<Link> linksList;
     private String code;
     private String message;
     private List<ErrorResponse> errors;
@@ -26,28 +31,34 @@ public abstract class BaseResponse {
     private String result;
     private String desc;
 
-    public List<Link> getLinks() {
-        if (links == null) {
-            links = Collections.emptyList();
-        }
-        return links;
+    @JsonProperty("_links")
+    public Map<String, Link> getLinks() {
+        return (links != null ? links : getLinksListAsMap());
     }
 
-    public void setLinks(
-            List<Link> links) {
-        this.links = links;
+    @JsonProperty("_links")
+    public void setLinks(Map<String, Link> links) {
+        this.links = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        this.links.putAll(links);
+    }
+
+    private Map<String, Link> getLinksListAsMap() {
+        if (linksList == null) {
+            return Collections.emptyMap();
+        }
+        Map<String, Link> linkMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        linkMap.putAll(linksList.stream().collect(Collectors.toMap(Link::getRel, Function.identity())));
+        return linkMap;
     }
 
     protected URL findLink(Linkable linkable) {
         return searchLink(linkable)
-                .orElseThrow(() -> new IllegalStateException(links + " does not contain expected url"));
+                .orElseThrow(() -> new IllegalStateException(getLinks() + " does not contain expected url"));
     }
 
     protected Optional<URL> searchLink(Linkable linkable) {
-        return getLinks().stream()
-                .filter(link -> link != null && linkable.getName().equalsIgnoreCase(link.getRel()))
-                .findFirst()
-                .map(Link::toURL);
+        Optional<Link> optional = Optional.ofNullable(getLinks().get(linkable.getName()));
+        return (optional.isPresent() ? optional.map(Link::toURL) : Optional.empty());
     }
 
     public Optional<String> getFirstErrorMessage() {

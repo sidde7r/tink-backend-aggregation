@@ -39,6 +39,8 @@ endpoints:
     url: http://localhost:9090/
   fasttext:
     url: http://localhost:9090/
+  providerConfiguration:
+    url: http://localhost:9047/
 
 cluster: TINK
 
@@ -106,22 +108,8 @@ aggregationWorker:
   collectorSubscriptionKey: ASK_JOHANNES
 
 integrations:
-  seb:
-    mortgage:
-      https: false
-      targetHost: 10.1.18.10:10090
-      apiVersion: v1.0
-      httpHeaders:
-        Authorization: "Bearer ASK_JOHANNES"
-        Host: tink-api.seb.se:10443
   sbab:
     signBaseUrl: https://secure.sbab.se
-    mortgage:
-      https: false
-      targetHost: 10.10.1.120:10080
-      username: sys_tink
-      password: bytkod
-      signBaseUrl: https://testsign.sbab.se
 
 transfers:
   enabled: true

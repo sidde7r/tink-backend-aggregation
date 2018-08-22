@@ -4,9 +4,9 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.HandelsbankenNOAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.HandelsbankenNOMultiFactorAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.HandelsbankenNOAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.HandelsbankenNOInvestmentFetcher;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.HandelsbankenNOTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.transactionalaccount.HandelsbankenNOAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.investment.HandelsbankenNOInvestmentFetcher;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.transactionalaccount.HandelsbankenNOTransactionFetcher;
 import se.tink.backend.aggregation.agents.utils.authentication.encap.EncapClient;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -25,14 +25,15 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.Field;
+import se.tink.backend.common.config.SignatureKeyPair;
 
 public class HandelsbankenNOAgent extends NextGenerationAgent {
 
     private final HandelsbankenNOApiClient apiClient;
     private EncapClient encapClient;
 
-    public HandelsbankenNOAgent(CredentialsRequest request, AgentContext context) {
-        super(request, context);
+    public HandelsbankenNOAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
         apiClient = new HandelsbankenNOApiClient(client, sessionStorage);
         encapClient = new EncapClient(new HandelsbankenNOEncapConfiguration(), persistentStorage, client, true,
                 credentials.getField(Field.Key.USERNAME));

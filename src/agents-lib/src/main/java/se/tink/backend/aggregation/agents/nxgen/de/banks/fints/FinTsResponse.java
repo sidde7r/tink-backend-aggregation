@@ -11,6 +11,7 @@ import java.util.Objects;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.FinTsSegment;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsEscape;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsParser;
+import static se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants.StatusCode.PIN_TEMP_BLOCKED;
 
 public class FinTsResponse {
 
@@ -93,20 +94,27 @@ public class FinTsResponse {
         return summary.values().stream().noneMatch(status -> status.matches("^9.*"));
     }
 
+    public boolean isAccountBlocked() {
+        Map<String, String> summary = this.getLocalStatus();
+        return summary.values().stream().anyMatch(status -> status.matches(PIN_TEMP_BLOCKED));
+    }
+
     // <Message, StatusCode>
     public Map<String, String> getGlobalStatus() {
 
         String hirm = FinTsParser.getStatus(this.response);
         Map<String, String> result = new HashMap<>();
         List<String> splits = FinTsParser.getSegmentDataGroups(hirm);
-        List<String> parts = splits.subList(1, splits.size());
+        if (!splits.isEmpty()) {
+            List<String> parts = splits.subList(1, splits.size());
 
-        for (String part : parts) {
-            List<String> dge = FinTsParser.getDataGroupElements(part);
-            result.put(dge.get(2), dge.get(0));
+            for (String part : parts) {
+                List<String> dge = FinTsParser.getDataGroupElements(part);
+                result.put(dge.get(2), dge.get(0));
+            }
         }
-        return result;
 
+        return result;
     }
 
     public Map<String, String> getLocalStatus() {
@@ -114,12 +122,15 @@ public class FinTsResponse {
         Map<String, String> result = new HashMap<>();
         String seg = this.findSegment(FinTsConstants.Segments.HIRMS);
         List<String> splits = FinTsParser.getSegmentDataGroups(seg);
-        List<String> parts = splits.subList(1, splits.size());
+        if (!splits.isEmpty()) {
+            List<String> parts = splits.subList(1, splits.size());
 
-        for (String part : parts) {
-            List<String> dge = FinTsParser.getDataGroupElements(part);
-            result.put(dge.get(2), dge.get(0));
+            for (String part : parts) {
+                List<String> dge = FinTsParser.getDataGroupElements(part);
+                result.put(dge.get(2), dge.get(0));
+            }
         }
+
         return result;
     }
 

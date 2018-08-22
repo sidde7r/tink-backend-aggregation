@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
+import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.system.rpc.Transaction;
 
 public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
@@ -22,7 +23,7 @@ public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExe
     private final int bankIdPollIntervalMS;
     private boolean hasRefreshed = false;
 
-    public IkanoApiAgent(CredentialsRequest request, AgentContext context) throws NoSuchAlgorithmException {
+    public IkanoApiAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) throws NoSuchAlgorithmException {
         super(request, context);
 
         bankIdPollIntervalMS = 2000;
@@ -32,13 +33,14 @@ public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExe
                 clientFactory.createCookieClient(context.getLogOutputStream()),
                 credentials,
                 request.getProvider().getPayload(),
-                getAggregator().getAggregatorIdentifier());
+                DEFAULT_USER_AGENT);
     }
 
     /**
      *  This constructor is used for unit tests
      */
-    public IkanoApiAgent(CredentialsRequest request, AgentContext context, IkanoApiClient apiClient, int pollIntervalMS) {
+    public IkanoApiAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair,
+            IkanoApiClient apiClient, int pollIntervalMS) {
         super(request, context);
 
         bankIdPollIntervalMS = pollIntervalMS;
@@ -108,7 +110,7 @@ public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExe
 
         try {
             List<Account> accounts = apiClient.fetchAccounts();
-            context.updateAccounts(accounts);
+            context.cacheAccounts(accounts);
 
             for (Account account : accounts) {
                 List<Transaction> transactions = apiClient.getTransactionsFor(account);
