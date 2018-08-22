@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.clients;
 
+import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import se.tink.backend.aggregation.provider.configuration.client.InterContainerClientProviderServiceFactory;
@@ -18,10 +19,8 @@ public class ProviderServiceFactoryProvider implements Provider<InterContainerPr
 
     @Override
     public InterContainerProviderServiceFactory get() {
-        if (endpointConfiguration == null) {
-            throw new IllegalStateException("no endpoint found, did we configure correctly?");
-        }
-
+        Preconditions.checkNotNull(endpointConfiguration, "no endpoint found, did we configure correctly?");
+        
         return new InterContainerClientProviderServiceFactory(
                 endpointConfiguration.getPinnedCertificates(),
                 endpointConfiguration.getUrl(),
