@@ -11,6 +11,12 @@ public class SocieteGeneraleConstants {
         public static final String VK_VISUEL = "vk_visuel";
     }
 
+    public static class Default {
+        public static final String AUTHENTIFIE = "AUTHENTIFIE";
+        public static final String ZERO = "0";
+        public static final String VK_WIDESCREEN = "vk_widescreen";
+    }
+
     public static class Url {
 
         private static final String HOST = "https://app.secure.particuliers.societegenerale.mobi";

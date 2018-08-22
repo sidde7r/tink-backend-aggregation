@@ -38,14 +38,14 @@ public class SocieteGeneraleApiClient {
 
     public AuthInfoResponse getAuthInfo() {
         return client.request(SocieteGeneraleConstants.Url.GET_AUTH_INFO)
-                .queryParam(SocieteGeneraleConstants.QueryParam.NIV_AUTHENT, "AUTHENTIFIE")
+                .queryParam(SocieteGeneraleConstants.QueryParam.NIV_AUTHENT, SocieteGeneraleConstants.Default.AUTHENTIFIE)
                 .get(AuthInfoResponse.class);
     }
 
     public byte[] getLoginNumPadImage(String crypto) {
         return client.request(SocieteGeneraleConstants.Url.SEC_VK_GEN_UI)
-                .queryParam(SocieteGeneraleConstants.QueryParam.MODE_CLAVIER, "0")
-                .queryParam(SocieteGeneraleConstants.QueryParam.VK_VISUEL, "vk_widescreen")
+                .queryParam(SocieteGeneraleConstants.QueryParam.MODE_CLAVIER, SocieteGeneraleConstants.Default.ZERO)
+                .queryParam(SocieteGeneraleConstants.QueryParam.VK_VISUEL, SocieteGeneraleConstants.Default.VK_WIDESCREEN)
                 .queryParam(SocieteGeneraleConstants.QueryParam.CRYPTOGRAMME, crypto)
                 .get(byte[].class);
     }
