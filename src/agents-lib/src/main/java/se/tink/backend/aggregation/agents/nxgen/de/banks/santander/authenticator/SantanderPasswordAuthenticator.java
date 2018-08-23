@@ -31,7 +31,7 @@ public class SantanderPasswordAuthenticator implements PasswordAuthenticator {
             if (StringUtils.containsIgnoreCase(error, SantanderConstants.ERROR.WRONG_PASSWORD_CODE)) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             }
-            logger.error("Unable to authenticate error %s ", error, SantanderConstants.LOGTAG.SANTANDER_LOGIN_ERROR);
+            logger.error("{} Unable to authenticate error {}", SantanderConstants.LOGTAG.SANTANDER_LOGIN_ERROR, error);
             throw e;
         }
     }
