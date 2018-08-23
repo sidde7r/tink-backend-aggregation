@@ -31,26 +31,24 @@ public class CommerzbankTransactionFetcher implements TransactionIndexPaginator<
     @Override
     public PaginatorResponse getTransactionsFor(TransactionalAccount account, int numberOfTransactions,
             int startIndex) {
-
-        Collection<Transaction> transactions = new ArrayList<>();
-
         Map<String, String> keys = account.getTemporaryStorage();
         String productType = keys.get(CommerzbankConstants.HEADERS.PRODUCT_TYPE).replaceAll("\"", "");
         String identifier = keys.get(CommerzbankConstants.HEADERS.IDENTIFIER).replaceAll("\"", "");
 
-        TransactionResultEntity transactionResultEntity = null;
+        TransactionResultEntity transactionResultEntity;
         try {
             transactionResultEntity = apiClient.transactionOverview(productType, identifier);
         } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException(String.format("The transaction search is invalid"));
+            throw new IllegalArgumentException("The transaction search is invalid");
         }
 
-        Preconditions.checkState(transactionResultEntity != null, Collections.EMPTY_LIST);
+        Preconditions.checkState(transactionResultEntity != null, "Transaction Result entity is null");
         Optional<TransactionEntity> transactionEntity = Optional.ofNullable(transactionResultEntity.getItems().get(0));
-        Preconditions.checkState(transactionEntity != null, Collections.EMPTY_LIST);
-        List<PfmTransactionsEntity> pfmTransactionsEntities = transactionEntity.get().getPfmTransactions();
 
-        transactions = pfmTransactionsEntities.stream()
+        List<PfmTransactionsEntity> pfmTransactionsEntities = transactionEntity
+                .map(TransactionEntity::getPfmTransactions).orElse(new ArrayList<>());
+
+        Collection<Transaction> transactions = pfmTransactionsEntities.stream()
                 .map(PfmTransactionsEntity::toTinkTransaction).collect(Collectors
                         .toList());
 

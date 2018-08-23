@@ -29,17 +29,19 @@ public class CommerzbankAgent extends NextGenerationAgent {
 
     public CommerzbankAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        apiClient = new CommerzbankApiClient(client, sessionStorage);
+        apiClient = new CommerzbankApiClient(client);
     }
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
+        // TEMP enable this to test the mem leak issue
+        client.setDebugOutput(true);
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
-                new CommerzbankPasswordAuthenticator(apiClient, sessionStorage));
+                new CommerzbankPasswordAuthenticator(apiClient));
     }
 
     @Override
@@ -47,7 +49,7 @@ public class CommerzbankAgent extends NextGenerationAgent {
         return Optional.of(new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
-                new CommerzbankAccountFetcher(apiClient, sessionStorage),
+                new CommerzbankAccountFetcher(apiClient),
                 new TransactionFetcherController<>(this.transactionPaginationHelper,
                         new TransactionIndexPaginationController<>(new CommerzbankTransactionFetcher(apiClient)))));
     }
