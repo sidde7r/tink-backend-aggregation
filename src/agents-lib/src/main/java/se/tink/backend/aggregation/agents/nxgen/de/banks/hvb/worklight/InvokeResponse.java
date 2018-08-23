@@ -38,12 +38,17 @@ public final class InvokeResponse {
     }
 
     public Optional<String> getMessages() {
-        return Optional.ofNullable(
-                Stream.of(errors, warnings, info, Collections.singleton(securityServiceLoginError))
-                        .filter(Objects::nonNull)
+        return Optional.of(
+                Stream.of(
+                        Optional.ofNullable(errors).orElse(Collections.emptyList()),
+                        Optional.ofNullable(warnings).orElse(Collections.emptyList()),
+                        Optional.ofNullable(info).orElse(Collections.emptyList()),
+                        Optional.ofNullable(securityServiceLoginError)
+                                .map(Collections::singletonList)
+                                .orElse(Collections.emptyList())
+                )
                         .flatMap(Collection::stream)
-                        .collect(Collectors.joining("; ")))
-                .filter(s -> !s.isEmpty());
+                        .collect(Collectors.joining("; "))).filter(s -> !s.isEmpty());
     }
 
     /**
