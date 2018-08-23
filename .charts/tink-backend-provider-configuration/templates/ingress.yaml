@@ -10,7 +10,7 @@ spec:
   rules:
   - http:
       paths:
-        - path: /provider
+        - path: /provider-service
           backend:
             serviceName: provider-configuration-api
             servicePort: 80
