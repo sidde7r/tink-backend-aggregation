@@ -12,9 +12,7 @@ spec:
   - port: 80
     targetPort: http-api
     name: http-api
-    nodePort: 31008
   {{- end }}
-  type: NodePort
   selector:
     app: provider-configuration-service
 
