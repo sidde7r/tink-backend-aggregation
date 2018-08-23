@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.entit
 import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.entities.RequestTransactionDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.rpc.FetchTransactionsResponse;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -25,6 +26,7 @@ public class SantanderApiClient {
     private final TinkHttpClient client;
     private final SessionStorage storage;
     Logger logger = LoggerFactory.getLogger(SantanderApiClient.class);
+    AggregationLogger longlogger = new AggregationLogger(SantanderApiClient.class);
 
     public SantanderApiClient(TinkHttpClient client, SessionStorage storage){
         this.client = client;
@@ -81,9 +83,9 @@ public class SantanderApiClient {
                 .post(FetchAccountsResponse.class);
 
         try {
-            logger.info("{} response: {}", SantanderConstants.LOGTAG.SANTANDER_ACCOUNT_LOGGING, SerializationUtils.serializeToString(response));
+            longlogger.infoExtraLong(SerializationUtils.serializeToString(response), SantanderConstants.LOGTAG.SANTANDER_ACCOUNT_LOGGING);
         } catch (Exception e) {
-            logger.warn("{} error: {}", SantanderConstants.LOGTAG.SANTANDER_ACCOUNT_PARSING_ERROR, e.toString());
+            longlogger.infoExtraLong(e.toString(), SantanderConstants.LOGTAG.SANTANDER_ACCOUNT_PARSING_ERROR);
         }
 
         storage.put(SantanderConstants.STORAGE.LOCAL_CONTRACT_DETAIL, response.getAccountResultEntity().getLocalContractDetail());
@@ -101,8 +103,10 @@ public class SantanderApiClient {
 
         String requestData = new RequestTransactionDataEntity(fromDate, toDate, companyId, contractType, contractDetail).toJson();
 
-         return getRequest(SantanderConstants.URL.BASEURL, SantanderConstants.URL.TRANSACTIONS, token, requestData)
+        FetchTransactionsResponse response = getRequest(SantanderConstants.URL.BASEURL, SantanderConstants.URL.TRANSACTIONS, token, requestData)
                 .post(FetchTransactionsResponse.class);
+        longlogger.infoExtraLong(SerializationUtils.serializeToString(response), SantanderConstants.LOGTAG.SANTANDER_TRANSACTION_LOGGING);
+        return response;
     }
 
 }
