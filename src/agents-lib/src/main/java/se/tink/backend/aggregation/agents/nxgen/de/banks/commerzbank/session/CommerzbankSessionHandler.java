@@ -17,8 +17,6 @@ public class CommerzbankSessionHandler implements SessionHandler {
 
     @Override
     public void logout() {
-        String textLogout = apiClient.logout().getResult().getItems().get(0).getMessage();
-        System.out.println("Text is: " + textLogout);
         if (apiClient.logout().getResult().getItems().get(0).getMsgKey()
                 .equalsIgnoreCase(CommerzbankConstants.VALUES.LOGOUT_OK)) {
             return;
@@ -30,7 +28,7 @@ public class CommerzbankSessionHandler implements SessionHandler {
     public void keepAlive() throws SessionException {
         try {
             apiClient.keepAlive();
-        } catch (HttpResponseException e) {
+        } catch (Exception e) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }

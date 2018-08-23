@@ -13,18 +13,14 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.Er
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.RootModel;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class CommerzbankPasswordAuthenticator implements PasswordAuthenticator {
 
-    private CommerzbankApiClient apiClient;
-    private SessionStorage sessionStorage;
     private static final Logger logger = LoggerFactory.getLogger(CommerzbankPasswordAuthenticator.class);
+    private CommerzbankApiClient apiClient;
 
-
-    public CommerzbankPasswordAuthenticator(CommerzbankApiClient apiClient, SessionStorage sessionStorage) {
+    public CommerzbankPasswordAuthenticator(CommerzbankApiClient apiClient) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
     }
 
     @Override
@@ -50,7 +46,5 @@ public class CommerzbankPasswordAuthenticator implements PasswordAuthenticator {
                 throw new IllegalStateException(message);
             }
         }
-        String cookie = response.getCookies().toString();
-        sessionStorage.put(CommerzbankConstants.HEADERS.COOKIE, cookie);
     }
 }

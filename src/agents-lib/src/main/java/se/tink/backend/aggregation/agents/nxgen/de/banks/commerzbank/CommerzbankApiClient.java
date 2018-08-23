@@ -20,26 +20,23 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 public class CommerzbankApiClient {
 
     private final TinkHttpClient client;
-    private final SessionStorage storage;
 
-    public CommerzbankApiClient(TinkHttpClient client, SessionStorage storage) {
+    public CommerzbankApiClient(TinkHttpClient client) {
         this.client = client;
-        this.storage = storage;
     }
 
     private static URL getUrl(String resource) {
         return new URL(CommerzbankConstants.URLS.HOST + resource);
     }
 
-    private RequestBuilder firstRequest(String resource) {
-        return client.request(getUrl(resource))
+    private RequestBuilder firstRequest() {
+        return client.request(getUrl(CommerzbankConstants.URLS.LOGIN))
                 .header(CommerzbankConstants.HEADERS.CONTENT_TYPE, CommerzbankConstants.VALUES.JSON);
     }
 
     private RequestBuilder makeRequest(String resource) {
         return client.request(getUrl(resource))
                 .header(CommerzbankConstants.HEADERS.CONTENT_TYPE, CommerzbankConstants.VALUES.JSON)
-                .header(CommerzbankConstants.HEADERS.COOKIE, storage.get(CommerzbankConstants.HEADERS.COOKIE))
                 .header(CommerzbankConstants.HEADERS.CCB_CLIENT_VERSION, CommerzbankConstants.VALUES.CCB_VALUE)
                 .header(CommerzbankConstants.HEADERS.USER_AGENT, CommerzbankConstants.VALUES.USER_AGENT_VALUE);
     }
@@ -50,8 +47,7 @@ public class CommerzbankApiClient {
                 CommerzbankConstants.VALUES.SESSION_TOKEN_VALUE);
         String serialized = new ObjectMapper().writeValueAsString(loginRequestBody);
 
-        return firstRequest(CommerzbankConstants.URLS.LOGIN)
-                .post(HttpResponse.class, serialized);
+        return firstRequest().post(HttpResponse.class, serialized);
     }
 
     public ResultEntity financialOverview() {
