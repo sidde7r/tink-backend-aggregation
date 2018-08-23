@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.queue.sqs.configuration.SqsQueueConfiguration;
 
 public class SqsQueue {
-
     private final AmazonSQS sqs;
     private final boolean isAvailable;
     private final String url;
@@ -26,23 +25,44 @@ public class SqsQueue {
     @Inject
     public SqsQueue(SqsQueueConfiguration configuration) {
         // Enable long polling when creating a queue
-        CreateQueueRequest create_request = new CreateQueueRequest()
-                .withQueueName(configuration.getQueueName())
-                .addAttributesEntry("ReceiveMessageWaitTimeSeconds", "20");
+        CreateQueueRequest create_request = new CreateQueueRequest().addAttributesEntry("ReceiveMessageWaitTimeSeconds", "20");
 
-        if(configuration.getRegion().equals(LOCAL_REGION)){
-            sqs = AmazonSQSClientBuilder.standard()
-                    .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(configuration.getUrl(), configuration.getRegion()))
-                    .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(
-                            configuration.getAwsAccessKeyId(),
-                            configuration.getAwsSecretKey()
-                    )))
+        AmazonSQSClientBuilder amazonSQSClientBuilder = AmazonSQSClientBuilder.standard()
+                .withEndpointConfiguration(
+                        new AwsClientBuilder.EndpointConfiguration(configuration.getUrl(), configuration.getRegion()));
+
+        if (configuration.getRegion().equals(LOCAL_REGION)) {
+            create_request.withQueueName(configuration.getQueueName());
+
+            sqs = amazonSQSClientBuilder.withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(
+                    configuration.getAwsAccessKeyId(),
+                    configuration.getAwsSecretKey()
+            )))
                     .build();
+
+            this.isAvailable = isQueueAvailable(create_request);
+            this.url = this.isAvailable ? getQueueUrl(configuration.getQueueName()) : "";
         } else {
-            sqs = AmazonSQSClientBuilder.standard()
-                    .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(configuration.getUrl(), configuration.getRegion())).build();
+            sqs = amazonSQSClientBuilder.build();
+            this.url = configuration.getUrl();
+            this.isAvailable = isQueueAvailable(create_request);
         }
 
+        // TODO: introrduce metrics
+    }
+
+    private String getQueueUrl(String name){
+        try {
+            GetQueueUrlRequest getQueueUrlRequest = new GetQueueUrlRequest(name);
+            GetQueueUrlResult getQueueUrlResult = sqs.getQueueUrl(getQueueUrlRequest);
+            return getQueueUrlResult.getQueueUrl();
+        } catch (AmazonSQSException e) {
+            logger.warn("Queue configurations invalid");
+            return "";
+        }
+    }
+
+    private boolean isQueueAvailable(CreateQueueRequest create_request){
         try {
             sqs.createQueue(create_request);
         } catch (AmazonSQSException e) {
@@ -50,18 +70,10 @@ public class SqsQueue {
                 logger.warn("Queue already exists.");
             }
         } catch (SdkClientException e) {
-            isAvailable = false;
-            url = "";
-            return;
+            return false;
         }
 
-        isAvailable = true;
-
-        GetQueueUrlRequest getQueueUrlRequest = new GetQueueUrlRequest(configuration.getQueueName());
-        GetQueueUrlResult getQueueUrlResult = sqs.getQueueUrl(getQueueUrlRequest);
-        this.url = getQueueUrlResult.getQueueUrl();
-
-        // TODO: introrduce metrics
+        return true;
     }
 
     public AmazonSQS getSqs() {
