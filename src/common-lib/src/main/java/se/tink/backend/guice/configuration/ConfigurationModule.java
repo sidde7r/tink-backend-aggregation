@@ -6,6 +6,7 @@ import com.google.inject.util.Providers;
 import se.tink.backend.common.config.CacheConfiguration;
 import se.tink.backend.common.config.GrpcConfiguration;
 import se.tink.backend.common.config.ServiceConfiguration;
+import se.tink.backend.queue.sqs.configuration.SqsQueueConfiguration;
 import se.tink.backend.guice.annotations.AggregationConfiguration;
 import se.tink.backend.guice.annotations.AggregationControllerConfiguration;
 import se.tink.backend.guice.annotations.EncryptionConfiguration;
@@ -57,6 +58,7 @@ public class ConfigurationModule extends AbstractModule {
         // Tink monolith (common-lib and main-api) configurations
         bind(AbnAmroConfiguration.class).toProvider(Providers.of(configuration.getAbnAmro()));
         bind(CacheConfiguration.class).toProvider(Providers.of(configuration.getCacheConfiguration()));
+        bind(SqsQueueConfiguration.class).toProvider(Providers.of(configuration.getSqsQueueConfiguration()));
         bind(Cluster.class).toInstance(configuration.getCluster());
         bind(ServiceConfiguration.class).toInstance(configuration);
         bind(GrpcConfiguration.class).toInstance(configuration.getGrpc());

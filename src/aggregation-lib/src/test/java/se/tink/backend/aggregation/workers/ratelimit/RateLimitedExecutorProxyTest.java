@@ -19,6 +19,7 @@ public class RateLimitedExecutorProxyTest {
 
     public static final MetricId.MetricLabels NO_METRIC_LABELS = new MetricId.MetricLabels();
     public static final MetricRegistry dummyMetricRegistry = new MetricRegistry();
+    private static final int MAX_QUEUED_UP = 180000;
 
     private static class TestRunnable implements Runnable {
         private String identifier;
@@ -94,7 +95,7 @@ public class RateLimitedExecutorProxyTest {
                 Suppliers.<RateLimiter>ofInstance(fakeRateLimiter),
                 delegateExecutor,
                 new ThreadFactoryBuilder().setNameFormat(
-                        "test-rate-limit-proxy-%d").build(), dummyMetricRegistry, NO_METRIC_LABELS);
+                        "test-rate-limit-proxy-%d").build(), dummyMetricRegistry, NO_METRIC_LABELS, MAX_QUEUED_UP);
 
         Stopwatch timer = Stopwatch.createStarted(fakeRateLimiter);
 

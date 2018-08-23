@@ -96,6 +96,21 @@ java_library(
 )
 
 java_library(
+    name = "com_amazonaws_aws_java_sdk_sqs",
+    visibility = ["//visibility:public"],
+    exports = [
+      "@com_amazonaws_aws_java_sdk_core//jar",
+      "@com_amazonaws_aws_java_sdk_sqs//jar",
+      "@com_amazonaws_aws_java_sdk_code_generator//jar",
+      "@com_amazonaws_jmespath_java//jar",
+      "@org_codehaus_jackson_jackson_core_asl//jar",
+      "@org_codehaus_jackson_jackson_mapper_asl//jar",
+      "@org_apache_httpcomponents_httpclient//jar",
+      "@commons_codec_commons_codec//jar",
+    ],
+)
+
+java_library(
     name = "com_codahale_metrics_metrics_annotation",
     visibility = ["//visibility:public"],
     exports = [
