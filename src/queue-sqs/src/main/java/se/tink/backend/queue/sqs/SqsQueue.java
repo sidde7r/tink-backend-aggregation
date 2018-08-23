@@ -25,7 +25,9 @@ public class SqsQueue {
 
     @Inject
     public SqsQueue(SqsQueueConfiguration configuration) {
-        if (!configuration.isEnabled()) {
+        if (!configuration.isEnabled() ||
+                Objects.isNull(configuration.getUrl()) ||
+                Objects.isNull(configuration.getRegion())) {
             this.isAvailable = false;
             this.url = "";
             this.sqs = null;
@@ -87,10 +89,8 @@ public class SqsQueue {
     public boolean validLocalConfiguration(SqsQueueConfiguration configuration){
         return Objects.nonNull(configuration) &&
                 Objects.nonNull(configuration.getQueueName()) &&
-                Objects.nonNull(configuration.getRegion()) &&
                 Objects.nonNull(configuration.getAwsAccessKeyId()) &&
                 Objects.nonNull(configuration.getAwsSecretKey()) &&
-                Objects.nonNull(configuration.getUrl()) &&
                 configuration.getRegion().equals(LOCAL_REGION);
     }
 
