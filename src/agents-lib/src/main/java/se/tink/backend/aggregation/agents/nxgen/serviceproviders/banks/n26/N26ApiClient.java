@@ -120,27 +120,6 @@ public class N26ApiClient {
                 .get(SavingsAccountResponse.class);
     }
 
-    public void fetchAndLogCreditInfo() {
-        TokenEntity tokenEntity = getToken();
-        String bearer = N26Constants.BEARER_TOKEN + tokenEntity.getAccessToken();
-        try {
-            String creditEg = getRequest(N26Constants.URLS.CREDIT_ELIGIBILITY, bearer)
-                    .get(String.class);
-            logger.info("{} response: {}", N26Constants.Logging.CREDIT_ELIGIBILITY, creditEg);
-            String creditDraft = getRequest(N26Constants.URLS.CREDIT_DRAFTS, bearer)
-                    .queryParam(N26Constants.Queryparams.FLOW_VERSION, N26Constants.Queryparams.FLOW_VERSION_V2)
-                    .get(String.class);
-            logger.info("{} response: {}", N26Constants.Logging.CREDIT_DRAFT, creditDraft);
-            String fullInfo = getRequest(N26Constants.URLS.USER_FULL_INFO, bearer)
-                    .queryParam(N26Constants.Queryparams.FULL, N26Constants.Queryparams.FULL_TRUE)
-                    .get(String.class);
-            logger.info("{} response: {}", N26Constants.Logging.FULL_USER_INFO, fullInfo);
-
-        } catch (Exception e) {
-            logger.warn("{} error: {}", N26Constants.Logging.CREDIT_ERROR, e.toString());
-        }
-    }
-
     public HttpResponse logout() {
         TokenEntity token = getToken();
         String bearer = N26Constants.BEARER_TOKEN + token.getAccessToken();

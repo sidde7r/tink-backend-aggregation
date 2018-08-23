@@ -44,9 +44,6 @@ public class N26Constants {
     }
 
     public static class Logging {
-        public static final LogTag CREDIT_DRAFT = LogTag.from("#n26_credit_draft");
-        public static final LogTag CREDIT_ELIGIBILITY = LogTag.from("#n26_credit_eligibility");
-        public static final LogTag FULL_USER_INFO = LogTag.from("#n26_user_full_info");
-        public static final LogTag CREDIT_ERROR = LogTag.from("#n26_credit_error");
+        public static final LogTag ACCOUNT_LOGGING = LogTag.from("#n26_account_logging");
     }
 }
