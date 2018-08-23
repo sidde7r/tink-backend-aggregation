@@ -60,6 +60,7 @@ public class SantanderConstants {
         public static final LogTag SANTANDER_UNKNOWN_ACCOUNTTYPE = LogTag.from("SANTANDER_UNKNOWN_ACCOUNTTYPE");
         public static final LogTag SANTANDER_ACCOUNT_LOGGING = LogTag.from("SANTANDER_ACCOUNT_LOGGING");
         public static final LogTag SANTANDER_ACCOUNT_PARSING_ERROR = LogTag.from("SANTANDER_ACCOUNT_PARSING_ERROR");
+        public static final LogTag SANTANDER_TRANSACTION_LOGGING = LogTag.from("SANTANDER_TRANSACTION_LOGGING");
     }
 
     public static class ACCOUNT_TYPE{
