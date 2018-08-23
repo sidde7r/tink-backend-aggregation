@@ -232,7 +232,7 @@ public class AggregationServiceResource implements AggregationService, Managed {
                             clusterInfo.getClusterId().getEnvironment())
                     .ping();
         } catch(Exception e){
-            logger.error("Cannot connect to provider service: " + e);
+            logger.error("Cannot connect to provider service", e);
         }
         return null;
     }
