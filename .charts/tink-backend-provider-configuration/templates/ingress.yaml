@@ -8,9 +8,12 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: "/"
 spec:
   rules:
-    - http:
-        paths:
-          - path: /provider-configuration
-            backend:
-              serviceName: provider-configuration-api
-              servicePort: 80
+  - http:
+      paths:
+        - path: /provider
+          backend:
+            serviceName: provider-configuration-api
+            servicePort: 80
+  tls:
+    - secretName: ingress-tls
+
