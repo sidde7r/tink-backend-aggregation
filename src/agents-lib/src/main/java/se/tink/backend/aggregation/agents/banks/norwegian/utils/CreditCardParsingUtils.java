@@ -71,7 +71,7 @@ public class CreditCardParsingUtils {
     public static Optional<String> parseTransactionalAccountNumber(String htmlContent) {
         Element script = Jsoup.parse(htmlContent);
 
-        Pattern pattern = Pattern.compile("TransactionViewModel\\(\"(.+?)\"");
+        Pattern pattern = Pattern.compile("\"accountNo\":\"(.+?)\"");
         Matcher matcher = pattern.matcher(script.html());
 
         if (!matcher.find()) {
