@@ -26,6 +26,7 @@ import se.tink.backend.encryption.client.EncryptionServiceFactory;
 import se.tink.backend.queue.QueueProducer;
 import se.tink.backend.system.client.SystemServiceFactory;
 import se.tink.backend.utils.LogUtils;
+import se.tink.libraries.draining.ApplicationDrainMode;
 import se.tink.libraries.metrics.MetricRegistry;
 
 /**
@@ -51,6 +52,7 @@ public class ServiceContext implements Managed, RepositoryFactory {
     private final boolean isAggregationCluster;
     private final boolean isProvidersOnAggregation;
     private QueueProducer producer;
+    private ApplicationDrainMode applicationDrainMode;
 
     private ListenableThreadPoolExecutor<Runnable> trackingExecutorService;
 
@@ -73,7 +75,7 @@ public class ServiceContext implements Managed, RepositoryFactory {
             @Named("trackingExecutor") ListenableThreadPoolExecutor<Runnable> trackingExecutorService,
             @Named("isAggregationCluster") boolean isAggregationCluster,
             @Named("isProvidersOnAggregation") boolean isProvidersOnAggregation,
-            QueueProducer producer) {
+            QueueProducer producer, ApplicationDrainMode applicationDrainMode) {
 
         this.isUseAggregationController = isUseAggregationController;
         this.serviceFactory = serviceFactory;
@@ -90,6 +92,7 @@ public class ServiceContext implements Managed, RepositoryFactory {
         this.isAggregationCluster = isAggregationCluster;
         this.isProvidersOnAggregation = isProvidersOnAggregation;
         this.producer = producer;
+        this.applicationDrainMode = applicationDrainMode;
     }
 
     public QueueProducer getProducer() {
@@ -277,4 +280,7 @@ public class ServiceContext implements Managed, RepositoryFactory {
         return isProvidersOnAggregation;
     }
 
+    public ApplicationDrainMode getApplicationDrainMode() {
+        return applicationDrainMode;
+    }
 }

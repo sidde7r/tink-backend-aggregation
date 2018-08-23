@@ -188,6 +188,7 @@ java_library(
         "//src/libraries/http:http-utils",
         "//src/libraries/auth:auth",
         "//src/libraries/discovery:discovery",
+        "//src/libraries/draining:draining",
         "//src/libraries/uuid:uuid",
         "//src/libraries/jersey_utils:jersey-utils",
         "//src/libraries/serialization_utils:serialization-utils",
@@ -339,6 +340,7 @@ java_library(
           "//src/libraries/dropwizard_utils:dropwizard-utils",
           "//src/libraries/metrics:metrics",
           "//src/libraries/cluster:cluster",
+          "//src/libraries/draining:draining",
 
          "//third_party:com_google_guava_guava",
          "//third_party:com_google_inject_guice",
@@ -549,6 +551,7 @@ java_binary(
         "//src/libraries/auth:auth",
         "//src/libraries/cluster:cluster",
         "//src/libraries/discovery:discovery",
+        "//src/libraries/draining:draining",
         "//src/libraries/metrics:metrics",
         "//src/libraries/dropwizard_utils:dropwizard-utils",
 

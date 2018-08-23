@@ -31,6 +31,7 @@ import se.tink.libraries.discovery.ServiceDiscoveryHelper;
 import se.tink.libraries.dropwizard.DropwizardLifecycleInjectorFactory;
 import se.tink.libraries.dropwizard.DropwizardObjectMapperConfigurator;
 import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.draining.DrainModeTask;
 
 @Path("/aggregation")
 public class AggregationServiceContainer extends AbstractServiceContainer {
@@ -77,6 +78,7 @@ public class AggregationServiceContainer extends AbstractServiceContainer {
                 AggregationModuleFactory.build(configuration, environment));
 
         ServiceContext serviceContext = injector.getInstance(ServiceContext.class);
+        environment.admin().addTask(injector.getInstance(DrainModeTask.class));
         buildContainer(configuration, environment, serviceContext, injector);
     }
 
