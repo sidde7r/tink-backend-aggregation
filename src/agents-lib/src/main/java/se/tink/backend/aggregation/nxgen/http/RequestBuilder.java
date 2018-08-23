@@ -380,14 +380,15 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
         return body(body).method(method, c);
     }
 
-    // RequestBuilder
+    /**
+     * AbstractForm and its subclasses handled specifivcally
+     */
     public RequestBuilder body(Object body) {
-        this.body = body;
-        return this;
-    }
-
-    public RequestBuilder body(AbstractForm body) {
-        this.body = body.getBodyValue();
+        if (body instanceof AbstractForm) {
+            this.body = ((AbstractForm) body).getBodyValue();
+        } else {
+            this.body = body;
+        }
         return this;
     }
 
