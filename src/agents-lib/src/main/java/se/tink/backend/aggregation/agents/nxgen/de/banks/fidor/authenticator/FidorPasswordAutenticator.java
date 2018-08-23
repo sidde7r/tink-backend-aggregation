@@ -25,7 +25,7 @@ public class FidorPasswordAutenticator implements PasswordAuthenticator {
 
     private FidorApiClient client;
     private static final File phantomJsFile;
-    Logger logger = LoggerFactory.getLogger(FidorApiClient.class);
+    private Logger logger = LoggerFactory.getLogger(FidorPasswordAutenticator.class);
 
     public FidorPasswordAutenticator(FidorApiClient client){
         this.client = client;
