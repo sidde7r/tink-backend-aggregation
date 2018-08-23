@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.accounts.HKSPA;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.accounts.SEPAAccount;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.accounts.SepaAccountGuesser;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.auth.HKIDN;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.auth.HKSYN;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.auth.HKVVB;
@@ -33,6 +34,7 @@ import se.tink.backend.aggregation.rpc.AccountTypes;
 public class FinTsApiClient {
     private final TinkHttpClient apiClient;
     private final FinTsConfiguration configuration;
+    private final SepaAccountGuesser sepaAccountGuesser;
     private int messageNumber = 1;
     private String dialogId = "0";
     private String systemId = "0";
@@ -50,6 +52,7 @@ public class FinTsApiClient {
         this.apiClient = apiClient;
         this.configuration = configuration;
         sepaAccounts = new ArrayList<>();
+        this.sepaAccountGuesser = new SepaAccountGuesser();
     }
 
     private FinTsResponse sendMessage(FinTsRequest message) {
@@ -185,8 +188,7 @@ public class FinTsApiClient {
                 sepaAccount.setIban(elements.get(2));
                 sepaAccount.setCustomerId(elements.get(3));
                 // Some banks don not set the account type field...
-                sepaAccount.setAccountType(
-                        Integer.valueOf(Strings.isNullOrEmpty(elements.get(4)) ? "1" : elements.get(4)));
+                sepaAccount.setAccountType(getAccountType(elements.get(4), elements.get(8)));
                 sepaAccount.setCurrency(elements.get(5));
                 sepaAccount.setAccountOwner1(elements.get(6));
                 sepaAccount.setAccountOwner2(elements.get(7));
@@ -205,6 +207,14 @@ public class FinTsApiClient {
         }
 
         this.dialogId = initResponse.getDialogId();
+    }
+
+    private int getAccountType(String accountType, String productName) {
+        if (!Strings.isNullOrEmpty(accountType)) {
+            return Integer.valueOf(accountType);
+        }
+
+        return sepaAccountGuesser.guessSepaAccountType(productName);
     }
 
     public boolean keepAlive() {
