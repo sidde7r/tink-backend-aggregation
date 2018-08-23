@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight;
 
 import java.util.UUID;
 import java.util.regex.Pattern;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
 public final class WLConstants {
     private WLConstants() {
@@ -64,6 +65,15 @@ public final class WLConstants {
         public static final String COMPRESS_RESPONSE = "compressResponse";
         public static final String PARAMETERS = "parameters";
         public static final String FETCH_CRYPT = "fetch_crypt";
+    }
+
+    public enum LogTags {
+        WL_RECEIVED_PLAINTEXT,
+        WL_SENT_PLAINTEXT;
+
+        public LogTag toTag() {
+            return LogTag.from(name());
+        }
     }
 
     public static final String DEVICE_ID = UUID.randomUUID().toString().toUpperCase();
