@@ -42,7 +42,7 @@ public class IngCreditCardFetcher implements AccountFetcher<CreditCardAccount>, 
         try {
             Optional<String> creditCardsRequestUrl = loginResponse.findCreditCardsRequestUrl();
             if (creditCardsRequestUrl.isPresent()) {
-                LOGGER.info("%s: %s", IngConstants.Logs.CREDITCARDS, creditCardsRequestUrl.get());
+                LOGGER.info("{}: {}", IngConstants.Logs.CREDITCARDS, creditCardsRequestUrl.get());
 
                 String serializedLoginResponse = SerializationUtils.serializeToString(loginResponse);
                 AGGR_LOGGER.infoExtraLong(serializedLoginResponse, IngConstants.Logs.LOGIN_RESPONSE);
@@ -51,7 +51,7 @@ public class IngCreditCardFetcher implements AccountFetcher<CreditCardAccount>, 
             Optional<String> creditCardTransactionsRequestUrl =
                     loginResponse.findCreditCardTransactionsRequestUrl();
             creditCardTransactionsRequestUrl.ifPresent(url ->
-                    LOGGER.info("%s: %s", IngConstants.Logs.CREDITCARD_TRANSACTIONS, url));
+                    LOGGER.info("{}: {}", IngConstants.Logs.CREDITCARD_TRANSACTIONS, url));
         } catch (Exception e) {
             LOGGER.warn("Something went wrong when logging credit card endpoints");
         }
