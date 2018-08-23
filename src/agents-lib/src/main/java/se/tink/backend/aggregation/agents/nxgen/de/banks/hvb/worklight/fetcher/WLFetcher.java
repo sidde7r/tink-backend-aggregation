@@ -27,12 +27,14 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.fetcher.r
 import se.tink.backend.aggregation.agents.utils.crypto.AES;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public final class WLFetcher {
     private static final Logger logger = LoggerFactory.getLogger(WLFetcher.class);
+    private static final AggregationLogger longLogger = new AggregationLogger(WLFetcher.class);
 
     private final WLApiClient apiClient;
     private final WLFetcherStorage storage;
@@ -103,7 +105,8 @@ public final class WLFetcher {
         final byte[] plaintext = AES.decryptCbc(sharedAesKey, sharedAesIv, ciphertextBytes);
 
         final String plaintextString = new String(plaintext);
-        logger.info("Received plaintext:\n{}", plaintextString); // TODO consider moving to caller
+        // TODO consider moving to caller
+        longLogger.infoExtraLong(plaintextString, WLConstants.LogTags.WL_RECEIVED_PLAINTEXT.toTag());
         return SerializationUtils.deserializeFromString(plaintextString, entityClass);
     }
 
@@ -149,7 +152,8 @@ public final class WLFetcher {
                 new CFRequest(paylIWV.toString(), DatatypeConverter.printHexBinary(z), "0")
         );
 
-        logger.info("Sent plaintext:\n{}", plaintext); // TODO consider moving to caller
+        // TODO consider moving to caller
+        longLogger.infoExtraLong(plaintext, WLConstants.LogTags.WL_SENT_PLAINTEXT.toTag());
 
         // Actual message, encrypted and base64 encoded
         final byte[] ciphertext = AES.encryptCbc(sharedAesKey, sharedAesIv, plaintext.getBytes());
