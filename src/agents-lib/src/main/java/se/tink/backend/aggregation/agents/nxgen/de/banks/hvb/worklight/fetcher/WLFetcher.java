@@ -65,6 +65,10 @@ public final class WLFetcher {
         return query(WLConstants.Procedure.fetch_AccountDO.name(), entityClass, paylIWV);
     }
 
+    private String getApiPath(final String slug) {
+        return WLConstants.Url.API_ROOT + config.getModuleName() + slug;
+    }
+
     private <T> T query(final String procedure, final Class<T> entityClass, final JSONObject payload) {
         final Form request = new Form.Builder()
                 .put(WLConstants.Forms.ADAPTER, WLConstants.Forms.ADAPTER_FACADE)
@@ -74,7 +78,7 @@ public final class WLFetcher {
                         SerializationUtils.serializeToString(getParameters(procedure, payload)))
                 .build();
         final HttpResponse httpResponse = apiClient.getClient()
-                .request(config.getEndpointUrl() + WLConstants.Url.QUERY)
+                .request(config.getEndpointUrl() + getApiPath(WLConstants.Url.QUERY))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .header(WLConstants.Headers.X_WL_APP_VERSION, WLConstants.WL_APP_VERSION)
                 .header(WLConstants.Storage.WL_INSTANCE_ID, storage.getWlInstanceId())
