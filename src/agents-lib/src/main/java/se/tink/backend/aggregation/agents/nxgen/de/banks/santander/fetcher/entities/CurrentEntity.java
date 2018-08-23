@@ -28,7 +28,8 @@ public class CurrentEntity {
             return AccountTypes.CHECKING;
 
         default:
-            logger.error("Unknown account type: %s",accountEntity.getAccountType(), SantanderConstants.LOGTAG.SANTANDER_UNKNOWN_ACCOUNTTYPE);
+            logger.error("{} Unknown account type: {}",
+                    SantanderConstants.LOGTAG.SANTANDER_UNKNOWN_ACCOUNTTYPE, accountEntity.getAccountType());
             return AccountTypes.OTHER;
         }
 
