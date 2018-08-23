@@ -102,6 +102,11 @@ public class AmericanExpressV3ApiClient {
     public LoginResponse login() {
         String profileInfo = credentials.getSensitivePayload("profileInfo");
 
+        // Test to not send this for logins due to failures after we migrated to a new aggregation cluster.
+        // Remove this line of code after all credentials have been migrated OR remove the "profileInfo" functionality
+        // all together if it works without.
+        profileInfo = null;
+
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setProfileInfo(profileInfo);
         loginRequest.setTimeZoneOffsetInMilli("7200000");
