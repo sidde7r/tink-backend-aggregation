@@ -351,6 +351,7 @@ java_library(
     srcs = glob(["src/aggregation-lib/src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     data = [
+        "//tools:phantomjs_linux",
         "//tools:phantomjs_mac",
         "//tools:libkbc_wbaes_linux",
         "//tools:libkbc_wbaes_mac",
@@ -438,6 +439,7 @@ java_library(
     srcs = glob(["src/agents-lib/src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     data = [
+        "//tools:phantomjs_linux",
         "//tools:phantomjs_mac",
         "//tools:libkbc_wbaes_linux",
         "//tools:libkbc_wbaes_mac",
@@ -587,6 +589,7 @@ junit_test(
     srcs = glob(["src/aggregation-lib/src/test/**/*.java"]),
     data = [
         "//data:agents",
+        "//tools:phantomjs_linux",
         "//tools:phantomjs_mac",
         "//tools:libkbc_wbaes_linux",
         "//tools:libkbc_wbaes_mac",
@@ -640,6 +643,7 @@ junit_test(
     srcs = glob(["src/agents-lib/src/test/**/*.java"]),
     data = [
         "//data:agents",
+        "//tools:phantomjs_linux",
         "//tools:phantomjs_mac",
         "//tools:libkbc_wbaes_linux",
         "//tools:libkbc_wbaes_mac",

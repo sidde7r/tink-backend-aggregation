@@ -16,7 +16,6 @@ public class DanskeBankFIHttpFilter extends DanskeBankHttpFilter {
         httpRequest.getHeaders().add("Accept", MediaType.APPLICATION_JSON);
         httpRequest.getHeaders().add(CLIENT_ID_KEY, CLIENT_ID_VALUE);
         httpRequest.getHeaders().add(CLIENT_SECRET_KEY, CLIENT_SECRET_VALUE);
-        httpRequest.getHeaders().add(APP_CULTURE_KEY, "en-GB");
         httpRequest.getHeaders().add(ADRUM_KEY, ADRUM_VALUE);
         httpRequest.getHeaders().add(ADRUM1_KEY, ADRUM1_VALUE);
         httpRequest.getHeaders().add(APP_VERSION_KEY, "MobileBank ios FI 1023385");
