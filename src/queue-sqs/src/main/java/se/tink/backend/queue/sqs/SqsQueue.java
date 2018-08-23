@@ -25,21 +25,20 @@ public class SqsQueue {
 
     @Inject
     public SqsQueue(SqsQueueConfiguration configuration) {
-        // Enable long polling when creating a queue
-        if (configuration.isEnabled() == false) {
+        if (!configuration.isEnabled()) {
             this.isAvailable = false;
             this.url = "";
             this.sqs = null;
             return;
         }
-
+        // Enable long polling when creating a queue
         CreateQueueRequest createRequest = new CreateQueueRequest().addAttributesEntry("ReceiveMessageWaitTimeSeconds", "20");
 
         AmazonSQSClientBuilder amazonSQSClientBuilder = AmazonSQSClientBuilder.standard()
                 .withEndpointConfiguration(
                         new AwsClientBuilder.EndpointConfiguration(configuration.getUrl(), configuration.getRegion()));
 
-        if (configuration.getRegion().equals(LOCAL_REGION) && validLocalConfiguration(configuration)) {
+        if (validLocalConfiguration(configuration)) {
             createRequest.withQueueName(configuration.getQueueName());
 
             sqs = amazonSQSClientBuilder.withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(
@@ -77,6 +76,7 @@ public class SqsQueue {
             if (!e.getErrorCode().equals("QueueAlreadyExists")) {
                 logger.warn("Queue already exists.");
             }
+            // Reach this if the configurations are invalid
         } catch (SdkClientException e) {
             return false;
         }
@@ -89,7 +89,9 @@ public class SqsQueue {
                 Objects.nonNull(configuration.getQueueName()) &&
                 Objects.nonNull(configuration.getRegion()) &&
                 Objects.nonNull(configuration.getAwsAccessKeyId()) &&
-                Objects.nonNull(configuration.getAwsSecretKey());
+                Objects.nonNull(configuration.getAwsSecretKey()) &&
+                Objects.nonNull(configuration.getUrl()) &&
+                configuration.getRegion().equals(LOCAL_REGION);
     }
 
     public AmazonSQS getSqs() {
