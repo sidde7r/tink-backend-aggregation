@@ -63,11 +63,11 @@ public class CommerzbankApiClient {
                 .post(HttpResponse.class);
     }
 
-    public TransactionResultEntity transactionOverview(String productType, String identifier)
+    public TransactionResultEntity transactionOverview(String productType, String identifier, int page)
             throws JsonProcessingException {
 
         TransactionRequestBody transactionRequestBody = new TransactionRequestBody(
-                new SearchCriteriaDto(null, null, 0, CommerzbankConstants.VALUES.AMOUNT_TYPE,
+                new SearchCriteriaDto(null, null, page, CommerzbankConstants.VALUES.AMOUNT_TYPE,
                         30, null),
                 new Identifier(productType, CommerzbankConstants.VALUES.CURRENCY_VALUE, identifier,
                         CommerzbankConstants.VALUES.PRODUCT_BRANCH));

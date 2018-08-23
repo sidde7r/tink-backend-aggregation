@@ -37,7 +37,7 @@ public class CommerzbankTransactionFetcher implements TransactionIndexPaginator<
 
         TransactionResultEntity transactionResultEntity;
         try {
-            transactionResultEntity = apiClient.transactionOverview(productType, identifier);
+            transactionResultEntity = apiClient.transactionOverview(productType, identifier, startIndex);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("The transaction search is invalid");
         }
@@ -45,13 +45,10 @@ public class CommerzbankTransactionFetcher implements TransactionIndexPaginator<
         Preconditions.checkState(transactionResultEntity != null, "Transaction Result entity is null");
         Optional<TransactionEntity> transactionEntity = Optional.ofNullable(transactionResultEntity.getItems().get(0));
 
-        List<PfmTransactionsEntity> pfmTransactionsEntities = transactionEntity
-                .map(TransactionEntity::getPfmTransactions).orElse(new ArrayList<>());
+        if(transactionEntity.isPresent()){
+            return transactionEntity.get();
+        }
 
-        Collection<Transaction> transactions = pfmTransactionsEntities.stream()
-                .map(PfmTransactionsEntity::toTinkTransaction).collect(Collectors
-                        .toList());
-
-        return PaginatorResponseImpl.create(transactions);
+        return PaginatorResponseImpl.createEmpty();
     }
 }
