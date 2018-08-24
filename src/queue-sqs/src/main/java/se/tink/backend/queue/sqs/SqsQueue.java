@@ -88,7 +88,7 @@ public class SqsQueue {
             }
             // Reach this if the configurations are invalid
         } catch (SdkClientException e) {
-            logger.warn("No SQS with the current configurations is available.");
+            logger.error("No SQS with the current configurations is available.");
             return false;
         }
 
