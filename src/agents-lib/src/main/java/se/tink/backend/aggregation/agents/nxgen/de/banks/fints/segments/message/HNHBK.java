@@ -10,7 +10,7 @@ public class HNHBK extends FinTsSegment {
     private final static String FINTS3_VERSION = "300"; // version 3.0
 
     public HNHBK(int messageLength, String dialogId, int messageNumber) {
-        super(1);// always the first segment
+        super(1, false);// always the first segment
 
         Preconditions.checkArgument(messageNumber > 0, "Invalid message number, must be > 0.");
 

@@ -108,5 +108,6 @@ public class FinTsConstants {
         public static final LogTag TRANSACTION_STATUS = LogTag.from("#fints_transaction_status");
         public static final LogTag SCANNER_PARSING_ERROR = LogTag.from("#fints_scanner_parsing_error");
         public static final LogTag PRODUCTNAME_FOR_MISSING_ACCOUNT_TYPE = LogTag.from("#fints_missing_account_type");
+        public static final LogTag GET_ACCOUNTS_ERROR = LogTag.from("#fints_get_account_error");
     }
 }
