@@ -26,16 +26,11 @@ public class SqsQueue {
     private Logger logger = LoggerFactory.getLogger(SqsQueue.class);
     private final static String LOCAL_REGION = "local";
     private final static MetricId METRIC_ID_BASE = MetricId.newId("aggregation_queues");
-    private final static String QUEUE_AVAILABLE_METRIC = "queue_available";
-    private final static String QUEUE_URL_METRIC = "queue_url";
-    private final MetricRegistry metricRegistry;
     private final Counter produced;
     private final Counter consumed;
 
-
     @Inject
     public SqsQueue(SqsQueueConfiguration configuration, MetricRegistry metricRegistry) {
-        this.metricRegistry = metricRegistry;
         this.consumed = metricRegistry.meter(METRIC_ID_BASE.label("event", "consumed"));
         this.produced = metricRegistry.meter(METRIC_ID_BASE.label("event", "produced"));
 
@@ -71,15 +66,6 @@ public class SqsQueue {
             this.url = configuration.getUrl();
             this.isAvailable = isQueueAvailable(createRequest);
         }
-
-        addMetrics(metricRegistry);
-    }
-
-    private void addMetrics(MetricRegistry metricRegistry){
-        MetricId.MetricLabels labels = new MetricId.MetricLabels()
-                .add(QUEUE_AVAILABLE_METRIC, "" + this.isAvailable)
-                .add(QUEUE_URL_METRIC, this.url);
-        metricRegistry.meter(METRIC_ID_BASE.label(labels));
     }
 
     private String getQueueUrl(String name){
@@ -102,6 +88,7 @@ public class SqsQueue {
             }
             // Reach this if the configurations are invalid
         } catch (SdkClientException e) {
+            logger.warn("No SQS with the current configurations is available.");
             return false;
         }
 
