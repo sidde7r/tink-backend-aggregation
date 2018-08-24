@@ -244,8 +244,9 @@ public class FinTsApiClient {
         FinTsResponse getAccountResponse = sendMessage(getAccountRequest);
         if (!getAccountResponse.isSuccess()) {
             LONGLOGGER.warnExtraLong(
-                    String.format("Request: %s Response: %s", getAccountRequest.toString(),
-                            getAccountResponse.toString()),
+                    String.format("Request: %s Response: %s DialogId: %s", getAccountRequest.toString(),
+                            getAccountResponse.toString(),
+                            this.dialogId),
                     FinTsConstants.LogTags.GET_ACCOUNTS_ERROR);
             throw new IllegalStateException(getAccountResponse.toString());
         }
