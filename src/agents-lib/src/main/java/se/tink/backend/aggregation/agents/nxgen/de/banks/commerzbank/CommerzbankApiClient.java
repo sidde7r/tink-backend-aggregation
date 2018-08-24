@@ -11,14 +11,17 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.tra
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.transaction.rpc.SearchCriteriaDto;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.transaction.rpc.TransactionRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.session.entities.SessionModel;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CommerzbankApiClient {
 
     private final TinkHttpClient client;
+    private static final AggregationLogger LOGGER = new AggregationLogger(CommerzbankApiClient.class);
 
     public CommerzbankApiClient(TinkHttpClient client) {
         this.client = client;
@@ -50,7 +53,10 @@ public class CommerzbankApiClient {
     }
 
     public ResultEntity financialOverview() {
-        return makeRequest(CommerzbankConstants.URLS.OVERVIEW).post(RootModel.class).getResult();
+        ResultEntity resultEntity = makeRequest(CommerzbankConstants.URLS.OVERVIEW).post(RootModel.class).getResult();
+        LOGGER.infoExtraLong(SerializationUtils.serializeToString(resultEntity),
+                CommerzbankConstants.LOGTAG.FINANCE_OVERVIEW);
+        return resultEntity;
     }
 
     public SessionModel logout() {
@@ -60,6 +66,15 @@ public class CommerzbankApiClient {
     public HttpResponse keepAlive() {
         return makeRequest(CommerzbankConstants.URLS.OVERVIEW)
                 .post(HttpResponse.class);
+    }
+
+    public void logMultibankingProducts() {
+        try {
+            LOGGER.infoExtraLong(makeRequest(CommerzbankConstants.URLS.MULTIBANKING).post(String.class),
+                    CommerzbankConstants.LOGTAG.MULTIBANKING_PRODUCTS);
+        } catch (Exception e) {
+            LOGGER.warnExtraLong(e.getMessage(), CommerzbankConstants.LOGTAG.MULTIBANKING_ERROR);
+        }
     }
 
     public TransactionResultEntity transactionOverview(String productType, String identifier, int page)
@@ -72,7 +87,12 @@ public class CommerzbankApiClient {
                         CommerzbankConstants.VALUES.PRODUCT_BRANCH));
         String serialized = new ObjectMapper().writeValueAsString(transactionRequestBody);
 
-        return makeRequest(CommerzbankConstants.URLS.TRANSACTIONS)
+        TransactionResultEntity result = makeRequest(CommerzbankConstants.URLS.TRANSACTIONS)
                 .post(TransactionModel.class, serialized).getResult();
+
+        LOGGER.infoExtraLong(SerializationUtils.serializeToString(result),
+                CommerzbankConstants.LOGTAG.TRANSACTION_LOGGING);
+
+        return result;
     }
 }
