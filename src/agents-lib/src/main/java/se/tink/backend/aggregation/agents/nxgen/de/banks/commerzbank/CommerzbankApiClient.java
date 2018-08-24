@@ -69,8 +69,12 @@ public class CommerzbankApiClient {
     }
 
     public void logMultibankingProducts() {
-        LOGGER.infoExtraLong(makeRequest(CommerzbankConstants.URLS.MULTIBANKING).post(String.class),
-                CommerzbankConstants.LOGTAG.MULTIBANKING_PRODUCTS);
+        try {
+            LOGGER.infoExtraLong(makeRequest(CommerzbankConstants.URLS.MULTIBANKING).post(String.class),
+                    CommerzbankConstants.LOGTAG.MULTIBANKING_PRODUCTS);
+        } catch (Exception e) {
+            LOGGER.warnExtraLong(e.getMessage(), CommerzbankConstants.LOGTAG.MULTIBANKING_ERROR);
+        }
     }
 
     public TransactionResultEntity transactionOverview(String productType, String identifier, int page)

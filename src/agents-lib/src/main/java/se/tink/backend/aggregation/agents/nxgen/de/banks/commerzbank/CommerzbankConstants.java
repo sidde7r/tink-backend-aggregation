@@ -39,6 +39,7 @@ public class CommerzbankConstants {
     public static class LOGTAG {
         public static final LogTag FINANCE_OVERVIEW = LogTag.from("#commerzbank_finance_overview");
         public static final LogTag MULTIBANKING_PRODUCTS = LogTag.from("#commerzbank_multibanking_products");
+        public static final LogTag MULTIBANKING_ERROR = LogTag.from("#commerzbank_multibanking_error");
         public static final LogTag TRANSACTION_LOGGING = LogTag.from("#commerzbank_transaction_logging");
     }
 
