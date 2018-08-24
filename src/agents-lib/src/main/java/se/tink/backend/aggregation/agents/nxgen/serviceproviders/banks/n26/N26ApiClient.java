@@ -46,7 +46,6 @@ public class N26ApiClient {
 
     private void validateToken(TokenEntity token) {
         if (!token.isValid()) {
-            logger.error("Token is not valid! {}", token);
             throw new IllegalStateException("Token is not valid!");
         }
     }
