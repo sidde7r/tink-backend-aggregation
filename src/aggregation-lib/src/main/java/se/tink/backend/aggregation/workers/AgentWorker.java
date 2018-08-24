@@ -7,6 +7,7 @@ import io.dropwizard.lifecycle.Managed;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
+import javax.inject.Named;
 import se.tink.backend.aggregation.workers.ratelimit.RateLimitedExecutorService;
 import se.tink.backend.common.concurrency.InstrumentedRunnable;
 import se.tink.backend.common.concurrency.ListenableThreadPoolExecutor;
@@ -31,6 +32,7 @@ public class AgentWorker implements Managed {
             .newId("aggregation_operation_tasks");
     private static final String MONITOR_THREAD_NAME_FORMAT = "agent-worker-operation-thread-%s";
     private final MetricRegistry metricRegistry;
+    private final boolean queueAvailable;
 
     // On Leeds (running 3g heap size), we started GC:ing aggressively when above 180k elements in the queue here. At
     // 300k elements we ran out of memory entirely and all aggregation deadlocked (note that they did not restart). The
@@ -59,8 +61,9 @@ public class AgentWorker implements Managed {
             .setNameFormat("aggregation-worker-agent-thread-%d").build();
 
     @Inject
-    public AgentWorker(MetricRegistry metricRegistry) {
+    public AgentWorker(MetricRegistry metricRegistry, @Named("queueAvailable") boolean queueAvailable) {
         this.metricRegistry = metricRegistry;
+        this.queueAvailable = queueAvailable;
     }
 
     @Override
@@ -81,7 +84,7 @@ public class AgentWorker implements Managed {
 
         //Build executionservices for automatic refreshes
         BlockingQueue<WrappedRunnableListenableFutureTask<Runnable, ?>> automaticExecutorServiceQueue = Queues
-                .newLinkedBlockingQueue(MAX_QUEUE_AUTOMATIC_REFRESH);
+                .newLinkedBlockingQueue(queueAvailable ? MAX_QUEUE_AUTOMATIC_REFRESH : MAX_QUEUED_UP);
 
         automaticRefreshExecutorService = ListenableThreadPoolExecutor.builder(
                 automaticExecutorServiceQueue,
@@ -91,7 +94,7 @@ public class AgentWorker implements Managed {
 
         automaticRefreshRateLimitedExecutorService = new RateLimitedExecutorService(automaticRefreshExecutorService,
                 metricRegistry,
-                MAX_QUEUE_AUTOMATIC_REFRESH);
+                queueAvailable ? MAX_QUEUE_AUTOMATIC_REFRESH : MAX_QUEUED_UP);
         automaticRefreshRateLimitedExecutorService.start();
     }
 
