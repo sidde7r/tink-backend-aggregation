@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRe
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.index.TransactionIndexPaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
@@ -34,8 +34,6 @@ public class CommerzbankAgent extends NextGenerationAgent {
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
-        // TEMP enable this to test the mem leak issue
-        client.setDebugOutput(true);
     }
 
     @Override
@@ -46,12 +44,14 @@ public class CommerzbankAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
+
         return Optional.of(new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
                 new CommerzbankAccountFetcher(apiClient),
-                new TransactionFetcherController<>(this.transactionPaginationHelper,
-                        new TransactionIndexPaginationController<>(new CommerzbankTransactionFetcher(apiClient)))));
+                new TransactionFetcherController<>(transactionPaginationHelper,
+                        new TransactionPagePaginationController<>(
+                                new CommerzbankTransactionFetcher(apiClient), 0))));
     }
 
     @Override
