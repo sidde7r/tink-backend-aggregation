@@ -250,7 +250,7 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
         Long accountNumber = getCreditCardContractNumber(account);
         Optional<CreditCardAccountEntity> accountEntity = getCreditCardAccountEntities(accountNumber);
 
-        return accountEntity.map(CreditCardAccountEntity::getCurrentBalance).orElse(0.0);
+        return accountEntity.map(acc -> -(acc.getCurrentBalance()+acc.getAuthorizedBalance())).orElse(0.0);
     }
 
     private List<Transaction> getCreditCardTransactions(Long accountNumber) throws IcsException {
