@@ -51,7 +51,7 @@ endpoints:
     pinnedCertificates:
       - "CERTSHA256:A0A8FBAC442F4A58AC56CB1D0C185F93EE119A1B026BA3F046B0CA99EC165390"
   providerConfiguration:
-    url: http://192.168.99.100:31008/
+    url: https://192.168.99.100:32443/provider-service/
     accessToken: devtoken
     pinnedCertificates:
       - "CERTSHA256:A0A8FBAC442F4A58AC56CB1D0C185F93EE119A1B026BA3F046B0CA99EC165390"

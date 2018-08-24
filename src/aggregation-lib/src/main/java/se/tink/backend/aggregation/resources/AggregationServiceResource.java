@@ -7,6 +7,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.api.AggregationService;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
@@ -39,6 +42,8 @@ import se.tink.backend.queue.QueueProducer;
 import se.tink.libraries.http.utils.HttpResponseHelper;
 import se.tink.libraries.metrics.MetricRegistry;
 
+import java.util.Objects;
+
 @Path("/aggregation")
 public class AggregationServiceResource implements AggregationService {
     private final QueueProducer producer;
@@ -51,6 +56,8 @@ public class AggregationServiceResource implements AggregationService {
     private SupplementalInformationController supplementalInformationController;
     private ClusterHostConfigurationRepository clusterHostConfigurationRepository;
     private final boolean isAggregationCluster;
+
+    public static Logger logger = LoggerFactory.getLogger(AggregationServiceResource.class);
 
     /**
      * Constructor.
@@ -209,5 +216,20 @@ public class AggregationServiceResource implements AggregationService {
         } catch (Exception e) {
             throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @Override
+    public String pingProvider(ClusterInfo clusterInfo){
+        try{
+            return serviceContext
+                    .getProviderServiceFactory()
+                    .getMonitoringService(
+                            clusterInfo.getClusterId().getName(),
+                            clusterInfo.getClusterId().getEnvironment())
+                    .ping();
+        } catch(Exception e){
+            logger.error("Cannot connect to provider service", e);
+        }
+        return null;
     }
 }
