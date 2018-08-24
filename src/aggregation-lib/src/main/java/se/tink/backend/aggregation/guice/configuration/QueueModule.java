@@ -17,7 +17,6 @@ import se.tink.backend.queue.sqs.SqsConsumer;
 import se.tink.backend.queue.sqs.SqsProducer;
 import se.tink.backend.queue.sqs.SqsQueue;
 import se.tink.backend.queue.sqs.configuration.SqsQueueConfiguration;
-import se.tink.libraries.metrics.MetricRegistry;
 
 public class QueueModule extends AbstractModule {
     private SqsQueueConfiguration sqsQueueConfiguration;
