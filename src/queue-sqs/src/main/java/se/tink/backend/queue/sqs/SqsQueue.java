@@ -15,6 +15,8 @@ import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.queue.sqs.configuration.SqsQueueConfiguration;
+import se.tink.libraries.metrics.MetricId;
+import se.tink.libraries.metrics.MetricRegistry;
 
 public class SqsQueue {
     private final AmazonSQS sqs;
@@ -22,9 +24,12 @@ public class SqsQueue {
     private final String url;
     private Logger logger = LoggerFactory.getLogger(SqsQueue.class);
     private final static String LOCAL_REGION = "local";
+    private final static MetricId METRIC_ID_BASE = MetricId.newId("SQS_Queue");
+    private final static String QUEUE_AVAILABLE_METRIC = "Queue_available";
+    private final static String QUEUE_URL_METRIC = "Queue_URL";
 
     @Inject
-    public SqsQueue(SqsQueueConfiguration configuration) {
+    public SqsQueue(SqsQueueConfiguration configuration, MetricRegistry metricRegistry) {
         if (!configuration.isEnabled() ||
                 Objects.isNull(configuration.getUrl()) ||
                 Objects.isNull(configuration.getRegion())) {
@@ -57,7 +62,14 @@ public class SqsQueue {
             this.isAvailable = isQueueAvailable(createRequest);
         }
 
-        // TODO: introrduce metrics
+        addMetrics(metricRegistry);
+    }
+
+    private void addMetrics(MetricRegistry metricRegistry){
+        MetricId.MetricLabels labels = new MetricId.MetricLabels()
+                .add(QUEUE_AVAILABLE_METRIC, "" + this.isAvailable)
+                .add(QUEUE_URL_METRIC, this.url);
+        metricRegistry.meter(METRIC_ID_BASE.label(labels));
     }
 
     private String getQueueUrl(String name){

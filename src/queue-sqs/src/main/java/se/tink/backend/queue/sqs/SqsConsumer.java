@@ -1,6 +1,7 @@
 package se.tink.backend.queue.sqs;
 
 import com.amazonaws.services.sqs.model.DeleteMessageRequest;
+import com.amazonaws.services.sqs.model.GetQueueAttributesRequest;
 import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
@@ -12,6 +13,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import se.tink.backend.queue.QueueConsumer;
 import se.tink.libraries.log.LogUtils;
+import se.tink.libraries.metrics.Counter;
+import se.tink.libraries.metrics.MetricId;
+import se.tink.libraries.metrics.MetricRegistry;
 
 public class SqsConsumer implements Managed, QueueConsumer {
 
@@ -23,10 +27,13 @@ public class SqsConsumer implements Managed, QueueConsumer {
     private final int VISIBILITY_TIMEOUT_SECONDS = 300; //5 minutes
     private static final LogUtils log = new LogUtils(SqsConsumer.class);
     private AtomicBoolean running = new AtomicBoolean(false);
-
+    private final Counter commitedJobs;
+    private final MetricId METRIC_ID_BASE = MetricId.newId("sqs_consumer");
+    private static final String VISIBLE_ITEMS_ATTRIBUTE = "ApproximateNumberOfMessages";
 
     @Inject
-    public SqsConsumer(SqsQueue sqsQueue, QueueMesssageAction queueMesssageAction) {
+    public SqsConsumer(SqsQueue sqsQueue, QueueMesssageAction queueMesssageAction, MetricRegistry registry) {
+        this.commitedJobs = registry.meter(METRIC_ID_BASE.label("event", "number_of_commited_jobs"));
         this.sqsQueue = sqsQueue;
         this.queueMesssageAction = queueMesssageAction;
         this.service = new AbstractExecutionThreadService() {
@@ -40,7 +47,7 @@ public class SqsConsumer implements Managed, QueueConsumer {
 
                         for (Message message : messages) { // MAX_NUMBER_OF_MESSAGES is 1
                             delete(message);
-                            tryConsumeUntilNotRejected(message);
+                            tryConsumeUntilNotRejected(message, registry);
                         }
                     }
                 } catch (Exception e) {
@@ -63,7 +70,7 @@ public class SqsConsumer implements Managed, QueueConsumer {
                 .withVisibilityTimeout(VISIBILITY_TIMEOUT_SECONDS);
     }
 
-    private void tryConsumeUntilNotRejected(Message sqsMessage) throws Exception {
+    private void tryConsumeUntilNotRejected(Message sqsMessage, MetricRegistry registry) throws Exception {
         int tries = 0;
 
         boolean consumed = false;
@@ -71,6 +78,7 @@ public class SqsConsumer implements Managed, QueueConsumer {
             try {
                 consume(sqsMessage.getBody());
                 consumed = true;
+                commitedJobs.inc();
             } catch (RejectedExecutionException e) {
                 Thread.sleep(50); // Wait 50ms to not spam either system
                 log.info("Attempt (" + tries + ") to queue with message_id: " + sqsMessage.getMessageId());
@@ -82,6 +90,9 @@ public class SqsConsumer implements Managed, QueueConsumer {
 
             tries++;
         }
+        //Number of queued
+
+        registry.meter(METRIC_ID_BASE.label("Items_in_SQS", "" + getQueuedItems(VISIBLE_ITEMS_ATTRIBUTE)));
     }
 
 
@@ -104,6 +115,19 @@ public class SqsConsumer implements Managed, QueueConsumer {
     public void stop() throws Exception {
         service.awaitTerminated(30, TimeUnit.SECONDS);
         running.set(false);
+    }
+
+    public int getQueuedItems(String attribute){
+        GetQueueAttributesRequest attributeRequest = new GetQueueAttributesRequest(sqsQueue.getUrl())
+                .withAttributeNames(attribute);
+        String result = sqsQueue.getSqs().getQueueAttributes(attributeRequest)
+                .getAttributes().get(attribute);
+
+        try {
+            return Integer.parseInt(result);
+        } catch(Exception e) {
+            return 0;
+        }
     }
 }
 
