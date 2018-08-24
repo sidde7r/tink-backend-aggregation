@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.statemen
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.statement.MT940Statement;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsAccountTypeConverter;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsParser;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 
@@ -44,6 +45,7 @@ public class FinTsApiClient {
     // We need to get full information of account in two calls, so need to cache here.
     private List<SEPAAccount> sepaAccounts;
     private static final Logger LOGGER = LoggerFactory.getLogger(FinTsApiClient.class);
+    private static final AggregationLogger LONGLOGGER = new AggregationLogger(FinTsApiClient.class);
 
     private boolean endDateSupported = true;
     private int fetchedTransactions = -1;
@@ -241,6 +243,10 @@ public class FinTsApiClient {
                         new HKSPA(3, null, null, null));
         FinTsResponse getAccountResponse = sendMessage(getAccountRequest);
         if (!getAccountResponse.isSuccess()) {
+            LONGLOGGER.warnExtraLong(
+                    String.format("Request: %s Response: %s", getAccountRequest.toString(),
+                            getAccountResponse.toString()),
+                    FinTsConstants.LogTags.GET_ACCOUNTS_ERROR);
             throw new IllegalStateException(getAccountResponse.toString());
         }
         String accounts = getAccountResponse.findSegment(FinTsConstants.Segments.HISPA);
