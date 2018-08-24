@@ -34,8 +34,6 @@ public class CommerzbankAgent extends NextGenerationAgent {
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
-        // TEMP enable this to test the mem leak issue
-        client.setDebugOutput(true);
     }
 
     @Override
