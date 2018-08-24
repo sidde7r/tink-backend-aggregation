@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank;
 
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
+
 public class CommerzbankConstants {
 
     public static class URLS {
@@ -8,7 +10,7 @@ public class CommerzbankConstants {
         public static final String OVERVIEW = "/app/rest/v3/financeoverview";
         public static final String TRANSACTIONS = "/app/rest/transactionoverview";
         public static final String LOGOUT = "/app/lp/v3/logout";
-
+        public static final String MULTIBANKING = "/app/rest/v1/multibanking/products";
     }
 
     public static class HEADERS {
@@ -32,6 +34,12 @@ public class CommerzbankConstants {
 
     public static class ERRORS {
         public static final String PIN_ERROR = "login.pin.error.10203";
+    }
+
+    public static class LOGTAG {
+        public static final LogTag FINANCE_OVERVIEW = LogTag.from("#commerzbank_finance_overview");
+        public static final LogTag MULTIBANKING_PRODUCTS = LogTag.from("#commerzbank_multibanking_products");
+        public static final LogTag TRANSACTION_LOGGING = LogTag.from("#commerzbank_transaction_logging");
     }
 
 }
