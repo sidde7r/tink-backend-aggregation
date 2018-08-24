@@ -79,7 +79,7 @@ public class SqsConsumer implements Managed, QueueConsumer {
                     break;
                 }
             }
-
+            sqsQueue.consumed();
             tries++;
         }
     }
