@@ -110,6 +110,10 @@ public class AggregationServiceResource implements AggregationService {
 
     @Override
     public String ping(){
+        if (this.serviceContext.getApplicationDrainMode().isEnabled()) {
+            HttpResponseHelper.error(Response.Status.SERVICE_UNAVAILABLE);
+        }
+
         return "pong";
     }
 
