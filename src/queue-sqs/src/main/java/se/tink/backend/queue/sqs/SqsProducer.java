@@ -28,6 +28,7 @@ public class SqsProducer implements QueueProducer {
                     .withMessageBody(encodingHandler.encode(t))
                     .withMessageAttributes(null); // FIXME: probably we want to use that in the future
             sqsQueue.getSqs().sendMessage(sendMessageStandardQueue);
+            sqsQueue.produced();
         } catch (IOException e) {
             logger.error("Could not send message");
         }

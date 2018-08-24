@@ -15,6 +15,7 @@ import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.queue.sqs.configuration.SqsQueueConfiguration;
+import se.tink.libraries.metrics.Counter;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 
@@ -24,12 +25,20 @@ public class SqsQueue {
     private final String url;
     private Logger logger = LoggerFactory.getLogger(SqsQueue.class);
     private final static String LOCAL_REGION = "local";
-    private final static MetricId METRIC_ID_BASE = MetricId.newId("SQS_Queue");
-    private final static String QUEUE_AVAILABLE_METRIC = "Queue_available";
-    private final static String QUEUE_URL_METRIC = "Queue_URL";
+    private final static MetricId METRIC_ID_BASE = MetricId.newId("aggregation_queues");
+    private final static String QUEUE_AVAILABLE_METRIC = "queue_available";
+    private final static String QUEUE_URL_METRIC = "queue_url";
+    private final MetricRegistry metricRegistry;
+    private final Counter produced;
+    private final Counter consumed;
+
 
     @Inject
     public SqsQueue(SqsQueueConfiguration configuration, MetricRegistry metricRegistry) {
+        this.metricRegistry = metricRegistry;
+        this.consumed = metricRegistry.meter(METRIC_ID_BASE.label("event", "consumed"));
+        this.produced = metricRegistry.meter(METRIC_ID_BASE.label("event", "produced"));
+
         if (!configuration.isEnabled() ||
                 Objects.isNull(configuration.getUrl()) ||
                 Objects.isNull(configuration.getRegion())) {
@@ -38,6 +47,7 @@ public class SqsQueue {
             this.sqs = null;
             return;
         }
+
         // Enable long polling when creating a queue
         CreateQueueRequest createRequest = new CreateQueueRequest().addAttributesEntry("ReceiveMessageWaitTimeSeconds", "20");
 
@@ -104,6 +114,14 @@ public class SqsQueue {
                 Objects.nonNull(configuration.getAwsAccessKeyId()) &&
                 Objects.nonNull(configuration.getAwsSecretKey()) &&
                 configuration.getRegion().equals(LOCAL_REGION);
+    }
+
+    public void consumed(){
+        this.consumed.inc();
+    }
+
+    public void produced(){
+        this.produced.inc();
     }
 
     public AmazonSQS getSqs() {
