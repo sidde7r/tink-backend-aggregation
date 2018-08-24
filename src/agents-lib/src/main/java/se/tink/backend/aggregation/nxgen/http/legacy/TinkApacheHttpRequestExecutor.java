@@ -3,8 +3,6 @@ package se.tink.backend.aggregation.nxgen.http.legacy;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.common.config.SignatureKeyPair;
-import se.tink.libraries.cryptography.RSAUtils;
 
 /*
     This HttpRequestExecutor is only necessary because of bugs in the underlying libraries (jersey and apache).
@@ -44,6 +41,7 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
 
     private SignatureKeyPair signatureKeyPair;
     private Algorithm algorithm;
+    private boolean shouldAddRequestSignature = true;
 
     public TinkApacheHttpRequestExecutor(SignatureKeyPair signatureKeyPair) {
         if (signatureKeyPair == null || signatureKeyPair.getPrivateKey() == null) {
@@ -62,8 +60,15 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         request.removeHeaders("Cookie2");
         mergeCookieHeaders(request);
 
-        addRequestSignature(request);
+        if (shouldAddRequestSignature) {
+            addRequestSignature(request);
+        }
+
         return super.execute(request, conn, context);
+    }
+
+    public void disableSignatureRequestHeader() {
+        this.shouldAddRequestSignature = false;
     }
 
     private void mergeCookieHeaders(HttpRequest request) {

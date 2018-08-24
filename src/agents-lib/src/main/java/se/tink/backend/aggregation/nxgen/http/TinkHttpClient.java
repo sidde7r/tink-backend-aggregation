@@ -66,6 +66,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
+    private TinkApacheHttpRequestExecutor requestExecutor;
     private Client internalClient = null;
     private final ClientConfig internalClientConfig;
     private HttpClientBuilder internalHttpClientBuilder;
@@ -155,11 +156,12 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         this.context = context;
         this.credentials = credentials;
 
+        this.requestExecutor = new TinkApacheHttpRequestExecutor(signatureKeyPair);
         this.internalClientConfig = new DefaultApacheHttpClient4Config();
         this.internalCookieStore = new BasicCookieStore();
         this.internalRequestConfigBuilder = RequestConfig.custom();
         this.internalHttpClientBuilder = HttpClientBuilder.create()
-                                        .setRequestExecutor(new TinkApacheHttpRequestExecutor(signatureKeyPair))
+                                        .setRequestExecutor(requestExecutor)
                                         .setDefaultCookieStore(this.internalCookieStore);
 
         this.internalSslContextBuilder = new SSLContextBuilder()
@@ -260,6 +262,10 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         Preconditions.checkState(this.internalClient == null);
         this.userAgent = userAgent;
         this.internalHttpClientBuilder = this.internalHttpClientBuilder.setUserAgent(userAgent);
+    }
+
+    public void disableSignatureRequestHeader() {
+        requestExecutor.disableSignatureRequestHeader();
     }
 
     public void setTimeout(int milliseconds) {
