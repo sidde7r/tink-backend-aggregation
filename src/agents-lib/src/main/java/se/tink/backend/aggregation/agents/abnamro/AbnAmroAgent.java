@@ -241,13 +241,13 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
     }
 
     private void refreshCreditCardTransactions(Account account) throws IcsException {
-        Long accountNumber = getCreditCardAccountNumber(account);
+        Long accountNumber = getCreditCardContractNumber(account);
         List<Transaction> transactions = getCreditCardTransactions(accountNumber);
         context.cacheTransactions(account.getId(), transactions);
     }
 
     private Double getCreditCardBalance(Account account) throws IcsException {
-        Long accountNumber = getCreditCardAccountNumber(account);
+        Long accountNumber = getCreditCardContractNumber(account);
         Optional<CreditCardAccountEntity> accountEntity = getCreditCardAccountEntities(accountNumber);
 
         return accountEntity.map(CreditCardAccountEntity::getCurrentBalance).orElse(0.0);
@@ -287,7 +287,10 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
         return Optional.of(accountEntities.put(accountNumber, entities.get(0)));
     }
 
-    private Long getCreditCardAccountNumber(Account account) {
+    private Long getCreditCardContractNumber(Account account) {
+        // The contract number is an extension of the account number suffixed by a card specific number. When a user
+        // is issued a new card, the contract number changes although the account stays the same. We store the latest
+        // available full contract number in the payload to fetch data from ICS but map only on the account number.
         return Long.valueOf(account.getPayload(AbnAmroUtils.ABN_AMRO_ICS_ACCOUNT_CONTRACT_PAYLOAD));
     }
 
