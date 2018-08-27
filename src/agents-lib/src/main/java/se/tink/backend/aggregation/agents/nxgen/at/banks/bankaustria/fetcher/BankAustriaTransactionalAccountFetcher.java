@@ -21,14 +21,24 @@ public class BankAustriaTransactionalAccountFetcher implements
     private BankAustriaApiClient apiClient;
     private OtmlResponseConverter otmlResponseConverter;
 
-    public BankAustriaTransactionalAccountFetcher(BankAustriaApiClient apiClient, OtmlResponseConverter otmlResponseConverter) {
+    public BankAustriaTransactionalAccountFetcher(BankAustriaApiClient apiClient,
+            OtmlResponseConverter otmlResponseConverter) {
         this.apiClient = apiClient;
         this.otmlResponseConverter = otmlResponseConverter;
     }
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return otmlResponseConverter.getAccountsFromSettings(apiClient.getAccountsFromSettings().getDataSources())
+        Collection<TransactionalAccount> accountsFromSettings = otmlResponseConverter
+                .getAccountsFromSettings(apiClient.getAccountsFromSettings().getDataSources());
+
+        // If we did not get any accounts we might have been shown a pop up screen instead, retry
+        // loading the settings
+        if (accountsFromSettings.isEmpty()) {
+            accountsFromSettings = otmlResponseConverter
+                    .getAccountsFromSettings(apiClient.getAccountsFromSettings().getDataSources());
+        }
+        return accountsFromSettings
                 .stream()
                 .map(account -> otmlResponseConverter
                         .fillAccountInformation(
@@ -37,7 +47,6 @@ public class BankAustriaTransactionalAccountFetcher implements
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
-
 
     @Override
     public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
