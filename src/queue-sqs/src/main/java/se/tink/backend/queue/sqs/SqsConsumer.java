@@ -23,12 +23,13 @@ public class SqsConsumer implements Managed, QueueConsumer {
     private final int VISIBILITY_TIMEOUT_SECONDS = 300; //5 minutes
     private static final LogUtils log = new LogUtils(SqsConsumer.class);
     private AtomicBoolean running = new AtomicBoolean(false);
-
+    private final SqsProducer producer;
 
     @Inject
-    public SqsConsumer(SqsQueue sqsQueue, QueueMesssageAction queueMesssageAction) {
+    public SqsConsumer(SqsQueue sqsQueue, QueueMesssageAction queueMesssageAction, SqsProducer producer) {
         this.sqsQueue = sqsQueue;
         this.queueMesssageAction = queueMesssageAction;
+        this.producer = producer;
         this.service = new AbstractExecutionThreadService() {
 
             @Override
@@ -65,12 +66,12 @@ public class SqsConsumer implements Managed, QueueConsumer {
 
     private void tryConsumeUntilNotRejected(Message sqsMessage) throws Exception {
         int tries = 0;
-
         boolean consumed = false;
         while(!consumed) {
             try {
                 consume(sqsMessage.getBody());
                 consumed = true;
+                sqsQueue.consumed();
             } catch (RejectedExecutionException e) {
                 Thread.sleep(50); // Wait 50ms to not spam either system
                 log.info("Attempt (" + tries + ") to queue with message_id: " + sqsMessage.getMessageId());
@@ -79,11 +80,15 @@ public class SqsConsumer implements Managed, QueueConsumer {
                     break;
                 }
             }
-            sqsQueue.consumed();
+
+            if (tries > 1) {
+                producer.requeue(sqsMessage);
+                break;
+            }
+
             tries++;
         }
     }
-
 
     public void consume(String message) throws Exception {
         queueMesssageAction.handle(message);

@@ -1,7 +1,9 @@
 package se.tink.backend.queue.sqs;
 
+import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.google.inject.Inject;
+import java.util.concurrent.ThreadLocalRandom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.queue.QueueProducer;
@@ -33,6 +35,28 @@ public class SqsProducer implements QueueProducer {
             logger.error("Could not send message");
         }
         // TODO introduce metrics
+    }
+
+    // Future: requeue multiple jobs at the same time to reduce traffic
+    public void requeue(Message sqsMessage) {
+        SendMessageRequest sendMessageStandardQueue = new SendMessageRequest()
+                .withQueueUrl(sqsQueue.getUrl())
+                .withMessageBody(sqsMessage.getBody())
+                //With delay seconds can max hide a message for 15 min. It
+                .withDelaySeconds(randomTimeoutSeconds(0,900));
+        sqsQueue.getSqs().sendMessage(sendMessageStandardQueue);
+        sqsQueue.reQueued();
+        // TODO introduce metrics
+    }
+
+    public int randomTimeoutSeconds(int min, int max){
+        //This is the limits for delayed adding.
+        //Could skip and change visibility for the message
+        if(max > 900 || min >= max || min < 0){
+            return ThreadLocalRandom.current().nextInt(0, 900);
+        }
+
+        return ThreadLocalRandom.current().nextInt(min, max);
     }
 
     @Override
