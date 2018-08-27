@@ -3,7 +3,7 @@
   "currency": "EUR",
   "providers": [
     {
-      "name": "de-hvb-password",
+      "name": "de-hypovereinsbank-password",
       "displayName": "HypoVereinsbank",
       "groupDisplayName": "HypoVereinsbank",
       "popular": false,
