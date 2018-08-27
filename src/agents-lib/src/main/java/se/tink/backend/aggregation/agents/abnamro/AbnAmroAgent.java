@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.agents.abnamro;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -15,6 +18,7 @@ import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
 import se.tink.backend.aggregation.agents.abnamro.converters.AccountConverter;
 import se.tink.backend.aggregation.agents.abnamro.ics.mappers.TransactionMapper;
 import se.tink.backend.aggregation.agents.abnamro.utils.AbnAmroAgentUtils;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -49,10 +53,12 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
     private final Credentials credentials;
     private final Catalog catalog;
     private final User user;
+    private final AggregationLogger log = new AggregationLogger(AbnAmroAgent.class);
 
     private IBSubscriptionClient subscriptionClient;
     private EnrollmentClient enrollmentService;
     private AbnAmroConfiguration abnAmroConfiguration;
+    private Map<Long, CreditCardAccountEntity> accountEntities = Maps.newHashMap();
     private List<Account> accounts = null;
 
     public AbnAmroAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -217,20 +223,13 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
     }
 
     private void updateCreditCardAccount(Account account, RefreshableItem item) {
-        String bcNumber = credentials.getPayload();
-
-
-        context.cacheAccount(account);
-        context.sendAccountToUpdateService(account.getBankId());
-
         try {
+            account.setBalance(getCreditCardBalance(account));
+            context.cacheAccount(account);
+            context.sendAccountToUpdateService(account.getBankId());
+
             if (Objects.equals(item, RefreshableItem.CREDITCARD_TRANSACTIONS)) {
-                String fullBankId = account.getPayload(AbnAmroUtils.ABN_AMRO_ICS_ACCOUNT_CONTRACT_PAYLOAD);
-                if (credentials.isDebug()) {
-                    log.info(account, String.format("Updating credit card transactions with contract number: %s",
-                            fullBankId));
-                }
-                refreshCreditCardTransactions(bcNumber, fullBankId);
+                refreshCreditCardTransactions(account);
             }
         } catch (IcsException e) {
             if (abnAmroConfiguration.shouldIgnoreCreditCardErrors()) {
@@ -241,24 +240,65 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
         }
     }
 
-    private void refreshCreditCardTransactions(String bcNumber, String accountNumber) throws IcsException {
-        List<CreditCardAccountContainerEntity> entities = subscriptionClient.getCreditCardAccountAndTransactions(
-                bcNumber, Long.valueOf(accountNumber));
-
-        entities.stream()
-                .map(CreditCardAccountContainerEntity::getCreditCardAccount)
-                .forEach(account -> storeCreditCardTransactions(accountNumber, account));
+    private void refreshCreditCardTransactions(Account account) throws IcsException {
+        Long accountNumber = getCreditCardContractNumber(account);
+        List<Transaction> transactions = getCreditCardTransactions(accountNumber);
+        context.cacheTransactions(account.getId(), transactions);
     }
 
-    private void storeCreditCardTransactions(String accountNumber, CreditCardAccountEntity accountEntity) {
-        String shortAccountNumber = AbnAmroUtils.creditCardIdToAccountId(accountNumber);
+    private Double getCreditCardBalance(Account account) throws IcsException {
+        Long accountNumber = getCreditCardContractNumber(account);
+        Optional<CreditCardAccountEntity> accountEntity = getCreditCardAccountEntities(accountNumber);
 
-        List<Transaction> transactions = accountEntity.getTransactions().stream()
+        return accountEntity.map(acc -> -(acc.getCurrentBalance()+acc.getAuthorizedBalance())).orElse(0.0);
+    }
+
+    private List<Transaction> getCreditCardTransactions(Long accountNumber) throws IcsException {
+        Optional<CreditCardAccountEntity> accountEntity = getCreditCardAccountEntities(accountNumber);
+
+        return accountEntity.map(acc -> icsTransactionsConverter(acc.getTransactions()))
+                .orElseGet(ImmutableList::of);
+    }
+
+    private Optional<CreditCardAccountEntity> getCreditCardAccountEntities(Long accountNumber) throws IcsException {
+        if (accountEntities.containsKey(accountNumber)) {
+            // We've already fetched this account recently.
+            return Optional.of(accountEntities.get(accountNumber));
+        }
+
+        if (credentials.isDebug()) {
+            log.info(String.format("Fetching ICS transactions for contract: %s", accountNumber));
+        }
+
+        String bcNumber = credentials.getPayload();
+
+        List<CreditCardAccountEntity> entities = subscriptionClient
+                .getCreditCardAccountAndTransactions(bcNumber, accountNumber)
+                .stream()
+                .map(CreditCardAccountContainerEntity::getCreditCardAccount)
+                .collect(Collectors.toList());
+
+        if (entities.size() != 1) {
+            log.warn(String.format("Fetching ICS accounts, expected 1 account in payload, got %d", entities.size()));
+            return Optional.empty();
+        }
+
+        // We're only asking for a single account, so we're only interested in the first account entity.
+        return Optional.of(accountEntities.put(accountNumber, entities.get(0)));
+    }
+
+    private Long getCreditCardContractNumber(Account account) {
+        // The contract number is an extension of the account number suffixed by a card specific number. When a user
+        // is issued a new card, the contract number changes although the account stays the same. We store the latest
+        // available full contract number in the payload to fetch data from ICS but map only on the account number.
+        return Long.valueOf(account.getPayload(AbnAmroUtils.ABN_AMRO_ICS_ACCOUNT_CONTRACT_PAYLOAD));
+    }
+
+    private List<Transaction> icsTransactionsConverter(List<TransactionContainerEntity> transactionContainer) {
+        return transactionContainer.stream()
                 .filter(TransactionContainerEntity::isInEUR)
                 .map(TransactionMapper::toTransaction)
                 .collect(Collectors.toList());
-
-        context.cacheTransactions(shortAccountNumber, transactions);
     }
 
     @Override
