@@ -34,7 +34,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public final class WLFetcher {
     private static final Logger logger = LoggerFactory.getLogger(WLFetcher.class);
-    private static final AggregationLogger longLogger = new AggregationLogger(WLFetcher.class);
+    //private static final AggregationLogger longLogger = new AggregationLogger(WLFetcher.class);
 
     private final WLApiClient apiClient;
     private final WLFetcherStorage storage;
@@ -106,7 +106,7 @@ public final class WLFetcher {
 
         final String plaintextString = new String(plaintext);
         // TODO consider moving to caller
-        longLogger.infoExtraLong(plaintextString, WLConstants.LogTags.WL_RECEIVED_PLAINTEXT.toTag());
+        //longLogger.infoExtraLong(plaintextString, WLConstants.LogTags.WL_RECEIVED_PLAINTEXT.toTag());
         return SerializationUtils.deserializeFromString(plaintextString, entityClass);
     }
 
@@ -153,7 +153,7 @@ public final class WLFetcher {
         );
 
         // TODO consider moving to caller
-        longLogger.infoExtraLong(plaintext, WLConstants.LogTags.WL_SENT_PLAINTEXT.toTag());
+        //longLogger.infoExtraLong(plaintext, WLConstants.LogTags.WL_SENT_PLAINTEXT.toTag());
 
         // Actual message, encrypted and base64 encoded
         final byte[] ciphertext = AES.encryptCbc(sharedAesKey, sharedAesIv, plaintext.getBytes());

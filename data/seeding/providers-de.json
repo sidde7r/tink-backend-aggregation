@@ -3,7 +3,7 @@
   "currency": "EUR",
   "providers": [
     {
-      "name": "de-hvb-password",
+      "name": "de-hypovereinsbank-password",
       "displayName": "HypoVereinsbank",
       "groupDisplayName": "HypoVereinsbank",
       "popular": false,
@@ -12,16 +12,16 @@
       "credentialsType": "PASSWORD",
       "multiFactor": false,
       "className": "nxgen.de.banks.hvb.HVBAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+      "passwordHelpText": "Use the same PIN as you would in your bank's mobile app.",
       "transactional": true,
       "fields": [
         {
-          "description": "Username",
+          "description": "Direct B@nking Number",
           "name": "username",
           "immutable": true
         },
         {
-          "description": "Password",
+          "description": "PIN",
           "masked": true,
           "name": "password",
           "sensitive": true
