@@ -30,6 +30,7 @@ import java.security.Security;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -70,12 +71,14 @@ import se.tink.backend.aggregation.agents.banks.seb.model.HoldingEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.InitiateBankIdRequest;
 import se.tink.backend.aggregation.agents.banks.seb.model.InitiateBankIdResponse;
 import se.tink.backend.aggregation.agents.banks.seb.model.InitiateRequest;
+import se.tink.backend.aggregation.agents.banks.seb.model.InsuranceEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.InvestmentDataRequest;
 import se.tink.backend.aggregation.agents.banks.seb.model.MatchableTransferRequestEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.PCBW2581;
 import se.tink.backend.aggregation.agents.banks.seb.model.PCBW2582;
 import se.tink.backend.aggregation.agents.banks.seb.model.PCBW431Z;
 import se.tink.backend.aggregation.agents.banks.seb.model.PCBW4341;
+import se.tink.backend.aggregation.agents.banks.seb.model.InsuranceHoldingEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.PortfolioAccountMapperEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.RequestWrappingEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.ResultInfoMessage;
@@ -171,6 +174,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
     private static final String DEPOT_URL = API_URL + "PC_BankLista11Depainnehav02.asmx/Execute";
     private static final String FUND_HOLDING_URL = API_URL + "PC_BankLista01Fond_innehav02.asmx/Execute";
     private static final String INSURANCE_LIST_URL = API_URL + "Tl_forsakringLista11Enga01.asmx/Execute";
+    private static final String INSURANCE_DETAIL = API_URL + "PC_BankHamta11Savingsvarde01.asmx/Execute";
 
     private static final String INITIATE_BANKID_URL = AUTH_URL + "auth";
     private static final String COLLECT_BANKID_STRING_FORMAT_URL = AUTH_URL + "%s";
@@ -340,6 +344,64 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
     private void updateInvestmentAccounts() {
         updateFundHoldings();
         updateDepotAccounts();
+        updateInsuranceAccounts();
+    }
+
+    private void updateInsuranceAccounts() {
+        Optional<SebResponse> sebResponse = fetchInvestments(INSURANCE_LIST_URL);
+
+        if (!sebResponse.isPresent()) {
+            return;
+        }
+
+        SebResponse insuranceResponse = sebResponse.get();
+
+        List<InsuranceEntity> insurances = insuranceResponse.d.VODB.getInsuranceEntities();
+
+        if (insurances.isEmpty()) {
+            return;
+        }
+
+        insurances.forEach(insuranceEntity -> {
+            Account account = insuranceEntity.toAccount();
+
+            Portfolio portfolio = insuranceEntity.toPortfolio();
+
+            List<Instrument> instruments = getInsuranceInstruments(insuranceEntity.getDetailUrl());
+            portfolio.setInstruments(instruments);
+            portfolio.setTotalProfit(instruments.stream().mapToDouble(Instrument::getProfit).sum());
+
+            context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
+        });
+    }
+
+    private List<Instrument> getInsuranceInstruments(String detailUrl) {
+        if (Strings.isNullOrEmpty(detailUrl)) {
+            return Collections.emptyList();
+        }
+
+        RequestWrappingEntity requestWrappingEntity = new RequestWrappingEntity();
+        requestWrappingEntity.setServiceInput(
+                Collections.singletonList(
+                        new ServiceInput("DETAIL_URL", detailUrl)));
+
+        InvestmentDataRequest investmentDataRequest = new InvestmentDataRequest();
+        investmentDataRequest.setRequest(requestWrappingEntity);
+
+        SebResponse detailResponse = postAsJSON(INSURANCE_DETAIL, investmentDataRequest, SebResponse.class);
+
+        List<InsuranceHoldingEntity> holdingsEntities = detailResponse.d.VODB
+                .getInsuranceHoldingEntities();
+
+        List<Instrument> instruments = new ArrayList<>();
+
+        Optional.ofNullable(holdingsEntities).orElse(Collections.emptyList())
+                .forEach(holdingsEntity -> {
+                    Optional<Instrument> instrument = holdingsEntity.toInstrument();
+                    instrument.ifPresent(instruments::add);
+                });
+
+        return instruments;
     }
 
     private void updateFundHoldings() {
@@ -385,7 +447,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
     }
 
     private void updateDepotAccounts() {
-        Optional<SebResponse> sebResponse = fetchDepots();
+        Optional<SebResponse> sebResponse = fetchInvestments(DEPOT_URL);
 
         if (!sebResponse.isPresent()) {
             return;
@@ -706,7 +768,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
             return Collections.emptyList();
         }
 
-        Optional<SebResponse> optionalResponse = fetchDepots();
+        Optional<SebResponse> optionalResponse = fetchInvestments(DEPOT_URL);
 
         if (!optionalResponse.isPresent()) {
             return Collections.emptyList();
@@ -723,10 +785,10 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
                 .collect(Collectors.toList());
     }
 
-    private Optional<SebResponse> fetchDepots() {
+    private Optional<SebResponse> fetchInvestments(String url) {
         InvestmentDataRequest investmentDataRequest = new InvestmentDataRequest();
         investmentDataRequest.setRequest(new RequestWrappingEntity());
-        SebResponse response = postAsJSON(DEPOT_URL, investmentDataRequest, SebResponse.class);
+        SebResponse response = postAsJSON(url, investmentDataRequest, SebResponse.class);
 
         if (response.d == null || response.d.VODB == null) {
             return Optional.empty();
