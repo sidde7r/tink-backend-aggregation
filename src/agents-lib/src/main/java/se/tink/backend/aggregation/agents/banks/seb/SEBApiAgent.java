@@ -435,6 +435,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
             fundAccounts.forEach(fundAccountEntity -> fundAccountEntity.toInstrument().ifPresent(instruments::add));
             portfolio.setInstruments(instruments);
             portfolio.setTotalValue(instruments.stream().mapToDouble(Instrument::getMarketValue).sum());
+            portfolio.setTotalProfit(instruments.stream().mapToDouble(Instrument::getProfit).sum());
 
             account.setBalance(portfolio.getTotalValue());
 
@@ -493,6 +494,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
                 });
             });
             portfolio.setInstruments(instruments);
+            portfolio.setTotalProfit(instruments.stream().mapToDouble(Instrument::getProfit).sum());
 
             context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
         });
