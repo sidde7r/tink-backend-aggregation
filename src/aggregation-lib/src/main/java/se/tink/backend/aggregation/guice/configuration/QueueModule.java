@@ -12,7 +12,7 @@ import se.tink.backend.queue.QueueProducer;
 import se.tink.backend.queue.sqs.EncodingHandler;
 import se.tink.backend.queue.sqs.FakeHandler;
 import se.tink.backend.queue.sqs.FakeProducer;
-import se.tink.backend.queue.sqs.QueueMesssageAction;
+import se.tink.backend.queue.sqs.QueueMessageAction;
 import se.tink.backend.queue.sqs.SqsConsumer;
 import se.tink.backend.queue.sqs.SqsProducer;
 import se.tink.backend.queue.sqs.SqsQueue;
@@ -30,23 +30,23 @@ public class QueueModule extends AbstractModule {
     @Override
     protected void configure() {
         if (sqsQueueConfiguration.isEnabled()) {
-            bind(QueueMesssageAction.class).to(AutomaticRefreshQueueHandler.class).in(Scopes.SINGLETON);
+            bind(QueueMessageAction.class).to(AutomaticRefreshQueueHandler.class).in(Scopes.SINGLETON);
             bind(QueueProducer.class).to(SqsProducer.class).in(Scopes.SINGLETON);
             bind(SqsQueue.class).in(Scopes.SINGLETON);
             bind(EncodingHandler.class).to(AutomaticRefreshQueueEncoder.class).in(Scopes.SINGLETON);
         } else {
             bind(QueueProducer.class).to(FakeProducer.class).in(Scopes.SINGLETON);
-            bind(QueueMesssageAction.class).to(FakeHandler.class).in(Scopes.SINGLETON);
+            bind(QueueMessageAction.class).to(FakeHandler.class).in(Scopes.SINGLETON);
         }
     }
 
     @Provides
     @Singleton
     public QueueConsumer manageQueueThread(SqsQueue sqsQueue,
-            QueueMesssageAction queueMesssageAction,
+            QueueMessageAction queueMessageAction,
             SqsProducer producer) {
 
-        SqsConsumer sqsConsumer = new SqsConsumer(sqsQueue, queueMesssageAction, producer);
+        SqsConsumer sqsConsumer = new SqsConsumer(sqsQueue, queueMessageAction, producer);
         if (sqsQueue.isAvailable()) {
             lifecycle.manage(sqsConsumer);
         }

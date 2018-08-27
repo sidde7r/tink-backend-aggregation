@@ -11,10 +11,10 @@ import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.backend.aggregation.workers.AgentWorkerOperationFactory;
 import se.tink.backend.aggregation.workers.AgentWorkerRefreshOperationCreatorWrapper;
 import se.tink.backend.queue.sqs.EncodingHandler;
-import se.tink.backend.queue.sqs.QueueMesssageAction;
+import se.tink.backend.queue.sqs.QueueMessageAction;
 import java.io.IOException;
 
-public class AutomaticRefreshQueueHandler implements QueueMesssageAction {
+public class AutomaticRefreshQueueHandler implements QueueMessageAction {
     private AgentWorker agentWorker;
     private AgentWorkerOperationFactory agentWorkerCommandFactory;
     private EncodingHandler<RefreshInformation> encodingHandler;

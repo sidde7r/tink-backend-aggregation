@@ -17,7 +17,7 @@ public class SqsConsumer implements Managed, QueueConsumer {
 
     private final AbstractExecutionThreadService service;
     private final SqsQueue sqsQueue;
-    private QueueMesssageAction queueMesssageAction;
+    private QueueMessageAction queueMessageAction;
     private final int WAIT_TIME_SECONDS = 1;
     private final int MAX_NUMBER_OF_MESSAGES = 1;
     private final int VISIBILITY_TIMEOUT_SECONDS = 300; //5 minutes
@@ -26,9 +26,9 @@ public class SqsConsumer implements Managed, QueueConsumer {
     private final SqsProducer producer;
 
     @Inject
-    public SqsConsumer(SqsQueue sqsQueue, QueueMesssageAction queueMesssageAction, SqsProducer producer) {
+    public SqsConsumer(SqsQueue sqsQueue, QueueMessageAction queueMessageAction, SqsProducer producer) {
         this.sqsQueue = sqsQueue;
-        this.queueMesssageAction = queueMesssageAction;
+        this.queueMessageAction = queueMessageAction;
         this.producer = producer;
         this.service = new AbstractExecutionThreadService() {
 
@@ -91,7 +91,7 @@ public class SqsConsumer implements Managed, QueueConsumer {
     }
 
     public void consume(String message) throws Exception {
-        queueMesssageAction.handle(message);
+        queueMessageAction.handle(message);
     }
 
     public void delete(Message message){
