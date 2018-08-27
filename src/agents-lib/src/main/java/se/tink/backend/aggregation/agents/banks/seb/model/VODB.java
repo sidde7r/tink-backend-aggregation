@@ -127,9 +127,8 @@ public class VODB {
     @JsonProperty("PCBWF061")
     public List<InsuranceAccountEntity> insuranceAccountEntities = Lists.newArrayList();
 
-    // Not certain of the object name: PensionInsuranceHoldingEntity
     @JsonProperty("PCBW173")
-    public List<PensionInsuranceHoldingEntity> pensionInsuranceHoldingEntities = Lists.newArrayList();
+    public List<InsuranceHoldingEntity> insuranceHoldingEntities = Lists.newArrayList();
 
     // Not certain of the object name: IpsHoldingEntity
     @JsonProperty("PCBW174")
@@ -213,8 +212,8 @@ public class VODB {
         return insuranceAccountEntities == null ? Collections.emptyList() : insuranceAccountEntities;
     }
 
-    public List<PensionInsuranceHoldingEntity> getPensionInsuranceHoldingEntities() {
-        return pensionInsuranceHoldingEntities == null ? Collections.emptyList() : pensionInsuranceHoldingEntities;
+    public List<InsuranceHoldingEntity> getInsuranceHoldingEntities() {
+        return insuranceHoldingEntities == null ? Collections.emptyList() : insuranceHoldingEntities;
     }
 
     public List<IpsHoldingEntity> getIpsHoldingEntities() {
