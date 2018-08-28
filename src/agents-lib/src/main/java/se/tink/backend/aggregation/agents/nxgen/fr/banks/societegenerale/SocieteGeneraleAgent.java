@@ -3,12 +3,15 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale.authenticator.SocieteGeneraleAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale.fetcher.transactionalaccount.SocieteGeneraleTransactionalAccountFetcher;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
@@ -28,7 +31,7 @@ public class SocieteGeneraleAgent extends NextGenerationAgent {
 
         super(request, context, signatureKeyPair);
 
-        apiClient = new SocieteGeneraleApiClient(client, persistentStorage);
+        apiClient = new SocieteGeneraleApiClient(client, persistentStorage, sessionStorage);
 
         checkDeviceId();
     }
@@ -40,12 +43,26 @@ public class SocieteGeneraleAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new SocieteGeneraleAuthenticator(apiClient, persistentStorage);
+        return new SocieteGeneraleAuthenticator(apiClient, persistentStorage,sessionStorage);
     }
 
     @Override
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        return Optional.empty();
+        SocieteGeneraleTransactionalAccountFetcher fetcher = new SocieteGeneraleTransactionalAccountFetcher(apiClient);
+        return Optional.of(
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        fetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionPagePaginationController<>(
+                                        fetcher,
+                                        0
+                                )
+                        )
+                )
+        );
     }
 
     @Override

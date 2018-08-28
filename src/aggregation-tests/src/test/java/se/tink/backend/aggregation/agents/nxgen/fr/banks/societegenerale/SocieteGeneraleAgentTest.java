@@ -11,11 +11,9 @@ public class SocieteGeneraleAgentTest {
     private final String USERNAME = ""; // 8 digits
     private final String PASSWORD = ""; // 6 digits
 
-
-
     @Test
     public void testLoginRefresh() throws Exception {
-        new AgentIntegrationTest.Builder("fr", "fr-societegenerale-password")
+        new AgentIntegrationTest.Builder(SocieteGeneraleConstants.MARKET, SocieteGeneraleConstants.PROVIDER_NAME)
                 .addCredentialField(Field.Key.USERNAME, USERNAME)
                 .addCredentialField(Field.Key.PASSWORD, PASSWORD)
                 .loadCredentialsBefore(false)
@@ -23,4 +21,5 @@ public class SocieteGeneraleAgentTest {
                 .build()
                 .testRefresh();
     }
+
 }

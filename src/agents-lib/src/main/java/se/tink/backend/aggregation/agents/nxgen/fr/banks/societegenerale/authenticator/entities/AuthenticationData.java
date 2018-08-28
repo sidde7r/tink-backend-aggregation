@@ -5,7 +5,7 @@ import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class DataEntity {
+public class AuthenticationData {
 
     @JsonProperty("code_etoile")
     private String codeEtoile;
@@ -15,15 +15,24 @@ public class DataEntity {
     private String canalDernCon;
     @JsonProperty("droits")
     private List<String> rights;
-    private String clesession;
+    @JsonProperty("clesession")
+    private String sessionKey;
     @JsonProperty("id_cle")
-    private String idCle;
+    private String keyId;
     @JsonProperty("jeton")
     private String token;
     @JsonProperty("id_stat")
     private String idStat;
     @JsonProperty("profil_tiers")
-    private ProfilTiersEntity profilTiers;
+    private ThirdPartyProfileEntity thirdPartyProfile;
+
+    public String getSessionKey() {
+        return sessionKey;
+    }
+
+    public String getKeyId() {
+        return keyId;
+    }
 
     public String getToken() {
         return token;
