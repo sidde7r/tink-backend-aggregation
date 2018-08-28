@@ -90,7 +90,8 @@ public class NordeaFiConstants {
                 "You need to upgrade the Nordea Codes app in order to continue.");
 
         private static final String CODES_APP_STORE_URL = "https://itunes.apple.com/se/app/nordea-codes/id995971128";
-        private static final String CODES_AUTH_INTENT = "nordeamta://";
+        private static final String CODES_APP_SCHEME = "nordeamta://";
+        private static final String CODES_RETURN_LINK = "confirm?returnUrl=tink://";
         private static final String CODES_ANDROID_PACKAGE_NAME = "com.nordea.mobiletoken";
         private static final int CODES_REQUIRED_ANDROID_VERSION = 1050200; // 1.5.2.0
 
@@ -107,8 +108,8 @@ public class NordeaFiConstants {
 
             // iOS details
             ThirdPartyAppAuthenticationPayload.Ios iosPayload = new ThirdPartyAppAuthenticationPayload.Ios();
-            iosPayload.setAppScheme(CODES_AUTH_INTENT);
-            iosPayload.setDeepLinkUrl(CODES_AUTH_INTENT);
+            iosPayload.setAppScheme(CODES_APP_SCHEME);
+            iosPayload.setDeepLinkUrl(CODES_APP_SCHEME + CODES_RETURN_LINK);
             iosPayload.setAppStoreUrl(CODES_APP_STORE_URL);
 
             payload.setIos(iosPayload);
@@ -117,7 +118,7 @@ public class NordeaFiConstants {
             ThirdPartyAppAuthenticationPayload.Android androidPayload = new ThirdPartyAppAuthenticationPayload.Android();
             androidPayload.setPackageName(CODES_ANDROID_PACKAGE_NAME);
             androidPayload.setRequiredVersion(CODES_REQUIRED_ANDROID_VERSION);
-            androidPayload.setIntent(CODES_AUTH_INTENT);
+            androidPayload.setIntent(CODES_APP_SCHEME + CODES_RETURN_LINK);
 
             payload.setAndroid(androidPayload);
 
