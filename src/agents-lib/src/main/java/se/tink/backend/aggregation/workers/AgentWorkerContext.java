@@ -329,7 +329,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
                 continue;
             }
 
-            String accountId = account.get().getId();
             List<Transaction> accountTransactions = transactionsByAccountBankId.get(bankId);
 
             for (Transaction transaction : accountTransactions) {
