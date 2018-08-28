@@ -283,8 +283,10 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
             return Optional.empty();
         }
 
+        CreditCardAccountEntity accountEntity = entities.get(0);
+        accountEntities.put(accountNumber, accountEntity);
         // We're only asking for a single account, so we're only interested in the first account entity.
-        return Optional.of(accountEntities.put(accountNumber, entities.get(0)));
+        return Optional.of(accountEntity);
     }
 
     private Long getCreditCardContractNumber(Account account) {
