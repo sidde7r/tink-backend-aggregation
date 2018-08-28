@@ -36,6 +36,8 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Provider;
+import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
+import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.rpc.UpdateCredentialsRequest;
 import se.tink.backend.common.ServiceContext;
 import se.tink.backend.common.coordination.BarrierName;
@@ -609,7 +611,9 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
             updateCredentialsStatusRequest.setUserId(credentials.getUserId());
             updateCredentialsStatusRequest.setUpdateContextTimestamp(
                     request instanceof UpdateCredentialsRequest ||
-                            request instanceof CreateCredentialsRequest);
+                            request instanceof CreateCredentialsRequest ||
+                            request instanceof RefreshInformationRequest ||
+                            request instanceof TransferRequest);
             updateCredentialsStatusRequest.setManual(request.isManual());
             updateCredentialsStatusRequest.setUserDeviceId(request.getUserDeviceId());
 
@@ -626,7 +630,9 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
             updateCredentialsStatusRequest.setUserId(credentials.getUserId());
             updateCredentialsStatusRequest.setUpdateContextTimestamp(
                     request instanceof UpdateCredentialsRequest ||
-                            request instanceof CreateCredentialsRequest);
+                            request instanceof CreateCredentialsRequest ||
+                            request instanceof RefreshInformationRequest ||
+                            request instanceof TransferRequest);
             updateCredentialsStatusRequest.setManual(request.isManual());
             updateCredentialsStatusRequest.setUserDeviceId(request.getUserDeviceId());
 
