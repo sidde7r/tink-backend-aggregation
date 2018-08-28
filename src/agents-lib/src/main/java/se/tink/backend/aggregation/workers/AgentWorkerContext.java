@@ -384,25 +384,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
             return;
         }
 
-        // If we don't get any transactions, just update the credentials. If
-        // we do, we actually update the status of the credentials when
-        // we've both processed the transactions and generated the
-        // statistics.
-
-        if (!isWaitingOnConnectorTransactions() && transactions.isEmpty()) {
-            log.info("Empty transaction list, considering UPDATED to be the case ("
-                    + request.getCredentials().getId() + ")");
-
-            Date now = new Date();
-
-            credentials.setUpdated(now);
-            credentials.setStatus(UPDATED);
-
-            updateCredentialsExcludingSensitiveInformation(credentials, true);
-
-            return;
-        }
-
         // Send the request to process the transactions that we've collected in this batch.
 
         if (useAggregationController) {
