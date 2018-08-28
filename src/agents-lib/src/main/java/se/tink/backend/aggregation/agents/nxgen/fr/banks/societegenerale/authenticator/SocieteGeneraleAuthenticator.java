@@ -5,17 +5,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale.SocieteGeneraleApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale.SocieteGeneraleConstants;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale.authenticator.entities.AuthenticationData;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale.authenticator.entities.LoginGridData;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale.authenticator.rpc.AuthenticationResponse;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale.authenticator.rpc.LoginGridResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.utils.ImageRecognizer;
@@ -24,12 +25,13 @@ public class SocieteGeneraleAuthenticator implements Authenticator {
 
     private final SocieteGeneraleApiClient apiClient;
     private final PersistentStorage persistentStorage;
+    private final SessionStorage sessionStorage;
 
-    public SocieteGeneraleAuthenticator(
-            SocieteGeneraleApiClient apiClient,
-            PersistentStorage persistentStorage) {
+    public SocieteGeneraleAuthenticator(SocieteGeneraleApiClient apiClient, PersistentStorage persistentStorage,
+            SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
+        this.sessionStorage = sessionStorage;
     }
 
     @Override
@@ -38,8 +40,13 @@ public class SocieteGeneraleAuthenticator implements Authenticator {
         String username = credentials.getField(Field.Key.USERNAME);
         String password = credentials.getField(Field.Key.PASSWORD);
 
-        LoginGridResponse gridResponse = apiClient.getLoginGrid();
-        LoginGridData gridData = gridResponse.getData();
+        Optional<LoginGridData> gridResponse = apiClient.getLoginGrid();
+
+        if (!gridResponse.isPresent()) {
+            throw LoginError.WRONG_PHONENUMBER_OR_INACTIVATED_SERVICE.exception();
+        }
+
+        LoginGridData gridData = gridResponse.get();
         List<Integer> oneTimePad = gridData.getOneTimePad();
         String crypto = gridData.getCrypto();
 
@@ -47,12 +54,13 @@ public class SocieteGeneraleAuthenticator implements Authenticator {
 
         String encryptedPasscode = getEncryptedPasscode(password, numberPad, oneTimePad);
 
-        AuthenticationResponse resp = apiClient.postAuthentication(username, crypto, encryptedPasscode);
+        Optional<AuthenticationData> resp = apiClient.postAuthentication(username, crypto, encryptedPasscode);
 
-        if (!"ok".equalsIgnoreCase(resp.getCommon().getStatus())) {
+        if (!resp.isPresent()) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         } else {
-            persistentStorage.put(SocieteGeneraleConstants.StorageKey.TOKEN, resp.getData().getToken());
+            persistentStorage.put(SocieteGeneraleConstants.StorageKey.TOKEN, resp.get().getToken());
+            sessionStorage.put(SocieteGeneraleConstants.StorageKey.SESSION_KEY, resp.get().getSessionKey());
         }
     }
 

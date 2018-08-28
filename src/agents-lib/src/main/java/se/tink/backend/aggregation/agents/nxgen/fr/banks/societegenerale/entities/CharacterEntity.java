@@ -11,7 +11,15 @@ public class CharacterEntity {
     @JsonProperty("delai_val")
     private int delaiVal;
     @JsonProperty("chiffrement")
-    private boolean encryption;
-    private boolean compression;
+    private boolean encrypted;
+    @JsonProperty("compression")
+    private boolean compressed;
 
+    public boolean isEncrypted() {
+        return encrypted;
+    }
+
+    public boolean isCompressed() {
+        return compressed;
+    }
 }
