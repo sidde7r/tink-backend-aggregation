@@ -224,7 +224,8 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
 
     private void updateCreditCardAccount(Account account, RefreshableItem item) {
         try {
-            account.setBalance(getCreditCardBalance(account));
+            // TODO: Re-add balance when we the agent is working properly
+            // account.setBalance(getCreditCardBalance(account));
             context.cacheAccount(account);
             context.sendAccountToUpdateService(account.getBankId());
 
