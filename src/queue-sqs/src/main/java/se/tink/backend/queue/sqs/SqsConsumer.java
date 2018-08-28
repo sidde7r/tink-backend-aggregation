@@ -17,18 +17,19 @@ public class SqsConsumer implements Managed, QueueConsumer {
 
     private final AbstractExecutionThreadService service;
     private final SqsQueue sqsQueue;
-    private QueueMesssageAction queueMesssageAction;
+    private QueueMessageAction queueMessageAction;
     private final int WAIT_TIME_SECONDS = 1;
     private final int MAX_NUMBER_OF_MESSAGES = 1;
     private final int VISIBILITY_TIMEOUT_SECONDS = 300; //5 minutes
     private static final LogUtils log = new LogUtils(SqsConsumer.class);
     private AtomicBoolean running = new AtomicBoolean(false);
-
+    private final SqsProducer producer;
 
     @Inject
-    public SqsConsumer(SqsQueue sqsQueue, QueueMesssageAction queueMesssageAction) {
+    public SqsConsumer(SqsQueue sqsQueue, QueueMessageAction queueMessageAction, SqsProducer producer) {
         this.sqsQueue = sqsQueue;
-        this.queueMesssageAction = queueMesssageAction;
+        this.queueMessageAction = queueMessageAction;
+        this.producer = producer;
         this.service = new AbstractExecutionThreadService() {
 
             @Override
@@ -64,29 +65,18 @@ public class SqsConsumer implements Managed, QueueConsumer {
     }
 
     private void tryConsumeUntilNotRejected(Message sqsMessage) throws Exception {
-        int tries = 0;
-
-        boolean consumed = false;
-        while(!consumed) {
-            try {
-                consume(sqsMessage.getBody());
-                consumed = true;
-            } catch (RejectedExecutionException e) {
-                Thread.sleep(50); // Wait 50ms to not spam either system
-                log.info("Attempt (" + tries + ") to queue with message_id: " + sqsMessage.getMessageId());
-                if (!running.get() && tries > 100) {
-                    // If we are about to shutdown, don't retry-adding for more than 5000ms (sleep of 50ms times 100)
-                    break;
-                }
-            }
+        try {
+            consume(sqsMessage.getBody());
             sqsQueue.consumed();
-            tries++;
+        } catch (RejectedExecutionException e) {
+            log.info("MessageID: " + sqsMessage.getMessageId() + " rejected by executor-queue. Will be requeued in SQS");
+            producer.requeue(sqsMessage);
         }
+
     }
 
-
     public void consume(String message) throws Exception {
-        queueMesssageAction.handle(message);
+        queueMessageAction.handle(message);
     }
 
     public void delete(Message message){
