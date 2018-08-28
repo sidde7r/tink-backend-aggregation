@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.de.banks.hvb;
+package se.tink.backend.aggregation.agents.framework;
 
 import com.google.common.collect.ImmutableList;
 import java.util.Arrays;
