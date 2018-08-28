@@ -15,13 +15,8 @@ public class AmountEntity {
     @JsonProperty("valeur")
     private int unscaledValue;
 
-    private transient Amount amount = null;
-
     public Amount toTinkAmount() {
-        if (amount == null) {
-            amount = new Amount(currency, BigDecimal.valueOf(unscaledValue, scale).doubleValue());
-        }
-        return amount;
+        return new Amount(currency, BigDecimal.valueOf(unscaledValue, scale).doubleValue());
     }
 
 }

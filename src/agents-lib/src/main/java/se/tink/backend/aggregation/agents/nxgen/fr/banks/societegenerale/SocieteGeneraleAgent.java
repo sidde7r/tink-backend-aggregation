@@ -28,11 +28,8 @@ public class SocieteGeneraleAgent extends NextGenerationAgent {
     public SocieteGeneraleAgent(CredentialsRequest request,
             AgentContext context,
             SignatureKeyPair signatureKeyPair) {
-
         super(request, context, signatureKeyPair);
-
         apiClient = new SocieteGeneraleApiClient(client, persistentStorage, sessionStorage);
-
         checkDeviceId();
     }
 

@@ -59,7 +59,6 @@ public class SocieteGeneraleConstants {
         public static final URL ABM_RESTIT_CAV_LISTE_OPERATIONS = new URL(
                 HOST + "/abm/restit/cav/listeOperations.json");
         public static final URL LOGOUT = new URL(HOST + "/logout.json");
-
     }
 
     public static class Logging {
