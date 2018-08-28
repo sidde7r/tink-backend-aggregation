@@ -220,11 +220,6 @@ public class AgentWorkerOperationFactory {
                     createMetricState(request)));
         }
 
-        if (RefreshableItem.hasTransactions(items)) {
-            commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.TRANSACTIONS,
-                    createMetricState(request)));
-        }
-
         if (items.contains(RefreshableItem.EINVOICES)) {
             commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.EINVOICES,
                     createMetricState(request)));
@@ -232,6 +227,13 @@ public class AgentWorkerOperationFactory {
 
         if (items.contains(RefreshableItem.TRANSFER_DESTINATIONS)) {
             commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.TRANSFER_DESTINATIONS,
+                    createMetricState(request)));
+        }
+
+        // Transactions are processed last of the refreshable items since the credential status will be set `UPDATED`
+        // by system when the processing is done.
+        if (RefreshableItem.hasTransactions(items)) {
+            commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.TRANSACTIONS,
                     createMetricState(request)));
         }
 
