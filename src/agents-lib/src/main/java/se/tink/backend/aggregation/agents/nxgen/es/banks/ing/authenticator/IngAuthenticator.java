@@ -26,7 +26,7 @@ import se.tink.backend.aggregation.rpc.Field;
 
 public class IngAuthenticator implements Authenticator {
 
-    private static final Pattern NIE_PATTERN = Pattern.compile("(?i)^X.+[A-Z]$");
+    private static final Pattern NIE_PATTERN = Pattern.compile("(?i)^[XY].+[A-Z]$");
 
     private final IngApiClient apiClient;
     private final SessionStorage sessionStorage;

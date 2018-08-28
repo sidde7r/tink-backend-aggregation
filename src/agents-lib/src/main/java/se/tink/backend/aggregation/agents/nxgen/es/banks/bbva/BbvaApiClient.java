@@ -29,7 +29,7 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 public class BbvaApiClient {
 
     private static final int RANDOM_HEX_LENGTH = 64;
-    private static final Pattern NIE_PATTERN = Pattern.compile("(?i)^X.+[A-Z]$");
+    private static final Pattern NIE_PATTERN = Pattern.compile("(?i)^[XY].+[A-Z]$");
 
     private TinkHttpClient client;
     private String userAgent;
