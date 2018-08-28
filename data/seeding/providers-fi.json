@@ -228,7 +228,7 @@
         }
       ],
       "multiFactor": true,
-      "name": "fi-nordea-codeslogin",
+      "name": "fi-nordea-thirdpartyapp",
       "popular": true,
       "refreshFrequency": 1,
       "refreshFrequencyFactor": 1,
