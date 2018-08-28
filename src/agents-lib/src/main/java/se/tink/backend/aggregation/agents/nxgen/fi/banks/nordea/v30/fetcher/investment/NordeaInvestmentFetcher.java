@@ -7,15 +7,15 @@ import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
 
 public class NordeaInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
 
-    private final NordeaFiApiClient client;
+    private final NordeaFiApiClient apiClient;
 
     public NordeaInvestmentFetcher(
-            NordeaFiApiClient client) {
-        this.client = client;
+            NordeaFiApiClient apiClient) {
+        this.apiClient = apiClient;
     }
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
-        return client.fetchInvestments().toTinkInvestmentAccounts();
+        return apiClient.fetchInvestments().toTinkInvestmentAccounts();
     }
 }

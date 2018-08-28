@@ -33,7 +33,6 @@ public class NordeaFiAgent extends NordeaV21Agent {
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.addFilter(new NordeaFiFilter());
-//        client.setProxy("http://127.0.0.1:8888");
     }
 
     @Override

@@ -19,7 +19,6 @@ public class FetchTransactionsResponse implements PaginatorResponse{
         return transactions.stream()
                 .map(TransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
-
     }
 
     @Override

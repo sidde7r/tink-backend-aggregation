@@ -41,7 +41,7 @@ public class CardTransactionEntity {
                 .setDate(transactionDate)
                 .setPending(!booked)
                 .setCreditAccount(account)
-                .setDescription(String.format("%s: %s", title, transactionType))
+                .setDescription(title)
                 .build();
     }
 }

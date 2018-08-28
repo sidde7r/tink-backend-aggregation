@@ -13,21 +13,20 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 public class NordeaLoanFetcher implements AccountFetcher<LoanAccount> {
     private static final AggregationLogger log = new AggregationLogger(NordeaLoanFetcher.class);
 
-    private final NordeaFiApiClient client;
+    private final NordeaFiApiClient apiClient;
 
-    public NordeaLoanFetcher(NordeaFiApiClient client) {
-        this.client = client;
+    public NordeaLoanFetcher(NordeaFiApiClient apiClient) {
+        this.apiClient = apiClient;
     }
 
     @Override
     public Collection<LoanAccount> fetchAccounts() {
 
-        HttpResponse response = client.fetchLoans();
-
-        // TODO Loan entity is built from test data found in the Nordea App. Remove when verified.
-        log.infoExtraLong(response.getBody(String.class), NordeaFiConstants.LogTags.NORDEA_FI_LOAN);
         try{
+            HttpResponse response = apiClient.fetchLoans();
 
+            // TODO Loan entity is built from test data found in the Nordea App. Remove when verified.
+            log.infoExtraLong(response.getBody(String.class), NordeaFiConstants.LogTags.NORDEA_FI_LOAN);
             return response.getBody(FetchLoanResponse.class).toTinkLoanAccounts();
         }catch (Exception e){
 

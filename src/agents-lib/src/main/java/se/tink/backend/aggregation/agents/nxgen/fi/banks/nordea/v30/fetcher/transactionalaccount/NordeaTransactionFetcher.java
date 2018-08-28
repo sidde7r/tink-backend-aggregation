@@ -9,18 +9,18 @@ import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 
 public class NordeaTransactionFetcher implements TransactionIndexPaginator<TransactionalAccount> {
 
-    private final NordeaFiApiClient client;
+    private final NordeaFiApiClient apiClient;
 
     public NordeaTransactionFetcher(
-            NordeaFiApiClient client) {
-        this.client = client;
+            NordeaFiApiClient apiClient) {
+        this.apiClient = apiClient;
     }
 
     @Override
     public PaginatorResponse getTransactionsFor(TransactionalAccount account, int numberOfTransactions,
             int startIndex) {
 
-        return client
+        return apiClient
                 .fetchTransactions(startIndex, numberOfTransactions, account.getBankIdentifier(),
                         NordeaFiConstants.Products.ACCOUNT, FetchTransactionsResponse.class);
     }

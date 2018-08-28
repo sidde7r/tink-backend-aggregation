@@ -70,8 +70,7 @@ public class AuthenticateResponse {
         return agreementId;
     }
 
-    public void store(SessionStorage storage) {
-
+    public void storeTokens(SessionStorage storage) {
         storage.put(NordeaFiConstants.SessionStorage.ACCESS_TOKEN, accessToken);
         storage.put(NordeaFiConstants.SessionStorage.REFRESH_TOKEN, refreshToken);
         storage.put(NordeaFiConstants.SessionStorage.TOKEN_TYPE, tokenType);

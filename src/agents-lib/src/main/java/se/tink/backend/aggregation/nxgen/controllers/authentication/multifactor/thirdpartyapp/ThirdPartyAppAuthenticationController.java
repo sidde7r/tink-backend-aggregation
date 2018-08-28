@@ -41,7 +41,6 @@ public class ThirdPartyAppAuthenticationController<T> implements MultiFactorAuth
 
     @Override
     public CredentialsTypes getType() {
-        // Todo: Change to `THIRD_PARTY_APP`.
         return CredentialsTypes.THIRD_PARTY_APP;
     }
 

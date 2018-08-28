@@ -12,17 +12,17 @@ import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 public class NordeaCreditCardFetcher implements AccountFetcher<CreditCardAccount>,
         TransactionIndexPaginator<CreditCardAccount> {
 
-    private final NordeaFiApiClient client;
+    private final NordeaFiApiClient apiClient;
 
     public NordeaCreditCardFetcher(
             NordeaFiApiClient client) {
-        this.client = client;
+        this.apiClient = client;
     }
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
 
-        return client
+        return apiClient
                 .fetchCards()
                 .toTinkCards();
     }
@@ -30,7 +30,7 @@ public class NordeaCreditCardFetcher implements AccountFetcher<CreditCardAccount
     @Override
     public PaginatorResponse getTransactionsFor(CreditCardAccount account, int numberOfTransactions, int startIndex) {
 
-        return client
+        return apiClient
                 .fetchTransactions(startIndex, numberOfTransactions, account.getBankIdentifier(),
                         NordeaFiConstants.Products.CARD, FetchCardTransactionResponse.class)
                 .toPaginatorResponse(account);

@@ -6,21 +6,20 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
 public class NordeaSessionHandler implements SessionHandler {
 
-    private final NordeaFiApiClient client;
+    private final NordeaFiApiClient apiClient;
 
     public NordeaSessionHandler(
-            NordeaFiApiClient client) {
-        this.client = client;
+            NordeaFiApiClient apiClient) {
+        this.apiClient = apiClient;
     }
 
     @Override
     public void logout() {
-        client.logout();
+        apiClient.logout();
     }
 
     @Override
     public void keepAlive() throws SessionException {
-
-        client.keepAlive();
+        apiClient.keepAlive();
     }
 }
