@@ -117,6 +117,8 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
     private List<Account> accountsToAggregate;
     // a collection of account numbers that the Opt-in user selected during the opt-in flow
     private List<String> uniqueIdOfUserSelectedAccounts;
+    // True or false if system has been requested to process transactions.
+    private boolean isSystemProcessingTransactions;
 
     public AgentWorkerContext(CredentialsRequest request, ServiceContext serviceContext, MetricRegistry metricRegistry,
             boolean useAggregationController,
@@ -178,6 +180,10 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
 
     public void removeEventListener(AgentEventListener eventListener) {
         eventListeners.remove(eventListener);
+    }
+
+    public boolean isSystemProcessingTransactions() {
+        return isSystemProcessingTransactions;
     }
 
     @Override
@@ -401,6 +407,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
                 aggregationControllerAggregationClient.updateTransactionsAsynchronously(updateTransactionsRequest);
             }
 
+            isSystemProcessingTransactions = true;
         } else {
             UpdateTransactionsRequest updateTransactionsRequest = new UpdateTransactionsRequest();
             updateTransactionsRequest.setTransactions(transactions);
@@ -409,6 +416,8 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
             updateTransactionsRequest.setUserTriggered(request.isManual());
 
             systemServiceFactory.getProcessService().updateTransactionsAsynchronously(updateTransactionsRequest);
+
+            isSystemProcessingTransactions = true;
         }
 
         // Don't use the queue yet
