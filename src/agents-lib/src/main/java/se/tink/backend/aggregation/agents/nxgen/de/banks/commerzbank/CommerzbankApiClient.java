@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.LoginRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.ResultEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.RootModel;
@@ -52,11 +53,14 @@ public class CommerzbankApiClient {
         return firstRequest().post(HttpResponse.class, serialized);
     }
 
-    public ResultEntity financialOverview() {
-        ResultEntity resultEntity = makeRequest(CommerzbankConstants.URLS.OVERVIEW).post(RootModel.class).getResult();
-        LOGGER.infoExtraLong(SerializationUtils.serializeToString(resultEntity),
-                CommerzbankConstants.LOGTAG.FINANCE_OVERVIEW);
-        return resultEntity;
+    public ResultEntity financialOverview()  {
+        String resultString = makeRequest(CommerzbankConstants.URLS.OVERVIEW).post(String.class);
+        LOGGER.infoExtraLong(resultString, CommerzbankConstants.LOGTAG.FINANCE_OVERVIEW);
+        try {
+         return  new ObjectMapper().readValue(resultString, RootModel.class).getResult();
+        } catch (IOException e) {
+            return null;
+        }
     }
 
     public SessionModel logout() {
