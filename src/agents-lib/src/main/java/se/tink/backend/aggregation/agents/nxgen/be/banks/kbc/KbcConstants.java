@@ -82,7 +82,7 @@ public class KbcConstants {
 
     public static class RequestInput {
         public static final String APP_FAMILY = "PHNIOSV1";
-        public static final String VERSION_NUMBER = "18.5.0";
+        public static final String VERSION_NUMBER = "18.05.02";
         public static final String APPLICATION_ID = "3700";
         public static final String COMPANY_ID = "0001";
 
