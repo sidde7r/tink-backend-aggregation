@@ -244,7 +244,7 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
     private void refreshCreditCardTransactions(Account account) throws IcsException {
         Long accountNumber = getCreditCardContractNumber(account);
         List<Transaction> transactions = getCreditCardTransactions(accountNumber);
-        context.cacheTransactions(account.getId(), transactions);
+        context.cacheTransactions(account.getBankId(), transactions);
     }
 
     private Double getCreditCardBalance(Account account) throws IcsException {
