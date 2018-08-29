@@ -38,15 +38,16 @@ public class NordeaV17CreditCardFetcher implements AccountFetcher<CreditCardAcco
         return client.getAccountProductsOfTypes(ProductType.CARD).stream()
                 .map(pe -> {
                     CardBalancesResponse cardBalancesResponse = client.fetchCardDetails(pe.getNordeaAccountIdV2());
-                    List<CardsEntity> cardEntities = cardBalancesResponse.getGetCardBalancesOut().getCards();
+                    List<CardsEntity> distinctCardEntities = cardBalancesResponse.getGetCardBalancesOut()
+                            .getDistinctCardsList();
 
-                    // We ask for one credit card, we should only get one credit card in the response
-                    Preconditions.checkState(cardEntities.size() == 1,
+                    // We ask for one credit card, we should only get one distinct credit card in the response
+                    Preconditions.checkState(distinctCardEntities.size() == 1,
                             "%s: Received != 1 number of credit cards (%d)",
                             NordeaV17Constants.CREDITCARD_LOG_TAG,
-                            cardEntities.size());
+                            distinctCardEntities.size());
 
-                    return parser.parseCreditCardAccount(pe, cardEntities.get(0));
+                    return parser.parseCreditCardAccount(pe, distinctCardEntities.get(0));
                 })
                 .collect(Collectors.toList());
     }
