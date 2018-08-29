@@ -59,7 +59,7 @@ public class CommerzbankApiClient {
         try {
          return  new ObjectMapper().readValue(resultString, RootModel.class).getResult();
         } catch (IOException e) {
-            return null;
+            throw new IllegalStateException(e.getMessage());
         }
     }
 
