@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.fetc
 import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Date;
+import java.util.stream.Collectors;
 import javax.xml.bind.JAXBException;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskApiClient;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskConstants;
@@ -57,7 +58,10 @@ public class BawagPskTransactionFetcher implements TransactionDatePaginator<Tran
         final GetAccountStatementItemsResponse response = apiClient
                 .getGetAccountStatementItemsResponse(requestString);
 
-        final Collection<? extends Transaction> transactions = response.getTransactions();
+        // Get transactions, filter zero amounts since they are not shown in the app
+        final Collection<? extends Transaction> transactions = response.getTransactions().stream()
+                .filter(transaction -> transaction.getAmount().isPositive())
+                .collect(Collectors.toSet());
 
         return PaginatorResponseImpl.create(transactions);
     }
