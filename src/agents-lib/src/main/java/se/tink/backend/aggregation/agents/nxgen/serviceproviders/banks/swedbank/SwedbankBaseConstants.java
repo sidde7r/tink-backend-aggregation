@@ -14,6 +14,8 @@ import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.UrlEnum;
 import se.tink.backend.utils.StringUtils;
+import se.tink.libraries.i18n.LocalizableEnum;
+import se.tink.libraries.i18n.LocalizableKey;
 
 public class SwedbankBaseConstants {
 
@@ -262,6 +264,10 @@ public class SwedbankBaseConstants {
 
     public static class UserMessage {
         public static final String STRONGER_AUTHENTICATION_NEEDED = "In order to add new recipients you need to activate Mobile BankID for extended use. This is done in the Internet bank on the page BankID (found in the tab Tillval).";
+        public static final LocalizableKey WRONG_BANK_SWEDBANK = new LocalizableKey(
+                "You do not have any accounts at Swedbank. Use Sparbankerna (Mobile BankID) instead.");
+        public static final LocalizableKey WRONG_BANK_SAVINGSBANK = new LocalizableKey(
+                "You do not have any accounts at Sparbankerna. Use Swedbank (Mobile BankID) instead.");
     }
 
     public static class ErrorCode {
