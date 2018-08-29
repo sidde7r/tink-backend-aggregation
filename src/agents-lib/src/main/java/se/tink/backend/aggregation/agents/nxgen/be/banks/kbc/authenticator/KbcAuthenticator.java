@@ -197,29 +197,30 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
     private String waitForLoginCode(String challenge) throws SupplementalInfoException {
     return waitForSupplementalInformation(
         createDescriptionField(catalog.getString(
-                "1  Insert your bank card into the card reader ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_CardReader.png)\n"
-                + "2  Tap ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_LOGIN.png) + ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_LOGIN.png)\n"
-                + "3  Enter the start code []"),
+                "1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_CardReader.png) Insert your "
+                        + "bank card into the card reader\n"
+                + "2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_LOGIN.png) Tap\n"
+                + "3$  Enter the start code []"),
             challenge),
         createInputField(catalog.getString(
-                "4  Tap ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png)\n"
-                    + "5  Enter your secret code\n"
-                    + "6  Tap ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png)\n"
-                    + "7  Enter the login code")));
+                "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap\n"
+                    + "5$  Enter your secret code\n"
+                    + "6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap\n"
+                    + "7$  Enter the login code")));
     }
 
     private String waitForSignCode(String challenge) throws SupplementalInfoException {
     return waitForSupplementalInformation(
         createDescriptionField(catalog.getString(
-            "1  Insert your bank card into the card reader ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_CardReader.png)\n"
-                + "2  Tap ![]https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN.png) + ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN.png)\n"
-                + "3  Enter the start code []"),
+            "1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_CardReader.png) Insert your bank card into the card reader\n"
+                + "2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN.png) Tap\n"
+                + "3$  Enter the start code []"),
             challenge),
         createInputField(catalog.getString(
-            "4  Tap ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) + ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png)\n"
-                    + "5  Enter your PIN\n"
-                    + "6  Tap ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png)\n"
-                    + "7  Enter the sign code")));
+            "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap\n"
+                    + "5$  Enter your PIN\n"
+                    + "6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap\n"
+                    + "7$  Enter the sign code")));
     }
 
     private String waitForSupplementalInformation(Field... fields)
