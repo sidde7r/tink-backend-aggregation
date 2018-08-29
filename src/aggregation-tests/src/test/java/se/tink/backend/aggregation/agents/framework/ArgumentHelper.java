@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.framework;
 
 import com.google.common.collect.ImmutableList;
+import java.util.Collection;
+import java.util.HashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static org.junit.Assume.assumeNotNull;
@@ -22,6 +24,7 @@ public final class ArgumentHelper {
     private static final Logger logger = LoggerFactory.getLogger(ArgumentHelper.class);
 
     private static int skippedTestsCount = 0;
+    private static final Collection<String> missingArguments = new HashSet<>();
 
     private ImmutableList<String> arguments;
 
@@ -41,9 +44,10 @@ public final class ArgumentHelper {
         // Run tests only if the listed parameters have been passed as arguments, otherwise skip
         skippedTestsCount++;
         for (final String arg : arguments) {
-            assumeNotNull(System.getProperty(arg));
+            missingArguments.add(arg);
+            assumeNotNull(System.getProperty(arg)); // Will terminate the method here if the property is missing
+            missingArguments.remove(arg);
         }
-        // This statement is unreachable if not every command line parameter has been assigned a value
         skippedTestsCount--;
     }
 
@@ -52,7 +56,8 @@ public final class ArgumentHelper {
      */
     public static void afterClass() {
         if (skippedTestsCount > 0) {
-            logger.warn(String.format("Skipped %s tests", skippedTestsCount));
+            logger.warn(String.format("Skipped %s tests because arguments were not supplied: %s",
+                    skippedTestsCount, missingArguments));
         }
     }
 
@@ -62,7 +67,10 @@ public final class ArgumentHelper {
      */
     public String get(final String propertyName) {
         if (!arguments.contains(propertyName)) {
-            throw new IllegalArgumentException(String.format("Argument '%s' was never registered", propertyName));
+            throw new IllegalArgumentException(
+                    String.format("Argument '%s' was never declared. You declared: %s",
+                            propertyName,
+                            arguments));
         }
         return System.getProperty(propertyName);
     }
