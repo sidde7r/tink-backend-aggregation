@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.fetcher.transactional;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.xml.bind.JAXBException;
@@ -46,6 +47,18 @@ public class BawagPskTransactionalAccountFetcher implements AccountFetcher<Trans
         return bawagPskApiClient.getGetAccountInformationListResponse(requestString);
     }
 
+    /**
+     * The account data is scattered across two responses:
+     * @param loginResponse which contains all needed data for all accounts, except balance
+     * @param accountResponse which contains balance for all accounts
+     * @return A collection of TransactionAccount instances built from these responses
+     */
+    private static Collection<TransactionalAccount> toTransactionalAccounts(
+            final LoginResponse loginResponse,
+            final GetAccountInformationListResponse accountResponse) {
+        return loginResponse.toTransactionalAccounts(accountResponse.getAccountNumberToBalanceMap());
+    }
+
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         final LoginResponse loginResponse = bawagPskApiClient.getLoginResponse()
@@ -59,10 +72,6 @@ public class BawagPskTransactionalAccountFetcher implements AccountFetcher<Trans
             logger.warn(String.format("Retrieved invalid BIC/IBAN: %s/%s", iban.getBic(), iban.getIban()));
         }
 
-        return loginResponse.getProductList().stream()
-                .map(product -> product.toTransactionalAccount(
-                        accountResponse.getBalanceFromAccountNumber(product.getAccountNumber())
-                ))
-                .collect(Collectors.toSet());
+        return toTransactionalAccounts(loginResponse, accountResponse);
     }
 }
