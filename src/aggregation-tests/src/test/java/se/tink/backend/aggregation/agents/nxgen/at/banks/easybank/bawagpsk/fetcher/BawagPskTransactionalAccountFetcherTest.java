@@ -70,7 +70,6 @@ public final class BawagPskTransactionalAccountFetcherTest {
     }
 
     @Test
-    @Ignore
     public void testFetchAccounts() throws AuthenticationException, AuthorizationException {
         authenticator.authenticate(helper.get("tink.username"), helper.get("tink.password"));
 

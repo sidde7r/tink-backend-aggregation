@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk;
 
-import org.junit.Ignore;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,7 +7,6 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentHelper;
 import se.tink.backend.aggregation.rpc.Field;
 
-@Ignore
 public class BawagPskAgentTest {
     private final ArgumentHelper helper = new ArgumentHelper("tink.username", "tink.password");
 
