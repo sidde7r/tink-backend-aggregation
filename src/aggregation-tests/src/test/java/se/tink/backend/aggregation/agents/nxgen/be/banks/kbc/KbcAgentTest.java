@@ -8,6 +8,8 @@ import se.tink.backend.aggregation.rpc.Field;
 @Ignore
 public class KbcAgentTest {
 
+    // NB  m4ri needs to be installed
+    // See ../tools/libkbc_wbaes_src/README
     private static final String USERNAME = "";
 
     private static final AgentIntegrationTest.Builder builder =
