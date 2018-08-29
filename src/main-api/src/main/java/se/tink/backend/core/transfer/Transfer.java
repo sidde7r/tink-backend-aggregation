@@ -177,7 +177,7 @@ public class Transfer implements Serializable, Cloneable {
             this.oldAmount = null;
             this.currency = null;
         } else {
-            this.amount = amount.getValue() == null ? null : BigDecimal.valueOf(amount.getValue());
+            this.amount = amount.toBigDecimal();
             this.oldAmount = amount.getValue();
             this.currency = amount.getCurrency();
         }
