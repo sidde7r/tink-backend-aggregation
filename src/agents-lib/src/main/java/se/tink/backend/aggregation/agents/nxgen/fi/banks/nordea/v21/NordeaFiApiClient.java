@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea;
+package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v21;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v21.NordeaV21ApiClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;

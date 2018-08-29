@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea;
+package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v21;
 
 import com.google.common.collect.Maps;
 import java.util.Map;

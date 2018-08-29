@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.parser;
+package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v21.parser;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Strings;
