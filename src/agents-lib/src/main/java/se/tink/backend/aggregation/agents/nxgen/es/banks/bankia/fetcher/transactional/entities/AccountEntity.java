@@ -52,8 +52,8 @@ public class AccountEntity {
                 .setName(getAccountName(iban))
                 .setBalance(realBalance.toTinkAmount())
                 .setBankIdentifier(bankIdentifier)
-                .addToTemporaryStorage(BankiaConstants.StorageKey.COUNTRY, country)
-                .addToTemporaryStorage(BankiaConstants.StorageKey.CONTROL_DIGITS, controlDigits)
+                .putInTemporaryStorage(BankiaConstants.StorageKey.COUNTRY, country)
+                .putInTemporaryStorage(BankiaConstants.StorageKey.CONTROL_DIGITS, controlDigits)
                 .build();
     }
 }

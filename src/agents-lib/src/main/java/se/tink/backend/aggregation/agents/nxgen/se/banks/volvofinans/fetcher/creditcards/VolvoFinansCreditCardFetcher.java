@@ -56,7 +56,7 @@ public class VolvoFinansCreditCardFetcher implements AccountFetcher<CreditCardAc
 
     private List<CreditCardTransaction> getTransactionsBatch(CreditCardAccount account, LocalDate localFromDate,
             LocalDate localToDate) {
-        String accountId = account.getTemporaryStorage(VolvoFinansConstants.UrlParameters.ACCOUNT_ID, String.class);
+        String accountId = account.getFromTemporaryStorage(VolvoFinansConstants.UrlParameters.ACCOUNT_ID);
         int limit = VolvoFinansConstants.Pagination.LIMIT;
         int offset = 0;
 

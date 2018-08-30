@@ -16,7 +16,9 @@ public class SabadellTransactionFetcher implements TransactionKeyPaginator<Trans
     @Override
     public TransactionKeyPaginatorResponse<Boolean> getTransactionsFor(TransactionalAccount account, Boolean key) {
         boolean moreRequest = key != null;
-        AccountEntity accountEntity = account.getTemporaryStorage(account.getAccountNumber(), AccountEntity.class);
+        AccountEntity accountEntity =
+                account.getFromTemporaryStorage(account.getAccountNumber(), AccountEntity.class)
+                .orElseThrow(() -> new IllegalStateException("No account entity provided"));
 
         return apiClient.fetchTransactions(accountEntity, moreRequest);
     }

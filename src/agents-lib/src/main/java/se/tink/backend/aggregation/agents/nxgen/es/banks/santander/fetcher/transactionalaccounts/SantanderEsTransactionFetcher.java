@@ -20,12 +20,12 @@ public class SantanderEsTransactionFetcher implements TransactionKeyPaginator<Tr
     @Override
     public TransactionKeyPaginatorResponse<RepositionEntity> getTransactionsFor(
             TransactionalAccount account, RepositionEntity key) {
-        String userDataXmlString = account.getTemporaryStorage(
-                SantanderEsConstants.Storage.USER_DATA_XML, String.class);
-        String contractIdXmlString = account.getTemporaryStorage(
-                SantanderEsConstants.Storage.CONTRACT_ID_XML, String.class);
-        String balanceXmlString = account.getTemporaryStorage(
-                SantanderEsConstants.Storage.BALANCE_XML, String.class);
+        String userDataXmlString = account.getFromTemporaryStorage(
+                SantanderEsConstants.Storage.USER_DATA_XML);
+        String contractIdXmlString = account.getFromTemporaryStorage(
+                SantanderEsConstants.Storage.CONTRACT_ID_XML);
+        String balanceXmlString = account.getFromTemporaryStorage(
+                SantanderEsConstants.Storage.BALANCE_XML);
 
         String xmlResponseString = SerializationUtils.deserializeFromString(
                 apiClient.fetchTransactions(userDataXmlString, contractIdXmlString, balanceXmlString, key),

@@ -81,8 +81,10 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
         try {
             for (TransactionalAccount account : accounts) {
                 String accountNumber = account.getAccountNumber();
-                BankProfile bankProfile = account.getTemporaryStorage(SwedbankBaseConstants.StorageKey.PROFILE,
-                        BankProfile.class);
+
+                BankProfile bankProfile =
+                        account.getFromTemporaryStorage(SwedbankBaseConstants.StorageKey.PROFILE, BankProfile.class)
+                                .orElse(null);
 
                 String bankProfileId = "N/A";
                 if (bankProfile != null && bankProfile.getBank() != null) {
@@ -99,7 +101,9 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
 
     @Override
     public Collection<UpcomingTransaction> fetchUpcomingTransactionsFor(TransactionalAccount account) {
-        BankProfile bankProfile = account.getTemporaryStorage(SwedbankBaseConstants.StorageKey.PROFILE, BankProfile.class);
+        BankProfile bankProfile =
+                account.getFromTemporaryStorage(SwedbankBaseConstants.StorageKey.PROFILE, BankProfile.class)
+                        .orElseThrow(() -> new IllegalStateException("No bank profile specified"));
         apiClient.selectProfile(bankProfile);
 
         PaymentsConfirmedResponse paymentsConfirmedResponse = apiClient.paymentsConfirmed();
@@ -110,14 +114,18 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
     @Override
     public TransactionKeyPaginatorResponse<LinkEntity> getTransactionsFor(
             TransactionalAccount account, LinkEntity key) {
-        BankProfile bankProfile = account.getTemporaryStorage(SwedbankBaseConstants.StorageKey.PROFILE, BankProfile.class);
+        BankProfile bankProfile =
+                account.getFromTemporaryStorage(SwedbankBaseConstants.StorageKey.PROFILE, BankProfile.class)
+                        .orElseThrow(() -> new IllegalStateException("No bank profile specified"));
         apiClient.selectProfile(bankProfile);
 
         if (key != null) {
             return apiClient.engagementTransactions(key);
         }
 
-        LinkEntity nextLink = account.getTemporaryStorage(SwedbankBaseConstants.StorageKey.NEXT_LINK, LinkEntity.class);
+        LinkEntity nextLink =
+                account.getFromTemporaryStorage(SwedbankBaseConstants.StorageKey.NEXT_LINK, LinkEntity.class)
+                        .orElse(null);
 
         TransactionKeyPaginatorResponseImpl<LinkEntity> transactionKeyPaginatorResponse =
                 new TransactionKeyPaginatorResponseImpl<>();

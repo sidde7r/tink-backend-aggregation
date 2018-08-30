@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.nxgen.core.account;
 
-import org.assertj.core.util.Maps;
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.rpc.AccountTypes;
@@ -29,8 +28,7 @@ public class TransactionalAccountTest {
                 TransactionalAccount.builder(AccountTypes.CHECKING, ACCOUNT_NUMBER)
                         .setHolderName(new HolderName("name"))
                         .setAccountNumber(ACCOUNT_NUMBER)
-                        .setBalance(Amount.inSEK(12d))
-                        .setTemporaryStorage(Maps.newHashMap());
+                        .setBalance(Amount.inSEK(12d));
         transactionalBuilder.setBalance(Amount.inDKK(20d));
         TransactionalAccount transactionalAccount = transactionalBuilder.build();
         assertEquals(Amount.inDKK(20d), transactionalAccount.getBalance());

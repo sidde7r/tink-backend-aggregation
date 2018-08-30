@@ -43,7 +43,7 @@ public class CreditCardEntity {
                 .builder(accountNumber, Amount.inSEK(balance), Amount.inSEK(availableCredit))
                 .setAccountNumber(accountNumber)
                 .setName(name)
-                .addToTemporaryStorage(VolvoFinansConstants.UrlParameters.ACCOUNT_ID, accountId)
+                .putInTemporaryStorage(VolvoFinansConstants.UrlParameters.ACCOUNT_ID, accountId)
                 .build();
     }
 }

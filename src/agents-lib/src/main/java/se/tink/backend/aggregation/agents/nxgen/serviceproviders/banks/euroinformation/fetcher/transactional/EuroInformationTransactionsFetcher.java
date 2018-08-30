@@ -28,8 +28,7 @@ public class EuroInformationTransactionsFetcher implements TransactionFetcher<Tr
 
     @Override
     public List<AggregationTransaction> fetchTransactionsFor(TransactionalAccount account) {
-        // TODO: Temporary fix for double serialization problem, please remove `replace` method when fixed
-        String webId = account.getTemporaryStorage().get(EuroInformationConstants.Tags.WEB_ID).replace("\"", "");
+        String webId = account.getFromTemporaryStorage(EuroInformationConstants.Tags.WEB_ID);
         Optional<TransactionSummaryResponse> transactionsForAccount = getTransactionsForAccount(webId);
 
         List<AggregationTransaction> transactions = Lists.newArrayList();

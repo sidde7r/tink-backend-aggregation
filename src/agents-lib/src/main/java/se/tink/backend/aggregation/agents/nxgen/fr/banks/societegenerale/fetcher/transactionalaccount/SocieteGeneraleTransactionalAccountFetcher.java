@@ -61,8 +61,9 @@ public class SocieteGeneraleTransactionalAccountFetcher implements AccountFetche
 
         builder.setBalance(entity.getBalance().toTinkAmount());
 
-        builder.addToTemporaryStorage(SocieteGeneraleConstants.StorageKey.TECHNICAL_ID, entity.getTechnicalId());
-        builder.addToTemporaryStorage(SocieteGeneraleConstants.StorageKey.TECHNICAL_CARD_ID,
+        builder.putInTemporaryStorage(SocieteGeneraleConstants.StorageKey.TECHNICAL_ID,
+                entity.getTechnicalId());
+        builder.putInTemporaryStorage(SocieteGeneraleConstants.StorageKey.TECHNICAL_CARD_ID,
                 entity.getTechnicalCardId());
 
         return builder.build();
@@ -97,9 +98,9 @@ public class SocieteGeneraleTransactionalAccountFetcher implements AccountFetche
     public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
 
         String technicalId = account
-                .getTemporaryStorage(SocieteGeneraleConstants.StorageKey.TECHNICAL_ID, String.class);
+                .getFromTemporaryStorage(SocieteGeneraleConstants.StorageKey.TECHNICAL_ID);
         String technicalCardId = account
-                .getTemporaryStorage(SocieteGeneraleConstants.StorageKey.TECHNICAL_CARD_ID, String.class);
+                .getFromTemporaryStorage(SocieteGeneraleConstants.StorageKey.TECHNICAL_CARD_ID);
 
         Optional<TransactionsData> response = apiClient
                 .getTransactions(technicalId, technicalCardId, page, PAGE_SIZE);

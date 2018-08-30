@@ -105,11 +105,11 @@ public class AccountEntity {
         return TransactionalAccount.builder(getTinkAccountType(), getUniqueIdentifier(), balance.getTinkAmount())
                 .setAccountNumber(iban)
                 .setName(generalInfo.getAlias())
-                .addToTemporaryStorage(SantanderEsConstants.Storage.USER_DATA_XML,
+                .putInTemporaryStorage(SantanderEsConstants.Storage.USER_DATA_XML,
                         SantanderEsXmlUtils.parseJsonToXmlString(userData))
-                .addToTemporaryStorage(SantanderEsConstants.Storage.CONTRACT_ID_XML,
+                .putInTemporaryStorage(SantanderEsConstants.Storage.CONTRACT_ID_XML,
                         SantanderEsXmlUtils.parseJsonToXmlString(originalContractId))
-                .addToTemporaryStorage(SantanderEsConstants.Storage.BALANCE_XML,
+                .putInTemporaryStorage(SantanderEsConstants.Storage.BALANCE_XML,
                         SantanderEsXmlUtils.parseJsonToXmlString(getBalance()))
                 .build();
     }

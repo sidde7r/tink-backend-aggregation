@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher
 import java.util.HashMap;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.entities.LinkEntity;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.core.Amount;
@@ -65,7 +65,7 @@ public class AccountEntity {
                .setAccountNumber(accountNumber)
                .setName(getProperties().getAlias())
                .setBankIdentifier(id)
-               .addToTemporaryStorage(SparebankenSorConstants.Storage.TEMPORARY_STORAGE_LINKS, links)
+               .putInTemporaryStorage(SparebankenSorConstants.Storage.TEMPORARY_STORAGE_LINKS, links)
                .build();
     }
 

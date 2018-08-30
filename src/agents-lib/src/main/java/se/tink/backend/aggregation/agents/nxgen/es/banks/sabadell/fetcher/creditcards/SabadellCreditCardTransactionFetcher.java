@@ -21,7 +21,8 @@ public class SabadellCreditCardTransactionFetcher implements TransactionPagePagi
     @Override
     public PaginatorResponse getTransactionsFor(CreditCardAccount account, int page) {
         CreditCardEntity creditCardEntity = account
-                .getTemporaryStorage(account.getBankIdentifier(), CreditCardEntity.class);
+                .getFromTemporaryStorage(account.getBankIdentifier(), CreditCardEntity.class)
+                        .orElseThrow(() -> new IllegalStateException("No account entity provided"));
 
         CreditCardTransactionsResponse creditCardTransactionsResponse = apiClient
                 .fetchCreditCardTransactions(creditCardEntity, getTotalItemsFetched(page), page);

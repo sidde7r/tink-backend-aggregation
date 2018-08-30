@@ -20,7 +20,7 @@ public class BnpParibasTransactionalAccountTransactionFetcher implements
 
     @Override
     public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
-        String ibanKey = account.getTemporaryStorage(BnpParibasConstants.Storage.IBAN_KEY, String.class);
+        String ibanKey = account.getFromTemporaryStorage(BnpParibasConstants.Storage.IBAN_KEY);
 
         Collection<? extends Transaction> transactions = apiClient
                 .getTransactionalAccountTransactions(fromDate, toDate, ibanKey)
