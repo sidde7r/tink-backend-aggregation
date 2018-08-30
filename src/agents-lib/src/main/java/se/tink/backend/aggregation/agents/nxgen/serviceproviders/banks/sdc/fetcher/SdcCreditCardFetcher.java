@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcSessionStorage;
@@ -53,17 +54,19 @@ public class SdcCreditCardFetcher extends SdcAgreementFetcher implements Account
 
         SessionStorageAgreements agreements = getAgreements();
         for (SessionStorageAgreement agreement : agreements) {
-            SdcServiceConfigurationEntity serviceConfigurationEntity = selectAgreement(agreement, agreements);
+            Optional<SdcServiceConfigurationEntity> serviceConfigurationEntity = selectAgreement(agreement, agreements);
 
-            // different provider service config use different endpoints
-            if (serviceConfigurationEntity.isCreditCard()) {
-                fetchCreditCardProviderAccountList(creditCards, agreement);
-            }
+            serviceConfigurationEntity.ifPresent(configurationEntity -> {
 
-            if (serviceConfigurationEntity.isBlockCard()) {
-                fetchCreditCardList(creditCards, agreement);
-            }
+                // different provider service config use different endpoints
+                if (configurationEntity.isCreditCard()) {
+                    fetchCreditCardProviderAccountList(creditCards, agreement);
+                }
 
+                if (configurationEntity.isBlockCard()) {
+                    fetchCreditCardList(creditCards, agreement);
+                }
+            });
         }
 
         // store updated agreements
@@ -77,7 +80,11 @@ public class SdcCreditCardFetcher extends SdcAgreementFetcher implements Account
         SessionStorageAgreements agreements = getAgreements();
         SessionStorageAgreement agreement = agreements.findAgreementForAccountBankId(account.getBankIdentifier());
 
-        selectAgreement(agreement, agreements);
+        Optional<SdcServiceConfigurationEntity> serviceConfigurationEntity = selectAgreement(agreement, agreements);
+
+        if (!serviceConfigurationEntity.isPresent()) {
+            return PaginatorResponseImpl.createEmpty(false);
+        }
 
         SdcAccountKey creditCardAccountId = this.creditCardAccounts.get(account.getBankIdentifier());
         SearchTransactionsRequest searchTransactionsRequest = new SearchTransactionsRequest()

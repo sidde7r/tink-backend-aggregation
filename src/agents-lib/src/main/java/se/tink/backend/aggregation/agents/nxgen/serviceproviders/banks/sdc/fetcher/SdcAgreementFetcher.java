@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher;
 
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.entities.SdcServiceConfigurationEntity;
@@ -8,8 +10,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.entities.SessionStorageAgreements;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.rpc.SdcAgreementServiceConfigurationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.SelectAgreementRequest;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public abstract class SdcAgreementFetcher {
+    private static final Logger log = LoggerFactory.getLogger(SdcAgreementFetcher.class);
 
     protected final SdcApiClient bankClient;
     private final SdcSessionStorage sessionStorage;
@@ -27,18 +31,27 @@ public abstract class SdcAgreementFetcher {
         sessionStorage.setAgreements(agreements);
     }
 
-    protected SdcServiceConfigurationEntity selectAgreement(SessionStorageAgreement currentAgreement,
+    protected Optional<SdcServiceConfigurationEntity> selectAgreement(SessionStorageAgreement currentAgreement,
             SessionStorageAgreements agreements) {
         Optional<SdcServiceConfigurationEntity> configurationEntity = sessionStorage
                 .getCurrentServiceConfiguration()
                 .map(SdcAgreementServiceConfigurationResponse::getServiceConfiguration);
+
         if (configurationEntity.isPresent() && agreements.size() == 1) {
-            return configurationEntity.get();
+            return configurationEntity;
         }
-        SdcAgreementServiceConfigurationResponse serviceConfiguration =
-                updateServerWithAgreementInUse(currentAgreement);
-        sessionStorage.putCurrentServiceConfiguration(serviceConfiguration);
-        return serviceConfiguration.getServiceConfiguration();
+
+        try {
+            SdcAgreementServiceConfigurationResponse serviceConfiguration =
+                    updateServerWithAgreementInUse(currentAgreement);
+            sessionStorage.putCurrentServiceConfiguration(serviceConfiguration);
+            return Optional.of(serviceConfiguration.getServiceConfiguration());
+        } catch (HttpResponseException e) {
+            // SDC seems to return 500 with no explanation for some agreements. Since we've seen that we're able
+            // to select other agreements sucessfully for the same credential we don't want this to break the refresh.
+            log.warn("Unable to select agreement.", e);
+            return Optional.empty();
+        }
     }
 
     /*

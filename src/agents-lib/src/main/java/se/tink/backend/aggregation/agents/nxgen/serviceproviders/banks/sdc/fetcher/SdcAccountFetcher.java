@@ -1,7 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher;
 
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcSessionStorage;
@@ -23,21 +24,24 @@ public class SdcAccountFetcher extends SdcAgreementFetcher implements AccountFet
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        Collection<TransactionalAccount> accounts = Lists.newArrayList();
+        Collection<TransactionalAccount> accounts = new ArrayList<>();
 
         SessionStorageAgreements agreements = getAgreements();
 
         for (SessionStorageAgreement agreement : agreements) {
-            SdcServiceConfigurationEntity serviceConfiguration = selectAgreement(agreement, agreements);
-            if (serviceConfiguration.isAccounts()) {
-                Collection<TransactionalAccount> agreementAccounts = fetchAgreementAccounts();
+            Optional<SdcServiceConfigurationEntity> serviceConfiguration = selectAgreement(agreement, agreements);
 
-                for (TransactionalAccount account : agreementAccounts) {
-                    agreement.addAccountBankId(account.getBankIdentifier());
+            serviceConfiguration.ifPresent(configurationEntity -> {
+                if (configurationEntity.isAccounts()) {
+                    Collection<TransactionalAccount> agreementAccounts = fetchAgreementAccounts();
+
+                    for (TransactionalAccount account : agreementAccounts) {
+                        agreement.addAccountBankId(account.getBankIdentifier());
+                    }
+
+                    accounts.addAll(agreementAccounts);
                 }
-
-                accounts.addAll(agreementAccounts);
-            }
+            });
         }
 
         setAgreements(agreements);

@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetc
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcSessionStorage;
@@ -27,9 +28,14 @@ public class SdcLoanFetcher extends SdcAgreementFetcher implements AccountFetche
         SessionStorageAgreements agreements = getAgreements();
 
         for (SessionStorageAgreement agreement : agreements) {
-            SdcServiceConfigurationEntity serviceConfiguration = selectAgreement(agreement,
+            Optional<SdcServiceConfigurationEntity> serviceConfiguration = selectAgreement(agreement,
                     agreements);
-            if (serviceConfiguration.isLoan()) {
+
+            if (!serviceConfiguration.isPresent()) {
+                continue;
+            }
+
+            if (serviceConfiguration.get().isLoan()) {
                 ListLoanAccountsResponse loanAccounsResponse = bankClient.listLoans();
                 if (loanAccounsResponse != null) {
                     return loanAccounsResponse.stream()
