@@ -30,15 +30,11 @@ import se.tink.backend.aggregation.controllers.SupplementalInformationController
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.aggregation.rpc.CreateCredentialsRequest;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Provider;
-import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
-import se.tink.backend.aggregation.rpc.TransferRequest;
-import se.tink.backend.aggregation.rpc.UpdateCredentialsRequest;
 import se.tink.backend.common.ServiceContext;
 import se.tink.backend.common.coordination.BarrierName;
 import se.tink.backend.common.mapper.CoreAccountMapper;
@@ -78,6 +74,7 @@ import se.tink.libraries.metrics.Counter;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.uuid.UUIDUtils;
+import static se.tink.backend.aggregation.rpc.CredentialsStatus.UPDATED;
 
 public class AgentWorkerContext extends AgentContext implements Managed, SetAccountsToAggregateContext {
     private static final AggregationLogger log = new AggregationLogger(AgentWorkerContext.class);
@@ -122,7 +119,8 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
     private List<String> uniqueIdOfUserSelectedAccounts;
 
     public AgentWorkerContext(CredentialsRequest request, ServiceContext serviceContext, MetricRegistry metricRegistry,
-            boolean useAggregationController, AggregationControllerAggregationClient aggregationControllerAggregationClient,
+            boolean useAggregationController,
+            AggregationControllerAggregationClient aggregationControllerAggregationClient,
             ClusterInfo clusterInfo) {
 
         final ClusterId clusterId = clusterInfo.getClusterId();
@@ -247,7 +245,8 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         // Metrics
         refreshTotal.inc();
         TARGET_ACCOUNT_TYPES.forEach(accountType -> {
-            if (allAvailableAccountsByUniqueId.values().stream().noneMatch(pair-> pair.first.getType() == accountType)) {
+            if (allAvailableAccountsByUniqueId.values().stream()
+                    .noneMatch(pair -> pair.first.getType() == accountType)) {
                 metricRegistry.meter(
                         MetricId.newId("no_accounts_fetched")
                                 .label(defaultMetricLabels)
@@ -322,7 +321,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
                         + "This should not happen and might mean that Agent is not updating all Accounts separately.");
                 continue;
             }
-            
+
             if (!shouldAggregateDataForAccount(account.get())) {
                 // Account marked to not aggregate data from.
                 // Preferably we would not even download the data but this makes sure
@@ -373,14 +372,15 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
                     aggregationControllerAggregationClient.generateStatisticsAndActivityAsynchronously(
                             generateStatisticsReq);
                 }
-            } else{
+            } else {
                 GenerateStatisticsAndActivitiesRequest generateStatisticsReq = new GenerateStatisticsAndActivitiesRequest();
                 generateStatisticsReq.setUserId(request.getUser().getId());
                 generateStatisticsReq.setCredentialsId(request.getCredentials().getId());
                 generateStatisticsReq.setUserTriggered(request.isCreate());
                 generateStatisticsReq.setMode(StatisticMode.FULL); // To trigger refresh of residences.
 
-                systemServiceFactory.getProcessService().generateStatisticsAndActivityAsynchronously(generateStatisticsReq);
+                systemServiceFactory.getProcessService()
+                        .generateStatisticsAndActivityAsynchronously(generateStatisticsReq);
             }
             return;
         }
@@ -397,9 +397,9 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
             Date now = new Date();
 
             credentials.setUpdated(now);
-            credentials.setStatus(CredentialsStatus.UPDATED);
+            credentials.setStatus(UPDATED);
 
-            updateCredentialsExcludingSensitiveInformation(credentials);
+            updateCredentialsExcludingSensitiveInformation(credentials, true);
 
             return;
         }
@@ -465,6 +465,10 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
 
         } catch (Exception e) {
             log.error("Caught exception while waiting for supplemental information", e);
+        } finally {
+            // Always clean up the supplemental information
+            Credentials credentials = request.getCredentials();
+            credentials.setSupplementalInformation(null);
         }
 
         return Optional.empty();
@@ -473,7 +477,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
     @Override
     public String requestSupplementalInformation(Credentials credentials, boolean wait) {
         if (wait) {
-            updateCredentialsExcludingSensitiveInformation(credentials);
+            updateCredentialsExcludingSensitiveInformation(credentials, true);
 
             Optional<String> supplementalInformation = waitForSupplementalInformation(credentials.getId(), 2,
                     TimeUnit.MINUTES);
@@ -497,7 +501,8 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
     }
 
     private boolean shouldAggregateDataForAccount(Account account) {
-        return accountsToAggregate.stream().map(Account::getBankId).collect(Collectors.toList()).contains(account.getBankId());
+        return accountsToAggregate.stream().map(Account::getBankId).collect(Collectors.toList())
+                .contains(account.getBankId());
     }
 
     @Override
@@ -517,7 +522,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
     }
 
     public void sendAllCachedAccountsToUpdateService() {
-        for(String uniqueId : allAvailableAccountsByUniqueId.keySet()) {
+        for (String uniqueId : allAvailableAccountsByUniqueId.keySet()) {
             sendAccountToUpdateService(uniqueId);
         }
     }
@@ -587,7 +592,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
     }
 
     @Override
-    public void updateCredentialsExcludingSensitiveInformation(Credentials credentials) {
+    public void updateCredentialsExcludingSensitiveInformation(Credentials credentials, boolean doStatusUpdate) {
         // Execute any event-listeners.
 
         for (AgentEventListener eventListener : eventListeners) {
@@ -609,12 +614,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
                     new se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest();
             updateCredentialsStatusRequest.setCredentials(coreCredentials);
             updateCredentialsStatusRequest.setUserId(credentials.getUserId());
-            updateCredentialsStatusRequest.setUpdateContextTimestamp(
-                    request instanceof UpdateCredentialsRequest ||
-                            request instanceof CreateCredentialsRequest ||
-                            request instanceof RefreshInformationRequest ||
-                            request instanceof TransferRequest);
-            updateCredentialsStatusRequest.setManual(request.isManual());
+            updateCredentialsStatusRequest.setUpdateContextTimestamp(doStatusUpdate);
             updateCredentialsStatusRequest.setUserDeviceId(request.getUserDeviceId());
 
             if (isAggregationCluster) {
@@ -628,11 +628,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
             UpdateCredentialsStatusRequest updateCredentialsStatusRequest = new UpdateCredentialsStatusRequest();
             updateCredentialsStatusRequest.setCredentials(coreCredentials);
             updateCredentialsStatusRequest.setUserId(credentials.getUserId());
-            updateCredentialsStatusRequest.setUpdateContextTimestamp(
-                    request instanceof UpdateCredentialsRequest ||
-                            request instanceof CreateCredentialsRequest ||
-                            request instanceof RefreshInformationRequest ||
-                            request instanceof TransferRequest);
+            updateCredentialsStatusRequest.setUpdateContextTimestamp(doStatusUpdate);
             updateCredentialsStatusRequest.setManual(request.isManual());
             updateCredentialsStatusRequest.setUserDeviceId(request.getUserDeviceId());
 
@@ -657,7 +653,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
     @Override
     public void updateStatus(final CredentialsStatus status, final String statusPayload,
             final boolean statusFromProvider) {
-
         Credentials credentials = request.getCredentials();
         credentials.setStatus(status);
         credentials.setStatusPayload(statusPayload);
@@ -685,7 +680,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
             credentials.setStatusPayload(payload);
         }
 
-        updateCredentialsExcludingSensitiveInformation(credentials);
+        updateCredentialsExcludingSensitiveInformation(credentials, true);
     }
 
     @Override
@@ -801,7 +796,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
             } else {
                 aggregationControllerAggregationClient.updateSignableOperation(signableOperation);
             }
-        } else{
+        } else {
             systemServiceFactory.getUpdateService().updateSignableOperation(signableOperation);
         }
     }

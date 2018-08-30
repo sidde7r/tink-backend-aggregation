@@ -263,7 +263,7 @@ public class NewAgentTestContext extends AgentContext {
     }
 
     @Override
-    public void updateCredentialsExcludingSensitiveInformation(Credentials credentials) {
+    public void updateCredentialsExcludingSensitiveInformation(Credentials credentials, boolean doUpdateStatus) {
         // noop
     }
 

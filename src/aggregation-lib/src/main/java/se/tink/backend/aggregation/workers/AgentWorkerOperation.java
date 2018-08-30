@@ -132,7 +132,7 @@ public class AgentWorkerOperation implements Runnable {
 
                 credentials.setStatus(CredentialsStatus.TEMPORARY_ERROR);
                 credentials.setStatusPayload(null);
-                context.updateCredentialsExcludingSensitiveInformation(credentials);
+                context.updateCredentialsExcludingSensitiveInformation(credentials, true);
 
                 break;
             }

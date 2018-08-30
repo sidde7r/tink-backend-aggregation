@@ -124,7 +124,7 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
             credentials.setStatus(CredentialsStatus.AUTHENTICATION_ERROR);
         }
 
-        context.updateCredentialsExcludingSensitiveInformation(credentials);
+        context.updateCredentialsExcludingSensitiveInformation(credentials, true);
 
         return bcNumber.isPresent();
     }
