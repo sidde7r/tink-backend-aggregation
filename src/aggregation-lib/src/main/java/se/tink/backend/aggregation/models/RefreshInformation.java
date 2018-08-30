@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.models;
 
+import java.util.Map;
+import org.slf4j.MDC;
 import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
@@ -12,6 +14,7 @@ public class RefreshInformation {
     private String apiToken;
     private byte[] clientCertificate;
     private boolean disableRequestCompression;
+    private Map<String, String> context;
 
     private String name;
     private String environment;
@@ -29,6 +32,7 @@ public class RefreshInformation {
         this.name = clusterInfo.getClusterId().getName();
         this.environment = clusterInfo.getClusterId().getEnvironment();
         this.aggregator = clusterInfo.getClusterId().getAggregator();
+        this.context = MDC.getCopyOfContextMap();
     }
 
     public RefreshInformationRequest getRequest() {
@@ -93,5 +97,13 @@ public class RefreshInformation {
 
     public void setAggregator(Aggregator aggregator) {
         this.aggregator = aggregator;
+    }
+
+    public void setMDCContext(Map<String, String> context){
+        this.context = context;
+    }
+
+    public Map<String, String> getMDCContext(){
+        return context;
     }
 }
