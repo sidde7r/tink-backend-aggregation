@@ -5,8 +5,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcSessionStorage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.entities.SdcServiceConfigurationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.entities.SessionStorageAgreement;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.entities.SessionStorageAgreements;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.SearchTransactionsRequest;
@@ -35,7 +37,11 @@ public class SdcTransactionFetcher extends SdcAgreementFetcher implements Transa
         SessionStorageAgreements agreements = getAgreements();
         SessionStorageAgreement agreement = agreements.findAgreementForAccountBankId(account.getBankIdentifier());
 
-        selectAgreement(agreement, agreements);
+        Optional<SdcServiceConfigurationEntity> serviceConfigurationEntity = selectAgreement(agreement, agreements);
+
+        if (!serviceConfigurationEntity.isPresent()) {
+            return PaginatorResponseImpl.createEmpty();
+        }
 
         SearchTransactionsRequest searchTransactionsRequest = new SearchTransactionsRequest()
                 .setAccountId(account.getAccountNumber())

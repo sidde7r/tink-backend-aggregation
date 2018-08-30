@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcSessionStorage;
@@ -53,14 +54,18 @@ public class SdcCreditCardFetcher extends SdcAgreementFetcher implements Account
 
         SessionStorageAgreements agreements = getAgreements();
         for (SessionStorageAgreement agreement : agreements) {
-            SdcServiceConfigurationEntity serviceConfigurationEntity = selectAgreement(agreement, agreements);
+            Optional<SdcServiceConfigurationEntity> serviceConfigurationEntity = selectAgreement(agreement, agreements);
+
+            if (!serviceConfigurationEntity.isPresent()) {
+                continue;
+            }
 
             // different provider service config use different endpoints
-            if (serviceConfigurationEntity.isCreditCard()) {
+            if (serviceConfigurationEntity.get().isCreditCard()) {
                 fetchCreditCardProviderAccountList(creditCards, agreement);
             }
 
-            if (serviceConfigurationEntity.isBlockCard()) {
+            if (serviceConfigurationEntity.get().isBlockCard()) {
                 fetchCreditCardList(creditCards, agreement);
             }
 
@@ -77,7 +82,11 @@ public class SdcCreditCardFetcher extends SdcAgreementFetcher implements Account
         SessionStorageAgreements agreements = getAgreements();
         SessionStorageAgreement agreement = agreements.findAgreementForAccountBankId(account.getBankIdentifier());
 
-        selectAgreement(agreement, agreements);
+        Optional<SdcServiceConfigurationEntity> serviceConfigurationEntity = selectAgreement(agreement, agreements);
+
+        if (!serviceConfigurationEntity.isPresent()) {
+            return PaginatorResponseImpl.createEmpty();
+        }
 
         SdcAccountKey creditCardAccountId = this.creditCardAccounts.get(account.getBankIdentifier());
         SearchTransactionsRequest searchTransactionsRequest = new SearchTransactionsRequest()

@@ -1,7 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.entities.SdcAmount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.entities.SdcChange;
@@ -32,10 +33,13 @@ public class CustodyOverviewResponse {
         return totalValue;
     }
 
-    public Stream<InvestmentAccount> toInvestmentAccounts(SdcApiClient bankClient) {
+    public List<InvestmentAccount> toInvestmentAccounts(SdcApiClient bankClient) {
         if (deposits == null) {
-            return Stream.empty();
+            return Collections.emptyList();
         }
-        return deposits.stream().map(deposit -> deposit.toInvestmentAccount(bankClient));
+
+        return deposits.stream()
+                .map(deposit -> deposit.toInvestmentAccount(bankClient))
+                .collect(Collectors.toList());
     }
 }
