@@ -11,6 +11,7 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import se.tink.backend.queue.QueueConsumer;
+import se.tink.backend.queue.QueueProducer;
 import se.tink.libraries.log.LogUtils;
 
 public class SqsConsumer implements Managed, QueueConsumer {
@@ -23,10 +24,10 @@ public class SqsConsumer implements Managed, QueueConsumer {
     private final int VISIBILITY_TIMEOUT_SECONDS = 300; //5 minutes
     private static final LogUtils log = new LogUtils(SqsConsumer.class);
     private AtomicBoolean running = new AtomicBoolean(false);
-    private final SqsProducer producer;
+    private final QueueProducer producer;
 
     @Inject
-    public SqsConsumer(SqsQueue sqsQueue, QueueMessageAction queueMessageAction, SqsProducer producer) {
+    public SqsConsumer(SqsQueue sqsQueue, QueueMessageAction queueMessageAction, QueueProducer producer) {
         this.sqsQueue = sqsQueue;
         this.queueMessageAction = queueMessageAction;
         this.producer = producer;
@@ -70,7 +71,7 @@ public class SqsConsumer implements Managed, QueueConsumer {
             sqsQueue.consumed();
         } catch (RejectedExecutionException e) {
             log.info("MessageID: " + sqsMessage.getMessageId() + " rejected by executor-queue. Will be requeued in SQS");
-            producer.requeue(sqsMessage);
+            producer.requeue(sqsMessage.getBody());
         }
 
     }

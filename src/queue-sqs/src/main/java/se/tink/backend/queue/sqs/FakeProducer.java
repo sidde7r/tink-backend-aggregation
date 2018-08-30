@@ -13,4 +13,9 @@ public class FakeProducer implements QueueProducer {
     public boolean isAvailable() {
         return false;
     }
+
+    @Override
+    public void requeue(String t) {
+
+    }
 }

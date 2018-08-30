@@ -41,10 +41,11 @@ public class SqsProducer implements QueueProducer {
     }
 
     // Future: requeue multiple jobs at the same time to reduce traffic
-    public void requeue(Message sqsMessage) {
+    @Override
+    public void requeue(String sqsMessage) {
         SendMessageRequest sendMessageStandardQueue = new SendMessageRequest()
                 .withQueueUrl(sqsQueue.getUrl())
-                .withMessageBody(sqsMessage.getBody())
+                .withMessageBody(sqsMessage)
                 //With delay seconds can max hide a message for 15 min. It
                 .withDelaySeconds(randomTimeoutSeconds(0, 900));
         sqsQueue.getSqs().sendMessage(sendMessageStandardQueue);
