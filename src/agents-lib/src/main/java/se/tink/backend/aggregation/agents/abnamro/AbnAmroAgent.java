@@ -223,13 +223,17 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
     }
 
     private void updateCreditCardAccount(Account account, RefreshableItem item) {
+        boolean shouldFetchTransactions = Objects.equals(item, RefreshableItem.CREDITCARD_TRANSACTIONS);
+
         try {
-            // TODO: Re-add balance when we the agent is working properly
-            // account.setBalance(getCreditCardBalance(account));
+            if (shouldFetchTransactions) {
+                account.setBalance(getCreditCardBalance(account));
+            }
+
             context.cacheAccount(account);
             context.sendAccountToUpdateService(account.getBankId());
 
-            if (Objects.equals(item, RefreshableItem.CREDITCARD_TRANSACTIONS)) {
+            if (shouldFetchTransactions) {
                 refreshCreditCardTransactions(account);
             }
         } catch (IcsException e) {
