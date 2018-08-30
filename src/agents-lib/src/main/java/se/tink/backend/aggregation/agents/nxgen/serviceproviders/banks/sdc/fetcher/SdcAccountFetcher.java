@@ -32,7 +32,7 @@ public class SdcAccountFetcher extends SdcAgreementFetcher implements AccountFet
             Optional<SdcServiceConfigurationEntity> serviceConfiguration = selectAgreement(agreement, agreements);
 
             serviceConfiguration.ifPresent(configurationEntity -> {
-                if (serviceConfiguration.get().isAccounts()) {
+                if (configurationEntity.isAccounts()) {
                     Collection<TransactionalAccount> agreementAccounts = fetchAgreementAccounts();
 
                     for (TransactionalAccount account : agreementAccounts) {
