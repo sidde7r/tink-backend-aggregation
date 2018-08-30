@@ -31,19 +31,17 @@ public class SdcAccountFetcher extends SdcAgreementFetcher implements AccountFet
         for (SessionStorageAgreement agreement : agreements) {
             Optional<SdcServiceConfigurationEntity> serviceConfiguration = selectAgreement(agreement, agreements);
 
-            if (!serviceConfiguration.isPresent()) {
-                continue;
-            }
+            serviceConfiguration.ifPresent(configurationEntity -> {
+                if (serviceConfiguration.get().isAccounts()) {
+                    Collection<TransactionalAccount> agreementAccounts = fetchAgreementAccounts();
 
-            if (serviceConfiguration.get().isAccounts()) {
-                Collection<TransactionalAccount> agreementAccounts = fetchAgreementAccounts();
+                    for (TransactionalAccount account : agreementAccounts) {
+                        agreement.addAccountBankId(account.getBankIdentifier());
+                    }
 
-                for (TransactionalAccount account : agreementAccounts) {
-                    agreement.addAccountBankId(account.getBankIdentifier());
+                    accounts.addAll(agreementAccounts);
                 }
-
-                accounts.addAll(agreementAccounts);
-            }
+            });
         }
 
         setAgreements(agreements);

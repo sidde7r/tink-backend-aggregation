@@ -56,19 +56,17 @@ public class SdcCreditCardFetcher extends SdcAgreementFetcher implements Account
         for (SessionStorageAgreement agreement : agreements) {
             Optional<SdcServiceConfigurationEntity> serviceConfigurationEntity = selectAgreement(agreement, agreements);
 
-            if (!serviceConfigurationEntity.isPresent()) {
-                continue;
-            }
+            serviceConfigurationEntity.ifPresent(configurationEntity -> {
 
-            // different provider service config use different endpoints
-            if (serviceConfigurationEntity.get().isCreditCard()) {
-                fetchCreditCardProviderAccountList(creditCards, agreement);
-            }
+                // different provider service config use different endpoints
+                if (configurationEntity.isCreditCard()) {
+                    fetchCreditCardProviderAccountList(creditCards, agreement);
+                }
 
-            if (serviceConfigurationEntity.get().isBlockCard()) {
-                fetchCreditCardList(creditCards, agreement);
-            }
-
+                if (configurationEntity.isBlockCard()) {
+                    fetchCreditCardList(creditCards, agreement);
+                }
+            });
         }
 
         // store updated agreements

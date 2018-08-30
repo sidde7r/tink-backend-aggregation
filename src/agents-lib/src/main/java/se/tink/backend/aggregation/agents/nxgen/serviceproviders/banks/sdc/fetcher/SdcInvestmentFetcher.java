@@ -46,14 +46,12 @@ public class SdcInvestmentFetcher extends SdcAgreementFetcher implements Account
         for (SessionStorageAgreement agreement : agreements) {
             Optional<SdcServiceConfigurationEntity> serviceConfiguration = selectAgreement(agreement, agreements);
 
-            if (!serviceConfiguration.isPresent()) {
-                continue;
-            }
-
-            if (serviceConfiguration.get().isInvestmentDeposit()) {
-                investmentAccounts.addAll(
-                        this.bankClient.fetchCustodyOverview().toInvestmentAccounts(this.bankClient));
-            }
+            serviceConfiguration.ifPresent(configurationEntity -> {
+                if (configurationEntity.isInvestmentDeposit()) {
+                    investmentAccounts.addAll(
+                            this.bankClient.fetchCustodyOverview().toInvestmentAccounts(this.bankClient));
+                }
+            });
         }
 
         return investmentAccounts;
