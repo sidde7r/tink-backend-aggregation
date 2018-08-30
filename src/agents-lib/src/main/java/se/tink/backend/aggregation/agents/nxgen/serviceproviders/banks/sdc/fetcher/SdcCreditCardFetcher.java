@@ -85,7 +85,7 @@ public class SdcCreditCardFetcher extends SdcAgreementFetcher implements Account
         Optional<SdcServiceConfigurationEntity> serviceConfigurationEntity = selectAgreement(agreement, agreements);
 
         if (!serviceConfigurationEntity.isPresent()) {
-            return PaginatorResponseImpl.createEmpty();
+            return PaginatorResponseImpl.createEmpty(false);
         }
 
         SdcAccountKey creditCardAccountId = this.creditCardAccounts.get(account.getBankIdentifier());

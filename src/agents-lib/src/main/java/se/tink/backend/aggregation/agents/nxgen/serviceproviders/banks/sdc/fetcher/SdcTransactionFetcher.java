@@ -40,7 +40,7 @@ public class SdcTransactionFetcher extends SdcAgreementFetcher implements Transa
         Optional<SdcServiceConfigurationEntity> serviceConfigurationEntity = selectAgreement(agreement, agreements);
 
         if (!serviceConfigurationEntity.isPresent()) {
-            return PaginatorResponseImpl.createEmpty();
+            return PaginatorResponseImpl.createEmpty(false);
         }
 
         SearchTransactionsRequest searchTransactionsRequest = new SearchTransactionsRequest()
