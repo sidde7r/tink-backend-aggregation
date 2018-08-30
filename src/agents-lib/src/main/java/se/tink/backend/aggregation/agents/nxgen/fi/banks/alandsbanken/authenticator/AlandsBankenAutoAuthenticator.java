@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.alandsbanken.authentic
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.alandsbanken.AlandsBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.alandsbanken.AlandsBankenConstants;
@@ -35,13 +36,13 @@ public class AlandsBankenAutoAuthenticator implements PasswordAuthenticator, Aut
     }
 
     @Override
-    public void autoAuthenticate() throws SessionException {
+    public void autoAuthenticate() throws SessionException, AuthorizationException {
         if (!persistentStorage.readyForSingleFactor()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
         try {
             authenticationController.authenticate(credentials);
-        } catch (AuthorizationException | AuthenticationException e) { // AuthorizationException never thrown...
+        } catch (AuthenticationException e) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }
@@ -54,6 +55,12 @@ public class AlandsBankenAutoAuthenticator implements PasswordAuthenticator, Aut
                 .setPassword(password)
                 .setAppVersion(AlandsBankenConstants.AutoAuthentication.APP_VERSION)
         );
+
+        if (response.passwordExpired()) {
+            persistentStorage.clearDeviceCredentials();
+            throw AuthorizationError.ACCOUNT_BLOCKED.exception(
+                    AlandsBankenConstants.EndUserMessage.PASSWORD_EXPIRED.getKey());
+        }
 
         if (response.incorrectPassword()) {
             LOGGER.warn("The password was incorrect");
