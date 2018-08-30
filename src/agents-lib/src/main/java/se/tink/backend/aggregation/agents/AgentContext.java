@@ -160,7 +160,7 @@ public abstract class AgentContext {
 
     public abstract void cacheTransactions(String accountUniqueId, List<Transaction> transactions);
 
-    public abstract void updateCredentialsExcludingSensitiveInformation(Credentials credentials);
+    public abstract void updateCredentialsExcludingSensitiveInformation(Credentials credentials, boolean doStatusUpdate);
 
     public abstract void updateCredentialsOnlySensitiveInformation(Credentials credentials);
 

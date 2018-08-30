@@ -79,7 +79,7 @@ public class AutoAuthenticationControllerTest {
         order.verify(credentials).setType(CredentialsTypes.MOBILE_BANKID);
         order.verify(multiFactorAuthenticator).authenticate(credentials);
         order.verify(credentials).setType(CredentialsTypes.PASSWORD);
-        order.verify(context).updateCredentialsExcludingSensitiveInformation(credentials);
+        order.verify(context).updateCredentialsExcludingSensitiveInformation(credentials, false);
         Assert.assertEquals(CredentialsTypes.PASSWORD, credentials.getType());
     }
 
@@ -136,7 +136,7 @@ public class AutoAuthenticationControllerTest {
             InOrder order = Mockito.inOrder(multiFactorAuthenticator, context, credentials);
             order.verify(multiFactorAuthenticator).authenticate(credentials);
             order.verify(credentials, Mockito.never()).setType(CredentialsTypes.PASSWORD);
-            order.verify(context).updateCredentialsExcludingSensitiveInformation(credentials);
+            order.verify(context).updateCredentialsExcludingSensitiveInformation(credentials, false);
         }
     }
 
@@ -173,7 +173,7 @@ public class AutoAuthenticationControllerTest {
             InOrder order = Mockito.inOrder(autoAuthenticator, context, credentials);
             order.verify(autoAuthenticator).autoAuthenticate();
             order.verify(credentials).setType(multiFactorAuthenticator.getType());
-            order.verify(context).updateCredentialsExcludingSensitiveInformation(credentials);
+            order.verify(context).updateCredentialsExcludingSensitiveInformation(credentials, false);
         }
     }
 
@@ -199,7 +199,7 @@ public class AutoAuthenticationControllerTest {
             order.verify(autoAuthenticator).autoAuthenticate();
             order.verify(multiFactorAuthenticator).authenticate(credentials);
             order.verify(credentials).setType(multiFactorAuthenticator.getType());
-            order.verify(context).updateCredentialsExcludingSensitiveInformation(credentials);
+            order.verify(context).updateCredentialsExcludingSensitiveInformation(credentials, false);
         }
     }
 

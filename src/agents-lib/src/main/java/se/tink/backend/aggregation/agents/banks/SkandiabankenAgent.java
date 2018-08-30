@@ -682,7 +682,7 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
         }
 
         credentials.setPayload(customerIdString);
-        context.updateCredentialsExcludingSensitiveInformation(credentials);
+        context.updateCredentialsExcludingSensitiveInformation(credentials, false);
 
         customerId = loginResponse.getId();
 

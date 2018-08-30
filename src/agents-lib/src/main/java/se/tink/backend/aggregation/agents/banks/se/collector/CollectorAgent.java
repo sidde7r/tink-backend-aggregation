@@ -99,7 +99,7 @@ public class CollectorAgent extends AbstractAgent implements RefreshableItemExec
                 credentials.setSensitivePayload(Field.Key.ACCESS_TOKEN, response.getAccessToken());
                 credentials.setSensitivePayload(Field.Key.PASSWORD, response.getRefreshToken());
 
-                context.updateCredentialsExcludingSensitiveInformation(credentials);
+                context.updateCredentialsExcludingSensitiveInformation(credentials, false);
                 apiClient.rememberAccessToken(response.getAccessToken());
 
                 return true;
@@ -115,7 +115,7 @@ public class CollectorAgent extends AbstractAgent implements RefreshableItemExec
         credentials.setSensitivePayload(Field.Key.ACCESS_TOKEN, null);
         credentials.setSensitivePayload(Field.Key.PASSWORD, null);
         credentials.setStatus(CredentialsStatus.UNCHANGED);
-        context.updateCredentialsExcludingSensitiveInformation(credentials);
+        context.updateCredentialsExcludingSensitiveInformation(credentials, true);
 
         return false;
     }
@@ -135,7 +135,7 @@ public class CollectorAgent extends AbstractAgent implements RefreshableItemExec
                 credentials.setSensitivePayload(Field.Key.PASSWORD, authenticationResponse.getRefreshToken());
                 credentials.setSensitivePayload(Field.Key.ACCESS_TOKEN, authenticationResponse.getAccessToken());
 
-                context.updateCredentialsExcludingSensitiveInformation(credentials);
+                context.updateCredentialsExcludingSensitiveInformation(credentials, false);
 
                 apiClient.rememberAccessToken(authenticationResponse.getAccessToken());
                 return;
