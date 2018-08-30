@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import java.util.concurrent.RejectedExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.models.RefreshInformation;
@@ -44,6 +45,7 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
                             refreshInformation.isDisableRequestCompression()
                     ));
 
+            MDC.setContextMap(refreshInformation.getMDCContext());
             agentWorker.executeAutomaticRefresh(agentWorkerRefreshOperationCreatorWrapper);
         } catch (RejectedExecutionException rejectedExecution) {
             throw rejectedExecution;
