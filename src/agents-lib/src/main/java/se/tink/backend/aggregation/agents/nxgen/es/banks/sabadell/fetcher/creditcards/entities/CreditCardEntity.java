@@ -65,7 +65,7 @@ public class CreditCardEntity {
                 .setName(description)
                 .setHolderName(new HolderName(name))
                 .setBankIdentifier(bankIdentifier)
-                .addToTemporaryStorage(bankIdentifier, this)
+                .putInTemporaryStorage(bankIdentifier, this)
                 .build();
     }
 

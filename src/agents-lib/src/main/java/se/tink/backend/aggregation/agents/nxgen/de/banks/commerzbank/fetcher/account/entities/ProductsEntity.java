@@ -325,8 +325,8 @@ public class ProductsEntity {
                 .setName(getProductType().getProductName())
                 .setAccountNumber(getInternalAccountNumber())
                 .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
-                .addToTemporaryStorage(CommerzbankConstants.HEADERS.IDENTIFIER, getProductId().getIdentifier())
-                .addToTemporaryStorage(CommerzbankConstants.HEADERS.PRODUCT_TYPE, getProductId().getProductType())
+                .putInTemporaryStorage(CommerzbankConstants.HEADERS.IDENTIFIER, getProductId().getIdentifier())
+                .putInTemporaryStorage(CommerzbankConstants.HEADERS.PRODUCT_TYPE, getProductId().getProductType())
                 .build();
     }
 

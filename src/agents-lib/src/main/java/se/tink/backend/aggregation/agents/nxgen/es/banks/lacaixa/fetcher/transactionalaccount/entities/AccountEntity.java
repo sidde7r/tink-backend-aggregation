@@ -29,7 +29,7 @@ public class AccountEntity {
                 .setAccountNumber(identifiers.getIban())
                 .setName(alias)
                 .addIdentifiers(identifiers.getIdentifiers())
-                .addToTemporaryStorage(LaCaixaConstants.TemporaryStorage.ACCOUNT_REFERENCE, identifiers.getAccountReference())
+                .putInTemporaryStorage(LaCaixaConstants.TemporaryStorage.ACCOUNT_REFERENCE, identifiers.getAccountReference())
                 .setHolderName(holderName)
                 .build();
     }

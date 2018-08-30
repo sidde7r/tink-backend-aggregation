@@ -35,12 +35,12 @@ public class PocketEntity {
                 .setAccountNumber(accountNumber);
 
         if (accountEntity.getRequiredReference() != null) {
-            builder.addToTemporaryStorage(
+            builder.putInTemporaryStorage(
                     RevolutConstants.Accounts.REQUIRED_REFERENCE,
                     accountEntity.getRequiredReference());
         }
 
-        builder.addToTemporaryStorage(RevolutConstants.Storage.CURRENCY, currency);
+        builder.putInTemporaryStorage(RevolutConstants.Storage.CURRENCY, currency);
         
         return builder.build();
     }

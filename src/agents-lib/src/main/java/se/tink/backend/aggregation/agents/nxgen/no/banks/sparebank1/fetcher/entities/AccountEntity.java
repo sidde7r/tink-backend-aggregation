@@ -40,7 +40,7 @@ public class AccountEntity {
                 Sparebank1AmountUtils.constructAmount(disposableAmountInteger, disposableAmountFraction))
                 .setAccountNumber(getTinkFormattedAccountNumber())
                 .setName(name)
-                .addToTemporaryStorage(Sparebank1Constants.Keys.TRANSACTIONS_LINK,
+                .putInTemporaryStorage(Sparebank1Constants.Keys.TRANSACTIONS_LINK,
                         links.get(Sparebank1Constants.Keys.TRANSACTIONS_KEY))
                 .build();
     }

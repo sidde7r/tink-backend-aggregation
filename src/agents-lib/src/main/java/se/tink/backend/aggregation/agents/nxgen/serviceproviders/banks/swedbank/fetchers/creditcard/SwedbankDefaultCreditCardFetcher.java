@@ -61,15 +61,18 @@ public class SwedbankDefaultCreditCardFetcher implements AccountFetcher<CreditCa
 
     @Override
     public TransactionKeyPaginatorResponse<LinkEntity> getTransactionsFor(CreditCardAccount account, LinkEntity key) {
-        BankProfile bankProfile = account.getTemporaryStorage(SwedbankBaseConstants.StorageKey.PROFILE, BankProfile.class);
+        BankProfile bankProfile =
+                account.getFromTemporaryStorage(SwedbankBaseConstants.StorageKey.PROFILE, BankProfile.class)
+                        .orElseThrow(() -> new IllegalStateException("No bank profile specified"));
         apiClient.selectProfile(bankProfile);
 
         if (key != null) {
             return apiClient.cardAccountDetails(key).toTransactionKeyPaginatorResponse(account, defaultCurrency);
         }
 
-        DetailedCardAccountResponse creditCardResponse = account.getTemporaryStorage(
-                SwedbankBaseConstants.StorageKey.CREDIT_CARD_RESPONSE, DetailedCardAccountResponse.class);
+        DetailedCardAccountResponse creditCardResponse = account.getFromTemporaryStorage(
+                SwedbankBaseConstants.StorageKey.CREDIT_CARD_RESPONSE, DetailedCardAccountResponse.class)
+                .orElseThrow(() -> new IllegalStateException("No credit card response available"));
 
         List<CreditCardTransaction> transactions = new ArrayList<>();
         transactions.addAll(creditCardResponse.toTransactions(account, defaultCurrency));

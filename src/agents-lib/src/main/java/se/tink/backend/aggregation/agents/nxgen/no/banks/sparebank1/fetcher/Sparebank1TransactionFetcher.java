@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher;
 
 import com.google.common.base.Strings;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1ApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants;
@@ -22,10 +23,15 @@ public class Sparebank1TransactionFetcher implements TransactionPaginator<Transa
 
     @Override
     public PaginatorResponse fetchTransactionsFor(TransactionalAccount account) {
-        LinkEntity transactionsLink = account.getTemporaryStorage(
+        Optional<LinkEntity> storedTransactionsLink = account.getFromTemporaryStorage(
                 Sparebank1Constants.Keys.TRANSACTIONS_LINK, LinkEntity.class);
 
-        if (transactionsLink == null || Strings.isNullOrEmpty(transactionsLink.getHref())) {
+        if (!storedTransactionsLink.isPresent()) {
+            return PaginatorResponseImpl.createEmpty(false);
+        }
+
+        LinkEntity transactionsLink = storedTransactionsLink.get();
+        if (Strings.isNullOrEmpty(transactionsLink.getHref())) {
             return PaginatorResponseImpl.createEmpty(false);
         }
 
