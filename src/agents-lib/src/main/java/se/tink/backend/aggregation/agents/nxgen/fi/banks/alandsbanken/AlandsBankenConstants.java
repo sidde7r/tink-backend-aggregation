@@ -6,6 +6,8 @@ import se.tink.backend.aggregation.nxgen.core.account.LoanDetails;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.system.rpc.Instrument;
 import se.tink.backend.system.rpc.Portfolio;
+import se.tink.libraries.i18n.LocalizableEnum;
+import se.tink.libraries.i18n.LocalizableKey;
 
 public class AlandsBankenConstants {
 
@@ -30,6 +32,7 @@ public class AlandsBankenConstants {
     }
 
     public static final class AutoAuthentication {
+        public static final String PASSWORD_STATUS_CHANGE = "CHANGE";
         public static final String ERR_PASSWORD_TOKEN_LOGIN_FAILED = "ERR_PASSWORD_TOKEN_LOGIN_FAILED";
         public static final String ERR_PASSWORD_MISSING = "ERR_PASSWORD_MISSING";  // happens if field is missing (i.e. null)
         public static final String ERR_PASSWORD_NOT_VALID = "ERR_PASSWORD_NOT_VALID";
@@ -85,4 +88,21 @@ public class AlandsBankenConstants {
     public static final ImmutableMap<String, Instrument.Type> INSTRUMENT_TYPES = ImmutableMap.<String, Instrument.Type>builder()
             .put(Fetcher.Instrument.STOCK.toLowerCase(), Instrument.Type.STOCK)
             .build();
+
+    public enum EndUserMessage implements LocalizableEnum {
+        PASSWORD_EXPIRED(new LocalizableKey("Your current password has expired and you have to create a new one." +
+                " You can do this in Ålandsbanken's app if you have a registered device, if not, please contact " +
+                "Ålandsbanken at: 0204 292 910."));
+
+        private LocalizableKey userMessage;
+
+        EndUserMessage(LocalizableKey userMessage) {
+            this.userMessage = userMessage;
+        }
+
+        @Override
+        public LocalizableKey getKey() {
+            return userMessage;
+        }
+    }
 }
