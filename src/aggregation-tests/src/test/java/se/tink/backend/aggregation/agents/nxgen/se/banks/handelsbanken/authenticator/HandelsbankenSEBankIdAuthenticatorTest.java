@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator;
 
+import java.util.Collections;
 import java.util.Optional;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.AgentContext;
@@ -28,7 +29,8 @@ public class HandelsbankenSEBankIdAuthenticatorTest {
         credentials.setField(Field.Key.USERNAME, HandelsbankenSETestConfig.HEDBERG);
 
         HandelsbankenSEConfiguration configuration = new HandelsbankenSEConfiguration();
-        HandelsbankenPersistentStorage persistentStorage = new HandelsbankenPersistentStorage(new PersistentStorage());
+        HandelsbankenPersistentStorage persistentStorage = new HandelsbankenPersistentStorage(new PersistentStorage(),
+                Collections.emptyMap());
         HandelsbankenSessionStorage sessionStorage = new HandelsbankenSessionStorage(new SessionStorage(),
                 configuration);
         new BankIdAuthenticationController<>(
