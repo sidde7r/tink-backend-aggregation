@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken;
 
 import com.google.common.base.Strings;
+import java.util.Map;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.encryption.LibTFA;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.auto.AuthorizeResponse;
@@ -13,8 +14,13 @@ public class HandelsbankenPersistentStorage {
 
     private final PersistentStorage persistentStorage;
 
-    public HandelsbankenPersistentStorage(PersistentStorage persistentStorage) {
+    // Legacy storage
+    private final Map<String, String> legacySensitivePayload;
+
+    public HandelsbankenPersistentStorage(PersistentStorage persistentStorage,
+            Map<String, String> legacySensitivePayload) {
         this.persistentStorage = persistentStorage;
+        this.legacySensitivePayload = legacySensitivePayload;
     }
 
     public void persist(ActivateProfileResponse activateProfile) {
