@@ -1484,7 +1484,7 @@ msgid "Number of your bank card"
 msgstr "Nummer van uw bankkaart"
 
 msgid ""
-"1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_CardReader.png) Sign using your Belfius Card Reader\n"
+"1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_CardReader.png) Login using your Belfius Card Reader\n"
 "2$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_LOGIN.png) Press\n"
 "3$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter the security code []"
 msgstr ""
