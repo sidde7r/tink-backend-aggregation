@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.framework;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -26,6 +27,20 @@ public final class ArgumentHelper {
     private static int skippedTestsCount = 0;
     private static final Collection<String> missingArguments = new HashSet<>();
 
+    private class State {
+        private boolean isBeforeExecuted = false;
+
+        private void setIsBeforeExecuted() {
+            isBeforeExecuted = true;
+        }
+
+        private boolean getIsBeforeExecuted() {
+            return isBeforeExecuted;
+        }
+    }
+
+    private final State state = new State();
+
     private ImmutableList<String> arguments;
 
     /**
@@ -41,6 +56,7 @@ public final class ArgumentHelper {
      * Call this method in your @Before
      */
     public void before() {
+        state.setIsBeforeExecuted();
         // Run tests only if the listed parameters have been passed as arguments, otherwise skip
         skippedTestsCount++;
         for (final String arg : arguments) {
@@ -66,6 +82,9 @@ public final class ArgumentHelper {
      * @return Property value of the property associated with propertyName, e.g. the actual password
      */
     public String get(final String propertyName) {
+        Preconditions.checkState(state.getIsBeforeExecuted(),
+                "ArgumentHelper::before was not called prior to ArgumentHelper::get");
+
         if (!arguments.contains(propertyName)) {
             throw new IllegalArgumentException(
                     String.format("Argument '%s' was never declared. You declared: %s",
