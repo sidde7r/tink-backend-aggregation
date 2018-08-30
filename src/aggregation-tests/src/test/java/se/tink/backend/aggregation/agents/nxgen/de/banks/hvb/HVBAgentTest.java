@@ -14,7 +14,7 @@ public class HVBAgentTest {
     }
 
     private static final AgentIntegrationTest.Builder builder = new AgentIntegrationTest.Builder("de",
-            "de-hvb-password")
+            "de-hypovereinsbank-password")
             .loadCredentialsBefore(false)
             .saveCredentialsAfter(false);
 
