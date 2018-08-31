@@ -28,6 +28,11 @@ public class AcountTransactionsResponse implements PaginatorResponse {
 
     @Override
     public Optional<Boolean> canFetchMore() {
-        return Optional.of(moreRecordsIndicator);
+        // We cannot trust/use `moreRecordsIndicator` or `paginacionIndicator`.
+        // `paginacionIndicator` is always True.
+        // `moreRecordsIndicator` is always False.
+        // If we paginate too far back we get a temporary error.
+        // Let the pagination controller decide when to stop by returning Optional.empty().
+        return Optional.empty();
     }
 }
