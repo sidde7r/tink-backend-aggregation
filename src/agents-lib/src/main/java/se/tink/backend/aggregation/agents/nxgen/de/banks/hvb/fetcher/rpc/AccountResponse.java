@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.core.Amount;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 public final class AccountResponse {
@@ -38,7 +39,8 @@ public final class AccountResponse {
         case "2":
             return Optional.of(AccountTypes.CHECKING);
         default:
-            logger.warn("Received unknown account type: {}", accountType);
+            logger.warn("Received unknown account type: {} for account entity {}", accountType,
+                    SerializationUtils.serializeToString(accountEntity));
         }
         return Optional.empty();
     }
