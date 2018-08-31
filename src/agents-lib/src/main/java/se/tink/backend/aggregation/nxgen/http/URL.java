@@ -68,6 +68,10 @@ public final class URL {
         return new URL(url, queryParam);
     }
 
+    public URL query(String query){
+        return new URL(url, query);
+    }
+
     public String get() {
         String url = this.url;
 
@@ -113,3 +117,4 @@ public final class URL {
                 .toHashCode();
     }
 }
+

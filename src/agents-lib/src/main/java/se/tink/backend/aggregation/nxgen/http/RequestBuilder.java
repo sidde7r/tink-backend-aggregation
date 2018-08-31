@@ -64,6 +64,11 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
         return this;
     }
 
+    public RequestBuilder query(String query){
+        url = url.query(query);
+        return this;
+    }
+
     // UniformInterface
     private HttpRequest build(HttpMethod method) {
         return new HttpRequestImpl(method, url, headers, body);
