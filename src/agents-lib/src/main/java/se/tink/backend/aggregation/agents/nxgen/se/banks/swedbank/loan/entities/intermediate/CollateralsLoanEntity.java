@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.CollateralsEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.LoanDetailsAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.DetailedLoanResponse;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
@@ -10,14 +12,11 @@ import se.tink.backend.aggregation.nxgen.core.account.LoanDetails;
 
 public class CollateralsLoanEntity extends BaseAbstractLoanDetailedEntity {
 
-    private CollateralsLoanEntity(
-            LoanEntity loanOverview) {
+    private CollateralsLoanEntity(LoanEntity loanOverview) {
         super(loanOverview);
     }
 
-    private CollateralsLoanEntity(
-            DetailedLoanResponse loanDetails,
-            LoanEntity loanOverview) {
+    private CollateralsLoanEntity(DetailedLoanResponse loanDetails, LoanEntity loanOverview) {
         super(loanDetails, loanOverview);
     }
 
@@ -37,22 +36,24 @@ public class CollateralsLoanEntity extends BaseAbstractLoanDetailedEntity {
                 .setBalance(getAmount())
                 .setName(getName())
                 .setInterestRate(getInterest())
-                .setDetails(
-                        LoanDetails.builder()
-                                .setType(LoanDetails.Type.MORTGAGE)
-                                .setMonthlyAmortization(getMonthlyAmortization())
-                                .setSecurity(getSecurity())
-                                .setApplicants(borrowers)
-                                .setCoApplicant(borrowers.size() > 1 ? true : false)
-                                .setName(getName())
-                                .build()
+                .setDetails(buildLoanDetails(borrowers))
+                .build();
+    }
 
-                ).build();
+    private LoanDetails buildLoanDetails(List<String> borrowers) {
+        return LoanDetails.builder()
+                .setType(LoanDetails.Type.MORTGAGE)
+                .setMonthlyAmortization(getMonthlyAmortization())
+                .setSecurity(getSecurity())
+                .setApplicants(borrowers)
+                .setCoApplicant(borrowers.size() > 1)
+                .setName(getName())
+                .build();
     }
 
     private String getSecurity() {
-        return loanDetails.map(ld -> ld.getCollaterals()).orElseGet(Collections::emptyList)
-                .stream().map(c -> c.getDescription())
+        return loanDetails.map(LoanDetailsAccountEntity::getCollaterals).orElseGet(Collections::emptyList)
+                .stream().map(CollateralsEntity::getDescription)
                 .collect(Collectors.joining(","));
     }
 }

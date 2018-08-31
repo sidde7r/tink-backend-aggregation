@@ -19,11 +19,9 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.Detai
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.LoanOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.loan.SwedbankDefaultLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 
 public class SwedbankSELoanFetcher extends SwedbankDefaultLoanFetcher {
-    private static final AggregationLogger LOGGER = new AggregationLogger(SwedbankSELoanFetcher.class);
 
     private final SwedbankSEApiClient apiClient;
     private final LoanEntityFactory loanEntityFactory = new LoanEntityFactory();
@@ -42,50 +40,55 @@ public class SwedbankSELoanFetcher extends SwedbankDefaultLoanFetcher {
             return Collections.emptyList();
         }
 
-        fetchAndSaveCollateralsLoans(loanAccounts, loanOverviewResponse);
+        fetchCollateralLoans(loanAccounts, loanOverviewResponse);
 
-        fetchAndSaveCarLoans(loanAccounts, loanOverviewResponse);
+        fetchCarLoans(loanAccounts, loanOverviewResponse);
 
-        fetchAndSaveConsumptionLoans(loanAccounts, loanOverviewResponse);
+        fetchConsumptionLoans(loanAccounts, loanOverviewResponse);
 
         return loanAccounts;
     }
 
-    private void fetchAndSaveCollateralsLoans(ArrayList<LoanAccount> loanAccounts,
+    private void fetchCollateralLoans(ArrayList<LoanAccount> loanAccounts,
             LoanOverviewResponse loanOverviewResponse) {
         List<CollateralsEntity> collaterals = loanOverviewResponse.getCollaterals();
-        List<LoanAccount> collateralsLoans = Optional.ofNullable(collaterals).orElseGet(Collections::emptyList)
+
+        List<LoanAccount> collateralLoans = Optional.ofNullable(collaterals).orElseGet(Collections::emptyList)
                 .stream()
                 .flatMap(collateral -> collateral.getLoans().stream())
                 .map(l -> createLoanAccountFromLoanInformation(l, CollateralsLoanEntity.class))
                 .collect(Collectors.toList());
-        loanAccounts.addAll(collateralsLoans);
+
+        loanAccounts.addAll(collateralLoans);
     }
 
-    private void fetchAndSaveCarLoans(ArrayList<LoanAccount> loanAccounts, LoanOverviewResponse loanOverviewResponse) {
+    private void fetchCarLoans(ArrayList<LoanAccount> loanAccounts, LoanOverviewResponse loanOverviewResponse) {
         List<LoanAccount> carLoans = loanOverviewResponse.getCarLoans().stream()
                 .map(loan -> createLoanAccountFromLoanInformation(loan, CarLoanEntity.class))
                 .collect(Collectors.toList());
+
         loanAccounts.addAll(carLoans);
     }
 
-    private void fetchAndSaveConsumptionLoans(ArrayList<LoanAccount> loanAccounts,
+    private void fetchConsumptionLoans(ArrayList<LoanAccount> loanAccounts,
             LoanOverviewResponse loanOverviewResponse) {
         List<LoanAccount> consumptionLoans = loanOverviewResponse.getConsumptionLoans().stream()
                 .map(loan -> createLoanAccountFromLoanInformation(loan, ConsumptionLoanEntity.class))
                 .collect(Collectors.toList());
+
         loanAccounts.addAll(consumptionLoans);
     }
 
-    public <T extends BaseAbstractLoanEntity> LoanAccount createLoanAccountFromLoanInformation(
+    private <T extends BaseAbstractLoanEntity> LoanAccount createLoanAccountFromLoanInformation(
             LoanEntity loanEntity, Class<T> loanType) {
         return Optional.of(loanEntity)
                 .map(loan -> {
                     DetailedLoanResponse loanDetails = getLoanDetails(loan);
-                    return Optional.ofNullable(loanDetails).map(ld -> loanEntityFactory.create(loanType, loan, ld))
+                    return Optional.ofNullable(loanDetails)
+                            .map(ld -> loanEntityFactory.create(loanType, loan, ld))
                             .orElseGet(() -> loanEntityFactory.create(loanType, loan));
                 })
-                .map(l -> l.toTinkLoan())
+                .map(BaseAbstractLoanEntity::toTinkLoan)
                 .orElseThrow(IllegalStateException::new);
     }
 
@@ -95,7 +98,7 @@ public class SwedbankSELoanFetcher extends SwedbankDefaultLoanFetcher {
                 .map(LoanEntity::getLinks)
                 .filter(linksEntity -> linksEntity.getNext() != null)
                 .map(LinksEntity::getNext)
-                .map(linkEntity -> apiClient.loadDetailsEntity(linkEntity))
-                .orElseGet(() -> null);
+                .map(apiClient::loadDetailsEntity)
+                .orElse(null);
     }
 }
