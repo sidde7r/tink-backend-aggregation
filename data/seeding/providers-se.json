@@ -10,12 +10,12 @@
             "displayName": "Ålandsbanken",
             "fields": [
                 {
-                    "description": "Användar ID",
+                    "description": "Username",
                     "immutable": true,
                     "name": "username"
                 },
                 {
-                    "description": "Lösenord",
+                    "description": "Password",
                     "masked": true,
                     "sensitive": true,
           "name": "password"
@@ -23,7 +23,7 @@
             ],
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "Du använder ditt svenska användar-ID och lösenord på samma sätt som när du loggar in i Ålandsbankens mobilapp.",
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
             "popular": true,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,
@@ -39,12 +39,12 @@
             "displayName": "American Express",
             "fields": [
                 {
-                    "description": "Användarnamn",
+                    "description": "Username",
                     "immutable": true,
                     "name": "username"
                 },
                 {
-                    "description": "Lösenord",
+                    "description": "Password",
                     "masked": true,
                     "sensitive": true,
           "name": "password"
@@ -53,7 +53,8 @@
             "groupDisplayName": "American Express",
             "market": "SE",
             "multiFactor": false,
-            "passwordHelpText": "Du använder samma lösenord som när du loggar in på americanexpress.se. Du kan beställa ett nytt användarnamn och lösenord hos [American Express](https://global.americanexpress.com/myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=sv_SE).",
+            "passwordHelpText": "Use the same username and password as you would in the card issuer's mobile app.",
+            "tutorialUrl": "https://global.americanexpress.com/myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=sv_SE",
             "payload": "SE",
             "popular": false,
             "refreshFrequency": 1,
@@ -67,16 +68,16 @@
             "className": "brokers.avanza.AvanzaV2Agent",
             "credentialsType": "PASSWORD",
             "currency": "SEK",
-            "displayDescription": "Lösenord",
+            "displayDescription": "Password",
             "displayName": "Avanza",
             "fields": [
                 {
-                    "description": "Användarnamn",
+                    "description": "Username",
                     "immutable": true,
                     "name": "username"
                 },
                 {
-                    "description": "Lösenord",
+                    "description": "Password",
                     "masked": true,
                     "sensitive": true,
           "name": "password"
@@ -85,7 +86,8 @@
             "groupDisplayName": "Avanza",
             "market": "SE",
             "multiFactor": false,
-            "passwordHelpText": "Du använder samma användarnamn och lösenord som när du loggar in på avanza.se. Du kan beställa ett nytt användarnamn och lösenord hos [Avanza](https://www.avanza.se/aza/login/forgotten.jsp).",
+            "passwordHelpText": "Use the same username and password as you would in the broker's mobile app.",
+            "tutorialUrl": "https://www.avanza.se/aza/login/forgotten.jsp",
             "popular": false,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,
@@ -109,14 +111,14 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "groupDisplayName": "Avanza",
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "Du använder Mobilt Bankid för att bekräfta din identitet på samma sätt som i Avanzas app.",
+            "passwordHelpText": "To connect your broker, you need to identify yourself using Mobile BankID.",
             "popular": false,
             "refreshFrequency": 0,
             "refreshFrequencyFactor": 1,
@@ -139,13 +141,13 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som som när du loggar in på Chevrolet Big Plus Cards hemsida.",
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "payload": "chse:0086",
             "popular": false,
             "refreshFrequency": 0,
@@ -170,13 +172,13 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som när du loggar in på Nordic Choice Club MasterCards hemsida.",
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "payload": "cose:0108",
             "popular": false,
             "refreshFrequency": 0,
@@ -204,13 +206,13 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "Du använder Mobilt Bankid för att bekräfta din identitet på samma sätt som i Collectors app.",
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
             "popular": false,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,
@@ -226,11 +228,11 @@
             "displayName": "Coop MedMera",
             "fields": [
                 {
-                    "description": "Användarnamn",
+                    "description": "Username",
                     "name": "username"
                 },
                 {
-                    "description": "Lösenord",
+                    "description": "Password",
                     "masked": true,
                     "sensitive": true,
           "name": "password"
@@ -238,7 +240,7 @@
             ],
             "market": "SE",
             "multiFactor": false,
-            "passwordHelpText": "Du använder samma användarnamn och lösenord som när du loggar in på Coops hemsida eller mobilapp.",
+            "passwordHelpText": "Use the same username and password as you would in the card issuer's mobile app.",
             "popular": false,
             "refreshFrequency": 0,
             "refreshFrequencyFactor": 1,
@@ -265,8 +267,8 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "groupDisplayName": "Fraud",
@@ -294,8 +296,8 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 },
                 {
                     "hint": "NNNN",
@@ -305,13 +307,14 @@
                     "pattern": "([0-9]{4})",
                     "maxLength": 4,
                     "minLength": 4,
-                    "description": "PIN-kod",
-                    "patternError": "Vänligen ange fyra siffror."
+                    "description": "PIN",
+                    "patternError": "Please enter 4 digits"
                 }
             ],
             "market": "SE",
             "multiFactor": false,
-            "passwordHelpText": "Du använder samma 4-siffriga PIN kod som när du loggar in på csn.se. Du kan beställa en ny kod hos [CSN](https://www.csn.se/bas/ekund/personligKod.do).",
+            "passwordHelpText": "You use the same 4-digit PIN as when you log in at the providers web site.",
+            "tutorialUrl": "https://www.csn.se/bas/ekund/personligKod.do",
             "popular": false,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,
@@ -339,8 +342,8 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 },
                 {
                     "hint": "NNNN",
@@ -352,13 +355,14 @@
                     "maxLength": 4,
                     "minLength": 4,
                     "description": "Servicekod",
-                    "patternError": "Vänligen ange fyra siffror."
+                    "patternError": "Please enter 4 digits"
                 }
             ],
             "groupDisplayName": "Danske Bank",
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "Du använder samma 4-siffriga servicekod som för Danske Banks mobilapp. Du behöver dessutom tillgång till din kodbox för att skapa en skärmkod. Läs mer hos [Danske Bank](http://www.danskebank.se/sv-se/privat/Onlinetjanster/mobila-tjanster/Pages/mobilbank.aspx).",
+            "passwordHelpText": "You use the same 4-digit service code as for the banks mobile app. You also need access to your code box to create a screen code.",
+            "tutorialUrl": "http://www.danskebank.se/en-us/privat/Onlinetjanster/mobila-tjanster/Pages/mobilbank.aspx",
             "payload": "SE",
             "popular": true,
             "refreshFrequency": 1,
@@ -387,14 +391,14 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "groupDisplayName": "Danske Bank",
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "Du använder Mobilt BankID på samma sätt som i Danske Banks mobilapp. Du kan beställa Mobilt BankID i internetbanken.",
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
             "payload": "SE",
             "popular": true,
             "refreshFrequency": 0,
@@ -411,12 +415,12 @@
             "displayName": "Demo",
             "fields": [
                 {
-                    "description": "Användarnamn",
+                    "description": "Username",
                     "immutable": true,
                     "name": "username"
                 },
                 {
-                    "description": "Lösenord",
+                    "description": "Password",
                     "masked": true,
                     "sensitive": true,
           "name": "password"
@@ -446,13 +450,13 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som när du loggar in på Djurgårdskortet MasterCards hemsida.",
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "payload": "djse:0116",
             "popular": false,
             "refreshFrequency": 0,
@@ -477,13 +481,13 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som när du loggar in på Eurocards hemsida. Du kommer tillbaka till Tink när du har legitimerat dig.",
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "payload": "ecse:0005",
             "popular": false,
             "refreshFrequency": 0,
@@ -508,13 +512,13 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt somm när du loggar in på Finnair Plus MasterCards hemsida.",
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "payload": "fase:0129",
             "popular": false,
             "refreshFrequency": 0,
@@ -539,13 +543,13 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "market": "SE",
             "multiFactor": false,
-            "passwordHelpText": "Du använder ditt personnummer och PIN-kod på samma sätt som när du loggar in i Forex Banks mobilapp.",
+            "passwordHelpText": "You use your social security number and PIN in the same way as when you log in to the bank's mobile app.",
             "popular": false,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,
@@ -562,7 +566,7 @@
             "className": "nxgen.se.banks.handelsbanken.HandelsbankenSEAgent",
             "credentialsType": "PASSWORD",
             "currency": "SEK",
-            "displayDescription": "Kortläsare",
+            "displayDescription": "Card reader",
             "displayName": "Handelsbanken",
             "fields": [
                 {
@@ -573,8 +577,8 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 },
                 {
                     "hint": "NNNN",
@@ -585,14 +589,15 @@
                     "pattern": "([0-9]{4})",
                     "maxLength": 4,
                     "minLength": 4,
-                    "description": "Personlig kod",
-                    "patternError": "Vänligen ange fyra siffror."
+                    "description": "PIN",
+                    "patternError": "Please enter 4 digits"
                 }
             ],
             "groupDisplayName": "Handelsbanken",
             "market": "SE",
             "multiFactor": false,
-            "passwordHelpText": "Du använder din kortläsare och personliga kod på samma sätt som för Handelsbankens mobilapp. Mer info hittar du hos [Handelsbanken](https://www.handelsbanken.se/SHB/Inet/ICentSv.nsf/default/qF01AA1F3402ECCE2C12581A0003CC76F).",
+            "passwordHelpText": "You use your card reader and personal code in the same way as for the bank's mobile app.",
+            "tutorialUrl": "https://www.handelsbanken.se/SHB/Inet/ICentSv.nsf/default/qF01AA1F3402ECCE2C12581A0003CC76F",
             "popular": true,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,
@@ -620,14 +625,15 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "groupDisplayName": "Handelsbanken",
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "För att ansluta din bank behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som i Handelsbankens mobilapp. Mer info hittar du hos [Handelsbanken](https://www.handelsbanken.se/SHB/Inet/ICentSv.nsf/default/qF01AA1F3402ECCE2C12581A0003CC76F).",
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+            "tutorialUrl": "https://www.handelsbanken.se/SHB/Inet/ICentSv.nsf/default/qF01AA1F3402ECCE2C12581A0003CC76F",
             "popular": true,
             "refreshFrequency": 0,
             "refreshFrequencyFactor": 1,
@@ -654,14 +660,14 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "groupDisplayName": "ICAbanken",
             "market": "SE",
             "multiFactor": false,
-            "passwordHelpText": "Du använder Mobilt BankID på samma sätt som i ICAbankens mobilapp. Du kan beställa Mobilt BankID på internetbanken.",
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
             "popular": true,
             "refreshFrequency": 0,
             "refreshFrequencyFactor": 1,
@@ -684,13 +690,13 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "market": "SE",
             "multiFactor": false,
-            "passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID.",
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "payload": "IKANOKORT",
             "popular": false,
             "refreshFrequency": 0,
@@ -715,13 +721,13 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som när du loggar in på INGO MasterCards hemsida (före detta JET MasterCard).",
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "payload": "jese:0032",
             "popular": false,
             "refreshFrequency": 0,
@@ -740,7 +746,7 @@
             "className": "banks.LansforsakringarAgent",
             "credentialsType": "PASSWORD",
             "currency": "SEK",
-            "displayDescription": "PIN-kod",
+            "displayDescription": "PIN",
             "displayName": "Länsförsäkringar",
             "fields": [
                 {
@@ -751,8 +757,8 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 },
                 {
                     "hint": "NNNN",
@@ -763,14 +769,14 @@
                     "pattern": "([0-9]{4})",
                     "maxLength": 4,
                     "minLength": 4,
-                    "description": "PIN-kod",
-                    "patternError": "Vänligen ange fyra siffror."
+                    "description": "PIN",
+                    "patternError": "Please enter 4 digits"
                 }
             ],
             "groupDisplayName": "Länsförsäkringar",
             "market": "SE",
             "multiFactor": false,
-            "passwordHelpText": "Du använder samma PIN-kod som för Länsförsäkringars internettjänst eller mobilapp. Om du inte har någon PIN-kod kan du beställa en via Länsförsäkringars kundtjänst (telefon 0771-666 555 och dröj kvar för personlig service).",
+            "passwordHelpText": "You use your social security number and PIN in the same way as when you log in to the bank's mobile app.",
             "popular": true,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,
@@ -798,14 +804,14 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "groupDisplayName": "Länsförsäkringar",
             "market": "SE",
             "multiFactor": false,
-            "passwordHelpText": "Du använder Mobilt BankID på samma sätt som för Länsförsäkringars internettjänst eller mobilapp.",
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
             "popular": true,
             "refreshFrequency": 0,
             "refreshFrequencyFactor": 1,
@@ -821,7 +827,7 @@
             "displayName": "Lysa",
             "fields": [
                 {
-                    "description": "Personnummer",
+                    "description": "Social security number",
                     "hint": "ÅÅÅÅMMDDNNNN",
                     "immutable": true,
                     "maxLength": 12,
@@ -829,12 +835,12 @@
                     "name": "username",
                     "numeric": true,
                     "pattern": "(19|20)[0-9]{10}",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "För att ansluta Lysa behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som på Lysa:s hemsida.",
+            "passwordHelpText": "To connect your broker, you need to identify yourself using Mobile BankID.",
             "popular": false,
             "refreshFrequency": 0,
             "refreshFrequencyFactor": 0,
@@ -857,13 +863,13 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som när du loggar in på NK Nyckeln MasterCards hemsida.",
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "payload": "nkse:0007",
             "popular": false,
             "refreshFrequency": 0,
@@ -892,8 +898,8 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 },
                 {
                   "hint": "NNNN",
@@ -905,15 +911,16 @@
                   "maxLength": 4,
                   "minLength": 0,
                   "optional": true,
-                  "description": "Personlig kod",
-                  "patternError": "Vänligen ange fyra siffror, eller lämna tomt.",
-                  "helpText": "Samma kod som du använder i Nordeas mobilapp efter att du loggat in med Bank ID en gång. Har du glömt din kod så kan du välja en ny i Nordeas mobilapp. Genom att fylla i denna kan transaktioner hämtas automatiskt i bakgrunden, så att du slipper använda Bank ID varje gång."
+                  "description": "PIN",
+                  "patternError": "Please enter 4 digits",
+                  "helpText": "Use the same code that you use in Nordea's mobile app after you log in with Bank ID once. If you forgot your code, you can choose a new one in Nordea's mobile app. By filling in this, transactions can be downloaded automatically in the background, so you do not need to use Bank ID every time."
                 }
             ],
             "groupDisplayName": "Nordea",
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "Du loggar in med Mobilt BankID på samma sätt som i Nordeas mobilapp. Läs mer hos [Nordea](http://www.nordea.se/privat/vardagstjanster/internet-mobil-telefon/mobilbanken.html).",
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+            "tutorialUrl": "http://www.nordea.se/privat/vardagstjanster/internet-mobil-telefon/mobilbanken.html",
             "popular": true,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,
@@ -926,16 +933,16 @@
             "className": "brokers.NordnetAgent",
             "credentialsType": "PASSWORD",
             "currency": "SEK",
-            "displayDescription": "Lösenord",
+            "displayDescription": "Password",
             "displayName": "Nordnet",
             "fields": [
                 {
-                    "description": "Användarnamn",
+                    "description": "Username",
                     "immutable": true,
                     "name": "username"
                 },
                 {
-                    "description": "Lösenord",
+                    "description": "Password",
                     "masked": true,
                     "sensitive": true,
           "name": "password"
@@ -944,7 +951,7 @@
             "groupDisplayName": "Nordnet",
             "market": "SE",
             "multiFactor": false,
-            "passwordHelpText": "Du använder samma användarnamn och lösenord som när du loggar in på nordnet.se. Du kan beställa ett nytt användarnamn och lösenord hos [Nordnet](https://www.nordnet.se/mux/login/NewPsw.html?a3=NNSE&a4=sv&usePhrase=0).",
+            "passwordHelpText": "Use the same username and password as you would in the broker's mobile app.",
             "popular": false,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,
@@ -968,14 +975,14 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "groupDisplayName": "Nordnet",
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "Du använder Mobilt Bankid för att bekräfta din identitet på samma sätt som i Nordnets mobil app.",
+            "passwordHelpText": "To connect your broker, you need to identify yourself using Mobile BankID.",
             "popular": false,
             "refreshFrequency": 0,
             "refreshFrequencyFactor": 1,
@@ -998,13 +1005,13 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "För att ansluta din bank behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som på Norwegian. Mer info hittar du hos [Norwegian](https://www.banknorwegian.se/Kundservice/e-legitimation/mobilt-bankid).",
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
             "popular": false,
             "refreshFrequency": 0,
             "refreshFrequencyFactor": 1,
@@ -1027,19 +1034,19 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 },
                 {
                     "sensitive": true,
           "name": "password",
                     "masked": true,
-                    "description": "Lösenord"
+                    "description": "Password"
                 }
             ],
             "market": "SE",
             "multiFactor": false,
-            "passwordHelpText": "Du använder samma lösenord som när du loggar in på OKQ8 Banks hemsida. Med ditt första kontoutdrag finns ett lösenord som du använder första gången du loggar in.",
+            "passwordHelpText": "Use the same username and password as you would in the card issuer's mobile app.",
             "popular": false,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,
@@ -1062,13 +1069,13 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som när du loggar in på Opel MasterCards hemsida.",
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "payload": "opse:0107",
             "popular": false,
             "refreshFrequency": 0,
@@ -1093,13 +1100,13 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "market": "SE",
             "multiFactor": false,
-            "passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som när du loggar in på Preems hemsida.",
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "payload": "PREEM",
             "popular": false,
             "refreshFrequency": 0,
@@ -1117,12 +1124,12 @@
             "displayName": "Ticket Rikskortet",
             "fields": [
                 {
-                    "description": "Användarnamn",
+                    "description": "Username",
                     "immutable": true,
                     "name": "username"
                 },
                 {
-                    "description": "Lösenord",
+                    "description": "Password",
                     "masked": true,
                     "sensitive": true,
           "name": "password"
@@ -1130,7 +1137,8 @@
             ],
             "market": "SE",
             "multiFactor": false,
-            "passwordHelpText": "Du använder samma användarnamn och lösenord som när du använder Rikskortets app eller loggar in på hemsidan. Du kan beställa en ny kod på [hemsidan](https://edenred.se/rikskuponger/mina-sidor/glomt-losenord/).",
+            "passwordHelpText": "Use the same username and password as you would in the card issuer's mobile app.",
+            "tutorialUrl": "https://edenred.se/rikskuponger/mina-sidor/glomt-losenord/",
             "popular": false,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,
@@ -1153,13 +1161,13 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som när du loggar in på SAAB MasterCards hemsida.",
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "payload": "sbse:0106",
             "popular": false,
             "refreshFrequency": 0,
@@ -1177,12 +1185,12 @@
             "displayName": "SAS EuroBonus American Express",
             "fields": [
                 {
-                    "description": "Användarnamn",
+                    "description": "Username",
                     "immutable": true,
                     "name": "username"
                 },
                 {
-                    "description": "Lösenord",
+                    "description": "Password",
                     "masked": true,
                     "sensitive": true,
           "name": "password"
@@ -1191,7 +1199,7 @@
             "groupDisplayName": "American Express",
             "market": "SE",
             "multiFactor": false,
-            "passwordHelpText": "Du använder samma lösenord som när du loggar in på americanexpress.se. Du kan beställa ett nytt användarnamn och lösenord hos [American Express](https://global.americanexpress.com/myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=sv_SE).",
+            "passwordHelpText": "Use the same username and password as you would in the card issuer's mobile app.",
             "payload": "SE",
             "popular": false,
             "refreshFrequency": 1,
@@ -1215,13 +1223,13 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som när du loggar in på SAS Eurobonus MasterCards hemsida. Du kommer tillbaka till Tink när du har legitimerat dig.",
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "payload": "sase:0102",
             "popular": false,
             "refreshFrequency": 0,
@@ -1250,14 +1258,14 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "groupDisplayName": "Swedbank och Sparbankerna",
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "Du använder Mobilt BankID på samma sätt som i Sparbankernas mobilapp. Om du har en personlig kod för förenklad inloggning så rekommenderar vi att du använder den istället för Mobilt BankID. Backa då tillbaka ett steg och välj Swedbank och Sparbankerna. På så sätt kan du få automatiskta varningar och notiser utan att behöva använda Mobilt BankID för att logga in i Tink varje gång.",
+            "passwordHelpText": "You use Mobile BankID the same way as in the bank's mobile app. If you have a personal code for simplified login, we recommend using it instead of Mobile BankID.",
             "payload": "savingsbank",
             "popular": true,
             "refreshFrequency": 0,
@@ -1285,14 +1293,14 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "groupDisplayName": "Swedbank och Sparbankerna",
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "Du använder Mobilt BankID på samma sätt som i Sparbankernas mobilapp. Om du har en personlig kod för förenklad inloggning så rekommenderar vi att du använder den istället för Mobilt BankID. Backa då tillbaka ett steg och välj Swedbank Ung. På så sätt kan du få automatiskta varningar och notiser utan att behöva använda Mobilt BankID för att logga in i Tink varje gång.",
+            "passwordHelpText": "",
             "payload": "savingsbank-youth",
             "popular": true,
             "refreshFrequency": 0,
@@ -1320,13 +1328,14 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "För att ansluta din bank behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som på SBAB:s hemsida. Mer info hittar du hos [SBAB](http://www.sbab.se).",
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+            "tutorialUrl": "http://www.sbab.se",
             "popular": false,
             "refreshFrequency": 0,
             "refreshFrequencyFactor": 1,
@@ -1349,13 +1358,13 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "market": "SE",
             "multiFactor": false,
-            "passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID.",
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "payload": "SEAT",
             "popular": false,
             "refreshFrequency": 0,
@@ -1380,20 +1389,20 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 },
                 {
                     "sensitive": true,
           "name": "password",
                     "masked": true,
-                    "description": "Personlig kod"
+                    "description": "PIN"
                 }
             ],
             "groupDisplayName": "SEB",
             "market": "SE",
             "multiFactor": false,
-            "passwordHelpText": "Du använder samma personliga kod som för SEBs mobilapp. Du kan beställa en ny kod på internetbanken. Mer info hittar du hos [SEB](http://www.seb.se/pow/wcp/index.asp?ss=/pow/wcp/templates/sebarticle.cfmc.asp%3FDUID%3DDUID_FD94998C1B31C6BFC1257823003993B2%26sitekey%3Dseb.se).",
+            "passwordHelpText": "",
             "popular": false,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,
@@ -1420,14 +1429,15 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "groupDisplayName": "SEB",
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "För att ansluta din bank behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som i SEBs mobilapp. Du kommer tillbaka till Tink när du har legitimerat dig. Mer info hittar du hos [SEB](http://www.seb.se).",
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+            "tutorialUrl": "http://www.seb.se/pow/wcp/index.asp?ss=/pow/wcp/templates/sebarticle.cfmc.asp%3FDUID%3DDUID_FD94998C1B31C6BFC1257823003993B2%26sitekey%3Dseb.se",
             "popular": true,
             "refreshFrequency": 0,
             "refreshFrequencyFactor": 1,
@@ -1450,13 +1460,13 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som när du loggar in på SEB Wallet MasterCards hemsida.",
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "payload": "wase:0121",
             "popular": false,
             "refreshFrequency": 0,
@@ -1482,14 +1492,14 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "groupDisplayName": "Shell MasterCard",
             "market": "SE",
             "multiFactor": false,
-            "passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som när du loggar in på Shells hemsida.",
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "payload": "SHELL",
             "popular": false,
             "refreshFrequency": 0,
@@ -1514,13 +1524,13 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som som när du loggar in på SJ Prio MasterCards hemsida. Du kommer tillbaka till Tink när du har legitimerat dig.",
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "payload": "sjse:0104",
             "popular": false,
             "refreshFrequency": 0,
@@ -1539,7 +1549,7 @@
             "fields": [],
             "market": "SE",
             "multiFactor": false,
-            "passwordHelpText": "Du använder Mobilt BankID på samma sätt som i Skandiabankens mobilapp. Du kan beställa Mobilt BankID på internetbanken. Läs mer hos [Skandiabanken](http://www.skandiabanken.se/hem/Konton/Mobila-planboken/Fakta/Mobila-planboken/Sa-har-ansluter-du-dig/).",
+            "passwordHelpText": "",
             "popular": true,
             "refreshFrequency": 0,
             "refreshFrequencyFactor": 1,
@@ -1562,13 +1572,13 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "market": "SE",
             "multiFactor": false,
-            "passwordHelpText": "Du använder Mobilt BankID på samma sätt som i Skandiabankens mobilapp. Läs mer hos Skandiabanken.",
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
             "popular": true,
             "refreshFrequency": 0,
             "refreshFrequencyFactor": 1,
@@ -1592,14 +1602,14 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "groupDisplayName": "Skodakortet",
             "market": "SE",
             "multiFactor": false,
-            "passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID.",
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "payload": "SKODA",
             "popular": false,
             "refreshFrequency": 0,
@@ -1624,13 +1634,13 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "För att ansluta din bank behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som i Sparbanken Syds mobilapp. Du kommer tillbaka till Tink när du har legitimerat dig. Läs mer hos [Sparbanken Syd](https://www.sparbankensyd.se/vardagstjanster/mobilbanken/).",
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
             "payload": "9570",
             "popular": false,
             "refreshFrequency": 0,
@@ -1654,13 +1664,13 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som när du loggar in på Statoil MasterCards hemsida.",
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "payload": "stse:0122",
             "popular": false,
             "refreshFrequency": 0,
@@ -1685,13 +1695,13 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som när du loggar in på Supreme Cards hemsida. Du kommer tillbaka till Tink när du har legitimerat dig.",
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "popular": false,
             "refreshFrequency": 0,
             "refreshFrequencyFactor": 1,
@@ -1719,14 +1729,14 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "groupDisplayName": "Swedbank och Sparbankerna",
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "Du använder Mobilt BankID på samma sätt som i Swedbanks mobilapp.",
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
             "payload": "swedbank",
             "popular": true,
             "refreshFrequency": 1,
@@ -1754,14 +1764,14 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "groupDisplayName": "Swedbank och Sparbankerna",
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "Du använder Mobilt BankID på samma sätt som i Swedbanks mobilapp. Om du har en personlig kod för förenklad inloggning så rekommenderar vi att du använder den istället för Mobilt BankID. Backa då tillbaka ett steg och välj Swedbank Ung. På så sätt kan du få automatiskta varningar och notiser utan att behöva använda Mobilt BankID för att logga in i Tink varje gång.",
+            "passwordHelpText": "",
             "payload": "swedbank-youth",
             "popular": true,
             "refreshFrequency": 0,
@@ -1785,13 +1795,13 @@
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Personnummer",
-                    "patternError": "Vänligen ange ett befintligt personnummer."
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
                 }
             ],
             "market": "SE",
             "multiFactor": false,
-            "passwordHelpText": "För att ansluta ditt kort behöver du legitimera dig mot Mobilt BankID.",
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "payload": "VOLKSWAGEN",
             "popular": false,
             "refreshFrequency": 0,
@@ -1865,12 +1875,12 @@
                   "immutable": true,
                   "maxLength": 12,
                   "minLength": 12,
-                  "description": "Personnummer",
-                  "patternError": "Vänligen ange ett befintligt personnummer."
+                  "description": "Social security number",
+                  "patternError": "Please enter a valid social security number."
                 }
             ],
             "multiFactor": true,
-            "passwordHelpText": "För att ansluta din bank behöver du legitimera dig mot Mobilt BankID. Du använder Mobilt BankID på samma sätt som i CarPay-appen. ",
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
             "popular": false,
             "status": "ENABLED",
             "transactional": true,
