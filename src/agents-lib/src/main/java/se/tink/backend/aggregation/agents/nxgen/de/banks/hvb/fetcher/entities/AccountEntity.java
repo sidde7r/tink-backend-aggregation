@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.entities;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -12,31 +13,31 @@ public final class AccountEntity {
     private String bic;
     private String type;
 
-    public Double getCurrentBalance() {
-        return currentBalance;
+    public Optional<Double> getCurrentBalance() {
+        return Optional.ofNullable(currentBalance);
     }
 
-    public String getIban() {
-        return iban;
+    public Optional<String> getIban() {
+        return Optional.ofNullable(iban);
     }
 
-    public String getNumber() {
-        return number;
+    public Optional<String> getNumber() {
+        return Optional.ofNullable(number);
     }
 
-    public String getCurrency() {
-        return currency;
+    public Optional<String> getCurrency() {
+        return Optional.ofNullable(currency);
     }
 
-    public String getTitle() {
-        return title;
+    public Optional<String> getTitle() {
+        return Optional.ofNullable(title);
     }
 
-    public String getBic() {
-        return bic;
+    public Optional<String> getBic() {
+        return Optional.ofNullable(bic);
     }
 
-    public String getType() {
-        return type;
+    public Optional<String> getType() {
+        return Optional.ofNullable(type);
     }
 }

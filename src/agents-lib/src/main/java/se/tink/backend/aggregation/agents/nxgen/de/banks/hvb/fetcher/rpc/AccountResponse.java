@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.rpc;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,31 +21,62 @@ public final class AccountResponse {
     private List<AccountEntity> accounts;
 
     public Collection<TransactionalAccount.Builder<?, ?>> getTransactionalAccounts() {
-        return Collections.unmodifiableCollection(
-                accounts.stream()
-                        .map(AccountResponse::toTransactionalAccount)
-                        .collect(Collectors.toSet()));
+        return Optional.ofNullable(accounts).orElse(Collections.emptyList())
+                .stream()
+                .map(AccountResponse::toTransactionalAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toSet());
     }
 
-    private static AccountTypes getAccountType(final AccountEntity accountEntity) {
-        final String accountType = accountEntity.getType().trim();
+    private static Optional<AccountTypes> getAccountType(final AccountEntity accountEntity) {
+        if (!accountEntity.getType().isPresent()) {
+            return Optional.empty();
+        }
+        final String accountType = accountEntity.getType().get().trim();
         switch (accountType) {
         case "2":
-            return AccountTypes.CHECKING;
+            return Optional.of(AccountTypes.CHECKING);
         default:
-            logger.info("Account type was: {}; interpreting this as a savings account", accountType);
-            return AccountTypes.SAVINGS;
+            logger.warn("Received unknown account type: {}", accountType);
         }
+        return Optional.empty();
     }
 
-    private static TransactionalAccount.Builder<?, ?> toTransactionalAccount(final AccountEntity accountEntity) {
-        final Amount amount = new Amount(accountEntity.getCurrency().trim(), accountEntity.getCurrentBalance());
-        final IbanIdentifier iban = new IbanIdentifier(accountEntity.getBic().trim(), accountEntity.getIban().trim());
-        final AccountTypes accountType = getAccountType(accountEntity);
-        final String accountNumber = accountEntity.getNumber().trim();
-        return TransactionalAccount.builder(accountType, accountNumber, amount)
+    private static Optional<TransactionalAccount.Builder<?, ?>> toTransactionalAccount(
+            final AccountEntity accountEntity) {
+        if (!accountEntity.getCurrency().isPresent()) {
+            logger.warn("Could not find account currency");
+            return Optional.empty();
+        } else if (!accountEntity.getCurrentBalance().isPresent()) {
+            logger.warn("Could not find current account balance");
+            return Optional.empty();
+        } else if (!accountEntity.getBic().isPresent()) {
+            logger.warn("Could not find account BIC");
+            return Optional.empty();
+        } else if (!accountEntity.getIban().isPresent()) {
+            logger.warn("Could not find account IBAN");
+            return Optional.empty();
+        } else if (!accountEntity.getNumber().isPresent()) {
+            logger.warn("Could not find account number");
+            return Optional.empty();
+        } else if (!accountEntity.getTitle().isPresent()) {
+            logger.warn("Could not find account title");
+            return Optional.empty();
+        }
+        final Optional<AccountTypes> accountType = getAccountType(accountEntity);
+        if (!accountType.isPresent()) {
+            logger.warn("Could not find or recognize account type");
+            return Optional.empty();
+        }
+        final Amount amount = new Amount(accountEntity.getCurrency().get().trim(),
+                accountEntity.getCurrentBalance().get());
+        final IbanIdentifier iban = new IbanIdentifier(accountEntity.getBic().get().trim(),
+                accountEntity.getIban().get().trim());
+        final String accountNumber = accountEntity.getNumber().get().trim();
+        return Optional.of(TransactionalAccount.builder(accountType.get(), accountNumber, amount)
                 .setAccountNumber(accountNumber)
                 .addIdentifier(iban)
-                .setName(accountEntity.getTitle().trim());
+                .setName(accountEntity.getTitle().get().trim()));
     }
 }
