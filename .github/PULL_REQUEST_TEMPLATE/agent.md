@@ -17,6 +17,7 @@ _Put an `x` in the boxes that have been checked and fullfiled_
 	- [ ] The Authenticator throws an AuthenticationException (e.g the password is incorrect)
 	- [ ] The Authenticator throws an AuthorizationException if the user attempts to access a resource it does not have privileges to (e.g. if the account has been blocked).
 	 You may want to throw this exception if the http status code is 401/403
+- [ ] The account fetcher sets the appropriate account type, logs unknown types and does not fall back to known values
 - [ ] The `JSON/XML` values are sanitized (Not hardcoded from string concatenation of input values; Use `Jackson`!) 
 - [ ] The code uses a [`Constants Class`](https://github.com/tink-ab/tink-backend-aggregation/wiki/Code-Structure#constants) for constants 
 - [ ] The code uses insensitive comparison of constants (`equalsIgnoreCase`)
