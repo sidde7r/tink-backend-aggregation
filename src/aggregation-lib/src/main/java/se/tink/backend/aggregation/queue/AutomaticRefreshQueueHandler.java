@@ -50,7 +50,8 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
         } catch (RejectedExecutionException rejectedExecution) {
             throw rejectedExecution;
         } catch (Exception e) {
-            logger.error("Something went wrong with an automatic refresh from sqs.");
+            logger.error("Something went wrong with an automatic refresh from sqs. \n"
+                    + e.getMessage());
         }
     }
 }
