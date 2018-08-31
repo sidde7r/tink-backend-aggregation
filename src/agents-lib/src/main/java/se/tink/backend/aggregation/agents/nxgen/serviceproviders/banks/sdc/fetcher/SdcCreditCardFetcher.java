@@ -10,8 +10,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.entities.SdcServiceConfigurationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.entities.SessionStorageAgreement;
@@ -34,6 +37,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 public class SdcCreditCardFetcher extends SdcAgreementFetcher implements AccountFetcher<CreditCardAccount>,
         TransactionDatePaginator<CreditCardAccount> {
+    private static final Logger log = LoggerFactory.getLogger(SdcCreditCardFetcher.class);
 
     private static final int ONE_WEEK_AGO_IN_DAYS = -7;
 
@@ -63,8 +67,13 @@ public class SdcCreditCardFetcher extends SdcAgreementFetcher implements Account
                     fetchCreditCardProviderAccountList(creditCards, agreement);
                 }
 
-                if (configurationEntity.isBlockCard()) {
-                    fetchCreditCardList(creditCards, agreement);
+                if (configurationEntity.isBlockCard() ||
+                        SdcConstants.BANK_CODE_SPARBANKEN_SYD.equals(agentConfiguration.getBankCode())) {
+                    try {
+                        fetchCreditCardList(creditCards, agreement);
+                    } catch (Exception e) {
+                        log.info("Failed to fetch credit card for user", e);
+                    }
                 }
             });
         }
@@ -123,8 +132,17 @@ public class SdcCreditCardFetcher extends SdcAgreementFetcher implements Account
     }
 
     private void fetchCreditCardList(List<CreditCardAccount> creditCards, SessionStorageAgreement agreement) {
-        ListCreditCardsResponse creditAndDebetCards = this.bankClient.listCreditCards();
         FilterAccountsResponse accounts = retrieveAccounts();
+
+        // if no credit card account do not try to fetch any
+        Optional<SdcAccount> creditCardAccount = accounts.stream()
+                .filter(SdcAccount::isCreditCardAccount)
+                .findFirst();
+        if (!creditCardAccount.isPresent()) {
+            return;
+        }
+
+        ListCreditCardsResponse creditAndDebetCards = this.bankClient.listCreditCards();
 
         for (SdcCreditCardEntity creditCardEntity : creditAndDebetCards.getCreditCards()) {
             SdcAccount sdcAccount = accounts.findAccount(creditCardEntity);

@@ -17,6 +17,7 @@ public class SdcConstants {
 
     // set timeout to 5 minutes
     public static final int HTTP_TIMEOUT = 1000 * 60 * 5;
+    public static final String BANK_CODE_SPARBANKEN_SYD = "9570";
 
     // after more tests we may find more errors during logon
     public enum ErrorMessage {
