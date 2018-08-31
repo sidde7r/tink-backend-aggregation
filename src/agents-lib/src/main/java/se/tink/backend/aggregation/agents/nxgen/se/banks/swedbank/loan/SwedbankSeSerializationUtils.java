@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEConstants;
 import se.tink.backend.core.Amount;
 import se.tink.libraries.strings.StringUtils;
 
@@ -35,5 +36,20 @@ public class SwedbankSeSerializationUtils {
         }
         Double interestRate = StringUtils.parseAmount(matcher.group(1)) / 100d;
         return interestRate;
+    }
+
+    public static int parseNumMonthsBound(String fixedInterestPeriod) {
+        if (fixedInterestPeriod != null && fixedInterestPeriod.indexOf(' ') != -1) {
+
+            String[] parts = fixedInterestPeriod.split(" ");
+
+            if (parts.length == 2 && SwedbankSEConstants.LOAN_YEARS.equalsIgnoreCase(parts[1])) {
+                return Integer.parseInt(parts[0]) * 12;
+            } else if (parts.length == 2 && SwedbankSEConstants.LOAN_MONTHS.equalsIgnoreCase(parts[1])) {
+                return Integer.parseInt(parts[0]);
+            }
+        }
+
+        return 0;
     }
 }

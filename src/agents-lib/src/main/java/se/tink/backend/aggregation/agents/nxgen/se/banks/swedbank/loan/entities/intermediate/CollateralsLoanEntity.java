@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.intermediate;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.SwedbankSeSerializationUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.CollateralsEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.LoanDetailsAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.LoanEntity;
@@ -43,12 +45,25 @@ public class CollateralsLoanEntity extends BaseAbstractLoanDetailedEntity {
     private LoanDetails buildLoanDetails(List<String> borrowers) {
         return LoanDetails.builder()
                 .setType(LoanDetails.Type.MORTGAGE)
+                .setNumMonthsBound(getNumMonthsBound())
+                .setNextDayOfTermsChange(getNextDayOfTermsChange())
                 .setMonthlyAmortization(getMonthlyAmortization())
                 .setSecurity(getSecurity())
                 .setApplicants(borrowers)
                 .setCoApplicant(borrowers.size() > 1)
                 .setName(getName())
                 .build();
+    }
+
+
+    protected int getNumMonthsBound() {
+        return loanDetails.map(LoanDetailsAccountEntity::getFixedInterestPeriod)
+                .map(SwedbankSeSerializationUtils::parseNumMonthsBound)
+                .orElse(0);
+    }
+
+    protected Date getNextDayOfTermsChange() {
+        return loanDetails.map(LoanDetailsAccountEntity::getInterestFixedToDate).orElse(null);
     }
 
     private String getSecurity() {
