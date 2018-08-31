@@ -84,7 +84,7 @@ class PotFileGenerator {
     }
 
     private function createOrUpdateProviderPot($translatableStrings) {
-        $providerPot = fopen('po/' . $this->providerPotFilename, "w") or die("Unable to open .pot file!");
+        $providerPot = fopen('../../po/' . $this->providerPotFilename, "w") or die("Unable to open .pot file!");
 
         $timezone = new \DateTimeZone("CEST");
         $date = new \DateTime('@' . time(), $timezone);
@@ -127,7 +127,7 @@ class PotFileGenerator {
     }
 
     private function getAllProviders() {
-        $dir = "data/seeding/";
+        $dir = "../../data/seeding/";
         $allProviders = array();
 
         foreach (glob($dir . "providers-[a-z][a-z].json") as $filename) {
