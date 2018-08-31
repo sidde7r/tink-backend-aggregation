@@ -29,7 +29,7 @@ foreach ($locales as $locale) {
 	file_put_contents('../../po/'.$locale.'.po', $response);
 }
 
-print('Converting translations...');
-exec('cd ../../src/common-lib && mvn gettext:dist && cd ../../');
+//print('Converting translations...');
+//exec('cd ../../src/common-lib && mvn gettext:dist && cd ../../');
 
 ?>
