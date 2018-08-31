@@ -41,11 +41,26 @@ public class OpBankInstrumentsEntity {
             instrument.setProfit(winLose.getWinLoseAmount().getAmount());
         }
 
-        if (holdings.getMarketPrice() != null) {
-            Amount marketPrice = holdings.getMarketPrice().getPriceEur().getTinkAmount();
-            instrument.setPrice(marketPrice.getValue());
-        }
+        instrument.setPrice(getInstrumentPrice());
 
         return instrument;
+    }
+
+    /**
+     * Returns market price if it's present, if not, calculates market price by dividing marketValue by ownedPcs
+     */
+    private Double getInstrumentPrice() {
+        OpBankPriceEurEntity marketPrice = holdings.getMarketPrice();
+        OpBankPriceEurEntity marketValue = holdings.getMarketValue();
+
+        if (marketPrice != null && marketPrice.getPriceEur() != null) {
+            return marketPrice.getPriceEur().getAmount();
+        } else if (marketValue != null && marketValue.getPriceEur() != null) {
+            if (holdings.getOwnedPcs() != 0) {
+                return marketValue.getPriceEur().getAmount() / holdings.getOwnedPcs();
+            }
+        }
+
+        return null;
     }
 }
