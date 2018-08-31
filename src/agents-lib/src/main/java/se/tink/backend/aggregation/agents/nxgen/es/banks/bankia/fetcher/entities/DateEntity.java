@@ -13,9 +13,9 @@ public class DateEntity {
     @JsonProperty("valor")
     private String value;
 
-    public static DateEntity of(LocalDate localDate) {
+    public static DateEntity of(Date date) {
         DateEntity entity = new DateEntity();
-        entity.setLocalDate(localDate);
+        entity.setDate(date);
         return entity;
     }
 
@@ -25,7 +25,8 @@ public class DateEntity {
     }
 
     @JsonIgnore
-    public void setLocalDate(LocalDate localDate) {
+    public void setDate(Date date) {
+        LocalDate localDate = date.toInstant().atZone(BankiaConstants.ZONE_ID).toLocalDate();
         value = localDate.toString();
     }
 
