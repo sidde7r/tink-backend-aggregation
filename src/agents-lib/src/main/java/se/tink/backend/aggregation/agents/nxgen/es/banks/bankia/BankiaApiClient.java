@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia;
 
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.LoginRequest;
@@ -63,7 +63,7 @@ public final class BankiaApiClient {
                 .get(ContractsResponse.class);
     }
 
-    public AcountTransactionsResponse getTransactions(Account account, LocalDate fromDate, LocalDate toDate) {
+    public AcountTransactionsResponse getTransactions(Account account, Date fromDate, Date toDate) {
         AccountIdentifierEntity accountIdentifier = new AccountIdentifierEntity();
         accountIdentifier.setCountry(account.getFromTemporaryStorage(BankiaConstants.StorageKey.COUNTRY));
         accountIdentifier.setControlDigits(account.getFromTemporaryStorage(BankiaConstants.StorageKey.CONTROL_DIGITS));
