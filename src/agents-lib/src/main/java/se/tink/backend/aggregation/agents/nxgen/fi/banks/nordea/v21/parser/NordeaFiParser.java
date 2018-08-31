@@ -103,6 +103,7 @@ public class NordeaFiParser extends NordeaV21Parser {
         return InvestmentAccount.builder(productEntity.getAccountNumber(),
                 new Amount(productEntity.getCurrency(), productEntity.getBalance()))
                 .setName(getTinkAccountName(productEntity).orElse(productEntity.getAccountNumber()))
+                .setAccountNumber(productEntity.getAccountNumber())
                 .setBankIdentifier(productEntity.getNordeaAccountIdV2())
                 .build();
     }
