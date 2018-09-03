@@ -10,18 +10,16 @@ import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale.entities.Form;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale.authenticatior.entities.SubmitLoginForm;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
 public class LaBanquePostaleApiClient {
 
     private final TinkHttpClient client;
-    private final Form formBuilder;
 
     public LaBanquePostaleApiClient(TinkHttpClient client) {
         this.client = client;
-        formBuilder = new Form();
     }
 
     public String initLogin() {
@@ -52,21 +50,9 @@ public class LaBanquePostaleApiClient {
 
     public Optional<String> submitLogin(String username, String password) {
 
-        formBuilder.put(LaBanquePostaleConstants.QueryParams.URL_BACKEND,
-                LaBanquePostaleConstants.QueryDefaultValues.MOBILE_AUTH_BACKEND);
-        formBuilder.put(LaBanquePostaleConstants.QueryParams.ORIGIN,
-                LaBanquePostaleConstants.QueryDefaultValues.TACTILE);
-        formBuilder.put(LaBanquePostaleConstants.QueryParams.PASSWORD,
-                password);
-        formBuilder.put(LaBanquePostaleConstants.QueryParams.CV,
-                LaBanquePostaleConstants.QueryDefaultValues.TRUE);
-        formBuilder.put(LaBanquePostaleConstants.QueryParams.CVVS,
-                "");
-        formBuilder.put(LaBanquePostaleConstants.QueryParams.USERNAME,
-                username);
-
         HttpResponse response = client.request(LaBanquePostaleConstants.Urls.SUBMIT_LOGIN)
-                .body(formBuilder, MediaType.APPLICATION_FORM_URLENCODED)
+                .body(new SubmitLoginForm(username, password),
+                        MediaType.APPLICATION_FORM_URLENCODED)
                 .post(HttpResponse.class);
 
         return errorFromResponse(response);
