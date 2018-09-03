@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.core.signableoperation.SignableOperation;
 import se.tink.backend.guice.annotations.AggregationControllerConfiguration;
+import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;
 import se.tink.libraries.discovered.DiscoveredWebServiceClassBuilder;
 import se.tink.libraries.endpoints.EndpointConfiguration;
 import se.tink.libraries.http.client.WebResourceFactory;
@@ -190,20 +191,12 @@ public class AggregationControllerAggregationClient {
         return getUpdateService(clusterInfo).updateDocument(request);
     }
 
-    public Response updateProductInformation(UpdateProductInformationRequest request) {
-        return getUpdateServiceUsingServiceDiscovery().updateProductInformation(request);
+    public Response updateFraudDetails(ClusterInfo clusterInfo, UpdateFraudDetailsRequest request) {
+        return getUpdateService(clusterInfo).updateFraudDetails(request);
     }
 
-    public Response updateProductInformation(ClusterInfo clusterInfo, UpdateProductInformationRequest request) {
-        return getUpdateService(clusterInfo).updateProductInformation(request);
-    }
-
-    public Response updateApplication(UpdateApplicationRequest request) {
-        return getUpdateServiceUsingServiceDiscovery().updateApplication(request);
-    }
-
-    public Response updateApplication(ClusterInfo clusterInfo, UpdateApplicationRequest request) {
-        return getUpdateService(clusterInfo).updateApplication(request);
+    public Response updateFraudDetails(UpdateFraudDetailsRequest updateFraudRequest) {
+        return getUpdateServiceUsingServiceDiscovery().updateFraudDetails(updateFraudRequest);
     }
 
     public Response updateCredentialSensitive(ClusterInfo clusterInfo, Credentials credentials,

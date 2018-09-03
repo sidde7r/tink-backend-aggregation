@@ -170,8 +170,6 @@ public interface UpdateService {
     @Produces({
         MediaType.APPLICATION_JSON
     })
-    public Response updateCredentials(UpdateCredentialsStatusRequest request);
-
     @POST
     @Path("/fraud/update")
     @TeamOwnership(Team.DATA)
@@ -182,6 +180,8 @@ public interface UpdateService {
             MediaType.APPLICATION_JSON
     })
     public Response updateFraudDetails(UpdateFraudDetailsRequest request);
+
+    public Response updateCredentials(UpdateCredentialsStatusRequest request);
 
     @POST
     @Path("/credentials/operation/update")
