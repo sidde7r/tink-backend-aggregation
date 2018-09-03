@@ -7,11 +7,11 @@ public class LaBanquePostaleConstants {
 
     public static class Regex {
 
-        static final String NUMPAD_QUERY_GROUP_NAME = "numpadquery";
+        static final String NUMPAD_URL_GROUP_NAME = "numpadquery";
         public static final String ERROR_CODE_GROUP_NAME = "errorcode";
         static final Pattern NUMPAD_QUERY_PATTERN = Pattern.compile(
-                String.format("(?:background:url\\(loginform\\?)(?<%s>.+)(?:\\))",
-                        NUMPAD_QUERY_GROUP_NAME));
+                String.format("(?:background:url\\()(?<%s>loginform\\?.+)(?:\\))",
+                        NUMPAD_URL_GROUP_NAME));
         public static final Pattern ERROR_REDIRECT_PATTERN = Pattern.compile(
                 String.format("(?:param=)(?<%s>0x\\w+)(?:&|$)",
                         ERROR_CODE_GROUP_NAME));
@@ -22,7 +22,7 @@ public class LaBanquePostaleConstants {
         static final String KEEP_ALIVE_PATH =
                 "/ws_qh5/bad/mobile/rest/api/v2/clients/A2G/statut-abonnements";
         static final String INIT_LOGIN_PATH = "/wsost/OstBrokerWeb/pagehandler";
-        static final String GET_NUMPAD_PATH = "wsost/OstBrokerWeb/loginform";
+        static final String GET_NUMPAD_BASE_PATH = "wsost/OstBrokerWeb/";
         static final String SUBMIT_LOGIN_PATH = "wsost/OstBrokerWeb/auth";
     }
 
@@ -32,7 +32,7 @@ public class LaBanquePostaleConstants {
 
         public static final URL KEEP_ALIVE = new URL(BASE + ApiServices.KEEP_ALIVE_PATH);
         public static final URL INIT_LOGIN = new URL(BASE + ApiServices.INIT_LOGIN_PATH);
-        public static final URL GET_NUMPAD = new URL(BASE + ApiServices.GET_NUMPAD_PATH);
+        public static final URL GET_NUMPAD_BASE = new URL(BASE + ApiServices.GET_NUMPAD_BASE_PATH);
         public static final URL SUBMIT_LOGIN = new URL(BASE + ApiServices.SUBMIT_LOGIN_PATH);
     }
 

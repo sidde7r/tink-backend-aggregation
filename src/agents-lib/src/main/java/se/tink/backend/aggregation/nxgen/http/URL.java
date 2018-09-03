@@ -68,8 +68,8 @@ public final class URL {
         return new URL(url, queryParam);
     }
 
-    public URL query(String query){
-        return new URL(url, query);
+    public URL concat(String s) {
+        return new URL(url.concat(s), query);
     }
 
     public String get() {

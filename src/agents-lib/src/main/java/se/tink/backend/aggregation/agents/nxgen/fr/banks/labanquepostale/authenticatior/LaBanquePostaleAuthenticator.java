@@ -31,8 +31,8 @@ public class LaBanquePostaleAuthenticator implements Authenticator {
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
 
-        String numpadQuery = apiClient.initLogin();
-        byte[] numpadImg = apiClient.getLoginNumpad(numpadQuery);
+        String numpadUrlExt = apiClient.initLogin();
+        byte[] numpadImg = apiClient.getLoginNumpad(numpadUrlExt);
         Map<Integer, String> numpad = parseNumpad(numpadImg);
         String password = buildPassword(credentials.getField(Field.Key.PASSWORD), numpad);
 

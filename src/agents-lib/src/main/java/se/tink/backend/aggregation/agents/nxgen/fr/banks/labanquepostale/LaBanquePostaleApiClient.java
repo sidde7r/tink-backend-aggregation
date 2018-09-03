@@ -21,7 +21,7 @@ public class LaBanquePostaleApiClient {
 
     public String initLogin() {
 
-        String rawHtml = client.request(LaBanquePostaleConstants.Urls.GET_NUMPAD)
+        String rawHtml = client.request(LaBanquePostaleConstants.Urls.INIT_LOGIN)
                 .queryParam(LaBanquePostaleConstants.QueryParams.TAM_OP,
                         LaBanquePostaleConstants.QueryDefaultValues.LOGIN)
                 .queryParam(LaBanquePostaleConstants.QueryParams.ERROR_CODE,
@@ -32,16 +32,16 @@ public class LaBanquePostaleApiClient {
 
         Matcher m = LaBanquePostaleConstants.Regex.NUMPAD_QUERY_PATTERN.matcher(rawHtml);
         if (m.find()) {
-            return m.group(LaBanquePostaleConstants.Regex.NUMPAD_QUERY_GROUP_NAME);
+            return m.group(LaBanquePostaleConstants.Regex.NUMPAD_URL_GROUP_NAME);
         }
 
         throw new IllegalStateException(LaBanquePostaleConstants.ErrorMessages.NO_NUMPAD_PARAMS);
     }
 
-    public byte[] getLoginNumpad(String query) {
+    public byte[] getLoginNumpad(String numpadUrlExt) {
 
-        return client.request(LaBanquePostaleConstants.Urls.INIT_LOGIN)
-                .query(query)
+        return client.request(
+                LaBanquePostaleConstants.Urls.GET_NUMPAD_BASE.concat(numpadUrlExt))
                 .get(byte[].class);
     }
 
