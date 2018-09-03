@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.entities;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.entities.HandelsbankenSEAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.ApplicationEntryPointResponse;
@@ -17,7 +18,9 @@ public class AccountGroup {
     public Stream<TransactionalAccount> toAccounts(
             ApplicationEntryPointResponse applicationEntryPoint) {
         return accounts.stream()
-                .map(handelsbankenAccount -> handelsbankenAccount.toTransactionalAccount(applicationEntryPoint));
+                .map(handelsbankenAccount -> handelsbankenAccount.toTransactionalAccount(applicationEntryPoint))
+                .filter(Optional::isPresent)
+                .map(Optional::get);
     }
 
     public Stream<? extends HandelsbankenAccount> find(Account account) {

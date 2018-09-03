@@ -80,7 +80,7 @@ public class HandelsbankenSEAccountTest {
         ApplicationEntryPointResponse applicationEntryPoint = mock(ApplicationEntryPointResponse.class);
         when(applicationEntryPoint.getClearingNumber()).thenReturn(HandelsbankenClearingNumber.create("1234"));
 
-        tinkAccount = account.toTransactionalAccount(applicationEntryPoint);
+        tinkAccount = account.toTransactionalAccount(applicationEntryPoint).orElseThrow(() -> new IllegalStateException("No account found!"));
     }
 
     private void assertTinkAccountIsValid() {
