@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.entities;
 
 import com.google.common.annotations.VisibleForTesting;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.validators.BankIdValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.ApplicationEntryPointResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAccount;
@@ -27,25 +28,27 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
     //private String holderName;
     //private boolean isCard;
 
-    public TransactionalAccount toTransactionalAccount(
+    public Optional<TransactionalAccount> toTransactionalAccount(
             ApplicationEntryPointResponse applicationEntryPoint) {
+        if (searchLink(CARD_TRANSACTIONS).isPresent()) {
+            return Optional.empty();
+        }
+
         BankIdValidator.validate(number);
         final String accountNumber = applicationEntryPoint.getClearingNumber() + "-" + numberFormatted;
 
         AccountTypes accountType = AccountTypes.CHECKING;
-        if (searchLink(CARD_TRANSACTIONS).isPresent()) {
-            accountType = AccountTypes.CREDIT_CARD;
-        } else if (NAME_SAVINGS_1.equalsIgnoreCase(name) || NAME_SAVINGS_2.equalsIgnoreCase(name)) {
+        if (NAME_SAVINGS_1.equalsIgnoreCase(name) || NAME_SAVINGS_2.equalsIgnoreCase(name)) {
             accountType = AccountTypes.SAVINGS;
         }
 
-        return TransactionalAccount.builder(accountType, accountNumber, findBalanceAmount().asAmount())
+        return Optional.of(TransactionalAccount.builder(accountType, accountNumber, findBalanceAmount().asAmount())
                 .setBankIdentifier(number)
                 .setAccountNumber(accountNumber)
                 .setName(name)
                 .addIdentifier(new SwedishIdentifier(accountNumber))
                 .addIdentifier(new SwedishSHBInternalIdentifier(number))
-                .build();
+                .build());
     }
 
     private HandelsbankenAmount findBalanceAmount() {
