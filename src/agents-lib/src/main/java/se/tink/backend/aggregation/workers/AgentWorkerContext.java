@@ -74,7 +74,6 @@ import se.tink.libraries.metrics.Counter;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.uuid.UUIDUtils;
-import static se.tink.backend.aggregation.rpc.CredentialsStatus.UPDATED;
 
 public class AgentWorkerContext extends AgentContext implements Managed, SetAccountsToAggregateContext {
     private static final AggregationLogger log = new AggregationLogger(AgentWorkerContext.class);
@@ -407,7 +406,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
                 aggregationControllerAggregationClient.updateTransactionsAsynchronously(updateTransactionsRequest);
             }
 
-            isSystemProcessingTransactions = true;
         } else {
             UpdateTransactionsRequest updateTransactionsRequest = new UpdateTransactionsRequest();
             updateTransactionsRequest.setTransactions(transactions);
@@ -416,9 +414,9 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
             updateTransactionsRequest.setUserTriggered(request.isManual());
 
             systemServiceFactory.getProcessService().updateTransactionsAsynchronously(updateTransactionsRequest);
-
-            isSystemProcessingTransactions = true;
         }
+
+        isSystemProcessingTransactions = true;
 
         // Don't use the queue yet
         //
