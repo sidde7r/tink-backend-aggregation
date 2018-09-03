@@ -19,6 +19,8 @@ public class CommerzbankConstants {
         public static final String USER_AGENT = "User-Agent";
         public static final String PRODUCT_TYPE = "productType";
         public static final String IDENTIFIER = "identifier";
+        public static final String CREDIT_CARD_PRODUCT_TYPE = "creditcardProductType";
+        public static final String CREDIT_CARD_IDENTIFIER = "creditcardIdentifier";
     }
 
     public static class VALUES {
@@ -32,6 +34,15 @@ public class CommerzbankConstants {
         public static final String LOGOUT_OK = "logoutText.ok";
     }
 
+    public static class STORAGE {
+        public static final String ROOTMODEL = "ROOTMODEL";
+    }
+
+    public static class ACCOUNTS {
+        public static final String SAVINGS_ACCOUNT = "Sparkonto";
+        public static final String CREDIT_CARD = "Kreditkarten";
+    }
+
     public static class ERRORS {
         public static final String PIN_ERROR = "login.pin.error.10203";
     }
@@ -41,6 +52,7 @@ public class CommerzbankConstants {
         public static final LogTag MULTIBANKING_PRODUCTS = LogTag.from("#commerzbank_multibanking_products");
         public static final LogTag MULTIBANKING_ERROR = LogTag.from("#commerzbank_multibanking_error");
         public static final LogTag TRANSACTION_LOGGING = LogTag.from("#commerzbank_transaction_logging");
+        public static final LogTag CREDIT_CARD_FETCHING_ERROR = LogTag.from("#commerzbank_credit_card_fetching_error");
     }
 
 }

@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CommerzbankApiClient {
@@ -53,11 +54,11 @@ public class CommerzbankApiClient {
         return firstRequest().post(HttpResponse.class, serialized);
     }
 
-    public ResultEntity financialOverview()  {
+    public ResultEntity financialOverview() {
         String resultString = makeRequest(CommerzbankConstants.URLS.OVERVIEW).post(String.class);
         LOGGER.infoExtraLong(resultString, CommerzbankConstants.LOGTAG.FINANCE_OVERVIEW);
         try {
-         return  new ObjectMapper().readValue(resultString, RootModel.class).getResult();
+            return new ObjectMapper().readValue(resultString, RootModel.class).getResult();
         } catch (IOException e) {
             throw new IllegalStateException(e.getMessage());
         }
@@ -81,12 +82,11 @@ public class CommerzbankApiClient {
         }
     }
 
-    public TransactionResultEntity transactionOverview(String productType, String identifier, int page)
-            throws JsonProcessingException {
-
+    public TransactionResultEntity transactionOverview(String productType, String identifier, int page,
+            int transactionsPerPage) throws JsonProcessingException {
         TransactionRequestBody transactionRequestBody = new TransactionRequestBody(
                 new SearchCriteriaDto(null, null, page, CommerzbankConstants.VALUES.AMOUNT_TYPE,
-                        30, null),
+                        transactionsPerPage, null),
                 new Identifier(productType, CommerzbankConstants.VALUES.CURRENCY_VALUE, identifier,
                         CommerzbankConstants.VALUES.PRODUCT_BRANCH));
         String serialized = new ObjectMapper().writeValueAsString(transactionRequestBody);
@@ -98,5 +98,10 @@ public class CommerzbankApiClient {
                 CommerzbankConstants.LOGTAG.TRANSACTION_LOGGING);
 
         return result;
+    }
+
+    public TransactionResultEntity transactionOverview(String productType, String identifier, int page)
+            throws JsonProcessingException {
+        return transactionOverview(productType, identifier, page, 30);
     }
 }

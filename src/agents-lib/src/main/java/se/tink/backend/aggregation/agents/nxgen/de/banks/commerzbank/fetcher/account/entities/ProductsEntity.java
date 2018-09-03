@@ -1,9 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.account.entities;
 
-import com.google.api.client.repackaged.com.google.common.base.Preconditions;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
+import org.apache.commons.lang.StringUtils;
+import se.tink.backend.aggregation.agents.creditcards.ikano.api.utils.CreditCardUtils;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.core.Amount;
@@ -27,6 +30,8 @@ public class ProductsEntity {
     private String technicalAccountNumber;
     private String branch;
     private ProductIdEntity productId;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private CreditLimit creditLimit;
     private BalanceEntity externalLimit;
     private String externalLimitInterestRate;
     private String openingDate;
@@ -76,6 +81,7 @@ public class ProductsEntity {
     private String valuationCutOffDate;
     private int numberOfPositions;
     private boolean priceForPositionsAvailable;
+    private String creditCardNumber;
 
     public ProductTypeEntity getProductType() {
         return productType;
@@ -134,7 +140,6 @@ public class ProductsEntity {
     }
 
     public ProductIdEntity getProductId() {
-        Preconditions.checkState(productId != null, "Expected a Product Id object but it was null");
         return productId;
     }
 
@@ -307,16 +312,31 @@ public class ProductsEntity {
     }
 
     public AccountTypes getType() {
-        switch (productType.getDisplayCategoryIndex()){
-            case 1:
-                return AccountTypes.CHECKING;
-            default:
-                return AccountTypes.OTHER;
+        switch (productType.getDisplayCategoryIndex()) {
+        case 1:
+            return AccountTypes.CHECKING;
+        case 2:
+            return getSavingsOrInvestment();
+        default:
+            return AccountTypes.OTHER;
         }
     }
 
+    private AccountTypes getSavingsOrInvestment() {
+        //Savings accounts and Investment accounts have CategoryIndex 2
+        if (StringUtils
+                .containsIgnoreCase(productType.getProductName(), CommerzbankConstants.ACCOUNTS.SAVINGS_ACCOUNT)) {
+            return AccountTypes.SAVINGS;
+        }
+        return AccountTypes.OTHER;
+    }
+
     public Amount getTinkBalance() {
-        return new Amount(getCurrency(), originalBalance.getValue());
+        return new Amount(originalBalance.getCurrency(), originalBalance.getValue());
+    }
+
+    public Amount getTinkCredit() {
+        return creditLimit.toTinkAmount();
     }
 
     public TransactionalAccount toTransactionalAccount() {
@@ -330,6 +350,22 @@ public class ProductsEntity {
                 .build();
     }
 
+    public CreditCardAccount toCreditCardAccount() {
+        return CreditCardAccount
+                .builder(se.tink.libraries.strings.StringUtils.hashAsStringMD5(identifier), getTinkBalance(),
+                        getTinkCredit())
+                .setName(getProductType().getProductName())
+                .setAccountNumber(CreditCardUtils.maskCardNumber(creditCardNumber))
+                .putInTemporaryStorage(CommerzbankConstants.HEADERS.CREDIT_CARD_IDENTIFIER,
+                        getProductId().getIdentifier())
+                .putInTemporaryStorage(CommerzbankConstants.HEADERS.CREDIT_CARD_PRODUCT_TYPE,
+                        getProductId().getProductType())
+                .build();
+    }
+
+    public boolean isCreditCard() {
+        return productType.getDisplayCategory().equalsIgnoreCase(CommerzbankConstants.ACCOUNTS.CREDIT_CARD);
+    }
 
     public Object getConvertedBalance() {
         return convertedBalance;
