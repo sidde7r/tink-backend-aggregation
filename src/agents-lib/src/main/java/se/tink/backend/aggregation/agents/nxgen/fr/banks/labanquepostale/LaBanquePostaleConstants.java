@@ -8,13 +8,9 @@ public class LaBanquePostaleConstants {
     public static class Regex {
 
         static final String NUMPAD_URL_GROUP_NAME = "numpadquery";
-        public static final String ERROR_CODE_GROUP_NAME = "errorcode";
         static final Pattern NUMPAD_QUERY_PATTERN = Pattern.compile(
                 String.format("(?:background:url\\()(?<%s>loginform\\?.+)(?:\\))",
                         NUMPAD_URL_GROUP_NAME));
-        public static final Pattern ERROR_REDIRECT_PATTERN = Pattern.compile(
-                String.format("(?:param=)(?<%s>0x\\w+)(?:&|$)",
-                        ERROR_CODE_GROUP_NAME));
     }
 
     private static class ApiServices {
@@ -47,6 +43,7 @@ public class LaBanquePostaleConstants {
         public static final String USERNAME = "username";
         public static final String CV = "cv";
         public static final String CVVS = "cvvs";
+        public static final String ERROR_PARAM = "param";
     }
 
     public static class QueryDefaultValues {

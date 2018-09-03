@@ -1,10 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale;
 
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
+import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale.entities.Form;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -79,20 +84,21 @@ public class LaBanquePostaleApiClient {
         List<URI> redirects = response.getRedirects();
         if (!redirects.isEmpty()) {
 
-            return errorFromURI(redirects.get(redirects.size() - 1));
+            return errorFromUri(redirects.get(redirects.size() - 1));
         }
 
         return Optional.empty();
     }
 
-    private Optional<String> errorFromURI(URI uri) {
+    private Optional<String> errorFromUri(URI uri){
 
-        Matcher m = LaBanquePostaleConstants.Regex.ERROR_REDIRECT_PATTERN.matcher(uri.toString());
-        if (m.find()) {
+        List<NameValuePair> query = URLEncodedUtils.parse(uri, Charset.forName("UTF-8"));
 
-            return Optional.of(m.group(LaBanquePostaleConstants.Regex.ERROR_CODE_GROUP_NAME));
-        }
+        Map<String, String> m = query.stream().collect(
+                Collectors.toMap(NameValuePair::getName,
+                        NameValuePair::getValue));
 
-        return Optional.empty();
+        return Optional.ofNullable(m.get(LaBanquePostaleConstants.QueryParams.ERROR_PARAM))
+                .map(String::toLowerCase);
     }
 }
