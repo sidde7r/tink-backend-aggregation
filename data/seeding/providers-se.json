@@ -100,7 +100,7 @@
             "className": "brokers.avanza.AvanzaV2Agent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
-            "displayDescription": "Mobilt BankID",
+            "displayDescription": "Mobile BankID",
             "displayName": "Avanza",
             "fields": [
                 {
@@ -351,7 +351,7 @@
             "className": "banks.danskebank.v2.DanskeBankV2Agent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
-            "displayDescription": "Mobilt BankID",
+            "displayDescription": "Mobile BankID",
             "displayName": "Danske Bank",
             "fields": [
                 {
@@ -585,7 +585,7 @@
             "className": "nxgen.se.banks.handelsbanken.HandelsbankenSEAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
-            "displayDescription": "Mobilt BankID",
+            "displayDescription": "Mobile BankID",
             "displayName": "Handelsbanken",
             "fields": [
                 {
@@ -764,7 +764,7 @@
             "className": "banks.LansforsakringarAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
-            "displayDescription": "Mobilt BankID",
+            "displayDescription": "Mobile BankID",
             "displayName": "Länsförsäkringar",
             "fields": [
                 {
@@ -906,7 +906,7 @@
             "className": "brokers.NordnetAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
-            "displayDescription": "Mobilt BankID",
+            "displayDescription": "Mobile BankID",
             "displayName": "Nordnet",
             "fields": [
                 {
@@ -1352,7 +1352,7 @@
             "className": "creditcards.ikano.api.IkanoApiAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
-            "displayDescription": "Mobilt BankID",
+            "displayDescription": "Mobile BankID",
             "displayName": "Shell MasterCard",
             "fields": [
                 {
@@ -1445,7 +1445,7 @@
             "className": "creditcards.ikano.api.IkanoApiAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
-            "displayDescription": "Mobilt BankID",
+            "displayDescription": "Mobile BankID",
             "displayName": "Skodakortet",
             "fields": [
                 {
