@@ -9,7 +9,7 @@ public class NumMonthBoundParser {
     }
 
     public static Integer parse(String value) {
-        if (HandelsbankenSEConstants.Fetcher.Loans.FLOATING.equals(value)) {
+        if (HandelsbankenSEConstants.Fetcher.Loans.FLOATING.equalsIgnoreCase(value)) {
             return HandelsbankenSEConstants.Fetcher.Loans.FLOATING_REEVALUATION_PERIOD;
         }
         if (value == null) {
