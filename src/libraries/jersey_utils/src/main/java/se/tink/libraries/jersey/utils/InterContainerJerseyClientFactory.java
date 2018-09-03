@@ -23,12 +23,12 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManagerFactory;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLContextBuilder;
-import org.apache.http.conn.ssl.TrustStrategy;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
+import se.tink.org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import se.tink.org.apache.http.conn.ssl.SSLContextBuilder;
+import se.tink.org.apache.http.conn.ssl.TrustStrategy;
+import se.tink.org.apache.http.impl.client.BasicCookieStore;
+import se.tink.org.apache.http.impl.client.CloseableHttpClient;
+import se.tink.org.apache.http.impl.client.HttpClientBuilder;
 import se.tink.libraries.net.TinkApacheHttpClient4Handler;
 
 public class InterContainerJerseyClientFactory {
