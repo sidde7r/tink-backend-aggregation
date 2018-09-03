@@ -4,7 +4,7 @@ import java.security.SecureRandom;
 import java.util.Objects;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.codec.binary.Hex;
-import org.apache.http.cookie.Cookie;
+import se.tink.org.apache.http.cookie.Cookie;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants.StaticUrlValuePairs;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants.StaticUrlValues;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants.Url;

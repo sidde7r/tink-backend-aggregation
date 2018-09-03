@@ -4,8 +4,8 @@ import com.sun.jersey.client.apache4.ApacheHttpClient4;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import org.apache.http.client.CookieStore;
-import org.apache.http.cookie.Cookie;
+import se.tink.org.apache.http.client.CookieStore;
+import se.tink.org.apache.http.cookie.Cookie;
 import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.agents.utils.jersey.JerseyClientFactory;
@@ -160,7 +160,7 @@ public abstract class AbstractAgent extends AgentParsingUtils implements Agent, 
             return;
         }
 
-        addCookiesToContainer(client.getClientHandler().getCookieStore(), cookieContainer);
+        addCookiesToContainer((CookieStore)client.getClientHandler().getCookieStore(), cookieContainer);
     }
 
     protected void addCookiesToContainer(CookieStore store, CookieContainer cookieContainer) {

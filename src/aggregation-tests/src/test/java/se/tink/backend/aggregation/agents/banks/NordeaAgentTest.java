@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import org.apache.http.impl.cookie.BasicClientCookie;
+import se.tink.org.apache.http.impl.cookie.BasicClientCookie;
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;

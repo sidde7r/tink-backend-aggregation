@@ -11,8 +11,8 @@ import java.util.List;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NewCookie;
-import org.apache.http.impl.client.DefaultRedirectStrategy;
-import org.apache.http.impl.client.RedirectLocations;
+import se.tink.org.apache.http.impl.client.DefaultRedirectStrategy;
+import se.tink.org.apache.http.impl.client.RedirectLocations;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 

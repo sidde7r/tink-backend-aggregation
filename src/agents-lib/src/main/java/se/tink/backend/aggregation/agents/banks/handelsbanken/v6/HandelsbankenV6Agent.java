@@ -30,7 +30,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
-import org.apache.http.HttpStatus;
+import se.tink.org.apache.http.HttpStatus;
 import org.joda.time.LocalDate;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
