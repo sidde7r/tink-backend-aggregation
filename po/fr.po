@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2018-08-08 11:24+0000\n"
-"PO-Revision-Date: 2018-08-08 11:24+0000\n"
+"POT-Creation-Date: 2018-09-03 11:33+0000\n"
+"PO-Revision-Date: 2018-09-03 11:33+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -10,6 +10,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap\n5$  Enter your PIN\n6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap\n7$  Enter the sign code"
+msgstr "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Appuyez sur\n5$  Introduisez votre code PIN\n6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Appuyez sur\n7$  Complétez le code signature"
+
+msgid "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Want to register your device?\n5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter your PIN\n6$  Enter the signature code"
+msgstr "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enregistrer votre appareil?\n5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Introduisez votre code pin\n6$  Introduisez le code signature"
 
 #, java-format
 msgid "Updating {0}..."
@@ -59,9 +65,6 @@ msgstr "Trouvez le numéro sur votre liste de numéros correspondant au numéro 
 
 msgid "Key number"
 msgstr "Numéro clé"
-
-msgid "NNNN"
-msgstr "NNNN"
 
 msgid "Product not available."
 msgstr "Produit indisponible."
@@ -237,7 +240,7 @@ msgid "BankID authentication failed. Please verify your Mobil BankID is OK."
 msgstr "Échec de l'authentification à BankID. Veuillez vérifier que votre BankID Mobile est fonctionnel."
 
 msgid "MMMMM yyyy"
-msgstr "MMMMM aaaa"
+msgstr "MMMMM yyyy"
 
 msgid "Largest expenses"
 msgstr "Plus grosses dépenses"
@@ -298,7 +301,7 @@ msgid "Open Tink"
 msgstr "Ouvrir Tink"
 
 msgid "d MMMMM"
-msgstr "j MMMMM"
+msgstr "d MMMMM"
 
 #, java-format
 msgid "{0} to {1}"
@@ -473,17 +476,17 @@ msgid "MMM"
 msgstr "MMM"
 
 msgid "MMM d"
-msgstr "MMM j"
+msgstr "MMM d"
 
 msgid "M/d"
-msgstr "M/j"
+msgstr "M/d"
 
 #, java-format
 msgid "last {0}"
 msgstr "dernier {0}"
 
 msgid "MMMM d"
-msgstr "MMMM j"
+msgstr "MMMM d"
 
 msgid "tomorrow"
 msgstr "demain"
@@ -493,7 +496,7 @@ msgid "on {0}"
 msgstr "le {0}"
 
 msgid "MMM d YYYY"
-msgstr "MMM j AAAA"
+msgstr "MMM d YYYY"
 
 msgid "High balance"
 msgstr "Solde élevé"
@@ -1710,7 +1713,7 @@ msgstr "Pharmacie"
 msgid "{0} new event from {1}"
 msgid_plural "{0} new events from i.a. {1}"
 msgstr[0] "{0} nouvel événement de {1}"
-msgstr[1] "{0} nouveaux événements de i.a. {1}"
+msgstr[1] "{0} nouveaux événements, par ex. {1}"
 
 msgid "You have a new event that needs your attention."
 msgid_plural "You have new events that need your attention."
@@ -2001,7 +2004,7 @@ msgid "Could not update payment"
 msgstr "Impossible de mettre à jour le paiement"
 
 msgid "Transfer or payment was not signed with security token device"
-msgstr "Le transfert ou le paiement n'a pas été signé avec un jeton de sécurité"
+msgstr "Le transfert ou le paiement n'a pas été signé avec un dongle de sécurité"
 
 msgid "You have another BankID session in progress. Please try again."
 msgstr "Vous avez une autre session de BankID en cours. Veuillez réessayer."
@@ -2064,7 +2067,7 @@ msgid "Could not find a bank for the given destination account. Check the accoun
 msgstr "Impossible de trouver une banque pour le compte de destination donné. Vérifiez le numéro de compte et réessayez."
 
 msgid "The login must be signed with a code box"
-msgstr "La connexion doit être signée avec une fenêtre de code"
+msgstr "La connexion doit être signée avec une boîtier à code"
 
 msgid "Could not sign the e-invoice"
 msgstr "Impossible de signer l'e-facture"
@@ -2259,9 +2262,6 @@ msgstr "Montant reporté"
 msgid "Do you have deferred capital gains tax?"
 msgstr "Avez-vous reporté la taxation des plus-values ?"
 
-msgid "Email"
-msgstr "E-mail"
-
 msgid "Employee since"
 msgstr "Employé depuis"
 
@@ -2366,12 +2366,6 @@ msgstr "Loyer foncier"
 
 msgid "Are you paying alimony?"
 msgstr "Versez-vous une pension ?"
-
-msgid "Social security number"
-msgstr "Numéro de sécurité sociale"
-
-msgid "Phone number"
-msgstr "Numéro de téléphone"
 
 msgid "Property type"
 msgstr "Type de propriété"
@@ -2689,7 +2683,7 @@ msgid "Our suggestions"
 msgstr "Nos suggestions"
 
 msgid "Tink thinks"
-msgstr "Tink pense"
+msgstr "Tink réfléchit"
 
 msgid "Do you have a mortgage on the property at"
 msgstr "Avez-vous un prêt immobilier pour la propriété à"
@@ -2770,7 +2764,7 @@ msgid "And some more details"
 msgstr "Et plus d'informations"
 
 msgid "For the Bank to be able to do a valuation they need to know more about your apartment."
-msgstr "Pour que la banque fasse une évaluation, elle doit en savoir plus sur votre appartement."
+msgstr "Pour que la banque fasse une estimation, elle doit en savoir plus sur votre appartement."
 
 msgid "We need some information about your new savings account."
 msgstr "Vous avons besoin d'informations concernant votre nouveau compte d'épargne."
@@ -3029,7 +3023,7 @@ msgid "Here are the best floating interest rates from our partners based on your
 msgstr "Voici les meilleurs taux d'intérêt variables de nos partenaires en fonction de vos données."
 
 msgid "For the bank to be able to do a valuation they need to know more about your apartment."
-msgstr "Pour que la banque fasse une évaluation, elle doit en savoir plus sur votre appartement."
+msgstr "Pour que la banque fasse une estimation, elle doit en savoir plus sur votre appartement."
 
 msgid "Try to make the estimate as fair as possible to get more correct interest rate proposals."
 msgstr "Essayez de faire une estimation la plus juste possible pour obtenir des offres de taux d'intérêt plus correctes."
@@ -3101,7 +3095,7 @@ msgstr "Je confirme avoir lu et accepté les Conditions d'utilisation de SEB"
 
 #, java-format
 msgid "Your interest rate at {0} is {1}."
-msgstr "Votre taux d'intérêt à {0} est {1}."
+msgstr "Votre taux d'intérêt à {0} est de {1}."
 
 msgid "How did we select our partners?"
 msgstr "Comment sélectionnons-nous nos partenaires ?"
@@ -3287,7 +3281,7 @@ msgid "You're considered to be this if you are an American citizen, have a Green
 msgstr "On vous considère comme cela si vous êtes un citoyen américain, que vous avez une carte verte ou que vous êtes un résident américain pendant une certaine période."
 
 msgid "For example blanco loans, car loans or used credit on a credit card. Don't include other mortgages or student loans."
-msgstr "Par exemple les prêts blanco, pour une voiture, ou le crédit utilisé sur une carte de crédit. N'incluez pas les autres prêts immobilier ou prêts étudiants."
+msgstr "Par exemple les prêts à fort taux d'intérêt, pour une voiture, ou le crédit utilisé sur une carte de crédit. N'incluez pas les autres prêts immobilier ou prêts étudiants."
 
 msgid "Ground rent (quarterly)"
 msgstr "Loyer foncier"
@@ -3417,9 +3411,6 @@ msgstr "Nom de l'autre banque"
 msgid "Specify other way"
 msgstr "Spécifiez l'autre moyen"
 
-msgid "Registration number"
-msgstr "Numéro d'enregistrement"
-
 msgid "Specify industry"
 msgstr "Spécifiez l'industrie"
 
@@ -3520,7 +3511,7 @@ msgid "If your co-applicant e.g. has sold an apartment or a house and deferred p
 msgstr "Si votre codemandeur a par exemple vendu un appartement ou une maison et reporté la taxation des plus-values."
 
 msgid "Like second mortgage, blanco loans or used credit not already stated. Don't include mortgages on other properties, for example the vacation house."
-msgstr "Comme un second prêt immobilier, un prêt blanco ou le crédit utilisé pas encore indiqué. N'incluez pas des prêts pour une autre propriété, comme une maison de vacances."
+msgstr "Comme un second prêt immobilier, un prêt à fort taux d'intérêt ou le crédit utilisé pas encore indiqué. N'incluez pas des prêts pour une autre propriété, comme une maison de vacances."
 
 msgid "Congratulations! You already have a good interest rate!"
 msgstr "Félicitations ! Vous avez déjà un bon taux d'intérêt !"
@@ -3613,7 +3604,7 @@ msgid "About your house"
 msgstr "À propos de votre maison"
 
 msgid "For the bank to be able to do a valuation they need to know more about your house."
-msgstr "Pour que la banque fasse une évaluation, elle doit en savoir plus sur votre maison."
+msgstr "Pour que la banque fasse une estimation, elle doit en savoir plus sur votre maison."
 
 msgid "This is how it works"
 msgstr "Voici comment cela fonctionne"
@@ -3649,10 +3640,10 @@ msgid "Questions about you and your household"
 msgstr "Des questions sur vous et votre ménage"
 
 msgid "Social security number (YYYYMMDD-NNNN)"
-msgstr "Numéro de sécurité sociale (AAAAMMJJ-NNNN)"
+msgstr "Numéro de sécurité sociale (YYYYMMDD-NNNN)"
 
 msgid "Social security number (YYYYMMDDNNNN)"
-msgstr "Numéro de sécurité sociale (AAAAMMJJNNNN)"
+msgstr "Numéro de sécurité sociale (YYYYMMDDNNNN)"
 
 #, java-format
 msgid "Could not find any engagements in {0}. Use {1} (Mobile BankID) instead."
@@ -3794,7 +3785,7 @@ msgid "Optional data"
 msgstr "Donnée optionnelle"
 
 msgid "The more data you add, the more precise will your valuation be."
-msgstr "Plus vous ajoutez de données, plus votre évaluation sera précise."
+msgstr "Plus vous ajoutez de données, plus votre estimation sera précise."
 
 msgid "Calculating the value of your residence..."
 msgstr "Calcul de la valeur de votre résidence..."
@@ -4122,7 +4113,7 @@ msgid "Something went wrong with the BankId authentication"
 msgstr "Une erreur s'est produite lors de l'authentification à BankID."
 
 msgid "You've received a Swish from {0}"
-msgstr "Vous avez reçu un sifflement de {0}"
+msgstr "Vous avez reçu un Swish de {0}"
 
 msgid "someone"
 msgstr "quelqu'un"
@@ -4347,7 +4338,7 @@ msgid "Key card index"
 msgstr "Index de carte clé"
 
 msgid "Key card code"
-msgstr "Code de carte clé"
+msgstr "Code de la carte clé"
 
 msgid "Phone number is not valid."
 msgstr "Le numéro de téléphone est invalide."
@@ -4384,9 +4375,6 @@ msgstr "Le service bancaire est hors-ligne, veuillez réessayer ultérieurement.
 
 msgid "You need to change your password at S-Pankki before you can login."
 msgstr "Vous devez modifier votre mot de passe à S-Pankki avant de vous connecter."
-
-msgid "Activation code"
-msgstr "Code d'activation"
 
 msgid "The last month you have spent the most money on this."
 msgstr "Le mois dernier, c'est sur cela que vous avez dépensé le plus."
@@ -4437,7 +4425,7 @@ msgid "Could not find any engagements in Sparbankerna. If you have Sparbankerna 
 msgstr "Impossible de trouver un engagement à Sparbankerna. Si vous avez Sparbankerna Ung, nous ne le prenons malheureusement pas en charge."
 
 msgid "Client is deprecated."
-msgstr "Le client est désapprouvé."
+msgstr "Le client est obsolète."
 
 msgid "Device is not authorized."
 msgstr "L'appareil n'est pas autorisé"
@@ -4566,7 +4554,7 @@ msgid "Insert your bank card in your ING Card Reader and press SIGN. Enter your 
 msgstr "Insérez votre carte bancaire dans votre lecteur de cartes ING et appuyez sur CONNEXION. Saisissez votre code PIN, et appuyez sur OK, puis entrez le défi et appuyez sur CONNEXION. Saisissez le défi-réponse dans le champ ci-dessus."
 
 msgid "Challenge"
-msgstr "Défi"
+msgstr "Stimuler"
 
 msgid "Challenge response"
 msgstr "Défi-réponse"
@@ -4635,28 +4623,41 @@ msgstr "Le numéro de carte saisi est incorrect. Veuillez réessayer."
 msgid "The provided credentials are not for KBC bank"
 msgstr "Les identifiants fournis ne sont pas pour la banque KBC"
 
-msgid ""
-"1$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png) Insert your ING bank card in your ING Card Reader\n"
-"2$  Press ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_SIGN.png) Press\n"
-"3$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png) Enter your PIN and press\n"
-"4$  Enter the following number []"
-msgstr ""
-"1$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png) Insérez votre carte bancaire ING dans l'ING Card Reader\n"
-"2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_SIGN.png) Appuyez sur\n"
-"3$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png) Indiquez le code secret de votre carte bancaire ING et appuyez sur\n"
-"4$  Indiquez ces chiffres []"
+msgid "1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_CardReader.png)Insert your bank card into the card reader\n2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_LOGIN.png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_LOGIN.png) Tap\n3$  Enter the start code []"
+msgstr "1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_CardReader.png) Insérez votre carte bancaire dans le lecteur\n2$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_LOGIN.png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_LOGIN.png) Appuyez sur\n3$  Complétez le code de départ []"
 
-msgid ""
-"5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_SIGN.png) And press\n"
-"6$ Enter your RESPONSE code"
-msgstr ""
-"5$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_SIGN.png) Et appuyez sur\n"
-"6$ Indiquez le code RESPONSE"
+msgid "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap\n5$  Enter your secret code\n6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap\n7$  Enter the login code"
+msgstr "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Appuyez sur\n5$  Introduisez votre code secret\n6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Appuyez sur\n7$  Complétez le code de connextion"
+
+msgid "1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_CardReader.png) Insert your bank card into the card reader\n2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN.png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN.png) Tap\n3$  Enter the start code []"
+msgstr "1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_CardReader.png) Insérez votre carte bancaire dans le lecteur\n2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN.png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN.png) Appuyez sur\n3$  Complétez le code de départ []"
+
+msgid "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap\n5$  Enter your PIN\n6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap\n7$  Enter the sign code"
+msgstr "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) (https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Appuyez sur\n5$  Introduisez votre code PIN\n6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Appuyez sur\n7$  Complétez le code signature"
+
+msgid "1$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png) Insert your ING bank card into the ING Card Reader\n2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_IDENTIFY.png)\n3$  Enter your PIN\n4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png) Press\n5$ Enter the response code"
+msgstr "1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png) Insérez votre carte bancaire ING dans l'ING Card Reader\n2$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_IDENTIFY.png) Appuyez sur\n3$  Indiquez votre code secret\n4$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png) Appuyez sur\n5$ Indiquez le code response"
+
+msgid "1$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png) Insert your ING bank card in your ING Card Reader\n2$  Press ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_SIGN.png) Press\n3$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png) Enter your PIN and press\n4$  Enter the following number []"
+msgstr "1$![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png) Insérez votre carte bancaire ING dans l'ING Card Reader\n2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_SIGN.png) Appuyez sur\n3$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png) Indiquez le code secret de votre carte bancaire ING et appuyez sur\n4$  Indiquez ces chiffres []"
+
+msgid "5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_SIGN.png) And press\n6$ Enter your RESPONSE code"
+msgstr "5$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_SIGN.png) Et appuyez sur\n6$ Indiquez le code RESPONSE"
+
+msgid "1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_CardReader.png) Login using your Belfius Card Reader\n2$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_LOGIN.png) Press\n3$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter the security code []"
+msgstr "1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_CardReader.png) Signez avec votre lecteur de carte\n2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_LOGIN.png) Appuyez sur\n3$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Introduisez le code sécurité []"
+
+msgid "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter your PIN\n5$  Enter the login code"
+msgstr "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Introduisez votre code PIN\n5$  Introduisez le code connextion"
+
+msgid "1$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_CardReader.png) Sign using your Belfius Card Reader\n2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_SIGN.png) Press\n3$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter the security code []"
+msgstr "1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_CardReader.png) Signez avec votre lecteur de carte\n2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_SIGN.png)  Appuyez sur\n3$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Introduisez le code sécurité []"
+
+msgid "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Want to register your device?\n5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter your PIN\n code pin\n6$  Enter the signature code"
+msgstr "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enregistrer votre appareil?\n5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Introduisez votre code pin\n6$  Introduisez le code signature"
 
 msgid "The bank service has temporarily failed, please try again later."
-msgstr ""
-"Le service bancaire a échoué temporairement, veuillez réessayer "
-"ultérieurement."
+msgstr "Le service bancaire a échoué temporairement, veuillez réessayer ultérieurement."
 
 msgid "Failed to sign transfer"
 msgstr "Échec de signature du transfert"
@@ -4666,100 +4667,4 @@ msgstr "Type de message manquant"
 
 msgid "The entered structured message is invalid"
 msgstr "Le message structuré saisi est invalide"
-
-msgid ""
-"1$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png) Insert your ING bank card into the ING Card Reader\n"
-"2$  Press ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_IDENTIFY.png)\n"
-"3$  Enter your PIN\n"
-"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png) Press\n"
-"5$ Enter the response code"
-msgstr ""
-"1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png) Insérez votre carte bancaire ING dans l'ING Card Reader\n"
-"2$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_IDENTIFY.png) Appuyez sur\n"
-"3$  Indiquez votre code secret\n"
-"4$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png) Appuyez sur\n"
-"5$ Indiquez le code response"
-
-msgid ""
-"1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_CardReader.png) Insert your bank card into the card reader\n"
-"2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_LOGIN.png) Tap\n"
-"3$  Enter the start code []"
-msgstr ""
-"1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_CardReader.png) Insérez votre carte bancaire dans le lecteur\n"
-"2$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_LOGIN.png) Appuyez sur\n"
-"3$  Complétez le code de départ []"
-
-msgid ""
-"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap\n"
-"5$  Enter your secret code\n"
-"6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap\n"
-"7$  Enter the login code"
-msgstr ""
-"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Appuyez sur\n"
-"5$  Introduisez votre code secret\n"
-"6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Appuyez sur\n"
-"7$  Complétez le code de connextion"
-
-msgid ""
-"1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_CardReader.png) Insert your bank card into the card reader\n"
-"2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN.png) Tap\n"
-"3$  Enter the start code []"
-msgstr ""
-"1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_CardReader.png) Insérez votre carte bancaire dans le lecteur\n"
-"2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN.png) Appuyez sur\n"
-"3$  Complétez le code de départ []"
-
-msgid ""
-"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap\n"
-"5$  Enter your PIN\n"
-"6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap\n"
-"7$  Enter the sign code"
-msgstr ""
-"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Appuyez sur\n"
-"5$  Introduisez votre code PIN\n"
-"6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Appuyez sur\n"
-"7$  Complétez le code signature"
-
-msgid "Number of your bank card"
-msgstr "Numéro de votre carte bancaire "
-
-msgid ""
-"1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_CardReader.png) Login using your Belfius Card Reader\n"
-"2$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_LOGIN.png) Press\n"
-"3$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter the security code []"
-msgstr ""
-"1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_CardReader.png) Signez avec votre lecteur de carte\n"
-"2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_LOGIN.png) Appuyez sur\n"
-"3$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Introduisez le code sécurité []"
-
-msgid ""
-"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter your PIN\n"
-"5$  Enter the login code"
-msgstr ""
-"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Introduisez votre code PIN\n"
-"5$  Introduisez le code connextion"
-
-msgid ""
-"1$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_CardReader.png) Sign using your Belfius Card Reader\n"
-"2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_SIGN.png) Press\n"
-"3$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter the security code []"
-msgstr ""
-"1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_CardReader.png) Signez avec votre lecteur de carte\n"
-"2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_SIGN.png)  Appuyez sur\n"
-"3$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Introduisez le code sécurité []"
-
-msgid ""
-"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Want to register your device?\n"
-"5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter your PIN\n"
-"6$  Enter the signature code"
-msgstr ""
-"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enregistrer votre appareil?\n"
-"5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Introduisez votre code pin\n"
-"6$  Introduisez le code signature"
-
-msgid "Card number"
-msgstr "Numéro de carte"
-
-msgid "Password"
-msgstr "Mot de passe "
 

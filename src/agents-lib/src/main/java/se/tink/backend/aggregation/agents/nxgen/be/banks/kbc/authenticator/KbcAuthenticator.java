@@ -197,9 +197,8 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
     private String waitForLoginCode(String challenge) throws SupplementalInfoException {
     return waitForSupplementalInformation(
         createDescriptionField(catalog.getString(
-                "1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_CardReader.png) Insert your "
-                        + "bank card into the card reader\n"
-                + "2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_LOGIN.png) Tap\n"
+                "1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_CardReader.png)Insert your bank card into the card reader\n"
+                + "2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_LOGIN.png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_LOGIN.png) Tap\n"
                 + "3$  Enter the start code []"),
             challenge),
         createInputField(catalog.getString(
@@ -213,11 +212,11 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
     return waitForSupplementalInformation(
         createDescriptionField(catalog.getString(
             "1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_CardReader.png) Insert your bank card into the card reader\n"
-                + "2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN.png) Tap\n"
+                + "2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN.png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN.png) Tap\n"
                 + "3$  Enter the start code []"),
             challenge),
         createInputField(catalog.getString(
-            "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap\n"
+            "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap\n"
                     + "5$  Enter your PIN\n"
                     + "6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap\n"
                     + "7$  Enter the sign code")));
