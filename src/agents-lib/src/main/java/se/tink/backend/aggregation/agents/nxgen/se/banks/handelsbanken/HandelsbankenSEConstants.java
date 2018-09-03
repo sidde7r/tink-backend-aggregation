@@ -70,6 +70,7 @@ public class HandelsbankenSEConstants {
         }
 
         public static class Investments {
+            public static final String ERROR_TOO_YOUNG_INVESTMENTS = "10001";
             public enum InstrumentType {
                 STOCK("stock", Instrument.Type.STOCK),
                 FUND("fund", Instrument.Type.FUND),
