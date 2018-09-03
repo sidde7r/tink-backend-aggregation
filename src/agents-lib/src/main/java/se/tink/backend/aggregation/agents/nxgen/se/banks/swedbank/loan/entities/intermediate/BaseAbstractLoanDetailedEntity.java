@@ -6,6 +6,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.SwedbankSeSerializationUtils;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.BorrowerEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.LoanDetailsAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.DetailedLoanResponse;
 import se.tink.backend.core.Amount;
@@ -21,9 +23,10 @@ public abstract class BaseAbstractLoanDetailedEntity extends BaseAbstractLoanEnt
     }
 
     protected List<String> getBorrowers() {
-        return loanDetails.map(ld -> ld.getBorrowers())
-                .orElseGet(Collections::emptyList)
-                .stream().map(b -> b.getName())
+        return loanDetails
+                .map(LoanDetailsAccountEntity::getBorrowers).orElseGet(Collections::emptyList)
+                .stream()
+                .map(BorrowerEntity::getName)
                 .collect(Collectors.toList());
     }
 
@@ -36,7 +39,7 @@ public abstract class BaseAbstractLoanDetailedEntity extends BaseAbstractLoanEnt
                 .filter(ld -> Objects.nonNull(ld.getUpcomingInvoice()))
                 .map(ld -> ld.getUpcomingInvoice().getExpenses().stream()
                         .filter(ex -> SwedbankSEConstants.AMORTIZATION.equals(ex.getDescription()))
-                        .map(ex -> ex.getAmount().getTinkAmount()).findFirst().orElseGet(() -> null))
-                .orElseGet(() -> null);
+                        .map(ex -> ex.getAmount().getTinkAmount()).findFirst().orElse(null))
+                .orElse(null);
     }
 }
