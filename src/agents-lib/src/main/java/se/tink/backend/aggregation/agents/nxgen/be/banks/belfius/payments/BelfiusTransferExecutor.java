@@ -232,7 +232,7 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
                         BelfiusConstants.InputFieldConstants.CONTROL_CODE_FIELD_DESCRIPTION,
                         helpText,
                         controlCode),
-                createDescriptionField(
+                extraDescriptionField(
                         BelfiusConstants.InputFieldConstants.DESCRIPTION_CODE_FIELD_DESCRIPTION,
                         descriptionCodeHelp,
                         descriptionCode),
@@ -255,6 +255,16 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         field.setMasked(false);
         field.setDescription(descriptionName);
         field.setName("description");
+        field.setHelpText(description);
+        field.setValue(challenge);
+        field.setImmutable(true);
+        return field;
+    }
+
+    private Field extraDescriptionField(String descriptionName, String description, String challenge) {
+        Field field = new Field();
+        field.setMasked(false);
+        field.setDescription(descriptionName);
         field.setHelpText(description);
         field.setValue(challenge);
         field.setImmutable(true);
