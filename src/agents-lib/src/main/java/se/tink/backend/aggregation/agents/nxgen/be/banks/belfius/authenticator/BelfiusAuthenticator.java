@@ -154,7 +154,6 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
         createInputField(catalog.getString(
                 "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Want to register your device?\n"
                     + "5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter your PIN\n"
-                    + " code pin\n"
                     + "6$  Enter the signature code")));
     }
 
