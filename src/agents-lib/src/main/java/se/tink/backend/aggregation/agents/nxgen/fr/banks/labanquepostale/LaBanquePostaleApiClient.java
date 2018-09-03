@@ -72,11 +72,12 @@ public class LaBanquePostaleApiClient {
         return errorFromResponse(response);
     }
 
-    public Optional<String> isAlive() {
+    public boolean isAlive() {
 
         HttpResponse response = client.request(LaBanquePostaleConstants.Urls.KEEP_ALIVE)
                 .get(HttpResponse.class);
-        return errorFromResponse(response);
+
+        return !errorFromResponse(response).isPresent();
     }
 
     private Optional<String> errorFromResponse(HttpResponse response) {
