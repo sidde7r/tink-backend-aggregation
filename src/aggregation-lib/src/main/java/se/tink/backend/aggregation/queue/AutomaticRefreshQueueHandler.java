@@ -24,8 +24,8 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
     private AgentWorkerOperationFactory agentWorkerCommandFactory;
     private EncodingHandler<RefreshInformation> encodingHandler;
     private static final Logger logger = LoggerFactory.getLogger(AutomaticRefreshQueueHandler.class);
-    private MetricRegistry metricRegistry;
-    private MetricId metricId = MetricId.newId("successful_consumes");
+    private final MetricRegistry metricRegistry;
+    private final MetricId metricId = MetricId.newId("successful_consumes");
 
     @Inject
     public AutomaticRefreshQueueHandler(AgentWorker agentWorker,
