@@ -42,12 +42,14 @@ public class SwedbankSeSerializationUtils {
         if (fixedInterestPeriod != null && fixedInterestPeriod.indexOf(' ') != -1) {
 
             String[] parts = fixedInterestPeriod.split(" ");
+            String quantity = parts[0];
+            String unit = parts[1];
 
             if (parts.length == 2) {
-                if (SwedbankSEConstants.LOAN_YEARS.equalsIgnoreCase(parts[1])) {
-                    return Integer.parseInt(parts[0]) * 12;
-                } else if (SwedbankSEConstants.LOAN_MONTHS.equalsIgnoreCase(parts[1])) {
-                    return Integer.parseInt(parts[0]);
+                if (SwedbankSEConstants.LOAN_YEARS.equalsIgnoreCase(unit)) {
+                    return Integer.parseInt(quantity) * 12;
+                } else if (SwedbankSEConstants.LOAN_MONTHS.equalsIgnoreCase(unit)) {
+                    return Integer.parseInt(quantity);
                 }
             }
         }
