@@ -27,10 +27,6 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
     //private String holderName;
     //private boolean isCard;
 
-    public String getNumber() {
-        return number;
-    }
-
     public TransactionalAccount toTransactionalAccount(
             ApplicationEntryPointResponse applicationEntryPoint) {
         BankIdValidator.validate(number);
@@ -43,7 +39,7 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
             accountType = AccountTypes.SAVINGS;
         }
 
-        return TransactionalAccount.builder(accountType, number, findBalanceAmount().asAmount())
+        return TransactionalAccount.builder(accountType, accountNumber, findBalanceAmount().asAmount())
                 .setBankIdentifier(number)
                 .setAccountNumber(accountNumber)
                 .setName(name)
