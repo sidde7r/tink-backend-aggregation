@@ -106,7 +106,6 @@ public interface UpdateService {
     @Produces(MediaType.APPLICATION_JSON)
     Response updateApplication(UpdateApplicationRequest updateApplicationRequest);
 
-
     @POST
     @Path("/fraud/update")
     @TeamOwnership(Team.DATA)
