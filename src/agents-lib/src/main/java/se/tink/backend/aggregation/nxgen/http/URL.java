@@ -68,6 +68,10 @@ public final class URL {
         return new URL(url, queryParam);
     }
 
+    public URL concat(String s) {
+        return new URL(url.concat(s), query);
+    }
+
     public String get() {
         String url = this.url;
 
@@ -113,3 +117,4 @@ public final class URL {
                 .toHashCode();
     }
 }
+
