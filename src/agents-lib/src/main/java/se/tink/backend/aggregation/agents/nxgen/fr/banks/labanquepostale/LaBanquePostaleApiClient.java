@@ -32,7 +32,7 @@ public class LaBanquePostaleApiClient {
                 .queryParam(LaBanquePostaleConstants.QueryParams.ERROR_CODE,
                         LaBanquePostaleConstants.QueryDefaultValues.ZERO)
                 .queryParam(LaBanquePostaleConstants.QueryParams.URL,
-                        LaBanquePostaleConstants.QueryDefaultValues.AUTH_INIT)
+                        LaBanquePostaleConstants.QueryDefaultValues.MOBILE_AUTH_BACKEND)
                 .get(String.class);
 
         Matcher m = LaBanquePostaleConstants.Regex.NUMPAD_QUERY_PATTERN.matcher(rawHtml);
@@ -53,7 +53,7 @@ public class LaBanquePostaleApiClient {
     public Optional<String> submitLogin(String username, String password) {
 
         formBuilder.put(LaBanquePostaleConstants.QueryParams.URL_BACKEND,
-                LaBanquePostaleConstants.QueryDefaultValues.SUBMIT_AUTH);
+                LaBanquePostaleConstants.QueryDefaultValues.MOBILE_AUTH_BACKEND);
         formBuilder.put(LaBanquePostaleConstants.QueryParams.ORIGIN,
                 LaBanquePostaleConstants.QueryDefaultValues.TACTILE);
         formBuilder.put(LaBanquePostaleConstants.QueryParams.PASSWORD,

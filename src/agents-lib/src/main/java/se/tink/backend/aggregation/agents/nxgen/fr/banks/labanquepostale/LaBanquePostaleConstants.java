@@ -52,11 +52,9 @@ public class LaBanquePostaleConstants {
         public static final String ZERO = "0x00000000";
         public static final String TACTILE = "tactile";
         public static final String TRUE = "true";
-        public static final String AUTH_INIT = "/ws_qh5/bad/mobile/canalJSON/authentification"
-                + "/vide-identif.ea?origin=tactile&codeMedia=9241&version=06_00_01.004";
-        public static final String SUBMIT_AUTH =
-                "%2Fws_qh5%2Fbad%2Fmobile%2FcanalJSON%2Fauthentification%2Fvide-identif"
-                        + ".ea%3Forigin%3Dtactile%26codeMedia%3D9241%26version%3D06_00_01.004";
+        public static final String MOBILE_AUTH_BACKEND =
+                "/ws_qh5/bad/mobile/canalJSON/authentification/vide-identif.ea?"
+                        + "origin=tactile&codeMedia=9241&version=06_00_01.004";
     }
 
     public static class AuthConfig {
