@@ -1,8 +1,51 @@
+java_import(
+    name = "se_tink_httpclient",
+    jars = [
+        "external-jar/se.tink.httpclient-4.3.4.jar",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+java_import(
+    name = "se_tink_httpcore",
+    jars = [
+        "external-jar/se.tink.httpcore-4.3.2.jar",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+java_import(
+    name = "se_tink_commons_codec",
+    jars = [
+        "external-jar/se.tink.commons-codec-1.6.jar",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+java_import(
+    name = "se_tink_commons_logging",
+    jars = [
+        "external-jar/se.tink.commons-logging-1.1.3.jar",
+    ],
+    visibility = ["//visibility:public"],
+)
+
 java_library(
     name = "antlr_antlr",
     visibility = ["//visibility:public"],
     exports = [
         "@antlr_antlr//jar",
+    ],
+)
+
+java_library(
+    name = "se_tink_http",
+    visibility = ["//visibility:public"],
+    exports = [
+        ":se_tink_commons_codec",
+        ":se_tink_httpclient",
+        ":se_tink_commons_logging",
+        ":se_tink_httpcore",
     ],
 )
 
@@ -449,7 +492,6 @@ java_library(
         "@com_google_code_gson_gson//jar",
     ],
 )
-
 java_library(
     name = "com_google_guava_guava",
     visibility = ["//visibility:public"],
@@ -462,6 +504,7 @@ java_library(
     name = "com_google_http_client_google_http_client",
     visibility = ["//visibility:public"],
     exports = [
+        ":se_tink_httpclient",
         "@com_google_code_findbugs_jsr305//jar",
         "@com_google_http_client_google_http_client//jar",
         "@org_apache_httpcomponents_httpclient//jar",
@@ -630,8 +673,8 @@ java_library(
         "@io_netty_netty_handler_proxy//jar",
         "@io_netty_netty_resolver//jar",
         "@io_netty_netty_resolver_dns//jar",
-        "@io_netty_netty_transport//jar",
         "@io_netty_netty_tcnative_boringssl_static//jar",
+        "@io_netty_netty_transport//jar",
         "@org_slf4j_slf4j_api//jar",
     ],
 )
@@ -1189,8 +1232,8 @@ java_library(
     name = "io_grpc_grpc_auth",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_grpc_grpc_core//jar",
         "@io_grpc_grpc_auth//jar",
+        "@io_grpc_grpc_core//jar",
         "@io_opencensus_opencensus_api//jar",
         "@io_opencensus_opencensus_grpc_metrics//jar",
     ],
@@ -1329,7 +1372,6 @@ java_library(
     ],
 )
 
-
 java_library(
     name = "io_netty_netty_all",
     visibility = ["//visibility:public"],
@@ -1337,18 +1379,19 @@ java_library(
         "@io_netty_netty_buffer//jar",
         "@io_netty_netty_codec//jar",
         "@io_netty_netty_codec_dns//jar",
-        "@io_netty_netty_codec_socks//jar",
         "@io_netty_netty_codec_http//jar",
         "@io_netty_netty_codec_http2//jar",
+        "@io_netty_netty_codec_socks//jar",
         "@io_netty_netty_common//jar",
         "@io_netty_netty_handler//jar",
         "@io_netty_netty_handler_proxy//jar",
         "@io_netty_netty_resolver//jar",
         "@io_netty_netty_resolver_dns//jar",
-        "@io_netty_netty_transport//jar",
         "@io_netty_netty_tcnative_boringssl_static//jar",
+        "@io_netty_netty_transport//jar",
     ],
 )
+
 java_library(
     name = "io_prometheus_simpleclient",
     visibility = ["//visibility:public"],
@@ -1701,6 +1744,7 @@ java_library(
     name = "net_sourceforge_htmlunit_htmlunit",
     visibility = ["//visibility:public"],
     exports = [
+
         "@commons_codec_commons_codec//jar",
         "@commons_collections_commons_collections//jar",
         "@commons_io_commons_io//jar",
@@ -1838,8 +1882,8 @@ java_library(
     name = "org_apache_curator_curator_client",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_google_guava_guava//jar",
         ":io_netty_netty_all",
+        "@com_google_guava_guava//jar",
         "@jline_jline//jar",
         "@log4j_log4j//jar",
         "@org_apache_curator_curator_client//jar",
@@ -1852,8 +1896,8 @@ java_library(
     name = "org_apache_curator_curator_framework",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_google_guava_guava//jar",
         ":io_netty_netty_all",
+        "@com_google_guava_guava//jar",
         "@jline_jline//jar",
         "@log4j_log4j//jar",
         "@org_apache_curator_curator_client//jar",
@@ -1867,8 +1911,8 @@ java_library(
     name = "org_apache_curator_curator_recipes",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_google_guava_guava//jar",
         ":io_netty_netty_all",
+        "@com_google_guava_guava//jar",
         "@jline_jline//jar",
         "@log4j_log4j//jar",
         "@org_apache_curator_curator_client//jar",
@@ -1883,8 +1927,8 @@ java_library(
     name = "org_apache_curator_curator_x_discovery",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_google_guava_guava//jar",
         ":io_netty_netty_all",
+        "@com_google_guava_guava//jar",
         "@jline_jline//jar",
         "@log4j_log4j//jar",
         "@org_apache_curator_curator_client//jar",
@@ -1945,9 +1989,35 @@ java_library(
     name = "org_apache_httpcomponents_httpclient",
     visibility = ["//visibility:public"],
     exports = [
-        "@commons_codec_commons_codec//jar",
         "@org_apache_httpcomponents_httpclient//jar",
+        "@commons_codec_commons_codec//jar",
         "@org_apache_httpcomponents_httpcore//jar",
+    ],
+)
+
+java_library(
+    name = "tink_org_apache_httpcomponents_httpclient",
+    visibility = ["//visibility:public"],
+    exports = [
+        ":se_tink_httpclient",
+        ":se_tink_httpcore",
+        "@commons_codec_commons_codec//jar",
+    ],
+)
+
+java_library(
+    name = "tink_org_apache_commons_codec",
+    visibility = ["//visibility:public"],
+    exports = [
+        ":se_tink_commons_codec",
+    ],
+)
+
+java_library(
+    name = "tink_org_apache_commons_logging",
+    visibility = ["//visibility:public"],
+    exports = [
+        ":se_tink_commons_logging",
     ],
 )
 
@@ -1956,6 +2026,13 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@org_apache_httpcomponents_httpcore//jar",
+    ],
+)
+java_library(
+    name = "tink_org_apache_httpcomponents_httpcore",
+    visibility = ["//visibility:public"],
+    exports = [
+        ":se_tink_httpcore",
     ],
 )
 
@@ -2495,11 +2572,11 @@ java_library(
     exports = [
         "@asm_asm//jar",
         "@cglib_cglib//jar",
-        "@org_javassist_javassist//jar",
         "@org_hibernate_hibernate_annotations//jar",
         "@org_hibernate_hibernate_core//jar",
         "@org_hibernate_hibernate_entitymanager//jar",
         "@org_hibernate_javax_persistence_hibernate_jpa_2_0_api//jar",
+        "@org_javassist_javassist//jar",
         "@org_slf4j_slf4j_api//jar",
     ],
 )
@@ -2843,13 +2920,13 @@ java_library(
     name = "org_seleniumhq_selenium_selenium_java",
     visibility = ["//visibility:public"],
     exports = [
+        ":io_netty_netty_all",
         "@cglib_cglib_nodep//jar",
         "@com_google_guava_guava//jar",
         "@commons_codec_commons_codec//jar",
         "@commons_collections_commons_collections//jar",
         "@commons_io_commons_io//jar",
         "@commons_logging_commons_logging//jar",
-        ":io_netty_netty_all",
         "@net_java_dev_jna_jna//jar",
         "@net_java_dev_jna_platform//jar",
         "@net_sourceforge_cssparser_cssparser//jar",
@@ -2965,7 +3042,6 @@ java_library(
     ],
 )
 
-
 java_library(
     name = "org_springframework_data_spring_data_commons",
     visibility = ["//visibility:public"],
@@ -2999,8 +3075,8 @@ java_library(
     name = "org_springframework_security",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_springframework_security_core//jar"
-    ]
+        "@org_springframework_security_core//jar",
+    ],
 )
 
 java_library(
@@ -3133,7 +3209,7 @@ java_library(
 java_library(
     name = "org_hamcrest_hamcrest_core",
     visibility = ["//visibility:public"],
-    exports = ["@org_hamcrest_hamcrest_core//jar"]
+    exports = ["@org_hamcrest_hamcrest_core//jar"],
 )
 
 java_library(
@@ -3212,8 +3288,8 @@ java_library(
     name = "org_apache_avro_avro",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_apache_avro_avro//jar",
         "@com_thoughtworks_paranamer_paranamer//jar",
+        "@org_apache_avro_avro//jar",
         "@org_apache_commons_commons_compress//jar",
         "@org_codehaus_jackson_jackson_core_asl//jar",
         "@org_codehaus_jackson_jackson_mapper_asl//jar",
@@ -3230,7 +3306,6 @@ java_library(
         "@com_clearspring_analytics_stream//jar",
     ],
 )
-
 
 java_library(
     name = "org_apache_pdfbox_pdfbox",
@@ -3261,7 +3336,7 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@com_auth0_java_jwt//jar",
-    ]
+    ],
 )
 
 java_library(

@@ -20,8 +20,8 @@ java_library(
         "//third_party:org_iban4j_iban4j",
 
         # HTTP
-        "//third_party:org_apache_httpcomponents_httpcore",
-        "//third_party:org_apache_httpcomponents_httpclient",
+        "//third_party:tink_org_apache_httpcomponents_httpclient",
+        "//third_party:tink_org_apache_httpcomponents_httpcore",
 
         # Stringutils
         "//third_party:org_apache_commons_commons_lang3",
