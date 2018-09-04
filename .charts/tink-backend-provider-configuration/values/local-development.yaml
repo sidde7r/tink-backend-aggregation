@@ -7,7 +7,7 @@ coordinationHosts: coordination.default.svc.cluster.local:2181
 
 aggregationdb:
   username: tink
-  host: aggregationdb.default.svc.cluster.local
+  host: providerdb.default.svc.cluster.local
   password: tink
 
 applicationCluster: TINK

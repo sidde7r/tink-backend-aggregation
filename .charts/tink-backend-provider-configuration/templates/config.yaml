@@ -1,4 +1,4 @@
-{{ $aggregationdb := .Values.aggregationdb | default dict }}
+{{ $providerdb := .Values.providerdb | default dict }}
 
 apiVersion: v1
 kind: ConfigMap
@@ -46,13 +46,13 @@ data:
 
     database:
       driverClass: com.mysql.jdbc.Driver
-      username: {{ default "tink-provider-configuration" $aggregationdb.username }}
+      username: {{ default "tink-provider-configuration" $providerdb.username }}
       {{- if eq "local" .Values.Cluster }}
-      password: {{ default "password" $aggregationdb.password }}
+      password: {{ default "password" $providerdb.password }}
       {{- else }}
       password: MYSQL_PASSWORD # Is added via Kubernetes Secrets
       {{- end }}
-      url: jdbc:mysql://{{ default "aggregationdb.provider.svc.cluster.local" $aggregationdb.host }}/tink?useLocalSessionState=true&rewriteBatchedStatements=true&useSSL=true&verifyServerCertificate=false
+      url: jdbc:mysql://{{ default "providerdb.provider.svc.cluster.local" $providerdb.host }}/tink?useLocalSessionState=true&rewriteBatchedStatements=true&useSSL=true&verifyServerCertificate=false
       showSql: false
       persistenceUnitName: tink-provider-api
       generateDdl: true
@@ -70,7 +70,7 @@ metadata:
   namespace: provider-configuration
 type: Opaque
 data:
-  aggregationdb-password: ZGV2dG9rZW4=
+  providerdb-password: ZGV2dG9rZW4=
   # Is set to changeme for the development keystore
   keystore-password: Y2hhbmdlbWU=
   system-access-token: ZGV2dG9rZW4=
