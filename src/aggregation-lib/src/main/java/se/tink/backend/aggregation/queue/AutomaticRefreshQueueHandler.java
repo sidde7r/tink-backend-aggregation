@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.queue;
 
 import com.google.inject.Inject;
+import java.util.Optional;
 import java.util.concurrent.RejectedExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,24 +15,35 @@ import se.tink.backend.aggregation.workers.AgentWorkerRefreshOperationCreatorWra
 import se.tink.backend.queue.sqs.EncodingHandler;
 import se.tink.backend.queue.sqs.QueueMessageAction;
 import java.io.IOException;
+import se.tink.libraries.metrics.Counter;
+import se.tink.libraries.metrics.MetricId;
+import se.tink.libraries.metrics.MetricRegistry;
 
 public class AutomaticRefreshQueueHandler implements QueueMessageAction {
     private AgentWorker agentWorker;
     private AgentWorkerOperationFactory agentWorkerCommandFactory;
     private EncodingHandler<RefreshInformation> encodingHandler;
     private static final Logger logger = LoggerFactory.getLogger(AutomaticRefreshQueueHandler.class);
-
+    private final MetricRegistry metricRegistry;
+    private final MetricId metricId = MetricId.newId("aggregation_queue_consumes_by_provider");
 
     @Inject
-    public AutomaticRefreshQueueHandler(AgentWorker agentWorker, AgentWorkerOperationFactory agentWorkerOperationFactory, EncodingHandler encodingHandler) {
+    public AutomaticRefreshQueueHandler(AgentWorker agentWorker,
+            AgentWorkerOperationFactory agentWorkerOperationFactory,
+            EncodingHandler encodingHandler,
+            MetricRegistry metricRegistry) {
         this.agentWorker = agentWorker;
         this.agentWorkerCommandFactory = agentWorkerOperationFactory;
         this.encodingHandler = encodingHandler;
+        this.metricRegistry = metricRegistry;
     }
 
     @Override
     public void handle(String message) throws IOException, RejectedExecutionException {
         RefreshInformation refreshInformation = encodingHandler.decode(message);
+        metricRegistry.meter(metricId.label("provider",
+                refreshInformation.getRequest().getProvider().getName())).inc();
+
         try {
             AgentWorkerRefreshOperationCreatorWrapper agentWorkerRefreshOperationCreatorWrapper = AgentWorkerRefreshOperationCreatorWrapper.of(
                     agentWorkerCommandFactory,
@@ -50,8 +62,7 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
         } catch (RejectedExecutionException rejectedExecution) {
             throw rejectedExecution;
         } catch (Exception e) {
-            logger.error("Something went wrong with an automatic refresh from sqs. \n"
-                    + e.getMessage());
+            logger.error("Something went wrong with an automatic refresh from sqs.", e);
         }
     }
 }
