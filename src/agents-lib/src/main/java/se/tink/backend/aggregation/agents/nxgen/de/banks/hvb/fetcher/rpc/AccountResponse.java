@@ -5,8 +5,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import org.assertj.core.util.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.HVBConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.entities.AccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
@@ -24,61 +28,63 @@ public final class AccountResponse {
     public Collection<TransactionalAccount.Builder<?, ?>> getTransactionalAccounts() {
         return Optional.ofNullable(accounts).orElse(Collections.emptyList())
                 .stream()
+                .filter(AccountResponse::validateAndLogAccountType)
                 .map(AccountResponse::toTransactionalAccount)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
                 .collect(Collectors.toSet());
     }
 
-    private static Optional<AccountTypes> getAccountType(final AccountEntity accountEntity) {
-        if (!accountEntity.getType().isPresent()) {
-            return Optional.empty();
+    /**
+     * @return true iff the account type is recognized.
+     * @throws NullPointerException if the account type was not found
+     */
+    private static boolean validateAndLogAccountType(final AccountEntity accountEntity) {
+        final String accountTypeString = Preconditions.checkNotNull(accountEntity.getType()).trim();
+        final Optional<AccountTypes> accountType = stringToAccountType(accountTypeString);
+        if (!accountType.isPresent()) {
+            logger.warn("{} - Received unknown account type: {} for account entity {}",
+                    HVBConstants.LogTags.HVB_UNKNOWN_ACCOUNT_TYPE.toTag(),
+                    accountTypeString,
+                    SerializationUtils.serializeToString(accountEntity)
+            );
+            return false;
         }
-        final String accountType = accountEntity.getType().get().trim();
+        return true;
+    }
+
+    private static AccountTypes getAccountType(final AccountEntity accountEntity) {
+        final String accountTypeString = Preconditions.checkNotNull(accountEntity.getType()).trim();
+        return stringToAccountType(accountTypeString).orElseThrow(IllegalStateException::new);
+    }
+
+    private static Optional<AccountTypes> stringToAccountType(@Nonnull final String accountType) {
         switch (accountType) {
         case "2":
             return Optional.of(AccountTypes.CHECKING);
         default:
-            logger.warn("Received unknown account type: {} for account entity {}", accountType,
-                    SerializationUtils.serializeToString(accountEntity));
+            return Optional.empty();
         }
-        return Optional.empty();
     }
 
-    private static Optional<TransactionalAccount.Builder<?, ?>> toTransactionalAccount(
+    @Nullable
+    private static String trimNullable(@Nullable final String string) {
+        return string == null ? null : string.trim();
+    }
+
+    private static TransactionalAccount.Builder<?, ?> toTransactionalAccount(
             final AccountEntity accountEntity) {
-        if (!accountEntity.getCurrency().isPresent()) {
-            logger.warn("Could not find account currency");
-            return Optional.empty();
-        } else if (!accountEntity.getCurrentBalance().isPresent()) {
-            logger.warn("Could not find current account balance");
-            return Optional.empty();
-        } else if (!accountEntity.getBic().isPresent()) {
-            logger.warn("Could not find account BIC");
-            return Optional.empty();
-        } else if (!accountEntity.getIban().isPresent()) {
-            logger.warn("Could not find account IBAN");
-            return Optional.empty();
-        } else if (!accountEntity.getNumber().isPresent()) {
-            logger.warn("Could not find account number");
-            return Optional.empty();
-        } else if (!accountEntity.getTitle().isPresent()) {
-            logger.warn("Could not find account title");
-            return Optional.empty();
-        }
-        final Optional<AccountTypes> accountType = getAccountType(accountEntity);
-        if (!accountType.isPresent()) {
-            logger.warn("Could not find or recognize account type");
-            return Optional.empty();
-        }
-        final Amount amount = new Amount(accountEntity.getCurrency().get().trim(),
-                accountEntity.getCurrentBalance().get());
-        final IbanIdentifier iban = new IbanIdentifier(accountEntity.getBic().get().trim(),
-                accountEntity.getIban().get().trim());
-        final String accountNumber = accountEntity.getNumber().get().trim();
-        return Optional.of(TransactionalAccount.builder(accountType.get(), accountNumber, amount)
+        final String currency = trimNullable(accountEntity.getCurrency());
+        final Double balance = accountEntity.getCurrentBalance();
+        final String bic = Preconditions.checkNotNull(accountEntity.getBic());
+        final String iban = Preconditions.checkNotNull(accountEntity.getIban());
+        final String accountNumber = Preconditions.checkNotNull(accountEntity.getNumber());
+        final String accountName = trimNullable(accountEntity.getTitle());
+        final AccountTypes accountType = getAccountType(accountEntity);
+
+        final Amount amount = new Amount(currency, balance);
+        final IbanIdentifier ibanIdentifier = new IbanIdentifier(bic, iban);
+        return TransactionalAccount.builder(accountType, accountNumber, amount)
                 .setAccountNumber(accountNumber)
-                .addIdentifier(iban)
-                .setName(accountEntity.getTitle().get().trim()));
+                .addIdentifier(ibanIdentifier)
+                .setName(accountName);
     }
 }
