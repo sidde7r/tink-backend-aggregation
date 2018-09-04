@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.rpc.DeleteCredentialsRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsDecryptRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsReencryptRequest;
+import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.ReencryptionRequest;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
@@ -180,6 +181,24 @@ public class AggregationServiceResource implements AggregationService {
     public void setSupplementalInformation(SupplementInformationRequest request) {
         supplementalInformationController.setSupplementalInformation(request.getCredentialsId(),
                 request.getSupplementalInformation());
+    }
+
+    @Override
+    public Response reEncryptCredentials(ReEncryptCredentialsRequest reencryptCredentialsRequest,
+            ClusterInfo clusterInfo) {
+        // Only aggregation cluster can decrypt and encrypt with the new encryption method
+        if (!isAggregationCluster) {
+            HttpResponseHelper.error(Response.Status.BAD_REQUEST);
+        }
+
+        try {
+            agentWorker.execute(agentWorkerCommandFactory
+                    .createReEncryptCredentialsOperation(clusterInfo, reencryptCredentialsRequest));
+        } catch (Exception e) {
+            HttpResponseHelper.error(Response.Status.INTERNAL_SERVER_ERROR);
+        }
+
+        return HttpResponseHelper.ok();
     }
 
     @Override
