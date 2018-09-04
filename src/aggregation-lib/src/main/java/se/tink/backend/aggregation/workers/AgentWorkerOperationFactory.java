@@ -220,11 +220,6 @@ public class AgentWorkerOperationFactory {
                     createMetricState(request)));
         }
 
-        if (RefreshableItem.hasTransactions(items)) {
-            commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.TRANSACTIONS,
-                    createMetricState(request)));
-        }
-
         if (items.contains(RefreshableItem.EINVOICES)) {
             commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.EINVOICES,
                     createMetricState(request)));
@@ -235,10 +230,19 @@ public class AgentWorkerOperationFactory {
                     createMetricState(request)));
         }
 
-        // Don't update the status if we are waiting on transactions from the connector.
+        // Transactions are processed last of the refreshable items since the credential status will be set `UPDATED`
+        // by system when the processing is done.
+        if (RefreshableItem.hasTransactions(items)) {
+            commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.TRANSACTIONS,
+                    createMetricState(request)));
+        }
+
+        // Update the status to `UPDATED` if the credential isn't waiting on transactions from the connector and if
+        // transactions aren't processed in system. The transaction processing in system will set the status to
+        // `UPDATED` when transactions have been processed and new statistics are generated.
         // Todo: Remove this dependency
         commands.add(new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATED,
-                c -> !c.isWaitingOnConnectorTransactions()));
+                c -> !c.isWaitingOnConnectorTransactions() && !c.isSystemProcessingTransactions()));
 
         return commands;
     }

@@ -74,7 +74,6 @@ import se.tink.libraries.metrics.Counter;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.uuid.UUIDUtils;
-import static se.tink.backend.aggregation.rpc.CredentialsStatus.UPDATED;
 
 public class AgentWorkerContext extends AgentContext implements Managed, SetAccountsToAggregateContext {
     private static final AggregationLogger log = new AggregationLogger(AgentWorkerContext.class);
@@ -117,6 +116,8 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
     private List<Account> accountsToAggregate;
     // a collection of account numbers that the Opt-in user selected during the opt-in flow
     private List<String> uniqueIdOfUserSelectedAccounts;
+    // True or false if system has been requested to process transactions.
+    private boolean isSystemProcessingTransactions;
 
     public AgentWorkerContext(CredentialsRequest request, ServiceContext serviceContext, MetricRegistry metricRegistry,
             boolean useAggregationController,
@@ -178,6 +179,10 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
 
     public void removeEventListener(AgentEventListener eventListener) {
         eventListeners.remove(eventListener);
+    }
+
+    public boolean isSystemProcessingTransactions() {
+        return isSystemProcessingTransactions;
     }
 
     @Override
@@ -329,7 +334,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
                 continue;
             }
 
-            String accountId = account.get().getId();
             List<Transaction> accountTransactions = transactionsByAccountBankId.get(bankId);
 
             for (Transaction transaction : accountTransactions) {
@@ -385,25 +389,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
             return;
         }
 
-        // If we don't get any transactions, just update the credentials. If
-        // we do, we actually update the status of the credentials when
-        // we've both processed the transactions and generated the
-        // statistics.
-
-        if (!isWaitingOnConnectorTransactions() && transactions.isEmpty()) {
-            log.info("Empty transaction list, considering UPDATED to be the case ("
-                    + request.getCredentials().getId() + ")");
-
-            Date now = new Date();
-
-            credentials.setUpdated(now);
-            credentials.setStatus(UPDATED);
-
-            updateCredentialsExcludingSensitiveInformation(credentials, true);
-
-            return;
-        }
-
         // Send the request to process the transactions that we've collected in this batch.
 
         if (useAggregationController) {
@@ -430,6 +415,8 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
 
             systemServiceFactory.getProcessService().updateTransactionsAsynchronously(updateTransactionsRequest);
         }
+
+        isSystemProcessingTransactions = true;
 
         // Don't use the queue yet
         //
