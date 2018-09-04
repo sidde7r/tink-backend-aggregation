@@ -89,4 +89,8 @@ public class DanskeBankApiClient {
 
         return DanskeBankDeserializer.convertStringToObject(response, ListSecurityDetailsResponse.class);
     }
+
+    public void keepAlive() {
+        postRequest(DanskeBankConstants.Url.EXTEND_SESSION, "{}");
+    }
 }

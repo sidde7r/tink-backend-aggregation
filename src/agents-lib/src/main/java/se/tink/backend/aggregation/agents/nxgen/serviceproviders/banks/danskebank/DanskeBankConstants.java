@@ -42,6 +42,11 @@ public final class DanskeBankConstants {
         public static final String LIST_TRANSACTIONS = E4_BASE + "/transaction/list";
         public static final String LIST_UPCOMING_TRANSACTIONS = E4_BASE + "/transaction/future";
         // == END Transactions
+
+        // == START SessionHandler ==
+        public static final String EXTEND_SESSION = BASE + "/extend";
+        // == END SessionHandler ==
+
     }
 
     public static class Account {
