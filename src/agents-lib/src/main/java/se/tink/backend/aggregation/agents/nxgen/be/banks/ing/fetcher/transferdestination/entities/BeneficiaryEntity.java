@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transferde
 import javax.xml.bind.annotation.XmlRootElement;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.identifiers.BelgianIdentifier;
+import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 
 @XmlRootElement
 public class BeneficiaryEntity implements GeneralAccountEntity {
@@ -136,7 +136,7 @@ public class BeneficiaryEntity implements GeneralAccountEntity {
 
     @Override
     public AccountIdentifier generalGetAccountIdentifier() {
-        return new BelgianIdentifier(ibanNumber);
+        return new SepaEurIdentifier(ibanNumber);
     }
 
     @Override

@@ -55,7 +55,8 @@ public class TransferController {
     private void executeBankTransfer(final Transfer transfer) {
         Preconditions.checkNotNull(bankTransferExecutor);
 
-        if (transfer.getSource().is(AccountIdentifier.Type.BE)) {
+        if (transfer.getSource().is(AccountIdentifier.Type.BE)
+            || transfer.getSource().is(AccountIdentifier.Type.SEPA_EUR)) {
             validateTransferMessageType(transfer);
         }
 

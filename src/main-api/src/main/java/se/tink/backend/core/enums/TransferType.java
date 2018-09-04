@@ -35,6 +35,7 @@ public enum TransferType {
         case BANK_TRANSFER:
             return new AccountIdentifier.Type[] {
                     AccountIdentifier.Type.BE,
+                    AccountIdentifier.Type.SEPA_EUR,
                     AccountIdentifier.Type.SE,
                     AccountIdentifier.Type.SE_SHB_INTERNAL,
                     AccountIdentifier.Type.TINK

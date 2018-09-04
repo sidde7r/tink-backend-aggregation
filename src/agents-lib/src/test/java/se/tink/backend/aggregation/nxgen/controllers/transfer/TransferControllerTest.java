@@ -42,7 +42,7 @@ public class TransferControllerTest {
         Transfer transfer = new Transfer();
         transfer.setType(TransferType.BANK_TRANSFER);
         // Source iban is just an example that's fetched from an online website.
-        transfer.setSource(AccountIdentifier.create(AccountIdentifier.Type.BE, "BE68539007547034"));
+        transfer.setSource(AccountIdentifier.create(AccountIdentifier.Type.SEPA_EUR, "BE68539007547034"));
         return transfer;
     }
 

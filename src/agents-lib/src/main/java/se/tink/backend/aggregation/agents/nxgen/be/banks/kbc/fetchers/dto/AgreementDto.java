@@ -177,7 +177,7 @@ public class AgreementDto implements GeneralAccountEntity {
 
     @Override
     public AccountIdentifier generalGetAccountIdentifier() {
-        return AccountIdentifier.create(AccountIdentifier.Type.BE,
+        return AccountIdentifier.create(AccountIdentifier.Type.SEPA_EUR,
                 agreementNo.getValue(), agreementName.getValue());
     }
 

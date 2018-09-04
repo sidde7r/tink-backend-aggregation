@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-import static se.tink.libraries.account.AccountIdentifier.Type.IBAN;
 
 public class IngTransactionalAccountFetcher extends ProductMovementsFetcher<TransactionalAccount, Transaction> {
 
@@ -29,7 +28,7 @@ public class IngTransactionalAccountFetcher extends ProductMovementsFetcher<Tran
         String bic = product.getBic();
         String iban = product.getIban();
         if (bic != null && iban != null) {
-            builder.addIdentifier(new IbanIdentifier(IBAN, bic, iban.replaceAll(" ", "")));
+            builder.addIdentifier(new IbanIdentifier(bic, iban.replaceAll(" ", "")));
         }
 
         return builder.build();

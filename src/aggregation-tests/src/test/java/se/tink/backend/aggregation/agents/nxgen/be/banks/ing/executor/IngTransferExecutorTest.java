@@ -21,13 +21,18 @@ import se.tink.backend.core.enums.MessageType;
 import se.tink.backend.core.enums.TransferType;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.identifiers.BelgianIdentifier;
+import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 import se.tink.libraries.date.DateUtils;
 import static se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Storage.OTP_COUNTER;
 
 @Ignore
 public class IngTransferExecutorTest {
+    //
+    // Use IngTwoFactorAuthenticatorTest to populate
+    // persistent storage in IngTestConfig
+    // VIRTUAL_CARD_NUMBER below and OTP Counter in setUP
 
+    public static final String VIRTUAL_CARD_NUMBER = "";
     private Credentials credentials;
     private IngApiClient apiClient;
     private PersistentStorage persistentStorage;
@@ -52,6 +57,7 @@ public class IngTransferExecutorTest {
         // Change each test round
         this.persistentStorage.put(OTP_COUNTER, "");
         this.ingHelper = ingTestConfig.getTestIngHelper();
+        ingHelper.setCardNumber(VIRTUAL_CARD_NUMBER);
 
         this.autoAuthenticator = new IngAutoAuthenticator(apiClient, persistentStorage, ingHelper);
         autoAuthenticator.autoAuthenticate();
@@ -59,17 +65,26 @@ public class IngTransferExecutorTest {
         this.transferController = new TransferController(null, ingTransferExecutor, null, null);
 
         // Populate with account numbers for test user
-        this.currentAccountSource = new BelgianIdentifier("");
-        this.savingsAccountSource = new BelgianIdentifier("");
-        this.savedBeneficiaryDestination = new BelgianIdentifier("");
-        this.thirdPartyDestination = new BelgianIdentifier("");
+        this.currentAccountSource = new SepaEurIdentifier("");
+        this.savingsAccountSource = new SepaEurIdentifier("");
+
+        this.savedBeneficiaryDestination = new SepaEurIdentifier("");
+        this.thirdPartyDestination = new SepaEurIdentifier("");
         this.thirdPartyDestination.setName("");
     }
 
     @After
     public void tearDown() throws Exception {
         System.out.println("Copy/paste new otp counter from: persistentStorage = " + this.persistentStorage);
+        System.out.println("this.persistentStorage.put(OTP_COUNTER, \"" + this.persistentStorage.get(OTP_COUNTER) + "\");");
+        persistentStorage.keySet().iterator().forEachRemaining(key -> {
+            if (!key.equalsIgnoreCase(OTP_COUNTER)) {
+                System.out.println("this.persistentStorage.put(\"" + key + "\", \"" + persistentStorage.get(key) + "\");" );
+            }
+        });
     }
+
+
 
     @Test
     public void ensureInternalTransfer_withFreeTextMsg_succeeds() throws Exception {
