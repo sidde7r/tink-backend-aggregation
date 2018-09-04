@@ -17,6 +17,8 @@ exec('msguniq --use-first --no-location ../../po/' . $generatedFilename . ' -o .
 // Upload the generated tink-provider.pot file to OneSky
 // TODO: Uncomment below code to enable uploading the generated .pot file to OneSky
 // TODO: Don't enable uploading to OneSky until all translatable provider fields are in English
+// TODO: Until that's done run this script for one market/language at the time, and inspect the pot file before uploading
+// TDOO: Modify line 133 in the potfilegenerator.php script change which provider configurations are included
 /*
 $oneSkyClient->upload($generatedFilename);
 */
