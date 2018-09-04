@@ -25,7 +25,7 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
     private EncodingHandler<RefreshInformation> encodingHandler;
     private static final Logger logger = LoggerFactory.getLogger(AutomaticRefreshQueueHandler.class);
     private final MetricRegistry metricRegistry;
-    private final MetricId metricId = MetricId.newId("successful_consumes");
+    private final MetricId metricId = MetricId.newId("aggregation_queue_consumes_by_provider");
 
     @Inject
     public AutomaticRefreshQueueHandler(AgentWorker agentWorker,
@@ -41,7 +41,11 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
     @Override
     public void handle(String message) throws IOException, RejectedExecutionException {
         RefreshInformation refreshInformation = encodingHandler.decode(message);
+
         try {
+            metricRegistry.meter(metricId.label("provider",
+                    refreshInformation.getRequest().getProvider().getName())).inc();
+
             AgentWorkerRefreshOperationCreatorWrapper agentWorkerRefreshOperationCreatorWrapper = AgentWorkerRefreshOperationCreatorWrapper.of(
                     agentWorkerCommandFactory,
                     refreshInformation.getRequest(),
@@ -56,14 +60,10 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
 
             MDC.setContextMap(refreshInformation.getMDCContext());
             agentWorker.executeAutomaticRefresh(agentWorkerRefreshOperationCreatorWrapper);
-
-            metricRegistry.meter(metricId.label("provider",
-                            refreshInformation.getRequest().getProvider().getName())).inc();
         } catch (RejectedExecutionException rejectedExecution) {
             throw rejectedExecution;
         } catch (Exception e) {
-            logger.error("Something went wrong with an automatic refresh from sqs. \n"
-                    + e.getMessage());
+            logger.error("Something went wrong with an automatic refresh from sqs.", e);
         }
     }
 }
