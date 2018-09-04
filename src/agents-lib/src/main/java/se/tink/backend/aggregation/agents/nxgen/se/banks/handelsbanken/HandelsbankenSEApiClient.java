@@ -129,6 +129,11 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
         return createRequest(creditCard.toCardTransactions()).get(CreditCardSETransactionsResponse.class);
     }
 
+    @Override
+    public CreditCardSETransactionsResponse creditCardTransactions(URL url) {
+        return createRequest(url).get(CreditCardSETransactionsResponse.class);
+    }
+
     public Optional<PaymentDetails> paymentDetails(PendingTransaction pendingTransaction) {
         return pendingTransaction.toPaymentDetails().map(url -> createRequest(url).get(PaymentDetails.class));
     }

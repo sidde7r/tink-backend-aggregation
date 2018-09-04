@@ -22,7 +22,7 @@ public class HandelsbankenSECreditCardTransaction {
     @JsonDeserialize(using = StringCleaningDeserializer.class)
     private String description;
 
-    public CreditCardTransaction toTinkTransaction(HandelsbankenSECreditCard creditcard, CreditCardAccount account) {
+    private CreditCardTransaction toTinkTransaction(CreditCardAccount account, boolean invertAmount) {
         String formattedDescription = description;
         boolean pending = false;
 
@@ -33,7 +33,7 @@ public class HandelsbankenSECreditCardTransaction {
         }
 
         return CreditCardTransaction.builder()
-                .setAmount(Amount.inSEK(calculateAmount(creditcard)))
+                .setAmount(Amount.inSEK(calculateAmount(invertAmount)))
                 .setDate(date)
                 .setDescription(formattedDescription)
                 .setPending(pending)
@@ -41,10 +41,17 @@ public class HandelsbankenSECreditCardTransaction {
                 .build();
     }
 
-    private Double calculateAmount(
-            HandelsbankenSECreditCard creditcard) {
+    public CreditCardTransaction toTinkTransaction(HandelsbankenSECreditCard creditcard, CreditCardAccount account) {
+        return toTinkTransaction(account, creditcard.hasInvertedTransactions());
+    }
+
+    public CreditCardTransaction toTinkTransaction(CreditCardAccount account) {
+        return toTinkTransaction(account, false);
+    }
+
+    private Double calculateAmount(boolean invertAmount) {
         Double amount = this.amount.asDouble();
-        if (creditcard != null && creditcard.hasInvertedTransactions()) {
+        if (invertAmount) {
             return -amount;
         }
         return amount;

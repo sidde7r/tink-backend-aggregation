@@ -8,4 +8,5 @@ import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 
 public abstract class CreditCardTransactionsResponse<CreditCard extends HandelsbankenCreditCard> extends BaseResponse {
     public abstract List<CreditCardTransaction> tinkTransactions(CreditCard creditcard, CreditCardAccount account);
+    public abstract List<CreditCardTransaction> tinkTransactions(CreditCardAccount account);
 }
