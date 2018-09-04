@@ -29,11 +29,6 @@ public class CookieContainer {
     }
 
     @JsonIgnore
-    public void setCookiesFromClient(ApacheHttpClient4 client) {
-        cookies = client.getClientHandler().getCookieStore().getCookies().stream().map(c -> (Cookie) c) .collect(Collectors.toList());
-    }
-
-    @JsonIgnore
     public void addCookie(Cookie cookie) {
         this.cookies.add(cookie);
     }

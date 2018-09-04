@@ -145,6 +145,7 @@ import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecutor, TransferExecutor,
@@ -270,7 +271,7 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
     }
 
     private final TransferMessageFormatter transferMessageFormatter;
-    private ApacheHttpClient4 client;
+    private TinkApacheHttpClient4 client;
     private Credentials credentials;
     private ProfileParameters profileParameters;
     private Map<String, List<Transaction>> upcomingTransactionsByBankId;
@@ -286,7 +287,7 @@ public class SwedbankAgent extends AbstractAgent implements RefreshableItemExecu
 
         ApacheHttpClient4Config clientConfig = new DefaultApacheHttpClient4Config();
         clientConfig.getProperties().put(ApacheHttpClient4Config.PROPERTY_ENABLE_BUFFERING, true);
-        client = clientFactory.createCookieClient(context.getLogOutputStream(), clientConfig);
+        client = TinkApacheHttpClient4.create(clientConfig);
 
         transferMessageFormatter = new TransferMessageFormatter(context.getCatalog(),
                 TRANSFER_MESSAGE_LENGTH_CONFIG,

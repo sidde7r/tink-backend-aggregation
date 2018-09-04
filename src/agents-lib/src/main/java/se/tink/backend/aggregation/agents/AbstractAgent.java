@@ -154,15 +154,6 @@ public abstract class AbstractAgent extends AgentParsingUtils implements Agent, 
         addCookiesToContainer(client.getClientHandler().getCookieStore(), cookieContainer);
     }
 
-    protected void addSessionCookiesToClient(ApacheHttpClient4 client, CookieContainer cookieContainer) {
-        if (client == null) {
-            this.log.error("Client is null");
-            return;
-        }
-
-        addCookiesToContainer((CookieStore)client.getClientHandler().getCookieStore(), cookieContainer);
-    }
-
     protected void addCookiesToContainer(CookieStore store, CookieContainer cookieContainer) {
         if (cookieContainer == null) {
             this.log.error("Cookie container is null");
