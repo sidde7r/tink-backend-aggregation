@@ -1,5 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.hvb;
 
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 // NOTE: Look out for additional, Worklight-specific constants in the WLConstants class
@@ -51,4 +52,12 @@ public final class HVBConstants {
                     + "JkzTX/dRzFICZpvtgIh2EwG0UfkdBi1Ibj94yw7Wr++pbgLg/I4cL/NGtDGlbHZk"
                     + "VY04ZL62s9Qa9HK5LlMXCCtXaI8Oixq1B+RkyR5rov5IBy5NhEgOEqvJvN7JlNR0"
                     + "NgKyrHSPgFEsGXJdsPkHCkdDLNaZgFebgI2YHD3bljTgJODwrv8=";
+
+    public enum LogTags {
+        HVB_UNKNOWN_ACCOUNT_TYPE;
+
+        public LogTag toTag() {
+            return LogTag.from("#" + name());
+        }
+    }
 }
