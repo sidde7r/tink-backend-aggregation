@@ -1,9 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale;
 
+import java.time.ZoneId;
 import java.util.regex.Pattern;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class LaBanquePostaleConstants {
+
+    public static final String CURRENCY = "EUR";
+    public static final ZoneId ZONE_ID = ZoneId.of("Europe/Paris");
+    public static final String MARKET = "fr";
+    public static final String PROVIDER_NAME = "fr-labanquepostale-password";
 
     public static class Regex {
 
@@ -20,6 +27,9 @@ public class LaBanquePostaleConstants {
         static final String INIT_LOGIN_PATH = "/wsost/OstBrokerWeb/pagehandler";
         static final String GET_NUMPAD_BASE_PATH = "wsost/OstBrokerWeb/";
         static final String SUBMIT_LOGIN_PATH = "wsost/OstBrokerWeb/auth";
+        static final String EQUIPMENTS_COMPTES = "ws_qh5/bad/mobile/canalREST/equipements/comptes_2.0.0.ea";
+        static final String LISTE_MOUBVEMENTS_CNE = "ws_qh5/bad/mobile/canalREST/listemouvements/listeMouvementsCNE.ea";
+        static final String LISTE_MOUBVEMENTS_CPP = "ws_qh5/bad/mobile/canalREST/listemouvements/listeMouvementsCCP.ea";
     }
 
     public static class Urls {
@@ -30,6 +40,9 @@ public class LaBanquePostaleConstants {
         public static final URL INIT_LOGIN = new URL(BASE + ApiServices.INIT_LOGIN_PATH);
         public static final URL GET_NUMPAD_BASE = new URL(BASE + ApiServices.GET_NUMPAD_BASE_PATH);
         public static final URL SUBMIT_LOGIN = new URL(BASE + ApiServices.SUBMIT_LOGIN_PATH);
+        public static final URL EQUIPMENTS_COMPTES = new URL(BASE + ApiServices.EQUIPMENTS_COMPTES);
+        public static final URL LISTE_MOUBVEMENTS_CNE = new URL(BASE + ApiServices.LISTE_MOUBVEMENTS_CNE);
+        public static final URL LISTE_MOUBVEMENTS_CPP = new URL(BASE + ApiServices.LISTE_MOUBVEMENTS_CPP);
     }
 
     public static class QueryParams {
@@ -44,6 +57,11 @@ public class LaBanquePostaleConstants {
         public static final String CV = "cv";
         public static final String CVVS = "cvvs";
         public static final String ERROR_PARAM = "param";
+        protected static final String CODE_MEDIA = "codeMedia";
+        protected static final String COMPTE_NUMERO = "compte.numero";
+        protected static final String TYPE_RECHERCHE = "typeRecherche";
+        protected static final String APPEL_ASSUARANCES = "appelAssuarances";
+        protected static final String APPEL_PRETS = "appelPrets";
     }
 
     public static class QueryDefaultValues {
@@ -55,6 +73,8 @@ public class LaBanquePostaleConstants {
         public static final String MOBILE_AUTH_BACKEND =
                 "/ws_qh5/bad/mobile/canalJSON/authentification/vide-identif.ea?"
                         + "origin=tactile&codeMedia=9241&version=06_00_01.004";
+        protected static final String _9241 = "9241";
+        protected static final String _10 = "10";
     }
 
     public static class AuthConfig {
@@ -83,4 +103,9 @@ public class LaBanquePostaleConstants {
         public static final String INCORRECT_CREDENTIALS = "0x132120c8";
         public static final String COULD_NOT_HANDLE_REQUEST = "0x13212070";
     }
+
+    public static class Logging {
+        public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from(PROVIDER_NAME + "-unknown-account-type");
+    }
+
 }
