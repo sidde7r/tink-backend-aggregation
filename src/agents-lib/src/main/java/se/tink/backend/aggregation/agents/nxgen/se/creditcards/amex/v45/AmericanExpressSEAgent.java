@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.creditcards.amex;
+package se.tink.backend.aggregation.agents.nxgen.se.creditcards.amex.v45;
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.AmericanExpressAgent;

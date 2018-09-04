@@ -1,7 +1,7 @@
-package se.tink.backend.aggregation.agents.nxgen.se.creditcards.amex;
+package se.tink.backend.aggregation.agents.nxgen.se.creditcards.amex.v45;
 
 import java.util.Date;
-import se.tink.backend.aggregation.agents.nxgen.se.creditcards.amex.fetcher.rpc.TimelineSERequest;
+import se.tink.backend.aggregation.agents.nxgen.se.creditcards.amex.v45.fetcher.rpc.TimelineSERequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.AmericanExpressConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.AmericanExpressConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.authenticator.entities.CardEntity;
