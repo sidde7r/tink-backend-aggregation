@@ -4,5 +4,6 @@ coordinationHosts: 10.89.60.29:2181
 applicationCluster: TINK
 developmentMode: false
 
-aggregationdb:
-  host: aggregation-20180615075316658100000003.chuxbkxjm8ld.eu-west-1.rds.amazonaws.com
+providerdb:
+  host: provider-db.internal.staging.aggregation.tink.network
+  username: tink-provider

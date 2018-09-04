@@ -53,7 +53,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: provider-configuration-secrets
-              key: aggregationdb-password
+              key: providerdb-password
       containers:
       - name: tink-backend-provider-configuration
         resources:
