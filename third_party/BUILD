@@ -2001,7 +2001,7 @@ java_library(
     exports = [
         ":se_tink_httpclient",
         ":se_tink_httpcore",
-        "@commons_codec_commons_codec//jar",
+        ":se_tink_commons_codec",
     ],
 )
 

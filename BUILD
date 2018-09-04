@@ -519,7 +519,6 @@ java_library(
         "//third_party:net_sourceforge_tess4j",
         "//third_party:net_sourceforge_cssparser_cssparser",
         "//third_party:com_auth0_java_jwt",
-
         "//third_party:tink_org_apache_httpcomponents_httpclient",
         "//third_party:tink_org_apache_httpcomponents_httpcore",
         "//third_party:tink_org_apache_commons_codec",
