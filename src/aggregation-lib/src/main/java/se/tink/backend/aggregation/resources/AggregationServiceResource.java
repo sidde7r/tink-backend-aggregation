@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.resources;
 
 import com.google.api.client.util.Lists;
-import io.dropwizard.lifecycle.Managed;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
@@ -41,8 +40,6 @@ import se.tink.backend.common.repository.mysql.aggregation.clusterhostconfigurat
 import se.tink.backend.queue.QueueProducer;
 import se.tink.libraries.http.utils.HttpResponseHelper;
 import se.tink.libraries.metrics.MetricRegistry;
-
-import java.util.Objects;
 
 @Path("/aggregation")
 public class AggregationServiceResource implements AggregationService {
@@ -199,7 +196,7 @@ public class AggregationServiceResource implements AggregationService {
         }
 
         AgentWorkerOperation updateCredentialsOperation = agentWorkerCommandFactory
-                .createDecryptCredentialsOperation(clusterInfo, request);
+                .createMigrateDecryptCredentialsOperation(clusterInfo, request);
 
         updateCredentialsOperation.run();
 
@@ -214,7 +211,7 @@ public class AggregationServiceResource implements AggregationService {
         }
 
         try {
-            agentWorker.execute(agentWorkerCommandFactory.createReencryptCredentialsOperation(
+            agentWorker.execute(agentWorkerCommandFactory.createMigrateReencryptCredentialsOperation(
                     clusterInfo, request));
             return HttpResponseHelper.ok();
         } catch (Exception e) {

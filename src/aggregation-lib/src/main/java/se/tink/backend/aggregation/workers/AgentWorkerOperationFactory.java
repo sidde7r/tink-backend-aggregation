@@ -416,7 +416,7 @@ public class AgentWorkerOperationFactory {
         return new AgentWorkerOperation(agentWorkerOperationState, "keep-alive", request, commands, context);
     }
 
-    public AgentWorkerOperation createDecryptCredentialsOperation(ClusterInfo clusterInfo,
+    public AgentWorkerOperation createMigrateDecryptCredentialsOperation(ClusterInfo clusterInfo,
             MigrateCredentialsDecryptRequest request) {
         AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
                 useAggregationController, aggregationControllerAggregationClient, clusterInfo);
@@ -428,7 +428,7 @@ public class AgentWorkerOperationFactory {
         return new AgentWorkerOperation(agentWorkerOperationState, "migrate-decrypt", request, commands, context);
     }
 
-    public AgentWorkerOperation createReencryptCredentialsOperation(ClusterInfo clusterInfo,
+    public AgentWorkerOperation createMigrateReencryptCredentialsOperation(ClusterInfo clusterInfo,
             MigrateCredentialsReencryptRequest request) {
         AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
                 useAggregationController, aggregationControllerAggregationClient, clusterInfo);
