@@ -2,9 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.am
 
 import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62ApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Configuration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants;
@@ -17,9 +21,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class AmericanExpressV62TransactionFetcher
         implements TransactionPagePaginator<CreditCardAccount> {
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(AmericanExpressV62TransactionFetcher.class);
     private final AmericanExpressV62ApiClient client;
     private final AmericanExpressV62Configuration config;
 
@@ -41,7 +48,8 @@ public class AmericanExpressV62TransactionFetcher
                 .setBillingIndexList(ImmutableList.of(page));
 
         if (page == AmericanExpressV62Constants.Fetcher.START_PAGE) {
-            return client.requestTransaction(request).getPaginatorResponse(config, fetchPendingTransactionsFor(account));
+            return client.requestTransaction(request)
+                    .getPaginatorResponse(config, fetchPendingTransactionsFor(account));
         }
 
         return client.requestTransaction(request).getPaginatorResponse(config);
@@ -58,8 +66,10 @@ public class AmericanExpressV62TransactionFetcher
     private List<Transaction> getPendingTransactionsFor(
             CreditCardAccount account, TimelineEntity timeline) {
 
+        LOGGER.info(SerializationUtils.serializeToString(timeline));
+
         List<String> pendingIdList =
-                timeline.getTimelineItems()
+                Optional.ofNullable(timeline.getTimelineItems()).orElseGet(Collections::emptyList)
                         .stream()
                         .map(item -> item.getSubItems().stream())
                         .flatMap(Function.identity())
