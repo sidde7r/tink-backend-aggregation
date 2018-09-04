@@ -41,11 +41,10 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
     @Override
     public void handle(String message) throws IOException, RejectedExecutionException {
         RefreshInformation refreshInformation = encodingHandler.decode(message);
+        metricRegistry.meter(metricId.label("provider",
+                refreshInformation.getRequest().getProvider().getName())).inc();
 
         try {
-            metricRegistry.meter(metricId.label("provider",
-                    refreshInformation.getRequest().getProvider().getName())).inc();
-
             AgentWorkerRefreshOperationCreatorWrapper agentWorkerRefreshOperationCreatorWrapper = AgentWorkerRefreshOperationCreatorWrapper.of(
                     agentWorkerCommandFactory,
                     refreshInformation.getRequest(),
