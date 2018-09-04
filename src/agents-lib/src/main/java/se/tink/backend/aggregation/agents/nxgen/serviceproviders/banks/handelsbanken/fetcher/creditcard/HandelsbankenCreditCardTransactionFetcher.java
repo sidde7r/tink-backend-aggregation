@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAccount;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
@@ -21,10 +22,22 @@ public class HandelsbankenCreditCardTransactionFetcher implements TransactionFet
     @Override
     @SuppressWarnings("unchecked")
     public List<AggregationTransaction> fetchTransactionsFor(CreditCardAccount account) {
-        return sessionStorage.creditCards()
+
+        // Fetch transactions for creditcards that are accounts.
+        List<AggregationTransaction> transactions = sessionStorage.accountList()
+                .flatMap(accountList -> accountList.find(account))
+                .filter(HandelsbankenAccount::isCreditCard)
+                .map(handelsbankenAccount -> client.transactions(handelsbankenAccount)
+                        .toTinkTransactions(account, client, sessionStorage))
+                .orElse(Collections.emptyList());
+
+        transactions.addAll(sessionStorage.creditCards()
                 .flatMap(creditCards -> creditCards.find(account))
                 .map(creditCard -> client.creditCardTransactions(creditCard)
                         .tinkTransactions(creditCard, account))
-                .orElse(Collections.emptyList());
+                .orElse(Collections.emptyList())
+        );
+
+        return transactions;
     }
 }

@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.ErrorResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
 
 @JsonObject
 public abstract class BaseResponse {
@@ -59,6 +60,10 @@ public abstract class BaseResponse {
     protected Optional<URL> searchLink(Linkable linkable) {
         Optional<Link> optional = Optional.ofNullable(getLinks().get(linkable.getName()));
         return (optional.isPresent() ? optional.map(Link::toURL) : Optional.empty());
+    }
+
+    public boolean isCreditCard() {
+        return searchLink(HandelsbankenConstants.URLS.Links.CARD_TRANSACTIONS).isPresent();
     }
 
     public Optional<String> getFirstErrorMessage() {

@@ -10,6 +10,10 @@ public class CardInvoiceInfo {
     private HandelsbankenAmount spendable;
     private HandelsbankenAmount usedCredit;
 
+    public HandelsbankenAmount getCredit() {
+        return credit;
+    }
+
     public Optional<HandelsbankenAmount> findSpendable() {
         return Optional.ofNullable(spendable);
     }

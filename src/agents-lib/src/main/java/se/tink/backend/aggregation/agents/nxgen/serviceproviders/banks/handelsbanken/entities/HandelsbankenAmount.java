@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsb
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.annotations.VisibleForTesting;
+import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.deserializers.DoubleDeserializer;
@@ -25,6 +26,18 @@ public class HandelsbankenAmount {
         return Optional.ofNullable(amount).map(HandelsbankenAmount::asDouble).orElse(null);
     }
 
+    public Double getAmount() {
+        return amount;
+    }
+
+    public Double getAmountFormatted() {
+        return amountFormatted;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
     @VisibleForTesting
     public HandelsbankenAmount setAmount(Double amount) {
         this.amount = amount;
@@ -43,6 +56,10 @@ public class HandelsbankenAmount {
 
     @JsonIgnore
     public Amount asAmount() {
+        if (Objects.isNull(amount)) {
+            return new Amount(currency, amountFormatted);
+        }
+
         return new Amount(currency, amount);
     }
 }
