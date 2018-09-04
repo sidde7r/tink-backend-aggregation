@@ -91,7 +91,6 @@ def create_credentials():
 	credentialsRequest = create_credentials_request()
 	r = requests.post(AGGREGATION_HOST + '/aggregation/create', data=json.dumps(credentialsRequest), headers=POST_HEADERS)
 	credential = json.loads(r.text)
-	credential['timestamp'] = get_time_in_millis()
 	CREDENTIALS_TABLE.insert(credential)
 	return prettify_dict({'credentialsId': credential['id']})
 
@@ -101,7 +100,6 @@ def refresh_credentials(cid):
 	if not credentials:
 		abort(400, 'Not a valid credentials id.')
 
-	CREDENTIALS_TABLE.update({'status': 'AUTHENTICATING', 'timestamp': get_time_in_millis()}, where('id') == cid)
 	credentialsRequest = create_credentials_request(cid)
 	credentialsRequest['manual'] = True
 	r = requests.post(AGGREGATION_HOST + '/aggregation/refresh', data=json.dumps(credentialsRequest), headers=POST_HEADERS)
@@ -120,7 +118,6 @@ def credentials_supplemental():
 		abort(400, 'This credentials is not awaiting supplemental information.')
 
 	r = requests.post(AGGREGATION_HOST + '/aggregation/supplemental', data=json.dumps(supplementalRequest), headers=POST_HEADERS)
-	CREDENTIALS_TABLE.update({'status': 'UPDATING', 'timestamp': get_time_in_millis()}, where('id') == credential['id'])
 	return ('', 204)
 
 @app.route("/credentials/list", methods = ['GET'])
@@ -163,7 +160,6 @@ def get_credential(id):
 
 	response = {
 		'status': credentials[0]['status'],
-		'timestamp': credentials[0]['timestamp']
 	}
 
 	return (prettify_dict(response), 200)
@@ -180,7 +176,6 @@ def ping():
 def update_credentials_status():
 	responseObject = get_json(request)
 	credentials = responseObject['credentials']
-	CREDENTIALS_TABLE.update({'status': credentials['status'], 'timestamp': get_time_in_millis()}, where('id') == credentials['id'])
 	return Response({}, status=200, mimetype="application/json")
 
 @app.route("/aggregation/controller/v1/system/update/accounts/update", methods = ['POST'])
