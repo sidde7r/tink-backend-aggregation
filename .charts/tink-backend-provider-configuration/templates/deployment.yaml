@@ -21,6 +21,11 @@ spec:
         prometheus.io/port: '9130'
         prometheus.io/scrape: 'true'
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65535
+        runAsGroup: 65535
+        fsGroup: 65535
       initContainers:
       # Script to replace placeholder passwords with the real passwords
       - name: add-secrets-to-config
@@ -33,6 +38,8 @@ spec:
              sed -i \"s/MYSQL_PASSWORD/$MYSQL_PWD/g\" /mnt/altered-config-volume/provider-configuration-server.yml"
         image: gcr.io/tink-containers/debian:stretch
         imagePullPolicy: IfNotPresent
+        securityContext:
+          readOnlyRootFilesystem: true
         volumeMounts:
         - name: config-volume
           mountPath: /mnt/config-volume
@@ -66,6 +73,8 @@ spec:
 
         image: gcr.io/tink-containers/tink-backend-provider-configuration:{{ .Files.Get "tink-versions/tink-backend-provider-configuration.txt" | default "latest" }}
         imagePullPolicy: IfNotPresent
+        securityContext:
+          readOnlyRootFilesystem: true
 
         command:
         - "java"
@@ -80,11 +89,9 @@ spec:
 
         ports:
         - name: https-api
-          containerPort: 443
-        {{- if .Values.insecureHttpServer }}
+          containerPort: 8443
         - name: http-api
-          containerPort: 80
-        {{- end }}
+          containerPort: 8080
         - name: metrics
           containerPort: 9130
         volumeMounts:
@@ -93,7 +100,7 @@ spec:
         livenessProbe:
           httpGet:
             path: /monitoring/ping
-            port: 80
+            port: 8080
           periodSeconds: 10
           failureThreshold: 10
           timeoutSeconds: 1
@@ -104,7 +111,7 @@ spec:
         readinessProbe:
           httpGet:
             path: /monitoring/ping
-            port: 80
+            port: 8080
           periodSeconds: 3
           failureThreshold: 3
           timeoutSeconds: 1
