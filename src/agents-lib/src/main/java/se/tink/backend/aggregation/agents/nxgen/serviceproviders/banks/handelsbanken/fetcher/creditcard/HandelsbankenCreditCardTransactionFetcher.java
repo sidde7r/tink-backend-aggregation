@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsb
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAccount;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
@@ -24,11 +26,24 @@ public class HandelsbankenCreditCardTransactionFetcher implements TransactionFet
     public List<AggregationTransaction> fetchTransactionsFor(CreditCardAccount account) {
 
         // Fetch transactions for creditcards that are accounts.
+        // They will have both account transactions and credit card transactions.
         List<AggregationTransaction> transactions = sessionStorage.accountList()
                 .flatMap(accountList -> accountList.find(account))
                 .filter(HandelsbankenAccount::isCreditCard)
-                .map(handelsbankenAccount -> client.transactions(handelsbankenAccount)
-                        .toTinkTransactions(account, client, sessionStorage))
+                .map(handelsbankenAccount -> {
+                    // Fetch the account transactions and filter out the summary transactions.
+                    List<AggregationTransaction> subTransactions = removeSummaryTransactions(
+                            client.transactions(handelsbankenAccount).toTinkTransactions(account, client,
+                                    sessionStorage));
+
+                    // Fetch the card transactions.
+                    subTransactions.addAll(
+                            client.creditCardTransactions(handelsbankenAccount.toCardTransactions())
+                                    .tinkTransactions(account)
+                    );
+
+                    return subTransactions;
+                })
                 .orElse(Collections.emptyList());
 
         transactions.addAll(sessionStorage.creditCards()
@@ -39,5 +54,12 @@ public class HandelsbankenCreditCardTransactionFetcher implements TransactionFet
         );
 
         return transactions;
+    }
+
+    private List<AggregationTransaction> removeSummaryTransactions(List<AggregationTransaction> transactions) {
+        return transactions.stream()
+                .filter(transaction -> !HandelsbankenConstants.TransactionFiltering.CREDIT_CARD_SUMMARY
+                        .equalsIgnoreCase(transaction.getDescription()))
+                .collect(Collectors.toList());
     }
 }

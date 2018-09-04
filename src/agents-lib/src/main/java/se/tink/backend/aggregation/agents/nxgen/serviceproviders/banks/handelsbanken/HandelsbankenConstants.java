@@ -101,6 +101,10 @@ public class HandelsbankenConstants {
         }
     }
 
+    public static final class TransactionFiltering {
+        public static final String CREDIT_CARD_SUMMARY = "periodens köp";
+    }
+
     public static final class Headers {
         public static final String X_SHB_DEVICE_NAME = "X-SHB-DEVICE-NAME";
         public static final String DEVICE_NAME = "iOS;Tink;Tink";
