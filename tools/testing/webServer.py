@@ -34,8 +34,8 @@ app = Flask(__name__)
 
 ### START - CONSTANTS ###
 
-AGGREGATION_HOST = 'http://127.0.0.1:9057'
-PROVIDER_HOST = 'http://127.0.0.1:9047'
+AGGREGATION_HOST = 'http://127.0.0.1:9095'
+PROVIDER_HOST = 'http://127.0.0.1:9095'
 
 DATA_BASE = None
 CREDENTIALS_TABLE = None
