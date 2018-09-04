@@ -33,9 +33,11 @@ public class HandelsbankenSECreditCard extends HandelsbankenCreditCard {
         return findLink(HandelsbankenConstants.URLS.Links.CARD_TRANSACTIONS);
     }
 
-    // SHB sends all cards of the user, not 'just' the credit cards
+    // SHB sends all cards of the user, not 'just' the credit cards.
+    // Also sends cards that are "accounts" (typeCode "A")
     public boolean isCreditCard() {
-        return searchLink(HandelsbankenConstants.URLS.Links.CARD_TRANSACTIONS).isPresent();
+        return !HandelsbankenSEConstants.Fetcher.CREDIT_CARD_IGNORE_TYPE.equalsIgnoreCase(typeCode) &&
+                searchLink(HandelsbankenConstants.URLS.Links.CARD_TRANSACTIONS).isPresent();
     }
 
     @Override

@@ -48,6 +48,8 @@ public class HandelsbankenSEConstants {
                 "I" // // BUSINESS_PRIVATE_VISA
         );
 
+        public static final String CREDIT_CARD_IGNORE_TYPE = "A";
+
         public static final class Transactions {
             public static final Pattern PENDING_PATTERN = Pattern.compile("^prel\\.?(\\s)?", Pattern.CASE_INSENSITIVE);
         }
