@@ -70,7 +70,7 @@ public class EuroInformationInvestmentAccountFetcher implements AccountFetcher<I
                                     .requestAccountDetails(a.getNumber(), page);
                             Amount amount = EuroInformationUtils
                                     .parseAmount(investmentAccount.getSecurityAccountOverview().getOverview().getAmount());
-                            AGGREGATION_LOGGER.infoExtraLong(investmentAccount.toString(), investmentLogTag);
+                            AGGREGATION_LOGGER.infoExtraLong(SerializationUtils.serializeToString(investmentAccount), investmentLogTag);
                             String accountNumber = investmentAccount
                                     .getSecurityAccountOverview()
                                     .getOverview()
