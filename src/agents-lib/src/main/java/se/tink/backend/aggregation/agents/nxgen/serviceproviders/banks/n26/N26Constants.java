@@ -36,6 +36,8 @@ public class N26Constants {
         public static final String FLOW_VERSION_V2 = "V2";
         public static final String FULL = "full";
         public static final String FULL_TRUE = "true";
+        public static final String LIMIT = "limit";
+        public static final String LIMIT_DEFAULT = "1000";
     }
     
     public static class Body {

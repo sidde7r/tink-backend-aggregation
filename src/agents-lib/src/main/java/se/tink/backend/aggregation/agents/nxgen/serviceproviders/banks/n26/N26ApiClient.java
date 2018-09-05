@@ -108,6 +108,7 @@ public class N26ApiClient {
         String bearer = N26Constants.BEARER_TOKEN + token.getAccessToken();
 
         return getRequest(N26Constants.URLS.TRANSACTION, MediaType.APPLICATION_JSON_TYPE, bearer)
+                .queryParam(N26Constants.Queryparams.LIMIT, N26Constants.Queryparams.LIMIT_DEFAULT)
                 .get(TransactionResponse.class);
     }
 
