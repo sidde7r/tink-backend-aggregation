@@ -118,4 +118,11 @@ public class LaBanquePostaleApiClient {
         return request.get(TransactionsResponse.class);
     }
 
+    public void getDisconnection() {
+        client.request(LaBanquePostaleConstants.Urls.DECONNEXION)
+                .queryParam(LaBanquePostaleConstants.QueryParams.CODE_MEDIA,
+                        LaBanquePostaleConstants.QueryDefaultValues._9241).accept(MediaType.APPLICATION_JSON_TYPE)
+                .get(HttpResponse.class);
+    }
+
 }

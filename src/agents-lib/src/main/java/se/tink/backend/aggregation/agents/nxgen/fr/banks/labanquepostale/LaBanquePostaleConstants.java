@@ -30,6 +30,7 @@ public class LaBanquePostaleConstants {
         static final String EQUIPMENTS_COMPTES = "ws_qh5/bad/mobile/canalREST/equipements/comptes_2.0.0.ea";
         static final String LISTE_MOUBVEMENTS_CNE = "ws_qh5/bad/mobile/canalREST/listemouvements/listeMouvementsCNE.ea";
         static final String LISTE_MOUBVEMENTS_CPP = "ws_qh5/bad/mobile/canalREST/listemouvements/listeMouvementsCCP.ea";
+        static final String DECONNEXION = "ws_qh5/bad/mobile/canalJSON/authentification/deconnexion.ea";
     }
 
     public static class Urls {
@@ -43,6 +44,7 @@ public class LaBanquePostaleConstants {
         public static final URL EQUIPMENTS_COMPTES = new URL(BASE + ApiServices.EQUIPMENTS_COMPTES);
         public static final URL LISTE_MOUBVEMENTS_CNE = new URL(BASE + ApiServices.LISTE_MOUBVEMENTS_CNE);
         public static final URL LISTE_MOUBVEMENTS_CPP = new URL(BASE + ApiServices.LISTE_MOUBVEMENTS_CPP);
+        public static final URL DECONNEXION = new URL(BASE + ApiServices.DECONNEXION);
     }
 
     public static class QueryParams {
