@@ -628,11 +628,15 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         UpdateFraudDetailsRequest updateFraudRequest = new UpdateFraudDetailsRequest();
         updateFraudRequest.setUserId(request.getUser().getId());
         updateFraudRequest.setDetailsContents(detailsContents);
-        if (isAggregationCluster) {
-            aggregationControllerAggregationClient.updateFraudDetails(getClusterInfo(),
-                    updateFraudRequest);
+        if (useAggregationController) {
+            if (isAggregationCluster) {
+                aggregationControllerAggregationClient.updateFraudDetails(getClusterInfo(),
+                        updateFraudRequest);
+            } else {
+                aggregationControllerAggregationClient.updateFraudDetails(updateFraudRequest);
+            }
         } else {
-            aggregationControllerAggregationClient.updateFraudDetails(updateFraudRequest);
+            systemServiceFactory.getUpdateService().updateFraudDetails(updateFraudRequest);
         }
     }
 
