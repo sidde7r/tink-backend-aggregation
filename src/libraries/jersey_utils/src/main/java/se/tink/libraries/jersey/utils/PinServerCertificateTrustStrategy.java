@@ -6,7 +6,7 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
-import se.tink.org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.binary.Hex;
 import se.tink.org.apache.http.conn.ssl.TrustStrategy;
 
 // Leaf certificate pinning. Code taken from JavaPinning.

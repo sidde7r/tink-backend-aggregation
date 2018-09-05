@@ -17,6 +17,7 @@ java_library(
         "//third_party:com_sun_jersey_contribs_jersey_apache_client4",
         "//third_party:com_sun_jersey_jersey_client",
         "//third_party:com_sun_jersey_jersey_server",
+        "@commons_codec_commons_codec//jar",
 
         "//third_party:eu_geekplace_javapinning_java_pinning_jar",
     ],
