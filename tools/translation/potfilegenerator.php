@@ -130,7 +130,7 @@ class PotFileGenerator {
         $dir = "../../data/seeding/";
         $allProviders = array();
 
-        foreach (glob($dir . "providers-[a-z][a-z].json") as $filename) {
+        foreach (glob($dir . "providers-se.json") as $filename) {
             $providerFile = fopen($filename, "r") or die("Unable to open file!");
             $providerConf = json_decode(fread($providerFile, filesize($filename)));
 
