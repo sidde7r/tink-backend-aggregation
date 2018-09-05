@@ -40,8 +40,8 @@ public class HandelsbankenFILoan {
 
     @JsonIgnore
     public LoanAccount toLoanAccount() {
-        LoanDetails details = LoanDetails.builder()
-                .setType(HandelsbankenFIConstants.LoanType.findLoanType(loanName).getTinkType())
+        LoanDetails details = LoanDetails
+                .builder(HandelsbankenFIConstants.LoanType.findLoanType(loanName).getTinkType())
                 .setName(loanName)
                 .setLoanNumber(loanNumber)
                 .build();

@@ -24,8 +24,8 @@ import se.tink.backend.core.transfer.Transfer;
 public class UpdateControllerTestImpl extends UpdateController {
     private Set<Account> accounts = Sets.newHashSet();
 
-    public UpdateControllerTestImpl(String currency) {
-        super(Mockito.mock(AgentContext.class), Mockito.mock(Credentials.class), currency);
+    public UpdateControllerTestImpl(String market, String currency) {
+        super(Mockito.mock(AgentContext.class), market, currency);
     }
 
     @Override

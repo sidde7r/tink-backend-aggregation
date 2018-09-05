@@ -27,10 +27,9 @@ public class LoanDetailsSLoan {
     public LoanDetails toTinkLoan(LoanDetailsEntity loanDetails) {
         String loanNameFI = loanDetails.getLoanName().getFi();
 
-        return LoanDetails.builder()
+        return LoanDetails.builder(LoanDetails.Type.BLANCO)
                 .setName(loanNameFI)
                 .setLoanNumber(loanDetails.getLoanNumber())
-                .setType(LoanDetails.Type.BLANCO)
                 .setInitialBalance(Amount.inEUR(-originalAmount))
                 .setInitialDate(getBeginDateParsed())
                 .build();

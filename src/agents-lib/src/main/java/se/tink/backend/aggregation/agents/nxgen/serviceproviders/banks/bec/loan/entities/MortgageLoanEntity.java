@@ -44,9 +44,8 @@ public class MortgageLoanEntity {
                 .setAccountNumber(getLoanNumber())
                 .setName(getDisplayName())
                 .setInterestRate(loanDetails.getInterestRate().orElse(null))
-                .setDetails(LoanDetails.builder()
+                .setDetails(LoanDetails.builder(LoanDetails.Type.MORTGAGE)
                         .setSecurity(getPropertyAddress())
-                        .setType(LoanDetails.Type.MORTGAGE)
                         .build())
                 .build();
     }

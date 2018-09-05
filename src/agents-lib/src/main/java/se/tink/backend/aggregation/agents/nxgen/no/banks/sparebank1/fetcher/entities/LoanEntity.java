@@ -31,7 +31,7 @@ public class LoanEntity {
                 .setAccountNumber(formattedNumber)
                 .setName(name)
                 .setInterestRate(loanDetails.getInterestRate())
-                .setDetails(LoanDetails.builder()
+                .setDetails(LoanDetails.builder(LoanDetails.Type.DERIVE_FROM_NAME)
                         .setName(loanDetails.getName())
                         .setInitialBalance(loanDetails.getInitialBalance())
                         .setSecurity(loanDetails.getCollateral())

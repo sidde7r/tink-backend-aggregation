@@ -110,8 +110,7 @@ public class LoansEntity {
                 .setName(getLoanName())
                 .setBankIdentifier(getLoanNumber())
                 .setInterestRate(getInterestRate())
-                .setDetails(LoanDetails.builder()
-                        .setType(LoanDetails.Type.BLANCO)
+                .setDetails(LoanDetails.builder(LoanDetails.Type.BLANCO)
                         .setInitialDate(getInitialDate())
                         .setInitialBalance(toAmount(-getInitialDebt()))
                         .setAmortized(toAmount(

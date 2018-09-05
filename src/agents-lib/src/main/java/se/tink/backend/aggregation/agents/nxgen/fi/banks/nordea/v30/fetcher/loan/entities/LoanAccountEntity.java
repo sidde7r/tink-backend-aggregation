@@ -59,7 +59,7 @@ public class LoanAccountEntity {
 
     private LoanDetails getLoanDetails() {
 
-        return LoanDetails.builder()
+        return LoanDetails.builder(LoanDetails.Type.DERIVE_FROM_NAME)
                 .setAmortized(toAmount(paid))
                 .setApplicants(getApplicants())
                 .setCoApplicant(owners.size() > 1)

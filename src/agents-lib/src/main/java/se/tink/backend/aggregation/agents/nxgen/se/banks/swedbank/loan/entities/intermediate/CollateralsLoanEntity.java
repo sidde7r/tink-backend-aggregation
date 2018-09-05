@@ -43,8 +43,7 @@ public class CollateralsLoanEntity extends BaseAbstractLoanDetailedEntity {
     }
 
     private LoanDetails buildLoanDetails(List<String> borrowers) {
-        return LoanDetails.builder()
-                .setType(LoanDetails.Type.MORTGAGE)
+        return LoanDetails.builder(LoanDetails.Type.MORTGAGE)
                 .setNumMonthsBound(getNumMonthsBound())
                 .setNextDayOfTermsChange(getNextDayOfTermsChange())
                 .setMonthlyAmortization(getMonthlyAmortization())

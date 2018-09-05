@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.core.account;
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import java.util.Collections;
@@ -125,7 +126,7 @@ public class LoanDetails {
     }
 
     public Type getType() {
-        return type != null ? type : Type.OTHER;
+        return type;
     }
 
     public String getSecurity() {
@@ -140,7 +141,7 @@ public class LoanDetails {
         return getApplicants().size() > 1 ? true : coApplicant;
     }
 
-    public Loan toSystemLoan(LoanAccount account) {
+    public Loan toSystemLoan(LoanAccount account, LoanInterpreter interpreter) {
         Loan loan = new Loan();
 
         loan.setBalance(account.getBalance().getValue());
@@ -153,7 +154,12 @@ public class LoanDetails {
         loan.setInitialDate(initialDate);
         loan.setNumMonthsBound(numMonthsBound);
         loan.setNextDayOfTermsChange(nextDayOfTermsChange);
-        loan.setType(getType().toSystemType());
+
+        Type type = Type.DERIVE_FROM_NAME.equals(getType()) ?
+                interpreter.interpretLoanType(loan.getName()) :
+                getType();
+
+        loan.setType(type.toSystemType());
 
         se.tink.backend.system.rpc.LoanDetails loanDetails = new se.tink.backend.system.rpc.LoanDetails();
         loanDetails.setLoanSecurity(security);
@@ -165,8 +171,8 @@ public class LoanDetails {
         return loan;
     }
 
-    public static Builder builder() {
-        return new Builder();
+    public static Builder builder(Type type) {
+        return new Builder(type);
     }
 
     public static class Builder {
@@ -182,6 +188,11 @@ public class LoanDetails {
         private String security;
         private List<String> applicants;
         private boolean coApplicant;
+
+        public Builder(Type type) {
+            Preconditions.checkNotNull(type, String.format("%s", type));
+            this.type = type;
+        }
 
         public String getName() {
             return name;
@@ -265,12 +276,7 @@ public class LoanDetails {
         }
 
         public Type getType() {
-            return type != null ? type : Type.OTHER;
-        }
-
-        public Builder setType(Type type) {
-            this.type = type;
-            return this;
+            return type;
         }
 
         public String getSecurity() {
@@ -309,7 +315,8 @@ public class LoanDetails {
 
     public enum Type {
         MORTGAGE(Loan.Type.MORTGAGE), BLANCO(Loan.Type.BLANCO), MEMBERSHIP(Loan.Type.MEMBERSHIP),
-        VEHICLE(Loan.Type.VEHICLE), LAND(Loan.Type.LAND), STUDENT(Loan.Type.STUDENT), OTHER(Loan.Type.OTHER);
+        VEHICLE(Loan.Type.VEHICLE), LAND(Loan.Type.LAND), STUDENT(Loan.Type.STUDENT),
+        OTHER(Loan.Type.OTHER), DERIVE_FROM_NAME(null);
 
         private final Loan.Type type;
 
@@ -318,6 +325,9 @@ public class LoanDetails {
         }
 
         public Loan.Type toSystemType() {
+            Preconditions.checkNotNull(type,
+                    "System can`t accept null type. "
+                    + "Type must be set explicitly or be derived using LoanInterpreter.");
             return type;
         }
     }
