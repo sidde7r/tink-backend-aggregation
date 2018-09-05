@@ -77,7 +77,6 @@ def refresh_credential():
         except KeyError:
             pass
 
-        #Reduce the rate of log prints
         sleep(1)
         
         # Update the status
