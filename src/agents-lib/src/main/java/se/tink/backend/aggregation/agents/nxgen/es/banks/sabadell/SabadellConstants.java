@@ -78,7 +78,7 @@ public final class SabadellConstants {
     }
 
     public static final class CreditCardTransactionsRequest {
-        public static final int ITEMS_PER_PAGE_20 = 20;
+        public static final int ITEMS_PER_PAGE = 100;
         public static final String ORDER_DESC = "desc";
         public static final String DATE_FROM = "";
         public static final String DATE_TO = "";

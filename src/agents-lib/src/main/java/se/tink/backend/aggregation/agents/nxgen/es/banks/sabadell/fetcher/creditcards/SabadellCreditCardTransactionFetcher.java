@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards;
 
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellApiClient;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.entities.CreditCardEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
@@ -23,6 +24,6 @@ public class SabadellCreditCardTransactionFetcher implements TransactionPagePagi
     }
 
     private int getTotalItemsFetched(int page) {
-        return 20 * (page - 1);
+        return SabadellConstants.CreditCardTransactionsRequest.ITEMS_PER_PAGE * (page - 1);
     }
 }
