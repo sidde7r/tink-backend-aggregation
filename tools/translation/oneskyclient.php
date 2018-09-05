@@ -15,9 +15,6 @@ class OneSkyClient {
     }
 
     public function upload($filename) {
-        // Use xgettext to remove duplicate strings from the .pot file
-        echo "Removing duplicate strings from '" . $filename . "'..." . PHP_EOL;
-        exec('msguniq --use-first --no-location ../../po/' . $filename . ' -o ../../po/' . $filename);
 
         echo "Uploading '" . $filename . "'..." . PHP_EOL;
         $response = $this->client->files('upload', array(
