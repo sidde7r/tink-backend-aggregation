@@ -25,8 +25,6 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class AmericanExpressV62TransactionFetcher
         implements TransactionPagePaginator<CreditCardAccount> {
-    private static final Logger LOGGER =
-            LoggerFactory.getLogger(AmericanExpressV62TransactionFetcher.class);
     private final AmericanExpressV62ApiClient client;
     private final AmericanExpressV62Configuration config;
 
@@ -65,8 +63,6 @@ public class AmericanExpressV62TransactionFetcher
 
     private List<Transaction> getPendingTransactionsFor(
             CreditCardAccount account, TimelineEntity timeline) {
-
-        LOGGER.info(SerializationUtils.serializeToString(timeline));
 
         List<String> pendingIdList =
                 Optional.ofNullable(timeline.getTimelineItems()).orElseGet(Collections::emptyList)
