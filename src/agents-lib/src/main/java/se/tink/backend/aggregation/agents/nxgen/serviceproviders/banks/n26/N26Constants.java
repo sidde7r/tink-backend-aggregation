@@ -8,6 +8,7 @@ public class N26Constants {
     public static final String BEARER_TOKEN = "Bearer ";
     public static final String AUTHENTICATION_ERROR = "invalid_grant";
     public static final String CURRENCY_EUR = "EUR";
+    public static final int ONETHOUSAND = 1000;
 
     public static class URLS {
         public static final String HOST = "https://api.tech26.de";
@@ -26,7 +27,7 @@ public class N26Constants {
         public static final String FULL = "full";
         public static final String LASTID = "lastId";
         public static final String LIMIT = "limit";
-        public static final String LIMIT_DEFAULT = "100";
+        public static final String LIMIT_DEFAULT = "20";
     }
     
     public static class Body {
