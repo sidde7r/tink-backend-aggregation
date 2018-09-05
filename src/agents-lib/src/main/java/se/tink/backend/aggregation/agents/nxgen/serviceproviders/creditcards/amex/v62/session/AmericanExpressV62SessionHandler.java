@@ -28,8 +28,8 @@ public class AmericanExpressV62SessionHandler implements SessionHandler {
     @Override
     public void keepAlive() throws SessionException {
 
-        sessionStorage.get(AmericanExpressV62Constants.Tags.SESSION_ID, String.class)
-                .orElseThrow(() -> SessionError.SESSION_EXPIRED.exception());
+        Optional.ofNullable(sessionStorage.get(AmericanExpressV62Constants.Tags.SESSION_ID))
+                .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
         int status =
                 Optional.of(apiClient.requestExtendSession())
