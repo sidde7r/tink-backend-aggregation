@@ -361,7 +361,7 @@
             "groupDisplayName": "Danske Bank",
             "market": "SE",
             "multiFactor": true,
-            "passwordHelpText": "You use the same 4-digit service code as for the banks mobile app. You also need access to your token generator to create a screen code.",
+            "passwordHelpText": "You use the same 4-digit service code as for the bank's mobile app. You also need access to your token generator to create a screen code.",
             "tutorialUrl": "http://www.danskebank.se/en-us/privat/Onlinetjanster/mobila-tjanster/Pages/mobilbank.aspx",
             "payload": "SE",
             "popular": true,
