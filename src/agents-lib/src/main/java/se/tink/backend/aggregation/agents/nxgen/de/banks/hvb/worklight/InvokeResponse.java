@@ -30,11 +30,19 @@ public final class InvokeResponse {
         return securityServiceLoginRequired;
     }
 
+    public String getLegitimation() {
+        return legitimation;
+    }
+
     /**
      * @return true if there is evidence that the server claims the client is authenticated
      */
     public boolean isLegit() {
-        return Objects.equals(legitimation, "1");
+        try {
+            return Integer.parseInt(legitimation) >= 1;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     public Optional<String> getMessages() {

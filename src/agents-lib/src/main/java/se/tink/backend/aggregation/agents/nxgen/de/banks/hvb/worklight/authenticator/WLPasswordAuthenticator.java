@@ -263,9 +263,10 @@ public final class WLPasswordAuthenticator implements PasswordAuthenticator {
         } else if (response.isAccountLocked()) {
             throw AuthorizationError.ACCOUNT_BLOCKED.exception();
         } else if (!response.getIsSuccessful()) {
-            throw new IllegalStateException("Failed on /invoke/: expected isSuccessful to be true");
+            logger.warn("Potential failure in /invoke/: expected isSuccessful to be true");
         } else if (!response.isLegit()) {
-            throw new IllegalStateException("Failed on /invoke/: expected legitimation to be \"1\"");
+            final String legitimation = response.getLegitimation();
+            logger.warn("Potential failure in /invoke/: expected legitimation to be >= 1, found {}", legitimation);
         }
     }
 }
