@@ -18,15 +18,15 @@ $client->setApiKey($apiKey)->setSecret($apiSecret);
 // Fetch the translations.
 
 foreach ($locales as $locale) {
-	print('Downloading \''.$locale.'\'...'.PHP_EOL);
+    print('Downloading \''.$locale.'\'...'.PHP_EOL);
 
-	$response = $client->translations('export', array(
-	    'project_id'  => $projectId,
-	    'source_file_name'        => 'tink-backend.pot',
-	    'locale' => $locale
-	));
+    $response = $client->translations('export', array(
+        'project_id'  => $projectId,
+        'source_file_name'        => 'tink-backend.pot',
+        'locale' => $locale
+    ));
 
-	$providerResponse = $client->translations('export', array(
+    $providerResponse = $client->translations('export', array(
         'project_id'  => $projectId,
         'source_file_name'        => 'tink-provider.pot',
         'locale' => $locale
