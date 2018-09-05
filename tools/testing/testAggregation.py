@@ -79,10 +79,7 @@ def refresh_credential():
         except KeyError:
             pass
 
-        if statusBeforeUpdate['timestamp'] == currentStatus['timestamp']:
-            print output
-            sleep(1)
-            continue
+        sleep(1)
         
         # Update the status
         statusBeforeUpdate = currentStatus
