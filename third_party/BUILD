@@ -1,35 +1,3 @@
-java_import(
-    name = "se_tink_httpclient",
-    jars = [
-        "external-jar/se.tink.httpclient-4.3.4.jar",
-    ],
-    visibility = ["//visibility:public"],
-)
-
-java_import(
-    name = "se_tink_httpcore",
-    jars = [
-        "external-jar/se.tink.httpcore-4.3.2.jar",
-    ],
-    visibility = ["//visibility:public"],
-)
-
-java_import(
-    name = "se_tink_commons_codec",
-    jars = [
-        "external-jar/se.tink.commons-codec-1.6.jar",
-    ],
-    visibility = ["//visibility:public"],
-)
-
-java_import(
-    name = "se_tink_commons_logging",
-    jars = [
-        "external-jar/se.tink.commons-logging-1.1.3.jar",
-    ],
-    visibility = ["//visibility:public"],
-)
-
 java_library(
     name = "antlr_antlr",
     visibility = ["//visibility:public"],
@@ -42,12 +10,27 @@ java_library(
     name = "se_tink_http",
     visibility = ["//visibility:public"],
     exports = [
-        ":se_tink_commons_codec",
         ":se_tink_httpclient",
-        ":se_tink_commons_logging",
         ":se_tink_httpcore",
     ],
 )
+
+java_library(
+    name = "se_tink_httpcore",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@se_tink_httpcore//:tink_httpcore",
+    ],
+)
+
+java_library(
+    name = "se_tink_httpclient",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@se_tink_httpclient//:tink_httpclient",
+    ],
+)
+
 
 java_library(
     name = "aopalliance_aopalliance",
@@ -2001,23 +1984,6 @@ java_library(
     exports = [
         ":se_tink_httpclient",
         ":se_tink_httpcore",
-        ":se_tink_commons_codec",
-    ],
-)
-
-java_library(
-    name = "tink_org_apache_commons_codec",
-    visibility = ["//visibility:public"],
-    exports = [
-        ":se_tink_commons_codec",
-    ],
-)
-
-java_library(
-    name = "tink_org_apache_commons_logging",
-    visibility = ["//visibility:public"],
-    exports = [
-        ":se_tink_commons_logging",
     ],
 )
 

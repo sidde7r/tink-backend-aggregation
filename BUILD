@@ -521,8 +521,6 @@ java_library(
         "//third_party:com_auth0_java_jwt",
         "//third_party:tink_org_apache_httpcomponents_httpclient",
         "//third_party:tink_org_apache_httpcomponents_httpcore",
-        "//third_party:tink_org_apache_commons_codec",
-        "//third_party:tink_org_apache_commons_logging",
 
     ],
 )

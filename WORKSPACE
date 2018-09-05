@@ -25,6 +25,23 @@ load(
     container_repositories = "repositories",
 )
 
+#local_repository(
+#    name = "se_tink_httpcore",
+#    path = "../apache/httpcomponents-core/."
+#)
+
+git_repository(
+    name = "se_tink_httpcore",
+    remote = "https://github.com/tink-ab/httpcomponents-core.git",
+    commit = "a20a8723692a66dd5b57dd002013811e02f2d127"
+)
+
+git_repository(
+    name = "se_tink_httpclient",
+    remote = "git@github.com:tink-ab/httpcomponents-client.git",
+    commit = "037f32c031ebfd13a60e84635786532b3cb11454"
+)
+
 container_repositories()
 
 container_pull(
