@@ -150,27 +150,35 @@ public class TransactionEntity {
         return partnerEmail;
     }
 
-    public String getMerchantName() {return merchantName;}
+    public String getMerchantName() {
+        return merchantName;
+    }
 
-    private String getDescription(){
+    private String getDescription() {
 
-        if(!Strings.isNullOrEmpty(getMerchantName())){
+        if (!Strings.isNullOrEmpty(getMerchantName())) {
             return merchantName;
         }
 
-        if(!Strings.isNullOrEmpty(getPartnerName())){
+        if (!Strings.isNullOrEmpty(getPartnerName())) {
             return partnerName;
         }
 
         return referenceText;
     }
 
+    private String getRawDetails() {
+        return category;
+    }
+
     public Transaction toTinkTransaction() {
 
         return Transaction.builder()
-                .setAmount(new Amount(getCurrencyCode(),getAmount()))
+                .setAmount(new Amount(getCurrencyCode(), getAmount()))
                 .setDate(new Date(getCreatedTS()))
                 .setDescription(getDescription())
-                .setPending(isPending()).build();
+                .setPending(isPending())
+                .setRawDetails(getRawDetails())
+                .build();
     }
 }
