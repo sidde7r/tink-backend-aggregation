@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26;
 
+import com.google.common.base.Strings;
 import java.io.UnsupportedEncodingException;
 import java.util.NoSuchElementException;
 import javax.ws.rs.core.HttpHeaders;
@@ -103,9 +104,18 @@ public class N26ApiClient {
                 .get(HttpResponse.class);
     }
 
-    public TransactionResponse fetchTransactions() {
+    public TransactionResponse fetchTransactions(String lastTransactionId) {
         TokenEntity token = getToken();
         String bearer = N26Constants.BEARER_TOKEN + token.getAccessToken();
+
+        if (!Strings.isNullOrEmpty(lastTransactionId)) {
+            TransactionResponse response = getRequest(N26Constants.URLS.TRANSACTION, MediaType.APPLICATION_JSON_TYPE, bearer)
+                    .queryParam(N26Constants.Queryparams.LIMIT, N26Constants.Queryparams.LIMIT_DEFAULT)
+                    .queryParam(N26Constants.Queryparams.LASTID, lastTransactionId)
+                    .get(TransactionResponse.class);
+            response.setPreviousTransactionId(lastTransactionId);
+            return response;
+        }
 
         return getRequest(N26Constants.URLS.TRANSACTION, MediaType.APPLICATION_JSON_TYPE, bearer)
                 .queryParam(N26Constants.Queryparams.LIMIT, N26Constants.Queryparams.LIMIT_DEFAULT)
