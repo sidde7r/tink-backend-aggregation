@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.text.ParseException;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.backend.core.Amount;
 import se.tink.libraries.date.ThreadSafeDateFormat;
-
-import java.text.ParseException;
 
 @JsonObject
 public class TransactionEntity {
@@ -96,11 +96,17 @@ public class TransactionEntity {
         return bookingDate;
     }
 
+    @JsonIgnore
+    private boolean isPending() {
+        return !showReconciled;
+    }
+
     public Transaction toTinkTransaction() {
         Transaction.Builder transactionBuilder = Transaction.builder()
                 .setAmount(
                         new Amount(currency, amount))
-                .setDescription(text);
+                .setDescription(text)
+                .setPending(isPending());
 
         try {
             transactionBuilder.setDate(ThreadSafeDateFormat.FORMATTER_INTEGER_DATE.parse(bookingDate));
