@@ -43,7 +43,6 @@ public class SpankkiAgent extends NextGenerationAgent {
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
-//        client.setDebugOutput(true);
     }
 
     @Override
