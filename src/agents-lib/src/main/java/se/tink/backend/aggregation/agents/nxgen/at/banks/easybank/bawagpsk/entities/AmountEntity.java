@@ -3,15 +3,15 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.enti
 import javax.xml.bind.annotation.XmlElement;
 
 public class AmountEntity {
-    private double amount;
+    private Double amount;
     private String currency;
 
     @XmlElement(name = "Amount")
-    public void setAmount(double amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
-    public double getAmount() {
+    public Double getAmount() {
         return amount;
     }
 

@@ -2,10 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.enti
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.backend.core.Amount;
-import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 @XmlRootElement(name = "Product")
 public class Product {
@@ -48,17 +44,5 @@ public class Product {
 
     public ProductID getProductID() {
         return productID;
-    }
-
-    public IbanIdentifier getIban() {
-        return new IbanIdentifier(productID.getFinancialInstitute().getBIC().trim(), productID.getIban().trim());
-    }
-
-    public TransactionalAccount toTransactionalAccount(final Amount balance) {
-        return TransactionalAccount.builder(productID.getAccountType(), accountNumber, balance)
-                .setAccountNumber(accountNumber)
-                .addIdentifier(getIban())
-                .setHolderName(new HolderName(productID.getAccountOwner().trim()))
-                .build();
     }
 }
