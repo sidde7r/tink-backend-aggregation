@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.nxgen.core.transaction;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Optional;
 import se.tink.backend.core.Amount;
@@ -65,6 +67,16 @@ public final class UpcomingTransaction extends AggregationTransaction {
         @Override
         public Builder setDate(Date date) {
             return (Builder) super.setDate(date);
+        }
+
+        @Override
+        public Builder setDate(LocalDate date) {
+            return (Builder) super.setDate(date);
+        }
+
+        @Override
+        public Builder setDate(CharSequence date, DateTimeFormatter formatter) {
+            return (Builder) super.setDate(date, formatter);
         }
 
         @Override

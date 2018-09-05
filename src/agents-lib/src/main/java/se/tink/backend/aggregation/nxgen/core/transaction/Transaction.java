@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.nxgen.core.transaction;
 
 import com.google.common.base.Strings;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import se.tink.backend.core.Amount;
 import se.tink.backend.system.rpc.TransactionPayloadTypes;
@@ -60,6 +62,16 @@ public class Transaction extends AggregationTransaction {
         @Override
         public Builder setDate(Date date) {
             return (Builder) super.setDate(date);
+        }
+
+        @Override
+        public Builder setDate(LocalDate date) {
+            return (Builder) super.setDate(date);
+        }
+
+        @Override
+        public Builder setDate(CharSequence date, DateTimeFormatter formatter) {
+            return (Builder) super.setDate(date, formatter);
         }
 
         @Override

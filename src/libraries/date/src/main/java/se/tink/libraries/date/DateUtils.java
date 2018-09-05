@@ -13,6 +13,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.time.YearMonth;
 import java.util.ArrayList;
@@ -1443,4 +1444,18 @@ public class DateUtils {
     public static boolean after(Date date1, Date date2) {
         return date1.compareTo(date2) > 0;
     }
+
+    public static java.time.LocalDate toJavaTimeLocalDate(java.util.Date date) {
+        return Instant.ofEpochMilli(date.getTime()).atZone(DEFAULT_ZONE_ID).toLocalDate();
+    }
+
+    public static java.util.Date toJavaUtilDate(java.time.LocalDate date) {
+        return new java.util.Date(
+                date.atTime(java.time.LocalTime.NOON).atZone(DEFAULT_ZONE_ID).toInstant().toEpochMilli());
+    }
+
+    public static java.util.Date toJavaUtilDate(CharSequence date, java.time.format.DateTimeFormatter formatter) {
+        return toJavaUtilDate(java.time.LocalDate.parse(date, formatter));
+    }
+
 }
