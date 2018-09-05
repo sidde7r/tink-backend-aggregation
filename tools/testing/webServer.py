@@ -131,6 +131,17 @@ def list_credentials():
 	responseList = map(filter_credentials_info, credentials)
 	return (prettify_dict(responseList), 200)
 
+@app.route("/credentials/reencrypt/<cid>", methods = ['POST'])
+def reencrypt_credentials(cid):
+	credentials = CREDENTIALS_TABLE.search(Query().id == cid)
+	if not credentials:
+		abort(400, 'Not a valid credentials id.')
+
+	credentialsRequest = create_credentials_request(cid)
+	credentialsRequest['manual'] = True
+	r = requests.post(AGGREGATION_HOST + '/aggregation/reencrypt/credentials', data=json.dumps(credentialsRequest), headers=POST_HEADERS)
+	return ('', 204)
+
 @app.route("/providers/list/<market>", methods = ['GET'])
 def list_provider_by_market(market):
 	print market

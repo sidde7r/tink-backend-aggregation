@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.resources;
 
 import com.google.api.client.util.Lists;
-import io.dropwizard.lifecycle.Managed;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
@@ -22,6 +21,7 @@ import se.tink.backend.aggregation.rpc.DeleteCredentialsRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsDecryptRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsReencryptRequest;
+import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.ReencryptionRequest;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
@@ -41,8 +41,6 @@ import se.tink.backend.common.repository.mysql.aggregation.clusterhostconfigurat
 import se.tink.backend.queue.QueueProducer;
 import se.tink.libraries.http.utils.HttpResponseHelper;
 import se.tink.libraries.metrics.MetricRegistry;
-
-import java.util.Objects;
 
 @Path("/aggregation")
 public class AggregationServiceResource implements AggregationService {
@@ -186,6 +184,24 @@ public class AggregationServiceResource implements AggregationService {
     }
 
     @Override
+    public Response reEncryptCredentials(ReEncryptCredentialsRequest reencryptCredentialsRequest,
+            ClusterInfo clusterInfo) {
+        // Only aggregation cluster can decrypt and encrypt with the new encryption method
+        if (!isAggregationCluster) {
+            HttpResponseHelper.error(Response.Status.BAD_REQUEST);
+        }
+
+        try {
+            agentWorker.execute(agentWorkerCommandFactory
+                    .createReEncryptCredentialsOperation(clusterInfo, reencryptCredentialsRequest));
+        } catch (Exception e) {
+            HttpResponseHelper.error(Response.Status.INTERNAL_SERVER_ERROR);
+        }
+
+        return HttpResponseHelper.ok();
+    }
+
+    @Override
     public Credentials migrateDecryptCredentials(MigrateCredentialsDecryptRequest request, ClusterInfo clusterInfo) {
         // There is not any encryption service in the aggregation cluster
         if (isAggregationCluster) {
@@ -199,7 +215,7 @@ public class AggregationServiceResource implements AggregationService {
         }
 
         AgentWorkerOperation updateCredentialsOperation = agentWorkerCommandFactory
-                .createDecryptCredentialsOperation(clusterInfo, request);
+                .createMigrateDecryptCredentialsOperation(clusterInfo, request);
 
         updateCredentialsOperation.run();
 
@@ -214,7 +230,7 @@ public class AggregationServiceResource implements AggregationService {
         }
 
         try {
-            agentWorker.execute(agentWorkerCommandFactory.createReencryptCredentialsOperation(
+            agentWorker.execute(agentWorkerCommandFactory.createMigrateReencryptCredentialsOperation(
                     clusterInfo, request));
             return HttpResponseHelper.ok();
         } catch (Exception e) {
