@@ -127,5 +127,6 @@ public interface AggregationService {
     @Path("provider/ping")
     @TeamOwnership(Team.INTEGRATION)
     @Produces(MediaType.TEXT_PLAIN)
+    @AllowAnonymous
     String pingProvider();
 }

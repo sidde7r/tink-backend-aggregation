@@ -42,6 +42,15 @@ public class InterContainerClientProviderServiceFactory implements InterContaine
         JerseyUtils.registerAPIAccessToken(client, accessToken);
         return client.resource(host);
     }
+    private static WebResource createResource(List<String> pinnedCertificates,
+                                               String host, String accessToken){
+
+        Preconditions.checkState(!Strings.isNullOrEmpty(host),
+                "Host cannot be empty");
+        Client client = JerseyUtils.getClient(pinnedCertificates);
+        JerseyUtils.registerAPIAccessToken(client, accessToken);
+        return client.resource(host);
+    }
 
     private ServiceClassBuilder builder(String clusterName, String clusterEnvironment) {
         ClusterIdFilter clientFilter = new ClusterIdFilter(clusterName, clusterEnvironment);
@@ -55,8 +64,8 @@ public class InterContainerClientProviderServiceFactory implements InterContaine
     }
 
     @Override
-    public MonitoringService getMonitoringService(String clusterName, String clusterEnvironment){
-        return builder(clusterName, clusterEnvironment).build(MonitoringService.class);
+    public MonitoringService getMonitoringService(){
+        return new BasicWebServiceClassBuilder(createResource(pinnedCertificate, host, accessToken)).build(MonitoringService.class);
     }
 
     public class ClusterIdFilter extends ClientFilter {
