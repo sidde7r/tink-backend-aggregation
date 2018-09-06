@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class UnknownHash71A6C34B1D40C8Fafe9A6D43279845AbEntity {
+public class OutstandingCardsEntity {
     @JsonProperty("cumul")
     private double plurality;
-    // `dateImputation` is null - cannot define it!
+    private Object dateImputation;
 }

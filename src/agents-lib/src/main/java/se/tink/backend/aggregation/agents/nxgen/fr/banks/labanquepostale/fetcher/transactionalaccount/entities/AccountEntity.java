@@ -43,9 +43,9 @@ public class AccountEntity {
     @JsonProperty("typePartenaire")
     private String partnerType;
     @JsonProperty("encoursCartesNonArrete")
-    private UnknownHash71A6C34B1D40C8Fafe9A6D43279845AbEntity outstandingCardsNotArrested;
+    private OutstandingCardsEntity outstandingCardsNotArrested;
     @JsonProperty("encoursCartesArrete")
-    private UnknownHash71A6C34B1D40C8Fafe9A6D43279845AbEntity outstandingCardsArrete;
+    private OutstandingCardsEntity outstandingCardsArrete;
     @JsonProperty("totalEncoursCartes")
     private double totalOutstandingCards;
     @JsonProperty("carte")
