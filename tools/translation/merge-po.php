@@ -22,13 +22,13 @@ foreach ($locales as $locale) {
 
     $response = $client->translations('export', array(
         'project_id'  => $projectId,
-        'source_file_name'        => 'tink-backend.pot',
+        'source_file_name'        => 'tink-aggr-backend.pot',
         'locale' => $locale
     ));
 
     $providerResponse = $client->translations('export', array(
         'project_id'  => $projectId,
-        'source_file_name'        => 'tink-provider.pot',
+        'source_file_name'        => 'tink-aggr-provider.pot',
         'locale' => $locale
     ));
 
