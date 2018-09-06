@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale;
 
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -11,6 +12,7 @@ public class LaBanquePostaleConstants {
     public static final ZoneId ZONE_ID = ZoneId.of("Europe/Paris");
     public static final String MARKET = "fr";
     public static final String PROVIDER_NAME = "fr-labanquepostale-password";
+    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public static class Regex {
 
