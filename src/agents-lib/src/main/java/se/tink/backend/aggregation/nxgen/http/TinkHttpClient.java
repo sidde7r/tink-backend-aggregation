@@ -91,8 +91,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     private final Filter finalFilter = new SendRequestFilter();
     private final PersistentHeaderFilter persistentHeaderFilter = new PersistentHeaderFilter();
 
-
-    public static Logger logger = LoggerFactory
+    public static final Logger logger = LoggerFactory
             .getLogger(TinkHttpClient.class);
 
     private class DEFAULTS {
@@ -111,9 +110,11 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
     public String getHeaderAggregatorIdentifier(){
         if(aggregator != null){
+            logger.info("Aggregator header set to: {}", aggregator.getAggregatorIdentifier());
             return aggregator.getAggregatorIdentifier();
         }
 
+        logger.info("Aggregator header set to default.");
         return Aggregator.DEFAULT;
     }
 
@@ -196,7 +197,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
         //Todo: Remove this once the aggregator identifier is verified
         if (Objects.nonNull(context) &&
-                context.getClusterInfo().getClusterId().getId().toLowerCase().equals("oxford-staging")) {
+                context.getClusterInfo().getClusterId().getId().equalsIgnoreCase("oxford-staging")) {
             logger.info("Setting the outgoing aggregator identifier header to: {}", getHeaderAggregatorIdentifier());
         }
     }
