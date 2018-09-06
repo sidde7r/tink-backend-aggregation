@@ -129,7 +129,7 @@ java_library(
         "//third_party:joda_time_joda_time",
         "//third_party:org_apache_commons_commons_collections4",
         "//third_party:org_apache_commons_commons_lang3",
-        "//third_party:org_apache_httpcomponents_httpclient",
+        "//third_party:tink_org_apache_httpcomponents_httpclient",
         "//third_party:org_apache_mahout_mahout_math",
         "//third_party:org_apache_maven_maven_artifact",
         "//third_party:org_eclipse_jetty_orbit_javax_servlet",
@@ -137,7 +137,6 @@ java_library(
         "//third_party:org_iban4j_iban4j",
         "//third_party:org_pojava_pojava",
         "//third_party:org_xerial_snappy_snappy_java",
-        "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:commons_codec_commons_codec",
         "//third_party:com_lambdaworks_scrypt",
         "//third_party:org_json_json",
@@ -257,7 +256,7 @@ java_library(
         "//third_party:org_apache_commons_commons_math3",
         "//third_party:org_apache_curator_curator_framework",
         "//third_party:org_apache_curator_curator_x_discovery",
-        "//third_party:org_apache_httpcomponents_httpclient",
+        "//third_party:tink_org_apache_httpcomponents_httpclient",
         "//third_party:org_apache_kafka_kafka_clients",
         "//third_party:org_apache_kafka_kafka_streams",
         "//third_party:com_sproutsocial_nsqj_j",
@@ -520,6 +519,8 @@ java_library(
         "//third_party:net_sourceforge_tess4j",
         "//third_party:net_sourceforge_cssparser_cssparser",
         "//third_party:com_auth0_java_jwt",
+        "//third_party:tink_org_apache_httpcomponents_httpclient",
+        "//third_party:tink_org_apache_httpcomponents_httpcore",
 
     ],
 )
@@ -700,6 +701,8 @@ junit_test(
         "//third_party:com_nimbusds_srp6a",
         "//third_party:org_bouncycastle_bcprov_jdk15on",
         "//third_party:com_auth0_java_jwt",
+        "//third_party:tink_org_apache_httpcomponents_httpcore",
+        "//third_party:tink_org_apache_httpcomponents_httpclient",
     ],
 )
 
@@ -750,7 +753,7 @@ junit_test(
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:commons_io_commons_io",
         "//third_party:org_apache_curator_curator_framework",
-        "//third_party:org_apache_httpcomponents_httpclient",
+        "//third_party:tink_org_apache_httpcomponents_httpclient",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_bouncycastle_bcpkix_jdk15on",
         "//third_party:org_mockito_mockito_core",
