@@ -42,7 +42,6 @@ public class HandelsbankenFILoan {
     public LoanAccount toLoanAccount() {
         LoanDetails details = LoanDetails
                 .builder(HandelsbankenFIConstants.LoanType.findLoanType(loanName).getTinkType())
-                .setName(loanName)
                 .setLoanNumber(loanNumber)
                 .build();
 

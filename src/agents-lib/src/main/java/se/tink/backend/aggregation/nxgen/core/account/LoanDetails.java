@@ -15,7 +15,6 @@ import se.tink.libraries.date.DateUtils;
 public class LoanDetails {
     private static final AggregationLogger log = new AggregationLogger(LoanDetails.class);
 
-    private final String name;
     private final Amount amortized;
     private final Amount monthlyAmortization;
     private final Amount initialBalance;
@@ -29,13 +28,12 @@ public class LoanDetails {
     private final boolean coApplicant;
 
     private LoanDetails() {
-        this(null, null, null, null, null, null, 0, null, null, null, null, false);
+        this(null, null, null, null, null, 0, null, null, null, null, false);
     }
 
-    private LoanDetails(String name, Amount amortized, Amount monthlyAmortization, Amount initialBalance,
+    private LoanDetails(Amount amortized, Amount monthlyAmortization, Amount initialBalance,
             Date initialDate, String loanNumber, int numMonthsBound, Date nextDayOfTermsChange, Type type,
             String security, List<String> applicants, boolean coApplicant) {
-        this.name = name;
         this.amortized = amortized;
         this.monthlyAmortization = monthlyAmortization;
         this.initialBalance = initialBalance;
@@ -47,10 +45,6 @@ public class LoanDetails {
         this.security = security;
         this.applicants = applicants;
         this.coApplicant = coApplicant;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public Amount getAmortized() {
@@ -138,7 +132,7 @@ public class LoanDetails {
     }
 
     public boolean hasCoApplicant() {
-        return getApplicants().size() > 1 ? true : coApplicant;
+        return getApplicants().size() > 1 || coApplicant;
     }
 
     public Loan toSystemLoan(LoanAccount account, LoanInterpreter interpreter) {
@@ -146,7 +140,7 @@ public class LoanDetails {
 
         loan.setBalance(account.getBalance().getValue());
         loan.setInterest(account.getInterestRate());
-        loan.setName(Strings.isNullOrEmpty(name) ? account.getName() : name);
+        loan.setName(account.getName());
         loan.setLoanNumber(Strings.isNullOrEmpty(loanNumber) ? account.getAccountNumber() : loanNumber);
         loan.setAmortized(calculateAmortizedValue(account));
         loan.setMonthlyAmortization(calculateMonthlyAmortizationValue(account));
@@ -176,7 +170,6 @@ public class LoanDetails {
     }
 
     public static class Builder {
-        private String name;
         private Amount amortized;
         private Amount monthlyAmortization;
         private Amount initialBalance;
@@ -192,15 +185,6 @@ public class LoanDetails {
         public Builder(Type type) {
             Preconditions.checkNotNull(type, String.format("%s", type));
             this.type = type;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public Builder setName(String name) {
-            this.name = name;
-            return this;
         }
 
         public Amount getAmortized() {
@@ -307,7 +291,7 @@ public class LoanDetails {
         }
 
         public LoanDetails build() {
-            return new LoanDetails(getName(), getAmortized(), getMonthlyAmortization(), getInitialBalance(),
+            return new LoanDetails(getAmortized(), getMonthlyAmortization(), getInitialBalance(),
                     getInitialDate(), getLoanNumber(), getNumMonthsBound(), getNextDayOfTermsChange(), getType(),
                     getSecurity(), getApplicants(), hasCoApplicant());
         }

@@ -92,7 +92,8 @@ public class LoanAccount extends Account {
         public LoanDetails getDetails() {
             return this.details != null
                     ? this.details
-                    : LoanDetails.builder(LoanDetails.Type.DERIVE_FROM_NAME).setName(getName()).setLoanNumber(getAccountNumber())
+                    : LoanDetails.builder(LoanDetails.Type.DERIVE_FROM_NAME)
+                    .setLoanNumber(getAccountNumber())
                     .build();
         }
 

@@ -44,7 +44,6 @@ public class ConsumptionLoanEntity extends BaseAbstractLoanDetailedEntity {
                 .setMonthlyAmortization(getMonthlyAmortization())
                 .setApplicants(borrowers)
                 .setCoApplicant(borrowers.size() > 1)
-                .setName(getName())
                 .build();
     }
 }

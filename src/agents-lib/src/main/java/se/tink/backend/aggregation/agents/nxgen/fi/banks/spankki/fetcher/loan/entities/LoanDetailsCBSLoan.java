@@ -62,7 +62,6 @@ public class LoanDetailsCBSLoan {
         String loanNameFI = loanDetails.getLoanName().getFi();
 
         return LoanDetails.builder(getTinkLoanType(loanNameFI))
-                .setName(loanNameFI)
                 .setLoanNumber(loanDetails.getLoanNumber())
                 .setInitialBalance(new Amount(currency, -withdrawnAmount))
                 .setInitialDate(openingDate)

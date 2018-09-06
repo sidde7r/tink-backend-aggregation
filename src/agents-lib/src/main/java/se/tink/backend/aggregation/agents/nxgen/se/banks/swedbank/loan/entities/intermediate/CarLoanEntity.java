@@ -34,7 +34,6 @@ public class CarLoanEntity extends BaseAbstractLoanEntity {
 
     private LoanDetails buildLoanDetails() {
         return LoanDetails.builder(LoanDetails.Type.VEHICLE)
-                .setName(getName())
                 .build();
     }
 }

@@ -50,7 +50,6 @@ public class CollateralsLoanEntity extends BaseAbstractLoanDetailedEntity {
                 .setSecurity(getSecurity())
                 .setApplicants(borrowers)
                 .setCoApplicant(borrowers.size() > 1)
-                .setName(getName())
                 .build();
     }
 

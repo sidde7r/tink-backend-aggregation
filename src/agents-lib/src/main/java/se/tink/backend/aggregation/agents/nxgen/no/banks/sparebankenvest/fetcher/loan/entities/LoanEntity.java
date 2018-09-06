@@ -50,7 +50,6 @@ public class LoanEntity {
         LoanDetails loanDetails = LoanDetails.builder(getLoanType())
                 .setLoanNumber(loanNumber)
                 .setInitialBalance(Amount.inNOK(loanDetailsResponse.getInitialBalanace()))
-                .setName(name)
                 .build();
         return LoanAccount.builder(loanNumber, Amount.inNOK(balance))
                 .setAccountNumber(loanNumber)
