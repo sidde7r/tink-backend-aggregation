@@ -65,8 +65,8 @@ public class EuroInformationAgent extends NextGenerationAgent {
         return Optional.of(new CreditCardRefreshController(
                 metricRefreshController,
                 updateController,
-                EuroInformationCreditCardFetcher.create(apiClient, sessionStorage),
-                EuroInformationCreditCardTransactionsFetcher.create()
+                EuroInformationCreditCardFetcher.create(this.apiClient, this.sessionStorage),
+                EuroInformationCreditCardTransactionsFetcher.create(this.apiClient)
         ));
     }
 
