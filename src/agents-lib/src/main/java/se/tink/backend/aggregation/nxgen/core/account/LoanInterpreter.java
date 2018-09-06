@@ -26,6 +26,10 @@ public abstract class LoanInterpreter implements Serializable {
     }
 
     public Type interpretLoanType(final String loanName) {
+        if(Strings.isNullOrEmpty(loanName)){
+            return Type.OTHER;
+        }
+
         return nameParts.stream()
                 .filter(namePart -> loanName.toLowerCase().contains(namePart.getPartInLowerCase()))
                 .max(Comparator.comparingDouble(NamePart::getProbability))
