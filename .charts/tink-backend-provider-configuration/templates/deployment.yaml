@@ -90,7 +90,25 @@ spec:
         volumeMounts:
         - name: altered-config-volume
           mountPath: /etc/tink
-      # add readiness/liveness probes
+        livenessProbe:
+          httpGet:
+            path: /monitoring/ping
+            port: 80
+          periodSeconds: 10
+          failureThreshold: 10
+          timeoutSeconds: 1
+          initialDelaySeconds: 300
+        # The pod will only receive traffic if the readinessProbe is succeeding,
+        # it's also used when rolling out a new version, to know if the new version
+        # is working or not
+        readinessProbe:
+          httpGet:
+            path: /monitoring/ping
+            port: 80
+          periodSeconds: 3
+          failureThreshold: 3
+          timeoutSeconds: 1
+          initialDelaySeconds: 60
       volumes:
       - name: config-volume
         configMap:
