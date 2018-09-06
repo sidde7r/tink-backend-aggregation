@@ -94,18 +94,20 @@ public class LaBanquePostaleApiClient {
                 .map(String::toLowerCase);
     }
 
-    public AccountsResponse getAccounts(boolean includeLoan, boolean includeInsurance) {
-        return client.request(LaBanquePostaleConstants.Urls.EQUIPMENTS_COMPTES)
-                .queryParam(LaBanquePostaleConstants.QueryParams.APPEL_ASSUARANCES, Boolean.toString(includeInsurance))
-                .queryParam(LaBanquePostaleConstants.QueryParams.APPEL_PRETS, Boolean.toString(includeLoan))
+    public AccountsResponse getAccounts() {
+        return client.request(LaBanquePostaleConstants.Urls.ACCOUNTS)
+                .queryParam(LaBanquePostaleConstants.QueryParams.APPEL_ASSUARANCES,
+                        LaBanquePostaleConstants.QueryDefaultValues.TRUE)
+                .queryParam(LaBanquePostaleConstants.QueryParams.APPEL_PRETS,
+                        LaBanquePostaleConstants.QueryDefaultValues.TRUE)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .get(AccountsResponse.class);
     }
 
     public TransactionsResponse getTransactions(String accountNumber, AccountTypes type) {
         URL url = type == AccountTypes.CHECKING ?
-                LaBanquePostaleConstants.Urls.LISTE_MOUBVEMENTS_CPP :
-                LaBanquePostaleConstants.Urls.LISTE_MOUBVEMENTS_CNE;
+                LaBanquePostaleConstants.Urls.TRANSACTIONS_CHECKING_ACCOUNTS :
+                LaBanquePostaleConstants.Urls.TRANSACTIONS_SAVINGS_ACCOUNTS;
         RequestBuilder request = client.request(url)
                 .queryParam(LaBanquePostaleConstants.QueryParams.CODE_MEDIA,
                         LaBanquePostaleConstants.QueryDefaultValues._9241)
@@ -119,7 +121,7 @@ public class LaBanquePostaleApiClient {
     }
 
     public void getDisconnection() {
-        client.request(LaBanquePostaleConstants.Urls.DECONNEXION)
+        client.request(LaBanquePostaleConstants.Urls.DISCONNECTION)
                 .queryParam(LaBanquePostaleConstants.QueryParams.CODE_MEDIA,
                         LaBanquePostaleConstants.QueryDefaultValues._9241).accept(MediaType.APPLICATION_JSON_TYPE)
                 .get(HttpResponse.class);

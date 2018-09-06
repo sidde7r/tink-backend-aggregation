@@ -41,10 +41,10 @@ public class LaBanquePostaleConstants {
         public static final URL INIT_LOGIN = new URL(BASE + ApiServices.INIT_LOGIN_PATH);
         public static final URL GET_NUMPAD_BASE = new URL(BASE + ApiServices.GET_NUMPAD_BASE_PATH);
         public static final URL SUBMIT_LOGIN = new URL(BASE + ApiServices.SUBMIT_LOGIN_PATH);
-        public static final URL EQUIPMENTS_COMPTES = new URL(BASE + ApiServices.EQUIPMENTS_COMPTES);
-        public static final URL LISTE_MOUBVEMENTS_CNE = new URL(BASE + ApiServices.LISTE_MOUBVEMENTS_CNE);
-        public static final URL LISTE_MOUBVEMENTS_CPP = new URL(BASE + ApiServices.LISTE_MOUBVEMENTS_CPP);
-        public static final URL DECONNEXION = new URL(BASE + ApiServices.DECONNEXION);
+        public static final URL ACCOUNTS = new URL(BASE + ApiServices.EQUIPMENTS_COMPTES);
+        public static final URL TRANSACTIONS_SAVINGS_ACCOUNTS = new URL(BASE + ApiServices.LISTE_MOUBVEMENTS_CNE);
+        public static final URL TRANSACTIONS_CHECKING_ACCOUNTS = new URL(BASE + ApiServices.LISTE_MOUBVEMENTS_CPP);
+        public static final URL DISCONNECTION = new URL(BASE + ApiServices.DECONNEXION);
     }
 
     public static class QueryParams {
@@ -108,6 +108,11 @@ public class LaBanquePostaleConstants {
 
     public static class Logging {
         public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from(PROVIDER_NAME + "-unknown-account-type");
+    }
+
+    public static class AccountType {
+        public static final String _000001 = "000001";
+        public static final String _000002 = "000002";
     }
 
 }

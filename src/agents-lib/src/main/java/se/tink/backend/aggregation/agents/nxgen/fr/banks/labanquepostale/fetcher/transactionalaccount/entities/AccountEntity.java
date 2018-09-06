@@ -52,9 +52,9 @@ public class AccountEntity {
     private MapEntity map;
 
     public AccountTypes toTinkAccountType() {
-        if ("000001".equals(productRange)) {
+        if (LaBanquePostaleConstants.AccountType._000001.equals(productRange)) {
             return AccountTypes.CHECKING;
-        } else if ("000002".equals(productRange)) {
+        } else if (LaBanquePostaleConstants.AccountType._000002.equals(productRange)) {
             return AccountTypes.SAVINGS;
         } else {
             logger.info("{} Unknown account type: {}", LaBanquePostaleConstants.Logging.UNKNOWN_ACCOUNT_TYPE,

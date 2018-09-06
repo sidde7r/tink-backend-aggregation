@@ -38,7 +38,7 @@ public class LaBanquePostaleTransactionalAccountFetcher implements AccountFetche
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
 
-        AccountsResponse response = apiClient.getAccounts(false, false);
+        AccountsResponse response = apiClient.getAccounts();
 
         return response.getAccounts().stream()
                 .filter(LaBanquePostaleTransactionalAccountFetcher::isTransactionalAccount)
