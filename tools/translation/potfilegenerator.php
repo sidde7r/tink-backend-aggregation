@@ -1,7 +1,7 @@
 <?php
 class PotFileGenerator {
-    private $backendPotFilename = "tink-backend.pot";
-    private $providerPotFilename = "tink-provider.pot";
+    private $backendPotFilename = "tink-aggr-backend.pot";
+    private $providerPotFilename = "tink-aggr-provider.pot";
 
     public function generateBackendPotFile() {
         echo "Generating '" . $this->backendPotFilename . "'..." . PHP_EOL;

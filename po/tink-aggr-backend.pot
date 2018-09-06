@@ -1,0 +1,1022 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-09-06 14:12+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+msgid "Input the code from your code card"
+msgstr ""
+
+msgid "Key card index"
+msgstr ""
+
+msgid "Key card code"
+msgstr ""
+
+msgid "Verification code"
+msgstr ""
+
+msgid "SMS code"
+msgstr ""
+
+msgid "You lack the sufficient permissions for this service."
+msgstr ""
+
+msgid ""
+"To be able to refresh your accounts in Tink you need to updated your "
+"customer info in the ICA bank app."
+msgstr ""
+
+msgid ""
+"If the e-invoice has been modified in the ICA Banken app, please refresh you "
+"credentials."
+msgstr ""
+
+msgid "The card number you have entered is incorrect. Please try again."
+msgstr ""
+
+msgid "The provided credentials are not for KBC bank"
+msgstr ""
+
+msgid ""
+"1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/"
+"KBC_CardReader.png)Insert your bank card into the card reader\n"
+"2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_LOGIN."
+"png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_LOGIN."
+"png) Tap\n"
+"3$  Enter the start code []"
+msgstr ""
+
+msgid ""
+"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) "
+"Tap\n"
+"5$  Enter your secret code\n"
+"6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) "
+"Tap\n"
+"7$  Enter the login code"
+msgstr ""
+
+msgid ""
+"1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/"
+"KBC_CardReader.png) Insert your bank card into the card reader\n"
+"2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN."
+"png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN."
+"png) Tap\n"
+"3$  Enter the start code []"
+msgstr ""
+
+msgid ""
+"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK."
+"png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK."
+"png) Tap\n"
+"5$  Enter your PIN\n"
+"6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) "
+"Tap\n"
+"7$  Enter the sign code"
+msgstr ""
+
+msgid "Input"
+msgstr ""
+
+msgid ""
+"Check if your authentication parameters are correct:\n"
+"1. ING ID from your bank card\n"
+"2. Card ID from your bank card\n"
+"3. \"RESPONSE\" from the ING Card Reader"
+msgstr ""
+
+msgid ""
+"The amount of this transaction exceeds your transfer limits. Please log in "
+"to Home'Bank to check your transfer limits."
+msgstr ""
+
+msgid "Transfers to external accounts is not allowed from this account."
+msgstr ""
+
+msgid "Execution date have to be a business day, choose another date."
+msgstr ""
+
+msgid "Destination name have to be supplied for third party transfers."
+msgstr ""
+
+msgid "Transfer validation failed."
+msgstr ""
+
+msgid "Transfer execution failed."
+msgstr ""
+
+msgid ""
+"1$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/"
+"ING_CardReader.png) Insert your ING bank card into the ING Card Reader\n"
+"2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/"
+"ING_IDENTIFY.png)\n"
+"3$  Enter your PIN\n"
+"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png) "
+"Press\n"
+"5$ Enter the response code"
+msgstr ""
+
+msgid ""
+"1$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/"
+"ING_CardReader.png) Insert your ING bank card in your ING Card Reader\n"
+"2$  Press ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/"
+"ING_SIGN.png) Press\n"
+"3$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png) "
+"Enter your PIN and press\n"
+"4$  Enter the following number []"
+msgstr ""
+
+msgid ""
+"5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_SIGN."
+"png) And press\n"
+"6$ Enter your RESPONSE code"
+msgstr ""
+
+msgid ""
+"1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/"
+"BEL_CardReader.png) Login using your Belfius Card Reader\n"
+"2$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_LOGIN."
+"png) Press\n"
+"3$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK."
+"png) Enter the security code []"
+msgstr ""
+
+msgid ""
+"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) "
+"Enter your PIN\n"
+"5$  Enter the login code"
+msgstr ""
+
+msgid ""
+"1$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/"
+"BEL_CardReader.png) Sign using your Belfius Card Reader\n"
+"2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_SIGN."
+"png) Press\n"
+"3$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) "
+"Enter the security code []"
+msgstr ""
+
+msgid ""
+"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) "
+"Want to register your device?\n"
+"5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) "
+"Enter your PIN\n"
+"6$  Enter the signature code"
+msgstr ""
+
+msgid "Activation code"
+msgstr ""
+
+msgid ""
+"Have you received a new mobile phone, made changes to your mobile "
+"subscription or have a new SIM card? In that case, you must delete BankID "
+"Mobile and re-enable the service."
+msgstr ""
+
+msgid "Error Code: C161. "
+msgstr ""
+
+msgid "Error Code C176. "
+msgstr ""
+
+msgid "Error Code C30F. "
+msgstr ""
+
+msgid ""
+"Error Code C307. Your BankID is blocked due to incorrect PINLog in to the "
+"internet bank in another way and reset BankID on mobile."
+msgstr ""
+
+msgid "Error Code C202. "
+msgstr ""
+
+msgid ""
+"Error Code C131. This error indicates that your mobile operator has trouble "
+"or a process is running on your phone number. Restart your phone and try "
+"again in 5 minutes."
+msgstr ""
+
+msgid ""
+"Error code C308. There was a timeout due to slow response time. This can "
+"happen if there are weak or unstable signals or if the mobile operator is "
+"having trouble. Please try again in 5 minutes."
+msgstr ""
+
+msgid ""
+"Error code C302. This error occurs when you have switched mobile networks, "
+"for example, if you have just been abroad. Restart your phone and try again."
+msgstr ""
+
+msgid ""
+"Your personal code has been locked. Contact Nordea customer services "
+"(0771-42 15 16) to order a new code, or contact your local Nordea office."
+msgstr ""
+
+msgid ""
+"You're missing a valid Mobilt BankID. Download the BankID app and login to "
+"Internetbanken to order and connect to Mobil BankID."
+msgstr ""
+
+msgid ""
+"We could not find a valid internet banking agreement. If you login to "
+"Nordea's internetbank with e-code (card reader) you may sign an agreement "
+"for internet and telephone banking"
+msgstr ""
+
+msgid ""
+"Your personal code has been locked. Contact Nordea customer services (0200 "
+"70 000) to order a new code, or contact your local Nordea office."
+msgstr ""
+
+msgid ""
+"You do not have any accounts at Swedbank. Use Sparbankerna (Mobile BankID) "
+"instead."
+msgstr ""
+
+msgid ""
+"You do not have any accounts at Sparbankerna. Use Swedbank (Mobile BankID) "
+"instead."
+msgstr ""
+
+msgid "Recipient name"
+msgstr ""
+
+msgid ""
+"Because this is the first time you transfer money to this account, you'll "
+"need to register a name for it."
+msgstr ""
+
+msgid "You can only make payments to Swedish destinations"
+msgstr ""
+
+msgid "You can only make transfers to Swedish accounts"
+msgstr ""
+
+msgid "Invalid username or password"
+msgstr ""
+
+msgid "Contract is missing."
+msgstr ""
+
+msgid "Contract has been transferred to other bank."
+msgstr ""
+
+msgid "User account is locked. Please contact your bank."
+msgstr ""
+
+msgid "User account is blocked. Please contact your bank."
+msgstr ""
+
+msgid "Too many devices registered. Please contact your bank."
+msgstr ""
+
+msgid ""
+"Are you trying to use your charge card to login? Please use your login card "
+"for BankID. The response should be 9 figures."
+msgstr ""
+
+msgid ""
+"You need to activate your personal code for telephone and mobile services on "
+"the internet bank."
+msgstr ""
+
+msgid ""
+"You need to activate your mobile app credentials and generate a 4-digit pin "
+"code via the Handelsbanken app."
+msgstr ""
+
+msgid "You have used incorrect credentials. Please try again."
+msgstr ""
+
+msgid ""
+"Incorrect answer code. The challenge code is only active for four minutes. "
+"Press OK to restart."
+msgstr ""
+
+msgid ""
+"The activation could not be completed. It is not possible to activate more "
+"than ten apps."
+msgstr ""
+
+msgid ""
+"Too many incorrect tries. The card has been locked for 60 minutes for "
+"signing with the card reader without a cord. Contact Handelsbanken technical "
+"support for more information."
+msgstr ""
+
+msgid ""
+"The card you are using is blocked. Please contact Handelsbanken technical "
+"support or visit your local bank office to order a new login card."
+msgstr ""
+
+msgid ""
+"Handelsbanken is no longer active for the specified user. This could be due "
+"to that the Handelsbanken app for this device has not been active in 90 "
+"days. To login again you need to activate the app again."
+msgstr ""
+
+msgid "Wrong challenge response input - Will retry login."
+msgstr ""
+
+msgid "Download Nordea Codes"
+msgstr ""
+
+msgid "You need to download the Nordea Codes app in order to continue."
+msgstr ""
+
+msgid "Upgrade Nordea Codes"
+msgstr ""
+
+msgid "You need to upgrade the Nordea Codes app in order to continue."
+msgstr ""
+
+msgid "Authentication cancelled by the Codes app. Please try again."
+msgstr ""
+
+msgid "Authentication timed out."
+msgstr ""
+
+msgid "Another client is already trying to sign in."
+msgstr ""
+
+msgid "You need to change your password at S-Pankki before you can login."
+msgstr ""
+
+msgid ""
+"Your current password has expired and you have to create a new one. You can "
+"do this in Ålandsbanken's app if you have a registered device, if not, "
+"please contact Ålandsbanken at: 0204 292 910."
+msgstr ""
+
+msgid "Login is blocked. Contact your bank's customer service."
+msgstr ""
+
+msgid "No response from Mobile BankID. Have you opened the app?"
+msgstr ""
+
+msgid "You have another BankID session in progress. Please try again."
+msgstr ""
+
+msgid "You cancelled the BankID process. Please try again."
+msgstr ""
+
+msgid "The BankID authentication failed"
+msgstr ""
+
+msgid "Download Mobile Banking"
+msgstr ""
+
+msgid "You need to download the Mobile Banking in order to continue."
+msgstr ""
+
+msgid "Upgrade Mobile Banking"
+msgstr ""
+
+msgid "You need to upgrade the Mobile Banking in order to continue."
+msgstr ""
+
+#, java-format
+msgid ""
+"No transactions are available for credit card {0}. Please go to ‘Settings’ > "
+"‘Accounts’ in the Mobile Banking app to add this credit card. If your credit "
+"card transactions are displayed in Mobile Banking, they will also be "
+"available for Grip."
+msgid_plural ""
+"No transactions are available for credit cards {0}. Please go to ‘Settings’ "
+"> ‘Accounts’ in the Mobile Banking app to add these credit cards. If your "
+"credit cards transactions are displayed in Mobile Banking, they will also be "
+"available for Grip."
+msgstr[0] ""
+msgstr[1] ""
+
+#, java-format
+msgid ""
+"A temporary error occurred in the communication between ABN and ICS for the "
+"credit card {0}. We will automatically refresh data as soon as the "
+"connection is available."
+msgid_plural ""
+"A temporary error occurred in the communication between ABN and ICS for the "
+"credit cards {0}. We will automatically refresh data as soon as the "
+"connection is available."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "and"
+msgstr ""
+
+#, java-format
+msgid "{0} account"
+msgid_plural "{0} accounts"
+msgstr[0] ""
+msgstr[1] ""
+
+#, java-format
+msgid "{0} transaction"
+msgid_plural "{0} transactions"
+msgstr[0] ""
+msgstr[1] ""
+
+#, java-format
+msgid "Updating {0}..."
+msgstr ""
+
+msgid "person"
+msgstr ""
+
+msgid "protected identity"
+msgstr ""
+
+msgid "locked identity"
+msgstr ""
+
+msgid "deceased"
+msgstr ""
+
+msgid "removed from register"
+msgstr ""
+
+msgid "emigrated"
+msgstr ""
+
+msgid "changed person number"
+msgstr ""
+
+msgid ""
+"For safety reasons you have been logged out. Please login again to continue."
+msgstr ""
+
+msgid "You have not entered a valid code. Please try again"
+msgstr ""
+
+msgid "The mobile BankID session timed out. Please try again."
+msgstr ""
+
+msgid "Something went wrong with the BankId authentication."
+msgstr ""
+
+msgid "You are not authorized to use this service."
+msgstr ""
+
+msgid "You do not have a valid profile."
+msgstr ""
+
+msgid ""
+"Could not login to your bank. The access could be blocked. Please activate "
+"it in your bank app or contact your bank."
+msgstr ""
+
+msgid "You don't have any commitments in the selected bank."
+msgstr ""
+
+msgid ""
+"The authentication needed to login to your bank is not supported at the "
+"moment. If possible please try another option."
+msgstr ""
+
+msgid "Incorrect login credentials. Please try again."
+msgstr ""
+
+msgid "Incorrect challenge response. Please try again."
+msgstr ""
+
+msgid "Your credentials could not be verified. Please try again."
+msgstr ""
+
+msgid ""
+"Please ensure that you have entered the correct mobile number and date of "
+"birth. Also make sure that you have activated bankID on mobile in your "
+"internet bank."
+msgstr ""
+
+msgid "There is an error with your mobile operator. Please try again later."
+msgstr ""
+
+msgid ""
+"Your device could not be registered. This could be due to restrictions in "
+"the number of devices your bank allows you to register. Please try again "
+"later or reach out to your bank."
+msgstr ""
+
+msgid "The bank service is offline, please try again later."
+msgstr ""
+
+msgid "The bank service has temporarily failed, please try again later."
+msgstr ""
+
+msgid ""
+"Another BankId authentication was initiated while authenticating. Please try "
+"again."
+msgstr ""
+
+msgid "Your identity could not be validated. Please try again."
+msgstr ""
+
+msgid "Your BankID is not authorized for this service."
+msgstr ""
+
+msgid ""
+"Your BankID is blocked. Log in to the internet bank and reset/reorder BankID "
+"on mobile."
+msgstr ""
+
+msgid "Something went wrong with the BankId authentication"
+msgstr ""
+
+msgid ""
+"The mobile operator you use may have blocked BankID on mobile. To resolve "
+"this, log in to the internet bank using another authentication method and "
+"reorder BankID on mobile."
+msgstr ""
+
+msgid "The social security number has been updated, please try again"
+msgstr ""
+
+msgid "Wrong BankID signature. Did you log in with the wrong personnummer?"
+msgstr ""
+
+msgid "Failed to sign transfer with BankID"
+msgstr ""
+
+msgid "Failed to sign transfer"
+msgstr ""
+
+msgid "Transfer or payment was not signed with security token device"
+msgstr ""
+
+msgid "Not able to update this e-invoice"
+msgstr ""
+
+msgid "Could not validate e-invoice"
+msgstr ""
+
+msgid "The e-invoice could not be found at your bank"
+msgstr ""
+
+msgid "Could not sign the e-invoice"
+msgstr ""
+
+msgid "Found more than one eInvoices that exactly matches the transfer"
+msgstr ""
+
+msgid ""
+"You have existing unsigned transfers, please sign these in your bank's app "
+"before executing a new transfer"
+msgstr ""
+
+msgid "The transfer amount is larger than what is available on the account."
+msgstr ""
+
+msgid "Invalid destination account"
+msgstr ""
+
+msgid "The payment date is not a business day"
+msgstr ""
+
+msgid "The payment date is too soon or not a business day"
+msgstr ""
+
+msgid "The destination message is not valid"
+msgstr ""
+
+msgid "The destination message is not a valid OCR reference"
+msgstr ""
+
+msgid "The message given is not valid"
+msgstr ""
+
+msgid "Invalid source account"
+msgstr ""
+
+msgid "Could not retrieve source accounts"
+msgstr ""
+
+msgid "Could not find source account"
+msgstr ""
+
+msgid "Unable to create new recipient account"
+msgstr ""
+
+msgid "You must specify a recipient name"
+msgstr ""
+
+msgid "It's not possible to modify the amount of this transfer"
+msgstr ""
+
+msgid "It's not possible to modify the destination of this transfer"
+msgstr ""
+
+msgid "It's not possible to modify the payment date of this transfer"
+msgstr ""
+
+msgid "It's not possible to modify OCR/message of this transfer"
+msgstr ""
+
+msgid "It's not possible to modify this transfer"
+msgstr ""
+
+msgid ""
+"It's not possible to modify the source or destination account of this "
+"transfer"
+msgstr ""
+
+msgid "Could not execute transfer"
+msgstr ""
+
+msgid "Could not delete transfer"
+msgstr ""
+
+msgid "An error occurred when confirming the transfer"
+msgstr ""
+
+msgid "It's not possible to modify the amount of this e-invoice"
+msgstr ""
+
+msgid "It's not possible to modify the payment date of this e-invoice"
+msgstr ""
+
+msgid "It's not possible to modify the destination account of this e-invoice"
+msgstr ""
+
+msgid "It's not possible to modify the source message of this e-invoice"
+msgstr ""
+
+msgid "It's not possible to modify the destination message of this e-invoice"
+msgstr ""
+
+msgid "It's not possible to modify the source account of this e-invoice"
+msgstr ""
+
+msgid "It's not possible to modify this e-invoice"
+msgstr ""
+
+msgid "The payment could not be found at your bank"
+msgstr ""
+
+msgid "Could not create payment"
+msgstr ""
+
+msgid "Could not update payment"
+msgstr ""
+
+msgid "It's not possible to modify this payment"
+msgstr ""
+
+msgid "It's not possible to modify the amount of this payment"
+msgstr ""
+
+msgid "It's not possible to modify the destination of this payment"
+msgstr ""
+
+msgid "It's not possible to modify the source account of this payment"
+msgstr ""
+
+msgid "It's not possible to modify the payment date of this payment"
+msgstr ""
+
+msgid "It's not possible to modify OCR/message of this payment"
+msgstr ""
+
+msgid "It's not possible to modify the source message of this payment"
+msgstr ""
+
+msgid "Missing message type"
+msgstr ""
+
+msgid "The entered structured message is invalid"
+msgstr ""
+
+#, java-format
+msgid "The message length exceeds maximum of {0} letters."
+msgstr ""
+
+msgid ""
+"Could not find a bank for the given destination account. Check the account "
+"number and try again."
+msgstr ""
+
+msgid "Could not get recipient name from user"
+msgstr ""
+
+msgid "N/A"
+msgstr ""
+
+msgid "Unsupported transfer type"
+msgstr ""
+
+msgid "Something went wrong."
+msgstr ""
+
+msgid "Payment was not accepted at Nordea"
+msgstr ""
+
+msgid "Waiting on Mobile Bank Id"
+msgstr ""
+
+msgid "Did not receive a identification code"
+msgstr ""
+
+msgid "Payment was not signed"
+msgstr ""
+
+msgid "Next unused code"
+msgstr ""
+
+msgid ""
+"Could not find any engagements in Swedbank. If you have Swedbank Ung, we "
+"unfortunately do not support them."
+msgstr ""
+
+msgid ""
+"Could not find any engagements in Swedbank Ung. Use Swedbank (Mobile BankID) "
+"instead."
+msgstr ""
+
+msgid ""
+"Could not find any engagements in Sparbankerna. If you have Sparbankerna "
+"Ung, we unfortunately do not support them."
+msgstr ""
+
+msgid ""
+"Could not find any engagements in Sparbankerna Ung. Use Sparbankerna (Mobile "
+"BankID) instead."
+msgstr ""
+
+msgid ""
+"In order to add new recipients you need to activate Mobile BankID for "
+"extended use. This is done in the Internet bank on the page BankID (found in "
+"the tab Tillval)."
+msgstr ""
+
+msgid "Payment date has to be within one year from now"
+msgstr ""
+
+msgid ""
+"The first time you use your mobile BankId you have to verify it with your "
+"Digipass. Login to the SEB-app with your mobile BankID to do this."
+msgstr ""
+
+msgid ""
+"It looks like you have SEB Ung. Unfortunately we currently only support "
+"SEB's standard login."
+msgstr ""
+
+msgid "No update needed, payment is not changed."
+msgstr ""
+
+msgid "Cannot find payment in list from bank."
+msgstr ""
+
+msgid "The payment cannot be updated."
+msgstr ""
+
+msgid "Payment cannot be signed on bank."
+msgstr ""
+
+msgid "Cannot find e-invoice in list from bank"
+msgstr ""
+
+msgid "Source account not available"
+msgstr ""
+
+msgid "Could not fetch payment accounts."
+msgstr ""
+
+msgid "E-invoice cannot be signed on bank"
+msgstr ""
+
+msgid "Something went wrong when signing e-invoice"
+msgstr ""
+
+msgid "Transfer amount is too small"
+msgstr ""
+
+msgid "Destination account is not valid"
+msgstr ""
+
+msgid "Source account not found"
+msgstr ""
+
+msgid ""
+"You need to activate the connection with your Handelsbanken card reader."
+msgstr ""
+
+msgid "You need to activate your BankID in the Handelsbanken app."
+msgstr ""
+
+msgid ""
+"You need to confirm your BankID to Skandiabanken. You do it by logging in "
+"with the Skandiabanken app once and confirm that your BankID is yours. You "
+"can then continue using Tink with BankID."
+msgstr ""
+
+msgid ""
+"Could not login to Skandiabanken. Unfortunately we don't support "
+"Skandiabanken for customers under the age of 18 years."
+msgstr ""
+
+msgid "Could not login, please try again."
+msgstr ""
+
+msgid ""
+"You have enter incorrect service code to many times. For safety reasons the "
+"service code is now blocked. You may unlock your safety in Hembanken, in "
+"Mobila tjänster."
+msgstr ""
+
+msgid ""
+"To use the mobile services you need to sign an agreement for Service code. "
+"Log in at Hembanken and and look in Mobila tjänster - Se och ändra "
+"servicekod."
+msgstr ""
+
+msgid ""
+"Wrong personal number or service code. Please try again or control your "
+"service code in Hembanken, in Mobila tjänster."
+msgstr ""
+
+msgid ""
+"We encountered problems signing the payment/transfer with your bank. Please "
+"log in to your bank app and validate the payment/transfer."
+msgstr ""
+
+msgid "Failed to sign using BankID, please try again later"
+msgstr ""
+
+msgid "Failed to sign payment using BankID"
+msgstr ""
+
+msgid "You must be over the age of 16 to use Mobilt BankID."
+msgstr ""
+
+#, java-format
+msgid ""
+"For the selected source, the destination message cannot be longer than {0} "
+"characters. Please adjust the message and try again."
+msgstr ""
+
+#, java-format
+msgid ""
+"For the selected source, messages cannot contain some of the typed "
+"characters:\n"
+"\n"
+"{0}\n"
+"\n"
+"Valid characters:\n"
+"\n"
+"{1}"
+msgstr ""
+
+msgid "Error from"
+msgstr ""
+
+msgid "What can I do if this is not correct?"
+msgstr ""
+
+msgid ""
+"If any of the information is incorrect, please contact Skatteverket on %s."
+msgstr ""
+
+#, java-format
+msgid ""
+"If any of the information is incorrect, please contact Bolagsverket on {0} "
+"or Skatteverket on {1}."
+msgstr ""
+
+msgid ""
+"If any of the information is incorrect, please contact Lantmäteriet on %s."
+msgstr ""
+
+msgid ""
+"If any of the information is incorrect, please contact Kronofogden on %s."
+msgstr ""
+
+msgid ""
+"If you have any questions about you credit score, please contact Creditsafe "
+"on %s."
+msgstr ""
+
+msgid ""
+"If you don’t recognise the transactions, please contact your bank and let "
+"them check who registered the transactions."
+msgstr ""
+
+msgid ""
+"If you don’t recognise the transaction, please contact your bank and let "
+"them check who registered the purchase."
+msgstr ""
+
+msgid ""
+"The information is fetched from Statens personadressregister. SPAR includes "
+"all persons who are registered as resident in Sweden. The data in SPAR is "
+"updated each day with data from the Swedish Population Register."
+msgstr ""
+
+msgid ""
+"The information is fetched from Bolagsverket and Skatteveket. Bolagsverket "
+"is a public authority whose main purpose is to register new companies and "
+"handle changes in register for existing companies, such as changes in "
+"address and changes of board and accountants. Skatteverket handled F-tax and "
+"moms."
+msgstr ""
+
+msgid ""
+"The information is fetched from Lantmäteriet. Lantmäteriet is the authority "
+"that handles geographical information, appoints district names and is "
+"responsible for real estate classification."
+msgstr ""
+
+msgid ""
+"The information is fetched from Kronofogden. Kronofogden is a neutral "
+"administrative authority. The assignment is to create a balance between the "
+"one paying and the one who is payed. It is the duty of Kronofogden to help "
+"the one not getting payed, but also supporting the one who cannot pay a debt."
+msgstr ""
+
+msgid ""
+"The information is fetched from Kronofogden. A non-payment is a sign of you "
+"not being able to handle your payments. The effect could for example be that "
+"your are not getting a mortgage, apartment, job or phone subscription."
+msgstr ""
+
+msgid ""
+"The information is fetched from Skatteverket when your tax return has been "
+"approved."
+msgstr ""
+
+msgid ""
+"Creditsafe scoring is a tool to determine the solvency level for a person. "
+"The scoring is done by a number of generic credit scoring models and is "
+"mainly based on income, assets, age, company engagements, civil status and "
+"non-payments. The scoring is a scale from 1 to 100 where 1-19 means low "
+"solvency, 20-39 medium solvency, 40-69 high solvency and 70-100 very high "
+"solvency."
+msgstr ""
+
+msgid ""
+"Every day Tink scans all of your transactions to find things that differ "
+"from you normal behaviour and things we want to keep you extra alerted on. "
+"In this case we have notices there were two transactions deducted from your "
+"account the same day with the same amount and description. It could be "
+"someone with bad intentions that has charged you twice but it could of "
+"course also been you buying the same thing twice the same day."
+msgstr ""
+
+msgid ""
+"Every day Tink scans all of your transactions to find things that differ "
+"from you normal behaviour and things we want to keep you extra alerted on. "
+"In this case we have notices there was an unusual large expense on your "
+"account."
+msgstr ""
+
+msgid ""
+"Every day Tink scans all of your transactions to find things that differ "
+"from you normal behaviour and things we want to keep you extra alerted on. "
+"In this case we have notices there was an unusual large cash withdrawal on "
+"your account."
+msgstr ""
+
+msgid ""
+"Every day Tink scans all of your transactions to find things that differ "
+"from you normal behaviour and things we want to keep you extra alerted on. "
+"In this case we have notices there was an unusual high activity on one of "
+"you accounts with more transactions than usual."
+msgstr ""
+
+msgid "Source"
+msgstr ""
+
+msgid "Where does this information come from?"
+msgstr ""
+
+msgid "What can I do if this looks weird?"
+msgstr ""
+
+#, java-format
+msgid ""
+"We are currently having technical issues with {0}. Please try again later."
+msgstr ""
+
+msgid ""
+"Invalid credentials status. Update the credentials before retrying the "
+"operation."
+msgstr ""
+
+msgid "BankID session already in progress, please try again."
+msgstr ""
+
+msgid "BankID authentication failed. Please verify your Mobil BankID is OK."
+msgstr ""
