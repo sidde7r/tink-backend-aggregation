@@ -154,7 +154,7 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor, UpdatePa
                     : client.paymentContext(updatablePayment));
             verifySourceAccount(transfer.getSource(), context);
 
-            updatablePayment = (PaymentDetails) client
+            updatablePayment = client
                     .updatePayment(updatablePayment, UpdatePaymentRequest.create(transfer))
                     .orElseThrow(() -> exception(PAYMENT_UPDATE_FAILED));
         }
