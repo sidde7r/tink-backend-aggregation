@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
@@ -19,6 +21,11 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
     private Object body;
     private MultivaluedMap<String, Object> headers;
     private List<String> cookies = new ArrayList<>();
+
+
+    //TODO: REMOVE THIS ONCE AGGREGATOR IDENTIFIER IS VERIFIED
+    public static Logger logger = LoggerFactory
+            .getLogger(RequestBuilder.class);
 
     public RequestBuilder(Filterable filterChain, Filter finalFilter, URL url) {
         this(filterChain, finalFilter);
@@ -452,6 +459,8 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
     }
 
     public RequestBuilder header(String name, Object value) {
+        //TODO: REMOVE THIS ONCE AGGREGATOR IDENTIFIER IS VERIFIED
+        logger.info("Adding the header:" + name + "with the value" + value.toString());
         headers.add(name, value);
         return this;
     }

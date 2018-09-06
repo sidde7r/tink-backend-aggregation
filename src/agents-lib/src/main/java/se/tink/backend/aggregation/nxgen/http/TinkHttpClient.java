@@ -63,6 +63,9 @@ import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
 import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
@@ -87,6 +90,10 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
     private final Filter finalFilter = new SendRequestFilter();
     private final PersistentHeaderFilter persistentHeaderFilter = new PersistentHeaderFilter();
+
+
+    public static Logger logger = LoggerFactory
+            .getLogger(TinkHttpClient.class);
 
     private class DEFAULTS {
         private final static String DEFAULT_USER_AGENT = AbstractAgent.DEFAULT_USER_AGENT;
@@ -185,6 +192,12 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         setDebugOutput(DEFAULTS.DEBUG_OUTPUT);
         addPersistentHeader("X-Aggregator", getHeaderAggregatorIdentifier());
         setUserAgent(DEFAULTS.DEFAULT_USER_AGENT);
+
+
+        //Todo: Remove this once the aggregator identifier is verified
+        if(context.getClusterInfo().getClusterId().getId().equals("local-development")){
+            logger.info("Setting the outgoing aggregator identifier header to: " + getHeaderAggregatorIdentifier());
+        }
     }
 
     public TinkHttpClient(@Nullable AgentContext context, @Nullable Credentials credentials) {
