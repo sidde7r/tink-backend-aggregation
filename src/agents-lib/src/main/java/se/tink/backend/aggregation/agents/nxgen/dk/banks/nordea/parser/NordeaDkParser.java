@@ -78,13 +78,12 @@ public class NordeaDkParser extends NordeaV20Parser {
         LoanData loanData = loanDetailsResponse.getLoanData();
         if (loanData != null) {
             accountBuilder.setInterestRate(loanData.getInterest())
-                    .setDetails(LoanDetails.builder()
+                    .setDetails(LoanDetails.builder(AccountType.getLoanTypeForCode(pe.getProductTypeExtension()))
                             .setLoanNumber(loanData.getLocalNumber())
                             .setNextDayOfTermsChange(loanData.getInterestTermEnds())
                             .setMonthlyAmortization(new Amount(loanData.getCurrency(),
                                     loanDetailsResponse.getFollowingPayment().getAmortization()))
                             .setInitialBalance(new Amount(loanData.getCurrency(), loanData.getGranted()))
-                            .setType(AccountType.getLoanTypeForCode(pe.getProductTypeExtension()))
                             .build());
         }
 
@@ -96,9 +95,8 @@ public class NordeaDkParser extends NordeaV20Parser {
                 .setAccountNumber(pe.getAccountNumber(true))
                 .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(true)))
                 .setBankIdentifier(pe.getNordeaAccountIdV2())
-                .setDetails(LoanDetails.builder()
+                .setDetails(LoanDetails.builder(AccountType.getLoanTypeForCode(pe.getProductTypeExtension()))
                         .setLoanNumber(Optional.ofNullable(pe.getLoanId()).orElse(pe.getProductNumber()))
-                        .setType(AccountType.getLoanTypeForCode(pe.getProductTypeExtension()))
                         .build())
                 .build();
     }

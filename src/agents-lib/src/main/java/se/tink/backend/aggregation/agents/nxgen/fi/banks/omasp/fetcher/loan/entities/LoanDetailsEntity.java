@@ -38,8 +38,7 @@ public class LoanDetailsEntity extends LoanEntity {
                 .setBankIdentifier(id)
                 .setName(getName())
                 .setDetails(
-                        LoanDetails.builder()
-                                .setType(getLoanType())
+                        LoanDetails.builder(getLoanType())
                                 .setLoanNumber(loanNumber)
                                 .build()
                 )

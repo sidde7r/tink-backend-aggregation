@@ -62,13 +62,12 @@ public class NordeaNoParser extends NordeaV17Parser {
                 .setBankIdentifier(pe.getNordeaAccountIdV2());
 
         loanDetails.getLoanData().ifPresent(loanData -> accountBuilder.setInterestRate(loanData.getInterest())
-                .setDetails(LoanDetails.builder()
+                .setDetails(LoanDetails.builder(AccountType.getLoanTypeForCode(pe.getNordeaProductTypeExtension()))
                         .setLoanNumber(loanData.getLocalNumber())
                         .setNextDayOfTermsChange(loanData.getInterestTermEnds())
                         .setMonthlyAmortization(new Amount(loanData.getCurrency(),
                                 loanDetails.getFollowingPayment().getAmortization()))
                         .setInitialBalance(new Amount(loanData.getCurrency(), loanData.getGranted()))
-                        .setType(AccountType.getLoanTypeForCode(pe.getNordeaProductTypeExtension()))
                         .build()));
 
         return accountBuilder.build();

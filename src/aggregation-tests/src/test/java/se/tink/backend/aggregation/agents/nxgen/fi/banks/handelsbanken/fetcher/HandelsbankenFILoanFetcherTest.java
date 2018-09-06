@@ -5,7 +5,10 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.handelsbanken.HandelsbankenFIAuthenticatedTest;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.handelsbanken.HandelsbankenFITestConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.loan.HandelsbankenLoanFetcher;
+
+import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
+import se.tink.backend.aggregation.nxgen.core.account.LoanInterpreter;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.system.rpc.Loan;
 import static org.hamcrest.core.Is.is;
@@ -29,7 +32,7 @@ public class HandelsbankenFILoanFetcherTest extends HandelsbankenFIAuthenticated
         assertTrue(loanAccounts.isEmpty());
         //Next assertions will be active if test data actually has loans. Assertions are based on SE loans
         loanAccounts.forEach(a -> {
-            Loan loan = a.getDetails().toSystemLoan(a);
+            Loan loan = a.getDetails().toSystemLoan(a, LoanInterpreter.getInstance(MarketCode.FI));
             assertAccountAttributes(a);
             assertLoanAttributes(loan);
             assertAccountAndLoanMatch(a, loan);

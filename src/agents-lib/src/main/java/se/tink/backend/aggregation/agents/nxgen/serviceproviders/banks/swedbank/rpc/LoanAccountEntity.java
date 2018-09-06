@@ -18,9 +18,8 @@ public class LoanAccountEntity extends AccountEntity {
             return Optional.empty();
         }
 
-        LoanDetails loanDetails = LoanDetails.builder()
+        LoanDetails loanDetails = LoanDetails.builder(LoanDetails.Type.DERIVE_FROM_NAME)
                 .setLoanNumber(accountNumber)
-                .setName(name)
                 .setNextDayOfTermsChange(nextDayOfTermsChange)
                 .build();
 

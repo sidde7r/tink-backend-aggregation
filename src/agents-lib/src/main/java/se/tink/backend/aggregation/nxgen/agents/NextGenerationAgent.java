@@ -74,7 +74,9 @@ public abstract class NextGenerationAgent extends AbstractAgent implements Refre
         this.persistentStorage = new PersistentStorage();
         this.sessionStorage = new SessionStorage();
         this.credentials = request.getCredentials();
-        this.updateController = new UpdateController(context, credentials, request.getProvider().getCurrency());
+        this.updateController = new UpdateController(context,
+                request.getProvider().getMarket(),
+                request.getProvider().getCurrency());
         this.client = new TinkHttpClient(context, credentials, signatureKeyPair);
         this.transactionPaginationHelper = new TransactionPaginationHelper(request);
         this.supplementalInformationController = new SupplementalInformationController(context, credentials);

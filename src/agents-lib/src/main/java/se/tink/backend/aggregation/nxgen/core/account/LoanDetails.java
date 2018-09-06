@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.core.account;
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import java.util.Collections;
@@ -14,7 +15,6 @@ import se.tink.libraries.date.DateUtils;
 public class LoanDetails {
     private static final AggregationLogger log = new AggregationLogger(LoanDetails.class);
 
-    private final String name;
     private final Amount amortized;
     private final Amount monthlyAmortization;
     private final Amount initialBalance;
@@ -28,13 +28,12 @@ public class LoanDetails {
     private final boolean coApplicant;
 
     private LoanDetails() {
-        this(null, null, null, null, null, null, 0, null, null, null, null, false);
+        this(null, null, null, null, null, 0, null, null, null, null, false);
     }
 
-    private LoanDetails(String name, Amount amortized, Amount monthlyAmortization, Amount initialBalance,
+    private LoanDetails(Amount amortized, Amount monthlyAmortization, Amount initialBalance,
             Date initialDate, String loanNumber, int numMonthsBound, Date nextDayOfTermsChange, Type type,
             String security, List<String> applicants, boolean coApplicant) {
-        this.name = name;
         this.amortized = amortized;
         this.monthlyAmortization = monthlyAmortization;
         this.initialBalance = initialBalance;
@@ -46,10 +45,6 @@ public class LoanDetails {
         this.security = security;
         this.applicants = applicants;
         this.coApplicant = coApplicant;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public Amount getAmortized() {
@@ -125,7 +120,7 @@ public class LoanDetails {
     }
 
     public Type getType() {
-        return type != null ? type : Type.OTHER;
+        return type;
     }
 
     public String getSecurity() {
@@ -137,15 +132,15 @@ public class LoanDetails {
     }
 
     public boolean hasCoApplicant() {
-        return getApplicants().size() > 1 ? true : coApplicant;
+        return getApplicants().size() > 1 || coApplicant;
     }
 
-    public Loan toSystemLoan(LoanAccount account) {
+    public Loan toSystemLoan(LoanAccount account, LoanInterpreter interpreter) {
         Loan loan = new Loan();
 
         loan.setBalance(account.getBalance().getValue());
         loan.setInterest(account.getInterestRate());
-        loan.setName(Strings.isNullOrEmpty(name) ? account.getName() : name);
+        loan.setName(account.getName());
         loan.setLoanNumber(Strings.isNullOrEmpty(loanNumber) ? account.getAccountNumber() : loanNumber);
         loan.setAmortized(calculateAmortizedValue(account));
         loan.setMonthlyAmortization(calculateMonthlyAmortizationValue(account));
@@ -153,7 +148,12 @@ public class LoanDetails {
         loan.setInitialDate(initialDate);
         loan.setNumMonthsBound(numMonthsBound);
         loan.setNextDayOfTermsChange(nextDayOfTermsChange);
-        loan.setType(getType().toSystemType());
+
+        Type type = Type.DERIVE_FROM_NAME.equals(getType()) ?
+                interpreter.interpretLoanType(loan.getName()) :
+                getType();
+
+        loan.setType(type.toSystemType());
 
         se.tink.backend.system.rpc.LoanDetails loanDetails = new se.tink.backend.system.rpc.LoanDetails();
         loanDetails.setLoanSecurity(security);
@@ -165,12 +165,11 @@ public class LoanDetails {
         return loan;
     }
 
-    public static Builder builder() {
-        return new Builder();
+    public static Builder builder(Type type) {
+        return new Builder(type);
     }
 
     public static class Builder {
-        private String name;
         private Amount amortized;
         private Amount monthlyAmortization;
         private Amount initialBalance;
@@ -183,13 +182,9 @@ public class LoanDetails {
         private List<String> applicants;
         private boolean coApplicant;
 
-        public String getName() {
-            return name;
-        }
-
-        public Builder setName(String name) {
-            this.name = name;
-            return this;
+        public Builder(Type type) {
+            Preconditions.checkNotNull(type, String.format("%s", type));
+            this.type = type;
         }
 
         public Amount getAmortized() {
@@ -265,12 +260,7 @@ public class LoanDetails {
         }
 
         public Type getType() {
-            return type != null ? type : Type.OTHER;
-        }
-
-        public Builder setType(Type type) {
-            this.type = type;
-            return this;
+            return type;
         }
 
         public String getSecurity() {
@@ -301,7 +291,7 @@ public class LoanDetails {
         }
 
         public LoanDetails build() {
-            return new LoanDetails(getName(), getAmortized(), getMonthlyAmortization(), getInitialBalance(),
+            return new LoanDetails(getAmortized(), getMonthlyAmortization(), getInitialBalance(),
                     getInitialDate(), getLoanNumber(), getNumMonthsBound(), getNextDayOfTermsChange(), getType(),
                     getSecurity(), getApplicants(), hasCoApplicant());
         }
@@ -309,7 +299,8 @@ public class LoanDetails {
 
     public enum Type {
         MORTGAGE(Loan.Type.MORTGAGE), BLANCO(Loan.Type.BLANCO), MEMBERSHIP(Loan.Type.MEMBERSHIP),
-        VEHICLE(Loan.Type.VEHICLE), LAND(Loan.Type.LAND), STUDENT(Loan.Type.STUDENT), OTHER(Loan.Type.OTHER);
+        VEHICLE(Loan.Type.VEHICLE), LAND(Loan.Type.LAND), STUDENT(Loan.Type.STUDENT),
+        OTHER(Loan.Type.OTHER), DERIVE_FROM_NAME(null);
 
         private final Loan.Type type;
 
@@ -318,6 +309,9 @@ public class LoanDetails {
         }
 
         public Loan.Type toSystemType() {
+            Preconditions.checkNotNull(type,
+                    "System can`t accept null type. "
+                    + "Type must be set explicitly or be derived using LoanInterpreter.");
             return type;
         }
     }

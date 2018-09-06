@@ -139,13 +139,11 @@ public class AlandsBankenAccount {
                 .setName(accountNickname)
                 .setInterestRate(interestRate)
                 .setBankIdentifier(accountId)
-                .setDetails(LoanDetails.builder()
-                        .setName(accountNickname)
+                .setDetails(LoanDetails.builder(getLoanType())
                         .setLoanNumber(bban)
                         .setInitialBalance(new Amount(currency, loanDetailsEntity.getGrantedAmount()))
                         .setInitialDate(loanDetailsEntity.getOpeningDate())
                         .setNextDayOfTermsChange(loanDetailsEntity.getNextInterestAdjustmentDate())
-                        .setType(getLoanType())
                         .build())
                 .build();
     }

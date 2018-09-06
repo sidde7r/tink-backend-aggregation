@@ -59,14 +59,13 @@ public class NordeaFiParser extends NordeaV21Parser {
         LoanData loanData = loanDetailsResponse.getLoanData();
         if (loanData != null) {
             accountBuilder.setInterestRate(loanData.getInterest())
-                    .setDetails(LoanDetails.builder()
+                    .setDetails(LoanDetails.builder(NordeaFiConstants.AccountType.getLoanTypeFromCode(
+                            productEntity.getNordeaProductTypeExtension()))
                             .setLoanNumber(loanData.getLocalNumber())
                             .setNextDayOfTermsChange(loanData.getInterestTermEnds())
                             .setMonthlyAmortization(new Amount(loanData.getCurrency(),
                                     loanDetailsResponse.getFollowingPayment().getAmortization()))
                             .setInitialBalance(new Amount(loanData.getCurrency(), loanData.getGranted()))
-                            .setType(NordeaFiConstants.AccountType.getLoanTypeFromCode(
-                                    productEntity.getNordeaProductTypeExtension()))
                             .build());
         }
 
