@@ -460,7 +460,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
 
     public RequestBuilder header(String name, Object value) {
         //TODO: REMOVE THIS ONCE AGGREGATOR IDENTIFIER IS VERIFIED
-        logger.info("Adding the header:" + name + "with the value" + value.toString());
+        logger.info("Adding the header: {}", name);
         headers.add(name, value);
         return this;
     }
