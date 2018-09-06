@@ -2,8 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.cr
 
 import com.google.common.base.Strings;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants;
@@ -11,12 +9,13 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.Re
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.account.entities.ProductsEntity;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 
 public class CommerzbankCreditCardFetcher implements AccountFetcher<CreditCardAccount>,
-        TransactionFetcher<CreditCardAccount> {
+        TransactionPagePaginator<CreditCardAccount> {
 
     private final CommerzbankApiClient apiClient;
     private static final AggregationLogger LOGGER = new AggregationLogger(CommerzbankCreditCardFetcher.class);
@@ -36,18 +35,18 @@ public class CommerzbankCreditCardFetcher implements AccountFetcher<CreditCardAc
     }
 
     @Override
-    public List<AggregationTransaction> fetchTransactionsFor(CreditCardAccount account) {
+    public PaginatorResponse getTransactionsFor(CreditCardAccount account, int page) {
         String productType = account.getFromTemporaryStorage(CommerzbankConstants.HEADERS.CREDIT_CARD_PRODUCT_TYPE);
         String identifier = account.getFromTemporaryStorage(CommerzbankConstants.HEADERS.CREDIT_CARD_IDENTIFIER);
 
         if (!Strings.isNullOrEmpty(productType) && !Strings.isNullOrEmpty(identifier)) {
             try {
-                return apiClient.transactionOverview(productType, identifier, 0, 1000).getItems()
-                        .get(0).getTinkTransactions().stream().collect(Collectors.toList());
+                return apiClient.transactionOverview(productType, identifier, page).getItems()
+                        .get(0);
             } catch (Exception e) {
                 LOGGER.warnExtraLong(e.toString(), CommerzbankConstants.LOGTAG.CREDIT_CARD_FETCHING_ERROR);
             }
         }
-        return Collections.EMPTY_LIST;
+        return PaginatorResponseImpl.createEmpty();
     }
 }
