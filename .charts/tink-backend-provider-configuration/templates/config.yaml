@@ -52,7 +52,7 @@ data:
       {{- else }}
       password: MYSQL_PASSWORD # Is added via Kubernetes Secrets
       {{- end }}
-      url: jdbc:mysql://{{ default "providerdb.provider.svc.cluster.local" $providerdb.host }}/tink?useLocalSessionState=true&rewriteBatchedStatements=true&useSSL=true&verifyServerCertificate=false
+      url: jdbc:mysql://{{ default "providerdb.provider.svc.cluster.local" $providerdb.host }}/provider?useLocalSessionState=true&rewriteBatchedStatements=true&useSSL=true&verifyServerCertificate=false
       showSql: false
       persistenceUnitName: tink-provider-api
       generateDdl: true
