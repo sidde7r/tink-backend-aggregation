@@ -1,12 +1,13 @@
 package se.tink.backend.aggregation.nxgen.core.account;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import java.io.Serializable;
 import java.util.Comparator;
+import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.nxgen.core.account.LoanDetails.Type;
 
 public abstract class LoanInterpreter implements Serializable {
-    private static final String MARKET_SE = "SE";
 
     private ImmutableSet<NamePart> nameParts;
 
@@ -14,8 +15,10 @@ public abstract class LoanInterpreter implements Serializable {
         this.nameParts = nameParts;
     }
 
-    public static LoanInterpreter getInstance(String market) {
-        if (MARKET_SE.equalsIgnoreCase(market)) {
+    public static LoanInterpreter getInstance(MarketCode market) {
+
+        switch (market) {
+        case SE:
             return new LoanInterpreterSE();
         }
 

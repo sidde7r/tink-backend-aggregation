@@ -4,6 +4,7 @@ import java.util.Collection;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEAuthenticatedTest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.loan.HandelsbankenLoanFetcher;
+import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.LoanInterpreter;
 import se.tink.backend.aggregation.rpc.AccountTypes;
@@ -30,7 +31,7 @@ public class HandelsbankenSELoanFetcherTest extends HandelsbankenSEAuthenticated
 
         accounts.forEach(account -> {
             Loan loan = account.getDetails().toSystemLoan(account,
-                    LoanInterpreter.getInstance("SE"));
+                    LoanInterpreter.getInstance(MarketCode.SE));
             assertAccountAttributes(account);
             assertLoanAttributes(loan);
             assertAccountAndLoanMatch(account, loan);

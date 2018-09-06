@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
+import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
@@ -26,7 +27,7 @@ public class UpdateController {
 
     public UpdateController(AgentContext baseContext, String market, String currency) {
         this.baseContext = baseContext;
-        this.loanInterpreter = LoanInterpreter.getInstance(market);
+        this.loanInterpreter = LoanInterpreter.getInstance(MarketCode.valueOf(market));
         this.currency = currency;
     }
 
