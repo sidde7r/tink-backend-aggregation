@@ -1,48 +1,25 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest;
 
-import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.NextGenerationBaseAgentTest;
-import se.tink.backend.aggregation.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.CredentialsStatus;
-import se.tink.backend.aggregation.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.utils.CurrencyConstants;
+import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.backend.aggregation.rpc.Field;
 
-public class SparebankenVestAgentTest extends NextGenerationBaseAgentTest<SparebankenVestAgent> {
-    private static final String USERNAME = "username";
-    private static final String ACTIVATION_CODE = "activationCode";
+@Ignore
+public class SparebankenVestAgentTest {
+    private static final String USERNAME = "";
+    private static final String ACTIVATION_CODE = "";
 
-    private Credentials credentials;
-
-    public SparebankenVestAgentTest() {
-        super(SparebankenVestAgent.class);
-    }
-
-    @Before
-    public void setup() {
-        credentials = new Credentials();
-        credentials.setStatus(CredentialsStatus.CREATED);
-        credentials.setUsername(USERNAME);
-    }
-
-    @Test
-    public void testPasswordLogin() throws Exception {
-        credentials.setPassword(ACTIVATION_CODE);
-        credentials.setType(CredentialsTypes.PASSWORD);
-
-        testLogin(credentials);
+    private AgentIntegrationTest.Builder builder() {
+        return new AgentIntegrationTest.Builder("no", "no-sparebankenvest-activationcode")
+                .addCredentialField(Field.Key.USERNAME, USERNAME)
+                .addCredentialField(Field.Key.PASSWORD, ACTIVATION_CODE)
+                .loadCredentialsBefore(false)
+                .saveCredentialsAfter(false);
     }
 
     @Test
     public void testRefresh() throws Exception {
-        credentials.setPassword(ACTIVATION_CODE);
-        credentials.setType(CredentialsTypes.PASSWORD);
-
-        testRefresh(credentials);
-    }
-
-    @Override
-    public String getCurrency() {
-        return CurrencyConstants.NO.getCode();
+        builder().build().testRefresh();
     }
 }
