@@ -105,7 +105,7 @@ public class LaBanquePostaleApiClient {
     }
 
     public TransactionsResponse getTransactions(String accountNumber, AccountTypes type) {
-        URL url = type == AccountTypes.CHECKING ?
+        URL url = (type == AccountTypes.CHECKING) ?
                 LaBanquePostaleConstants.Urls.TRANSACTIONS_CHECKING_ACCOUNTS :
                 LaBanquePostaleConstants.Urls.TRANSACTIONS_SAVINGS_ACCOUNTS;
         RequestBuilder request = client.request(url)

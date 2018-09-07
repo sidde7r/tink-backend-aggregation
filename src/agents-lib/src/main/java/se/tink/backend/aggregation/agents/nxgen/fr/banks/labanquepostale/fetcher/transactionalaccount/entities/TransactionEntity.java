@@ -6,17 +6,16 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale.LaBanqu
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.core.Amount;
-import se.tink.libraries.date.DateUtils;
 
 @JsonObject
 public class TransactionEntity {
 
     private LocalDate date;
+    @JsonProperty("montant")
     private Amount amount;
     @JsonProperty("libelle")
     private String label;
 
-    @JsonProperty("montant")
     public void setAmount(double amount) {
         this.amount = new Amount(LaBanquePostaleConstants.CURRENCY, amount);
     }
