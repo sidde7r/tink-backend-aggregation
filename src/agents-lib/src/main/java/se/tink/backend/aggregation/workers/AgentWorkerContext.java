@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -506,6 +507,11 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         }
 
         allAvailableAccountsByUniqueId.put(account.getBankId(), new Pair<>(account, accountFeaturesToCache));
+    }
+
+    @Override
+    public Optional<AccountFeatures> getAccountFeatures(final String uniqueAccountId) {
+        return Optional.ofNullable(allAvailableAccountsByUniqueId.get(uniqueAccountId)).map(p -> p.second);
     }
 
     public void sendAllCachedAccountsToUpdateService() {
