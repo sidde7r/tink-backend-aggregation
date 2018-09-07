@@ -65,50 +65,53 @@ import se.tink.libraries.metrics.MetricRegistry;
 
 public class AgentWorkerOperationFactory {
     private static final Logger log = LoggerFactory.getLogger(AgentWorkerOperationFactory.class);
-    private InstantiateAgentWorkerCommandState instantiateAgentWorkerCommandState;
-    private ServiceContext serviceContext;
-    private EncryptAgentWorkerCommandState encryptAgentWorkerCommandState;
-    private ReportProviderMetricsAgentWorkerCommandState reportMetricsAgentWorkerCommandState;
-    private AgentWorkerOperationState agentWorkerOperationState;
-    private CircuitBreakerAgentWorkerCommandState circuitBreakAgentWorkerCommandState;
-    private DeleteAgentWorkerCommandState deleteAgentWorkerCommandState;
-    private DebugAgentWorkerCommandState debugAgentWorkerCommandState;
-    private LoginAgentWorkerCommandState loginAgentWorkerCommandState;
-    private boolean useAggregationController;
-    private AggregationControllerAggregationClient aggregationControllerAggregationClient;
+
     private final boolean isAggregationCluster;
     private final ClusterCryptoConfigurationRepository clusterCryptoConfigurationRepository;
     private final CacheClient cacheClient;
-
     private final MetricCacheLoader metricCacheLoader;
 
+    // States
+    private AgentWorkerOperationState agentWorkerOperationState;
+    private CircuitBreakerAgentWorkerCommandState circuitBreakAgentWorkerCommandState;
+    private DebugAgentWorkerCommandState debugAgentWorkerCommandState;
+    private DeleteAgentWorkerCommandState deleteAgentWorkerCommandState;
+    private EncryptAgentWorkerCommandState encryptAgentWorkerCommandState;
+    private InstantiateAgentWorkerCommandState instantiateAgentWorkerCommandState;
+    private LoginAgentWorkerCommandState loginAgentWorkerCommandState;
+    private ReportProviderMetricsAgentWorkerCommandState reportMetricsAgentWorkerCommandState;
+
+    private AggregationControllerAggregationClient aggregationControllerAggregationClient;
     private MetricRegistry metricRegistry;
+    private ServiceContext serviceContext;
+    private boolean useAggregationController;
+
 
     @Inject
     public AgentWorkerOperationFactory(ServiceContext serviceContext, MetricRegistry metricRegistry,
-                                       @Named("useAggregationController") boolean useAggregationController, AggregationControllerAggregationClient aggregationControllerAggregationClient) {
-        this.serviceContext = serviceContext;
-
-        // Initialize agent worker command states.
-        metricCacheLoader = new MetricCacheLoader(metricRegistry);
-
-        instantiateAgentWorkerCommandState = new InstantiateAgentWorkerCommandState(serviceContext);
-        encryptAgentWorkerCommandState = new EncryptAgentWorkerCommandState(serviceContext);
-        reportMetricsAgentWorkerCommandState = new ReportProviderMetricsAgentWorkerCommandState(metricRegistry);
-        circuitBreakAgentWorkerCommandState = new CircuitBreakerAgentWorkerCommandState(
-                serviceContext.getConfiguration().getAggregationWorker().getCircuitBreaker(), metricRegistry);
-        deleteAgentWorkerCommandState = new DeleteAgentWorkerCommandState(serviceContext);
-        debugAgentWorkerCommandState = new DebugAgentWorkerCommandState(serviceContext);
-        loginAgentWorkerCommandState = new LoginAgentWorkerCommandState(serviceContext, metricRegistry);
-        agentWorkerOperationState = new AgentWorkerOperationState(metricRegistry);
-        this.metricRegistry = metricRegistry;
-        this.useAggregationController = useAggregationController;
-        this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
+            @Named("useAggregationController") boolean useAggregationController,
+            AggregationControllerAggregationClient aggregationControllerAggregationClient) {
         this.isAggregationCluster = serviceContext.isAggregationCluster();
         this.clusterCryptoConfigurationRepository =
                 serviceContext.getRepository(ClusterCryptoConfigurationRepository.class);
-
         this.cacheClient = serviceContext.getCacheClient();
+        metricCacheLoader = new MetricCacheLoader(metricRegistry);
+
+        // Initialize agent worker command states.
+        agentWorkerOperationState = new AgentWorkerOperationState(metricRegistry);
+        debugAgentWorkerCommandState = new DebugAgentWorkerCommandState(serviceContext);
+        deleteAgentWorkerCommandState = new DeleteAgentWorkerCommandState(serviceContext);
+        circuitBreakAgentWorkerCommandState = new CircuitBreakerAgentWorkerCommandState(
+                serviceContext.getConfiguration().getAggregationWorker().getCircuitBreaker(), metricRegistry);
+        encryptAgentWorkerCommandState = new EncryptAgentWorkerCommandState(serviceContext);
+        instantiateAgentWorkerCommandState = new InstantiateAgentWorkerCommandState(serviceContext);
+        loginAgentWorkerCommandState = new LoginAgentWorkerCommandState(serviceContext, metricRegistry);
+        reportMetricsAgentWorkerCommandState = new ReportProviderMetricsAgentWorkerCommandState(metricRegistry);
+
+        this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
+        this.metricRegistry = metricRegistry;
+        this.serviceContext = serviceContext;
+        this.useAggregationController = useAggregationController;
     }
 
     private AgentWorkerCommandMetricState createMetricState(CredentialsRequest request) {
