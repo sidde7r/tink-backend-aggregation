@@ -36,12 +36,9 @@ public final class SabadellConstants {
         NO_ERROR("noError", "true"),
         CTA_VISTA("type", "CTA_VISTA"),
         CTA_CARD_ALL("filter", "CTA_CARD_ALL"),
-        PAGE_1("page", "1"),
-        ITEMS_PER_PAGE_20("itemsPerPage", "20"),
-        ITEMS_PER_PAGE_5("itemsPerPage", "5"),
+        PAGE("page", "1"),
         ORDER_DESC("order", "desc"),
         ORDER_0("order", "0");
-
 
         private final String key;
         private final String value;
@@ -77,11 +74,23 @@ public final class SabadellConstants {
         public static final String PASSWORD_BS_KEY = "password";
     }
 
+    public static final class FetcherRequest {
+        public static final String ITEMS_PER_PAGE = "itemsPerPage";
+    }
+
     public static final class CreditCardTransactionsRequest {
-        public static final int ITEMS_PER_PAGE_20 = 20;
+        public static final int ITEMS_PER_PAGE = 100;
         public static final String ORDER_DESC = "desc";
         public static final String DATE_FROM = "";
         public static final String DATE_TO = "";
+    }
+
+    public static final class LoansRequest {
+        public static final String ITEMS_PER_PAGE = "20";
+    }
+
+    public static final class PensionPlansRequest {
+        public static final String ITEMS_PER_PAGE = "5";
     }
 
     public static final class ErrorCodes {
