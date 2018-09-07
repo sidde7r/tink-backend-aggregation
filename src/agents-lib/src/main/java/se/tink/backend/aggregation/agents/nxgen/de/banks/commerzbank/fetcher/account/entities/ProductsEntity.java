@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringUtils;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.utils.CreditCardUtils;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.rpc.AccountTypes;
@@ -82,6 +83,7 @@ public class ProductsEntity {
     private int numberOfPositions;
     private boolean priceForPositionsAvailable;
     private String creditCardNumber;
+    private static final AggregationLogger LOGGER = new AggregationLogger(ProductsEntity.class);
 
     public ProductTypeEntity getProductType() {
         return productType;
@@ -323,6 +325,7 @@ public class ProductsEntity {
         case 2:
             return getSavingsOrInvestment();
         default:
+            LOGGER.warnExtraLong(String.format("displayCategoryIndex: %s", productType.getDisplayCategoryIndex()), CommerzbankConstants.LOGTAG.UNKNOWN_ACCOUNT_TYPE);
             return AccountTypes.OTHER;
         }
     }
