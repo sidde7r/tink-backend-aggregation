@@ -477,6 +477,10 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
     }
 
     private void addAggregatorToHeader() {
+        if (headerAggregatorIdentifier == null) {
+            logger.warn("Aggregator header identifier is null. The header should not be null.");
+            return;
+        }
         headers.add("X-Aggregator", headerAggregatorIdentifier);
     }
 
