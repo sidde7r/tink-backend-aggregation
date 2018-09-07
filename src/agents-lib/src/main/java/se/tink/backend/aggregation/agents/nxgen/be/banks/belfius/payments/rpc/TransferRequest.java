@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusSe
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusStringUtils;
 import se.tink.backend.core.Amount;
 import se.tink.backend.core.transfer.Transfer;
-import se.tink.libraries.account.identifiers.BelgianIdentifier;
+import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 
 public class TransferRequest extends BelfiusRequest {
 
@@ -35,7 +35,7 @@ public class TransferRequest extends BelfiusRequest {
 
     private static String getName(Transfer transfer) {
         Optional<String> name = transfer.getDestination().getName();
-        return name.isPresent() ? name.get() : ((BelgianIdentifier) transfer.getDestination()).getIban();
+        return name.isPresent() ? name.get() : ((SepaEurIdentifier) transfer.getDestination()).getIban();
     }
 
     public static BelfiusRequest.Builder create(boolean toOwnAccount, Transfer transfer, String clientHash,
@@ -51,10 +51,10 @@ public class TransferRequest extends BelfiusRequest {
                                         BelfiusConstants.Widget.TRANSFER_PAY),
                                 WidgetEventInformation.newInputValueChangedWidgetEvent(
                                         BelfiusConstants.Widget.ACCOUNT_INPUT,
-                                        "I" + ((BelgianIdentifier) (transfer.getSource())).getIban()),
+                                        "I" + ((SepaEurIdentifier) (transfer.getSource())).getIban()),
                                 WidgetEventInformation.newInputValueChangedWidgetEvent(
                                         BelfiusConstants.Widget.ACCOUNT_OWNER,
-                                        "I" + ((BelgianIdentifier) transfer.getDestination()).getIban()),
+                                        "I" + ((SepaEurIdentifier) transfer.getDestination()).getIban()),
                                 WidgetEventInformation.newInputValueChangedWidgetEvent(
                                         BelfiusConstants.Widget.TO_OWN_ACCOUNT, toOwnAccount ? "Y" : "N"),
                                 WidgetEventInformation.newInputValueChangedWidgetEvent(

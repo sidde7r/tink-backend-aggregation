@@ -10,16 +10,15 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstant
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.serializer.BelfiusHolderNameDeserializer;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.serializer.BelfiusStringDeserializer;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusStringUtils;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.core.Amount;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.identifiers.BelgianIdentifier;
-
+import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 
 @JsonObject
 public class BelfiusProduct implements GeneralAccountEntity{
@@ -111,7 +110,7 @@ public class BelfiusProduct implements GeneralAccountEntity{
                         .setName(this.denominationDescription)
                         .setBankIdentifier(key)
                         .setHolderName(this.holderName)
-                        .addIdentifier(new BelgianIdentifier(this.numberAccount.replace(" ", "")))
+                        .addIdentifier(new SepaEurIdentifier(this.numberAccount.replace(" ", "")))
                         .build()
         ).orElse(null);
     }
@@ -162,7 +161,7 @@ public class BelfiusProduct implements GeneralAccountEntity{
 
     @Override
     public AccountIdentifier generalGetAccountIdentifier() {
-        BelgianIdentifier bi = new BelgianIdentifier(this.extIntAccount.replace(" ", ""));
+        SepaEurIdentifier bi = new SepaEurIdentifier(this.extIntAccount.replace(" ", ""));
         return bi;
     }
 

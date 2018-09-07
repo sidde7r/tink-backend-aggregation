@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.Text;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.identifiers.BelgianIdentifier;
+import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 
 @JsonObject
 public class BeneficiariesContacts implements GeneralAccountEntity {
@@ -196,7 +196,7 @@ public class BeneficiariesContacts implements GeneralAccountEntity {
 
     @Override
     public AccountIdentifier generalGetAccountIdentifier() {
-        return new BelgianIdentifier(mlbAccount.getText().replace(" ", ""));
+        return new SepaEurIdentifier(mlbAccount.getText().replace(" ", ""));
     }
 
     @Override
