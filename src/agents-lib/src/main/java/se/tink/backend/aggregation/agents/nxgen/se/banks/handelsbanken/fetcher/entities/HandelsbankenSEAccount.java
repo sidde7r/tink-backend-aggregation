@@ -5,7 +5,6 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.creditcard.entities.CardInvoiceInfo;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.rpc.TransactionsSEResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.validators.BankIdValidator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.ApplicationEntryPointResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAmount;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
@@ -32,13 +31,14 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
     private String holderName;
     private boolean isCard;
 
-    public Optional<TransactionalAccount> toTransactionalAccount(ApplicationEntryPointResponse applicationEntryPoint) {
+    public Optional<TransactionalAccount> toTransactionalAccount(TransactionsSEResponse transactionsResponse) {
         if (isCreditCard()) {
             return Optional.empty();
         }
 
         BankIdValidator.validate(number);
-        final String accountNumber = applicationEntryPoint.getClearingNumber() + "-" + numberFormatted;
+
+        final String accountNumber = getAccountNumber(transactionsResponse);
 
         AccountTypes accountType = AccountTypes.CHECKING;
         if (NAME_SAVINGS_1.equalsIgnoreCase(name) || NAME_SAVINGS_2.equalsIgnoreCase(name)) {
@@ -55,15 +55,14 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
                 .build());
     }
 
-    public Optional<CreditCardAccount> toCreditCardAccount(TransactionsSEResponse transactionsResponse,
-            ApplicationEntryPointResponse applicationEntryPoint) {
+    public Optional<CreditCardAccount> toCreditCardAccount(TransactionsSEResponse transactionsResponse) {
         if (!isCreditCard()) {
             return Optional.empty();
         }
 
         BankIdValidator.validate(number);
-        final String accountNumber = applicationEntryPoint.getClearingNumber() + "-" + numberFormatted;
 
+        final String accountNumber = getAccountNumber(transactionsResponse);
         CardInvoiceInfo cardInvoiceInfo = transactionsResponse.getCardInvoiceInfo();
 
         return Optional.of(CreditCardAccount.builder(accountNumber)
@@ -76,6 +75,13 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
                 .addIdentifier(new SwedishIdentifier(accountNumber))
                 .addIdentifier(new SwedishSHBInternalIdentifier(number))
                 .build());
+    }
+
+    private String getAccountNumber(TransactionsSEResponse transactionsResponse) {
+        // Clearing number is not set in the account listing, only in the account we receive when we fetch
+        // transactions.
+        HandelsbankenSEAccount transactionsAccount = transactionsResponse.getAccount();
+        return transactionsAccount.getClearingNumber() + "-" + numberFormatted;
     }
 
     /**
@@ -107,6 +113,10 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
         return number != null && number.equals(account.getBankIdentifier());
     }
 
+    public String getClearingNumber() {
+        return clearingNumber;
+    }
+
     public void applyTo(Transfer transfer) {
         SwedishSHBInternalIdentifier identifier = new SwedishSHBInternalIdentifier(number);
         if (identifier.isValid()) {
@@ -127,8 +137,7 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
     }
 
     @VisibleForTesting
-    HandelsbankenSEAccount setAmountAvailable(
-            HandelsbankenAmount amountAvailable) {
+    HandelsbankenSEAccount setAmountAvailable(HandelsbankenAmount amountAvailable) {
         this.amountAvailable = amountAvailable;
         return this;
     }

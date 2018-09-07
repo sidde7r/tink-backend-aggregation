@@ -3,9 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.ApplicationEntryPointResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.entities.AccountGroup;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.transactionalaccount.rpc.AccountListResponse;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
@@ -17,16 +16,15 @@ public class AccountListSEResponse extends AccountListResponse {
     private List<AccountGroup> accountGroups;
 
     @Override
-    public Stream<TransactionalAccount> toTinkAccounts(ApplicationEntryPointResponse applicationEntryPoint) {
+    public Stream<TransactionalAccount> toTinkAccounts(HandelsbankenApiClient client) {
         return accountGroups == null ? Stream.empty() : accountGroups.stream()
-                .flatMap(accountGroup -> accountGroup.toAccounts(applicationEntryPoint));
+                .flatMap(accountGroup -> accountGroup.toAccounts(client));
     }
 
     @Override
-    public Stream<CreditCardAccount> toTinkCreditCard(HandelsbankenApiClient client,
-            ApplicationEntryPointResponse applicationEntryPoint) {
+    public Stream<CreditCardAccount> toTinkCreditCard(HandelsbankenApiClient client) {
         return accountGroups == null ? Stream.empty() : accountGroups.stream()
-                .flatMap(accountGroup -> accountGroup.toTinkCreditCard(client, applicationEntryPoint));
+                .flatMap(accountGroup -> accountGroup.toTinkCreditCard(client));
     }
 
     @Override
