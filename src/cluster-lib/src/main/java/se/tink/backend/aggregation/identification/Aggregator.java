@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.cluster.identification;
 
-import com.google.common.base.Strings;
-
 public class Aggregator {
 
     private String aggregatorIdentifier;
