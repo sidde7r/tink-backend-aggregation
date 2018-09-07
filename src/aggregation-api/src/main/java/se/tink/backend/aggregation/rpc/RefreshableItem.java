@@ -65,6 +65,22 @@ public enum RefreshableItem {
             .add(RefreshableItem.INVESTMENT_TRANSACTIONS)
             .build();
 
+    // Legacy items not included
+    private static final ImmutableSet<RefreshableItem> REFRESHABLE_ITEMS_ALL = ImmutableSet.<RefreshableItem>builder()
+            .add(RefreshableItem.CHECKING_ACCOUNTS)
+            .add(RefreshableItem.CHECKING_TRANSACTIONS)
+            .add(RefreshableItem.SAVING_ACCOUNTS)
+            .add(RefreshableItem.SAVING_TRANSACTIONS)
+            .add(RefreshableItem.CREDITCARD_ACCOUNTS)
+            .add(RefreshableItem.CREDITCARD_TRANSACTIONS)
+            .add(RefreshableItem.LOAN_ACCOUNTS)
+            .add(RefreshableItem.LOAN_TRANSACTIONS)
+            .add(RefreshableItem.INVESTMENT_ACCOUNTS)
+            .add(RefreshableItem.INVESTMENT_TRANSACTIONS)
+            .add(RefreshableItem.EINVOICES)
+            .add(RefreshableItem.TRANSFER_DESTINATIONS)
+            .build();
+
     public boolean isAccountType(AccountTypes type) {
         return accountTypes.contains(type);
     }
