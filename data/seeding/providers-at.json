@@ -3,6 +3,33 @@
     "currency": "EUR",
     "providers": [
         {
+            "name":"at-bankaustria-password",
+            "displayName":"Bank Austria",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"nxgen.at.banks.bankaustria.BankAustriaAgent",
+            "passwordHelpText":null,
+            "transactional":"true",
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"usernumber",
+                    "description":"User number",
+                    "immutable":true
+                },
+                {
+                    "name":"password",
+                    "description":"PIN",
+                    "masked":true,
+                    "numeric":true
+                }
+            ]
+        },
+        {
             "name": "at-bawagpsk-password",
             "displayName": "BAWAG P.S.K.",
             "popular": true,
