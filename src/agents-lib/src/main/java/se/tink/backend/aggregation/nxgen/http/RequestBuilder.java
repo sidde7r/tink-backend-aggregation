@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.Filterable;
 
 public class RequestBuilder extends Filterable<RequestBuilder> {
     private final Filter finalFilter;
+    private final String headerAggregatorIdentifier;
     private URL url;
     private Object body;
     private MultivaluedMap<String, Object> headers;
@@ -27,17 +28,18 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
     public static Logger logger = LoggerFactory
             .getLogger(RequestBuilder.class);
 
-    public RequestBuilder(Filterable filterChain, Filter finalFilter, URL url) {
-        this(filterChain, finalFilter);
+    public RequestBuilder(Filterable filterChain, Filter finalFilter, URL url, String headerAggregatorIdentifier) {
+        this(filterChain, finalFilter, headerAggregatorIdentifier);
         this.url = url;
     }
 
-    public RequestBuilder(Filterable filterChain, Filter finalFilter) {
+    public RequestBuilder(Filterable filterChain, Filter finalFilter, String headerAggregatorIdentifier) {
         super(filterChain);
         this.finalFilter = finalFilter;
 
         // OutBoundHeaders is a case insenstive MultivaluedMap
         headers = new OutBoundHeaders();
+        this.headerAggregatorIdentifier = headerAggregatorIdentifier;
     }
 
     public URL getUrl() {
@@ -459,8 +461,6 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
     }
 
     public RequestBuilder header(String name, Object value) {
-        //TODO: REMOVE THIS ONCE AGGREGATOR IDENTIFIER IS VERIFIED
-        logger.info("Adding the header: {}", name);
         headers.add(name, value);
         return this;
     }
@@ -476,11 +476,16 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
         }
     }
 
+    private void addAggregatorToHeader() {
+        headers.add("X-Aggregator", headerAggregatorIdentifier);
+    }
+
     private <T> T handle(Class<T> c, HttpRequest httpRequest) throws HttpClientException, HttpResponseException {
         // Add the final filter so that we actually send the request
         addFilter(finalFilter);
 
         addCookiesToHeader();
+        addAggregatorToHeader();
         HttpResponse httpResponse = getFilterHead().handle(httpRequest);
 
         // Throw an exception for all statuses >= 400, i.e. the request was not accepted. This is to force us
