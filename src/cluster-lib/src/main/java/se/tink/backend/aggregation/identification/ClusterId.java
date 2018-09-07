@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.cluster.identification;
 
 import com.google.common.base.Strings;
-import com.sun.jersey.spi.container.ContainerRequest;
-import java.util.Objects;
 import se.tink.libraries.metrics.MetricId;
 
 public class ClusterId {
@@ -41,17 +39,6 @@ public class ClusterId {
 
     public String getId() {
         return String.format("%s-%s", name, environment);
-    }
-
-    public static ClusterId createFromContainerRequest(ContainerRequest request) {
-        if (Objects.isNull(request)) {
-            return createEmpty();
-        }
-
-        String clusterName = request.getHeaderValue(CLUSTER_NAME_HEADER);
-        String clusterEnvironment = request.getHeaderValue(CLUSTER_ENVIRONMENT_HEADER);
-
-        return new ClusterId(clusterName, clusterEnvironment);
     }
 
     public static ClusterId createEmpty() {
