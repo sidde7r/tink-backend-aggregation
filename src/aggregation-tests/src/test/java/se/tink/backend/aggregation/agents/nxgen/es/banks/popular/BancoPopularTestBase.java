@@ -29,8 +29,8 @@ public class BancoPopularTestBase {
         TinkHttpClient client = new TinkHttpClient(context, credentials);
         client.setDebugOutput(true);
 
-        bankClient = new BancoPopularApiClient(client, new SessionStorage(), credentials);
         persistentStorage = new BancoPopularPersistentStorage(new PersistentStorage());
+        bankClient = new BancoPopularApiClient(client, new SessionStorage());
         authenticator = new BancoPopularAuthenticator(bankClient, persistentStorage);
     }
 }
