@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 public class TransactionResponse extends ArrayList<TransactionEntity> implements
         TransactionKeyPaginatorResponse<String> {
+    private String previousTransactionId = "";
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
@@ -17,13 +18,27 @@ public class TransactionResponse extends ArrayList<TransactionEntity> implements
                 .collect(Collectors.toList());
     }
 
+    public void setPreviousTransactionId(String previousTransactionId) {
+        this.previousTransactionId = previousTransactionId;
+    }
+
+    private String getLastTransactionId() {
+        if (this.isEmpty()) {
+            return null;
+        }
+        return this.get(this.size() - 1).getId();
+    }
+
     @Override
     public Optional<Boolean> canFetchMore() {
-        return Optional.of(false);
+        if (this.isEmpty()) {
+            return Optional.of(false);
+        }
+        return Optional.of(!getLastTransactionId().equals(previousTransactionId));
     }
 
     @Override
     public String nextKey() {
-        return null;
+        return getLastTransactionId();
     }
 }
