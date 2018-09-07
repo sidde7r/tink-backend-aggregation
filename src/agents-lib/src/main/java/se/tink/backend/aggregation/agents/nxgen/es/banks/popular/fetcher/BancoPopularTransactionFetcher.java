@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularApiClient;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularPersistenStorage;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.entities.BancoPopularContract;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.rpc.FetchTransactionsRequest;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -17,10 +17,10 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 public class BancoPopularTransactionFetcher implements TransactionDatePaginator<TransactionalAccount> {
 
     private final BancoPopularApiClient bankClient;
-    private final BancoPopularPersistenStorage persistentStorage;
+    private final BancoPopularPersistentStorage persistentStorage;
 
     public BancoPopularTransactionFetcher(BancoPopularApiClient bankClient,
-            BancoPopularPersistenStorage persistentStorage) {
+            BancoPopularPersistentStorage persistentStorage) {
 
         this.bankClient = bankClient;
         this.persistentStorage = persistentStorage;

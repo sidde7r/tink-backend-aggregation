@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher;
 
 import java.util.Collection;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularApiClient;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularPersistenStorage;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.entities.BancoPopularContract;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.rpc.SetContractRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.rpc.SetContractResponse;
@@ -10,10 +10,10 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.rpc.Set
 public class BancoPopularContractFetcher {
 
     protected final BancoPopularApiClient bankClient;
-    protected final BancoPopularPersistenStorage persistentStorage;
+    protected final BancoPopularPersistentStorage persistentStorage;
 
     public BancoPopularContractFetcher(BancoPopularApiClient bankClient,
-            BancoPopularPersistenStorage persistentStorage) {
+            BancoPopularPersistentStorage persistentStorage) {
 
         this.bankClient = bankClient;
         this.persistentStorage = persistentStorage;

@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularConstants;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularPersistenStorage;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.entities.BancoPopularContract;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.rpc.FetchAccountsRequest;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -16,7 +16,7 @@ public class BancoPopularInvestmentFetcher extends BancoPopularContractFetcher i
     private static final AggregationLogger log = new AggregationLogger(BancoPopularInvestmentFetcher.class);
 
     public BancoPopularInvestmentFetcher(BancoPopularApiClient bankClient,
-            BancoPopularPersistenStorage persistentStorage) {
+            BancoPopularPersistentStorage persistentStorage) {
         super(bankClient, persistentStorage);
     }
 

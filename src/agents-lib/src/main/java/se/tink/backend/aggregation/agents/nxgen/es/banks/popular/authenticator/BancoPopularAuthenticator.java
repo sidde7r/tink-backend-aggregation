@@ -4,7 +4,7 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularApiClient;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularPersistenStorage;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.authenticator.entities.BancoPopularLoginContract;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.authenticator.rpc.LoginResponse;
@@ -15,10 +15,9 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.password.Pas
 public class BancoPopularAuthenticator implements PasswordAuthenticator {
 
     private final BancoPopularApiClient bankClient;
-    private final BancoPopularPersistenStorage persistentStorage;
+    private final BancoPopularPersistentStorage persistentStorage;
 
-    public BancoPopularAuthenticator(BancoPopularApiClient bankClient, BancoPopularPersistenStorage persistentStorage) {
-
+    public BancoPopularAuthenticator(BancoPopularApiClient bankClient, BancoPopularPersistentStorage persistentStorage) {
         this.bankClient = bankClient;
         this.persistentStorage = persistentStorage;
     }
