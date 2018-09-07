@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusSt
 import se.tink.backend.core.Amount;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.account.identifiers.BelgianIdentifier;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 public class TransferRequest extends BelfiusRequest {
 
@@ -61,7 +62,7 @@ public class TransferRequest extends BelfiusRequest {
                                         BelfiusConstants.Widget.RECIPIENT_NAME, getName(transfer)),
                                 WidgetEventInformation.newInputValueChangedWidgetEvent(
                                         BelfiusConstants.Widget.RECIPIENT_COUNTRY,
-                                        StringUtils.substring(transfer.getDestination().getIdentifier(), 0, 2)),
+                                        StringUtils.substring(((IbanIdentifier)transfer.getDestination()).getIban(), 0, 2)),
                                 WidgetEventInformation.newInputValueChangedWidgetEvent(
                                         BelfiusConstants.Widget.RECIPIENT_MESSAGE, transfer.getDestinationMessage()),
                                 WidgetEventInformation.newInputValueChangedWidgetEvent(
