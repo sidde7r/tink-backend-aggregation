@@ -43,6 +43,12 @@ public class CommerzbankConstants {
         public static final String CREDIT_CARD = "Kreditkarten";
     }
 
+    public static class DISPLAYCATEGORYINDEX {
+        public static final int CHECKING = 1;
+        public static final int SAVINGS_OR_INVESTMENT = 2;
+        public static final int CREDIT = 3;
+    }
+
     public static class ERRORS {
         public static final String PIN_ERROR = "login.pin.error.10203";
     }

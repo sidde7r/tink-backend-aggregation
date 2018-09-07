@@ -320,9 +320,9 @@ public class ProductsEntity {
 
     public AccountTypes getType() {
         switch (productType.getDisplayCategoryIndex()) {
-        case 1:
+        case CommerzbankConstants.DISPLAYCATEGORYINDEX.CHECKING:
             return AccountTypes.CHECKING;
-        case 2:
+        case CommerzbankConstants.DISPLAYCATEGORYINDEX.SAVINGS_OR_INVESTMENT:
             return getSavingsOrInvestment();
         default:
             LOGGER.warnExtraLong(String.format("displayCategoryIndex: %s", productType.getDisplayCategoryIndex()), CommerzbankConstants.LOGTAG.UNKNOWN_ACCOUNT_TYPE);
@@ -331,7 +331,6 @@ public class ProductsEntity {
     }
 
     private AccountTypes getSavingsOrInvestment() {
-        //Savings accounts and Investment accounts have CategoryIndex 2
         if (StringUtils
                 .containsIgnoreCase(productType.getProductName(), CommerzbankConstants.ACCOUNTS.SAVINGS_ACCOUNT)) {
             return AccountTypes.SAVINGS;
@@ -372,7 +371,7 @@ public class ProductsEntity {
     }
 
     public boolean isCreditCard() {
-        return productType.getDisplayCategory().equalsIgnoreCase(CommerzbankConstants.ACCOUNTS.CREDIT_CARD);
+        return productType.getDisplayCategoryIndex() == CommerzbankConstants.DISPLAYCATEGORYINDEX.CREDIT;
     }
 
     public Object getConvertedBalance() {
