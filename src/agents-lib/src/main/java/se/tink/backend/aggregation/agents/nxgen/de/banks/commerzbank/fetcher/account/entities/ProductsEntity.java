@@ -311,6 +311,11 @@ public class ProductsEntity {
         return priceForPositionsAvailable;
     }
 
+    //Commerzbank sometimes sends ProductId as null, which means we cannot map the account type
+    public boolean hasValidProductId(){
+        return productId != null;
+    }
+
     public AccountTypes getType() {
         switch (productType.getDisplayCategoryIndex()) {
         case 1:

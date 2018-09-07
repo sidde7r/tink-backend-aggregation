@@ -27,7 +27,8 @@ public class CommerzbankAccountFetcher implements AccountFetcher<TransactionalAc
         return resultEntity.getItems().get(0).getProducts().stream()
                 .filter(productsEntity -> productsEntity
                         .getProductType()
-                        .getDisplayCategoryIndex() == 1)
+                        .getDisplayCategoryIndex() == 1
+                        && productsEntity.hasValidProductId())
                 .map(ProductsEntity::toTransactionalAccount)
                 .collect(Collectors.toList());
     }

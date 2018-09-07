@@ -59,11 +59,12 @@ public class CommerzbankAgent extends NextGenerationAgent {
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
         CommerzbankCreditCardFetcher accountFetcher = new CommerzbankCreditCardFetcher(apiClient);
         return Optional.of(
-                new CreditCardRefreshController(
-                        this.metricRefreshController,
-                        this.updateController,
-                        accountFetcher,
-                        accountFetcher));
+                new CreditCardRefreshController(metricRefreshController, updateController,
+                        new CommerzbankCreditCardFetcher(apiClient),
+                        new TransactionFetcherController<>(transactionPaginationHelper,
+                                new TransactionPagePaginationController<>(
+                                        new CommerzbankCreditCardFetcher(apiClient), 1)))
+        );
     }
 
     @Override
