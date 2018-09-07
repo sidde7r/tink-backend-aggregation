@@ -135,5 +135,6 @@ public interface AggregationService {
     @Path("provider/ping")
     @TeamOwnership(Team.INTEGRATION)
     @Produces(MediaType.TEXT_PLAIN)
-    String pingProvider(@ClusterContext ClusterInfo clusterInfo);
+    @AllowAnonymous
+    String pingProvider();
 }

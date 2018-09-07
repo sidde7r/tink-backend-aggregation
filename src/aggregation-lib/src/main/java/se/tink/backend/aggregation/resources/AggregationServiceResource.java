@@ -239,13 +239,11 @@ public class AggregationServiceResource implements AggregationService {
     }
 
     @Override
-    public String pingProvider(ClusterInfo clusterInfo){
+    public String pingProvider(){
         try{
             return serviceContext
                     .getProviderServiceFactory()
-                    .getMonitoringService(
-                            clusterInfo.getClusterId().getName(),
-                            clusterInfo.getClusterId().getEnvironment())
+                    .getMonitoringService()
                     .ping();
         } catch(Exception e){
             logger.error("Cannot connect to provider service", e);

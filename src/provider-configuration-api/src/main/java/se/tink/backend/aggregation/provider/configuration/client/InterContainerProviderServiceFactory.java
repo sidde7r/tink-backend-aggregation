@@ -7,5 +7,5 @@ public interface InterContainerProviderServiceFactory {
     String SERVICE_NAME = "provider-configuration";
 
     ProviderService getProviderService(String clusterName, String clusterEnvironment);
-    MonitoringService getMonitoringService(String clusterName, String clusterEnvirontment);
+    MonitoringService getMonitoringService();
 }
