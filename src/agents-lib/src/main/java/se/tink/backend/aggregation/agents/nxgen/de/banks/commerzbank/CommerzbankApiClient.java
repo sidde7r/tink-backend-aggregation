@@ -82,11 +82,11 @@ public class CommerzbankApiClient {
         }
     }
 
-    public TransactionResultEntity transactionOverview(String productType, String identifier, int page,
-            int transactionsPerPage) throws JsonProcessingException {
+    public TransactionResultEntity transactionOverview(String productType, String identifier, int page)
+            throws JsonProcessingException {
         TransactionRequestBody transactionRequestBody = new TransactionRequestBody(
                 new SearchCriteriaDto(null, null, page, CommerzbankConstants.VALUES.AMOUNT_TYPE,
-                        transactionsPerPage, null),
+                        30, null),
                 new Identifier(productType, CommerzbankConstants.VALUES.CURRENCY_VALUE, identifier,
                         CommerzbankConstants.VALUES.PRODUCT_BRANCH));
         String serialized = new ObjectMapper().writeValueAsString(transactionRequestBody);
@@ -100,8 +100,4 @@ public class CommerzbankApiClient {
         return result;
     }
 
-    public TransactionResultEntity transactionOverview(String productType, String identifier, int page)
-            throws JsonProcessingException {
-        return transactionOverview(productType, identifier, page, 30);
-    }
 }
