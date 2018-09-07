@@ -50,7 +50,7 @@ public class AddBeneficiaryRequest extends BelfiusRequest {
                                         ""),
                                 WidgetEventInformation.newInputValueChangedWidgetEvent(
                                         BelfiusConstants.Widget.INP_COUNTRY_CODE,
-                                        StringUtils.substring(transfer.getDestination().getIdentifier(), 0, 2)),
+                                        StringUtils.substring(((IbanIdentifier) (transfer.getDestination())).getIban(), 0, 2)),
                                 WidgetEventInformation.newInputValueChangedWidgetEvent(
                                         BelfiusConstants.Widget.INP_STRUCTURED_COMMUNICATION,
                                         isStructuredMessage ? "Y" : "N"),

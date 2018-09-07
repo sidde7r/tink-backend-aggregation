@@ -13,6 +13,10 @@ public class BelfiusPaymentResponse extends BelfiusResponse {
     public boolean requireSign() {
         return MessageResponse.requireSign(this);
     }
+
+    public boolean requireSignOfBeneficiary() {
+        return MessageResponse.requireSignOfBeneficiary(this);
+    }
 }
 
 

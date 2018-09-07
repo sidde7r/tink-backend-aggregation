@@ -67,16 +67,20 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
                 .executePayment(ownAccount, transfer, createClientSha(transfer),
                         transfer.getMessageType().equals(MessageType.STRUCTURED));
 
-        if (!ownAccount && !containsAccount(((BelgianIdentifier) (transfer.getDestination())).getIban(),
+        boolean signed = false;
+
+        if ( paymentResponse.requireSignOfBeneficiary() && !ownAccount
+                && !containsAccount(((BelgianIdentifier) (transfer.getDestination())).getIban(),
                 apiClient.prepareTransfer().getBeneficiaries())) {
             addBeneficiary(transfer, transfer.getMessageType().equals(MessageType.STRUCTURED));
+            signed = true;
         }
 
         if (paymentResponse.isDoublePayment()) {
             apiClient.doublePayment();
         }
 
-        if (paymentResponse.requireSign()) {
+        if (!signed && paymentResponse.requireSign()) {
             signPayments();
         }
     }
