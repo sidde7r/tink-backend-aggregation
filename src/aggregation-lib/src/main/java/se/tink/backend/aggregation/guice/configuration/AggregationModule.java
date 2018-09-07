@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.api.ProviderService;
 import se.tink.backend.aggregation.client.AggregationServiceFactory;
 import se.tink.backend.aggregation.client.InProcessAggregationServiceFactory;
 import se.tink.backend.aggregation.clients.ProviderServiceFactoryProvider;
-import se.tink.backend.aggregation.cluster.JerseyClusterIdProvider;
+import se.tink.backend.aggregation.cluster.JerseyClusterInfoProvider;
 import se.tink.backend.aggregation.cluster.provider.ClusterInfoProvider;
 import se.tink.backend.aggregation.controllers.ProviderServiceController;
 import se.tink.backend.aggregation.log.AggregationLoggerRequestFilter;
@@ -61,7 +61,7 @@ public class AggregationModule extends AbstractModule {
                 .addResponseFilters(AccessLoggingFilter.class)
                 .addResources(ProviderService.class)
                 //This is not a resource, but a provider
-                .addResources(JerseyClusterIdProvider.class)
+                .addResources(JerseyClusterInfoProvider.class)
                 .bind();
 
     }
