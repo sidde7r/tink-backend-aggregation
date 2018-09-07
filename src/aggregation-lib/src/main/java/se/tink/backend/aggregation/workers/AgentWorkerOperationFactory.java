@@ -119,6 +119,7 @@ public class AgentWorkerOperationFactory {
                 request.getType());
     }
 
+    // TODO: Remove this when all clusters are using the Aggregation cluster and there are no more local aggregation services
     public AgentWorkerOperation createDeleteCredentialsOperation(ClusterInfo clusterInfo, CredentialsRequest request) {
         AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
                 useAggregationController, aggregationControllerAggregationClient, clusterInfo);
