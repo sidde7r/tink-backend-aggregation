@@ -31,6 +31,8 @@ import javax.net.ssl.SSLContext;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
+
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.org.apache.http.HttpHost;
 import se.tink.org.apache.http.client.config.RequestConfig;
 import se.tink.org.apache.http.client.params.ClientPNames;
@@ -63,8 +65,6 @@ import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
 import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 public class TinkHttpClient extends Filterable<TinkHttpClient> {
@@ -91,8 +91,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     private final Filter finalFilter = new SendRequestFilter();
     private final PersistentHeaderFilter persistentHeaderFilter = new PersistentHeaderFilter();
 
-    public static final Logger logger = LoggerFactory
-            .getLogger(TinkHttpClient.class);
+    private static final AggregationLogger logger = new AggregationLogger(TinkHttpClient.class);
 
     private class DEFAULTS {
         private final static String DEFAULT_USER_AGENT = AbstractAgent.DEFAULT_USER_AGENT;
@@ -110,7 +109,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
     public String getHeaderAggregatorIdentifier(){
         if(aggregator != null){
-            logger.info("Aggregator header set to: {}", aggregator.getAggregatorIdentifier());
+            logger.info("Aggregator header set to: " + aggregator.getAggregatorIdentifier());
             return aggregator.getAggregatorIdentifier();
         }
 
@@ -198,7 +197,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         //Todo: Remove this once the aggregator identifier is verified
         if (Objects.nonNull(context) &&
                 context.getClusterInfo().getClusterId().getId().equalsIgnoreCase("oxford-staging")) {
-            logger.info("Setting the outgoing aggregator identifier header to: {}", getHeaderAggregatorIdentifier());
+            logger.info("Setting the outgoing aggregator identifier header to: " + getHeaderAggregatorIdentifier());
         }
     }
 
