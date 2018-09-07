@@ -8,11 +8,9 @@ spec:
   - port: 443
     targetPort: https-api
     name: https-api
-  {{- if .Values.insecureHttpServer }}
   - port: 80
     targetPort: http-api
     name: http-api
-  {{- end }}
   selector:
     app: provider-configuration-service
 
