@@ -82,38 +82,6 @@ public class AgentWorkerOperationFactory {
 
     private final MetricCacheLoader metricCacheLoader;
 
-    private static final ImmutableSet<RefreshableItem> REFRESHABLE_ITEMS_ALL = ImmutableSet.<RefreshableItem>builder()
-            .add(RefreshableItem.CHECKING_ACCOUNTS)
-            .add(RefreshableItem.CHECKING_TRANSACTIONS)
-            .add(RefreshableItem.SAVING_ACCOUNTS)
-            .add(RefreshableItem.SAVING_TRANSACTIONS)
-            .add(RefreshableItem.CREDITCARD_ACCOUNTS)
-            .add(RefreshableItem.CREDITCARD_TRANSACTIONS)
-            .add(RefreshableItem.LOAN_ACCOUNTS)
-            .add(RefreshableItem.LOAN_TRANSACTIONS)
-            .add(RefreshableItem.INVESTMENT_ACCOUNTS)
-            .add(RefreshableItem.INVESTMENT_TRANSACTIONS)
-            .add(RefreshableItem.EINVOICES)
-            .add(RefreshableItem.TRANSFER_DESTINATIONS)
-            .build();
-
-    private static final ImmutableSet<RefreshableItem> REFRESHABLE_ITEMS_TRANSACTIONS = ImmutableSet.<RefreshableItem>builder()
-            .add(RefreshableItem.CHECKING_TRANSACTIONS)
-            .add(RefreshableItem.SAVING_TRANSACTIONS)
-            .add(RefreshableItem.CREDITCARD_TRANSACTIONS)
-            .add(RefreshableItem.LOAN_TRANSACTIONS)
-            .add(RefreshableItem.INVESTMENT_TRANSACTIONS)
-            .build();
-
-    private static final ImmutableSet<RefreshableItem> REFRESHABLE_ITEMS_ACCOUNTS = ImmutableSet.<RefreshableItem>builder()
-            .add(RefreshableItem.CHECKING_ACCOUNTS)
-            .add(RefreshableItem.SAVING_ACCOUNTS)
-            .add(RefreshableItem.CREDITCARD_ACCOUNTS)
-            .add(RefreshableItem.LOAN_ACCOUNTS)
-            .add(RefreshableItem.INVESTMENT_ACCOUNTS)
-            .build();
-
-
     private MetricRegistry metricRegistry;
 
     @Inject
@@ -165,12 +133,12 @@ public class AgentWorkerOperationFactory {
     private Set<RefreshableItem> convertLegacyItems(Set<RefreshableItem> items) {
         if (items.contains(RefreshableItem.ACCOUNTS)) {
             items.remove(RefreshableItem.ACCOUNTS);
-            items.addAll(REFRESHABLE_ITEMS_ACCOUNTS);
+            items.addAll(RefreshableItem.REFRESHABLE_ITEMS_ACCOUNTS);
         }
 
         if (items.contains(RefreshableItem.TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS)) {
             items.remove(RefreshableItem.TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS);
-            items.addAll(REFRESHABLE_ITEMS_TRANSACTIONS);
+            items.addAll(RefreshableItem.REFRESHABLE_ITEMS_TRANSACTIONS);
         }
 
         return items;
@@ -254,7 +222,7 @@ public class AgentWorkerOperationFactory {
             // Add all available items if none were submitted.
             // Todo: Remove this once it has been verified that no consumer sends in an empty/null list.
             // Instead it should abort if it's empty (empty list == do nothing).
-            request.setItemsToRefresh(REFRESHABLE_ITEMS_ALL);
+            request.setItemsToRefresh(RefreshableItem.REFRESHABLE_ITEMS_ALL);
         }
 
         log.debug("Creating refresh operation chain for credential");
@@ -325,10 +293,10 @@ public class AgentWorkerOperationFactory {
         commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)));
         commands.add(new TransferAgentWorkerCommand(context, request, createMetricState(request)));
 
-        commands.addAll(createRefreshAccountsCommandChain(request, context, REFRESHABLE_ITEMS_ALL));
+        commands.addAll(createRefreshAccountsCommandChain(request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
         commands.add(new SelectAccountsToAggregateCommand(context, request));
         // Refresh everything
-        commands.addAll(createRefreshableItemsChain(request, context, REFRESHABLE_ITEMS_ALL));
+        commands.addAll(createRefreshableItemsChain(request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
 
         return new AgentWorkerOperation(agentWorkerOperationState, "execute-transfer", request, commands,
                 context);

@@ -49,7 +49,7 @@ public enum RefreshableItem {
             RefreshableItem.TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS
     ));
 
-    private static final ImmutableSet<RefreshableItem> REFRESHABLE_ITEMS_ACCOUNTS = ImmutableSet.<RefreshableItem>builder()
+    public static final ImmutableSet<RefreshableItem> REFRESHABLE_ITEMS_ACCOUNTS = ImmutableSet.<RefreshableItem>builder()
             .add(RefreshableItem.CHECKING_ACCOUNTS)
             .add(RefreshableItem.SAVING_ACCOUNTS)
             .add(RefreshableItem.CREDITCARD_ACCOUNTS)
@@ -57,7 +57,7 @@ public enum RefreshableItem {
             .add(RefreshableItem.INVESTMENT_ACCOUNTS)
             .build();
 
-    private static final ImmutableSet<RefreshableItem> REFRESHABLE_ITEMS_TRANSACTIONS = ImmutableSet.<RefreshableItem>builder()
+    public static final ImmutableSet<RefreshableItem> REFRESHABLE_ITEMS_TRANSACTIONS = ImmutableSet.<RefreshableItem>builder()
             .add(RefreshableItem.CHECKING_TRANSACTIONS)
             .add(RefreshableItem.SAVING_TRANSACTIONS)
             .add(RefreshableItem.CREDITCARD_TRANSACTIONS)
@@ -66,7 +66,7 @@ public enum RefreshableItem {
             .build();
 
     // Legacy items not included
-    private static final ImmutableSet<RefreshableItem> REFRESHABLE_ITEMS_ALL = ImmutableSet.<RefreshableItem>builder()
+    public static final ImmutableSet<RefreshableItem> REFRESHABLE_ITEMS_ALL = ImmutableSet.<RefreshableItem>builder()
             .add(RefreshableItem.CHECKING_ACCOUNTS)
             .add(RefreshableItem.CHECKING_TRANSACTIONS)
             .add(RefreshableItem.SAVING_ACCOUNTS)
