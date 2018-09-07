@@ -10,7 +10,7 @@ public class Aggregator {
     public Aggregator() {
     }
 
-    public Aggregator(String aggregatorIdentifier){
+    private Aggregator(String aggregatorIdentifier){
         this.aggregatorIdentifier = aggregatorIdentifier;
     }
 
