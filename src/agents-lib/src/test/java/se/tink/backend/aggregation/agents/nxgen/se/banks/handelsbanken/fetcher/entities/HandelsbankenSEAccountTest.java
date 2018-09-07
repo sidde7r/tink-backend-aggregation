@@ -5,8 +5,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.entities.HandelsbankenClearingNumber;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.ApplicationEntryPointResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.rpc.TransactionsSEResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAmount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
@@ -77,10 +76,12 @@ public class HandelsbankenSEAccountTest {
                 .setAmountAvailable(new HandelsbankenAmount().setCurrency("SEK").setAmount(20.20)
                 ).setNumberFormatted("123 456 78");
 
-        ApplicationEntryPointResponse applicationEntryPoint = mock(ApplicationEntryPointResponse.class);
-        when(applicationEntryPoint.getClearingNumber()).thenReturn(HandelsbankenClearingNumber.create("1234"));
+        TransactionsSEResponse transactionsResponse = mock(TransactionsSEResponse.class);
+        HandelsbankenSEAccount transactionsAccount = mock(HandelsbankenSEAccount.class);
+        when(transactionsResponse.getAccount()).thenReturn(transactionsAccount);
+        when(transactionsAccount.getClearingNumber()).thenReturn("1234");
 
-        tinkAccount = account.toTransactionalAccount(applicationEntryPoint).orElseThrow(() -> new IllegalStateException("No account found!"));
+        tinkAccount = account.toTransactionalAccount(transactionsResponse).orElseThrow(() -> new IllegalStateException("No account found!"));
     }
 
     private void assertTinkAccountIsValid() {

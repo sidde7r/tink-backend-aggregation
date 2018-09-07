@@ -28,7 +28,7 @@ public class HandelsbankenCreditCardAccountFetcher implements AccountFetcher<Cre
         List<CreditCardAccount> creditCardAccounts = sessionStorage.applicationEntryPoint().map(applicationEntryPoint -> {
                     AccountListResponse accountList = client.accountList(applicationEntryPoint);
                     sessionStorage.persist(accountList);
-                    return accountList.toTinkCreditCard(client, applicationEntryPoint).collect(Collectors.toList());
+                    return accountList.toTinkCreditCard(client).collect(Collectors.toList());
                 }
         ).orElse(Collections.emptyList());
 
