@@ -193,14 +193,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         setMaxRedirects(DEFAULTS.MAX_REDIRECTS);
         setFollowRedirects(DEFAULTS.FOLLOW_REDIRECTS);
         setDebugOutput(DEFAULTS.DEBUG_OUTPUT);
-        addPersistentHeader("X-Aggregator", getHeaderAggregatorIdentifier());
         setUserAgent(DEFAULTS.DEFAULT_USER_AGENT);
-
-
-        //Todo: Remove this once the aggregator identifier is verified 
-        if (Objects.nonNull(context) && Objects.nonNull(context.getClusterInfo())) {
-            logger.info("Setting the outgoing aggregator identifier header to: " + getHeaderAggregatorIdentifier() + " clusterId: " + context.getClusterInfo().getClusterId().getId());
-        }
     }
 
     public TinkHttpClient(@Nullable AgentContext context, @Nullable Credentials credentials) {
@@ -445,15 +438,15 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     }
 
     public RequestBuilder request(URL url) {
-        return new RequestBuilder(this, this.finalFilter, url);
+        return new RequestBuilder(this, this.finalFilter, url, getHeaderAggregatorIdentifier());
     }
 
     public <T> T request(Class<T> c, HttpRequest request) throws HttpClientException, HttpResponseException {
-        return new RequestBuilder(this, this.finalFilter).raw(c, request);
+        return new RequestBuilder(this, this.finalFilter, getHeaderAggregatorIdentifier()).raw(c, request);
     }
 
     public void request(HttpRequest request) throws HttpClientException, HttpResponseException {
-        new RequestBuilder(this, this.finalFilter).raw(request);
+        new RequestBuilder(this, this.finalFilter, getHeaderAggregatorIdentifier()).raw(request);
     }
     // --- Requests ---
 }
