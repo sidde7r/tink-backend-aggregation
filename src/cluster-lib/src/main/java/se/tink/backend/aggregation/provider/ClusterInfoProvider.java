@@ -76,5 +76,4 @@ public class ClusterInfoProvider {
                 configuration.isDisableRequestCompression(),
                 aggregator);
     }
-
 }

@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.queue;
 
 import com.google.inject.Inject;
-import java.util.Optional;
 import java.util.concurrent.RejectedExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +14,6 @@ import se.tink.backend.aggregation.workers.AgentWorkerRefreshOperationCreatorWra
 import se.tink.backend.queue.sqs.EncodingHandler;
 import se.tink.backend.queue.sqs.QueueMessageAction;
 import java.io.IOException;
-import se.tink.libraries.metrics.Counter;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 
@@ -49,13 +47,12 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
                     agentWorkerCommandFactory,
                     refreshInformation.getRequest(),
                     ClusterInfo.createForAggregationCluster(
-                            ClusterId.create(refreshInformation.getName(), refreshInformation.getEnvironment(),
-                                    refreshInformation.getAggregator()),
+                            ClusterId.create(refreshInformation.getName(), refreshInformation.getEnvironment()),
                             refreshInformation.getAggregationControllerHost(),
                             refreshInformation.getApiToken(),
                             refreshInformation.getClientCertificate(),
-                            refreshInformation.isDisableRequestCompression()
-                    ));
+                            refreshInformation.isDisableRequestCompression(),
+                            refreshInformation.getAggregator()));
 
             MDC.setContextMap(refreshInformation.getMDCContext());
             agentWorker.executeAutomaticRefresh(agentWorkerRefreshOperationCreatorWrapper);

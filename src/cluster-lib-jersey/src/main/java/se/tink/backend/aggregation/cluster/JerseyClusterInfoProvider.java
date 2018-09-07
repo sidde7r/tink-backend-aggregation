@@ -12,23 +12,22 @@ import se.tink.backend.aggregation.cluster.annotation.ClusterContext;
 import se.tink.backend.aggregation.cluster.exception.ClusterNotValid;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
-import se.tink.backend.aggregation.cluster.provider.ClusterIdProvider;
+import se.tink.backend.aggregation.cluster.provider.ClusterInfoProvider;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.lang.reflect.Type;
 
-public class JerseyClusterIdProvider extends AbstractHttpContextInjectable<ClusterInfo>
+public class JerseyClusterInfoProvider extends AbstractHttpContextInjectable<ClusterInfo>
         implements InjectableProvider<ClusterContext, Type> {
 
     private static final String CLUSTER_NAME_HEADER = ClusterId.CLUSTER_NAME_HEADER;
     private static final String CLUSTER_ENVIRONMENT_HEADER = ClusterId.CLUSTER_ENVIRONMENT_HEADER;
-    private static final String AGGREGATOR_NAME_HEADER = ClusterId.AGGREGATOR_NAME_HEADER;
-    private ClusterIdProvider clusterIdProvider;
+    private ClusterInfoProvider clusterInfoProvider;
 
     @Inject
-    public JerseyClusterIdProvider(ClusterIdProvider clusterIdProvider) {
-        this.clusterIdProvider = clusterIdProvider;
+    public JerseyClusterInfoProvider(ClusterInfoProvider clusterInfoProvider) {
+        this.clusterInfoProvider = clusterInfoProvider;
     }
 
     @Override
@@ -47,12 +46,11 @@ public class JerseyClusterIdProvider extends AbstractHttpContextInjectable<Clust
     @Override
     public ClusterInfo getValue(HttpContext c) {
         HttpRequestContext request = c.getRequest();
-        String aggregator = request.getHeaderValue(AGGREGATOR_NAME_HEADER);
         String name = request.getHeaderValue(CLUSTER_NAME_HEADER);
         String environment = request.getHeaderValue(CLUSTER_ENVIRONMENT_HEADER);
 
         try {
-            return clusterIdProvider.getClusterInfo(name, environment, aggregator);
+            return clusterInfoProvider.getClusterInfo(name, environment);
         } catch (ClusterNotValid clusterNotValid) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
