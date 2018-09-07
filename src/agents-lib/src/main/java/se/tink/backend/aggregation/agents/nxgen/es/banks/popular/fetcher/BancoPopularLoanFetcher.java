@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.rpc.Fet
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
-import se.tink.backend.aggregation.rpc.Credentials;
 
 public class BancoPopularLoanFetcher extends BancoPopularContractFetcher implements AccountFetcher<LoanAccount> {
     private static final AggregationLogger log = new AggregationLogger(BancoPopularLoanFetcher.class);
@@ -27,8 +26,8 @@ public class BancoPopularLoanFetcher extends BancoPopularContractFetcher impleme
             for (BancoPopularContract contract : contracts) {
 
                 if (selectCurrentContract(contract)) {
-                    FetchAccountsRequest fetchLoanAccountsRequest = new FetchAccountsRequest()
-                            .setIdentificador(BancoPopularConstants.Fetcher.PRESTAMO);
+                    FetchAccountsRequest fetchLoanAccountsRequest = FetchAccountsRequest.build(
+                            BancoPopularConstants.Fetcher.PRESTAMO);
 
                     String fetchLoanAccountsResponse = bankClient.fetchLoanAccounts(fetchLoanAccountsRequest);
                     if (fetchLoanAccountsResponse.contains("\"faultIndicator\":true")) {

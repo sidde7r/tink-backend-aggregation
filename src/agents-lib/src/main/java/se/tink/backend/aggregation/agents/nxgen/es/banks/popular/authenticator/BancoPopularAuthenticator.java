@@ -24,7 +24,7 @@ public class BancoPopularAuthenticator implements PasswordAuthenticator {
 
     @Override
     public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
-        LoginRequest loginRequest = new LoginRequest().setUsuario(username).setIdPassword(password);
+        LoginRequest loginRequest = LoginRequest.build(username, password);
 
         LoginResponse response = bankClient.login(loginRequest);
 
@@ -32,10 +32,7 @@ public class BancoPopularAuthenticator implements PasswordAuthenticator {
         BancoPopularContracts contracts = new BancoPopularContracts();
 
         for (BancoPopularLoginContract loginContract : loginContracts) {
-            contracts.addLoginContract(new BancoPopularContract()
-                    .setnItnCont(loginContract.getnItnCont())
-                    .setBanco(loginContract.getBanco())
-                    .setOficina(loginContract.getOficina()));
+            contracts.addLoginContract(BancoPopularContract.build(loginContract));
        }
 
        // store for subsequent calls

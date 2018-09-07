@@ -32,12 +32,7 @@ public class BancoPopularContractFetcher {
     }
 
     private SetContractResponse setCurrentContract(BancoPopularContract contract) {
-        SetContractRequest setContractRequest = new SetContractRequest()
-                .setBanco(contract.getBanco())
-                .setOficina(contract.getOficina())
-                .setContract(contract.getnItnCont())
-                .setIp(persistentStorage.getIp());
-
-        return bankClient.setContract(setContractRequest);
+        return bankClient.setContract(
+                SetContractRequest.build(contract, persistentStorage.getIp()));
     }
 }
