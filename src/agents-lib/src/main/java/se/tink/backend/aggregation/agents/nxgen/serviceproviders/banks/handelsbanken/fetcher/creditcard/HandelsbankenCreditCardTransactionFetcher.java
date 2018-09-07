@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.creditcard;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,7 +28,7 @@ public class HandelsbankenCreditCardTransactionFetcher implements TransactionFet
 
         // Fetch transactions for creditcards that are accounts.
         // They will have both account transactions and credit card transactions.
-        List<AggregationTransaction> transactions = sessionStorage.accountList()
+        List<AggregationTransaction> accountTransactions = sessionStorage.accountList()
                 .flatMap(accountList -> accountList.find(account))
                 .filter(HandelsbankenAccount::isCreditCard)
                 .map(handelsbankenAccount -> {
@@ -46,12 +47,15 @@ public class HandelsbankenCreditCardTransactionFetcher implements TransactionFet
                 })
                 .orElse(Collections.emptyList());
 
-        transactions.addAll(sessionStorage.creditCards()
+        List<AggregationTransaction> transactions = new ArrayList<>(accountTransactions);
+
+        List<AggregationTransaction> creditCardTransactions = sessionStorage.creditCards()
                 .flatMap(creditCards -> creditCards.find(account))
                 .map(creditCard -> client.creditCardTransactions(creditCard)
                         .tinkTransactions(creditCard, account))
-                .orElse(Collections.emptyList())
-        );
+                .orElse(Collections.emptyList());
+
+        transactions.addAll(creditCardTransactions);
 
         return transactions;
     }
