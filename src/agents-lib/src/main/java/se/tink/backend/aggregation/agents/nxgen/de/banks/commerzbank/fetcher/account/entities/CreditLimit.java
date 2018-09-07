@@ -4,15 +4,20 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.core.Amount;
 
 @JsonObject
-public class BalanceEntity {
-    private Double value;
+public class CreditLimit {
+    private String value;
     private String currency;
 
-    public Double getValue() {
+    public String getValue() {
         return value;
     }
 
     public String getCurrency() {
         return currency;
+    }
+
+    public Amount toTinkAmount(){
+        double limitValue = Double.parseDouble(value);
+        return new Amount(currency, limitValue);
     }
 }

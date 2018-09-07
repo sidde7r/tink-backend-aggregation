@@ -4,6 +4,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.CommerzbankPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.account.CommerzbankAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.credit.CommerzbankCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.transaction.CommerzbankTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.session.CommerzbankSessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -56,7 +57,14 @@ public class CommerzbankAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.empty();
+        CommerzbankCreditCardFetcher accountFetcher = new CommerzbankCreditCardFetcher(apiClient);
+        return Optional.of(
+                new CreditCardRefreshController(metricRefreshController, updateController,
+                        new CommerzbankCreditCardFetcher(apiClient),
+                        new TransactionFetcherController<>(transactionPaginationHelper,
+                                new TransactionPagePaginationController<>(
+                                        new CommerzbankCreditCardFetcher(apiClient), 1)))
+        );
     }
 
     @Override

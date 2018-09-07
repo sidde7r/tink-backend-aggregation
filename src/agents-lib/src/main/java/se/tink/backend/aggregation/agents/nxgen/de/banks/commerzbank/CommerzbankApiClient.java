@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CommerzbankApiClient {
@@ -53,11 +54,11 @@ public class CommerzbankApiClient {
         return firstRequest().post(HttpResponse.class, serialized);
     }
 
-    public ResultEntity financialOverview()  {
+    public ResultEntity financialOverview() {
         String resultString = makeRequest(CommerzbankConstants.URLS.OVERVIEW).post(String.class);
         LOGGER.infoExtraLong(resultString, CommerzbankConstants.LOGTAG.FINANCE_OVERVIEW);
         try {
-         return  new ObjectMapper().readValue(resultString, RootModel.class).getResult();
+            return new ObjectMapper().readValue(resultString, RootModel.class).getResult();
         } catch (IOException e) {
             throw new IllegalStateException(e.getMessage());
         }
@@ -83,7 +84,6 @@ public class CommerzbankApiClient {
 
     public TransactionResultEntity transactionOverview(String productType, String identifier, int page)
             throws JsonProcessingException {
-
         TransactionRequestBody transactionRequestBody = new TransactionRequestBody(
                 new SearchCriteriaDto(null, null, page, CommerzbankConstants.VALUES.AMOUNT_TYPE,
                         30, null),
@@ -99,4 +99,5 @@ public class CommerzbankApiClient {
 
         return result;
     }
+
 }
