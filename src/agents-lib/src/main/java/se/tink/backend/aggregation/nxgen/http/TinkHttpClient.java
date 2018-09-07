@@ -184,6 +184,9 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         addFilter(this.persistentHeaderFilter);
 
         this.aggregator = Objects.isNull(context) ? Aggregator.getDefault(): context.getAggregator();
+        if (Objects.isNull(context)) {
+            logger.info("Context is null.");
+        }
 
         setTimeout(DEFAULTS.TIMEOUT_MS);
         setChunkedEncoding(DEFAULTS.CHUNKED_ENCODING);
