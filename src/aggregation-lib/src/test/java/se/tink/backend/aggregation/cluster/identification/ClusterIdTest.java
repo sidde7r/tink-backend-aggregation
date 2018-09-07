@@ -8,7 +8,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ClusterIdTest {
     private static final String NAME = "clusterName";
     private static final String ENVIRONMENT = "clusterEnvironment";
-    private static final Aggregator AGGREGATOR = Aggregator.of(Aggregator.DEFAULT);
 
     @Test(expected = WebApplicationException.class)
     public void whenEmptyClusterId_throwWebApplicationException() {
