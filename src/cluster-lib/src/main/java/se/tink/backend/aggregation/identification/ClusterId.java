@@ -51,14 +51,14 @@ public class ClusterId {
         String clusterName = request.getHeaderValue(CLUSTER_NAME_HEADER);
         String clusterEnvironment = request.getHeaderValue(CLUSTER_ENVIRONMENT_HEADER);
 
-        return create(clusterName, clusterEnvironment);
+        return new ClusterId(clusterName, clusterEnvironment);
     }
 
     public static ClusterId createEmpty() {
         return new ClusterId(null, null);
     }
 
-    public static ClusterId create(String name, String environment) {
+    public static ClusterId of(String name, String environment) {
         return new ClusterId(name, environment);
     }
 }

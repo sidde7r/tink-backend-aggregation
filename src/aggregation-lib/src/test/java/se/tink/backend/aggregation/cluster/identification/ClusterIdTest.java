@@ -20,7 +20,7 @@ public class ClusterIdTest {
 
     @Test(expected = WebApplicationException.class)
     public void whenEnvironmentNull_throwWebApplicationException() {
-        ClusterId validClusterId = ClusterId.create(NAME, null, null);
+        ClusterId validClusterId = ClusterId.of(NAME, null);
         Optional.of(validClusterId)
                 .filter(ClusterId::isValidId)
                 .orElseThrow(WebApplicationException::new);
@@ -28,7 +28,7 @@ public class ClusterIdTest {
 
     @Test(expected = WebApplicationException.class)
     public void whenNameNull_throwWebApplicationException() {
-        ClusterId validClusterId = ClusterId.create(null, ENVIRONMENT, null);
+        ClusterId validClusterId = ClusterId.of(null, ENVIRONMENT);
         Optional.of(validClusterId)
                 .filter(ClusterId::isValidId)
                 .orElseThrow(WebApplicationException::new);
@@ -36,7 +36,7 @@ public class ClusterIdTest {
 
     @Test
     public void whenValidClusterId_doNotThrow() {
-        ClusterId validClusterId = ClusterId.create(NAME, ENVIRONMENT, AGGREGATOR);
+        ClusterId validClusterId = ClusterId.of(NAME, ENVIRONMENT);
         Optional.of(validClusterId)
                 .filter(ClusterId::isValidId)
                 .orElseThrow(WebApplicationException::new);
@@ -44,13 +44,13 @@ public class ClusterIdTest {
 
     @Test
     public void whenValidClusterId_assertThatClusterIdIsValid() {
-        ClusterId clusterId = ClusterId.create(NAME, ENVIRONMENT, AGGREGATOR);
+        ClusterId clusterId = ClusterId.of(NAME, ENVIRONMENT);
         assertThat(clusterId.isValidId()).isTrue();
     }
 
     @Test
     public void whenValidClusterId_assertThatIdEqualsExpectedId() {
-        ClusterId validClusterId = ClusterId.create(NAME, ENVIRONMENT, AGGREGATOR);
+        ClusterId validClusterId = ClusterId.of(NAME, ENVIRONMENT);
         ClusterId clusterId = Optional.of(validClusterId)
                 .filter(ClusterId::isValidId)
                 .orElseThrow(WebApplicationException::new);

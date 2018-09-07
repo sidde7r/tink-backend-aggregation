@@ -47,7 +47,7 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
                     agentWorkerCommandFactory,
                     refreshInformation.getRequest(),
                     ClusterInfo.createForAggregationCluster(
-                            ClusterId.create(refreshInformation.getName(), refreshInformation.getEnvironment()),
+                            ClusterId.of(refreshInformation.getName(), refreshInformation.getEnvironment()),
                             refreshInformation.getAggregationControllerHost(),
                             refreshInformation.getApiToken(),
                             refreshInformation.getClientCertificate(),

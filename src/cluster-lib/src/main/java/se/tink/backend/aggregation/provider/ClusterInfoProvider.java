@@ -64,7 +64,7 @@ public class ClusterInfoProvider {
         ClusterHostConfiguration configuration = getValidClusterHost(clusterName, clusterEnvironment);
         Aggregator aggregator = createAggregator(configuration);
 
-        clusterId = ClusterId.create(clusterName,
+        clusterId = ClusterId.of(clusterName,
                 clusterEnvironment);
 
         return  ClusterInfo.createForAggregationCluster(clusterId,
