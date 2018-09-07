@@ -31,11 +31,7 @@ public class ClusterIdProvider {
         Preconditions.checkNotNull(configuration.getHost());
         Preconditions.checkNotNull(configuration.getApiToken());
         Preconditions.checkNotNull(configuration.getClientCertificate());
-        /*
-        Uncomment this as soon as the databases are updated with the new aggregator identifier
-
         Preconditions.checkNotNull(configuration.getAggregatorIdentifier());
-        */
     }
 
     private ClusterHostConfiguration getValidClusterHost(String clusterName, String clusterEnvironment) throws ClusterNotValid {
@@ -56,13 +52,10 @@ public class ClusterIdProvider {
             return Aggregator.of(aggregationName);
         }
 
-        /*
-        Uncomment this as soon as the databases are updated with the new aggregator identifier
-
         if (!Strings.isNullOrEmpty(configuration.getAggregatorIdentifier())) {
             return Aggregator.of(configuration.getAggregatorIdentifier());
         }
-        */
+
 
         return Aggregator.of(Aggregator.DEFAULT);
     }
