@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.rpc.AccountTypes;
 
 public class LaBanquePostaleTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount>,
         TransactionPagePaginator<TransactionalAccount> {
@@ -26,13 +27,8 @@ public class LaBanquePostaleTransactionalAccountFetcher implements AccountFetche
     }
 
     private static boolean isTransactionalAccount(AccountEntity accountEntity) {
-        switch (accountEntity.toTinkAccountType()) {
-        case CHECKING:
-        case SAVINGS:
-            return true;
-        default:
-            return false;
-        }
+        AccountTypes tinkType = accountEntity.toTinkAccountType();
+        return AccountTypes.CHECKING.equals(tinkType) || AccountTypes.SAVINGS.equals(tinkType);
     }
 
     @Override
