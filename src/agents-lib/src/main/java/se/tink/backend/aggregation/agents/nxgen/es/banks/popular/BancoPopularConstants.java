@@ -31,6 +31,7 @@ public class BancoPopularConstants {
 
     public static class Fetcher {
         public static final String OK = "OK";
+        public static final String CAN_FETCH_MORE = "S";
 
         public static final String TIPO_MOV_ECRMVTO_2 = "T";
         public static final int CONCEP_ECRMVTO_2 = 98;
