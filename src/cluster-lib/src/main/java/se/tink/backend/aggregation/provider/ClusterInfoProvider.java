@@ -47,8 +47,6 @@ public class ClusterInfoProvider {
     }
 
     private Aggregator createAggregator(ClusterHostConfiguration configuration) {
-
-
         if (!Strings.isNullOrEmpty(configuration.getAggregatorIdentifier())) {
             return Aggregator.of(configuration.getAggregatorIdentifier());
         }
