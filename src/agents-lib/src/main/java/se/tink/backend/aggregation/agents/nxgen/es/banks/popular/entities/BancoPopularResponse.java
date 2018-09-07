@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.popular.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonObject
 public class BancoPopularResponse {
     private boolean faultIndicator;
     private String nextPage;
@@ -13,31 +13,15 @@ public class BancoPopularResponse {
         return faultIndicator;
     }
 
-    public void setFaultIndicator(boolean faultIndicator) {
-        this.faultIndicator = faultIndicator;
-    }
-
     public String getNextPage() {
         return nextPage;
-    }
-
-    public void setNextPage(String nextPage) {
-        this.nextPage = nextPage;
     }
 
     public String getFaultMessage() {
         return faultMessage;
     }
 
-    public void setFaultMessage(String faultMessage) {
-        this.faultMessage = faultMessage;
-    }
-
     public String getFaultCode() {
         return faultCode;
-    }
-
-    public void setFaultCode(String faultCode) {
-        this.faultCode = faultCode;
     }
 }

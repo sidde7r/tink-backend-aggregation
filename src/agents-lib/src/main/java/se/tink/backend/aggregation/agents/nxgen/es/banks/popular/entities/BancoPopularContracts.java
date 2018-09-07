@@ -1,14 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.popular.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.ArrayList;
 import java.util.List;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
 /*
  * Class for storing login contracts in storage
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonObject
 public class BancoPopularContracts {
     private List<BancoPopularContract> contracts;
 

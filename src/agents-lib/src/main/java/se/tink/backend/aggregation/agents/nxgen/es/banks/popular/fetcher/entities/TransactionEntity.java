@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.core.Amount;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BancoPopularCustomEccas211SPartEMV {
+public class TransactionEntity {
     private int numSecuenMov;
     private Date fecmvtoEcrmvto2211;
     private String conceptoMov;   // description
