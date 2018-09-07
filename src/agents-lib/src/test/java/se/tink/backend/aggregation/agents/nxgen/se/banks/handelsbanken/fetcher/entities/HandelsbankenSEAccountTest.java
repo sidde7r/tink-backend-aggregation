@@ -79,7 +79,7 @@ public class HandelsbankenSEAccountTest {
         TransactionsSEResponse transactionsResponse = mock(TransactionsSEResponse.class);
         HandelsbankenSEAccount transactionsAccount = mock(HandelsbankenSEAccount.class);
         when(transactionsResponse.getAccount()).thenReturn(transactionsAccount);
-        when(transactionsAccount.getClearingNumber()).thenReturn("123");
+        when(transactionsAccount.getClearingNumber()).thenReturn("1234");
 
         tinkAccount = account.toTransactionalAccount(transactionsResponse).orElseThrow(() -> new IllegalStateException("No account found!"));
     }
