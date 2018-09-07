@@ -28,11 +28,6 @@ public enum RefreshableItem {
         accountTypes = Arrays.asList(types);
     }
 
-    private static final ImmutableList<RefreshableItem> LEGACY_ITEMS = ImmutableList.<RefreshableItem>builder()
-            .add(ACCOUNTS)
-            .add(TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS)
-            .build();
-
     // Explicit order of refreshable items. Many subsequent places assumes Accounts will come first.
     private static final Ordering<RefreshableItem> REFRESHABLE_ITEM_ORDERING = Ordering.explicit(ImmutableList.of(
             RefreshableItem.CHECKING_ACCOUNTS,
