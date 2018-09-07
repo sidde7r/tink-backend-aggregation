@@ -4,6 +4,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.CommerzbankPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.account.CommerzbankAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.credit.CommerzbankCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.transaction.CommerzbankTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.session.CommerzbankSessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -14,7 +15,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRe
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.index.TransactionIndexPaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
@@ -29,7 +30,7 @@ public class CommerzbankAgent extends NextGenerationAgent {
 
     public CommerzbankAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        apiClient = new CommerzbankApiClient(client, sessionStorage);
+        apiClient = new CommerzbankApiClient(client);
     }
 
     @Override
@@ -39,22 +40,31 @@ public class CommerzbankAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
-                new CommerzbankPasswordAuthenticator(apiClient, sessionStorage));
+                new CommerzbankPasswordAuthenticator(apiClient));
     }
 
     @Override
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
+
         return Optional.of(new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
-                new CommerzbankAccountFetcher(apiClient, sessionStorage),
-                new TransactionFetcherController<>(this.transactionPaginationHelper,
-                        new TransactionIndexPaginationController<>(new CommerzbankTransactionFetcher(apiClient)))));
+                new CommerzbankAccountFetcher(apiClient),
+                new TransactionFetcherController<>(transactionPaginationHelper,
+                        new TransactionPagePaginationController<>(
+                                new CommerzbankTransactionFetcher(apiClient), 0))));
     }
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.empty();
+        CommerzbankCreditCardFetcher accountFetcher = new CommerzbankCreditCardFetcher(apiClient);
+        return Optional.of(
+                new CreditCardRefreshController(metricRefreshController, updateController,
+                        new CommerzbankCreditCardFetcher(apiClient),
+                        new TransactionFetcherController<>(transactionPaginationHelper,
+                                new TransactionPagePaginationController<>(
+                                        new CommerzbankCreditCardFetcher(apiClient), 1)))
+        );
     }
 
     @Override

@@ -24,17 +24,10 @@ PROJECTS = {
         'chart': False,
         'salt': True,
         'branches': [
-            'oxford-production',
-            'oxford-staging',
             'leeds-production',
             'leeds-staging',
-            'cornwall-production',
-            'cornwall-testing',
-            'kirkby-production',
-            'kirkby-staging',
             'newport-production',
             'newport-staging',
-            'farnham-staging',
             'aggregation-production',
             'aggregation-staging'
         ],},

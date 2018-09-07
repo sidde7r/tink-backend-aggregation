@@ -184,7 +184,7 @@ public class PfmTransactionsEntity {
     public Transaction toTinkTransaction() {
 
         return Transaction.builder()
-                .setAmount(new Amount(getAmount().getCurrency(),getAmount().getValue()))
+                .setAmount(new Amount(getAmount().getCurrency(), getAmount().getValue()))
                 .setDate((getDate()))
                 .setDescription(getOriginalText())
                 .setPending(isUncleared()).build();

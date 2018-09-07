@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.nxgen.http.redirect;
 
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
-import org.apache.http.protocol.HttpContext;
+import se.tink.org.apache.http.HttpRequest;
+import se.tink.org.apache.http.HttpResponse;
+import se.tink.org.apache.http.protocol.HttpContext;
 
 public class DenyAllRedirectHandler extends RedirectHandler {
     @Override

@@ -12,16 +12,13 @@ public abstract class BaseAbstractLoanEntity {
     protected final Optional<DetailedLoanResponse> allLoanDetails;
     protected final LoanEntity loanOverview;
 
-    protected BaseAbstractLoanEntity(
-            LoanEntity loanOverview) {
+    protected BaseAbstractLoanEntity(LoanEntity loanOverview) {
         this.loanDetails = Optional.empty();
         this.allLoanDetails = Optional.empty();
         this.loanOverview = loanOverview;
     }
 
-    protected BaseAbstractLoanEntity(
-            DetailedLoanResponse loanDetails,
-            LoanEntity loanOverview) {
+    protected BaseAbstractLoanEntity(DetailedLoanResponse loanDetails, LoanEntity loanOverview) {
         this.allLoanDetails = Optional.ofNullable(loanDetails);
         this.loanDetails = Optional.ofNullable(loanDetails.getLoanDetails());
         this.loanOverview = loanOverview;
@@ -32,7 +29,8 @@ public abstract class BaseAbstractLoanEntity {
     }
 
     public String getAccountNumber() {
-        return allLoanDetails.map(ld -> ld.getLoan().getAccount().getAccountNumber())
+        return allLoanDetails
+                .map(ld -> ld.getLoan().getAccount().getAccountNumber())
                 .orElse(loanOverview.getAccount().getAccountNumber());
     }
 
@@ -41,12 +39,14 @@ public abstract class BaseAbstractLoanEntity {
     }
 
     public String getFullAccountNumber() {
-        return allLoanDetails.map(ld -> ld.getLoan().getAccount().getFullyFormattedNumber())
+        return allLoanDetails
+                .map(ld -> ld.getLoan().getAccount().getFullyFormattedNumber())
                 .orElse(loanOverview.getAccount().getFullyFormattedNumber());
     }
 
     public String getClearingNumber() {
-        return allLoanDetails.map(ld -> ld.getLoan().getAccount().getClearingNumber())
+        return allLoanDetails
+                .map(ld -> ld.getLoan().getAccount().getClearingNumber())
                 .orElse(loanOverview.getAccount().getClearingNumber());
     }
 

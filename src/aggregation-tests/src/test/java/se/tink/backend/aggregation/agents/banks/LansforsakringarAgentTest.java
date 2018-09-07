@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.banks;
 import com.google.common.collect.Maps;
 import java.util.Date;
 import java.util.Map;
-import org.apache.http.impl.cookie.BasicClientCookie;
+import se.tink.org.apache.http.impl.cookie.BasicClientCookie;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;

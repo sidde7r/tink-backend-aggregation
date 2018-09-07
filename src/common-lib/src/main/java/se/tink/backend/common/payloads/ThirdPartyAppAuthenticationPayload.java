@@ -104,7 +104,7 @@ public class ThirdPartyAppAuthenticationPayload {
         private String packageName;
 
         /**
-         * The minimum version of the package that needs to be installed. Example: 9030101
+         * The minimum version of the package that needs to be installed. Example: 9.03.01.01 = 9030101
          */
         private int requiredMinimumVersion;
 

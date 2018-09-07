@@ -24,9 +24,8 @@ public class CreditDetailsResponse {
                 .setInterestRate(totalInterestRate)
                 .setBankIdentifier(creditEntity.getAgreementNumberIban())
                 .setName(creditEntity.getLoanName())
-                .setDetails(LoanDetails.builder()
+                .setDetails(LoanDetails.builder(OpBankConstants.LoanType.findLoanType(creditEntity.getUsage()).getTinkType())
                         .setLoanNumber(creditEntity.getAgreementNumberIban())
-                        .setType(OpBankConstants.LoanType.findLoanType(creditEntity.getUsage()).getTinkType())
                         .build()
                 )
                 .build();

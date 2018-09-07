@@ -47,11 +47,9 @@ public class LoanEntity {
     }
 
     public LoanAccount toTinkLoan(LoanDetailsResponse loanDetailsResponse) {
-        LoanDetails loanDetails = LoanDetails.builder()
+        LoanDetails loanDetails = LoanDetails.builder(getLoanType())
                 .setLoanNumber(loanNumber)
                 .setInitialBalance(Amount.inNOK(loanDetailsResponse.getInitialBalanace()))
-                .setName(name)
-                .setType(getLoanType())
                 .build();
         return LoanAccount.builder(loanNumber, Amount.inNOK(balance))
                 .setAccountNumber(loanNumber)

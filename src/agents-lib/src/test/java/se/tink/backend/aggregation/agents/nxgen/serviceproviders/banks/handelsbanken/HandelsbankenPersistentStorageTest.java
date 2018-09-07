@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken;
 
+import java.util.Collections;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Rule;
@@ -28,7 +29,7 @@ public class HandelsbankenPersistentStorageTest {
     public void setUp() throws Exception {
         persistentMap = new PersistentStorage();
         persistentStorage = new HandelsbankenPersistentStorage(
-                persistentMap);
+                persistentMap, Collections.emptyMap());
         credentials = new Credentials();
     }
 

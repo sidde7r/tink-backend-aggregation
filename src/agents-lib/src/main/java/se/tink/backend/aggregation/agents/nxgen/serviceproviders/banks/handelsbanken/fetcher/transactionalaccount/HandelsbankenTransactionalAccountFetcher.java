@@ -24,7 +24,7 @@ public class HandelsbankenTransactionalAccountFetcher implements AccountFetcher<
         return sessionStorage.applicationEntryPoint().map(applicationEntryPoint -> {
                     AccountListResponse accountList = client.accountList(applicationEntryPoint);
                     sessionStorage.persist(accountList);
-                    return accountList.toTinkAccounts(applicationEntryPoint).collect(Collectors.toList());
+                    return accountList.toTinkAccounts(client).collect(Collectors.toList());
                 }
         ).orElse(Collections.emptyList());
     }

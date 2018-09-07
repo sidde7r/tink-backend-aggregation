@@ -93,6 +93,10 @@ public class MessageResponse extends ResponseEntity {
         return findError(response, BelfiusConstants.Messages.EXCEED_BENEFICIARY, "");
     }
 
+    public static boolean requireSignOfBeneficiary(BelfiusResponse response) {
+        return findError(response, BelfiusConstants.Messages.ADD_BENEFICIARY, "");
+    }
+
     public static boolean transferSignFailed(BelfiusResponse response) {
         return findError(response, BelfiusConstants.Messages.TRANSFER_SIGN_FAILED, BelfiusConstants.ErrorCodes.ERROR_SIGN_CODE);
     }

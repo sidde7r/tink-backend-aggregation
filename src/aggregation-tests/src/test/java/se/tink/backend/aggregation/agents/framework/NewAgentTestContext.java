@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.apache.curator.framework.CuratorFramework;
 import org.junit.Assert;
@@ -106,13 +107,7 @@ public class NewAgentTestContext extends AgentContext {
         // noop
     }
 
-    @Override
-    public String requestSupplementalInformation(Credentials credentials, boolean wait) {
-        if (!wait) {
-            log.warn("Requesting supplemental information - aborting due to non-wait.");
-            return null;
-        }
-
+    private void displaySupplementalInformation(Credentials credentials) {
         log.info("Requesting supplemental information.");
 
         List<Field> supplementalInformation = SerializationUtils.deserializeFromString(
@@ -132,8 +127,43 @@ public class NewAgentTestContext extends AgentContext {
                 })
                 .collect(Collectors.toList());
         CliPrintUtils.printTable(0, "supplemental information", output);
+    }
 
-        return AgentTestServerClient.askForSupplementalInformation(credentials.getSupplementalInformation());
+    @Override
+    public Optional<String> waitForSupplementalInformation(String key, long waitFor, TimeUnit unit) {
+        return Optional.ofNullable(AgentTestServerClient.waitForSupplementalInformation(key, waitFor, unit));
+    }
+
+    @Override
+    public String requestSupplementalInformation(Credentials credentials, boolean wait) {
+        log.info("Requesting additional info from client. Status: {}, wait: {}", credentials.getStatus(), wait);
+
+        switch (credentials.getStatus()) {
+        case AWAITING_SUPPLEMENTAL_INFORMATION:
+            displaySupplementalInformation(credentials);
+
+            AgentTestServerClient.initiateSupplementalInformation(credentials.getId(),
+                    credentials.getSupplementalInformation());
+
+            if (!wait) {
+                // The agent is not interested in the result. This is the same logic as the production code.
+                return null;
+            }
+
+            Optional<String> supplementalInformation = waitForSupplementalInformation(credentials.getId(), 2,
+                    TimeUnit.MINUTES);
+
+            return supplementalInformation.orElse(null);
+        case AWAITING_MOBILE_BANKID_AUTHENTICATION:
+            // Do nothing as we cannot communicate to the app to open BankId.
+            return null;
+        case AWAITING_THIRD_PARTY_APP_AUTHENTICATION:
+            AgentTestServerClient.openThirdPartyApp(credentials.getSupplementalInformation());
+            return null;
+        default:
+            Assert.fail(String.format("Cannot handle credentials status: %s", credentials.getStatus()));
+            return null;
+        }
     }
 
     @Override
@@ -233,7 +263,7 @@ public class NewAgentTestContext extends AgentContext {
     }
 
     @Override
-    public void updateCredentialsExcludingSensitiveInformation(Credentials credentials) {
+    public void updateCredentialsExcludingSensitiveInformation(Credentials credentials, boolean doUpdateStatus) {
         // noop
     }
 

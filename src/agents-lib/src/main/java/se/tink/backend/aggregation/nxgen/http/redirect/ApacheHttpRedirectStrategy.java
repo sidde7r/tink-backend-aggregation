@@ -3,11 +3,11 @@ package se.tink.backend.aggregation.nxgen.http.redirect;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
-import org.apache.http.ProtocolException;
-import org.apache.http.impl.client.LaxRedirectStrategy;
-import org.apache.http.protocol.HttpContext;
+import se.tink.org.apache.http.HttpRequest;
+import se.tink.org.apache.http.HttpResponse;
+import se.tink.org.apache.http.ProtocolException;
+import se.tink.org.apache.http.impl.client.LaxRedirectStrategy;
+import se.tink.org.apache.http.protocol.HttpContext;
 
 // The LaxRedirectStrategy automatically redirects all HEAD, GET, POST, and DELETE requests.
 public class ApacheHttpRedirectStrategy extends LaxRedirectStrategy {

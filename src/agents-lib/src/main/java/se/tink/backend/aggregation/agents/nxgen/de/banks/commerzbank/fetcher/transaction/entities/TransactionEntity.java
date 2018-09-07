@@ -1,11 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.transaction.entities;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.account.entities.BalanceEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
-public class TransactionEntity {
+public class TransactionEntity implements PaginatorResponse {
     private String productName;
     private BalanceEntity originalBalance;
     private Object balanceEUR;
@@ -70,5 +76,20 @@ public class TransactionEntity {
 
     public Object getType() {
         return type;
+    }
+
+    @Override
+    public Collection<? extends Transaction> getTinkTransactions() {
+        if(pfmTransactions == null){
+            return Collections.EMPTY_LIST;
+        }
+        return pfmTransactions.stream()
+                .map(pfmTransactionsEntity -> pfmTransactionsEntity.toTinkTransaction())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<Boolean> canFetchMore() {
+        return Optional.of(totalTransactions > 0);
     }
 }

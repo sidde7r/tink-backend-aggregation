@@ -19,4 +19,12 @@ public class CreditCardFITransactionsResponse extends CreditCardTransactionsResp
                         .toTinkTransaction(account))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<CreditCardTransaction> tinkTransactions(CreditCardAccount account) {
+        return transactions.stream()
+                .map(handelsbankenFICreditCardTransaction -> handelsbankenFICreditCardTransaction
+                        .toTinkTransaction(account))
+                .collect(Collectors.toList());
+    }
 }

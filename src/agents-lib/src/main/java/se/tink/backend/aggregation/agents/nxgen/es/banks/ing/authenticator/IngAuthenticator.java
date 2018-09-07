@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import se.tink.org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
@@ -15,14 +16,17 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.authenticator.rpc.L
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.authenticator.rpc.LoginPinPad;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.authenticator.rpc.LoginPinPositions;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.authenticator.rpc.LoginTicket;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.Field;
 
 public class IngAuthenticator implements Authenticator {
 
-    private static final Pattern NON_NATIONAL_USERNAME_PATTERN = Pattern.compile("(?i)^X.+F$");
+    private static final Pattern NIE_PATTERN = Pattern.compile("(?i)^[XY].+[A-Z]$");
 
     private final IngApiClient apiClient;
     private final SessionStorage sessionStorage;
@@ -32,14 +36,13 @@ public class IngAuthenticator implements Authenticator {
         this.sessionStorage = sessionStorage;
     }
 
-    // Users who are not ES nationals will have usernames in the format "^X.+F$" (regex).
-    // Non-nationals have the type 1 and the rest have type 0.
+    // Currently only know the difference between NIE and NON_NIE types (NON_NIE might contain more types).
     private static int getUsernameType(String username) {
-        if (NON_NATIONAL_USERNAME_PATTERN.matcher(username).matches()) {
-            return IngConstants.UsernameType.NON_NATIONAL;
+        if (NIE_PATTERN.matcher(username).matches()) {
+            return IngConstants.UsernameType.NIE;
         }
 
-        return IngConstants.UsernameType.NATIONAL;
+        return IngConstants.UsernameType.NON_NIE;
     }
 
     @Override
@@ -55,14 +58,27 @@ public class IngAuthenticator implements Authenticator {
 
         LoginID loginId = LoginID.create(username, dateOfBirth, getUsernameType(username));
 
-        LoginPinPad pinpad = apiClient.postLoginRestSession(loginId);
-        if (pinpad.hasError()) {
-            if (pinpad.hasErrorCode(IngConstants.ErrorCode.INVALID_LOGIN_DOCUMENT_TYPE)) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+        LoginPinPad pinpad;
+        try {
+            pinpad = apiClient.postLoginRestSession(loginId);
+        } catch (HttpResponseException hre) {
+
+            HttpResponse response = hre.getResponse();
+
+            if (response.getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
+                Optional<String> errorSummary = errorResponse.getErrorSummary();
+
+                if (errorResponse.hasErrorCode(IngConstants.ErrorCode.INVALID_LOGIN_DOCUMENT_TYPE)) {
+                    // This should not happen, if it does: The method `getUsernameType` is wrong.
+                    throw new IllegalStateException(String.format("Invalid username type: %s",
+                            errorSummary.orElse(null)));
+                }
+                // Fall through and re-throw original exception.
             }
 
-            Optional<String> errorSummary = pinpad.getErrorSummary();
-            throw new IllegalStateException(String.format("Unknown login error: %s", errorSummary.orElse("null")));
+            // Re-throw the exception.
+            throw hre;
         }
 
         LoginPinPositions positions = this.positions(pinpad, pin);

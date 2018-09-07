@@ -34,8 +34,8 @@ app = Flask(__name__)
 
 ### START - CONSTANTS ###
 
-AGGREGATION_HOST = 'http://127.0.0.1:9057'
-PROVIDER_HOST = 'http://127.0.0.1:9047'
+AGGREGATION_HOST = 'http://127.0.0.1:9095'
+PROVIDER_HOST = 'http://127.0.0.1:9095'
 
 DATA_BASE = None
 CREDENTIALS_TABLE = None
@@ -101,9 +101,11 @@ def refresh_credentials(cid):
 	if not credentials:
 		abort(400, 'Not a valid credentials id.')
 
+
 	CREDENTIALS_TABLE.update({'status': 'AUTHENTICATING', 'timestamp': get_time_in_millis()}, where('id') == cid)
 	credentialsRequest = create_credentials_request(cid)
 	credentialsRequest['manual'] = True
+	del credentialsRequest['credentials']['timestamp']
 	r = requests.post(AGGREGATION_HOST + '/aggregation/refresh', data=json.dumps(credentialsRequest), headers=POST_HEADERS)
 	return ('', 204)
 
@@ -130,6 +132,17 @@ def list_credentials():
 
 	responseList = map(filter_credentials_info, credentials)
 	return (prettify_dict(responseList), 200)
+
+@app.route("/credentials/reencrypt/<cid>", methods = ['POST'])
+def reencrypt_credentials(cid):
+	credentials = CREDENTIALS_TABLE.search(Query().id == cid)
+	if not credentials:
+		abort(400, 'Not a valid credentials id.')
+
+	credentialsRequest = create_credentials_request(cid)
+	credentialsRequest['manual'] = True
+	r = requests.post(AGGREGATION_HOST + '/aggregation/reencrypt/credentials', data=json.dumps(credentialsRequest), headers=POST_HEADERS)
+	return ('', 204)
 
 @app.route("/providers/list/<market>", methods = ['GET'])
 def list_provider_by_market(market):

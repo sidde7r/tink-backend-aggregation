@@ -27,7 +27,7 @@ public class RevolutTransactionFetcher implements TransactionKeyPaginator<Transa
 
         TransactionKeyPaginatorResponseImpl<String> response = new TransactionKeyPaginatorResponseImpl<>();
 
-        String accountCurrency = account.getTemporaryStorage(RevolutConstants.Storage.CURRENCY, String.class);
+        String accountCurrency = account.getFromTemporaryStorage(RevolutConstants.Storage.CURRENCY);
 
         response.setTransactions(transactionEntities.stream()
                 .filter(t -> t.getCurrency().equalsIgnoreCase(accountCurrency))

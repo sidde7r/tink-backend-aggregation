@@ -966,7 +966,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
     private void updateCredentialsType(CredentialsTypes type) {
         if (type != this.credentials.getType()) {
             this.credentials.setType(type);
-            this.context.updateCredentialsExcludingSensitiveInformation(this.credentials);
+            this.context.updateCredentialsExcludingSensitiveInformation(this.credentials, false);
         }
     }
 

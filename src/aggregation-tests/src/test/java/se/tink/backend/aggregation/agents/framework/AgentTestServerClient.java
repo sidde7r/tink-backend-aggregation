@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.framework;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
-import org.apache.http.HttpStatus;
+import se.tink.org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
@@ -12,11 +12,15 @@ import se.tink.backend.aggregation.rpc.Credentials;
 public class AgentTestServerClient {
     private static final String PROVIDER_NAME_KEY = "providerName";
     private static final String CREDENTIAL_ID_KEY = "credentialId";
+    private static final String SUPPLEMENTAL_KEY_KEY = "key";
+    private static final String SUPPLEMENTAL_TIMEOUT_KEY = "timeout";
     private final static int TIMEOUT_MS = Math.toIntExact(TimeUnit.MINUTES.toMillis(2));
     private static final TinkHttpClient client = constructHttpClient();
 
     private enum Urls {
-        SUPPLEMENTAL("supplemental"),
+        OPEN_THIRDPARTYAPP("thirdparty/open"),
+        INITIATE_SUPPLEMENTAL(String.format("supplemental/{%s}", SUPPLEMENTAL_KEY_KEY)),
+        WAIT_FOR_SUPPLEMENTAL(String.format("supplemental/{%s}/{%s}", SUPPLEMENTAL_KEY_KEY, SUPPLEMENTAL_TIMEOUT_KEY)),
         CREDENTIAL(String.format("credential/{%s}/{%s}", PROVIDER_NAME_KEY, CREDENTIAL_ID_KEY));
 
         private URL url;
@@ -38,10 +42,24 @@ public class AgentTestServerClient {
         return client;
     }
 
-    public static String askForSupplementalInformation(String fields) {
-        return client.request(Urls.SUPPLEMENTAL.getUrl())
+    public static void openThirdPartyApp(String fields) {
+        client.request(Urls.OPEN_THIRDPARTYAPP.getUrl())
                 .type(MediaType.APPLICATION_JSON)
-                .post(String.class, fields);
+                .post(fields);
+    }
+
+    public static void initiateSupplementalInformation(String key, String fields) {
+        client.request(Urls.INITIATE_SUPPLEMENTAL.getUrl().parameter(SUPPLEMENTAL_KEY_KEY, key))
+                .type(MediaType.APPLICATION_JSON)
+                .post(fields);
+    }
+
+    public static String waitForSupplementalInformation(String key, long waitFor, TimeUnit unit) {
+        return client.request(
+                Urls.WAIT_FOR_SUPPLEMENTAL.getUrl()
+                        .parameter(SUPPLEMENTAL_KEY_KEY, key)
+                        .parameter(SUPPLEMENTAL_TIMEOUT_KEY, Long.toString(unit.toSeconds(waitFor))))
+                .get(String.class);
     }
 
     public static void saveCredential(String providerName, Credentials credential) {

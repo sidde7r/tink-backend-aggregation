@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransferDe
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransfersRequest;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.core.signableoperation.SignableOperation;
+import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;
 import se.tink.libraries.http.annotations.auth.AllowAnonymous;
 
 @Path("/aggregation/controller/v1/system/update")
@@ -104,4 +105,12 @@ public interface UpdateService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response updateApplication(UpdateApplicationRequest updateApplicationRequest);
+
+    @POST
+    @Path("/fraud/update")
+    @TeamOwnership(Team.DATA)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateFraudDetails(UpdateFraudDetailsRequest request);
+
 }

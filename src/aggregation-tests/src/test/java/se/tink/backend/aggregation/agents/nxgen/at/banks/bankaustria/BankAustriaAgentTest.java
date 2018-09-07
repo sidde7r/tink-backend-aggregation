@@ -7,10 +7,13 @@ import se.tink.backend.aggregation.rpc.Field;
 
 @Ignore
 public class BankAustriaAgentTest {
+    private static final String USERNAME = "";
+    private static final String PIN = "";
+
     private static final AgentIntegrationTest.Builder builder =
             new AgentIntegrationTest.Builder("at", "at-bankaustria-password")
-                    .addCredentialField(Field.Key.USERNAME, "ACCOUNT")
-                    .addCredentialField(Field.Key.PASSWORD, "PIN")
+                    .addCredentialField(Field.Key.USERNAME, USERNAME)
+                    .addCredentialField(Field.Key.PASSWORD, PIN)
                     .doLogout(true)
                     .loadCredentialsBefore(false)
                     .saveCredentialsAfter(false);

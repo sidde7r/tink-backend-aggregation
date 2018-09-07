@@ -8,7 +8,9 @@ import com.google.common.collect.Maps;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
 import org.apache.curator.framework.CuratorFramework;
 import se.tink.backend.aggregation.cluster.identification.Aggregator;
@@ -86,6 +88,11 @@ public class AgentTestContext extends AgentContext {
 
     public List<Transfer> getTransfers() {
         return transfers;
+    }
+
+    @Override
+    public Optional<String> waitForSupplementalInformation(String key, long waitFor, TimeUnit unit) {
+        return Optional.empty();
     }
 
     @Override
@@ -246,7 +253,7 @@ public class AgentTestContext extends AgentContext {
     }
 
     @Override
-    public void updateCredentialsExcludingSensitiveInformation(Credentials credentials) {
+    public void updateCredentialsExcludingSensitiveInformation(Credentials credentials, boolean doUpdateStatus) {
         // nothing
     }
 

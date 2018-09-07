@@ -7,11 +7,14 @@ import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAg
 import se.tink.backend.aggregation.api.ProviderService;
 import se.tink.backend.aggregation.client.AggregationServiceFactory;
 import se.tink.backend.aggregation.client.InProcessAggregationServiceFactory;
+import se.tink.backend.aggregation.clients.ProviderServiceFactoryProvider;
 import se.tink.backend.aggregation.cluster.JerseyClusterIdProvider;
 import se.tink.backend.aggregation.controllers.ProviderServiceController;
 import se.tink.backend.aggregation.injectableproviders.ClusterIdProvider;
 import se.tink.backend.aggregation.log.AggregationLoggerRequestFilter;
+import se.tink.backend.aggregation.provider.configuration.client.InterContainerProviderServiceFactory;
 import se.tink.backend.aggregation.resources.ProviderServiceResource;
+import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.backend.client.ServiceFactory;
 import se.tink.backend.common.ServiceContext;
 import se.tink.backend.common.client.EncryptionServiceFactoryProvider;
@@ -42,8 +45,10 @@ public class AggregationModule extends AbstractModule {
         bind(AggregationControllerAggregationClient.class).in(Scopes.SINGLETON);
 
         bind(ProviderService.class).to(ProviderServiceResource.class).in(Scopes.SINGLETON);
+        bind(InterContainerProviderServiceFactory.class).toProvider(ProviderServiceFactoryProvider.class).in(Scopes.SINGLETON);
         bind(ProviderServiceController.class).in(Scopes.SINGLETON);
         bind(ClusterIdProvider.class).in(Scopes.SINGLETON);
+        bind(AgentWorker.class).in(Scopes.SINGLETON);
 
         // TODO Remove these lines after getting rid of dependencies on ServiceContext
         bind(ServiceContext.class).in(Scopes.SINGLETON);

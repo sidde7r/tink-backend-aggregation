@@ -3,8 +3,6 @@ package se.tink.backend.aggregation.nxgen.http.legacy;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,22 +10,21 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.Header;
-import org.apache.http.HttpClientConnection;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpEntityEnclosingRequest;
-import org.apache.http.HttpException;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
-import org.apache.http.RequestLine;
-import org.apache.http.protocol.HttpContext;
-import org.apache.http.protocol.HttpRequestExecutor;
+import se.tink.org.apache.http.Header;
+import se.tink.org.apache.http.HttpClientConnection;
+import se.tink.org.apache.http.HttpEntity;
+import se.tink.org.apache.http.HttpEntityEnclosingRequest;
+import se.tink.org.apache.http.HttpException;
+import se.tink.org.apache.http.HttpRequest;
+import se.tink.org.apache.http.HttpResponse;
+import se.tink.org.apache.http.RequestLine;
+import se.tink.org.apache.http.protocol.HttpContext;
+import se.tink.org.apache.http.protocol.HttpRequestExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.common.config.SignatureKeyPair;
-import se.tink.libraries.cryptography.RSAUtils;
 
 /*
     This HttpRequestExecutor is only necessary because of bugs in the underlying libraries (jersey and apache).
@@ -44,6 +41,7 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
 
     private SignatureKeyPair signatureKeyPair;
     private Algorithm algorithm;
+    private boolean shouldAddRequestSignature = true;
 
     public TinkApacheHttpRequestExecutor(SignatureKeyPair signatureKeyPair) {
         if (signatureKeyPair == null || signatureKeyPair.getPrivateKey() == null) {
@@ -62,8 +60,15 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         request.removeHeaders("Cookie2");
         mergeCookieHeaders(request);
 
-        addRequestSignature(request);
+        if (shouldAddRequestSignature) {
+            addRequestSignature(request);
+        }
+
         return super.execute(request, conn, context);
+    }
+
+    public void disableSignatureRequestHeader() {
+        this.shouldAddRequestSignature = false;
     }
 
     private void mergeCookieHeaders(HttpRequest request) {
@@ -87,10 +92,9 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
             return;
         }
 
-        // TODO: Create a webpage with info on how to verify signature.
         // This header needs to be added before we fetch the headers to create the signature.
         request.addHeader("X-Signature-Info",
-                "Visit https://developers.tink.se/request-signature-verification for more info.");
+                "Visit https://cdn.tink.se/aggregation-signature/how-to-verify.txt for more info.");
 
         RequestLine requestLine = request.getRequestLine();
         Header[] allHeaders = request.getAllHeaders();

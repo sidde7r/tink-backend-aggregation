@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import org.apache.http.client.utils.URIBuilder;
+import se.tink.org.apache.http.client.utils.URIBuilder;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
@@ -112,7 +112,7 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshableItemEx
             }
 
             credentials.setField(Field.Key.USERNAME, ssn.get());
-            context.updateCredentialsExcludingSensitiveInformation(credentials);
+            context.updateCredentialsExcludingSensitiveInformation(credentials, false);
 
             // Due to a bug in the app, we aren't able to prompt BankID after a supplemental information request
             // So instead we need to abort the current login operation and ask the user to try again

@@ -43,7 +43,7 @@ public class AccountEntity {
                 .setName(getTinkName())
                 .setBankIdentifier(iban)
                 .addIdentifier(new IbanIdentifier(iban))
-                .addToTemporaryStorage(iban, this)
+                .putInTemporaryStorage(iban, this)
                 .build();
     }
 

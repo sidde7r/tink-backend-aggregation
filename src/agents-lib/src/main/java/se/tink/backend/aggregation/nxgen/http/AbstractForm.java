@@ -1,29 +1,26 @@
 package se.tink.backend.aggregation.nxgen.http;
 
-import java.net.URLEncoder;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
 
-public abstract class AbstractForm extends LinkedHashMap<String, String> {
+public abstract class AbstractForm {
 
-    private static final String JOINING_DELIMITER = "&";
-    private static final String NAME_VALUE_FORMAT = "%s=%s";
-    private static final String CHARSET = "UTF-8";
+    private final Form.Builder formBuilder = new Form.Builder();
 
     public String getBodyValue() {
-        return this.entrySet().stream()
-                .map(this::getValuePair)
-                .collect(Collectors.joining(JOINING_DELIMITER));
+        return formBuilder.build().serialize();
     }
 
-    private String getValuePair(Map.Entry<String, String> parameter) {
-        try {
-            return String.format(NAME_VALUE_FORMAT,
-                    URLEncoder.encode(parameter.getKey(), CHARSET),
-                    URLEncoder.encode(parameter.getValue(), CHARSET));
-        } catch(Exception e) {
-            throw new IllegalStateException("Cannot create form body: " + e.getMessage());
-        }
+    /**
+     * Add key-value parameter.
+     */
+    protected void put(@Nonnull String key, @Nonnull String value) {
+        formBuilder.put(key, value);
+    }
+
+    /**
+     * Add parameter without a value.
+     */
+    protected void put(@Nonnull String key) {
+        formBuilder.put(key);
     }
 }

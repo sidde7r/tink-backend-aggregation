@@ -34,12 +34,12 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
+import se.tink.org.apache.http.NameValuePair;
+import se.tink.org.apache.http.client.config.RequestConfig;
+import se.tink.org.apache.http.client.utils.URLEncodedUtils;
+import se.tink.org.apache.http.impl.client.BasicCookieStore;
+import se.tink.org.apache.http.impl.client.CloseableHttpClient;
+import se.tink.org.apache.http.impl.client.HttpClientBuilder;
 import org.jsoup.Jsoup;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
@@ -682,7 +682,7 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
         }
 
         credentials.setPayload(customerIdString);
-        context.updateCredentialsExcludingSensitiveInformation(credentials);
+        context.updateCredentialsExcludingSensitiveInformation(credentials, false);
 
         customerId = loginResponse.getId();
 

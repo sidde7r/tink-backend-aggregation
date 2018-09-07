@@ -1,7 +1,9 @@
 # coordination-0
-coordinationHosts: 10.21.55.255:2181
+coordinationHosts: 10.89.60.29:2181
 
 applicationCluster: TINK
 developmentMode: false
 
-pinnedCertificatesForSystem: CERTSHA256:9B7F4D67F6FA395C07B9B22EBC39CED8C0B99B854275B1AD1298551F0A632DE0
+providerdb:
+  host: provider-db.internal.staging.aggregation.tink.network
+  username: tink-provider

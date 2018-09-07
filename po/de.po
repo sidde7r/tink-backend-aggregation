@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2018-08-08 11:24+0000\n"
-"PO-Revision-Date: 2018-08-08 11:24+0000\n"
+"POT-Creation-Date: 2018-09-03 11:33+0000\n"
+"PO-Revision-Date: 2018-09-03 11:33+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: de\n"
@@ -11,157 +11,4660 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid ""
-"1  Insert your ING bank card in your ![](https://p1.easybanking."
-"qabnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png) ING Card Reader\n"
-"2  Press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/"
-"ING_SIGN.png)\n"
-"3  Enter your PIN and press ![](https://p1.easybanking.qabnpparibasfortis.be/"
-"rsc/serv/bank/ING/ING_OK.png)\n"
-"4  Enter the following number []"
-msgstr ""
-"1  Stecken Sie Ihre ING Bankkarte in den Kartenleser ![](https://p1."
-"easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png)\\n2  "
-"Drücken Sie auf ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/"
-"bank/ING/ING_SIGN.png)\\n3  Geben Sie den PIN ein und drücken Sie auf ![]"
-"(https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_OK."
-"png)\\n4  Geben Sie diese Ziffer [] ein"
+msgid "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap\n5$  Enter your PIN\n6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap\n7$  Enter the sign code"
+msgstr "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Drücken Sie auf\n5$  Geben Sie Ihre Geheimzahl ein\n6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Drücken Sie auf\n7$  Geben Sie den Anmeldecode ein"
 
-msgid ""
-"5  And press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/"
-"ING/ING_SIGN.png)\n"
-"Enter your RESPONSE code"
-msgstr ""
-"5  Und drücken Sie auf ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/"
-"serv/bank/ING/ING_SIGN.png)\\nGeben Sie Ihren RESPONSE-Code ein"
+msgid "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Want to register your device?\n5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter your PIN\n6$  Enter the signature code"
+msgstr "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Uw apparaat registreren?\n5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Toets uw pincode in\n6$  Voer de tekencode in"
 
-msgid ""
-"1  Insert your ING bank card into the ![](https://p1.easybanking."
-"qabnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png)\n"
-"<br>ING Card Reader\n"
-"2  Press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/"
-"ING_IDENTIFY.png)\n"
-"3  Enter your PIN\n"
-"4  Press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/"
-"ING_OK.png)\n"
-"Enter the respond code"
-msgstr ""
-"1  Stecken Sie Ihre ING Card in den ING Kartenleser ![](https://p1."
-"easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png)\\n2  "
-"Drücken Sie auf ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/"
-"bank/ING/ING_IDENTIFY.png)\\n3  Geben Sie Ihren PIN-Code ein\\n4  Drücken "
-"Sie auf ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/"
-"ING_OK.png)\\nGeben Sie Ihren RESPONSE-code ein"
+#, java-format
+msgid "Updating {0}..."
+msgstr "{0} wird aktualisiert ..."
 
-msgid ""
-"1  Insert your bank card into the card reader ![](https://p1.easybanking."
-"qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_CardReader.png)\n"
-"2  Tap ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/"
-"KBC_LOGIN.png) + ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/"
-"bank/KBC/KBC_LOGIN.png)\n"
-"3  Enter the start code []"
-msgstr ""
-"1  Führen Sie Ihre Geldkarte in den Kartenlesser ein ![](https://p1."
-"easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_CardReader.png)\\n2  "
-"Drücken Sie auf ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/"
-"bank/KBC/KBC_LOGIN.png) + ![](https://p1.easybanking.qabnpparibasfortis.be/"
-"rsc/serv/bank/KBC/KBC_LOGIN.png)\\n3  Geben Sie Ihren Startcode ein []"
+msgid "Your account is blocked. Please unblock your account using the ABN AMRO app."
+msgstr "Ihr Konto ist gesperrt. Bitte entsperren Sie Ihr Konto mit der ABN AMRO-App."
 
-msgid ""
-"4  Tap ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/"
-"KBC_OK.png)\n"
-"5  Enter your secret code\n"
-"6  Tap ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/"
-"KBC_OK.png)\n"
-"7  Enter the login code"
-msgstr ""
-"4  Drücken Sie auf ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/"
-"bank/KBC/KBC_OK.png)\\n5  Geben Sie Ihre Geheimzahl ein\\n6  Drücken Sie "
-"auf ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/"
-"KBC_OK.png)\\n7  Geben Sie den Zeichencode ein "
+msgid "Second level authentication with OTP is not supported"
+msgstr "Zweistufige Authentifizierung mit OTP wird nicht unterstützt."
 
-msgid ""
-"1  Insert your bank card into the card reader ![](https://p1.easybanking."
-"qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_CardReader.png)\n"
-"2  Tap ![]https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/"
-"KBC_SIGN.png) + ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/"
-"bank/KBC/KBC_SIGN.png)\n"
-"3  Enter the start code []"
-msgstr ""
-"1  Fürhen Sie Ihre Geldkarte in den Kartenlesser ein ![](https://p1."
-"easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/KBC_CardReader.png)\\n2  "
-"Drücken Sie auf ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/"
-"bank/KBC/KBC_SIGN.png) + ![](https://p1.easybanking.qabnpparibasfortis.be/"
-"rsc/serv/bank/KBC/KBC_SIGN.png)\\n3  Geben Sie Ihren Startcode ein []"
+msgid "Failed to sign transfer with BankID"
+msgstr "Überweisung konnte mit BankID nicht unterzeichnet werden"
 
-msgid ""
-"4  Tap ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/"
-"KBC_OK.png) + ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/"
-"KBC/KBC_OK.png)\n"
-"5  Enter your PIN\n"
-"6  Tap ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/"
-"KBC_OK.png)\n"
-"7  Enter the sign code"
-msgstr ""
-"4  Drücken Sie auf ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/"
-"bank/KBC/KBC_OK.png) + (https://p1.easybanking.qabnpparibasfortis.be/rsc/"
-"serv/bank/KBC/KBC_OK.png)\\n5  Geben Sie Ihre Geheimzahl ein\\n6  Drücken "
-"Sie auf ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/KBC/"
-"KBC_OK.png)\\n7  Geben Sie den Anmeldecode ein "
+msgid "Could not find source account"
+msgstr "Quellkonto wurde nicht gefunden"
 
-msgid "Number of your bank card"
-msgstr "Nummer Ihrer Bankkarte"
+msgid "Failed to get challenge response from user"
+msgstr "Antwort auf die Challenge wurde vom Nutzer nicht abgegeben"
 
-msgid ""
-"1  Sign using your Belfius Card Reader ![](https://p1.easybanking."
-"qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_CardReader.png)\n"
-"2  Press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/"
-"BEL_LOGIN.png)\n"
-"3  Enter the security code []  ![](https://p1.easybanking.qabnpparibasfortis."
-"be/rsc/serv/bank/BEL/BEL_OK.png)"
-msgstr ""
-"1  Unterschreiben Sie mit Ihrem Belfius Kartenleser\\n2  Klicken Sie auf ![]"
-"(https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_LOGIN."
-"png)\\n3  Geben Sie Ihren Sicherheitscode ein []  ![](https://p1.easybanking."
-"qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png)"
+msgid "No response from Mobile BankID. Have you opened the app?"
+msgstr "Keine Antwort von Mobile BankID. Haben Sie die App geöffnet?"
 
-msgid ""
-"4  Enter your PIN ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/"
-"bank/BEL/BEL_OK.png)\n"
-"5  Enter the login code"
-msgstr ""
-"4  Geben Sie Ihren PIN-Code ein ![](https://p1.easybanking."
-"qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png)\\n5  Geben Sie den "
-"Verbindungscode ein"
+msgid "The key number was incorrect, please try again."
+msgstr "Die Schlüsselnummer war falsch. Bitte versuchen Sie es erneut."
 
-msgid ""
-"1  Sign using your Belfius Card Reader ![](https://p1.easybanking."
-"qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_CardReader.png)\n"
-"2  Press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/"
-"BEL_SIGN.png)\n"
-"3   Enter the security code [] ![](https://p1.easybanking.qabnpparibasfortis."
-"be/rsc/serv/bank/BEL/BEL_OK.png)"
-msgstr ""
-"1  Unterschreiben Sie mit Ihrem Belfius Kartenleser ![](https://p1."
-"easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_CardReader.png)\\n2  "
-"Klicken Sie auf  ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/"
-"bank/BEL/BEL_SIGN.png)\\n3  Geben Sie Ihren Sicherheitscode ein [] ![]"
-"(https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png)"
+msgid "Could not login, please try again."
+msgstr "Einloggen nicht möglich. Bitte versuchen Sie es erneut."
 
-msgid ""
-"4  Want to register your device? ![](https://p1.easybanking."
-"qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png)\n"
-"5  Enter your PIN ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/"
-"bank/BEL/BEL_OK.png)\n"
-"6  Enter the signature code"
-msgstr ""
-"4  Möchten Sie Ihr Gerät registrieren? ![](https://p1.easybanking."
-"qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png)\\n5  Geben Sie Ihren PIN-"
-"Code ein ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/"
-"BEL_OK.png)\\n6  Geben Sie den Signaturcode ein"
+msgid "You need to activate the connection with your key number list."
+msgstr "Sie müssen die Verbindung mit Ihrer Schlüsselnummerliste aktivieren."
 
-msgid "Card ID"
-msgstr "Karten ID"
+msgid "The format of the given credentials are incorrect."
+msgstr "Das Format der Anmeldedaten ist nicht richtig."
 
-msgid "Password"
-msgstr "Passwort"
+msgid "The user id or password you entered is incorrect."
+msgstr "Der eingegebene Nutzername oder das Passwort waren nicht richtig."
+
+msgid "Could not login. This can happen when having the OP app installed on several devices. You can resolve this by removing one of them in the Settings view of your OP app or when logged in on OP's web site."
+msgstr "Einloggen nicht möglich. Das kann passieren, wenn Sie die OP-App auf mehreren Geräten installiert haben. Sie können das Problem lösen, indem Sie eines davon in den Einstellungen Ihrer OP-App entfernen oder wenn Sie auf der OP-Website eingeloggt sind."
+
+msgid "The bank's number"
+msgstr "Die Banknummer"
+
+msgid "Find the number on your number list that corresponds to the bank's number and enter it in the field below. You find the key number to the right of the bank's number on your key list."
+msgstr "Suchen Sie die Nummer auf auf Ihrer Nummernliste, die der der Bank entspricht, und geben Sie sie unten ein. Sie finden die Schlüsselnummer rechts von der Banknummer auf der Schlüsselliste."
+
+msgid "Key number"
+msgstr "Schlüsselnummer"
+
+msgid "Product not available."
+msgstr "Produkt nicht verfügbar."
+
+msgid "The destination message is not a valid OCR reference"
+msgstr "Die Zielnachricht ist keine gültige OCR-Referenz"
+
+msgid "The destination message is not valid"
+msgstr "Die Zielnachricht ist nicht gültig"
+
+msgid "Transfer amount is too small"
+msgstr "Die Überweisungssumme ist zu gering"
+
+msgid "Destination account is not valid"
+msgstr "Zielkonto ist nicht gültig"
+
+msgid "Source account not found"
+msgstr "Quellkonto nicht gefunden"
+
+msgid "BankID session already in progress, please try again."
+msgstr "Die BankID-Sitzung läuft bereits. Bitte versuchen Sie es erneut."
+
+msgid "Failed to sign payment using BankID"
+msgstr "Zahlung konnte nicht mit BankID unterzeichnet werden"
+
+msgid "Could not find bank for destination account"
+msgstr "Bank für Zielkonto wurde nicht gefunden"
+
+msgid "Invalid destination account"
+msgstr "Ungültiges Empfängerkonto"
+
+msgid "You have existing unsigned transfers, please sign those before executing a new transfer"
+msgstr "Sie haben nicht unterzeichnete Überweisungen. Bitte unterzeichnen Sie sie, bevor Sie eine neue Überweisung durchführen."
+
+msgid "Marked not implemented"
+msgstr "Markiert als \"Nicht implementiert\""
+
+msgid "Payment was not accepted at Nordea"
+msgstr "Die Zahlung wurde von Nordea nicht akzeptiert"
+
+msgid "Transfer completed"
+msgstr "Transfer abgeschlossen"
+
+msgid "Waiting on Mobile Bank Id"
+msgstr "Warten auf Mobile Bank ID"
+
+msgid "No response from Mobile BankID"
+msgstr "Keine Antwort von Mobile BankID"
+
+msgid "Did not receive a identification code"
+msgstr "Identifikationscode nicht erhalten"
+
+msgid "Transfer failed"
+msgstr "Transfer fehlgeschlagen"
+
+msgid "Payment was not signed"
+msgstr "Die Zahlung wurde nicht unterzeichnet"
+
+msgid "Invalid source account"
+msgstr "Ungültiges Quellkonto"
+
+msgid "Next unused code"
+msgstr "Nächster freier Code"
+
+msgid "BankID authentication cancelled or user not a customer of "
+msgstr "BankID-Authentifikation wurde abgebrochen oder der Nutzer ist kein Kunde von "
+
+msgid "Wrong user name or password, please try again."
+msgstr "Falscher Nutzername oder Passwort. Bitte versuchen Sie es erneut."
+
+msgid "Selected user has been blocked. Please contact your bank or reset the password in netbank."
+msgstr "Der ausgewählte Nutzer wurde blockiert. Kontaktieren Sie Ihre Bank oder setzen Sie das Passwort in Netbank zurück."
+
+msgid "Selected user is inactive. Please contact your bank."
+msgstr "Ausgewählter Nutzer ist nicht aktiv. Kontaktieren Sie Ihre Bank."
+
+msgid "User is not enrolled Mobilbank"
+msgstr "Nutzer ist nicht bei Mobilbank angemeldet"
+
+msgid "You have no netbank agreement"
+msgstr "Sie haben keine Netbank-Vereinbarung"
+
+msgid "Could not find destination account"
+msgstr "Zielkonto wurde nicht gefunden"
+
+msgid "Could not get recipient name from user"
+msgstr "Empfängername wurde vom Nutzer nicht bekanntgegeben"
+
+msgid "BankID authentication failed"
+msgstr "BankID-Authentifizierung fehlgeschlagen"
+
+msgid "Unsupported transfer type"
+msgstr "Überweisungsart wird nicht unterstützt"
+
+msgid "Could not retrieve source accounts."
+msgstr "Quellkonten wurden nicht gefunden."
+
+msgid "The message length exceeds maximum of 100 letters."
+msgstr "Die Nachrichtenlänge überschreitet 100 Buchstaben."
+
+msgid "The message given is not valid."
+msgstr "Die angegebene Nachricht ist nicht gültig."
+
+msgid "Wrong BankID signature. Did you log in with the wrong personnummer?"
+msgstr "Falsche BankID-Signatur. Haben Sie sich mit der falschen persönlichen Nummer angemeldet?"
+
+msgid "Unable to create new recipient account"
+msgstr "Neues Empfängerkonto konnte nicht erstellt werden"
+
+msgid "Recipient name"
+msgstr "Empfängername"
+
+msgid "Because this is the first time you transfer money to this account, you'll need to register a name for it."
+msgstr "Da Sie zum ersten Mal Geld an dieses Konto überweisen, müssen Sie dafür einen Namen eingeben."
+
+msgid "In order to add new recipients you need to activate Mobile BankID for extended use. This is done in the internet bank on the page BankID (found in the tab Tillval)."
+msgstr "Um neue Empfänger hinzuzufügen, müssen Sie die Mobile BankID für die erweiterte Nutzung freischalten. Dies geschieht über die Internetbank auf der Seite BankID (im Tab Tillval)."
+
+msgid "You have outstanding transfers you'll need to sign before executing a new one"
+msgstr "Sie haben offene Überweisungen, die Sie unterzeichnen müssen, bevor Sie eine neue durchführen"
+
+msgid "Invalid profile"
+msgstr "Ungültiges Profil"
+
+msgid "The transaction was cancelled by the user."
+msgstr "Die Transaktion wurde vom Nutzer abgebrochen."
+
+msgid "Timeout while waiting for the user to sign the transfer."
+msgstr "Die Zeit fürs Warten auf die Signatur für die Transaktion vom Nutzer ist abgelaufen."
+
+msgid "Could not find savings goal to delete."
+msgstr "Sparziel zum Löschen wurde nicht gefunden."
+
+msgid "Could not delete savings goal."
+msgstr "Sparziel konnte nicht gelöscht werden."
+
+msgid "person"
+msgstr "Person"
+
+msgid "protected identity"
+msgstr "Geschützte Identität"
+
+msgid "locked identity"
+msgstr "Gesperrte Identität"
+
+msgid "deceased"
+msgstr "Verstorben"
+
+msgid "removed from register"
+msgstr "Aus dem Register entfernt"
+
+msgid "emigrated"
+msgstr "Ausgewandert"
+
+msgid "changed person number"
+msgstr "Persönliche Nummer geändert"
+
+#, java-format
+msgid "You use the same credentials as you use at {0}. For more information about the required credentials, please see [their website]({1}). If you have any questions or problems connecting {0}, please contact [support@tinkapp.com](mailto:support@tinkapp.com)."
+msgstr "Sie verwenden dieselben Anmeldedaten wie für {0}. Weitere Informationen über die erforderlichen Anmeldedaten finden Sie auf [ihrer Website]({1}). Wenn Sie Fragen oder Probleme beim Verbinden mit {0} haben, kontaktieren Sie bitte [support@tinkapp.com](mailto:support@tinkapp.com)."
+
+#, java-format
+msgid "For the selected source, the destination message cannot be longer than {0} characters. Please adjust the message and try again."
+msgstr "Für die ausgewählte Quelle kann die Zielnachricht nicht länger sein als {0} Zeichen. Bitte passen Sie die Nachricht an und versuchen Sie es erneut."
+
+msgid "Error from"
+msgstr "Fehler von"
+
+msgid "Something went wrong."
+msgstr "Etwas ist schiefgegangen."
+
+msgid "BankID authentication failed. Please verify your Mobil BankID is OK."
+msgstr "BankID-Authentifizierung fehlgeschlagen. Bitte bestätigen Sie, dass Ihre Mobile BankID stimmt."
+
+msgid "MMMMM yyyy"
+msgstr "MMMMM yyyy"
+
+msgid "Largest expenses"
+msgstr "Größte Ausgaben"
+
+msgid "compared with previous month"
+msgstr "im Vergleich mit dem vorherigen Monat"
+
+msgid "Percentage points"
+msgstr "Prozentpunkte"
+
+msgid "Important Events"
+msgstr "Wichtige Events"
+
+msgid "Low balance"
+msgstr "Geringes Guthaben"
+
+msgid "Large expenses"
+msgstr "Große Ausgaben"
+
+msgid "More than usual"
+msgstr "Mehr als gewöhnlich"
+
+msgid "Budgets"
+msgstr "Budgets"
+
+msgid "ID Control"
+msgstr "ID-Kontrolle"
+
+msgid "Activate ID Control to safeguard your identity and bank accounts"
+msgstr "ID-Kontrolle aktivieren, um Ihre Identität und Bankkonten zu schützen"
+
+msgid "Handle warnings"
+msgstr "Warnungen bearbeiten"
+
+msgid "Activate ID Control"
+msgstr "ID-Kontrolle aktivieren"
+
+msgid "You have"
+msgstr "Sie haben"
+
+msgid "You handled"
+msgstr "Sie haben Folgendes bearbeitet:"
+
+msgid "No warnings to handle"
+msgstr "Keine Warnungen zum Bearbeiten"
+
+msgid "%s warning to handle"
+msgid_plural "%s warnings to handle"
+msgstr[0] "%s Warnung, die bearbeitet werden muss"
+msgstr[1] "%s Warnungen, die bearbeitet werden müssen"
+
+msgid "Event latest month"
+msgid_plural "Events latest month"
+msgstr[0] "Ereignis letzten Monat"
+msgstr[1] "Ereignisse letzten Monat"
+
+msgid "Open Tink"
+msgstr "Tink öffnen"
+
+msgid "d MMMMM"
+msgstr "d MMMMM"
+
+#, java-format
+msgid "{0} to {1}"
+msgstr "{0} an {1}"
+
+#, java-format
+msgid "Tink has automatically categorized {0} transaction the past salary period."
+msgid_plural "Tink has automatically categorized {0} transactions the past salary period."
+msgstr[0] "Tink hat automatisch {0} Überweisung im letzten Gehaltzeitraum kategorisiert."
+msgstr[1] "Tink hat automatisch {0} Überweisungen im letzten Gehaltzeitraum kategorisiert."
+
+#, java-format
+msgid "Tink has automatically categorized {0} transaction the past month."
+msgid_plural "Tink has automatically categorized {0} transactions the past month."
+msgstr[0] "Tink hat automatisch {0} Überweisung im letzten Monat kategorisiert."
+msgstr[1] "Tink hat automatisch {0} Überweisungen im letzten Monat kategorisiert."
+
+msgid "If you no longer want to receive these emails, please click <a href=\"%s\">here</a>."
+msgstr "Wenn Sie diese E-Mails nicht mehr erhalten möchten, dann klicken Sie <a href=\"%s\">hier</a>."
+
+msgid "You kept your goal. Great job!"
+msgid_plural "You kept all your goals. Great job!"
+msgstr[0] "Sie haben Ihr Ziel erreicht. Gut gemacht!"
+msgstr[1] "Sie haben Ihre Ziele erreicht. Gut gemacht!"
+
+msgid "You did not keep your goal. Better luck next month."
+msgid_plural "You did not keep a single goal. Better luck next month."
+msgstr[0] "Sie haben Ihr Ziel nicht erreicht. Viel Glück für den nächsten Monat!"
+msgstr[1] "Sie haben Ihre Ziele nicht erreicht. Viel Glück für den nächsten Monat!"
+
+#, java-format
+msgid "You kept {0} of your goals."
+msgstr "Sie haben {0} Ihrer Ziele erreicht."
+
+msgid "You have a new monthly summary for %s"
+msgstr "Sie haben eine neue monatliche Zusammenfassung für %s"
+
+msgid "Update your bank connections in Tink to view it!"
+msgstr "Aktualisieren Sie Ihre Bankverbindungen in Tink, um sie anzusehen!"
+
+msgid "place_id"
+msgstr "Ort_id"
+
+msgid "description"
+msgstr "Beschreibung"
+
+msgid "name"
+msgstr "Name"
+
+msgid "formatted_address"
+msgstr "Formatierte_Adresse"
+
+msgid "vicinity"
+msgstr "In der Nähe"
+
+msgid "website"
+msgstr "Website"
+
+msgid "formatted_phone_number"
+msgstr "Formatierte_Telefon_Nummer"
+
+msgid "photo_reference"
+msgstr "Foto_Referenz"
+
+msgid "long_name"
+msgstr "Langer_Name"
+
+msgid "over"
+msgstr "über"
+
+msgid "more than"
+msgstr "mehr als"
+
+msgid "less than"
+msgstr "weniger als"
+
+msgid "under"
+msgstr "unter"
+
+msgid "around"
+msgstr "ungefähr"
+
+msgid "weekdays"
+msgstr "Unter der Woche"
+
+msgid "weekends"
+msgstr "Am Wochenende"
+
+msgid "today"
+msgstr "Heute"
+
+msgid "yesterday"
+msgstr "Gestern"
+
+msgid "this week"
+msgstr "Diese Woche"
+
+msgid "last week"
+msgstr "Letzte Woche"
+
+msgid "this month"
+msgstr "Dieser Monat"
+
+msgid "last month"
+msgstr "Letzter Monat"
+
+msgid "this year"
+msgstr "Dieses Jahr"
+
+msgid "last year"
+msgstr "Letztes Jahr"
+
+#, java-format
+msgid "week {0}"
+msgstr "Woche {0}"
+
+msgid "month"
+msgstr "Monat"
+
+msgid "week"
+msgstr "Woche"
+
+msgid "day"
+msgstr "Tag"
+
+msgid "and"
+msgstr "und"
+
+#, java-format
+msgid "{0} account"
+msgid_plural "{0} accounts"
+msgstr[0] "{0} Konto"
+msgstr[1] "{0} Konten"
+
+#, java-format
+msgid "{0} transaction"
+msgid_plural "{0} transactions"
+msgstr[0] "{0} Überweisung"
+msgstr[1] "{0} Überweisungen"
+
+msgid "zero"
+msgstr "null"
+
+msgid "one"
+msgstr "eins"
+
+msgid "two"
+msgstr "zwei"
+
+msgid "three"
+msgstr "drei"
+
+msgid "four"
+msgstr "vier"
+
+msgid "five"
+msgstr "fünf"
+
+msgid "six"
+msgstr "sechs"
+
+msgid "seven"
+msgstr "sieben"
+
+msgid "eight"
+msgstr "acht"
+
+msgid "nine"
+msgstr "neun"
+
+msgid "MMM"
+msgstr "MMM"
+
+msgid "MMM d"
+msgstr "MMM d"
+
+msgid "M/d"
+msgstr "M/d"
+
+#, java-format
+msgid "last {0}"
+msgstr "zuletzt {0}"
+
+msgid "MMMM d"
+msgstr "MMMM d"
+
+msgid "tomorrow"
+msgstr "morgen"
+
+#, java-format
+msgid "on {0}"
+msgstr "am {0}"
+
+msgid "MMM d YYYY"
+msgstr "MMM d YYYY"
+
+msgid "High balance"
+msgstr "Hohes Guthaben"
+
+msgid "You have an unusually high balance on one account."
+msgstr "Sie haben ein ungewöhnlich hohes Guthaben auf einem Konto."
+
+#, java-format
+msgid "You have an unusually high balance on {0}"
+msgstr "Sie haben ein ungewöhnlich hohes Guthaben auf {0}"
+
+msgid "You have an unusually low balance on one account."
+msgstr "Sie haben ein ungewöhnlich niedriges Guthaben auf einem Konto."
+
+#, java-format
+msgid "You have an unusually low balance on {0}"
+msgstr "Sie haben ein ungewöhnlich niedriges Guthaben auf {0}."
+
+msgid "Bank Fee"
+msgstr "Bankgebühr"
+
+#, java-format
+msgid "You were charged by {0}"
+msgstr "{0} hat etwas bei Ihnen abgebucht"
+
+msgid "Bank fee selfie"
+msgstr "Bankgebühr-Selfie"
+
+#, java-format
+msgid "You spent {0} less than {1} on {2} {3}."
+msgstr "Sie haben {0} weniger als {1} für {2} {3} ausgegeben."
+
+#, java-format
+msgid "You spent {0} more than {1} on {2} {3}."
+msgstr "Sie haben {0} mehr als {1} für {2} {3} ausgegeben."
+
+msgid "Add a budget now"
+msgstr "Jetzt ein Budget hinzufügen"
+
+msgid "Tip: start with budgetting"
+msgstr "Tipp: Setzen Sie sich ein Budget"
+
+msgid "For example, set a maximum amount per month on groceries or clothes and Grip will track it for you."
+msgstr "Bestimmen Sie zum Beispiel den Höchstsumme, die Sie im Monat für Einkäufe oder Kleidung ausgeben wollen, und Grip überwacht sie für Sie."
+
+msgid "Double charge"
+msgstr "Doppelbuchung"
+
+msgid "You were double-charged."
+msgstr "Ihr Konto wurde doppelt belastet."
+
+#, java-format
+msgid "You were double-charged by {0} for {1}."
+msgstr "Ihr Konto wurde von {0} für {1} doppelt belastet."
+
+#, java-format
+msgid "You have exceeded your goal for {0} this month."
+msgstr "Sie haben Ihr Ziel für {0} diesen Monat überschritten."
+
+#, java-format
+msgid "You are close to exceeding your goal for {0} this month."
+msgstr "Sie stehen kurz davor, Ihr Ziel für {0} diesen Monat zu überschreiten."
+
+#, java-format
+msgid "You exceeded your goal for {0} on {1}"
+msgstr "Sie haben Ihr Ziel für {0} am {1} überschritten."
+
+#, java-format
+msgid "You were close to exceeding your goal for {0} on {1}"
+msgstr "Sie standen kurz davor, Ihr Ziel für {0} am {1} zu überschreiten."
+
+msgid "Missed goal"
+msgstr "Verpasstes Ziel"
+
+msgid "Close to goal"
+msgstr "Ziel fast erreicht"
+
+msgid "Handle warning"
+msgid_plural "Handle warnings"
+msgstr[0] "Warnung bearbeiten"
+msgstr[1] "Warnungen bearbeiten"
+
+msgid "There is %s new warning that needs your attention."
+msgid_plural "There are %s new warnings that need your attention."
+msgstr[0] "Es gibt %s neue Warnung, um die Sie sich kümmern müssen."
+msgstr[1] "Es gibt %s neue Warnungen, um die Sie sich kümmern müssen."
+
+msgid "Show map"
+msgstr "Karte anzeigen"
+
+msgid "Eating out map"
+msgstr "Karte von Restaurantbesuchen"
+
+msgid "This is where you eat out."
+msgstr "Hier haben Sie auswärts gegessen."
+
+#, java-format
+msgid "You have a low balance on {0}"
+msgstr "Sie haben ein geringes Guthaben auf {0}"
+
+msgid "Income"
+msgstr "Einkommen"
+
+msgid "You received an income."
+msgstr "Sie haben Einkommen erhalten."
+
+#, java-format
+msgid "You received income from {0}"
+msgstr "Sie haben Einnahmen von {0} erhalten"
+
+#, java-format
+msgid "You received {0} incomes."
+msgstr "Sie haben {0} Einkommen erhalten."
+
+msgid "Large expense"
+msgstr "Große Ausgabe"
+
+msgid "You were charged an unusually large expense."
+msgstr "Ihnen wurden eine ungewöhnlich große Ausgabe berechnet."
+
+#, java-format
+msgid "You were charged an unusually large expense by {0}"
+msgstr "Ihnen wurden eine ungewöhnlich große Ausgabe von {0} berechnet."
+
+#, java-format
+msgid "You were charged {0} unusually large expenses."
+msgstr "Ihnen wurden {0} ungewöhnlich große Ausgaben berechnet."
+
+#, java-format
+msgid "You were charged some unusually large expenses by {0}"
+msgstr "Ihnen wurde von {0} eine ungewöhnlich große Ausgabe berechnet"
+
+msgid "You are above average spending at this time of month"
+msgstr "Sie haben zu diesem Zeitpunkt mehr als den Monatsdurchschnitt ausgegeben"
+
+msgid "You are still above average spending at this time of month"
+msgstr "Sie haben zu diesem Zeitpunkt immer noch mehr als den Monatsdurchschnitt ausgegeben"
+
+msgid "You are below average spending at this time of month"
+msgstr "Sie haben zu diesem Zeitpunkt weniger als den Monatsdurchschnitt ausgegeben"
+
+msgid "You are still below average spending at this time of month"
+msgstr "Sie haben zu diesem Zeitpunkt immer noch weniger als den Monatsdurchschnitt ausgegeben"
+
+msgid "Left to Spend"
+msgstr "Zum Ausgeben übrig"
+
+msgid "1 year ago"
+msgstr "Vor 1 Jahr"
+
+msgid "Look back on it"
+msgstr "Zurückblicken"
+
+msgid "Look back"
+msgstr "Zurückblicken"
+
+#, java-format
+msgid "1 year ago: {0} - via @tink"
+msgstr "Vor 1 Jahr: {0} - über @tink"
+
+#, java-format
+msgid "in {0}"
+msgstr "in {0}"
+
+msgid "top 5 %"
+msgstr "Top 5 %"
+
+#, java-format
+msgid "You are one of the {0} spenders at {1}."
+msgstr "Sie sind einer der {0} Verschwender bei {1}."
+
+#, java-format
+msgid "Of the customers at {2}, you spent {0} more than {1} {3}."
+msgstr "Von den Kunden bei {2} haben Sie {0} mehr als {1} {3} ausgegeben."
+
+#, java-format
+msgid "Of the customers at {2}, you spent {0} less than {1} {3}."
+msgstr "Von den Kunden bei {2} haben Sie {0} weniger als {1} {3} ausgegeben."
+
+msgid "Great job!"
+msgstr "Gut gemacht!"
+
+msgid "Good job!"
+msgstr "Gut gemacht!"
+
+msgid "Come on!"
+msgstr "Na los!"
+
+#, java-format
+msgid "You kept your goal in {0}. Great job!"
+msgid_plural "You kept all your goals in {0}. Great job!"
+msgstr[0] "Sie haben Ihr Ziel in {0} erreicht. Gut gemacht!"
+msgstr[1] "Sie haben Ihre Ziele in {0} erreicht. Gut gemacht!"
+
+#, java-format
+msgid "You did not keep your goal in {0}. Better luck next month."
+msgid_plural "You did not keep a single goal in {0}. Better luck next month."
+msgstr[0] "Sie haben Ihr Ziel in {0} nicht erreicht. Viel Glück für den nächsten Monat!"
+msgstr[1] "Sie haben Ihre Ziele in {0} nicht erreicht. Viel Glück für den nächsten Monat!"
+
+#, java-format
+msgid "You kept {0} of your goals in {1}."
+msgstr "Sie haben {0} Ihrer Ziele in {1} erreicht."
+
+msgid "Check out your monthly summary!"
+msgstr "Sehen Sie sich Ihre monatliche Zusammenfassung an!"
+
+#, java-format
+msgid "{0} was a great month! You made {1} more than you spent."
+msgstr "{0} war ein toller Monat! Sie haben {1} mehr verdient, als Sie ausgegeben haben."
+
+#, java-format
+msgid "{0} was a not a great month. You spent {1} more than you made."
+msgstr "{0} war kein guter Monat. Sie haben {1} mehr ausgegeben, als Sie verdient haben."
+
+#, java-format
+msgid "You have saved {0} in {1} months!"
+msgstr "Sie haben {0} in {1} Monaten gespart!"
+
+msgid "Add account"
+msgstr "Konto hinzufügen"
+
+msgid "Connect to Tink and get an even better overview"
+msgstr "Verbinden Sie sich mit Tink, um eine noch bessere Übersicht zu erhalten"
+
+#, java-format
+msgid "It seems like you have an account at {0} that you haven't connected to Tink."
+msgstr "Es sieht so aus, als hätten Sie ein Konto bei {0}, das Sie nicht mit Tink verknüpft haben."
+
+#, java-format
+msgid "Pick a location for another {1} merchants and see {0}% on the eating out map."
+msgstr "Wählen Sie einen Standort für weitere {1} Händler und sehen Sie {0}% der Restaurantkarte."
+
+#, java-format
+msgid "Pick a location for another {1} merchants to reach {0}% merchantized."
+msgstr "Wählen Sie einen Standort für weitere {1} Händler, um {0}% zu erreichen."
+
+msgid "Expense"
+msgstr "Ausgaben"
+
+msgid "Expenses"
+msgstr "Ausgaben"
+
+msgid "You've made a purchase."
+msgstr "Sie haben einen Kauf getätigt."
+
+#, java-format
+msgid "You had an expense charged by {0}"
+msgstr "Ihnen wurde eine Ausgabe von {0} berechnet"
+
+#, java-format
+msgid "You spent {0} more yesterday than the average tab at {1}."
+msgstr "Sie haben gestern {0} mehr als durchschnittlich für {1} ausgegeben."
+
+msgid "Transfer"
+msgstr "Überweisung"
+
+#, java-format
+msgid "You transferred {0} from {1} to {2}"
+msgstr "Sie haben {0} von {1} nach {2} überwiesen"
+
+msgid "Less than usual"
+msgstr "Weniger als gewöhnlich"
+
+#, java-format
+msgid "You have spent less than usual on {0} this month."
+msgstr "Sie haben weniger als normal diesen Monat für {0} ausgegeben"
+
+#, java-format
+msgid "You have spent more than usual on {0} this month."
+msgstr "Sie haben mehr als normal diesen Monat für {0} ausgegeben"
+
+msgid "others"
+msgstr "sonstiges"
+
+msgid "other"
+msgstr "sonstiges"
+
+#, java-format
+msgid "{0} year old"
+msgstr "{0} Jahr alt"
+
+#, java-format
+msgid "{0} year olds"
+msgstr "{0} Jahre alt"
+
+msgid "men"
+msgstr "Männer"
+
+msgid "women"
+msgstr "Frauen"
+
+#, java-format
+msgid "Week {0}"
+msgstr "Woche {0}"
+
+msgid "Weekly Summary"
+msgstr "Wöchentliche Zusammenfassung"
+
+msgid "You are good with your goals. Great job!"
+msgid_plural "You are good on all your goals. Great job!"
+msgstr[0] "Sie sind auf dem besten Weg bei Ihrem Ziel. Gut gemacht!"
+msgstr[1] "Sie sind auf dem besten Weg bei Ihren Zielen. Gut gemacht!"
+
+msgid "You have already blown your goal. Better luck next month."
+msgid_plural "You have already blown all of your goals. Better luck next month."
+msgstr[0] "Sie haben Ihr Ziel bereits verpasst. Viel Glück für den nächsten Monat."
+msgstr[1] "Sie haben Ihre Ziele bereits verpasst. Viel Glück für den nächsten Monat."
+
+#, java-format
+msgid "You are good on {0} of your {1} goals."
+msgstr "Sie machen Fortschritte bei {0} von Ihren {1} Zielen."
+
+msgid "Check it out!"
+msgstr "Sehen Sie ihn sich an!"
+
+#, java-format
+msgid "You have spent {0} during last week."
+msgstr "Sie haben letzte Woche {0} ausgegeben."
+
+msgid "Share me"
+msgstr "Teilen"
+
+msgid "Card fees"
+msgstr "Kartengebühren"
+
+msgid "Cash withdrawal fees"
+msgstr "Abhebungensgebühren"
+
+msgid "Administration fees"
+msgstr "Verwaltungsgebühren"
+
+#, java-format
+msgid "You have payed at least {0} in bank fees so far this year. That is equal to the average Tink user."
+msgstr "Sie haben bisher dieses Jahr {0} an Bankgebühren bezahlt. Das entspricht dem durchschnittlichen Tink-Nutzer."
+
+#, java-format
+msgid "You have payed at least {0} in bank fees so far this year. That is {1} more than the average Tink user."
+msgstr "Sie haben bisher dieses Jahr {0} an Bankgebühren bezahlt. Das ist mehr als {1} des durchschnittlichen Tink-Nutzers."
+
+#, java-format
+msgid "You have payed at least {0} in bank fees so far this year. That is {1} less than the average Tink user."
+msgstr "Sie haben bisher dieses Jahr {0} an Bankgebühren bezahlt. Das ist weniger als {1} des durchschnittlichen Tink-Nutzers."
+
+msgid "Approve"
+msgstr "Zustimmen"
+
+#, java-format
+msgid "To be payed {0}"
+msgstr "Es wird gezahlt {0}"
+
+msgid "Immediate"
+msgstr "Sofort"
+
+#, java-format
+msgid "{0} overspent"
+msgstr "{0} zuviel ausgegeben"
+
+#, java-format
+msgid "{0} left"
+msgstr "{0} übrig"
+
+#, java-format
+msgid "of {0}"
+msgstr "von {0}"
+
+#, java-format
+msgid "{0} above avg."
+msgstr "{0} über Durchschnitt"
+
+#, java-format
+msgid "{0} below avg."
+msgstr "{0} unter Durchschnitt"
+
+msgid "Biggest purchase"
+msgstr "Größter Kauf"
+
+msgid "Total expenses"
+msgstr "Gesamtausgaben"
+
+#, java-format
+msgid "{0} over avg."
+msgstr "{0} über Durchschnitt"
+
+msgid "Unusual spending"
+msgstr "Ungewöhnliche Ausgabe"
+
+msgid "normally"
+msgstr "Normal"
+
+msgid "Start wizard now"
+msgstr "Jetzt den Assistenten starten"
+
+msgid "Improve categorization"
+msgstr "Kategorisierung starten"
+
+#, java-format
+msgid "You can reach {0}% by categorizing one additional transaction."
+msgid_plural "You can reach {0}% by categorizing {1} additional transactions."
+msgstr[0] "Sie erreichen {0}%, indem Sie eine zusätzliche Überweisung kategorisieren."
+msgstr[1] "Sie erreichen {0}%, indem Sie {1} zusätzliche Überweisungen kategorisieren."
+
+#, java-format
+msgid "{0} incomes"
+msgstr "{0} Einkommen"
+
+#, java-format
+msgid "{0} expenses"
+msgstr "{0} Ausgaben"
+
+#, java-format
+msgid "{0} large expenses"
+msgstr "{0} große Ausgaben"
+
+#, java-format
+msgid "{0} bank fees"
+msgstr "{0} Bankgebühren"
+
+msgid "Weekly summary"
+msgstr "Wöchentliche Zusammenfassung"
+
+msgid "Expenses this week"
+msgstr "Ausgaben diese Woche"
+
+msgid "average"
+msgstr "Durchschnitt"
+
+msgid "You have no registered address"
+msgstr "Sie haben keine Meldeadresse"
+
+msgid "You have no registered company engagements"
+msgstr "Sie haben keine registrierten Firmenengagements"
+
+msgid "You have no registered debts at the Kronofogden"
+msgstr "Sie haben keine registrierten Schulden bei Kronofogden"
+
+msgid "You have no detected double charges"
+msgstr "Sie haben keine erfassten Doppelbuchungen"
+
+msgid "You have no registered personal data"
+msgstr "Sie haben persönlichen Daten registriert"
+
+msgid "You have no credit inquiries to show"
+msgstr "Sie haben Kreditanfragen, die angezeigt werden können"
+
+msgid "You have no detected unusual large expenses"
+msgstr "Sie haben keine erfassten ungewöhnlich großen Ausgaben"
+
+msgid "You have no registered non-payments"
+msgstr "Sie haben keine registrierten Nichtzahlungen"
+
+msgid "You have no registered real estate"
+msgstr "Sie haben keine registrierten Immobilien"
+
+msgid "You have no estimated credit score"
+msgstr "Sie haben keine geschätzte Credit Score"
+
+msgid "You have no detected unusual large withdrawals"
+msgstr "Sie haben keine erfassten ungewöhnlich großen Abbuchungen"
+
+msgid "You have no extra frequent activity on any of your accounts"
+msgstr "Sie haben keine zusätzlichen, häufigen Aktivitäten auf einem Ihrer Konten"
+
+msgid "You have no detected off-location purchases."
+msgstr "Sie haben keine erfassten Einkäufe abseits des Standorts."
+
+msgid "You have no detected fraudulent merchant purchases"
+msgstr "Sie haben keine erfassten betrügerischen Händlereinkäufe"
+
+msgid "You have no tax return registered"
+msgstr "Sie haben keine Steuererklärung registriert"
+
+msgid "Your registered address is"
+msgstr "Ihre Meldeadresse lautet"
+
+msgid ", "
+msgstr ", "
+
+msgid "You have the role of %s in"
+msgid_plural "You have the roles %s in"
+msgstr[0] "Sie haben die Rolle %s in"
+msgstr[1] "Sie haben die Rollen %s in"
+
+msgid "You no longer have the role %s in"
+msgid_plural "You no longer have the roles %s in"
+msgstr[0] "Sie haben die Rolle %s nicht mehr in"
+msgstr[1] "Sie haben die Rollen %s nicht mehr in"
+
+msgid "Your personal data is"
+msgstr "Ihre persönlichen Daten lauten"
+
+msgid "You are registered owner of"
+msgstr "Sie sind der gemeldete Eigentümer von"
+
+msgid "You have %s debt with a balance of"
+msgid_plural "You have %s debts with total balance of"
+msgstr[0] "Sie haben %s Schulden über"
+msgstr[1] "Sie haben %s Schulden über"
+
+msgid "You have a non-payment at"
+msgstr "Sie haben eine Nichtzahlung von"
+
+msgid "%s with amount %s"
+msgstr "%s mit einer Summe von %s"
+
+msgid "No credit scoring"
+msgstr "Keine Credit Score"
+
+msgid "You have a credit score of"
+msgstr "Sie haben eine Credit Score von"
+
+msgid "%s out of %s with description: %s"
+msgstr "%s von %s mit Beschreibung: %s"
+
+msgid "You have a possible double charge from"
+msgstr "Sie haben eine mögliche Doppelbuchung von"
+
+msgid "This day you have an extra frequent activity on you account"
+msgstr "An diesem Tag haben Sie besonders häufige Aktivitäten auf Ihrem Konto"
+
+msgid "%s with %s transactions"
+msgstr "%s mit %s Transaktionen"
+
+msgid "You have an unusual large expense from"
+msgstr "Sie haben eine ungewöhnlich hohe Ausgabe von"
+
+msgid "A credit inquiry was taken for you from"
+msgstr "Eine Kreditanfrage über Sie wurde veranlasst von"
+
+msgid "You have an unusual large withdrawal with amount"
+msgstr "Sie haben eine ungewöhnlich hohe Abbuchung über"
+
+msgid "You made a purchase at"
+msgstr "Sie haben einen Kauf getätigt bei"
+
+msgid "You made a purchase at an untrusted listed merchant"
+msgstr "Sie haben einen Kauf getätigt bei einem nicht vertrauenswürdigen Händler"
+
+#, java-format
+msgid "Your tax return from Skatteverket, total income is {0}"
+msgstr "Ihre Steuererklärung von Skatteverket. Das Gesamteinkommen beläuft sich auf {0}"
+
+msgid "Tax return"
+msgstr "Steuererklärung"
+
+#, java-format
+msgid "Your tax return from Skatteverket for income year {0}, total income is {1}"
+msgstr "Ihre Steuererklärung von Skatteverket für das Steuerjahr {0}. Das Gesamteinkommen beläuft sich auf {1}"
+
+#, java-format
+msgid "Income year {0}"
+msgstr "Steuerjahr {0}"
+
+#, java-format
+msgid "Employment: {0}\nCapital: {1}\nTax: {2}"
+msgstr "Anstellung: {0}\nKapital: {1}\nSteuern: {2}"
+
+msgid "Registered address"
+msgstr "Meldeadresse"
+
+msgid "Company engagement"
+msgstr "Firmenengagement"
+
+msgid "Debt balance"
+msgstr "Schuldenstand"
+
+msgid "Account activity"
+msgstr "Kontoaktivität"
+
+msgid "Identity"
+msgstr "Identität"
+
+msgid "Credit inquiry"
+msgstr "Kreditanfrage"
+
+msgid "Nonpayment"
+msgstr "Nichtzahlung"
+
+msgid "Real estate holding"
+msgstr "Immobilienbestand"
+
+msgid "Credit score"
+msgstr "Credit Score"
+
+msgid "Large withdrawal"
+msgstr "Große Abhebunge"
+
+msgid "Off location purchase"
+msgstr "Einkauf abseits des Standorts"
+
+msgid "Fraudulent merchant"
+msgstr "Betrügerischer Händler"
+
+msgid "Non-payments"
+msgstr "Nichtzahlungen"
+
+msgid "Identity & engagements"
+msgstr "Identität & Engagements"
+
+msgid "Credit reviews"
+msgstr "Kreditprüfungen"
+
+msgid "Account activities"
+msgstr "Kontoaktivitäten"
+
+msgid "The information is fetched from Statens personadressregister. SPAR includes all persons who are registered as resident in Sweden. The data in SPAR is updated each day with data from the Swedish Population Register."
+msgstr "Diese Informationen kommen aus dem Statens personadressergister. SPAR beinhaltet alle Personen, die als Einwohner in Schweden registriert sind. Die Daten in SPAR wird jeden Tag mit Daten aus dem schwedischen Einwohnermelderegister aktualisiert."
+
+msgid "The information is fetched from Bolagsverket and Skatteveket. Bolagsverket is a public authority whose main purpose is to register new companies and handle changes in register for existing companies, such as changes in address and changes of board and accountants. Skatteverket handled F-tax and moms."
+msgstr "Diese Informationen kommen von Bolagsverket und Skatteveket. Bolagsverket ist eine öffentliche Behörde, deren Hauptaufgabe es ist, neue Firmen zu registrieren und Änderungen für bestehende Firmen auszuführen, wenn sich zum Beispiel eine Adresse geändert hat, der Vorstand oder Buchhalter. Skatteverket kümmert sich um F-Steuern und Mütter."
+
+msgid "The information is fetched from Lantmäteriet. Lantmäteriet is the authority that handles geographical information, appoints district names and is responsible for real estate classification."
+msgstr "Diese Informationen kommen von Lantmäteriet. Lantmäteriet ist die Behörde, die geografische Daten verwaltet, Bezirksnamen zuweist und verantwortlich für Klassifizierungen von Immobilien ist."
+
+msgid "The information is fetched from Kronofogden. Kronofogden is a neutral administrative authority. The assignment is to create a balance between the one paying and the one who is payed. It is the duty of Kronofogden to help the one not getting payed, but also supporting the one who cannot pay a debt."
+msgstr "Diese Informationen kommen aus Kronofogden. Kronofogden ist eine neutrale Verwaltungsbehörde. Bei der Zuordnung geht es darum, eine Bilanz zwischen dem Zahlenden und dem, der die Zahlung erhält, herzustellen. Es ist die Aufgabe von Kronofogden, Personen zu helfen, die nicht bezahlt werden, und außerdem diejenigen zu unterstützen, die eine Schuld nicht zurückzahlen können."
+
+msgid "The information is fetched from Kronofogden. A non-payment is a sign of you not being able to handle your payments. The effect could for example be that your are not getting a mortgage, apartment, job or phone subscription."
+msgstr "Diese Informationen kommen aus Kronofogden. Eine Nichtzahlung ist ein Zeichen, dass Sie nicht in der Lage sind, sich um Ihre Zahlungen zu kümmern. Dies könnte zum Beispiel Auswirkungen darauf haben, ob Sie einen Hauskredit, eine Wohnung, einen Job oder einen Handyvertrag erhalten."
+
+msgid "The information is fetched from Skatteverket when your tax return has been approved."
+msgstr "Diese Informationen werden von Skatteverket abgerufen, wenn Ihre Steuererklärung angenommen wurde."
+
+msgid "Creditsafe scoring is a tool to determine the solvency level for a person. The scoring is done by a number of generic credit scoring models and is mainly based on income, assets, age, company engagements, civil status and non-payments. The scoring is a scale from 1 to 100 where 1-19 means low solvency, 20-39 medium solvency, 40-69 high solvency and 70-100 very high solvency."
+msgstr "Creditsafe Scoring ist ein Tool, das die Solvenzstufe einer Person bestimmt. Das Scoring findet anhand einer Reihe generischer Credit Scoring-Modelle statt und basiert hauptsächlich auf Einkommen, Vermögen, Alter, Firmenengagements, Familienstand und Nichtzahlungen. Bei dem Scoring handelt es sich um eine Skala von 1 bis 100, bei dem 1-19 für geringe Solvenz, 20-39 für mittlere Solvenz, 40-69 für hohe Solvenz und 70-100 für sehr hohe Solvenz steht."
+
+msgid "Every day Tink scans all of your transactions to find things that differ from you normal behaviour and things we want to keep you extra alerted on. In this case we have notices there were two transactions deducted from your account the same day with the same amount and description. It could be someone with bad intentions that has charged you twice but it could of course also been you buying the same thing twice the same day."
+msgstr "Tink scannt alle Ihrer Transaktionen jeden Tag, um Dinge zu finden, die von Ihrem normalen Verhalten abweichen, und Dinge, über die wir Sie gesondert aufmerksam machen wollen. In diesem Fall haben wir festgestellt, dass zwei Transaktionen am selben Tag von Ihrem Konto mit demselben Betrag und derselben Beschreibung abgebucht wurden. Es kann sein, dass jemand mit bösen Absichten dein Konto zweimal belastet hat, oder natürlich könnte es auch sein, dass du dieselbe Sache zweimal am Tag gekauft hast."
+
+msgid "Every day Tink scans all of your transactions to find things that differ from you normal behaviour and things we want to keep you extra alerted on. In this case we have notices there was an unusual large expense on your account."
+msgstr "Tink scannt alle Ihrer Transaktionen jeden Tag, um Dinge zu finden, die von Ihrem normalen Verhalten abweichen, und Dinge, über die wir Sie gesondert aufmerksam machen wollen. In diesem Fall sind wir auf eine ungewöhnlich große Ausgabe auf Ihrem Konto aufmerksam geworden."
+
+msgid "Every day Tink scans all of your transactions to find things that differ from you normal behaviour and things we want to keep you extra alerted on. In this case we have notices there was an unusual large cash withdrawal on your account."
+msgstr "Tink scannt alle Ihrer Transaktionen jeden Tag, um Dinge zu finden, die von Ihrem normalen Verhalten abweichen, und Dinge, über die wir Sie gesondert aufmerksam machen wollen. In diesem Fall sind wir auf eine ungewöhnlich große Abhebung auf Ihrem Konto aufmerksam geworden."
+
+msgid "Every day Tink scans all of your transactions to find things that differ from you normal behaviour and things we want to keep you extra alerted on. In this case we have notices there was an unusual high activity on one of you accounts with more transactions than usual."
+msgstr "Tink scannt alle Ihrer Transaktionen jeden Tag, um Dinge zu finden, die von Ihrem normalen Verhalten abweichen, und Dinge, über die wir Sie gesondert aufmerksam machen wollen. In diesem Fall sind wir auf eine ungewöhnlich starke Aktivitäten auf einem Ihrer Kontos aufmerksam geworden, mit mehr Transaktionen als normal."
+
+msgid "Every day Tink scans all of your transactions to find things that differ from you normal behaviour and things we want to keep you extra alerted on. In this case we have notices there was a purchase made on a location where we think you havnt't been."
+msgstr "Tink scannt alle Ihrer Transaktionen jeden Tag, um Dinge zu finden, die von Ihrem normalen Verhalten abweichen, und Dinge, über die wir Sie gesondert aufmerksam machen wollen. In diesem Fall ist uns aufgefallen, dass ein Kauf an einem Ort vorgenommen wurde, von dem wir vermuten, dass Sie nicht dort waren."
+
+msgid "Every day Tink scans all of your transactions to find things that differ from you normal behaviour and things we want to keep you extra alerted on. In this case we have notices there was a purchase made at a merchant that has been flagged by trade organizations as fraudulent."
+msgstr "Tink scannt alle Ihrer Transaktionen jeden Tag, um Dinge zu finden, die von Ihrem normalen Verhalten abweichen, und Dinge, über die wir Sie gesondert aufmerksam machen wollen. In diesem Fall ist uns aufgefallen, dass ein Kauf bei einem Händler vorgenommen wurde, der von Handelsorganisationen aus betrügerisch gemeldet wurde."
+
+msgid "If any of the information is incorrect, please contact Skatteverket on %s."
+msgstr "Sollten die Daten falsch sein, kontaktieren Sie bitte Skatteverket über %s."
+
+#, java-format
+msgid "If any of the information is incorrect, please contact Bolagsverket on {0} or Skatteverket on {1}."
+msgstr "Sollten die Daten falsch sein, kontaktieren Sie bitte Bolagsverket über {0} oder Skatteverket über {1}."
+
+msgid "If any of the information is incorrect, please contact Lantmäteriet on %s."
+msgstr "Sollten die Daten falsch sein, kontaktieren Sie bitte Lantmäteriet über %s."
+
+msgid "If any of the information is incorrect, please contact Kronofogden on %s."
+msgstr "Sollten die Daten falsch sein, kontaktieren Sie bitte Kronofogden über %s."
+
+msgid "If you have any questions about you credit score, please contact Creditsafe on %s."
+msgstr "Wenn Sie Fragen über Ihre Credit Score haben, kontaktieren Sie bitte Creditsafe über %s."
+
+msgid "If you don’t recognise the transactions, please contact your bank and let them check who registered the transactions."
+msgstr "Wenn Sie die Transaktionen nicht erkennen, dann kontaktieren Sie bitte Ihre Bank und informieren Sie sie darüber, wer die Transaktionen registriert hat."
+
+msgid "If you don’t recognise the transaction, please contact your bank and let them check who registered the purchase."
+msgstr "Wenn Sie die Transaktion nicht erkennen, dann kontaktieren Sie bitte Ihre Bank und informieren Sie sie darüber, wer die Transaktion registriert hat."
+
+msgid "If you don’t recognise the transaction or there are problems in delivery of the purchased products, please contact the company and if necessary the police."
+msgstr "Wenn Sie die Transaktion nicht erkennen oder es Probleme bei der Lieferung der gekauften Produkte gibt, dann kontaktieren Sie bitte das Unternehmen oder falls nötig, die Polizei."
+
+msgid "foreclosure attempt"
+msgstr "Versuch zur Zwangsvollstreckung"
+
+msgid "dept balance"
+msgstr "Schuldenstand"
+
+msgid "personal bankruptcy"
+msgstr "Privatinsolvenz"
+
+msgid "under 18, non valid person number or no income"
+msgstr "Unter 18, ungültige persönliche Nummer oder kein Einkommen"
+
+msgid "debt restructuring"
+msgstr "Neuorganisation von Schulden"
+
+msgid "put under trusteeship"
+msgstr "Unter Treuhandschaft"
+
+msgid "deceased person"
+msgstr "Verstorbene Person"
+
+msgid "blocked person"
+msgstr "Gesperrte Person"
+
+msgid "emigrant"
+msgstr "Ausgewandert"
+
+msgid "technical deregistered"
+msgstr "Technische Deregistrierung"
+
+msgid "protected person"
+msgstr "Geschützte Person"
+
+msgid "under 18 years old"
+msgstr "Unter 18 Jahre alt"
+
+msgid "person missing"
+msgstr "Vermisste Person"
+
+msgid "error in score calculation"
+msgstr "Fehler bei der Score-Berechnung"
+
+msgid "low solvency"
+msgstr "Geringe Solvenz"
+
+msgid "medium solvency"
+msgstr "Mittlere Solvenz"
+
+msgid "high solvency"
+msgstr "Starke Solvenz"
+
+msgid "very high solvency"
+msgstr "Sehr starke Solvenz"
+
+msgid "Is this correct?"
+msgstr "Ist das richtig?"
+
+msgid "Was this you?"
+msgstr "Waren Sie das?"
+
+msgid "Is this OK?"
+msgstr "Ist das okay?"
+
+msgid "Yes"
+msgstr "Ja"
+
+msgid "No"
+msgstr "Nein"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Org. number"
+msgstr "Org.Nummer"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Address"
+msgstr "Adresse"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "F-tax"
+msgstr "F-Steuer"
+
+msgid "Vat"
+msgstr "MwSt."
+
+msgid "Registrerat namn"
+msgstr "Registrierter Name"
+
+msgid "Type"
+msgstr "Art"
+
+msgid "Role"
+msgstr "Rolle"
+
+msgid "Credit rating"
+msgstr "Kreditbewertung"
+
+msgid "Nbr employees"
+msgstr "NBR-Angestellte"
+
+msgid "Revenue"
+msgstr "Einkünfte"
+
+msgid "Profit after tax"
+msgstr "Gewinn nach Steuern"
+
+msgid "Net profit"
+msgstr "Nettogewinn"
+
+msgid "Total capital"
+msgstr "Gesamtkapital"
+
+msgid "Gross Profit Margin"
+msgstr "Bruttogewinnspanne"
+
+msgid "Quick ratio"
+msgstr "Einzugsliquidität"
+
+msgid "Solidity"
+msgstr "Beständigkeit"
+
+msgid "Director"
+msgstr "Direktor"
+
+msgid "New events"
+msgstr "Neue Events"
+
+msgid "You have new events in your feed"
+msgstr "Sie haben neue Events in Ihrem Feed."
+
+msgid "Updated."
+msgstr "Aktualisert."
+
+#, java-format
+msgid "Analyzed {0}."
+msgstr "{0} analysiert."
+
+msgid "The bank connection was blocked due to an abnormal number of transactions."
+msgstr "Die Bankverbindung wurde aufgrund einer unnormalen Anzahl Transaktionen gesperrt."
+
+#, java-format
+msgid "Loaded one transaction"
+msgid_plural "Loaded {0} transactions"
+msgstr[0] "Eine Überweisung geladen"
+msgstr[1] "{0} Überweisungen geladen"
+
+msgid "You're using a version of the app that is too old. Please update to the latest version in order to login to your Tink account."
+msgstr "Sie verwenden eine Version der App, die zu alt ist. Bitte aktualisieren Sie auf die neuste Version, um sich in Ihr Tink-Konto einzuloggen."
+
+msgid "Unable to fetch accounts."
+msgstr "Konten konnten nicht aufgerufen werden."
+
+msgid "Unable to subscribe to accounts."
+msgstr "Konten konnten nicht abonniert werden."
+
+msgid "Please verify you bank connection before creating an account."
+msgstr "Bitte überprüfen Sie Ihre Bankverbindung, bevor Sie ein Konto erstellen."
+
+msgid "accounts"
+msgstr "Konten"
+
+msgid "transactions"
+msgstr "Transaktionen"
+
+msgid "amount spent in each category"
+msgstr "Summe, die in jeder Kategorie ausgegeben wurde"
+
+msgid "number of purchases in each category"
+msgstr "Anzahl der Käufe in jeder Kategorie"
+
+msgid "amount spent at each merchant"
+msgstr "Summe, die bei jedem Händler ausgegeben wurde"
+
+msgid "number of purchases at each merchant"
+msgstr "Anzahl der Käufe bei jedem Händler"
+
+msgid "bank connections"
+msgstr "Bankverbindungen"
+
+msgid "user profile"
+msgstr "Nutzerprofil"
+
+msgid "budgets and savings goals"
+msgstr "Budgets und Sparziele"
+
+msgid "documents"
+msgstr "Dokumente"
+
+msgid "payment options"
+msgstr "Zahlungsoptionen"
+
+msgid "statistics"
+msgstr "Statistik"
+
+#, java-format
+msgid "View your {0}"
+msgstr "Ihr {0} ansehen"
+
+#, java-format
+msgid "Update your {0}"
+msgstr "Aktualisieren Sie Ihr {0}"
+
+msgid "Lunch"
+msgstr "Mittagessen"
+
+msgid "Restaurants"
+msgstr "Restaurants"
+
+msgid "Weekly groceries"
+msgstr "Wöchentliche Einkäufe"
+
+msgid "Groceries"
+msgstr "Einkäufe"
+
+msgid "Small things"
+msgstr "Kleine Dinge"
+
+msgid "What a night"
+msgstr "Was für eine Nacht"
+
+msgid "Bars"
+msgstr "Bars"
+
+msgid "Cash from the wall"
+msgstr "Geld von der Wand"
+
+msgid "Withdrawals"
+msgstr "Abhebungen"
+
+msgid "Going out"
+msgstr "Ausgehen"
+
+msgid "Morning regrets"
+msgstr "Morgendliche Reue"
+
+#, java-format
+msgid "Tagged with {0}"
+msgstr "Getaggt mit {0}"
+
+msgid "Apps"
+msgstr "Apps"
+
+msgid "Source"
+msgstr "Quelle"
+
+msgid "Where does this information come from?"
+msgstr "Woher kommen diese Informationen?"
+
+msgid "What can I do if this looks weird?"
+msgstr "Was kann ich tun, wenn etwas seltsam erscheint?"
+
+msgid "What can I do if this is not correct?"
+msgstr "Was kann ich tun, wenn das nicht richtig war?"
+
+msgid "No thanks, I'd prefer to not get any e-mails from Tink."
+msgstr "Nein danke, ich möchte keine E-Mails von Tink erhalten."
+
+msgid "Monthly e-mail summarizing the last month's activity on my account."
+msgstr "Monatliche E-Mail mit einer Übersicht über meine Kontoaktivitäten des letztes Monats."
+
+msgid "When there are issues with my bank or credit card connection."
+msgstr "Wenn es Probleme mit meiner Bank oder meinen Kreditkarten gibt."
+
+msgid "When Tink has new and exciting product updates."
+msgstr "Wenn Tink neue und interessante Produktupdates hat."
+
+msgid "Follow the money"
+msgstr "Folgen Sie dem Geld"
+
+msgid "Manage your Tink subscriptions"
+msgstr "Verwalten Sie Ihre Tink-Abonnements"
+
+msgid "Save"
+msgstr "Speichern"
+
+msgid "Settings saved."
+msgstr "Einstellungen gespeichert."
+
+msgid "We are sad to see you go but maybe you are not the email type of person? Follow us on <a href=\"https://twitter.com/tink\" target=\"_blank\">Twitter</a> and <a href=\"https://www.facebook.com/tink.se\" target=\"_blank\">Facebook</a> instead."
+msgstr "Es tut uns leid, dass Sie uns verlassen. Vielleicht mögen Sie einfach keine E-Mails? Folgen Sie uns stattdessen auf <a href=\"https://twitter.com/tink\" target=\"_blank\">Twitter</a> und <a href=\"https://www.facebook.com/tink.se\" target=\"_blank\">Facebook</a>."
+
+msgid "Source account doesn't exist."
+msgstr "Quellkonto existiert nicht."
+
+msgid "Destination account doesn't exist."
+msgstr "Zielkonto existiert nicht."
+
+msgid "Destination account is not valid from source account."
+msgstr "Zielkonto ist nicht gültig vom Quellkonto."
+
+msgid "Please verify you bank connection before making a transfer."
+msgstr "Bitte überprüfen Sie Ihre Bankverbindung, bevor Sie einen Transfer vornehmen."
+
+#, java-format
+msgid "Unfortunately the maximum tansfer amount is {0}."
+msgstr "Leider ist die Höchstüberweisungssumme ist {0}."
+
+#, java-format
+msgid "Unfortunately the maximum payment amount is {0}."
+msgstr "Leider ist die Höchstzahlungssumme ist {0}."
+
+msgid "You have transferred too much money in a short time. Please wait a while and try again."
+msgstr "Sie haben zu viel Geld in zu kurzer Zeit überwiesen. Bitte warten Sie etwas und versuchen Sie es erneut."
+
+msgid "You just made a transfer just like this one. Make sure it's not a duplicate."
+msgstr "Sie haben gerade eine solche Überweisung getätigt. Passen Sie auf, dass Sie nicht doppelt ist."
+
+msgid "Transfers has temporarily been disabled. Please try again later."
+msgstr "Die Überweisungen wurden vorübergehend deaktiviert. Bitte versuchen Sie es später erneut."
+
+msgid "Transfer cannot be null"
+msgstr "Überweisung darf nicht null sein"
+
+msgid "Amount cannot be null"
+msgstr "Summe darf nicht null sein"
+
+msgid "Destination account is invalid"
+msgstr "Zielkonto ist nicht gültig"
+
+msgid "Source account is invalid"
+msgstr "Quellkonto ist nicht gültig"
+
+msgid "You are not allowed to modify destination account."
+msgstr "Sie dürfen das Zielkonto nicht bearbeiten."
+
+msgid "Due date not set"
+msgstr "Fälligkeitsdatum nicht eingerichtet"
+
+msgid "Due date is set before today"
+msgstr "Das Fälligkeitsdatum liegt vor heute"
+
+msgid "Due date must be set to a business day"
+msgstr "Das Fälligkeitsdatum muss auf einen Werktag fallen"
+
+msgid "You need to specify a message/ocr when making a payment."
+msgstr "Sie müssen eine Nachricht/OCR angeben, wenn Sie eine Zahlung machen."
+
+msgid "Transfers"
+msgstr "Überweisungen"
+
+msgid "Home"
+msgstr "Haus"
+
+msgid "Rent"
+msgstr "Miete"
+
+msgid "Mortgage"
+msgstr "Hauskredit"
+
+msgid "Communications"
+msgstr "Kommunikation"
+
+msgid "Utilities"
+msgstr "Nebenkosten"
+
+msgid "Insurance & Fees"
+msgstr "Versicherungen & Gebühren"
+
+msgid "Services"
+msgstr "Dienstleistungen"
+
+msgid "Taxes"
+msgstr "Steuern"
+
+msgid "Home Other"
+msgstr "Haus - Sonstiges"
+
+msgid "House & Garden"
+msgstr "Haus & Garten"
+
+msgid "Repairs"
+msgstr "Reparaturen"
+
+msgid "Fitment"
+msgstr "Einrichtung"
+
+msgid "Garden"
+msgstr "Garten"
+
+msgid "House & Garden Other"
+msgstr "Haus & Garten - Sonstiges"
+
+msgid "Food & Drinks"
+msgstr "Essen & Getränke"
+
+msgid "Coffee & Lunch"
+msgstr "Kaffee & Mittagessen"
+
+msgid "Alcohol & Tobacco"
+msgstr "Alkohol & Tabak"
+
+msgid "Food & Drinks Other"
+msgstr "Essen & Getränke - Sonstiges"
+
+msgid "Transport"
+msgstr "Transport"
+
+msgid "Car"
+msgstr "Auto"
+
+msgid "Public Transport"
+msgstr "Öffentliche Verkehrsmittel"
+
+msgid "Airfare"
+msgstr "Flugtickets"
+
+msgid "Taxi"
+msgstr "Taxi"
+
+msgid "Transport Other"
+msgstr "Transport - Sonstiges"
+
+msgid "Shopping"
+msgstr "Shoppen"
+
+msgid "Clothes & Accessories"
+msgstr "Kleidung & Accessoires"
+
+msgid "Electronics"
+msgstr "Elektronik"
+
+msgid "Books & Newspapers"
+msgstr "Bücher & Zeitungen"
+
+msgid "Gifts"
+msgstr "Geschenke"
+
+msgid "Shopping Other"
+msgstr "Shoppen - Sonstiges"
+
+msgid "Leisure"
+msgstr "Freizeit"
+
+msgid "Outings"
+msgstr "Ausgeben"
+
+msgid "Hobby & Sports"
+msgstr "Hobby & Sport"
+
+msgid "Accommodation"
+msgstr "Unterbringung"
+
+msgid "Lotteries"
+msgstr "Lotto"
+
+msgid "Leisure Other"
+msgstr "Freizeit - Sonstiges"
+
+msgid "Health & Beauty"
+msgstr "Gesundheit & Schönheit"
+
+msgid "Healthcare & Pharmacy"
+msgstr "Gesundheit & Apotheke"
+
+msgid "Daily Care"
+msgstr "Tägliche Pflege"
+
+msgid "Eyecare"
+msgstr "Augenpflege"
+
+msgid "Beauty"
+msgstr "Schönheit"
+
+msgid "Health & Beauty Other"
+msgstr "Gesundheit & Schönheit - Sonstiges"
+
+msgid "Other"
+msgstr "Sonstiges"
+
+msgid "Outlays"
+msgstr "Auslagen"
+
+msgid "Kids"
+msgstr "Kinder"
+
+msgid "Pets"
+msgstr "Haustiere"
+
+msgid "Charity"
+msgstr "Spenden"
+
+msgid "Education"
+msgstr "Bildung"
+
+msgid "Uncategorized"
+msgstr "Ohne Kategorie"
+
+msgid "Salary"
+msgstr "Gehalt"
+
+msgid "Pension"
+msgstr "Rente"
+
+msgid "Reimbursements"
+msgstr "Erstattungen"
+
+msgid "Benefits"
+msgstr "Zuschüsse"
+
+msgid "Financial"
+msgstr "Finanzen"
+
+msgid "Other Income"
+msgstr "Anderes Einkommen"
+
+msgid "Savings"
+msgstr "Ersparnisse"
+
+msgid "Exclude"
+msgstr "Ausschließen"
+
+msgid "Coffee"
+msgstr "Kaffee"
+
+msgid "Hobby & Sports Equipment"
+msgstr "Hobby & Sportausrüstung"
+
+msgid "Books & Games"
+msgstr "Bücher & Spiele"
+
+msgid "Culture & Entertainment"
+msgstr "Kultur & Unterhaltung"
+
+msgid "Hobby"
+msgstr "Hobby"
+
+msgid "Sports & Fitness"
+msgstr "Sport & Fitness"
+
+msgid "Vacation"
+msgstr "Urlaub"
+
+msgid "Healthcare"
+msgstr "Gesundheit"
+
+msgid "Pharmacy"
+msgstr "Apotheke"
+
+#, java-format
+msgid "{0} new event from {1}"
+msgid_plural "{0} new events from i.a. {1}"
+msgstr[0] "{0} neues Ereignis von {1}"
+msgstr[1] "{0} neue Ereignisse von {1}"
+
+msgid "You have a new event that needs your attention."
+msgid_plural "You have new events that need your attention."
+msgstr[0] "Sie haben ein neues Ereignis, um das Sie sich kümmern müssen."
+msgstr[1] "Sie haben neue Ereignisse, um die Sie sich kümmern müssen."
+
+msgid "Updating..."
+msgstr "Wird aktualisiert ..."
+
+msgid "Authentication error. Please check your credentials."
+msgstr "Authentifizierungsfehler Bitte überprüfen Sie Ihre Anmeldedaten."
+
+msgid "Temporary error. Please try again later."
+msgstr "Zeitweiliger Fehler. Bitte versuchen Sie es später erneut."
+
+msgid "The transfer has been sent to your bank."
+msgstr "Die Überweisung wurde an Ihre Bank geschickt."
+
+msgid "The payment has been sent to your bank"
+msgstr "Die Zahlung wurde an Ihre Bank geschickt."
+
+#, java-format
+msgid "paid {0}."
+msgstr "bezahlt {0}."
+
+msgid "You need to update your credentials."
+msgstr "Sie müssen Ihre Anmeldedaten aktualisieren."
+
+msgid "You haven't refreshed your transactions in a while."
+msgstr "Sie haben Ihre Transaktionen länger nicht aktualisiert."
+
+msgid "Payday!"
+msgstr "Zahltag!"
+
+msgid "Have you gotten your salary today?"
+msgstr "Haben Sie Ihr Gehalt heute erhalten?"
+
+msgid "hello@tinkapp.com"
+msgstr "hello@tinkapp.com"
+
+msgid "(missing description)"
+msgstr "(fehlende Beschreibung)"
+
+#, java-format
+msgid "Analyzed {0} of {1} transactions..."
+msgstr "{0} von {1} Transaktionen analysiert ..."
+
+msgid "One time code must be provided."
+msgstr "Sie müssen einen einmaligen Code angeben."
+
+msgid "The password must be provided."
+msgstr "Sie müssen ein Passwort angeben."
+
+msgid "Invalid password."
+msgstr "Ungültiges Passwort:"
+
+msgid "Invalid password, please contact Ålandsbanken at: 0771-415 415."
+msgstr "Ungültiges Passwort. Bitte kontaktieren Sie Ålandsbanken unter: 0771-415 415."
+
+msgid "Your password is blocked, please contact Ålandsbanken at: 0771-415 415."
+msgstr "Ihr Passwort ist gesperrt. Bitte kontaktieren Sie Ålandsbanken unter: 0771-415 415."
+
+msgid "Authorization failed, please contact Ålandsbanken at: 0771-415 415."
+msgstr "Autorisierung fehlgeschlagen. Bitte kontaktieren Sie Ålandsbanken unter: 0771-415 415."
+
+msgid "You have unconfirmed agreements, please login to Ålandsbankens online bank using a browser."
+msgstr "Sie haben unbestätigte Vereinbarungen. Bitte loggen Sie sich bei der Ålandsbankens-Onlinebank mit einem Browser ein."
+
+msgid "Wrong user id or password."
+msgstr "Falscher Nutzername oder Passwort."
+
+msgid "Invalid user id."
+msgstr "Ungültiger Nutzername."
+
+msgid "All disposable codes have been used, please contact Ålandsbanken at: 0771-415 415."
+msgstr "Alle einmaligen Codes wurden aufgebraucht. Bitte kontaktieren Sie Ålandsbanken unter: 0771-415 415."
+
+msgid "The one time code was not complete, please try again."
+msgstr "Der einmalige Code war nicht vollständig. Bitte versuchen Sie es erneut."
+
+msgid "Invalid one time code, please try again."
+msgstr "Der einmalige Code war ungültig. Bitte versuchen Sie es erneut."
+
+msgid "Bank id authentication failed."
+msgstr "BankID-Authentifizierung fehlgeschlagen."
+
+msgid "Bank id authentication canceled."
+msgstr "BankID-Authentifizierung abgebrochen."
+
+msgid "Bank id can't be accessed at the moment, please try again later."
+msgstr "Zugriff auf die BankID ist derzeit nicht möglich. Bitte versuchen Sie es später erneut."
+
+msgid "Bank id are already in progress."
+msgstr "BankID läuft bereits."
+
+msgid "Encountered a problem with the BankID app, please make sure you have the latest version of BankID installed."
+msgstr "Es ist ein Problem mit der BankID-App aufgetreten. Überprüfen Sie, ob Sie die neuste Version von BankID installiert haben."
+
+msgid "Encountered a problem while opening the BankID app."
+msgstr "Ein Problem ist beim Öffnen der BankID-App aufgetreten."
+
+msgid "The time limit for authenticating with BankID expired."
+msgstr "Das Zeitlimit für die Authentifizierung mit BankID wurde überschritten."
+
+msgid "Invalid password, please contact Ålandsbanken at: 0204 292 920."
+msgstr "Ungültiges Passwort. Bitte kontaktieren Sie Ålandsbanken unter: 0204 292 920."
+
+msgid "Your password is blocked, please contact Ålandsbanken at: 0204 292 920."
+msgstr "Ihr Passwort ist gesperrt. Bitte kontaktieren Sie Ålandsbanken unter: 0204 292 920."
+
+msgid "Authorization failed, please contact Ålandsbanken at: 0204 292 920."
+msgstr "Autorisierung fehlgeschlagen. Bitte kontaktieren Sie Ålandsbanken unter: 0204 292 920."
+
+msgid "All disposable codes have been used, please contact Ålandsbanken at: 0204 292 920."
+msgstr "Alle einmaligen Codes wurden aufgebraucht. Bitte kontaktieren Sie Ålandsbanken unter: 0204 292 920."
+
+msgid "Encountered a technical error, please try again later"
+msgstr "Ein technischer Fehler ist aufgetreten. Bitte versuchen Sie es später erneut."
+
+msgid "Not able to update this e-invoice"
+msgstr "Diese E-Rechnung konnte nicht aktualisiert werden"
+
+msgid "Source account not available"
+msgstr "Quellkonto nicht verfügbar"
+
+msgid "You are not allowed to change this e-invoice"
+msgstr "Sie dürfen diese E-Rechnung nicht bearbeiten."
+
+msgid "You are not allowed to change the amount of this e-invoice"
+msgstr "Sie dürfen die Summe dieser E-Rechnung nicht bearbeiten."
+
+msgid "You are not allowed to change the due date of this e-invoice"
+msgstr "Sie dürfen das Fälligkeitsdatum dieser E-Rechnung nicht bearbeiten."
+
+msgid "You are not allowed to change the message of this e-invoice"
+msgstr "Sie dürfen die Nachricht dieser E-Rechnung nicht bearbeiten."
+
+msgid "You are not allowed to change the from account of this e-invoice"
+msgstr "Sie dürfen das Absendekonto dieser E-Rechnung nicht bearbeiten."
+
+msgid "You are not allowed to change the source message."
+msgstr "Sie dürfen die Quellnachricht nicht bearbeiten."
+
+msgid "Cannot find e-invoice in list from bank"
+msgstr "E-Rechnung wurde in der Liste der Bank nicht gefunden"
+
+msgid "E-invoice cannot be signed on bank"
+msgstr "E-Rechnung kann nicht bei der Bank unterzeichnet werden"
+
+msgid "Something went wrong when signing e-invoice"
+msgstr "Etwas ist beim Unterzeichnen der E-Rechnung schiefgegangen."
+
+msgid "During beta mode there is a limit on how much you can transfer every 5 minutes. Please wait a while and try again."
+msgstr "Im Betamodus gibt es eine Beschränkung, wie viel Sie alle 5 Minuten überweisen können. Bitte warten Sie etwas und versuchen Sie es erneut."
+
+#, java-format
+msgid "During beta mode the maximum transfer amount is {0}."
+msgstr "Im Betamodus ist die Höchstüberweisungssumme ist {0}."
+
+#, java-format
+msgid "During beta mode the maximum payment amount is {0}."
+msgstr "Im Betamodus ist die Höchstzahlungssumme ist {0}."
+
+msgid "No update needed, payment is not changed."
+msgstr "Keine Aktualisierung erforderlich. Die Zahlung hat sich nicht geändert."
+
+msgid "Cannot find payment in list from bank."
+msgstr "Zahlung wurde in der Liste der Bank nicht gefunden"
+
+msgid "The payment cannot be updated."
+msgstr "Die Zahlung kann nicht aktualisiert werden."
+
+msgid "Payment cannot be signed on bank."
+msgstr "Zahlung kann nicht bei der Bank unterzeichnet werden"
+
+msgid "It's not possible to change the OCR/message of the invoice"
+msgstr "Sie können die OCR/Nachricht der Rechnung nicht ändern"
+
+#, java-format
+msgid "{0} e-invoices to approve"
+msgstr "{0} E-Rechnungen zum Überprüfen"
+
+msgid "New e-invoice to approve"
+msgstr "Neue E-Rechnung zum Überprüfen"
+
+msgid "Found more than one eInvoices that exactly matches the transfer"
+msgstr "Mehr als eine E-Rechnung wurde gefunden, die zu der Überweisung passen"
+
+msgid "The due date is not a business day"
+msgstr "Das Fälligkeitsdatum liegt nicht an einem Werktag"
+
+msgid "The message given is not valid"
+msgstr "Die angegebene Nachricht ist nicht gültig"
+
+msgid "Could not retrieve source accounts"
+msgstr "Quellkonten wurden nicht gefunden."
+
+msgid "It's not possible to modify the amount of this transfer"
+msgstr "Es ist nicht möglich, die Summe dieser Überweisung zu bearbeiten"
+
+msgid "It's not possible to modify the due date of this transfer"
+msgstr "Es ist nicht möglich, das Fälligkeitsdatum dieser Überweisung zu bearbeiten"
+
+msgid "It's not possible to modify OCR/message of this transfer"
+msgstr "Es ist nicht möglich, diese OCR/Nachricht dieser Überweisung zu bearbeiten"
+
+msgid "It's not possible to modify this transfer"
+msgstr "Es ist nicht möglich, diese Überweisung zu bearbeiten"
+
+msgid "It's not possible to modify the source or destination account of this transfer"
+msgstr "Es ist nicht möglich, das Quell- oder Zielkonto dieser Überweisung zu bearbeiten"
+
+#, java-format
+msgid "The message length exceeds maximum of {0} letters."
+msgstr "Die Nachrichtenlänge überschreitet {0} Buchstaben."
+
+msgid "Same as previous month"
+msgstr "Identisch mit dem vorherigen Monat"
+
+#, java-format
+msgid "{0} less than previous month"
+msgstr "{0} weniger als im vorherigen Monat"
+
+#, java-format
+msgid "{0} more than previous month"
+msgstr "{0} mehr als im vorherigen Monat"
+
+#, java-format
+msgid "{0} expense"
+msgstr "{0} Ausgaben"
+
+#, java-format
+msgid "{0} income"
+msgstr "{0} Einkommen"
+
+msgid "It's not possible to modify the destination of this transfer"
+msgstr "Es ist nicht möglich, das Ziel dieser Überweisung zu bearbeiten"
+
+#, java-format
+msgid "{0} overview"
+msgstr "{0} Überblick"
+
+msgid "N/A"
+msgstr "K/A"
+
+msgid "It's not possible to modify the amount of this e-invoice"
+msgstr "Es ist nicht möglich, die Summe dieser E-Rechnung zu bearbeiten"
+
+msgid "It's not possible to modify the due date of this e-invoice"
+msgstr "Es ist nicht möglich, das Fälligkeitsdatum dieser E-Rechnung zu bearbeiten"
+
+msgid "It's not possible to modify the destination account of this e-invoice"
+msgstr "Es ist nicht möglich, das Zielkonto dieser E-Rechnung zu bearbeiten"
+
+msgid "It's not possible to modify the source message of this e-invoice"
+msgstr "Es ist nicht möglich, die Quellnachricht dieser E-Rechnung zu bearbeiten"
+
+msgid "It's not possible to modify the destination message of this e-invoice"
+msgstr "Es ist nicht möglich, die Zielnachricht dieser E-Rechnung zu bearbeiten"
+
+msgid "This week"
+msgstr "Diese Woche"
+
+msgid "E-invoices to approve"
+msgstr "E-Rechnungen zum Überprüfen"
+
+msgid "E-invoice to approve"
+msgid_plural "E-invoices to approve"
+msgstr[0] "E-Rechnung zum Bestätigen"
+msgstr[1] "E-Rechnungen zum Bestätigen"
+
+msgid "Could not validate e-invoice"
+msgstr "E-Rechnung konnte nicht bestätigt werden"
+
+msgid "Could not execute transfer"
+msgstr "Überweisung konnte nicht ausgeführt werden"
+
+msgid "Could not delete transfer"
+msgstr "Überweisung konnte nicht gelöscht werden"
+
+msgid "An error occurred when confirming the transfer"
+msgstr "Ein Fehler ist bei der Bestätigung der Überweisung aufgetreten"
+
+msgid "Could not create payment"
+msgstr "Zahlung konnte nicht erstellt werden"
+
+msgid "Could not update payment"
+msgstr "Zahlungsmethode konnte nicht aktualisiert werden"
+
+msgid "Transfer or payment was not signed with security token device"
+msgstr "Überweisung oder Zahlung wurde nicht mit dem Gerät für Sicherheitstoken unterzeichnet"
+
+msgid "You have another BankID session in progress. Please try again."
+msgstr "Sie haben eine andere aktuelle BankID-Sitzung. Bitte versuchen Sie es erneut."
+
+msgid "You cancelled the BankID process. Please try again."
+msgstr "Sie haben den BankID-Prozess abgebrochen. Bitte versuchen Sie es erneut."
+
+msgid "You have existing unsigned transfers, please sign these in your bank's app before executing a new transfer"
+msgstr "Sie haben nicht unterzeichnete Überweisungen. Bitte unterzeichnen Sie sie in Ihrer Bank-App, bevor Sie eine neue Überweisung durchführen."
+
+msgid "An unexpected error occurred at your bank. Please try again later."
+msgstr "Ein unerwarteter Fehler ist bei Ihrer Bank aufgetreten. Bitte versuchen Sie es später erneut."
+
+msgid "Payment date has to be within one year from now"
+msgstr "Das Zahlungsdatum muss innerhalb eines Jahres von heute liegen"
+
+msgid "The payment date is not a business day"
+msgstr "Das Zahlungsdatum liegt nicht an einem Werktag"
+
+msgid "It's not possible to modify the payment date of this transfer"
+msgstr "Es ist nicht möglich, das Zahlungsdatum dieser Überweisung zu bearbeiten"
+
+msgid "It's not possible to modify the payment date of this e-invoice"
+msgstr "Es ist nicht möglich, das Zahlungsdatum dieser E-Rechnung zu bearbeiten"
+
+msgid "It's not possible to modify the source account of this e-invoice"
+msgstr "Es ist nicht möglich, das Quellkonto dieser E-Rechnung zu bearbeiten"
+
+msgid "It's not possible to modify this e-invoice"
+msgstr "Es ist nicht möglich, diese E-Rechnung zu bearbeiten"
+
+msgid "The BankID authentication failed"
+msgstr "Die BankID-Authentifizierung ist fehlgeschlagen."
+
+msgid "You can only make transfers to Swedish accounts"
+msgstr "Sie können nur Überweisungen auf schwedische Konten durchführen"
+
+msgid "You can only make payments to Swedish destinations"
+msgstr "Sie können nur Überweisungen an schwedische Zielorte durchführen"
+
+msgid "You do not have any accounts at Swedbank. Use Sparbankerna (Mobile BankID) instead."
+msgstr "Sie haben keine Konten bei Swedbank. Verwenden Sie stattdessen Sparbankerna (Mobile BankID)."
+
+msgid "You do not have any accounts at Sparbankerna. Use Swedbank (Mobile BankID) instead."
+msgstr "Sie haben keine Konten bei Sparbankerna. Verwenden Sie stattdessen Swedbank (Mobile BankID)."
+
+msgid "You do not have a valid profile"
+msgstr "Sie haben kein gültiges Profil"
+
+msgid "The e-invoice could not be found at your bank"
+msgstr "Die E-Rechnung wurde bei Ihrer Bank nicht gefunden"
+
+msgid "You must specify a recipient name"
+msgstr "Sie müssen den Namen des Empfängers angeben"
+
+msgid "The payment could not be found at your bank"
+msgstr "Die Zahlung wurde bei Ihrer Bank nicht gefunden"
+
+msgid "Could not find a bank for the given destination account. Check the account number and try again."
+msgstr "Es wurde keine Bank für das angegebene Zielkonto gefunden. Überprüfen Sie die Kontonummer und versuchen Sie es erneut."
+
+msgid "The login must be signed with a code box"
+msgstr "Das Login muss mit einer Codebox unterzeichnet sind"
+
+msgid "Could not sign the e-invoice"
+msgstr "E-Rechnung konnte nicht unterzeichnet werden"
+
+msgid "Move your mortgage"
+msgstr "Verschieben Sie Ihren Hauskredit"
+
+msgid "The application is not yet started"
+msgstr "Der Antrag wurde nicht begonnen"
+
+msgid "The application is started but not complete"
+msgstr "Der Antrag wurde begonnen, ist aber nicht vollständig"
+
+msgid "The application is complete"
+msgstr "Der Antrag ist vollständig"
+
+msgid "The form is not yet started"
+msgstr "Das Formular wurde nicht begonnen"
+
+msgid "The form is started but not complete"
+msgstr "Das Formular wurde begonnen, ist aber nicht vollständig"
+
+msgid "The form is validated and complete"
+msgstr "Das Formular wurde bestätigt und ist vollständig"
+
+msgid "Postal code"
+msgstr "Postleitzahl"
+
+msgid "The postal code"
+msgstr "Die Postleitzahl"
+
+msgid "Apartment"
+msgstr "Wohnung"
+
+msgid "Real Estate"
+msgstr "Immobilien"
+
+#, java-format
+msgid "Currency {0} not available."
+msgstr "Währung {0} ist nicht verfügbar."
+
+msgid "Please choose a source account."
+msgstr "Bitte wählen Sie ein Quellkonto."
+
+msgid "Please choose a destination account."
+msgstr "Bitte wählen Sie ein Zielkonto."
+
+msgid "Please choose a payment date."
+msgstr "Bitte wählen Sie ein Zahlungsdatum."
+
+msgid "Amount cannot be empty."
+msgstr "Summe darf nicht leer sein."
+
+msgid "Invalid account credentials."
+msgstr "Ungültige Kontoanmeldedaten"
+
+msgid "Payment date cannot be set before today."
+msgstr "Das Zahlungsdatum darf nicht vor heute liegen."
+
+msgid "Payment date have to be a business day."
+msgstr "Das Zahlungsdatum muss ein Werktag sein"
+
+msgid "Couldn't find source account."
+msgstr "Quellkonto wurde nicht gefunden"
+
+msgid "Amount has to be a positive value."
+msgstr "Summe muss positiv sein"
+
+msgid "Currency not available."
+msgstr "Währung ist nicht verfügbar."
+
+msgid "Access denied."
+msgstr "Zugang nicht genehmigt."
+
+msgid "The possibility to make transfers and pay invoices has temporarily been disabled. Please try again later."
+msgstr "Die Möglichkeit, Überweisungen durchzuführen und Rechnungen zu bezahlen, wurde vorübergehend deaktiviert. Bitte versuchen Sie es später erneut."
+
+msgid "Couldn't execute transfer."
+msgstr "Überweisung konnte nicht ausgeführt werden."
+
+msgid "Couldn't update transfer."
+msgstr "Überweisung konnte nicht aktualisiert werden."
+
+msgid "Please choose an amount"
+msgstr "Bitte wählen Sie eine Summe"
+
+msgid "Please choose a currency"
+msgstr "Bitte wählen Sie eine Währung"
+
+msgid "Invalid source account."
+msgstr "Ungültiges Quellkonto"
+
+msgid "Please verify your bank connection before making a transfer."
+msgstr "Bitte überprüfen Sie Ihre Bankverbindung, bevor Sie einen Transfer vornehmen."
+
+msgid "You need to confirm your BankID to Skandiabanken. You do it by logging in with the Skandiabanken app once and confirm that your BankID is yours. You can then continue using Tink with BankID."
+msgstr "Sie müssen Ihre BankID bei Skandiabanken bestätigen. Sie können dies tun, indem Sie sich in die Skandiabanken-App einmal einloggen und bestätigen, dass die BankID Ihnen gehört. Sie können Tink weiter mit BankID verwenden."
+
+#, java-format
+msgid "The maximum transfer amount is {0}."
+msgstr "Die Höchstüberweisungssumme ist {0}."
+
+#, java-format
+msgid "The maximum payment amount is {0}."
+msgstr "Die Höchstzahlungssumme ist {0}."
+
+msgid "There is a limit on how much you can transfer every 5 minutes. Please wait a while and try again."
+msgstr "Es gibt eine Beschränkung, wie viel Sie alle 5 Minuten überweisen können. Bitte warten Sie etwas und versuchen Sie es erneut."
+
+msgid "You need to activate your BankID in the Handelsbanken app."
+msgstr "Sie müssen Ihre BankID in der Handelsbanken-App aktivieren."
+
+#, java-format
+msgid "For the selected source, messages cannot contain some of the typed characters:\n\n{0}\n\nValid characters:\n\n{1}"
+msgstr "Für die ausgewählte Quelle dürfen Nachrichten einige der eingegebenen Zeichen nicht enthalten:\n\n{0}\n\nGültige Zeichen:\n\n{1}"
+
+msgid "Open savings account"
+msgstr "Sparkonto eröffnen"
+
+msgid "The application has been signed"
+msgstr "Der Antrag wurde unterzeichnet"
+
+msgid "Alimony amount per month"
+msgstr "Unterhalt pro Monat"
+
+msgid "Did you bail someone loan?"
+msgstr "Haben Sie für den Kredit von jemand anderem gebürgt?"
+
+msgid "Bail Amount"
+msgstr "Bürgschaftssumme"
+
+msgid "Number of children receiving alimony"
+msgstr "Anzahl der Kinder, die Unterhalt erhalten"
+
+msgid "Does your co-applicant live at the same address as you"
+msgstr "Lebt der Mitbewerber unter derselben Adresse wie Sie?"
+
+msgid "Alimony amount per month for your co-applicant"
+msgstr "Unterhalt pro Monat für Ihren Mitbewerber"
+
+msgid "Does you co-applicant have a csn loan?"
+msgstr "Hat Ihr Mitbewerber einen CSN-Kredit?"
+
+msgid "Amount for CSN loan"
+msgstr "Summe des CSN-Kredits"
+
+msgid "Does your co-applicant have children which whom is paying alimony for?"
+msgstr "Hat Ihr Mitbewerber Kinder, für die er/sie Unterhalt bezahlt?"
+
+msgid "Town"
+msgstr "Stadt"
+
+msgid "Does your co-applicant live on the same address as you?"
+msgstr "Lebt der Mitbewerber unter derselben Adresse wie Sie?"
+
+msgid "Account for money withdrawal"
+msgstr "Konto für die Geldabhebung"
+
+msgid "How much are you planning to deposit when opening the account?"
+msgstr "Wie viel wollen Sie einzahlen, wenn Sie das Konto eröffnen?"
+
+msgid "How often will you withdrawal money from the account?"
+msgstr "Wie oft werden Sie Geld von dem Konto abheben?"
+
+msgid "I confirm that I have read and accept the Collector Save Agreement."
+msgstr "Ich bestätige, dass ich das Collector Save Agreement gelesen habe und ihm zustimme."
+
+msgid "How often will you deposit money to the account?"
+msgstr "Wie oft werden Sie Geld in das Konto einzahlen?"
+
+msgid "What is the purpose of your savings?"
+msgstr "Worauf sparen Sie hin?"
+
+msgid "From where does the money originate?"
+msgstr "Woher kommt das Geld?"
+
+msgid "Where does the money that will be deposited into the account come from?"
+msgstr "Woher kommt das Geld, das in das Konto eingezahlt wird?"
+
+msgid "Current loans"
+msgstr "Aktuelle Kredite"
+
+msgid "Mark all the loans that belongs to the property at "
+msgstr "Markieren Sie alle Kredite, die zu der Immobilie gehören unter "
+
+msgid "Street address"
+msgstr "Straße"
+
+msgid "Deferred amount"
+msgstr "Ausgesetzte Summe"
+
+msgid "Do you have deferred capital gains tax?"
+msgstr "Haben Sie eine ausgesetzte Kapitalertragssteuer?"
+
+msgid "Employee since"
+msgstr "Angestellt seit"
+
+msgid "Employer or Company name"
+msgstr "Arbeitgeber oder Firmenname"
+
+msgid "Employment type"
+msgstr "Art der Anstellung"
+
+msgid "What is the market value for your property?"
+msgstr "Wie ist der Marktwerk für Ihre Immobilie?"
+
+msgid "Do you get alimony?"
+msgstr "Erhalten Sie Unterhalt?"
+
+msgid "Do you have a co-applicant for your mortgage?"
+msgstr "Haben Sie einen Mitbewerber für Ihre Kredit?"
+
+msgid "Do you have a student loan from CSN?"
+msgstr "Haben Sie einen Studentenkredit von CSN?"
+
+msgid "Are there anymore adults (over 18 years) in the household?"
+msgstr "Gibt es noch mehr Erwachsene (über 18) im Haushalt?"
+
+msgid "Number of adults in the household"
+msgstr "Anzahl der Erwachsenen im Haushalt"
+
+msgid "Is there someone in your household that bailed a loan for someone else?"
+msgstr "Gibt es jemanden in Ihrem Haushalt, der für einen Kredit für jemand anderen gebürgt hat?"
+
+msgid "Total bail amount"
+msgstr "Gesamte Bürgschaftssumme"
+
+msgid "Are there any children in the household?"
+msgstr "Gibt es Kinder im Haushalt?"
+
+msgid "Number of children"
+msgstr "Anzahl Kinder"
+
+msgid "Number of children you get alimony for"
+msgstr "Anzahl Kinder, für die Sie Unterhalt erhalten"
+
+msgid "Did someone in your household requested deferral of capital gains tax?"
+msgstr "Hat jemand in Ihrem Haushalt um die Aussetzung von Kapitalertragssteuer gebeten?"
+
+msgid "Total amount of deferral capital gain tax"
+msgstr "Gesamtsumme der ausgesetzten Kapitalertragssteuer"
+
+msgid "Is there someone in your household that has other loans?"
+msgstr "Gibt es jemanden in Ihrem Haushalt, der andere Kredite hat?"
+
+msgid "Total amount of all loans"
+msgstr "Gesamtsumme alle Kredite"
+
+msgid "Housing community name"
+msgstr "Name der Hausverwaltung"
+
+msgid "Do you have a mortgage on the property at "
+msgstr "Haben Sie einen Hauskredit für die Immobilie unter "
+
+msgid "Are you, a family member or a close associate in a political exposed position?"
+msgstr "Sind Sie, ein Familienmitglied oder eine enge Person in einer exponierten politischen Lage?"
+
+msgid "Living area (m²)"
+msgstr "Wohnbereich (m²)"
+
+msgid "Amount"
+msgstr "Summe"
+
+msgid "Lender"
+msgstr "Kreditgeber"
+
+msgid "Monthly fee (SEK)"
+msgstr "Monatliche Gebühr (SEK)"
+
+msgid "Monthly income (SEK)"
+msgstr "Monatliches Einkommen (SEK)"
+
+msgid "Choose bank to switch your mortgage to"
+msgstr "Wählen Sie eine Bank, zu der Sie mit Ihrem Kredit wechseln möchten"
+
+msgid "Number of rooms"
+msgstr "Anzahl Zimmer"
+
+msgid "+ Add loan"
+msgstr "'+ Kredit hinzufügen"
+
+msgid "Market value"
+msgstr "Marktwert"
+
+msgid "Loan amount"
+msgstr "Kreditsumme"
+
+msgid "Monthly cost"
+msgstr "Monatliche Kosten"
+
+msgid "Assessed value"
+msgstr "Geschätzter Wert"
+
+msgid "Ground rent"
+msgstr "Bodenrente"
+
+msgid "Are you paying alimony?"
+msgstr "Zahlen Sie Unterhalt?"
+
+msgid "Property type"
+msgstr "Art der Immobilie"
+
+msgid "For how much did you buy the apartment for?"
+msgstr "Für wie viel haben Sie die Wohnung gekauft?"
+
+msgid "Relationship status"
+msgstr "Beziehungsstatus"
+
+msgid "Product"
+msgstr "Produkt"
+
+msgid "Add citizenship in other county"
+msgstr "Fügen Sie eine Staatsbürgerschaft in einem anderen Land hinzu"
+
+msgid "Citizenship in other country"
+msgstr "Staatsbürgerschaft in einem anderen Land"
+
+msgid "Who is depositing money to the account?"
+msgstr "Wer zahlt das Geld in das Konto ein?"
+
+msgid "Savings amount per month"
+msgstr "Gesparte Summe pro Monat"
+
+msgid "I confirm that I have read and accept the Terms and Conditions, that I have read the information sheet about Deposit insurance and Information concerning the processing of personal data."
+msgstr "Ich bestätige, dass ich die Nutzungsbedingungen gelesen habe, dass ich das Informationsblatt über Einlagensicherung und Informationen über die Verarbeitung von persönlichen Daten gelesen habe."
+
+msgid "Monthly income"
+msgstr "Monatliches Einkommen"
+
+msgid "Where does the money come from that will be deposited into this account?"
+msgstr "Woher kommt das Geld, das in das Konto eingezahlt wird?"
+
+msgid "Taxpayer identification number"
+msgstr "Steueridentifikationsnummer"
+
+msgid "Street adress"
+msgstr "Straße"
+
+msgid "Are you a Swedish citizen?"
+msgstr "Sind Sie schwedischer Staatsbürger?"
+
+msgid "Add taxable country"
+msgstr "Steuerpflichtiges Land hinzufügen"
+
+msgid "Are you paying tax in any other country?"
+msgstr "Zahlen Sie Steuern in einem anderen Land?"
+
+msgid "Are you paying tax in Sweden?"
+msgstr "Zahlen Sie Steuern in Schweden?"
+
+msgid "Taxable in USA"
+msgstr "Steuerpflichtig in den USA"
+
+msgid "If you for example help a family member with taking a loan."
+msgstr "Wenn Sie zum Beispiel einem Familienmitglied mit einem Kredit helfen."
+
+msgid "Do not include loans for other properties."
+msgstr "Dazu gehören keine Kredite für andere Immobilien."
+
+msgid "Try to make the best estimate of the market value as possible to get more precise interest rate proposals."
+msgstr "Versuchen Sie, so gut wie möglich den Marktwert zu schätzen, um genauere Angebote für Zinsen zu erhalten."
+
+msgid "For example, if you and your partner took a loan together."
+msgstr "Wenn Sie und Ihr Partner zum Beispiel gemeinsam einen Kredit aufgenommen haben."
+
+msgid "For example, adult children that still lives at home."
+msgstr "Wenn erwachsene Kinder zum Beispiel noch zuhause leben."
+
+msgid "This question also applies to your co-applicant if you live together."
+msgstr "Diese Frage bezieht sich auch auf Ihren Mitbewerber, wenn Sie zusammen leben."
+
+msgid "Square meters"
+msgstr "Quadratmeter"
+
+msgid "In Swedish kronor"
+msgstr "In schwedischen Kronen"
+
+msgid "From a foreign bank"
+msgstr "Von einer ausländischen Bank"
+
+msgid "Between 10000 and 20000"
+msgstr "Zwischen 10.000 und 20.000"
+
+msgid "Between 10000 and 25000"
+msgstr "Zwischen 10.000 und 25.000"
+
+msgid "Between 20000 and 30000"
+msgstr "Zwischen 20.000 und 30.000"
+
+msgid "Between 20000 and 35000"
+msgstr "Zwischen 20.000 und 35.000"
+
+msgid "Between 25000 and 50000"
+msgstr "Zwischen 25.000 und 50.000"
+
+msgid "Between 30000 and 40000"
+msgstr "Zwischen 30.000 und 40.000"
+
+msgid "Between 35000 and 50000"
+msgstr "Zwischen 35.000 und 50.000"
+
+msgid "Between 50000 and 70000"
+msgstr "Zwischen 50.000 und 70.000"
+
+msgid "Between 50000 and 150000"
+msgstr "Zwischen 50.000 und 150.000"
+
+msgid "Between 150000 and 250000"
+msgstr "Zwischen 150.000 und 250.000"
+
+msgid "Between 250000 and 350000"
+msgstr "Zwischen 250.000 und 350.000"
+
+msgid "Cohabitant"
+msgstr "Mitbewohner"
+
+msgid "Employed"
+msgstr "Angestellt"
+
+msgid "False"
+msgstr "Falsch"
+
+msgid "Five to ten times a month"
+msgstr "Fünf bis zehnmal im Monat"
+
+msgid "Gift or inheritance"
+msgstr "Geschenk oder Erbe"
+
+msgid "House"
+msgstr "Haus"
+
+msgid "Less than 10000"
+msgstr "Weniger als 10.000"
+
+msgid "Less than 20000"
+msgstr "Weniger als 20.000"
+
+msgid "Less than 50000"
+msgstr "Weniger als 50.000"
+
+msgid "Less than once a month"
+msgstr "Weniger als einmal im Monat"
+
+msgid "Lottery or gambling"
+msgstr "Lotto oder Wetten"
+
+msgid "Married"
+msgstr "Verheiratet"
+
+msgid "More than 350000"
+msgstr "Mehr als 350.000"
+
+msgid "More than 40000"
+msgstr "Mehr als 40.000"
+
+msgid "More than 50000"
+msgstr "Mehr als 50.000"
+
+msgid "More than 70000"
+msgstr "Mehr als 70.000"
+
+msgid "More than five times a month"
+msgstr "Mehr als fünfmal im Monat"
+
+msgid "More than ten times a month"
+msgstr "Mehr als zehnmal im Monat"
+
+msgid "From my account in a swedish bank"
+msgstr "Von meinem Konto bei einer schwedischen Bank"
+
+msgid "No other properties"
+msgstr "Keine anderen Immobilien"
+
+msgid "One to five times a month"
+msgstr "Ein bis fünfmal im Monat"
+
+msgid "Other savings (funds or stocks etc.)"
+msgstr "Andere Ersparnisse (Fonds oder Aktien etc.)"
+
+msgid "Other way"
+msgstr "Andere Methode"
+
+msgid "From someone else´s account in a swedish bank"
+msgstr "Von dem Konto einer anderen Person bei einer schwedischen Bank"
+
+msgid "Own business (e.g salary or dividend)"
+msgstr "Eigenes Geschäft (z. B. Gehalt oder Dividende)"
+
+msgid "Part time employee"
+msgstr "Teilzeitangestellter"
+
+msgid "Me and someone else"
+msgstr "Ich und jemand anderes"
+
+msgid "Me or account holder"
+msgstr "Ich oder Kontoinhaber"
+
+msgid "Someone else"
+msgstr "Jemand anderes"
+
+msgid "Financial buffer"
+msgstr "Finanzieller Puffer"
+
+msgid "Future tax payments"
+msgstr "Zukünftige Steuerzahlungen"
+
+msgid "Investment of surplus liquidity"
+msgstr "Investition durch Überschussliquidität"
+
+msgid "Long term investments"
+msgstr "Langzeitinvestition"
+
+msgid "Ongoing expenses"
+msgstr "Laufende Ausgaben"
+
+msgid "Operating costs of property"
+msgstr "Betriebskosten der Immobilie"
+
+msgid "Payments of loan"
+msgstr "Kreditzahlungen"
+
+msgid "Private consumption"
+msgstr "Privatverbrauch"
+
+msgid "Saving for relative (e.g. children)"
+msgstr "Sparen für Verwandte (z. B. Kinder)"
+
+msgid "Salary or pension"
+msgstr "Gehalt oder Rente"
+
+msgid "Sale of assets (e.g. house, car, boat, company)"
+msgstr "Verkauf von Vermögen (z. B. Haus, Auto, Boot, Firma)"
+
+msgid "Sale of capital goods"
+msgstr "Verkauf von Investitionsgütern"
+
+msgid "Sales of company"
+msgstr "Verkauf der Firma"
+
+msgid "Sales of property"
+msgstr "Verkauf von Immobilien"
+
+msgid "Self employed"
+msgstr "Selbstständig"
+
+msgid "Retired"
+msgstr "In Ruhestand"
+
+msgid "Securities trading"
+msgstr "Handel mit Sicherheiten"
+
+msgid "Single"
+msgstr "Alleinstehend"
+
+msgid "Six to ten times a month"
+msgstr "Sechs bis zehnmal im Monat"
+
+msgid "Student"
+msgstr "Student"
+
+msgid "Surplus liquidity"
+msgstr "Überschussliquidität"
+
+msgid "Switch of bank or savings form"
+msgstr "Bank- oder Sparformular wechseln"
+
+msgid "Tax refund"
+msgstr "Steuerrückzahlung"
+
+msgid "Tenancy"
+msgstr "Mietverhältnis"
+
+msgid "True"
+msgstr "Wahr"
+
+msgid "Unemployed"
+msgstr "Arbeitslos"
+
+msgid "Vacation house"
+msgstr "Ferienhaus"
+
+msgid "Does your co-applicant live at the same address as you?"
+msgstr "Lebt der Mitbewerber unter derselben Adresse wie Sie?"
+
+msgid "What is your co applicants employment?"
+msgstr "Wie sind Ihre Mitbewerber angestellt?"
+
+msgid "About you co-applicant"
+msgstr "Über Ihren Mitbewerber"
+
+msgid "-"
+msgstr "-"
+
+msgid "Nice work!"
+msgstr "Gut gemacht!"
+
+msgid "Do you have more loans?"
+msgstr "Haben Sie noch mehr Kredite?"
+
+msgid "Did you requested deferral of capital gains tax?"
+msgstr "Haben Sie um die Aussetzung von Kapitalertragssteuer gebeten?"
+
+msgid "What is your employment?"
+msgstr "Wie sind Sie angestellt?"
+
+msgid "About you household"
+msgstr "Über Ihren Haushalt"
+
+msgid "Are you or a family member in a political exposed position, or are you a known associate of such a person (PEP)?"
+msgstr "Sind Sie oder ein Familienmitglied in einer exponierten politischen Lage oder kennen Sie solche Personen?"
+
+msgid "Our suggestions"
+msgstr "Unsere Vorschläge"
+
+msgid "Tink thinks"
+msgstr "Tink denkt"
+
+msgid "Do you have a mortgage on the property at"
+msgstr "Haben Sie einen Hauskredit für die Immobilie unter"
+
+msgid "Property Details"
+msgstr "Immobiliendetails"
+
+msgid "About your apartment"
+msgstr "Über Ihre Wohnung"
+
+msgid "Some more questions"
+msgstr "Noch ein paar Fragen"
+
+msgid "Just some more questions..."
+msgstr "Nur noch ein paar Fragen ..."
+
+msgid "Do you have citizenship in other country than Sweden?"
+msgstr "Haben Sie eine Staatsbürgerschaft in einem anderen Land?"
+
+msgid "Are you or someone in your family in a political exposed position?"
+msgstr "Sind Sie oder ein Familienmitglied in einer exponierten politischen Lage?"
+
+msgid "Are you taxable in other country than Sweden?"
+msgstr "Sind Sie in einem anderen Land steuerpflichtig?"
+
+msgid "About selected account"
+msgstr "Über das gewählte Konto"
+
+msgid "Compare savings rates"
+msgstr "Sparquote vergleichen"
+
+msgid "Do you have other properties?"
+msgstr "Haben Sie noch anderes Eigentum?"
+
+msgid "Nice work"
+msgstr "Gut gemacht"
+
+msgid "Questions from the bank"
+msgstr "Fragen von der Bank"
+
+msgid "Are you taxable in other country?"
+msgstr "Sind Sie in einem anderen Land steuerpflichtig?"
+
+msgid "Are you taxable in Sweden?"
+msgstr "Sind Sie in Schweden steuerpflichtig?"
+
+msgid "Are you taxable in USA?"
+msgstr "Sind Sie in den USA steuerpflichtig?"
+
+msgid "Complete your profile"
+msgstr "Vervollständigen Sie Ihr Profil"
+
+msgid "It may be helpful if you have the person nearby in case you do not have answers to all the questions"
+msgstr "Es könnte hilfreich sein, dass Sie die Person in der Nähe haben, falls Sie nicht alle Fragen beantworten können"
+
+msgid "You are now ready to submit your application to the bank. The move of your mortgage is not binding until you have written on the debt securities from the bank."
+msgstr "Sie können jetzt Ihren Antrag an die Bank senden. Das Verschieben Ihres Hauskredits ist nicht verbindlich, bis Sie die Sicherheiten der Bank unterzeichnet haben."
+
+msgid "Remember that credit cards are seen as a loan, whether you use your credit or not."
+msgstr "Denken Sie daran, dass Kreditkarten als Kredit gelten, unabhängig davon, ob Sie sie nutzen."
+
+msgid "If you for example sold an apartment and delayed paying of taxes."
+msgstr "Wenn Sie zum Beispiel eine Wohnung verkauft und die Zahlung der Steuern ausgesetzt haben."
+
+msgid "If they for example helped a family member applying for a loan."
+msgstr "Wenn Sie zum Beispiel einem Familienmitglied beim Antrag für einen Kredit geholfen haben."
+
+msgid "For example, work as prime minister, commander in cheif or judges of the Supreme Court."
+msgstr "Wenn Sie zum Beispiel als Premierminister, Oberbefehlshaber oder Richter beim obersten Gerichtshof arbeiten."
+
+msgid "This is the best floating interest rates from our partners based on your data."
+msgstr "Dies ist der beste variable Zinssatz unserer Partner, basierend auf Ihren Daten."
+
+msgid "Calculating on your finances"
+msgstr "Berechnen Ihrer Finanzen"
+
+msgid "And some more details"
+msgstr "Und noch mehr Details"
+
+msgid "For the Bank to be able to do a valuation they need to know more about your apartment."
+msgstr "Damit die Bank eine Bewertung vornehmen kann, muss sie mehr über Ihre Wohnung wissen."
+
+msgid "We need some information about your new savings account."
+msgstr "Wir benötigen einige Details über Ihr neues Sparkonto."
+
+msgid "The bank need to ask some questions to be sure that you are not doing something fishy."
+msgstr "Die Bank muss einige Fragen stellen, um sicherzugehen, dass Sie nichts suspektes tun."
+
+msgid "Details about your new savings account."
+msgstr "Details über Ihr neues Sparkonto."
+
+msgid "Here are some options for your savings account!"
+msgstr "Hier sind ein paar Optionen für Ihr Sparkonto!"
+
+msgid "Sign with BankID, you can start using your account right away! You also get a confirmation sent home."
+msgstr "Unterzeichnen Sie mit BankID und Sie können Ihr Konto sofort benutzen! Sie erhalten außerdem eine Bestätigung nach hause."
+
+msgid "The bank needs more information to give you a final interest rate proposals and ask a few questions to follow the law."
+msgstr "Die Bank benötigt mehr Informationen, um Ihnen ein endgültiges Zinsangebot machen zu können. Sie muss Ihnen außerdem ein paar Fragen stellen, um sich an das Gesetz zu halten."
+
+msgid "You can submit the application to move your mortgage directly in Tink. The application is not binding until you have signed the banks contract."
+msgstr "Sie können den Antrag zum Verschieben Ihres Hauskredits direkt in Tink stellen. Der Antrag ist nicht verbindlich, bis Sie den Bankvertrag unterschrieben haben."
+
+msgid "Your tax residence is the country where you pay your taxes, usually the country where you live or work. Remember that if you are a US citizen or have a Green card, your tax residence is the United States."
+msgstr "Ihre Steueransässigkeit ist das Land, in dem Sie Ihre Steuern bezahlen. Dies ist normalerweise das Land, in dem Sie leben oder arbeiten. Denken Sie daran, dass Ihre Steueransässigkeit in den Vereinigten Staaten ist, wenn Sie ein US-Staatsbürger sind oder eine Green Card besitzen."
+
+msgid "For example, if you are an american citizen, have a green card or other relations to USA."
+msgstr "Wenn Sie zum Beispiel ein amerikanischer Staatsbürger sind, eine Green Card benutzen oder eine andere Verbindung zu den USA haben."
+
+msgid "We need some more information about you for your application. This will take about 10-15 minutes."
+msgstr "Wir benötigen für ihren Antrag mehr Informationen über Sie. Dies dauert ungefähr 10-15 Minuten."
+
+msgid "Household & Services"
+msgstr "Haushalt & Dienstleistungen"
+
+msgid "House & Services Other"
+msgstr "Haus & Dienstleistungen - Sonstiges"
+
+msgid "Provisions"
+msgstr "Vorkehrungen"
+
+msgid "Provisions Other"
+msgstr "Vorkehrungen - Sonstiges"
+
+msgid "Food"
+msgstr "Essen"
+
+msgid "Collector Save Agreement"
+msgstr "Collector Save Agreement"
+
+msgid "How will the money generally be deposited?"
+msgstr "Wie wird das Geld normalerweise eingezahlt?"
+
+msgid "Do you have a citizenship in other country?"
+msgstr "Haben Sie eine Staatsbürgerschaft in einem anderen Land?"
+
+msgid "How much do you intend to save each month?"
+msgstr "Wie viel wollen Sie jeden Monat sparen?"
+
+msgid "Are you taxable in any other country than Sweden and USA?"
+msgstr "Sind Sie in einem anderen Land als Schweden oder den USA steuerpflichtig?"
+
+msgid "Me"
+msgstr "Ich"
+
+msgid "Long term investment"
+msgstr "Langzeitinvestition"
+
+msgid "Household & Services Other"
+msgstr "Haus & Dienstleistungen - Sonstiges"
+
+msgid "Food Other"
+msgstr "Essen - Sonstiges"
+
+msgid "How much do you amortize per month?"
+msgstr "Wie viel amortisieren Sie jeden Monat?"
+
+msgid "Apartment number"
+msgstr "Wohnungsnummer"
+
+msgid "Monthly cost for student loan"
+msgstr "Monatliche Kosten für Studentenkredt"
+
+msgid "First name"
+msgstr "Vorname"
+
+msgid "Do you or someone in your household have children (under 18 years old)?"
+msgstr "Haben Sie oder jemand in Ihrem Haushalt Kinder (unter 18 Jahren)?"
+
+msgid "Does someone in your household have a student CSN loan?"
+msgstr "Hat jemand in Ihrem Haushalt einen Studenten-CSN-Kredit?"
+
+msgid "Number of children you pay alimony for"
+msgstr "Anzahl Kinder, für die Sie Unterhalt zahlen"
+
+msgid "Number of children you get child benefits from"
+msgstr "Anzahl Kinder, für die Sie Kindergeld erhalten"
+
+msgid "Last name"
+msgstr "Nachname"
+
+msgid "House label"
+msgstr "Hausbezeichnung"
+
+msgid "Municipality"
+msgstr "Gemeinde"
+
+msgid "Operating cost"
+msgstr "Betriebskosten"
+
+msgid "Ownership share"
+msgstr "Eigentumsanteil"
+
+msgid "Do you have a citizenship in another country?"
+msgstr "Haben Sie eine Staatsbürgerschaft in einem anderen Land?"
+
+msgid "I confirm that I have read and accept SBAB's Terms and Conditions and thus received the information about the deposit insurance and information concerning the processing of personal data."
+msgstr "Ich bestätige, dass ich die SBAB-Nutzungsbedingungen gelesen habe und das Informationsblatt über Einlagensicherung und Informationen über die Verarbeitung von persönlichen Daten erhalten habe."
+
+msgid "Are you taxable in any other country?"
+msgstr "Sind Sie in einem anderen Land steuerpflichtig?"
+
+msgid "Are you taxable in yet another country?"
+msgstr "Sind Sie in noch einem anderen Land steuerpflichtig?"
+
+msgid "For example, work as prime minister, commander in chief or judge of the Supreme Court."
+msgstr "Wenn Sie zum Beispiel als Premierminister, Oberbefehlshaber oder Richter beim obersten Gerichtshof arbeiten."
+
+msgid "Besides Sweden, USA and the previous choice."
+msgstr "Außer Schweden, USA und der vorherigen Wahl"
+
+msgid "Besides Sweden and USA."
+msgstr "Außer Schweden und USA."
+
+msgid "Besides Sweden and the previous choice."
+msgstr "Außer Schweden und der vorherigen Wahl"
+
+msgid "Besides Sweden."
+msgstr "Außer Schweden."
+
+msgid "You have to supply information for this field."
+msgstr "Sie müssen Informationen in dieses Feld eingeben."
+
+msgid "You have to select at least one option."
+msgstr "Sie müssen mindestens eine Option wählen."
+
+msgid "You have to select one option."
+msgstr "Sie müssen eine Option wählen."
+
+msgid "Invalid option selected."
+msgstr "Ungültige Option ausgewählt."
+
+msgid "Invalid input format."
+msgstr "Ungültiges Eingabeformat."
+
+msgid "Are you taxable in another country?"
+msgstr "Sind Sie in einem anderen Land steuerpflichtig?"
+
+msgid "For people in a politically exposed position (PEP), extra information is required which Tink currently doesn't support."
+msgstr "Für Personen in einer politisch exponierten Lage werden zusätzliche Informationen benötigt, die Tink derzeit nicht unterstützt."
+
+#, java-format
+msgid "{0} chosen"
+msgstr "{0} ausgewählt"
+
+msgid "Tink profile 100% done"
+msgstr "Tink-Profil zu 100% abgeschlossen"
+
+msgid "Mail from the bank to sign and return"
+msgstr "Mail von der Bank, die Sie unterschreiben und zurückschicken müssen"
+
+msgid "Mortgage moved"
+msgstr "Hauskredit verschoben"
+
+msgid "Complete your Tink profile"
+msgstr "Vervollständigen Sie Ihr Tink-Profil"
+
+msgid "If you already have a Collector account, the existing withdrawal account will override your selection below."
+msgstr "Wenn Sie bereits ein Collector-Konto besitzen, dann wird die vorhandene Abbuchungssumme Ihre Auswahl unten außer Kraft setzen."
+
+msgid "SBAB's Terms and Conditions"
+msgstr "SBAB-Nutzungsbedingungen"
+
+msgid "For example, if you are an American citizen, have a green card or other relations to USA."
+msgstr "Wenn Sie zum Beispiel ein amerikanischer Staatsbürger sind, eine Green Card benutzen oder eine andere Verbindung zu den USA haben."
+
+msgid "What is the main purpose of your savings?"
+msgstr "Worauf sparen Sie hin?"
+
+msgid "Where does the money that will be deposited into the account mainly come from?"
+msgstr "Woher kommt das Geld hauptsächlich, das in das Konto eingezahlt wird?"
+
+msgid "Please contact Collector Bank directly to open an account. Visit them at collector.se or call 010-161 00 00."
+msgstr "Bitte kontaktieren Sie die Collector Bank direkt, um ein Konto zu eröffnen. Sie finden Sie unter collector.se oder können unter 010-161 00 00 anrufen."
+
+msgid "Collector Bank doesn't allow people that are taxable in the USA to open savings accounts (due to reporting requirements)."
+msgstr "Collector Bank ermöglicht Personen, die in den USA steuerpflichtig sind, die Eröffnung von Sparkonten nicht (aufgrund Berichterstattungsanforderungen)."
+
+msgid "Have you been employed there for more than 12 months?"
+msgstr "Sind Sie hier für mehr als 12 Monate angestellt?"
+
+msgid "What is your occupation?"
+msgstr "Was für einen Beruf haben Sie?"
+
+msgid "Have you taken the loan together with someone else?"
+msgstr "Haben Sie den Kredit mit jemand anderem zusammen aufgenommen?"
+
+msgid "Living area"
+msgstr "Wohnbereich"
+
+msgid "Loan debt / used credit"
+msgstr "Kreditschulden/verwendeter Kredit"
+
+msgid "Bank / credit institution"
+msgstr "Bank/Kreditinstitut"
+
+msgid "Monthly fee"
+msgstr "Monatliche Gebühr"
+
+msgid "How much did you buy the apartment for?"
+msgstr "Für wie viel haben Sie die Wohnung gekauft?"
+
+msgid "Residence property type"
+msgstr "Art der Wohnimmobilie"
+
+msgid "Do you have citizenship in yet another country?"
+msgstr "Haben Sie eine Staatsbürgerschaft in noch einem anderen Land?"
+
+msgid "For example, if you and your partner took the loan together."
+msgstr "Wenn Sie und Ihr Partner zum Beispiel gemeinsam den Kredit aufgenommen haben."
+
+msgid "Even children over 18 that still stay at home counts."
+msgstr "Auch Kinder über 18, die zuhause wohnen, zählen dazu."
+
+msgid "Permanent employment"
+msgstr "Dauerhafte Anstellung"
+
+msgid "Temporary employment"
+msgstr "Zeitweilige Anstellung"
+
+msgid "Your profile"
+msgstr "Ihr Profil"
+
+msgid "Do you have a mortgage at"
+msgstr "Haben Sie einen Hauskredit unter"
+
+msgid "What is the market value of your property?"
+msgstr "Wie ist der Marktwerk für Ihre Immobilie?"
+
+msgid "Remember that used credit on a credit card also counts as debt."
+msgstr "Denken Sie daran, dass verwendeter Kredit von einer Kreditkarte auch als Schulden gelten."
+
+msgid "Do not include loans for other properties, such as vacation home. You have to move the whole mortgage."
+msgstr "Dazu gehören keine Kredite für andere Immobilien, wie z. B. eine Ferienwohnung. Sie müssen den gesamten Kredit verschieben."
+
+msgid "Here are the best floating interest rates from our partners based on your data."
+msgstr "Hier sind die besten variable Zinssätze unserer Partner, basierend auf Ihren Daten."
+
+msgid "For the bank to be able to do a valuation they need to know more about your apartment."
+msgstr "Damit die Bank eine Bewertung vornehmen kann, muss sie mehr über Ihre Wohnung wissen."
+
+msgid "Try to make the estimate as fair as possible to get more correct interest rate proposals."
+msgstr "Versuchen Sie, so gut wie möglich den Marktwert zu schätzen, um genauere Angebote für Zinsen zu erhalten."
+
+msgid "You're done soon, but the bank needs to ask a few questions about your residence and family situation."
+msgstr "Sie sind bald fertig. Aber die Bank muss Ihnen einige Fragen über Ihre Wohn- und Familiensituation stellen."
+
+msgid "We need some more information about you for your application. This will take about 5-10 minutes."
+msgstr "Wir benötigen für ihren Antrag mehr Informationen über Sie. Dies dauert ungefähr 5-10 Minuten."
+
+msgid "During the testing period of this feature, we only allow switching mortgages on the apartment where you're registered. We apoligize for that we can't help you at the moment."
+msgstr "Während des Testzeitraums für diese Funktion ermöglichen wir nur das Verschieben des Kredits für die Wohnung, in der Sie gemeldet sind. Es tut uns leid, dass wir Ihnen derzeit nicht helfen können."
+
+#, java-format
+msgid "Mark all loans that belong to {0}."
+msgstr "Markieren Sie alle Kredite, die zu {0} gehören."
+
+msgid "Lowest interest rate"
+msgstr "Geringster Zinssatz"
+
+msgid "Low interest rate"
+msgstr "Geringer Zinssatz"
+
+msgid "Other alternatives"
+msgstr "Andere Alternativen"
+
+#, java-format
+msgid "You save {0} per year"
+msgstr "Sie sparen {0} pro Jahr"
+
+#, java-format
+msgid "{0} interest rate"
+msgstr "{0} Zinssatz"
+
+#, java-format
+msgid "{0}/month"
+msgstr "{0}/Monat"
+
+#, java-format
+msgid "You save {0} per month"
+msgstr "Sie sparen {0} pro Monat"
+
+msgid "The interest rate is preliminary. The final rate is set when the bank has processed your application."
+msgstr "Der Zinssatz ist vorläufig. Der endgültige Satz wird festgelegt, wenn die Bank Ihren Antrag bearbeitet hat."
+
+msgid "SBAB's terms"
+msgstr "SBAB-Nutzungsbedingungen"
+
+msgid "SBAB does a credit check"
+msgstr "SBAB überprüft Ihre Credit Score"
+
+msgid "Information about processing of personal data (PUL)"
+msgstr "Informationen über die Verarbeitung von persönlichen Daten"
+
+msgid "SEB's terms"
+msgstr "SEB-Nutzungsbedingungen"
+
+msgid "Terms of SEB's Internet Bank"
+msgstr "Nutzungsbedingungen der SEB-Internetbank"
+
+msgid "SEB does a credit check"
+msgstr "SEB überprüft Ihre Credit Score"
+
+msgid "I confirm that I have read and accept SBAB´s Terms and Conditions"
+msgstr "Ich bestätige, dass ich die SBAB-Nutzungsbedingungen gelesen habe und ihnen zustimme."
+
+msgid "I confirm that I have read and accept SEB´s Terms and Conditions"
+msgstr "Ich bestätige, dass ich die SEB-Nutzungsbedingungen gelesen habe und ihnen zustimme."
+
+#, java-format
+msgid "Your interest rate at {0} is {1}."
+msgstr "Ihr Zinssatz für {0} ist {1}."
+
+msgid "How did we select our partners?"
+msgstr "Wie haben wir unsere Partner ausgewählt?"
+
+msgid "Example calculation"
+msgstr "Beispielsberechnung"
+
+msgid "If you already have a Collector Bank account, the existing withdrawal account will override your selection below."
+msgstr "Wenn Sie bereits ein Collector Bank-Konto besitzen, dann wird die vorhandene Abbuchungssumme Ihre Auswahl unten außer Kraft setzen."
+
+msgid "You can only withdraw money from your Collector Bank account to the selected account. You'll be able to change this later by contacting Collector Bank."
+msgstr "Sie können nur Geld von Ihrem Collector Bank-Konto auf das ausgewählte Konto überweisen. Sie können dies später ändern, indem Sie Collector Bank kontaktieren."
+
+msgid "In order to add new recipients you need to activate Mobile BankID for extended use. This is done in the Internet bank on the page BankID (found in the tab Tillval)."
+msgstr "Um neue Empfänger hinzuzufügen, müssen Sie die Mobile BankID für die erweiterte Nutzung freischalten. Dies geschieht über die Internetbank auf der Seite BankID (im Tab Tillval)."
+
+msgid "Just a couple of questions..."
+msgstr "Nur ein paar Fragen ..."
+
+msgid "Our proposals"
+msgstr "Unsere Vorschläge"
+
+msgid "Confirm the Terms and Conditions and sign with BankID, and you can start using the account immediately!"
+msgstr "Bestätigen Sie die Nutzungsbedingungen und unterschreiben Sie mit BankID und Sie können das Konto sofort benutzen!"
+
+msgid "Here are the best savings interest rates from our partners."
+msgstr "Hier sind die besten Sparzinsen unserer Partner."
+
+#, java-format
+msgid "{0} needs to ask some questions to make sure that you are't planning to launder money or something else fishy."
+msgstr "{0} muss Ihnen einige Fragen stellen, um sicherzustellen, dass Sie keine Geldwäsche oder etwas anderes Illegales geplant haben."
+
+msgid "savings account"
+msgstr "Sparkonto"
+
+msgid "checking account"
+msgstr "Girokonto"
+
+msgid "account"
+msgstr "Konto"
+
+#, java-format
+msgid "Your current {0} at {1} has an interest rate of {2}."
+msgstr "Ihr aktueller {0} bei {1} hat einen Zinssatz von {2}."
+
+msgid "Please contact SBAB directly to open an account. Visit them at sbab.se or call 0771-45 30 00."
+msgstr "Bitte kontaktieren Sie SBAB direkt, um ein Konto zu eröffnen. Sie finden Sie unter sbab.se oder können unter 0771-45 30 00 anrufen."
+
+msgid "Besides the previous choice."
+msgstr "Außer der vorherigen Wahl."
+
+msgid "To be able to refresh your accounts in Tink you need to updated your customer info in the ICA bank app."
+msgstr "Wenn Sie Ihre Konten in Tink aktualisieren wollen, müssen Ihre Kundendaten in der ICA-Bank-App aktualisiert sein."
+
+msgid "Have you requested deferral of capital gains tax?"
+msgstr "Haben Sie um die Aussetzung von Kapitalertragssteuer gebeten?"
+
+msgid "Name of the housing community"
+msgstr "Name der Hausverwaltung"
+
+msgid "If you have sold e.g. an apartment or house and deferred to pay the tax."
+msgstr "Wenn Sie z. B. eine Wohnung oder ein Haus verkauft haben und die Steuerzahlung dafür ausgesetzt haben."
+
+msgid "How much alimony do you pay in total per month?"
+msgstr "Wie viel Unterhalt zahlen Sie insgesamt pro Monat?"
+
+msgid "How much alimony does your co-applicant pay in total per month?"
+msgstr "Wie viel Unterhalt zahlt Ihr Mitbewerber Sie insgesamt pro Monat?"
+
+msgid "Enter your co-applicant's postal address."
+msgstr "Geben Sie die Anschrift Ihres Mitbewerbers ein."
+
+msgid "You can find your deferred amount by logging in with BankID at skatteverket.se."
+msgstr "Sie finden die ausgesetzte Summe, indem Sie sich mit BankID bei skatteverket.se einloggen."
+
+msgid "How many adults in total are you in the household?"
+msgstr "Wie viele Erwachsene gibt es insgesamt in Ihrem Haushalt?"
+
+msgid "Enter your American taxpayer identification number. If you don't have any, please contact the bank and they'll help you."
+msgstr "Geben Sie Ihre amerikanische Steueridentifikationsnummer ein. Wenn Sie keine haben, dann kontaktieren Sie bitte die Bank und dort wird man Ihnen helfen."
+
+msgid "Co-applicant"
+msgstr "Mitbewerber"
+
+msgid "Apartment details"
+msgstr "Wohnungsdetails"
+
+msgid "How much is your residence worth?"
+msgstr "Wie viel ist Ihre Wohnung wert?"
+
+msgid "Calculating on your finances..."
+msgstr "Berechnen Ihrer Finanzen ..."
+
+msgid "You can submit an application to switch your mortgage through Tink. The application is not binding until you've signed the bank's contract."
+msgstr "Sie können einen Antrag zum Wechseln Ihres Hauskredits über Tink abschicken. Der Antrag ist nicht verbindlich, bis Sie den Bankvertrag unterschrieben haben."
+
+msgid "How we have calculated"
+msgstr "Wie wir unsere Berechnung gemacht haben"
+
+#, java-format
+msgid "You payed {0} in interest last month.\n\nWith an interest rate of {1}, you'd pay {2}, which is {3} {4}.\n\nAfter interest tax deduction, it would be {5} per month, or {6} per year. We haven't included potential amortization."
+msgstr "Sie haben letzten Monat {0} Zinsen bezahlt.\n\nMit einem Zinssatz von {1} würden Sie {2} bezahlen, das macht {3} {4}.\n\nNach Abzug der Zinssteuerermäßigung wäre das {5} pro Monat oder {6} pro Jahr. Wir haben eine potentielle Amortisierung nicht mit eingeschlossen."
+
+msgid "more"
+msgstr "mehr"
+
+msgid "less"
+msgstr "weniger"
+
+msgid "Terms and Conditions for SEB's internet bank"
+msgstr "Nutzungsbedingungen für die SEB-Internetbank"
+
+msgid "information about processing of personal data"
+msgstr "informationen über die Verarbeitung von persönlichen Daten"
+
+msgid "I confirm that I have read and accept SBAB's Terms and Conditions"
+msgstr "Ich bestätige, dass ich die SBAB-Nutzungsbedingungen gelesen habe und ihnen zustimme."
+
+msgid "I confirm that I have read and accept the Terms and Conditions for SEB's internet bank and that SEB does a credit check, and that I have read the information about processing of personal data."
+msgstr "Ich bestätige, dass ich die SEB-Nutzungsbedingungen gelesen habe und sie akzeptiere, sowie dass SEB die Credit Score überprüft, und dass ich die Informationen über die Verarbeitung von persönlichen Daten gelesen habe."
+
+msgid "Example calculation with effective interest"
+msgstr "Beispielsberechnung mit effektivem Zins"
+
+msgid "Amount per month"
+msgstr "Summe pro Monat"
+
+msgid "Company name"
+msgstr "Firmenname"
+
+msgid "Employee since (YY/MM)"
+msgstr "Angestellt seit (JJ/MM)"
+
+msgid "Employer name"
+msgstr "Arbeitgeber"
+
+msgid "Is there someone else in your household that bailed a loan for someone?"
+msgstr "Gibt es jemanden in Ihrem Haushalt, der für einen Kredit für jemand anderen gebürgt hat?"
+
+msgid "Did someone else in your household requested deferral of capital gains tax?"
+msgstr "Hat noch jemand in Ihrem Haushalt um die Aussetzung von Kapitalertragssteuer gebeten?"
+
+msgid "Do you have any children that you pay alimony for?"
+msgstr "Haben Sie Kinder, für die Sie Unterhalt zahlen?"
+
+msgid "Self-employed since (YY/MM)"
+msgstr "Selbstständig seit (JJ/MM)"
+
+msgid "Is Sweden your residence for tax purposes?"
+msgstr "Ist Schweden für Steuerzwecke Ihr Aufenthaltsland?"
+
+msgid "If you for example helped a family member with taking a loan."
+msgstr "Wenn Sie zum Beispiel einem Familienmitglied mit einem Kredit helfen."
+
+msgid "Your residence for tax purposes is the country where you pay tax. Normally in the country where you live or work."
+msgstr "Ihre Aufenthaltsort für Steuerzwecke ist das Land, in dem Sie Steuern bezahlen. Dies ist normalerweise das Land, in dem Sie leben oder arbeiten."
+
+msgid "Other occupation"
+msgstr "Anderer Beruf"
+
+msgid "Your tax residence is the country where you pay your taxes, usually the country where you live or work."
+msgstr "Ihre Steueransässigkeit ist das Land, in dem Sie Ihre Steuern bezahlen. Dies ist normalerweise das Land, in dem Sie leben oder arbeiten."
+
+msgid "Your taxpayer identification number is usually on your ID documents or tax report. If the country doesn't issue TIN, enter instead 'Missing'."
+msgstr "Ihre Steueridentifikationsnummer befindet sich normalerweise auf Ihren ID-Dokumenten oder Ihrer Steuererklärung. Wenn das Land keine Tin ausgibt, dann geben Sie stattdessen 'Missing' ein."
+
+msgid "Employee since (YYYY-MM)"
+msgstr "Angestellt seit (JJJJ-MM)"
+
+msgid "What is your main occupation?"
+msgstr "Was für Hauptberuf haben Sie?"
+
+msgid "Monthly rent"
+msgstr "Monatliche Miete"
+
+msgid "Self-employed since (YYYY-MM)"
+msgstr "Selbstständig seit (JJJJ-MM)"
+
+msgid "Include your cohabitant and grown-up children who are living at home."
+msgstr "Dazu gehören Ihr Mitbewohner und erwachsene Kinder, die zuhause leben."
+
+msgid "You're considered to be this if you are an American citizen, have a Green card or is a US resident during a certain period."
+msgstr "Das sind Sie, wenn Sie zum Beispiel ein amerikanischer Staatsbürger sind, eine Green Card benutzen oder über einen gewissen Zeitraum in den USA leben."
+
+msgid "For example blanco loans, car loans or used credit on a credit card. Don't include other mortgages or student loans."
+msgstr "Zum Beispiel einfache Kredite, Autokredite oder Kredit über eine Kreditkarte. Dazu gehören keine anderen Hauskredite oder Studentenkredite."
+
+msgid "Ground rent (quarterly)"
+msgstr "Bodenrente (Quartal)"
+
+msgid "Does your co-applicant have other loans?"
+msgstr "Hat Ihr Mitbewerber andere Kredite?"
+
+msgid "What approximate amount is deposited in association to opening the account?"
+msgstr "Welche ungefähre Summe zahlen Sie im Zusammenhang mit der Kontoeröffnung ein?"
+
+msgid "Who will be depositing money?"
+msgstr "Wer zahlt das Geld ein?"
+
+msgid "What's the total amount that will be deposited per month?"
+msgstr "Wieviel Geld wird insgesamt pro Monat eingezahlt?"
+
+msgid "How often will deposits be made?"
+msgstr "Wie oft zahlen Sie etwas ein?"
+
+msgid "What's your monthly income, before taxes?"
+msgstr "Wie hoch ist Ihr monatliches Einkommen vor Steuern?"
+
+msgid "What is the purpose of the savings account?"
+msgstr "Wofür benötigen Sie das Sparkonto?"
+
+msgid "How will money mainly be deposited?"
+msgstr "Wie wird das Geld hauptsächlich eingezahlt?"
+
+msgid "Where does the money come from?"
+msgstr "Woher kommt das Geld?"
+
+msgid "Enter your American taxpayer identification number."
+msgstr "Geben Sie Ihre amerikanische Steueridentifikationsnummer ein."
+
+msgid "Our partners' savings accounts are of course covered by the state deposit insurance, are totally free of charge and without binding period."
+msgstr "Die Sparkonten unserer Partner fallen natürlich unter die staatliche Einlagensicherung, sind Gebührenfrei und ohne bindenden Zeitraum."
+
+msgid "We need to ask some questions to make sure that you are't planning to launder money or something else fishy."
+msgstr "Wir müssen Ihnen einige Fragen stellen, um sicherzustellen, dass Sie keine Geldwäsche oder etwas anderes Illegales geplant haben."
+
+#, java-format
+msgid "{0} with {1} interest"
+msgstr "{0} mit {1} Zinsen"
+
+msgid "Open a savings account in Tink"
+msgstr "Eröffnen eines Sparkontos in Tink"
+
+msgid "Start saving on a savings account with interest."
+msgstr "Beginnen Sie das Sparen auf einem Sparkonto mit Zinsen."
+
+msgid "Better interest rate on your mortgage"
+msgstr "Besserer Zinssatz für Ihren Hauskredit"
+
+msgid "See what interest rate you can get and move your mortgage directly in Tink."
+msgstr "Finden Sie heraus, welchen Zinssatz Sie erhalten und verschieben Sie Ihren Hauskredit direkt in Tink."
+
+msgid "Show alternatives"
+msgstr "Alternativen anzeigen"
+
+msgid "Choose a savings account you like"
+msgstr "Wählen Sie ein Sparkonto, das Ihnen gefällt"
+
+msgid "Answer a few simple questions"
+msgstr "Beantworten Sie ein paar einfache Fragen"
+
+msgid "The account is opened"
+msgstr "Das Konto ist eröffnet"
+
+msgid "Start wizard"
+msgstr "Den Assistenten starten"
+
+msgid "Answer 4 simple questions"
+msgstr "Beantworten Sie 4 einfache Fragen"
+
+msgid "See what interest you can get"
+msgstr "Finden Sie heraus, welchen Zinssatz Sie erhalten"
+
+msgid "Move your mortgage in the app"
+msgstr "Verschieben Sie Ihren Hauskredit in der App"
+
+msgid "See your year in numbers!"
+msgstr "Sehen Sie Ihr Jahr in Zahlen!"
+
+#, java-format
+msgid "No transactions are available for credit card {0}. Please go to ‘Settings’ > ‘Accounts’ in the Mobile Banking app to add this credit card. If your credit card transactions are displayed in Mobile Banking, they will also be available for Grip."
+msgid_plural "No transactions are available for credit cards {0}. Please go to ‘Settings’ > ‘Accounts’ in the Mobile Banking app to add these credit cards. If your credit cards transactions are displayed in Mobile Banking, they will also be available for Grip."
+msgstr[0] "Keine Transaktionen sind für die Kreditkarte {0} verfügbar. Rufen Sie Einstellungen > Konten in der mobilen Banking-App auf, um diese Kreditkarte hinzuzufügen. Wenn Ihre Kreditkartentransaktionen im mobilen Banking angezeigt werden, sind Sie auch für Grip verfügbar."
+msgstr[1] "Keine Transaktionen sind für die Kreditkarten {0} verfügbar. Rufen Sie Einstellungen > Konten in der mobilen Banking-App auf, um diese Kreditkarten hinzuzufügen. Wenn Ihre Kreditkartentransaktionen im mobilen Banking angezeigt werden, sind Sie auch für Grip verfügbar."
+
+#, java-format
+msgid "A temporary error occurred in the communication between ABN and ICS for the credit card {0}. We will automatically refresh data as soon as the connection is available."
+msgid_plural "A temporary error occurred in the communication between ABN and ICS for the credit cards {0}. We will automatically refresh data as soon as the connection is available."
+msgstr[0] "Ein vorübergehender Fehler ist bei der Kommunikation zwischen ABN und ICS für die Kreditkarte {0} aufgetreten. Wir werden die Daten automatisch aktualisieren, sobald die Verbindung wieder verfügbar ist."
+msgstr[1] "Ein vorübergehender Fehler ist bei der Kommunikation zwischen ABN und ICS für die Kreditkarten {0} aufgetreten. Wir werden die Daten automatisch aktualisieren, sobald die Verbindung wieder verfügbar ist."
+
+#, java-format
+msgid "The connection to {0} is temporarily out of order. We're working on restoring the connection as soon as possible."
+msgstr "Die Verbindung mit {0} ist kurzzeitig unterbrochen. Wir arbeiten daran, die Verbindung so schnell wie möglich wiederherzustellen."
+
+#, java-format
+msgid "Expenses Week {0}"
+msgstr "Ausgaben diese Woche {0}"
+
+#, java-format
+msgid "To {0}"
+msgstr "An {0}"
+
+#, java-format
+msgid "From {0}"
+msgstr "Von {0}"
+
+msgid "Total loan amount"
+msgstr "Gesamte Kreditsumme"
+
+msgid "Who is someone else?"
+msgstr "Wer ist jemand anderes?"
+
+msgid "Specify purpose"
+msgstr "Zweck angeben"
+
+msgid "From my account in a Swedish bank"
+msgstr "Von meinem Konto bei einer schwedischen Bank"
+
+msgid "Name of other bank"
+msgstr "Name der anderen Bank"
+
+msgid "Specify other way"
+msgstr "Andere Methode angeben"
+
+msgid "Specify industry"
+msgstr "Branche angeben"
+
+msgid "Specify source"
+msgstr "Quelle angeben"
+
+msgid "Danske Bank"
+msgstr "Danske Bank"
+
+msgid "Handelsbanken"
+msgstr "Handelsbanken"
+
+msgid "Data/IT/Ekonomi/Juridik"
+msgstr "Data/IT/Ekonomi/Juridik"
+
+msgid "Försäljning/Marknadsföring"
+msgstr "Försäljning/Marknadsföring"
+
+msgid "Hotell/Uthyrning/Resetjänster"
+msgstr "Hotell/Uthyrning/Resetjänster"
+
+msgid "Kultur/Media/Design/Hantverk"
+msgstr "Kultur/Media/Design/Hantverk"
+
+msgid "Restaurang/Taxi/Bemanning/Åkeri/Transport"
+msgstr "Restaurang/Taxi/Bemanning/Åkeri/Transport"
+
+msgid "Betalningsförmedling/Valutaväxling/Virtuella valutor"
+msgstr "Betalningsförmedling/Valutaväxling/Virtuella valutor"
+
+msgid "Spelbolag/Kasino"
+msgstr "Spelbolag/Kasino"
+
+msgid "Frisör/Hushållsnära tjänster"
+msgstr "Frisör/Hushållsnära tjänster"
+
+msgid "Hälso- och sjukvård/Frisk- och kroppsvård"
+msgstr "Hälso- och sjukvård/Frisk- och kroppsvård"
+
+msgid "Bygg och Anläggning/Skrot/Återvinning"
+msgstr "Bygg och Anläggning/Skrot/Återvinning"
+
+msgid "Vapenhandel"
+msgstr "Vapenhandel"
+
+msgid "Teknik/Säkerhet/Industri"
+msgstr "Teknik/Säkerhet/Industri"
+
+msgid "Nordea"
+msgstr "Nordea"
+
+msgid "From someone else´s account in a Swedish bank"
+msgstr "Von dem Konto einer anderen Person bei einer schwedischen Bank"
+
+msgid "SEB"
+msgstr "SEB"
+
+msgid "Swedbank"
+msgstr "Swedbank"
+
+#, java-format
+msgid "You lose {0} per year"
+msgstr "Sie verlieren {0} pro Jahr"
+
+#, java-format
+msgid "{0} more expensive per year"
+msgstr "{0} teurer im Jahr"
+
+#, java-format
+msgid "{0} more expensive per month"
+msgstr "{0} teurer im Monat"
+
+msgid "SEB does a credit check and can request complementary information"
+msgstr "SEB überprüft Ihre Credit Score und kann zusätzliche Informationen anfordern"
+
+msgid "Answer questions and submit application"
+msgstr "Beantworten Sie Fragen und senden Sie den Antrag ab"
+
+msgid "Second mortgage, car loans or used credit on a credit card. Don't include mortgages on other properties, for example the vacation house."
+msgstr "Einen zweiten Hauskredit,, Autokredite oder Kredit über eine Kreditkarte. Dazu gehören keine Hauskredite für andere Immobilien, wie zum Beispiel Ferienhäuser."
+
+msgid "You add second mortgage later on. Do not include loans for other properties, such as vacation home. You have to move the whole mortgage."
+msgstr "Sie fügen später einen zweiten Hauskredit hinzu. Dazu gehören keine Kredite für andere Immobilien, wie z. B. eine Ferienwohnung. Sie müssen den gesamten Kredit verschieben."
+
+msgid "Have your co-applicant bailed someones loan?"
+msgstr "Hat Ihr Mitbewerber für den Kredit von jemand anderem gebürgt?"
+
+msgid "Have your co-applicant requested deferral of capital gains tax?"
+msgstr "Hat Ihr Mitbewerber um die Aussetzung von Kapitalertragssteuer gebeten?"
+
+msgid "Does your co-applicant have any other loans?"
+msgstr "Hat Ihr Mitbewerber andere Kredite?"
+
+msgid "If your co-applicant e.g. has helped a family member to take a loan."
+msgstr "Wenn Ihr Mitbewerber z. B. einem Familienmitglied bei der Aufnahme eines Kredits geholfen hat."
+
+msgid "If your co-applicant e.g. has sold an apartment or a house and deferred paying capital gains tax."
+msgstr "Wenn Ihr Mitbewerber z. B. eine Wohnung oder ein Haus verkauft hat und die Kapitalertragssteuer dafür ausgesetzt hat."
+
+msgid "Like second mortgage, blanco loans or used credit not already stated. Don't include mortgages on other properties, for example the vacation house."
+msgstr "Wie ein zweiter Hauskredit, ein allgemeiner Kredit oder ein Kredit, der noch nicht aufgeführt wurde. Dazu gehören keine Hauskredite für andere Immobilien, wie zum Beispiel Ferienhäuser."
+
+msgid "Congratulations! You already have a good interest rate!"
+msgstr "Herzlichen Glückwunsch! Sie haben bereits einen guten Zinssatz!"
+
+msgid "In comparison with other banks, you already have a good interest rate. But check on a regular basis to see if the interest rates change."
+msgstr "Im Vergleich zu anderen Banken haben Sie bereits einen guten Zinssatz! Aber sehen Sie trotzdem regelmäßig nach, ob sich der Zinssatz verändert."
+
+msgid "Are there other adults in the household?"
+msgstr "Gibt es noch andere Erwachsene im Haushalt?"
+
+msgid "E.g. a cohabitant who is not included in the loan."
+msgstr "Zum Beispiel einen Mitbewohner, der mit dem Kredit nichts zu tun hat."
+
+msgid "Challenge your rate"
+msgstr "Finden Sie bessere Raten"
+
+msgid "See an example with effective rate further down on the page."
+msgstr "Weiter unten auf der Seite finden Sie ein Beispiel mit einem effektiven Zinssatz."
+
+msgid "Is there another adult in the household?"
+msgstr "Gibt es noch andere Erwachsene im Haushalt?"
+
+msgid "As a cohabitant who is not included in the loan."
+msgstr "Zum Beispiel einen Mitbewohner, der mit dem Kredit nichts zu tun hat."
+
+msgid "Challenge rate"
+msgstr "Finden Sie bessere Raten"
+
+msgid "See an example with effective rate further down in the page."
+msgstr "Weiter unten auf der Seite finden Sie ein Beispiel mit einem effektiven Zinssatz."
+
+msgid "Does your co-applicant receive alimony for any children?"
+msgstr "Erhält Ihr Mitbewerber Unterhalt für Kinder?"
+
+msgid "Profession"
+msgstr "Beruf"
+
+msgid "Not yet connected banks"
+msgstr "Noch keine verknüpften Banken"
+
+msgid "Do you have any children that you receive alimony for?"
+msgstr "Haben Sie Kinder, für die Sie Unterhalt erhalten?"
+
+msgid "Applies to children not living with you."
+msgstr "Gilt für Kinder, die nicht bei Ihnen leben."
+
+msgid "How many children do you pay alimony for?"
+msgstr "Für wie viele Kinder zahlen Sie Unterhalt?"
+
+msgid "How many children does your co-applicant pay alimony for?"
+msgstr "Für wie viele Kinder zahlt Ihr Mitbewerber Unterhalt?"
+
+msgid "How many children does your co-applicant receive alimony for?"
+msgstr "Für wie viele Kinder erhält Ihr Mitbewerber Unterhalt?"
+
+msgid "What's the total alimony amount paid each month?"
+msgstr "Welche Gesamtsumme wird für Unterhalt jeden Monat bezahlt?"
+
+msgid "How many children do you receive alimony for?"
+msgstr "Für wie viele Kinder erhalten Sie Unterhalt?"
+
+msgid "Are you receiving alimony?"
+msgstr "Erhalten Sie Unterhalt?"
+
+msgid "Is your co-applicant paying alimony?"
+msgstr "Zahlt Ihr Mitbewerber Unterhalt?"
+
+msgid "Questions about you"
+msgstr "Fragen über Sie"
+
+msgid "According to the law on measures against money laundering and terrorist financing and international tax law, the bank must have good knowledge of all its customers."
+msgstr "Gemäß dem Gesetz gegen Geldwäsche und die Finanzierung von Terroristen sowie dem internationalen Steuerrecht, muss die Bank ihre Kunden gut kennen."
+
+msgid "Cadastral"
+msgstr "Zum Grundbuch gehörig"
+
+msgid "How much did you purchase the house for?"
+msgstr "Für wie viel haben Sie das Haus gekauft?"
+
+msgid "Monthly operating cost"
+msgstr "Monatliche Betriebskosten"
+
+msgid "Enter the address and property type of the residence that you want to move your mortgage for."
+msgstr "Geben Sie die Adresse und die Art der Immobilie ein, für die Sie Ihren Hauskredit verschieben wollen."
+
+msgid "House details"
+msgstr "Hausdetails"
+
+msgid "About your house"
+msgstr "Über Ihr Haus"
+
+msgid "For the bank to be able to do a valuation they need to know more about your house."
+msgstr "Damit die Bank eine Bewertung vornehmen kann, muss sie mehr über Ihr Haus wissen."
+
+msgid "This is how it works"
+msgstr "So funktioniert es"
+
+msgid "Questions about you, your co-applicant and your household"
+msgstr "Fragen über Sie, Ihren Mitbewerber und Ihren Haushalt"
+
+msgid "Sign the application with BankID"
+msgstr "Unterzeichnen Sie den Antrag mit BankID"
+
+msgid "The bank will contact you and tell what you need to submit by mail"
+msgstr "Die Bank kontaktiert Sie und sagt Ihnen, was Sie per Post einschicken müssen"
+
+msgid "Total CSN amount"
+msgstr "Gesamte CSN-Summe"
+
+msgid "If your second mortgage is absent, you can add it later on. Do not include loans for other properties, such as vacation home. You have to move the whole mortgage."
+msgstr "Wenn Ihr zweiter Hauskredit fehlt, können Sie ihn später hinzufügen. Dazu gehören keine Kredite für andere Immobilien, wie z. B. eine Ferienwohnung. Sie müssen den gesamten Kredit verschieben."
+
+msgid "Operating costs of my residence"
+msgstr "Betriebskosten meines Wohnorts"
+
+msgid "Payments of loan at SBAB"
+msgstr "Kreditzahlungen bei SBAB"
+
+msgid "Sales (e.g. house, car, boat, company)"
+msgstr "Verkauf (z. B. Haus, Auto, Boot, Firma)"
+
+msgid "information sheet about Deposit insurance"
+msgstr "Informationsblatt über Einlagensicherung"
+
+msgid "Questions about you and your household"
+msgstr "Fragen über Sie und Ihren Haushalt"
+
+msgid "Social security number (YYYYMMDD-NNNN)"
+msgstr "Sozialversicherungsnummer (JJJJMMTT-NNNN)"
+
+msgid "Social security number (YYYYMMDDNNNN)"
+msgstr "Sozialversicherungsnummer (JJJJMMTTNNNN)"
+
+#, java-format
+msgid "Could not find any engagements in {0}. Use {1} (Mobile BankID) instead."
+msgstr "Keine Engagements in {0} gefunden. Verwenden Sie stattdessen {1} (Mobile BankID)."
+
+msgid "Year of construction"
+msgstr "Baujahr"
+
+msgid "Additional area"
+msgstr "Zusätzlicher Bereich"
+
+msgid "Plot area"
+msgstr "Grundstück"
+
+msgid "Kitchen condition"
+msgstr "Küchenzustand"
+
+msgid "Bathroom condition"
+msgstr "Badzustand"
+
+msgid "Tiled stove / Fireplace"
+msgstr "Gekachelter Ofen/Kamin"
+
+msgid "Vista"
+msgstr "Ausblick"
+
+msgid "Ceiling height (cm)"
+msgstr "Deckenhöhe (cm)"
+
+msgid "Elevator"
+msgstr "Fahrstuhl"
+
+msgid "Balcony"
+msgstr "Balkon"
+
+msgid "Patio"
+msgstr "Terrasse"
+
+msgid "Basement"
+msgstr "Keller"
+
+msgid "Parking options"
+msgstr "Parkmöglichkeiten"
+
+msgid "Last ground drainage"
+msgstr "Letzte Bodentrockenlegung"
+
+msgid "Roof renovation"
+msgstr "Dachrennovierung"
+
+msgid "Chain terrace house"
+msgstr "Reihenhaus"
+
+msgid "Semi-detached house"
+msgstr "Doppelhaushälfte"
+
+msgid "Terrace house"
+msgstr "Reihenhaus"
+
+msgid "Sea view"
+msgstr "Meeresblick"
+
+msgid "Lake view"
+msgstr "Seeblick"
+
+msgid "Rooftops"
+msgstr "Dächer"
+
+msgid "Courtyard"
+msgstr "Hof"
+
+msgid "Nothing special"
+msgstr "Nichts besonderes"
+
+msgid "Traditional"
+msgstr "Traditionell"
+
+msgid "French"
+msgstr "Französisch"
+
+msgid "Double traditional"
+msgstr "Traditionelles Doppelhaus"
+
+msgid "Terrace"
+msgstr "Reihenhaus"
+
+msgid "Royal balcony"
+msgstr "Vollbalkon"
+
+msgid "Functional"
+msgstr "Funktional"
+
+msgid "Non-functional"
+msgstr "Nicht funktional"
+
+msgid "0 to 15 years ago"
+msgstr "Vor 0 bis 15 Jahren"
+
+msgid "15 to 30 years ago"
+msgstr "Vor 15 bis 30 Jahren"
+
+msgid "30 years ago or more"
+msgstr "Vor 30 Jahren oder länger"
+
+msgid "Garage"
+msgstr "Garage"
+
+msgid "Double garage"
+msgstr "Doppelgarage"
+
+msgid "Driveway"
+msgstr "Einfahrt"
+
+msgid "Street"
+msgstr "Straße"
+
+msgid "Bad"
+msgstr "Schlecht"
+
+msgid "Pretty bad"
+msgstr "Sehr schlecht"
+
+msgid "Ok"
+msgstr "OK"
+
+msgid "Good"
+msgstr "Gut"
+
+msgid "Excellent"
+msgstr "Ausgezeichnet"
+
+msgid "What kind of residence is it?"
+msgstr "Was für Wohnsitz ist es?"
+
+msgid "How big is your residence?"
+msgstr "Wie groß ist Ihr Wohnsitz?"
+
+msgid "Optional data"
+msgstr "Optionale Daten"
+
+msgid "The more data you add, the more precise will your valuation be."
+msgstr "Je mehr Daten Sie hinzufügen, desto genauer wird Ihre Bewertung."
+
+msgid "Calculating the value of your residence..."
+msgstr "Berechnen des Werts Ihres Wohnsitzes ..."
+
+msgid "I confirm that I have read and accept the Collector Save Agreement and that I have received information about state-provided guarantee of deposits."
+msgstr "Ich bestätige, dass ich das Collector Save Agreement gelesen habe und ihm zustimme und dass ich Informationen über staatliche Einlagensicherung erhalten habe."
+
+msgid "state-provided guarantee of deposits"
+msgstr "Staatliche Einlagensicherung"
+
+msgid "Du behöver aktivera anslutningen med din kortläsare."
+msgstr "Du behöver aktivera anslutningen med din kortläsare."
+
+msgid "Försöker du använda ditt betalkort för att logga in? Testa att använda inloggningskortet istället. Svarskoden borde då bli 9 siffror."
+msgstr "Försöker du använda ditt betalkort för att logga in? Testa att använda inloggningskortet istället. Svarskoden borde då bli 9 siffror."
+
+msgid "Du måste aktivera din personliga kod för telefon- och mobiltjänster på internetbanken."
+msgstr "Du måste aktivera din personliga kod för telefon- och mobiltjänster på internetbanken."
+
+msgid "You don't have any commitments in the selected bank."
+msgstr "Sie haben eine Verpflichtungen bei der ausgewählten Bank."
+
+msgid "Could not login to your bank. The access could be blocked. Please activate it in your bank app or contact your bank."
+msgstr "Einloggen bei Ihrer Bank nicht möglich. Der Zugang könnte gesperrt sein. Bitte aktivieren Sie ihn in Ihrer Bank-App oder kontaktieren Sie Ihre Bank."
+
+msgid "The authentication needed to login to your bank is not supported at the moment. If possible please try another option."
+msgstr "Die Authentifizierung, mit der Sie sich bei Ihrer Bank einloggen, wird derzeit nicht unterstützt. Probieren Sie eine andere Option, wenn möglich."
+
+msgid "For safety reasons you have been logged out. Please login again to continue."
+msgstr "Aus Sicherheitsgründen wurden Sie ausgeloggt. Bitte loggen Sie sich erneut ein um fortzufahren."
+
+msgid "Incorrect login credentials. Please try again."
+msgstr "Falsche Anmeldedaten. Bitte versuchen Sie es erneut."
+
+msgid "The transfer amount is larger than what is available on the account."
+msgstr "Die Überweisungssumme ist größer als das verfügbare Guthaben."
+
+msgid "Additional area (m²)"
+msgstr "Zusätzlicher Bereich (m²)"
+
+msgid "Plot area (m²)"
+msgstr "Grundstück (m²)"
+
+msgid "You have enter incorrect service code to many times. For safety reasons the service code is now blocked. You may unlock your safety in Hembanken, in Mobila tjänster."
+msgstr "Sie haben den falschen Dienstcode zu oft eingegeben. Aus Sicherheitsgründen ist der Code jetzt gesperrt. Sie können ihn bei Hembanken in Mobila tjänster wieder freischalten."
+
+msgid "To use the mobile services you need to sign an agreement for Service code. Log in at Hembanken and and look in Mobila tjänster - Se och ändra servicekod."
+msgstr "Um die mobilen Dienste zu verwenden, müssen Sie eine Vereinbarung für den Dienstcode unterschreiben. Loggen Sie sich bei Hembanken ein und sehen Sie sich Mobila tjänster - Se och ändra servicekod an."
+
+msgid "Wrong personal number or service code. Please try again or control your service code in Hembanken, in Mobila tjänster."
+msgstr "Falsche persönliche Nummer oder Dienstcode. Bitte versuchen Sie es erneut oder sehen Sie sich Ihren Dienstcode in Hembanken in Mobila tjänster an."
+
+msgid "Your personal code has been locked. Contact Nordea customer services (0771-42 15 16) to order a new code, or contact your local Nordea office."
+msgstr "Ihr persönlicher Code wurde gesperrt. Kontaktieren Sie den Nordea-Kundendienst (0771-42 15 16), um einen neuen Code zu bestellen, oder kontaktieren Sie Ihr örtliches Nordea-Büro."
+
+msgid "You're missing a valid Mobilt BankID. Download the BankID app and login to Internetbanken to order and connect to Mobil BankID."
+msgstr "Ihnen fehlt eine gültige Mobilt BankID. Laden Sie die BankID-App herunter und loggen Sie sich bei Internetbanken ein, um Mobil BankID zu bestellen und sich damit zu verbinden."
+
+msgid "We could not find a valid internet banking agreement. If you login to Nordea's internetbank with e-code (card reader) you may sign an agreement for internet and telephone banking"
+msgstr "Wir konnten keine gültige Internetbankingvereinbarung finden. Wenn Sie sich in Nordeas Internetbank mit einem E-Code (Kartenlesegerät) einloggen, können Sie eine Vereinbarung für das Internet- und Telefonbanking unterschreiben."
+
+msgid "Your password has expired."
+msgstr "Ihr Passwort ist abgelaufen."
+
+msgid "The first time you use your mobile BankId you have to verify it with your Digipass. Login to the SEB-app with your mobile BankID to do this."
+msgstr "Beim ersten Mal, wenn Sie Ihre mobile BankID verwenden, müssen Sie sie mit ihrem Digipass bestätigen. Loggen Sie sich dazu mit Ihrer mobilen BankID bei der SEB-App ein."
+
+msgid "Could not find any engagements in Swedbank. Use Swedbank Ung (Mobile BankID) instead."
+msgstr "Keine Engagements in Swedbank gefunden. Verwenden Sie stattdessen Swedbank Ung (Mobile BankID)."
+
+msgid "Could not find any engagements in Swedbank Ung. Use Swedbank (Mobile BankID) instead."
+msgstr "Keine Engagements in Swedbank Ung gefunden. Verwenden Sie stattdessen Swedbank (Mobile BankID)."
+
+msgid "Could not find any engagements in Sparbankerna. Use Sparbankerna Ung (Mobile BankID) instead."
+msgstr "Keine Engagements in Sparbankerna gefunden. Verwenden Sie stattdessen Sparbankerna Ung (Mobile BankID)."
+
+msgid "Could not find any engagements in Sparbankerna Ung. Use Sparbankerna (Mobile BankID) instead."
+msgstr "Keine Engagements in Sparbankerna Ung gefunden. Verwenden Sie stattdessen Sparbankerna (Mobile BankID)."
+
+msgid "You are not authorized to use this service."
+msgstr "Sie sind nicht berechtigt, diesen Dienst zu nutzen."
+
+msgid "You do not have a valid profile."
+msgstr "Sie haben kein gültiges Profil."
+
+msgid "Move the loan directly"
+msgstr "Den Kredit direkt verschieben"
+
+msgid "Banks not connected"
+msgstr "Banken sind nicht verbunden"
+
+msgid "3 months list rate / average rate"
+msgstr "3 Monate Listensatz/Durchschnittssatz"
+
+msgid "Interest rates for you"
+msgstr "Zinssätze für Sie"
+
+msgid "The interest rates are based on your information, your finances and loan size."
+msgstr "Die Zinssätze basieren auf Ihren Informationen, Ihren Finanzen und der Größe des Kredits."
+
+msgid "The source and destination accounts cannot be the same."
+msgstr "Die Quell- und Zielkonten dürfen nicht identisch sein."
+
+msgid "Handelsbanken är inte längre aktiv för angiven användare. Det kan bero på att Handelsbankens app inte använts på den här enheten på 90 dagar. För att logga in behöver du aktivera appen på nytt."
+msgstr "Handelsbanken är inte längre aktiv för angiven användare. Det kan bero på att Handelsbankens app inte använts på den här enheten på 90 dagar. För att logga in behöver du aktivera appen på nytt."
+
+msgid "You must be over the age of 16 to use Mobilt BankID."
+msgstr "Sie müssen älter als 16 sein, um die Mobilt BankID zu verwenden."
+
+msgid "Could not login to Skandiabanken. Unfortunately we don't support Skandiabanken for customers under the age of 18 years."
+msgstr "Einloggen bei Skandiabanken nicht möglich. Leider bieten wir Skandiabanken für Kunden unter 18 Jahren nicht an."
+
+msgid "Your identity could not be validated. Please try again."
+msgstr "Ihre Identität konnte nicht bestätigt werden. Bitte versuchen Sie es erneut."
+
+msgid "Your BankID is not authorized for this service."
+msgstr "Ihre BankID ist für diesen Dienst nicht autorisiert."
+
+msgid "It looks like you have SEB Ung. Unfortunately we currently only support SEB's standard login."
+msgstr "Es sieht so aus, als haben Sie SEB Ung. Leider unterstützen wir für SEB nur das Standard-Login."
+
+#, java-format
+msgid "We are currently having issues with {0}. Please try again later."
+msgstr "Wir haben derzeit Probleme mit {0}. Bitte versuchen Sie es später erneut."
+
+#, java-format
+msgid "We are currently having technical issues with {0}. Please try again later."
+msgstr "Wir haben derzeit technische Probleme mit {0}. Bitte versuchen Sie es später erneut."
+
+msgid "Felaktig svarskod. Tänk på att kontrollkoden endast är giltig i fyra minuter. Tryck OK för att börja om."
+msgstr "Felaktig svarskod. Tänk på att kontrollkoden endast är giltig i fyra minuter. Tryck OK för att börja om."
+
+msgid "See your summer spendings"
+msgstr "Sehen Sie Ihre Ausgaben im Sommer"
+
+msgid "I confirm that I have read and accepted the terms of service for direct debit."
+msgstr "Ich bestätige, dass ich die Nutzungsbedingungen für Abbuchungen gelesen habe und ihm zustimme."
+
+msgid "Account for direct debit"
+msgstr "Konto für Abbuchungen"
+
+msgid "With direct debit your payment is debited every month from the account of your choice."
+msgstr "Mit den Abbuchungen werden Ihre Zahlungen jeden Monat von einem Konto Ihrer Wahl abgezogen."
+
+msgid "Signature"
+msgstr "Unterschrift"
+
+msgid "Your signature"
+msgstr "Ihre Unterschrift"
+
+msgid "Do you have an income in another currency than Swedish crowns?"
+msgstr "Haben Sie ein Einkommen in einer anderen Währung als schwedische Kronen?"
+
+msgid "We ask because changes in the exchange rate can affect your finances."
+msgstr "Wir fragen, weil Änderungen im Wechselkurs Einfluss auf Ihre Finanzen haben können."
+
+msgid "You spend the most money on this the last month."
+msgstr "Sie haben letzten Monat hierfür am meisten Geld ausgegeben."
+
+msgid "In Tink you get on top of where you spend your money. Do you need to reduce any expenses? or spend more on something that’s important to you?"
+msgstr "In Tink sehen Sie genau, wofür Sie Ihr Geld ausgeben. Müssen Sie Ausgaben reduzieren? Oder mehr für etwas anderes ausgeben, das Ihnen wichtig ist?"
+
+msgid "Do you have savings that you want to transfer to SEB?"
+msgstr "Haben Sie Ersparnisse, die Sie zu SEB übertragen möchten?"
+
+msgid "Are you interested in other services from SEB in addition to mortgages?"
+msgstr "Haben Sie Interesse an anderen Diensten von SEB, außer Hauskrediten?"
+
+msgid "Was your mortgage granted, extended, or otherwise changed after the 1st of June 2016?"
+msgstr "Wurde Ihr Hauskredit nach dem 1. Juni 2016 gewährt, verlängert oder anderweitig geändert?"
+
+msgid "This is not a requirement and you do not need to make a decision now."
+msgstr "Dies ist keine Bedingung und Sie müssen sich jetzt nicht entscheiden."
+
+msgid "Insurance payout"
+msgstr "Versicherungsauszahlung"
+
+msgid "Dividends from small business"
+msgstr "Dividenden aus kleinen Unternehmen"
+
+msgid "Capital management"
+msgstr "Investitionsmanagement"
+
+msgid "Cards"
+msgstr "Karten"
+
+msgid "Pension insurance"
+msgstr "Rentenversicherung"
+
+msgid "Investing"
+msgstr "Investieren"
+
+msgid "Where is the money that you plan on transfering originating from?"
+msgstr "Woher kommt das Geld, das Sie überweisen wollen?"
+
+msgid "What kind of services are you interested in?"
+msgstr "Für welche Dienste interessieren Sie sich?"
+
+msgid "Nice job! Your application is complete."
+msgstr "Gut gemacht! Ihr Antrag ist vollständig."
+
+msgid "You are ready to apply! Here is everything you need to know about your new mortgage."
+msgstr "Sie können den Antrag stellen! Hier ist alles, was Sie über Ihren neuen Hauskredit wissen müssen."
+
+msgid "Your mortgage interest rate is lower than most others."
+msgstr "Ihr Hauskredit-Zinssatz ist niedriger als die meisten anderen."
+
+msgid "In Tink you get help to keep track on your interest rate and the value of the residence. You can also lower your interest rate directly in the app!"
+msgstr "In Tink erhalten Sie Hilfe, um Ihren Zinssatz nachzuvollziehen wie auch den Wert des Wohnsitzes. Sie können Ihren Zinssatz auch direkt in der App senken!"
+
+#, java-format
+msgid "You spend on average {0} per day."
+msgstr "Sie geben durchschnittlich {0} pro Tag aus."
+
+#, java-format
+msgid "You’re spending the most on {0}, on which you spend on average {1}."
+msgstr "Sie geben das Meiste für {0} aus. Durchschnittlich sind es {1}."
+
+msgid "You normally have a bunch of money left of your salary."
+msgstr "Normalerweise haben Sie viel Geld von Ihrem Gehalt übrig."
+
+msgid "Deposit the surplus every month into a savings account where it grows over time. Open a savings account with interest rate directly in Tink."
+msgstr "Zahlen Sie den Restbetrag jeden Monat in ein Sparkonto ein, wo es mit der Zeit anwächst. Öffnen Sie direkt in Tink ein Sparkonto mit einem Zinssatz."
+
+msgid "Your mortgage interest rate is lower than most others, but there's room for improvement."
+msgstr "Ihr Hauskredit-Zinssatz ist niedriger als die meisten anderen, aber er kann noch besser werden."
+
+msgid "Your mortgage interest rate is higher than most others."
+msgstr "Ihr Hauskredit-Zinssatz ist höher als die meisten anderen."
+
+msgid "Do you like Tink?"
+msgstr "Gefällt Ihnen Tink?"
+
+msgid "Rate the app and leave a comment in the App Store!"
+msgstr "Bewerten Sie die App und hinterlassen Sie einen Kommentar im App Store!"
+
+msgid "Rate the app and leave a comment in the Play Store!"
+msgstr "Bewerten Sie die App und hinterlassen Sie einen Kommentar im Play Store!"
+
+msgid "No, thanks"
+msgstr "Nein danke"
+
+msgid "Sure!"
+msgstr "Klar!"
+
+msgid "Name of asset"
+msgstr "Name des Vermögens"
+
+msgid "Value of asset"
+msgstr "Wert des Vermögens"
+
+msgid "Sale of property"
+msgstr "Verkauf von Immobilien"
+
+msgid "Do you have other assets?"
+msgstr "Haben Sie noch andere Vermögenswerte?"
+
+msgid "Those could be mutual funds, stocks, other securities, and savings. Do not include pension savings."
+msgstr "Es könnten Anlagefonds, Aktien, andere Sicherheit und Ersparnisse sein. Dazu gehören keine Rentenersparnisse."
+
+msgid "We are curious to know what you think about the app. Would you like to rate it?"
+msgstr "Wir sind neugierig, was Sie über die App denken. Möchten Sie sie gerne bewerten?"
+
+msgid "Do you like Grip?"
+msgstr "Gefällt Ihnen Grip?"
+
+msgid "Could not fetch payment accounts."
+msgstr "Zahlungskonten konnten nicht aufgerufen werden."
+
+msgid "You need to activate the connection with your Handelsbanken card reader."
+msgstr "Sie müssen die Verbindung mit Ihrem Handelsbanken-Kartenlesegerät aktivieren."
+
+msgid "Are you trying to use your charge card to login? Please use your login card for BankID. The response should be 9 figures."
+msgstr "Veresuchen Sie, Ihre Kreditkarten zum Einloggen zu verwenden? Bitte verwenden Sie Ihre Login-Karte für BankID. Die Antwort sollte aus 9 Zahlen bestehen."
+
+msgid "You need to activate your personal code for telephone and mobile services on the internet bank."
+msgstr "Sie müssen Ihren persönlichen Code für Telefon- und Mobildienste bei der Internetbank aktivieren."
+
+msgid "Handelsbanken is no longer active for the specified user. This could be due to that the Handelsbanken app for this device has not been active in 90 days. To login again you need to activate the app again."
+msgstr "Handelsbanken ist für den angegebenen Nutzer nicht mehr aktiv. Das könnte daran liegen, dass die Handelsbanken-App für dieses Gerät 90 Tage lang nicht mehr aktiv war. Um sich erneut einzuloggen, müssen Sie die App wieder aktivieren."
+
+msgid "Incorrect answer code. The challenge code is only active for four minutes. Press OK to restart."
+msgstr "Falscher Antwortcode. Der Challenge-Code ist nur vier Minuten lang aktiv. Drücken Sie zum Neustarten OK."
+
+msgid "You have used incorrect credentials. Please try again."
+msgstr "Sie haben falsche Anmeldedaten verwendet. Bitte versuchen Sie es erneut."
+
+msgid "You lack the sufficient permissions for this service."
+msgstr "Sie haben nicht genug Berechtigungen für diesen Dienst."
+
+msgid "The card you are using is blocked. Please contact Handelsbanken technical support or visit your local bank office to order a new login card."
+msgstr "Die Karte, die Sie verwenden, ist gesperrt. Bitte kontaktieren Sie den technischen Support von Handelsbanken oder besuchen Sie Ihre lokale Filiale, um eine neue Login-Karte zu bestellen."
+
+msgid "Too many incorrect tries. The card has been locked for 60 minutes for signing with the card reader without a cord. Contact Handelsbanken technical support for more information."
+msgstr "Zu viele falsche Versuche. Die Karte wurde 60 Minuten lang gesperrt, weil Sie das Kartenlesegerät ohne Kabel unterzeichnet haben. Kontaktieren Sie den technischen Support von Handelsbanken, um mehr Informationen zu erhalten."
+
+msgid "The activation could not be completed. It is not possible to activate more than ten apps."
+msgstr "Die Aktivierung konnte nicht abgeschlossen werden. Es ist nicht möglich, mehr als zehn Apps zu aktivieren."
+
+#, java-format
+msgid "Congratulation! You have a good savings buffer! {0}% better than Tink users into savings and investments accounts."
+msgstr "Herzlichen Glückwunsch! Sie haben einen guten Puffer! {0}% besser als Tink-Nutzer mit Spar- und Investitionskonten."
+
+#, java-format
+msgid "You have a good savings buffer! {0}% better than Tink users into savings and investments accounts. Keep saving!"
+msgstr "Sie haben einen guten Puffer! {0}% besser als Tink-Nutzer mit Spar- und Investitionskonten. Sparen Sie weiter so!"
+
+#, java-format
+msgid "Your savings buffer is {0} less than average Tink user."
+msgstr "Ihr Puffer ist weniger als {0} des durchschnittlichen Tink-Nutzers."
+
+msgid "Tink helps you keep track of all you accounts. You can create a new account with a good savings rate and setup savings goals to help you get started!"
+msgstr "Tink hilft Ihnen dabei, den Überblick über all Ihre Konten nicht zu verlieren. Sie können ein neues Konto mit einem guten Sparzinssatz erstellen und Sparziele einrichten, die Ihnen beim Loslegen helfen!"
+
+msgid "If the e-invoice has been modified in the ICA Banken app, please refresh you credentials."
+msgstr "Wenn die E-Rechnung in der ICA Banken-App bearbeitet wurde, dann aktualisieren Sie bitte Ihre Anmeldedaten."
+
+msgid "The social security number has been updated, please try again"
+msgstr "Die Sozialversicherungsnummer wurde aktualisiert. Bitte versuchen Sie es erneut."
+
+msgid "Another BankId authentication was initiated while authenticating. Please try again."
+msgstr "Während der Authentifizierung wurde eine andere BankID-Authentifizierung gestartet. Bitte versuchen Sie es erneut."
+
+msgid "Something went wrong with the BankId authentication"
+msgstr "Etwas ist mit der BankID-Authentifizierung schiefgegangen."
+
+msgid "You've received a Swish from {0}"
+msgstr "Sie haben einen Swish von erhalten von {0}"
+
+msgid "someone"
+msgstr "jemandem"
+
+msgid "Is it a reimbursement for an expense?"
+msgstr "Ist es eine Rückerstattung für eine Ausgabe?"
+
+msgid "Deduct from expense"
+msgstr "Von Ausgabe abziehen"
+
+msgid "Skip"
+msgstr "Überspringen"
+
+msgid "Your verification code is"
+msgstr "Ihr Verifizierungscode lautet"
+
+msgid "Mondays"
+msgstr "Montags"
+
+msgid "Tuesdays"
+msgstr "Dienstags"
+
+msgid "Wednesdays"
+msgstr "Mittwochs"
+
+msgid "Thursdays"
+msgstr "Donnerstags"
+
+msgid "Fridays"
+msgstr "Freitags"
+
+msgid "Saturdays"
+msgstr "Samstags"
+
+msgid "Sundays"
+msgstr "Sonntags"
+
+msgid "Your mortgage interest rate is decent, but there's room for improvement."
+msgstr "Ihr Hauskredit-Zinssatz ist okay, aber er kann noch besser werden."
+
+msgid "Your mortgage interest rate is quite high. Maybe we can help?"
+msgstr "Ihr Hauskredit-Zinssatz ist sehr hoch. Vielleicht können wir helfen?"
+
+#, java-format
+msgid "The last few months, you’re spending the most on {0}, on which you spend on average {1}."
+msgstr "In den letzten paar Monaten geben Sie das Meiste für {0} aus. Durchschnittlich sind es {1}."
+
+#, java-format
+msgid "Congratulation! You have a good amount saved. You belong to the top {0}!"
+msgstr "Herzlichen Glückwunsch! Sie haben eine gute Summe gespart. Sie gehören zu den Top {0}!"
+
+#, java-format
+msgid "You have a good savings buffer! More than {0} over average. Keep up the good job!"
+msgstr "Sie haben einen guten Puffer! Mehr als {0} über Durchschnitt. Machen Sie weiter so!"
+
+msgid "Your savings buffer is a little bit lower than average. Let us help you improve!"
+msgstr "Ihr Puffer ist ein bisschen geringer als der des durchschnittlichen Tink-Nutzers. Wir helfen Ihnen dabei, das zu verbessern!"
+
+msgid "Download Mobile Banking"
+msgstr "Mobiles Banking herunterladen"
+
+msgid "You need to download the Mobile Banking in order to continue."
+msgstr "Sie müssen das mobile Banking herunterladen um fortzufahren."
+
+msgid "Upgrade Mobile Banking"
+msgstr "Mobiles Banking aktualisieren"
+
+msgid "You need to upgrade the Mobile Banking in order to continue."
+msgstr "Sie müssen das mobile Banking aktualisieren um fortzufahren."
+
+msgid "Error Code: C161. Please ensure that you have entered the correct mobile number and date of birth and that you have activated BankID on mobile in your online bank."
+msgstr "Fehlercode: C161. Bitte stellen Sie sicher, dass Sie die richtige Handynummer und das richtige Geburtsdatum eingegeben haben, und dass Sie die BankID für Mobilgeräte bei Ihrer Online-Bank aktiviert haben."
+
+msgid "Your credentials could not be verified. Please try again."
+msgstr "Ihre Anmeldedaten konnten nicht überprüft werden. Bitte versuchen Sie es erneut."
+
+msgid "Please ensure that you have entered the correct mobile number and date of birth and that you have activated authentication service on mobile in your online bank."
+msgstr "Bitte stellen Sie sicher, dass Sie die richtige Handynummer und das richtige Geburtsdatum eingegeben haben, und dass Sie den Authentifizierungsdienst für Mobilgeräte bei Ihrer Online-Bank aktiviert haben."
+
+msgid "The mobile BankID session timed out. Please try again."
+msgstr "Die Sitzung der mobilen BankID ist abgelaufen. Bitte versuchen Sie es erneut."
+
+msgid "Something went wrong with the BankId authentication."
+msgstr "Etwas ist mit der BankID-Authentifizierung schiefgegangen."
+
+msgid "Error Code: C161. "
+msgstr "Fehlercode: C161. "
+
+msgid "Are you filling out the application on your own behalf?"
+msgstr "Füllen Sie den Antrag für sich selber aus?"
+
+msgid "The question is asked for the control of the true principal, to ensure that you do not act on somebody else's behalf. Any potential co-applicant is not concerned."
+msgstr "Die Frage wird für die Kontrolle der tatsächlichen Kreditsumme gefragt, damit wir sicherstellen können, dass Sie nicht für jemand anderen agieren. Dies beeinflusst potentielle Mitbewerber nicht."
+
+msgid "Download Mobile BankID"
+msgstr "Mobile BankID herunterladen"
+
+msgid "You need to install the Mobile BankID app to authenticate"
+msgstr "Sie müssen die mobile BankID-App zum Authentifizieren installieren"
+
+msgid "Your rate has decreased"
+msgid_plural "Your rates have decreased"
+msgstr[0] "Ihr Satz wurde gesenkt"
+msgstr[1] "Ihre Sätze wurden gesenkt"
+
+msgid "Your rate has increased"
+msgid_plural "Your rates have increased"
+msgstr[0] "Ihr Satz wurde erhöht"
+msgstr[1] "Ihre Sätze wurden erhöht"
+
+msgid "Challenge your mortgage"
+msgstr "Finden Sie einen besseren Hauskredit"
+
+#, java-format
+msgid "Rate {0}"
+msgstr "Satz {0}"
+
+msgid "Balance: %s"
+msgstr "Guthaben: %s"
+
+#, java-format
+msgid "Date of change: {0}"
+msgstr "Änderungsdatum: {0}"
+
+msgid "Incomes"
+msgstr "Einkommen"
+
+msgid "Left to spend"
+msgstr "Zum Ausgeben übrig"
+
+msgid "Unusual account activity"
+msgstr "Ungewöhnliche Kontoaktivität"
+
+msgid "ID Control event"
+msgstr "ID-Kontrollereignis"
+
+msgid "Weekly"
+msgstr "Wöchentlich"
+
+msgid "Monthly"
+msgstr "Monatlich"
+
+msgid "E-invoices"
+msgstr "E-Rechnungen"
+
+msgid "Expenses over goal"
+msgstr "Ausgaben über Ziel"
+
+msgid "Income & Expenses"
+msgstr "Einnahmen & Ausgaben"
+
+msgid "Irregularities"
+msgstr "Unregelmäßigkeiten"
+
+msgid "Summaries"
+msgstr "Zusammenfassungen"
+
+msgid "Your BankID is blocked. Log in to the internet bank and reset/reorder BankID on mobile."
+msgstr "Ihre BankID ist gesperrt. Loggen Sie sich bei der Internetbank ein und setzen Sie Ihre BankID auf dem Mobilgerät zurück oder bestellen Sie eine neue."
+
+msgid "The mobile operator you use may have blocked BankID on mobile. To resolve this, log in to the internet bank using another authentication method and reorder BankID on mobile."
+msgstr "Der Mobilfunkbetreiber kann BankID für Mobilgeräte gesperrt haben. Um dies zu lösen, loggen Sie sich bei der Internetbank mit einer anderen Authentifizierungsmethode ein und bestellen Sie eine neue BankID für Mobilgeräte."
+
+msgid "Incorrect challenge response. Please try again."
+msgstr "Falsche Antwort auf Challenge. Bitte versuchen Sie es erneut."
+
+msgid "Please ensure that you have entered the correct mobile number and date of birth. Also make sure that you have activated bankID on mobile in your internet bank."
+msgstr "Bitte stellen Sie sicher, dass Sie die richtige Handynummer und das richtige Geburtsdatum eingegeben haben. Achten Sie außerdem darauf, dass Sie BankID für Mobilgeräte bei Ihrer Internetbank aktiviert haben."
+
+msgid "There is an error with your mobile operator. Please try again later."
+msgstr "Es ist ein Fehler bei Ihrem Mobilfunkanbieter aufgetreten. Bitte versuchen Sie es später erneut."
+
+msgid "Have you received a new mobile phone, made changes to your mobile subscription or have a new SIM card? In that case, you must delete BankID Mobile and re-enable the service."
+msgstr "Haben Sie eine neue Mobilfunknummer erhalten, Änderungen an Ihrem Vertrag vorgenommen oder haben Sie eine neue SIM-Karte? In dem Fall müssen Sie BankID Mobile löschen und den Dienst neu aktivieren."
+
+msgid "Error Code C176. "
+msgstr "Fehlercode C176. "
+
+msgid "Error Code C30F. "
+msgstr "Fehlercode C30F. "
+
+msgid "Error Code C307. Your BankID is blocked due to incorrect PINLog in to the internet bank in another way and reset BankID on mobile."
+msgstr "Fehlercode C307. Ihre BankID wurde aufgrund eines falschen PINLogs bei der Internetbank anderweitig gesperrt und für Mobilgeräte zurückgesetzt."
+
+msgid "Error Code C202. "
+msgstr "Fehlercode C202. "
+
+msgid "Error Code C131. This error indicates that your mobile operator has trouble or a process is running on your phone number. Restart your phone and try again in 5 minutes."
+msgstr "Fehlercode C131. Dieser Fehler zeigt an, dass Ihr Mobilfunkbetreiber Probleme hat oder das ein Vorgang über Ihre Telefonnummer läuft. Starten Sie Ihr Handy neu und versuchen Sie es in 5 Minuten noch einmal."
+
+msgid "Error code C308. There was a timeout due to slow response time. This can happen if there are weak or unstable signals or if the mobile operator is having trouble. Please try again in 5 minutes."
+msgstr "Fehlercode C308. Eine Zeitüberschreitung ist durch eine langsame Antwortzeit aufgetreten. Dies kann passieren, wenn das Signal schwach oder instabil ist oder wenn der Mobilfunkbetreiber Probleme hat. Versuchen Sie es in 5 Minuten noch einmal."
+
+msgid "Error code C302. This error occurs when you have switched mobile networks, for example, if you have just been abroad. Restart your phone and try again."
+msgstr "Fehlercode C302. Dieser Fehler tritt auf, wenn Sie Mobilfunknetzwerke gewechselt haben, wie wenn Sie zum Beispiel gerade im Ausland waren. Starten Sie Ihr Handy neu und versuchen Sie es noch einmal."
+
+msgid "Wrong challenge response input - Will retry login."
+msgstr "Falsche Eingabe für Challenge-Code - Login erneut versuchen."
+
+msgid "You need to activate your mobile app credentials and generate a 4-digit pin code via the Handelsbanken app."
+msgstr "Sie müssen Ihre Anmeldedaten für Ihre mobile App aktivieren und einen PIN aus 4 Ziffern über die Handelsbanken-App erstellen."
+
+msgid "Your personal code has been locked. Contact Nordea customer services (0200 70 000) to order a new code, or contact your local Nordea office."
+msgstr "Ihr persönlicher Code wurde gesperrt. Kontaktieren Sie den Nordea-Kundendienst (0200 70 000), um einen neuen Code zu bestellen, oder kontaktieren Sie Ihr örtliches Nordea-Büro."
+
+msgid "Invalid username or password"
+msgstr "Ungültiger Nutzername oder Passwort"
+
+msgid "Contract missing"
+msgstr "Vertrag fehlt"
+
+msgid "User is locked"
+msgstr "Nutzer ist gesperrt"
+
+msgid "User is blocked"
+msgstr "Nutzer ist gesperrt"
+
+msgid "Input the code from your code card"
+msgstr "Geben Sie den Code von der Codekarte ein."
+
+msgid "Key card index"
+msgstr "Schlüsselkartenindex"
+
+msgid "Key card code"
+msgstr "Schlüsselkartencode"
+
+msgid "Phone number is not valid."
+msgstr "Telefonnummer nicht gültig."
+
+msgid "You have not entered a valid code. Please try again"
+msgstr "Sie haben keinen gültigen Code eingegeben. Bitte versuchen Sie es erneut."
+
+msgid "Login is blocked. Contact your bank's customer service."
+msgstr "Login ist gesperrt Kontaktieren Sie den Kundendienst Ihrer Bank."
+
+msgid "Contract is missing."
+msgstr "Vertrag fehlt"
+
+msgid "Contract has been transferred to other bank."
+msgstr "Der Vertrag wurde auf eine andere Bank übertragen."
+
+msgid "User account is locked. Please contact your bank."
+msgstr "Nutzerkonto ist gesperrt. Kontaktieren Sie Ihre Bank."
+
+msgid "User account is blocked. Please contact your bank."
+msgstr "Nutzerkonto ist gesperrt. Kontaktieren Sie Ihre Bank."
+
+msgid "Too many devices registered. Please contact your bank."
+msgstr "Zu viele registrierte Geräte. Kontaktieren Sie Ihre Bank."
+
+msgid "I confirm that I have read and accept SBAB's Terms and Conditions and Terms and Conditions for savings accounts and thus received the information about the deposit insurance and information concerning the processing of personal data."
+msgstr "Ich bestätige, dass ich die SBAB-Nutzungsbedingungen gelesen habe sowie die Nutzungsbedingungen für Sparkonten und das Informationsblatt über Einlagensicherung und Informationen über die Verarbeitung von persönlichen Daten erhalten habe."
+
+msgid "Terms and Conditions for savings accounts"
+msgstr "Nutzungsbedingungen für Sparkonten"
+
+msgid "The bank service is offline, please try again later."
+msgstr "Der Bankservice ist offline. Bitte versuchen Sie es später erneut."
+
+msgid "You need to change your password at S-Pankki before you can login."
+msgstr "Sie müssen Ihr Passwort bei S-Pankki ändern, bevor Sie sich einloggen können."
+
+msgid "The last month you have spent the most money on this."
+msgstr "Letzte Monat haben Sie dafür am meisten Geld ausgegeben."
+
+msgid "Would you like to spend less or more in these categories? By settings budgets you get more insights and control."
+msgstr "Möchten Sie in diesen Kategorien gerne weniger oder mehr ausgeben? Indem Sie Budgets einrichten, erhalten Sie mehr Übersicht und Kontrolle."
+
+#, java-format
+msgid "The last months you have spend the most on {0}: {1}."
+msgstr "Die letzten Monate haben Sie dafür am meisten Geld für {0}: {1} ausgegeben."
+
+msgid "You have each month a nice amount left."
+msgstr "Sie haben jeden Monat eine hübsche Summe übrig."
+
+msgid "Maybe it is a good idea to transfer this amount to a savings account. In this way you save easily money for vacation or unexpected expenses."
+msgstr "Vielleicht wäre es eine gute Idee, diese Summe in ein Sparkonto zu überweisen. So können Sie ganz einfach Geld für Urlaub oder unerwartete Ausgaben sparen."
+
+msgid "In Grip you get help to keep track on your interest rate and the value of the residence. You can also lower your interest rate directly in the app!"
+msgstr "In Grip erhalten Sie Hilfe, um Ihren Zinssatz nachzuvollziehen wie auch den Wert des Wohnsitzes. Sie können Ihren Zinssatz auch direkt in der App senken!"
+
+msgid "Grip helps you keep track of all you accounts. You can create a new account with a good savings rate and setup savings goals to help you get started!"
+msgstr "Grip hilft Ihnen dabei, den Überblick über all Ihre Konten nicht zu verlieren. Sie können ein neues Konto mit einem guten Sparzinssatz erstellen und Sparziele einrichten, die Ihnen beim Loslegen helfen!"
+
+msgid "Your mortgage rate is lower than most others."
+msgstr "Ihr Hauskredit-Zinssatz ist niedriger als die meisten anderen."
+
+msgid "Your mortgage rate is decent, but can be better."
+msgstr "Ihr Hauskredit-Zinssatz ist okay, aber er kann noch besser werden."
+
+msgid "Your mortgage rate is quite high. Maybe we can help?"
+msgstr "Ihr Hauskredit-Zinssatz ist sehr hoch. Vielleicht können wir helfen?"
+
+#, java-format
+msgid "You have a very good amount saved. You belong to the top {0}!"
+msgstr "Sie haben eine gute Summe gespart. Sie gehören zu den Top {0}!"
+
+#, java-format
+msgid "You have a good savings buffer! More than {0} over average."
+msgstr "Sie haben einen guten Puffer! Mehr als {0} über Durchschnitt."
+
+msgid "Your savings buffer is slightly lower than average. We can help!"
+msgstr "Ihr Puffer ist ein bisschen geringer als der des durchschnittlichen Tink-Nutzers. Wir können helfen!"
+
+msgid "Could not find any engagements in Swedbank. If you have Swedbank Ung, we unfortunately do not support them."
+msgstr "Keine Engagements in Swedbank gefunden. Leider unterstützen wir Swedbank Ung nicht."
+
+msgid "Could not find any engagements in Sparbankerna. If you have Sparbankerna Ung, we unfortunately do not support them."
+msgstr "Keine Engagements in Sparbankerna gefunden. Leider unterstützen wir Swedbank Ung nicht."
+
+msgid "Client is deprecated."
+msgstr "Der Client ist veraltet."
+
+msgid "Device is not authorized."
+msgstr "Das Gerät ist nicht autorisiert."
+
+msgid "A user with this username is already registered."
+msgstr "Ein Nutzer mit diesem Namen ist bereits registriert."
+
+msgid "User is not authenticated."
+msgstr "Der Nutzer ist nicht authentifiziert."
+
+msgid "Internal error."
+msgstr "Interner Fehler."
+
+msgid "Authentication token not found."
+msgstr "Authentifizierungstoken nicht gefunden."
+
+msgid "Authentication token has expired."
+msgstr "Authentifizierungstoken ist abgelaufen."
+
+msgid "Authentication token has an invalid status."
+msgstr "Authentifizierungstoken hat einen ungültigen Status."
+
+msgid "Mobile BankId token not found."
+msgstr "Mobile BankID-Token nicht gefunden."
+
+msgid "Mobile BankId token expired."
+msgstr "Mobile BankID-Token ist abgelaufen."
+
+msgid "Mobile BankId timed out."
+msgstr "Mobile BankID ist abgelaufen."
+
+msgid "Mobile BankId aborted."
+msgstr "Mobile BankID wurde abgebrochen."
+
+msgid "SMS OTP was not found."
+msgstr "SMS OTP nicht gefunden."
+
+msgid "SMS OTP has an invalid status."
+msgstr "SMS OTP hat einen ungültigen Status."
+
+msgid "SMS OTP gateway is currently unavailable."
+msgstr "SMS OTP Gateway ist derzeit nicht verfügbar."
+
+msgid "Phone number is currently blocked."
+msgstr "Telefonnummer ist derzeit blockiert."
+
+msgid "Locale is not valid."
+msgstr "Standort ist nicht gültig."
+
+msgid "Email is not valid."
+msgstr "E-Mail-Adresse nicht gültig."
+
+msgid "PIN6 is not valid."
+msgstr "PIN6 nicht gültig."
+
+msgid "Access denied for requested transfer."
+msgstr "Zugang für angeforderte Überweisung verweigert."
+
+msgid "Account was not found."
+msgstr "Konto nicht gefunden."
+
+msgid "User was not found."
+msgstr "Nutzer nicht gefunden."
+
+msgid "Statistics are currently unavailable."
+msgstr "Die Statistik ist derzeit nicht verfügbar."
+
+msgid "Activities are currently unavailable."
+msgstr "Aktivitäten sind derzeit nicht verfügbar."
+
+msgid "A credential with the same fields is already created."
+msgstr "Anmeldedaten mit denselben Feldern wurden bereits erstellt."
+
+msgid "The credential is not allowed to be created."
+msgstr "Die Anmeldedaten dürfen nicht erstellt werden."
+
+msgid "An unknown error occurred when the credential was created."
+msgstr "Ein unbekannter Fehler ist beim Erstellen der Anmeldedaten aufgetreten."
+
+msgid "The consent was not found."
+msgstr "Die Zustimmung wurde nicht gefunden."
+
+msgid "The checksum doesn't match."
+msgstr "Die Prüfsumme stimmt nicht überein."
+
+msgid "The request is not valid."
+msgstr "Die Anfrage ist nicht gültig."
+
+msgid "The category is not found."
+msgstr "Die Kategorie wurde nicht gefunden."
+
+msgid "The service is currently unavailable."
+msgstr "Der Dienst ist derzeit nicht verfügbar."
+
+msgid "Couldn't find any identity events."
+msgstr "Keine Identitätsereignisse gefunden."
+
+msgid "The stream is aborted."
+msgstr "Der Stream wurde abgebrochen."
+
+msgid "User is already migrated."
+msgstr "Der Nutzer wurde bereits verschoben."
+
+msgid "investments"
+msgstr "Investitionen"
+
+msgid "Home & Household"
+msgstr "Haus & Haushalt"
+
+msgid "Coffee & snacks"
+msgstr "Kaffee & Snacks"
+
+msgid "Tobacco"
+msgstr "Tabak"
+
+msgid "Alcohol & Bars"
+msgstr "Alkohol & Bars"
+
+msgid "Sports"
+msgstr "Sport"
+
+msgid "SMS code"
+msgstr "SMS-Code"
+
+msgid "Insert your bank card in your ING Card Reader and press SIGN. Enter your PIN and press OK, then enter the challenge and press SIGN. Enter the challenge response in the field below."
+msgstr "Geben Sie Ihre Bankkarte in Ihr ING-Kartenlesegerät ein und drücken Sie SIGN. Geben Sie Ihre PIN ein und drücken Sie OK und geben Sie dann die Challenge ein und drücken Sie SIGN. Geben Sie in das Feld unten die Challenge-Antwort ein."
+
+msgid "Challenge"
+msgstr "Challenge"
+
+msgid "Challenge response"
+msgstr "Challenge-Antwort"
+
+msgid "Failed to sign using BankID"
+msgstr "Konnte nicht mit BankID unterzeichnet werden"
+
+msgid "Transfer doesn't exist."
+msgstr "Überweisung existiert nicht."
+
+msgid "Couldn't find giro account."
+msgstr "Girokonto wurde nicht gefunden."
+
+msgid "Not a valid giro number."
+msgstr "Keine gültige Gironummer."
+
+msgid "Transfer destination already exists."
+msgstr "Überweisungsziel existiert bereits."
+
+msgid "The stream is aborted by the client."
+msgstr "Der Stream wurde vom Client abgebrochen."
+
+msgid "Application was not found."
+msgstr "Antrag nicht gefunden."
+
+msgid "Failed to get application."
+msgstr "Antrag konnte nicht aufgerufen werden."
+
+msgid "Failed to submit form."
+msgstr "Formular wurde nicht eingesendet."
+
+msgid "The application is already signed and cannot be modified"
+msgstr "Der Antrag wurde bereits unterzeichnet und kann nicht bearbeitet werden"
+
+msgid "Unable to invoke application signing."
+msgstr "Antragsunterzeichnung konnte nicht aufgerufen werden."
+
+msgid "Could not process application"
+msgstr "Antrag konnte nicht verarbeitet werden"
+
+msgid "Application hasn't been completed yet."
+msgstr "Antrag wurde noch nicht vervollständigt."
+
+msgid "Permission denied."
+msgstr "Genehmigung nicht erteilt."
+
+msgid "Property not found."
+msgstr "Immobilie nicht gefunden."
+
+msgid "Illegal argument"
+msgstr "Illegale Argumentation"
+
+msgid "Follow item already exist"
+msgstr "Das folgende Element existiert bereits"
+
+msgid "Follow item was not found"
+msgstr "Das folgende Element wurde nicht gefunden"
+
+#, java-format
+msgid "{0} large expense"
+msgstr "{0} große Ausgabe"
+
+msgid "The card number you have entered is incorrect. Please try again."
+msgstr "Die Kartennummer, die Sie eingegeben haben, war falsch. Bitte versuchen Sie es erneut."
+
+msgid "The provided credentials are not for KBC bank"
+msgstr "Die angegebenen Anmeldedaten sind nicht für die KBC-Bank."
+
+msgid "1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_CardReader.png)Insert your bank card into the card reader\n2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_LOGIN.png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_LOGIN.png) Tap\n3$  Enter the start code []"
+msgstr "1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_CardReader.png) Plaats je bankkaart in de kaartlezer\n2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_LOGIN.png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_LOGIN.png)Druk\n3$  Voer je startcode in []"
+
+msgid "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap\n5$  Enter your secret code\n6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap\n7$  Enter the login code"
+msgstr "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Druk\n5$  Vul je pincode in\n6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Druk\n7$  Vul de aanmeldcode in"
+
+msgid "1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_CardReader.png) Insert your bank card into the card reader\n2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN.png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN.png) Tap\n3$  Enter the start code []"
+msgstr "1$ Fürhen! [](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_CardReader.png) Sie Ihre Geldkarte in den Kartenlesser ein\n2$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN.png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN.png) Drücken Sie auf\n3$  Geben Sie Ihren Startcode ein []"
+
+msgid "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap\n5$  Enter your PIN\n6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap\n7$  Enter the sign code"
+msgstr "4$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) (https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Druk\n5$  Vul je pincode in\n6$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Druk\n7$  Vul de tekencode in"
+
+msgid "1$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png) Insert your ING bank card into the ING Card Reader\n2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_IDENTIFY.png)\n3$  Enter your PIN\n4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png) Press\n5$ Enter the response code"
+msgstr "1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png)  Stecken Sie Ihre ING Card in den ING Kartenleser\n2$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_IDENTIFY.png) Drücken Sie auf\n3$  Geben Sie Ihren PIN-Code ein\n4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png) Drücken Sie auf\n5$ Geben Sie Ihren RESPONSE-code ein"
+
+msgid "1$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png) Insert your ING bank card in your ING Card Reader\n2$  Press ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_SIGN.png) Press\n3$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png) Enter your PIN and press\n4$  Enter the following number []"
+msgstr "1$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png) Stecken Sie Ihre ING Bankkarte in den Kartenleser\n2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_SIGN.png) Drücken Sie auf\n3$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png) Geben Sie den PIN ein und drücken Sie auf\n4$  Geben Sie diese Ziffer [] ein"
+
+msgid "5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_SIGN.png) And press\n6$ Enter your RESPONSE code"
+msgstr "5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_SIGN.png) Und drücken Sie auf\n6$ Geben Sie Ihren RESPONSE-Code ein"
+
+msgid "1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_CardReader.png) Login using your Belfius Card Reader\n2$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_LOGIN.png) Press\n3$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter the security code []"
+msgstr "1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_CardReader.png) Tekenen met uw Belfius Card Reader\n2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_LOGIN.png) Druk op\n3$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Voer de beveiligingscode in []"
+
+msgid "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter your PIN\n5$  Enter the login code"
+msgstr "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Toets uw pincode in\n5$  Voer de aanmeldcode in"
+
+msgid "1$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_CardReader.png) Sign using your Belfius Card Reader\n2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_SIGN.png) Press\n3$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter the security code []"
+msgstr "1$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_CardReader.png) Tekenen met uw Belfius Card Reader\n2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_SIGN.png) Druk op\n3$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Voer de beveiligingscode in []"
+
+msgid "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Want to register your device?\n5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter your PIN\n code pin\n6$  Enter the signature code"
+msgstr "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Uw apparaat registreren?\n5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Toets uw pincode in\n6$  Voer de tekencode in"
+
+msgid "The bank service has temporarily failed, please try again later."
+msgstr "Der Bankservice ist vorübergehend fehlgeschlagen. Bitte versuchen Sie es später erneut."
+
+msgid "Failed to sign transfer"
+msgstr "Überweisung konnte nicht unterzeichnet werden"
+
+msgid "Missing message type"
+msgstr "Fehlende Nachrichtenart"
+
+msgid "The entered structured message is invalid"
+msgstr "Die eingegebene strukturierte Nachricht ist ungültig"
+

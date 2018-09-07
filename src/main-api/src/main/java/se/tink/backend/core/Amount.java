@@ -5,50 +5,89 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import io.protostuff.Tag;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 import java.util.Optional;
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class Amount {
+public class Amount extends Number {
     @JsonIgnore
     private static final String CURRENCY_ERROR_MESSAGE = "The currencies must be the same.";
     @JsonIgnore
     private static final String VALUE_ERROR_MESSAGE = "You must input a positive number to %s.";
+    private static final int SCALE = 2;
 
     @Tag(1)
     private String currency;
     @Tag(2)
-    private Double value;
+    private double value;
 
-    public Amount() {
+    public static Amount valueOf(String currency, long unscaledValue, int scale) {
+        Objects.requireNonNull(currency);
+        BigDecimal value = toBigDecimal(unscaledValue,scale);
+        return new Amount(currency, value);
     }
 
-    public Amount(String currency, Double value) {
-        this.currency = Optional.ofNullable(currency).map(String::toUpperCase).orElse(null);
+    private static BigDecimal toBigDecimal(long unscaledValue, int scale) {
+        BigDecimal value = BigDecimal.valueOf(unscaledValue, scale);
+        if (scale != SCALE) {
+            value = value.setScale(SCALE, RoundingMode.HALF_EVEN);
+        }
+        return value;
+    }
+
+    public Amount() {
+        this.currency = null;
+        this.value = 0D;
+    }
+
+    public Amount(String currency, Number value) {
+        this(currency, value != null ? value.doubleValue() : Double.NaN);
+    }
+
+    public Amount(String currency, double value) {
+        this.currency = currency != null ? currency.toUpperCase() : null;
         this.value = value;
     }
 
     public static Optional<Amount> createFromAmount(Amount amount) {
         return Optional.ofNullable(amount)
                 .filter(a -> a.getCurrency() != null)
-                .filter(a -> a.getValue() != null)
+                .filter(a -> Double.isFinite(a.getValue()))
                 .map(a -> new Amount(a.getCurrency(), a.getValue()));
     }
 
     public String getCurrency() {
-        return currency != null ? currency.toUpperCase() : null;
+        return currency;
     }
 
     public void setCurrency(String currency) {
-        this.currency = currency;
+        this.currency = currency != null ? currency.toUpperCase() : null;
     }
 
+    /**
+     * Should preferably return double rather than Double, but too much code expects a reference type here.
+     * It's probably better to call either {@link #doubleValue()} or {@link #toBigDecimal()}}.
+     */
     public Double getValue() {
         return value;
     }
 
-    public void setValue(Double amount) {
+    public void setValue(Number amount) {
+        if (amount != null) {
+            setValue(amount.doubleValue());
+        } else {
+            setValue(Double.NaN);
+        }
+    }
+
+    public void setValue(long unscaledValue, int scale) {
+        setValue(toBigDecimal(unscaledValue, scale));
+    }
+
+    public void setValue(double amount) {
         this.value = amount;
     }
 
@@ -67,19 +106,19 @@ public class Amount {
         return Objects.equals(this.value, other.value);
     }
 
-    public static Amount inSEK(Double value) {
+    public static Amount inSEK(Number value) {
         return new Amount("SEK", value);
     }
 
-    public static Amount inNOK(Double value) {
+    public static Amount inNOK(Number value) {
         return new Amount("NOK", value);
     }
 
-    public static Amount inDKK(Double value) {
+    public static Amount inDKK(Number value) {
         return new Amount("DKK", value);
     }
 
-    public static Amount inEUR(Double value) {
+    public static Amount inEUR(Number value) {
         return new Amount("EUR", value);
     }
 
@@ -93,12 +132,12 @@ public class Amount {
 
     @JsonIgnore
     public boolean isEmpty() {
-        return Strings.isNullOrEmpty(currency) || value == null;
+        return Strings.isNullOrEmpty(currency) || !Double.isFinite(value);
     }
 
     @JsonIgnore
     public boolean isPositive() {
-        return value != null && value > 0;
+        return Double.isFinite(value) && value > 0;
     }
 
     @JsonIgnore
@@ -144,4 +183,33 @@ public class Amount {
         Preconditions.checkArgument(Objects.equals(this.currency, toAdd.getCurrency()), CURRENCY_ERROR_MESSAGE);
         return add(toAdd.getValue());
     }
+
+    public BigDecimal toBigDecimal() {
+        if (Double.isFinite(value)) {
+            return BigDecimal.valueOf(Math.round(value * 100D), SCALE);
+        } else {
+            return null; // Not nice, but it's what's expected...
+        }
+    }
+
+    @Override
+    public int intValue() {
+        return (int) longValue();
+    }
+
+    @Override
+    public long longValue() {
+        return Math.round(value);
+    }
+
+    @Override
+    public float floatValue() {
+        return (float) value;
+    }
+
+    @Override
+    public double doubleValue() {
+        return value;
+    }
+
 }

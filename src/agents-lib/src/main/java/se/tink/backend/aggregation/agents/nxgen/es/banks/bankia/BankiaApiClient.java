@@ -1,21 +1,21 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia;
 
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.RsaKeyResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.creditcard.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.creditcard.rpc.CardTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.creditcard.rpc.CardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entities.DateEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.rpc.ContractsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.entities.AccountIdentifierEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.creditcard.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.entities.SearchCriteriaEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.rpc.AccountTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.rpc.AcountTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.rpc.ContractsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
@@ -63,11 +63,10 @@ public final class BankiaApiClient {
                 .get(ContractsResponse.class);
     }
 
-    public AcountTransactionsResponse getTransactions(Account account, LocalDate fromDate, LocalDate toDate) {
+    public AcountTransactionsResponse getTransactions(Account account, Date fromDate, Date toDate) {
         AccountIdentifierEntity accountIdentifier = new AccountIdentifierEntity();
-        accountIdentifier.setCountry(account.getTemporaryStorage(BankiaConstants.StorageKey.COUNTRY, String.class));
-        accountIdentifier.setControlDigits(account.getTemporaryStorage(BankiaConstants.StorageKey.CONTROL_DIGITS,
-                String.class));
+        accountIdentifier.setCountry(account.getFromTemporaryStorage(BankiaConstants.StorageKey.COUNTRY));
+        accountIdentifier.setControlDigits(account.getFromTemporaryStorage(BankiaConstants.StorageKey.CONTROL_DIGITS));
         accountIdentifier.setIdentifier(account.getBankIdentifier());
 
         SearchCriteriaEntity searchCriteria = new SearchCriteriaEntity();

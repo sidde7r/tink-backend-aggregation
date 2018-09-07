@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.ent
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
 import java.util.HashMap;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1AmountUtils;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.LinkEntity;
@@ -29,10 +30,9 @@ public class LoanEntity {
         return LoanAccount.builder(formattedNumber,
                 Sparebank1AmountUtils.constructAmount(balanceAmountInteger, balanceAmountFraction))
                 .setAccountNumber(formattedNumber)
-                .setName(name)
+                .setName(Strings.isNullOrEmpty(loanDetails.getName()) ? getName() : loanDetails.getName())
                 .setInterestRate(loanDetails.getInterestRate())
-                .setDetails(LoanDetails.builder()
-                        .setName(loanDetails.getName())
+                .setDetails(LoanDetails.builder(LoanDetails.Type.DERIVE_FROM_NAME)
                         .setInitialBalance(loanDetails.getInitialBalance())
                         .setSecurity(loanDetails.getCollateral())
                         .build())

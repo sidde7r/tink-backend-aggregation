@@ -48,6 +48,8 @@ public class HandelsbankenSEConstants {
                 "I" // // BUSINESS_PRIVATE_VISA
         );
 
+        public static final String CREDIT_CARD_IGNORE_TYPE = "A";
+
         public static final class Transactions {
             public static final Pattern PENDING_PATTERN = Pattern.compile("^prel\\.?(\\s)?", Pattern.CASE_INSENSITIVE);
         }
@@ -70,6 +72,7 @@ public class HandelsbankenSEConstants {
         }
 
         public static class Investments {
+            public static final String ERROR_TOO_YOUNG_INVESTMENTS = "10001";
             public enum InstrumentType {
                 STOCK("stock", Instrument.Type.STOCK),
                 FUND("fund", Instrument.Type.FUND),

@@ -6,9 +6,8 @@ import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.LoanDetails;
 
 public class CarLoanEntity extends BaseAbstractLoanEntity {
-    private CarLoanEntity(
-            DetailedLoanResponse loanDetails,
-            LoanEntity loanOverview) {
+
+    private CarLoanEntity(DetailedLoanResponse loanDetails, LoanEntity loanOverview) {
         super(loanDetails, loanOverview);
     }
 
@@ -29,11 +28,12 @@ public class CarLoanEntity extends BaseAbstractLoanEntity {
                 .setName(getName())
                 .setBalance(getAmount())
                 .setAccountNumber(getAccountNumber())
-                .setDetails(
-                        LoanDetails.builder()
-                                .setType(LoanDetails.Type.VEHICLE)
-                                .setName(getName())
-                                .build()
-                ).build();
+                .setDetails(buildLoanDetails())
+                .build();
+    }
+
+    private LoanDetails buildLoanDetails() {
+        return LoanDetails.builder(LoanDetails.Type.VEHICLE)
+                .build();
     }
 }

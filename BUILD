@@ -129,7 +129,7 @@ java_library(
         "//third_party:joda_time_joda_time",
         "//third_party:org_apache_commons_commons_collections4",
         "//third_party:org_apache_commons_commons_lang3",
-        "//third_party:org_apache_httpcomponents_httpclient",
+        "//third_party:tink_org_apache_httpcomponents_httpclient",
         "//third_party:org_apache_mahout_mahout_math",
         "//third_party:org_apache_maven_maven_artifact",
         "//third_party:org_eclipse_jetty_orbit_javax_servlet",
@@ -137,7 +137,6 @@ java_library(
         "//third_party:org_iban4j_iban4j",
         "//third_party:org_pojava_pojava",
         "//third_party:org_xerial_snappy_snappy_java",
-        "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:commons_codec_commons_codec",
         "//third_party:com_lambdaworks_scrypt",
         "//third_party:org_json_json",
@@ -181,11 +180,14 @@ java_library(
         ":encryption-api",
         ":main-api",
         ":system-api",
-
+        ":provider-configuration-api",
+        "//src/queue-lib:queue-lib",
+        "//src/queue-sqs:queue-sqs",
         "//src/libraries/http:http-annotations",
         "//src/libraries/http:http-utils",
         "//src/libraries/auth:auth",
         "//src/libraries/discovery:discovery",
+        "//src/libraries/draining:draining",
         "//src/libraries/uuid:uuid",
         "//src/libraries/jersey_utils:jersey-utils",
         "//src/libraries/serialization_utils:serialization-utils",
@@ -254,7 +256,7 @@ java_library(
         "//third_party:org_apache_commons_commons_math3",
         "//third_party:org_apache_curator_curator_framework",
         "//third_party:org_apache_curator_curator_x_discovery",
-        "//third_party:org_apache_httpcomponents_httpclient",
+        "//third_party:tink_org_apache_httpcomponents_httpclient",
         "//third_party:org_apache_kafka_kafka_clients",
         "//third_party:org_apache_kafka_kafka_streams",
         "//third_party:com_sproutsocial_nsqj_j",
@@ -337,6 +339,7 @@ java_library(
           "//src/libraries/dropwizard_utils:dropwizard-utils",
           "//src/libraries/metrics:metrics",
           "//src/libraries/cluster:cluster",
+          "//src/libraries/draining:draining",
 
          "//third_party:com_google_guava_guava",
          "//third_party:com_google_inject_guice",
@@ -350,6 +353,7 @@ java_library(
     srcs = glob(["src/aggregation-lib/src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     data = [
+        "//tools:phantomjs_linux",
         "//tools:phantomjs_mac",
         "//tools:libkbc_wbaes_linux",
         "//tools:libkbc_wbaes_mac",
@@ -364,7 +368,12 @@ java_library(
         ":system-api",
         ":agents-lib",
         ":aggregationcontroller-api",
+        ":provider-configuration-api",
 
+
+        "//src/queue-lib:queue-lib",
+        "//src/queue-sqs:queue-sqs",
+        "//third_party:com_amazonaws_aws_java_sdk_sqs",
         "//src/libraries/uuid:uuid",
         "//src/libraries/http:http-utils",
         "//src/libraries/serialization_utils:serialization-utils",
@@ -421,11 +430,14 @@ java_library(
         "//third_party:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
         "//third_party:org_assertj_assertj_core",
         "//third_party:net_sourceforge_tess4j",
+        "//third_party:com_auth0_java_jwt",
+        "//third_party:org_xerial_snappy_snappy_java",
 
         "//third_party:net_sourceforge_cssparser_cssparser",
 
         "//src/cluster-lib:cluster-lib",
         "//src/cluster-lib-jersey:cluster-lib-jersey",
+
     ],
 )
 
@@ -434,6 +446,7 @@ java_library(
     srcs = glob(["src/agents-lib/src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     data = [
+        "//tools:phantomjs_linux",
         "//tools:phantomjs_mac",
         "//tools:libkbc_wbaes_linux",
         "//tools:libkbc_wbaes_mac",
@@ -506,6 +519,8 @@ java_library(
         "//third_party:net_sourceforge_tess4j",
         "//third_party:net_sourceforge_cssparser_cssparser",
         "//third_party:com_auth0_java_jwt",
+        "//third_party:tink_org_apache_httpcomponents_httpclient",
+        "//third_party:tink_org_apache_httpcomponents_httpcore",
 
     ],
 )
@@ -537,6 +552,7 @@ java_binary(
         "//src/libraries/auth:auth",
         "//src/libraries/cluster:cluster",
         "//src/libraries/discovery:discovery",
+        "//src/libraries/draining:draining",
         "//src/libraries/metrics:metrics",
         "//src/libraries/dropwizard_utils:dropwizard-utils",
 
@@ -583,6 +599,7 @@ junit_test(
     srcs = glob(["src/aggregation-lib/src/test/**/*.java"]),
     data = [
         "//data:agents",
+        "//tools:phantomjs_linux",
         "//tools:phantomjs_mac",
         "//tools:libkbc_wbaes_linux",
         "//tools:libkbc_wbaes_mac",
@@ -636,6 +653,7 @@ junit_test(
     srcs = glob(["src/agents-lib/src/test/**/*.java"]),
     data = [
         "//data:agents",
+        "//tools:phantomjs_linux",
         "//tools:phantomjs_mac",
         "//tools:libkbc_wbaes_linux",
         "//tools:libkbc_wbaes_mac",
@@ -683,6 +701,8 @@ junit_test(
         "//third_party:com_nimbusds_srp6a",
         "//third_party:org_bouncycastle_bcprov_jdk15on",
         "//third_party:com_auth0_java_jwt",
+        "//third_party:tink_org_apache_httpcomponents_httpcore",
+        "//third_party:tink_org_apache_httpcomponents_httpclient",
     ],
 )
 
@@ -693,6 +713,7 @@ junit_test(
     srcs = glob(["src/aggregation-tests/src/test/**/*.java"]),
     data = [
         "etc/development.yml",
+        "//data:agents",
         "//data:aggregation-test",
         "//data:tesseract-training-set",
         "//data:cryptography-test",
@@ -732,7 +753,7 @@ junit_test(
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:commons_io_commons_io",
         "//third_party:org_apache_curator_curator_framework",
-        "//third_party:org_apache_httpcomponents_httpclient",
+        "//third_party:tink_org_apache_httpcomponents_httpclient",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_bouncycastle_bcpkix_jdk15on",
         "//third_party:org_mockito_mockito_core",

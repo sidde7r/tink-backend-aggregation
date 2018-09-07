@@ -12,6 +12,7 @@ SERVER_HOST = 'http://127.0.0.1:5000'
 CREATE_CREDENTIAL = SERVER_HOST + '/credentials/create'
 REFRESH_CREDENTIAL = SERVER_HOST + '/credentials/refresh/{}'
 STATUS_CREDENTIAL = SERVER_HOST + '/credentials/status/{}'
+REENCRYPT_CREDENTIAL = SERVER_HOST + '/credentials/reencrypt/{}'
 LIST_CREDENTIALS = SERVER_HOST + '/credentials/list'
 SUPPLEMENTAL = SERVER_HOST + '/credentials/supplemental'
 GET_PROVIDER = SERVER_HOST + '/providers/{}'
@@ -25,6 +26,7 @@ EXIT_OPERATION = ['exit', 'e']
 GET_OPERATION = ['get', 'g']
 LIST_OPERATION = ['list', 'l']
 REFRESH_OPERATION = ['refresh', 'r']
+REENCRYPT_OPERATION = ['reencrypt', 'y']
 CREATE_OPERATION = ['create', 'c']
 ACCOUNT_OPERATION = ['account', 'a']
 CREDENTIALS_OPERATION = ['credentials', 'c']
@@ -77,10 +79,7 @@ def refresh_credential():
         except KeyError:
             pass
 
-        if statusBeforeUpdate['timestamp'] == currentStatus['timestamp']:
-            print output
-            sleep(1)
-            continue
+        sleep(1)
         
         # Update the status
         statusBeforeUpdate = currentStatus
@@ -110,6 +109,15 @@ def refresh_credential():
 
         if currentStatus['status'] == 'UPDATED':
             return '\nRefresh completed.'
+
+def reencrypt_credentials():
+    credentialsId = raw_input('Credentials id: ')
+    responseObject = requests.post(str.format(REENCRYPT_CREDENTIAL, credentialsId))
+
+    if responseObject.status_code is not 204:
+        return json.loads(responseObject.text)['message']
+
+    return '\nReencryption complete'
 
 def list_credentials():
     return requests.get(LIST_CREDENTIALS).text
@@ -178,18 +186,19 @@ def clean_providers(listOfProviders):
 def credentials():
     while True:
         print '''
- -- Credentials operations ----------
-|                                    |
-| Create: create / c                 |
-| Refresh: refresh / r               |
-| Get one: get / g                   |
-| List all: list / l                 |
-| Supplemental information: supp / s |
-| List accounts: accounts / a        |
-|                                    |
-| Exit: exit / e                     |
-|                                    |
- ------------------------------------
+ -- Credentials operations -----------
+|                                     |
+| Create: create / c                  |
+| Refresh: refresh / r                |
+| Get one: get / g                    |
+| List all: list / l                  |
+| Supplemental information: supp / s  |
+| List accounts: accounts / a         |
+| Reencrypt credential: reencrypt / y |
+|                                     |
+| Exit: exit / e                      |
+|                                     |
+ -------------------------------------
 '''
 
         userInput = raw_input('Operation: ')
@@ -208,6 +217,8 @@ def credentials():
             print list_credentials()
         elif userInput in ACCOUNT_OPERATION:
             print list_accounts()
+        elif userInput in REENCRYPT_OPERATION:
+            print reencrypt_credentials()
         
 
 def providers():

@@ -3,6 +3,63 @@
   "currency": "EUR",
   "providers": [
     {
+      "name": "de-americanexpress-password",
+      "className": "nxgen.de.creditcards.amex.AmericanExpressDEAgent",
+      "credentialsType": "PASSWORD",
+      "currency": "EUR",
+      "displayName": "American Express",
+      "fields": [
+        {
+          "description": "Username",
+          "immutable": true,
+          "name": "username"
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "sensitive": true,
+          "name": "password"
+        }
+      ],
+      "groupDisplayName": "American Express",
+      "market": "DE",
+      "multiFactor": false,
+      "passwordHelpText": "Use the same credentials as when you log in to americanexpress.de. You can order new passwords at [American Express](https://global.americanexpress.com/myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=de_DE).",
+      "payload": "DE",
+      "popular": false,
+      "refreshFrequency": 1,
+      "refreshFrequencyFactor": 1,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "CREDIT_CARD"
+    },
+    {
+      "name": "de-hypovereinsbank-password",
+      "displayName": "HypoVereinsbank",
+      "groupDisplayName": "HypoVereinsbank",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.hvb.HVBAgent",
+      "passwordHelpText": "Use the same PIN as you would in your bank's mobile app.",
+      "transactional": true,
+      "fields": [
+        {
+          "description": "Direct B@nking Number",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "PIN",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
       "name": "de-n26-password",
       "displayName": "N26",
       "groupDisplayName": "N26",
@@ -10056,33 +10113,6 @@
       "passwordHelpText": "Use the same password as you would in your bank's web login.",
       "transactional": true,
       "payload": "29151700 https://banking-ni1.s-fints-pt-ni.de/fints30",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-sparkassekreisosterholz-password",
-      "displayName": "Kreissparkasse Osterholz",
-      "groupDisplayName": "Sparkasse",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "29152300 https://banking-ni1.s-fints-pt-ni.de/fints30",
       "fields": [
         {
           "description": "Username",
@@ -23598,60 +23628,6 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-wittingen-klötze-password",
-      "displayName": "Volksbank Wittingen-Klötze eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "25761894 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-hankensbüttel-wahrenholz-password",
-      "displayName": "Volksbank Hankensbüttel-Wahrenholz eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "25791516 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-celle-password",
       "displayName": "Volksbank Südheide",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -25689,33 +25665,6 @@
       "passwordHelpText": "Use the same password as you would in your bank's web login.",
       "transactional": true,
       "payload": "35060386 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-dinslaken-password",
-      "displayName": "Volksbank Dinslaken eG",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "35261248 https://hbci-pintan.gad.de/cgi-bin/hbciservlet",
       "fields": [
         {
           "description": "Username",
@@ -34965,33 +34914,6 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-heiligenstadt-heilbad-password",
-      "displayName": "Volksbank Heiligenstadt",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "82094004 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-nordhausen-thür-password",
       "displayName": "Nordthüringer Volksbank",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -40041,33 +39963,6 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-neudenau-password",
-      "displayName": "Raiffeisenbank Neudenau-Stein-Herbolzheim",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "66762433 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisenbaiertal-password",
       "displayName": "Raiffeisenbank Baiertal",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -42147,33 +42042,6 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-hohenwart-paar-password",
-      "displayName": "Raiffeisenbank Hohenwart -alt-",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "72169111 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-schrobenhausen-password",
       "displayName": "Raiffeisenbank Schrobenhausen",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -43416,33 +43284,6 @@
       ]
     },
     {
-      "name": "de-volksraiffeisen-mengkofen-password",
-      "displayName": "Raiffeisenbank Mengkofen-Loiching",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "74369704 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
       "name": "de-volksraiffeisen-wildenberg-hallertau-password",
       "displayName": "Raiffeisenbank Wildenberg",
       "groupDisplayName": "Volks- and Raiffeisenbanken",
@@ -43482,33 +43323,6 @@
       "passwordHelpText": "Use the same password as you would in your bank's web login.",
       "transactional": true,
       "payload": "75060150 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-volksraiffeisen-schwandorf-bay-password",
-      "displayName": "Raiffeisenbank Schwandorf-Nittenau",
-      "groupDisplayName": "Volks- and Raiffeisenbanken",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "75061168 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
       "fields": [
         {
           "description": "Username",
@@ -47142,6 +46956,33 @@
       ]
     },
     {
+      "name": "de-volksraiffeisenniederbayern-password",
+      "displayName": "VR Bank Niederbayern-Oberpfalz",
+      "groupDisplayName": "Volks- and Raiffeisenbanken",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.de.banks.fints.FinTsAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's web login.",
+      "transactional": true,
+      "payload": "75090900 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
       "name": "de-netm70013100-password",
       "displayName": "BLZ: 70013100",
       "groupDisplayName": "net-m privatbank 1891",
@@ -47883,33 +47724,6 @@
       "passwordHelpText": "Use the same password as you would in your bank's web login.",
       "transactional": true,
       "payload": "72090900 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "de-psdbankniederbayern-password",
-      "displayName": "PSD Bank Niederbayern-Oberpfalz",
-      "groupDisplayName": "PSD Bank",
-      "popular": false,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.de.banks.fints.FinTsAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's web login.",
-      "transactional": true,
-      "payload": "75090900 https://hbci11.fiducia.de/cgi-bin/hbciservlet",
       "fields": [
         {
           "description": "Username",

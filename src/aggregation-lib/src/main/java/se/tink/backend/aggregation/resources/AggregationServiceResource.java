@@ -1,16 +1,19 @@
 package se.tink.backend.aggregation.resources;
 
 import com.google.api.client.util.Lists;
-import io.dropwizard.lifecycle.Managed;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.api.AggregationService;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
+import se.tink.backend.aggregation.models.RefreshInformation;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
 import se.tink.backend.aggregation.rpc.CreateCredentialsRequest;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -18,6 +21,7 @@ import se.tink.backend.aggregation.rpc.DeleteCredentialsRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsDecryptRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsReencryptRequest;
+import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.ReencryptionRequest;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
@@ -34,11 +38,13 @@ import se.tink.backend.aggregation.workers.ratelimit.OverridingProviderRateLimit
 import se.tink.backend.aggregation.workers.ratelimit.ProviderRateLimiterFactory;
 import se.tink.backend.common.ServiceContext;
 import se.tink.backend.common.repository.mysql.aggregation.clusterhostconfiguration.ClusterHostConfigurationRepository;
+import se.tink.backend.queue.QueueProducer;
 import se.tink.libraries.http.utils.HttpResponseHelper;
 import se.tink.libraries.metrics.MetricRegistry;
 
 @Path("/aggregation")
-public class AggregationServiceResource implements AggregationService, Managed {
+public class AggregationServiceResource implements AggregationService {
+    private final QueueProducer producer;
     @Context
     private HttpServletRequest httpRequest;
 
@@ -49,6 +55,8 @@ public class AggregationServiceResource implements AggregationService, Managed {
     private ClusterHostConfigurationRepository clusterHostConfigurationRepository;
     private final boolean isAggregationCluster;
 
+    public static Logger logger = LoggerFactory.getLogger(AggregationServiceResource.class);
+
     /**
      * Constructor.
      *
@@ -57,16 +65,17 @@ public class AggregationServiceResource implements AggregationService, Managed {
      */
     public AggregationServiceResource(ServiceContext context, MetricRegistry metricRegistry,
             boolean useAggregationController,
-            AggregationControllerAggregationClient aggregationControllerAggregationClient) {
+            AggregationControllerAggregationClient aggregationControllerAggregationClient,
+            AgentWorker agentWorker) {
         this.serviceContext = context;
-
-        this.agentWorker = new AgentWorker(metricRegistry);
+        this.agentWorker = agentWorker;
         this.agentWorkerCommandFactory = new AgentWorkerOperationFactory(serviceContext, metricRegistry,
                 useAggregationController, aggregationControllerAggregationClient);
         this.supplementalInformationController = new SupplementalInformationController(serviceContext.getCacheClient(),
                 serviceContext.getCoordinationClient());
         this.clusterHostConfigurationRepository = serviceContext.getRepository(ClusterHostConfigurationRepository.class);
         this.isAggregationCluster = serviceContext.isAggregationCluster();
+        this.producer = this.serviceContext.getProducer();
     }
 
 
@@ -99,6 +108,10 @@ public class AggregationServiceResource implements AggregationService, Managed {
 
     @Override
     public String ping(){
+        if (this.serviceContext.getApplicationDrainMode().isEnabled()) {
+            HttpResponseHelper.error(Response.Status.SERVICE_UNAVAILABLE);
+        }
+
         return "pong";
     }
 
@@ -122,15 +135,17 @@ public class AggregationServiceResource implements AggregationService, Managed {
         if (request.isManual()) {
             agentWorker.execute(agentWorkerCommandFactory.createRefreshOperation(clusterInfo, request));
         } else {
-            agentWorker.executeAutomaticRefresh(AgentWorkerRefreshOperationCreatorWrapper.of(agentWorkerCommandFactory, request, clusterInfo));
+            if (producer.isAvailable()) {
+                producer.send(new RefreshInformation(request, clusterInfo));
+            } else {
+                agentWorker.executeAutomaticRefresh(AgentWorkerRefreshOperationCreatorWrapper.of(agentWorkerCommandFactory, request, clusterInfo));
+            }
         }
-
     }
 
     @Override
     public void transfer(final TransferRequest request, ClusterInfo clusterInfo) throws Exception {
         agentWorker.execute(agentWorkerCommandFactory.createExecuteTransferOperation(clusterInfo, request));
-
     }
 
     @Override
@@ -148,16 +163,6 @@ public class AggregationServiceResource implements AggregationService, Managed {
         // TODO: Add commands appropriate for doing an inline refresh here in next iteration.
 
         return updateCredentialsOperation.getRequest().getCredentials();
-    }
-
-    @Override
-    public void start() throws Exception {
-        agentWorker.start();
-    }
-
-    @Override
-    public void stop() throws Exception {
-        agentWorker.stop();
     }
 
     private static ProviderRateLimiterFactory constructProviderRateLimiterFactoryFromRequest(
@@ -179,6 +184,24 @@ public class AggregationServiceResource implements AggregationService, Managed {
     }
 
     @Override
+    public Response reEncryptCredentials(ReEncryptCredentialsRequest reencryptCredentialsRequest,
+            ClusterInfo clusterInfo) {
+        // Only aggregation cluster can decrypt and encrypt with the new encryption method
+        if (!isAggregationCluster) {
+            HttpResponseHelper.error(Response.Status.BAD_REQUEST);
+        }
+
+        try {
+            agentWorker.execute(agentWorkerCommandFactory
+                    .createReEncryptCredentialsOperation(clusterInfo, reencryptCredentialsRequest));
+        } catch (Exception e) {
+            HttpResponseHelper.error(Response.Status.INTERNAL_SERVER_ERROR);
+        }
+
+        return HttpResponseHelper.ok();
+    }
+
+    @Override
     public Credentials migrateDecryptCredentials(MigrateCredentialsDecryptRequest request, ClusterInfo clusterInfo) {
         // There is not any encryption service in the aggregation cluster
         if (isAggregationCluster) {
@@ -192,7 +215,7 @@ public class AggregationServiceResource implements AggregationService, Managed {
         }
 
         AgentWorkerOperation updateCredentialsOperation = agentWorkerCommandFactory
-                .createDecryptCredentialsOperation(clusterInfo, request);
+                .createMigrateDecryptCredentialsOperation(clusterInfo, request);
 
         updateCredentialsOperation.run();
 
@@ -207,11 +230,24 @@ public class AggregationServiceResource implements AggregationService, Managed {
         }
 
         try {
-            agentWorker.execute(agentWorkerCommandFactory.createReencryptCredentialsOperation(
+            agentWorker.execute(agentWorkerCommandFactory.createMigrateReencryptCredentialsOperation(
                     clusterInfo, request));
             return HttpResponseHelper.ok();
         } catch (Exception e) {
             throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @Override
+    public String pingProvider(){
+        try{
+            return serviceContext
+                    .getProviderServiceFactory()
+                    .getMonitoringService()
+                    .ping();
+        } catch(Exception e){
+            logger.error("Cannot connect to provider service", e);
+        }
+        return null;
     }
 }

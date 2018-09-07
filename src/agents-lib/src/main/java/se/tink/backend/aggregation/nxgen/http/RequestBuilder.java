@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
@@ -15,22 +17,29 @@ import se.tink.backend.aggregation.nxgen.http.filter.Filterable;
 
 public class RequestBuilder extends Filterable<RequestBuilder> {
     private final Filter finalFilter;
+    private final String headerAggregatorIdentifier;
     private URL url;
     private Object body;
     private MultivaluedMap<String, Object> headers;
     private List<String> cookies = new ArrayList<>();
 
-    public RequestBuilder(Filterable filterChain, Filter finalFilter, URL url) {
-        this(filterChain, finalFilter);
+
+    //TODO: REMOVE THIS ONCE AGGREGATOR IDENTIFIER IS VERIFIED
+    public static Logger logger = LoggerFactory
+            .getLogger(RequestBuilder.class);
+
+    public RequestBuilder(Filterable filterChain, Filter finalFilter, URL url, String headerAggregatorIdentifier) {
+        this(filterChain, finalFilter, headerAggregatorIdentifier);
         this.url = url;
     }
 
-    public RequestBuilder(Filterable filterChain, Filter finalFilter) {
+    public RequestBuilder(Filterable filterChain, Filter finalFilter, String headerAggregatorIdentifier) {
         super(filterChain);
         this.finalFilter = finalFilter;
 
         // OutBoundHeaders is a case insenstive MultivaluedMap
         headers = new OutBoundHeaders();
+        this.headerAggregatorIdentifier = headerAggregatorIdentifier;
     }
 
     public URL getUrl() {
@@ -380,7 +389,9 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
         return body(body).method(method, c);
     }
 
-    // RequestBuilder
+    /**
+     * AbstractForm and its subclasses handled specifivcally
+     */
     public RequestBuilder body(Object body) {
         if (body instanceof AbstractForm) {
             this.body = ((AbstractForm) body).getBodyValue();
@@ -465,11 +476,21 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
         }
     }
 
+    private void addAggregatorToHeader() {
+        if (headerAggregatorIdentifier == null) {
+            logger.warn("Aggregator header identifier is null. The header should not be null.");
+            return;
+        }
+        logger.info("Setting X-Aggregator header.");
+        headers.add("X-Aggregator", headerAggregatorIdentifier);
+    }
+
     private <T> T handle(Class<T> c, HttpRequest httpRequest) throws HttpClientException, HttpResponseException {
         // Add the final filter so that we actually send the request
         addFilter(finalFilter);
 
         addCookiesToHeader();
+        addAggregatorToHeader();
         HttpResponse httpResponse = getFilterHead().handle(httpRequest);
 
         // Throw an exception for all statuses >= 400, i.e. the request was not accepted. This is to force us

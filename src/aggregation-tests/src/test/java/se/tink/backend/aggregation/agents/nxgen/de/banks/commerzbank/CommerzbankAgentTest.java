@@ -18,6 +18,7 @@ public class CommerzbankAgentTest {
                 .addCredentialField(Field.Key.PASSWORD, PASSWORD)
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
+                .doLogout(true)
                 .build()
                 .testRefresh();
 

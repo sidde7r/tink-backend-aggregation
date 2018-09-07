@@ -34,7 +34,7 @@ public class VolvoFinansTransactionalAccountFetcher implements AccountFetcher<Tr
 
     @Override
     public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
-        String accountId = account.getTemporaryStorage(VolvoFinansConstants.UrlParameters.ACCOUNT_ID, String.class);
+        String accountId = account.getFromTemporaryStorage(VolvoFinansConstants.UrlParameters.ACCOUNT_ID);
         int limit = VolvoFinansConstants.Pagination.LIMIT;
 
         final LocalDate localStartDate = fromDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();

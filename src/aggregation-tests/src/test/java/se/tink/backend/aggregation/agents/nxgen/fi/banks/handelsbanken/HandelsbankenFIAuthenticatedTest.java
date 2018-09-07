@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.handelsbanken;
 
+import java.util.Collections;
 import org.junit.Before;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
@@ -25,7 +26,7 @@ public abstract class HandelsbankenFIAuthenticatedTest {
         credentials.setField(Field.Key.USERNAME, config.getUserName());
         credentials.setField(Field.Key.PASSWORD, config.getPassword());
         credentials.setType(CredentialsTypes.PASSWORD);
-        persistentStorage = new HandelsbankenPersistentStorage(config.getPersistentStorage());
+        persistentStorage = new HandelsbankenPersistentStorage(config.getPersistentStorage(), Collections.emptyMap());
         HandelsbankenFIConfiguration handelsbankenConfiguration = new HandelsbankenFIConfiguration();
         this.client = new HandelsbankenFIApiClient(new TinkHttpClient
                 (null, credentials), handelsbankenConfiguration);

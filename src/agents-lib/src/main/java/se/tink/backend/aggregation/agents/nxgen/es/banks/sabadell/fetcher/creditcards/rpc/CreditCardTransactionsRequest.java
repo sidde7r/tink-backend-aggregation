@@ -16,7 +16,7 @@ public class CreditCardTransactionsRequest {
     @JsonIgnore
     public static CreditCardTransactionsRequest build(CreditCardEntity cardEntity, int totalItems, int page) {
         PaginatorEntity cardPaginator = new PaginatorEntity();
-        cardPaginator.setItemsPerPage(SabadellConstants.CreditCardTransactionsRequest.ITEMS_PER_PAGE_20);
+        cardPaginator.setItemsPerPage(SabadellConstants.CreditCardTransactionsRequest.ITEMS_PER_PAGE);
         cardPaginator.setOrder(SabadellConstants.CreditCardTransactionsRequest.ORDER_DESC);
         cardPaginator.setTotalItems(totalItems);
         cardPaginator.setPage(page);

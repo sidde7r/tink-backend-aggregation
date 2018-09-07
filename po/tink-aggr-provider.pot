@@ -1,0 +1,112 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-09-06 13:13PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#, java-format
+msgid ""
+"Use the same username and password as you would in the bank's mobile app."
+msgstr ""
+
+msgid "Username"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid ""
+"Use the same username and password as you would in the card issuer's mobile "
+"app."
+msgstr ""
+
+msgid ""
+"Use the same username and password as you would in the broker's mobile app."
+msgstr ""
+
+msgid ""
+"To connect your broker, you need to identify yourself using Mobile BankID."
+msgstr ""
+
+msgid "Mobile BankID"
+msgstr ""
+
+msgid "YYYYMMDDNNNN"
+msgstr ""
+
+msgid "Social security number"
+msgstr ""
+
+msgid "Please enter a valid social security number."
+msgstr ""
+
+msgid ""
+"To connect your credit card, you need to identify yourself using Mobile "
+"BankID."
+msgstr ""
+
+msgid ""
+"To connect your bank, you need to identify yourself using Mobile BankID."
+msgstr ""
+
+msgid ""
+"You use the same 4-digit PIN as when you log in at the service provider's "
+"web site."
+msgstr ""
+
+msgid "NNNN"
+msgstr ""
+
+msgid "PIN"
+msgstr ""
+
+msgid "Please enter 4 digits"
+msgstr ""
+
+msgid ""
+"You use the same 4-digit service code as for the bank's mobile app. You also "
+"need access to your token generator to create a screen code."
+msgstr ""
+
+msgid "Token generator"
+msgstr ""
+
+msgid ""
+"You use your social security number and PIN in the same way as when you log "
+"in to the bank's mobile app."
+msgstr ""
+
+msgid ""
+"You use your card reader and personal code the same way as you would in the "
+"bank's mobile app."
+msgstr ""
+
+msgid "Card reader"
+msgstr ""
+
+msgid ""
+"Use the same code that you use in the bank's mobile app after you log in "
+"with Bank ID once. If you forgot your code, you can choose a new one in the "
+"bank's mobile app. By filling in this, transactions can be downloaded "
+"automatically in the background, so you do not need to use Bank ID every "
+"time."
+msgstr ""
+
+msgid ""
+"You use Mobile BankID the same way as in the bank's mobile app. If you have "
+"a personal code for simplified login, we recommend using it instead of "
+"Mobile BankID."
+msgstr ""

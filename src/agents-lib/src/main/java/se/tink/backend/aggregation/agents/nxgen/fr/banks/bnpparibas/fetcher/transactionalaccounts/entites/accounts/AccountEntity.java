@@ -66,7 +66,7 @@ public class AccountEntity {
                 .setAccountNumber(iban)
                 .setHolderName(new HolderName(getCustomerName()))
                 .setName(productLabel)
-                .addToTemporaryStorage(BnpParibasConstants.Storage.IBAN_KEY, ibanKey)
+                .putInTemporaryStorage(BnpParibasConstants.Storage.IBAN_KEY, ibanKey)
                 .build();
     }
 

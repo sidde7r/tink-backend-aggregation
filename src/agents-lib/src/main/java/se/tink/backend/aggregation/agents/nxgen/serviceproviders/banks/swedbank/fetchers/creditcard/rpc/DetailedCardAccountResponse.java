@@ -79,8 +79,8 @@ public class DetailedCardAccountResponse {
                         .setAccountNumber(cardAccount.getCardNumber())
                         .setName(cardAccount.getName())
                         .setHolderName(new HolderName(cardAccount.getCardHolder()))
-                        .addToTemporaryStorage(SwedbankBaseConstants.StorageKey.CREDIT_CARD_RESPONSE, this)
-                        .addToTemporaryStorage(SwedbankBaseConstants.StorageKey.PROFILE, bankProfile)
+                        .putInTemporaryStorage(SwedbankBaseConstants.StorageKey.CREDIT_CARD_RESPONSE, this)
+                        .putInTemporaryStorage(SwedbankBaseConstants.StorageKey.PROFILE, bankProfile)
                         .build());
     }
 

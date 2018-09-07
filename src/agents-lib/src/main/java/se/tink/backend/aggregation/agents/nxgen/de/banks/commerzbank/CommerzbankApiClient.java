@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.LoginRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.ResultEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.RootModel;
@@ -11,35 +12,35 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.tra
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.transaction.rpc.SearchCriteriaDto;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.transaction.rpc.TransactionRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.session.entities.SessionModel;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CommerzbankApiClient {
 
     private final TinkHttpClient client;
-    private final SessionStorage storage;
+    private static final AggregationLogger LOGGER = new AggregationLogger(CommerzbankApiClient.class);
 
-    public CommerzbankApiClient(TinkHttpClient client, SessionStorage storage) {
+    public CommerzbankApiClient(TinkHttpClient client) {
         this.client = client;
-        this.storage = storage;
     }
 
     private static URL getUrl(String resource) {
         return new URL(CommerzbankConstants.URLS.HOST + resource);
     }
 
-    private RequestBuilder firstRequest(String resource) {
-        return client.request(getUrl(resource))
+    private RequestBuilder firstRequest() {
+        return client.request(getUrl(CommerzbankConstants.URLS.LOGIN))
                 .header(CommerzbankConstants.HEADERS.CONTENT_TYPE, CommerzbankConstants.VALUES.JSON);
     }
 
     private RequestBuilder makeRequest(String resource) {
         return client.request(getUrl(resource))
                 .header(CommerzbankConstants.HEADERS.CONTENT_TYPE, CommerzbankConstants.VALUES.JSON)
-                .header(CommerzbankConstants.HEADERS.COOKIE, storage.get(CommerzbankConstants.HEADERS.COOKIE))
                 .header(CommerzbankConstants.HEADERS.CCB_CLIENT_VERSION, CommerzbankConstants.VALUES.CCB_VALUE)
                 .header(CommerzbankConstants.HEADERS.USER_AGENT, CommerzbankConstants.VALUES.USER_AGENT_VALUE);
     }
@@ -50,12 +51,17 @@ public class CommerzbankApiClient {
                 CommerzbankConstants.VALUES.SESSION_TOKEN_VALUE);
         String serialized = new ObjectMapper().writeValueAsString(loginRequestBody);
 
-        return firstRequest(CommerzbankConstants.URLS.LOGIN)
-                .post(HttpResponse.class, serialized);
+        return firstRequest().post(HttpResponse.class, serialized);
     }
 
     public ResultEntity financialOverview() {
-        return makeRequest(CommerzbankConstants.URLS.OVERVIEW).post(RootModel.class).getResult();
+        String resultString = makeRequest(CommerzbankConstants.URLS.OVERVIEW).post(String.class);
+        LOGGER.infoExtraLong(resultString, CommerzbankConstants.LOGTAG.FINANCE_OVERVIEW);
+        try {
+            return new ObjectMapper().readValue(resultString, RootModel.class).getResult();
+        } catch (IOException e) {
+            throw new IllegalStateException(e.getMessage());
+        }
     }
 
     public SessionModel logout() {
@@ -67,17 +73,31 @@ public class CommerzbankApiClient {
                 .post(HttpResponse.class);
     }
 
-    public TransactionResultEntity transactionOverview(String productType, String identifier)
-            throws JsonProcessingException {
+    public void logMultibankingProducts() {
+        try {
+            LOGGER.infoExtraLong(makeRequest(CommerzbankConstants.URLS.MULTIBANKING).post(String.class),
+                    CommerzbankConstants.LOGTAG.MULTIBANKING_PRODUCTS);
+        } catch (Exception e) {
+            LOGGER.warnExtraLong(e.getMessage(), CommerzbankConstants.LOGTAG.MULTIBANKING_ERROR);
+        }
+    }
 
+    public TransactionResultEntity transactionOverview(String productType, String identifier, int page)
+            throws JsonProcessingException {
         TransactionRequestBody transactionRequestBody = new TransactionRequestBody(
-                new SearchCriteriaDto(null, null, 0, CommerzbankConstants.VALUES.AMOUNT_TYPE,
+                new SearchCriteriaDto(null, null, page, CommerzbankConstants.VALUES.AMOUNT_TYPE,
                         30, null),
                 new Identifier(productType, CommerzbankConstants.VALUES.CURRENCY_VALUE, identifier,
                         CommerzbankConstants.VALUES.PRODUCT_BRANCH));
         String serialized = new ObjectMapper().writeValueAsString(transactionRequestBody);
 
-        return makeRequest(CommerzbankConstants.URLS.TRANSACTIONS)
+        TransactionResultEntity result = makeRequest(CommerzbankConstants.URLS.TRANSACTIONS)
                 .post(TransactionModel.class, serialized).getResult();
+
+        LOGGER.infoExtraLong(SerializationUtils.serializeToString(result),
+                CommerzbankConstants.LOGTAG.TRANSACTION_LOGGING);
+
+        return result;
     }
+
 }

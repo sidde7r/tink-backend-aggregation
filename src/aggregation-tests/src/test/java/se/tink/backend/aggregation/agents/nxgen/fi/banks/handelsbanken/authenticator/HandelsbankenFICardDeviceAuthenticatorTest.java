@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.handelsbanken.authenticator;
 
 import com.google.common.collect.ImmutableMap;
+import java.util.Collections;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -54,7 +55,7 @@ public class HandelsbankenFICardDeviceAuthenticatorTest {
         userCode = "Intercept me!";
         client = spy(
                 new HandelsbankenFIApiClient(new TinkHttpClient(null, credentials), new HandelsbankenFIConfiguration()));
-        persistentStorage = new HandelsbankenPersistentStorage(new PersistentStorage());
+        persistentStorage = new HandelsbankenPersistentStorage(new PersistentStorage(), Collections.emptyMap());
         sessionStorage = new HandelsbankenSessionStorage(new SessionStorage(), new HandelsbankenFIConfiguration());
     }
 

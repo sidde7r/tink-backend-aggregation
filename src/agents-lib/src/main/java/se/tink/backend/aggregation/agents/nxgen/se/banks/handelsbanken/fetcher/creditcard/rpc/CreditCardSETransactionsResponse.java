@@ -37,4 +37,11 @@ public class CreditCardSETransactionsResponse extends CreditCardTransactionsResp
                 .map(transaction -> transaction.toTinkTransaction(creditcard, account))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<CreditCardTransaction> tinkTransactions(CreditCardAccount account) {
+        return transactions.stream()
+                .map(transaction -> transaction.toTinkTransaction(account))
+                .collect(Collectors.toList());
+    }
 }

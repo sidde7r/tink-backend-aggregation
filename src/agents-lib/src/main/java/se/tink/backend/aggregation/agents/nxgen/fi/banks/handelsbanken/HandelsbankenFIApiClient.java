@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.device.InitNewProfileResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.creditcard.entities.HandelsbankenCreditCard;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class HandelsbankenFIApiClient extends HandelsbankenApiClient {
     public HandelsbankenFIApiClient(TinkHttpClient client, HandelsbankenFIConfiguration handelsbankenConfiguration) {
@@ -35,5 +36,10 @@ public class HandelsbankenFIApiClient extends HandelsbankenApiClient {
     public <CreditCard extends HandelsbankenCreditCard> CreditCardFITransactionsResponse creditCardTransactions(
             CreditCard creditcard) {
         return createRequest(creditcard.toCardTransactions()).get(CreditCardFITransactionsResponse.class);
+    }
+
+    @Override
+    public CreditCardFITransactionsResponse creditCardTransactions(URL url) {
+        return createRequest(url).get(CreditCardFITransactionsResponse.class);
     }
 }

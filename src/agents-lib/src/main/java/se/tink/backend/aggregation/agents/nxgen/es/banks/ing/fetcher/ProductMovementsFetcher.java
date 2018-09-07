@@ -56,7 +56,8 @@ abstract class ProductMovementsFetcher<A extends Account, T extends Transaction>
     @Override
     public PaginatorResponse getTransactionsFor(A account, Year year, Month month) {
 
-        Product product = account.getTemporaryStorage(IngConstants.ORIGINAL_ENTITY, Product.class);
+        Product product = account.getFromTemporaryStorage(IngConstants.ORIGINAL_ENTITY, Product.class)
+                .orElseThrow(() -> new IllegalStateException("No product supplied"));
 
         List<T> transactions = new ArrayList<>();
 
@@ -109,7 +110,7 @@ abstract class ProductMovementsFetcher<A extends Account, T extends Transaction>
                 .setBankIdentifier(product.getBank())
                 .setBalance(new Amount(product.getCurrency(), product.getBalance()))
                 .setHolderName(new HolderName(product.getHolder().getCompleteName()))
-                .addToTemporaryStorage(IngConstants.ORIGINAL_ENTITY, product);
+                .putInTemporaryStorage(IngConstants.ORIGINAL_ENTITY, product);
     }
 
     protected static void copyCommonAttributes(Account account, Element movement,

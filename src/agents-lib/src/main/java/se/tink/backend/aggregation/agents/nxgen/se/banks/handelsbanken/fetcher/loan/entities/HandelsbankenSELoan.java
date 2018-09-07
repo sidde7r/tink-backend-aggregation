@@ -11,6 +11,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.deserializers.InterestDeserializer;
+
+import se.tink.backend.aggregation.nxgen.core.account.LoanDetails;
 import se.tink.backend.core.Amount;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 
@@ -34,7 +36,7 @@ public class HandelsbankenSELoan {
                 .setName(lender)
                 .addIdentifier(new SwedishIdentifier(agreementNumber))
                 .setInterestRate(interestRateFormatted)
-                .setDetails(se.tink.backend.aggregation.nxgen.core.account.LoanDetails.builder()
+                .setDetails(LoanDetails.builder(LoanDetails.Type.DERIVE_FROM_NAME)
                         .setCoApplicant(multipleApplicantValue())
                         .setNextDayOfTermsChange(termsOfChangeValue())
                         .setNumMonthsBound(NumMonthBoundParser.parse(fixationdateText))

@@ -21,14 +21,14 @@ public class BankAustriaConstants {
 
     public static final class Application {
         static final String PLATFORM = "ios";
-        static final String PLATFORM_VERSION = "iPhone_Bank Austria_41_4.7.1";
+        static final String PLATFORM_VERSION = "iPhone_Bank Austria_43_4.8.1";
         static final String OTMLID = "1.07";
     }
 
     public static final class Device {
         static final String IPHONE7_RESOLUTION = "{750, 1334}";
         static final String IPHONE7_DEVICEID = "Apple_iPhone7,2_iOS_11.1.2";
-        static final String IPHONE7_OTML_LAYOUT_INITIAL = "97E5F84071E93B799B749A8FFAD8881B";
+        static final String IPHONE7_OTML_LAYOUT_INITIAL = "583702078EBA306BEAC2CD899D3FD206";
         static final String IPHONE7_USERAGENT = "Mozilla/5.0 (iPhone; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10";
     }
 

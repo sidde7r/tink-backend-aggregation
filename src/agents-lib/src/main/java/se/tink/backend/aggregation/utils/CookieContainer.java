@@ -6,8 +6,10 @@ import com.google.common.collect.Lists;
 import com.sun.jersey.client.apache4.ApacheHttpClient4;
 import java.util.HashMap;
 import java.util.List;
-import org.apache.http.cookie.Cookie;
-import org.apache.http.impl.cookie.BasicClientCookie;
+import java.util.stream.Collectors;
+
+import se.tink.org.apache.http.cookie.Cookie;
+import se.tink.org.apache.http.impl.cookie.BasicClientCookie;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 
 /**
@@ -23,11 +25,6 @@ public class CookieContainer {
 
     @JsonIgnore
     public void setCookiesFromClient(TinkApacheHttpClient4 client) {
-        cookies = client.getClientHandler().getCookieStore().getCookies();
-    }
-
-    @JsonIgnore
-    public void setCookiesFromClient(ApacheHttpClient4 client) {
         cookies = client.getClientHandler().getCookieStore().getCookies();
     }
 

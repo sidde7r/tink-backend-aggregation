@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints;
 
+import com.google.common.collect.ImmutableList;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
 public class FinTsConstants {
@@ -90,6 +91,13 @@ public class FinTsConstants {
         public final static String MT940_MULTIPURPOSE_FIELD = ":86:";
     }
 
+    public static class SepaAccountIdentifiers {
+        public static final ImmutableList<String> KNOWN_SAVINGS_ACCOUNT_NAMES = ImmutableList.of("extra-konto", "sparbrief", "vl-sparen");
+        public static final ImmutableList<String> ACCOUNT_TYPE_SAVINGS_TOKENS = ImmutableList.of("spar");
+        public static final ImmutableList<String> KNOWN_INVESTMENT_ACCOUNT_NAMES = ImmutableList.of("direkt-depot");
+        public static final ImmutableList<String> ACCOUNT_TYPE_INVESTMENT_TOKENS = ImmutableList.of("depot");
+    }
+
     public static class LogTags {
         public static final LogTag ERROR_CODE = LogTag.from("#fints_login_error_types");
         public static final LogTag NUMBER_OF_FETCHED_TRANSACTIONS = LogTag.from("#fints_number_of_fetched_transactions");
@@ -99,5 +107,7 @@ public class FinTsConstants {
         public static final LogTag SPARKASSE_NO_PHONE_NUMBER_ATTACHED_WARNING = LogTag.from("#fints_sparkasse_no_phone_attached");
         public static final LogTag TRANSACTION_STATUS = LogTag.from("#fints_transaction_status");
         public static final LogTag SCANNER_PARSING_ERROR = LogTag.from("#fints_scanner_parsing_error");
+        public static final LogTag PRODUCTNAME_FOR_MISSING_ACCOUNT_TYPE = LogTag.from("#fints_missing_account_type");
+        public static final LogTag GET_ACCOUNTS_ERROR = LogTag.from("#fints_get_account_error");
     }
 }

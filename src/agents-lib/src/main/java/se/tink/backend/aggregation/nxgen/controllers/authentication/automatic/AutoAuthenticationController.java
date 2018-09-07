@@ -45,7 +45,7 @@ public class AutoAuthenticationController implements TypedAuthenticator {
                 auto(credentials);
             }
         } finally {
-            context.updateCredentialsExcludingSensitiveInformation(credentials);
+            context.updateCredentialsExcludingSensitiveInformation(credentials, false);
         }
     }
 

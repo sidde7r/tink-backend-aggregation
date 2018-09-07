@@ -273,6 +273,7 @@ public class BelfiusConstants {
         public static final String IDENTICAL_PAYMENT = "identieke overschrijving ingevoerd";
         public static final String CONTINUE_CHANGE_BUTTON = " knop 'Verder' te drukken, zoniet druk op de knop 'Wijzigen";
         public static final String EXCEED_BENEFICIARY = "Daarom moet u even ondertekenen";
+        public static final String ADD_BENEFICIARY = "De limiet voor uw begunstigde is overschreden. Daarom moet u even ondertekenen.";
         public static final String TRANSFER_SIGN_FAILED = "De ondertekening van uw transactie is ongeldig";
         public static final String SIGN_TEMP_ERROR = "Door een technisch probleem is deze functie tijdelijk niet beschikbaar.";
         public static final String WEEKLY_READER_LIMIT = "De weeklimiet voor betalingen met de Belfius-kaartlezer werd bereikt";

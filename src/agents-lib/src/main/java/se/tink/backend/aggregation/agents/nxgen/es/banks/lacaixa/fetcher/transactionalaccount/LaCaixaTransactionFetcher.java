@@ -21,10 +21,10 @@ public class LaCaixaTransactionFetcher implements TransactionPagePaginator<Trans
     @Override
     public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
 
-        String accountReference = account.getTemporaryStorage(LaCaixaConstants.TemporaryStorage.ACCOUNT_REFERENCE,
-                String.class);
+        String accountReference = account.getFromTemporaryStorage(LaCaixaConstants.TemporaryStorage.ACCOUNT_REFERENCE);
 
-        AccountTransactionResponse response = bankClient.fetchNextAccountTransactions(accountReference,page == 0);
+        AccountTransactionResponse response =
+                bankClient.fetchNextAccountTransactions(accountReference,page == 0);
 
         // Update descriptions, if available.
         response.getTransactions().forEach(transaction -> {

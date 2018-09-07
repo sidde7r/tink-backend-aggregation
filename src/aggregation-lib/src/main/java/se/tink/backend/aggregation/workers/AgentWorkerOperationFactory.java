@@ -6,6 +6,9 @@ import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
@@ -15,6 +18,7 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsDecryptRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsReencryptRequest;
+import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.ReencryptionRequest;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
@@ -112,8 +116,9 @@ public class AgentWorkerOperationFactory {
 
     private MetricRegistry metricRegistry;
 
+    @Inject
     public AgentWorkerOperationFactory(ServiceContext serviceContext, MetricRegistry metricRegistry,
-            boolean useAggregationController, AggregationControllerAggregationClient aggregationControllerAggregationClient) {
+                                       @Named("useAggregationController") boolean useAggregationController, AggregationControllerAggregationClient aggregationControllerAggregationClient) {
         this.serviceContext = serviceContext;
 
         // Initialize agent worker command states.
@@ -216,11 +221,6 @@ public class AgentWorkerOperationFactory {
                     createMetricState(request)));
         }
 
-        if (RefreshableItem.hasTransactions(items)) {
-            commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.TRANSACTIONS,
-                    createMetricState(request)));
-        }
-
         if (items.contains(RefreshableItem.EINVOICES)) {
             commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.EINVOICES,
                     createMetricState(request)));
@@ -231,10 +231,19 @@ public class AgentWorkerOperationFactory {
                     createMetricState(request)));
         }
 
-        // Don't update the status if we are waiting on transactions from the connector.
+        // Transactions are processed last of the refreshable items since the credential status will be set `UPDATED`
+        // by system when the processing is done.
+        if (RefreshableItem.hasTransactions(items)) {
+            commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.TRANSACTIONS,
+                    createMetricState(request)));
+        }
+
+        // Update the status to `UPDATED` if the credential isn't waiting on transactions from the connector and if
+        // transactions aren't processed in system. The transaction processing in system will set the status to
+        // `UPDATED` when transactions have been processed and new statistics are generated.
         // Todo: Remove this dependency
         commands.add(new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATED,
-                c -> !c.isWaitingOnConnectorTransactions()));
+                c -> !c.isWaitingOnConnectorTransactions() && !c.isSystemProcessingTransactions()));
 
         return commands;
     }
@@ -408,7 +417,24 @@ public class AgentWorkerOperationFactory {
         return new AgentWorkerOperation(agentWorkerOperationState, "keep-alive", request, commands, context);
     }
 
-    public AgentWorkerOperation createDecryptCredentialsOperation(ClusterInfo clusterInfo,
+    public AgentWorkerOperation createReEncryptCredentialsOperation(ClusterInfo clusterInfo,
+            ReEncryptCredentialsRequest request) {
+        AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
+                useAggregationController, aggregationControllerAggregationClient, clusterInfo);
+
+        ImmutableList<AgentWorkerCommand> commands = ImmutableList.of(
+                new LockAgentWorkerCommand(context),
+                new DecryptCredentialsWorkerCommand(clusterInfo, cacheClient, clusterCryptoConfigurationRepository,
+                        aggregationControllerAggregationClient, context),
+                new EncryptCredentialsWorkerCommand(clusterInfo, cacheClient, clusterCryptoConfigurationRepository,
+                        aggregationControllerAggregationClient, context)
+        );
+
+        return new AgentWorkerOperation(agentWorkerOperationState, "reencrypt-credentials", request,
+                commands, context);
+    }
+
+    public AgentWorkerOperation createMigrateDecryptCredentialsOperation(ClusterInfo clusterInfo,
             MigrateCredentialsDecryptRequest request) {
         AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
                 useAggregationController, aggregationControllerAggregationClient, clusterInfo);
@@ -420,7 +446,7 @@ public class AgentWorkerOperationFactory {
         return new AgentWorkerOperation(agentWorkerOperationState, "migrate-decrypt", request, commands, context);
     }
 
-    public AgentWorkerOperation createReencryptCredentialsOperation(ClusterInfo clusterInfo,
+    public AgentWorkerOperation createMigrateReencryptCredentialsOperation(ClusterInfo clusterInfo,
             MigrateCredentialsReencryptRequest request) {
         AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
                 useAggregationController, aggregationControllerAggregationClient, clusterInfo);

@@ -5,9 +5,10 @@ replicas: 1
 
 coordinationHosts: coordination.default.svc.cluster.local:2181
 
+aggregationdb:
+  username: tink
+  host: providerdb.default.svc.cluster.local
+  password: tink
 
 applicationCluster: TINK
 developmentMode: true
-
-
-pinnedCertificatesForSystem: CERTSHA256:A0A8FBAC442F4A58AC56CB1D0C185F93EE119A1B026BA3F046B0CA99EC165390

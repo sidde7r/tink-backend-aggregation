@@ -1,11 +1,11 @@
 <?php
 class PotFileGenerator {
-    private $backendPotFilename = "tink-backend.pot";
-    private $providerPotFilename = "tink-provider.pot";
+    private $backendPotFilename = "tink-aggr-backend.pot";
+    private $providerPotFilename = "tink-aggr-provider.pot";
 
     public function generateBackendPotFile() {
         echo "Generating '" . $this->backendPotFilename . "'..." . PHP_EOL;
-        exec ('find ./ -name \'*.java\' ! -path \'*Lookup*\' ! -name SeedMerchantsCommand.java ! -name \'*Test.java\' -exec xgettext --from-code="UTF-8" -kgetString -kgetPluralString:1,2 -kLocalizableKey -kLocalizableParametrizedKey -kLocalizablePluralKey:1,2 --join-existing -o po/' . $this->backendPotFilename . ' {} +');
+        exec ('find ../../src/ -name \'*.java\' ! -path \'*Lookup*\' ! -name SeedMerchantsCommand.java ! -name \'*Test.java\' -exec xgettext --from-code="UTF-8" -kgetString -kgetPluralString:1,2 -kLocalizableKey -kLocalizableParametrizedKey -kLocalizablePluralKey:1,2 --join-existing -o ../../po/' . $this->backendPotFilename . ' {} +');
         echo "Generated '" . $this->backendPotFilename . "'" . PHP_EOL . PHP_EOL;
         return $this->backendPotFilename;
     }
@@ -84,7 +84,7 @@ class PotFileGenerator {
     }
 
     private function createOrUpdateProviderPot($translatableStrings) {
-        $providerPot = fopen('po/' . $this->providerPotFilename, "w") or die("Unable to open .pot file!");
+        $providerPot = fopen('../../po/' . $this->providerPotFilename, "w") or die("Unable to open .pot file!");
 
         $timezone = new \DateTimeZone("CEST");
         $date = new \DateTime('@' . time(), $timezone);
@@ -127,10 +127,10 @@ class PotFileGenerator {
     }
 
     private function getAllProviders() {
-        $dir = "data/seeding/";
+        $dir = "../../data/seeding/";
         $allProviders = array();
 
-        foreach (glob($dir . "providers-[a-z][a-z].json") as $filename) {
+        foreach (glob($dir . "providers-se.json") as $filename) {
             $providerFile = fopen($filename, "r") or die("Unable to open file!");
             $providerConf = json_decode(fread($providerFile, filesize($filename)));
 

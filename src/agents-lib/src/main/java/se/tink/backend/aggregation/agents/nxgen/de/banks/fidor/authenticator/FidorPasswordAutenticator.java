@@ -25,7 +25,7 @@ public class FidorPasswordAutenticator implements PasswordAuthenticator {
 
     private FidorApiClient client;
     private static final File phantomJsFile;
-    Logger logger = LoggerFactory.getLogger(FidorApiClient.class);
+    private Logger logger = LoggerFactory.getLogger(FidorPasswordAutenticator.class);
 
     public FidorPasswordAutenticator(FidorApiClient client){
         this.client = client;
@@ -82,7 +82,7 @@ public class FidorPasswordAutenticator implements PasswordAuthenticator {
             submitButton = driver.findElement(By.name(FidorConstants.FORM.SUBMIT_NAME));
         }
         catch (org.openqa.selenium.NoSuchElementException e){
-            logger.error("Selenium could not find element: %s", e, FidorConstants.LOGGING.AUTHENTICATION_ERROR);
+            logger.error("{} Selenium could not find element: {}", FidorConstants.LOGGING.AUTHENTICATION_ERROR, e);
         }
 
         emailField.sendKeys(username);

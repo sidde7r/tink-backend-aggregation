@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.nxgen.core.transaction;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import se.tink.backend.core.Amount;
 import se.tink.backend.system.rpc.TransactionPayloadTypes;
@@ -84,6 +86,14 @@ public abstract class AggregationTransaction {
         public Builder setDate(Date date) {
             this.date = date;
             return this;
+        }
+
+        public Builder setDate(LocalDate date) {
+            return setDate(DateUtils.toJavaUtilDate(date));
+        }
+
+        public Builder setDate(CharSequence date, DateTimeFormatter formatter) {
+            return setDate(DateUtils.toJavaUtilDate(date, formatter));
         }
 
         Date getDate() {

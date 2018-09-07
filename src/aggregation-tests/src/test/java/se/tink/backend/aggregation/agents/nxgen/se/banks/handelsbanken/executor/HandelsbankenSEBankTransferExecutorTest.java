@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor;
 
+import java.util.Collections;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
@@ -75,7 +76,8 @@ public class HandelsbankenSEBankTransferExecutorTest {
         credentials.setField(Field.Key.USERNAME, HandelsbankenSETestConfig.HEDBERG);
 
         HandelsbankenSEConfiguration configuration = new HandelsbankenSEConfiguration();
-        HandelsbankenPersistentStorage persistentStorage = new HandelsbankenPersistentStorage(new PersistentStorage());
+        HandelsbankenPersistentStorage persistentStorage = new HandelsbankenPersistentStorage(new PersistentStorage(),
+                Collections.emptyMap());
         HandelsbankenSessionStorage sessionStorage = new HandelsbankenSessionStorage(new SessionStorage(),
                 configuration);
         HandelsbankenSEApiClient client = spy(new HandelsbankenSEApiClient(new TinkHttpClient(null, credentials),

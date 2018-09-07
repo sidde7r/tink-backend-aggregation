@@ -161,6 +161,7 @@ public interface UpdateService {
     })
     Response updateCredentialsSensitiveData(UpdateCredentialsSensitiveRequest request);
 
+
     @POST
     @Path("/credentials/update")
     @TeamOwnership(Team.DATA)

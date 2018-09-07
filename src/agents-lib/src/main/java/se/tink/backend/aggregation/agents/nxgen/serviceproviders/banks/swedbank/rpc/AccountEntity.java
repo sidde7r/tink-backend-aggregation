@@ -81,9 +81,9 @@ public abstract class AccountEntity extends AbstractAccountEntity {
                         .setName(name)
                         .setBankIdentifier(id)
                         .addIdentifier(new SwedishIdentifier(fullyFormattedNumber))
-                        .addToTemporaryStorage(SwedbankBaseConstants.StorageKey.NEXT_LINK,
+                        .putInTemporaryStorage(SwedbankBaseConstants.StorageKey.NEXT_LINK,
                                 links != null ? links.getNext() : null)
-                        .addToTemporaryStorage(SwedbankBaseConstants.StorageKey.PROFILE, bankProfile)
+                        .putInTemporaryStorage(SwedbankBaseConstants.StorageKey.PROFILE, bankProfile)
                         .build());
     }
 }

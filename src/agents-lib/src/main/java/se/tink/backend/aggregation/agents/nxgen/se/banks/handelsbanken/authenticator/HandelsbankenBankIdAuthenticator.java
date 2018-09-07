@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator;
 
+import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.bankid.AuthenticateResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.bankid.InitBankIdRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.bankid.InitBankIdResponse;
@@ -43,6 +45,13 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ini
 
     @Override
     public BankIdStatus collect(InitBankIdResponse initBankId) throws AuthenticationException, AuthorizationException {
+        if (!Strings.isNullOrEmpty(initBankId.getCode())) {
+            // if a bankid signature is running at the time we initiate ours the bank/bankid will cancel both of them.
+            if (HandelsbankenSEConstants.BankIdAuthentication.CANCELLED.equalsIgnoreCase(initBankId.getCode())) {
+                return BankIdStatus.CANCELLED;
+            }
+        }
+
         AuthenticateResponse authenticate = client.authenticate(initBankId);
         BankIdStatus bankIdStatus = authenticate.toBankIdStatus(credentials);
         if (bankIdStatus == BankIdStatus.DONE) {

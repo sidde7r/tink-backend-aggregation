@@ -132,26 +132,29 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
     private String waitForLoginCode(String challenge) throws SupplementalInfoException {
     return waitForSupplementalInformation(
         createDescriptionField(catalog.getString(
-            "1  Sign using your Belfius Card Reader ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_CardReader.png)\n"
-                + "2  Press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_LOGIN.png)\n"
-                + "3  Enter the security code []  ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png)"),
+                "1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_CardReader.png) Login using "
+                        + "your "
+                        + "Belfius Card Reader\n"
+                        + "2$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_LOGIN.png) Press\n"
+                        + "3$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter the "
+                        + "security code []"),
             challenge),
         createInputField(catalog.getString(
-            "4  Enter your PIN ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png)\n"
-                    + "5  Enter the login code")));
+            "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter your PIN\n"
+                    + "5$  Enter the login code")));
     }
 
     private String waitForSignCode(String challenge) throws SupplementalInfoException {
     return waitForSupplementalInformation(
         createDescriptionField(catalog.getString(
-            "1  Sign using your Belfius Card Reader ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_CardReader.png)\n"
-                + "2  Press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_SIGN.png)\n"
-                + "3   Enter the security code [] ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png)"),
+            "1$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_CardReader.png) Sign using your Belfius Card Reader\n"
+                + "2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_SIGN.png) Press\n"
+                + "3$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter the security code []"),
             challenge),
         createInputField(catalog.getString(
-            "4  Want to register your device? ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png)\n"
-                    + "5  Enter your PIN ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png)\n"
-                    + "6  Enter the signature code")));
+                "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Want to register your device?\n"
+                    + "5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter your PIN\n"
+                    + "6$  Enter the signature code")));
     }
 
     private String waitForSupplementalInformation(Field... fields)

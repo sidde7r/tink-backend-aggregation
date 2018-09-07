@@ -27,4 +27,20 @@ public class CardsEntity {
         }
         return fundsAvailable;
     }
+
+    public Double getBalance() {
+        return balance;
+    }
+
+    public String getCardId() {
+        return cardId;
+    }
+
+    public Double getCreditLimit() {
+        return creditLimit;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
 }

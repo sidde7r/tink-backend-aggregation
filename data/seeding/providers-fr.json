@@ -3,6 +3,63 @@
   "currency": "EUR",
   "providers": [
     {
+      "name": "fr-n26-password",
+      "displayName": "N26",
+      "groupDisplayName": "N26",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.serviceproviders.banks.n26.N26Agent",
+      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+      "transactional": true,
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "fr-revolut-password",
+      "className": "nxgen.serviceproviders.banks.revolut.RevolutAgent",
+      "displayName": "Revolut",
+      "credentialsType": "PASSWORD",
+      "multiFactor": true,
+      "fields": [
+        {
+          "description": "Phone number",
+          "name": "username",
+          "pattern": "\\+?[1-9][0-9]+",
+          "minLength": 5,
+          "maxLength": 16,
+          "patternError": "Please enter your full phone number in international format, starting with '+' and including country code. Example: +33 NNN NNN NNNN"
+        },
+        {
+          "description": "Passcode",
+          "name": "password",
+          "pattern": "[0-9]{4}",
+          "sensitive": true,
+          "masked": true,
+          "minLength": 4,
+          "maxLength": 4,
+          "patternError": "Please enter your four digit passcode."
+        }
+      ],
+      "passwordhelptext": "Enter your full phone number in international format starting with '+', and the four digit passcode you set up in your Revolut app.",
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
       "name": "fr-bnpparibas-password",
       "displayName": "BNP Paribas",
       "popular": true,
@@ -1916,6 +1973,58 @@
       "payload": "844",
       "transactional": true,
       "type": "BANK"
+    },
+    {
+      "name": "fr-societegenerale-password",
+      "className": "nxgen.fr.banks.societegenerale.SocieteGeneraleAgent",
+      "displayName": "Société Générale",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your mobile banking app.",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "numeric": true,
+          "immutable": true,
+          "pattern": "[0-9]{8}"
+        },
+        {
+          "description": "Password",
+          "sensitive": true,
+          "masked": true,
+          "name": "password",
+          "pattern": "[0-9]{6}"
+        }
+      ],
+      "type": "BANK",
+      "status": "ENABLED"
+    },
+    {
+      "name": "fr-labanquepostale-password",
+      "className": "nxgen.fr.banks.labanquepostale.LaBanquePostaleAgent",
+      "displayName": "La Banque Postale",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your mobile banking app.",
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "numeric": true,
+          "immutable": true,
+          "pattern": "[0-9]{10}"
+        },
+        {
+          "description": "Password",
+          "sensitive": true,
+          "masked": true,
+          "name": "password",
+          "pattern": "[0-9]{6}"
+        }
+      ],
+      "type": "BANK",
+      "status": "ENABLED"
     }
   ]
 }

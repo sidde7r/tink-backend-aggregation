@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2018-06-11 15:41+0000\n"
-"PO-Revision-Date: 2018-06-11 15:41+0000\n"
+"POT-Creation-Date: 2018-09-03 11:33+0000\n"
+"PO-Revision-Date: 2018-09-03 11:33+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: sv\n"
@@ -1418,7 +1418,7 @@ msgid "Taxes"
 msgstr "Skatt"
 
 msgid "Home Other"
-msgstr "Boende & Hushåll övrigt"
+msgstr "Hushåll & tjänster övrigt"
 
 msgid "House & Garden"
 msgstr "Hem & Trädgård"
@@ -2046,9 +2046,6 @@ msgstr "Uppskovsbelopp"
 msgid "Do you have deferred capital gains tax?"
 msgstr "Har du uppskjuten reavinstskatt?"
 
-msgid "Email"
-msgstr "Email"
-
 msgid "Employee since"
 msgstr "Anställd sedan"
 
@@ -2153,12 +2150,6 @@ msgstr "Tomträttsavgäld"
 
 msgid "Are you paying alimony?"
 msgstr "Betalar du underhåll för barn?"
-
-msgid "Social security number"
-msgstr "Personnummer"
-
-msgid "Phone number"
-msgstr "Telefonnummer"
 
 msgid "Property type"
 msgstr "Fastighetstyp"
@@ -2590,7 +2581,7 @@ msgid "We need some more information about you for your application. This will t
 msgstr "Vi behöver mer information om dig till sin ansökan. Detta tar 10-15 minuter."
 
 msgid "Household & Services"
-msgstr "Hushåll & tjänster"
+msgstr "Boende & Hushåll"
 
 msgid "Provisions"
 msgstr "Livsmedel"
@@ -3184,9 +3175,6 @@ msgstr "Bankens namn"
 
 msgid "Specify other way"
 msgstr "Specificera annat sätt"
-
-msgid "Registration number"
-msgstr "Organisationsnummer"
 
 msgid "Specify industry"
 msgstr "Specificera branch"
@@ -3874,6 +3862,18 @@ msgstr "Du har en bra sparbuffert! Mer än {0} över snittet."
 
 msgid "Your savings buffer is slightly lower than average. We can help!"
 msgstr "Din sparbuffert är lite lägre än snittet. Vi kan hjälpa till!"
+
+msgid "The category is not found."
+msgstr "Kategorin kunde inte hittas."
+
+msgid "The service is currently unavailable."
+msgstr "Det går för tillfället inte att nå systemet. Var god försök igen senare."
+
+msgid "investments"
+msgstr "investeringar"
+
+msgid "Coffee & snacks"
+msgstr "Fika & Snacks"
 
 msgid "Failed to sign using BankID"
 msgstr "Misslyckades med att signera med BankID"

@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.accounts.HKSPA;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.accounts.SEPAAccount;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.accounts.SepaAccountGuesser;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.auth.HKIDN;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.auth.HKSYN;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.auth.HKVVB;
@@ -27,12 +28,14 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.statemen
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.statement.MT940Statement;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsAccountTypeConverter;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsParser;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 
 public class FinTsApiClient {
     private final TinkHttpClient apiClient;
     private final FinTsConfiguration configuration;
+    private final SepaAccountGuesser sepaAccountGuesser;
     private int messageNumber = 1;
     private String dialogId = "0";
     private String systemId = "0";
@@ -42,6 +45,7 @@ public class FinTsApiClient {
     // We need to get full information of account in two calls, so need to cache here.
     private List<SEPAAccount> sepaAccounts;
     private static final Logger LOGGER = LoggerFactory.getLogger(FinTsApiClient.class);
+    private static final AggregationLogger LONGLOGGER = new AggregationLogger(FinTsApiClient.class);
 
     private boolean endDateSupported = true;
     private int fetchedTransactions = -1;
@@ -50,6 +54,7 @@ public class FinTsApiClient {
         this.apiClient = apiClient;
         this.configuration = configuration;
         sepaAccounts = new ArrayList<>();
+        this.sepaAccountGuesser = new SepaAccountGuesser();
     }
 
     private FinTsResponse sendMessage(FinTsRequest message) {
@@ -149,7 +154,7 @@ public class FinTsApiClient {
 
     public Collection<String> sync() {
         FinTsResponse syncResponse = sendMessage(getMessageSync());
-        if (!syncResponse.isSuccess()) {
+        if (!syncResponse.isSuccess() || syncResponse.isAccountBlocked()) {
             Collection<String> rmg = syncResponse.getGlobalStatus().values();
             Collection<String> rms = syncResponse.getLocalStatus().values();
 
@@ -185,8 +190,7 @@ public class FinTsApiClient {
                 sepaAccount.setIban(elements.get(2));
                 sepaAccount.setCustomerId(elements.get(3));
                 // Some banks don not set the account type field...
-                sepaAccount.setAccountType(
-                        Integer.valueOf(Strings.isNullOrEmpty(elements.get(4)) ? "1" : elements.get(4)));
+                sepaAccount.setAccountType(getAccountType(elements.get(4), elements.get(8)));
                 sepaAccount.setCurrency(elements.get(5));
                 sepaAccount.setAccountOwner1(elements.get(6));
                 sepaAccount.setAccountOwner2(elements.get(7));
@@ -205,6 +209,14 @@ public class FinTsApiClient {
         }
 
         this.dialogId = initResponse.getDialogId();
+    }
+
+    private int getAccountType(String accountType, String productName) {
+        if (!Strings.isNullOrEmpty(accountType)) {
+            return Integer.valueOf(accountType);
+        }
+
+        return sepaAccountGuesser.guessSepaAccountType(productName);
     }
 
     public boolean keepAlive() {
@@ -231,6 +243,11 @@ public class FinTsApiClient {
                         new HKSPA(3, null, null, null));
         FinTsResponse getAccountResponse = sendMessage(getAccountRequest);
         if (!getAccountResponse.isSuccess()) {
+            LONGLOGGER.warnExtraLong(
+                    String.format("Request: %s Response: %s DialogId: %s", getAccountRequest.toString(),
+                            getAccountResponse.toString(),
+                            this.dialogId),
+                    FinTsConstants.LogTags.GET_ACCOUNTS_ERROR);
             throw new IllegalStateException(getAccountResponse.toString());
         }
         String accounts = getAccountResponse.findSegment(FinTsConstants.Segments.HISPA);

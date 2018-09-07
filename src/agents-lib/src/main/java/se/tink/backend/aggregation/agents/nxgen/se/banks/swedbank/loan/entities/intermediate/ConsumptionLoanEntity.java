@@ -9,9 +9,7 @@ import se.tink.backend.aggregation.nxgen.core.account.LoanDetails;
 
 public class ConsumptionLoanEntity extends BaseAbstractLoanDetailedEntity {
 
-
-    private ConsumptionLoanEntity(
-            DetailedLoanResponse loanDetails, LoanEntity loanOverview) {
+    private ConsumptionLoanEntity(DetailedLoanResponse loanDetails, LoanEntity loanOverview) {
         super(loanDetails, loanOverview);
     }
 
@@ -35,17 +33,17 @@ public class ConsumptionLoanEntity extends BaseAbstractLoanDetailedEntity {
                 .setBalance(getAmount())
                 .setName(getName())
                 .setInterestRate(getInterest())
-                .setDetails(
-                        LoanDetails.builder()
-                                .setType(getName().contains(SwedbankSEConstants.MEMBERSHIP_LOAN) ?
-                                        LoanDetails.Type.MEMBERSHIP :
-                                        LoanDetails.Type.BLANCO)
-                                .setMonthlyAmortization(getMonthlyAmortization())
-                                .setApplicants(borrowers)
-                                .setCoApplicant(borrowers.size() > 1 ? true : false)
-                                .setName(getName())
-                                .build()
+                .setDetails(buildLoanDetails(borrowers))
+                .build();
+    }
 
-                ).build();
+    private LoanDetails buildLoanDetails(List<String> borrowers) {
+        return LoanDetails.builder(getName().contains(SwedbankSEConstants.MEMBERSHIP_LOAN) ?
+                LoanDetails.Type.MEMBERSHIP :
+                LoanDetails.Type.BLANCO)
+                .setMonthlyAmortization(getMonthlyAmortization())
+                .setApplicants(borrowers)
+                .setCoApplicant(borrowers.size() > 1)
+                .build();
     }
 }

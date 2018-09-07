@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.TreeMap;
 import javax.ws.rs.core.Cookie;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.http.HttpStatus;
+import se.tink.org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
@@ -169,6 +169,8 @@ public class SwedbankDefaultApiClient {
         return makeRequest(linkEntity, PaymentBaseinfoResponse.class);
     }
 
+
+
     // this is where we handle the profiles, fetch all and store store in session storage
     // never assume anything in session storage is usable when authenticating, it is setup
     // after login
@@ -184,6 +186,14 @@ public class SwedbankDefaultApiClient {
             throw hre;
         }
         if (!hasValidProfile(profileResponse)) {
+            if (modeAndProfileMismatch(profileResponse)) {
+                if (!configuration.isSavingsBank()) {
+                    throw LoginError.NOT_CUSTOMER.exception(SwedbankBaseConstants.UserMessage.WRONG_BANK_SWEDBANK);
+                } else {
+                    throw LoginError.NOT_CUSTOMER.exception(SwedbankBaseConstants.UserMessage.WRONG_BANK_SAVINGSBANK);
+                }
+            }
+
             throw LoginError.NOT_CUSTOMER.exception();
         }
 
@@ -560,5 +570,13 @@ public class SwedbankDefaultApiClient {
                 profileResponse.isHasSwedbankProfile();
 
         return hasValidBank && profileResponse.getBanks().size() > 0;
+    }
+
+    private boolean modeAndProfileMismatch(ProfileResponse profileResponse) {
+        if (!configuration.isSavingsBank()) {
+            return !profileResponse.isHasSwedbankProfile() && profileResponse.isHasSavingbankProfile();
+        } else {
+            return !profileResponse.isHasSavingbankProfile() && profileResponse.isHasSwedbankProfile();
+        }
     }
 }

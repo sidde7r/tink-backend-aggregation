@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.creditcard;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaApiClient;
@@ -45,30 +44,20 @@ public class BankiaCreditCardFetcher implements AccountFetcher<CreditCardAccount
         //      does not make the app request more transactions
 
         String id = account.getBankIdentifier();
-        CardTransactionsResponse response;
-        List<AggregationTransaction> transactions;
-        boolean hasMore;
 
-        int appLimit = 20;
-        response = apiClient.getCardTransactions(id, appLimit);
-        hasMore = response.isIndicateMoreTransactions();
-        transactions = response.getTransactions()
+        int maxLimit = 100;
+        CardTransactionsResponse response = apiClient.getCardTransactions(id, maxLimit);
+        boolean hasMore = response.isIndicateMoreTransactions();
+        List<AggregationTransaction> transactions = response.getTransactions()
                 .stream()
                 .map(CardTransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
-        LOGGER.info(String.format("Fetched %d transactions when limit was set to %d. hasMore was set to %s.",
-                transactions.size(), appLimit, Boolean.toString(hasMore)));
 
-        int maxLimit = 999;
-        response = apiClient.getCardTransactions(id, maxLimit);
-        hasMore = response.isIndicateMoreTransactions();
-        transactions = response.getTransactions()
-                .stream()
-                .map(CardTransactionEntity::toTinkTransaction)
-                .collect(Collectors.toList());
-        LOGGER.info(String.format("Fetched %d transactions when limit was set to %d. hasMore was set to %s.",
-                transactions.size(), maxLimit, Boolean.toString(hasMore)));
+        if (hasMore) {
+            LOGGER.warn(String.format("Fetched %d transactions when limit was set to %d. hasMore was set to %s.",
+                    transactions.size(), maxLimit, Boolean.toString(hasMore)));
+        }
 
-        return Collections.EMPTY_LIST;
+        return transactions;
     }
 }

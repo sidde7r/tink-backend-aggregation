@@ -27,6 +27,7 @@ public class TransactionIndexPaginationController<A extends Account> implements 
                 numberOfTransactionsFetched);
 
         Collection<? extends Transaction> transactions = response.getTinkTransactions();
+        numberOfTransactionsFetched += transactions.size();
 
         if (transactions.size() < NUMBER_OF_TRANSACTIONS_PER_PAGE && !response.canFetchMore().isPresent()) {
             // If we return less transactions than we asked for AND the pagee doesn't implement canFetchMore we

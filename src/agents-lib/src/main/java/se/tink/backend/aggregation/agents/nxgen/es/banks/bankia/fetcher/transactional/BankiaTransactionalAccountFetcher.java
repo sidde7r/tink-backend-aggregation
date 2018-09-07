@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional;
 
 import java.time.LocalDate;
-import java.time.Month;
-import java.time.Year;
-import java.time.temporal.TemporalAdjusters;
 import java.util.Collection;
+import java.util.Date;
 import java.util.stream.Collectors;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaApiClient;
@@ -13,11 +12,14 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.entities.AccountEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.libraries.date.DateUtils;
 
 public class BankiaTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount>,
-        TransactionPagePaginator<TransactionalAccount> {
+        TransactionDatePaginator<TransactionalAccount> {
 
     private static final Logger log = LoggerFactory.getLogger(BankiaTransactionalAccountFetcher.class);
     private final BankiaApiClient apiClient;
@@ -48,21 +50,24 @@ public class BankiaTransactionalAccountFetcher implements AccountFetcher<Transac
                 .collect(Collectors.toList());
     }
 
+    private static Date getOneYearOldDate() {
+        return DateUtils.addMonths(new Date(), -12);
+    }
+
     @Override
-    public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
-        // NOTE: this code was taken from the TransactionMonthPaginationController in order to leverage
-        // the canFetchMore() functionality.
-        // Todo: refactor this when the `TransactionMonthPaginationController` can handle canFetchMore.
-        LocalDate dateToFetch = nowInLocalDate.minusMonths(page);
+    public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
+        try {
+            return apiClient.getTransactions(account, fromDate, toDate);
+        } catch (HttpResponseException hre) {
+            if (hre.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR &&
+                    toDate.after(getOneYearOldDate())) {
+                // We will get status code 500 if we try to fetch too far back in time. If this happens we
+                // indicate to the paginator that we cannot fetch more.
+                return PaginatorResponseImpl.createEmpty(false);
+            }
 
-        Year year = Year.from(dateToFetch);
-        Month month = Month.from(dateToFetch);
-
-        // First day of the month
-        LocalDate fromDate = LocalDate.of(year.getValue(), month, 1);
-        // Last day of the month
-        LocalDate toDate = fromDate.with(TemporalAdjusters.lastDayOfMonth());
-
-        return apiClient.getTransactions(account, fromDate, toDate);
+            // Re-throw unknown exception.
+            throw hre;
+        }
     }
 }

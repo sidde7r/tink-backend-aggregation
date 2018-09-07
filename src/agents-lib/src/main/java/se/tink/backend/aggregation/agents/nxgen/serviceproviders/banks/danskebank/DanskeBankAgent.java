@@ -91,7 +91,7 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new DanskeBankSessionHandler();
+        return new DanskeBankSessionHandler(this.apiClient);
     }
 
     @Override

@@ -31,16 +31,18 @@ import javax.net.ssl.SSLContext;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
-import org.apache.http.HttpHost;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.params.ClientPNames;
-import org.apache.http.conn.ssl.SSLContextBuilder;
-import org.apache.http.conn.ssl.TrustStrategy;
-import org.apache.http.cookie.Cookie;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.params.CoreConnectionPNames;
+
+import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.org.apache.http.HttpHost;
+import se.tink.org.apache.http.client.config.RequestConfig;
+import se.tink.org.apache.http.client.params.ClientPNames;
+import se.tink.org.apache.http.conn.ssl.SSLContextBuilder;
+import se.tink.org.apache.http.conn.ssl.TrustStrategy;
+import se.tink.org.apache.http.cookie.Cookie;
+import se.tink.org.apache.http.impl.client.BasicCookieStore;
+import se.tink.org.apache.http.impl.client.CloseableHttpClient;
+import se.tink.org.apache.http.impl.client.HttpClientBuilder;
+import se.tink.org.apache.http.params.CoreConnectionPNames;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
@@ -64,8 +66,10 @@ import se.tink.backend.aggregation.workers.AgentWorkerContext;
 import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+
 public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
+    private TinkApacheHttpRequestExecutor requestExecutor;
     private Client internalClient = null;
     private final ClientConfig internalClientConfig;
     private HttpClientBuilder internalHttpClientBuilder;
@@ -87,6 +91,8 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     private final Filter finalFilter = new SendRequestFilter();
     private final PersistentHeaderFilter persistentHeaderFilter = new PersistentHeaderFilter();
 
+    private static final AggregationLogger logger = new AggregationLogger(TinkHttpClient.class);
+
     private class DEFAULTS {
         private final static String DEFAULT_USER_AGENT = AbstractAgent.DEFAULT_USER_AGENT;
         private final static int TIMEOUT_MS = 30000;
@@ -103,9 +109,11 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
     public String getHeaderAggregatorIdentifier(){
         if(aggregator != null){
+            logger.info("Aggregator header set to: " + aggregator.getAggregatorIdentifier());
             return aggregator.getAggregatorIdentifier();
         }
 
+        logger.info("Aggregator header set to default.");
         return Aggregator.DEFAULT;
     }
 
@@ -155,11 +163,12 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         this.context = context;
         this.credentials = credentials;
 
+        this.requestExecutor = new TinkApacheHttpRequestExecutor(signatureKeyPair);
         this.internalClientConfig = new DefaultApacheHttpClient4Config();
         this.internalCookieStore = new BasicCookieStore();
         this.internalRequestConfigBuilder = RequestConfig.custom();
         this.internalHttpClientBuilder = HttpClientBuilder.create()
-                                        .setRequestExecutor(new TinkApacheHttpRequestExecutor(signatureKeyPair))
+                                        .setRequestExecutor(requestExecutor)
                                         .setDefaultCookieStore(this.internalCookieStore);
 
         this.internalSslContextBuilder = new SSLContextBuilder()
@@ -175,13 +184,15 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         addFilter(this.persistentHeaderFilter);
 
         this.aggregator = Objects.isNull(context) ? Aggregator.getDefault(): context.getAggregator();
+        if (Objects.isNull(context)) {
+            logger.info("Context is null.");
+        }
 
         setTimeout(DEFAULTS.TIMEOUT_MS);
         setChunkedEncoding(DEFAULTS.CHUNKED_ENCODING);
         setMaxRedirects(DEFAULTS.MAX_REDIRECTS);
         setFollowRedirects(DEFAULTS.FOLLOW_REDIRECTS);
         setDebugOutput(DEFAULTS.DEBUG_OUTPUT);
-        addPersistentHeader("X-Aggregator", getHeaderAggregatorIdentifier());
         setUserAgent(DEFAULTS.DEFAULT_USER_AGENT);
     }
 
@@ -260,6 +271,10 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         Preconditions.checkState(this.internalClient == null);
         this.userAgent = userAgent;
         this.internalHttpClientBuilder = this.internalHttpClientBuilder.setUserAgent(userAgent);
+    }
+
+    public void disableSignatureRequestHeader() {
+        requestExecutor.disableSignatureRequestHeader();
     }
 
     public void setTimeout(int milliseconds) {
@@ -423,15 +438,15 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     }
 
     public RequestBuilder request(URL url) {
-        return new RequestBuilder(this, this.finalFilter, url);
+        return new RequestBuilder(this, this.finalFilter, url, getHeaderAggregatorIdentifier());
     }
 
     public <T> T request(Class<T> c, HttpRequest request) throws HttpClientException, HttpResponseException {
-        return new RequestBuilder(this, this.finalFilter).raw(c, request);
+        return new RequestBuilder(this, this.finalFilter, getHeaderAggregatorIdentifier()).raw(c, request);
     }
 
     public void request(HttpRequest request) throws HttpClientException, HttpResponseException {
-        new RequestBuilder(this, this.finalFilter).raw(request);
+        new RequestBuilder(this, this.finalFilter, getHeaderAggregatorIdentifier()).raw(request);
     }
     // --- Requests ---
 }

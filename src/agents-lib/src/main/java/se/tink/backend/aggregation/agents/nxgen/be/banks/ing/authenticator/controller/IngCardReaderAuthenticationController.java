@@ -79,21 +79,21 @@ public class IngCardReaderAuthenticationController implements MultiFactorAuthent
      otpField.setName(OTP_FIELD);
      otpField.setNumeric(true);
      otpField.setSensitive(true);
-     otpField.setHelpText(catalog.getString("1  Insert your ING bank card into the ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png)\n<br>ING Card Reader\n"
-             + "2  Press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_IDENTIFY.png)\n"
-             + "3  Enter your PIN\n"
-             + "4  Press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png)\n"
-             + "Enter the respond code"));
+     otpField.setHelpText(catalog.getString("1$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png) Insert your ING bank card into the ING Card Reader\n"
+             + "2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_IDENTIFY.png)\n"
+             + "3$  Enter your PIN\n"
+             + "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png) Press\n"
+             + "5$ Enter the response code"));
      return otpField;
     }
 
     private Field getChallengeField(String challenge) {
     String helpText =
         catalog.getString(
-            "1  Insert your ING bank card in your ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png) ING Card Reader\n"
-                    + "2  Press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_SIGN.png)\n"
-                    + "3  Enter your PIN and press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png)\n"
-                    + "4  Enter the following number []");
+            "1$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png) Insert your ING bank card in your ING Card Reader\n"
+                    + "2$  Press ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_SIGN.png) Press\n"
+                    + "3$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png) Enter your PIN and press\n"
+                    + "4$  Enter the following number []");
 
         Field challengeField = new Field();
         challengeField.setDescription(getChallengeFormattedWithSpaces(challenge));
@@ -107,8 +107,8 @@ public class IngCardReaderAuthenticationController implements MultiFactorAuthent
     private Field getChallengeResponseField() {
     String helpText =
         catalog.getString(
-            "5  And press ![](https://p1.easybanking.qabnpparibasfortis.be/rsc/serv/bank/ING/ING_SIGN.png)\n"
-                    + "Enter your RESPONSE code");
+            "5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_SIGN.png) And press\n"
+                    + "6$ Enter your RESPONSE code");
         Field challengeResponse = new Field();
         challengeResponse.setDescription(catalog.getString("Input"));
         challengeResponse.setName(CHALLENGE_RESPONSE_FIELD_KEY);

@@ -26,8 +26,6 @@ public abstract class IngConstants {
 
     public static class Default {
         public static final String MOBILE_PHONE = "mobilePhone";
-        /** Probably used to identify how the user identifies herself: 1 == username/DNI/NIE */
-        public static final int LOGIN_DOCUMENT_TYPE = 1;
         public static final String SESSION_NAME_ALL = "all";
         public static final String ACTION_NAME_LOGOUT = "logout";
         public static final String OPERATION_NAME_EMPTY = "";
@@ -36,14 +34,14 @@ public abstract class IngConstants {
     public static class UsernameType {
         // These types might need to be made more granular at a later time.
 
-        // The following formats of usernames matches (regex) NATIONAL (0):
+        // The following formats of usernames matches (regex) NON_NIE (0):
         //  [0-9]+z
         //  [0-9]+y
-        public static final int NATIONAL = 0;
+        public static final int NON_NIE = 0;
 
-        // The following formats of usernames matches (regex) NON_NATIONAL (1):
-        //  x[0-9]+f
-        public static final int NON_NATIONAL = 1;
+        // The following formats of usernames matches (regex) NIE (1):
+        //  x[0-9]+[A-Z]
+        public static final int NIE = 1;
     }
 
     public static class ErrorCode {

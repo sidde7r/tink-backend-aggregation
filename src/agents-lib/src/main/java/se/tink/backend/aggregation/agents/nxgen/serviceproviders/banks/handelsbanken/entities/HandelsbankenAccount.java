@@ -10,5 +10,9 @@ public abstract class HandelsbankenAccount extends BaseResponse {
         return findLink(HandelsbankenConstants.URLS.Links.TRANSACTIONS);
     }
 
+    public URL toCardTransactions() {
+        return findLink(HandelsbankenConstants.URLS.Links.CARD_TRANSACTIONS);
+    }
+
     public abstract boolean is(Account account);
 }

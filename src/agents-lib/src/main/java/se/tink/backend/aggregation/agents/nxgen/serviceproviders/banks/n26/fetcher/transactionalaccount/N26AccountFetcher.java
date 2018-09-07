@@ -2,17 +2,18 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetc
 
 import java.util.ArrayList;
 import java.util.Collection;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.N26ApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.N26Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.rpc.SavingsAccountResponse;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class N26AccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     private final N26ApiClient n26ApiClient;
-    private static final Logger logger = LoggerFactory.getLogger(N26ApiClient.class);
+    private static final AggregationLogger LOGGER = new AggregationLogger(N26AccountFetcher.class);
 
     public N26AccountFetcher(N26ApiClient n26ApiClient) {
         this.n26ApiClient = n26ApiClient;
@@ -26,6 +27,7 @@ public class N26AccountFetcher implements AccountFetcher<TransactionalAccount> {
         if(!res.isEmpty()){
             result.addAll(res.toSavingsAccounts());
         }
+        LOGGER.infoExtraLong(SerializationUtils.serializeToString(result), N26Constants.Logging.ACCOUNT_LOGGING);
         return result;
     }
 

@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.santander;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Date;
 import java.util.regex.Matcher;
 import javax.ws.rs.core.HttpHeaders;
@@ -12,16 +14,19 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.entit
 import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.entities.RequestTransactionDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.rpc.FetchTransactionsResponse;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SantanderApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage storage;
     Logger logger = LoggerFactory.getLogger(SantanderApiClient.class);
+    AggregationLogger longlogger = new AggregationLogger(SantanderApiClient.class);
 
     public SantanderApiClient(TinkHttpClient client, SessionStorage storage){
         this.client = client;
@@ -77,6 +82,12 @@ public class SantanderApiClient {
         FetchAccountsResponse response = getRequest(SantanderConstants.URL.BASEURL, SantanderConstants.URL.ACCOUNT, token, requestData)
                 .post(FetchAccountsResponse.class);
 
+        try {
+            longlogger.infoExtraLong(SerializationUtils.serializeToString(response), SantanderConstants.LOGTAG.SANTANDER_ACCOUNT_LOGGING);
+        } catch (Exception e) {
+            longlogger.infoExtraLong(e.toString(), SantanderConstants.LOGTAG.SANTANDER_ACCOUNT_PARSING_ERROR);
+        }
+
         storage.put(SantanderConstants.STORAGE.LOCAL_CONTRACT_DETAIL, response.getAccountResultEntity().getLocalContractDetail());
         storage.put(SantanderConstants.STORAGE.LOCAL_CONTRACT_TYPE, response.getAccountResultEntity().getLocalContractType());
         storage.put(SantanderConstants.STORAGE.COMPANY_ID, response.getAccountResultEntity().getCompanyId());
@@ -92,8 +103,10 @@ public class SantanderApiClient {
 
         String requestData = new RequestTransactionDataEntity(fromDate, toDate, companyId, contractType, contractDetail).toJson();
 
-         return getRequest(SantanderConstants.URL.BASEURL, SantanderConstants.URL.TRANSACTIONS, token, requestData)
+        FetchTransactionsResponse response = getRequest(SantanderConstants.URL.BASEURL, SantanderConstants.URL.TRANSACTIONS, token, requestData)
                 .post(FetchTransactionsResponse.class);
+        longlogger.infoExtraLong(SerializationUtils.serializeToString(response), SantanderConstants.LOGTAG.SANTANDER_TRANSACTION_LOGGING);
+        return response;
     }
 
 }

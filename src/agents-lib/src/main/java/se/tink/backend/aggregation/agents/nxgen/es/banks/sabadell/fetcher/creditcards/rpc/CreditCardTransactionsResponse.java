@@ -1,13 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.rpc;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.entities.CreditCardEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.entities.GenericGroupedMovementEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.entities.GroupedMovementsEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.entities.PaginatorEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 public class CreditCardTransactionsResponse implements PaginatorResponse {
@@ -24,18 +24,17 @@ public class CreditCardTransactionsResponse implements PaginatorResponse {
     private AmountEntity chargeAccount;
     private CreditCardEntity card;
     private PaginatorEntity paginator;
-    private GenericGroupedMovementEntity genericGroupedMovement;
+    private GroupedMovementsEntity genericGroupedMovement;
 
     @Override
-    public Collection<Transaction> getTinkTransactions() {
-        return Collections.emptyList();
+    public Collection<? extends Transaction> getTinkTransactions() {
+        CreditCardAccount creditCardAccount = card.toTinkAccount();
+        return genericGroupedMovement.toTinkTransactions(creditCardAccount);
     }
 
     @Override
     public Optional<Boolean> canFetchMore() {
-        // Always return false until we can parse transactions, makes no sense to paginate until then.
-        // When we know how to parse transactions we can use genericGroupedMovement.hasMoreElements()
-        return Optional.of(false);
+        return Optional.of(genericGroupedMovement.hasMoreElements());
     }
 
     public String getContractNumber() {
@@ -90,7 +89,7 @@ public class CreditCardTransactionsResponse implements PaginatorResponse {
         return paginator;
     }
 
-    public GenericGroupedMovementEntity getGenericGroupedMovement() {
+    public GroupedMovementsEntity getGenericGroupedMovement() {
         return genericGroupedMovement;
     }
 }

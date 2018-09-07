@@ -58,22 +58,28 @@ public class AmericanExpressPasswordAuthenticator implements PasswordAuthenticat
 
     private void handleAuthenticationFail(LogonDataEntity logonData)
             throws AuthorizationException, LoginException {
-        if (logonData.isRevoked()) {
-            throw AuthorizationError.ACCOUNT_BLOCKED.exception();
-        }
 
-        if (logonData.isIncorrect()) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        // Please note!!!
+        // Code below is deliberately (and hopefully temporarely) removed.
+        // In principal the commented out code is correct, but we often get wrong error messages from amex.
+        // This is to avoid throwing INCORRECT_CREDENTIALS when there is actually some problem with amex.
+        // In short, we can't trust amex error messages.
 
-        } else {
-            throw new IllegalStateException(
-                    String.format(
-                            "#login-refactoring - AMEX " + config.getFace() + " - Login failed with message : "
-                                    + "(%s) %s", logonData.getStatusCode(), logonData.getMessage()
-                    )
-            );
-        }
-
+        //        if (logonData.isRevoked()) {
+        //            throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+        //        }
+        //
+        //        if (logonData.isIncorrect()) {
+        //            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        //
+        //        } else {
+        throw new IllegalStateException(
+                String.format(
+                        "#login-refactoring - AMEX " + config.getFace() + " - Login failed with message : "
+                                + "(%s) %s", logonData.getStatusCode(), logonData.getMessage()
+                )
+        );
+        //        }
     }
 
     private LogonRequest createLogonRequest(String username, String password) {

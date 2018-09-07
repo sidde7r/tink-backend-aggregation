@@ -39,7 +39,7 @@ public class AccountEntity {
         return TransactionalAccount.builder(getTinkAccountType(), normalizedIban, new Amount(currency, availableBalance))
                 .setAccountNumber(iban)
                 .setName(name)
-                .addToTemporaryStorage(BbvaConstants.Storage.ACCOUNT_ID, id)
+                .putInTemporaryStorage(BbvaConstants.Storage.ACCOUNT_ID, id)
                 .addIdentifier(AccountIdentifier.create(IBAN, normalizedIban))
                 .build();
     }

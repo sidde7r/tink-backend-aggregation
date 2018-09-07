@@ -20,10 +20,6 @@ public class DetailedLoanResponse {
     private AmountEntity debt;
     private LoanInfoEntity loan;
 
-    public LoanDetailsAccountEntity getLoanDetail() {
-        return loanDetail;
-    }
-
     public LoanInfoEntity getLoan() {
         return loan;
     }

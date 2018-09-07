@@ -7,12 +7,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
+import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
+import se.tink.backend.aggregation.nxgen.core.account.LoanInterpreter;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
-import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.system.rpc.AccountFeatures;
 
@@ -20,13 +21,13 @@ public class UpdateController {
     private static final AggregationLogger log = new AggregationLogger(UpdateController.class);
 
     private final AgentContext baseContext;
-    private final Credentials credentials;
     protected final String currency;
     private final HashSet<Account> accounts = Sets.newHashSet();
+    private final LoanInterpreter loanInterpreter;
 
-    public UpdateController(AgentContext baseContext, Credentials credentials, String currency) {
+    public UpdateController(AgentContext baseContext, String market, String currency) {
         this.baseContext = baseContext;
-        this.credentials = credentials;
+        this.loanInterpreter = LoanInterpreter.getInstance(MarketCode.valueOf(market));
         this.currency = currency;
     }
 
@@ -35,7 +36,8 @@ public class UpdateController {
     }
 
     public boolean updateAccount(LoanAccount account) {
-        return updateAccount(account, AccountFeatures.createForLoan(account.getDetails().toSystemLoan(account)));
+        return updateAccount(account, AccountFeatures.createForLoan(
+                account.getDetails().toSystemLoan(account, loanInterpreter)));
     }
 
     public boolean updateAccount(InvestmentAccount account) {
