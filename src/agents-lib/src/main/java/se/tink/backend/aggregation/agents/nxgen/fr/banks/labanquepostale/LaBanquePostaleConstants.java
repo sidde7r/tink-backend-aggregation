@@ -1,10 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale;
 
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMap;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.rpc.AccountTypes;
 
 public class LaBanquePostaleConstants {
 
@@ -113,8 +117,17 @@ public class LaBanquePostaleConstants {
     }
 
     public static class AccountType {
-        public static final String _000001 = "000001";
-        public static final String _000002 = "000002";
+        private static final ImmutableMap<String, AccountTypes> KNOWN_PRODUCT_CODES = ImmutableMap.<String, AccountTypes>builder()
+                .put("000001", AccountTypes.CHECKING)
+                .put("000002", AccountTypes.SAVINGS)
+                .build();
+
+        public static Optional<AccountTypes> translate(String productCode) {
+            if (Strings.isNullOrEmpty(productCode)) {
+                return Optional.empty();
+            }
+            return Optional.ofNullable(KNOWN_PRODUCT_CODES.getOrDefault(productCode.toUpperCase(), null));
+        }
     }
 
 }
