@@ -72,6 +72,18 @@ public class UpdateController {
         return true;
     }
 
+    public boolean updateTransactions(LoanAccount account, Collection<AggregationTransaction> transactions) {
+        if (!updateAccount(account)) {
+            return false;
+        }
+
+        baseContext.cacheTransactions(account.getBankIdentifier(), transactions.stream()
+                .map(AggregationTransaction::toSystemTransaction)
+                .collect(Collectors.toList()));
+
+        return true;
+    }
+
     public void updateEInvoices(List<Transfer> eInvoices) {
         baseContext.updateEinvoices(eInvoices);
     }
