@@ -4,11 +4,13 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
@@ -61,6 +63,7 @@ import se.tink.backend.aggregation.workers.refresh.ProcessableItem;
 import se.tink.backend.common.ServiceContext;
 import se.tink.backend.common.cache.CacheClient;
 import se.tink.backend.common.repository.mysql.aggregation.clustercryptoconfiguration.ClusterCryptoConfigurationRepository;
+import se.tink.libraries.http.utils.HttpResponseHelper;
 import se.tink.libraries.metrics.MetricRegistry;
 
 public class AgentWorkerOperationFactory {
@@ -220,7 +223,60 @@ public class AgentWorkerOperationFactory {
         return commands;
     }
 
+    private AgentWorkerOperation createLegacyRefreshOperation(ClusterInfo clusterInfo,
+            RefreshInformationRequest request) {
+        if (request.getItemsToRefresh() == null || request.getItemsToRefresh().isEmpty()) {
+            // Add all available items if none were submitted.
+            // Todo: Remove this once it has been verified that no consumer sends in an empty/null list.
+            // Instead it should abort if it's empty (empty list == do nothing).
+            request.setItemsToRefresh(RefreshableItem.REFRESHABLE_ITEMS_ALL);
+        }
+
+        log.debug("Creating legacy refresh operation chain for credential");
+
+
+        AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
+                useAggregationController, aggregationControllerAggregationClient, clusterInfo);
+
+        List<AgentWorkerCommand> commands = Lists.newArrayList();
+
+        String metricsName = (request.isManual() ? "refresh-manual" : "refresh-auto");
+
+        commands.add(new ValidateProviderAgentWorkerStatus(context, useAggregationController,
+                aggregationControllerAggregationClient, isAggregationCluster, clusterInfo));
+        commands.add(new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
+        commands.add(new ReportProviderMetricsAgentWorkerCommand(context, metricsName,
+                reportMetricsAgentWorkerCommandState));
+        commands.add(new LockAgentWorkerCommand(context));
+        if (isAggregationCluster) {
+            commands.add(new DecryptCredentialsWorkerCommand(clusterInfo, cacheClient,
+                    clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context));
+        } else {
+            commands.add(new DecryptAgentWorkerCommand(context, useAggregationController,
+                    aggregationControllerAggregationClient));
+        }
+        commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState));
+        commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
+        commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)));
+
+        commands.addAll(createRefreshAccountsCommandChain(request, context, request.getItemsToRefresh()));
+        if(request instanceof RefreshWhitelistInformationRequest && ((RefreshWhitelistInformationRequest) request).isOptIn()){
+            RefreshWhitelistInformationRequest refreshWhiteList = (RefreshWhitelistInformationRequest) request;
+            commands.add(new RequestUserOptInAccountsAgentWorkerCommand(context, refreshWhiteList));
+        }
+
+        commands.add(new SelectAccountsToAggregateCommand(context, request));
+
+        commands.addAll(createRefreshableItemsChain(request, context, request.getItemsToRefresh()));
+
+        log.debug("Created legacy refresh operation chain for credential");
+        return new AgentWorkerOperation(agentWorkerOperationState, metricsName, request, commands, context);
+    }
+
     public AgentWorkerOperation createRefreshOperation(ClusterInfo clusterInfo, RefreshInformationRequest request) {
+        if (!request.getProvider().isNextGenerationAgent()) {
+            return createLegacyRefreshOperation(clusterInfo, request);
+        }
 
         if (request.getItemsToRefresh() == null || request.getItemsToRefresh().isEmpty()) {
             // Add all available items if none were submitted.
