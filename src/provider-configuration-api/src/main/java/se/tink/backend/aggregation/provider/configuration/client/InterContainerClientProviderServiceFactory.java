@@ -42,6 +42,7 @@ public class InterContainerClientProviderServiceFactory implements InterContaine
         JerseyUtils.registerAPIAccessToken(client, accessToken);
         return client.resource(host);
     }
+    
     private static WebResource createResource(List<String> pinnedCertificates,
                                                String host, String accessToken){
 
