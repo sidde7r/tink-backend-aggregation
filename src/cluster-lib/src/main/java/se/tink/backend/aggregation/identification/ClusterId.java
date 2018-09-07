@@ -8,16 +8,13 @@ import se.tink.libraries.metrics.MetricId;
 public class ClusterId {
     public static final String CLUSTER_NAME_HEADER = "x-tink-cluster-name";
     public static final String CLUSTER_ENVIRONMENT_HEADER = "x-tink-cluster-environment";
-    public static final String AGGREGATOR_NAME_HEADER = "x-tink-aggregator-header";
 
     private final String name;
     private final String environment;
-    private final Aggregator aggregator;
 
-    private ClusterId(String name, String environment, Aggregator aggregator) {
+    private ClusterId(String name, String environment) {
         this.name = name;
         this.environment = environment;
-        this.aggregator = aggregator;
     }
 
     public MetricId.MetricLabels metricLabels() {
@@ -46,10 +43,6 @@ public class ClusterId {
         return String.format("%s-%s", name, environment);
     }
 
-    public Aggregator getAggregator(){
-        return aggregator;
-    }
-
     public static ClusterId createFromContainerRequest(ContainerRequest request) {
         if (Objects.isNull(request)) {
             return createEmpty();
@@ -57,16 +50,15 @@ public class ClusterId {
 
         String clusterName = request.getHeaderValue(CLUSTER_NAME_HEADER);
         String clusterEnvironment = request.getHeaderValue(CLUSTER_ENVIRONMENT_HEADER);
-        String aggregatorName = request.getHeaderValue(AGGREGATOR_NAME_HEADER);
 
-        return create(clusterName, clusterEnvironment, Aggregator.initAggregator(aggregatorName));
+        return create(clusterName, clusterEnvironment);
     }
 
     public static ClusterId createEmpty() {
-        return new ClusterId(null, null, null);
+        return new ClusterId(null, null);
     }
 
-    public static ClusterId create(String name, String environment, Aggregator aggregator) {
-        return new ClusterId(name, environment, aggregator);
+    public static ClusterId create(String name, String environment) {
+        return new ClusterId(name, environment);
     }
 }

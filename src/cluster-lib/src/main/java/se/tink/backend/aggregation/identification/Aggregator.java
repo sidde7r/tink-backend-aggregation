@@ -25,16 +25,4 @@ public class Aggregator {
     public static Aggregator of(String aggregatorIdentifier) {
         return new Aggregator(aggregatorIdentifier);
     }
-
-    public static Aggregator initAggregator(String aggregatorHeader){
-        if(!Strings.isNullOrEmpty(aggregatorHeader)){
-            return Aggregator.of(aggregatorHeader);
-        }
-
-        return  Aggregator.of(Aggregator.DEFAULT);
-    }
-
-    public void setAggregatorIdentifier(String aggregatorIdentifier) {
-        this.aggregatorIdentifier = aggregatorIdentifier;
-    }
 }
