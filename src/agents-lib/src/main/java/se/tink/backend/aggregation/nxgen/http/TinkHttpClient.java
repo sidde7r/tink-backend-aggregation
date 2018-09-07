@@ -198,7 +198,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
 
         //Todo: Remove this once the aggregator identifier is verified 
-        if (Objects.nonNull(context)) {
+        if (Objects.nonNull(context) && Objects.nonNull(context.getClusterInfo())) {
             logger.info("Setting the outgoing aggregator identifier header to: " + getHeaderAggregatorIdentifier() + " clusterId: " + context.getClusterInfo().getClusterId().getId());
         }
     }
