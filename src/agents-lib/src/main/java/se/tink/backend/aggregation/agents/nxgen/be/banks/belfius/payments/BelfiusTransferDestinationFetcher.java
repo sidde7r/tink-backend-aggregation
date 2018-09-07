@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.identifiers.BelgianIdentifier;
+import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 
 public class BelfiusTransferDestinationFetcher implements TransferDestinationFetcher {
 
@@ -43,7 +43,7 @@ public class BelfiusTransferDestinationFetcher implements TransferDestinationFet
                 .setSourceAccounts(sourceAccounts)
                 .setDestinationAccounts(destinationAccounts)
                 .setTinkAccounts(tinkAccounts)
-                .matchDestinationAccountsOn(AccountIdentifier.Type.BE, BelgianIdentifier.class)
+                .matchDestinationAccountsOn(AccountIdentifier.Type.SEPA_EUR, SepaEurIdentifier.class)
                 .build();
     }
 
@@ -57,8 +57,8 @@ public class BelfiusTransferDestinationFetcher implements TransferDestinationFet
                 .setSourceAccounts(sourceAccounts)
                 .setDestinationAccounts(destinationAccounts)
                 .setTinkAccounts(tinkAccounts)
-                .matchDestinationAccountsOn(AccountIdentifier.Type.BE, BelgianIdentifier.class)
-                .addMultiMatchPattern(AccountIdentifier.Type.BE, TransferDestinationPattern.ALL)
+                .matchDestinationAccountsOn(AccountIdentifier.Type.SEPA_EUR, SepaEurIdentifier.class)
+                .addMultiMatchPattern(AccountIdentifier.Type.SEPA_EUR, TransferDestinationPattern.ALL)
                 .build();
     }
 
@@ -84,7 +84,7 @@ public class BelfiusTransferDestinationFetcher implements TransferDestinationFet
 
     private GeneralAccountEntity toGeneralAccountEntity(Account account) {
         AccountIdentifier accountIdentifier =
-                new BelgianIdentifier(account.getAccountNumber().replace(" ", ""));
+                new SepaEurIdentifier(account.getAccountNumber().replace(" ", ""));
 
         return new TransferAccountEntity(accountIdentifier, BelfiusConstants.TRANSACTION_BANK_NAME, account.getName());
     }

@@ -22,7 +22,7 @@ import se.tink.backend.core.enums.MessageType;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.identifiers.BelgianIdentifier;
+import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 import se.tink.libraries.date.CountryDateUtils;
 import se.tink.libraries.i18n.Catalog;
 import static se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusSecurityUtils.createTransferSignature;
@@ -70,7 +70,7 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         boolean signed = false;
 
         if ( paymentResponse.requireSignOfBeneficiary() && !ownAccount
-                && !containsAccount(((BelgianIdentifier) (transfer.getDestination())).getIban(),
+                && !containsAccount(((SepaEurIdentifier) (transfer.getDestination())).getIban(),
                 apiClient.prepareTransfer().getBeneficiaries())) {
             addBeneficiary(transfer, transfer.getMessageType().equals(MessageType.STRUCTURED));
             signed = true;
@@ -207,8 +207,8 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
 
     public String createClientSha(Transfer transfer) {
         return createTransferSignature(belfiusSessionStorage.getChallenge(),
-                "I" + ((BelgianIdentifier) (transfer.getSource())).getIban(),
-                "I" + ((BelgianIdentifier) (transfer.getDestination())).getIban(),
+                "I" + ((SepaEurIdentifier) (transfer.getSource())).getIban(),
+                "I" + ((SepaEurIdentifier) (transfer.getDestination())).getIban(),
                 getFormattedAmount(transfer.getAmount()),
                 transfer.getAmount().getCurrency());
     }

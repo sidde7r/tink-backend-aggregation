@@ -14,7 +14,7 @@ import se.tink.backend.core.Amount;
 import se.tink.backend.core.enums.MessageType;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
-import se.tink.libraries.account.identifiers.BelgianIdentifier;
+import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 import se.tink.libraries.date.CountryDateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
@@ -134,8 +134,8 @@ public class TransferRequest {
     }
 
     public static TransferRequest create(Transfer transfer, boolean isTransferToOwnAccount) {
-        String principalAccountNo = ((BelgianIdentifier)transfer.getSource()).getIban();
-        String beneficiaryAccountNo = ((BelgianIdentifier)transfer.getDestination()).getIban();
+        String principalAccountNo = ((SepaEurIdentifier)transfer.getSource()).getIban();
+        String beneficiaryAccountNo = ((SepaEurIdentifier)transfer.getDestination()).getIban();
 
         MessageType messageType = transfer.getMessageType();
         String destinationMessage = transfer.getDestinationMessage();

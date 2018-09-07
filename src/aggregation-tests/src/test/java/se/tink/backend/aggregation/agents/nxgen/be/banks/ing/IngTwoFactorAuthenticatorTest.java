@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.ing;
 import com.google.common.collect.ImmutableMap;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngCardReaderAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.controller.IngCardReaderAuthenticationController;
@@ -15,6 +16,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@Ignore
 public class IngTwoFactorAuthenticatorTest {
     private Credentials credentials;
     private IngApiClient apiClient;
@@ -32,9 +34,17 @@ public class IngTwoFactorAuthenticatorTest {
 
     @After
     public void tearDown() throws Exception {
-        System.out.println("Save the following values to the test config in order to auto authenticate: "
-                + persistentStorage);
+        System.out.println("Save the following values to the test config in order to auto authenticate: " + persistentStorage);
+        System.out.println("VirtualCardnumber: " + persistentStorage.get(IngConstants.Storage.VIRTUAL_CARDNUMBER));
+        System.out.println("VirtualCardnumber: " + ingHelper.getCardNumber());
+        persistentStorage.keySet().iterator().forEachRemaining(key -> System.out.println("this.persistentStorage.put(\"" + key + "\", \"" + persistentStorage.get(key) + "\");" ));
     }
+
+    // Debug
+    // Get OTP from keyreader
+    // Insert card, pin, identify gives OTP
+    // Lock at the console and put a break point before "Challange me!" is used, get challenge from console
+    // Insert card, pin, sign challenge, Change "Challenge me!" to response
 
     @Test
     public void authenticate_2Factor() throws Exception {

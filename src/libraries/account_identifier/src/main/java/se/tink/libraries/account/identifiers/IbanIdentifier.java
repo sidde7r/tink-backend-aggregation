@@ -1,6 +1,7 @@
 package se.tink.libraries.account.identifiers;
 
 import com.google.common.base.Strings;
+import java.util.Collection;
 import org.iban4j.BicFormatException;
 import org.iban4j.BicUtil;
 import org.iban4j.IbanFormatException;
@@ -46,8 +47,8 @@ public class IbanIdentifier extends AccountIdentifier {
         }
     }
 
-    public IbanIdentifier(Type type, String bic, String iban) {
-        if (validateBicAndIbanWithType(type, bic, iban)) {
+    public IbanIdentifier(String bic, String iban, Collection<String> countryCodeRestrictions) {
+        if (validateBicAndIbanWithCountryCodeRestriction(bic, iban, countryCodeRestrictions)) {
             this.bic = bic;
             this.iban = iban;
             this.isValidIban = true;
@@ -63,11 +64,16 @@ public class IbanIdentifier extends AccountIdentifier {
         return isValidIban && (Strings.isNullOrEmpty(bic) || validateBic(bic));
     }
 
-    private boolean validateBicAndIbanWithType(Type type, String bic, String iban) {
+    private boolean validateBicAndIbanWithCountryCodeRestriction(String bic, String iban, Collection<String> countryCodeRestrictions) {
         boolean isValidBicAndIban = validateBicAndIban(bic, iban);
         String countryCode = IbanUtil.getCountryCode(iban);
 
-        return isValidBicAndIban && type.toString().equalsIgnoreCase(countryCode);
+        return isValidBicAndIban && isValidCountry(countryCode, countryCodeRestrictions);
+    }
+
+
+    private boolean isValidCountry(String countryCode, Collection<String> countryCodeRestrictions) {
+        return countryCodeRestrictions.stream().anyMatch(country -> country.equalsIgnoreCase(countryCode));
     }
 
     private boolean validateIban(String iban) {
@@ -96,7 +102,7 @@ public class IbanIdentifier extends AccountIdentifier {
 
         return String.format("%s/%s", bic, iban);
     }
-    
+
     @Override
     public boolean isValid() {
         if (Strings.isNullOrEmpty(bic)) {

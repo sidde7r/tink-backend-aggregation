@@ -16,9 +16,11 @@ import static se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants
 import static se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Storage.SESSION_KEY_AUTH_IN_HEX;
 import static se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Storage.SESSION_KEY_IN_HEX;
 import static se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Storage.SYSTEM_PIN;
-import static se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Storage.VIRTUAL_CARDNUMBER;
 
 public class IngTestConfig {
+    private static final String USERNAME = "";
+    private static final String CARD_ID = "";
+
     private Credentials credentials;
     private IngApiClient apiClient;
     private IngHelper ingHelper;
@@ -46,8 +48,8 @@ public class IngTestConfig {
     private Credentials createTestUserCredentials() {
         Credentials credentials = new Credentials();
         credentials.setType(CredentialsTypes.PASSWORD);
-        credentials.setField(Field.Key.USERNAME, "");
-        credentials.setField("cardId", "");
+        credentials.setField(Field.Key.USERNAME, USERNAME);
+        credentials.setField("cardId", CARD_ID);
         return credentials;
     }
 
@@ -61,7 +63,6 @@ public class IngTestConfig {
     private void populatePersistentStorage() {
         this.persistentStorage.put(ING_ID, "");
         this.persistentStorage.put(DEVICE_ID, "");
-        this.persistentStorage.put(VIRTUAL_CARDNUMBER, "");
         this.persistentStorage.put(PSN, "");
         this.persistentStorage.put(OTP_KEY_HEX, "");
         this.persistentStorage.put(SYSTEM_PIN, "");

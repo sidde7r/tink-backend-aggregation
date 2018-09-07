@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.identifiers.BelgianIdentifier;
+import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 
 public class IngTransferDestinationFetcher implements TransferDestinationFetcher {
     private final IngApiClient apiClient;
@@ -64,7 +64,7 @@ public class IngTransferDestinationFetcher implements TransferDestinationFetcher
                 .setSourceAccounts(sourceAccounts)
                 .setDestinationAccounts(destinationAccounts)
                 .setTinkAccounts(accounts)
-                .matchDestinationAccountsOn(AccountIdentifier.Type.BE, BelgianIdentifier.class)
+                .matchDestinationAccountsOn(AccountIdentifier.Type.SEPA_EUR, SepaEurIdentifier.class)
                 .build();
     }
 
@@ -79,8 +79,8 @@ public class IngTransferDestinationFetcher implements TransferDestinationFetcher
                 .setSourceAccounts(sourceAccounts)
                 .setDestinationAccounts(destinationAccounts)
                 .setTinkAccounts(accounts)
-                .matchDestinationAccountsOn(AccountIdentifier.Type.BE, BelgianIdentifier.class)
-                .addMultiMatchPattern(AccountIdentifier.Type.BE, TransferDestinationPattern.ALL)
+                .matchDestinationAccountsOn(AccountIdentifier.Type.SEPA_EUR, SepaEurIdentifier.class)
+                .addMultiMatchPattern(AccountIdentifier.Type.SEPA_EUR, TransferDestinationPattern.ALL)
                 .build();
     }
 
@@ -113,7 +113,7 @@ public class IngTransferDestinationFetcher implements TransferDestinationFetcher
     }
 
     private GeneralAccountEntity toGeneralAccountEntity(AccountEntity account) {
-        AccountIdentifier accountIdentifier = new BelgianIdentifier(account.getIbanNumber());
+        AccountIdentifier accountIdentifier = new SepaEurIdentifier(account.getIbanNumber());
 
         return new TransferAccountEntity(accountIdentifier, account.getName());
     }

@@ -364,6 +364,8 @@ public class Account implements Cloneable {
             return getIdentifier(Type.IBAN);
         case BE:
             return getIdentifier(Type.BE);
+        case SEPA_EUR:
+            return getIdentifier(Type.SEPA_EUR);
         }
         return null;
     }

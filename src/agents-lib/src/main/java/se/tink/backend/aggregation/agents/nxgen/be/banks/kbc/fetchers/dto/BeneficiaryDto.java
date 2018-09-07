@@ -4,7 +4,7 @@ import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeValuePair;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.identifiers.BelgianIdentifier;
+import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 
 @JsonObject
 public class BeneficiaryDto implements GeneralAccountEntity {
@@ -14,7 +14,7 @@ public class BeneficiaryDto implements GeneralAccountEntity {
 
     @Override
     public AccountIdentifier generalGetAccountIdentifier() {
-        return new BelgianIdentifier(accountNo.getValue());
+        return new SepaEurIdentifier(accountNo.getValue());
     }
 
     @Override
