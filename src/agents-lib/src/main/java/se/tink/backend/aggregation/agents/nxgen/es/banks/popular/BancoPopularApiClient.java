@@ -27,7 +27,6 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.backend.aggregation.rpc.Credentials;
 
 public class BancoPopularApiClient {
     private static final AggregationLogger LOGGER =
@@ -35,13 +34,10 @@ public class BancoPopularApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
-    private final Credentials credentials;
 
-    public BancoPopularApiClient(TinkHttpClient client, SessionStorage sessionStorage,
-            Credentials credentials) {
+    public BancoPopularApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
-        this.credentials = credentials;
     }
 
     public LoginResponse login(LoginRequest loginRequest) throws LoginException {

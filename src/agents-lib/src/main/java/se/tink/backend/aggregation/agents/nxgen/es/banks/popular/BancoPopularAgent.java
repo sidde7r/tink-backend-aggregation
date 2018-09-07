@@ -32,7 +32,7 @@ public class BancoPopularAgent extends NextGenerationAgent {
 
     public BancoPopularAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        bankClient = new BancoPopularApiClient(client, sessionStorage, credentials);
+        bankClient = new BancoPopularApiClient(client, sessionStorage);
         popularPersistentStorage = new BancoPopularPersistentStorage(persistentStorage);
     }
 
