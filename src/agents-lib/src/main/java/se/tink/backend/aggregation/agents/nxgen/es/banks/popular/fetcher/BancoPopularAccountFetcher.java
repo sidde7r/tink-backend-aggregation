@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 
 public class BancoPopularAccountFetcher extends BancoPopularContractFetcher implements
         AccountFetcher<TransactionalAccount> {
+
     public BancoPopularAccountFetcher(BancoPopularApiClient bankClient,
             BancoPopularPersistentStorage persistentStorage) {
         super(bankClient, persistentStorage);

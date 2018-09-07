@@ -38,7 +38,6 @@ public class BancoPopularAgent extends NextGenerationAgent {
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
-
     }
 
     @Override
