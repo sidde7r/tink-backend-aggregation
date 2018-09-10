@@ -56,12 +56,11 @@ public class AccountEntity {
 
         Optional<AccountTypes> type = LaBanquePostaleConstants.AccountType.translate(productRange);
 
-        if (!type.isPresent()) {
+        return type.orElseGet(() -> {
             logger.info("{} Unknown account type: {}", LaBanquePostaleConstants.Logging.UNKNOWN_ACCOUNT_TYPE,
                     productRange);
-        }
-
-        return type.orElse(AccountTypes.OTHER);
+            return AccountTypes.OTHER;
+        });
     }
 
     public TransactionalAccount toTinkAccount() {
