@@ -52,7 +52,7 @@ public class AgentTestContext extends AgentContext {
 
     public AgentTestContext(Credentials credentials) {
         this.credentials = credentials;
-        setClusterInfo(ClusterInfo.createForLegacyAggregation(ClusterId.of("test", "local-development"1)));
+        setClusterInfo(ClusterInfo.createForLegacyAggregation(ClusterId.of("test", "local-development")));
         setAggregator(Aggregator.getDefault());
     }
 
