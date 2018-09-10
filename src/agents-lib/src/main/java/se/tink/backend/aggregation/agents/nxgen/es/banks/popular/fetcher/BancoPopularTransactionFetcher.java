@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularPersistentStorage;
@@ -27,23 +25,9 @@ public class BancoPopularTransactionFetcher implements TransactionDatePaginator<
     public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
         BancoPopularContract contract = persistentStorage.getLoginContracts().getFirstContract();
 
-        FetchTransactionsRequest fetchTransactionsRequest = new FetchTransactionsRequest()
-                .setCccBanco(intToZeroFilledString(contract.getBank()))
-                .setNumIntContrato(account.getBankIdentifier())
-                .setCccSucursal(intToZeroFilledString(contract.getOffice()))
-                .setFechaDesde(formatDate(fromDate))
-                .setFechaHasta(formatDate(toDate))
-                .updateCccFields(account.getAccountNumber());
+        FetchTransactionsRequest fetchTransactionsRequest = FetchTransactionsRequest.build(
+                contract, account, fromDate, toDate);
 
         return bankClient.fetchTransactions(fetchTransactionsRequest);
-    }
-
-    private String intToZeroFilledString(int i) {
-        return String.format("%04d", i);
-    }
-
-    private String formatDate(Date aDate) {
-        LocalDate date = new java.sql.Date(aDate.getTime()).toLocalDate();
-        return date.format(DateTimeFormatter.ISO_DATE);
     }
 }

@@ -33,7 +33,7 @@ public class BancoPopularConstants {
         public static final String OK = "OK";
         public static final String CAN_FETCH_MORE = "S";
 
-        public static final String TIPO_MOV_ECRMVTO_2 = "T";
+        public static final String MOVEMENT_TYPE = "T";
         public static final int CONCEP_ECRMVTO_2 = 98;
 
         public static final String CHECKING_ACCOUNT_IDENTIFIER = "A32";  // account
