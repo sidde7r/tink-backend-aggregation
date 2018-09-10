@@ -29,7 +29,7 @@ public class BancoPopularAccountFetcher extends BancoPopularContractFetcher impl
             if (selectCurrentContract(contract)) {
 
                 FetchAccountsRequest fetchAccountsRequest = FetchAccountsRequest.build(
-                        BancoPopularConstants.Fetcher.CUENTA);
+                        BancoPopularConstants.Fetcher.CHECKING_ACCOUNT_IDENTIFIER);
 
                 allAccounts.addAll(bankClient.fetchAccounts(fetchAccountsRequest)
                         .getTinkAccounts());

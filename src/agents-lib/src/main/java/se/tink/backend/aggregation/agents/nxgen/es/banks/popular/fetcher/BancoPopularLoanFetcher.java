@@ -27,7 +27,7 @@ public class BancoPopularLoanFetcher extends BancoPopularContractFetcher impleme
 
                 if (selectCurrentContract(contract)) {
                     FetchAccountsRequest fetchLoanAccountsRequest = FetchAccountsRequest.build(
-                            BancoPopularConstants.Fetcher.PRESTAMO);
+                            BancoPopularConstants.Fetcher.LOAN_ACCOUNT_IDENTIFIER);
 
                     String fetchLoanAccountsResponse = bankClient.fetchLoanAccounts(fetchLoanAccountsRequest);
                     if (fetchLoanAccountsResponse.contains("\"faultIndicator\":true")) {

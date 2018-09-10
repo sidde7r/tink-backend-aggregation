@@ -42,7 +42,7 @@ public class BancoPopularInvestmentFetcher extends BancoPopularContractFetcher i
 
     private void fetchFundAccounts() {
         FetchAccountsRequest fetchInvestmentAccountsRequest = FetchAccountsRequest.build(
-                BancoPopularConstants.Fetcher.FOND_SELECCION);
+                BancoPopularConstants.Fetcher.FUND_ACCOUNT_IDENTIFIER);
 
         String fetchInvestmentAccountsResponse = bankClient.fetchFundAccounts(fetchInvestmentAccountsRequest);
         // this is just to avoid unnecessary logging when no data is present
@@ -55,7 +55,7 @@ public class BancoPopularInvestmentFetcher extends BancoPopularContractFetcher i
 
     private void fetchSecuritiesAccounts() {
         FetchAccountsRequest fetchInvestmentAccountsRequest = FetchAccountsRequest.build(
-                BancoPopularConstants.Fetcher.SEGURO);
+                BancoPopularConstants.Fetcher.INSURANCE_ACCOUNT_IDENTIFIER);
 
         String fetchInvestmentAccountsResponse = bankClient.fetchSecuritiesAccounts(fetchInvestmentAccountsRequest);
         // this is just to avoid unnecessary logging when no data is present
@@ -67,7 +67,8 @@ public class BancoPopularInvestmentFetcher extends BancoPopularContractFetcher i
     }
 
     private void fetchCreditAccounts() {
-        FetchAccountsRequest request =  FetchAccountsRequest.build(BancoPopularConstants.Fetcher.CUENTA_CREDITO);
+        FetchAccountsRequest request =  FetchAccountsRequest.build(
+                BancoPopularConstants.Fetcher.CREDIT_CARD_ACCOUNT_IDENTIFIER);
 
         String response = bankClient.fetchCreditAccounts(request);
         // this is just to avoid unnecessary logging when no data is present

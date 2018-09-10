@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.rpc;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -26,19 +27,24 @@ import se.tink.backend.aggregation.annotations.JsonObject;
  */
 @JsonObject
 public class FetchAccountsRequest {
-    private String identificador;
-    private String nivel;
-    private String ocurrencias;
-    private String indicador3;
-    private String indicador5;
+    @JsonProperty("identificador")
+    private String identifier;
+    @JsonProperty("nivel")
+    private String level;
+    @JsonProperty("ocurrencias")
+    private String occurrences;
+    @JsonProperty("indicador3")
+    private String indicator3;
+    @JsonProperty("indicador5")
+    private String indicator5;
     private String page;
 
     private FetchAccountsRequest(String accountIdentifier) {
-        this.identificador = accountIdentifier;
-        this.nivel = BancoPopularConstants.Fetcher.NIVEL;
-        this.ocurrencias = BancoPopularConstants.Fetcher.OCURRENCIAS;
-        this.indicador3 = BancoPopularConstants.Fetcher.INDICADOR_3;
-        this.indicador5 = BancoPopularConstants.Fetcher.INDICADOR_5;
+        this.identifier = accountIdentifier;
+        this.level = BancoPopularConstants.Fetcher.LEVEL;
+        this.occurrences = BancoPopularConstants.Fetcher.OCCURRENCES;
+        this.indicator3 = BancoPopularConstants.Fetcher.INDICATOR_3;
+        this.indicator5 = BancoPopularConstants.Fetcher.INDICATOR_5;
         this.page = BancoPopularConstants.Fetcher.ACCOUNTS_PAGE;
 
     }
