@@ -25,6 +25,13 @@ public final class AccountResponse {
 
     private List<AccountEntity> accounts;
 
+    public AccountResponse() {
+    }
+
+    public AccountResponse(final List<AccountEntity> accountEntities) {
+        accounts = accountEntities;
+    }
+
     public Collection<TransactionalAccount.Builder<?, ?>> getTransactionalAccounts() {
         return Optional.ofNullable(accounts).orElse(Collections.emptyList())
                 .stream()
@@ -35,15 +42,13 @@ public final class AccountResponse {
 
     /**
      * @return true iff the account type is recognized.
-     * @throws NullPointerException if the account type was not found
+     * Logs an error if the account type was not found.
      */
     private static boolean validateAndLogAccountType(final AccountEntity accountEntity) {
-        final String accountTypeString = Preconditions.checkNotNull(accountEntity.getType()).trim();
-        final Optional<AccountTypes> accountType = stringToAccountType(accountTypeString);
+        final Optional<AccountTypes> accountType = entityToAccountType(accountEntity);
         if (!accountType.isPresent()) {
-            logger.warn("{} - Received unknown account type: {} for account entity {}",
-                    HVBConstants.LogTags.HVB_UNKNOWN_ACCOUNT_TYPE.toTag(),
-                    accountTypeString,
+            logger.error("{} - Could not figure out account type for account entity {}",
+                    HVBConstants.LogTags.HVB_UNRECOGNIZED_ACCOUNT_TYPE.toTag(),
                     SerializationUtils.serializeToString(accountEntity)
             );
             return false;
@@ -52,14 +57,42 @@ public final class AccountResponse {
     }
 
     private static AccountTypes getAccountType(final AccountEntity accountEntity) {
+        return entityToAccountType(accountEntity).orElseThrow(IllegalStateException::new);
+    }
+
+    private static Optional<AccountTypes> entityToAccountType(final AccountEntity accountEntity) {
         final String accountTypeString = Preconditions.checkNotNull(accountEntity.getType()).trim();
-        return stringToAccountType(accountTypeString).orElseThrow(IllegalStateException::new);
+        final Optional<AccountTypes> type = stringToAccountType(accountTypeString);
+        if (!type.isPresent()) {
+            logger.warn("{} - Received unknown account type: {} for account entity {}",
+                    HVBConstants.LogTags.HVB_UNKNOWN_ACCOUNT_TYPE.toTag(),
+                    accountTypeString,
+                    SerializationUtils.serializeToString(accountEntity)
+            );
+            final String title = Optional.ofNullable(accountEntity.getTitle())
+                    .map(String::trim)
+                    .orElse("");
+            return titleToAccountType(title);
+        }
+        return type;
+    }
+
+    private static Optional<AccountTypes> titleToAccountType(@Nonnull final String accountTitle) {
+        final String upperCaseTitle = accountTitle.toUpperCase();
+        if (HVBConstants.CHECKING_ACCOUNT_TITLE_SUBSTRINGS.stream().anyMatch(upperCaseTitle::contains)) {
+            return Optional.of(AccountTypes.CHECKING);
+        } else if (HVBConstants.SAVINGS_ACCOUNT_TITLE_SUBSTRINGS.stream().anyMatch(upperCaseTitle::contains)) {
+            return Optional.of(AccountTypes.SAVINGS);
+        }
+        return Optional.empty();
     }
 
     private static Optional<AccountTypes> stringToAccountType(@Nonnull final String accountType) {
         switch (accountType) {
         case "2":
             return Optional.of(AccountTypes.CHECKING);
+        case "6":
+            return Optional.of(AccountTypes.SAVINGS);
         default:
             return Optional.empty();
         }
@@ -70,8 +103,7 @@ public final class AccountResponse {
         return string == null ? null : string.trim();
     }
 
-    private static TransactionalAccount.Builder<?, ?> toTransactionalAccount(
-            final AccountEntity accountEntity) {
+    private static TransactionalAccount.Builder<?, ?> toTransactionalAccount(final AccountEntity accountEntity) {
         final String currency = trimNullable(accountEntity.getCurrency());
         final Double balance = accountEntity.getCurrentBalance();
         final String bic = Preconditions.checkNotNull(accountEntity.getBic());

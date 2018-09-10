@@ -1,9 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -15,6 +11,20 @@ public final class AccountEntity {
     private String title;
     private String bic;
     private String type;
+
+    public AccountEntity() {
+    }
+
+    public AccountEntity(final Double currentBalance, final String iban, final String number, final String currency,
+            final String title, final String bic, final String type) {
+        this.currentBalance = currentBalance;
+        this.iban = iban;
+        this.number = number;
+        this.currency = currency;
+        this.title = title;
+        this.bic = bic;
+        this.type = type;
+    }
 
     public Double getCurrentBalance() {
         return currentBalance;

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.hvb;
 
+import com.google.common.collect.ImmutableSet;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
@@ -53,8 +54,21 @@ public final class HVBConstants {
                     + "VY04ZL62s9Qa9HK5LlMXCCtXaI8Oixq1B+RkyR5rov5IBy5NhEgOEqvJvN7JlNR0"
                     + "NgKyrHSPgFEsGXJdsPkHCkdDLNaZgFebgI2YHD3bljTgJODwrv8=";
 
+    public static final ImmutableSet<String> CHECKING_ACCOUNT_TITLE_SUBSTRINGS = ImmutableSet.<String>builder()
+            .add("KONTO START") // Observed as "HVB Konto Start", a.k.a. "HVB StartKonto"
+            .add("AKTIVKONTO") // Observed as "HVB AktivKonto"
+            .add("PLUSKONTO")
+            .add("EXKLUSIVKONTO")
+            .build();
+
+    public static final ImmutableSet<String> SAVINGS_ACCOUNT_TITLE_SUBSTRINGS = ImmutableSet.<String>builder()
+            .add("KOMFORTSPAREN")
+            .add("SPARKARTE") // Observed as "FCB SparKarte"
+            .build();
+
     public enum LogTags {
-        HVB_UNKNOWN_ACCOUNT_TYPE;
+        HVB_UNKNOWN_ACCOUNT_TYPE,
+        HVB_UNRECOGNIZED_ACCOUNT_TYPE;
 
         public LogTag toTag() {
             return LogTag.from("#" + name());
