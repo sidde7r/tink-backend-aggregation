@@ -92,6 +92,7 @@ def create_credentials():
 	r = requests.post(AGGREGATION_HOST + '/aggregation/create', data=json.dumps(credentialsRequest), headers=POST_HEADERS)
 	credential = json.loads(r.text)
 	credential['timestamp'] = get_time_in_millis()
+	credential['supplementalInformation'] = ""
 	CREDENTIALS_TABLE.insert(credential)
 	return prettify_dict({'credentialsId': credential['id']})
 
@@ -105,8 +106,18 @@ def refresh_credentials(cid):
 	CREDENTIALS_TABLE.update({'status': 'AUTHENTICATING', 'timestamp': get_time_in_millis()}, where('id') == cid)
 	credentialsRequest = create_credentials_request(cid)
 	credentialsRequest['manual'] = True
-	del credentialsRequest['credentials']['timestamp']
+	#del credentialsRequest['credentials']['timestamp']
 	r = requests.post(AGGREGATION_HOST + '/aggregation/refresh', data=json.dumps(credentialsRequest), headers=POST_HEADERS)
+	return ('', 204)
+
+@app.route("/credentials/whitelist/<cid>", methods = ['POST'])
+def whitelist_credentials(cid):
+	credentials = CREDENTIALS_TABLE.search(Query().id == cid)
+	if not credentials:
+		abort(400, 'Not a valid credentials id.')
+
+	credentialsRequest = create_credentials_request(cid)
+	r = requests.post(AGGREGATION_HOST + '/aggregation/configure/whitelist', data=json.dumps(credentialsRequest), headers=POST_HEADERS)
 	return ('', 204)
 
 @app.route("/credentials/supplemental", methods = ['POST'])
@@ -146,7 +157,6 @@ def reencrypt_credentials(cid):
 
 @app.route("/providers/list/<market>", methods = ['GET'])
 def list_provider_by_market(market):
-	print market
 	return requests.get(PROVIDER_HOST + '/providers/' + market + '/list', headers=GET_HEADERS).text
 
 @app.route("/providers/<providername>", methods = ['GET'])
@@ -179,6 +189,9 @@ def get_credential(id):
 		'timestamp': credentials[0]['timestamp']
 	}
 
+	if credentials[0]['status'] == "AWAITING_SUPPLEMENTAL_INFORMATION":
+		response['supplementalInformation'] = credentials[0]['supplementalInformation']
+
 	return (prettify_dict(response), 200)
 
 @app.route("/ping", methods = ['GET'])
@@ -193,7 +206,7 @@ def ping():
 def update_credentials_status():
 	responseObject = get_json(request)
 	credentials = responseObject['credentials']
-	CREDENTIALS_TABLE.update({'status': credentials['status'], 'timestamp': get_time_in_millis()}, where('id') == credentials['id'])
+	CREDENTIALS_TABLE.update({'status': credentials['status'], 'timestamp': get_time_in_millis(), 'supplementalInformation': credentials['supplementalInformation']}, where('id') == credentials['id'])
 	return Response({}, status=200, mimetype="application/json")
 
 @app.route("/aggregation/controller/v1/system/update/accounts/update", methods = ['POST'])

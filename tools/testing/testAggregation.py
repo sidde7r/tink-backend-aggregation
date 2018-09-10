@@ -12,6 +12,7 @@ SERVER_HOST = 'http://127.0.0.1:5000'
 CREATE_CREDENTIAL = SERVER_HOST + '/credentials/create'
 REFRESH_CREDENTIAL = SERVER_HOST + '/credentials/refresh/{}'
 STATUS_CREDENTIAL = SERVER_HOST + '/credentials/status/{}'
+WHITELIST_CREDENTIAL = SERVER_HOST + '/credentials/whitelist/{}'
 REENCRYPT_CREDENTIAL = SERVER_HOST + '/credentials/reencrypt/{}'
 LIST_CREDENTIALS = SERVER_HOST + '/credentials/list'
 SUPPLEMENTAL = SERVER_HOST + '/credentials/supplemental'
@@ -27,6 +28,7 @@ GET_OPERATION = ['get', 'g']
 LIST_OPERATION = ['list', 'l']
 REFRESH_OPERATION = ['refresh', 'r']
 REENCRYPT_OPERATION = ['reencrypt', 'y']
+WHITELIST_OPERATION = ['whitelist', 'w']
 CREATE_OPERATION = ['create', 'c']
 ACCOUNT_OPERATION = ['account', 'a']
 CREDENTIALS_OPERATION = ['credentials', 'c']
@@ -110,6 +112,13 @@ def refresh_credential():
         if currentStatus['status'] == 'UPDATED':
             return '\nRefresh completed.'
 
+def whitelist_accounts():
+    credentialsId = raw_input('Credentials id: ')
+    responseObject = requests.post(str.format(WHITELIST_CREDENTIAL, credentialsId))
+
+    if responseObject.status_code is not 204:
+        return json.loads(responseObject.text)['message']
+
 def reencrypt_credentials():
     credentialsId = raw_input('Credentials id: ')
     responseObject = requests.post(str.format(REENCRYPT_CREDENTIAL, credentialsId))
@@ -136,6 +145,16 @@ def supplemental_information(cid=None):
     if not cid:
         cid = raw_input('Credentials id: ')
     
+    credentials = json.loads(credentials_status(cid))
+
+    if credentials['status'] != "AWAITING_SUPPLEMENTAL_INFORMATION":
+        return "\nCredentials is not awaiting supplemental information."
+
+    if not credentials['supplementalInformation']:
+        return "\nCredentials is awaiting supplemental information, but no information provided from aggregation."
+
+    print prettify(json.loads(credentials['supplementalInformation']))
+
     supplemental = raw_input('Aggregation is requesting supplemental information: ')
     supplementalRequest = {
         'credentialsId': cid,
@@ -195,6 +214,7 @@ def credentials():
 | Supplemental information: supp / s  |
 | List accounts: accounts / a         |
 | Reencrypt credential: reencrypt / y |
+| Whitelist accounts: whitelist / w   |
 |                                     |
 | Exit: exit / e                      |
 |                                     |
@@ -219,6 +239,8 @@ def credentials():
             print list_accounts()
         elif userInput in REENCRYPT_OPERATION:
             print reencrypt_credentials()
+        elif userInput in WHITELIST_OPERATION:
+            print whitelist_accounts()
         
 
 def providers():
