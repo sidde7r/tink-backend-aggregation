@@ -35,7 +35,7 @@ public final class AccountResponse {
 
     /**
      * @return true iff the account type is recognized.
-     * @throws NullPointerException if the account type was not found
+     * Logs an error if the account type was not found.
      */
     private static boolean validateAndLogAccountType(final AccountEntity accountEntity) {
         final Optional<AccountTypes> accountType = entityToAccountType(accountEntity);
