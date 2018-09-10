@@ -2095,6 +2095,12 @@ maven_jar(
 )
 
 maven_jar(
+    name = "org_hamcrest_hamcrest_library",
+    artifact = "org.hamcrest:hamcrest-library:1.3",
+    sha1 = "4785a3c21320980282f9f33d0d1264a69040538f",
+)
+
+maven_jar(
     name = "io_protostuff_protostuff_runtime",
     artifact = "io.protostuff:protostuff-runtime:1.5.1",
     sha1 = "9cb10e589b733d1eff3a14af9eaef7ce2c0292ad",

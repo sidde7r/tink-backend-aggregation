@@ -756,6 +756,7 @@ junit_test(
         "//third_party:tink_org_apache_httpcomponents_httpclient",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_bouncycastle_bcpkix_jdk15on",
+        "//third_party:org_hamcrest_hamcrest_library",
         "//third_party:org_mockito_mockito_core",
         "//third_party:net_bytebuddy_byte_buddy",
         "//third_party:org_objenesis_objenesis",
