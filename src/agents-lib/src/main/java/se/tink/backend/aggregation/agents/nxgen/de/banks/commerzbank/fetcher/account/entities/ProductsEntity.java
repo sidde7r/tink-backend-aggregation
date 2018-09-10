@@ -314,7 +314,7 @@ public class ProductsEntity {
     }
 
     //Commerzbank sometimes sends ProductId as null, which means we cannot map the account type
-    public boolean hasValidProductId(){
+    public boolean hasValidProductId() {
         return productId != null;
     }
 
@@ -325,7 +325,8 @@ public class ProductsEntity {
         case CommerzbankConstants.DISPLAYCATEGORYINDEX.SAVINGS_OR_INVESTMENT:
             return getSavingsOrInvestment();
         default:
-            LOGGER.warnExtraLong(String.format("displayCategoryIndex: %s", productType.getDisplayCategoryIndex()), CommerzbankConstants.LOGTAG.UNKNOWN_ACCOUNT_TYPE);
+            LOGGER.warnExtraLong(String.format("displayCategoryIndex: %s", productType.getDisplayCategoryIndex()),
+                    CommerzbankConstants.LOGTAG.UNKNOWN_ACCOUNT_TYPE);
             return AccountTypes.OTHER;
         }
     }
@@ -354,6 +355,7 @@ public class ProductsEntity {
                 .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
                 .putInTemporaryStorage(CommerzbankConstants.HEADERS.IDENTIFIER, getProductId().getIdentifier())
                 .putInTemporaryStorage(CommerzbankConstants.HEADERS.PRODUCT_TYPE, getProductId().getProductType())
+                .putInTemporaryStorage(CommerzbankConstants.HEADERS.PRODUCT_BRANCH, getProductType().getProductBranch())
                 .build();
     }
 
@@ -367,6 +369,7 @@ public class ProductsEntity {
                         getProductId().getIdentifier())
                 .putInTemporaryStorage(CommerzbankConstants.HEADERS.CREDIT_CARD_PRODUCT_TYPE,
                         getProductId().getProductType())
+                .putInTemporaryStorage(CommerzbankConstants.HEADERS.PRODUCT_BRANCH, getProductType().getProductBranch())
                 .build();
     }
 

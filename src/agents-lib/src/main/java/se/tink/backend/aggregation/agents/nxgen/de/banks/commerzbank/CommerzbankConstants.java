@@ -21,6 +21,7 @@ public class CommerzbankConstants {
         public static final String IDENTIFIER = "identifier";
         public static final String CREDIT_CARD_PRODUCT_TYPE = "creditcardProductType";
         public static final String CREDIT_CARD_IDENTIFIER = "creditcardIdentifier";
+        public static final String PRODUCT_BRANCH = "productBranch";
     }
 
     public static class VALUES {

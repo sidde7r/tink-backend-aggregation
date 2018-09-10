@@ -37,10 +37,11 @@ public class CommerzbankCreditCardFetcher implements AccountFetcher<CreditCardAc
     public PaginatorResponse getTransactionsFor(CreditCardAccount account, int page) {
         String productType = account.getFromTemporaryStorage(CommerzbankConstants.HEADERS.CREDIT_CARD_PRODUCT_TYPE);
         String identifier = account.getFromTemporaryStorage(CommerzbankConstants.HEADERS.CREDIT_CARD_IDENTIFIER);
+        String productBranch = account.getFromTemporaryStorage(CommerzbankConstants.HEADERS.PRODUCT_BRANCH);
 
         if (!Strings.isNullOrEmpty(productType) && !Strings.isNullOrEmpty(identifier)) {
             try {
-                return apiClient.transactionOverview(productType, identifier, page).getItems()
+                return apiClient.transactionOverview(productType, identifier, page, productBranch).getItems()
                         .get(0);
             } catch (Exception e) {
                 LOGGER.warnExtraLong(e.toString(), CommerzbankConstants.LOGTAG.CREDIT_CARD_FETCHING_ERROR);
