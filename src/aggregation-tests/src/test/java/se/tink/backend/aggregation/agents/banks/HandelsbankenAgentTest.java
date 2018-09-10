@@ -4,7 +4,7 @@ import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import java.io.File;
 import java.util.Date;
-import se.tink.org.apache.http.impl.cookie.BasicClientCookie;
+import tink.org.apache.http.impl.cookie.BasicClientCookie;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;

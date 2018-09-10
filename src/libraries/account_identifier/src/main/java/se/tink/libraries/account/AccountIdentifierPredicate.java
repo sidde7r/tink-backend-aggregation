@@ -4,7 +4,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import java.util.Objects;
-import se.tink.org.apache.http.NameValuePair;
+import tink.org.apache.http.NameValuePair;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 
 public class AccountIdentifierPredicate {

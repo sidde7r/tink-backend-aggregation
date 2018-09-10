@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
-import se.tink.org.apache.http.impl.cookie.BasicClientCookie;
+import tink.org.apache.http.impl.cookie.BasicClientCookie;
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
