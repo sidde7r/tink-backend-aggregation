@@ -3,25 +3,26 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenti
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.rpc.Credentials;
 
 public class AuthenticateResponse extends BaseResponse {
 
     private static final AggregationLogger LOGGER = new AggregationLogger(AuthenticateResponse.class);
 
-    public BankIdStatus toBankIdStatus(Credentials credentials) {
+    public BankIdStatus toBankIdStatus() throws LoginException {
         String authenticateResult = getResult();
         if (HandelsbankenSEConstants.BankIdAuthentication.DONE.equalsIgnoreCase(authenticateResult)) {
             return BankIdStatus.DONE;
         }
         if (HandelsbankenSEConstants.BankIdAuthentication.MUST_ACTIVATE.equalsIgnoreCase(authenticateResult)) {
-            LOGGER.info("Got " + HandelsbankenSEConstants.BankIdAuthentication.MUST_ACTIVATE);
-            return BankIdStatus.NO_CLIENT;
+            throw LoginError.INCORRECT_CREDENTIALS.exception(
+                    HandelsbankenSEConstants.BankIdUserMessages.ACTIVATION_NEEDED);
         }
 
         String statusCode = getCode();

@@ -24,13 +24,17 @@ public class HandelsbankenSEConstants {
     }
 
     public static final class BankIdAuthentication {
-
         public static final String UNKNOWN_BANKID = "102";
         public static final String BANKID_UNAUTHORIZED = "104";
         public static final String TIMEOUT = "110";
         public static final String CANCELLED = "111";
         public static final String MUST_ACTIVATE = "MUST_ACTIVATE";
         public static final String DONE = "AUTHENTICATED";
+    }
+
+    public static final class BankIdUserMessages {
+        public static final LocalizableKey ACTIVATION_NEEDED =
+                new LocalizableKey("You need to activate your BankID in the Handelsbanken app.");
     }
 
     public static final class Authentication {
