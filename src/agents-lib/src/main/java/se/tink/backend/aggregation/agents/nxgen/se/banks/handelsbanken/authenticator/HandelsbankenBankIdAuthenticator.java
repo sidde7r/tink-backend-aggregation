@@ -53,7 +53,7 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ini
         }
 
         AuthenticateResponse authenticate = client.authenticate(initBankId);
-        BankIdStatus bankIdStatus = authenticate.toBankIdStatus(credentials);
+        BankIdStatus bankIdStatus = authenticate.toBankIdStatus();
         if (bankIdStatus == BankIdStatus.DONE) {
             AuthorizeResponse authorize = client.authorize(authenticate);
 
@@ -66,6 +66,4 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ini
         }
         return bankIdStatus;
     }
-
-
 }
