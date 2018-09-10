@@ -4,9 +4,11 @@ import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.rpc.Account;
+import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
+import se.tink.backend.aggregation.rpc.WhitelistRequest;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.agents.SetAccountsToAggregateContext;
@@ -43,26 +45,28 @@ public class SelectAccountsToAggregateCommand extends AgentWorkerCommand {
 
         // handle black list removal
         List<Account> allExceptForBlacklisted = allAccounts.stream().filter(x -> !shouldNotAggregateDataForAccount(accountsFromRequest, x)).collect(Collectors.toList());
-        if (!(refreshInformationRequest instanceof RefreshWhitelistInformationRequest)) {
+        if (!(refreshInformationRequest instanceof WhitelistRequest)) {
             context.setAccountsToAggregate(allExceptForBlacklisted);
             return AgentWorkerCommandResult.CONTINUE;
         }
 
         // handle opt-in inclusion
-        RefreshWhitelistInformationRequest whiteListRequest = (RefreshWhitelistInformationRequest) refreshInformationRequest;
-        if (whiteListRequest.isOptIn()) {
+        if (refreshInformationRequest instanceof ConfigureWhitelistInformationRequest) {
             context.setAccountsToAggregate(
-                    allExceptForBlacklisted.stream().filter(a -> uniqueIdOfUserSelectedAccounts.contains(a.getBankId())).collect
-                            (Collectors.toList())
-            );
+                    allExceptForBlacklisted.stream()
+                            .filter(a -> uniqueIdOfUserSelectedAccounts.contains(a.getBankId()))
+                            .collect(Collectors.toList()));
             return AgentWorkerCommandResult.CONTINUE;
         }
 
         // handle whitelist-only inclusion
-        List<String> accountIdsFromRequest = accountsFromRequest.stream().map(Account::getBankId).collect(Collectors.toList());
+        List<String> accountIdsFromRequest = accountsFromRequest.stream()
+                .map(Account::getBankId)
+                .collect(Collectors.toList());
         context.setAccountsToAggregate(
-                allExceptForBlacklisted.stream().filter(a -> accountIdsFromRequest.contains(a.getBankId())).collect(Collectors.toList())
-        );
+                allExceptForBlacklisted.stream()
+                        .filter(a -> accountIdsFromRequest.contains(a.getBankId()))
+                        .collect(Collectors.toList()));
         return AgentWorkerCommandResult.CONTINUE;
     }
 

@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.models.RefreshInformation;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
+import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.CreateCredentialsRequest;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.DeleteCredentialsRequest;
@@ -113,6 +114,12 @@ public class AggregationServiceResource implements AggregationService {
         }
 
         return "pong";
+    }
+
+    @Override
+    public void configureWhitelistInformation(final ConfigureWhitelistInformationRequest request,
+            ClusterInfo clusterInfo) throws Exception {
+        agentWorker.execute(agentWorkerCommandFactory.createConfigureWhitelistOperation(clusterInfo, request));
     }
 
     @Override
