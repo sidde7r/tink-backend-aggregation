@@ -21,6 +21,7 @@ public class CommerzbankConstants {
         public static final String IDENTIFIER = "identifier";
         public static final String CREDIT_CARD_PRODUCT_TYPE = "creditcardProductType";
         public static final String CREDIT_CARD_IDENTIFIER = "creditcardIdentifier";
+        public static final String PRODUCT_BRANCH = "productBranch";
     }
 
     public static class VALUES {
@@ -58,6 +59,7 @@ public class CommerzbankConstants {
         public static final LogTag MULTIBANKING_PRODUCTS = LogTag.from("#commerzbank_multibanking_products");
         public static final LogTag MULTIBANKING_ERROR = LogTag.from("#commerzbank_multibanking_error");
         public static final LogTag TRANSACTION_LOGGING = LogTag.from("#commerzbank_transaction_logging");
+        public static final LogTag TRANSACTION_RESPONSE = LogTag.from("#commerzbank_transaction_response");
         public static final LogTag CREDIT_CARD_FETCHING_ERROR = LogTag.from("#commerzbank_credit_card_fetching_error");
         public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("#commerzbank_unknown_account_type");
     }

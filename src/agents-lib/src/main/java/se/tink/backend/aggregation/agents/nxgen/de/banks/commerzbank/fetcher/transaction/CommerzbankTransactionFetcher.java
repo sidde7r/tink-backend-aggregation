@@ -24,10 +24,11 @@ public class CommerzbankTransactionFetcher implements TransactionPagePaginator<T
 
         String productType = account.getFromTemporaryStorage(CommerzbankConstants.HEADERS.PRODUCT_TYPE);
         String identifier = account.getFromTemporaryStorage(CommerzbankConstants.HEADERS.IDENTIFIER);
+        String productBranch = account.getFromTemporaryStorage(CommerzbankConstants.HEADERS.PRODUCT_BRANCH);
 
         TransactionResultEntity transactionResultEntity;
         try {
-            transactionResultEntity = apiClient.transactionOverview(productType, identifier, page);
+            transactionResultEntity = apiClient.transactionOverview(productType, identifier, page, productBranch);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("The transaction search is invalid");
         }
