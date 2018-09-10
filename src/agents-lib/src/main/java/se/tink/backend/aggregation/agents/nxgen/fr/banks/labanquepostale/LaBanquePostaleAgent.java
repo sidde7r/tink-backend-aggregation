@@ -3,12 +3,15 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale.authenticatior.LaBanquePostaleAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale.fetcher.transactionalaccount.LaBanquePostaleTransactionalAccountFetcher;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
@@ -30,6 +33,7 @@ public class LaBanquePostaleAgent extends NextGenerationAgent {
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
+       
     }
 
     @Override
@@ -38,9 +42,22 @@ public class LaBanquePostaleAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController>
-    constructTransactionalAccountRefreshController() {
-        return Optional.empty();
+    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
+        LaBanquePostaleTransactionalAccountFetcher fetcher = new LaBanquePostaleTransactionalAccountFetcher(apiClient);
+        return Optional.of(
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        fetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionPagePaginationController<>(
+                                        fetcher,
+                                        0
+                                )
+                        )
+                )
+        );
     }
 
     @Override

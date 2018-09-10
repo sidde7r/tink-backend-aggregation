@@ -9,14 +9,15 @@ import se.tink.backend.aggregation.rpc.Field;
 @Ignore
 public class LaBanquePostaleAgentTest {
 
-    private final String TEST_USERNAME = "NNNN";
-    private final String TEST_PASSWORD = "NNNN";
+    private final String TEST_USERNAME = "";
+    private final String TEST_PASSWORD = "";
 
     private AgentIntegrationTest.Builder builder;
 
     @Before
-    public void setup(){
-        builder = new AgentIntegrationTest.Builder("fr", "fr-labanquepostale-password")
+    public void setup() {
+        builder = new AgentIntegrationTest.Builder(LaBanquePostaleConstants.MARKET,
+                LaBanquePostaleConstants.PROVIDER_NAME)
                 .addCredentialField(Field.Key.USERNAME, TEST_USERNAME)
                 .addCredentialField(Field.Key.PASSWORD, TEST_PASSWORD)
                 .loadCredentialsBefore(false)
@@ -25,7 +26,6 @@ public class LaBanquePostaleAgentTest {
 
     @Test
     public void testRefresh() throws Exception {
-
         builder.build().testRefresh();
     }
 }

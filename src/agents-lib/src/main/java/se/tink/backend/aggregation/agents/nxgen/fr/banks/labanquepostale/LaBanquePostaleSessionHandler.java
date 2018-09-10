@@ -15,6 +15,7 @@ public class LaBanquePostaleSessionHandler implements SessionHandler {
 
     @Override
     public void logout() {
+        apiClient.getDisconnection();
     }
 
     @Override
