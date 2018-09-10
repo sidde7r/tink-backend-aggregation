@@ -20,6 +20,10 @@ public class Aggregator {
         return this.aggregatorIdentifier;
     }
 
+    public void setAggregatorIdentifier(String aggregatorIdentifier) {
+        this.aggregatorIdentifier = aggregatorIdentifier;
+    }
+
     public static Aggregator of(String aggregatorIdentifier) {
         return new Aggregator(aggregatorIdentifier);
     }
