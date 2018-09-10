@@ -91,8 +91,12 @@ public class CommerzbankApiClient {
                         productBranch));
         String serialized = new ObjectMapper().writeValueAsString(transactionRequestBody);
 
-        TransactionResultEntity result = makeRequest(CommerzbankConstants.URLS.TRANSACTIONS)
-                .post(TransactionModel.class, serialized).getResult();
+        String res = makeRequest(CommerzbankConstants.URLS.TRANSACTIONS)
+                .post(String.class, serialized);
+
+        LOGGER.infoExtraLong(res, CommerzbankConstants.LOGTAG.TRANSACTION_RESPONSE);
+
+        TransactionResultEntity result = SerializationUtils.deserializeForLogging(res, TransactionModel.class).get().getResult();
 
         LOGGER.infoExtraLong(SerializationUtils.serializeToString(result),
                 CommerzbankConstants.LOGTAG.TRANSACTION_LOGGING);
