@@ -83,7 +83,7 @@ public class AccountEntity {
 
     @JsonIgnore
     public TransactionalAccount toTinkAccount() {
-        return CheckingAccount.builder(formatAccountNumber(), getTinkBalance())
+        return CheckingAccount.builder(formatAccountNumber().toLowerCase(), getTinkBalance())
                 .setAccountNumber(formatAccountNumber())
                 .setName(contractType)
                 .setBankIdentifier(Integer.toString(contractNumber))
