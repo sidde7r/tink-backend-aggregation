@@ -7,6 +7,6 @@ import se.tink.backend.common.config.SignatureKeyPair;
 
 public class CicBankAgent extends EuroInformationAgent {
     public CicBankAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair, new CicBankconfiguration());
+        super(request, context, signatureKeyPair, new CicBankConfiguration());
     }
 }

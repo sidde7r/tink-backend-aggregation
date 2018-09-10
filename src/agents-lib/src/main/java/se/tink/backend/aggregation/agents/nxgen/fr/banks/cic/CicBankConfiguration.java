@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.cic;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationConfiguration;
 
-public class CicBankconfiguration implements EuroInformationConfiguration {
+public class CicBankConfiguration implements EuroInformationConfiguration {
     @Override
     public String getUrl() {
         return CicBankConstants.URL;
