@@ -39,6 +39,10 @@ public class CommerzbankPasswordAuthenticator implements PasswordAuthenticator {
             if (response.getBody(RootModel.class).getError().getCode()
                     .equalsIgnoreCase(CommerzbankConstants.ERRORS.PIN_ERROR)) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+            else if (response.getBody(RootModel.class).getError().getCode()
+                    .equalsIgnoreCase(CommerzbankConstants.ERRORS.ACCOUNT_SESSION_ACTIVE_ERROR)) {
+                throw LoginError.COMMERZBANK_SESSION_ALREADY_ACTIVE.exception();
             } else {
                 final String message = String.format("Failed to login because: %s",
                         response.getBody(RootModel.class).getError().getMessage());

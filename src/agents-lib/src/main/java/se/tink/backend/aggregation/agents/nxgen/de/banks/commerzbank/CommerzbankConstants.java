@@ -51,6 +51,7 @@ public class CommerzbankConstants {
 
     public static class ERRORS {
         public static final String PIN_ERROR = "login.pin.error.10203";
+        public static final String ACCOUNT_SESSION_ACTIVE_ERROR = "login.pin.error.10205";
     }
 
     public static class LOGTAG {
