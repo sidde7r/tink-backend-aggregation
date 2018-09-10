@@ -1,199 +1,167 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularConstants;
+import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.core.Amount;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonObject
 public class TransactionEntity {
-    private int numSecuenMov;
-    private Date fecmvtoEcrmvto2211;
-    private String conceptoMov;   // description
-    private String tipoMov;
-    private double importeMov;  // amount
-    private String signoImporteMov;
-    private Date fecvalorEcrmvto221;
-    private String codMoneda; // currency
-    private double importeCV;  // amount
-    private String codMonedaCV;  // currency
-    private int indicador;
-    private double saldoCont;  //
-    private String signoCont;
+    @JsonIgnore
+    private static final Pattern TRANSACTION_DESCRIPTION_PATTERN =
+            Pattern.compile(BancoPopularConstants.Fetcher.MERCHANT_NAME_REGEX);
+
+    @JsonProperty("numSecuenMov")
+    private int sequenceNumber;
+    @JsonProperty("fecmvtoEcrmvto2211")
+    private Date transactionDate;
+    @JsonProperty("conceptoMov")
+    private String description;
+    @JsonProperty("tipoMov")
+    private String type;
+    @JsonProperty("importeMov")
+    private int amount;
+    @JsonProperty("signoImporteMov")
+    private String amountSign;
+    @JsonProperty("fecvalorEcrmvto221")
+    private Date valueDate;
+    @JsonProperty("codMoneda")
+    private String currencyCode;
+    @JsonProperty("importeCV")
+    private int amountCv;
+    @JsonProperty("codMonedaCV")
+    private String currencyCodeCv;
+    @JsonProperty("indicador")
+    private int indicator;
+    @JsonProperty("saldoCont")
+    private int accountBalance;
+    @JsonProperty("signoCont")
+    private String accountSign;
     private String indE;
     private int refE;
-    private String indDuplicado;
-    private int codServicio;
-    private String contIdentOperServicio;
-    private String indicaRss;
+    @JsonProperty("indDuplicado")
+    private String indDuplicate;
+    @JsonProperty("codServicio")
+    private int serviceCode;
+    @JsonProperty("contIdentOperServicio")
+    private String accountIdentiferOperationService;
+    @JsonProperty("indicaRss")
+    private String rssIndicator;
 
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setAmount(Amount.inEUR(convertToAmount(importeMov, signoImporteMov)))
-                .setDate(fecmvtoEcrmvto2211)
-                .setDescription(conceptoMov)
+                .setAmount(Amount.inEUR(convertToAmount(amount, amountSign)))
+                .setDate(transactionDate)
+                .setDescription(getFormattedDescription())
                 .build();
     }
 
-    // sign is set in separate field
-    private double convertToAmount(double importeMov, String signoImporteMov) {
-        if (BancoPopularConstants.Fetcher.AMOUNT_SIGN_INDICATOR_1.equalsIgnoreCase(signoImporteMov)
-                || BancoPopularConstants.Fetcher.AMOUNT_SIGN_INDICATOR_2.equals(signoImporteMov)) {
-            return -importeMov;
+    /**
+     * Sign is set in separate field, use this when converting to Tink amount
+     */
+    @JsonIgnore
+    private double convertToAmount(double amount, String amountSign) {
+        if (BancoPopularConstants.Fetcher.AMOUNT_SIGN_INDICATOR_1.equalsIgnoreCase(amountSign)
+                || BancoPopularConstants.Fetcher.AMOUNT_SIGN_INDICATOR_2.equals(amountSign)) {
+            return -amount;
         }
-        return importeMov;
+        return amount;
     }
 
-    public int getNumSecuenMov() {
-        return numSecuenMov;
+    @JsonIgnore
+    private String getFormattedDescription() {
+        Matcher matcher = TRANSACTION_DESCRIPTION_PATTERN.matcher(getDescription());
+
+        if (matcher.find()) {
+            return matcher.group(BancoPopularConstants.Fetcher.MERCHANT_NAME);
+        }
+
+        return getDescription();
     }
 
-    public void setNumSecuenMov(int numSecuenMov) {
-        this.numSecuenMov = numSecuenMov;
+    public int getSequenceNumber() {
+        return sequenceNumber;
     }
 
-    public Date getFecmvtoEcrmvto2211() {
-        return fecmvtoEcrmvto2211;
+    public Date getTransactionDate() {
+        return transactionDate;
     }
 
-    public void setFecmvtoEcrmvto2211(Date fecmvtoEcrmvto2211) {
-        this.fecmvtoEcrmvto2211 = fecmvtoEcrmvto2211;
+    public String getDescription() {
+        return Optional.ofNullable(description).orElse("").trim();
     }
 
-    public String getConceptoMov() {
-        return conceptoMov;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public void setConceptoMov(String conceptoMov) {
-        this.conceptoMov = conceptoMov;
+    public String getType() {
+        return type;
     }
 
-    public String getTipoMov() {
-        return tipoMov;
+    public int getAmount() {
+        return amount;
     }
 
-    public void setTipoMov(String tipoMov) {
-        this.tipoMov = tipoMov;
+    public String getAmountSign() {
+        return amountSign;
     }
 
-    public double getImporteMov() {
-        return importeMov;
+    public Date getValueDate() {
+        return valueDate;
     }
 
-    public void setImporteMov(double importeMov) {
-        this.importeMov = importeMov;
+    public String getCurrencyCode() {
+        return currencyCode;
     }
 
-    public String getSignoImporteMov() {
-        return signoImporteMov;
+    public int getAmountCv() {
+        return amountCv;
     }
 
-    public void setSignoImporteMov(String signoImporteMov) {
-        this.signoImporteMov = signoImporteMov;
+    public String getCurrencyCodeCv() {
+        return currencyCodeCv;
     }
 
-    public Date getFecvalorEcrmvto221() {
-        return fecvalorEcrmvto221;
+    public int getIndicator() {
+        return indicator;
     }
 
-    public void setFecvalorEcrmvto221(Date fecvalorEcrmvto221) {
-        this.fecvalorEcrmvto221 = fecvalorEcrmvto221;
+    public int getAccountBalance() {
+        return accountBalance;
     }
 
-    public String getCodMoneda() {
-        return codMoneda;
-    }
-
-    public void setCodMoneda(String codMoneda) {
-        this.codMoneda = codMoneda;
-    }
-
-    public double getImporteCV() {
-        return importeCV;
-    }
-
-    public void setImporteCV(double importeCV) {
-        this.importeCV = importeCV;
-    }
-
-    public String getCodMonedaCV() {
-        return codMonedaCV;
-    }
-
-    public void setCodMonedaCV(String codMonedaCV) {
-        this.codMonedaCV = codMonedaCV;
-    }
-
-    public int getIndicador() {
-        return indicador;
-    }
-
-    public void setIndicador(int indicador) {
-        this.indicador = indicador;
-    }
-
-    public double getSaldoCont() {
-        return saldoCont;
-    }
-
-    public void setSaldoCont(double saldoCont) {
-        this.saldoCont = saldoCont;
-    }
-
-    public String getSignoCont() {
-        return signoCont;
-    }
-
-    public void setSignoCont(String signoCont) {
-        this.signoCont = signoCont;
+    public String getAccountSign() {
+        return accountSign;
     }
 
     public String getIndE() {
         return indE;
     }
 
-    public void setIndE(String indE) {
-        this.indE = indE;
-    }
-
     public int getRefE() {
         return refE;
     }
 
-    public void setRefE(int refE) {
-        this.refE = refE;
+    public String getIndDuplicate() {
+        return indDuplicate;
     }
 
-    public String getIndDuplicado() {
-        return indDuplicado;
+    public int getServiceCode() {
+        return serviceCode;
     }
 
-    public void setIndDuplicado(String indDuplicado) {
-        this.indDuplicado = indDuplicado;
+    public String getAccountIdentiferOperationService() {
+        return accountIdentiferOperationService;
     }
 
-    public int getCodServicio() {
-        return codServicio;
-    }
-
-    public void setCodServicio(int codServicio) {
-        this.codServicio = codServicio;
-    }
-
-    public String getContIdentOperServicio() {
-        return contIdentOperServicio;
-    }
-
-    public void setContIdentOperServicio(String contIdentOperServicio) {
-        this.contIdentOperServicio = contIdentOperServicio;
-    }
-
-    public String getIndicaRss() {
-        return indicaRss;
-    }
-
-    public void setIndicaRss(String indicaRss) {
-        this.indicaRss = indicaRss;
+    public String getRssIndicator() {
+        return rssIndicator;
     }
 }

@@ -64,6 +64,10 @@ public class BancoPopularConstants {
         public static final String AMOUNT_SIGN_INDICATOR_1 = "D";
         public static final String AMOUNT_SIGN_INDICATOR_2 = "-";
 
+        public static final String MERCHANT_NAME = "merchantName";
+        public static final String MERCHANT_NAME_REGEX = String.format(
+                ".*, en (?<%s>.+)$", MERCHANT_NAME);
+
         public static final LogTag INVESTMENT_LOGGING =
                 LogTag.from("#investment-logging-popular-es");
         public static final LogTag LOAN_LOGGING =
