@@ -5,7 +5,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
-import se.tink.org.apache.http.cookie.Cookie;
+import tink.org.apache.http.cookie.Cookie;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
