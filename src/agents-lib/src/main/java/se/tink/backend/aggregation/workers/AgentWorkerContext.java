@@ -443,7 +443,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
                     return Optional.empty();
                 }
 
-                return Optional.of(supplementalInformation);
+                return Optional.ofNullable(supplementalInformation);
             } else {
                 log.info("Supplemental information request timed out");
                 // Did not get lock, release anyways and return.

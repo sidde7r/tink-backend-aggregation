@@ -26,7 +26,7 @@ import se.tink.backend.common.config.SignatureKeyPair;
 
 public abstract class SdcAgent extends NextGenerationAgent {
 
-    private final SdcTransactionParser parser;
+    protected final SdcTransactionParser parser;
     protected SdcConfiguration agentConfiguration;
     protected SdcApiClient bankClient;
     protected SdcSessionStorage sdcSessionStorage;
