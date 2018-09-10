@@ -8,11 +8,21 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 
 public class EuroInformationDateDeserializer extends XmlAdapter<String, Date> {
 
-    DateFormat f = new SimpleDateFormat("yyyyMMdd");
+    DateFormat shortDate = new SimpleDateFormat("yyyyMMdd");
+    DateFormat longDate = new SimpleDateFormat("yyyyMMddHHmmss");
 
     @Override
     public Date unmarshal(String v) throws Exception {
-        return f.parse(v);
+        switch (v.length()) {
+        //yyyyMMdd
+        case 8:
+            return shortDate.parse(v);
+        //yyyyMMddHHmmss
+        case 14:
+            return longDate.parse(v);
+        default:
+            throw new IllegalArgumentException(v);
+        }
     }
 
     @Override

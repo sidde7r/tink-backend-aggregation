@@ -4,6 +4,8 @@ import se.tink.backend.aggregation.nxgen.http.HeaderEnum;
 
 public class EuroInformationConstants {
 
+    public static final String EMPTY_RECOVERY_KEY = "";
+
     public enum Headers implements HeaderEnum {
         USER_AGENT("User-Agent", "AndroidVersion:6.0;Model:HTC One_M8"),
         CONTENT_TYPE("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
@@ -57,13 +59,17 @@ public class EuroInformationConstants {
         public static final String MAX_ELEMENTS = "NbElemMaxByPage";
         public static final String MAX_ELEMENTS_VALUE = "25";
         public static final String SECURITY_ACCOUNT = "SecurityAccount";
+        public static final String RECOVERY_KEY = "recoveryKey";
+        public static final String MAX_ITEMS = "max_items";
+        public static final String MAX_ITEMS_VALUE = String.valueOf(100);
     }
 
     public static class Url {
         public static final String LOGIN = "IDE.html";
         public static final String ACCOUNTS = "PRC2.html";
         public static final String INIT = "PFMINIT.html";
-        public static final String TRANSACTIONS = "LSTMVT2.html";
+        public static final String TRANSACTIONS_NOT_PAGINATED = "LSTMVT2.html";
+        public static final String TRANSACTIONS_PAGINATED = "PFMOPES.html";
         public static final String LOGOUT = "DCNX.html";
         public static final String INVESTMENT_ACCOUNT = "bourse/SecurityAccountOverview.aspx";
         public static final String INVESTMENT_ACCOUNTS = "bourse/SecurityAccountList.aspx";

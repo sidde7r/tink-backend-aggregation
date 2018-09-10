@@ -15,8 +15,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinfor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.investment.rpc.InvestmentAccountsListResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.AccountSummaryRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.AccountSummaryResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.TransactionSummaryRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.TransactionSummaryResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.paginated.OperationSummaryResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.notpaginated.TransactionSummaryRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.notpaginated.TransactionSummaryResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.session.rpc.InitRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.session.rpc.InitResponse;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
@@ -88,9 +89,14 @@ public class EuroInformationApiClient {
         return details;
     }
 
-    public TransactionSummaryResponse getTransactions(String webId) {
-        return buildRequestHeaders(EuroInformationConstants.Url.TRANSACTIONS)
+    public TransactionSummaryResponse getTransactionsNotPaginated(String webId) {
+        return buildRequestHeaders(EuroInformationConstants.Url.TRANSACTIONS_NOT_PAGINATED)
                 .post(TransactionSummaryResponse.class, new TransactionSummaryRequest(webId));
+    }
+
+    public OperationSummaryResponse getTransactionsPaginated(String webId, String recoveryKey) {
+        return buildRequestHeaders(EuroInformationConstants.Url.TRANSACTIONS_PAGINATED)
+                .post(OperationSummaryResponse.class, new TransactionSummaryRequest(webId, recoveryKey));
     }
 
     //Seems it's not obligatory call so use it for keep-alive

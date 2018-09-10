@@ -17,4 +17,8 @@ public interface EuroInformationConfiguration {
     public default String getLoginSubpage() {
         return EuroInformationConstants.Url.LOGIN;
     }
+
+    public default boolean usesPagination() {
+        return false;
+    }
 }

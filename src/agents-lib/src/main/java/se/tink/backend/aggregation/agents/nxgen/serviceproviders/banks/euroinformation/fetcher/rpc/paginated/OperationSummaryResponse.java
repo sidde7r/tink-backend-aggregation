@@ -1,19 +1,17 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.notpaginated;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.paginated;
 
 import java.util.Date;
-import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.entities.OperationListEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationMsgDateDeserializer;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.entities.TransactionEntity;
 
 @XmlRootElement(name = "root")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class TransactionSummaryResponse {
+public class OperationSummaryResponse {
 
     @XmlElement(name = "code_retour")
     private String returnCode;
@@ -22,9 +20,8 @@ public class TransactionSummaryResponse {
     @XmlJavaTypeAdapter(EuroInformationMsgDateDeserializer.class)
     private Date date;
 
-    @XmlElement(name = "ligmvt")
-    @XmlElementWrapper(name = "tabmvt")
-    private List<TransactionEntity> transactions;
+    @XmlElement(name = "operations_list")
+    private OperationListEntity operations;
 
     public String getReturnCode() {
         return returnCode;
@@ -34,7 +31,7 @@ public class TransactionSummaryResponse {
         return date;
     }
 
-    public List<TransactionEntity> getTransactions() {
-        return transactions;
+    public OperationListEntity getOperations() {
+        return operations;
     }
 }
