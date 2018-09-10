@@ -60,6 +60,8 @@ public final class AccountResponse {
         switch (accountType) {
         case "2":
             return Optional.of(AccountTypes.CHECKING);
+        case "6":
+            return Optional.of(AccountTypes.SAVINGS);
         default:
             return Optional.empty();
         }
