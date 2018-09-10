@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.cluster.provider;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.inject.name.Named;
-import com.sun.jersey.api.core.HttpRequestContext;
 import se.tink.backend.aggregation.cluster.exception.ClusterNotValid;
 import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
@@ -13,13 +12,13 @@ import se.tink.backend.core.ClusterHostConfiguration;
 import javax.inject.Inject;
 import java.util.Map;
 
-public class ClusterIdProvider {
+public class ClusterInfoProvider {
 
     private static Map<String, ClusterHostConfiguration> clusterHostConfigurations;
     private boolean isAggregationCluster;
 
     @Inject
-    public ClusterIdProvider(
+    public ClusterInfoProvider(
             @Named("clusterHostConfigurations") Map<String, ClusterHostConfiguration> clusterHostConfigurations,
             @Named("isAggregationCluster") boolean isAggregationCluster) {
         this.clusterHostConfigurations = clusterHostConfigurations;
@@ -47,20 +46,15 @@ public class ClusterIdProvider {
         return configuration;
     }
 
-    private Aggregator createAggregator(String aggregationName, ClusterHostConfiguration configuration) {
-        if (!Strings.isNullOrEmpty(aggregationName)) {
-            return Aggregator.of(aggregationName);
-        }
-
+    private Aggregator createAggregator(ClusterHostConfiguration configuration) {
         if (!Strings.isNullOrEmpty(configuration.getAggregatorIdentifier())) {
             return Aggregator.of(configuration.getAggregatorIdentifier());
         }
 
-
         return Aggregator.of(Aggregator.DEFAULT);
     }
 
-    public ClusterInfo getClusterInfo(String clusterName, String clusterEnvironment, String aggregatorName) throws ClusterNotValid {
+    public ClusterInfo getClusterInfo(String clusterName, String clusterEnvironment) throws ClusterNotValid {
         ClusterId clusterId;
         if (!isAggregationCluster) {
             clusterId = ClusterId.createEmpty();
@@ -68,17 +62,16 @@ public class ClusterIdProvider {
         }
 
         ClusterHostConfiguration configuration = getValidClusterHost(clusterName, clusterEnvironment);
-        Aggregator aggregator = createAggregator(aggregatorName, configuration);
+        Aggregator aggregator = createAggregator(configuration);
 
-        clusterId = ClusterId.create(clusterName,
-                clusterEnvironment,
-                aggregator);
+        clusterId = ClusterId.of(clusterName,
+                clusterEnvironment);
 
         return  ClusterInfo.createForAggregationCluster(clusterId,
                 configuration.getHost(),
                 configuration.getApiToken(),
                 configuration.getClientCertificate(),
-                configuration.isDisableRequestCompression());
+                configuration.isDisableRequestCompression(),
+                aggregator);
     }
-
 }

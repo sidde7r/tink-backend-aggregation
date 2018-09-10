@@ -47,9 +47,6 @@ public abstract class AgentContext {
     }
 
     public Aggregator getAggregator() {
-        if (Objects.isNull(aggregator)) {
-            return Aggregator.getDefault();
-        }
         return aggregator;
     }
 

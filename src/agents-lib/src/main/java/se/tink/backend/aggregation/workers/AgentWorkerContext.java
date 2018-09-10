@@ -140,7 +140,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
 
         this.aggregationCredentialsRepository = serviceContext.getRepository(AggregationCredentialsRepository.class);
         setClusterInfo(clusterInfo);
-        setAggregator(clusterId.getAggregator());
+        setAggregator(clusterInfo.getAggregator());
 
         if (request.getUser() != null) {
             this.catalog = Catalog.getCatalog(request.getUser().getProfile().getLocale());

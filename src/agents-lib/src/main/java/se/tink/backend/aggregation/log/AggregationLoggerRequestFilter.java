@@ -14,6 +14,9 @@ import se.tink.backend.aggregation.rpc.CredentialsRequestType;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.rpc.User;
 
+import static se.tink.backend.aggregation.cluster.identification.ClusterId.CLUSTER_ENVIRONMENT_HEADER;
+import static se.tink.backend.aggregation.cluster.identification.ClusterId.CLUSTER_NAME_HEADER;
+
 public class AggregationLoggerRequestFilter implements ContainerRequestFilter {
     // Changes to these keys MUST be mirrored in:
     // - tink-backend/etc/development-aggregation-server.yml
@@ -47,7 +50,16 @@ public class AggregationLoggerRequestFilter implements ContainerRequestFilter {
     }
 
     private void extractClusterId(ContainerRequest request) {
-        ClusterId clusterId = ClusterId.createFromContainerRequest(request);
+        ClusterId clusterId;
+
+        if (Objects.isNull(request)) {
+            clusterId = ClusterId.createEmpty();
+        } else {
+            String clusterName = request.getHeaderValue(CLUSTER_NAME_HEADER);
+            String clusterEnvironment = request.getHeaderValue(CLUSTER_ENVIRONMENT_HEADER);
+            clusterId = ClusterId.of(clusterName, clusterEnvironment);
+        }
+
         if (clusterId.isValidId()) {
             MDC.put(CLUSTER_ID_MDC_KEY, clusterId.getId());
         }

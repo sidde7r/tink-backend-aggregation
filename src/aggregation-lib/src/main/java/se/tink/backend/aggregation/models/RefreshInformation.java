@@ -31,7 +31,7 @@ public class RefreshInformation {
         this.disableRequestCompression = clusterInfo.isDisableRequestCompression();
         this.name = clusterInfo.getClusterId().getName();
         this.environment = clusterInfo.getClusterId().getEnvironment();
-        this.aggregator = clusterInfo.getClusterId().getAggregator();
+        this.aggregator = clusterInfo.getAggregator();
         this.context = MDC.getCopyOfContextMap();
     }
 
