@@ -12,9 +12,6 @@ import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import se.tink.backend.aggregation.agents.Agent;
-import se.tink.backend.aggregation.agents.AgentFactory;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 import java.util.ArrayList;
@@ -434,25 +431,5 @@ public class Provider implements Cloneable {
     @JsonIgnore
     public String getMetricTypeName() {
         return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_UNDERSCORE, getType().name());
-    }
-
-    /**
-     *
-     * Helper method giving info if this is a Provider with a Next Generation Agent.
-     *
-     * @return a boolean telling if this provider points to a Next Generation Agent.
-     */
-    @JsonIgnore
-    public boolean isNextGenerationAgent() {
-        if (className == null) {
-            return false;
-        }
-
-        try {
-            Class<? extends Agent> agentClass = AgentFactory.getAgentClass(this);
-            return NextGenerationAgent.class.isAssignableFrom(agentClass);
-        } catch (Exception e) {
-            return false;
-        }
     }
 }

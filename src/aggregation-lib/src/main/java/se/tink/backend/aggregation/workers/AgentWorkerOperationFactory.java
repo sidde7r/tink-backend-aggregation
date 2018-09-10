@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.workers;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
@@ -10,16 +12,20 @@ import java.util.stream.Collectors;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response;;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.Agent;
+import se.tink.backend.aggregation.agents.AgentFactory;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
+import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsDecryptRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsReencryptRequest;
+import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.ReencryptionRequest;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
@@ -274,7 +280,7 @@ public class AgentWorkerOperationFactory {
     }
 
     public AgentWorkerOperation createRefreshOperation(ClusterInfo clusterInfo, RefreshInformationRequest request) {
-        if (!request.getProvider().isNextGenerationAgent()) {
+        if (!isNextGenerationAgent(request.getProvider())) {
             return createLegacyRefreshOperation(clusterInfo, request);
         }
 
@@ -514,5 +520,28 @@ public class AgentWorkerOperationFactory {
     public AgentWorkerOperation createOptInRefreshOperation(ClusterInfo clusterInfo,
             RefreshWhitelistInformationRequest request) {
         return createRefreshOperation(clusterInfo, request);
+    }
+
+    /**
+     *
+     * Helper method giving info if this is a Provider with a Next Generation Agent.
+     *
+     * @return a boolean telling if this provider points to a Next Generation Agent.
+     */
+    private static boolean isNextGenerationAgent(Provider provider) {
+        if (provider == null) {
+            return false;
+        }
+
+        if (Strings.isNullOrEmpty(provider.getClassName())) {
+            return false;
+        }
+
+        try {
+            Class<? extends Agent> agentClass = AgentFactory.getAgentClass(provider);
+            return NextGenerationAgent.class.isAssignableFrom(agentClass);
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
