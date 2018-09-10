@@ -25,6 +25,13 @@ public final class AccountResponse {
 
     private List<AccountEntity> accounts;
 
+    public AccountResponse() {
+    }
+
+    public AccountResponse(final List<AccountEntity> accountEntities) {
+        accounts = accountEntities;
+    }
+
     public Collection<TransactionalAccount.Builder<?, ?>> getTransactionalAccounts() {
         return Optional.ofNullable(accounts).orElse(Collections.emptyList())
                 .stream()

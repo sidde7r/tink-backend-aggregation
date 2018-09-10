@@ -12,6 +12,20 @@ public final class AccountEntity {
     private String bic;
     private String type;
 
+    public AccountEntity() {
+    }
+
+    public AccountEntity(final Double currentBalance, final String iban, final String number, final String currency,
+            final String title, final String bic, final String type) {
+        this.currentBalance = currentBalance;
+        this.iban = iban;
+        this.number = number;
+        this.currency = currency;
+        this.title = title;
+        this.bic = bic;
+        this.type = type;
+    }
+
     public Double getCurrentBalance() {
         return currentBalance;
     }
