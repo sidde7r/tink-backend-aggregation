@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.ErrorEntity;
@@ -42,7 +43,7 @@ public class CommerzbankPasswordAuthenticator implements PasswordAuthenticator {
             }
             else if (response.getBody(RootModel.class).getError().getCode()
                     .equalsIgnoreCase(CommerzbankConstants.ERRORS.ACCOUNT_SESSION_ACTIVE_ERROR)) {
-                throw LoginError.COMMERZBANK_SESSION_ALREADY_ACTIVE.exception();
+                throw SessionError.SESSION_ALREADY_ACTIVE.exception();
             } else {
                 final String message = String.format("Failed to login because: %s",
                         response.getBody(RootModel.class).getError().getMessage());
