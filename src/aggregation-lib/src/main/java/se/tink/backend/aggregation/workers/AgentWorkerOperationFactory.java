@@ -499,11 +499,9 @@ public class AgentWorkerOperationFactory {
     }
 
     /**
-     *  the endpoint opt-in supports the initial refresh with opt-in, aka, display all accounts for user to select the
-     *  accounts to aggregate to. it also supports refreshing and updating only white-flagged accounts and the data.
-     *  when the opt-in flag is true, it indicates that we need user to select accounts again, therefore we fetch
-     *  only account data. after fetching, we set the flag into false, and put all white listed accounts in refresh.
-     *  when the opt-in flag is false, we refresh and update all white listed accounts
+     *
+     * Use this operation when refreshing only the accounts that are available in the request.
+     *
      **/
     public AgentWorkerOperation createWhitelistRefreshOperation(ClusterInfo clusterInfo,
             RefreshWhitelistInformationRequest request) {
@@ -551,6 +549,11 @@ public class AgentWorkerOperationFactory {
         return new AgentWorkerOperation(agentWorkerOperationState, metricsName, request, commands, context);
     }
 
+    /**
+     *
+     * Use this operation when whitelisting accounts to refresh with whitelist refresh.
+     *
+     */
     public AgentWorkerOperation createConfigureWhitelistOperation(ClusterInfo clusterInfo,
             ConfigureWhitelistInformationRequest request) {
         String operationMetricName = "configure-whitelist";
