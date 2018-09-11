@@ -57,32 +57,6 @@
       "type": "CREDIT_CARD"
     },
     {
-      "className": "demo.DemoAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Bunq",
-      "fields": [
-        {
-          "name": "username",
-          "description": "Login name",
-          "exposed": true,
-          "immutable": true
-        },
-        {
-          "sensitive": true,
-          "name": "password",
-          "description": "Password",
-          "exposed": true,
-          "masked": true
-        }
-      ],
-      "multiFactor": false,
-      "name": "nl-bunq",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": "true",
-      "type": "BANK"
-    },
-    {
       "className": "abnamro.AbnAmroAgent",
       "credentialsType": "PASSWORD",
       "displayName": "ABN AMRO",
@@ -133,7 +107,7 @@
       "name": "nl-bunq-sandbox-apikey",
       "passwordHelpText": "You get the API key from your bunq app by going to Profile > Security.",
       "popular": true,
-      "status": "ENABLED",
+      "status": "DISABLED",
       "transactional": true,
       "payload": "https://sandbox.public.api.bunq.com",
       "type": "BANK",

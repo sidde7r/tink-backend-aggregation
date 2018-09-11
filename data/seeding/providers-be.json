@@ -158,32 +158,6 @@
       "status": "ENABLED",
       "transactional": "true",
       "type": "TEST"
-    },
-    {
-      "name": "be-beobank-password",
-      "displayName": "BeoBank",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.be.banks.beobank.BeoBankAgent",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in BeoBank's mobile banking app.",
-      "transactional": "true",
-      "tutorialUrl": null,
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "sensitive": true,
-          "masked": true,
-          "name": "password"
-        }
-      ]
     }
   ]
 }
