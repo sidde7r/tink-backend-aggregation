@@ -505,10 +505,6 @@ public class AgentWorkerOperationFactory {
      **/
     public AgentWorkerOperation createWhitelistRefreshOperation(ClusterInfo clusterInfo,
             RefreshWhitelistInformationRequest request) {
-        if (!isNextGenerationAgent(request.getProvider())) {
-            return createLegacyRefreshOperation(clusterInfo, request);
-        }
-
         if (request.getItemsToRefresh() == null || request.getItemsToRefresh().isEmpty()) {
             // Add all available items if none were submitted.
             // Todo: Remove this once it has been verified that no consumer sends in an empty/null list.
