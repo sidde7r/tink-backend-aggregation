@@ -24,7 +24,7 @@ public class AccountEntity {
     private String typeDescription;
     private String familyCode;
     private String currency;
-    private double availableBalance;
+    private Double availableBalance;
     private List<BalancesEntity> availableBalances;
     private String branch;
     private String accountProductId;
