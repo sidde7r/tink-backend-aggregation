@@ -25,6 +25,7 @@ public class Field {
     private String value; // The value of the input
     private boolean sensitive; // If the field is sensitive. A sensitive field will be stored in the encrypted credential.
     private boolean checkbox; // if the field should be a boolean value displayed as a checkbox
+    private String additionalInfo; // This can be used to send additional information, possibly as a serialized JSON.
 
     public String getDescription() {
         return description;
@@ -76,6 +77,10 @@ public class Field {
 
     public boolean isOptional() {
         return optional;
+    }
+
+    public String getAdditionalInfo() {
+        return additionalInfo;
     }
 
     public void setDescription(String description) {
@@ -142,6 +147,10 @@ public class Field {
         this.sensitive = sensitive;
     }
 
+    public void setAdditionalInfo(String additionalInfo) {
+        this.additionalInfo = additionalInfo;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
@@ -168,6 +177,7 @@ public class Field {
         private String pattern;
         private String patternError;
         private String value;
+        private String additionalInfo;
 
         public Builder description(String description) {
             this.description = description;
@@ -231,6 +241,11 @@ public class Field {
 
         public Builder value(String value) {
             this.value = value;
+            return this;
+        }
+
+        public Builder additionalInfo(String additionalInfo) {
+            this.additionalInfo = additionalInfo;
             return this;
         }
 
