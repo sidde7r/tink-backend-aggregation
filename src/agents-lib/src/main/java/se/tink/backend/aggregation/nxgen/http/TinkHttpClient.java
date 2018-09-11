@@ -107,13 +107,10 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         return this.userAgent;
     }
 
-    public String getHeaderAggregatorIdentifier(){
+    public String getHeaderAggregatorIdentifier() {
         if(aggregator != null){
-            logger.info("Aggregator header set to: " + aggregator.getAggregatorIdentifier());
             return aggregator.getAggregatorIdentifier();
         }
-
-        logger.info("Aggregator header set to default.");
         return Aggregator.DEFAULT;
     }
 
