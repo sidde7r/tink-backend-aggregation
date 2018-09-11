@@ -481,7 +481,10 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
             logger.error("Aggregator header identifier is null. The header should not be null.");
             return;
         }
-        headers.add("X-Aggregator", headerAggregatorIdentifier);
+
+        if (!headers.containsKey("X-Aggregator")){
+            headers.add("X-Aggregator", headerAggregatorIdentifier);
+        }
     }
 
     private <T> T handle(Class<T> c, HttpRequest httpRequest) throws HttpClientException, HttpResponseException {
