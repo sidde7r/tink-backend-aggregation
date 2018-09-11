@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Ordering;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -93,11 +94,11 @@ public enum RefreshableItem {
         return REFRESHABLE_ITEMS_ACCOUNTS.contains(item);
     }
 
-    public static boolean hasAccounts(List<RefreshableItem> items) {
+    public static boolean hasAccounts(Collection<RefreshableItem> items) {
         return !Collections.disjoint(items, REFRESHABLE_ITEMS_ACCOUNTS);
     }
 
-    public static boolean hasTransactions(List<RefreshableItem> items) {
+    public static boolean hasTransactions(Collection<RefreshableItem> items) {
         return !Collections.disjoint(items, REFRESHABLE_ITEMS_TRANSACTIONS);
     }
 }
