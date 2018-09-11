@@ -178,6 +178,7 @@ public class Field {
         private String patternError;
         private String value;
         private String additionalInfo;
+        private boolean checkbox;
 
         public Builder description(String description) {
             this.description = description;
@@ -249,6 +250,11 @@ public class Field {
             return this;
         }
 
+        public Builder checkbox(boolean checkbox) {
+            this.checkbox = checkbox;
+            return this;
+        }
+
         public Field build() {
             Preconditions.checkNotNull(description);
             Preconditions.checkNotNull(name);
@@ -268,6 +274,8 @@ public class Field {
             field.setPattern(pattern);
             field.setPatternError(patternError);
             field.setValue(value);
+            field.setAdditionalInfo(additionalInfo);
+            field.setCheckbox(checkbox);
 
             return field;
         }
