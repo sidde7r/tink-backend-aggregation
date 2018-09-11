@@ -212,4 +212,8 @@ public class Amount extends Number {
         return value;
     }
 
+    public Amount negate() {
+        return new Amount(currency, -value);
+    }
+
 }
