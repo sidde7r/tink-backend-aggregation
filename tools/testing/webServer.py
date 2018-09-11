@@ -129,6 +129,7 @@ def whitelist_credentials(cid):
 		abort(400, 'Not a valid credentials id.')
 
 	credentialsRequest = create_credentials_request(cid)
+	credentialsRequest['manual'] = True
 	r = requests.post(AGGREGATION_HOST + '/aggregation/configure/whitelist', data=json.dumps(credentialsRequest), headers=POST_HEADERS)
 	return ('', 204)
 
