@@ -66,19 +66,19 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
         return AgentWorkerCommandResult.CONTINUE;
     }
 
-    private Field createSupplementalInformationField(Account account, List<Account>
-            existingAccounts){
+    private Field createSupplementalInformationField(Account account, List<Account> existingAccounts) {
         boolean isIncluded = existingAccounts.stream()
                 .anyMatch(a -> Objects.equals(a.getBankId(), account.getBankId()));
-        Field field = new Field();
-        field.setDescription(account.getAccountNumber() + " " + account.getName());
-        field.setMasked(false);
-        field.setPattern("(true|false)");
-        field.setName(account.getBankId());
-        field.setCheckbox(true);
-        field.setValue(String.valueOf(isIncluded));
-        field.setAdditionalInfo(createAdditionalInfo(account));
-        return field;
+
+        return Field.builder()
+                .description(account.getAccountNumber() + " " + account.getName())
+                .masked(false)
+                .pattern("true/false")
+                .name(account.getBankId())
+                .checkbox(true)
+                .value(String.valueOf(isIncluded))
+                .additionalInfo(createAdditionalInfo(account))
+                .build();
     }
 
     @Override
