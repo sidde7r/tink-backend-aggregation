@@ -28,6 +28,7 @@ import org.bouncycastle.jce.interfaces.ECPublicKey;
 import org.bouncycastle.jce.spec.ECNamedCurveParameterSpec;
 import org.bouncycastle.jce.spec.ECParameterSpec;
 import org.bouncycastle.math.ec.ECPoint;
+import org.bouncycastle.util.BigIntegers;
 
 public class EllipticCurve {
     public static byte[] diffieHellmanDeriveKey(PrivateKey privKey, PublicKey pubKey) {
@@ -115,6 +116,26 @@ public class EllipticCurve {
         try {
             KeyFactory kf = KeyFactory.getInstance("EC", "BC");
             return (ECPublicKey) kf.generatePublic(publicKeySpec);
+        } catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidKeySpecException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    public static PublicKey getPublicKeyFromCurveAndPoints(String curveName, byte[] x, byte[] y) {
+        BigInteger X = BigIntegers.fromUnsignedByteArray(x);
+        BigInteger Y = BigIntegers.fromUnsignedByteArray(y);
+
+        ECNamedCurveParameterSpec ecNamedCurveParameterSpec = ECNamedCurveTable.getParameterSpec(curveName);
+        java.security.spec.EllipticCurve ellipticCurve
+                = EC5Util.convertCurve(ecNamedCurveParameterSpec.getCurve(), ecNamedCurveParameterSpec.getSeed());
+        java.security.spec.ECPoint ecPoint = new java.security.spec.ECPoint(X, Y);
+        java.security.spec.ECParameterSpec ecParameterSpec
+                = EC5Util.convertSpec(ellipticCurve, ecNamedCurveParameterSpec);
+        java.security.spec.ECPublicKeySpec publicKeySpec
+                = new java.security.spec.ECPublicKeySpec(ecPoint, ecParameterSpec);
+        try {
+            KeyFactory kf = KeyFactory.getInstance("EC", "BC");
+            return kf.generatePublic(publicKeySpec);
         } catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidKeySpecException e) {
             throw new IllegalStateException(e);
         }
