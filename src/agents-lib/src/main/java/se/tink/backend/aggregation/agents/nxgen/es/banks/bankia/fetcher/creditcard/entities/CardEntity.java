@@ -21,26 +21,13 @@ public class CardEntity {
     private AmountEntity creditLimit;
 
     public CreditCardAccount toTinkAccount() {
-        Amount balance = getBalance();
 
-        String cardNumberUnmasked = contract.getIdentifierProductContract().substring(1);
-        Preconditions.checkState(
-                cardNumberUnmasked.matches(BankiaConstants.Regex.CARD_NUMBER_UNMASKED),
-                "Card number provided by bank is not of expected format (16 digits unformatted)"
-        );
+        String cardNumber = contract.getIdentifierProductContract().substring(1);
+        String cardAlias = contract.getAlias();
 
-        String firstFour = cardNumberUnmasked.substring(0, 4);
-        String lastFour = cardNumberUnmasked.substring(cardNumberUnmasked.length() - 4);
-        String accountNumber = String.format("%s **** **** %s", firstFour, lastFour);
-        String uniqueIdentifier = String.format("%s%s", firstFour, lastFour);
-        String name = String.format("%s *%s", contract.getAlias(), lastFour);
-
-        return CreditCardAccount.builder(uniqueIdentifier)
-                .setBalance(balance)
+        return CreditCardAccount.builderFromFullNumber(cardNumber, cardAlias)
+                .setBalance(getBalance())
                 .setAvailableCredit(availableBalance.toTinkAmount())
-                .setName(name)
-                .setAccountNumber(accountNumber)
-                .setBankIdentifier(cardNumberUnmasked)
                 .build();
     }
 
