@@ -18,7 +18,7 @@
                     "description": "Password",
                     "masked": true,
                     "sensitive": true,
-          "name": "password"
+                    "name": "password"
                 }
             ],
             "market": "SE",
@@ -47,7 +47,7 @@
                     "description": "Password",
                     "masked": true,
                     "sensitive": true,
-          "name": "password"
+                    "name": "password"
                 }
             ],
             "groupDisplayName": "American Express",
@@ -62,38 +62,6 @@
             "status": "ENABLED",
             "transactional": true,
             "type": "CREDIT_CARD"
-        },
-        {
-            "name": "avanza",
-            "className": "brokers.avanza.AvanzaV2Agent",
-            "credentialsType": "PASSWORD",
-            "currency": "SEK",
-            "displayDescription": "Password",
-            "displayName": "Avanza",
-            "fields": [
-                {
-                    "description": "Username",
-                    "immutable": true,
-                    "name": "username"
-                },
-                {
-                    "description": "Password",
-                    "masked": true,
-                    "sensitive": true,
-          "name": "password"
-                }
-            ],
-            "groupDisplayName": "Avanza",
-            "market": "SE",
-            "multiFactor": false,
-            "passwordHelpText": "Use the same username and password as you would in the broker's mobile app.",
-            "tutorialUrl": "https://www.avanza.se/aza/login/forgotten.jsp",
-            "popular": false,
-            "refreshFrequency": 1,
-            "refreshFrequencyFactor": 1,
-            "status": "ENABLED",
-            "transactional": true,
-            "type": "BROKER"
         },
         {
             "name": "avanza-bankid",
@@ -235,7 +203,7 @@
                     "description": "Password",
                     "masked": true,
                     "sensitive": true,
-          "name": "password"
+                    "name": "password"
                 }
             ],
             "market": "SE",
@@ -302,7 +270,7 @@
                 {
                     "hint": "NNNN",
                     "sensitive": true,
-          "name": "password",
+                    "name": "password",
                     "masked": true,
                     "pattern": "([0-9]{4})",
                     "maxLength": 4,
@@ -348,7 +316,7 @@
                 {
                     "hint": "NNNN",
                     "sensitive": true,
-          "name": "password",
+                    "name": "password",
                     "masked": true,
                     "numeric": true,
                     "pattern": "([0-9]{4})",
@@ -423,7 +391,7 @@
                     "description": "Password",
                     "masked": true,
                     "sensitive": true,
-          "name": "password"
+                    "name": "password"
                 }
             ],
             "market": "SE",
@@ -583,7 +551,7 @@
                 {
                     "hint": "NNNN",
                     "sensitive": true,
-          "name": "password",
+                    "name": "password",
                     "masked": true,
                     "numeric": true,
                     "pattern": "([0-9]{4})",
@@ -736,53 +704,6 @@
             "transactional": true,
             "tutorialUrl": "https://www.tink.se/sv/koppla-in-kreditkort-mobilt-bankid/chromeless/",
             "type": "CREDIT_CARD"
-        },
-        {
-            "name": "lansforsakringar",
-            "capabilities": [
-                "TRANSFERS",
-                "MORTGAGE_AGGREGATION"
-            ],
-            "className": "banks.LansforsakringarAgent",
-            "credentialsType": "PASSWORD",
-            "currency": "SEK",
-            "displayDescription": "PIN",
-            "displayName": "Länsförsäkringar",
-            "fields": [
-                {
-                    "hint": "YYYYMMDDNNNN",
-                    "name": "username",
-                    "numeric": true,
-                    "pattern": "(19|20)[0-9]{10}",
-                    "immutable": true,
-                    "maxLength": 12,
-                    "minLength": 12,
-                    "description": "Social security number",
-                    "patternError": "Please enter a valid social security number."
-                },
-                {
-                    "hint": "NNNN",
-                    "sensitive": true,
-          "name": "password",
-                    "masked": true,
-                    "numeric": true,
-                    "pattern": "([0-9]{4})",
-                    "maxLength": 4,
-                    "minLength": 4,
-                    "description": "PIN",
-                    "patternError": "Please enter 4 digits"
-                }
-            ],
-            "groupDisplayName": "Länsförsäkringar",
-            "market": "SE",
-            "multiFactor": false,
-            "passwordHelpText": "You use your social security number and PIN in the same way as when you log in to the bank's mobile app.",
-            "popular": true,
-            "refreshFrequency": 1,
-            "refreshFrequencyFactor": 1,
-            "status": "DISABLED",
-            "transactional": true,
-            "type": "BANK"
         },
         {
             "name": "lansforsakringar-bankid",
@@ -945,7 +866,7 @@
                     "description": "Password",
                     "masked": true,
                     "sensitive": true,
-          "name": "password"
+                    "name": "password"
                 }
             ],
             "groupDisplayName": "Nordnet",
@@ -1039,7 +960,7 @@
                 },
                 {
                     "sensitive": true,
-          "name": "password",
+                    "name": "password",
                     "masked": true,
                     "description": "Password"
                 }
@@ -1132,7 +1053,7 @@
                     "description": "Password",
                     "masked": true,
                     "sensitive": true,
-          "name": "password"
+                    "name": "password"
                 }
             ],
             "market": "SE",
@@ -1193,7 +1114,7 @@
                     "description": "Password",
                     "masked": true,
                     "sensitive": true,
-          "name": "password"
+                    "name": "password"
                 }
             ],
             "groupDisplayName": "American Express",
@@ -1372,41 +1293,6 @@
             "transactional": true,
             "tutorialUrl": "https://www.tink.se/sv/koppla-in-kreditkort-mobilt-bankid/chromeless/",
             "type": "CREDIT_CARD"
-        },
-        {
-            "name": "seb",
-            "className": "banks.seb.SEBApiAgent",
-            "credentialsType": "PASSWORD",
-            "currency": "SEK",
-            "displayName": "SEB (med personlig kod)",
-            "fields": [
-                {
-                    "hint": "YYYYMMDDNNNN",
-                    "name": "username",
-                    "numeric": true,
-                    "pattern": "(19|20)[0-9]{10}",
-                    "immutable": true,
-                    "maxLength": 12,
-                    "minLength": 12,
-                    "description": "Social security number",
-                    "patternError": "Please enter a valid social security number."
-                },
-                {
-                    "sensitive": true,
-          "name": "password",
-                    "masked": true,
-                    "description": "PIN"
-                }
-            ],
-            "groupDisplayName": "SEB",
-            "market": "SE",
-            "multiFactor": false,
-            "popular": false,
-            "refreshFrequency": 1,
-            "refreshFrequencyFactor": 1,
-            "status": "OBSOLETE",
-            "transactional": true,
-            "type": "BANK"
         },
         {
             "name": "seb-bankid",
