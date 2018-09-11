@@ -11,6 +11,7 @@ SERVER_HOST = 'http://127.0.0.1:5000'
 ### START ENDPOINTS ###
 CREATE_CREDENTIAL = SERVER_HOST + '/credentials/create'
 REFRESH_CREDENTIAL = SERVER_HOST + '/credentials/refresh/{}'
+WHITELIST_REFRESH_CREDENTIAL = SERVER_HOST + '/credentials/whitelist/refresh/{}'
 STATUS_CREDENTIAL = SERVER_HOST + '/credentials/status/{}'
 WHITELIST_CREDENTIAL = SERVER_HOST + '/credentials/whitelist/{}'
 REENCRYPT_CREDENTIAL = SERVER_HOST + '/credentials/reencrypt/{}'
@@ -98,6 +99,65 @@ def refresh_credential():
             elif not suppResponse == 204:
                 return '\nSupplemental information request failed.'
         
+        if status == 'AWAITING_MOBILE_BANKID_AUTHENTICATION':
+            output['message'] = 'Awaiting mobile bankid authentication'
+            continue
+
+        if status == 'AWAITING_THIRD_PARTY_APP_AUTHENTICATION':
+            output['message'] = 'Awaiting third party app authentication'
+            continue
+
+        if status in ERROR_STATUSES:
+            return str.format('Refresh failed with status: {}', status)
+
+        if currentStatus['status'] == 'UPDATED':
+            return '\nRefresh completed.'
+
+def whitelist_refresh():
+    credentialsId = raw_input('Credentials id: ')
+    statusBeforeUpdate = json.loads(credentials_status(credentialsId))
+
+    startTime = get_time_in_millis()
+    responseObject = requests.post(str.format(WHITELIST_REFRESH_CREDENTIAL, credentialsId))
+
+    output = {
+        'message': str.format('Refreshing credential with id {}', credentialsId)
+    }
+
+    while True:
+        if (get_time_in_millis() - startTime) / 1000.0 >= REFRESH_TIME_OUT_LIMIT:
+            return '\nRefresh timed out.'
+
+        currentStatus = json.loads(credentials_status(credentialsId))
+        if not currentStatus:
+            return '\nRefresh failed.'
+
+        try:
+            if currentStatus['message']:
+                return str.format('\nRefresh failed with message: {}', currentStatus['message'])
+        except KeyError:
+            pass
+
+        if statusBeforeUpdate['timestamp'] == currentStatus['timestamp']:
+            print output
+            sleep(1)
+            continue
+
+        # Update the status
+        statusBeforeUpdate = currentStatus
+
+        status = currentStatus['status']
+        if status == 'UPDATING':
+            output['message'] = 'Fetching accounts and transactions.'
+            continue
+
+        if status == 'AWAITING_SUMMPLEMENTAL_INFORMATION':
+            suppResponse = supplemental_information(credentialsId)
+            if not suppResponse:
+                return '\nSupplemental information request failed.'
+            elif not suppResponse == 204:
+                return '\nSupplemental information request failed.'
+
         if status == 'AWAITING_MOBILE_BANKID_AUTHENTICATION':
             output['message'] = 'Awaiting mobile bankid authentication'
             continue
@@ -228,7 +288,7 @@ def credentials():
         elif userInput in CREATE_OPERATION:
             print 'Response: \n' + create_credential()
         elif userInput in REFRESH_OPERATION:
-            print refresh_credential()
+            refresh()
         elif userInput in SUPPLEMENTAL_OPERATION:
             print supplemental_information()
         elif userInput in GET_OPERATION:
@@ -241,7 +301,26 @@ def credentials():
             print reencrypt_credentials()
         elif userInput in WHITELIST_OPERATION:
             print whitelist_accounts()
-        
+
+def refresh():
+    while True:
+        print '''
+ -- Refresh operations ------------
+|                                  |
+| Normal refresh: refresh / r      |
+| Whitelist refresh: whitelist / w |
+|                                  |
+ ----------------------------------
+'''
+
+        userInput = raw_input('Operation: ')
+
+        if userInput in EXIT_OPERATION:
+            break
+        elif userInput in REFRESH_OPERATION:
+            print refresh_credential()
+        elif userInput in WHITELIST_OPERATION:
+            print whitelist_refresh()
 
 def providers():
     while True:
