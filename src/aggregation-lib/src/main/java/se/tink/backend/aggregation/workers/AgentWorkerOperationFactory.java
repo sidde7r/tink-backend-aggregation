@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.workers;
 
+import com.gargoylesoftware.htmlunit.RefreshHandler;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -518,6 +519,8 @@ public class AgentWorkerOperationFactory {
         AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
                 useAggregationController, aggregationControllerAggregationClient, clusterInfo);
 
+        context.setWhitelistRefresh(true);
+
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
         String metricsName = (request.isManual() ? "refresh-manual" : "refresh-auto");
@@ -538,8 +541,7 @@ public class AgentWorkerOperationFactory {
         commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState));
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)));
-        commands.add(new SelectAccountsToAggregateCommand(context, request));
-        commands.addAll(createRefreshableItemsChain(request, context, request.getItemsToRefresh()));
+        commands.addAll(createWhitelistRefreshableItemsChain(request, context, request.getItemsToRefresh()));
 
         log.debug("Created whitelist refresh operation chain for credential");
         return new AgentWorkerOperation(agentWorkerOperationState, metricsName, request, commands, context);
@@ -585,6 +587,80 @@ public class AgentWorkerOperationFactory {
 
         return new AgentWorkerOperation(agentWorkerOperationState, operationMetricName, request,
                 commands, context);
+    }
+
+    private ImmutableList<AgentWorkerCommand> createWhitelistRefreshableItemsChain(CredentialsRequest request,
+            AgentWorkerContext context, Set<RefreshableItem> itemsToRefresh) {
+
+        // Convert legacy items to corresponding new refreshable items
+        itemsToRefresh = convertLegacyItems(itemsToRefresh);
+
+        // Sort the refreshable items
+        List<RefreshableItem> items = RefreshableItem.sort(itemsToRefresh);
+        log.info("Items to refresh (sorted): {}", items.stream()
+                .map(Enum::name)
+                .collect(Collectors.joining(", ")));
+
+        ImmutableList.Builder<AgentWorkerCommand> commands = ImmutableList.builder();
+
+        // Update credentials status to updating to inform systems that credentials is being updated.
+        commands.add(new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
+
+        List<RefreshableItem> accountItems = items.stream()
+                .filter(RefreshableItem::isAccount)
+                .collect(Collectors.toList());
+
+        // === START REFRESHING ===
+        // If there are account items to be refreshed, refresh them and then send them over to system.
+        if (accountItems.size() > 0) {
+            accountItems.forEach(item ->
+                    commands.add(new RefreshItemAgentWorkerCommand(context, item, createMetricState(request))));
+
+            // Update the accounts on system side
+            commands.add(new SelectAccountsToAggregateCommand(context, request));
+            commands.add(new SendAccountsToUpdateServiceAgentWorkerCommand(context, createMetricState(request)));
+        }
+
+        // Add all refreshable items that aren't accounts to refresh them.
+        items.stream()
+                .filter(i -> !accountItems.contains(i))
+                .forEach(item ->
+                        commands.add(new RefreshItemAgentWorkerCommand(context, item, createMetricState(request))));
+        // === END REFRESHING ===
+
+        // === START PROCESSING ===
+        // Post refresh processing. Only once per data type (accounts, transactions etc.).
+        if (RefreshableItem.hasAccounts(items)) {
+            commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.ACCOUNTS,
+                    createMetricState(request)));
+        }
+
+        if (items.contains(RefreshableItem.EINVOICES)) {
+            commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.EINVOICES,
+                    createMetricState(request)));
+        }
+
+        if (items.contains(RefreshableItem.TRANSFER_DESTINATIONS)) {
+            commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.TRANSFER_DESTINATIONS,
+                    createMetricState(request)));
+        }
+
+        // Transactions are processed last of the refreshable items since the credential status will be set `UPDATED`
+        // by system when the processing is done.
+        if (RefreshableItem.hasTransactions(items)) {
+            commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.TRANSACTIONS,
+                    createMetricState(request)));
+        }
+        // === END PROCESSING ===
+
+        // Update the status to `UPDATED` if the credential isn't waiting on transactions from the connector and if
+        // transactions aren't processed in system. The transaction processing in system will set the status to
+        // `UPDATED` when transactions have been processed and new statistics are generated.
+        // Todo: Remove this dependency
+        commands.add(new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATED,
+                c -> !c.isWaitingOnConnectorTransactions() && !c.isSystemProcessingTransactions()));
+
+        return commands.build();
     }
 
     /**
