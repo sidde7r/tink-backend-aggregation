@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities;
 
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.banks.handelsbanken.v6.utils.AmountParser;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.utils.AmountParser;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
