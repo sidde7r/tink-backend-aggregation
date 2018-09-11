@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc;
 
 import java.util.List;
+import java.util.Objects;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -15,6 +16,14 @@ public class EngagementOverviewResponse {
     private boolean errorFetchingCreditCards;
     private boolean showCreditCardIncreaseLimitLink;
     private boolean eligibleForOverdraftLimit;
+
+    public boolean hasTransactionAccount(AbstractAccountEntity account) {
+        if (Objects.isNull(account)) {
+            return false;
+        }
+
+        return transactionAccounts.stream().anyMatch(account::isSameAccount);
+    }
 
     public List<TransactionalAccountEntity> getTransactionAccounts() {
         return transactionAccounts;

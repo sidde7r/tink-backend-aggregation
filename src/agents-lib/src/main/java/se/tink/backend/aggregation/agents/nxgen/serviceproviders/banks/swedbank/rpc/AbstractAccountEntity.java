@@ -29,4 +29,9 @@ public abstract class AbstractAccountEntity {
     public String getFullyFormattedNumber() {
         return fullyFormattedNumber;
     }
+
+    public boolean isSameAccount(AbstractAccountEntity b) {
+        return clearingNumber.equalsIgnoreCase(b.getClearingNumber()) &&
+                accountNumber.equalsIgnoreCase(b.getAccountNumber());
+    }
 }
