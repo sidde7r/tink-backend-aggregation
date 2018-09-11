@@ -1,10 +1,13 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import com.google.api.client.json.Json;
+import com.google.gson.JsonObject;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -15,6 +18,7 @@ import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
+import se.tink.libraries.account.AccountIdentifier;
 
 /**
  * TODO adding metrics if necessary
@@ -73,6 +77,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
         field.setName(account.getBankId());
         field.setCheckbox(true);
         field.setValue(String.valueOf(isIncluded));
+        field.setAdditionalInfo(createAdditionalInfo(account));
         return field;
     }
 
@@ -80,4 +85,16 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
     public void postProcess() {
     }
 
+    private String createAdditionalInfo(Account account) {
+        JsonObject additionalInfo = new JsonObject();
+
+        additionalInfo.addProperty("accountName", account.getName());
+        additionalInfo.addProperty("accountType", account.getType().name());
+        additionalInfo.addProperty("balance", account.getBalance());
+        additionalInfo.addProperty("holderName", account.getHolderName());
+        additionalInfo.addProperty("iban", Objects.nonNull(account.getIdentifier(AccountIdentifier.Type.IBAN)) ?
+                account.getIdentifier(AccountIdentifier.Type.IBAN).getIdentifier() : null);
+
+        return additionalInfo.toString();
+    }
 }
