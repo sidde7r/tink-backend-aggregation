@@ -11,6 +11,12 @@ import se.tink.libraries.endpoints.EndpointsConfiguration;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ServiceConfiguration extends Configuration {
     @JsonProperty
+    private AbnAmroConfiguration abnAmroStaging = new AbnAmroConfiguration();
+
+    @JsonProperty
+    private AbnAmroConfiguration abnAmroProduction = new AbnAmroConfiguration();
+
+    @JsonProperty
     private AbnAmroConfiguration abnAmro = new AbnAmroConfiguration();
 
     @JsonProperty
@@ -65,6 +71,14 @@ public class ServiceConfiguration extends Configuration {
 
     @JsonProperty
     private SqsQueueConfiguration sqsQueueConfiguration = new SqsQueueConfiguration();
+
+    public AbnAmroConfiguration getAbnAmroStaging() {
+        return abnAmroStaging;
+    }
+
+    public AbnAmroConfiguration getAbnAmroProduction() {
+        return abnAmroProduction;
+    }
 
     public AbnAmroConfiguration getAbnAmro() {
         return abnAmro;

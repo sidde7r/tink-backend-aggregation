@@ -18,6 +18,8 @@ import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
 import se.tink.backend.aggregation.agents.abnamro.converters.AccountConverter;
 import se.tink.backend.aggregation.agents.abnamro.ics.mappers.TransactionMapper;
 import se.tink.backend.aggregation.agents.abnamro.utils.AbnAmroAgentUtils;
+import se.tink.backend.aggregation.cluster.identification.ClusterId;
+import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
@@ -71,7 +73,7 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
 
     @Override
     public void setConfiguration(ServiceConfiguration configuration) {
-        abnAmroConfiguration = configuration.getAbnAmro();
+        this.abnAmroConfiguration = getValidAbnAmroConfiguration(configuration);
 
         this.subscriptionClient = new IBSubscriptionClient(abnAmroConfiguration, context.getMetricRegistry());
 
@@ -79,6 +81,26 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
                 clientFactory.createBasicClient(context.getLogOutputStream()),
                 abnAmroConfiguration.getEnrollmentConfiguration(),
                 context.getMetricRegistry());
+    }
+
+    private AbnAmroConfiguration getValidAbnAmroConfiguration(ServiceConfiguration configuration) {
+        if (Objects.nonNull(configuration.getAbnAmro())) {
+            return configuration.getAbnAmro();
+        }
+
+        String clusterIdentifier = Optional.ofNullable(context.getClusterInfo())
+                .map(ClusterInfo::getClusterId)
+                .map(ClusterId::getId)
+                .orElseThrow(() -> new IllegalStateException("Failed to fetch cluster identifier."));
+
+        switch (clusterIdentifier.toLowerCase()) {
+        case "leeds-staging":
+            return configuration.getAbnAmroStaging();
+        case "leeds-production":
+            return configuration.getAbnAmroProduction();
+        default:
+            throw new IllegalStateException("This agent can only be used by Leeds cluster.");
+        }
     }
 
     @Override
