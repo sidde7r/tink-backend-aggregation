@@ -188,8 +188,7 @@ public class AgentWorkerOperationFactory {
         // FIXME: remove when Handelsbanken and Avanza have been moved to the nextgen agents. (TOP PRIO)
         // Due to the agents depending on updateTransactions to populate the the Accounts list
         // We need to reselect and send accounts to system
-        List<String> hackishFixProviders = ImmutableList.of("avanza-bankid", "handelsbanken", "handelsbanken-bankid");
-        if (hackishFixProviders.contains(request.getProvider().getName())) {
+        if (!isNextGenerationAgent(request.getProvider())) {
             commands.add(new SelectAccountsToAggregateCommand(context, request));
             commands.add(new SendAccountsToUpdateServiceAgentWorkerCommand(context, createMetricState(request)));
         }
