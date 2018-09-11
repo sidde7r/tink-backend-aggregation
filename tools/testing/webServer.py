@@ -218,7 +218,16 @@ def ping():
 def update_credentials_status():
 	responseObject = get_json(request)
 	credentials = responseObject['credentials']
-	CREDENTIALS_TABLE.update({'status': credentials['status'], 'timestamp': get_time_in_millis(), 'supplementalInformation': credentials['supplementalInformation']}, where('id') == credentials['id'])
+
+	try:
+		supplemental = credentials['supplementalInformation']
+	except KeyError:
+		supplemental = ""
+
+	if not supplemental:
+		CREDENTIALS_TABLE.update({'status': credentials['status'], 'timestamp': get_time_in_millis()}, where('id') == credentials['id'])
+	else:
+		CREDENTIALS_TABLE.update({'status': credentials['status'], 'timestamp': get_time_in_millis(), 'supplementalInformation': supplemental}, where('id') == credentials['id'])
 	return Response({}, status=200, mimetype="application/json")
 
 @app.route("/aggregation/controller/v1/system/update/accounts/update", methods = ['POST'])

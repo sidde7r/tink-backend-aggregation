@@ -113,22 +113,23 @@ def refresh_credential():
         if currentStatus['status'] == 'UPDATED':
             return '\nRefresh completed.'
 
-def whitelist_refresh():
-    credentialsId = raw_input('Credentials id: ')
-    statusBeforeUpdate = json.loads(credentials_status(credentialsId))
+def whitelist_refresh(cid=None):
+    if not cid:
+        cid = raw_input('Credentials id: ')
+    statusBeforeUpdate = json.loads(credentials_status(cid))
 
     startTime = get_time_in_millis()
-    responseObject = requests.post(str.format(WHITELIST_REFRESH_CREDENTIAL, credentialsId))
+    responseObject = requests.post(str.format(WHITELIST_REFRESH_CREDENTIAL, cid))
 
     output = {
-        'message': str.format('Refreshing credential with id {}', credentialsId)
+        'message': str.format('Refreshing credential with id {}', cid)
     }
 
     while True:
         if (get_time_in_millis() - startTime) / 1000.0 >= REFRESH_TIME_OUT_LIMIT:
             return '\nRefresh timed out.'
 
-        currentStatus = json.loads(credentials_status(credentialsId))
+        currentStatus = json.loads(credentials_status(cid))
         if not currentStatus:
             return '\nRefresh failed.'
 
@@ -152,7 +153,7 @@ def whitelist_refresh():
             continue
 
         if status == 'AWAITING_SUMMPLEMENTAL_INFORMATION':
-            suppResponse = supplemental_information(credentialsId)
+            suppResponse = supplemental_information(cid)
             if not suppResponse:
                 return '\nSupplemental information request failed.'
             elif not suppResponse == 204:
@@ -178,6 +179,8 @@ def whitelist_accounts():
 
     if responseObject.status_code is not 204:
         return json.loads(responseObject.text)['message']
+
+    return '\nWhitelisting complete'
 
 def reencrypt_credentials():
     credentialsId = raw_input('Credentials id: ')
