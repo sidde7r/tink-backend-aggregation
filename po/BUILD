@@ -25,12 +25,18 @@ i18n_java_source(
     lang = "nl",
 )
 
+i18n_java_source(
+    name = "i18n_de",
+    lang = "de",
+)
+
 java_library(
     name = "i18n",
     srcs = [
         ":i18n_en_US",
         ":i18n_en_GB",
         ":i18n_fr",
+        ":i18n_de",
         ":i18n_nl",
         ":i18n_sv",
     ],
