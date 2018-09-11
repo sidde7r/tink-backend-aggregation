@@ -107,7 +107,7 @@
       "name": "nl-bunq-sandbox-apikey",
       "passwordHelpText": "You get the API key from your bunq app by going to Profile > Security.",
       "popular": true,
-      "status": "ENABLED",
+      "status": "DISABLED",
       "transactional": true,
       "payload": "https://sandbox.public.api.bunq.com",
       "type": "BANK",
