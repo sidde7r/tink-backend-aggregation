@@ -1,8 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.santander;
 
+import java.time.LocalDate;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.authenticator.rpc.AuthenticateCredentialsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.authenticator.rpc.LoginRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.entities.CardEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.rpc.SantanderEsCreditCardDetailsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.rpc.SantanderEsCreditCardTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.entities.RepositionEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.rpc.FirstPageOfTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.rpc.TransactionPaginationRequest;
@@ -52,6 +56,26 @@ public class SantanderEsApiClient {
                 SantanderEsXmlUtils.getTagNodeFromSoapString(
                         soapResponseString, SantanderEsConstants.NodeTags.METHOD_RESULT)
         );
+    }
+
+    public String fetchCreditCardDetails(String userDataXml, String cardNumber) {
+        String creditCardDetailsRequest =
+                SantanderEsCreditCardDetailsRequest.create(tokenCredential, userDataXml, cardNumber);
+
+        return postSoapMessage(SantanderEsConstants.Urls.SCH_BAMOBI,
+                SantanderEsConstants.Urls.SCH_BAMOBI.toString(),
+                creditCardDetailsRequest);
+    }
+
+    public String fetchCreditCardTransactions(String userDataXml, CardEntity card,
+            LocalDate fromDate, LocalDate toDate, boolean pagination) {
+        String creditCardTransactionsRequest = SantanderEsCreditCardTransactionsRequest
+                .create(tokenCredential, userDataXml, card.getGeneralInfo().getContractId(),
+                        card.getCardNumber(), fromDate, toDate, pagination);
+
+        return postSoapMessage(SantanderEsConstants.Urls.SCH_BAMOBI,
+                SantanderEsConstants.Urls.SCH_BAMOBI.toString(),
+                creditCardTransactionsRequest);
     }
 
     private String postSoapMessage(URL url, String soapAction, String body) {

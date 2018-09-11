@@ -54,7 +54,7 @@ public class SantanderEsAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        CreditCardFetcher creditcardFetcher = new CreditCardFetcher(sessionStorage);
+        CreditCardFetcher creditcardFetcher = new CreditCardFetcher(apiClient, sessionStorage);
 
         return Optional.of(
                 new CreditCardRefreshController(metricRefreshController, updateController,
