@@ -82,6 +82,10 @@ public final class URL {
         return url;
     }
 
+    public String getScheme() {
+        return toUri().getScheme();
+    }
+
     public URI toUri() {
         // Ensure there are no unpopulated parameters before converting to URI
         Preconditions.checkState(!URL_PARAMETER_PATTERN.matcher(url).find());
