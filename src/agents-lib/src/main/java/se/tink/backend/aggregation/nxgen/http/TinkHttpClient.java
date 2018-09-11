@@ -107,13 +107,10 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         return this.userAgent;
     }
 
-    public String getHeaderAggregatorIdentifier(){
+    public String getHeaderAggregatorIdentifier() {
         if(aggregator != null){
-            logger.info("Aggregator header set to: " + aggregator.getAggregatorIdentifier());
             return aggregator.getAggregatorIdentifier();
         }
-
-        logger.info("Aggregator header set to default.");
         return Aggregator.DEFAULT;
     }
 
@@ -184,9 +181,6 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         addFilter(this.persistentHeaderFilter);
 
         this.aggregator = Objects.isNull(context) ? Aggregator.getDefault(): context.getAggregator();
-        if (Objects.isNull(context)) {
-            logger.info("Context is null.");
-        }
 
         setTimeout(DEFAULTS.TIMEOUT_MS);
         setChunkedEncoding(DEFAULTS.CHUNKED_ENCODING);

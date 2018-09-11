@@ -478,11 +478,13 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
 
     private void addAggregatorToHeader() {
         if (headerAggregatorIdentifier == null) {
-            logger.warn("Aggregator header identifier is null. The header should not be null.");
+            logger.error("Aggregator header identifier is null. The header should not be null.");
             return;
         }
-        logger.info("Setting X-Aggregator header.");
-        headers.add("X-Aggregator", headerAggregatorIdentifier);
+
+        if (!headers.containsKey("X-Aggregator")){
+            headers.add("X-Aggregator", headerAggregatorIdentifier);
+        }
     }
 
     private <T> T handle(Class<T> c, HttpRequest httpRequest) throws HttpClientException, HttpResponseException {
@@ -520,6 +522,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
     // This is what Jersey does. Since we are not interested in the response data we immediately close the connection.
     private void voidHandle(HttpRequest httpRequest) throws HttpClientException, HttpResponseException {
         addCookiesToHeader();
+        addAggregatorToHeader();
         HttpResponse httpResponse = handle(HttpResponse.class, httpRequest);
         if (httpResponse.getStatus() >= 300) {
             // Since we internally request the response type `ClientResponse` (jersey type) we must do this check
