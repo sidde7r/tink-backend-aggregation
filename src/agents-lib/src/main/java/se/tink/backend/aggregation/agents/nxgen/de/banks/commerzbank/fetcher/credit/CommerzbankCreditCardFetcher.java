@@ -27,10 +27,7 @@ public class CommerzbankCreditCardFetcher implements AccountFetcher<CreditCardAc
     public Collection<CreditCardAccount> fetchAccounts() {
         ResultEntity entity = apiClient.financialOverview();
 
-        return entity.getItems().get(0).getProducts().stream()
-                .filter(productsEntity -> productsEntity.hasValidProductId() && productsEntity.isCreditCard())
-                .map(productsEntity -> productsEntity.toCreditCardAccount())
-                .collect(Collectors.toList());
+        return entity.toCreditAccount();
     }
 
     @Override
