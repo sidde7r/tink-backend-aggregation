@@ -9,6 +9,7 @@ import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.DetailedLoanResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.LoanOverviewResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.EngagementOverviewResponse;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.LoanDetails;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -30,6 +31,10 @@ public class SwedbankSELoanFetcherTest {
 
     @Test
     public void fetchAccounts_parseMembershipLoan() {
+        Mockito.when(apiClient.engagementOverview())
+                .thenReturn(SerializationUtils.deserializeFromString(SwedBankSELoansFetcherTestData.ENGAGEMENT_OVERVIEW,
+                        EngagementOverviewResponse.class));
+
         Mockito.when(apiClient.loanOverview())
                 .thenReturn(SerializationUtils.deserializeFromString(SwedBankSELoansFetcherTestData.OVERVIEW_OF_LOANS,
                         LoanOverviewResponse.class));
@@ -54,6 +59,10 @@ public class SwedbankSELoanFetcherTest {
 
     @Test
     public void fetchAccounts_parseMortgage() {
+        Mockito.when(apiClient.engagementOverview())
+                .thenReturn(SerializationUtils.deserializeFromString(SwedBankSELoansFetcherTestData.ENGAGEMENT_OVERVIEW,
+                        EngagementOverviewResponse.class));
+
         Mockito.when(apiClient.loanOverview())
                 .thenReturn(SerializationUtils.deserializeFromString(SwedBankSELoansFetcherTestData.OVERVIEW_OF_LOANS,
                         LoanOverviewResponse.class));
