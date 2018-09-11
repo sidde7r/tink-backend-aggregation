@@ -287,6 +287,7 @@ def create_credentials_request(credentialsId=None):
 	credentials = None
 	provider = None
 	user = None
+	accounts = None
 
 	if credentialsId:
 		listOfCredentials = CREDENTIALS_TABLE.search(Query().id == credentialsId)
@@ -297,6 +298,7 @@ def create_credentials_request(credentialsId=None):
 		credentials = listOfCredentials[0]
 		user = create_user(credentials['userId'])
 		provider = get_provider(credentials['providerName'])
+		accounts = ACCOUNTS_TABLE.search(Query().credentialsId == credentialsId)
 	
 	if not credentials:
 		user = create_user()
@@ -306,11 +308,14 @@ def create_credentials_request(credentialsId=None):
 	if not provider:
 		abort(400, 'Invalid provider name')
 
+	if not accounts:
+		accounts = []
+
 	return {
 		'user': user,
 		'credentials': credentials,
 		'provider': provider,
-		'accounts': []
+		'accounts': accounts
 	}
 
 def create_credential(userId):
