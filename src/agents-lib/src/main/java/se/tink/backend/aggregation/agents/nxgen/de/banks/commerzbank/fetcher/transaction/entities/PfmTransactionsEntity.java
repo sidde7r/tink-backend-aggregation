@@ -140,7 +140,7 @@ public class PfmTransactionsEntity {
      */
     private String fixDescriptions(String text) {
         if (text.contains(CommerzbankConstants.MULTIPLE_SPACES)) {
-            return text.substring(0, text.indexOf(CommerzbankConstants.MULTIPLE_SPACES));
+            return text.substring(0, text.indexOf(CommerzbankConstants.MULTIPLE_SPACES)).trim();
         }
         return text;
     }
