@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transa
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.Map;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.UserDataDeserializer;
 import se.tink.backend.aggregation.annotations.JsonObject;

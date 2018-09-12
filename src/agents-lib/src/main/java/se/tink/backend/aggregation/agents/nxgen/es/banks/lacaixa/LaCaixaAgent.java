@@ -36,7 +36,7 @@ public class LaCaixaAgent extends NextGenerationAgent {
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
 
-//          client.setProxy("http://127.0.0.1:8888");
+        //          client.setProxy("http://127.0.0.1:8888");
     }
 
     @Override
@@ -62,9 +62,9 @@ public class LaCaixaAgent extends NextGenerationAgent {
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
         LaCaixaCreditCardFetcher creditCardFetcher = new LaCaixaCreditCardFetcher(bankClient);
-
         return Optional.of(new CreditCardRefreshController(metricRefreshController, updateController,
-                creditCardFetcher, creditCardFetcher));
+                creditCardFetcher, new TransactionFetcherController<>(this.transactionPaginationHelper,
+                new TransactionPagePaginationController<>(creditCardFetcher, 0))));
     }
 
     @Override

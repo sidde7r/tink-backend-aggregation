@@ -1,26 +1,29 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa;
 
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class LaCaixaConstants {
 
+    public static final String CURRENCY = "EUR";
+
     public static class ApiService {
-        public static final String LOGIN_INIT_PATH = "login/loginInicio";
-        public static final String LOGIN_SUBMIT_PATH = "login/loginResultado";
-        public static final String LOGOUT_PATH= "login/logout";
-        public static final String MAIN_ACCOUNT_PATH = "dashboardApp/cuentaPrincipal?";
-        public static final String CHECK_FOTO_PATH = "smartContent/consultaFoto"; // Used for keep alive. TODO: Evaluate
-        public static final String USER_DATA_PATH = "login/loginDatosUsuario";
-        public static final String ACCOUNT_TRANSACTION_PATH = "cuentas/extracto?";
-        public static final String TRANSACTION_DETAILS_PATH = "cuentas/detalleMovimientoExtracto?";
-        public static final String CREDIT_CARDS_PATH = "tarjetas/listadoTarjetasGenerica";
+        static final String LOGIN_INIT_PATH = "login/loginInicio";
+        static final String LOGIN_SUBMIT_PATH = "login/loginResultado";
+        static final String LOGOUT_PATH = "login/logout";
+        static final String MAIN_ACCOUNT_PATH = "dashboardApp/cuentaPrincipal?";
+        static final String CHECK_FOTO_PATH = "smartContent/consultaFoto"; // Used for keep alive. TODO: Evaluate
+        static final String USER_DATA_PATH = "login/loginDatosUsuario";
+        static final String ACCOUNT_TRANSACTION_PATH = "cuentas/extracto?";
+        static final String TRANSACTION_DETAILS_PATH = "cuentas/detalleMovimientoExtracto?";
+        static final String GENERIC_CARDS_PATH = "tarjetas/listadoTarjetasGenerica";
+        static final String CARD_TRANSACTIONS_PATH = "tarjetasHCE/listaMovimientosGenerica";
     }
 
     public static class Urls {
         private static final String BASE = "https://loapp.caixabank.es/xmlapps/rest/";
 
-        public static final URL INIT_LOGIN = new URL(BASE + ApiService.LOGIN_INIT_PATH); // Gets session id. Needed before login.
+        public static final URL INIT_LOGIN = new URL(
+                BASE + ApiService.LOGIN_INIT_PATH); // Gets session id. Needed before login.
         public static final URL SUBMIT_LOGIN = new URL(BASE + ApiService.LOGIN_SUBMIT_PATH);
         public static final URL LOGOUT = new URL(BASE + ApiService.LOGOUT_PATH);
         public static final URL FETCH_MAIN_ACCOUNT = new URL(BASE + ApiService.MAIN_ACCOUNT_PATH);
@@ -28,7 +31,8 @@ public class LaCaixaConstants {
         public static final URL FETCH_USER_DATA = new URL(BASE + ApiService.USER_DATA_PATH);
         public static final URL FETCH_ACCOUNT_TRANSACTION = new URL(BASE + ApiService.ACCOUNT_TRANSACTION_PATH);
         public static final URL FETCH_TRANSACTION_DETAILS = new URL(BASE + ApiService.TRANSACTION_DETAILS_PATH);
-        public static final URL FETCH_CREDIT_CARDS = new URL(BASE + ApiService.CREDIT_CARDS_PATH);
+        public static final URL FETCH_CARDS = new URL(BASE + ApiService.GENERIC_CARDS_PATH);
+        public static final URL FETCH_CARD_TRANSACTIONS = new URL(BASE + ApiService.CARD_TRANSACTIONS_PATH);
     }
 
     public static class DefaultRequestParams {
@@ -74,7 +78,4 @@ public class LaCaixaConstants {
         public static final String TRANSFER_MESSAGE = "Concepto transferencia";
     }
 
-    public static class LogTags {
-        public static final LogTag CREDIT_CARDS = LogTag.from("es_lacaixa_creditcards");
-    }
 }
