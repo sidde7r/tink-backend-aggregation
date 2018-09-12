@@ -1,10 +1,10 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.Accounts.entities;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class AccountBodyEntity {
+public class AccountsBodyEntity {
     @JsonProperty("OwnAccountsTotalCurrentAmount")
     private double ownAccountsTotalCurrentAmount;
     @JsonProperty("OwnAccountsTotalAvailableAmount")

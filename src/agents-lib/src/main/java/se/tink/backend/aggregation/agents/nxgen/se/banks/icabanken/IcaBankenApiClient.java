@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.SignBundleResponseBody;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.SignedAssignmentList;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.Accounts.entities.AccountFetcherRoot;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.entities.AcceptEInvoiceTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.entities.EInvoiceBody;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.entities.PaymentNameBody;
@@ -22,14 +21,16 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.inves
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans.entities.LoanListEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans.entities.LoanOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans.entities.MortgageListEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transactions.entities.RootTransactionModel;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transactions.entities.UpcomingTransactionsBody;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transactions.entities.UpcomingTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.AssignmentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.AssignmentsResponseBody;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.BanksResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.BankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.entities.AccountsEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.entities.TransactionsBodyEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.entities.UpcomingTransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.rpc.UpcomingTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.RecipientEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.RecipientsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.TransferRequest;
@@ -114,6 +115,13 @@ public class IcaBankenApiClient {
         transferRequest.setDueDate(transferResponse.getBody().getProposedNewDate());
         return createPostRequest(IcaBankenConstants.Urls.UNSIGNED_ASSIGNMENTS_URL).post(TransferResponse.class,
                 transferRequest);
+    public TransactionsBodyEntity fetchTransactionsWithDate(Account account, Date toDate) {
+        return createRequest(IcaBankenConstants.Urls.TRANSACTIONS.parameter(IcaBankenConstants.IdTags.IDENTIFIER_TAG,
+                account.getBankIdentifier())
+                .queryParam(IcaBankenConstants.IdTags.TO_DATE_TAG,
+                        ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate)))
+                .get(TransactionsResponse.class)
+                .getBody();
     }
 
     public void deleteUnsignedTransfer(AssignmentsResponseBody responseBody) {
@@ -126,44 +134,43 @@ public class IcaBankenApiClient {
         if (assignments > 1) {
             log.warn("Unexpected size of list of assignments. Expected 1 - Real size %s", assignments);
         }
+    public TransactionsBodyEntity fetchTransactions(Account account) {
+        return createRequest(IcaBankenConstants.Urls.TRANSACTIONS.parameter(
+                IcaBankenConstants.IdTags.IDENTIFIER_TAG, account.getBankIdentifier()))
+                .get(TransactionsResponse.class)
+                .getBody();
+    }
 
         String transferId = responseBody.getAssignments()
                 .stream()
                 .findFirst()
                 .orElseThrow(IllegalStateException::new)
                 .getRegistrationId();
+    public TransactionsBodyEntity fetchReservedTransactions(Account account) {
+        return createRequest(
+                IcaBankenConstants.Urls.RESERVED_TRANSACTIONS.parameter(IcaBankenConstants.IdTags.IDENTIFIER_TAG,
+                        account.getBankIdentifier()))
+                .get(TransactionsResponse.class)
+                .getBody();
 
         createRequest(IcaBankenConstants.Urls.DELETE_UNSIGNED_TRANSFER_URL.parameter(
                 IcaBankenConstants.IdTags.TRANSFER_ID_TAG, transferId)).delete();
     }
 
-    public RootTransactionModel fetchTransactions(String accountNumber, String fromDate, String toDate) {
-        URL request = IcaBankenConstants.Urls.TRANSACTIONS.parameter(IcaBankenConstants.IdTags.IDENTIFIER_TAG,
-                accountNumber)
-                .queryParam(IcaBankenConstants.IdTags.FROM_DATE_TAG, fromDate)
-                .queryParam(IcaBankenConstants.IdTags.TO_DATE_TAG, toDate);
-        return postTransactionRequest(request);
+    public List<UpcomingTransactionEntity> fetchUpcomingTransactions() {
+        return createRequest(IcaBankenConstants.Urls.UPCOMING_TRANSACTIONS)
+                .get(UpcomingTransactionsResponse.class)
+                .getBody()
+                .getUpcomingTransactions();
     }
 
-    public UpcomingTransactionsBody fetchUpcomingTransactions() {
-        return createRequest(IcaBankenConstants.Urls.UPCOMING_TRANSACTIONS_URL).get(UpcomingTransactionsResponse.class)
                 .getBody();
     }
 
-    public RootTransactionModel fetchReservedTransactions(String accountNumber) {
-        URL request = IcaBankenConstants.Urls.RESERVED_TRANSACTIONS.parameter(IcaBankenConstants.IdTags.IDENTIFIER_TAG,
-                accountNumber);
-        return postTransactionRequest(request);
     }
 
-    public RootTransactionModel postTransactionRequest(URL request) {
 
-        try {
-            return createPostRequest(request).get(RootTransactionModel.class);
-        } catch (HttpResponseException httpException) {
 
-            return null;
-        }
     public void keepAlive() {
         createRequest(IcaBankenConstants.Urls.KEEP_ALIVE).get(HttpResponse.class);
     }

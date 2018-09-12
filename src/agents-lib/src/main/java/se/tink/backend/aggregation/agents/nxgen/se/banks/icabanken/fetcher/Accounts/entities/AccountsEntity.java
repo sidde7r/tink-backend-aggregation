@@ -1,27 +1,40 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.Accounts.entities;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.Lists;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AccountsEntity {
     @JsonProperty("OwnAccounts")
-    private List<OwnAccountsEntity> ownAccounts;
+    private List<AccountEntity> ownAccounts;
     @JsonProperty("JointAccounts")
-    private List<OwnAccountsEntity> jointAccounts;
+    private List<AccountEntity> jointAccounts;
     @JsonProperty("MinorsAccounts")
-    private List<OwnAccountsEntity> minorsAccounts;
+    private List<AccountEntity> minorsAccounts;
 
-    public List<OwnAccountsEntity> getOwnAccounts() {
+    public List<AccountEntity> getOwnAccounts() {
         return ownAccounts;
     }
 
-    public List<OwnAccountsEntity> getJointAccounts() {
+    public List<AccountEntity> getJointAccounts() {
         return jointAccounts;
     }
 
-    public List<OwnAccountsEntity> getMinorsAccounts() {
+    public List<AccountEntity> getMinorsAccounts() {
         return minorsAccounts;
+    }
+
+    public List<AccountEntity> concatenateAccounts() {
+        List<AccountEntity> accounts = Lists.newArrayList();
+
+        accounts.addAll(Optional.ofNullable(ownAccounts).orElse(Collections.emptyList()));
+        accounts.addAll(Optional.ofNullable(jointAccounts).orElse(Collections.emptyList()));
+        accounts.addAll(Optional.ofNullable(minorsAccounts).orElse(Collections.emptyList()));
+
+        return accounts;
     }
 }
