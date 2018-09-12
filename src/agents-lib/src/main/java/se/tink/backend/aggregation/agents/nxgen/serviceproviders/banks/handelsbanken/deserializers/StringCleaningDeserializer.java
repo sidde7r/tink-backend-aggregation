@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import java.io.IOException;
-import se.tink.backend.aggregation.agents.banks.handelsbanken.v6.utils.SHBUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.utils.SHBUtils;
 
 public class StringCleaningDeserializer extends StdDeserializer<String> {
 

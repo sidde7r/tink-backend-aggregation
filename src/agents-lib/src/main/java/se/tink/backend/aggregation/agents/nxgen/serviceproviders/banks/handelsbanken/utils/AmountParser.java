@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks.handelsbanken.v6.utils;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.utils;
 
 import java.util.Optional;
 import java.util.regex.Matcher;
