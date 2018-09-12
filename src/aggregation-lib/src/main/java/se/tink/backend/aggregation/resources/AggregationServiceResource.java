@@ -121,6 +121,23 @@ public class AggregationServiceResource implements AggregationService {
     @Override
     public void configureWhitelistInformation(final ConfigureWhitelistInformationRequest request,
             ClusterInfo clusterInfo) throws Exception {
+        Set<RefreshableItem> itemsToRefresh = request.getItemsToRefresh();
+
+        // If the caller don't set any refreshable items, we won't do a refresh
+        if (Objects.isNull(itemsToRefresh) || itemsToRefresh.isEmpty()) {
+            HttpResponseHelper.error(Response.Status.BAD_REQUEST);
+        }
+
+        // If the caller don't set any account type refreshable item, we don't do a refresh
+        if (!RefreshableItem.hasAccounts(itemsToRefresh)) {
+            HttpResponseHelper.error(Response.Status.BAD_REQUEST);
+        }
+
+        // If the caller don't set a cluster id or if it's invalid, we don't do a refresh
+        if (Objects.isNull(clusterInfo.getClusterId()) || !clusterInfo.getClusterId().isValidId()) {
+            HttpResponseHelper.error(Response.Status.BAD_REQUEST);
+        }
+
         agentWorker.execute(agentWorkerCommandFactory.createConfigureWhitelistOperation(clusterInfo, request));
     }
 
@@ -141,6 +158,11 @@ public class AggregationServiceResource implements AggregationService {
 
         // If the caller don't sets any account type refreshable item, we don't do a refresh
         if (!RefreshableItem.hasAccounts(itemsToRefresh)) {
+            HttpResponseHelper.error(Response.Status.BAD_REQUEST);
+        }
+
+        // If the caller don't set a cluster id or if it's invalid, we don't do a refresh
+        if (Objects.isNull(clusterInfo.getClusterId()) || !clusterInfo.getClusterId().isValidId()) {
             HttpResponseHelper.error(Response.Status.BAD_REQUEST);
         }
 
