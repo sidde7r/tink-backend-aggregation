@@ -215,6 +215,40 @@
       "transactional": "true"
     },
     {
+      "className": "nxgen.fi.banks.nordea.v21.NordeaFiAgent",
+      "credentialsType": "PASSWORD",
+      "displayDescription": "Password",
+      "displayName": "Nordea",
+      "fields": [
+        {
+          "description": "User ID",
+          "name": "username",
+          "numeric": true,
+          "minLength": 1
+        },
+        {
+          "description": "Password",
+          "maxLength": 4,
+          "minLength": 4,
+          "masked": true,
+          "sensitive": true,
+          "name": "password",
+          "pattern": "[0-9]{4}",
+          "patternError": "Please enter a valid password",
+          "numeric": true
+        }
+      ],
+      "multiFactor": false,
+      "name": "fi-nordea-lightlogin",
+      "passwordHelpText": "Use the same username and password as you would on the bank's website.",
+      "popular": true,
+      "refreshFrequency": 1,
+      "refreshFrequencyFactor": 1,
+      "status": "ENABLED",
+      "type": "BANK",
+      "transactional": true
+    },
+    {
       "className": "nxgen.fi.banks.nordea.v30.NordeaFiAgent",
       "credentialsType": "THIRD_PARTY_APP",
       "displayDescription": "Nordea Codes App",
