@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.paginated.OperationSummaryPaginationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.paginated.OperationSummaryResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationUtils;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
@@ -30,11 +29,11 @@ public class EuroInformationOperationsFetcher implements
         return getOperationsForAccount(webId, key);
     }
 
-    private OperationSummaryPaginationResponse getOperationsForAccount(String webId, String key) {
+    private OperationSummaryResponse getOperationsForAccount(String webId, String key) {
         OperationSummaryResponse operations = apiClient.getTransactionsPaginated(webId, key);
         if (!EuroInformationUtils.isSuccess(operations.getReturnCode())) {
             return null;
         }
-        return OperationSummaryPaginationResponse.create(operations);
+        return operations;
     }
 }
