@@ -61,8 +61,7 @@ public class LaCaixaPasswordHash {
             throw new IllegalStateException("Algorithm: (" + HASH_ALGORITHM + ") could not be found.");
         }
 
-        byte[] md5SumBytes = md.digest(md5BaseData.getBytes(StandardCharsets.UTF_8));
-        return md5SumBytes;
+        return md.digest(md5BaseData.getBytes(StandardCharsets.UTF_8));
     }
 
     private String calculateFoldedHash(byte[] md5Sum) {

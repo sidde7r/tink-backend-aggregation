@@ -5,9 +5,9 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstant
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class CreditCardRequest {
+public class GenericCardsRequest {
 
-    public CreditCardRequest(boolean fromBegin, int numElements) {
+    public GenericCardsRequest(boolean fromBegin, int numElements) {
         this.fromBegin = fromBegin;
         this.numElements = numElements;
         this.optionFilter = LaCaixaConstants.DefaultRequestParams.OPTION_FILTER;

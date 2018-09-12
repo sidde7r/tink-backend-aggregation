@@ -8,17 +8,26 @@ import se.tink.backend.core.Amount;
 public class LiquidationDataEntity {
 
     @JsonProperty("saldoPrepago")
-    private double prepaid;
-
+    private double prepaidAmount;
     @JsonProperty("saldoDisponible")
-    private double avaliableCredit;
+    private double availableCredit;
+    @JsonProperty("saldoDispuesto")
+    private double balance;
+    @JsonProperty("gastoMesDebito")
+    private String spendingMonthDebit;
+    @JsonProperty("datosUltimoMovimiento")
+    private LastMovementDataEntity lastMovementData;
 
-    public Amount getPrepaidAmount(){
-        return Amount.inEUR(prepaid);
+    public Amount getPrepaidAmount() {
+        return Amount.inEUR(prepaidAmount);
     }
 
-
-    public Amount getAvaliableCredit(){
-        return Amount.inEUR(avaliableCredit);
+    public Amount getAvailableCredit() {
+        return Amount.inEUR(availableCredit);
     }
+
+    public Amount getBalance() {
+        return Amount.inEUR(balance);
+    }
+
 }

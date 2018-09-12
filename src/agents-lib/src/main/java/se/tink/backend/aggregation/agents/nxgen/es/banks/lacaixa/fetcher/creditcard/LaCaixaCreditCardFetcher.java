@@ -1,40 +1,30 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 
-public class LaCaixaCreditCardFetcher implements AccountFetcher<CreditCardAccount>, TransactionFetcher<CreditCardAccount> {
-    private static final AggregationLogger log = new AggregationLogger(LaCaixaApiClient.class);
+public class LaCaixaCreditCardFetcher
+        implements AccountFetcher<CreditCardAccount>, TransactionPagePaginator<CreditCardAccount> {
 
-    LaCaixaApiClient bankApi;
+    private final LaCaixaApiClient apiClient;
 
     public LaCaixaCreditCardFetcher(LaCaixaApiClient bankApi) {
-        this.bankApi = bankApi;
+        this.apiClient = bankApi;
     }
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-
-
-        // TODO: Enable when we know how to properly filter credit/debit cards
-        // return bankApi.fetchCreditCards().toTinkCards();
-
-        String response = bankApi.fetchCreditCards();
-        log.infoExtraLong(response, LaCaixaConstants.LogTags.CREDIT_CARDS);
-
-        return Collections.emptyList();
+        return apiClient.fetchCards().toTinkCards();
     }
 
     @Override
-    public List<AggregationTransaction> fetchTransactionsFor(CreditCardAccount account) {
-        return Collections.emptyList();
+    public PaginatorResponse getTransactionsFor(CreditCardAccount account, int page) {
+        // Pagination state is maintained on the server. We should only indicate if this is new/first request or not.
+        // The response contains a boolean that indicates if there is more data to fetch or not.
+        return apiClient.fetchCardTransactions(account.getBankIdentifier(), page == 0);
     }
 }

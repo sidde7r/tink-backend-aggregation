@@ -7,7 +7,10 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.r
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.SessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.SessionResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.CreditCardRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.CardTransactionsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.CardTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.GenericCardsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.GenericCardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.AccountTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.ListAccountsResponse;
@@ -24,12 +27,12 @@ public class LaCaixaApiClient {
 
     private final TinkHttpClient client;
 
-    public LaCaixaApiClient(TinkHttpClient client){
+    public LaCaixaApiClient(TinkHttpClient client) {
 
         this.client = client;
     }
 
-    public SessionResponse initializeSession(){
+    public SessionResponse initializeSession() {
 
         SessionRequest request = new SessionRequest(
                 LaCaixaConstants.DefaultRequestParams.LANGUAGE_EN,
@@ -49,10 +52,10 @@ public class LaCaixaApiClient {
             return createRequest(LaCaixaConstants.Urls.SUBMIT_LOGIN)
                     .post(LoginResponse.class, loginRequest);
 
-        } catch (HttpResponseException e){
+        } catch (HttpResponseException e) {
             int statusCode = e.getResponse().getStatus();
 
-            if(statusCode == LaCaixaConstants.StatusCodes.INCORRECT_USERNAME_PASSWORD){
+            if (statusCode == LaCaixaConstants.StatusCodes.INCORRECT_USERNAME_PASSWORD) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             }
 
@@ -60,18 +63,18 @@ public class LaCaixaApiClient {
         }
     }
 
-    public void logout(){
+    public void logout() {
         createRequest(LaCaixaConstants.Urls.LOGOUT)
                 .post();
     }
 
-    public ListAccountsResponse fetchAccountList(){
+    public ListAccountsResponse fetchAccountList() {
 
         return createRequest(LaCaixaConstants.Urls.FETCH_MAIN_ACCOUNT)
                 .get(ListAccountsResponse.class);
     }
 
-    public UserDataResponse fetchUserData(){
+    public UserDataResponse fetchUserData() {
 
         UserDataRequest request = new UserDataRequest(LaCaixaConstants.UserData.FULL_HOLDER_NAME);
 
@@ -79,7 +82,7 @@ public class LaCaixaApiClient {
                 .post(UserDataResponse.class, request);
     }
 
-    public AccountTransactionResponse fetchNextAccountTransactions(String accountReference, boolean fromBegin){
+    public AccountTransactionResponse fetchNextAccountTransactions(String accountReference, boolean fromBegin) {
 
         return createRequest(LaCaixaConstants.Urls.FETCH_ACCOUNT_TRANSACTION)
                 .queryParam(LaCaixaConstants.QueryParams.FROM_BEGIN, Boolean.toString(fromBegin))
@@ -99,20 +102,24 @@ public class LaCaixaApiClient {
                 .get(TransactionDetailsResponse.class);
     }
 
-    public String fetchCreditCards(){
-
-        // TODO: Implement properly when logging is done.
-        return createRequest(LaCaixaConstants.Urls.FETCH_CREDIT_CARDS)
-                .post(String.class,
-                        new CreditCardRequest(true, LaCaixaConstants.DefaultRequestParams.NUM_CARDS));
+    public GenericCardsResponse fetchCards() {
+        return createRequest(LaCaixaConstants.Urls.FETCH_CARDS)
+                .body(new GenericCardsRequest(true, LaCaixaConstants.DefaultRequestParams.NUM_CARDS))
+                .post(GenericCardsResponse.class);
     }
 
-    public boolean isAlive(){
+    public CardTransactionsResponse fetchCardTransactions(String cardId, boolean start) {
+        return createRequest(LaCaixaConstants.Urls.FETCH_CARD_TRANSACTIONS)
+                .body(new CardTransactionsRequest(cardId, start))
+                .post(CardTransactionsResponse.class);
+    }
 
-        try{
+    public boolean isAlive() {
+
+        try {
 
             createRequest(LaCaixaConstants.Urls.KEEP_ALIVE).get(HttpResponse.class);
-        } catch(HttpResponseException e){
+        } catch (HttpResponseException e) {
 
             return false;
         }
@@ -120,7 +127,7 @@ public class LaCaixaApiClient {
         return true;
     }
 
-    private RequestBuilder createRequest(URL url){
+    private RequestBuilder createRequest(URL url) {
 
         return client
                 .request(url)
