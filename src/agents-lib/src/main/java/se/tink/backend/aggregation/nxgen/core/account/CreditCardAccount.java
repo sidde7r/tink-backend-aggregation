@@ -33,10 +33,9 @@ public class CreditCardAccount extends Account {
 
     /**
      * This is the preferred factory method when you have the complete credit card number. It defines the
-     * uniqueIdentifier, accountNumber and name in a standard way. In addition it also stores the complete
-     * creditCardNumber as the bankIdentifier (you'll likely want to change that to something else).
+     * uniqueIdentifier, accountNumber and name in a standard way.
      *
-     * @param creditCardNumber Complete credit card number (16 digits, unformatted)
+     * @param creditCardNumber Complete credit card number (any/all formatting, or non-digits, will be removed)
      * @param cardAlias A (user defined) card name
      * @return A builder with the uniqueIdentifier and accountNumber defined in a standard way
      */
@@ -48,13 +47,12 @@ public class CreditCardAccount extends Account {
 
     private static Builder<?, ?> makeBuilder(String cardNumber, String cardAlias) {
 
-        Preconditions.checkState(
-                cardNumber.matches("[0-9]{16}"),
-                "Card number is not of the expected format (16 digits, unformatted)!"
-        );
+        String unformatted = cardNumber.replaceAll("\\D+","");
 
-        String firstFour = cardNumber.substring(0, 4);
-        String lastFour = cardNumber.substring(cardNumber.length() - 4);
+        Preconditions.checkState(unformatted.length() >= 12, "Not enough digits. Should be minimum 12 and most likely 16 digits!");
+
+        String firstFour = unformatted.substring(0, 4);
+        String lastFour = unformatted.substring(unformatted.length() - 4);
 
         String uniqueIdentifier = String.format("%s%s", firstFour, lastFour);
         String accountNumber = String.format("%s **** **** %s", firstFour, lastFour);
@@ -62,8 +60,7 @@ public class CreditCardAccount extends Account {
 
         return new DefaultCreditCardBuilder(uniqueIdentifier)
                 .setAccountNumber(accountNumber)
-                .setName(name)
-                .setBankIdentifier(cardNumber);
+                .setName(name);
     }
 
     public Amount getAvailableCredit() {
