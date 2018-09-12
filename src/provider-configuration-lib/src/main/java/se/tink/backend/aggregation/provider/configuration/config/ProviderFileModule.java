@@ -1,14 +1,15 @@
 package se.tink.backend.aggregation.provider.configuration.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.api.client.util.Maps;
+import com.google.common.collect.Maps;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.cli.provider.ProviderConfigModel;
+
+import se.tink.backend.aggregation.provider.configuration.cli.ProviderConfigModel;
 import se.tink.backend.core.ProviderConfiguration;
 
 import java.io.File;

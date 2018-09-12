@@ -795,8 +795,6 @@ java_library(
         ":main-api",
         ":provider-configuration-api",
         ":common-lib",
-        ":aggregation-lib",
-
         "//src/cluster-lib",
         "//src/api-annotations",
         "//src/libraries/auth:auth",
@@ -820,7 +818,6 @@ java_library(
         "//third_party:org_eclipse_jetty_orbit_javax_servlet",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
-        "//third_party:com_google_http_client_google_http_client",
         "//third_party:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
         "//third_party:org_hibernate_hibernate_annotations",
         "//third_party:org_springframework_spring_expression",
