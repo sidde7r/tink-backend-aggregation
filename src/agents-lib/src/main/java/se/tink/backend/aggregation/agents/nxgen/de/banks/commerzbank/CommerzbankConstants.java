@@ -4,6 +4,8 @@ import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
 public class CommerzbankConstants {
 
+    public static final String MULTIPLE_SPACES = "  ";
+
     public static class URLS {
         public static final String HOST = "https://app.commerzbank.de";
         public static final String LOGIN = "/app/lp/v4/applogin";

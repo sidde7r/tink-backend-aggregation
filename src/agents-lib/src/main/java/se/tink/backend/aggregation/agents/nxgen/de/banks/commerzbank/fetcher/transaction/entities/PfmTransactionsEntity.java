@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang3.StringEscapeUtils;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.core.Amount;
@@ -129,6 +130,21 @@ public class PfmTransactionsEntity {
         return StringEscapeUtils.unescapeHtml4(originalText);
     }
 
+    private String getDescription() {
+        return fixDescriptions(getOriginalText());
+    }
+
+    /*
+        Example of transaction: Kantine Deluxe           Berlin      000
+        Removing everything after the spaces, since it is not important
+     */
+    private String fixDescriptions(String text) {
+        if (text.contains(CommerzbankConstants.MULTIPLE_SPACES)) {
+            return text.substring(0, text.indexOf(CommerzbankConstants.MULTIPLE_SPACES)).trim();
+        }
+        return text;
+    }
+
     public String getParentIdentifier() {
         return parentIdentifier;
     }
@@ -186,7 +202,7 @@ public class PfmTransactionsEntity {
         return Transaction.builder()
                 .setAmount(new Amount(getAmount().getCurrency(), getAmount().getValue()))
                 .setDate((getDate()))
-                .setDescription(getOriginalText())
+                .setDescription(getDescription())
                 .setPending(isUncleared()).build();
     }
 
