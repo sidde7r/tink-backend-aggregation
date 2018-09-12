@@ -1,25 +1,23 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class EuroInformationDateDeserializer extends XmlAdapter<String, Date> {
-
-    DateFormat shortDate = new SimpleDateFormat("yyyyMMdd");
-    DateFormat longDate = new SimpleDateFormat("yyyyMMddHHmmss");
+    ThreadSafeDateFormat shortDateFormatter = ThreadSafeDateFormat.FORMATTER_INTEGER_DATE; //yyyyMMdd
+    ThreadSafeDateFormat longDateFormatter = new ThreadSafeDateFormat("yyyyMMddHHmmss");
 
     @Override
     public Date unmarshal(String v) throws Exception {
         switch (v.length()) {
         //yyyyMMdd
         case 8:
-            return shortDate.parse(v);
+            return shortDateFormatter.parse(v);
         //yyyyMMddHHmmss
         case 14:
-            return longDate.parse(v);
+            return longDateFormatter.parse(v);
         default:
             throw new IllegalArgumentException(v);
         }
