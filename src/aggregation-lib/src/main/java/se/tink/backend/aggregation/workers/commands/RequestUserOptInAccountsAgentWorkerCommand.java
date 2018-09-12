@@ -1,13 +1,11 @@
 package se.tink.backend.aggregation.workers.commands;
 
-import com.google.api.client.json.Json;
 import com.google.gson.JsonObject;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
