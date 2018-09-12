@@ -16,8 +16,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.UserEntit
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.AccountContractsEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.ContractEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.FetchTransactionsRequestEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.AccountBalanceRequest;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.AccountBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.FetchAccountTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.FetchProductsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
@@ -89,12 +87,6 @@ public class BbvaApiClient {
 
         return createRefererRequest(BbvaConstants.Url.PRODUCTS)
                 .get(FetchProductsResponse.class);
-    }
-
-    public AccountBalanceResponse fetchAccountBalance(String accountId) {
-        AccountBalanceRequest request = AccountBalanceRequest.create(accountId);
-        return createRefererRequest(BbvaConstants.Url.ACCOUNT_BALANCE)
-                .post(AccountBalanceResponse.class, request);
     }
 
     public FetchAccountTransactionsResponse fetchAccountTransactions(Account account, int keyIndex) {
