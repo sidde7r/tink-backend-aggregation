@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.resources;
 
 import com.google.api.client.util.Lists;
+import java.util.Objects;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
@@ -15,6 +17,7 @@ import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.models.RefreshInformation;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
+import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.CreateCredentialsRequest;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.DeleteCredentialsRequest;
@@ -116,18 +119,54 @@ public class AggregationServiceResource implements AggregationService {
     }
 
     @Override
+    public void configureWhitelistInformation(final ConfigureWhitelistInformationRequest request,
+            ClusterInfo clusterInfo) throws Exception {
+        Set<RefreshableItem> itemsToRefresh = request.getItemsToRefresh();
+
+        // If the caller don't set any refreshable items, we won't do a refresh
+        if (Objects.isNull(itemsToRefresh) || itemsToRefresh.isEmpty()) {
+            HttpResponseHelper.error(Response.Status.BAD_REQUEST);
+        }
+
+        // If the caller don't set any account type refreshable item, we don't do a refresh
+        if (!RefreshableItem.hasAccounts(itemsToRefresh)) {
+            HttpResponseHelper.error(Response.Status.BAD_REQUEST);
+        }
+
+        // If the caller don't set a cluster id or if it's invalid, we don't do a refresh
+        if (Objects.isNull(clusterInfo.getClusterId()) || !clusterInfo.getClusterId().isValidId()) {
+            HttpResponseHelper.error(Response.Status.BAD_REQUEST);
+        }
+
+        agentWorker.execute(agentWorkerCommandFactory.createConfigureWhitelistOperation(clusterInfo, request));
+    }
+
+    @Override
     public void refreshWhitelistInformation(final RefreshWhitelistInformationRequest request, ClusterInfo clusterInfo)
-            throws
-            Exception {
-        // if it is opt-in (where user is asked to select the accounts to aggregate, we return a bad request
-        if (request.isOptIn() && request.getItemsToRefresh()!=null && request.getItemsToRefresh() == null && !RefreshableItem.hasAccounts(Lists.newArrayList(request.getItemsToRefresh()))){
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+            throws Exception {
+        // If the caller don't set any accounts to refresh, we won't do a refresh.
+        if (Objects.isNull(request.getAccounts()) || request.getAccounts().isEmpty()) {
+            HttpResponseHelper.error(Response.Status.BAD_REQUEST);
         }
-        // if it is refreshing white listed accounts, we return bad request if no accounts are white listed
-        if (!request.isOptIn() && (request.getAccounts()==null || request.getAccounts().isEmpty())){
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+
+        Set<RefreshableItem> itemsToRefresh = request.getItemsToRefresh();
+
+        // If the caller don't sets any refreshable items, we won't do a refresh
+        if (Objects.isNull(itemsToRefresh) || itemsToRefresh.isEmpty()) {
+            HttpResponseHelper.error(Response.Status.BAD_REQUEST);
         }
-        agentWorker.execute(agentWorkerCommandFactory.createOptInRefreshOperation(clusterInfo, request));
+
+        // If the caller don't sets any account type refreshable item, we don't do a refresh
+        if (!RefreshableItem.hasAccounts(itemsToRefresh)) {
+            HttpResponseHelper.error(Response.Status.BAD_REQUEST);
+        }
+
+        // If the caller don't set a cluster id or if it's invalid, we don't do a refresh
+        if (Objects.isNull(clusterInfo.getClusterId()) || !clusterInfo.getClusterId().isValidId()) {
+            HttpResponseHelper.error(Response.Status.BAD_REQUEST);
+        }
+
+        agentWorker.execute(agentWorkerCommandFactory.createWhitelistRefreshOperation(clusterInfo, request));
     }
 
     @Override

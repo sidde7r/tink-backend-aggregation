@@ -1,7 +1,8 @@
 package se.tink.backend.aggregation.workers;
 
+import com.gargoylesoftware.htmlunit.RefreshHandler;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Set;
@@ -9,15 +10,21 @@ import java.util.stream.Collectors;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.Agent;
+import se.tink.backend.aggregation.agents.AgentFactory;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
+import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsDecryptRequest;
 import se.tink.backend.aggregation.rpc.MigrateCredentialsReencryptRequest;
+import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.ReencryptionRequest;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
@@ -65,82 +72,53 @@ import se.tink.libraries.metrics.MetricRegistry;
 
 public class AgentWorkerOperationFactory {
     private static final Logger log = LoggerFactory.getLogger(AgentWorkerOperationFactory.class);
-    private InstantiateAgentWorkerCommandState instantiateAgentWorkerCommandState;
-    private ServiceContext serviceContext;
-    private EncryptAgentWorkerCommandState encryptAgentWorkerCommandState;
-    private ReportProviderMetricsAgentWorkerCommandState reportMetricsAgentWorkerCommandState;
-    private AgentWorkerOperationState agentWorkerOperationState;
-    private CircuitBreakerAgentWorkerCommandState circuitBreakAgentWorkerCommandState;
-    private DeleteAgentWorkerCommandState deleteAgentWorkerCommandState;
-    private DebugAgentWorkerCommandState debugAgentWorkerCommandState;
-    private LoginAgentWorkerCommandState loginAgentWorkerCommandState;
-    private boolean useAggregationController;
-    private AggregationControllerAggregationClient aggregationControllerAggregationClient;
+
     private final boolean isAggregationCluster;
     private final ClusterCryptoConfigurationRepository clusterCryptoConfigurationRepository;
     private final CacheClient cacheClient;
-
     private final MetricCacheLoader metricCacheLoader;
 
-    private static final ImmutableSet<RefreshableItem> REFRESHABLE_ITEMS_ALL = ImmutableSet.<RefreshableItem>builder()
-            .add(RefreshableItem.CHECKING_ACCOUNTS)
-            .add(RefreshableItem.CHECKING_TRANSACTIONS)
-            .add(RefreshableItem.SAVING_ACCOUNTS)
-            .add(RefreshableItem.SAVING_TRANSACTIONS)
-            .add(RefreshableItem.CREDITCARD_ACCOUNTS)
-            .add(RefreshableItem.CREDITCARD_TRANSACTIONS)
-            .add(RefreshableItem.LOAN_ACCOUNTS)
-            .add(RefreshableItem.LOAN_TRANSACTIONS)
-            .add(RefreshableItem.INVESTMENT_ACCOUNTS)
-            .add(RefreshableItem.INVESTMENT_TRANSACTIONS)
-            .add(RefreshableItem.EINVOICES)
-            .add(RefreshableItem.TRANSFER_DESTINATIONS)
-            .build();
+    // States
+    private AgentWorkerOperationState agentWorkerOperationState;
+    private CircuitBreakerAgentWorkerCommandState circuitBreakAgentWorkerCommandState;
+    private DebugAgentWorkerCommandState debugAgentWorkerCommandState;
+    private DeleteAgentWorkerCommandState deleteAgentWorkerCommandState;
+    private EncryptAgentWorkerCommandState encryptAgentWorkerCommandState;
+    private InstantiateAgentWorkerCommandState instantiateAgentWorkerCommandState;
+    private LoginAgentWorkerCommandState loginAgentWorkerCommandState;
+    private ReportProviderMetricsAgentWorkerCommandState reportMetricsAgentWorkerCommandState;
 
-    private static final ImmutableSet<RefreshableItem> REFRESHABLE_ITEMS_TRANSACTIONS = ImmutableSet.<RefreshableItem>builder()
-            .add(RefreshableItem.CHECKING_TRANSACTIONS)
-            .add(RefreshableItem.SAVING_TRANSACTIONS)
-            .add(RefreshableItem.CREDITCARD_TRANSACTIONS)
-            .add(RefreshableItem.LOAN_TRANSACTIONS)
-            .add(RefreshableItem.INVESTMENT_TRANSACTIONS)
-            .build();
-
-    private static final ImmutableSet<RefreshableItem> REFRESHABLE_ITEMS_ACCOUNTS = ImmutableSet.<RefreshableItem>builder()
-            .add(RefreshableItem.CHECKING_ACCOUNTS)
-            .add(RefreshableItem.SAVING_ACCOUNTS)
-            .add(RefreshableItem.CREDITCARD_ACCOUNTS)
-            .add(RefreshableItem.LOAN_ACCOUNTS)
-            .add(RefreshableItem.INVESTMENT_ACCOUNTS)
-            .build();
-
-
+    private AggregationControllerAggregationClient aggregationControllerAggregationClient;
     private MetricRegistry metricRegistry;
+    private ServiceContext serviceContext;
+    private boolean useAggregationController;
+
 
     @Inject
     public AgentWorkerOperationFactory(ServiceContext serviceContext, MetricRegistry metricRegistry,
-                                       @Named("useAggregationController") boolean useAggregationController, AggregationControllerAggregationClient aggregationControllerAggregationClient) {
-        this.serviceContext = serviceContext;
-
-        // Initialize agent worker command states.
-        metricCacheLoader = new MetricCacheLoader(metricRegistry);
-
-        instantiateAgentWorkerCommandState = new InstantiateAgentWorkerCommandState(serviceContext);
-        encryptAgentWorkerCommandState = new EncryptAgentWorkerCommandState(serviceContext);
-        reportMetricsAgentWorkerCommandState = new ReportProviderMetricsAgentWorkerCommandState(metricRegistry);
-        circuitBreakAgentWorkerCommandState = new CircuitBreakerAgentWorkerCommandState(
-                serviceContext.getConfiguration().getAggregationWorker().getCircuitBreaker(), metricRegistry);
-        deleteAgentWorkerCommandState = new DeleteAgentWorkerCommandState(serviceContext);
-        debugAgentWorkerCommandState = new DebugAgentWorkerCommandState(serviceContext);
-        loginAgentWorkerCommandState = new LoginAgentWorkerCommandState(serviceContext, metricRegistry);
-        agentWorkerOperationState = new AgentWorkerOperationState(metricRegistry);
-        this.metricRegistry = metricRegistry;
-        this.useAggregationController = useAggregationController;
-        this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
+            @Named("useAggregationController") boolean useAggregationController,
+            AggregationControllerAggregationClient aggregationControllerAggregationClient) {
         this.isAggregationCluster = serviceContext.isAggregationCluster();
         this.clusterCryptoConfigurationRepository =
                 serviceContext.getRepository(ClusterCryptoConfigurationRepository.class);
-
         this.cacheClient = serviceContext.getCacheClient();
+        metricCacheLoader = new MetricCacheLoader(metricRegistry);
+
+        // Initialize agent worker command states.
+        agentWorkerOperationState = new AgentWorkerOperationState(metricRegistry);
+        debugAgentWorkerCommandState = new DebugAgentWorkerCommandState(serviceContext);
+        deleteAgentWorkerCommandState = new DeleteAgentWorkerCommandState(serviceContext);
+        circuitBreakAgentWorkerCommandState = new CircuitBreakerAgentWorkerCommandState(
+                serviceContext.getConfiguration().getAggregationWorker().getCircuitBreaker(), metricRegistry);
+        encryptAgentWorkerCommandState = new EncryptAgentWorkerCommandState(serviceContext);
+        instantiateAgentWorkerCommandState = new InstantiateAgentWorkerCommandState(serviceContext);
+        loginAgentWorkerCommandState = new LoginAgentWorkerCommandState(serviceContext, metricRegistry);
+        reportMetricsAgentWorkerCommandState = new ReportProviderMetricsAgentWorkerCommandState(metricRegistry);
+
+        this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
+        this.metricRegistry = metricRegistry;
+        this.serviceContext = serviceContext;
+        this.useAggregationController = useAggregationController;
     }
 
     private AgentWorkerCommandMetricState createMetricState(CredentialsRequest request) {
@@ -148,6 +126,7 @@ public class AgentWorkerOperationFactory {
                 request.getType());
     }
 
+    // TODO: Remove this when all clusters are using the Aggregation cluster and there are no more local aggregation services
     public AgentWorkerOperation createDeleteCredentialsOperation(ClusterInfo clusterInfo, CredentialsRequest request) {
         AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
                 useAggregationController, aggregationControllerAggregationClient, clusterInfo);
@@ -165,12 +144,12 @@ public class AgentWorkerOperationFactory {
     private Set<RefreshableItem> convertLegacyItems(Set<RefreshableItem> items) {
         if (items.contains(RefreshableItem.ACCOUNTS)) {
             items.remove(RefreshableItem.ACCOUNTS);
-            items.addAll(REFRESHABLE_ITEMS_ACCOUNTS);
+            items.addAll(RefreshableItem.REFRESHABLE_ITEMS_ACCOUNTS);
         }
 
         if (items.contains(RefreshableItem.TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS)) {
             items.remove(RefreshableItem.TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS);
-            items.addAll(REFRESHABLE_ITEMS_TRANSACTIONS);
+            items.addAll(RefreshableItem.REFRESHABLE_ITEMS_TRANSACTIONS);
         }
 
         return items;
@@ -209,8 +188,7 @@ public class AgentWorkerOperationFactory {
         // FIXME: remove when Handelsbanken and Avanza have been moved to the nextgen agents. (TOP PRIO)
         // Due to the agents depending on updateTransactions to populate the the Accounts list
         // We need to reselect and send accounts to system
-        List<String> hackishFixProviders = ImmutableList.of("avanza-bankid", "handelsbanken", "handelsbanken-bankid");
-        if (hackishFixProviders.contains(request.getProvider().getName())) {
+        if (!isNextGenerationAgent(request.getProvider())) {
             commands.add(new SelectAccountsToAggregateCommand(context, request));
             commands.add(new SendAccountsToUpdateServiceAgentWorkerCommand(context, createMetricState(request)));
         }
@@ -249,12 +227,11 @@ public class AgentWorkerOperationFactory {
     }
 
     public AgentWorkerOperation createRefreshOperation(ClusterInfo clusterInfo, RefreshInformationRequest request) {
-
         if (request.getItemsToRefresh() == null || request.getItemsToRefresh().isEmpty()) {
             // Add all available items if none were submitted.
             // Todo: Remove this once it has been verified that no consumer sends in an empty/null list.
             // Instead it should abort if it's empty (empty list == do nothing).
-            request.setItemsToRefresh(REFRESHABLE_ITEMS_ALL);
+            request.setItemsToRefresh(RefreshableItem.REFRESHABLE_ITEMS_ALL);
         }
 
         log.debug("Creating refresh operation chain for credential");
@@ -285,11 +262,6 @@ public class AgentWorkerOperationFactory {
         commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)));
 
         commands.addAll(createRefreshAccountsCommandChain(request, context, request.getItemsToRefresh()));
-        if(request instanceof RefreshWhitelistInformationRequest && ((RefreshWhitelistInformationRequest) request).isOptIn()){
-            RefreshWhitelistInformationRequest refreshWhiteList = (RefreshWhitelistInformationRequest) request;
-            commands.add(new RequestUserOptInAccountsAgentWorkerCommand(context, refreshWhiteList));
-        }
-
         commands.add(new SelectAccountsToAggregateCommand(context, request));
 
         commands.addAll(createRefreshableItemsChain(request, context, request.getItemsToRefresh()));
@@ -325,10 +297,10 @@ public class AgentWorkerOperationFactory {
         commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)));
         commands.add(new TransferAgentWorkerCommand(context, request, createMetricState(request)));
 
-        commands.addAll(createRefreshAccountsCommandChain(request, context, REFRESHABLE_ITEMS_ALL));
+        commands.addAll(createRefreshAccountsCommandChain(request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
         commands.add(new SelectAccountsToAggregateCommand(context, request));
         // Refresh everything
-        commands.addAll(createRefreshableItemsChain(request, context, REFRESHABLE_ITEMS_ALL));
+        commands.addAll(createRefreshableItemsChain(request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
 
         return new AgentWorkerOperation(agentWorkerOperationState, "execute-transfer", request, commands,
                 context);
@@ -477,14 +449,189 @@ public class AgentWorkerOperationFactory {
     }
 
     /**
-     *  the endpoint opt-in supports the initial refresh with opt-in, aka, display all accounts for user to select the
-     *  accounts to aggregate to. it also supports refreshing and updating only white-flagged accounts and the data.
-     *  when the opt-in flag is true, it indicates that we need user to select accounts again, therefore we fetch
-     *  only account data. after fetching, we set the flag into false, and put all white listed accounts in refresh.
-     *  when the opt-in flag is false, we refresh and update all white listed accounts
+     *
+     * Use this operation when refreshing only the accounts that are available in the request.
+     *
      **/
-    public AgentWorkerOperation createOptInRefreshOperation(ClusterInfo clusterInfo,
+    public AgentWorkerOperation createWhitelistRefreshOperation(ClusterInfo clusterInfo,
             RefreshWhitelistInformationRequest request) {
-        return createRefreshOperation(clusterInfo, request);
+        if (request.getItemsToRefresh() == null || request.getItemsToRefresh().isEmpty()) {
+            // Add all available items if none were submitted.
+            // Todo: Remove this once it has been verified that no consumer sends in an empty/null list.
+            // Instead it should abort if it's empty (empty list == do nothing).
+            request.setItemsToRefresh(RefreshableItem.REFRESHABLE_ITEMS_ALL);
+        }
+
+        log.debug("Creating whitelist refresh operation chain for credential");
+
+
+        AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
+                useAggregationController, aggregationControllerAggregationClient, clusterInfo);
+
+        context.setWhitelistRefresh(true);
+
+        List<AgentWorkerCommand> commands = Lists.newArrayList();
+
+        String metricsName = (request.isManual() ? "refresh-manual" : "refresh-auto");
+
+        commands.add(new ValidateProviderAgentWorkerStatus(context, useAggregationController,
+                aggregationControllerAggregationClient, isAggregationCluster, clusterInfo));
+        commands.add(new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
+        commands.add(new ReportProviderMetricsAgentWorkerCommand(context, metricsName,
+                reportMetricsAgentWorkerCommandState));
+        commands.add(new LockAgentWorkerCommand(context));
+        if (isAggregationCluster) {
+            commands.add(new DecryptCredentialsWorkerCommand(clusterInfo, cacheClient,
+                    clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context));
+        } else {
+            commands.add(new DecryptAgentWorkerCommand(context, useAggregationController,
+                    aggregationControllerAggregationClient));
+        }
+        commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState));
+        commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
+        commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)));
+        commands.addAll(createWhitelistRefreshableItemsChain(request, context, request.getItemsToRefresh()));
+
+        log.debug("Created whitelist refresh operation chain for credential");
+        return new AgentWorkerOperation(agentWorkerOperationState, metricsName, request, commands, context);
+    }
+
+    /**
+     *
+     * Use this operation when whitelisting accounts to refresh with whitelist refresh.
+     *
+     */
+    public AgentWorkerOperation createConfigureWhitelistOperation(ClusterInfo clusterInfo,
+            ConfigureWhitelistInformationRequest request) {
+        String operationMetricName = "configure-whitelist";
+
+        if (request.getItemsToRefresh() == null || request.getItemsToRefresh().isEmpty()) {
+            // Add all available items if none were submitted.
+            // Todo: Remove this once it has been verified that no consumer sends in an empty/null list.
+            // Instead it should abort if it's empty (empty list == do nothing).
+            request.setItemsToRefresh(RefreshableItem.REFRESHABLE_ITEMS_ALL);
+        }
+
+        AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
+                useAggregationController, aggregationControllerAggregationClient, clusterInfo);
+
+        List<AgentWorkerCommand> commands = Lists.newArrayList();
+
+        commands.add(new ValidateProviderAgentWorkerStatus(context, useAggregationController,
+                aggregationControllerAggregationClient, isAggregationCluster, clusterInfo));
+        commands.add(new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
+        commands.add(new ReportProviderMetricsAgentWorkerCommand(context, operationMetricName,
+                reportMetricsAgentWorkerCommandState));
+        commands.add(new LockAgentWorkerCommand(context));
+        commands.add(new DecryptCredentialsWorkerCommand(clusterInfo, cacheClient,
+                    clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context));
+
+        commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState));
+        commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
+        commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)));
+        commands.addAll(createRefreshAccountsCommandChain(request, context, request.getItemsToRefresh()));
+        commands.add(new RequestUserOptInAccountsAgentWorkerCommand(context, request));
+        commands.add(new SelectAccountsToAggregateCommand(context, request));
+        commands.add(new SendAccountsToUpdateServiceAgentWorkerCommand(context, createMetricState(request)));
+
+        return new AgentWorkerOperation(agentWorkerOperationState, operationMetricName, request,
+                commands, context);
+    }
+
+    private ImmutableList<AgentWorkerCommand> createWhitelistRefreshableItemsChain(CredentialsRequest request,
+            AgentWorkerContext context, Set<RefreshableItem> itemsToRefresh) {
+
+        // Convert legacy items to corresponding new refreshable items
+        itemsToRefresh = convertLegacyItems(itemsToRefresh);
+
+        // Sort the refreshable items
+        List<RefreshableItem> items = RefreshableItem.sort(itemsToRefresh);
+        log.info("Items to refresh (sorted): {}", items.stream()
+                .map(Enum::name)
+                .collect(Collectors.joining(", ")));
+
+        ImmutableList.Builder<AgentWorkerCommand> commands = ImmutableList.builder();
+
+        // Update credentials status to updating to inform systems that credentials is being updated.
+        commands.add(new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
+
+        List<RefreshableItem> accountItems = items.stream()
+                .filter(RefreshableItem::isAccount)
+                .collect(Collectors.toList());
+
+        // === START REFRESHING ===
+        // If there are account items to be refreshed, refresh them and then send them over to system.
+        if (accountItems.size() > 0) {
+            accountItems.forEach(item ->
+                    commands.add(new RefreshItemAgentWorkerCommand(context, item, createMetricState(request))));
+
+            // Update the accounts on system side
+            commands.add(new SelectAccountsToAggregateCommand(context, request));
+            commands.add(new SendAccountsToUpdateServiceAgentWorkerCommand(context, createMetricState(request)));
+        }
+
+        // Add all refreshable items that aren't accounts to refresh them.
+        items.stream()
+                .filter(i -> !accountItems.contains(i))
+                .forEach(item ->
+                        commands.add(new RefreshItemAgentWorkerCommand(context, item, createMetricState(request))));
+        // === END REFRESHING ===
+
+        // === START PROCESSING ===
+        // Post refresh processing. Only once per data type (accounts, transactions etc.).
+        if (RefreshableItem.hasAccounts(items)) {
+            commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.ACCOUNTS,
+                    createMetricState(request)));
+        }
+
+        if (items.contains(RefreshableItem.EINVOICES)) {
+            commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.EINVOICES,
+                    createMetricState(request)));
+        }
+
+        if (items.contains(RefreshableItem.TRANSFER_DESTINATIONS)) {
+            commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.TRANSFER_DESTINATIONS,
+                    createMetricState(request)));
+        }
+
+        // Transactions are processed last of the refreshable items since the credential status will be set `UPDATED`
+        // by system when the processing is done.
+        if (RefreshableItem.hasTransactions(items)) {
+            commands.add(new ProcessItemAgentWorkerCommand(context, ProcessableItem.TRANSACTIONS,
+                    createMetricState(request)));
+        }
+        // === END PROCESSING ===
+
+        // Update the status to `UPDATED` if the credential isn't waiting on transactions from the connector and if
+        // transactions aren't processed in system. The transaction processing in system will set the status to
+        // `UPDATED` when transactions have been processed and new statistics are generated.
+        // Todo: Remove this dependency
+        commands.add(new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATED,
+                c -> !c.isWaitingOnConnectorTransactions() && !c.isSystemProcessingTransactions()));
+
+        return commands.build();
+    }
+
+    /**
+     *
+     * Helper method giving info if this is a Provider with a Next Generation Agent.
+     *
+     * @return a boolean telling if this provider points to a Next Generation Agent.
+     */
+    private static boolean isNextGenerationAgent(Provider provider) {
+        if (provider == null) {
+            return false;
+        }
+
+        if (Strings.isNullOrEmpty(provider.getClassName())) {
+            return false;
+        }
+
+        try {
+            Class<? extends Agent> agentClass = AgentFactory.getAgentClass(provider);
+            return NextGenerationAgent.class.isAssignableFrom(agentClass);
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

@@ -13,6 +13,7 @@ import se.tink.api.annotations.TeamOwnership;
 import se.tink.backend.aggregation.cluster.annotation.ClusterContext;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
+import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.CreateCredentialsRequest;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.DeleteCredentialsRequest;
@@ -59,6 +60,13 @@ public interface AggregationService {
     @Produces(MediaType.TEXT_PLAIN)
     @AllowAnonymous
     String ping();
+
+    @POST
+    @Path("configure/whitelist")
+    @TeamOwnership(Team.INTEGRATION)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    void configureWhitelistInformation(ConfigureWhitelistInformationRequest request, @ClusterContext ClusterInfo clusterInfo) throws Exception;
 
     @POST
     @Path("refresh/whitelist")

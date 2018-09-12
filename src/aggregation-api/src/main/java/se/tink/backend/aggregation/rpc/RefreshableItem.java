@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Ordering;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -28,11 +29,6 @@ public enum RefreshableItem {
         accountTypes = Arrays.asList(types);
     }
 
-    private static final ImmutableList<RefreshableItem> LEGACY_ITEMS = ImmutableList.<RefreshableItem>builder()
-            .add(ACCOUNTS)
-            .add(TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS)
-            .build();
-
     // Explicit order of refreshable items. Many subsequent places assumes Accounts will come first.
     private static final Ordering<RefreshableItem> REFRESHABLE_ITEM_ORDERING = Ordering.explicit(ImmutableList.of(
             RefreshableItem.CHECKING_ACCOUNTS,
@@ -54,7 +50,7 @@ public enum RefreshableItem {
             RefreshableItem.TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS
     ));
 
-    private static final ImmutableSet<RefreshableItem> REFRESHABLE_ITEMS_ACCOUNTS = ImmutableSet.<RefreshableItem>builder()
+    public static final ImmutableSet<RefreshableItem> REFRESHABLE_ITEMS_ACCOUNTS = ImmutableSet.<RefreshableItem>builder()
             .add(RefreshableItem.CHECKING_ACCOUNTS)
             .add(RefreshableItem.SAVING_ACCOUNTS)
             .add(RefreshableItem.CREDITCARD_ACCOUNTS)
@@ -62,12 +58,28 @@ public enum RefreshableItem {
             .add(RefreshableItem.INVESTMENT_ACCOUNTS)
             .build();
 
-    private static final ImmutableSet<RefreshableItem> REFRESHABLE_ITEMS_TRANSACTIONS = ImmutableSet.<RefreshableItem>builder()
+    public static final ImmutableSet<RefreshableItem> REFRESHABLE_ITEMS_TRANSACTIONS = ImmutableSet.<RefreshableItem>builder()
             .add(RefreshableItem.CHECKING_TRANSACTIONS)
             .add(RefreshableItem.SAVING_TRANSACTIONS)
             .add(RefreshableItem.CREDITCARD_TRANSACTIONS)
             .add(RefreshableItem.LOAN_TRANSACTIONS)
             .add(RefreshableItem.INVESTMENT_TRANSACTIONS)
+            .build();
+
+    // Legacy items not included
+    public static final ImmutableSet<RefreshableItem> REFRESHABLE_ITEMS_ALL = ImmutableSet.<RefreshableItem>builder()
+            .add(RefreshableItem.CHECKING_ACCOUNTS)
+            .add(RefreshableItem.CHECKING_TRANSACTIONS)
+            .add(RefreshableItem.SAVING_ACCOUNTS)
+            .add(RefreshableItem.SAVING_TRANSACTIONS)
+            .add(RefreshableItem.CREDITCARD_ACCOUNTS)
+            .add(RefreshableItem.CREDITCARD_TRANSACTIONS)
+            .add(RefreshableItem.LOAN_ACCOUNTS)
+            .add(RefreshableItem.LOAN_TRANSACTIONS)
+            .add(RefreshableItem.INVESTMENT_ACCOUNTS)
+            .add(RefreshableItem.INVESTMENT_TRANSACTIONS)
+            .add(RefreshableItem.EINVOICES)
+            .add(RefreshableItem.TRANSFER_DESTINATIONS)
             .build();
 
     public boolean isAccountType(AccountTypes type) {
@@ -82,11 +94,11 @@ public enum RefreshableItem {
         return REFRESHABLE_ITEMS_ACCOUNTS.contains(item);
     }
 
-    public static boolean hasAccounts(List<RefreshableItem> items) {
+    public static boolean hasAccounts(Collection<RefreshableItem> items) {
         return !Collections.disjoint(items, REFRESHABLE_ITEMS_ACCOUNTS);
     }
 
-    public static boolean hasTransactions(List<RefreshableItem> items) {
+    public static boolean hasTransactions(Collection<RefreshableItem> items) {
         return !Collections.disjoint(items, REFRESHABLE_ITEMS_TRANSACTIONS);
     }
 }

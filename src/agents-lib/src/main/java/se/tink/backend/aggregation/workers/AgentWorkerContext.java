@@ -118,6 +118,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
     private List<String> uniqueIdOfUserSelectedAccounts;
     // True or false if system has been requested to process transactions.
     private boolean isSystemProcessingTransactions;
+    private boolean isWhitelistRefresh;
 
     public AgentWorkerContext(CredentialsRequest request, ServiceContext serviceContext, MetricRegistry metricRegistry,
             boolean useAggregationController,
@@ -322,8 +323,11 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
                     .findFirst();
 
             if (!account.isPresent()) {
-                log.error("Account not found in updated Accounts list. "
-                        + "This should not happen and might mean that Agent is not updating all Accounts separately.");
+                if (!isWhitelistRefresh) {
+                    log.error("Account not found in updated Accounts list. "
+                            + "This should not happen and might mean that Agent is not updating all Accounts separately.");
+                }
+
                 continue;
             }
 
@@ -919,5 +923,13 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
 
     public void addOptInAccountUniqueId(List<String> optInAccountUniqueId) {
         this.uniqueIdOfUserSelectedAccounts = optInAccountUniqueId;
+    }
+
+    public boolean isWhitelistRefresh() {
+        return isWhitelistRefresh;
+    }
+
+    public void setWhitelistRefresh(boolean whitelistRefresh) {
+        isWhitelistRefresh = whitelistRefresh;
     }
 }

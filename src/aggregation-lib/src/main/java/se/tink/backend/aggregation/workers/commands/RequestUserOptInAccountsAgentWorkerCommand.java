@@ -1,21 +1,24 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import com.google.api.client.json.Json;
+import com.google.gson.JsonObject;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.rpc.Account;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.Field;
-import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
+import se.tink.libraries.account.AccountIdentifier;
 
 /**
  * TODO adding metrics if necessary
@@ -23,10 +26,11 @@ import se.tink.backend.aggregation.workers.AgentWorkerContext;
 public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerCommand{
     private static final Logger log = LoggerFactory.getLogger(RequestUserOptInAccountsAgentWorkerCommand.class);
     private final AgentWorkerContext context;
-    private final RefreshWhitelistInformationRequest request;
+    private final ConfigureWhitelistInformationRequest request;
     private final SupplementalInformationController supplementalInformationController;
 
-    public RequestUserOptInAccountsAgentWorkerCommand(AgentWorkerContext context, RefreshWhitelistInformationRequest request) {
+    public RequestUserOptInAccountsAgentWorkerCommand(AgentWorkerContext context,
+            ConfigureWhitelistInformationRequest request) {
         this.context = context;
         this.request = request;
         this.supplementalInformationController = new SupplementalInformationController(context , request.getCredentials());
@@ -62,22 +66,35 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
         return AgentWorkerCommandResult.CONTINUE;
     }
 
-    private Field createSupplementalInformationField(Account account, List<Account>
-            existingAccounts){
+    private Field createSupplementalInformationField(Account account, List<Account> existingAccounts) {
         boolean isIncluded = existingAccounts.stream()
                 .anyMatch(a -> Objects.equals(a.getBankId(), account.getBankId()));
-        Field field = new Field();
-        field.setDescription(account.getAccountNumber() + " " + account.getName());
-        field.setMasked(false);
-        field.setPattern("(true|false)");
-        field.setName(account.getBankId());
-        field.setCheckbox(true);
-        field.setValue(String.valueOf(isIncluded));
-        return field;
+
+        return Field.builder()
+                .description(account.getAccountNumber() + " " + account.getName())
+                .masked(false)
+                .pattern("true/false")
+                .name(account.getBankId())
+                .checkbox(true)
+                .value(String.valueOf(isIncluded))
+                .additionalInfo(createAdditionalInfo(account))
+                .build();
     }
 
     @Override
     public void postProcess() {
     }
 
+    private String createAdditionalInfo(Account account) {
+        JsonObject additionalInfo = new JsonObject();
+
+        additionalInfo.addProperty("accountName", account.getName());
+        additionalInfo.addProperty("accountType", account.getType().name());
+        additionalInfo.addProperty("balance", account.getBalance());
+        additionalInfo.addProperty("holderName", account.getHolderName());
+        additionalInfo.addProperty("iban", Objects.nonNull(account.getIdentifier(AccountIdentifier.Type.IBAN)) ?
+                account.getIdentifier(AccountIdentifier.Type.IBAN).getIdentifier() : null);
+
+        return additionalInfo.toString();
+    }
 }

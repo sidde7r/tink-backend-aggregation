@@ -11,7 +11,9 @@ SERVER_HOST = 'http://127.0.0.1:5000'
 ### START ENDPOINTS ###
 CREATE_CREDENTIAL = SERVER_HOST + '/credentials/create'
 REFRESH_CREDENTIAL = SERVER_HOST + '/credentials/refresh/{}'
+WHITELIST_REFRESH_CREDENTIAL = SERVER_HOST + '/credentials/whitelist/refresh/{}'
 STATUS_CREDENTIAL = SERVER_HOST + '/credentials/status/{}'
+WHITELIST_CREDENTIAL = SERVER_HOST + '/credentials/whitelist/{}'
 REENCRYPT_CREDENTIAL = SERVER_HOST + '/credentials/reencrypt/{}'
 LIST_CREDENTIALS = SERVER_HOST + '/credentials/list'
 SUPPLEMENTAL = SERVER_HOST + '/credentials/supplemental'
@@ -27,6 +29,7 @@ GET_OPERATION = ['get', 'g']
 LIST_OPERATION = ['list', 'l']
 REFRESH_OPERATION = ['refresh', 'r']
 REENCRYPT_OPERATION = ['reencrypt', 'y']
+WHITELIST_OPERATION = ['whitelist', 'w']
 CREATE_OPERATION = ['create', 'c']
 ACCOUNT_OPERATION = ['account', 'a']
 CREDENTIALS_OPERATION = ['credentials', 'c']
@@ -110,6 +113,75 @@ def refresh_credential():
         if currentStatus['status'] == 'UPDATED':
             return '\nRefresh completed.'
 
+def whitelist_refresh(cid=None):
+    if not cid:
+        cid = raw_input('Credentials id: ')
+    statusBeforeUpdate = json.loads(credentials_status(cid))
+
+    startTime = get_time_in_millis()
+    responseObject = requests.post(str.format(WHITELIST_REFRESH_CREDENTIAL, cid))
+
+    output = {
+        'message': str.format('Refreshing credential with id {}', cid)
+    }
+
+    while True:
+        if (get_time_in_millis() - startTime) / 1000.0 >= REFRESH_TIME_OUT_LIMIT:
+            return '\nRefresh timed out.'
+
+        currentStatus = json.loads(credentials_status(cid))
+        if not currentStatus:
+            return '\nRefresh failed.'
+
+        try:
+            if currentStatus['message']:
+                return str.format('\nRefresh failed with message: {}', currentStatus['message'])
+        except KeyError:
+            pass
+
+        if statusBeforeUpdate['timestamp'] == currentStatus['timestamp']:
+            print output
+            sleep(1)
+            continue
+
+        # Update the status
+        statusBeforeUpdate = currentStatus
+
+        status = currentStatus['status']
+        if status == 'UPDATING':
+            output['message'] = 'Fetching accounts and transactions.'
+            continue
+
+        if status == 'AWAITING_SUMMPLEMENTAL_INFORMATION':
+            suppResponse = supplemental_information(cid)
+            if not suppResponse:
+                return '\nSupplemental information request failed.'
+            elif not suppResponse == 204:
+                return '\nSupplemental information request failed.'
+
+        if status == 'AWAITING_MOBILE_BANKID_AUTHENTICATION':
+            output['message'] = 'Awaiting mobile bankid authentication'
+            continue
+
+        if status == 'AWAITING_THIRD_PARTY_APP_AUTHENTICATION':
+            output['message'] = 'Awaiting third party app authentication'
+            continue
+
+        if status in ERROR_STATUSES:
+            return str.format('Refresh failed with status: {}', status)
+
+        if currentStatus['status'] == 'UPDATED':
+            return '\nRefresh completed.'
+
+def whitelist_accounts():
+    credentialsId = raw_input('Credentials id: ')
+    responseObject = requests.post(str.format(WHITELIST_CREDENTIAL, credentialsId))
+
+    if responseObject.status_code is not 204:
+        return json.loads(responseObject.text)['message']
+
+    return '\nWhitelisting complete'
+
 def reencrypt_credentials():
     credentialsId = raw_input('Credentials id: ')
     responseObject = requests.post(str.format(REENCRYPT_CREDENTIAL, credentialsId))
@@ -136,6 +208,16 @@ def supplemental_information(cid=None):
     if not cid:
         cid = raw_input('Credentials id: ')
     
+    credentials = json.loads(credentials_status(cid))
+
+    if credentials['status'] != "AWAITING_SUPPLEMENTAL_INFORMATION":
+        return "\nCredentials is not awaiting supplemental information."
+
+    if not credentials['supplementalInformation']:
+        return "\nCredentials is awaiting supplemental information, but no information provided from aggregation."
+
+    print prettify(json.loads(credentials['supplementalInformation']))
+
     supplemental = raw_input('Aggregation is requesting supplemental information: ')
     supplementalRequest = {
         'credentialsId': cid,
@@ -195,6 +277,7 @@ def credentials():
 | Supplemental information: supp / s  |
 | List accounts: accounts / a         |
 | Reencrypt credential: reencrypt / y |
+| Whitelist accounts: whitelist / w   |
 |                                     |
 | Exit: exit / e                      |
 |                                     |
@@ -208,7 +291,7 @@ def credentials():
         elif userInput in CREATE_OPERATION:
             print 'Response: \n' + create_credential()
         elif userInput in REFRESH_OPERATION:
-            print refresh_credential()
+            refresh()
         elif userInput in SUPPLEMENTAL_OPERATION:
             print supplemental_information()
         elif userInput in GET_OPERATION:
@@ -219,7 +302,28 @@ def credentials():
             print list_accounts()
         elif userInput in REENCRYPT_OPERATION:
             print reencrypt_credentials()
-        
+        elif userInput in WHITELIST_OPERATION:
+            print whitelist_accounts()
+
+def refresh():
+    while True:
+        print '''
+ -- Refresh operations ------------
+|                                  |
+| Normal refresh: refresh / r      |
+| Whitelist refresh: whitelist / w |
+|                                  |
+ ----------------------------------
+'''
+
+        userInput = raw_input('Operation: ')
+
+        if userInput in EXIT_OPERATION:
+            break
+        elif userInput in REFRESH_OPERATION:
+            print refresh_credential()
+        elif userInput in WHITELIST_OPERATION:
+            print whitelist_refresh()
 
 def providers():
     while True:
