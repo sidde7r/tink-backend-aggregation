@@ -43,7 +43,7 @@ public class EuroInformationCreditCardFetcher implements AccountFetcher<CreditCa
                 .getAccountDetailsList()
                 .stream()
                 .filter(a ->
-                        AccountTypes.CREDIT_CARD.equals(a.getTinkTypeByTypeNumber().getTinkType())
+                        AccountTypes.CREDIT_CARD == a.getTinkTypeByTypeNumber().getTinkType()
                 )
                 .map(a -> {
                     CreditCardAccount.Builder<CreditCardAccount, ?> accountBuilder = (CreditCardAccount.Builder) a

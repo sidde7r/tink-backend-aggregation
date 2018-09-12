@@ -83,7 +83,7 @@ public class EuroInformationApiClient {
 
         // Print unknown account types
         Optional.ofNullable(details.getAccountDetailsList()).orElseGet(Collections::emptyList).stream()
-                .filter(a -> a.getTinkTypeByTypeNumber().equals(AccountTypeEnum.UNKNOWN))
+                .filter(a -> a.getTinkTypeByTypeNumber() == AccountTypeEnum.UNKNOWN)
                 .forEach(acc -> AGGREGATION_LOGGER
                         .infoExtraLong(SerializationUtils.serializeToString(details), unknownAccountTypesTag));
         return details;

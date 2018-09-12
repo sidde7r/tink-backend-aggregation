@@ -23,7 +23,8 @@ public class EuroInformationAccountFetcher implements AccountFetcher<Transaction
         this.sessionStorage = sessionStorage;
     }
 
-    public static EuroInformationAccountFetcher create(EuroInformationApiClient apiClient, SessionStorage sessionStorage) {
+    public static EuroInformationAccountFetcher create(EuroInformationApiClient apiClient,
+            SessionStorage sessionStorage) {
         return new EuroInformationAccountFetcher(apiClient, sessionStorage);
     }
 
@@ -37,7 +38,7 @@ public class EuroInformationAccountFetcher implements AccountFetcher<Transaction
                 .stream()
                 .filter(a -> {
                     AccountTypes tinkType = a.getTinkTypeByTypeNumber().getTinkType();
-                    return AccountTypes.CHECKING.equals(tinkType) || AccountTypes.SAVINGS.equals(tinkType);
+                    return (AccountTypes.CHECKING == tinkType) || (AccountTypes.SAVINGS == tinkType);
                 })
                 .map(a -> {
                     TransactionalAccount.Builder<TransactionalAccount, ?> accountBuilder = (TransactionalAccount.Builder) a
