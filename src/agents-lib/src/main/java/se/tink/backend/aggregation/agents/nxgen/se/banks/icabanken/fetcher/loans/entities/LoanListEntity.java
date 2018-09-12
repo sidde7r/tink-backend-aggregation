@@ -7,11 +7,11 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class LoanListEntity {
     @JsonProperty("Loans")
-    private List<LoansEntity> loans;
+    private List<LoanEntity> loans;
     @JsonProperty("TotalDebt")
     private double totalDebt;
 
-    public List<LoansEntity> getLoans() {
+    public List<LoanEntity> getLoans() {
         return loans;
     }
 

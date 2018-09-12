@@ -4,8 +4,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans.entities.LoansEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans.entities.MortgagesEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans.entities.LoanEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans.entities.LoansBodyEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans.entities.MortgageEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 
@@ -20,15 +21,17 @@ public class IcaBankenLoanFetcher implements AccountFetcher<LoanAccount> {
     @Override
     public Collection<LoanAccount> fetchAccounts() {
 
-        List<LoansEntity> loanOverview = apiClient.fetchLoanOverview().getLoans();
-        Collection<LoanAccount> loanAccounts = loanOverview.stream().map(LoansEntity::toTinkLoan)
+        LoansBodyEntity loansBodyEntity = apiClient.fetchLoanOverview();
+
+        Collection<LoanAccount> loanAccounts = loansBodyEntity.getLoanList().getLoans().stream()
+                .map(LoanEntity::toTinkLoan)
                 .collect(Collectors.toList());
 
-        List<MortgagesEntity> mortgageOverview = apiClient.fetchMortgages().getMortgages();
-        Collection<LoanAccount> mortgagesAccounts = mortgageOverview.stream().map(MortgagesEntity::toTinkLoan)
+        List<LoanAccount> mortgageAccounts = loansBodyEntity.getMortgageList().getMortgages().stream()
+                .map(MortgageEntity::toTinkLoan)
                 .collect(Collectors.toList());
 
-        loanAccounts.addAll(mortgagesAccounts);
+        loanAccounts.addAll(mortgageAccounts);
 
         return loanAccounts;
     }

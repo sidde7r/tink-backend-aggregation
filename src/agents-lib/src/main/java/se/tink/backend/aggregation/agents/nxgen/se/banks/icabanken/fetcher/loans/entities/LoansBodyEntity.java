@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class BodyEntity {
+public class LoansBodyEntity {
     @JsonProperty("LoanList")
     private LoanListEntity loanList;
     @JsonProperty("MortgageList")
