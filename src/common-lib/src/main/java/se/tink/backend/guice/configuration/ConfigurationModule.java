@@ -13,7 +13,6 @@ import se.tink.backend.guice.annotations.EncryptionConfiguration;
 import se.tink.backend.guice.annotations.MainConfiguration;
 import se.tink.backend.guice.annotations.SystemConfiguration;
 import se.tink.backend.guice.annotations.ProviderConfiguration;
-import se.tink.libraries.abnamro.config.AbnAmroConfiguration;
 import se.tink.libraries.cluster.Cluster;
 import se.tink.libraries.discovery.CoordinationConfiguration;
 import se.tink.libraries.endpoints.EndpointConfiguration;
@@ -58,7 +57,6 @@ public class ConfigurationModule extends AbstractModule {
                 .to(configuration.getSqsQueueConfiguration().isEnabled());
 
         // Tink monolith (common-lib and main-api) configurations
-        bind(AbnAmroConfiguration.class).toProvider(Providers.of(configuration.getAbnAmro()));
         bind(CacheConfiguration.class).toProvider(Providers.of(configuration.getCacheConfiguration()));
         bind(SqsQueueConfiguration.class).toProvider(Providers.of(configuration.getSqsQueueConfiguration()));
         bind(Cluster.class).toInstance(configuration.getCluster());

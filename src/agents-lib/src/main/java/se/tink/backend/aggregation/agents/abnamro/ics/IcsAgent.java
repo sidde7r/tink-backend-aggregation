@@ -5,6 +5,8 @@ import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
 import com.google.common.base.Preconditions;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -16,6 +18,8 @@ import se.tink.backend.aggregation.agents.abnamro.ics.mappers.AccountMapper;
 import se.tink.backend.aggregation.agents.abnamro.ics.mappers.TransactionMapper;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.cluster.identification.ClusterId;
+import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
@@ -32,6 +36,7 @@ import se.tink.libraries.abnamro.client.exceptions.IcsRetryableException;
 import se.tink.libraries.abnamro.client.model.creditcards.CreditCardAccountContainerEntity;
 import se.tink.libraries.abnamro.client.model.creditcards.CreditCardAccountEntity;
 import se.tink.libraries.abnamro.client.model.creditcards.TransactionContainerEntity;
+import se.tink.libraries.abnamro.config.AbnAmroConfiguration;
 import se.tink.libraries.abnamro.utils.AbnAmroUtils;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.MetricRegistry;
@@ -83,10 +88,32 @@ public class IcsAgent extends AbstractAgent implements RefreshableItemExecutor {
     public void setConfiguration(ServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
+        AbnAmroConfiguration abnAmroConfiguration = getValidAbnAmroConfiguration(configuration);
+
         try {
-            this.ibSubscriptionClient = new IBSubscriptionClient(configuration.getAbnAmro(), metricRegistry);
+            this.ibSubscriptionClient = new IBSubscriptionClient(abnAmroConfiguration, metricRegistry);
         } catch (Exception e) {
             throw new RuntimeException("Could not instantiate Internet Banking Client", e);
+        }
+    }
+
+    private AbnAmroConfiguration getValidAbnAmroConfiguration(ServiceConfiguration configuration) {
+        if (Objects.nonNull(configuration.getAbnAmro())) {
+            return configuration.getAbnAmro();
+        }
+
+        String clusterIdentifier = Optional.ofNullable(context.getClusterInfo())
+                .map(ClusterInfo::getClusterId)
+                .map(ClusterId::getId)
+                .orElseThrow(() -> new IllegalStateException("Failed to fetch cluster identifier."));
+
+        switch (clusterIdentifier.toLowerCase()) {
+        case "leeds-staging":
+            return configuration.getAbnAmroStaging();
+        case "leeds-production":
+            return configuration.getAbnAmroProduction();
+        default:
+            throw new IllegalStateException("This agent can only be used by Leeds cluster.");
         }
     }
 
