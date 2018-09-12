@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.accounts;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants;
@@ -36,19 +37,19 @@ public class SepaAccountGuesser {
             }
 
             for (String savingsToken : FinTsConstants.SepaAccountIdentifiers.ACCOUNT_TYPE_SAVINGS_TOKENS) {
-                if (accountName.contains(savingsToken)) {
+                if (StringUtils.containsIgnoreCase(accountName, savingsToken)) {
                     return FinTsConstants.AccountType.SAVINGS_ACCOUNT_CURSOR;
                 }
             }
 
             for (String investmentToken : FinTsConstants.SepaAccountIdentifiers.ACCOUNT_TYPE_INVESTMENT_TOKENS) {
-                if (accountName.contains(investmentToken)) {
+                if (StringUtils.containsIgnoreCase(accountName, investmentToken)) {
                     return FinTsConstants.AccountType.FUND_DEPOSIT_ACCOUNT_CURSOR;
                 }
             }
 
             for (String creditToken : FinTsConstants.SepaAccountIdentifiers.ACCOUNT_TYPE_CREDIT_TOKENS) {
-                if (accountName.contains(creditToken)) {
+                if (StringUtils.containsIgnoreCase(accountName, creditToken)) {
                     return FinTsConstants.AccountType.CREDIT_CARD_CURSOR;
                 }
             }
