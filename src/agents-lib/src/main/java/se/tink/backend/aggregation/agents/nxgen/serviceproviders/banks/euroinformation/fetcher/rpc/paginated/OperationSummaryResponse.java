@@ -46,7 +46,8 @@ public class OperationSummaryResponse implements TransactionKeyPaginatorResponse
 
     @Override
     public String nextKey() {
-        return Optional.ofNullable(operations.getRecoveryKey())
+        return Optional.ofNullable(operations)
+                .map(o -> o.getRecoveryKey())
                 .orElse(EuroInformationConstants.EMPTY_RECOVERY_KEY);
     }
 
@@ -66,7 +67,9 @@ public class OperationSummaryResponse implements TransactionKeyPaginatorResponse
     @Override
     public Optional<Boolean> canFetchMore() {
         return Optional.of(
-                operations.getRecoveryKey()
+                Optional.ofNullable(operations)
+                        .map(o -> o.getRecoveryKey())
+                        .orElse(null)
                         != null
         );
     }

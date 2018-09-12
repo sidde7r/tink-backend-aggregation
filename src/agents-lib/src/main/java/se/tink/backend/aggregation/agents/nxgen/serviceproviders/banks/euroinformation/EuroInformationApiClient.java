@@ -83,7 +83,7 @@ public class EuroInformationApiClient {
         Optional.ofNullable(details.getAccountDetailsList()).orElseGet(Collections::emptyList).stream()
                 .filter(a -> a.getTinkTypeByTypeNumber() == AccountTypeEnum.UNKNOWN)
                 .forEach(acc -> AGGREGATION_LOGGER
-                        .infoExtraLong(SerializationUtils.serializeToString(details), EuroInformationConstants.LoggingTags.unknownAccountTypesTag));
+                        .infoExtraLong(SerializationUtils.serializeToString(acc), EuroInformationConstants.LoggingTags.unknownAccountTypesTag));
         return details;
     }
 

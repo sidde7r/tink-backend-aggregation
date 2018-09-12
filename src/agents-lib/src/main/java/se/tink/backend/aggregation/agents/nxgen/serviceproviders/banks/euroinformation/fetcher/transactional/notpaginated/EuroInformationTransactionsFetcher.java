@@ -9,10 +9,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinfor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.notpaginated.TransactionSummaryResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationUtils;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class EuroInformationTransactionsFetcher implements TransactionFetcher<TransactionalAccount> {
     private static final Logger LOGGER = LoggerFactory.getLogger(EuroInformationTransactionsFetcher.class);
@@ -43,7 +45,9 @@ public class EuroInformationTransactionsFetcher implements TransactionFetcher<Tr
 
     private Optional<TransactionSummaryResponse> getTransactionsForAccount(String webId) {
         TransactionSummaryResponse details = apiClient.getTransactionsNotPaginated(webId);
-        if (!EuroInformationUtils.isSuccess(details.getReturnCode())) {
+        String returnCode = details.getReturnCode();
+        if (!EuroInformationUtils.isSuccess(returnCode)) {
+            LOGGER.info(EuroInformationErrorCodes.getByCodeNumber(returnCode).toString() + SerializationUtils.serializeToString(details));
             return Optional.empty();
         }
         return Optional.of(details);

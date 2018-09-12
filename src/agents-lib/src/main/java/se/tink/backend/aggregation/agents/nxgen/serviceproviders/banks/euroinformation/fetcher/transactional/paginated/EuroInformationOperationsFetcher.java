@@ -5,10 +5,12 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.paginated.OperationSummaryResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationUtils;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class EuroInformationOperationsFetcher implements
         TransactionKeyPaginator<TransactionalAccount, String> {
@@ -31,8 +33,10 @@ public class EuroInformationOperationsFetcher implements
 
     private OperationSummaryResponse getOperationsForAccount(String webId, String key) {
         OperationSummaryResponse operations = apiClient.getTransactionsPaginated(webId, key);
+        String returnCode = operations.getReturnCode();
         if (!EuroInformationUtils.isSuccess(operations.getReturnCode())) {
-            return null;
+            LOGGER.info(EuroInformationErrorCodes.getByCodeNumber(returnCode).toString() +
+                    SerializationUtils.serializeToString(operations));
         }
         return operations;
     }
