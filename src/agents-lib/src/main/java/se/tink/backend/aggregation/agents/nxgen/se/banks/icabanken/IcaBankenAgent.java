@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaBankenBankIdTransferController;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaBankenBankIdTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.IcaBankenApproveEInvoiceExecutor;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.einvoice.IcaBankenEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.IcaBankenCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.IcaBankenTransactionalAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.IcaBankenEInvoiceFetcher;
@@ -111,8 +112,13 @@ public class IcaBankenAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<EInvoiceRefreshController> constructEInvoiceRefreshController() {
-        IcaBankenEInvoiceFetcher eInvoiceFetcher = new IcaBankenEInvoiceFetcher(apiClient, catalog, context);
-        return Optional.of(new EInvoiceRefreshController(metricRefreshController, updateController, eInvoiceFetcher));
+        IcaBankenEInvoiceFetcher eInvoiceFetcher = new IcaBankenEInvoiceFetcher(apiClient, catalog);
+
+        return Optional.of(new EInvoiceRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        eInvoiceFetcher)
+        );
     }
 
     @Override

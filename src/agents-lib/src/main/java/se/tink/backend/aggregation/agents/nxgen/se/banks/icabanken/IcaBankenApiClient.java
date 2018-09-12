@@ -10,12 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.SignBundleResponseBody;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.SignedAssignmentList;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.entities.AcceptEInvoiceTransferRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.entities.EInvoiceBody;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.entities.PaymentNameBody;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.entities.UpdateEInvoiceRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.entities.ValidateEInvoiceRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.entities.ValidateEInvoiceResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.AssignmentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.AssignmentsResponseBody;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.BanksResponse;
@@ -26,6 +20,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accou
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.rpc.UpcomingTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.entities.EInvoiceBodyEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.rpc.EInvoiceResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.entities.DepotEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.entities.FundDetailsBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.rpc.InstrumentResponse;
@@ -187,6 +183,11 @@ public class IcaBankenApiClient {
                 .getBody();
     }
 
+    public EInvoiceBodyEntity fetchEInvoices() {
+        return createRequest(IcaBankenConstants.Urls.EINVOICES)
+                .get(EInvoiceResponse.class)
+                .getBody();
+    }
 
     public void keepAlive() {
         createRequest(IcaBankenConstants.Urls.KEEP_ALIVE).get(HttpResponse.class);
@@ -264,8 +265,6 @@ public class IcaBankenApiClient {
         }
     }
 
-    public EInvoiceBody fetchEInvoices() {
-        return createRequest(IcaBankenConstants.Urls.EINVOICES_URL).get(EInvoiceBody.class);
     }
 
     public ValidateEInvoiceResponse updateEInvoice(UpdateEInvoiceRequest updateEInvoiceRequest) {

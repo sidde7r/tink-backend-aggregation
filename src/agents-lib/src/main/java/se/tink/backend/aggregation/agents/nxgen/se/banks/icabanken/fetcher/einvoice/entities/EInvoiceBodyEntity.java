@@ -1,37 +1,36 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.api.client.util.Objects;
 import com.google.common.base.Preconditions;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.i18n.Catalog;
 
 @JsonObject
-public class EInvoiceBody {
-
+public class EInvoiceBodyEntity {
     @JsonProperty("ElectronicInvoices")
     private List<EInvoiceEntity> eInvoices;
 
+    @JsonIgnore
     public List<Transfer> toTinkTransfers(Catalog catalog) {
-        Preconditions.checkState(eInvoices != null, new ArrayList<>());
 
-        List<Transfer> transfers = new ArrayList<>();
-        for (EInvoiceEntity eInvoice : eInvoices) {
-            Transfer transfer = eInvoice.toTinkTransfer(catalog);
-            transfers.add(transfer);
-        }
-        return transfers;
+        return Optional.ofNullable(eInvoices).orElse(Collections.emptyList()).stream()
+                .map(eInvoice -> eInvoice.toTinkTransfer(catalog))
+                .collect(Collectors.toList());
     }
 
-    public Optional<EInvoiceEntity> getInvoiceById(String uuid) {
-        Preconditions.checkNotNull(uuid);
+    @JsonIgnore
+    public Optional<EInvoiceEntity> getInvoiceById(String invoiceId) {
+        Preconditions.checkNotNull(invoiceId);
 
         for (EInvoiceEntity eInvoice : eInvoices) {
-            if (Objects.equal(eInvoice.getUuid(), uuid)) {
+            if (Objects.equal(eInvoice.getUniqueId(), invoiceId)) {
                 return Optional.of(eInvoice);
             }
         }
