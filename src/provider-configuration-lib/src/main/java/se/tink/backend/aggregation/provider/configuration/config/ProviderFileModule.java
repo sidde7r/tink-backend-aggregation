@@ -8,19 +8,22 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import se.tink.backend.aggregation.provider.configuration.cli.ProviderConfigModel;
+import se.tink.backend.aggregation.provider.configuration.config.clusterprovider.ClusterProviderConfigurationModel;
+import se.tink.backend.aggregation.provider.configuration.config.clusterprovider.ClusterProviderListModel;
+import se.tink.backend.aggregation.provider.configuration.config.clusterprovider.ProviderConfigModel;
+import se.tink.backend.aggregation.provider.configuration.config.clusterprovider.ProviderSpecificationModel;
 import se.tink.backend.core.ProviderConfiguration;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ProviderFileModule extends AbstractModule {
 
-    protected static ObjectMapper mapper = new ObjectMapper();
-    public static final Logger log = LoggerFactory.getLogger(ProviderRepositoryModule.class);
+    private static ObjectMapper mapper = new ObjectMapper();
+    private static final Logger log = LoggerFactory.getLogger(ProviderFileModule.class);
 
     @Override
     protected void configure() { }
