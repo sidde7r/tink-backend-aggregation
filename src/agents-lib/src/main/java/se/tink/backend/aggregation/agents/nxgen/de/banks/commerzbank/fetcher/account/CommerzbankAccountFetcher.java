@@ -26,6 +26,6 @@ public class CommerzbankAccountFetcher implements AccountFetcher<TransactionalAc
         apiClient.logMultibankingProducts();
 
         Preconditions.checkState(resultEntity != null, "No overview found");
-        return resultEntity.toTransactionalAccount();
+        return resultEntity.toTransactionalAccounts();
     }
 }

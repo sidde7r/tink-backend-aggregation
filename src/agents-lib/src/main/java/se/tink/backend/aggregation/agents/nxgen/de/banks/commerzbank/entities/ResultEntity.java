@@ -24,7 +24,7 @@ public class ResultEntity {
     }
 
 
-    public Collection<CreditCardAccount> toCreditAccount(){
+    public Collection<CreditCardAccount> toCreditAccounts(){
         Collection<CreditCardAccount> result = new ArrayList<>();
         for (ItemsEntity entity : items) {
             result.addAll(entity.getProducts().stream()
@@ -34,7 +34,7 @@ public class ResultEntity {
         return result;
     }
 
-    public Collection<TransactionalAccount> toTransactionalAccount(){
+    public Collection<TransactionalAccount> toTransactionalAccounts(){
         Collection<TransactionalAccount> result = new ArrayList<>();
         for (ItemsEntity entity : items) {
             result.addAll(entity.getProducts().stream()

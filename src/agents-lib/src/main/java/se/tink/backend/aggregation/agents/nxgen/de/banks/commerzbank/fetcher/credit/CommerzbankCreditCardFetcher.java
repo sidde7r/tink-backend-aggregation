@@ -27,7 +27,7 @@ public class CommerzbankCreditCardFetcher implements AccountFetcher<CreditCardAc
     public Collection<CreditCardAccount> fetchAccounts() {
         ResultEntity entity = apiClient.financialOverview();
 
-        return entity.toCreditAccount();
+        return entity.toCreditAccounts();
     }
 
     @Override
