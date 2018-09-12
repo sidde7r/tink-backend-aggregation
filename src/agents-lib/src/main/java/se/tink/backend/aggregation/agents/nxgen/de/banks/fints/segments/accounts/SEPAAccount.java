@@ -2,8 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.account
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import io.netty.util.internal.StringUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsAccountTypeConverter;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
@@ -15,7 +13,6 @@ import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.account.AccountIdentifier;
 
 public class SEPAAccount {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SEPAAccount.class);
 
     private String iban;
     private String bic;
@@ -173,9 +170,6 @@ public class SEPAAccount {
     public CreditCardAccount toTinkCreditCardAccount() {
         verifyCreditCardAccount();
 
-        logCreditCardInformation();
-        logCreditCardPermittedTransactions();
-
         CreditCardAccount.Builder<?, ?> builder = CreditCardAccount.builder(
                 getBlz() + getAccountNo(),
                 getAmount(getCurrency(), getBalance()),
@@ -190,17 +184,6 @@ public class SEPAAccount {
 
         return builder.build();
 
-    }
-
-    private void logCreditCardInformation() {
-        LOGGER.info("{} Accounttype: {}, account limit \"{}\", balance \"{}\"",
-                FinTsConstants.LogTags.CREDIT_CARD_INFORMATION, accountType, accountLimit, balance);
-    }
-
-    private void logCreditCardPermittedTransactions() {
-        LOGGER.info("{} permitted business transactions: \"{}\"  extensions: \"{}\"",
-                FinTsConstants.LogTags.CREDIT_CARD_PERMITTED_BUSINESS_TRANSACTIONS, this.permittedBusinessTransactions,
-                this.extensions);
     }
 
     private Amount getAmount(String currency, String amount) {

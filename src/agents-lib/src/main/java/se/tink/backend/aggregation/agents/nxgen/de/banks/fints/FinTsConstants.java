@@ -103,14 +103,6 @@ public class FinTsConstants {
 
     public static class LogTags {
         public static final LogTag ERROR_CODE = LogTag.from("#fints_login_error_types");
-        public static final LogTag NUMBER_OF_FETCHED_TRANSACTIONS = LogTag.from("#fints_number_of_fetched_transactions");
-        public static final LogTag CREDIT_CARD_INFORMATION = LogTag.from("#fints_credit_card_information");
-        public static final LogTag CREDIT_CARD_PERMITTED_BUSINESS_TRANSACTIONS= LogTag.from("#fints_credit_card_permitted_transactions");
-        public static final LogTag CREDIT_CARD_NUMBER_OF_FETCHED_TRANSACTIONS = LogTag.from("#fints_credit_card_fetched_transactions");
-        public static final LogTag SPARKASSE_NO_PHONE_NUMBER_ATTACHED_WARNING = LogTag.from("#fints_sparkasse_no_phone_attached");
-        public static final LogTag TRANSACTION_STATUS = LogTag.from("#fints_transaction_status");
-        public static final LogTag SCANNER_PARSING_ERROR = LogTag.from("#fints_scanner_parsing_error");
         public static final LogTag PRODUCTNAME_FOR_MISSING_ACCOUNT_TYPE = LogTag.from("#fints_missing_account_type");
-        public static final LogTag GET_ACCOUNTS_ERROR = LogTag.from("#fints_get_account_error");
     }
 }

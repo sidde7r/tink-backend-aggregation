@@ -44,11 +44,6 @@ public class FinTsCreditCardFetcher implements AccountFetcher<CreditCardAccount>
                 .map(MT940Statement::toTinkTransaction)
                 .collect(Collectors.toList());
 
-        if (transactions != null && !transactions.isEmpty()) {
-            LOGGER.info("{} number of creditcard transactions fetched: {}",
-                    FinTsConstants.LogTags.CREDIT_CARD_NUMBER_OF_FETCHED_TRANSACTIONS, transactions.size());
-        }
-
         return PaginatorResponseImpl.create(transactions);
     }
 }
