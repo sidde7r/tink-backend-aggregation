@@ -874,7 +874,6 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         ":provider-configuration-lib",
-        ":aggregation-lib",
         ":main-api",
         ":agents-lib",
         ":common-lib"
