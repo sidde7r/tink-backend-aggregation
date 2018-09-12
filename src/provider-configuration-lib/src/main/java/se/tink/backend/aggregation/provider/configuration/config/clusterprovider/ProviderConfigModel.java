@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.provider.configuration.cli;
+package se.tink.backend.aggregation.provider.configuration.config.clusterprovider;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
