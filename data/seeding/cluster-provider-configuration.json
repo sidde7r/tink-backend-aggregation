@@ -1,0 +1,19 @@
+{
+    "cluster-provider-configuration": [
+        {
+            "clusterid": "local-development",
+            "providers": [
+                "alandsbanken",
+                "americanexpress"
+            ]
+        },
+        {
+            "clusterid": "oxford-staging",
+            "providers": [
+                "alandsbanken",
+                "americanexpress",
+                "collector-bankid"
+            ]
+        }
+    ]
+}
