@@ -53,7 +53,7 @@ public class OperationEntity {
 
     public Transaction toTransaction() {
         return Transaction.builder()
-                .setDate(getDate())
+                .setDate(date)
                 .setAmount(EuroInformationUtils.parseAmount(value))
                 .setDescription(getTransactionDescription()).build();
     }
