@@ -1,13 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.system.rpc.Portfolio;
 
 import java.util.List;
 
 @JsonObject
-public class DepotsEntity {
+public class DepotEntity {
     @JsonProperty("InvestmentAccountType")
     private String investmentAccountType;
     @JsonProperty("Balance")
@@ -36,6 +38,24 @@ public class DepotsEntity {
     private boolean ownerIsMinor;
     @JsonProperty("OwnerCustomerId")
     private String ownerCustomerId;
+
+    @JsonIgnore
+    public Portfolio toPortfolio() {
+        Portfolio portfolio = new Portfolio();
+
+        portfolio.setUniqueIdentifier(depotNumber);
+        portfolio.setTotalValue(totalDepotValue - disposable);
+        portfolio.setCashValue(disposable);
+        portfolio.setType(getPortfolioType());
+        portfolio.setRawType(investmentAccountType);
+        portfolio.setTotalProfit(calcTotalProfit());
+
+        return portfolio;
+    }
+
+    private double calcTotalProfit() {
+        return totalDepotValue - investedAmount - reserved - disposable;
+    }
 
     public String getInvestmentAccountType() {
         return investmentAccountType;
@@ -95,9 +115,9 @@ public class DepotsEntity {
 
     public Portfolio.Type getPortfolioType(){
         switch(investmentAccountType.toLowerCase()){
-            case "isk" :
+            case IcaBankenConstants.AccountTypes.ISK_ACCOUNT:
                 return Portfolio.Type.ISK;
-            case "depot" :
+            case IcaBankenConstants.AccountTypes.DEPOT_ACCOUNT:
                 return Portfolio.Type.DEPOT;
             default:
                 return Portfolio.Type.OTHER;

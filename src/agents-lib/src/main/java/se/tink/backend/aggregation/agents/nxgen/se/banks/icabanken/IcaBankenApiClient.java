@@ -16,8 +16,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvo
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.entities.UpdateEInvoiceRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.entities.ValidateEInvoiceRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.entities.ValidateEInvoiceResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.entities.InstrumentResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.entities.InvestmentAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans.entities.LoanListEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans.entities.LoanOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans.entities.MortgageListEntity;
@@ -31,6 +29,10 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accou
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.rpc.UpcomingTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.entities.DepotEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.entities.FundDetailsBodyEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.rpc.InstrumentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.rpc.InvestmentAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.RecipientEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.RecipientsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.TransferRequest;
@@ -167,8 +169,20 @@ public class IcaBankenApiClient {
                 .getBody();
     }
 
+    public List<DepotEntity> getInvestments() {
+        List<DepotEntity> depots = createRequest(IcaBankenConstants.Urls.DEPOTS)
+                .get(InvestmentAccountResponse.class)
+                .getBody()
+                .getDepots();
+
+        return Optional.ofNullable(depots).orElse(Collections.emptyList());
     }
 
+    public FundDetailsBodyEntity getFundDetails(String fundId) {
+        return createRequest(IcaBankenConstants.Urls.FUND_DETAILS
+                .parameter(IcaBankenConstants.IdTags.FUND_ID_TAG, fundId))
+                .get(InstrumentResponse.class)
+                .getBody();
 
 
     public void keepAlive() {
@@ -223,14 +237,8 @@ public class IcaBankenApiClient {
                 .get(AssignmentsResponse.class);
     }
 
-    public InvestmentAccountResponse getInvestments() {
-        return createRequest(IcaBankenConstants.Urls.INVESTMENTS).get(InvestmentAccountResponse.class);
     }
 
-    public InstrumentResponse getInstrument(String fundId) {
-        return createRequest(
-                IcaBankenConstants.Urls.INSTRUMENT.parameter(IcaBankenConstants.IdTags.FUND_ID_TAG, fundId)).get(
-                InstrumentResponse.class);
     }
 
     }

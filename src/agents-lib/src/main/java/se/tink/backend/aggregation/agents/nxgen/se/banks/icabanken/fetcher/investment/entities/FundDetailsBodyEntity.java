@@ -1,10 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.system.rpc.Instrument;
 
 @JsonObject
-public class FundDetailsEntity {
+public class FundDetailsBodyEntity {
 
     @JsonProperty("Name")
     private String name;
@@ -54,6 +57,38 @@ public class FundDetailsEntity {
     private String minimumBuyAmount;
     @JsonProperty("SustainabilityRating")
     private int sustainabilityRating;
+
+    @JsonIgnore
+    public Optional<Instrument> toInstrument(FundHoldingsEntity holdingEntity) {
+
+        if (holdingEntity.getShares() == 0) {
+            return Optional.empty();
+        }
+
+        Instrument instrument = new Instrument();
+
+        instrument.setUniqueIdentifier(iSIN + tradingCode);
+        instrument.setType(Instrument.Type.FUND); // Currently only possible to buy funds at ICA
+        instrument.setIsin(iSIN);
+        instrument.setMarketPlace(tradingCode);
+        instrument.setAverageAcquisitionPrice(holdingEntity.getInvestedAmount()
+                / holdingEntity.getShares());
+        instrument.setCurrency(tradingCode);
+        instrument.setMarketValue(holdingEntity.getMarketValue());
+        instrument.setName(holdingEntity.getFundName());
+        instrument.setPrice(netAssetValue);
+        instrument.setQuantity(holdingEntity.getShares());
+        instrument.setProfit(calcProfit(instrument));
+        instrument.setRawType(category);
+
+        return Optional.of(instrument);
+    }
+
+    @JsonIgnore
+    private double calcProfit(Instrument instrument) {
+        return instrument.getMarketValue() - (instrument.getAverageAcquisitionPrice()
+                * instrument.getQuantity());
+    }
 
     public String getName() {
         return name;
@@ -150,5 +185,4 @@ public class FundDetailsEntity {
     public int getSustainabilityRating() {
         return sustainabilityRating;
     }
-
 }

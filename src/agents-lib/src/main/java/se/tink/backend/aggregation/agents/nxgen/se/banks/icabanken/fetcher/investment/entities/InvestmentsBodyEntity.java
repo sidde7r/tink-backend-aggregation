@@ -6,9 +6,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import java.util.List;
 
 @JsonObject
-public class BodyEntity {
+public class InvestmentsBodyEntity {
     @JsonProperty("Depots")
-    private List<DepotsEntity> depots;
+    private List<DepotEntity> depots;
     @JsonProperty("TotalBalance")
     private double totalBalance;
     @JsonProperty("TotalValue")
@@ -16,7 +16,7 @@ public class BodyEntity {
     @JsonProperty("NextMonthlySavingsStartDate")
     private String nextMonthlySavingsStartDate;
 
-    public List<DepotsEntity> getDepots() {
+    public List<DepotEntity> getDepots() {
         return depots;
     }
 

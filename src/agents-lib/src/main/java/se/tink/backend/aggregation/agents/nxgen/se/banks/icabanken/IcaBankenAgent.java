@@ -89,8 +89,12 @@ public class IcaBankenAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.of(new InvestmentRefreshController(metricRefreshController, updateController,
-                new IcaBankenInvestmentFetcher(apiClient, sessionStorage)));
+        return Optional.of(new InvestmentRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new IcaBankenInvestmentFetcher(apiClient)
+                )
+        );
     }
 
     @Override
