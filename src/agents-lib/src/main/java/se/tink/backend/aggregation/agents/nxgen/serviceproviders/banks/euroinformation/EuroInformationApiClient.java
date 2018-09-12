@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinfor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.notpaginated.TransactionSummaryResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.session.rpc.InitRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.session.rpc.InitResponse;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -30,7 +29,6 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class EuroInformationApiClient {
     private static final AggregationLogger AGGREGATION_LOGGER = new AggregationLogger(EuroInformationApiClient.class);
-    private final static LogTag unknownAccountTypesTag = LogTag.from("euroinformation_unknown_accounts");
     protected final TinkHttpClient client;
     protected final SessionStorage sessionStorage;
     protected final EuroInformationConfiguration config;
@@ -85,7 +83,7 @@ public class EuroInformationApiClient {
         Optional.ofNullable(details.getAccountDetailsList()).orElseGet(Collections::emptyList).stream()
                 .filter(a -> a.getTinkTypeByTypeNumber() == AccountTypeEnum.UNKNOWN)
                 .forEach(acc -> AGGREGATION_LOGGER
-                        .infoExtraLong(SerializationUtils.serializeToString(details), unknownAccountTypesTag));
+                        .infoExtraLong(SerializationUtils.serializeToString(details), EuroInformationConstants.LoggingTags.unknownAccountTypesTag));
         return details;
     }
 

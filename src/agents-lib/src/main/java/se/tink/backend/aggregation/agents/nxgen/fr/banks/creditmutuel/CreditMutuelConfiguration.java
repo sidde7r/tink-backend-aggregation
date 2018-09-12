@@ -15,6 +15,11 @@ public class CreditMutuelConfiguration implements EuroInformationConfiguration {
     }
 
     @Override
+    public boolean usesPagination() {
+        return true;
+    }
+
+    @Override
     public String getAppVersion() {
         return CreditMutuelConstants.APP_VERSION;
     }

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation;
 
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.HeaderEnum;
 
 public class EuroInformationConstants {
@@ -34,6 +35,12 @@ public class EuroInformationConstants {
         public static final String WEB_ID = "webId";
         public static final String INVESTMENT_ACCOUNTS = "investmentAccounts";
         public static final String INVESTMENT_ACCOUNT = "investmentAccountDetails";
+    }
+
+    public static class LoggingTags {
+        public final static LogTag creditcardTransactionsTag = LogTag.from("euroinformation_creditcard_transactions");
+        public final static LogTag unknownAccountTypesTag = LogTag.from("euroinformation_unknown_accounts");
+        public final static LogTag investmentLogTag = LogTag.from("euroinformation_investment_data");
     }
 
     // Some of these values are for Targo bank, so probably will be moved when using this provider for other banks with same backend
