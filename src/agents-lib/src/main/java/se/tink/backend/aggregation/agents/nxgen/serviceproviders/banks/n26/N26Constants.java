@@ -34,8 +34,4 @@ public class N26Constants {
         public static final String PASSWORD = "&password=";
         public static final String USERNAME = "&username=";
     }
-
-    public static class Logging {
-        public static final LogTag ACCOUNT_LOGGING = LogTag.from("#n26_account_logging");
-    }
 }
