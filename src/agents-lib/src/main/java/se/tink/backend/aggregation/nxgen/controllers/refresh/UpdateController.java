@@ -25,9 +25,9 @@ public class UpdateController {
     private final HashSet<Account> accounts = Sets.newHashSet();
     private final LoanInterpreter loanInterpreter;
 
-    public UpdateController(AgentContext baseContext, String market, String currency) {
+    public UpdateController(AgentContext baseContext, MarketCode market, String currency) {
         this.baseContext = baseContext;
-        this.loanInterpreter = LoanInterpreter.getInstance(MarketCode.valueOf(market));
+        this.loanInterpreter = LoanInterpreter.getInstance(market);
         this.currency = currency;
     }
 
