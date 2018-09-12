@@ -11,7 +11,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvo
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.IcaBankenInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transactions.IcaBankenTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.IcaBankenTransferDestinationFetcher;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.rpc.IcaBankenSessionFilter;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.filter.IcaBankenFilter;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.storage.IcaBankenSessionStorage;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
@@ -36,21 +37,23 @@ public class IcaBankenAgent extends NextGenerationAgent {
     private final IcaBankenApiClient apiClient;
     private final TransferMessageFormatter transferMessageFormatter = new TransferMessageFormatter(catalog,
             TransferMessageLengthConfig.createWithMaxLength(14, 12), new StringNormalizerSwedish(",.-?!/+"));
+    private final IcaBankenSessionStorage icaBankenSessionStorage;
 
     public IcaBankenAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        this.apiClient = new IcaBankenApiClient(client);
+        this.icaBankenSessionStorage = new IcaBankenSessionStorage(sessionStorage);
+        this.apiClient = new IcaBankenApiClient(client, icaBankenSessionStorage);
     }
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
-        client.addFilter(new IcaBankenSessionFilter(sessionStorage));
+        client.addFilter(new IcaBankenFilter());
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
         return new BankIdAuthenticationController<>(context,
-                new IcaBankenBankIdAuthenticator(apiClient, sessionStorage));
+                new IcaBankenBankIdAuthenticator(apiClient, icaBankenSessionStorage));
     }
 
     @Override
@@ -90,7 +93,7 @@ public class IcaBankenAgent extends NextGenerationAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new IcaBankenSessionHandler(apiClient, sessionStorage);
+        return new IcaBankenSessionHandler(apiClient, icaBankenSessionStorage);
     }
 
     @Override
