@@ -795,7 +795,6 @@ java_library(
         ":main-api",
         ":provider-configuration-api",
         ":common-lib",
-
         "//src/cluster-lib",
         "//src/api-annotations",
         "//src/libraries/auth:auth",
@@ -864,6 +863,21 @@ java_library(
          "//third_party:com_netflix_governator",
          "//third_party:io_dropwizard_dropwizard_core",
      ],
+)
+
+junit_test(
+    name = "provider-configuration-lib-test",
+    srcs = glob(["src/provider-configuration-lib/src/test/**/*.java"]),
+    data = [
+        "//data:provider-configuration-test"
+        ],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":provider-configuration-lib",
+        ":main-api",
+        ":agents-lib",
+        ":common-lib"
+    ]
 )
 
 java_binary(
