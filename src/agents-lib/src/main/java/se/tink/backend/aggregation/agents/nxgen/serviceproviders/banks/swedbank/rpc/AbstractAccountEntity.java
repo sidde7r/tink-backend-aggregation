@@ -30,8 +30,8 @@ public abstract class AbstractAccountEntity {
         return fullyFormattedNumber;
     }
 
-    public boolean isSameAccount(AbstractAccountEntity b) {
-        return clearingNumber.equalsIgnoreCase(b.getClearingNumber()) &&
-                accountNumber.equalsIgnoreCase(b.getAccountNumber());
+    public boolean isSameAccount(AbstractAccountEntity accountToCompare) {
+        return clearingNumber.equalsIgnoreCase(accountToCompare.getClearingNumber()) &&
+                accountNumber.equalsIgnoreCase(accountToCompare.getAccountNumber());
     }
 }
