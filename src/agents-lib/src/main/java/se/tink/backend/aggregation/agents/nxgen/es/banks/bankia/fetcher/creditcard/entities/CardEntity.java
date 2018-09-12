@@ -28,6 +28,7 @@ public class CardEntity {
         return CreditCardAccount.builderFromFullNumber(cardNumber, cardAlias)
                 .setBalance(getBalance())
                 .setAvailableCredit(availableBalance.toTinkAmount())
+                .setBankIdentifier(cardNumber)
                 .build();
     }
 
