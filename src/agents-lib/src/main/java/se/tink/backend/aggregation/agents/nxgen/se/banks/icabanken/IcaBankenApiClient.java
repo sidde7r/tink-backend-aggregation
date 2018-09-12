@@ -8,7 +8,6 @@ import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.bankid.BankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.SignBundleResponseBody;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.SignedAssignmentList;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.Accounts.entities.AccountFetcherRoot;
@@ -29,6 +28,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.trans
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.AssignmentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.AssignmentsResponseBody;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.BanksResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.BankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.entities.AccountsEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.RecipientEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.RecipientsResponse;
@@ -60,10 +60,6 @@ public class IcaBankenApiClient {
     private RequestBuilder createRequest(URL url) {
         RequestBuilder request = client.request(url);
 
-    public BankIdResponse initBankId(String ssn) {
-        return createPostRequest(
-                IcaBankenConstants.Urls.LOGIN_BANKID.parameter(IcaBankenConstants.IdTags.IDENTIFIER_TAG, ssn)).post(
-                BankIdResponse.class);
         String sessionId = icaBankenSessionStorage.getSessionId();
 
         if (!Strings.isNullOrEmpty(sessionId)) {
@@ -74,9 +70,14 @@ public class IcaBankenApiClient {
     }
 
     public BankIdResponse initBankIdEInvoice(String invoiceId) {
+    public String initBankId(String ssn) {
         return createPostRequest(
                 IcaBankenConstants.Urls.INIT_EINVOICE_SIGN_URL.parameter(IcaBankenConstants.IdTags.INVOICE_ID_TAG,
                         invoiceId)).post(BankIdResponse.class);
+                IcaBankenConstants.Urls.LOGIN_BANKID.parameter(IcaBankenConstants.IdTags.IDENTIFIER_TAG, ssn))
+                .post(BankIdResponse.class)
+                .getBody()
+                .getRequestId();
     }
 
     public BankIdResponse initBankIdTransfer() {
@@ -90,9 +91,10 @@ public class IcaBankenApiClient {
         return assignmentRequest.getSignedAssignmentList();
     }
 
-    public BankIdResponse authenticate(String reference) {
-        return createRequest(IcaBankenConstants.Urls.LOGIN_BANKID.parameter(IcaBankenConstants.IdTags.IDENTIFIER_TAG,
-                reference)).get(BankIdResponse.class);
+    public BankIdResponse pollBankId(String reference) {
+        return createRequest(IcaBankenConstants.Urls.LOGIN_BANKID.parameter(
+                IcaBankenConstants.IdTags.IDENTIFIER_TAG, reference))
+                .get(BankIdResponse.class);
     }
 
     public BankIdResponse sign(String requestId) {
