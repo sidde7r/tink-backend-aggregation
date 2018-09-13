@@ -214,18 +214,18 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
     }
 
     private String addBeneficiaryName() throws SupplementalInfoException {
-        String helpText = BelfiusConstants.InputFieldConstants.ADD_BENEFICIARY_NAME_HELP_TEXT;
+        String helpText = BelfiusConstants.InputFieldConstants.ADD_BENEFICIARY_NAME_HELP_TEXT.getKey().get();
         Field inputField = addBeneficiaryField(helpText);
 
         return supplementalInformationController.askSupplementalInformation(inputField)
-                .get(BelfiusConstants.InputFieldConstants.ADD_BENEFICIARY_INP_FIELD);
+                .get(BelfiusConstants.InputFieldConstants.ADD_BENEFICIARY_INP_FIELD.getKey().get());
     }
 
     private String waitForSignCode(String challenge, String descriptionCode) throws SupplementalInfoException {
         return waitForSupplementalInformation(
-                BelfiusConstants.InputFieldConstants.WAIT_FOR_SIGN_CODE_HELP_TEXT_1,
+                BelfiusConstants.InputFieldConstants.WAIT_FOR_SIGN_CODE_HELP_TEXT_1.getKey().get(),
                 challenge,
-                BelfiusConstants.InputFieldConstants.WAIT_FOR_SIGN_CODE_HELP_TEXT_2,
+                BelfiusConstants.InputFieldConstants.WAIT_FOR_SIGN_CODE_HELP_TEXT_2.getKey().get(),
                 descriptionCode);
     }
 
@@ -233,11 +233,11 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
             String descriptionCode) throws SupplementalInfoException {
         return supplementalInformationController.askSupplementalInformation(
                 createDescriptionField(
-                        BelfiusConstants.InputFieldConstants.CONTROL_CODE_FIELD_DESCRIPTION,
+                        BelfiusConstants.InputFieldConstants.CONTROL_CODE_FIELD_DESCRIPTION.getKey().get(),
                         helpText,
                         controlCode),
                 extraDescriptionField(
-                        BelfiusConstants.InputFieldConstants.DESCRIPTION_CODE_FIELD_DESCRIPTION,
+                        BelfiusConstants.InputFieldConstants.DESCRIPTION_CODE_FIELD_DESCRIPTION.getKey().get(),
                         descriptionCodeHelp,
                         descriptionCode),
                 createInputField(BelfiusConstants.MultiFactorAuthentication.CODE))
@@ -247,10 +247,10 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
     private Field addBeneficiaryField(String helpText) {
         Field field = new Field();
         field.setMasked(false);
-        field.setDescription(BelfiusConstants.InputFieldConstants.BENEFICIARY_FIELD_DESCRIPTION);
+        field.setDescription(BelfiusConstants.InputFieldConstants.BENEFICIARY_FIELD_DESCRIPTION.getKey().get());
         field.setHelpText(helpText);
         field.setHint("name");
-        field.setName(BelfiusConstants.InputFieldConstants.ADD_BENEFICIARY_INP_FIELD);
+        field.setName(BelfiusConstants.InputFieldConstants.ADD_BENEFICIARY_INP_FIELD.getKey().get());
         return field;
     }
 
@@ -278,7 +278,7 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
     private Field createInputField(String name) {
         Field field = new Field();
         field.setMasked(false);
-        field.setDescription(BelfiusConstants.InputFieldConstants.RESPONSE_CODE_FIELD_DESCRIPTION);
+        field.setDescription(BelfiusConstants.InputFieldConstants.RESPONSE_CODE_FIELD_DESCRIPTION.getKey().get());
         field.setName(name);
         field.setNumeric(true);
         field.setHint("NNNNNNN");

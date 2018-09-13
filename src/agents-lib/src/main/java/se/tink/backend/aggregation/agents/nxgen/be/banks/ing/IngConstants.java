@@ -222,7 +222,7 @@ public class IngConstants {
         TRANSFER_AMOUNT_EXCEEDS_LIMIT(new LocalizableKey("The amount of this transaction exceeds your transfer"
                 + " limits. Please log in to Home'Bank to check your transfer limits.")),
         TRANSFER_TO_EXTERNAL_ACCOUNTS_NOT_ALLOWED(
-                new LocalizableKey("Transfers to external accounts is not allowed from this account.")),
+                new LocalizableKey("Transfers to accounts from other banks is not allowed from this account.")),
         DATE_MUST_BE_BUSINESS_DAY(
                 new LocalizableKey("Execution date have to be a business day, choose another date.")),
         MISSING_DESTINATION_NAME(

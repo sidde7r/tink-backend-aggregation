@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -7,6 +8,8 @@ import se.tink.backend.aggregation.nxgen.http.UrlEnum;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n.LocalizableParametrizedEnum;
+import se.tink.libraries.i18n.LocalizableParametrizedKey;
 
 public class KbcConstants {
     public static final String LANGUAGE = "en";
@@ -189,7 +192,7 @@ public class KbcConstants {
 
     public enum UserMessage implements LocalizableEnum {
         INCORRECT_CARD_NUMBER(new LocalizableKey("The card number you have entered is incorrect. Please try again.")),
-        NOT_A_CUSTOMER(new LocalizableKey("The provided credentials are not for KBC bank"));
+        NOT_A_CUSTOMER(new LocalizableKey("The provided credentials are not for KBC."));
 
         private LocalizableKey userMessage;
 
@@ -203,6 +206,52 @@ public class KbcConstants {
         }
     }
 
+    public enum TransferMessage implements LocalizableEnum {
+
+        SIGN_INSTRUCTIONS(new LocalizableKey("Insert your card into the card reader and press SIGN twice."
+                + "Enter the control code on your card reader and press OK. Then enter the amount of your transfer, "
+                + "including the digits after the decimal sign, and press OK. Enter and your PIN and press OK, then "
+                + "enter the code from the card reader in the response code field.")),
+        MISSING_SOURCE_NAME(new LocalizableKey("Originator name must be specified.")),
+        MISSING_DESTINATION_NAME(new LocalizableKey("Beneficiary name must be specified.")),
+        DUE_DATE_TOO_FAR_IN_FUTURE(new LocalizableKey("Due date must be within a year from today"));
+
+        private LocalizableKey userMessage;
+
+        TransferMessage(LocalizableKey userMessage) {
+            this.userMessage = userMessage;
+        }
+
+        @Override
+        public LocalizableKey getKey() {
+            return userMessage;
+        }
+    }
+
+
+    public enum TransferMessageParametrized implements LocalizableParametrizedEnum {
+        MSG_LENGTH_EXCEEDS_MAX(new LocalizableParametrizedKey("Reference must be max {} characters.")),
+        AMOUNT_LESS_THAN_MIN(new LocalizableParametrizedKey("Transfer amount can't be less than {}."));
+
+        private final LocalizableParametrizedKey key;
+
+        TransferMessageParametrized(LocalizableParametrizedKey key) {
+            Preconditions.checkNotNull(key);
+            this.key = key;
+        }
+
+        @Override
+        public LocalizableParametrizedKey getKey() {
+            return key;
+        }
+
+        @Override
+        public LocalizableParametrizedKey cloneWith(Object... parameters) {
+            return key.cloneWith(parameters);
+        }
+    }
+
+
     public static class Transfers {
         public static final double MIN_AMOUNT = 0.01;
         public static final int MAX_MSG_LENGTH = 70;
@@ -210,16 +259,5 @@ public class KbcConstants {
         public static final String SCASH_VERSION_NUMBER = "";
         public static final String TRANSFER_TO_OWN_ACCOUNT = "transferOwnAccount";
         public static final String TRANSFER_TO_OTHER_ACCOUNT = "transferOtherAccount";
-
-        public static final String SIGN_INSTRUCTIONS = "Insert your card into the card reader and press SIGN twice."
-                + "Enter the control code on your card reader and press OK. Then enter the amount of your transfer, "
-                + "including the digits after the decimal sign, and press OK. Enter and your PIN and press OK, then "
-                + "enter the code from the card reader in the response code field.";
-        public static final String MSG_LENGTH_EXCEEDS_MAX = String.format(
-                "Reference must be max %d characters.", MAX_MSG_LENGTH);
-        public static final String MISSING_SOURCE_NAME = "Source name must be specified";
-        public static final String MISSING_DESTINATION_NAME = "Destination name must be specified";
-        public static final String DUE_DATE_TOO_FAR_IN_FUTURE = "Due date must be within a year from today";
-        public static final String AMOUNT_LESS_THAN_MIN = String.format("Transfer amount can't be less than %.2f", MIN_AMOUNT);
     }
 }
