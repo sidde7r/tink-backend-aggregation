@@ -3,8 +3,10 @@ package se.tink.backend.aggregation.rpc;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.collect.ImmutableSortedMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Objects;
 import org.apache.commons.codec.binary.Hex;
 import se.tink.libraries.strings.StringUtils;
 
@@ -105,7 +107,7 @@ public abstract class CredentialsRequest {
     }
 
     public List<Account> getAccounts() {
-        return accounts;
+        return Objects.nonNull(accounts) ? accounts : Collections.emptyList();
     }
 
     public void setAccounts(List<Account> accounts) {
