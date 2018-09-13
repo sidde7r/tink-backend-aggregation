@@ -389,7 +389,9 @@ public class NewAgentTestContext extends AgentContext {
             row.put("tot. profit", String.valueOf(portfolio.getTotalProfit()));
             CliPrintUtils.printTable(4, "portfolio", Lists.newArrayList(row));
 
-            printInstrumentDetails(portfolio.getInstruments());
+            if (portfolio.getInstruments() != null) {
+                printInstrumentDetails(portfolio.getInstruments());
+            }
         });
     }
 
