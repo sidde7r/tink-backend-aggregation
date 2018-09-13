@@ -16,6 +16,7 @@ import org.apache.curator.framework.CuratorFramework;
 import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
+import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -165,6 +166,11 @@ public class AgentTestContext extends AgentContext {
         }
 
         accountsByBankId.put(account.getBankId(), account);
+    }
+
+    @Override
+    public Optional<AccountFeatures> getAccountFeatures(final String uniqueAccountId) {
+        throw new NotImplementedException("Account features need to be cached to be retrievable");
     }
 
     public Account sendAccountToUpdateService(String uniqueId) {

@@ -127,7 +127,20 @@ public abstract class AgentContext {
 
     public abstract Account sendAccountToUpdateService(String uniqueId);
 
+    /**
+     * Caches {@code account} and the associated {@code accountFeatures}, making {@code accountFeatures} retrievable
+     * via {@code AgentContext::getAccountFeatures} after this method has been executed.
+     *
+     * @param account An account
+     * @param accountFeatures A set of account features associated with said account
+     */
     public abstract void cacheAccount(Account account, AccountFeatures accountFeatures);
+
+    /**
+     * @param uniqueAccountId Unique identifier for an account
+     * @return The cached account features of the related account, or Optional.empty if the account is not cached
+     */
+    public abstract Optional<AccountFeatures> getAccountFeatures(String uniqueAccountId);
 
     public abstract void updateTransferDestinationPatterns(Map<Account, List<TransferDestinationPattern>> map);
 
@@ -157,7 +170,8 @@ public abstract class AgentContext {
 
     public abstract void cacheTransactions(String accountUniqueId, List<Transaction> transactions);
 
-    public abstract void updateCredentialsExcludingSensitiveInformation(Credentials credentials, boolean doStatusUpdate);
+    public abstract void updateCredentialsExcludingSensitiveInformation(Credentials credentials,
+            boolean doStatusUpdate);
 
     public abstract void updateCredentialsOnlySensitiveInformation(Credentials credentials);
 
