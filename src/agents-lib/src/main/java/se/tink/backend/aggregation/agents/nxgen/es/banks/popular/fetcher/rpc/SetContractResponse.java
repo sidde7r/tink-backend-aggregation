@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularConstants;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonObject
 public class SetContractResponse {
     private String result;
     private String codError;
@@ -27,23 +27,11 @@ public class SetContractResponse {
         return result;
     }
 
-    public void setResult(String result) {
-        this.result = result;
-    }
-
     public String getCodError() {
         return codError;
     }
 
-    public void setCodError(String codError) {
-        this.codError = codError;
-    }
-
     public String getDescError() {
         return descError;
-    }
-
-    public void setDescError(String descError) {
-        this.descError = descError;
     }
 }

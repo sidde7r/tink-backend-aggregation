@@ -1,44 +1,30 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.entities.BancoPopularContract;
+import se.tink.backend.aggregation.annotations.JsonObject;
+
+@JsonObject
 public class SetContractRequest {
     private long contract;
     private int banco;
     private int oficina;
     private String ip;
 
-    public long getContract() {
-        return contract;
-    }
-
-    public SetContractRequest setContract(long contract) {
-        this.contract = contract;
-        return this;
-    }
-
-    public int getBanco() {
-        return banco;
-    }
-
-    public SetContractRequest setBanco(int banco) {
-        this.banco = banco;
-        return this;
-    }
-
-    public int getOficina() {
-        return oficina;
-    }
-
-    public SetContractRequest setOficina(int oficina) {
-        this.oficina = oficina;
-        return this;
-    }
-
-    public String getIp() {
-        return ip;
-    }
-
-    public SetContractRequest setIp(String ip) {
+    @JsonIgnore
+    private SetContractRequest(BancoPopularContract contract, String ip) {
+        this.contract = contract.getContractNumber();
+        this.banco = contract.getBank();
+        this.oficina = contract.getOffice();
         this.ip = ip;
-        return this;
+    }
+
+    @JsonIgnore
+    public static SetContractRequest build(BancoPopularContract contract, String ip) {
+        return new SetContractRequest(contract, ip);
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 }

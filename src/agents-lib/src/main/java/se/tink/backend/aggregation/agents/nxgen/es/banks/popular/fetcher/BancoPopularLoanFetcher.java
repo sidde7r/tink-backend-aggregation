@@ -4,18 +4,17 @@ import java.util.Collection;
 import java.util.Collections;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularConstants;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularPersistenStorage;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.entities.BancoPopularContract;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.rpc.FetchAccountsRequest;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
-import se.tink.backend.aggregation.rpc.Credentials;
 
 public class BancoPopularLoanFetcher extends BancoPopularContractFetcher implements AccountFetcher<LoanAccount> {
     private static final AggregationLogger log = new AggregationLogger(BancoPopularLoanFetcher.class);
 
-    public BancoPopularLoanFetcher(BancoPopularApiClient bankClient, BancoPopularPersistenStorage persistentStorage) {
+    public BancoPopularLoanFetcher(BancoPopularApiClient bankClient, BancoPopularPersistentStorage persistentStorage) {
         super(bankClient, persistentStorage);
     }
 
@@ -27,8 +26,8 @@ public class BancoPopularLoanFetcher extends BancoPopularContractFetcher impleme
             for (BancoPopularContract contract : contracts) {
 
                 if (selectCurrentContract(contract)) {
-                    FetchAccountsRequest fetchLoanAccountsRequest = new FetchAccountsRequest()
-                            .setIdentificador(BancoPopularConstants.Fetcher.PRESTAMO);
+                    FetchAccountsRequest fetchLoanAccountsRequest = FetchAccountsRequest.build(
+                            BancoPopularConstants.Fetcher.LOAN_ACCOUNT_IDENTIFIER);
 
                     String fetchLoanAccountsResponse = bankClient.fetchLoanAccounts(fetchLoanAccountsRequest);
                     if (fetchLoanAccountsResponse.contains("\"faultIndicator\":true")) {

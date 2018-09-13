@@ -4,19 +4,18 @@ import java.util.Collection;
 import java.util.Collections;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularConstants;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularPersistenStorage;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.entities.BancoPopularContract;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.rpc.FetchAccountsRequest;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
-import se.tink.backend.aggregation.rpc.Credentials;
 
 public class BancoPopularInvestmentFetcher extends BancoPopularContractFetcher implements AccountFetcher<InvestmentAccount> {
     private static final AggregationLogger log = new AggregationLogger(BancoPopularInvestmentFetcher.class);
 
     public BancoPopularInvestmentFetcher(BancoPopularApiClient bankClient,
-            BancoPopularPersistenStorage persistentStorage) {
+            BancoPopularPersistentStorage persistentStorage) {
         super(bankClient, persistentStorage);
     }
 
@@ -42,8 +41,8 @@ public class BancoPopularInvestmentFetcher extends BancoPopularContractFetcher i
     }
 
     private void fetchFundAccounts() {
-        FetchAccountsRequest fetchInvestmentAccountsRequest = new FetchAccountsRequest()
-                .setIdentificador(BancoPopularConstants.Fetcher.FOND_SELECCION);
+        FetchAccountsRequest fetchInvestmentAccountsRequest = FetchAccountsRequest.build(
+                BancoPopularConstants.Fetcher.FUND_ACCOUNT_IDENTIFIER);
 
         String fetchInvestmentAccountsResponse = bankClient.fetchFundAccounts(fetchInvestmentAccountsRequest);
         // this is just to avoid unnecessary logging when no data is present
@@ -55,8 +54,8 @@ public class BancoPopularInvestmentFetcher extends BancoPopularContractFetcher i
     }
 
     private void fetchSecuritiesAccounts() {
-        FetchAccountsRequest fetchInvestmentAccountsRequest = new FetchAccountsRequest()
-                .setIdentificador(BancoPopularConstants.Fetcher.SEGURO);
+        FetchAccountsRequest fetchInvestmentAccountsRequest = FetchAccountsRequest.build(
+                BancoPopularConstants.Fetcher.INSURANCE_ACCOUNT_IDENTIFIER);
 
         String fetchInvestmentAccountsResponse = bankClient.fetchSecuritiesAccounts(fetchInvestmentAccountsRequest);
         // this is just to avoid unnecessary logging when no data is present
@@ -68,8 +67,8 @@ public class BancoPopularInvestmentFetcher extends BancoPopularContractFetcher i
     }
 
     private void fetchCreditAccounts() {
-        FetchAccountsRequest request = new FetchAccountsRequest()
-                .setIdentificador(BancoPopularConstants.Fetcher.CUENTA_CREDITO);
+        FetchAccountsRequest request =  FetchAccountsRequest.build(
+                BancoPopularConstants.Fetcher.CREDIT_CARD_ACCOUNT_IDENTIFIER);
 
         String response = bankClient.fetchCreditAccounts(request);
         // this is just to avoid unnecessary logging when no data is present

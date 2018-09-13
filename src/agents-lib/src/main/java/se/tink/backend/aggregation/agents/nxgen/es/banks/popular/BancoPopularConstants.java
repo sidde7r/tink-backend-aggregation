@@ -31,21 +31,22 @@ public class BancoPopularConstants {
 
     public static class Fetcher {
         public static final String OK = "OK";
+        public static final String CAN_FETCH_MORE = "S";
 
-        public static final String TIPO_MOV_ECRMVTO_2 = "T";
+        public static final String MOVEMENT_TYPE = "T";
         public static final int CONCEP_ECRMVTO_2 = 98;
 
-        public static final String CUENTA = "A32";  // account
-        public static final String CUENTA_CREDITO = "A45";  // credit account
-        public static final String FOND_SELECCION = "J01";  // funds
-        public static final String PRESTAMO = "K11";   // loan
-        public static final String SEGURO = "F99";   // securities (stocks?)
+        public static final String CHECKING_ACCOUNT_IDENTIFIER = "A32";  // account
+        public static final String CREDIT_CARD_ACCOUNT_IDENTIFIER = "A45";  // credit account
+        public static final String FUND_ACCOUNT_IDENTIFIER = "J01";  // funds
+        public static final String LOAN_ACCOUNT_IDENTIFIER = "K11";   // loan
+        public static final String INSURANCE_ACCOUNT_IDENTIFIER = "F99";   // securities (stocks?)
 
         // BTAT query constants
-        public static final String NIVEL = "002";
-        public static final String OCURRENCIAS = "15";
-        public static final String INDICADOR_3 = "1";
-        public static final String INDICADOR_5 = "4";
+        public static final String LEVEL = "002";
+        public static final String OCCURRENCES = "15";
+        public static final String INDICATOR_3 = "1";
+        public static final String INDICATOR_5 = "4";
         public static final String ACCOUNTS_PAGE = "full";
 
         // codServicio
@@ -62,6 +63,10 @@ public class BancoPopularConstants {
 
         public static final String AMOUNT_SIGN_INDICATOR_1 = "D";
         public static final String AMOUNT_SIGN_INDICATOR_2 = "-";
+
+        public static final String MERCHANT_NAME = "merchantName";
+        public static final String MERCHANT_NAME_REGEX = String.format(
+                ".*, en (?<%s>.+)$", MERCHANT_NAME);
 
         public static final LogTag INVESTMENT_LOGGING =
                 LogTag.from("#investment-logging-popular-es");

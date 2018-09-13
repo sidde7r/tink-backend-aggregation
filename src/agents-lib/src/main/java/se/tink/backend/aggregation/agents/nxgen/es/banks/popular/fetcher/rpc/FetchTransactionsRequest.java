@@ -1,29 +1,60 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.rpc;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.entities.BancoPopularContract;
+import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 
+@JsonObject
 public class FetchTransactionsRequest {
-    private String numIntContrato;
-    private String cccBanco;
-    private String cccSucursal;
-    private String cccDigitos;
-    private String cccSubcuenta;
-    private String cccCuenta;
-    private String cccDigitosCtrol;
-    private String fechaDesde;
-    private String fechaHasta;
-    private String tipoMovEcrmvto2 = BancoPopularConstants.Fetcher.TIPO_MOV_ECRMVTO_2;
-    private int concepEcrmvto2 = BancoPopularConstants.Fetcher.CONCEP_ECRMVTO_2;
+    @JsonProperty("numIntContrato")
+    private String contractNumber;
+    @JsonProperty("cccBanco")
+    private String bank;
+    @JsonProperty("cccSucursal")
+    private String office;
+    @JsonProperty("cccDigitos")
+    private String digits;
+    @JsonProperty("cccSubcuenta")
+    private String subAccount;
+    @JsonProperty("cccCuenta")
+    private String account;
+    @JsonProperty("cccDigitosCtrol")
+    private String checkDigits;
+    @JsonProperty("fechaDesde")
+    private String fetchFrom;
+    @JsonProperty("fechaHasta")
+    private String fetchTo;
+    @JsonProperty("tipoMovEcrmvto2")
+    private String movementType = BancoPopularConstants.Fetcher.MOVEMENT_TYPE;
+    private int concepEcrmvto2 = BancoPopularConstants.Fetcher.CONCEP_ECRMVTO_2; // no clue what to translate to
 
-    // following fields depend on account number
-    public FetchTransactionsRequest updateCccFields(String accountNumber) {
-        accountNumber = extractAccountNumber(accountNumber);
-        cccDigitos = accountNumber.substring(0, 2);
-        cccSubcuenta = accountNumber.substring(2, 5);
-        cccCuenta = accountNumber.substring(5, 10);
-        cccDigitosCtrol = accountNumber.substring(accountNumber.length() - 2);
+    private FetchTransactionsRequest(BancoPopularContract contract, TransactionalAccount account,
+            Date fromDate, Date toDate) {
+        String accountNumber = extractAccountNumber(account.getAccountNumber());
 
-        return this;
+        this.contractNumber = account.getBankIdentifier();
+        this.bank = intToZeroFilledString(contract.getBank());
+        this.office = intToZeroFilledString(contract.getOffice());
+        this.digits = accountNumber.substring(0, 2);
+        this.subAccount = accountNumber.substring(2, 5);
+        this.account = accountNumber.substring(5, 10);
+        this.checkDigits = accountNumber.substring(accountNumber.length() - 2);
+        this.fetchFrom = formatDate(fromDate);
+        this.fetchTo = formatDate(toDate);
+        this.movementType = BancoPopularConstants.Fetcher.MOVEMENT_TYPE;
+        this.concepEcrmvto2 = BancoPopularConstants.Fetcher.CONCEP_ECRMVTO_2;
+
+    }
+
+    public static FetchTransactionsRequest build(BancoPopularContract contract, TransactionalAccount account,
+            Date fromDate, Date toDate) {
+
+        return new FetchTransactionsRequest(contract, account, fromDate, toDate);
     }
 
     // account number is set to iban, so just use the 12 last characters in the number
@@ -36,92 +67,12 @@ public class FetchTransactionsRequest {
         return normalizedAccountNumber;
     }
 
-    public String getNumIntContrato() {
-        return numIntContrato;
+    private String intToZeroFilledString(int i) {
+        return String.format("%04d", i);
     }
 
-    public FetchTransactionsRequest setNumIntContrato(String numIntContrato) {
-        this.numIntContrato = numIntContrato;
-        return this;
-    }
-
-    public String getCccBanco() {
-        return cccBanco;
-    }
-
-    public FetchTransactionsRequest setCccBanco(String cccBanco) {
-        this.cccBanco = cccBanco;
-        return this;
-    }
-
-    public String getCccSucursal() {
-        return cccSucursal;
-    }
-
-    public FetchTransactionsRequest setCccSucursal(String cccSucursal) {
-        this.cccSucursal = cccSucursal;
-        return this;
-    }
-
-    public String getCccDigitos() {
-        return cccDigitos;
-    }
-
-    public FetchTransactionsRequest setCccDigitos(String cccDigitos) {
-        this.cccDigitos = cccDigitos;
-        return this;
-    }
-
-    public String getCccSubcuenta() {
-        return cccSubcuenta;
-    }
-
-    public FetchTransactionsRequest setCccSubcuenta(String cccSubcuenta) {
-        this.cccSubcuenta = cccSubcuenta;
-        return this;
-    }
-
-    public String getCccCuenta() {
-        return cccCuenta;
-    }
-
-    public FetchTransactionsRequest setCccCuenta(String cccCuenta) {
-        this.cccCuenta = cccCuenta;
-        return this;
-    }
-
-    public String getCccDigitosCtrol() {
-        return cccDigitosCtrol;
-    }
-
-    public FetchTransactionsRequest setCccDigitosCtrol(String cccDigitosCtrol) {
-        this.cccDigitosCtrol = cccDigitosCtrol;
-        return this;
-    }
-
-    public String getFechaDesde() {
-        return fechaDesde;
-    }
-
-    public FetchTransactionsRequest setFechaDesde(String fechaDesde) {
-        this.fechaDesde = fechaDesde;
-        return this;
-    }
-
-    public String getFechaHasta() {
-        return fechaHasta;
-    }
-
-    public FetchTransactionsRequest setFechaHasta(String fechaHasta) {
-        this.fechaHasta = fechaHasta;
-        return this;
-    }
-
-    public String getTipoMovEcrmvto2() {
-        return tipoMovEcrmvto2;
-    }
-
-    public int getConcepEcrmvto2() {
-        return concepEcrmvto2;
+    private String formatDate(Date aDate) {
+        LocalDate date = new java.sql.Date(aDate.getTime()).toLocalDate();
+        return date.format(DateTimeFormatter.ISO_DATE);
     }
 }

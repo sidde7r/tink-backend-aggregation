@@ -1,185 +1,115 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.popular.authenticator.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.authenticator.entities.BancoPopularLoginContract;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
-/*
- * Sample data
-
-    "loginContractOut": [{}],  // see entities.BancoPopularLoginContract
-    "numIntPersona": "033352780",
-    "nombre": "KARL ALFRED ",
-    "tratamiento": 1,
-    "digDocum": "S",
-    "datosBasicos": "S",
-    "sitFirma": 5,
-    "rentasAltas": "N",
-    "inHayMas": "N",
-    "codConducta": "0",
-    "otpTelef": "2",
-    "dsExc": "0",
-    "dsOtp": "0",
-    "glContprov": "0",
-    "delegado": "",
-    "sitBenFre": "I",
-    "tipoFirma": "N"
- */
-
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonObject
 public class LoginResponse {
     private List<BancoPopularLoginContract> loginContractOut;
-    private String numIntPersona;
-    private String nombre;
-    private int tratamiento;
+    @JsonProperty("numIntPersona")
+    private String personNumber;
+    @JsonProperty("nombre")
+    private String firstName;
+    @JsonProperty("tratamiento")
+    private int treatment;
     private String digDocum;
-    private String datosBasicos;
-    private int sitFirma;
-    private String rentasAltas;
-    private String inHayMas;
-    private String codConducta;
+    @JsonProperty("datosBasicos")
+    private String basicData;
+    @JsonProperty("sitFirma")
+    private int sitCompany;
+    @JsonProperty("rentasAltas")
+    private String highRents;
+    @JsonProperty("inHayMas")
+    private String inHasMore;
+    @JsonProperty("codConducta")
+    private String codeConduct;
     private String otpTelef;
     private String dsExc;
     private String dsOtp;
     private String glContprov;
-    private String delegado;
+    @JsonProperty("delegado")
+    private String delegate;
     private String sitBenFre;
-    private String tipoFirma;
+    @JsonProperty("tipoFirma")
+    private String signatureType;
+    private int nDiasMigrs;
+    private int tPerfilclie;
 
     public List<BancoPopularLoginContract> getLoginContractOut() {
         return loginContractOut;
     }
 
-    public void setLoginContractOut(
-            List<BancoPopularLoginContract> loginContractOut) {
-        this.loginContractOut = loginContractOut;
+    public String getPersonNumber() {
+        return personNumber;
     }
 
-    public String getNumIntPersona() {
-        return numIntPersona;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setNumIntPersona(String numIntPersona) {
-        this.numIntPersona = numIntPersona;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public int getTratamiento() {
-        return tratamiento;
-    }
-
-    public void setTratamiento(int tratamiento) {
-        this.tratamiento = tratamiento;
+    public int getTreatment() {
+        return treatment;
     }
 
     public String getDigDocum() {
         return digDocum;
     }
 
-    public void setDigDocum(String digDocum) {
-        this.digDocum = digDocum;
+    public String getBasicData() {
+        return basicData;
     }
 
-    public String getDatosBasicos() {
-        return datosBasicos;
+    public int getSitCompany() {
+        return sitCompany;
     }
 
-    public void setDatosBasicos(String datosBasicos) {
-        this.datosBasicos = datosBasicos;
+    public String getHighRents() {
+        return highRents;
     }
 
-    public int getSitFirma() {
-        return sitFirma;
+    public String getInHasMore() {
+        return inHasMore;
     }
 
-    public void setSitFirma(int sitFirma) {
-        this.sitFirma = sitFirma;
-    }
-
-    public String getRentasAltas() {
-        return rentasAltas;
-    }
-
-    public void setRentasAltas(String rentasAltas) {
-        this.rentasAltas = rentasAltas;
-    }
-
-    public String getInHayMas() {
-        return inHayMas;
-    }
-
-    public void setInHayMas(String inHayMas) {
-        this.inHayMas = inHayMas;
-    }
-
-    public String getCodConducta() {
-        return codConducta;
-    }
-
-    public void setCodConducta(String codConducta) {
-        this.codConducta = codConducta;
+    public String getCodeConduct() {
+        return codeConduct;
     }
 
     public String getOtpTelef() {
         return otpTelef;
     }
 
-    public void setOtpTelef(String otpTelef) {
-        this.otpTelef = otpTelef;
-    }
-
     public String getDsExc() {
         return dsExc;
-    }
-
-    public void setDsExc(String dsExc) {
-        this.dsExc = dsExc;
     }
 
     public String getDsOtp() {
         return dsOtp;
     }
 
-    public void setDsOtp(String dsOtp) {
-        this.dsOtp = dsOtp;
-    }
-
     public String getGlContprov() {
         return glContprov;
     }
 
-    public void setGlContprov(String glContprov) {
-        this.glContprov = glContprov;
-    }
-
-    public String getDelegado() {
-        return delegado;
-    }
-
-    public void setDelegado(String delegado) {
-        this.delegado = delegado;
+    public String getDelegate() {
+        return delegate;
     }
 
     public String getSitBenFre() {
         return sitBenFre;
     }
 
-    public void setSitBenFre(String sitBenFre) {
-        this.sitBenFre = sitBenFre;
+    public String getSignatureType() {
+        return signatureType;
     }
 
-    public String getTipoFirma() {
-        return tipoFirma;
+    public int getnDiasMigrs() {
+        return nDiasMigrs;
     }
 
-    public void setTipoFirma(String tipoFirma) {
-        this.tipoFirma = tipoFirma;
+    public int gettPerfilclie() {
+        return tPerfilclie;
     }
 }

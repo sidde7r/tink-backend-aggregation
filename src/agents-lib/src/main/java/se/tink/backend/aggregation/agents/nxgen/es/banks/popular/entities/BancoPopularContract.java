@@ -1,37 +1,44 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.popular.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.authenticator.entities.BancoPopularLoginContract;
+import se.tink.backend.aggregation.annotations.JsonObject;
+
 /*
  * Class for storing login contracts in storage
  */
+@JsonObject
 public class BancoPopularContract {
-    private long nItnCont;
-    private int oficina;
-    private int banco;
+    @JsonProperty("nItnCont")
+    private long contractNumber;
+    @JsonProperty("oficina")
+    private int office;
+    @JsonProperty("banco")
+    private int bank;
 
-    public long getnItnCont() {
-        return nItnCont;
+    public BancoPopularContract() {
+
     }
 
-    public BancoPopularContract setnItnCont(long nItnCont) {
-        this.nItnCont = nItnCont;
-        return this;
+    private BancoPopularContract(BancoPopularLoginContract loginContract) {
+        this.contractNumber = loginContract.getContractNumber();
+        this.office = loginContract.getOffice();
+        this.bank = loginContract.getBank();
     }
 
-    public int getOficina() {
-        return oficina;
+    public static BancoPopularContract build(BancoPopularLoginContract loginContract) {
+        return new BancoPopularContract(loginContract);
     }
 
-    public BancoPopularContract setOficina(int oficina) {
-        this.oficina = oficina;
-        return this;
+    public long getContractNumber() {
+        return contractNumber;
     }
 
-    public int getBanco() {
-        return banco;
+    public int getOffice() {
+        return office;
     }
 
-    public BancoPopularContract setBanco(int banco) {
-        this.banco = banco;
-        return this;
+    public int getBank() {
+        return bank;
     }
 }

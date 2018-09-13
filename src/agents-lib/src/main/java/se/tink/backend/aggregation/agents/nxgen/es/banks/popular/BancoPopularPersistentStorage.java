@@ -3,11 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.popular;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.entities.BancoPopularContracts;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-public class BancoPopularPersistenStorage {
+public class BancoPopularPersistentStorage {
 
     private final PersistentStorage persistentStorage;
 
-    public BancoPopularPersistenStorage(PersistentStorage persistentStorage) {
+    public BancoPopularPersistentStorage(PersistentStorage persistentStorage) {
 
         this.persistentStorage = persistentStorage;
     }

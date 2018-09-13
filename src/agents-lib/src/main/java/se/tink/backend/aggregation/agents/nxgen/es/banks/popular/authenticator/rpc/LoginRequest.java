@@ -1,35 +1,21 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.popular.authenticator.rpc;
 
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularConstants;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
+@JsonObject
 public class LoginRequest {
     private String usuario;
     private String idPassword;
-    private String plataforma = BancoPopularConstants.Authentication.PLATAFORMA;
+    private String plataforma;
 
-    public String getUsuario() {
-        return usuario;
+    private LoginRequest(String username, String password) {
+        this.usuario = username;
+        this.idPassword = password;
+        this.plataforma = BancoPopularConstants.Authentication.PLATAFORMA;
     }
 
-    public LoginRequest setUsuario(String usuario) {
-        this.usuario = usuario;
-        return this;
-    }
-
-    public String getIdPassword() {
-        return idPassword;
-    }
-
-    public LoginRequest setIdPassword(String idPassword) {
-        this.idPassword = idPassword;
-        return this;
-    }
-
-    public String getPlataforma() {
-        return plataforma;
-    }
-
-    public void setPlataforma(String plataforma) {
-        this.plataforma = plataforma;
+    public static LoginRequest build(String username, String password) {
+        return new LoginRequest(username, password);
     }
 }

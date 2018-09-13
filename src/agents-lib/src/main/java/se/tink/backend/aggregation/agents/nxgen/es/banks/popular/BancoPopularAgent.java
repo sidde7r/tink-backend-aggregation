@@ -28,17 +28,16 @@ import se.tink.backend.common.config.SignatureKeyPair;
 public class BancoPopularAgent extends NextGenerationAgent {
 
     private final BancoPopularApiClient bankClient;
-    private final BancoPopularPersistenStorage popularPersistentStorage;
+    private final BancoPopularPersistentStorage popularPersistentStorage;
 
     public BancoPopularAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        bankClient = new BancoPopularApiClient(client, sessionStorage, credentials);
-        popularPersistentStorage = new BancoPopularPersistenStorage(persistentStorage);
+        bankClient = new BancoPopularApiClient(client, sessionStorage);
+        popularPersistentStorage = new BancoPopularPersistentStorage(persistentStorage);
     }
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
-
     }
 
     @Override

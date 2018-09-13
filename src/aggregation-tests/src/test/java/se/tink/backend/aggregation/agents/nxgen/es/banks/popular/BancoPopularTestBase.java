@@ -13,7 +13,7 @@ public class BancoPopularTestBase {
     protected Credentials credentials;
     protected BancoPopularApiClient bankClient;
     protected BancoPopularAuthenticator authenticator;
-    protected BancoPopularPersistenStorage persistentStorage;
+    protected BancoPopularPersistentStorage persistentStorage;
 
     protected String user = BancoPopularTestConfig.USERNAME;
     protected String password = BancoPopularTestConfig.PASSWORD;
@@ -29,8 +29,8 @@ public class BancoPopularTestBase {
         TinkHttpClient client = new TinkHttpClient(context, credentials);
         client.setDebugOutput(true);
 
-        persistentStorage = new BancoPopularPersistenStorage(new PersistentStorage());
-        bankClient = new BancoPopularApiClient(client, new SessionStorage(), credentials);
+        persistentStorage = new BancoPopularPersistentStorage(new PersistentStorage());
+        bankClient = new BancoPopularApiClient(client, new SessionStorage());
         authenticator = new BancoPopularAuthenticator(bankClient, persistentStorage);
     }
 }
