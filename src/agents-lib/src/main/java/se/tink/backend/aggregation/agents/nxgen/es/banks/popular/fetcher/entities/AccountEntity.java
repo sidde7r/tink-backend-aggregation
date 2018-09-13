@@ -21,25 +21,25 @@ public class AccountEntity {
     private String accountNumber;
     private long fecSald;
     @JsonProperty("posicion")
-    private int position;
+    private double position;
     @JsonProperty("signoPosicion")
     private String positionSign;
     @JsonProperty("monedaPosicion")
     private String currencyPosition;
     @JsonProperty("posicion2")
-    private int position2;
+    private double position2;
     @JsonProperty("signoPosicion2")
     private String position2Sign;
     @JsonProperty("monedaPosicion2")
     private String currencyPosition2;
     @JsonProperty("posicion3")
-    private int position3;
+    private double position3;
     @JsonProperty("signoPosicion3")
     private String position3Sign;
     @JsonProperty("monedaPosicion3")
     private String currencyPosition3;
     @JsonProperty("posicion4")
-    private int position4;
+    private double position4;
     @JsonProperty("signoPosicion4")
     private String position4Sign;
     @JsonProperty("monedaPosicion4")
@@ -138,7 +138,7 @@ public class AccountEntity {
         return fecSald;
     }
 
-    public int getPosition() {
+    public double getPosition() {
         return position;
     }
 
@@ -150,7 +150,7 @@ public class AccountEntity {
         return currencyPosition;
     }
 
-    public int getPosition2() {
+    public double getPosition2() {
         return position2;
     }
 
@@ -162,7 +162,7 @@ public class AccountEntity {
         return currencyPosition2;
     }
 
-    public int getPosition3() {
+    public double getPosition3() {
         return position3;
     }
 
@@ -174,7 +174,7 @@ public class AccountEntity {
         return currencyPosition3;
     }
 
-    public int getPosition4() {
+    public double getPosition4() {
         return position4;
     }
 

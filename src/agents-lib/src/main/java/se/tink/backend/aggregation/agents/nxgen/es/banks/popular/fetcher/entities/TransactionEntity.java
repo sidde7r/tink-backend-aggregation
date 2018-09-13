@@ -26,7 +26,7 @@ public class TransactionEntity {
     @JsonProperty("tipoMov")
     private String type;
     @JsonProperty("importeMov")
-    private int amount;
+    private double amount;
     @JsonProperty("signoImporteMov")
     private String amountSign;
     @JsonProperty("fecvalorEcrmvto221")
@@ -34,7 +34,7 @@ public class TransactionEntity {
     @JsonProperty("codMoneda")
     private String currencyCode;
     @JsonProperty("importeCV")
-    private int amountCv;
+    private double amountCv;
     @JsonProperty("codMonedaCV")
     private String currencyCodeCv;
     @JsonProperty("indicador")
@@ -105,7 +105,7 @@ public class TransactionEntity {
         return type;
     }
 
-    public int getAmount() {
+    public double getAmount() {
         return amount;
     }
 
@@ -121,7 +121,7 @@ public class TransactionEntity {
         return currencyCode;
     }
 
-    public int getAmountCv() {
+    public double getAmountCv() {
         return amountCv;
     }
 
