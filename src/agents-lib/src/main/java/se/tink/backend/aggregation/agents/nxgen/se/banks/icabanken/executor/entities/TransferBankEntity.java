@@ -5,15 +5,17 @@ import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class PaymentNameBody {
+public class TransferBankEntity {
     @JsonProperty("Name")
     private String name;
+    @JsonProperty("TransferBankId")
+    private String transferBankId;
 
-    public Optional<String> getName() {
-        return Optional.ofNullable(name);
+    public String getName() {
+        return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getTransferBankId() {
+        return Optional.ofNullable(transferBankId).orElse("-1");
     }
 }

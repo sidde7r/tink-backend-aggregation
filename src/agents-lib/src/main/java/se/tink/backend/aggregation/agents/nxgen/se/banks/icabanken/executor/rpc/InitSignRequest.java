@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants;

@@ -3,10 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.IcaBankenBankIdAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaBankenBankIdTransferController;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaBankenBankIdTransferExecutor;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.IcaBankenApproveEInvoiceExecutor;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.einvoice.IcaBankenEInvoiceExecutor;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaBankenBankTransferExecutor;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaBankenExecutorHelper;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaBankenPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.IcaBankenCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.IcaBankenTransactionalAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.IcaBankenEInvoiceFetcher;
@@ -30,15 +29,10 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
-import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
-import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
-import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
 import se.tink.backend.common.config.SignatureKeyPair;
 
 public class IcaBankenAgent extends NextGenerationAgent {
     private final IcaBankenApiClient apiClient;
-    private final TransferMessageFormatter transferMessageFormatter = new TransferMessageFormatter(catalog,
-            TransferMessageLengthConfig.createWithMaxLength(14, 12), new StringNormalizerSwedish(",.-?!/+"));
     private final IcaBankenSessionStorage icaBankenSessionStorage;
 
     public IcaBankenAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -138,9 +132,16 @@ public class IcaBankenAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransferController> constructTransferController() {
-        return Optional.of(new IcaBankenBankIdTransferController(context,
-                new IcaBankenBankIdTransferExecutor(apiClient, context, transferMessageFormatter), null,
-                new IcaBankenApproveEInvoiceExecutor(apiClient, context, catalog, transferMessageFormatter,
-                        new IcaBankenEInvoiceFetcher(apiClient, catalog, context)), null));
+        IcaBankenExecutorHelper executorHelper = new IcaBankenExecutorHelper(apiClient, context, catalog,
+                supplementalInformationController);
+
+        return Optional.of(
+                new TransferController(
+                        new IcaBankenPaymentExecutor(apiClient, executorHelper),
+                        new IcaBankenBankTransferExecutor(apiClient, executorHelper, catalog),
+                        null,
+                        null
+                )
+        );
     }
 }
