@@ -49,18 +49,18 @@ public class RSA {
     public static RSAPublicKey getPubKeyFromBytes(byte[] keyBytes) {
         X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
 
-        return generateRsaPublicKey(keySpec);
+        return getRsaPublicKey(keySpec);
     }
 
-    public static RSAPublicKey generatePublicKeyFromModulusAndExponent(byte[] modulusBytes, byte[] exponentBytes) {
+    public static RSAPublicKey getPublicKeyFromModulusAndExponent(byte[] modulusBytes, byte[] exponentBytes) {
         BigInteger modulus = new BigInteger(modulusBytes);
         BigInteger publicExponent = new BigInteger(exponentBytes);
         RSAPublicKeySpec keySpec = new RSAPublicKeySpec(modulus, publicExponent);
 
-        return generateRsaPublicKey(keySpec);
+        return getRsaPublicKey(keySpec);
     }
 
-    private static RSAPublicKey generateRsaPublicKey(KeySpec keySpec) {
+    private static RSAPublicKey getRsaPublicKey(KeySpec keySpec) {
         try {
             KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM);
             return (RSAPublicKey) keyFactory.generatePublic(keySpec);

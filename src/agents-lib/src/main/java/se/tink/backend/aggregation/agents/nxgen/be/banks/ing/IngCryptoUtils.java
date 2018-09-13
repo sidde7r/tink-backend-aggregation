@@ -158,7 +158,7 @@ public class IngCryptoUtils {
         byte[] modulusBytes = EncodingUtils.decodeHexString(IngConstants.Crypto.RSA_MODULUS_IN_HEX);
         byte[] exponentBytes = EncodingUtils.decodeHexString(IngConstants.Crypto.RSA_EXPONENT_IN_HEX);
 
-        return RSA.generatePublicKeyFromModulusAndExponent(modulusBytes, exponentBytes);
+        return RSA.getPublicKeyFromModulusAndExponent(modulusBytes, exponentBytes);
     }
 
     private static byte[] xor(byte[] a, byte[] b) {
