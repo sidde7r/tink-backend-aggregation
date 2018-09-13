@@ -45,7 +45,7 @@ public class EuroInformationCreditCardFetcher implements AccountFetcher<CreditCa
                             .getAccountBuilder();
                     return accountBuilder
                             .setName(a.getAccountName())
-                            //TODO: make a test for this shit based on example message
+                            //TODO: Double think about overriding account in this step
                             .setAccountNumber(a.parseAccountNumberFromName())
                             .putInTemporaryStorage(EuroInformationConstants.Tags.WEB_ID, a.getWebId())
                             .build();

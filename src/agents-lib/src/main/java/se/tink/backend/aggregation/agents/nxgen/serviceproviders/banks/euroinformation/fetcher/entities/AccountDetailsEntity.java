@@ -110,8 +110,8 @@ public class AccountDetailsEntity {
         if (!Strings.isNullOrEmpty(iban)) {
             return iban;
         }
-        if (!Strings.isNullOrEmpty(accountName)) {
-            return accountName;
+        if (!Strings.isNullOrEmpty(accountNumber)) {
+            return accountNumber;
         }
         return parseAccountNumberFromName();
     }
