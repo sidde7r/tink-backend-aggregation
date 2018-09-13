@@ -81,8 +81,7 @@ public class LoanEntity {
 
     @JsonIgnore
     private LoanDetails buildLoanDetails(IcaBankenLoanParsingHelper loanParsingHelper) {
-        return LoanDetails.builder()
-                .setType(LoanDetails.Type.BLANCO)
+        return LoanDetails.builder(LoanDetails.Type.BLANCO)
                 .setApplicants(loanParsingHelper.getApplicantsList())
                 .setAmortized(loanParsingHelper.getAmortized(presentDebt))
                 .setInitialBalance(loanParsingHelper.getInitialBalance())

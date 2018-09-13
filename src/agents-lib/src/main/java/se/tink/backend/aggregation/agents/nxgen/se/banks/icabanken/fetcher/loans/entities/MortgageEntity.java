@@ -74,10 +74,8 @@ public class MortgageEntity {
 
     @JsonIgnore
     private LoanDetails buildLoanDetails(IcaBankenLoanParsingHelper loanParsingHelper) {
-        return LoanDetails.builder()
-                .setType(LoanDetails.Type.MORTGAGE)
+        return LoanDetails.builder(LoanDetails.Type.MORTGAGE)
                 .setLoanNumber(mortgageNumber)
-                .setName(loanParsingHelper.getTypeOfLoan())
                 .setNextDayOfTermsChange(loanParsingHelper.getNextDayOfTermsChange())
                 .setNumMonthsBound(loanParsingHelper.getNumMonthsBound())
                 .setInitialBalance(loanParsingHelper.getInitialBalance())
