@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-06 15:52+0200\n"
+"POT-Creation-Date: 2018-09-13 16:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,6 +36,9 @@ msgstr ""
 msgid "You lack the sufficient permissions for this service."
 msgstr ""
 
+msgid "You need to activate your BankID in the Handelsbanken app."
+msgstr ""
+
 msgid ""
 "To be able to refresh your accounts in Tink you need to updated your "
 "customer info in the ICA bank app."
@@ -49,7 +52,30 @@ msgstr ""
 msgid "The card number you have entered is incorrect. Please try again."
 msgstr ""
 
-msgid "The provided credentials are not for KBC bank"
+msgid "The provided credentials are not for KBC."
+msgstr ""
+
+msgid ""
+"Insert your card into the card reader and press SIGN twice.Enter the control "
+"code on your card reader and press OK. Then enter the amount of your "
+"transfer, including the digits after the decimal sign, and press OK. Enter "
+"and your PIN and press OK, then enter the code from the card reader in the "
+"response code field."
+msgstr ""
+
+msgid "Reference must be max "
+msgstr ""
+
+msgid "Originator name must be specified."
+msgstr ""
+
+msgid "Beneficiary name must be specified."
+msgstr ""
+
+msgid "Due date must be within a year from today"
+msgstr ""
+
+msgid "Transfer amount can't be less than "
 msgstr ""
 
 msgid ""
@@ -104,7 +130,8 @@ msgid ""
 "to Home'Bank to check your transfer limits."
 msgstr ""
 
-msgid "Transfers to external accounts is not allowed from this account."
+msgid ""
+"Transfers to accounts from other banks is not allowed from this account."
 msgstr ""
 
 msgid "Execution date have to be a business day, choose another date."
@@ -144,6 +171,36 @@ msgid ""
 "5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_SIGN."
 "png) And press\n"
 "6$ Enter your RESPONSE code"
+msgstr ""
+
+msgid "Add Beneficiary"
+msgstr ""
+
+msgid "Beneficiary Name"
+msgstr ""
+
+msgid "Control Code"
+msgstr ""
+
+msgid "Description Code"
+msgstr ""
+
+msgid "Response Code"
+msgstr ""
+
+msgid ""
+"You have not transferred money to this account before. Please supply the "
+"name of the owner to the account in the field below"
+msgstr ""
+
+msgid ""
+"Insert your card into the card reader and press SIGN. Enter the control code "
+"and press OK."
+msgstr ""
+
+msgid ""
+"Insert the description code into the reader followed by your PIN. Enter the "
+"code from the reader into the field below."
 msgstr ""
 
 msgid ""
@@ -459,6 +516,9 @@ msgid ""
 "For safety reasons you have been logged out. Please login again to continue."
 msgstr ""
 
+msgid "There is already an active session on this account. Please try again."
+msgstr ""
+
 msgid "You have not entered a valid code. Please try again"
 msgstr ""
 
@@ -736,35 +796,6 @@ msgid "Next unused code"
 msgstr ""
 
 msgid ""
-"Could not find any engagements in Swedbank. If you have Swedbank Ung, we "
-"unfortunately do not support them."
-msgstr ""
-
-msgid ""
-"Could not find any engagements in Swedbank Ung. Use Swedbank (Mobile BankID) "
-"instead."
-msgstr ""
-
-msgid ""
-"Could not find any engagements in Sparbankerna. If you have Sparbankerna "
-"Ung, we unfortunately do not support them."
-msgstr ""
-
-msgid ""
-"Could not find any engagements in Sparbankerna Ung. Use Sparbankerna (Mobile "
-"BankID) instead."
-msgstr ""
-
-msgid ""
-"In order to add new recipients you need to activate Mobile BankID for "
-"extended use. This is done in the Internet bank on the page BankID (found in "
-"the tab Tillval)."
-msgstr ""
-
-msgid "Payment date has to be within one year from now"
-msgstr ""
-
-msgid ""
 "The first time you use your mobile BankId you have to verify it with your "
 "Digipass. Login to the SEB-app with your mobile BankID to do this."
 msgstr ""
@@ -772,49 +803,6 @@ msgstr ""
 msgid ""
 "It looks like you have SEB Ung. Unfortunately we currently only support "
 "SEB's standard login."
-msgstr ""
-
-msgid "No update needed, payment is not changed."
-msgstr ""
-
-msgid "Cannot find payment in list from bank."
-msgstr ""
-
-msgid "The payment cannot be updated."
-msgstr ""
-
-msgid "Payment cannot be signed on bank."
-msgstr ""
-
-msgid "Cannot find e-invoice in list from bank"
-msgstr ""
-
-msgid "Source account not available"
-msgstr ""
-
-msgid "Could not fetch payment accounts."
-msgstr ""
-
-msgid "E-invoice cannot be signed on bank"
-msgstr ""
-
-msgid "Something went wrong when signing e-invoice"
-msgstr ""
-
-msgid "Transfer amount is too small"
-msgstr ""
-
-msgid "Destination account is not valid"
-msgstr ""
-
-msgid "Source account not found"
-msgstr ""
-
-msgid ""
-"You need to activate the connection with your Handelsbanken card reader."
-msgstr ""
-
-msgid "You need to activate your BankID in the Handelsbanken app."
 msgstr ""
 
 msgid ""
@@ -1019,4 +1007,31 @@ msgid "BankID session already in progress, please try again."
 msgstr ""
 
 msgid "BankID authentication failed. Please verify your Mobil BankID is OK."
+msgstr ""
+
+msgid "Reference must be max {} characters."
+msgstr ""
+
+msgid "Transfer amount can't be less than {}."
+msgstr ""
+
+msgid ""
+"1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/"
+"ING_CardReader.png) Insert your ING bank card into the ING Card Reader\n"
+"2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/"
+"ING_IDENTIFY.png) Press\n"
+"3$ Enter your PIN\n"
+"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png) "
+"Press\n"
+"5$ Enter the response code"
+msgstr ""
+
+msgid ""
+"1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/"
+"ING_CardReader.png) Insert your ING bank card in your ING Card Reader\n"
+"2$ Press ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/"
+"ING_SIGN.png) Press\n"
+"3$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png) "
+"Enter your PIN and press\n"
+"4$ Enter the following number []"
 msgstr ""
