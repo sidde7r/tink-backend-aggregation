@@ -9,6 +9,11 @@ import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.BankIdResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.einvoice.rpc.AcceptEInvoiceTransferRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.einvoice.rpc.FinishEInvoiceSignRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.einvoice.rpc.UpdateEInvoiceRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.einvoice.rpc.ValidateEInvoiceRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.einvoice.rpc.ValidateEInvoiceResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.PaymentNameBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.SignedAssignmentListEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.TransferBankEntity;
@@ -80,6 +85,12 @@ public class IcaBankenApiClient {
                 .getRequestId();
     }
 
+    public String initEInvoiceBankId(String invoiceId) {
+        return createPostRequest(IcaBankenConstants.Urls.INIT_EINVOICE_SIGN
+                .parameter(IcaBankenConstants.IdTags.INVOICE_ID_TAG, invoiceId))
+                .post(BankIdResponse.class)
+                .getBody()
+                .getRequestId();
     }
 
     public String initTransferSign() {
@@ -205,12 +216,25 @@ public class IcaBankenApiClient {
         return Optional.ofNullable(bodyEntity.getAssignments()).orElse(Collections.emptyList());
     }
 
+    public ValidateEInvoiceResponse validateEInvoice(ValidateEInvoiceRequest validateRequest) {
+        return createPostRequest(IcaBankenConstants.Urls.VALIDATE_INVOICE)
+                .post(ValidateEInvoiceResponse.class, validateRequest);
     }
 
+    public ValidateEInvoiceResponse updateEInvoice(UpdateEInvoiceRequest updateEInvoiceRequest) {
+        return createRequest(IcaBankenConstants.Urls.UPDATE_INVOICE)
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .put(ValidateEInvoiceResponse.class, updateEInvoiceRequest);
     }
 
+    public void acceptEInvoice(AcceptEInvoiceTransferRequest request) {
+        createPostRequest(IcaBankenConstants.Urls.ACCEPT_EINVOICE)
+                .post(HttpResponse.class, request);
     }
 
+    public void finishEInvoiceSign(FinishEInvoiceSignRequest request) {
+        createPostRequest(IcaBankenConstants.Urls.FINISH_EINVOICE_SIGN)
+                .post(HttpResponse.class, request);
     }
 
     public List<TransferBankEntity> fetchTransferBanks() {
