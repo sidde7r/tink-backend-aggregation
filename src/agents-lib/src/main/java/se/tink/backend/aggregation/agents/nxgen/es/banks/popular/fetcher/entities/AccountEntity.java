@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.entiti
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.assertj.core.util.Strings;
+import se.tink.backend.aggregation.annotations.JsonDouble;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
@@ -20,24 +21,28 @@ public class AccountEntity {
     @JsonProperty("idExternaContrato")
     private String accountNumber;
     private long fecSald;
+    @JsonDouble
     @JsonProperty("posicion")
     private double position;
     @JsonProperty("signoPosicion")
     private String positionSign;
     @JsonProperty("monedaPosicion")
     private String currencyPosition;
+    @JsonDouble
     @JsonProperty("posicion2")
     private double position2;
     @JsonProperty("signoPosicion2")
     private String position2Sign;
     @JsonProperty("monedaPosicion2")
     private String currencyPosition2;
+    @JsonDouble
     @JsonProperty("posicion3")
     private double position3;
     @JsonProperty("signoPosicion3")
     private String position3Sign;
     @JsonProperty("monedaPosicion3")
     private String currencyPosition3;
+    @JsonDouble
     @JsonProperty("posicion4")
     private double position4;
     @JsonProperty("signoPosicion4")

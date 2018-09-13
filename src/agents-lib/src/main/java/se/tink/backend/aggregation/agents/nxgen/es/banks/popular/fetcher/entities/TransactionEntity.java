@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularConstants;
+import se.tink.backend.aggregation.annotations.JsonDouble;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.core.Amount;
@@ -25,6 +26,7 @@ public class TransactionEntity {
     private String description;
     @JsonProperty("tipoMov")
     private String type;
+    @JsonDouble
     @JsonProperty("importeMov")
     private double amount;
     @JsonProperty("signoImporteMov")
@@ -33,6 +35,7 @@ public class TransactionEntity {
     private Date valueDate;
     @JsonProperty("codMoneda")
     private String currencyCode;
+    @JsonDouble
     @JsonProperty("importeCV")
     private double amountCv;
     @JsonProperty("codMonedaCV")
