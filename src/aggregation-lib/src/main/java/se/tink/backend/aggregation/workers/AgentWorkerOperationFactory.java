@@ -1,16 +1,13 @@
 package se.tink.backend.aggregation.workers;
 
-import com.gargoylesoftware.htmlunit.RefreshHandler;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
-;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.Agent;
@@ -498,7 +495,7 @@ public class AgentWorkerOperationFactory {
 
     /**
      *
-     * Use this operation when whitelisting accounts to refresh with whitelist refresh.
+     * Use this operation when changing whitelisted accounts and then doing a refresh.
      *
      */
     public AgentWorkerOperation createConfigureWhitelistOperation(ClusterInfo clusterInfo,
@@ -529,10 +526,8 @@ public class AgentWorkerOperationFactory {
         commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState));
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)));
-        commands.addAll(createRefreshAccountsCommandChain(request, context, request.getItemsToRefresh()));
-        commands.add(new RequestUserOptInAccountsAgentWorkerCommand(context, request));
-        commands.add(new SelectAccountsToAggregateCommand(context, request));
-        commands.add(new SendAccountsToUpdateServiceAgentWorkerCommand(context, createMetricState(request)));
+        commands.addAll(
+                createWhitelistRefreshableItemsChain(request, context, request.getItemsToRefresh()));
 
         return new AgentWorkerOperation(agentWorkerOperationState, operationMetricName, request,
                 commands, context);
@@ -555,15 +550,21 @@ public class AgentWorkerOperationFactory {
         // Update credentials status to updating to inform systems that credentials is being updated.
         commands.add(new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
 
-        List<RefreshableItem> accountItems = items.stream()
+        Set<RefreshableItem> accountItems = items.stream()
                 .filter(RefreshableItem::isAccount)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
         // === START REFRESHING ===
-        // If there are account items to be refreshed, refresh them and then send them over to system.
         if (accountItems.size() > 0) {
-            accountItems.forEach(item ->
-                    commands.add(new RefreshItemAgentWorkerCommand(context, item, createMetricState(request))));
+            // Start refreshing all account items
+            commands.addAll(createRefreshAccountsCommandChain(request, context, accountItems));
+
+            // If this is an optIn request we request the caller do supply supplemental information with the
+            // accounts they want to whitelist.
+            if (request instanceof ConfigureWhitelistInformationRequest) {
+                commands.add(new RequestUserOptInAccountsAgentWorkerCommand(context,
+                        (ConfigureWhitelistInformationRequest) request));
+            }
 
             // Update the accounts on system side
             commands.add(new SelectAccountsToAggregateCommand(context, request));
