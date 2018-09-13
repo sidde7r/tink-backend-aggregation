@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinfor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.investment.rpc.InvestmentAccountsListResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationUtils;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
@@ -26,7 +25,6 @@ public class EuroInformationInvestmentAccountFetcher implements AccountFetcher<I
     private static final Logger LOGGER = LoggerFactory.getLogger(EuroInformationInvestmentAccountFetcher.class);
     private static final AggregationLogger AGGREGATION_LOGGER = new AggregationLogger(
             EuroInformationInvestmentAccountFetcher.class);
-    private final static LogTag investmentLogTag = LogTag.from("euroinformation_investment_data");
     private final EuroInformationApiClient apiClient;
     private final SessionStorage sessionStorage;
 
@@ -50,7 +48,7 @@ public class EuroInformationInvestmentAccountFetcher implements AccountFetcher<I
         if (!EuroInformationUtils.isSuccess(returnCode)) {
             if (!EuroInformationErrorCodes.NO_ACCOUNT.equals(EuroInformationErrorCodes.getByCodeNumber(returnCode))) {
                 AGGREGATION_LOGGER.infoExtraLong("Problem while fetching investment accounts: " + SerializationUtils
-                        .serializeToString(investmentAccountsListResponse), investmentLogTag);
+                        .serializeToString(investmentAccountsListResponse), EuroInformationConstants.LoggingTags.investmentLogTag);
             }
             return Collections.emptyList();
         }
@@ -70,7 +68,7 @@ public class EuroInformationInvestmentAccountFetcher implements AccountFetcher<I
                                     .requestAccountDetails(a.getNumber(), page);
                             Amount amount = EuroInformationUtils
                                     .parseAmount(investmentAccount.getSecurityAccountOverview().getOverview().getAmount());
-                            AGGREGATION_LOGGER.infoExtraLong(SerializationUtils.serializeToString(investmentAccount), investmentLogTag);
+                            AGGREGATION_LOGGER.infoExtraLong(SerializationUtils.serializeToString(investmentAccount), EuroInformationConstants.LoggingTags.investmentLogTag);
                             String accountNumber = investmentAccount
                                     .getSecurityAccountOverview()
                                     .getOverview()

@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationApiClient;
@@ -30,17 +32,21 @@ public class EuroInformationPasswordAuthenticator implements PasswordAuthenticat
     public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
         LoginResponse logon = apiClient.logon(username, password);
         if (!EuroInformationUtils.isSuccess(logon.getReturnCode())) {
-            EuroInformationErrorCodes errorCode = EuroInformationErrorCodes.getByCodeNumber(logon.getReturnCode());
-            switch (errorCode) {
-            case NOT_LOGGED_IN:
-                throw SessionError.SESSION_EXPIRED.exception();
-            case LOGIN_ERROR:
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
-            case TECHNICAL_PROBLEM:
-                throw new IllegalStateException(EuroInformationErrorCodes.TECHNICAL_PROBLEM.getCodeNumber());
-            case NO_ENUM_VALUE:
-                throw new  IllegalArgumentException("Unknown bank value code " + SerializationUtils.serializeToString(logon));
-            }
+            handleError(logon);
+        }
+    }
+
+    public void handleError(LoginResponse logon) throws SessionException, LoginException {
+        EuroInformationErrorCodes errorCode = EuroInformationErrorCodes.getByCodeNumber(logon.getReturnCode());
+        switch (errorCode) {
+        case NOT_LOGGED_IN:
+            throw SessionError.SESSION_EXPIRED.exception();
+        case LOGIN_ERROR:
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        case TECHNICAL_PROBLEM:
+            throw new IllegalStateException(EuroInformationErrorCodes.TECHNICAL_PROBLEM.getCodeNumber());
+        case NO_ENUM_VALUE:
+            throw new  IllegalArgumentException("Unknown bank value code " + SerializationUtils.serializeToString(logon));
         }
     }
 

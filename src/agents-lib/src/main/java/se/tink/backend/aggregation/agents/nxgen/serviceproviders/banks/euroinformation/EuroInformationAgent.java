@@ -3,13 +3,14 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinfo
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.authentication.EuroInformationPasswordAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.transactional.EuroInformationAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.creditcard.EuroInformationCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.creditcard.EuroInformationCreditCardTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.investment.EuroInformationInvestmentAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.transactional.EuroInformationTransactionsFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.session.EuroInformationSessionHandler;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.transactional.EuroInformationAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.transactional.notpaginated.EuroInformationTransactionsFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.transactional.paginated.EuroInformationOperationsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.interfaces.EuroInformationApiClientFactory;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.session.EuroInformationSessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
@@ -17,26 +18,33 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCa
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.common.config.SignatureKeyPair;
 
-public class EuroInformationAgent extends NextGenerationAgent {
+public abstract class EuroInformationAgent extends NextGenerationAgent {
     protected final EuroInformationApiClient apiClient;
+    private final EuroInformationConfiguration config;
 
     protected EuroInformationAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair,
             EuroInformationConfiguration config) {
         super(request, context, signatureKeyPair);
+        this.config = config;
         this.apiClient = new EuroInformationApiClient(this.client, sessionStorage, config);
     }
 
     protected EuroInformationAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair,
             EuroInformationConfiguration config, EuroInformationApiClientFactory apiClientFactory) {
         super(request, context, signatureKeyPair);
+        this.config = config;
         this.apiClient = apiClientFactory.getApiClient(client, sessionStorage, config);
     }
 
@@ -57,7 +65,17 @@ public class EuroInformationAgent extends NextGenerationAgent {
                         metricRefreshController,
                         updateController,
                         EuroInformationAccountFetcher.create(this.apiClient, this.sessionStorage),
-                        EuroInformationTransactionsFetcher.create(this.apiClient)));
+                        getTransactionFetcher()
+                ));
+    }
+
+    private TransactionFetcher<TransactionalAccount> getTransactionFetcher() {
+        if (this.config.usesPagination()) {
+            return new TransactionFetcherController<>(transactionPaginationHelper,
+                    new TransactionKeyPaginationController(
+                            EuroInformationOperationsFetcher.create(this.apiClient)));
+        }
+        return EuroInformationTransactionsFetcher.create(this.apiClient);
     }
 
     @Override
@@ -65,8 +83,8 @@ public class EuroInformationAgent extends NextGenerationAgent {
         return Optional.of(new CreditCardRefreshController(
                 metricRefreshController,
                 updateController,
-                EuroInformationCreditCardFetcher.create(apiClient, sessionStorage),
-                EuroInformationCreditCardTransactionsFetcher.create()
+                EuroInformationCreditCardFetcher.create(this.apiClient, this.sessionStorage),
+                EuroInformationCreditCardTransactionsFetcher.create(this.apiClient)
         ));
     }
 
