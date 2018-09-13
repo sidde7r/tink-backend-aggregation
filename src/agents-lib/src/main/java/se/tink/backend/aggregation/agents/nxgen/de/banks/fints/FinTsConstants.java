@@ -92,10 +92,13 @@ public class FinTsConstants {
     }
 
     public static class SepaAccountIdentifiers {
-        public static final ImmutableList<String> KNOWN_SAVINGS_ACCOUNT_NAMES = ImmutableList.of("extra-konto", "sparbrief", "vl-sparen");
+        public static final ImmutableList<String> KNOWN_SAVINGS_ACCOUNT_NAMES = ImmutableList.of("extra-konto", "sparbrief", "vl-sparen", "tagesgeld plus");
         public static final ImmutableList<String> ACCOUNT_TYPE_SAVINGS_TOKENS = ImmutableList.of("spar");
         public static final ImmutableList<String> KNOWN_INVESTMENT_ACCOUNT_NAMES = ImmutableList.of("direkt-depot");
         public static final ImmutableList<String> ACCOUNT_TYPE_INVESTMENT_TOKENS = ImmutableList.of("depot");
+        public static final ImmutableList<String> KNOWN_CHECKING_ACCOUNT_NAMES = ImmutableList.of("girokonto", "kontokorrentkonto privat", "lohn/gehalt/rente privat", "verrechnungskonto");
+        public static final ImmutableList<String> KNOWN_CREDIT_ACCOUNT_NAMES = ImmutableList.of("visa prepaid-karte", "visa-karte");
+        public static final ImmutableList<String> ACCOUNT_TYPE_CREDIT_TOKENS = ImmutableList.of("credit", "visa");
     }
 
     public static class LogTags {
