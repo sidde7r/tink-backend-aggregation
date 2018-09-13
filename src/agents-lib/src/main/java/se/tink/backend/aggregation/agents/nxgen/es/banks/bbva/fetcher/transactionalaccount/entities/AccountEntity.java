@@ -45,8 +45,6 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    // This is a temporary method until we have figured out how to get the balance on accounts that don't have it set
-    // in this model.
     public boolean hasBalance() {
         return Objects.nonNull(availableBalance);
     }
