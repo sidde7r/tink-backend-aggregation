@@ -1,25 +1,37 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsXmlUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.entities.CardEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.UserData;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.entities.CreditCardRepositionEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.rpc.CreditCardDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.rpc.CreditCardTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.SoapFaultErrorEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.rpc.LoginResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.date.DateUtils;
 
-public class CreditCardFetcher implements AccountFetcher<CreditCardAccount>,
-        TransactionFetcher<CreditCardAccount> {
+public class CreditCardFetcher
+        implements AccountFetcher<CreditCardAccount>, TransactionDatePaginator<CreditCardAccount> {
     private final static AggregationLogger log = new AggregationLogger(CreditCardFetcher.class);
 
     private final SantanderEsApiClient apiClient;
@@ -32,67 +44,75 @@ public class CreditCardFetcher implements AccountFetcher<CreditCardAccount>,
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
+        LoginResponse loginResponse = getLoginResponse();
+        String userDataXml = SantanderEsXmlUtils.parseJsonToXmlString(loginResponse.getUserData());
+
+        return Optional.ofNullable(loginResponse.getCards()).orElse(Collections.emptyList())
+                .stream()
+                .filter(cardEntity -> !SantanderEsConstants.AccountTypes.DEBIT_CARD_TYPE.equalsIgnoreCase(
+                        cardEntity.getCardType()))
+                .map(card -> {
+                    CreditCardDetailsResponse detailsResponse =
+                            apiClient.fetchCreditCardDetails(userDataXml, card.getCardNumber());
+
+                    return detailsResponse.toTinkCreditCard(userDataXml, card);
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public PaginatorResponse getTransactionsFor(CreditCardAccount account, Date fromDate, Date toDate) {
+        LocalDate startDate = DateUtils.toJavaTimeLocalDate(fromDate);
+        LocalDate endDate = DateUtils.toJavaTimeLocalDate(toDate);
+
+        String userDataXml = account.getFromTemporaryStorage(SantanderEsConstants.Storage.USER_DATA_XML);
+        CardEntity card = account.getFromTemporaryStorage(SantanderEsConstants.Storage.CARD_ENTITY, CardEntity.class)
+                .orElseThrow(() -> new IllegalStateException("No card entity found"));
+
+        return PaginatorResponseImpl.create(
+                fetchAllTransactionsBetweenDates(userDataXml, card, startDate, endDate)
+        );
+    }
+
+    private LoginResponse getLoginResponse() {
         String loginResponseString = sessionStorage.get(SantanderEsConstants.Storage.LOGIN_RESPONSE, String.class)
                 .orElseThrow(() -> new IllegalStateException(
                         SantanderEsConstants.LogMessages.LOGIN_RESPONSE_NOT_FOUND));
 
-        try {
-            LoginResponse loginResponse = SantanderEsXmlUtils.parseXmlStringToJson(
-                    loginResponseString, LoginResponse.class);
-            List<CardEntity> cardList = loginResponse.getCards();
+        return SantanderEsXmlUtils.parseXmlStringToJson(loginResponseString, LoginResponse.class);
+    }
 
-            if (cardList == null || cardList.isEmpty()) {
-                return Collections.emptyList();
+    private List<CreditCardTransaction> fetchAllTransactionsBetweenDates(String userDataXml, CardEntity card,
+            LocalDate startDate, LocalDate endDate) {
+        boolean fetchMore = true;
+        CreditCardRepositionEntity repositionEntity = null;
+        List<CreditCardTransaction> transactions = new ArrayList<>();
+
+        try {
+            while (fetchMore) {
+                CreditCardTransactionsResponse creditCardTransactionsResponse =
+                        apiClient.fetchCreditCardTransactions(userDataXml, card, startDate,endDate, repositionEntity);
+
+                transactions.addAll(creditCardTransactionsResponse.getTinkTransactions());
+                fetchMore = creditCardTransactionsResponse.canFetchMore().orElse(false);
+                repositionEntity = creditCardTransactionsResponse.getReposition();
             }
-
-            logNonDebitCards(cardList, loginResponse.getUserData());
-        } catch (Exception e) {
-            log.warn("Something went wrong when logging credit card accounts");
+        } catch (HttpResponseException hre) {
+            // santander returns 500 internal error when no more transactions
+            HttpResponse response = hre.getResponse();
+            if (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+                String soapErrorMessage = response.getBody(String.class);
+                Optional<SoapFaultErrorEntity> soapFaultError = SoapFaultErrorEntity.parseFaultErrorFromSoapError(soapErrorMessage);
+                if (soapFaultError.isPresent() &&
+                        soapFaultError.get()
+                                .matchesErrorMessage(SantanderEsConstants.SoapErrorMessages.NO_MORE_TRANSACTIONS)) {
+                    // OK, this is a no more transactions for this query
+                    return transactions;
+                }
+            }
+            throw hre;
         }
 
-        return Collections.emptyList();
-    }
-
-    // Logging all non debit cards, don't know exactly what the credit cards will be called, probably
-    // "crédito", but blacklisting just in case.
-    private void logNonDebitCards(List<CardEntity> cardList, UserData userData) {
-        String userDataXml = SantanderEsXmlUtils.parseJsonToXmlString(userData);
-        LocalDate toDate = LocalDate.now();
-        LocalDate fromDate = toDate.minusMonths(3).withDayOfMonth(1).minusDays(1);
-        boolean pagination = false;
-
-        cardList.stream()
-                .filter(cardEntity -> !SantanderEsConstants.AccountTypes.DEBIT_CARD_TYPE.equalsIgnoreCase(
-                        cardEntity.getCardType()))
-                .forEach(cardEntity -> {
-                    log.infoExtraLong(SerializationUtils.serializeToString(cardEntity),
-                            SantanderEsConstants.Tags.CREDIT_CARD_ACCOUNT);
-
-                    try {
-                        // log credit card details, just so we know what we are missing
-                        String creditCardDetailsResponse = apiClient.fetchCreditCardDetails(userDataXml, cardEntity.getCardNumber());
-                        log.infoExtraLong(creditCardDetailsResponse,
-                                SantanderEsConstants.Tags.CREDIT_CARD_ACCOUNT);
-                    } catch (Exception e) {
-                        log.info(SantanderEsConstants.Tags.CREDIT_CARD_ACCOUNT.toString() + " Could not fetch details for credit card", e);
-                    }
-
-                    logNonDebitCardsTransactions(userDataXml, cardEntity, fromDate, toDate, pagination);
-                });
-    }
-
-    // Logging transactions for non debit cards.
-    private void logNonDebitCardsTransactions(String userDataXml, CardEntity card, LocalDate fromDate, LocalDate toDate, boolean pagination) {
-        try {
-            String creditCardDetailsResponse = apiClient.fetchCreditCardTransactions(userDataXml, card, fromDate, toDate, pagination);
-            log.infoExtraLong(creditCardDetailsResponse, SantanderEsConstants.Tags.CREDIT_CARD_TRANSACTION);
-        } catch (Exception e) {
-            log.info(SantanderEsConstants.Tags.CREDIT_CARD_TRANSACTION.toString() + " Could not fetch transactions for credit card", e);
-        }
-    }
-
-    @Override
-    public List<AggregationTransaction> fetchTransactionsFor(CreditCardAccount account) {
-        return Collections.emptyList();
+        return transactions;
     }
 }

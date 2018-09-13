@@ -21,6 +21,7 @@ public class SantanderEsConstants {
         public static final String METHOD_RESULT = "methodResult";
         public static final String TOKEN_CREDENTIAL = "tokenCredential";
         public static final String CODIGO_ERROR = "codigoError";
+        public static final String FAULT_ERROR = "error";
     }
 
     public static final class ErrorCodes {
@@ -32,6 +33,7 @@ public class SantanderEsConstants {
         public static final String USER_DATA_XML = "userDataXml";
         public static final String CONTRACT_ID_XML = "contractIdXml";
         public static final String BALANCE_XML = "balanceXml";
+        public static final String CARD_ENTITY = "cardEntity";
     }
 
     public static final class DataHeader {
@@ -54,5 +56,14 @@ public class SantanderEsConstants {
 
     public static final class LogMessages {
         public static final String LOGIN_RESPONSE_NOT_FOUND = "Login response not found in session storage";
+    }
+
+    public static final class Indicators {
+        public static final String ERROR_CODE_OK = "0";
+        public static final String YES = "S";
+        public static final String NO = "N";
+    }
+    public static final class SoapErrorMessages {
+        public static final String NO_MORE_TRANSACTIONS = "no existen movimientos asociados a esta consulta";
     }
 }

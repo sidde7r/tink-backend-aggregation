@@ -3,12 +3,17 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.cred
 import java.time.LocalDate;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsXmlUtils;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.entities.CardEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.entities.CreditCardRepositionEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.ContractEntity;
 
 public class SantanderEsCreditCardTransactionsRequest {
 
-    public static String create(String tokenCredential, String userDataXmlString, ContractEntity contractEntity,
-            String creditCardNumber, LocalDate fromDate, LocalDate toDate, boolean pagination) {
+    public static String create(String tokenCredential, String userDataXmlString, CardEntity card,
+            LocalDate fromDate, LocalDate toDate, CreditCardRepositionEntity repositionEntity) {
+
+        ContractEntity contractEntity = card.getGeneralInfo().getContractId();
+        String creditCardNumber = card.getCardNumber();
         String contractBankOffice = SantanderEsXmlUtils.parseJsonToXmlString(contractEntity.getBankOffice());
 
         return String.format(
@@ -48,11 +53,17 @@ public class SantanderEsCreditCardTransactionsRequest {
                 contractEntity.getContractNumber(),
                 contractBankOffice,
                 creditCardNumber,
-                formatPaginationData(fromDate, toDate, pagination)
+                formatPaginationData(fromDate, toDate, repositionEntity)
         );
     }
 
-    private static String formatPaginationData(LocalDate fromDate, LocalDate toDate, boolean pagination) {
+    private static String formatPaginationData(LocalDate fromDate, LocalDate toDate, CreditCardRepositionEntity repositionEntity) {
+        boolean isPaginationRequest = repositionEntity != null;
+        String repositionData = "";
+        if (isPaginationRequest) {
+            repositionData = String.format("<repos>%s</repos>", SantanderEsXmlUtils.parseJsonToXmlString(repositionEntity));
+        }
+
         return String.format("<fechaDesde>"
                 + "<anyo>%d</anyo>"
                 + "<mes>%d</mes>"
@@ -63,14 +74,16 @@ public class SantanderEsCreditCardTransactionsRequest {
                 + "<mes>%d</mes>"
                 + "<dia>%d</dia>"
                 + "</fechaHasta>"
-                + "<esUnaPaginacion>%s</esUnaPaginacion>",
+                + "<esUnaPaginacion>%s</esUnaPaginacion>"
+                + "%s",
                 fromDate.getYear(),
                 fromDate.getMonthValue(),
                 fromDate.getDayOfMonth(),
                 toDate.getYear(),
                 toDate.getMonthValue(),
                 toDate.getDayOfMonth(),
-                (pagination ? "S" : "N")
+                (isPaginationRequest ? "S" : "N"),
+                repositionData
                 );
     }
 }

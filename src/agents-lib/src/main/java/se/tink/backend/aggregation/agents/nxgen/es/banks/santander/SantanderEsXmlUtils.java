@@ -14,6 +14,12 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class SantanderEsXmlUtils {
     private final static XmlMapper MAPPER = new XmlMapper();
 
+    public static <T> T deserializeFromSoapString(String data, String tagName, Class<T> cls) {
+        Node node = getTagNodeFromSoapString(data, tagName);
+        String serializedObject = SerializationUtils.deserializeFromString(SerializationUtils.serializeToString(node), String.class);
+        return parseXmlStringToJson(serializedObject, cls);
+    }
+
     public static Node getTagNodeFromSoapString(String responseString, String tagName) {
         Node node = SoapParser.getSoapBody(responseString);
         Preconditions.checkState(node instanceof Element,
