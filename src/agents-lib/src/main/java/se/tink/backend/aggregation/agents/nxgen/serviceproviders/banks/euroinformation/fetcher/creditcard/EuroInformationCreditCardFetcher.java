@@ -46,14 +46,10 @@ public class EuroInformationCreditCardFetcher implements AccountFetcher<CreditCa
                     return accountBuilder
                             .setName(a.getAccountName())
                             //TODO: make a test for this shit based on example message
-                            .setAccountNumber(getAccountNumberFromName(a))
+                            .setAccountNumber(a.parseAccountNumberFromName())
                             .putInTemporaryStorage(EuroInformationConstants.Tags.WEB_ID, a.getWebId())
                             .build();
                 })
                 .collect(Collectors.toList());
-    }
-
-    private String getAccountNumberFromName(AccountDetailsEntity a) {
-        return a.getAccountNameAndNumber().split(a.getAccountName())[0].toLowerCase();
     }
 }

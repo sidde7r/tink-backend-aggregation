@@ -6,6 +6,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationUtils;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.core.Amount;
@@ -98,9 +99,21 @@ public class AccountDetailsEntity {
     @JsonIgnore
     public Account.Builder<? extends Account, ?> getAccountBuilder() {
         Amount amount = EuroInformationUtils.parseAmount(amountToParse, currency);
-        return Account.builder(getTinkTypeByTypeNumber().getTinkType(), getIban().toLowerCase())
+
+        return Account.builder(getTinkTypeByTypeNumber().getTinkType(), decideUniqueIdentifier())
                 .setAccountNumber(accountNumber)
                 .setBalance(amount);
+    }
+
+    @JsonIgnore
+    private String decideUniqueIdentifier() {
+        if (!Strings.isNullOrEmpty(iban)) {
+            return iban;
+        }
+        if (!Strings.isNullOrEmpty(accountName)) {
+            return accountName;
+        }
+        return parseAccountNumberFromName();
     }
 
     // Using it as we store this entity in `SessionStorage`, which  serializes to JSON
@@ -111,5 +124,10 @@ public class AccountDetailsEntity {
                 .filter(v -> v.getType().equalsIgnoreCase(accountType))
                 .findFirst()
                 .orElse(AccountTypeEnum.UNKNOWN);
+    }
+
+    @JsonIgnore
+    public String parseAccountNumberFromName() {
+        return accountNameAndNumber.split(accountName)[0].toLowerCase();
     }
 }
