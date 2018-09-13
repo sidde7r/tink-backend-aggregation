@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities;
 
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.Accounts.entities.OwnAccountsEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.entities.AccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -9,9 +9,9 @@ public class OwnRecipientEntity extends RecipientEntity {
         super();
     }
 
-    public OwnRecipientEntity(OwnAccountsEntity ownAccountsEntity) {
-        this.setRecipientId(ownAccountsEntity.getAccountId());
-        this.setAccountNumber(ownAccountsEntity.getAccountNumber());
+    public OwnRecipientEntity(AccountEntity accountEntity) {
+        this.setRecipientId(accountEntity.getAccountId());
+        this.setAccountNumber(accountEntity.getAccountNumber());
     }
 
     @Override

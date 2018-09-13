@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
@@ -82,10 +84,10 @@ public class RecipientEntity implements GeneralAccountEntity {
 
     @Override
     public AccountIdentifier generalGetAccountIdentifier() {
-        switch (getType()) {
-        case "PaymentBg":
+        switch (getType().toLowerCase()) {
+        case IcaBankenConstants.AccountTypes.PAYMENT_BG:
             return new BankGiroIdentifier(getAccountNumber());
-        case "PaymentPg":
+        case IcaBankenConstants.AccountTypes.PAYMENT_PG:
             return new PlusGiroIdentifier(getAccountNumber());
         default:
             return new SwedishIdentifier(getAccountNumber());
@@ -105,7 +107,14 @@ public class RecipientEntity implements GeneralAccountEntity {
         return getName();
     }
 
+    @JsonIgnore
     public boolean isOwnAccount() {
         return false;
     }
+
+    @JsonIgnore
+    public String getUnformattedAccountNumber() {
+        return accountNumber.replaceAll("[ -]", "");
+    }
+
 }

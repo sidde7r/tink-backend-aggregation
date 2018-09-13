@@ -123,8 +123,12 @@ public class IcaBankenAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
-        return Optional.of(new TransferDestinationRefreshController(metricRefreshController, updateController,
-                new IcaBankenTransferDestinationFetcher(apiClient)));
+        return Optional.of(new TransferDestinationRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new IcaBankenTransferDestinationFetcher(apiClient)
+                )
+        );
     }
 
     @Override

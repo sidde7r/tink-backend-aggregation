@@ -5,7 +5,7 @@ import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class AssignmentsResponseBody {
+public class AssignmentsBodyEntity {
     @JsonProperty("Assignments")
     private List<AssignmentEntity> assignments;
     @JsonProperty("TotalAmount")
