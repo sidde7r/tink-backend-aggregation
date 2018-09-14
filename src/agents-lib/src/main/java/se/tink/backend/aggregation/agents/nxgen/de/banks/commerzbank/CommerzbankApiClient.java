@@ -118,7 +118,7 @@ public class CommerzbankApiClient {
     }
 
 
-    public TransactionResultEntity transactionOverview(String productType, String identifier, Date fromdate,
+    private TransactionResultEntity transactionOverview(String productType, String identifier, Date fromdate,
             Date toDate, String productBranch, int page)
             throws JsonProcessingException {
 
