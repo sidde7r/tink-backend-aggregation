@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.rpc;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -15,10 +16,10 @@ public final class AdvisorsList {
 
     private List<AdvisorProfileEntity> advisorProfiles;
 
-    public String getAccountOwner() {
+    public Optional<String> getAccountOwner() {
         if (advisorProfiles == null) {
-            logger.error("Could not find account holder name");
-            return "";
+            logger.warn("Could not find account holder name");
+            return Optional.empty();
         }
 
         final List<String> names = advisorProfiles.stream()
@@ -28,12 +29,12 @@ public final class AdvisorsList {
                 .collect(Collectors.toList());
 
         if (names.isEmpty()) {
-            logger.error("Could not find account holder name in advisor profiles");
-            return "";
+            logger.warn("Could not find account holder name in advisor profiles");
+            return Optional.empty();
         } else if (names.size() >= 2) {
             logger.warn("Found more than one customer name; account holder name may not be correct");
         }
 
-        return names.get(0);
+        return Optional.ofNullable(names.get(0));
     }
 }
