@@ -17,7 +17,11 @@ public class FutureTransactionsResponse extends HeaderResponse {
     private TypeValuePair repositioningKey;
 
     public Collection<UpcomingTransaction> getUpcomingTransactions() {
+
         return Optional.ofNullable(transactions).orElse(Collections.emptyList()).stream()
+                // When the user has no enough fund, the bank will reserve a transaction to reverse the transaction in
+                // the future, this transaction is without execution date
+                .filter(futureTransactionDto -> futureTransactionDto.getExecutionDate() != null)
                 .map(FutureTransactionDto::toUpcomingTransaction)
                 .collect(Collectors.toList());
     }
