@@ -6,6 +6,7 @@ import com.google.inject.name.Named;
 import java.util.Map;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.provider.configuration.repositories.mysql.ProviderConfigurationRepository;
+import se.tink.backend.aggregation.provider.configuration.repositories.mysql.ProviderStatusConfigurationRepository;
 import se.tink.backend.common.config.DatabaseConfiguration;
 import se.tink.backend.common.repository.mysql.aggregation.clusterhostconfiguration.ClusterHostConfigurationRepository;
 import se.tink.backend.core.ClusterHostConfiguration;
@@ -19,6 +20,7 @@ public class ProviderRepositoryModule extends RepositoryModule {
     protected void bindRepositories() {
         bindSpringBean(ProviderConfigurationRepository.class);
         bindSpringBean(ClusterHostConfigurationRepository.class);
+        bindSpringBean(ProviderStatusConfigurationRepository.class);
     }
 
     @Provides
