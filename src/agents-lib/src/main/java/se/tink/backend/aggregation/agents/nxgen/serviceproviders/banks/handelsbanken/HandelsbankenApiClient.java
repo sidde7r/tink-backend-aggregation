@@ -133,7 +133,7 @@ public abstract class HandelsbankenApiClient {
     public abstract <CreditCard extends HandelsbankenCreditCard> CreditCardTransactionsResponse
         creditCardTransactions(CreditCard creditcard);
 
-    public abstract <CreditCard extends HandelsbankenCreditCard> CreditCardTransactionsResponse
+    public abstract <CreditCard extends HandelsbankenCreditCard> CreditCardTransactionsResponse<CreditCard>
             creditCardTransactions(URL url);
 
     protected RequestBuilder createPostRequest(URL url) {

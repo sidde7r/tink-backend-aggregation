@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken;
 
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.creditcard.entities.HandelsbankenSECreditCard;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.ApplicationEntryPointResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.creditcard.entities.HandelsbankenCreditCard;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.transactionalaccount.rpc.AccountListResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.creditcard.rpc.CreditCardsResponse;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -44,7 +46,7 @@ public class HandelsbankenSessionStorage {
         persist(HandelsbankenConstants.Storage.CREDIT_CARDS, cards);
     }
 
-    public Optional<CreditCardsResponse<?>> creditCards() {
+    public <API extends HandelsbankenApiClient> Optional<CreditCardsResponse<API>> creditCards() {
         return retrieve(HandelsbankenConstants.Storage.CREDIT_CARDS, configuration.getCreditCardsResponse());
     }
 

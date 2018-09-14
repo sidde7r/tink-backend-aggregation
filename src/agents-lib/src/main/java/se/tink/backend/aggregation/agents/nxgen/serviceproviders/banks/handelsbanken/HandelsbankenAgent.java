@@ -4,7 +4,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.HandelsbankenAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.creditcard.HandelsbankenCreditCardAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.creditcard.HandelsbankenCreditCardTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.creditcard.HandelsbankenCreditCardTransactionPaginator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.loan.HandelsbankenLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.transactionalaccount.HandelsbankenTransactionalAccountFetcher;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -144,9 +144,18 @@ public abstract class HandelsbankenAgent<API extends HandelsbankenApiClient, Con
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.of(new CreditCardRefreshController(this.metricRefreshController, this.updateController,
-                new HandelsbankenCreditCardAccountFetcher(this.bankClient, this.handelsbankenSessionStorage),
-                new HandelsbankenCreditCardTransactionFetcher(this.bankClient, this.handelsbankenSessionStorage)
+
+        return Optional.of(new CreditCardRefreshController(this.metricRefreshController,
+                this.updateController,
+                new HandelsbankenCreditCardAccountFetcher(
+                        this.bankClient, this.handelsbankenSessionStorage),
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(
+                                new HandelsbankenCreditCardTransactionPaginator(this.bankClient,
+                                        this.handelsbankenSessionStorage)
+                        )
+                )
         ));
     }
 
