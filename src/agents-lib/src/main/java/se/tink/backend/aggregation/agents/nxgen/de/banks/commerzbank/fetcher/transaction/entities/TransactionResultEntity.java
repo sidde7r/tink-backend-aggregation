@@ -14,11 +14,11 @@ public class TransactionResultEntity {
         return items;
     }
 
-    public boolean shouldFetchNextPage(int currentPage) {
+    public boolean canFetchNextPage(int currentPage) {
         if (items == null || items.isEmpty()) {
             return false;
         }
-        return items.get(0).fetchNextPage(currentPage);
+        return items.get(0).canFetchNextPage(currentPage);
     }
 
     public void addAll(TransactionResultEntity transactionResultEntity) {

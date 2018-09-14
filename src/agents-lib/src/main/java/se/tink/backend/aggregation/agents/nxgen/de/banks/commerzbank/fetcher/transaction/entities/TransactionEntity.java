@@ -99,7 +99,7 @@ public class TransactionEntity implements PaginatorResponse {
         }
     }
 
-    public boolean fetchNextPage(int currentPage) {
+    public boolean canFetchNextPage(int currentPage) {
         return currentPage <= pageCount;
     }
 }

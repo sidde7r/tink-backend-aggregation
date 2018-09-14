@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CommerzbankApiClient {
@@ -94,16 +93,14 @@ public class CommerzbankApiClient {
     public TransactionResultEntity fetchAllPages(Date fromDate, Date toDate, String productType, String identifier,
             String productBranch)
             throws JsonProcessingException {
-        TransactionResultEntity transactionResultEntity = null;
-        int page = 0;
 
+        TransactionResultEntity transactionResultEntity = transactionOverview(productType, identifier, fromDate, toDate,
+                productBranch, 0);
+        int page = 1;
         while (canFetchMore(transactionResultEntity, page)) {
-            if (transactionResultEntity == null) {
-                transactionResultEntity = transactionOverview(productType, identifier, fromDate, toDate, productBranch, page);
-            } else {
-                transactionResultEntity
-                        .addAll(transactionOverview(productType, identifier, fromDate, toDate, productBranch, page));
-            }
+            transactionResultEntity
+                    .addAll(transactionOverview(productType, identifier, fromDate, toDate, productBranch, page));
+
             page++;
         }
         return transactionResultEntity;
@@ -114,9 +111,8 @@ public class CommerzbankApiClient {
             return true;
         }
 
-        return transactionResultEntity.shouldFetchNextPage(page);
+        return transactionResultEntity.canFetchNextPage(page);
     }
-
 
     private TransactionResultEntity transactionOverview(String productType, String identifier, Date fromdate,
             Date toDate, String productBranch, int page)
