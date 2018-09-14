@@ -28,7 +28,7 @@ public class AccountsEntity {
         return minorsAccounts;
     }
 
-    public List<AccountEntity> concatenateAccounts() {
+    public List<AccountEntity> getAllAccounts() {
         List<AccountEntity> accounts = Lists.newArrayList();
 
         accounts.addAll(Optional.ofNullable(ownAccounts).orElse(Collections.emptyList()));

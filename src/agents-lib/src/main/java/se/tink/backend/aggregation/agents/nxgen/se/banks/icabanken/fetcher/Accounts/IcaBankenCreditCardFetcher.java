@@ -27,7 +27,7 @@ public class IcaBankenCreditCardFetcher implements AccountFetcher<CreditCardAcco
     public Collection<CreditCardAccount> fetchAccounts() {
         AccountsEntity userAccounts = apiClient.fetchAccounts();
 
-        List<AccountEntity> accountEntities = userAccounts.concatenateAccounts();
+        List<AccountEntity> accountEntities = userAccounts.getAllAccounts();
 
         return accountEntities.stream()
                 .filter(AccountEntity::isCreditCardAccount)

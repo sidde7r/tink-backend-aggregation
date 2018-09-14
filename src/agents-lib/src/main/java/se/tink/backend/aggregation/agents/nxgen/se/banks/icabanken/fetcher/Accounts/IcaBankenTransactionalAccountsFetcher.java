@@ -30,7 +30,7 @@ public class IcaBankenTransactionalAccountsFetcher implements AccountFetcher<Tra
 
         AccountsEntity userAccounts = apiClient.fetchAccounts();
 
-        List<AccountEntity> accountEntities = userAccounts.concatenateAccounts();
+        List<AccountEntity> accountEntities = userAccounts.getAllAccounts();
 
         return accountEntities.stream()
                 .filter(AccountEntity::isTransactionalAccount)
