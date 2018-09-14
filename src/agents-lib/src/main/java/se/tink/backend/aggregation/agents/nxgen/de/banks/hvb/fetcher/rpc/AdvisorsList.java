@@ -29,7 +29,6 @@ public final class AdvisorsList {
                 .collect(Collectors.toList());
 
         if (names.isEmpty()) {
-            logger.warn("Could not find account holder name in advisor profiles");
             return Optional.empty();
         } else if (names.size() >= 2) {
             logger.warn("Found more than one customer name; account holder name may not be correct");
