@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableMap;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.libraries.i18n.LocalizableEnum;
+import se.tink.libraries.i18n.LocalizableKey;
 
 public class BelfiusConstants {
 
@@ -304,20 +306,28 @@ public class BelfiusConstants {
         public static final String INVBALID_SIGN_BENEFICIARY_CODE = "90AC/000000";
     }
 
-    public static class InputFieldConstants {
-        public static final String ADD_BENEFICIARY_INP_FIELD = "addBeneficiary";
-        public static final String BENEFICIARY_FIELD_DESCRIPTION = "Beneficiary Name";
-        public static final String CONTROL_CODE_FIELD_DESCRIPTION = "Control Code";
-        public static final String DESCRIPTION_CODE_FIELD_DESCRIPTION = "Description Code";
-        public static final String RESPONSE_CODE_FIELD_DESCRIPTION = "Response Code";
-        public static final String ADD_BENEFICIARY_NAME_HELP_TEXT =
-                "You have not transfered money to this account before. "
-                        + "Please supply the name of the owner to the account in the field below";
-        public static final String WAIT_FOR_SIGN_CODE_HELP_TEXT_1 =
-                "Insert your card into the card reader & press SIGN. "
-                        + "Enter the control code and press OK ";
-        public static final String WAIT_FOR_SIGN_CODE_HELP_TEXT_2 =
-                "Insert the description code into the reader followed by your pin code. "
-                        + "Enter the code from the reader into the field below. ";
+    public enum InputFieldConstants implements LocalizableEnum {
+        ADD_BENEFICIARY_INP_FIELD( new LocalizableKey("Add Beneficiary")),
+        BENEFICIARY_FIELD_DESCRIPTION( new LocalizableKey("Beneficiary Name")),
+        CONTROL_CODE_FIELD_DESCRIPTION( new LocalizableKey("Control Code")),
+        DESCRIPTION_CODE_FIELD_DESCRIPTION( new LocalizableKey("Description Code")),
+        RESPONSE_CODE_FIELD_DESCRIPTION( new LocalizableKey("Response Code")),
+        ADD_BENEFICIARY_NAME_HELP_TEXT( new LocalizableKey("You have not transferred money to this account before. "
+                + "Please supply the name of the owner to the account in the field below")),
+        WAIT_FOR_SIGN_CODE_HELP_TEXT_1( new LocalizableKey("Insert your card into the card reader and press SIGN. "
+                + "Enter the control code and press OK.")),
+        WAIT_FOR_SIGN_CODE_HELP_TEXT_2( new LocalizableKey("Insert the description code into the reader followed by your PIN. "
+                + "Enter the code from the reader into the field below."));
+
+        private LocalizableKey userMessage;
+
+        InputFieldConstants(LocalizableKey userMessage) {
+            this.userMessage = userMessage;
+        }
+
+        @Override
+        public LocalizableKey getKey() {
+            return userMessage;
+        }
     }
 }

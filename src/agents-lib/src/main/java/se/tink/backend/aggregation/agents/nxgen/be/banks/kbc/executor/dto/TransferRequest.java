@@ -79,7 +79,7 @@ public class TransferRequest {
 
     private static void validateAmount(Amount amount) {
         if (amount.isLessThan(KbcConstants.Transfers.MIN_AMOUNT)) {
-            cancelTransfer(KbcConstants.Transfers.AMOUNT_LESS_THAN_MIN);
+            cancelTransfer(KbcConstants.TransferMessageParametrized.AMOUNT_LESS_THAN_MIN.cloneWith(KbcConstants.Transfers.MIN_AMOUNT).get());
         }
     }
 
@@ -97,7 +97,7 @@ public class TransferRequest {
         CountryDateUtils belgianDateUtils = CountryDateUtils.getBelgianDateUtils();
 
         if (date.after(nextYear.getTime())) {
-            cancelTransfer(KbcConstants.Transfers.DUE_DATE_TOO_FAR_IN_FUTURE);
+            cancelTransfer(KbcConstants.TransferMessage.DUE_DATE_TOO_FAR_IN_FUTURE.getKey().get());
         }
 
         if (!belgianDateUtils.isBusinessDay(date)) {
@@ -107,7 +107,7 @@ public class TransferRequest {
 
     private static boolean isValidReferenceFreeText(String destinationMessage) {
         if (destinationMessage.length() > KbcConstants.Transfers.MAX_MSG_LENGTH) {
-            cancelTransfer(KbcConstants.Transfers.MSG_LENGTH_EXCEEDS_MAX);
+            cancelTransfer(KbcConstants.TransferMessageParametrized.MSG_LENGTH_EXCEEDS_MAX.cloneWith(KbcConstants.Transfers.MAX_MSG_LENGTH).get());
         }
 
         return true;
@@ -117,7 +117,7 @@ public class TransferRequest {
         Optional<String> principalName = transfer.getSource().getName();
 
         if (!principalName.isPresent() || Strings.isNullOrEmpty(principalName.get())) {
-            cancelTransfer(KbcConstants.Transfers.MISSING_SOURCE_NAME);
+            cancelTransfer(KbcConstants.TransferMessage.MISSING_SOURCE_NAME.getKey().get());
         }
 
         return principalName.get();
@@ -127,7 +127,7 @@ public class TransferRequest {
         Optional<String> beneficiaryName = transfer.getDestination().getName();
 
         if (!beneficiaryName.isPresent() || Strings.isNullOrEmpty(beneficiaryName.get())) {
-            cancelTransfer(KbcConstants.Transfers.MISSING_DESTINATION_NAME);
+            cancelTransfer(KbcConstants.TransferMessage.MISSING_DESTINATION_NAME.getKey().get());
         }
 
         return beneficiaryName.get();

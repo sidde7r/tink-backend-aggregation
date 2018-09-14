@@ -146,7 +146,7 @@ public class KbcBankTransferExecutor implements BankTransferExecutor {
     }
 
     private String waitForSignCode(String challenge) throws SupplementalInfoException {
-        return waitForSupplementalInformation(KbcConstants.Transfers.SIGN_INSTRUCTIONS,
+        return waitForSupplementalInformation(KbcConstants.TransferMessage.SIGN_INSTRUCTIONS.getKey().get(),
                 challenge);
     }
 

@@ -79,9 +79,9 @@ public class IngCardReaderAuthenticationController implements MultiFactorAuthent
      otpField.setName(OTP_FIELD);
      otpField.setNumeric(true);
      otpField.setSensitive(true);
-     otpField.setHelpText(catalog.getString("1$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png) Insert your ING bank card into the ING Card Reader\n"
-             + "2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_IDENTIFY.png)\n"
-             + "3$  Enter your PIN\n"
+     otpField.setHelpText(catalog.getString("1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png) Insert your ING bank card into the ING Card Reader\n"
+             + "2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_IDENTIFY.png) Press\n"
+             + "3$ Enter your PIN\n"
              + "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png) Press\n"
              + "5$ Enter the response code"));
      return otpField;
@@ -90,10 +90,10 @@ public class IngCardReaderAuthenticationController implements MultiFactorAuthent
     private Field getChallengeField(String challenge) {
     String helpText =
         catalog.getString(
-            "1$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png) Insert your ING bank card in your ING Card Reader\n"
-                    + "2$  Press ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_SIGN.png) Press\n"
+            "1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png) Insert your ING bank card in your ING Card Reader\n"
+                    + "2$ Press ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_SIGN.png) Press\n"
                     + "3$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png) Enter your PIN and press\n"
-                    + "4$  Enter the following number []");
+                    + "4$ Enter the following number []");
 
         Field challengeField = new Field();
         challengeField.setDescription(getChallengeFormattedWithSpaces(challenge));
