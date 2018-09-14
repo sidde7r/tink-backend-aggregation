@@ -10,41 +10,40 @@ import javax.persistence.NoResultException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
-import se.tink.backend.aggregation.provider.configuration.repositories.mysql.ProviderConfigurationRepository;
+import se.tink.backend.aggregation.provider.configuration.rpc.ProviderConfigurationDTO;
 import se.tink.backend.core.Field;
-import se.tink.backend.core.ProviderConfiguration;
 import se.tink.libraries.i18n.Catalog;
 
 public class ProviderServiceController {
     private static final Logger log = LoggerFactory.getLogger(ProviderServiceController.class);
 
-    private final ProviderConfigurationRepository providerConfigurationRepository;
+    private final ProviderConfigurationProvider providerConfigurationProvider;
 
     @Inject
-    public ProviderServiceController(ProviderConfigurationRepository providerConfigurationRepository) {
-        this.providerConfigurationRepository = providerConfigurationRepository;
+    public ProviderServiceController(ProviderConfigurationProvider providerConfigurationProvider) {
+        this.providerConfigurationProvider = providerConfigurationProvider;
     }
 
-    public List<ProviderConfiguration> list(Locale locale) {
-        return translate(locale, providerConfigurationRepository.findAll());
+    public List<ProviderConfigurationDTO> list(Locale locale) {
+        return translate(locale, providerConfigurationProvider.findAll());
     }
 
-    public List<ProviderConfiguration> list(Locale locale, ClusterId clusterId) {
-        return translate(locale, providerConfigurationRepository.findAllByClusterId(clusterId.getId()));
+    public List<ProviderConfigurationDTO> list(Locale locale, ClusterId clusterId) {
+        return translate(locale, providerConfigurationProvider.findAllByClusterId(clusterId.getId()));
     }
 
-    public List<ProviderConfiguration> listByMarket(Locale locale, ClusterId clusterId, String market) {
-        return translate(locale, providerConfigurationRepository.findAllByClusterIdAndMarket(clusterId.getId(), market));
+    public List<ProviderConfigurationDTO> listByMarket(Locale locale, ClusterId clusterId, String market) {
+        return translate(locale, providerConfigurationProvider.findAllByClusterIdAndMarket(clusterId.getId(), market));
     }
 
-    public List<ProviderConfiguration> listByMarket(Locale locale, String market) {
-        return translate(locale, providerConfigurationRepository.findAllByMarket(market));
+    public List<ProviderConfigurationDTO> listByMarket(Locale locale, String market) {
+        return translate(locale, providerConfigurationProvider.findAllByMarket(market));
     }
 
-    public Optional<ProviderConfiguration> getProviderByName(Locale locale, ClusterId clusterId, String providerName) {
+    public Optional<ProviderConfigurationDTO> getProviderByName(Locale locale, ClusterId clusterId, String providerName) {
         try {
             return Optional.of(translate(locale,
-                    providerConfigurationRepository.findByClusterIdAndProviderName(clusterId.getId(), providerName)));
+                    providerConfigurationProvider.findByClusterIdAndProviderName(clusterId.getId(), providerName)));
         } catch (NoResultException e) {
             log.warn("Could not find providerConfiguration for clusterId: %s, providerName: %s",
                     clusterId.getId(), providerName);
@@ -52,22 +51,22 @@ public class ProviderServiceController {
         return Optional.empty();
     }
 
-    public Optional<ProviderConfiguration> getProviderByName(Locale locale, String providerName) {
+    public Optional<ProviderConfigurationDTO> getProviderByName(Locale locale, String providerName) {
         try {
-            return Optional.of(translate(locale, providerConfigurationRepository.findByName(providerName)));
+            return Optional.of(translate(locale, providerConfigurationProvider.findByName(providerName)));
         } catch (NoResultException e) {
             log.warn("Could not find providerConfiguration for providerName: %s", providerName);
         }
         return Optional.empty();
     }
 
-    private List<ProviderConfiguration> translate(Locale locale, List<ProviderConfiguration> providerConfigurations) {
+    private List<ProviderConfigurationDTO> translate(Locale locale, List<ProviderConfigurationDTO> providerConfigurations) {
         return providerConfigurations.stream()
                 .map(providerConfiguration -> translate(locale, providerConfiguration))
                 .collect(Collectors.toList());
     }
 
-    private ProviderConfiguration translate(Locale locale, ProviderConfiguration providerConfiguration) {
+    private ProviderConfigurationDTO translate(Locale locale, ProviderConfigurationDTO providerConfiguration) {
         Catalog catalog = Catalog.getCatalog(locale);
         if (!Strings.isNullOrEmpty(providerConfiguration.getDisplayDescription())) {
             providerConfiguration.setDisplayDescription(catalog.getString(providerConfiguration.getDisplayDescription()));

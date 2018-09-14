@@ -10,7 +10,7 @@ import javax.ws.rs.core.Response;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.provider.configuration.controllers.ProviderServiceController;
 import se.tink.backend.aggregation.provider.configuration.api.ProviderService;
-import se.tink.backend.core.ProviderConfiguration;
+import se.tink.backend.aggregation.provider.configuration.rpc.ProviderConfigurationDTO;
 
 public class ProviderServiceResource implements ProviderService {
     @Context
@@ -24,17 +24,17 @@ public class ProviderServiceResource implements ProviderService {
     }
 
     @Override
-    public List<ProviderConfiguration> list(String lang, ClusterInfo clusterInfo) {
+    public List<ProviderConfigurationDTO> list(String lang, ClusterInfo clusterInfo) {
         return providerController.list(Locale.forLanguageTag(lang), clusterInfo.getClusterId());
     }
 
     @Override
-    public List<ProviderConfiguration> listByMarket(String lang, String market, ClusterInfo clusterInfo) {
+    public List<ProviderConfigurationDTO> listByMarket(String lang, String market, ClusterInfo clusterInfo) {
         return providerController.listByMarket(Locale.forLanguageTag(lang), clusterInfo.getClusterId(), market);
     }
 
     @Override
-    public ProviderConfiguration getProviderByName(String lang, String providerName, ClusterInfo clusterInfo) {
+    public ProviderConfigurationDTO getProviderByName(String lang, String providerName, ClusterInfo clusterInfo) {
         return providerController.getProviderByName(Locale.forLanguageTag(lang), clusterInfo.getClusterId(), providerName)
                 .orElseThrow(() -> new WebApplicationException(Response.Status.BAD_REQUEST));
     }
