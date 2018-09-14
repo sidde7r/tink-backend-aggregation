@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.nxgen.core.account.LoanDetails;
 @JsonObject
 public class LoanEntity {
     @JsonIgnore
-    Logger log = LoggerFactory.getLogger(LoanEntity.class);
+    private static final Logger log = LoggerFactory.getLogger(LoanEntity.class);
 
     private String loanName;
     private double initialDebt;
