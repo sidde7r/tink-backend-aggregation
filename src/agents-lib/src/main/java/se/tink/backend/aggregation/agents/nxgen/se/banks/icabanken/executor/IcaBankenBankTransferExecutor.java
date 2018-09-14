@@ -74,8 +74,7 @@ public class IcaBankenBankTransferExecutor implements BankTransferExecutor {
 		executorHelper.putTransferInOutbox(transferRequest);
 
 		if (executorHelper.hasUnsignedTransfers()) {
-			String reference = apiClient.initTransferSign();
-			executorHelper.finishTransferSign(reference, transfer, sourceAccount);
+			executorHelper.signTransfer(transfer, sourceAccount);
 		}
 	}
 }

@@ -184,25 +184,45 @@ public class IcaBankenExecutorHelper {
                 .build();
     }
 
-    public void finishTransferSign(String reference, Transfer transfer, AccountEntity sourceAccount) {
-        context.openBankId(null, false);
-
+    public void signTransfer(Transfer transfer, AccountEntity sourceAccount) {
         try {
+            String reference = apiClient.initTransferSign();
+            context.openBankId(null, false);
             poll(reference);
             assertSuccessfulSign(reference);
         } catch (Exception initialException) {
-            try {
-                List<AssignmentEntity> unsignedTransfers = apiClient.fetchUnsignedTransfers();
-                deleteUnsignedTransfer(unsignedTransfers);
-            } catch (Exception deleteException) {
-                log.warn("Could not delete transfer in outbox. "
-                                + "If unsigned transfers are left here, user could end up in a deadlock.",
-                        deleteException);
-            }
+            cleanUpOutbox();
 
             if (!isTransferFailedButWasSuccessful(transfer, sourceAccount)) {
+                if (initialException.getCause() instanceof HttpResponseException) {
+                    HttpResponse response = ((HttpResponseException) initialException.getCause()).getResponse();
+                    if (response.getStatus() == HttpStatus.SC_CONFLICT) {
+                        throwBankIdAlreadyInProgressError();
+                    }
+                }
+
                 throw initialException;
             }
+        }
+    }
+
+    private void throwBankIdAlreadyInProgressError() {
+
+        throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setMessage(TransferExecutionException.EndUserMessage.BANKID_ANOTHER_IN_PROGRESS.getKey().get())
+                .setEndUserMessage(catalog.getString(
+                        TransferExecutionException.EndUserMessage.BANKID_ANOTHER_IN_PROGRESS))
+                .build();
+    }
+
+    private void cleanUpOutbox() {
+        try {
+            List<AssignmentEntity> unsignedTransfers = apiClient.fetchUnsignedTransfers();
+            deleteUnsignedTransfer(unsignedTransfers);
+        } catch (Exception deleteException) {
+            log.warn("Could not delete transfer in outbox. "
+                            + "If unsigned transfers are left here, user could end up in a deadlock.",
+                    deleteException);
         }
     }
 
@@ -210,28 +230,40 @@ public class IcaBankenExecutorHelper {
         BankIdStatus status;
 
         for (int i = 0; i < IcaBankenConstants.Transfers.MAX_POLL_ATTEMPTS; i++) {
-            status = collect(reference);
+            try {
+                status = collect(reference);
 
-            switch (status) {
-            case DONE:
-                return;
-            case WAITING:
-                break;
-            case CANCELLED:
-                throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                        .setMessage(TransferExecutionException.EndUserMessage.BANKID_CANCELLED.getKey().get())
-                        .setEndUserMessage(catalog.getString(
-                                TransferExecutionException.EndUserMessage.BANKID_CANCELLED))
-                        .build();
-            default:
-                throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                        .setMessage(TransferExecutionException.EndUserMessage.BANKID_TRANSFER_FAILED.getKey().get())
-                        .setEndUserMessage(catalog.getString(
-                                TransferExecutionException.EndUserMessage.BANKID_TRANSFER_FAILED))
-                        .build();
+                switch (status) {
+                case DONE:
+                    return;
+                case WAITING:
+                    break;
+                case CANCELLED:
+                    throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                            .setMessage(TransferExecutionException.EndUserMessage.BANKID_CANCELLED.getKey().get())
+                            .setEndUserMessage(catalog.getString(
+                                    TransferExecutionException.EndUserMessage.BANKID_CANCELLED))
+                            .build();
+                default:
+                    throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                            .setMessage(TransferExecutionException.EndUserMessage.BANKID_TRANSFER_FAILED.getKey().get())
+                            .setEndUserMessage(catalog.getString(
+                                    TransferExecutionException.EndUserMessage.BANKID_TRANSFER_FAILED))
+                            .build();
+                }
+
+                Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
+
+            } catch (HttpResponseException e) {
+                if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
+                    throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                            .setMessage(IcaBankenConstants.UserMessage.BANKID_TRANSFER_INTERRUPTED.getKey().get())
+                            .setEndUserMessage(catalog.getString(
+                                    IcaBankenConstants.UserMessage.BANKID_TRANSFER_INTERRUPTED))
+                            .build();
+                }
             }
 
-            Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
         }
 
         throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)

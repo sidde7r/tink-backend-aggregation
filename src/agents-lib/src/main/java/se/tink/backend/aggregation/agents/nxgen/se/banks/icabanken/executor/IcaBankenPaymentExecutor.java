@@ -32,7 +32,6 @@ public class IcaBankenPaymentExecutor implements PaymentExecutor {
 
         executorHelper.putTransferInOutbox(paymentRequest);
 
-        String requestId = apiClient.initTransferSign();
-        executorHelper.finishTransferSign(requestId, transfer, sourceAccount);
+        executorHelper.signTransfer(transfer, sourceAccount);
     }
 }
