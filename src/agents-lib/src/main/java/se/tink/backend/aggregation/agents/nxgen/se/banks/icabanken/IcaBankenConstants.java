@@ -24,7 +24,7 @@ public class IcaBankenConstants {
         public static final URL TRANSFER_DESTINATIONS = new URL(HOST + "/api/recipients");
         public static final URL TRANSFER_BANKS = new URL(HOST + "/api/accounts/transferBanks");
         public static final URL INIT_TRANSFER_SIGN = new URL(HOST + "/api/assignments/bundle/bankid/init");
-        public static final URL SIGNED_ASSIGNMENTS = new URL(HOST + "/api/assignments/bundle/bankid/submit?");
+        public static final URL SIGNED_ASSIGNMENTS = new URL(HOST + "/api/assignments/bundle/bankid/submit");
         public static final URL UNSIGNED_ASSIGNMENTS = new URL(HOST + "/api/assignments");
         public static final URL DELETE_UNSIGNED_TRANSFER = new URL(HOST + "/api/assignments/bundle/{transferId}");
         public static final URL ACCEPT_EINVOICE = new URL(HOST + "/api/egiro/invoice/accept");
@@ -64,32 +64,32 @@ public class IcaBankenConstants {
     }
 
     public static final class IdTags {
-        public static String SESSION_ID_TAG = "sessionId";
-        public static String IDENTIFIER_TAG = "identifier";
-        public static String TO_DATE_TAG = "toDate";
-        public static String FUND_ID_TAG = "fundId";
-        public static String GIRO_NUMBER_TAG = "pgnumber";
-        public static String REQUEST_ID_TAG = "requestId";
-        public static String TRANSFER_ID_TAG = "transferId";
-        public static String INVOICE_ID_TAG = "invoiceId";
-        public static String NOT_AVAILABLE_TAG = "N/A";
+        public static final String SESSION_ID_TAG = "sessionId";
+        public static final String IDENTIFIER_TAG = "identifier";
+        public static final String TO_DATE_TAG = "toDate";
+        public static final String FUND_ID_TAG = "fundId";
+        public static final String GIRO_NUMBER_TAG = "pgnumber";
+        public static final String REQUEST_ID_TAG = "requestId";
+        public static final String TRANSFER_ID_TAG = "transferId";
+        public static final String INVOICE_ID_TAG = "invoiceId";
+        public static final String NOT_AVAILABLE_TAG = "N/A";
         //Used for making a sign request for transfers
-        public static String BUNDLE_TAG = "Bundle";
-        public static String KEY_TAG = "Key";
-        public static String VALUE_TAG = "Value";
-        public static String SWEDISH_AND_SEPARATOR = "och";
+        public static final String BUNDLE_TAG = "Bundle";
+        public static final String KEY_TAG = "Key";
+        public static final String VALUE_TAG = "Value";
+        public static final String SWEDISH_AND_SEPARATOR = "och";
     }
 
     public static final class LoanDetailsKeys {
-        public static String INTEREST_RATE = "aktuell räntesats";
-        public static String LOAN_NAME = "lån";
-        public static String INITIAL_DEBT = "ursprunglig skuld";
-        public static String INITIAL_DATE = "utbetalningsdag";
-        public static String APPLICANTS = "låntagare";
-        public static String NEXT_DAY_OF_TERMS_CHANGE = "nästa villkorsändringsdag";
-        public static String MONTH_BOUND = "räntebindningstid";
-        public static String SECURITY = "säkerhet";
-        public static String TYPE_OF_LOAN = "typ av lån";
+        public static final String INTEREST_RATE = "aktuell räntesats";
+        public static final String LOAN_NAME = "lån";
+        public static final String INITIAL_DEBT = "ursprunglig skuld";
+        public static final String INITIAL_DATE = "utbetalningsdag";
+        public static final String APPLICANTS = "låntagare";
+        public static final String NEXT_DAY_OF_TERMS_CHANGE = "nästa villkorsändringsdag";
+        public static final String MONTH_BOUND = "räntebindningstid";
+        public static final String SECURITY = "säkerhet";
+        public static final String TYPE_OF_LOAN = "typ av lån";
     }
 
     public static final class Transfers {
