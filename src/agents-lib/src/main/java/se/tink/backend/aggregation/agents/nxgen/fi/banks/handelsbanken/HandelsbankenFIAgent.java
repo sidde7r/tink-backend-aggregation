@@ -7,22 +7,30 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.HandelsbankenAutoAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.handelsbanken.fetcher.transactionalaccount.HandelsbankenFIAccountTransactionPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.common.config.SignatureKeyPair;
 
-public class HandelsbankenFIAgent extends HandelsbankenAgent<HandelsbankenFIApiClient, HandelsbankenFIConfiguration> {
-    public HandelsbankenFIAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+public class HandelsbankenFIAgent
+        extends HandelsbankenAgent<HandelsbankenFIApiClient, HandelsbankenFIConfiguration> {
+    public HandelsbankenFIAgent(CredentialsRequest request, AgentContext context,
+            SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, new HandelsbankenFIConfiguration());
     }
 
     @Override
-    protected HandelsbankenFIApiClient constructApiClient(HandelsbankenFIConfiguration handelsbankenConfiguration) {
+    protected HandelsbankenFIApiClient constructApiClient(
+            HandelsbankenFIConfiguration handelsbankenConfiguration) {
         return new HandelsbankenFIApiClient(this.client, handelsbankenConfiguration);
     }
 
@@ -33,32 +41,38 @@ public class HandelsbankenFIAgent extends HandelsbankenAgent<HandelsbankenFIApiC
             HandelsbankenPersistentStorage handelsbankenPersistentStorage,
             HandelsbankenSessionStorage handelsbankenSessionStorage) {
         return new TypedAuthenticator[] {
-            constructAutoAuthenticationController(
-                    new HandelsbankenFICardDeviceAuthenticator(bankClient, handelsbankenPersistentStorage,
-                            new SupplementalInformationController(this.context, this.credentials),
-                            handelsbankenConfiguration,
-                            new HandelsbankenAutoAuthenticator(bankClient, handelsbankenPersistentStorage,
-                                    this.credentials,
-                                    handelsbankenSessionStorage, handelsbankenConfiguration)
-                    )
-            )
+                constructAutoAuthenticationController(
+                        new HandelsbankenFICardDeviceAuthenticator(bankClient,
+                                handelsbankenPersistentStorage,
+                                new SupplementalInformationController(this.context,
+                                        this.credentials),
+                                handelsbankenConfiguration,
+                                new HandelsbankenAutoAuthenticator(bankClient,
+                                        handelsbankenPersistentStorage,
+                                        this.credentials,
+                                        handelsbankenSessionStorage, handelsbankenConfiguration)
+                        )
+                )
         };
     }
 
     @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController(HandelsbankenFIApiClient bankClient,
+    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController(
+            HandelsbankenFIApiClient bankClient,
             HandelsbankenSessionStorage handelsbankenSessionStorage) {
         return Optional.empty();
     }
 
     @Override
-    protected Optional<EInvoiceRefreshController> constructEInvoiceRefreshController(HandelsbankenFIApiClient client,
+    protected Optional<EInvoiceRefreshController> constructEInvoiceRefreshController(
+            HandelsbankenFIApiClient client,
             HandelsbankenSessionStorage sessionStorage) {
         return Optional.empty();
     }
 
     @Override
-    protected Optional<TransferController> constructTranferController(HandelsbankenFIApiClient client,
+    protected Optional<TransferController> constructTranferController(
+            HandelsbankenFIApiClient client,
             HandelsbankenSessionStorage sessionStorage, AgentContext context) {
         return Optional.empty();
     }
@@ -67,5 +81,13 @@ public class HandelsbankenFIAgent extends HandelsbankenAgent<HandelsbankenFIApiC
     protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController(
             HandelsbankenFIApiClient client, HandelsbankenSessionStorage sessionStorage) {
         return Optional.empty();
+    }
+
+    @Override
+    protected TransactionPaginator<TransactionalAccount> constructAccountTransactionPaginator(
+            HandelsbankenFIApiClient client, HandelsbankenSessionStorage sessionStorage) {
+
+        return new TransactionKeyPaginationController<>(
+                new HandelsbankenFIAccountTransactionPaginator(client, sessionStorage));
     }
 }

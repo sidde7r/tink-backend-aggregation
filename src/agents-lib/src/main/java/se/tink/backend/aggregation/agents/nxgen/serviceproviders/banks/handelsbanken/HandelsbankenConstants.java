@@ -61,6 +61,7 @@ public class HandelsbankenConstants {
             KEEP_ALIVE("keepalive"),
             LOANS("loans"),
             LOOKUP_RECIPIENT("lookup-recipient"),
+            NEXT_TRANSACTIONS("next"),
             PAYMENT_CONTEXT("payment-context"),
             PAYMENT_DETAIL("payment-detail"),
             PENDING_EINVOICES("einvoice-pending-v4"),

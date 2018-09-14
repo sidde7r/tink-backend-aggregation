@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.i
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc.PensionDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc.SecurityHoldingsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.rpc.PaymentDetails;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.rpc.TransactionsSEResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.interfaces.UpdatablePayment;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.HandelsbankenSEPaymentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.PaymentRecipient;
@@ -82,6 +83,17 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
 
     public AuthorizeResponse authorize(ValidateSignatureResponse validateSignature) {
         return createPostRequest(validateSignature.toAuthorize()).post(AuthorizeResponse.class);
+    }
+
+    public TransactionsSEResponse transactions(URL url, int from, int to, String authToken){
+        
+        return createRequest(url)
+                .queryParam(HandelsbankenSEConstants.QueryParams.IS_CARD, 
+                        HandelsbankenSEConstants.QueryParams.Defaults.FALSE)
+                .queryParam(HandelsbankenSEConstants.QueryParams.FROM, String.valueOf(from))
+                .queryParam(HandelsbankenSEConstants.QueryParams.TO, String.valueOf(to))
+                .queryParam(HandelsbankenSEConstants.QueryParams.AUTH_TOKEN, authToken)
+                .get(TransactionsSEResponse.class);
     }
 
     public PendingTransactionsResponse pendingTransactions(

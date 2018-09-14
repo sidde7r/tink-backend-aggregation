@@ -3,15 +3,14 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.entities
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.entities.HandelsbankenRecipient;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.rpc.PaymentDetails;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAmount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.core.Amount;
+import se.tink.backend.core.transfer.Transfer;
 
 public class PendingTransaction extends BaseResponse {
 
@@ -20,17 +19,12 @@ public class PendingTransaction extends BaseResponse {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dueDate;
 
-    public UpcomingTransaction toTinkTransaction(HandelsbankenSEApiClient client) {
+    public UpcomingTransaction toTinkTransaction(Transfer transfer) {
         return UpcomingTransaction.builder()
                 .setAmount(Amount.inSEK(-1 * amount.asDouble()))
                 .setDate(dueDate)
                 .setDescription(recipient.getName())
-                .setUpcomingTransfer(
-                        client.paymentDetails(this)
-                                .filter(PaymentDetails::isChangeAllowed)
-                                .map(PaymentDetails::toTransfer)
-                                .orElse(null)
-                )
+                .setUpcomingTransfer(transfer)
                 .build();
     }
 

@@ -116,6 +116,11 @@ public abstract class HandelsbankenApiClient {
                 .getTransactionsReponse());
     }
 
+    public TransactionsResponse transactions(URL url) {
+        return createRequest(url).get(handelsbankenConfiguration
+                .getTransactionsReponse());
+    }
+
     public CreditCardsResponse creditCards(ApplicationEntryPointResponse applicationEntryPoint) {
         return createRequest(handelsbankenConfiguration.toCards(applicationEntryPoint))
                 .get(handelsbankenConfiguration.getCreditCardsResponse());
