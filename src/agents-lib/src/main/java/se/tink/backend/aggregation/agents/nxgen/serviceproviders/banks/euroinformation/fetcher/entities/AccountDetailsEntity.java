@@ -25,6 +25,8 @@ public class AccountDetailsEntity {
     private String accountNameAndNumber;
     @XmlElement(name = "int")
     private String accountName;
+    @XmlElement(name = "tit")
+    private String title;
     private String codprod;
     @XmlElement(name = "category_code")
     private String categoryCode;
@@ -37,6 +39,20 @@ public class AccountDetailsEntity {
     @XmlElement(name = "webid")
     private String webId;
     private String contract;
+    private String refprd;
+    @XmlElement(name = "refctr_exi_val")
+    private String refctrExiVal;
+    @XmlElement(name = "refctr_inn_val")
+    private String refctrInnVal;
+    @XmlElement(name = "agreed_overdraft")
+    private String agreedOverdraft;
+    @XmlElement(name = "amount_available")
+    private String amountAvailable;
+    private String appcpt;
+    private String isholder;
+    private String checkingaccount;
+    private String characteristics;
+    private String simulation;
 
     public String getContract() {
         return contract;
