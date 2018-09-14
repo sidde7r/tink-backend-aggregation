@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.core.Amount;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 
 @JsonObject
@@ -65,6 +66,7 @@ public class AccountEntity implements GeneralAccountEntity {
                 .setHolderName(new HolderName(holder))
                 .setBankIdentifier(accountId)
                 .addIdentifier(new SwedishIdentifier(accountNumber))
+                .addIdentifier(new IbanIdentifier(iban))
                 .build();
     }
 
