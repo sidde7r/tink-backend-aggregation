@@ -14,6 +14,7 @@ public class ProviderModuleFactory {
                 new CoordinationModule(),
                 new ConfigurationModule(configuration),
                 new ProviderServiceModule(configuration, jersey),
+                new ProviderFileModule(),
                 new ProviderRepositoryModule(configuration.getDatabase()));
     }
 }

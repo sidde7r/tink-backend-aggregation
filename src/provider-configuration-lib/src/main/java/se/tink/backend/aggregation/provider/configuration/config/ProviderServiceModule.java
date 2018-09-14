@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.cluster.JerseyClusterInfoProvider;
 import se.tink.backend.aggregation.cluster.provider.ClusterInfoProvider;
 import se.tink.backend.aggregation.provider.configuration.api.MonitoringService;
 import se.tink.backend.aggregation.provider.configuration.api.ProviderService;
+import se.tink.backend.aggregation.provider.configuration.controllers.ProviderConfigurationProvider;
 import se.tink.backend.aggregation.provider.configuration.controllers.ProviderServiceController;
 import se.tink.backend.aggregation.provider.configuration.resources.MonitoringServiceResource;
 import se.tink.backend.aggregation.provider.configuration.resources.ProviderServiceResource;
@@ -33,6 +34,7 @@ public class ProviderServiceModule extends AbstractModule {
         bind(MonitoringService.class).to(MonitoringServiceResource.class).in(Scopes.SINGLETON);
         bind(ProviderServiceController.class).in(Scopes.SINGLETON);
         bind(ClusterInfoProvider.class).in(Scopes.SINGLETON);
+        bind(ProviderConfigurationProvider.class).in(Scopes.SINGLETON);
 
         bind(CoordinationConfiguration.class).toProvider(Providers.of(configuration.getCoordination()));
         bind(PrometheusConfiguration.class).toInstance(configuration.getPrometheus());
