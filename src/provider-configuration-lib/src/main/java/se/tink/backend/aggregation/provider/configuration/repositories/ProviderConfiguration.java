@@ -21,7 +21,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
-import se.tink.backend.core.*;
+import se.tink.backend.core.CredentialsTypes;
+import se.tink.backend.core.Field;
+import se.tink.backend.core.ProviderRefreshSchedule;
+import se.tink.backend.core.ProviderStatuses;
+import se.tink.backend.core.ProviderTypes;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Entity
