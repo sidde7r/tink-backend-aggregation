@@ -90,10 +90,7 @@ public class TransactionEntity implements PaginatorResponse {
 
     @Override
     public Optional<Boolean> canFetchMore() {
-        if (pfmTransactions != null && !pfmTransactions.isEmpty()) {
-            return Optional.of(true);
-        }
-        return Optional.of(false);
+        return Optional.of(getPageCount() > 0);
     }
 
     public void addAll(Collection<PfmTransactionsEntity> pfmTransactionsEntities) {
