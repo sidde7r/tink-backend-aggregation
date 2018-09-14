@@ -39,6 +39,7 @@ public class EuroInformationConstants {
 
     public static class LoggingTags {
         public final static LogTag creditcardTransactionsTag = LogTag.from("euroinformation_creditcard_transactions");
+        public final static LogTag creditcardLogTag = LogTag.from("euroinformation_creditcard_accounts");
         public final static LogTag unknownAccountTypesTag = LogTag.from("euroinformation_unknown_accounts");
         public final static LogTag investmentLogTag = LogTag.from("euroinformation_investment_data");
     }
