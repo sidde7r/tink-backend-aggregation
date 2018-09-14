@@ -142,6 +142,10 @@ public class IcaBankenConstants {
         public static final String EINVOICE_VALIDATE_ERROR = "Could not validate invoice";
     }
 
+    public static final class Log {
+        public static final String LOAN_TYPE = "icabanken_unknown_loan_type";
+    }
+
     public enum UserMessage implements LocalizableEnum {
         KNOW_YOUR_CUSTOMER(new LocalizableKey("To be able to refresh your accounts in Tink you need to updated your customer info in the ICA bank app.")),
         EINVOICE_MODIFIED_IN_BANK_APP(new LocalizableKey("If the e-invoice has been modified in the ICA Banken app, please refresh you credentials.")),

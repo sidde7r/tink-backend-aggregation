@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.api.client.util.Maps;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans.IcaBankenLoanParsingHelper;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -13,6 +16,9 @@ import se.tink.backend.aggregation.nxgen.core.account.LoanDetails;
 
 @JsonObject
 public class LoanEntity {
+    @JsonIgnore
+    Logger log = LoggerFactory.getLogger(LoanEntity.class);
+
     private String loanName;
     private double initialDebt;
     private double interestRate;
@@ -81,6 +87,8 @@ public class LoanEntity {
 
     @JsonIgnore
     private LoanDetails buildLoanDetails(IcaBankenLoanParsingHelper loanParsingHelper) {
+        logLoanType();
+
         return LoanDetails.builder(LoanDetails.Type.BLANCO)
                 .setApplicants(loanParsingHelper.getApplicantsList())
                 .setAmortized(loanParsingHelper.getAmortized(presentDebt))
@@ -88,5 +96,11 @@ public class LoanEntity {
                 .setInitialDate(loanParsingHelper.getInitialDate())
                 .setCoApplicant(loanParsingHelper.hasCoApplicant())
                 .build();
+    }
+
+    private void logLoanType() {
+        log.info("Unknown loan type: Name: {}, Type: {}",
+                Optional.ofNullable(loanName).orElse("Not present"),
+                Optional.ofNullable(type).orElse("Not present"));
     }
 }
