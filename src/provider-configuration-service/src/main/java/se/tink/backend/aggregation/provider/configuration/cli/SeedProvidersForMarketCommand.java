@@ -11,9 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.provider.configuration.config.clusterprovider.ProviderConfigModel;
 import se.tink.backend.aggregation.provider.configuration.repositories.mysql.ProviderConfigurationRepository;
-import se.tink.backend.common.config.ServiceConfiguration;
-import se.tink.backend.core.ProviderConfiguration;
+import se.tink.backend.aggregation.provider.configuration.repositories.ProviderConfiguration;
 import se.tink.backend.core.ProviderStatuses;
+import se.tink.backend.common.config.ServiceConfiguration;
 
 import java.io.File;
 import java.io.IOException;

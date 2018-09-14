@@ -7,8 +7,8 @@ import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 import net.sourceforge.argparse4j.inf.Subparsers;
 import se.tink.backend.aggregation.provider.configuration.repositories.mysql.ProviderConfigurationRepository;
-import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.backend.core.ProviderStatuses;
+import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.libraries.cli.printutils.CliPrintUtils;
 
 public class ProviderStatusCommand extends ProviderConfigurationCommand<ServiceConfiguration> {

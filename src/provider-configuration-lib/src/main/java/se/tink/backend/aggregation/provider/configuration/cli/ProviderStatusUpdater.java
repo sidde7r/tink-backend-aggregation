@@ -3,8 +3,9 @@ package se.tink.backend.aggregation.provider.configuration.cli;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.provider.configuration.repositories.mysql.ProviderConfigurationRepository;
-import se.tink.backend.core.ProviderConfiguration;
+import se.tink.backend.aggregation.provider.configuration.repositories.ProviderConfiguration;
 import se.tink.backend.core.ProviderStatuses;
+
 
 public class ProviderStatusUpdater {
     private static final Logger log = LoggerFactory.getLogger(ProviderStatusUpdater.class);

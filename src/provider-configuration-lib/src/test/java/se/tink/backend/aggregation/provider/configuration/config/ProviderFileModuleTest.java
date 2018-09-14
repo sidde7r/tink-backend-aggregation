@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.provider.configuration.config;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.core.ProviderConfiguration;
+import se.tink.backend.aggregation.provider.configuration.repositories.ProviderConfiguration;
 
 import java.io.IOException;
 import java.util.List;

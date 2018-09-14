@@ -5,7 +5,8 @@ import com.google.common.collect.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.provider.configuration.repositories.mysql.ProviderConfigurationRepository;
-import se.tink.backend.core.ProviderConfiguration;
+import se.tink.backend.aggregation.provider.configuration.repositories.ProviderConfiguration;
+
 
 import java.util.List;
 import java.util.Map;

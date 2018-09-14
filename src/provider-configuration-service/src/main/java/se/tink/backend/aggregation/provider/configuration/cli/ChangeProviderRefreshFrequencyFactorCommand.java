@@ -5,8 +5,8 @@ import com.google.inject.Injector;
 import io.dropwizard.setup.Bootstrap;
 import net.sourceforge.argparse4j.inf.Namespace;
 import se.tink.backend.aggregation.provider.configuration.repositories.mysql.ProviderConfigurationRepository;
+import se.tink.backend.aggregation.provider.configuration.repositories.ProviderConfiguration;
 import se.tink.backend.common.config.ServiceConfiguration;
-import se.tink.backend.core.ProviderConfiguration;
 
 import java.util.List;
 import java.util.Optional;

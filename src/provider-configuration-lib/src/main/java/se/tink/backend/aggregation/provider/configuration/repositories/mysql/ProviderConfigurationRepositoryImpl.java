@@ -1,9 +1,10 @@
 package se.tink.backend.aggregation.provider.configuration.repositories.mysql;
 
+import se.tink.backend.aggregation.provider.configuration.repositories.ProviderConfiguration;
+
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import se.tink.backend.core.ProviderConfiguration;
 
 public class ProviderConfigurationRepositoryImpl implements ProviderConfigurationRepositoryCustom {
     @PersistenceContext

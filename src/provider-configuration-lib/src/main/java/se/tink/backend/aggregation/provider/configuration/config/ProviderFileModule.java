@@ -13,7 +13,8 @@ import se.tink.backend.aggregation.provider.configuration.config.clusterprovider
 import se.tink.backend.aggregation.provider.configuration.config.clusterprovider.ClusterProviderListModel;
 import se.tink.backend.aggregation.provider.configuration.config.clusterprovider.ProviderConfigModel;
 import se.tink.backend.aggregation.provider.configuration.config.clusterprovider.ProviderSpecificationModel;
-import se.tink.backend.core.ProviderConfiguration;
+import se.tink.backend.aggregation.provider.configuration.repositories.ProviderConfiguration;
+
 
 import java.io.File;
 import java.io.IOException;
