@@ -97,21 +97,13 @@ public class CommerzbankApiClient {
         TransactionResultEntity transactionResultEntity = transactionOverview(productType, identifier, fromDate, toDate,
                 productBranch, 0);
         int page = 1;
-        while (canFetchMore(transactionResultEntity, page)) {
+        while (transactionResultEntity.canFetchNextPage(page)) {
             transactionResultEntity
                     .addAll(transactionOverview(productType, identifier, fromDate, toDate, productBranch, page));
 
             page++;
         }
         return transactionResultEntity;
-    }
-
-    private boolean canFetchMore(TransactionResultEntity transactionResultEntity, int page) {
-        if (transactionResultEntity == null) {
-            return true;
-        }
-
-        return transactionResultEntity.canFetchNextPage(page);
     }
 
     private TransactionResultEntity transactionOverview(String productType, String identifier, Date fromdate,
