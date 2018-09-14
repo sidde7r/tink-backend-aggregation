@@ -3,6 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.LoginRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.ResultEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.RootModel;
@@ -82,11 +85,47 @@ public class CommerzbankApiClient {
         }
     }
 
-    public TransactionResultEntity transactionOverview(String productType, String identifier, int page, String productBranch)
+    private String toCommerzDate(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat(CommerzbankConstants.DATE_FORMAT);
+        sdf.setTimeZone(TimeZone.getTimeZone(CommerzbankConstants.TIMEZONE_CET));
+        return sdf.format(date);
+    }
+
+    public TransactionResultEntity fetchAllPages(Date fromDate, Date toDate, String productType, String identifier,
+            String productBranch)
             throws JsonProcessingException {
+        TransactionResultEntity transactionResultEntity = null;
+        int page = 0;
+
+        while (canFetchMore(transactionResultEntity, page)) {
+            if (transactionResultEntity == null) {
+                transactionResultEntity = transactionOverview(productType, identifier, fromDate, toDate, productBranch, page);
+            } else {
+                transactionResultEntity
+                        .addAll(transactionOverview(productType, identifier, fromDate, toDate, productBranch, page));
+            }
+            page++;
+        }
+        return transactionResultEntity;
+    }
+
+    private boolean canFetchMore(TransactionResultEntity transactionResultEntity, int page) {
+        if (transactionResultEntity == null) {
+            return true;
+        }
+
+        return transactionResultEntity.shouldFetchNextPage(page);
+    }
+
+
+    public TransactionResultEntity transactionOverview(String productType, String identifier, Date fromdate,
+            Date toDate, String productBranch, int page)
+            throws JsonProcessingException {
+
         TransactionRequestBody transactionRequestBody = new TransactionRequestBody(
-                new SearchCriteriaDto(null, null, page, CommerzbankConstants.VALUES.AMOUNT_TYPE,
-                        30, null),
+                new SearchCriteriaDto(toCommerzDate(fromdate), toCommerzDate(toDate), page,
+                        CommerzbankConstants.VALUES.AMOUNT_TYPE,
+                        50, null),
                 new Identifier(productType, CommerzbankConstants.VALUES.CURRENCY_VALUE, identifier,
                         productBranch));
         String serialized = new ObjectMapper().writeValueAsString(transactionRequestBody);
@@ -96,7 +135,8 @@ public class CommerzbankApiClient {
 
         LOGGER.infoExtraLong(res, CommerzbankConstants.LOGTAG.TRANSACTION_RESPONSE);
 
-        TransactionResultEntity result = SerializationUtils.deserializeForLogging(res, TransactionModel.class).get().getResult();
+        TransactionResultEntity result = SerializationUtils.deserializeForLogging(res, TransactionModel.class).get()
+                .getResult();
 
         LOGGER.infoExtraLong(SerializationUtils.serializeToString(result),
                 CommerzbankConstants.LOGTAG.TRANSACTION_LOGGING);

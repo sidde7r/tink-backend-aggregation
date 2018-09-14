@@ -13,4 +13,17 @@ public class TransactionResultEntity {
     public List<TransactionEntity> getItems() {
         return items;
     }
+
+    public boolean shouldFetchNextPage(int currentPage) {
+        if (items == null || items.isEmpty()) {
+            return false;
+        }
+        return items.get(0).fetchNextPage(currentPage);
+    }
+
+    public void addAll(TransactionResultEntity transactionResultEntity) {
+        if (items != null && !items.isEmpty()) {
+            items.get(0).addAll(transactionResultEntity.getItems().get(0).getPfmTransactions());
+        }
+    }
 }

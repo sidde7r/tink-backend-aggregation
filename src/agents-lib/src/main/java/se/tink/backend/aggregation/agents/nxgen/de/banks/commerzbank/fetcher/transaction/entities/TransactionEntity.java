@@ -95,4 +95,14 @@ public class TransactionEntity implements PaginatorResponse {
         }
         return Optional.of(false);
     }
+
+    public void addAll(Collection<PfmTransactionsEntity> pfmTransactionsEntities) {
+        if (pfmTransactionsEntities != null && !pfmTransactionsEntities.isEmpty()) {
+            this.pfmTransactions.addAll(pfmTransactionsEntities);
+        }
+    }
+
+    public boolean fetchNextPage(int currentPage) {
+        return currentPage <= pageCount;
+    }
 }
