@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.HVBStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.rpc.AdvisorsList;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.HVBStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.WLApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.WLConfig;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.fetcher.WLFetcher;
@@ -24,11 +25,13 @@ public final class HVBTransactionalAccountFetcher implements AccountFetcher<Tran
     public Collection<TransactionalAccount> fetchAccounts() {
         final AccountResponse accountResponse = wlFetcher.getAccounts(AccountResponse.class);
         final AdvisorsList advisorsResponse = wlFetcher.getAccountHolders(AdvisorsList.class);
-        final HolderName holderName = new HolderName(advisorsResponse.getAccountOwner());
-        final Collection<TransactionalAccount> accounts = accountResponse.getTransactionalAccounts().stream()
-                .map(b -> b.setHolderName(holderName))
+        final Optional<HolderName> holderName = advisorsResponse.getAccountOwner()
+                .map(String::trim)
+                .map(HolderName::new);
+        final Collection<TransactionalAccount.Builder<?, ?>> accounts = accountResponse.getTransactionalAccounts();
+        accounts.forEach(account -> holderName.ifPresent(account::setHolderName));
+        return accounts.stream()
                 .map(TransactionalAccount.Builder::build)
                 .collect(Collectors.toSet());
-        return accounts;
     }
 }
