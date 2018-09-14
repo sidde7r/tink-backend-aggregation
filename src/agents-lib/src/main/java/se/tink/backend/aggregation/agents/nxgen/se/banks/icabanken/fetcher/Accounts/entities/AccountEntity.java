@@ -87,7 +87,7 @@ public class AccountEntity implements GeneralAccountEntity {
 
     @JsonIgnore
     private Amount getAvailableCredit() {
-        double availableCredit = Math.floor(availableAmount - currentAmount + outstandingAmount);
+        double availableCredit = Math.floor(creditLimit - (currentAmount + outstandingAmount));
         return Amount.inSEK(availableCredit);
     }
 
