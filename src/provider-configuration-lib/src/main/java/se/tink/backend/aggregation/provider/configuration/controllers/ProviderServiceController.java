@@ -37,10 +37,6 @@ public class ProviderServiceController {
         return translate(locale, providerConfigurationDAO.findAllByClusterIdAndMarket(clusterId.getId(), market));
     }
 
-    public List<ProviderConfiguration> listByMarket(Locale locale, String market) {
-        return translate(locale, providerConfigurationDAO.findAllByMarket(market));
-    }
-
     public Optional<ProviderConfiguration> getProviderByName(Locale locale, ClusterId clusterId, String providerName) {
         try {
             return Optional.of(translate(locale,
@@ -48,15 +44,6 @@ public class ProviderServiceController {
         } catch (NoResultException e) {
             log.warn("Could not find providerConfiguration for clusterId: %s, providerName: %s",
                     clusterId.getId(), providerName);
-        }
-        return Optional.empty();
-    }
-
-    public Optional<ProviderConfiguration> getProviderByName(Locale locale, String providerName) {
-        try {
-            return Optional.of(translate(locale, providerConfigurationDAO.findByName(providerName)));
-        } catch (NoResultException e) {
-            log.warn("Could not find providerConfiguration for providerName: %s", providerName);
         }
         return Optional.empty();
     }
