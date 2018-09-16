@@ -15,4 +15,5 @@ public interface ProviderConfigurationDAO {
 
     ProviderConfiguration findByName(String providerName);
 
+    void saveAndFlush(ProviderConfiguration provider);
 }

@@ -4,24 +4,24 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.provider.configuration.repositories.mysql.ProviderConfigurationRepository;
-import se.tink.backend.aggregation.provider.configuration.repositories.ProviderConfiguration;
-
+import se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration;
+import se.tink.backend.aggregation.provider.configuration.core.ProviderConfigurationDAO;
 
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+// FIXME: move business logic to controller instead of using DAO directly
 public class ProviderStatusesFetcher {
     private static final Logger log = LoggerFactory.getLogger(
             ProviderStatusesFetcher.class);
 
-    private final ProviderConfigurationRepository providerRepository;
     private final String market;
+    private final ProviderConfigurationDAO providerConfigurationDAO;
 
-    public ProviderStatusesFetcher(ProviderConfigurationRepository providerRepository, String market) {
-        this.providerRepository = providerRepository;
+    public ProviderStatusesFetcher(ProviderConfigurationDAO providerConfigurationDAO, String market) {
+        this.providerConfigurationDAO = providerConfigurationDAO;
         this.market = market;
     }
 
@@ -42,13 +42,13 @@ public class ProviderStatusesFetcher {
 
     private List<ProviderConfiguration> getProviders() {
         if (!Strings.isNullOrEmpty(market)) {
-            List<ProviderConfiguration> providers = providerRepository.findAllByMarket(market);
+            List<ProviderConfiguration> providers = providerConfigurationDAO.findAllByMarket(market);
             if (providers.isEmpty()) {
                 log.warn(String.format("Did not find any providers for supplied market '%s'", market));
             }
             return providers;
         }
 
-        return providerRepository.findAll();
+        return providerConfigurationDAO.findAll();
     }
 }
