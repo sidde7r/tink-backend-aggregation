@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+
+// FIXME: remove all code that has JSON IGNORE
 public class ProviderConfigurationDTO {
     @SuppressWarnings("serial")
     private static class CapabilityList extends ArrayList<Capability> {
