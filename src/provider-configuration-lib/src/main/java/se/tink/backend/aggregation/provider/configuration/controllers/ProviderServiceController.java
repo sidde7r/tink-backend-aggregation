@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration;
 import se.tink.backend.aggregation.provider.configuration.core.ProviderConfigurationDAO;
 
+// FIXME: move localization outside controller
 public class ProviderServiceController {
     private static final Logger log = LoggerFactory.getLogger(ProviderServiceController.class);
 
