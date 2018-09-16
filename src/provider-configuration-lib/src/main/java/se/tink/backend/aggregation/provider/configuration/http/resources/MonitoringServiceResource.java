@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.provider.configuration.resources;
+package se.tink.backend.aggregation.provider.configuration.http.resources;
 
 import se.tink.backend.aggregation.provider.configuration.api.MonitoringService;
 
