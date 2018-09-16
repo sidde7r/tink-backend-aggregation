@@ -9,7 +9,7 @@ import io.dropwizard.setup.Bootstrap;
 import net.sourceforge.argparse4j.inf.Namespace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.provider.configuration.config.clusterprovider.ProviderConfigModel;
+import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ProviderConfigModel;
 import se.tink.backend.aggregation.provider.configuration.repositories.mysql.ProviderConfigurationRepository;
 import se.tink.backend.aggregation.provider.configuration.repositories.ProviderConfiguration;
 import se.tink.backend.core.ProviderStatuses;
