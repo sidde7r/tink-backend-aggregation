@@ -1,6 +1,6 @@
-package se.tink.backend.aggregation.provider.configuration.repositories.mysql;
+package se.tink.backend.aggregation.provider.configuration.storage.repositories;
 
-import se.tink.backend.aggregation.provider.configuration.repositories.ProviderStatusConfiguration;
+import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderStatusConfiguration;
 
 import java.util.Optional;
 

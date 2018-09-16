@@ -1,10 +1,9 @@
-package se.tink.backend.aggregation.provider.configuration.repositories;
+package se.tink.backend.aggregation.provider.configuration.storage.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import se.tink.backend.core.ProviderStatuses;
 
 import javax.persistence.*;
-import java.util.Optional;
 
 @Entity
 @Table(name = "provider_status_configurations")

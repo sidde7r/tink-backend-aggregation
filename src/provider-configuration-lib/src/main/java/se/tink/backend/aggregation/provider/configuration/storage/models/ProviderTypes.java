@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.provider.configuration.repositories;
+package se.tink.backend.aggregation.provider.configuration.storage.models;
 
 
 public enum ProviderTypes {

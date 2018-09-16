@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.provider.configuration.config;
+package se.tink.backend.aggregation.provider.configuration.storage.module;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
@@ -9,11 +9,11 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.provider.configuration.config.clusterprovider.ClusterProviderConfigurationModel;
-import se.tink.backend.aggregation.provider.configuration.config.clusterprovider.ClusterProviderListModel;
-import se.tink.backend.aggregation.provider.configuration.config.clusterprovider.ProviderConfigModel;
-import se.tink.backend.aggregation.provider.configuration.config.clusterprovider.ProviderSpecificationModel;
-import se.tink.backend.aggregation.provider.configuration.repositories.ProviderConfiguration;
+import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
+import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ClusterProviderConfigurationModel;
+import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ClusterProviderListModel;
+import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ProviderConfigModel;
+import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ProviderSpecificationModel;
 
 
 import java.io.File;

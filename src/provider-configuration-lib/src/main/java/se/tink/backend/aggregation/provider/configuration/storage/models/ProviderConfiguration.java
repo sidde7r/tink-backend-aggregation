@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.provider.configuration.repositories;
+package se.tink.backend.aggregation.provider.configuration.storage.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -85,9 +85,9 @@ public class ProviderConfiguration {
     }
 
     @Override
-    public Provider clone() {
+    public ProviderConfiguration clone() {
         try {
-            return (Provider) super.clone();
+            return (ProviderConfiguration) super.clone();
         } catch (CloneNotSupportedException e) {
             return null;
         }
@@ -327,7 +327,7 @@ public class ProviderConfiguration {
 
     @Override
     public String toString() {
-        return MoreObjects.toStringHelper(Provider.class).add("name", name).toString();
+        return MoreObjects.toStringHelper(ProviderConfiguration.class).add("name", name).toString();
     }
 
     @JsonIgnore
