@@ -1,9 +1,9 @@
-package se.tink.backend.aggregation.provider.configuration.config;
+package se.tink.backend.aggregation.provider.configuration.storage.module;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.provider.configuration.repositories.ProviderConfiguration;
+import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
 
 import java.io.IOException;
 import java.util.List;
