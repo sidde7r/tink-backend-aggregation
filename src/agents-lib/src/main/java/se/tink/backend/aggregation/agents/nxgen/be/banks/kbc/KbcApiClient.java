@@ -110,7 +110,7 @@ public class KbcApiClient {
 
     private void notEnoughFundsCancelTransfer(HeaderDto header, String resultValue) {
         if(resultValue.equalsIgnoreCase(KbcConstants.ResultCode.ZERO_TWO)
-                && matchesErrorMessage(header.getResultMessage(), KbcConstants.ErrorMessage.ACCOUNT_HAS_NO_FUNDS) ) {
+                && matchesErrorMessage(header.getResultMessage(), KbcConstants.ErrorMessage.ACCOUNT_HAS_INSUFFICIENT_FUNDS) ) {
             cancelTransfer(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT.getKey().get());
         }
     }
