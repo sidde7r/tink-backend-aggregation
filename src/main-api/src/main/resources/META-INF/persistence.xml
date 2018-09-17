@@ -62,8 +62,7 @@
 		<class>se.tink.backend.core.ClusterHostConfiguration</class>
 		<class>se.tink.backend.core.ClusterCryptoConfiguration</class>
 		<class>se.tink.backend.core.ClusterProviderConfiguration</class>
-		<class>se.tink.backend.aggregation.provider.configuration.repositories.ProviderConfiguration</class>
-		<class>se.tink.backend.aggregation.provider.configuration.repositories.ProviderStatusConfiguration</class>
+		<class>se.tink.backend.aggregation.provider.configuration.storage.models.ProviderStatusConfiguration</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<property name="hibernate.hbm2ddl.auto" value="validate" />
