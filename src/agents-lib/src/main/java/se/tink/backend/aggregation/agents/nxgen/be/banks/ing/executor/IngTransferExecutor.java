@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transaction
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.core.Amount;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
@@ -40,8 +41,12 @@ public class IngTransferExecutor implements BankTransferExecutor {
 
         AccountEntity sourceAccount = tryFindOwnAccount(accounts, transfer.getSource())
                 .orElseThrow(() -> TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                                .setMessage(TransferExecutionException.EndUserMessage.INVALID_SOURCE.getKey().get())
-                                .build());
+                        .setMessage(TransferExecutionException.EndUserMessage.INVALID_SOURCE.getKey().get())
+                        .build());
+
+        if (immediateTransfer(transfer)) {
+            validateAmountCoveredByBalance(sourceAccount, transfer.getAmount());
+        }
 
         Optional<AccountEntity> destinationAccount = tryFindOwnAccount(accounts, transfer.getDestination());
 
@@ -52,7 +57,18 @@ public class IngTransferExecutor implements BankTransferExecutor {
         }
 
         new IngExternalTransferExecutor(apiClient, loginResponse, persistentStorage)
-                    .executeExternalTransfer(transfer, sourceAccount);
+                .executeExternalTransfer(transfer, sourceAccount);
+    }
+
+    private boolean immediateTransfer(Transfer transfer) {
+        return transfer.getDueDate() == null;
+    }
+
+    private void validateAmountCoveredByBalance(AccountEntity sourceAccount, Amount amount) {
+        if (Amount.inEUR(IngHelper.parseAmountStringToDouble(sourceAccount.getBalance()))
+                .isLessThan(amount.doubleValue())) {
+            IngTransferHelper.cancelTransfer(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT.getKey().get());
+        }
     }
 
     /**
