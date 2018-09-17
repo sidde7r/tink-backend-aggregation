@@ -98,8 +98,6 @@ public class ErsteBankApiClient {
                 .queryParam(ErsteBankConstants.QUERYPARAMS.FEATURES, ErsteBankConstants.QUERYPARAMS.FEATURES_ORDERS)
                 .get(AccountResponse.class);
 
-        storage.put(ErsteBankConstants.STORAGE.TRANSACTIONSURL, response.getId());
-
         return response;
     }
 
@@ -107,10 +105,10 @@ public class ErsteBankApiClient {
         return String.format(ErsteBankConstants.PATTERN.TRANSACTION_FORMAT, url);
     }
 
-    public TransactionsResponse fetchTransactions(int page){
+    public TransactionsResponse fetchTransactions(int page, String accountUrl){
         TokenEntity token = getTokenFromStorage();
         String bearer = ErsteBankConstants.HEADERS.BEARER + token.getToken();
-        String resource = getTransactionUrl(storage.get(ErsteBankConstants.STORAGE.TRANSACTIONSURL));
+        String resource = getTransactionUrl(accountUrl);
 
         return getRequestWithHeaders(ErsteBankConstants.URLS.GEORGE_GO_BASE, resource,
                 ErsteBankConstants.HEADERS.ACCEPT, bearer)
