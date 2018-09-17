@@ -22,4 +22,7 @@ public class ProviderStatusConfiguration {
         return status;
     }
 
+    public void setStatus(ProviderStatuses status) {
+        this.status = status;
+    }
 }

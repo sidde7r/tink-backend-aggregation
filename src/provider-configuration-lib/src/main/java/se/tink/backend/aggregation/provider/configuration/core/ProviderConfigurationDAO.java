@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.provider.configuration.core;
 
+import se.tink.backend.core.ProviderStatuses;
+
 import java.util.List;
 
 public interface ProviderConfigurationDAO {
@@ -15,5 +17,5 @@ public interface ProviderConfigurationDAO {
 
     ProviderConfiguration findByName(String providerName);
 
-    void saveAndFlush(ProviderConfiguration provider);
+    void updateStatus(String providerName, ProviderStatuses providerStatus);
 }

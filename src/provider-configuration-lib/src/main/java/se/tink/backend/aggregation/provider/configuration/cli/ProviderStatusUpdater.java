@@ -19,14 +19,6 @@ public class ProviderStatusUpdater {
     public void update(String providerName, ProviderStatuses providerStatus) {
         log.info(String.format("Attempting to update status of provider '%s' to '%s'",
                 providerName, providerStatus));
-
-        ProviderConfiguration provider = providerConfigurationDAO.findByName(providerName);
-        if (provider != null) {
-            provider.setStatus(providerStatus);
-            providerConfigurationDAO.saveAndFlush(provider);
-            log.info("Provider status updated");
-        } else {
-            log.warn(String.format("Provider '%s' could not be found.", providerName));
-        }
+        providerConfigurationDAO.updateStatus(providerName, providerStatus);
     }
 }

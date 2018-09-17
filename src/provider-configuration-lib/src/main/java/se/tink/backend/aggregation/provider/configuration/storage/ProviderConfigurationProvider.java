@@ -78,10 +78,19 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
         }
     }
 
-    private ProviderConfiguration setProviderConfigurationStatus(ProviderConfiguration providerConfiguration){
-        Optional<ProviderStatusConfiguration> statuses = providerStatusConfigurationRepository.getProviderStatusConfiguration(providerConfiguration.getName());
-//        return new ProviderConfigurationDTOConverter(providerConfiguration).convert(statuses);
-//        return ProviderConfigurationConverter.translate(providerConfiguration); // FIXME
-        return null;
+    private Optional<ProviderStatusConfiguration> getProviderStatus(ProviderConfiguration providerConfiguration){
+        return providerStatusConfigurationRepository.getProviderStatusConfiguration(providerConfiguration.getName());
+    }
+
+    @Override
+    public void updateStatus(String providerName, ProviderStatuses providerStatus) {
+        ProviderStatusConfiguration providerStatusConfiguration = providerStatusConfigurationRepository.getOne(providerName);
+        if (providerStatusConfiguration != null) {
+            providerStatusConfiguration.setStatus(providerStatus);
+            providerStatusConfigurationRepository.save(providerStatusConfiguration);
+            logger.info("Provider status updated");
+        } else {
+            logger.warn(String.format("Provider '%s' could not be found.", providerName));
+        }
     }
 }
