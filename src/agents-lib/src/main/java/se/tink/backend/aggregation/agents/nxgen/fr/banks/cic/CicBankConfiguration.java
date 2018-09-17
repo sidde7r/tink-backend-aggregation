@@ -14,11 +14,6 @@ public class CicBankConfiguration implements EuroInformationConfiguration {
     }
 
     @Override
-    public boolean usesPagination() {
-        return true;
-    }
-
-    @Override
     public String getAppVersion() {
         return CicBankConstants.APP_VERSION;
     }

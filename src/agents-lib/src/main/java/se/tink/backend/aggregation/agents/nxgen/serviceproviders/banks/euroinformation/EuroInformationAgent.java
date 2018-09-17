@@ -55,7 +55,7 @@ public abstract class EuroInformationAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
-                EuroInformationPasswordAuthenticator.create(this.apiClient));
+                EuroInformationPasswordAuthenticator.create(this.apiClient, this.sessionStorage));
     }
 
     @Override
@@ -70,7 +70,7 @@ public abstract class EuroInformationAgent extends NextGenerationAgent {
     }
 
     private TransactionFetcher<TransactionalAccount> getTransactionFetcher() {
-        if (this.config.usesPagination()) {
+        if (this.sessionStorage.get(EuroInformationConstants.Tags.PFM_ENABLED, Boolean.class).orElse(false)) {
             return new TransactionFetcherController<>(transactionPaginationHelper,
                     new TransactionKeyPaginationController(
                             EuroInformationOperationsFetcher.create(this.apiClient)));

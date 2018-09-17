@@ -35,6 +35,7 @@ public class EuroInformationConstants {
         public static final String WEB_ID = "webId";
         public static final String INVESTMENT_ACCOUNTS = "investmentAccounts";
         public static final String INVESTMENT_ACCOUNT = "investmentAccountDetails";
+        public static final String PFM_ENABLED = "pfm";
     }
 
     public static class LoggingTags {
