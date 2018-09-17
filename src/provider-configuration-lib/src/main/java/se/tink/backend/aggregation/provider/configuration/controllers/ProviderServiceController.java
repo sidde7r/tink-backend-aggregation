@@ -23,15 +23,18 @@ public class ProviderServiceController {
     }
 
     public List<ProviderConfiguration> list(Locale locale) {
-        return Localizator.translate(locale, providerConfigurationDAO.findAll());
+        List<ProviderConfiguration> providerConfigurationList = providerConfigurationDAO.findAll();
+        return Localizator.translate(locale, providerConfigurationList);
     }
 
     public List<ProviderConfiguration> list(Locale locale, ClusterId clusterId) {
-        return Localizator.translate(locale, providerConfigurationDAO.findAllByClusterId(clusterId.getId()));
+        List<ProviderConfiguration> providerConfigurationList = providerConfigurationDAO.findAllByClusterId(clusterId.getId());
+        return Localizator.translate(locale, providerConfigurationList);
     }
 
     public List<ProviderConfiguration> listByMarket(Locale locale, ClusterId clusterId, String market) {
-        return Localizator.translate(locale, providerConfigurationDAO.findAllByClusterIdAndMarket(clusterId.getId(), market));
+        List<ProviderConfiguration> providerConfigurationList = providerConfigurationDAO.findAllByClusterIdAndMarket(clusterId.getId(), market);
+        return Localizator.translate(locale, providerConfigurationList);
     }
 
     public Optional<ProviderConfiguration> getProviderByName(Locale locale, ClusterId clusterId, String providerName) {
