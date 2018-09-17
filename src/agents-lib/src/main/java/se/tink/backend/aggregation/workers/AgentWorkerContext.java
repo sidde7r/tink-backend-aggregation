@@ -28,7 +28,6 @@ import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -391,6 +390,11 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
                 systemServiceFactory.getProcessService()
                         .generateStatisticsAndActivityAsynchronously(generateStatisticsReq);
             }
+            return;
+        }
+
+        // Don't update transactions if we didn't get any
+        if (transactions.isEmpty()) {
             return;
         }
 
