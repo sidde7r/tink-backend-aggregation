@@ -26,6 +26,10 @@ public class FutureTransactionDto {
     private TypeValuePair descriptionLine02;
     private TypeValuePair detailIndicator;
 
+    public TypeValuePair getExecutionDate() {
+        return executionDate;
+    }
+
     public UpcomingTransaction toUpcomingTransaction() {
         return UpcomingTransaction.builder()
                 .setAmount(Amount.inEUR(Double.valueOf(amount.getValue())))
