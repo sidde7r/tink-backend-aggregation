@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.api.CredentialsServi
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.ProcessService;
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.UpdateService;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.GenerateStatisticsAndActivitiesRequest;
+import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.SupplementalInformationRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.SupplementalInformationResponse;
@@ -157,6 +158,14 @@ public class AggregationControllerAggregationClient {
 
     public Response processAccounts(ClusterInfo clusterInfo, ProcessAccountsRequest request) {
         return getUpdateService(clusterInfo).processAccounts(request);
+    }
+
+    public Response optOutAccounts(OptOutAccountsRequest request) {
+        return getUpdateServiceUsingServiceDiscovery().optOutAccounts(request);
+    }
+
+    public Response optOutAccounts(ClusterInfo clusterInfo, OptOutAccountsRequest request) {
+        return getUpdateService(clusterInfo).optOutAccounts(request);
     }
 
     public Response updateCredentials(UpdateCredentialsStatusRequest request) {

@@ -487,7 +487,8 @@ public class AgentWorkerOperationFactory {
         commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState));
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)));
-        commands.addAll(createWhitelistRefreshableItemsChain(request, context, request.getItemsToRefresh()));
+        commands.addAll(
+                createWhitelistRefreshableItemsChain(request, context, clusterInfo, request.getItemsToRefresh()));
 
         log.debug("Created whitelist refresh operation chain for credential");
         return new AgentWorkerOperation(agentWorkerOperationState, metricsName, request, commands, context);
@@ -527,14 +528,15 @@ public class AgentWorkerOperationFactory {
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)));
         commands.addAll(
-                createWhitelistRefreshableItemsChain(request, context, request.getItemsToRefresh()));
+                createWhitelistRefreshableItemsChain(request, context, clusterInfo, request.getItemsToRefresh()));
 
         return new AgentWorkerOperation(agentWorkerOperationState, operationMetricName, request,
                 commands, context);
     }
 
     private ImmutableList<AgentWorkerCommand> createWhitelistRefreshableItemsChain(CredentialsRequest request,
-            AgentWorkerContext context, Set<RefreshableItem> itemsToRefresh) {
+            AgentWorkerContext context, ClusterInfo clusterInfo,
+            Set<RefreshableItem> itemsToRefresh) {
 
         // Convert legacy items to corresponding new refreshable items
         itemsToRefresh = convertLegacyItems(itemsToRefresh);
@@ -563,7 +565,8 @@ public class AgentWorkerOperationFactory {
             // accounts they want to whitelist.
             if (request instanceof ConfigureWhitelistInformationRequest) {
                 commands.add(new RequestUserOptInAccountsAgentWorkerCommand(context,
-                        (ConfigureWhitelistInformationRequest) request));
+                        (ConfigureWhitelistInformationRequest) request, clusterInfo,
+                        aggregationControllerAggregationClient));
             }
 
             // Update the accounts on system side

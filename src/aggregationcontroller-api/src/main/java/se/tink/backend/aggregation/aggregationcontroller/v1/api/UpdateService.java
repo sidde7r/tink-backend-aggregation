@@ -9,6 +9,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import se.tink.api.annotations.Team;
 import se.tink.api.annotations.TeamOwnership;
+import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.SupplementalInformationRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.SupplementalInformationResponse;
@@ -63,6 +64,13 @@ public interface UpdateService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response processAccounts(ProcessAccountsRequest request);
+
+    @POST
+    @Path("/accounts/opt-out")
+    @TeamOwnership(Team.DATA)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    Response optOutAccounts(OptOutAccountsRequest request);
 
     @POST
     @Path("/credentials/update")

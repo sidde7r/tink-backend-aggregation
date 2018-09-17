@@ -20,6 +20,7 @@ import se.tink.backend.rpc.DeleteAccountRequest;
 import se.tink.backend.rpc.DeleteUserRequest;
 import se.tink.backend.rpc.SupplementalInformationRequest;
 import se.tink.backend.rpc.SupplementalInformationResponse;
+import se.tink.backend.system.rpc.OptOutAccountsRequest;
 import se.tink.backend.system.rpc.ProcessAccountsRequest;
 import se.tink.backend.system.rpc.Transaction;
 import se.tink.backend.system.rpc.UpdateAccountRequest;
@@ -149,6 +150,17 @@ public interface UpdateService {
             MediaType.APPLICATION_JSON
     })
     public Response processAccounts(ProcessAccountsRequest request);
+
+    @POST
+    @Path("/accounts/opt-out")
+    @TeamOwnership(Team.DATA)
+    @Consumes({
+            MediaType.APPLICATION_JSON
+    })
+    @Produces({
+            MediaType.APPLICATION_JSON
+    })
+    Response optOutAccounts(OptOutAccountsRequest request);
 
     @PUT
     @Path("/credentials/sensitive")
