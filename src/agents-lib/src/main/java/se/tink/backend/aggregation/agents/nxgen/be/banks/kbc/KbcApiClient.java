@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import org.assertj.core.util.Preconditions;
+import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.ActivationInstanceRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.ActivationInstanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.ActivationLicenseRequest;
@@ -57,6 +58,7 @@ import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -101,8 +103,28 @@ public class KbcApiClient {
         String resultValue = getResultCodeOrThrow(header);
 
         if (!Objects.equals(expectedValue, resultValue)) {
+            notEnoughFundsCancelTransfer(header, resultValue);
             throwInvalidResultCodeError(header, resultValue);
         }
+    }
+
+    private void notEnoughFundsCancelTransfer(HeaderDto header, String resultValue) {
+        if(resultValue.equalsIgnoreCase(KbcConstants.ResultCode.ZERO_TWO)
+                && matchesErrorMessage(header.getResultMessage(), KbcConstants.ErrorMessage.ACCOUNT_HAS_INSUFFICIENT_FUNDS) ) {
+            cancelTransfer(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT.getKey().get());
+        }
+    }
+
+    private void cancelTransfer(String message) throws TransferExecutionException {
+        throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setEndUserMessage(message)
+                .setMessage(message)
+                .build();
+    }
+
+    private boolean matchesErrorMessage(TypeValuePair e, String errorMessage) {
+        return e.getValue() != null &&
+                e.getValue().toLowerCase().contains(errorMessage);
     }
 
     private void throwInvalidResultCodeError(HeaderDto header, String resultCode) {

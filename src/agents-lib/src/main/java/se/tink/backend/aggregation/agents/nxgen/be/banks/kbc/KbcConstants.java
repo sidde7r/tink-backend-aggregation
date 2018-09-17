@@ -188,6 +188,7 @@ public class KbcConstants {
         public static final String NOT_A_CUSTOMER = "managing branch not found";
         public static final String INCORRECT_LOGIN_CODE = "you have entered the wrong login code";
         public static final String INCORRECT_SIGN_CODE = "your sign code is incorrect";
+        public static final String ACCOUNT_HAS_INSUFFICIENT_FUNDS = "account has no funds";
     }
 
     public enum UserMessage implements LocalizableEnum {
