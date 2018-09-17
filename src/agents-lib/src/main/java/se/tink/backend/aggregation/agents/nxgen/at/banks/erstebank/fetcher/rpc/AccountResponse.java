@@ -22,53 +22,8 @@ public class AccountResponse {
     @JsonProperty("products")
     private ProductListEntity productListEntity;
 
-    @JsonIgnore
-    Logger logger = LoggerFactory.getLogger(AccountResponse.class);
-
-    private AccountTypes getType(){
-        String accountType = productListEntity.get(0).getType().toUpperCase();
-        switch(accountType){
-        case ErsteBankConstants.ACCOUNTYPE.CHECKING:
-            return AccountTypes.CHECKING;
-        default:
-            logger.warn("{} {}", ErsteBankConstants.LOGTAG.UNKNOWN_ACCOUNT_TYPE, accountType);
-            return AccountTypes.CHECKING;
-        }
-    }
-
-    public String getId(){
-        return productListEntity.get(0).getId();
-    }
-
-    public String getAccountNumber(){return productListEntity.get(0).getIdentifier();}
-
-    private Amount getTinkBalance(){
-        return productListEntity.get(0).getAmountEntity().getTinkBalance();
-    }
-
-    private String getIban(){
-        return productListEntity.get(0).getAccountInfoEntity().getBankConnectionEntity().getIban();
-    }
-
-    private String getName(){
-        return productListEntity.get(0).getDescription();
-    }
-
-    private HolderName getHolderName(){
-        return new HolderName(productListEntity.get(0).getTitle());
-    }
-
-
-    public List<TransactionalAccount> toTransactionalAccount(){
-
-        TransactionalAccount account = TransactionalAccount.builder(getType(), getIban(), getTinkBalance())
-                .setAccountNumber(getAccountNumber())
-                .setName(getName())
-                .setHolderName(getHolderName())
-                .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, getIban()))
-                .build();
-
-        return Collections.singletonList(account);
+    public List<TransactionalAccount> toTransactionalAccounts() {
+        return productListEntity.toTransactionalAccounts();
     }
 
 }

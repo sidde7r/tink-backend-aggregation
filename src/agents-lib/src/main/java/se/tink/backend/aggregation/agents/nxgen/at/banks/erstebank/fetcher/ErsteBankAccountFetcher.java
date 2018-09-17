@@ -15,6 +15,6 @@ public class ErsteBankAccountFetcher implements AccountFetcher<TransactionalAcco
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return this.ersteBankApiClient.fetchAccounts().toTransactionalAccount();
+        return this.ersteBankApiClient.fetchAccounts().toTransactionalAccounts();
     }
 }
