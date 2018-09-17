@@ -2,11 +2,14 @@ package se.tink.backend.aggregation.provider.configuration.storage;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.provider.configuration.storage.converter.StorageProviderConfigurationConverter;
 import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
 import se.tink.backend.aggregation.provider.configuration.core.ProviderConfigurationDAO;
 import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderStatusConfiguration;
 import se.tink.backend.aggregation.provider.configuration.storage.repositories.ProviderStatusConfigurationRepository;
+import se.tink.backend.core.ProviderStatuses;
 
 import java.util.List;
 import java.util.Map;
@@ -19,6 +22,8 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
     private final Map<String, List<String>> providerEnabledByCluster;
     private final Map<String, Map<String, ProviderConfiguration>> providerConfigurationByCluster;
     private final ProviderStatusConfigurationRepository providerStatusConfigurationRepository;
+
+    private final static Logger logger = LoggerFactory.getLogger(ProviderConfigurationProvider.class);
 
     @Inject
     public ProviderConfigurationProvider(
@@ -34,33 +39,32 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
 
     public List<se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration> findAll(){
         return providerConfigurationByName.values().stream()
-                .map(StorageProviderConfigurationConverter::translate)
-//                .map(ProviderConfigurationDAO:) TODO: set status
+                .map(provider -> StorageProviderConfigurationConverter.translate(provider, getProviderStatus(provider)))
                 .collect(Collectors.toList());
     }
 
     public List<se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration> findAllByClusterId(String clusterId){
         return providerEnabledByCluster.get(clusterId).stream()
                 .map(providerName -> getProviderConfigurationForCluster(clusterId, providerName))
-                .map(StorageProviderConfigurationConverter::translate)
-//                .map(this::setProviderConfigurationStatus) TODO: set status
+                .map(provider -> StorageProviderConfigurationConverter.translate(provider, getProviderStatus(provider)))
                 .collect(Collectors.toList());
     }
 
     public List<se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration> findAllByMarket(String market) {
         return providerConfigurationByName.values().stream()
                 .filter(providerConfiguration -> Objects.equals(market, providerConfiguration.getMarket()))
-                .map(StorageProviderConfigurationConverter::translate)
-//                .map(this::setProviderConfigurationStatus) TODO: set status
+                .map(provider -> StorageProviderConfigurationConverter.translate(provider, getProviderStatus(provider)))
                 .collect(Collectors.toList());
     }
 
     public se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration findByClusterIdAndProviderName(String clusterId, String providerName) {
-        return StorageProviderConfigurationConverter.translate(setProviderConfigurationStatus(getProviderConfigurationForCluster(clusterId, providerName)));
+        ProviderConfiguration providerConfiguration = getProviderConfigurationForCluster(clusterId, providerName);
+        return StorageProviderConfigurationConverter.translate(providerConfiguration, getProviderStatus(providerConfiguration));
     }
 
     public se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration findByName(String providerName) {
-        return StorageProviderConfigurationConverter.translate(setProviderConfigurationStatus(providerConfigurationByName.get(providerName)));
+        ProviderConfiguration providerConfiguration = providerConfigurationByName.get(providerName);
+        return StorageProviderConfigurationConverter.translate(providerConfiguration, getProviderStatus(providerConfiguration));
     }
 
     public List<se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration> findAllByClusterIdAndMarket(String clusterId, String market) {
