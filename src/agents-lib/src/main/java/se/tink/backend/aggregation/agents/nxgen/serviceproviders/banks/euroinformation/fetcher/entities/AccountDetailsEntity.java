@@ -8,9 +8,11 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationUtils;
+import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.core.Amount;
 
+@JsonObject
 @XmlRootElement(name = "compte")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class AccountDetailsEntity {
