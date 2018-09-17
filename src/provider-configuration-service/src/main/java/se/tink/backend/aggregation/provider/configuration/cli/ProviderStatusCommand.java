@@ -6,7 +6,7 @@ import io.dropwizard.setup.Bootstrap;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 import net.sourceforge.argparse4j.inf.Subparsers;
-import se.tink.backend.aggregation.provider.configuration.repositories.mysql.ProviderConfigurationRepository;
+import se.tink.backend.aggregation.provider.configuration.core.ProviderConfigurationDAO;
 import se.tink.backend.core.ProviderStatuses;
 import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.libraries.cli.printutils.CliPrintUtils;
@@ -64,13 +64,13 @@ public class ProviderStatusCommand extends ProviderConfigurationCommand<ServiceC
 
         boolean updateProviderStatus = !Strings.isNullOrEmpty(providerName) && providerStatus != null;
 
-        ProviderConfigurationRepository providerConfigurationRepository = injector.getInstance(
-                ProviderConfigurationRepository.class);
+        ProviderConfigurationDAO providerConfigurationDAO = injector.getInstance(
+                ProviderConfigurationDAO.class);
         if (updateProviderStatus) {
-            new ProviderStatusUpdater(providerConfigurationRepository).update(providerName, providerStatus);
+            new ProviderStatusUpdater(providerConfigurationDAO).update(providerName, providerStatus);
         }
         if (namespace.getBoolean(SHOW_FIELD)){
-            new ProviderStatusesFetcher(providerConfigurationRepository, market).fetch(CliPrintUtils::printTable);
+            new ProviderStatusesFetcher(providerConfigurationDAO, market).fetch(CliPrintUtils::printTable);
         }
     }
 }
