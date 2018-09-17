@@ -5,6 +5,9 @@ import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.authenticator.rpc.AuthenticateCredentialsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.entities.CardEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.entities.CreditCardRepositionEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.rpc.CreditCardDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.rpc.SantanderEsCreditCardDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.rpc.SantanderEsCreditCardTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.entities.RepositionEntity;
@@ -58,24 +61,31 @@ public class SantanderEsApiClient {
         );
     }
 
-    public String fetchCreditCardDetails(String userDataXml, String cardNumber) {
+    public CreditCardDetailsResponse fetchCreditCardDetails(String userDataXml, String cardNumber) {
         String creditCardDetailsRequest =
                 SantanderEsCreditCardDetailsRequest.create(tokenCredential, userDataXml, cardNumber);
 
-        return postSoapMessage(SantanderEsConstants.Urls.SCH_BAMOBI,
+        String soapResponseString = postSoapMessage(SantanderEsConstants.Urls.SCH_BAMOBI,
                 SantanderEsConstants.Urls.SCH_BAMOBI.toString(),
                 creditCardDetailsRequest);
+
+        return SantanderEsXmlUtils.deserializeFromSoapString(soapResponseString,
+                SantanderEsConstants.NodeTags.METHOD_RESULT,
+                CreditCardDetailsResponse.class);
     }
 
-    public String fetchCreditCardTransactions(String userDataXml, CardEntity card,
-            LocalDate fromDate, LocalDate toDate, boolean pagination) {
+    public CreditCardTransactionsResponse fetchCreditCardTransactions(String userDataXml, CardEntity card,
+            LocalDate fromDate, LocalDate toDate, CreditCardRepositionEntity pagination) {
         String creditCardTransactionsRequest = SantanderEsCreditCardTransactionsRequest
-                .create(tokenCredential, userDataXml, card.getGeneralInfo().getContractId(),
-                        card.getCardNumber(), fromDate, toDate, pagination);
+                .create(tokenCredential, userDataXml, card, fromDate, toDate, pagination);
 
-        return postSoapMessage(SantanderEsConstants.Urls.SCH_BAMOBI,
-                SantanderEsConstants.Urls.SCH_BAMOBI.toString(),
-                creditCardTransactionsRequest);
+        String soapResponseString = postSoapMessage(SantanderEsConstants.Urls.SCH_BAMOBI,
+        SantanderEsConstants.Urls.SCH_BAMOBI.toString(),
+        creditCardTransactionsRequest);
+
+        return SantanderEsXmlUtils.deserializeFromSoapString(soapResponseString,
+                SantanderEsConstants.NodeTags.METHOD_RESULT,
+                CreditCardTransactionsResponse.class);
     }
 
     private String postSoapMessage(URL url, String soapAction, String body) {

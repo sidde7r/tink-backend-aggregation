@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRe
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
@@ -58,7 +59,8 @@ public class SantanderEsAgent extends NextGenerationAgent {
 
         return Optional.of(
                 new CreditCardRefreshController(metricRefreshController, updateController,
-                        creditcardFetcher, creditcardFetcher)
+                        creditcardFetcher, new TransactionFetcherController<>(transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(creditcardFetcher)))
         );
     }
 
