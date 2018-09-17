@@ -5,6 +5,8 @@ import se.tink.backend.aggregation.agents.utils.log.LogTag;
 public class CommerzbankConstants {
 
     public static final String MULTIPLE_SPACES = "  ";
+    public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+    public static final String TIMEZONE_CET = "CET";
 
     public static class URLS {
         public static final String HOST = "https://app.commerzbank.de";
@@ -65,6 +67,7 @@ public class CommerzbankConstants {
         public static final LogTag TRANSACTION_RESPONSE = LogTag.from("#commerzbank_transaction_response");
         public static final LogTag CREDIT_CARD_FETCHING_ERROR = LogTag.from("#commerzbank_credit_card_fetching_error");
         public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("#commerzbank_unknown_account_type");
+        public static final LogTag TRANSACTION_FETCHING_ERROR = LogTag.from("#commerzbank_transaction_fetching_error");
     }
 
 }

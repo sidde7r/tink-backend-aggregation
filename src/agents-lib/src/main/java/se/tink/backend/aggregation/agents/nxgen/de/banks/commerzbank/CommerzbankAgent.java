@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRe
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
@@ -34,8 +34,7 @@ public class CommerzbankAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
@@ -45,25 +44,23 @@ public class CommerzbankAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-
         return Optional.of(new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
                 new CommerzbankAccountFetcher(apiClient),
                 new TransactionFetcherController<>(transactionPaginationHelper,
-                        new TransactionPagePaginationController<>(
-                                new CommerzbankTransactionFetcher(apiClient), 0))));
+                        new TransactionDatePaginationController<>(
+                                new CommerzbankTransactionFetcher(apiClient)))));
     }
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        CommerzbankCreditCardFetcher accountFetcher = new CommerzbankCreditCardFetcher(apiClient);
         return Optional.of(
                 new CreditCardRefreshController(metricRefreshController, updateController,
                         new CommerzbankCreditCardFetcher(apiClient),
                         new TransactionFetcherController<>(transactionPaginationHelper,
-                                new TransactionPagePaginationController<>(
-                                        new CommerzbankCreditCardFetcher(apiClient), 1)))
+                                new TransactionDatePaginationController<>(
+                                        new CommerzbankCreditCardFetcher(apiClient))))
         );
     }
 

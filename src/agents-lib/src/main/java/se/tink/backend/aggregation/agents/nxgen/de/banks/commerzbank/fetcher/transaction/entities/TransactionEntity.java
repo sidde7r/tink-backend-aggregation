@@ -80,7 +80,7 @@ public class TransactionEntity implements PaginatorResponse {
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        if(pfmTransactions == null){
+        if (pfmTransactions == null) {
             return Collections.EMPTY_LIST;
         }
         return pfmTransactions.stream()
@@ -90,6 +90,16 @@ public class TransactionEntity implements PaginatorResponse {
 
     @Override
     public Optional<Boolean> canFetchMore() {
-        return Optional.of(totalTransactions > 0);
+        return Optional.of(getPageCount() > 0);
+    }
+
+    public void addAll(Collection<PfmTransactionsEntity> pfmTransactionsEntities) {
+        if (pfmTransactionsEntities != null && !pfmTransactionsEntities.isEmpty()) {
+            this.pfmTransactions.addAll(pfmTransactionsEntities);
+        }
+    }
+
+    public boolean canFetchNextPage(int currentPage) {
+        return currentPage <= pageCount;
     }
 }

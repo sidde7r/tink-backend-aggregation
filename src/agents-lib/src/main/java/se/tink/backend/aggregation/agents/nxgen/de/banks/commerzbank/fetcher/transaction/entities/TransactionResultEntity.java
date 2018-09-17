@@ -13,4 +13,10 @@ public class TransactionResultEntity {
     public List<TransactionEntity> getItems() {
         return items;
     }
+
+    public void addAll(TransactionResultEntity transactionResultEntity) {
+        if (items != null && !items.isEmpty()) {
+            items.get(0).addAll(transactionResultEntity.getItems().get(0).getPfmTransactions());
+        }
+    }
 }
