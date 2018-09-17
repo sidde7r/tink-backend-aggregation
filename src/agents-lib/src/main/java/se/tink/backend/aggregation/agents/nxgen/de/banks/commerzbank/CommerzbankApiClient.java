@@ -97,7 +97,7 @@ public class CommerzbankApiClient {
         TransactionResultEntity transactionResultEntity = transactionOverview(productType, identifier, fromDate, toDate,
                 productBranch, 0);
         int page = 1;
-        while (transactionResultEntity.canFetchNextPage(page)) {
+        while (transactionResultEntity.getItems().get(0).canFetchNextPage(page)) {
             transactionResultEntity
                     .addAll(transactionOverview(productType, identifier, fromDate, toDate, productBranch, page));
 
