@@ -1,0 +1,26 @@
+date	description	amount	type	pending
+2018-07-06	Nytorget 6 Bar	-345.11
+2018-07-06	Swish Markus	100.66
+2018-07-06	Swish Emil	150.33
+2018-07-04	Dobelns pasta	-300
+2018-07-04	Swish Henrik Karlsson	100
+2018-07-04	Swish Boris Johansson	100
+2018-07-04	Spy bar	-1200
+2018-07-04	Swish Alice Wallander	500
+2018-07-01	Salong Betong	-2000
+2018-07-01	Swish hyra	4000
+2018-06-25	Sevenday	-2500
+2018-05-24	Sevenday	-2510
+2018-04-25	Sevenday	-2520
+2018-03-25	Sevenday	-2530
+2018-02-25	Sevenday	-2540
+2018-06-25	Lendify blanko	-800
+2018-05-24	Lendify blanko	-810
+2018-04-25	Lendify blanko	-800
+2018-03-25	Lendify blanko	-822
+2018-02-25	Lendify blanko	-833
+2018-06-25	SVEA EKO	-800
+2018-05-24	SVEA EKO	-810
+2018-04-25	SVEA EKO	-800
+2018-03-25	SVEA EKO	-822
+2018-02-25	SVEA EKO	-833
