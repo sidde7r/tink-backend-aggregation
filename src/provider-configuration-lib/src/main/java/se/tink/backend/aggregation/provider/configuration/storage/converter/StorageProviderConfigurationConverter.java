@@ -26,6 +26,7 @@ public class StorageProviderConfigurationConverter {
         core.setRefreshFrequency(providerConfiguration.getRefreshFrequency());
         core.setRefreshFrequencyFactor(providerConfiguration.getRefreshFrequencyFactor());
 
+        // fixme: never return null
         providerStatusConfiguration.ifPresent(psc -> core.setStatus(psc.getStatus()));
 
         core.setTransactional(providerConfiguration.isTransactional());
@@ -35,6 +36,6 @@ public class StorageProviderConfigurationConverter {
                 prs -> core.setRefreshSchedule(prs)
         );
 
-        return null;
+        return core;
     }
 }
