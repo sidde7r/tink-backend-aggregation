@@ -60,7 +60,6 @@ public class BawagPskTransactionFetcher implements TransactionDatePaginator<Tran
 
         // Get transactions, filter zero amounts since they are not shown in the app
         final Collection<? extends Transaction> transactions = response.getTransactions().stream()
-                .filter(transaction -> transaction.getAmount().isPositive())
                 .collect(Collectors.toSet());
 
         return PaginatorResponseImpl.create(transactions);
