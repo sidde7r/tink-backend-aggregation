@@ -39,7 +39,6 @@ import se.tink.backend.aggregation.workers.ratelimit.DefaultProviderRateLimiterF
 import se.tink.backend.aggregation.workers.ratelimit.OverridingProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.ratelimit.ProviderRateLimiterFactory;
 import se.tink.backend.common.ServiceContext;
-import se.tink.backend.common.repository.mysql.aggregation.clusterhostconfiguration.ClusterHostConfigurationRepository;
 import se.tink.backend.queue.QueueProducer;
 import se.tink.libraries.http.utils.HttpResponseHelper;
 import se.tink.libraries.metrics.MetricRegistry;
@@ -54,7 +53,6 @@ public class AggregationServiceResource implements AggregationService {
     private AgentWorkerOperationFactory agentWorkerCommandFactory;
     private ServiceContext serviceContext;
     private SupplementalInformationController supplementalInformationController;
-    private ClusterHostConfigurationRepository clusterHostConfigurationRepository;
     private final boolean isAggregationCluster;
 
     public static Logger logger = LoggerFactory.getLogger(AggregationServiceResource.class);
@@ -75,7 +73,6 @@ public class AggregationServiceResource implements AggregationService {
                 useAggregationController, aggregationControllerAggregationClient);
         this.supplementalInformationController = new SupplementalInformationController(serviceContext.getCacheClient(),
                 serviceContext.getCoordinationClient());
-        this.clusterHostConfigurationRepository = serviceContext.getRepository(ClusterHostConfigurationRepository.class);
         this.isAggregationCluster = serviceContext.isAggregationCluster();
         this.producer = this.serviceContext.getProducer();
     }
