@@ -16,7 +16,6 @@ import se.tink.backend.common.mapper.CoreCredentialsMapper;
 import se.tink.backend.encryption.api.EncryptionService;
 import se.tink.backend.encryption.rpc.DecryptionRequest;
 import se.tink.backend.encryption.rpc.EncryptionKeySet;
-import se.tink.backend.system.rpc.UpdateCredentialsStatusRequest;
 import se.tink.backend.utils.StringUtils;
 
 @Deprecated
@@ -24,22 +23,20 @@ public class DecryptAgentWorkerCommand extends AgentWorkerCommand {
     private static final AggregationLogger log = new AggregationLogger(DecryptAgentWorkerCommand.class);
     private AggregationCredentialsRepository aggregationCredentialsRepository;
     private AgentWorkerContext context;
-    private boolean useAggregationController;
     private AggregationControllerAggregationClient aggregationControllerAggregationClient;
 
     private final boolean shouldEncryptCredential;
     private boolean hasDecryptedCredential = false;
 
-    public DecryptAgentWorkerCommand(AgentWorkerContext context, boolean useAggregationController,
+    public DecryptAgentWorkerCommand(AgentWorkerContext context,
             AggregationControllerAggregationClient aggregationControllerAggregationClient) {
-        this(context, useAggregationController, aggregationControllerAggregationClient, true);
+        this(context, aggregationControllerAggregationClient, true);
     }
 
-    public DecryptAgentWorkerCommand(AgentWorkerContext context, boolean useAggregationController,
+    public DecryptAgentWorkerCommand(AgentWorkerContext context,
             AggregationControllerAggregationClient aggregationControllerAggregationClient,
             boolean shouldEncryptCredential) {
         this.context = context;
-        this.useAggregationController = useAggregationController;
         this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
         this.shouldEncryptCredential = shouldEncryptCredential;
         aggregationCredentialsRepository = context.getServiceContext().getRepository(
@@ -64,21 +61,12 @@ public class DecryptAgentWorkerCommand extends AgentWorkerCommand {
             se.tink.backend.core.Credentials coreCredentials = CoreCredentialsMapper
                     .fromAggregationCredentials(credentials);
 
-            if (useAggregationController) {
-                se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest updateCredentialsStatusRequest =
-                        new se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest();
+            se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest updateCredentialsStatusRequest =
+                    new se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest();
 
-                updateCredentialsStatusRequest.setCredentials(coreCredentials);
-                updateCredentialsStatusRequest.setUserId(request.getCredentials().getUserId());
-                aggregationControllerAggregationClient.updateCredentials(updateCredentialsStatusRequest);
-            } else {
-                UpdateCredentialsStatusRequest updateCredentialsStatusRequest = new UpdateCredentialsStatusRequest();
-
-                updateCredentialsStatusRequest.setCredentials(coreCredentials);
-                updateCredentialsStatusRequest.setUserId(request.getCredentials().getUserId());
-
-                context.getSystemServiceFactory().getUpdateService().updateCredentials(updateCredentialsStatusRequest);
-            }
+            updateCredentialsStatusRequest.setCredentials(coreCredentials);
+            updateCredentialsStatusRequest.setUserId(request.getCredentials().getUserId());
+            aggregationControllerAggregationClient.updateCredentials(updateCredentialsStatusRequest);
 
             return AgentWorkerCommandResult.ABORT;
         }
