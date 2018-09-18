@@ -46,8 +46,6 @@ import se.tink.backend.aggregation.workers.commands.TransferAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ValidateProviderAgentWorkerStatus;
 import se.tink.backend.aggregation.workers.commands.state.CircuitBreakerAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.DebugAgentWorkerCommandState;
-import se.tink.backend.aggregation.workers.commands.state.DeleteAgentWorkerCommandState;
-import se.tink.backend.aggregation.workers.commands.state.EncryptAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.InstantiateAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.LoginAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.ReportProviderMetricsAgentWorkerCommandState;
@@ -70,8 +68,6 @@ public class AgentWorkerOperationFactory {
     private AgentWorkerOperationState agentWorkerOperationState;
     private CircuitBreakerAgentWorkerCommandState circuitBreakAgentWorkerCommandState;
     private DebugAgentWorkerCommandState debugAgentWorkerCommandState;
-    private DeleteAgentWorkerCommandState deleteAgentWorkerCommandState;
-    private EncryptAgentWorkerCommandState encryptAgentWorkerCommandState;
     private InstantiateAgentWorkerCommandState instantiateAgentWorkerCommandState;
     private LoginAgentWorkerCommandState loginAgentWorkerCommandState;
     private ReportProviderMetricsAgentWorkerCommandState reportMetricsAgentWorkerCommandState;
@@ -92,10 +88,8 @@ public class AgentWorkerOperationFactory {
         // Initialize agent worker command states.
         agentWorkerOperationState = new AgentWorkerOperationState(metricRegistry);
         debugAgentWorkerCommandState = new DebugAgentWorkerCommandState(serviceContext);
-        deleteAgentWorkerCommandState = new DeleteAgentWorkerCommandState(serviceContext);
         circuitBreakAgentWorkerCommandState = new CircuitBreakerAgentWorkerCommandState(
                 serviceContext.getConfiguration().getAggregationWorker().getCircuitBreaker(), metricRegistry);
-        encryptAgentWorkerCommandState = new EncryptAgentWorkerCommandState(serviceContext);
         instantiateAgentWorkerCommandState = new InstantiateAgentWorkerCommandState(serviceContext);
         loginAgentWorkerCommandState = new LoginAgentWorkerCommandState(serviceContext, metricRegistry);
         reportMetricsAgentWorkerCommandState = new ReportProviderMetricsAgentWorkerCommandState(metricRegistry);
