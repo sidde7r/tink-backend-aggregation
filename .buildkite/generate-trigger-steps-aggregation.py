@@ -4,17 +4,6 @@ from __future__ import print_function
 import os
 
 BRANCHES = {
-    'oxford-production': {'block': False},
-    'oxford-staging': {'block': False},
-    'leeds-production': {'block': False},
-    'leeds-staging': {'block': False},
-    'cornwall-production': {'block': False},
-    'cornwall-testing': {'block': False},
-    'kirkby-production': {'block': False},
-    'kirkby-staging': {'block': False},
-    'newport-production': {'block': False},
-    'newport-staging': {'block': False},
-    'farnham-staging': {'block': False},
     'aggregation-production': {'block': False},
     'aggregation-staging': {'block': False},
 }
