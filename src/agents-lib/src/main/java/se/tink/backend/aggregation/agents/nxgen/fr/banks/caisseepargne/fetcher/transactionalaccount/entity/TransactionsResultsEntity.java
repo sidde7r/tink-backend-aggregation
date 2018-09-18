@@ -33,8 +33,6 @@ public class TransactionsResultsEntity implements
     private String mttBalanceAccount;
     @JacksonXmlProperty(localName = "SensSoldeCompte")
     private String accountBalanceAccount;
-    @JacksonXmlProperty(localName = "_xsi:type")
-    private String xsiType;
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
