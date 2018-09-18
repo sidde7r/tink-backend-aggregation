@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.provider.configuration.storage.converter;
 
 import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
 import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderStatusConfiguration;
+import se.tink.backend.core.ProviderStatuses;
 
 import java.util.Optional;
 
@@ -25,10 +26,9 @@ public class StorageProviderConfigurationConverter {
         core.setPopular(providerConfiguration.isPopular());
         core.setRefreshFrequency(providerConfiguration.getRefreshFrequency());
         core.setRefreshFrequencyFactor(providerConfiguration.getRefreshFrequencyFactor());
-
-        // fixme: never return null
-        providerStatusConfiguration.ifPresent(psc -> core.setStatus(psc.getStatus()));
-
+        core.setType(providerConfiguration.getType());
+        core.setFields(providerConfiguration.getFields());
+        core.setStatus(determineProviderStatus(providerConfiguration, providerStatusConfiguration));
         core.setTransactional(providerConfiguration.isTransactional());
         core.setDisplayDescription(providerConfiguration.getDisplayDescription());
 
@@ -37,5 +37,20 @@ public class StorageProviderConfigurationConverter {
         );
 
         return core;
+    }
+
+    /**
+     * determinProviderStatus takes the provider status in database if present
+     * if not, takes the local status
+     * @param providerConfiguration
+     * @param providerStatusConfiguration
+     * @return
+     */
+    private static ProviderStatuses determineProviderStatus(ProviderConfiguration providerConfiguration,
+                                                     Optional<ProviderStatusConfiguration> providerStatusConfiguration){
+        ProviderStatuses providerStatuses = providerConfiguration.getStatus();
+        providerStatusConfiguration.ifPresent(psc -> providerConfiguration.setStatus(psc.getStatus()));
+
+        return providerStatuses;
     }
 }
