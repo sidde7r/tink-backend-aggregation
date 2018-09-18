@@ -122,7 +122,7 @@ public class AgentWorkerOperationFactory {
     // TODO: Remove this when all clusters are using the Aggregation cluster and there are no more local aggregation services
     public AgentWorkerOperation createDeleteCredentialsOperation(ClusterInfo clusterInfo, CredentialsRequest request) {
         AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
-                useAggregationController, aggregationControllerAggregationClient, clusterInfo);
+                aggregationControllerAggregationClient, clusterInfo);
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
@@ -231,7 +231,7 @@ public class AgentWorkerOperationFactory {
 
 
         AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
-                useAggregationController, aggregationControllerAggregationClient, clusterInfo);
+                aggregationControllerAggregationClient, clusterInfo);
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
@@ -265,7 +265,7 @@ public class AgentWorkerOperationFactory {
 
     public AgentWorkerOperation createExecuteTransferOperation(ClusterInfo clusterInfo, TransferRequest request) {
         AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
-                useAggregationController, aggregationControllerAggregationClient, clusterInfo);
+                aggregationControllerAggregationClient, clusterInfo);
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
@@ -301,7 +301,7 @@ public class AgentWorkerOperationFactory {
 
     public AgentWorkerOperation createCreateCredentialsOperation(ClusterInfo clusterInfo, CredentialsRequest request) {
         AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
-                useAggregationController, aggregationControllerAggregationClient, clusterInfo);
+                aggregationControllerAggregationClient, clusterInfo);
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
@@ -323,7 +323,7 @@ public class AgentWorkerOperationFactory {
 
     public AgentWorkerOperation createUpdateOperation(ClusterInfo clusterInfo, CredentialsRequest request) {
         AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
-                useAggregationController, aggregationControllerAggregationClient, clusterInfo);
+                aggregationControllerAggregationClient, clusterInfo);
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
@@ -345,7 +345,7 @@ public class AgentWorkerOperationFactory {
 
     public AgentWorkerOperation createKeepAliveOperation(ClusterInfo clusterInfo, KeepAliveRequest request) {
         AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
-                useAggregationController, aggregationControllerAggregationClient, clusterInfo);
+                aggregationControllerAggregationClient, clusterInfo);
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
@@ -371,7 +371,7 @@ public class AgentWorkerOperationFactory {
     public AgentWorkerOperation createReEncryptCredentialsOperation(ClusterInfo clusterInfo,
             ReEncryptCredentialsRequest request) {
         AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
-                useAggregationController, aggregationControllerAggregationClient, clusterInfo);
+                aggregationControllerAggregationClient, clusterInfo);
 
         ImmutableList<AgentWorkerCommand> commands = ImmutableList.of(
                 new LockAgentWorkerCommand(context),
@@ -420,7 +420,7 @@ public class AgentWorkerOperationFactory {
 
 
         AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
-                useAggregationController, aggregationControllerAggregationClient, clusterInfo);
+                aggregationControllerAggregationClient, clusterInfo);
 
         context.setWhitelistRefresh(true);
 
@@ -468,7 +468,7 @@ public class AgentWorkerOperationFactory {
         }
 
         AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
-                useAggregationController, aggregationControllerAggregationClient, clusterInfo);
+                aggregationControllerAggregationClient, clusterInfo);
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
