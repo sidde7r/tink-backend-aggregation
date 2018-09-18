@@ -31,22 +31,12 @@ import javax.net.ssl.SSLContext;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
-
-import se.tink.backend.aggregation.log.AggregationLogger;
-import tink.org.apache.http.HttpHost;
-import tink.org.apache.http.client.config.RequestConfig;
-import tink.org.apache.http.client.params.ClientPNames;
-import tink.org.apache.http.conn.ssl.SSLContextBuilder;
-import tink.org.apache.http.conn.ssl.TrustStrategy;
-import tink.org.apache.http.cookie.Cookie;
-import tink.org.apache.http.impl.client.BasicCookieStore;
-import tink.org.apache.http.impl.client.CloseableHttpClient;
-import tink.org.apache.http.impl.client.HttpClientBuilder;
-import tink.org.apache.http.params.CoreConnectionPNames;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
 import se.tink.backend.aggregation.cluster.identification.Aggregator;
+import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustRootCaStrategy;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
@@ -65,6 +55,16 @@ import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
 import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import tink.org.apache.http.HttpHost;
+import tink.org.apache.http.client.config.RequestConfig;
+import tink.org.apache.http.client.params.ClientPNames;
+import tink.org.apache.http.conn.ssl.SSLContextBuilder;
+import tink.org.apache.http.conn.ssl.TrustStrategy;
+import tink.org.apache.http.cookie.Cookie;
+import tink.org.apache.http.impl.client.BasicCookieStore;
+import tink.org.apache.http.impl.client.CloseableHttpClient;
+import tink.org.apache.http.impl.client.HttpClientBuilder;
+import tink.org.apache.http.params.CoreConnectionPNames;
 
 
 public class TinkHttpClient extends Filterable<TinkHttpClient> {
@@ -340,6 +340,19 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
             internalSslContextBuilder.loadKeyMaterial(keyStore, null);
         } catch (KeyStoreException | NoSuchProviderException | IOException | NoSuchAlgorithmException |
                 CertificateException | UnrecoverableKeyException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    public void trustRootCaCertificate(byte[] jksData, String password) {
+        try {
+            KeyStore keyStore = KeyStore.getInstance("JKS");
+            ByteArrayInputStream jksStream = new ByteArrayInputStream(jksData);
+            keyStore.load(jksStream, password.toCharArray());
+
+            TrustRootCaStrategy trustStrategy = TrustRootCaStrategy.createWithFallbackTrust(keyStore);
+            internalSslContextBuilder.loadTrustMaterial(keyStore, trustStrategy);
+        } catch (KeyStoreException | IOException | NoSuchAlgorithmException | CertificateException e) {
             throw new IllegalStateException(e);
         }
     }
