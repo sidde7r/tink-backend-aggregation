@@ -7,7 +7,7 @@ public class ErsteBankConstants {
 
     public static String LOCATION = "Location";
 
-    public static class ACCOUNTYPE{
+    public static class ACCOUNTYPE {
         public static final String CHECKING = "GIRO";
         public static final String SAVINGS = "BUILDING_SAVING";
     }
@@ -18,12 +18,12 @@ public class ErsteBankConstants {
     }
 
     public static class URLS {
-       public static final String LOGIN_BASE = "https://login.sparkasse.at";
-       public static final String OAUTH = "/sts/oauth/authorize";
-       public static final String GEORGE_GO_BASE = "https://georgego.sparkasse.at";
-       public static final String ACCOUNT = "/bff/b/overview";
-       public static final String SPARKASSE_BASE = "https://api.sparkasse.at";
-       public static final String LOGOUT = "/rest/netbanking/auth/token/invalidate";
+        public static final String LOGIN_BASE = "https://login.sparkasse.at";
+        public static final String OAUTH = "/sts/oauth/authorize";
+        public static final String GEORGE_GO_BASE = "https://georgego.sparkasse.at";
+        public static final String ACCOUNT = "/bff/b/overview";
+        public static final String SPARKASSE_BASE = "https://api.sparkasse.at";
+        public static final String LOGOUT = "/rest/netbanking/auth/token/invalidate";
     }
 
     public static class HEADERS {
@@ -58,9 +58,12 @@ public class ErsteBankConstants {
     }
 
     public static class PATTERN {
-        public static final Pattern SALT = Pattern.compile("\"saltCode\"\\s+value=\"(.+?)\".*", Pattern.DOTALL | Pattern.MULTILINE);
-        public static final Pattern MODULUS = Pattern.compile("\"modulus\"\\s+value=\"(.+?)\"", Pattern.DOTALL | Pattern.MULTILINE);
-        public static final Pattern EXPONENT = Pattern.compile("\"exponent\"\\s+value=\"(.+?)\"", Pattern.DOTALL | Pattern.MULTILINE);
+        public static final Pattern SALT = Pattern
+                .compile("\"saltCode\"\\s+value=\"(.+?)\".*", Pattern.DOTALL | Pattern.MULTILINE);
+        public static final Pattern MODULUS = Pattern
+                .compile("\"modulus\"\\s+value=\"(.+?)\"", Pattern.DOTALL | Pattern.MULTILINE);
+        public static final Pattern EXPONENT = Pattern
+                .compile("\"exponent\"\\s+value=\"(.+?)\"", Pattern.DOTALL | Pattern.MULTILINE);
 
         public static final Pattern ACCESS_TOKEN = Pattern.compile("access_token=(.*)&token_type");
         public static final Pattern TOKEN_TYPE = Pattern.compile("token_type=(.*)&expires_in");

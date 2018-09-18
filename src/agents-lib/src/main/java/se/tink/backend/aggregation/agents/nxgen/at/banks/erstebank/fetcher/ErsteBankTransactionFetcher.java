@@ -12,7 +12,7 @@ public class ErsteBankTransactionFetcher implements TransactionPagePaginator<Tra
 
     private final ErsteBankApiClient ersteBankApiClient;
 
-    public ErsteBankTransactionFetcher(ErsteBankApiClient ersteBankApiClient){
+    public ErsteBankTransactionFetcher(ErsteBankApiClient ersteBankApiClient) {
         this.ersteBankApiClient = ersteBankApiClient;
     }
 
@@ -20,7 +20,7 @@ public class ErsteBankTransactionFetcher implements TransactionPagePaginator<Tra
     public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
         String accountUrl = account.getFromTemporaryStorage(ErsteBankConstants.STORAGE.TRANSACTIONSURL);
 
-        if(!Strings.isNullOrEmpty(accountUrl)) {
+        if (!Strings.isNullOrEmpty(accountUrl)) {
             return this.ersteBankApiClient.fetchTransactions(page, accountUrl);
         }
         return PaginatorResponseImpl.createEmpty();
