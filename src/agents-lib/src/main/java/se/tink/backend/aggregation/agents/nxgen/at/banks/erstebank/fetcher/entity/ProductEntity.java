@@ -67,7 +67,7 @@ public class ProductEntity {
             return AccountTypes.SAVINGS;
         default:
             logger.warn("{} {}", ErsteBankConstants.LOGTAG.UNKNOWN_ACCOUNT_TYPE, accountType);
-            return AccountTypes.CHECKING;
+            return AccountTypes.OTHER;
         }
     }
 
