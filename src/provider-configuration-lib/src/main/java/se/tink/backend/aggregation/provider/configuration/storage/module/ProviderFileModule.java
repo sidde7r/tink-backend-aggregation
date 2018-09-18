@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 public class ProviderFileModule extends AbstractModule {
 
-    private static ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new ObjectMapper();
     private static final Logger log = LoggerFactory.getLogger(ProviderFileModule.class);
 
     @Override
