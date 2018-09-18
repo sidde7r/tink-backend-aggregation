@@ -6,7 +6,7 @@ import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.ResultEntity;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.transaction.entities.TransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.transaction.entities.TransactionResultEntity;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -36,19 +36,23 @@ public class CommerzbankCreditCardFetcher implements AccountFetcher<CreditCardAc
         String identifier = account.getFromTemporaryStorage(CommerzbankConstants.HEADERS.CREDIT_CARD_IDENTIFIER);
         String productBranch = account.getFromTemporaryStorage(CommerzbankConstants.HEADERS.PRODUCT_BRANCH);
 
-        if (Strings.isNullOrEmpty(productType)
-                || Strings.isNullOrEmpty(identifier)
-                || Strings.isNullOrEmpty(productBranch)) {
-            return new TransactionEntity();
-        }
+        if (!Strings.isNullOrEmpty(productType)
+                && !Strings.isNullOrEmpty(identifier)
+                && !Strings.isNullOrEmpty(productBranch)) {
+            try {
+                TransactionResultEntity response = apiClient
+                        .fetchAllPages(fromDate, toDate, productType, identifier, productBranch);
+                if (response.containsTransactions()) {
+                    return response.getItems().get(0);
+                }
 
-        try {
-            return apiClient.fetchAllPages(fromDate, toDate, productType, identifier, productBranch).getItems().get(0);
-        } catch (Exception e) {
-            LOGGER.errorExtraLong("Could not fetch credit transactions",
-                    CommerzbankConstants.LOGTAG.CREDIT_CARD_FETCHING_ERROR, e);
-            return PaginatorResponseImpl.createEmpty();
+            } catch (Exception e) {
+                LOGGER.errorExtraLong("Could not fetch credit transactions",
+                        CommerzbankConstants.LOGTAG.CREDIT_CARD_FETCHING_ERROR, e);
+                return PaginatorResponseImpl.createEmpty();
+            }
         }
+        return PaginatorResponseImpl.createEmpty();
     }
 
 }

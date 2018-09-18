@@ -19,4 +19,12 @@ public class TransactionResultEntity {
             items.get(0).addAll(transactionResultEntity.getItems().get(0).getPfmTransactions());
         }
     }
+
+    public boolean canFetchMore(int page) {
+        return containsTransactions() && items.get(0).canFetchNextPage(page);
+    }
+
+    public boolean containsTransactions() {
+        return items != null && !items.isEmpty();
+    }
 }
