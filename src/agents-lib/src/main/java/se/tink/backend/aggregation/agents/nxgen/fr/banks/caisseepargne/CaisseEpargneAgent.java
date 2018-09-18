@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.CaisseEpargneAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.fetcher.transactionalaccount.CaisseEpargneTransactionalAccountFetcher;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
@@ -10,6 +11,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCa
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
@@ -26,14 +29,21 @@ public class CaisseEpargneAgent extends NextGenerationAgent {
     public CaisseEpargneAgent(CredentialsRequest request,
             AgentContext context,
             SignatureKeyPair signatureKeyPair) {
+
         super(request, context, signatureKeyPair);
+
         apiClient = new CaisseEpargneApiClient(client);
-        checkDeviceId();
+
+        String deviceId = persistentStorage.get(CaisseEpargneConstants.StorageKey.DEVICE_ID);
+        if (deviceId == null) {
+            deviceId = UUIDUtils.generateUUID();
+            persistentStorage.put(CaisseEpargneConstants.StorageKey.DEVICE_ID, deviceId);
+        }
     }
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
-       // client.setProxy("http://127.0.0.1:8888");
+        // client.setProxy("http://127.0.0.1:8888");
     }
 
     @Override
@@ -43,7 +53,10 @@ public class CaisseEpargneAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        return Optional.empty();
+        CaisseEpargneTransactionalAccountFetcher fetcher = new CaisseEpargneTransactionalAccountFetcher(apiClient);
+        return Optional.of(new TransactionalAccountRefreshController(metricRefreshController, updateController,
+                fetcher, new TransactionFetcherController<>(transactionPaginationHelper,
+                new TransactionKeyPaginationController<>(fetcher))));
     }
 
     @Override
@@ -79,16 +92,6 @@ public class CaisseEpargneAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
-    }
-
-    private void checkDeviceId() {
-
-        String deviceId = persistentStorage.get(CaisseEpargneConstants.StorageKey.DEVICE_ID);
-
-        if (deviceId == null) {
-            deviceId = UUIDUtils.generateUUID();
-            persistentStorage.put(CaisseEpargneConstants.StorageKey.DEVICE_ID, deviceId);
-        }
     }
 
 }

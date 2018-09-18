@@ -1,21 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.rpc;
 
-import java.util.Map;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants;
 
-public abstract class GenericResponse {
+public class GenericResponse<T> {
 
-    protected final Map<String, Object> result;
-
-    protected GenericResponse(Map<String, Object> result) {
-        this.result = result;
-    }
+    @JacksonXmlProperty(localName = "Resultat")
+    protected T results;
+    @JacksonXmlProperty(localName = "CodeRetour")
+    private String returnCode;
+    @JacksonXmlProperty(localName = "LibelleRetour")
+    private String returnDescription;
 
     public boolean isResponseOK() {
-        if (result instanceof Map) {
-            return "0000".equals(result.get("CodeRetour"));
-        } else {
-            return false;
-        }
+        return CaisseEpargneConstants.ResponseValue.RETURN_CODE_OK.equalsIgnoreCase(returnCode);
     }
 
 }

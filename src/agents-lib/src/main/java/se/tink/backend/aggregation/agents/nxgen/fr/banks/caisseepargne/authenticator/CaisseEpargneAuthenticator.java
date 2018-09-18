@@ -28,11 +28,9 @@ public class CaisseEpargneAuthenticator implements PasswordAuthenticator {
         request.setPassword(password);
         request.setDeviceId(persistentStorage.get(CaisseEpargneConstants.StorageKey.DEVICE_ID));
 
-        AuthenticationResponse response = apiClient.postAuthentication(request);
+        AuthenticationResponse response = apiClient.authenticate(request);
 
-        if (response.isResponseOK()) {
-
-        } else {
+        if (!response.isResponseOK()) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
     }

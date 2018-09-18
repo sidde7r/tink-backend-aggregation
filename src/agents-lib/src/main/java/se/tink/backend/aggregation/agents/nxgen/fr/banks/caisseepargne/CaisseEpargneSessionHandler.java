@@ -19,13 +19,13 @@ public class CaisseEpargneSessionHandler implements SessionHandler {
     @Override
     public void logout() {
         DisconnectRequest request = new DisconnectRequest();
-        apiClient.postDisconnect(request);
+        apiClient.disconnect(request);
     }
 
     @Override
     public void keepAlive() throws SessionException {
         ClientInformationRequest request = new ClientInformationRequest();
-        ClientInformationResponse response = apiClient.postClientInformation(request);
+        ClientInformationResponse response = apiClient.getClientInformation(request);
         if (!response.isResponseOK()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
