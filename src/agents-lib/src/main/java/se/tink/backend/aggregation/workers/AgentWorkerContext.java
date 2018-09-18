@@ -269,29 +269,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
                 processAccountsRequest);
     }
 
-    private int countNumberOfTransactionsOlderThanToday(List<Transaction> transactions) {
-        final Date today = new Date();
-        return (int) transactions.stream()
-                .filter(t -> DateUtils.daysBetween(t.getDate(), today) > 0)
-                .count();
-    }
-
-    private AccountTypes getAccountTypeFor(String accountId) {
-        return getAccount(accountId)
-                .map(Account::getType)
-                .orElse(AccountTypes.OTHER);
-    }
-
-    private Date getCertainDateFor(String accountId) {
-        return getAccount(accountId)
-                .map(Account::getCertainDate)
-                .orElse(null);
-    }
-
-    private Optional<Account> getAccount(String accountId) {
-        return Optional.ofNullable(updatedAccountsByTinkId.get(accountId));
-    }
-
     @Override
     public void processTransactions() {
         Credentials credentials = request.getCredentials();
