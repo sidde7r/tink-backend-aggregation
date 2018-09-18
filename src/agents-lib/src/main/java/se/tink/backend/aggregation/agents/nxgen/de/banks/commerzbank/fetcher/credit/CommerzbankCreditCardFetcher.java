@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.tra
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 
@@ -46,7 +47,7 @@ public class CommerzbankCreditCardFetcher implements AccountFetcher<CreditCardAc
         } catch (Exception e) {
             LOGGER.errorExtraLong("Could not fetch credit transactions",
                     CommerzbankConstants.LOGTAG.CREDIT_CARD_FETCHING_ERROR, e);
-            return new TransactionEntity();
+            return PaginatorResponseImpl.createEmpty();
         }
     }
 
