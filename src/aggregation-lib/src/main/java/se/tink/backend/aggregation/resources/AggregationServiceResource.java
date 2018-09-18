@@ -54,12 +54,10 @@ public class AggregationServiceResource implements AggregationService {
 
     /**
      * Constructor.
-     *
-     * @param context used between all instances of this service
+     *  @param context used between all instances of this service
      * @param metricRegistry
      */
     public AggregationServiceResource(ServiceContext context, MetricRegistry metricRegistry,
-            boolean useAggregationController,
             AggregationControllerAggregationClient aggregationControllerAggregationClient,
             AgentWorker agentWorker) {
         this.serviceContext = context;
