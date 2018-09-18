@@ -83,6 +83,18 @@ java_library(
 )
 
 java_library(
+    name = "com_amazonaws_aws_java_sdk_s3",
+    visibility = ["//visibility:public"],
+    exports = [
+      "@com_amazonaws_aws_java_sdk_core//jar",
+      "@com_amazonaws_aws_java_sdk_s3//jar",
+      "@com_amazonaws_aws_java_sdk_code_generator//jar",
+      "@com_amazonaws_jmespath_java//jar",
+      "@com_amazonaws_aws_java_sdk_kms//jar",
+    ],
+)
+
+java_library(
     name = "com_codahale_metrics_metrics_annotation",
     visibility = ["//visibility:public"],
     exports = [

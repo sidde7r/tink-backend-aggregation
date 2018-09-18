@@ -433,6 +433,7 @@ java_library(
         "//third_party:net_sourceforge_tess4j",
         "//third_party:com_auth0_java_jwt",
         "//third_party:org_xerial_snappy_snappy_java",
+        "//third_party:com_amazonaws_aws_java_sdk_s3",
 
         "//third_party:net_sourceforge_cssparser_cssparser",
 
@@ -520,8 +521,8 @@ java_library(
         "//third_party:net_sourceforge_tess4j",
         "//third_party:net_sourceforge_cssparser_cssparser",
         "//third_party:com_auth0_java_jwt",
-        "//third_party:org_apache_httpcomponents_httpclient",
-        "//third_party:org_apache_httpcomponents_httpcore",
+        "//third_party:com_amazonaws_aws_java_sdk_s3",
+
 
     ],
 )

@@ -1345,6 +1345,18 @@ maven_jar(
     )
 
 maven_jar(
+    name = "com_amazonaws_aws_java_sdk_s3",
+    artifact = "com.amazonaws:aws-java-sdk-s3:1.11.381",
+    sha1 = "a2600515a420a5fd08d5c1d19fdf4a8714c515e2"
+    )
+
+maven_jar(
+    name = "com_amazonaws_aws_java_sdk_kms",
+    artifact = "com.amazonaws:aws-java-sdk-kms:1.11.381",
+    sha1 = "17a06d9854f804dfcf2ec799f906f555984084c9"
+    )
+
+maven_jar(
     name = "org_springframework_data_spring_data_jpa",
     artifact = "org.springframework.data:spring-data-jpa:1.11.1.RELEASE",
     sha1 = "fa362aecd78883991f57a5d64e19f34b57a2c34d",
