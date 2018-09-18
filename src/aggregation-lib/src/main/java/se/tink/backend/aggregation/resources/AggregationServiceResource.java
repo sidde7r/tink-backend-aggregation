@@ -82,9 +82,10 @@ public class AggregationServiceResource implements AggregationService {
         return createCredentialsOperation.getRequest().getCredentials();
     }
 
+    // TODO: Remove this endpoint when it's not available through the aggregation controller anymore.
     @Override
     public void deleteCredentials(DeleteCredentialsRequest request, ClusterInfo clusterInfo) {
-        agentWorkerCommandFactory.createDeleteCredentialsOperation(clusterInfo, request).run();
+        HttpResponseHelper.ok();
     }
 
     @Override

@@ -28,10 +28,7 @@ import se.tink.backend.aggregation.workers.AgentWorkerOperation.AgentWorkerOpera
 import se.tink.backend.aggregation.workers.commands.CircuitBreakerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ClearSensitiveInformationCommand;
 import se.tink.backend.aggregation.workers.commands.DebugAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.DecryptAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DecryptCredentialsWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.DeleteAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.EncryptAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.EncryptCredentialsWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.InstantiateAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.KeepAliveAgentWorkerCommand;
@@ -111,19 +108,6 @@ public class AgentWorkerOperationFactory {
     private AgentWorkerCommandMetricState createMetricState(CredentialsRequest request) {
         return new AgentWorkerCommandMetricState(request.getProvider(), request.getCredentials(), metricCacheLoader,
                 request.getType());
-    }
-
-    // TODO: Remove this when all clusters are using the Aggregation cluster and there are no more local aggregation services
-    public AgentWorkerOperation createDeleteCredentialsOperation(ClusterInfo clusterInfo, CredentialsRequest request) {
-        AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
-                aggregationControllerAggregationClient, clusterInfo);
-
-        List<AgentWorkerCommand> commands = Lists.newArrayList();
-
-        commands.add(new DeleteAgentWorkerCommand(context, deleteAgentWorkerCommandState));
-
-        return new AgentWorkerOperation(agentWorkerOperationState, "delete-credentials", request, commands,
-                context);
     }
 
     // Remove `ACCOUNTS` and `TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS` and replace them with appropriate new
