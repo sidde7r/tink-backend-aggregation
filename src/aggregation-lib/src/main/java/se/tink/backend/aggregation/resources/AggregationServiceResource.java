@@ -50,7 +50,6 @@ public class AggregationServiceResource implements AggregationService {
     private AgentWorkerOperationFactory agentWorkerCommandFactory;
     private ServiceContext serviceContext;
     private SupplementalInformationController supplementalInformationController;
-    private final boolean isAggregationCluster;
 
     public static Logger logger = LoggerFactory.getLogger(AggregationServiceResource.class);
 
@@ -70,7 +69,6 @@ public class AggregationServiceResource implements AggregationService {
                 useAggregationController, aggregationControllerAggregationClient);
         this.supplementalInformationController = new SupplementalInformationController(serviceContext.getCacheClient(),
                 serviceContext.getCoordinationClient());
-        this.isAggregationCluster = serviceContext.isAggregationCluster();
         this.producer = this.serviceContext.getProducer();
     }
 
@@ -218,11 +216,6 @@ public class AggregationServiceResource implements AggregationService {
     @Override
     public Response reEncryptCredentials(ReEncryptCredentialsRequest reencryptCredentialsRequest,
             ClusterInfo clusterInfo) {
-        // Only aggregation cluster can decrypt and encrypt with the new encryption method
-        if (!isAggregationCluster) {
-            HttpResponseHelper.error(Response.Status.BAD_REQUEST);
-        }
-
         try {
             agentWorker.execute(agentWorkerCommandFactory
                     .createReEncryptCredentialsOperation(clusterInfo, reencryptCredentialsRequest));
