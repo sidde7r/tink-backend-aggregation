@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.resources;
 
-import com.google.api.client.util.Lists;
 import java.util.Objects;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
