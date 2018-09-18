@@ -21,7 +21,6 @@ import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.DeleteCredentialsRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
-import se.tink.backend.aggregation.rpc.ReencryptionRequest;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
@@ -83,16 +82,6 @@ public class AggregationServiceResource implements AggregationService {
         // TODO: Add commands appropriate for doing an inline refresh here in next iteration.
 
         return createCredentialsOperation.getRequest().getCredentials();
-    }
-
-    @Override
-    public Credentials reencryptCredentials(ReencryptionRequest request, ClusterInfo clusterInfo) {
-        AgentWorkerOperation reencryptCredentialsOperation = agentWorkerCommandFactory
-                .reencryptCredentialsOperation(clusterInfo, request);
-
-        reencryptCredentialsOperation.run();
-
-        return reencryptCredentialsOperation.getRequest().getCredentials();
     }
 
     @Override

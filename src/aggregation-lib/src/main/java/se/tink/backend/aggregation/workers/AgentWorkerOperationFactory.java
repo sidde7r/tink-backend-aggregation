@@ -21,7 +21,6 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
-import se.tink.backend.aggregation.rpc.ReencryptionRequest;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
@@ -319,20 +318,6 @@ public class AgentWorkerOperationFactory {
         }
 
         return new AgentWorkerOperation(agentWorkerOperationState, "create-credentials", request, commands,
-                context);
-    }
-
-    public AgentWorkerOperation reencryptCredentialsOperation(ClusterInfo clusterInfo, ReencryptionRequest request) {
-        AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
-                useAggregationController, aggregationControllerAggregationClient, clusterInfo);
-
-        List<AgentWorkerCommand> commands = Lists.newArrayList();
-        commands.add(new LockAgentWorkerCommand(context)); // Avoid refreshing while this is going on.
-        commands.add(new DecryptAgentWorkerCommand(context, useAggregationController,
-                aggregationControllerAggregationClient, false));
-        commands.add(new EncryptAgentWorkerCommand(context, encryptAgentWorkerCommandState)
-                .withOverwriteSecretKey(true));
-        return new AgentWorkerOperation(agentWorkerOperationState, "reencrypt-credentials", request, commands,
                 context);
     }
 
