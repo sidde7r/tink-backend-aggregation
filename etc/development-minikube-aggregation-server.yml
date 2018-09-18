@@ -64,10 +64,6 @@ serviceAuthentication:
 
 developmentMode: true
 
-useAggregationController: false
-
-isAggregationCluster: false
-
 distributedDatabase:
   seeds:
     - 192.168.99.100

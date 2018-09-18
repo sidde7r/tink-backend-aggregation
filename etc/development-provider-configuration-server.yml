@@ -18,8 +18,6 @@ server:
 
 cluster: TINK
 
-isAggregationCluster: true
-
 coordination:
   hosts: 172.16.42.2:2181
 
