@@ -38,7 +38,6 @@ import se.tink.libraries.metrics.MetricRegistry;
 public class ServiceContext implements Managed, RepositoryFactory {
     private static final LogUtils log = new LogUtils(ServiceContext.class);
 
-    private final boolean isUseAggregationController;
     private final AggregationServiceFactory aggregationServiceFactory;
     private AnnotationConfigApplicationContext applicationContext;
     private CacheClient cacheClient;
@@ -49,7 +48,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
     private final SystemServiceFactory systemServiceFactory;
     private final InterContainerProviderServiceFactory providerServiceFactory;
     private LoadingCache<Class<?>, Object> DAOs;
-    private final boolean isAggregationCluster;
     private final boolean isProvidersOnAggregation;
     private QueueProducer producer;
     private ApplicationDrainMode applicationDrainMode;
@@ -63,9 +61,7 @@ public class ServiceContext implements Managed, RepositoryFactory {
     private ListenableThreadPoolExecutor<Runnable> executorService;
 
     @Inject
-    public ServiceContext(@Named("useAggregationController") boolean isUseAggregationController,
-
-            final ServiceConfiguration configuration, MetricRegistry metricRegistry,
+    public ServiceContext(final ServiceConfiguration configuration, MetricRegistry metricRegistry,
             CacheClient cacheClient, CuratorFramework zookeeperClient,
             ServiceFactory serviceFactory, SystemServiceFactory systemServiceFactory,
             InterContainerProviderServiceFactory providerServiceFactory,
@@ -73,11 +69,8 @@ public class ServiceContext implements Managed, RepositoryFactory {
             EncryptionServiceFactory encryptionServiceFactory,
             @Named("executor") ListenableThreadPoolExecutor<Runnable> executorService,
             @Named("trackingExecutor") ListenableThreadPoolExecutor<Runnable> trackingExecutorService,
-            @Named("isAggregationCluster") boolean isAggregationCluster,
             @Named("isProvidersOnAggregation") boolean isProvidersOnAggregation,
             QueueProducer producer, ApplicationDrainMode applicationDrainMode) {
-
-        this.isUseAggregationController = isUseAggregationController;
         this.serviceFactory = serviceFactory;
         this.systemServiceFactory = systemServiceFactory;
         this.aggregationServiceFactory = aggregationServiceFactory;
@@ -89,7 +82,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
         this.encryptionServiceFactory = encryptionServiceFactory;
         this.executorService = executorService;
         this.trackingExecutorService = trackingExecutorService;
-        this.isAggregationCluster = isAggregationCluster;
         this.isProvidersOnAggregation = isProvidersOnAggregation;
         this.producer = producer;
         this.applicationDrainMode = applicationDrainMode;
@@ -266,14 +258,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
 
     public EncryptionServiceFactory getEncryptionServiceFactory() {
         return encryptionServiceFactory;
-    }
-
-    public boolean isUseAggregationController() {
-        return isUseAggregationController;
-    }
-
-    public boolean isAggregationCluster() {
-        return isAggregationCluster;
     }
 
     public boolean isProvidersOnAggregation() {
