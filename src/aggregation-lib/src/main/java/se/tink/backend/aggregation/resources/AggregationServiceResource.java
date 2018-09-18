@@ -65,7 +65,7 @@ public class AggregationServiceResource implements AggregationService {
         this.serviceContext = context;
         this.agentWorker = agentWorker;
         this.agentWorkerCommandFactory = new AgentWorkerOperationFactory(serviceContext, metricRegistry,
-                useAggregationController, aggregationControllerAggregationClient);
+                aggregationControllerAggregationClient);
         this.supplementalInformationController = new SupplementalInformationController(serviceContext.getCacheClient(),
                 serviceContext.getCoordinationClient());
         this.producer = this.serviceContext.getProducer();

@@ -4,7 +4,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -66,7 +65,6 @@ import se.tink.libraries.metrics.MetricRegistry;
 public class AgentWorkerOperationFactory {
     private static final Logger log = LoggerFactory.getLogger(AgentWorkerOperationFactory.class);
 
-    private final boolean isAggregationCluster;
     private final ClusterCryptoConfigurationRepository clusterCryptoConfigurationRepository;
     private final CacheClient cacheClient;
     private final MetricCacheLoader metricCacheLoader;
@@ -84,14 +82,11 @@ public class AgentWorkerOperationFactory {
     private AggregationControllerAggregationClient aggregationControllerAggregationClient;
     private MetricRegistry metricRegistry;
     private ServiceContext serviceContext;
-    private boolean useAggregationController;
 
 
     @Inject
     public AgentWorkerOperationFactory(ServiceContext serviceContext, MetricRegistry metricRegistry,
-            @Named("useAggregationController") boolean useAggregationController,
             AggregationControllerAggregationClient aggregationControllerAggregationClient) {
-        this.isAggregationCluster = serviceContext.isAggregationCluster();
         this.clusterCryptoConfigurationRepository =
                 serviceContext.getRepository(ClusterCryptoConfigurationRepository.class);
         this.cacheClient = serviceContext.getCacheClient();
@@ -111,7 +106,6 @@ public class AgentWorkerOperationFactory {
         this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
         this.metricRegistry = metricRegistry;
         this.serviceContext = serviceContext;
-        this.useAggregationController = useAggregationController;
     }
 
     private AgentWorkerCommandMetricState createMetricState(CredentialsRequest request) {
@@ -237,19 +231,14 @@ public class AgentWorkerOperationFactory {
 
         String metricsName = (request.isManual() ? "refresh-manual" : "refresh-auto");
 
-        commands.add(new ValidateProviderAgentWorkerStatus(context, useAggregationController,
-                aggregationControllerAggregationClient, isAggregationCluster, clusterInfo));
+        commands.add(new ValidateProviderAgentWorkerStatus(context,
+                aggregationControllerAggregationClient, clusterInfo));
         commands.add(new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(new ReportProviderMetricsAgentWorkerCommand(context, metricsName,
                 reportMetricsAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
-        if (isAggregationCluster) {
-            commands.add(new DecryptCredentialsWorkerCommand(clusterInfo, cacheClient,
-                    clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context));
-        } else {
-            commands.add(new DecryptAgentWorkerCommand(context, useAggregationController,
-                    aggregationControllerAggregationClient));
-        }
+        commands.add(new DecryptCredentialsWorkerCommand(clusterInfo, cacheClient,
+                clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context));
         commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState));
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)));
@@ -269,22 +258,15 @@ public class AgentWorkerOperationFactory {
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
-        commands.add(new ValidateProviderAgentWorkerStatus(context, useAggregationController,
-                aggregationControllerAggregationClient, isAggregationCluster, clusterInfo));
+        commands.add(new ValidateProviderAgentWorkerStatus(context,
+                aggregationControllerAggregationClient, clusterInfo));
         commands.add(new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(new ReportProviderMetricsAgentWorkerCommand(context, "execute-transfer",
                 reportMetricsAgentWorkerCommandState));
         commands.add(new ReportProviderTransferMetricsAgentWorkerCommand(context,  "execute-transfer"));
         commands.add(new LockAgentWorkerCommand(context));
-        if (isAggregationCluster) {
-            commands.add(new DecryptCredentialsWorkerCommand(clusterInfo, cacheClient,
-                    clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context));
-
-        } else {
-            commands.add(new DecryptAgentWorkerCommand(context, useAggregationController,
-                    aggregationControllerAggregationClient));
-        }
-
+        commands.add(new DecryptCredentialsWorkerCommand(clusterInfo, cacheClient,
+                clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context));
         commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState));
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)));
@@ -309,13 +291,8 @@ public class AgentWorkerOperationFactory {
 
         // acquire lock to avoid encryption/decryption race conditions
         commands.add(new LockAgentWorkerCommand(context));
-
-        if (isAggregationCluster) {
-            commands.add(new EncryptCredentialsWorkerCommand(clusterInfo, cacheClient,
-                    clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context, false));
-        } else {
-            commands.add(new EncryptAgentWorkerCommand(context, encryptAgentWorkerCommandState));
-        }
+        commands.add(new EncryptCredentialsWorkerCommand(clusterInfo, cacheClient,
+                clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context, false));
 
         return new AgentWorkerOperation(agentWorkerOperationState, "create-credentials", request, commands,
                 context);
@@ -331,13 +308,8 @@ public class AgentWorkerOperationFactory {
 
         // acquire lock to avoid encryption/decryption race conditions
         commands.add(new LockAgentWorkerCommand(context));
-
-        if (isAggregationCluster) {
-            commands.add(new EncryptCredentialsWorkerCommand(clusterInfo, cacheClient,
-                    clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context, false));
-        } else {
-            commands.add(new EncryptAgentWorkerCommand(context, encryptAgentWorkerCommandState));
-        }
+        commands.add(new EncryptCredentialsWorkerCommand(clusterInfo, cacheClient,
+                clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context, false));
 
         return new AgentWorkerOperation(agentWorkerOperationState, "update-credentials", request, commands,
                 context);
@@ -349,18 +321,13 @@ public class AgentWorkerOperationFactory {
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
-        commands.add(new ValidateProviderAgentWorkerStatus(context, useAggregationController,
-                aggregationControllerAggregationClient, isAggregationCluster, clusterInfo));
+        commands.add(new ValidateProviderAgentWorkerStatus(context,
+                aggregationControllerAggregationClient, clusterInfo));
         commands.add(new ReportProviderMetricsAgentWorkerCommand(context, "keep-alive",
                 reportMetricsAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
-        if (isAggregationCluster) {
-            commands.add(new DecryptCredentialsWorkerCommand(clusterInfo, cacheClient,
-                    clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context));
-        } else {
-            commands.add(new DecryptAgentWorkerCommand(context, useAggregationController,
-                    aggregationControllerAggregationClient));
-        }
+        commands.add(new DecryptCredentialsWorkerCommand(clusterInfo, cacheClient,
+                clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context));
         commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState));
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(new KeepAliveAgentWorkerCommand(context));
@@ -428,19 +395,14 @@ public class AgentWorkerOperationFactory {
 
         String metricsName = (request.isManual() ? "refresh-manual" : "refresh-auto");
 
-        commands.add(new ValidateProviderAgentWorkerStatus(context, useAggregationController,
-                aggregationControllerAggregationClient, isAggregationCluster, clusterInfo));
+        commands.add(new ValidateProviderAgentWorkerStatus(context,
+                aggregationControllerAggregationClient, clusterInfo));
         commands.add(new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(new ReportProviderMetricsAgentWorkerCommand(context, metricsName,
                 reportMetricsAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
-        if (isAggregationCluster) {
-            commands.add(new DecryptCredentialsWorkerCommand(clusterInfo, cacheClient,
-                    clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context));
-        } else {
-            commands.add(new DecryptAgentWorkerCommand(context, useAggregationController,
-                    aggregationControllerAggregationClient));
-        }
+        commands.add(new DecryptCredentialsWorkerCommand(clusterInfo, cacheClient,
+                clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context));
         commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState));
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)));
@@ -472,8 +434,8 @@ public class AgentWorkerOperationFactory {
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
-        commands.add(new ValidateProviderAgentWorkerStatus(context, useAggregationController,
-                aggregationControllerAggregationClient, isAggregationCluster, clusterInfo));
+        commands.add(new ValidateProviderAgentWorkerStatus(context,
+                aggregationControllerAggregationClient, clusterInfo));
         commands.add(new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(new ReportProviderMetricsAgentWorkerCommand(context, operationMetricName,
                 reportMetricsAgentWorkerCommandState));

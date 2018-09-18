@@ -15,19 +15,14 @@ import se.tink.backend.system.rpc.UpdateCredentialsStatusRequest;
 
 public class ValidateProviderAgentWorkerStatus extends AgentWorkerCommand {
     private AgentWorkerContext context;
-    private boolean useAggregationController;
     private AggregationControllerAggregationClient aggregationControllerAggregationClient;
     private ClusterInfo clusterInfo;
-    private boolean isAggregationCluster;
 
     public ValidateProviderAgentWorkerStatus(AgentWorkerContext context,
-            boolean useAggregationController,
             AggregationControllerAggregationClient aggregationControllerAggregationClient,
-            boolean isAggregationCluster, ClusterInfo clusterInfo) {
+            ClusterInfo clusterInfo) {
         this.context = context;
-        this.useAggregationController = useAggregationController;
         this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
-        this.isAggregationCluster = isAggregationCluster;
         this.clusterInfo = clusterInfo;
     }
 
@@ -48,26 +43,13 @@ public class ValidateProviderAgentWorkerStatus extends AgentWorkerCommand {
         se.tink.backend.core.Credentials coreCredentials = CoreCredentialsMapper
                 .fromAggregationCredentials(credentials);
 
-        if (useAggregationController) {
-            se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest updateCredentialsStatusRequest =
-                    new se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest();
+        se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest updateCredentialsStatusRequest =
+                new se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest();
 
-            updateCredentialsStatusRequest.setCredentials(coreCredentials);
-            updateCredentialsStatusRequest.setUserId(credentials.getUserId());
+        updateCredentialsStatusRequest.setCredentials(coreCredentials);
+        updateCredentialsStatusRequest.setUserId(credentials.getUserId());
 
-            if (isAggregationCluster) {
-                aggregationControllerAggregationClient.updateCredentials(clusterInfo, updateCredentialsStatusRequest);
-            } else {
-                aggregationControllerAggregationClient.updateCredentials(updateCredentialsStatusRequest);
-            }
-        } else {
-            UpdateCredentialsStatusRequest updateCredentialsRequest = new UpdateCredentialsStatusRequest();
-
-            updateCredentialsRequest.setCredentials(coreCredentials);
-            updateCredentialsRequest.setUserId(credentials.getUserId());
-
-            context.getSystemServiceFactory().getUpdateService().updateCredentials(updateCredentialsRequest);
-        }
+        aggregationControllerAggregationClient.updateCredentials(clusterInfo, updateCredentialsStatusRequest);
 
         return AgentWorkerCommandResult.ABORT;
     }
