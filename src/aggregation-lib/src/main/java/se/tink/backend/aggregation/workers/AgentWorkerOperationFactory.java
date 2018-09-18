@@ -19,8 +19,6 @@ import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
-import se.tink.backend.aggregation.rpc.MigrateCredentialsDecryptRequest;
-import se.tink.backend.aggregation.rpc.MigrateCredentialsReencryptRequest;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.ReencryptionRequest;
@@ -34,7 +32,6 @@ import se.tink.backend.aggregation.workers.commands.ClearSensitiveInformationCom
 import se.tink.backend.aggregation.workers.commands.DebugAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DecryptAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DecryptCredentialsWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.DecryptForMigrationAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DeleteAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.EncryptAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.EncryptCredentialsWorkerCommand;
@@ -401,31 +398,6 @@ public class AgentWorkerOperationFactory {
 
         return new AgentWorkerOperation(agentWorkerOperationState, "reencrypt-credentials", request,
                 commands, context);
-    }
-
-    public AgentWorkerOperation createMigrateDecryptCredentialsOperation(ClusterInfo clusterInfo,
-            MigrateCredentialsDecryptRequest request) {
-        AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
-                useAggregationController, aggregationControllerAggregationClient, clusterInfo);
-
-        ImmutableList<AgentWorkerCommand> commands = ImmutableList.of(
-                new LockAgentWorkerCommand(context), // Avoid refreshing while this is going on.
-                new DecryptForMigrationAgentWorkerCommand(context));
-
-        return new AgentWorkerOperation(agentWorkerOperationState, "migrate-decrypt", request, commands, context);
-    }
-
-    public AgentWorkerOperation createMigrateReencryptCredentialsOperation(ClusterInfo clusterInfo,
-            MigrateCredentialsReencryptRequest request) {
-        AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
-                useAggregationController, aggregationControllerAggregationClient, clusterInfo);
-
-        ImmutableList<AgentWorkerCommand> commands = ImmutableList.of(
-                new LockAgentWorkerCommand(context), // Avoid refreshing while this is going on.
-                new EncryptCredentialsWorkerCommand(clusterInfo, cacheClient, clusterCryptoConfigurationRepository,
-                        aggregationControllerAggregationClient, context));
-
-        return new AgentWorkerOperation(agentWorkerOperationState, "migrate-reencrypt", request, commands, context);
     }
 
     // for each account type,

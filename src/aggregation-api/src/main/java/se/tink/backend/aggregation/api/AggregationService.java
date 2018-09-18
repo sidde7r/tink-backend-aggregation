@@ -124,20 +124,6 @@ public interface AggregationService {
     @Produces(MediaType.APPLICATION_JSON)
     Response reEncryptCredentials(ReEncryptCredentialsRequest request, @ClusterContext ClusterInfo clusterInfo);
 
-    @POST
-    @Path("migrate/decrypt")
-    @TeamOwnership(Team.INTEGRATION)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    Credentials migrateDecryptCredentials(MigrateCredentialsDecryptRequest request, @ClusterContext ClusterInfo clusterInfo);
-
-    @POST
-    @Path("migrate/reencrypt")
-    @TeamOwnership(Team.INTEGRATION)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    Response migrateReencryptCredentials(MigrateCredentialsReencryptRequest request, @ClusterContext ClusterInfo clusterInfo);
-
     // temporary endpoint for testing out provider service communication
     @GET
     @Path("provider/ping")

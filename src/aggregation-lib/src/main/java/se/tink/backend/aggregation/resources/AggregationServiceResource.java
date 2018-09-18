@@ -4,7 +4,6 @@ import java.util.Objects;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Path;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
@@ -21,8 +20,6 @@ import se.tink.backend.aggregation.rpc.CreateCredentialsRequest;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.DeleteCredentialsRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
-import se.tink.backend.aggregation.rpc.MigrateCredentialsDecryptRequest;
-import se.tink.backend.aggregation.rpc.MigrateCredentialsReencryptRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.ReencryptionRequest;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
@@ -234,43 +231,6 @@ public class AggregationServiceResource implements AggregationService {
         }
 
         return HttpResponseHelper.ok();
-    }
-
-    @Override
-    public Credentials migrateDecryptCredentials(MigrateCredentialsDecryptRequest request, ClusterInfo clusterInfo) {
-        // There is not any encryption service in the aggregation cluster
-        if (isAggregationCluster) {
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
-        }
-
-        // This is checked in aggregation controller but this is just a precaution
-        Credentials credentials = request.getCredentials();
-        if (credentials.getSensitiveDataSerialized() != null) {
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
-        }
-
-        AgentWorkerOperation updateCredentialsOperation = agentWorkerCommandFactory
-                .createMigrateDecryptCredentialsOperation(clusterInfo, request);
-
-        updateCredentialsOperation.run();
-
-        return updateCredentialsOperation.getRequest().getCredentials();
-    }
-
-    @Override
-    public Response migrateReencryptCredentials(MigrateCredentialsReencryptRequest request, ClusterInfo clusterInfo) {
-        // Only aggregation cluster can encrypt with the new encryption method
-        if (!isAggregationCluster) {
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
-        }
-
-        try {
-            agentWorker.execute(agentWorkerCommandFactory.createMigrateReencryptCredentialsOperation(
-                    clusterInfo, request));
-            return HttpResponseHelper.ok();
-        } catch (Exception e) {
-            throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
-        }
     }
 
     @Override
