@@ -104,7 +104,7 @@ def get_connection():
         except yaml.YAMLError as exc:
             print(exc)
 
-def seed_database(os, seedMarket):
+def seed_providers(os, seedMarket):
     os.chdir(bazelRelativePath)
     serverArgs = ['bazel run :aggregation seed-providers-for-market --jvmopt="-Dmarket=' + seedMarket.upper() + '" etc/development-minikube-aggregation-server.yml']
     server = subprocess.Popen(serverArgs, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -173,7 +173,7 @@ def main(argv):
         providers = json.loads(jsonString)
         market = providers['market']
         currency = providers['currency']
-        seed_database(os, seedMarket)
+        seed_providers(os, seedMarket)
 
     insert_local_development_crypto(db)
     insert_into_cluster_host_configuration(db)
