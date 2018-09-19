@@ -46,9 +46,9 @@ def findPrimaryKey(definedColumns):
         if a['Key']:
             return a['Field']
 
-def mysql_insert(db, tableName, row):
-    cols = row.keys()
-    vals = row.values()
+def mysql_insert(db, tableName, dataDict):
+    cols = dataDict.keys()
+    vals = dataDict.values()
     sql = "INSERT INTO {} ({}) VALUES ({})".format(
         tableName,
         ', '.join(cols),
