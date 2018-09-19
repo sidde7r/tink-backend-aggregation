@@ -52,26 +52,25 @@ def mysql_insert(db, tableName, dataDict):
     db.commit()
 
 def row_exist(db, selectWhat, tableName, primaryKey, primaryValue):
-    sql = "select %s from (%s) where (%s) = %s"
+    sql = "SELECT %s FROM {} WHERE {} = %s".format(tableName, primaryKey)
     print "Looking for rows with the column set to: " + primaryValue
     cursor = db.cursor()
-    primaryValue = "'" + primaryValue + "'"
-    cursor.execute(sql % (selectWhat, tableName,primaryKey, primaryValue))
-    val = cursor.fetchall()
+    cursor.execute(sql, (selectWhat, primaryValue))
+    val = cursor.fetchone()
     db.commit()
-    return not val
+    return val is not None
 
 def insert_local_development_crypto(db):
     if row_exist(db, "clusterid", clusterCryptoConfigurationTable, "clusterid", clusterCryptoConfigurationDefaultValues['clusterid']):
-        mysql_insert(db, clusterCryptoConfigurationTable, clusterCryptoConfigurationDefaultValues)
-    else:
         print "cluster_crypto_configurations already up to date"
+    else:
+        mysql_insert(db, clusterCryptoConfigurationTable, clusterCryptoConfigurationDefaultValues)
 
 def insert_into_cluster_host_configuration(db):
     if row_exist(db, "clusterid", clusterHostConfigurationTable, "clusterid", clusterHostDefaultValues['clusterid']):
-        mysql_insert(db, clusterHostConfigurationTable, clusterHostDefaultValues)
-    else:
         print "cluster_configurations already up to date"
+    else:
+        mysql_insert(db, clusterHostConfigurationTable, clusterHostDefaultValues)
     sql_executor(db, deleteQuery)
     sql_executor(db, joinQuery)
 
