@@ -20,6 +20,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class EuroInformationPasswordAuthenticator implements PasswordAuthenticator {
 
+    public static final String PFM_ENABLED = "pfm_enabled";
     private final Logger LOGGER = LoggerFactory.getLogger(EuroInformationPasswordAuthenticator.class);
     private final EuroInformationApiClient apiClient;
     private final SessionStorage sessionStorage;
@@ -42,8 +43,10 @@ public class EuroInformationPasswordAuthenticator implements PasswordAuthenticat
             handleError(logon);
         }
         PfmInitResponse pfmInitResponse = apiClient.actionInit();
-        if (!EuroInformationUtils.isSuccess(pfmInitResponse.getReturnCode())) {
+        if (!EuroInformationUtils.isSuccess(pfmInitResponse.getReturnCode())
+                || !pfmInitResponse.getInitialization().getUserInfos().contains(PFM_ENABLED)) {
             LOGGER.info("PFM initialization error: " + SerializationUtils.serializeToString(pfmInitResponse));
+            return;
         }
         sessionStorage.put(EuroInformationConstants.Tags.PFM_ENABLED, true);
     }

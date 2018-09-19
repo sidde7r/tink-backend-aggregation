@@ -61,7 +61,7 @@ public class EuroInformationConstants {
         public static final String CATEGORIZE = "categorize";
         public static final String CATEGORIZE_VALUE = "1";
         public static final String WEB_ID = "webid";
-        // Used for INIT call that seems to not be needed
+        //Pfm initialization
         public static final String INIT = "init";
         public static final String ACTION = "action";
 

@@ -97,7 +97,6 @@ public class EuroInformationApiClient {
                 .post(OperationSummaryResponse.class, new TransactionSummaryRequest(webId, recoveryKey));
     }
 
-    //Seems it's not obligatory call so use it for keep-alive
     public PfmInitResponse actionInit() {
         return buildRequestHeaders(EuroInformationConstants.Url.INIT)
                 .post(PfmInitResponse.class, new PfmInitRequest());
