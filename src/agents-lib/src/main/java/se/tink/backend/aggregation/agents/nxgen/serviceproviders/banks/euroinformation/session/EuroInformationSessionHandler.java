@@ -7,10 +7,9 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.authentication.rpc.LogoutResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.session.rpc.InitResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.session.rpc.PfmInitResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationUtils;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class EuroInformationSessionHandler implements SessionHandler {
     private final Logger LOGGER = LoggerFactory.getLogger(EuroInformationSessionHandler.class);
@@ -34,7 +33,7 @@ public class EuroInformationSessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
-        InitResponse response = apiClient.actionInit();
+        PfmInitResponse response = apiClient.actionInit();
         Optional.ofNullable(response).filter(o -> EuroInformationUtils.isSuccess(o.getReturnCode()))
                 .orElseThrow(() -> SessionError.SESSION_EXPIRED.exception());
     }

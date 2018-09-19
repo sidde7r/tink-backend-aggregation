@@ -18,7 +18,4 @@ public interface EuroInformationConfiguration {
         return EuroInformationConstants.Url.LOGIN;
     }
 
-    public default boolean usesPagination() {
-        return false;
-    }
 }

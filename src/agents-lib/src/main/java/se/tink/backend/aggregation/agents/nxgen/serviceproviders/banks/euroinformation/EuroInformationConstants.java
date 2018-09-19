@@ -35,11 +35,13 @@ public class EuroInformationConstants {
         public static final String WEB_ID = "webId";
         public static final String INVESTMENT_ACCOUNTS = "investmentAccounts";
         public static final String INVESTMENT_ACCOUNT = "investmentAccountDetails";
+        public static final String PFM_ENABLED = "pfm";
     }
 
     public static class LoggingTags {
         public final static LogTag creditcardTransactionsTag = LogTag.from("euroinformation_creditcard_transactions");
         public final static LogTag creditcardLogTag = LogTag.from("euroinformation_creditcard_accounts");
+        public final static LogTag loanAccountLogTag = LogTag.from("euroinformation_loan_accounts");
         public final static LogTag unknownAccountTypesTag = LogTag.from("euroinformation_unknown_accounts");
         public final static LogTag investmentLogTag = LogTag.from("euroinformation_investment_data");
     }
@@ -59,7 +61,7 @@ public class EuroInformationConstants {
         public static final String CATEGORIZE = "categorize";
         public static final String CATEGORIZE_VALUE = "1";
         public static final String WEB_ID = "webid";
-        // Used for INIT call that seems to not be needed
+        //Pfm initialization
         public static final String INIT = "init";
         public static final String ACTION = "action";
 
