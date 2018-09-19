@@ -32,7 +32,7 @@ public class CommerzbankTransactionFetcher implements TransactionDatePaginator<T
             try {
                 TransactionResultEntity response = apiClient
                         .fetchAllPages(fromDate, toDate, productType, identifier, productBranch);
-                if (response.containsTransactions()) {
+                if (response != null && response.containsTransactions()) {
                     return response.getItems().get(0);
                 }
 
