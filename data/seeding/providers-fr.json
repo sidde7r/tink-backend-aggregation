@@ -3,6 +3,342 @@
   "currency": "EUR",
   "providers": [
     {
+      "name": "fr-banquepopulaire-alsace-password",
+      "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
+      "credentialsType": "PASSWORD",
+      "groupDisplayName": "Banque Populaire",
+      "displayName": "Banque Populaire Alsace Lorraine Champagne",
+      "fields": [
+        {
+          "description": "Username",
+          "immutable": true,
+          "minLength": 1,
+          "name": "username"
+        },
+        {
+          "description": "Password",
+          "immutable": false,
+          "sensitive": true,
+          "masked": true,
+          "minLength": 1,
+          "name": "password"
+        }
+      ],
+      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+      "status": "ENABLED",
+      "payload": "047",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
+      "name": "fr-banquepopulaire-aquitaine-password",
+      "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
+      "credentialsType": "PASSWORD",
+      "groupDisplayName": "Banque Populaire",
+      "displayName": "Banque Populaire Aquitaine Centre Atlantique",
+      "fields": [
+        {
+          "description": "Username",
+          "immutable": true,
+          "minLength": 1,
+          "name": "username"
+        },
+        {
+          "description": "Password",
+          "immutable": false,
+          "sensitive": true,
+          "masked": true,
+          "minLength": 1,
+          "name": "password"
+        }
+      ],
+      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+      "status": "ENABLED",
+      "payload": "009",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
+      "name": "fr-banquepopulaire-ouest-password",
+      "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
+      "credentialsType": "PASSWORD",
+      "groupDisplayName": "Banque Populaire",
+      "displayName": "Banque Populaire Grand Ouest",
+      "fields": [
+        {
+          "description": "Username",
+          "immutable": true,
+          "minLength": 1,
+          "name": "username"
+        },
+        {
+          "description": "Password",
+          "immutable": false,
+          "sensitive": true,
+          "masked": true,
+          "minLength": 1,
+          "name": "password"
+        }
+      ],
+      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+      "status": "ENABLED",
+      "payload": "038",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
+      "name": "fr-banquepopulaire-auvergne-password",
+      "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
+      "credentialsType": "PASSWORD",
+      "groupDisplayName": "Banque Populaire",
+      "displayName": "Banque Populaire Auvergne Rhône Alpes",
+      "fields": [
+        {
+          "description": "Username",
+          "immutable": true,
+          "minLength": 1,
+          "name": "username"
+        },
+        {
+          "description": "Password",
+          "immutable": false,
+          "sensitive": true,
+          "masked": true,
+          "minLength": 1,
+          "name": "password"
+        }
+      ],
+      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+      "status": "ENABLED",
+      "payload": "068",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
+      "name": "fr-banquepopulaire-bourgogne-password",
+      "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
+      "credentialsType": "PASSWORD",
+      "groupDisplayName": "Banque Populaire",
+      "displayName": "Banque Populaire Bourgogne Franche-Comté",
+      "fields": [
+        {
+          "description": "Username",
+          "immutable": true,
+          "minLength": 1,
+          "name": "username"
+        },
+        {
+          "description": "Password",
+          "immutable": false,
+          "sensitive": true,
+          "masked": true,
+          "minLength": 1,
+          "name": "password"
+        }
+      ],
+      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+      "status": "ENABLED",
+      "payload": "008",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
+      "name": "fr-banquepopulaire-bred-password",
+      "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
+      "credentialsType": "PASSWORD",
+      "groupDisplayName": "Banque Populaire",
+      "displayName": "Banque Populaire BRED",
+      "fields": [
+        {
+          "description": "Username",
+          "immutable": true,
+          "minLength": 1,
+          "name": "username"
+        },
+        {
+          "description": "Password",
+          "immutable": false,
+          "sensitive": true,
+          "masked": true,
+          "minLength": 1,
+          "name": "password"
+        }
+      ],
+      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+      "status": "ENABLED",
+      "payload": "10107",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
+      "name": "fr-banquepopulaire-mediterranee-password",
+      "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
+      "credentialsType": "PASSWORD",
+      "groupDisplayName": "Banque Populaire",
+      "displayName": "Banque Populaire Méditerranée",
+      "fields": [
+        {
+          "description": "Username",
+          "immutable": true,
+          "minLength": 1,
+          "name": "username"
+        },
+        {
+          "description": "Password",
+          "immutable": false,
+          "sensitive": true,
+          "masked": true,
+          "minLength": 1,
+          "name": "password"
+        }
+      ],
+      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+      "status": "ENABLED",
+      "payload": "046",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
+      "name": "fr-banquepopulaire-nord-password",
+      "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
+      "credentialsType": "PASSWORD",
+      "groupDisplayName": "Banque Populaire",
+      "displayName": "Banque Populaire Nord",
+      "fields": [
+        {
+          "description": "Username",
+          "immutable": true,
+          "minLength": 1,
+          "name": "username"
+        },
+        {
+          "description": "Password",
+          "immutable": false,
+          "sensitive": true,
+          "masked": true,
+          "minLength": 1,
+          "name": "password"
+        }
+      ],
+      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+      "status": "ENABLED",
+      "payload": "035",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
+      "name": "fr-banquepopulaire-occitane-password",
+      "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
+      "credentialsType": "PASSWORD",
+      "groupDisplayName": "Banque Populaire",
+      "displayName": "Banque Populaire Occitane",
+      "fields": [
+        {
+          "description": "Username",
+          "immutable": true,
+          "minLength": 1,
+          "name": "username"
+        },
+        {
+          "description": "Password",
+          "immutable": false,
+          "sensitive": true,
+          "masked": true,
+          "minLength": 1,
+          "name": "password"
+        }
+      ],
+      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+      "status": "ENABLED",
+      "payload": "078",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
+      "name": "fr-banquepopulaire-rivesdeparis-password",
+      "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
+      "credentialsType": "PASSWORD",
+      "groupDisplayName": "Banque Populaire",
+      "displayName": "Banque Populaire Rives de Paris",
+      "fields": [
+        {
+          "description": "Username",
+          "immutable": true,
+          "minLength": 1,
+          "name": "username"
+        },
+        {
+          "description": "Password",
+          "immutable": false,
+          "sensitive": true,
+          "masked": true,
+          "minLength": 1,
+          "name": "password"
+        }
+      ],
+      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+      "status": "ENABLED",
+      "payload": "002",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
+      "name": "fr-banquepopulaire-sud-password",
+      "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
+      "credentialsType": "PASSWORD",
+      "groupDisplayName": "Banque Populaire",
+      "displayName": "Banque Populaire Sud",
+      "fields": [
+        {
+          "description": "Username",
+          "immutable": true,
+          "minLength": 1,
+          "name": "username"
+        },
+        {
+          "description": "Password",
+          "immutable": false,
+          "sensitive": true,
+          "masked": true,
+          "minLength": 1,
+          "name": "password"
+        }
+      ],
+      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+      "status": "ENABLED",
+      "payload": "066",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
+      "name": "fr-banquepopulaire-valdefrance-password",
+      "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
+      "credentialsType": "PASSWORD",
+      "groupDisplayName": "Banque Populaire",
+      "displayName": "Banque Populaire Val de France",
+      "fields": [
+        {
+          "description": "Username",
+          "immutable": true,
+          "minLength": 1,
+          "name": "username"
+        },
+        {
+          "description": "Password",
+          "immutable": false,
+          "sensitive": true,
+          "masked": true,
+          "minLength": 1,
+          "name": "password"
+        }
+      ],
+      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+      "status": "ENABLED",
+      "payload": "087",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
       "name": "fr-n26-password",
       "displayName": "N26",
       "groupDisplayName": "N26",
