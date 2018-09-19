@@ -41,11 +41,6 @@ username = ""
 market = ""
 currency = ""
 
-def findPrimaryKey(definedColumns):
-    for a in definedColumns:
-        if a['Key']:
-            return a['Field']
-
 def mysql_insert(db, tableName, dataDict):
     cols = dataDict.keys()
     vals = dataDict.values()
