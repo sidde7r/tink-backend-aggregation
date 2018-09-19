@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import org.assertj.core.util.Preconditions;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.ActivationInstanceRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.ActivationInstanceResponse;
@@ -86,6 +88,13 @@ public class KbcApiClient {
         String cleanString = responseBody.replaceFirst("\\)]}',\n", "");
 
         return SerializationUtils.deserializeFromString(cleanString, responseClass);
+    }
+
+    private void checkBlockedAccount(HeaderDto header) throws AuthorizationException {
+        String resultValue = getResultCodeOrThrow(header);
+        if (Objects.equals(KbcConstants.ResultCode.ZERO_TWO, resultValue)){
+            throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+        }
     }
 
     private String getResultCodeOrThrow(HeaderDto header) {
@@ -211,7 +220,7 @@ public class KbcApiClient {
 
     // == END PRIVATE METHODS ==
 
-    public void prepareSession() {
+    public void prepareSession() throws AuthorizationException {
         generateAndStoreCipherKey();
         keyExchange(KbcConstants.RequestInput.COMPANY_ID, KbcConstants.RequestInput.APP_FAMILY);
     }
@@ -221,28 +230,31 @@ public class KbcApiClient {
         verifyDoubleZeroResponseCode(response.getHeader());
     }
 
-    public KeyExchangeResponse keyExchange(String companyId, String appFamily) {
+    public KeyExchangeResponse keyExchange(String companyId, String appFamily) throws AuthorizationException {
         KeyExchangeRequest request = KeyExchangeRequest.createWithStandardTypes(
                 companyId, appFamily, encryptAndEncodePublicKey());
 
         KeyExchangeResponse response = post(KbcConstants.Url.KEY_EXCHANGE,
                 request, KeyExchangeResponse.class, false);
+        checkBlockedAccount(response.getHeader());
         verifyDoubleZeroResponseCode(response.getHeader());
 
         return response;
     }
 
-    public String challenge() {
+    public String challenge() throws AuthorizationException {
         ChallengeRequest challengeRequest = ChallengeRequest.createWithStandardTypes(
                 KbcConstants.RequestInput.AUTHENTICATION_TYPE, KbcConstants.LANGUAGE);
 
         ChallengeResponse response = post(KbcConstants.Url.CHALLENGE, challengeRequest, ChallengeResponse.class);
+        checkBlockedAccount(response.getHeader());
         verifyDoubleZeroResponseCode(response.getHeader());
 
         return response.getChallenge().getValue();
     }
 
-    public RegisterLogonResponse registerLogon(String username, String challengeResponse) {
+    public RegisterLogonResponse registerLogon(String username, String challengeResponse)
+            throws AuthorizationException {
         RegisterLogonRequest registerLogonRequest = RegisterLogonRequest.builder()
                 .applicationId(KbcConstants.ApplicationId.REGISTER_LOGON)
                 .captcha(KbcConstants.RequestInput.EMPTY_CAPTCHA)
@@ -255,6 +267,7 @@ public class KbcApiClient {
 
         RegisterLogonResponse response =
                 post(KbcConstants.Url.REGISTER_LOGON, registerLogonRequest, RegisterLogonResponse.class);
+        checkBlockedAccount(response.getHeader());
         verifyDoubleZeroResponseCode(response.getHeader());
 
         return response;
@@ -284,49 +297,53 @@ public class KbcApiClient {
         return response.getHeader().getSigningId().getEncoded();
     }
 
-    public String signTypeManual(String signingId) {
+    public String signTypeManual(String signingId) throws AuthorizationException {
         SignRequest signRequest = SignRequest.createWithSigningId(signingId);
 
         SignTypesResponse signTypesResponse =
                 post(KbcConstants.Url.SIGNING_TYPES, signRequest, SignTypesResponse.class);
+        checkBlockedAccount(signTypesResponse.getHeader());
         verifyDoubleZeroResponseCode(signTypesResponse.getHeader());
 
         return signTypesResponse.getSignTypeId(KbcConstants.Predicates.SIGN_TYPE_MANUAL);
     }
 
-    public String signChallenge(String signTypeId, String signingId) {
+    public String signChallenge(String signTypeId, String signingId) throws AuthorizationException {
         SignChallengeRequest signChallengeRequest = SignChallengeRequest.create(signTypeId, signingId);
 
         SignChallengeResponse signChallengeResponse =
                 post(KbcConstants.Url.SIGNING_CHALLENGE, signChallengeRequest, SignChallengeResponse.class);
+        checkBlockedAccount(signChallengeResponse.getHeader());
         verifyDoubleZeroResponseCode(signChallengeResponse.getHeader());
 
         return signChallengeResponse.getChallenge().getValue();
     }
 
-    public String signValidation(String signingResponse, String panNr, String signingId) {
+    public String signValidation(String signingResponse, String panNr, String signingId) throws AuthorizationException {
         SignValidationRequest signValidationRequest = SignValidationRequest.create(signingResponse, panNr, signingId);
 
         SignValidationResponse signValidationResponse =
                 post(KbcConstants.Url.SIGNING_VALIDATION, signValidationRequest, SignValidationResponse.class);
+        checkBlockedAccount(signValidationResponse.getHeader());
         verifyDoubleZeroResponseCode(signValidationResponse.getHeader());
 
         return signValidationResponse.getHeader().getSigningId().getEncoded();
     }
 
-    public EnrollDeviceRoundTwoResponse enrollDeviceWithSigningId(String signingId) {
+    public EnrollDeviceRoundTwoResponse enrollDeviceWithSigningId(String signingId) throws AuthorizationException {
         EnrollDeviceRoundTwoRequest enrollDeviceRoundTwoRequest = EnrollDeviceRoundTwoRequest.create(signingId);
 
         EnrollDeviceRoundTwoResponse enrollDeviceRoundTwoResponse = post(KbcConstants.Url.ENROLL_DEVICE,
                 enrollDeviceRoundTwoRequest,
                 EnrollDeviceRoundTwoResponse.class);
+        checkBlockedAccount(enrollDeviceRoundTwoResponse.getHeader());
         verifyDoubleZeroResponseCode(enrollDeviceRoundTwoResponse.getHeader());
 
         return enrollDeviceRoundTwoResponse;
     }
 
     public ActivationLicenseResponse activationLicence(KbcDevice device, String iv,
-            String encryptedClientPublicKeyAndNonce) {
+            String encryptedClientPublicKeyAndNonce) throws AuthorizationException {
         ActivationLicenseRequest activationLicenseRequest = ActivationLicenseRequest.builder()
                 .applicationId(KbcConstants.RequestInput.APPLICATION_ID)
                 .applicationTypeCode(KbcConstants.ApplicationId.APPLICATION_TYPE_CODE)
@@ -340,13 +357,14 @@ public class KbcApiClient {
 
         ActivationLicenseResponse activationLicenseResponse = post(
                 KbcConstants.Url.ACTIVATION_LICENSE, activationLicenseRequest, ActivationLicenseResponse.class);
+        checkBlockedAccount(activationLicenseResponse.getHeader());
         verifyDoubleZeroResponseCode(activationLicenseResponse.getHeader());
 
         return activationLicenseResponse;
     }
 
     public String activationInstance(KbcDevice device, String iv, String encryptedNonce, String challenge,
-            String deviceCode) {
+            String deviceCode) throws AuthorizationException {
         ActivationInstanceRequest activationInstanceRequest = ActivationInstanceRequest.builder()
                 .applicationId(KbcConstants.RequestInput.APPLICATION_ID)
                 .applicationTypeCode(KbcConstants.ApplicationId.APPLICATION_TYPE_CODE)
@@ -362,12 +380,14 @@ public class KbcApiClient {
 
         ActivationInstanceResponse activationInstanceResponse = post(
                 KbcConstants.Url.ACTIVATION_INSTANCE, activationInstanceRequest, ActivationInstanceResponse.class);
+        checkBlockedAccount(activationInstanceResponse.getHeader());
         verifyDoubleZeroResponseCode(activationInstanceResponse.getHeader());
 
         return activationInstanceResponse.getActivationMessage().getValue();
     }
 
-    public ActivationVerificationResponse activationVerification(KbcDevice device, String verificationMessage) {
+    public ActivationVerificationResponse activationVerification(KbcDevice device, String verificationMessage)
+            throws AuthorizationException {
         ActivationVerificationRequest activationVerificationRequest = ActivationVerificationRequest.builder()
                 .applicationId(KbcConstants.RequestInput.APPLICATION_ID)
                 .applicationTypeCode(KbcConstants.ApplicationId.APPLICATION_TYPE_CODE)
@@ -385,12 +405,13 @@ public class KbcApiClient {
         ActivationVerificationResponse activationVerificationResponse = post(
                 KbcConstants.Url.ACTIVATION_VERIFICATION, activationVerificationRequest,
                 ActivationVerificationResponse.class);
+        checkBlockedAccount(activationVerificationResponse.getHeader());
         verifyDoubleZeroResponseCode(activationVerificationResponse.getHeader());
 
         return activationVerificationResponse;
     }
 
-    public String challengeSotp(KbcDevice device) {
+    public String challengeSotp(KbcDevice device) throws AuthorizationException {
         ChallengeSotpRequest challengeRequest = ChallengeSotpRequest.builder()
                 .setApplicationId(KbcConstants.RequestInput.APPLICATION_ID)
                 .setApplicationTypeCode(KbcConstants.ApplicationId.APPLICATION_TYPE_CODE)
@@ -406,12 +427,13 @@ public class KbcApiClient {
 
         ChallengeSotpResponse challengeResponse = post(
                 KbcConstants.Url.CHALLENGE_SOTP, challengeRequest, ChallengeSotpResponse.class);
+        checkBlockedAccount(challengeResponse.getHeader());
         verifyDoubleZeroResponseCode(challengeResponse.getHeader());
 
         return challengeResponse.getChallenge().getValue();
     }
 
-    public LoginSotpResponse loginSotp(KbcDevice device, String otp) {
+    public LoginSotpResponse loginSotp(KbcDevice device, String otp) throws AuthorizationException {
         LoginSotpRequest loginSotpRequest = LoginSotpRequest.builder()
                 .setApplicationId(KbcConstants.RequestInput.APPLICATION_ID)
                 .setAppType(KbcConstants.ApplicationId.APPLICATION_TYPE_CODE)
@@ -428,6 +450,7 @@ public class KbcApiClient {
                 .build();
 
         LoginSotpResponse response = post(KbcConstants.Url.LOGIN_SOTP, loginSotpRequest, LoginSotpResponse.class);
+        checkBlockedAccount(response.getHeader());
         verifyDoubleZeroResponseCode(response.getHeader());
 
         return response;

@@ -69,7 +69,7 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
         login(device);
     }
 
-    private void registerLogon(String panNr) throws AuthenticationException {
+    private void registerLogon(String panNr) throws AuthenticationException, AuthorizationException {
         String challengeCode = apiClient.challenge();
         String responseCode = waitForLoginCode(challengeCode);
 
@@ -91,7 +91,8 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
         }
     }
 
-    private EnrollDeviceRoundTwoResponse enrollDeviceRoundTwo(String finalSigningId) throws AuthenticationException {
+    private EnrollDeviceRoundTwoResponse enrollDeviceRoundTwo(String finalSigningId)
+            throws AuthenticationException, AuthorizationException {
         try {
             return apiClient.enrollDeviceWithSigningId(finalSigningId);
         } catch (IllegalStateException e) {
@@ -109,7 +110,8 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
         }
     }
 
-    private KbcDevice createAndActivateKbcDevice(EnrollDeviceRoundTwoResponse enrollDeviceRoundTwoResponse) {
+    private KbcDevice createAndActivateKbcDevice(EnrollDeviceRoundTwoResponse enrollDeviceRoundTwoResponse)
+            throws AuthorizationException {
         KbcDevice device = new KbcDevice();
         device.setDeviceId(enrollDeviceRoundTwoResponse.getDeviceId().getValue());
         device.setAccessNumber(enrollDeviceRoundTwoResponse.getAccessNumber().getValue());
