@@ -243,11 +243,6 @@ public class FinTsApiClient {
                         new HKSPA(3, null, null, null));
         FinTsResponse getAccountResponse = sendMessage(getAccountRequest);
         if (!getAccountResponse.isSuccess()) {
-            LONGLOGGER.warnExtraLong(
-                    String.format("Request: %s Response: %s DialogId: %s", getAccountRequest.toString(),
-                            getAccountResponse.toString(),
-                            this.dialogId),
-                    FinTsConstants.LogTags.GET_ACCOUNTS_ERROR);
             throw new IllegalStateException(getAccountResponse.toString());
         }
         String accounts = getAccountResponse.findSegment(FinTsConstants.Segments.HISPA);
@@ -329,8 +324,6 @@ public class FinTsApiClient {
     private boolean noEntry(Map<String, String> status) {
         if (status.containsValue(FinTsConstants.StatusCode.NO_ENTRY) &&
                 status.containsKey(FinTsConstants.StatusMessage.NO_ACTIVE_PHONE_NUMBER_WARNING)) {
-            LOGGER.info("{} Status: {}", FinTsConstants.LogTags.SPARKASSE_NO_PHONE_NUMBER_ATTACHED_WARNING,
-                    status.toString());
             return false;
         }
         return status.containsValue(FinTsConstants.StatusCode.NO_ENTRY);
@@ -363,9 +356,6 @@ public class FinTsApiClient {
             status = response.getLocalStatus();
         }
 
-        LOGGER.info("{} statuses: {} accountNumber: {}", FinTsConstants.LogTags.TRANSACTION_STATUS, status.toString(),
-                accountNo);
-
         //TODO: Need to start checking key AND value
         if (status.containsValue(FinTsConstants.StatusCode.ACCOUNT_NOT_ASSIGNED) ||
                 noEntry(status) ||
@@ -385,10 +375,6 @@ public class FinTsApiClient {
         Map<String, String> touchdowns = response.getTouchDowns(getTransactionRequest);
         List<MT940Statement> transactions = new ArrayList<>(this.parseMt940Transactions(mt940));
 
-        LOGGER.info("{} number of fetched transactions: {} startDate: {} endDate: {} accountNumber: {}",
-                FinTsConstants.LogTags.NUMBER_OF_FETCHED_TRANSACTIONS, transactions.size(), start.toString(),
-                end.toString(), accountNo);
-
         // Process with touchdowns
         String seg = null;
         String mt940Content = null;
@@ -403,8 +389,6 @@ public class FinTsApiClient {
                 transactions.addAll(this.parseMt940Transactions(mt940Content));
                 touchdowns = furtherTransactionsResponse.getTouchDowns(getFurtherTransactionRequest);
             } catch (Exception e) {
-                LOGGER.error("{} error: {}", FinTsConstants.LogTags.SCANNER_PARSING_ERROR, e.toString(), seg,
-                        mt940Content);
                 continue;
             }
 

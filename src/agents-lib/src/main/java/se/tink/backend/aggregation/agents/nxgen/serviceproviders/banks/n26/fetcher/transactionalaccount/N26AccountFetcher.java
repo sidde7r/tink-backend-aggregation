@@ -27,7 +27,6 @@ public class N26AccountFetcher implements AccountFetcher<TransactionalAccount> {
         if(!res.isEmpty()){
             result.addAll(res.toSavingsAccounts());
         }
-        LOGGER.infoExtraLong(SerializationUtils.serializeToString(result), N26Constants.Logging.ACCOUNT_LOGGING);
         return result;
     }
 

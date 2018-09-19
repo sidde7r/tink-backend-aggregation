@@ -25,7 +25,6 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class CommerzbankApiClient {
 
     private final TinkHttpClient client;
-    private static final AggregationLogger LOGGER = new AggregationLogger(CommerzbankApiClient.class);
 
     public CommerzbankApiClient(TinkHttpClient client) {
         this.client = client;
@@ -57,13 +56,7 @@ public class CommerzbankApiClient {
     }
 
     public ResultEntity financialOverview() {
-        String resultString = makeRequest(CommerzbankConstants.URLS.OVERVIEW).post(String.class);
-        LOGGER.infoExtraLong(resultString, CommerzbankConstants.LOGTAG.FINANCE_OVERVIEW);
-        try {
-            return new ObjectMapper().readValue(resultString, RootModel.class).getResult();
-        } catch (IOException e) {
-            throw new IllegalStateException(e.getMessage());
-        }
+        return makeRequest(CommerzbankConstants.URLS.OVERVIEW).post(RootModel.class).getResult();
     }
 
     public SessionModel logout() {
@@ -73,15 +66,6 @@ public class CommerzbankApiClient {
     public HttpResponse keepAlive() {
         return makeRequest(CommerzbankConstants.URLS.OVERVIEW)
                 .post(HttpResponse.class);
-    }
-
-    public void logMultibankingProducts() {
-        try {
-            LOGGER.infoExtraLong(makeRequest(CommerzbankConstants.URLS.MULTIBANKING).post(String.class),
-                    CommerzbankConstants.LOGTAG.MULTIBANKING_PRODUCTS);
-        } catch (Exception e) {
-            LOGGER.warnExtraLong(e.getMessage(), CommerzbankConstants.LOGTAG.MULTIBANKING_ERROR);
-        }
     }
 
     private String toCommerzDate(Date date) {
@@ -119,18 +103,8 @@ public class CommerzbankApiClient {
                         productBranch));
         String serialized = new ObjectMapper().writeValueAsString(transactionRequestBody);
 
-        String res = makeRequest(CommerzbankConstants.URLS.TRANSACTIONS)
-                .post(String.class, serialized);
-
-        LOGGER.infoExtraLong(res, CommerzbankConstants.LOGTAG.TRANSACTION_RESPONSE);
-
-        TransactionResultEntity result = SerializationUtils.deserializeForLogging(res, TransactionModel.class).get()
-                .getResult();
-
-        LOGGER.infoExtraLong(SerializationUtils.serializeToString(result),
-                CommerzbankConstants.LOGTAG.TRANSACTION_LOGGING);
-
-        return result;
+        return makeRequest(CommerzbankConstants.URLS.TRANSACTIONS)
+                .post(TransactionModel.class, serialized).getResult();
     }
 
 }

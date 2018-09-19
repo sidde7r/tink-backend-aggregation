@@ -14,7 +14,6 @@ public class CommerzbankConstants {
         public static final String OVERVIEW = "/app/rest/v3/financeoverview";
         public static final String TRANSACTIONS = "/app/rest/transactionoverview";
         public static final String LOGOUT = "/app/lp/v3/logout";
-        public static final String MULTIBANKING = "/app/rest/v1/multibanking/products";
     }
 
     public static class HEADERS {
@@ -34,13 +33,8 @@ public class CommerzbankConstants {
         public static final String USER_AGENT_VALUE = "MobBkniOS-10.0.0";
         public static final String SESSION_TOKEN_VALUE = "false";
         public static final String CURRENCY_VALUE = "EUR";
-        public static final String PRODUCT_BRANCH = "100";
         public static final String AMOUNT_TYPE = "ALL";
         public static final String LOGOUT_OK = "logoutText.ok";
-    }
-
-    public static class STORAGE {
-        public static final String ROOTMODEL = "ROOTMODEL";
     }
 
     public static class ACCOUNTS {
@@ -60,11 +54,6 @@ public class CommerzbankConstants {
     }
 
     public static class LOGTAG {
-        public static final LogTag FINANCE_OVERVIEW = LogTag.from("#commerzbank_finance_overview");
-        public static final LogTag MULTIBANKING_PRODUCTS = LogTag.from("#commerzbank_multibanking_products");
-        public static final LogTag MULTIBANKING_ERROR = LogTag.from("#commerzbank_multibanking_error");
-        public static final LogTag TRANSACTION_LOGGING = LogTag.from("#commerzbank_transaction_logging");
-        public static final LogTag TRANSACTION_RESPONSE = LogTag.from("#commerzbank_transaction_response");
         public static final LogTag CREDIT_CARD_FETCHING_ERROR = LogTag.from("#commerzbank_credit_card_fetching_error");
         public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("#commerzbank_unknown_account_type");
         public static final LogTag TRANSACTION_FETCHING_ERROR = LogTag.from("#commerzbank_transaction_fetching_error");
