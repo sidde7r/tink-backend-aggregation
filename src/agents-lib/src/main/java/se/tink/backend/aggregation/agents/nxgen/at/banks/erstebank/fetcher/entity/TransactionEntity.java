@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.entity;
 
+import com.google.common.base.Strings;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -35,11 +36,15 @@ public class TransactionEntity {
         return date;
     }
 
-    public boolean isTransaction(){
+    public boolean isTransaction() {
         return amount != null;
     }
 
-    private Date toTinkDate(){
+    public boolean isValidTransaction() {
+        return !Strings.isNullOrEmpty(title) && !Strings.isNullOrEmpty(date) && amount != null;
+    }
+
+    private Date toTinkDate() {
         try {
             return new SimpleDateFormat(ErsteBankConstants.PATTERN.DATE_FORMAT).parse(getDate());
         } catch (ParseException e) {

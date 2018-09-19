@@ -47,10 +47,6 @@ public class ConfigurationModule extends AbstractModule {
 
         bindConstant().annotatedWith(Names.named("developmentMode")).to(configuration.isDevelopmentMode());
         bindConstant().annotatedWith(Names.named("productionMode")).to(!configuration.isDevelopmentMode());
-        bindConstant().annotatedWith(Names.named("useAggregationController"))
-                .to(configuration.isUseAggregationController());
-        bindConstant().annotatedWith(Names.named("isAggregationCluster"))
-                .to(configuration.isAggregationCluster());
         bindConstant().annotatedWith(Names.named("isProvidersOnAggregation"))
                 .to(configuration.isProvidersOnAggregation());
         bindConstant().annotatedWith(Names.named("queueAvailable"))

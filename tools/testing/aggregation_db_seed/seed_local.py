@@ -3,16 +3,14 @@ import json
 import pymysql
 import yaml
 import substring
-import sys
-import os
 import os, sys, select, subprocess
+import getopt
 import time
 
 
 #########################
 #Configuration Variables#
 #########################
-path = "../../../data/seeding/providers-" + sys.argv[1] + ".json"
 bazelRelativePath = "../../../"
 aggregatonConfigurationsFile = "../../../etc/development-minikube-aggregation-server.yml"
 
@@ -143,20 +141,59 @@ def seedDatabase(os):
         if server.poll() != None:
             break
 
+def showHelp(f, argv):
+    h = "%s [-h] [-a] [-c Aggregation controller host] [-f] [-m Market]\n" % argv[0]
+    h += "  -h/--help     	  This menu\n"
+    h += "  -a/--aggregation     	  Setup to only test Aggregation\n"
+    h += "  -c/--custom-host=       Server host for Aggregation controller (including port)\n"
+    h += "  -f/--full     	  Setup aggregation to use Aggregation controller\n"
+    h += "  -m/--market     	  Market to seed (Like SE, DK, ...)\n"
+    print >>f, h
 
-filePath = os.path.abspath(__file__)
-os.chdir(os.path.dirname(filePath))
+def main(argv):
+    try:
+        opts, args = getopt.getopt(
+                                argv[1:],
+                                "hfc:am:",
+                                ["help", "full", "custom=", "aggregation", "market="]
+                            )
+    except getopt.GetoptError:
+        showHelp(sys.stderr, argv)
+        return 1
 
-db = getConnection()
+    global clusterHostDefaultValues
+    seedMarket = ""
+    for opt, arg in opts:
+        if opt in ("-f", "--full"):
+            clusterHostDefaultValues['host'] = 'http://127.0.0.1:9098'
+        elif opt in ("-a", "--aggregation"):
+            clusterHostDefaultValues['host'] = 'http://127.0.0.1:5000'
+        elif opt in ("-m", "--market"):
+            seedMarket = arg
+        elif opt in ("-c", "--custom-host"):
+            clusterHostDefaultValues['host'] = arg
+        elif opt in ("-h", "--help"):
+            showHelp(sys.stdout, argv)
+            return 0
 
-tablename = "provider_configurations"
-inputfile = file(path, "r")
-jsonString = inputfile.read()
-providers = json.loads(jsonString)
-market = providers['market']
-currency = providers['currency']
+    filePath = os.path.abspath(__file__)
+    os.chdir(os.path.dirname(filePath))
 
-seedDatabase(os)
+    db = getConnection()
 
-insertLocalDevelopmentCrypto(db)
-insertIntoClusterHostConfiguration(db)
+    tablename = "provider_configurations"
+    path = "../../../data/seeding/providers-" + seedMarket + ".json"
+    inputfile = file(path, "r")
+    jsonString = inputfile.read()
+    providers = json.loads(jsonString)
+    market = providers['market']
+    currency = providers['currency']
+
+    seedDatabase(os)
+
+    insertLocalDevelopmentCrypto(db)
+    insertIntoClusterHostConfiguration(db)
+    return 0
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))

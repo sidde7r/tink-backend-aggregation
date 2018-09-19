@@ -19,13 +19,13 @@ public class TransactionsResponse implements PaginatorResponse {
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        return transactions.stream().filter(TransactionEntity::isTransaction)
+        return transactions.stream().filter(TransactionEntity::isValidTransaction)
                 .map(TransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }
 
     @Override
     public Optional<Boolean> canFetchMore() {
-        return Optional.of(page < totalPages);
+        return Optional.of(totalElements > 0 && page < totalPages);
     }
 }

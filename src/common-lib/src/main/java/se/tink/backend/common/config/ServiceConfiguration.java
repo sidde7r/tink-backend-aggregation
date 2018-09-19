@@ -58,12 +58,6 @@ public class ServiceConfiguration extends Configuration {
     private PrometheusConfiguration prometheus = new PrometheusConfiguration();
 
     @JsonProperty
-    private boolean useAggregationController = false;
-
-    @JsonProperty
-    private boolean isAggregationCluster = false;
-
-    @JsonProperty
     private boolean isProvidersOnAggregation = false;
 
     @JsonProperty
@@ -147,14 +141,6 @@ public class ServiceConfiguration extends Configuration {
 
     public PrometheusConfiguration getPrometheus() {
         return prometheus;
-    }
-
-    public boolean isUseAggregationController() {
-        return useAggregationController;
-    }
-
-    public boolean isAggregationCluster() {
-        return isAggregationCluster;
     }
 
     public boolean isProvidersOnAggregation() {

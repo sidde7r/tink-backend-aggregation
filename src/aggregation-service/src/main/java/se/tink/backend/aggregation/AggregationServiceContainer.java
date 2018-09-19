@@ -60,19 +60,6 @@ public class AggregationServiceContainer extends AbstractServiceContainer {
     @SuppressWarnings("unchecked")
     @Override
     protected void build(ServiceConfiguration configuration, Environment environment) throws Exception {
-
-        if (!configuration.isAggregationCluster() && configuration.getServiceAuthentication() != null
-                && !configuration.getServiceAuthentication().getServerTokens().isEmpty()) {
-            Predicate<String> authorizationAuthorizers = Predicates.or(
-                    new ApiTokenAuthorizationHeaderPredicate(configuration.getServiceAuthentication()
-                            .getServerTokens()),
-                    new YubicoAuthorizationHeaderPredicate(
-                            configuration.getYubicoClientId(),
-                            configuration.getServiceAuthentication().getYubikeys()));
-            environment.jersey().getResourceConfig().getResourceFilterFactories()
-                    .add(new ContainerAuthorizationResourceFilterFactory(authorizationAuthorizers));
-        }
-
         Injector injector = DropwizardLifecycleInjectorFactory.build(
                 environment.lifecycle(),
                 AggregationModuleFactory.build(configuration, environment));
@@ -84,17 +71,10 @@ public class AggregationServiceContainer extends AbstractServiceContainer {
 
     private void buildContainer(ServiceConfiguration configuration, Environment environment,
             ServiceContext serviceContext, Injector injector) {
-
-        if (!configuration.isAggregationCluster()) {
-            // Check connectivity to encryption service. Will throw an exception if not reachable. Very important this check
-            // is done before the aggregation container is fully functioning and its services are registered to Jersey etc.
-            serviceContext.getEncryptionServiceFactory().getEncryptionService().ping();
-        }
-
         AgentWorker agentWorker = injector.getInstance(AgentWorker.class);
 
         final AggregationServiceResource aggregationServiceResource = new AggregationServiceResource(serviceContext,
-                injector.getInstance(MetricRegistry.class), configuration.isUseAggregationController(),
+                injector.getInstance(MetricRegistry.class),
                 new AggregationControllerAggregationClient(
                         configuration.getEndpoints().getAggregationcontroller(),
                         serviceContext.getCoordinationClient()),
@@ -111,15 +91,5 @@ public class AggregationServiceContainer extends AbstractServiceContainer {
         inProcessAggregationServiceFactory.setCreditSafeService(creditSafeServiceResource);
 
         environment.jersey().register(inProcessAggregationServiceFactory.getAggregationService());
-
-        if (Objects.equals(Cluster.TINK, configuration.getCluster()) && !configuration.isAggregationCluster()) {
-            environment.jersey().register(inProcessAggregationServiceFactory.getCreditSafeService());
-        }
-
-        if (!configuration.isAggregationCluster()) {
-            ServiceDiscoveryHelper serviceDiscoveryHelper = constructServiceDiscoveryHelperFromConfiguration(
-                    serviceContext.getCoordinationClient(), configuration, AggregationServiceFactory.SERVICE_NAME);
-            environment.lifecycle().manage(serviceDiscoveryHelper);
-        }
     }
 }

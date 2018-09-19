@@ -4,17 +4,6 @@ from __future__ import print_function
 import os
 
 BRANCHES = {
-    'oxford-production': {'block': True},
-    'oxford-staging': {'block': False},
-    'leeds-production': {'block': True},
-    'leeds-staging': {'block': True},
-    'cornwall-production': {'block': True},
-    'cornwall-testing': {'block': True},
-    'kirkby-production': {'block': True},
-    'kirkby-staging': {'block': True},
-    'newport-production': {'block': True},
-    'newport-staging': {'block': True},
-    'farnham-staging': {'block': True},
     'aggregation-production': {'block': True},
     'aggregation-staging': {'block': True},
 }
@@ -24,10 +13,6 @@ PROJECTS = {
         'chart': False,
         'salt': True,
         'branches': [
-            'leeds-production',
-            'leeds-staging',
-            'newport-production',
-            'newport-staging',
             'aggregation-production',
             'aggregation-staging'
         ],},

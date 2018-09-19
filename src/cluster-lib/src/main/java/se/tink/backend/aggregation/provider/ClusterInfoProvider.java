@@ -15,14 +15,11 @@ import java.util.Map;
 public class ClusterInfoProvider {
 
     private static Map<String, ClusterHostConfiguration> clusterHostConfigurations;
-    private boolean isAggregationCluster;
 
     @Inject
     public ClusterInfoProvider(
-            @Named("clusterHostConfigurations") Map<String, ClusterHostConfiguration> clusterHostConfigurations,
-            @Named("isAggregationCluster") boolean isAggregationCluster) {
+            @Named("clusterHostConfigurations") Map<String, ClusterHostConfiguration> clusterHostConfigurations) {
         this.clusterHostConfigurations = clusterHostConfigurations;
-        this.isAggregationCluster = isAggregationCluster;
     }
 
     private void validateClusterHostConfiguration(ClusterHostConfiguration configuration) {
@@ -55,16 +52,10 @@ public class ClusterInfoProvider {
     }
 
     public ClusterInfo getClusterInfo(String clusterName, String clusterEnvironment) throws ClusterNotValid {
-        ClusterId clusterId;
-        if (!isAggregationCluster) {
-            clusterId = ClusterId.createEmpty();
-            return ClusterInfo.createForLegacyAggregation(clusterId);
-        }
-
         ClusterHostConfiguration configuration = getValidClusterHost(clusterName, clusterEnvironment);
         Aggregator aggregator = createAggregator(configuration);
 
-        clusterId = ClusterId.of(clusterName,
+        ClusterId clusterId = ClusterId.of(clusterName,
                 clusterEnvironment);
 
         return  ClusterInfo.createForAggregationCluster(clusterId,

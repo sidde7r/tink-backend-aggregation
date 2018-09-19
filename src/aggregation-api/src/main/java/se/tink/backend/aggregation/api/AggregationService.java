@@ -18,11 +18,8 @@ import se.tink.backend.aggregation.rpc.CreateCredentialsRequest;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.DeleteCredentialsRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
-import se.tink.backend.aggregation.rpc.MigrateCredentialsDecryptRequest;
-import se.tink.backend.aggregation.rpc.MigrateCredentialsReencryptRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
-import se.tink.backend.aggregation.rpc.ReencryptionRequest;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.SupplementInformationRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
@@ -39,13 +36,6 @@ public interface AggregationService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Credentials createCredentials(CreateCredentialsRequest request, @ClusterContext ClusterInfo clusterInfo);
-
-    @POST
-    @Path("reencrypt")
-    @TeamOwnership(Team.INTEGRATION)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    Credentials reencryptCredentials(ReencryptionRequest request, @ClusterContext ClusterInfo clusterInfo);
 
     @POST
     @Path("delete")
@@ -123,20 +113,6 @@ public interface AggregationService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response reEncryptCredentials(ReEncryptCredentialsRequest request, @ClusterContext ClusterInfo clusterInfo);
-
-    @POST
-    @Path("migrate/decrypt")
-    @TeamOwnership(Team.INTEGRATION)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    Credentials migrateDecryptCredentials(MigrateCredentialsDecryptRequest request, @ClusterContext ClusterInfo clusterInfo);
-
-    @POST
-    @Path("migrate/reencrypt")
-    @TeamOwnership(Team.INTEGRATION)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    Response migrateReencryptCredentials(MigrateCredentialsReencryptRequest request, @ClusterContext ClusterInfo clusterInfo);
 
     // temporary endpoint for testing out provider service communication
     @GET

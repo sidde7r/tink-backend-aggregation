@@ -46,18 +46,6 @@ public class ProviderConfigurationServiceContainer extends AbstractServiceContai
     @SuppressWarnings("unchecked")
     @Override
     protected void build(ServiceConfiguration configuration, Environment environment) throws Exception {
-        if (!configuration.isAggregationCluster() && configuration.getServiceAuthentication() != null
-                && !configuration.getServiceAuthentication().getServerTokens().isEmpty()) {
-            Predicate<String> authorizationAuthorizers = Predicates.or(
-                    new ApiTokenAuthorizationHeaderPredicate(configuration.getServiceAuthentication()
-                            .getServerTokens()),
-                    new YubicoAuthorizationHeaderPredicate(
-                            configuration.getYubicoClientId(),
-                            configuration.getServiceAuthentication().getYubikeys()));
-            environment.jersey().getResourceConfig().getResourceFilterFactories()
-                            .add(new ContainerAuthorizationResourceFilterFactory(authorizationAuthorizers));
-        }
-
         DropwizardLifecycleInjectorFactory.build(
                 environment.lifecycle(),
                 ProviderModuleFactory.build(configuration, environment.jersey()));
