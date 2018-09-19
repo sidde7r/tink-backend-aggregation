@@ -52,7 +52,7 @@ def mysql_insert(db, tableName, row):
     sql = "INSERT INTO {} ({}) VALUES ({})".format(
         tableName,
         ', '.join(cols),
-        ', '.join(['%s'] * len(cols)));
+        ', '.join(['%s'] * len(cols)))
     db.cursor().execute(sql, vals)
     db.commit()
 
