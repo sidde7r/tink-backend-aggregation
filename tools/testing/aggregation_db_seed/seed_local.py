@@ -51,7 +51,7 @@ def mysql_insert(db, tableName, dataDict):
     db.cursor().execute(sql, vals)
     db.commit()
 
-def rowExist(db, selectWhat, tableName, primaryKey, primaryValue):
+def row_exist(db, selectWhat, tableName, primaryKey, primaryValue):
     sql = "select %s from (%s) where (%s) = %s"
     print "Looking for rows with the column set to: " + primaryValue
     cursor = db.cursor()
@@ -61,22 +61,22 @@ def rowExist(db, selectWhat, tableName, primaryKey, primaryValue):
     db.commit()
     return not val
 
-def insertLocalDevelopmentCrypto(db):
-    if rowExist(db, "clusterid", clusterCryptoConfigurationTable, "clusterid", clusterCryptoConfigurationDefaultValues['clusterid']):
+def insert_local_development_crypto(db):
+    if row_exist(db, "clusterid", clusterCryptoConfigurationTable, "clusterid", clusterCryptoConfigurationDefaultValues['clusterid']):
         mysql_insert(db, clusterCryptoConfigurationTable, clusterCryptoConfigurationDefaultValues)
     else:
         print "cluster_crypto_configurations already up to date"
 
-def insertIntoClusterHostConfiguration(db):
-    if rowExist(db, "clusterid", clusterHostConfigurationTable, "clusterid", clusterHostDefaultValues['clusterid']):
+def insert_into_cluster_host_configuration(db):
+    if row_exist(db, "clusterid", clusterHostConfigurationTable, "clusterid", clusterHostDefaultValues['clusterid']):
         mysql_insert(db, clusterHostConfigurationTable, clusterHostDefaultValues)
     else:
         print "cluster_configurations already up to date"
-    sqlExecutor(db, deleteQuery)
-    sqlExecutor(db, joinQuery)
+    sql_executor(db, deleteQuery)
+    sql_executor(db, joinQuery)
 
 
-def sqlExecutor(db, sql):
+def sql_executor(db, sql):
     cursor = db.cursor()
     cursor.execute(sql)
     val = cursor.fetchall()
@@ -84,7 +84,7 @@ def sqlExecutor(db, sql):
     return val
 
 
-def getConnection():
+def get_connection():
     with open(aggregatonConfigurationsFile, 'r') as stream:
         try:
             aggregatonConfigurations = (yaml.load(stream))
@@ -105,7 +105,7 @@ def getConnection():
         except yaml.YAMLError as exc:
             print(exc)
 
-def seedDatabase(os, seedMarket):
+def seed_database(os, seedMarket):
     os.chdir(bazelRelativePath)
     serverArgs = ['bazel run :aggregation seed-providers-for-market --jvmopt="-Dmarket=' + seedMarket.upper() + '" etc/development-minikube-aggregation-server.yml']
     server = subprocess.Popen(serverArgs, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -163,7 +163,7 @@ def main(argv):
     filePath = os.path.abspath(__file__)
     os.chdir(os.path.dirname(filePath))
 
-    db = getConnection()
+    db = get_connection()
 
     tablename = "provider_configurations"
 
@@ -174,10 +174,10 @@ def main(argv):
         providers = json.loads(jsonString)
         market = providers['market']
         currency = providers['currency']
-        seedDatabase(os, seedMarket)
+        seed_database(os, seedMarket)
 
-    insertLocalDevelopmentCrypto(db)
-    insertIntoClusterHostConfiguration(db)
+    insert_local_development_crypto(db)
+    insert_into_cluster_host_configuration(db)
     return 0
 
 if __name__ == "__main__":
