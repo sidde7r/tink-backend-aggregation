@@ -59,46 +59,46 @@ def findPrimaryKey(definedColumns):
         if a['Key']:
             return a['Field']
 
-def mysql_insert(conn, table, row):
+def mysql_insert(db, table, row):
     cols = row.keys()
     vals = row.values()
     sql = "INSERT INTO {} ({}) VALUES ({})".format(
         table,
         ', '.join(cols),
         ', '.join(['%s'] * len(cols)));
-    conn.cursor().execute(sql, vals)
-    conn.commit()
+    db.cursor().execute(sql, vals)
+    db.commit()
 
-def rowExist(conn, selectWhat, table, primaryKey, primaryValue):
+def rowExist(db, selectWhat, table, primaryKey, primaryValue):
     sql = "select %s from (%s) where (%s) = %s"
     print "Looking for rows with the column set to: " + primaryValue
-    cursor = conn.cursor()
+    cursor = db.cursor()
     primaryValue = "'" + primaryValue + "'"
     cursor.execute(sql % (selectWhat, table,primaryKey, primaryValue))
     val = cursor.fetchall()
-    conn.commit()
+    db.commit()
     return not val
 
-def insertLocalDevelopmentCrypto(conn):
-    if rowExist(conn, "clusterid", clusterCryptoConfigurationTable, "clusterid", clusterCryptoConfigurationDefaultValues['clusterid']):
-        mysql_insert(conn, clusterCryptoConfigurationTable, clusterCryptoConfigurationDefaultValues)
+def insertLocalDevelopmentCrypto(db):
+    if rowExist(db, "clusterid", clusterCryptoConfigurationTable, "clusterid", clusterCryptoConfigurationDefaultValues['clusterid']):
+        mysql_insert(db, clusterCryptoConfigurationTable, clusterCryptoConfigurationDefaultValues)
     else:
         print "cluster_crypto_configurations already up to date"
 
-def insertIntoClusterHostConfiguration(conn):
-    if rowExist(conn, "clusterid", clusterHostConfigurationTable, "clusterid", clusterHostDefaultValues['clusterid']):
-        mysql_insert(conn, clusterHostConfigurationTable, clusterHostDefaultValues)
+def insertIntoClusterHostConfiguration(db):
+    if rowExist(db, "clusterid", clusterHostConfigurationTable, "clusterid", clusterHostDefaultValues['clusterid']):
+        mysql_insert(db, clusterHostConfigurationTable, clusterHostDefaultValues)
     else:
         print "cluster_configurations already up to date"
-    sqlExecutor(conn, deleteQuery)
-    sqlExecutor(conn, joinQuery)
+    sqlExecutor(db, deleteQuery)
+    sqlExecutor(db, joinQuery)
 
 
-def sqlExecutor(conn, sql):
-    cursor = conn.cursor()
+def sqlExecutor(db, sql):
+    cursor = db.cursor()
     cursor.execute(sql)
     val = cursor.fetchall()
-    conn.commit()
+    db.commit()
     return val
 
 
