@@ -51,9 +51,13 @@ def mysql_insert(db, tableName, dataDict):
     db.cursor().execute(sql, vals)
     db.commit()
 
+def mysql_delete(db, tableName, clusterid):
+    sql = "DELETE FROM {} WHERE clusterid = %s".format(tableName)
+    db.cursor().execute(sql, clusterid)
+    db.commit()
+
 def row_exist(db, selectWhat, tableName, primaryKey, primaryValue):
     sql = "SELECT %s FROM {} WHERE {} = %s".format(tableName, primaryKey)
-    print "Looking for rows with the column set to: " + primaryValue
     cursor = db.cursor()
     cursor.execute(sql, (selectWhat, primaryValue))
     val = cursor.fetchone()
@@ -62,15 +66,19 @@ def row_exist(db, selectWhat, tableName, primaryKey, primaryValue):
 
 def insert_local_development_crypto(db):
     if row_exist(db, "clusterid", clusterCryptoConfigurationTable, "clusterid", clusterCryptoConfigurationDefaultValues['clusterid']):
-        print "cluster_crypto_configurations already up to date"
-    else:
-        mysql_insert(db, clusterCryptoConfigurationTable, clusterCryptoConfigurationDefaultValues)
+        print "Deleting previous configuration for cluster crypto configuration table."
+        mysql_delete(db, clusterCryptoConfigurationTable, clusterCryptoConfigurationDefaultValues['clusterid'])
+
+    print "Inserting configuration for cluster crypto configuration table."
+    mysql_insert(db, clusterCryptoConfigurationTable, clusterCryptoConfigurationDefaultValues)
 
 def insert_into_cluster_host_configuration(db):
     if row_exist(db, "clusterid", clusterHostConfigurationTable, "clusterid", clusterHostDefaultValues['clusterid']):
-        print "cluster_configurations already up to date"
-    else:
-        mysql_insert(db, clusterHostConfigurationTable, clusterHostDefaultValues)
+        print "Deleting previous configuration for cluster host configuration table."
+        mysql_delete(db, clusterHostConfigurationTable, clusterCryptoConfigurationDefaultValues['clusterid'])
+
+    print "Inserting configuration for cluster host configuration table."
+    mysql_insert(db, clusterHostConfigurationTable, clusterHostDefaultValues)
     sql_executor(db, deleteQuery)
     sql_executor(db, joinQuery)
 
@@ -177,6 +185,9 @@ def main(argv):
 
     insert_local_development_crypto(db)
     insert_into_cluster_host_configuration(db)
+    print """
+*** Seeding finished succesfully ***
+    """
     return 0
 
 if __name__ == "__main__":
