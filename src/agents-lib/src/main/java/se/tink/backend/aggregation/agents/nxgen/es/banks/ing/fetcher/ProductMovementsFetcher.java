@@ -28,7 +28,6 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.core.Amount;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 abstract class ProductMovementsFetcher<A extends Account, T extends Transaction> implements AccountFetcher<A>,
         TransactionMonthPaginator<A> {
@@ -89,19 +88,7 @@ abstract class ProductMovementsFetcher<A extends Account, T extends Transaction>
     protected abstract T toTinkTransaction(A account, Element movement);
 
     protected static Optional<AccountTypes> mapToKnownType(Product product) {
-        switch (product.getType()) {
-        case IngConstants.ProductType.DEBIT_CARD:
-        case IngConstants.ProductType.VALUE_ACCOUNT:
-            return Optional.empty();
-        case IngConstants.ProductType.ACCOUNT_WITHOUT_PAYROLL:
-            return Optional.of(AccountTypes.CHECKING);
-        case IngConstants.ProductType.ORANGE_ACCOUNT:
-            return Optional.of(AccountTypes.SAVINGS);
-        default:
-            LOGGER.infoExtraLong(SerializationUtils.serializeToString(product),
-                    IngConstants.Logging.UNKNOWN_ACCOUNT_TYPE);
-            return Optional.empty();
-        }
+        return IngConstants.ProductType.translate(product);
     }
 
     protected static void copyCommonAttributes(Product product, Account.Builder builder) {
