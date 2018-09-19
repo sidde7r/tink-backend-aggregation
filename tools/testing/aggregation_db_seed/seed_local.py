@@ -41,19 +41,6 @@ username = ""
 market = ""
 currency = ""
 
-
-def join(columns, rowdict):
-    for row in rowdict:
-        row = row.lower()
-
-    rowdict = {k.lower(): v for k, v in rowdict.items()}
-    returnDict = {}
-    for column in columns:
-        if column['Field'].lower() in rowdict:
-            returnDict[column['Field']] = rowdict[column['Field']]
-
-    return returnDict
-
 def findPrimaryKey(definedColumns):
     for a in definedColumns:
         if a['Key']:
