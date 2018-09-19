@@ -123,9 +123,9 @@ def getConnection():
         except yaml.YAMLError as exc:
             print(exc)
 
-def seedDatabase(os):
+def seedDatabase(os, seedMarket):
     os.chdir(bazelRelativePath)
-    serverArgs = ['bazel run :aggregation seed-providers-for-market --jvmopt="-Dmarket=' + sys.argv[1].upper() + '" etc/development-minikube-aggregation-server.yml']
+    serverArgs = ['bazel run :aggregation seed-providers-for-market --jvmopt="-Dmarket=' + seedMarket.upper() + '" etc/development-minikube-aggregation-server.yml']
     server = subprocess.Popen(serverArgs, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     
     while True:
@@ -163,12 +163,14 @@ def main(argv):
 
     global clusterHostDefaultValues
     seedMarket = ""
+    isSeedProviders = False
     for opt, arg in opts:
         if opt in ("-f", "--full"):
             clusterHostDefaultValues['host'] = 'http://127.0.0.1:9098'
         elif opt in ("-a", "--aggregation"):
             clusterHostDefaultValues['host'] = 'http://127.0.0.1:5000'
         elif opt in ("-m", "--market"):
+            isSeedProviders = True
             seedMarket = arg
         elif opt in ("-c", "--custom-host"):
             clusterHostDefaultValues['host'] = arg
@@ -182,14 +184,15 @@ def main(argv):
     db = getConnection()
 
     tablename = "provider_configurations"
-    path = "../../../data/seeding/providers-" + seedMarket + ".json"
-    inputfile = file(path, "r")
-    jsonString = inputfile.read()
-    providers = json.loads(jsonString)
-    market = providers['market']
-    currency = providers['currency']
 
-    seedDatabase(os)
+    if isSeedProviders:
+        path = "../../../data/seeding/providers-" + seedMarket + ".json"
+        inputfile = file(path, "r")
+        jsonString = inputfile.read()
+        providers = json.loads(jsonString)
+        market = providers['market']
+        currency = providers['currency']
+        seedDatabase(os, seedMarket)
 
     insertLocalDevelopmentCrypto(db)
     insertIntoClusterHostConfiguration(db)
