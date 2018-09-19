@@ -2,10 +2,8 @@
 import json
 import pymysql
 import yaml
-import substring
-import os, sys, select, subprocess
+import os, sys, subprocess
 import getopt
-import time
 
 
 #########################
