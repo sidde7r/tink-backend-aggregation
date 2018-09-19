@@ -5,6 +5,7 @@ import com.google.inject.name.Names;
 import com.google.inject.util.Providers;
 import se.tink.backend.common.config.CacheConfiguration;
 import se.tink.backend.common.config.GrpcConfiguration;
+import se.tink.backend.common.config.S3StorageConfiguration;
 import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.backend.queue.sqs.configuration.SqsQueueConfiguration;
 import se.tink.backend.guice.annotations.AggregationConfiguration;
@@ -44,6 +45,7 @@ public class ConfigurationModule extends AbstractModule {
         bind(EndpointConfiguration.class).annotatedWith(ProviderConfiguration.class)
                 .toProvider(Providers.of(configuration.getEndpoints().getProviderConfiguration()));
         bind(EndpointsConfiguration.class).toProvider(Providers.of(configuration.getEndpoints()));
+        bind(S3StorageConfiguration.class).toProvider(Providers.of(configuration.getS3StorageConfiguration()));
 
         bindConstant().annotatedWith(Names.named("developmentMode")).to(configuration.isDevelopmentMode());
         bindConstant().annotatedWith(Names.named("productionMode")).to(!configuration.isDevelopmentMode());

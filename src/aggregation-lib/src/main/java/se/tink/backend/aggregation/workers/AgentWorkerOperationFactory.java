@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.rpc.TransferRequest;
+import se.tink.backend.aggregation.s3storage.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorkerOperation.AgentWorkerOperationState;
 import se.tink.backend.aggregation.workers.commands.CircuitBreakerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ClearSensitiveInformationCommand;
@@ -75,11 +76,11 @@ public class AgentWorkerOperationFactory {
     private AggregationControllerAggregationClient aggregationControllerAggregationClient;
     private MetricRegistry metricRegistry;
     private ServiceContext serviceContext;
-
+    private final AgentDebugStorageHandler agentDebugStorageHandler;
 
     @Inject
     public AgentWorkerOperationFactory(ServiceContext serviceContext, MetricRegistry metricRegistry,
-            AggregationControllerAggregationClient aggregationControllerAggregationClient) {
+            AggregationControllerAggregationClient aggregationControllerAggregationClient, AgentDebugStorageHandler agentDebugStorageHandler) {
         this.clusterCryptoConfigurationRepository =
                 serviceContext.getRepository(ClusterCryptoConfigurationRepository.class);
         this.cacheClient = serviceContext.getCacheClient();
@@ -97,6 +98,7 @@ public class AgentWorkerOperationFactory {
         this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
         this.metricRegistry = metricRegistry;
         this.serviceContext = serviceContext;
+        this.agentDebugStorageHandler = agentDebugStorageHandler;
     }
 
     private AgentWorkerCommandMetricState createMetricState(CredentialsRequest request) {
@@ -217,7 +219,7 @@ public class AgentWorkerOperationFactory {
         commands.add(new LockAgentWorkerCommand(context));
         commands.add(new DecryptCredentialsWorkerCommand(clusterInfo, cacheClient,
                 clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context));
-        commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState));
+        commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)));
 
@@ -245,7 +247,7 @@ public class AgentWorkerOperationFactory {
         commands.add(new LockAgentWorkerCommand(context));
         commands.add(new DecryptCredentialsWorkerCommand(clusterInfo, cacheClient,
                 clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context));
-        commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState));
+        commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)));
         commands.add(new TransferAgentWorkerCommand(context, request, createMetricState(request)));
@@ -306,7 +308,7 @@ public class AgentWorkerOperationFactory {
         commands.add(new LockAgentWorkerCommand(context));
         commands.add(new DecryptCredentialsWorkerCommand(clusterInfo, cacheClient,
                 clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context));
-        commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState));
+        commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(new KeepAliveAgentWorkerCommand(context));
 
@@ -381,7 +383,7 @@ public class AgentWorkerOperationFactory {
         commands.add(new LockAgentWorkerCommand(context));
         commands.add(new DecryptCredentialsWorkerCommand(clusterInfo, cacheClient,
                 clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context));
-        commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState));
+        commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)));
         commands.addAll(
@@ -421,7 +423,7 @@ public class AgentWorkerOperationFactory {
         commands.add(new DecryptCredentialsWorkerCommand(clusterInfo, cacheClient,
                     clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context));
 
-        commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState));
+        commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)));
         commands.addAll(

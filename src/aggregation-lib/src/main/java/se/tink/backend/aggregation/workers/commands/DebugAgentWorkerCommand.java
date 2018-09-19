@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.rpc.CredentialsRequestType;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.rpc.User;
+import se.tink.backend.aggregation.s3storage.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
@@ -25,10 +26,14 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
     private DebugAgentWorkerCommandState state;
     private AgentWorkerContext context;
+    private AgentDebugStorageHandler agentDebugStorage;
 
-    public DebugAgentWorkerCommand(AgentWorkerContext context, DebugAgentWorkerCommandState state) {
+    public DebugAgentWorkerCommand(AgentWorkerContext context,
+            DebugAgentWorkerCommandState state,
+            AgentDebugStorageHandler agentDebugStorage) {
         this.context = context;
         this.state = state;
+        this.agentDebugStorage = agentDebugStorage;
     }
 
     @Override
@@ -74,21 +79,27 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
                 logContent = logContent.replace(credentials.getPassword(), "******");
             }
 
-            File logFile = new File(debugDirectory, String.format(
+            String key = String.format(
                     "%s_%s_u%s_c%s.log",
                     credentials.getProviderName(),
                     ThreadSafeDateFormat.FORMATTER_FILENAME_SAFE.format(new Date()),
                     credentials.getUserId(),
-                    credentials.getId()));
+                    credentials.getId());
 
-            Files.write(logContent, logFile, Charsets.UTF_8);
+            String storageLocation;
+            if (agentDebugStorage.isAvailable()) {
+                storageLocation = agentDebugStorage.store(key, logContent);
+            } else {
+                File logFile = new File(debugDirectory, key);
+                storageLocation = logFile.getAbsolutePath();
+            }
+
 
             if (transferRequest != null) {
                 String id = UUIDUtils.toTinkUUID(transferRequest.getTransfer().getId());
-                log.info("Flushed transfer (" + id + ") debug log for further investigation: " + logFile
-                        .getAbsolutePath());
+                log.info("Flushed transfer (" + id + ") debug log for further investigation: " + storageLocation);
             } else {
-                log.info("Flushed debug log for further investigation: " + logFile.getAbsolutePath());
+                log.info("Flushed debug log for further investigation: " + storageLocation);
             }
 
         } catch (IOException e) {

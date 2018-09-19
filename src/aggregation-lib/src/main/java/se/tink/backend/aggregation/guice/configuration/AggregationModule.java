@@ -14,6 +14,8 @@ import se.tink.backend.aggregation.controllers.ProviderServiceController;
 import se.tink.backend.aggregation.log.AggregationLoggerRequestFilter;
 import se.tink.backend.aggregation.provider.configuration.client.InterContainerProviderServiceFactory;
 import se.tink.backend.aggregation.resources.ProviderServiceResource;
+import se.tink.backend.aggregation.s3storage.AgentDebugS3Storage;
+import se.tink.backend.aggregation.s3storage.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.backend.client.ServiceFactory;
 import se.tink.backend.common.ServiceContext;
@@ -49,6 +51,7 @@ public class AggregationModule extends AbstractModule {
         bind(ProviderServiceController.class).in(Scopes.SINGLETON);
         bind(ClusterInfoProvider.class).in(Scopes.SINGLETON);
         bind(AgentWorker.class).in(Scopes.SINGLETON);
+        bind(AgentDebugStorageHandler.class).to(AgentDebugS3Storage.class).in(Scopes.SINGLETON);
 
         // TODO Remove these lines after getting rid of dependencies on ServiceContext
         bind(ServiceContext.class).in(Scopes.SINGLETON);

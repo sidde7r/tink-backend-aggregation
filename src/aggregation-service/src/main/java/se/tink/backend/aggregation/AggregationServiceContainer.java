@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.client.InProcessAggregationServiceFactory;
 import se.tink.backend.aggregation.guice.configuration.AggregationModuleFactory;
 import se.tink.backend.aggregation.resources.AggregationServiceResource;
 import se.tink.backend.aggregation.resources.CreditSafeServiceResource;
+import se.tink.backend.aggregation.s3storage.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.backend.common.AbstractServiceContainer;
 import se.tink.backend.common.ServiceContext;
@@ -72,13 +73,15 @@ public class AggregationServiceContainer extends AbstractServiceContainer {
     private void buildContainer(ServiceConfiguration configuration, Environment environment,
             ServiceContext serviceContext, Injector injector) {
         AgentWorker agentWorker = injector.getInstance(AgentWorker.class);
+        AgentDebugStorageHandler agentDebugStorageHandler = injector.getInstance(AgentDebugStorageHandler.class);
 
         final AggregationServiceResource aggregationServiceResource = new AggregationServiceResource(serviceContext,
                 injector.getInstance(MetricRegistry.class),
                 new AggregationControllerAggregationClient(
                         configuration.getEndpoints().getAggregationcontroller(),
                         serviceContext.getCoordinationClient()),
-                        agentWorker);
+                        agentWorker,
+                agentDebugStorageHandler);
 
         environment.lifecycle().manage(agentWorker);
 

@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.rpc.SupplementInformationRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.rpc.UpdateCredentialsRequest;
+import se.tink.backend.aggregation.s3storage.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.backend.aggregation.workers.AgentWorkerOperation;
 import se.tink.backend.aggregation.workers.AgentWorkerRefreshOperationCreatorWrapper;
@@ -36,6 +37,7 @@ import se.tink.backend.aggregation.workers.ratelimit.OverridingProviderRateLimit
 import se.tink.backend.aggregation.workers.ratelimit.ProviderRateLimiterFactory;
 import se.tink.backend.common.ServiceContext;
 import se.tink.backend.queue.QueueProducer;
+import se.tink.backend.aggregation.s3storage.AgentDebugS3Storage;
 import se.tink.libraries.http.utils.HttpResponseHelper;
 import se.tink.libraries.metrics.MetricRegistry;
 
@@ -49,7 +51,6 @@ public class AggregationServiceResource implements AggregationService {
     private AgentWorkerOperationFactory agentWorkerCommandFactory;
     private ServiceContext serviceContext;
     private SupplementalInformationController supplementalInformationController;
-
     public static Logger logger = LoggerFactory.getLogger(AggregationServiceResource.class);
 
     /**
@@ -59,11 +60,12 @@ public class AggregationServiceResource implements AggregationService {
      */
     public AggregationServiceResource(ServiceContext context, MetricRegistry metricRegistry,
             AggregationControllerAggregationClient aggregationControllerAggregationClient,
-            AgentWorker agentWorker) {
+            AgentWorker agentWorker,
+            AgentDebugStorageHandler agentDebugStorageHandler) {
         this.serviceContext = context;
         this.agentWorker = agentWorker;
         this.agentWorkerCommandFactory = new AgentWorkerOperationFactory(serviceContext, metricRegistry,
-                aggregationControllerAggregationClient);
+                aggregationControllerAggregationClient, agentDebugStorageHandler);
         this.supplementalInformationController = new SupplementalInformationController(serviceContext.getCacheClient(),
                 serviceContext.getCoordinationClient());
         this.producer = this.serviceContext.getProducer();
