@@ -90,16 +90,13 @@ public class BanquePopulaireApiClient {
                 .get(HttpResponse.class);
     }
 
-    public ProfileResponse authenticate(String baseAuthUrl, PasswordValidationRequest passwordValidationRequest) {
-        PasswordValidationResponse passwordValidationResponse =
-                baseRequest(baseAuthUrl + getAppConfigEntity().getWebSSOv3WebAPIStepURL())
+    public PasswordValidationResponse authenticate(String baseAuthUrl, PasswordValidationRequest passwordValidationRequest) {
+        return baseRequest(baseAuthUrl + getAppConfigEntity().getWebSSOv3WebAPIStepURL())
                         .header(HttpHeaders.CONTENT_TYPE, BanquePopulaireConstants.Headers.CONTENT_TYPE_JSON_UTF8)
                         .post(PasswordValidationResponse.class, passwordValidationRequest);
-
-        return authenticateSaml2(passwordValidationResponse);
     }
 
-    private ProfileResponse authenticateSaml2(PasswordValidationResponse passwordValidationResponse) {
+    public ProfileResponse authenticateSaml2(PasswordValidationResponse passwordValidationResponse) {
         Saml2PostEntity saml2postEntity = passwordValidationResponse.getResponse().getSaml2Post();
         Saml2AcsRequest saml2AcsRequest = Saml2AcsRequest.create(saml2postEntity.getSamlResponse());
 

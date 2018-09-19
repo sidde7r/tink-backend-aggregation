@@ -13,7 +13,7 @@ public class BanquePopulaireAgentTest {
     @Test
     public void testRegisterAndRefresh() throws Exception {
         AgentIntegrationTest.Builder builder = new AgentIntegrationTest.Builder("fr",
-                "fr-banquepopulaire-password")
+                "fr-banquepopulaire-valdefrance-password")
                 .addCredentialField(Field.Key.USERNAME, USERNAME)
                 .addCredentialField(Field.Key.PASSWORD, PASSWORD)
                 .loadCredentialsBefore(true)

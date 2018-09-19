@@ -8,4 +8,9 @@ public class PhaseEntity {
     private int retryCounter;
     private boolean fallbackFactorAvailable;
     private String securityLevel;
+    private String previousResult;
+
+    public String getPreviousResult() {
+        return previousResult;
+    }
 }

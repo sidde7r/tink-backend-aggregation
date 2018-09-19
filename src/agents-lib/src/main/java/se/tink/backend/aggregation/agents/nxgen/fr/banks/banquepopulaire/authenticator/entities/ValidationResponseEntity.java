@@ -12,5 +12,9 @@ public class ValidationResponseEntity {
     public Saml2PostEntity getSaml2Post() {
         return saml2Post;
     }
+
+    public String getStatus() {
+        return status;
+    }
 }
 

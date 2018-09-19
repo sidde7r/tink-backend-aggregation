@@ -13,6 +13,11 @@ public class BanquePopulaireConstants {
     public static final class Authentication {
         public static final String SCOPES_IN_AUTH_HEADER =
                 "Basic QlBfY3liZXJwbHVzLm1vYmlsZS5pb3NfUFJPRF8zLjIxOmYxNjVkY2E4LTUzMWMtNGFiOC04Y2U2LTg3YmFjNmYwNzM4Yg==";
+
+        public static final String AUTHENTICATION_SUCCESS = "AUTHENTICATION_SUCCESS";
+        public static final String AUTHENTICATION_LOCKED = "AUTHENTICATION_LOCKED";
+        public static final String AUTHENTICATION_CANCELLED = "AUTHENTICATION_CANCELED";
+        public static final String AUTHENTICATION_FAILED = "FAILED_AUTHENTICATION";
     }
 
     public static final class Fetcher {
