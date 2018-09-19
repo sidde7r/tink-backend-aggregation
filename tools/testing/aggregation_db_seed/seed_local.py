@@ -59,22 +59,22 @@ def findPrimaryKey(definedColumns):
         if a['Key']:
             return a['Field']
 
-def mysql_insert(db, table, row):
+def mysql_insert(db, tableName, row):
     cols = row.keys()
     vals = row.values()
     sql = "INSERT INTO {} ({}) VALUES ({})".format(
-        table,
+        tableName,
         ', '.join(cols),
         ', '.join(['%s'] * len(cols)));
     db.cursor().execute(sql, vals)
     db.commit()
 
-def rowExist(db, selectWhat, table, primaryKey, primaryValue):
+def rowExist(db, selectWhat, tableName, primaryKey, primaryValue):
     sql = "select %s from (%s) where (%s) = %s"
     print "Looking for rows with the column set to: " + primaryValue
     cursor = db.cursor()
     primaryValue = "'" + primaryValue + "'"
-    cursor.execute(sql % (selectWhat, table,primaryKey, primaryValue))
+    cursor.execute(sql % (selectWhat, tableName,primaryKey, primaryValue))
     val = cursor.fetchall()
     db.commit()
     return not val
