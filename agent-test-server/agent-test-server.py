@@ -166,7 +166,7 @@ def main():
     )
     args = parser.parse_args()
 
-    app.run(threaded=True, host=args.bind, port=args.port, load_dotenv=False)
+    app.run(threaded=True, ssl_context="adhoc", host=args.bind, port=args.port, load_dotenv=False)
     return 0
 
 
