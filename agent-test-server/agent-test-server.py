@@ -127,6 +127,28 @@ def thirdparty_open():
     return ("", 204)
 
 
+# This endpoint will be accessed/opened by the web browser as a result
+# of a redirect from the bank's backend.
+@app.route("/api/v1/thirdparty/callback", methods=("GET",))
+def thirdparty_callback():
+
+    args = request.args
+
+    state = args.get("state", None)
+    if not state:
+        abort(400, "invalid request")
+
+    # turn it into a dict from a ImmutableMultiDict (we don't expect or
+    # support lists)
+    parameters = {k:v for (k,v) in args.iteritems()}
+
+    # Put the parameters on the queue so that it can be picked up
+    # when the agent asks for the supplemental information.
+    queue.put(state, parameters)
+
+    return ""
+
+
 def main():
     parser = argparse.ArgumentParser(description="Agent test server")
     parser.add_argument(
