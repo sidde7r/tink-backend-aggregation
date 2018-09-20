@@ -10,7 +10,7 @@ import java.util.List;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ClusterProviderConfigurationModel {
+public class ProviderOverrideOnClusterModel {
     @JsonProperty("cluster-provider-configuration")
     private List<ClusterProviderListModel> clusterProviderConfiguration;
 

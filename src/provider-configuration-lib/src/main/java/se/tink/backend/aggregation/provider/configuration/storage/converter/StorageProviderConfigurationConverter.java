@@ -16,7 +16,6 @@ public class StorageProviderConfigurationConverter {
         core.setCredentialsType(providerConfiguration.getCredentialsType());
         core.setCurrency(providerConfiguration.getCurrency());
         core.setDisplayName(providerConfiguration.getDisplayName());
-//      FIXME  core.setFieldsSerialized
         core.setGroupDisplayName(providerConfiguration.getGroupDisplayName());
         core.setMarket(providerConfiguration.getMarket());
         core.setMultiFactor(providerConfiguration.isMultiFactor());

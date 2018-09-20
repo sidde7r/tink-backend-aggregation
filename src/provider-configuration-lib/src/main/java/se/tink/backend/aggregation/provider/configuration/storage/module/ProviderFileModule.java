@@ -10,7 +10,7 @@ import com.google.inject.name.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
-import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ClusterProviderConfigurationModel;
+import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ProviderOverrideOnClusterModel;
 import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ClusterProviderListModel;
 import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ProviderConfigModel;
 import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ProviderSpecificationModel;
@@ -39,16 +39,16 @@ public class ProviderFileModule extends AbstractModule {
 
     @Provides
     @Singleton
-    @Named("clusterProviderList")
+    @Named("enabledProvidersOnCluster")
     public Map<String, List<String>> provideEnabledProvidersForCluster() throws IOException {
-        return loadClusterEnabledProviderNamesFromJson();
+        return loadEnabledProvidersOnClusterFromJson();
     }
 
     @Provides
     @Singleton
-    @Named("clusterSpecificProviderConfiguration")
+    @Named("providerOverrideOnCluster")
     public Map<String, Map<String, ProviderConfiguration>> provideClusterSpecificProviderConfiguraiton() throws IOException {
-        return loadClusterSpecificProviderConfigurationFromJson();
+        return loadProviderOverrideOnClusterFromJson();
     }
 
     private Map<String, ProviderConfiguration> loadProviderConfigurationFromJson() throws IOException {
@@ -63,25 +63,25 @@ public class ProviderFileModule extends AbstractModule {
 
         for (File providerFile : providerFiles) {
             log.info("Seeding from file " + providerFile.getName());
-            seedProvider(providerFile, providerConfigurationByProviderName);
+            parseProviderConfigurations(providerFile, providerConfigurationByProviderName);
         }
 
         return providerConfigurationByProviderName;
     }
 
-    private Map<String, List<String>> loadClusterEnabledProviderNamesFromJson() throws IOException {
+    private Map<String, List<String>> loadEnabledProvidersOnClusterFromJson() throws IOException {
         String clusterProviderFilePath = "data/seeding/cluster-provider-configuration.json";
         File clusterProviderFile = new File(clusterProviderFilePath);
-        ClusterProviderConfigurationModel clusterProviderConfigurationModel =
-                mapper.readValue(clusterProviderFile, ClusterProviderConfigurationModel.class);
+        ProviderOverrideOnClusterModel providerOverrideOnClusterModel =
+                mapper.readValue(clusterProviderFile, ProviderOverrideOnClusterModel.class);
 
-        List<ClusterProviderListModel> clusterProviderListModelList = clusterProviderConfigurationModel.getClusters();
+        List<ClusterProviderListModel> clusterProviderListModelList = providerOverrideOnClusterModel.getClusters();
 
         return clusterProviderListModelList.stream()
                 .collect(Collectors.toMap(ClusterProviderListModel::getClusterId, ClusterProviderListModel::getProviderName));
     }
 
-    private Map<String, Map<String, ProviderConfiguration>> loadClusterSpecificProviderConfigurationFromJson() throws IOException {
+    private Map<String, Map<String, ProviderConfiguration>> loadProviderOverrideOnClusterFromJson() throws IOException {
         File directory = new File("data/seeding");
         File[] providerSpecificationFiles = directory.listFiles((dir, fileName) -> fileName.matches("provider-specification.*.json"));
         Map<String, Map<String, ProviderConfiguration>> providerSpecificationByCluster = Maps.newHashMap();
@@ -92,12 +92,12 @@ public class ProviderFileModule extends AbstractModule {
 
         for (File providerSpecificationFile : providerSpecificationFiles) {
             log.info("Seeding provider specific from file %s", providerSpecificationFile.getName());
-            seedProviderSpecification(providerSpecificationFile, providerSpecificationByCluster);
+            parseProviderOverrideOnCluster(providerSpecificationFile, providerSpecificationByCluster);
         }
         return providerSpecificationByCluster;
     }
 
-    private void seedProvider(File providerFile, Map<String, ProviderConfiguration> providerConfigurationByProviderName)
+    private void parseProviderConfigurations(File providerFile, Map<String, ProviderConfiguration> providerConfigurationByProviderName)
             throws IOException, IllegalStateException {
         ProviderConfigModel providerConfig = mapper.readValue(providerFile, ProviderConfigModel.class);
 
@@ -117,7 +117,7 @@ public class ProviderFileModule extends AbstractModule {
         log.info("Seeded %d providers for cluster %s " , providers.size(), market);
     }
 
-    private void seedProviderSpecification(File providerSpecificationFile, Map<String, Map<String, ProviderConfiguration>> providerSpecificationByCluster)
+    private void parseProviderOverrideOnCluster(File providerSpecificationFile, Map<String, Map<String, ProviderConfiguration>> providerOverrideOnCluster)
             throws IOException {
         ProviderSpecificationModel providerSpecificationModel = mapper.readValue(providerSpecificationFile, ProviderSpecificationModel.class);
 
@@ -139,7 +139,7 @@ public class ProviderFileModule extends AbstractModule {
             providerConfigurationMap.put(providerConfiguration.getName(), providerConfiguration);
         }
 
-        providerSpecificationByCluster.put(clusterId, providerConfigurationMap);
+        providerOverrideOnCluster.put(clusterId, providerConfigurationMap);
         log.info("Seeded %d provider specification for cluster %s " , providerConfigurationMap.size(), clusterId);
     }
 }

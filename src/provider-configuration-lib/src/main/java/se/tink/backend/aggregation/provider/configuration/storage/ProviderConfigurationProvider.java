@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 
 public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
     private final Map<String, ProviderConfiguration> providerConfigurationByName;
-    private final Map<String, List<String>> providerEnabledByCluster;
-    private final Map<String, Map<String, ProviderConfiguration>> providerConfigurationByCluster;
+    private final Map<String, List<String>> enabledProvidersOnCluster;
+    private final Map<String, Map<String, ProviderConfiguration>> providerOverrideOnCluster;
     private final ProviderStatusConfigurationRepository providerStatusConfigurationRepository;
 
     private final static Logger logger = LoggerFactory.getLogger(ProviderConfigurationProvider.class);
@@ -28,12 +28,12 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
     @Inject
     public ProviderConfigurationProvider(
             @Named("providerConfiguration") Map<String, ProviderConfiguration> providerConfigurationByName,
-            @Named("clusterProviderList") Map<String, List<String>> providerEnabledByCluster,
-            @Named("clusterSpecificProviderConfiguration") Map<String, Map<String, ProviderConfiguration>> providerConfigurationByCluster,
+            @Named("enabledProvidersOnCluster") Map<String, List<String>> enabledProvidersOnCluster,
+            @Named("providerOverrideOnCluster") Map<String, Map<String, ProviderConfiguration>> providerOverrideOnCluster,
             ProviderStatusConfigurationRepository providerStatusConfigurationRepository){
         this.providerConfigurationByName = providerConfigurationByName;
-        this.providerEnabledByCluster = providerEnabledByCluster;
-        this.providerConfigurationByCluster = providerConfigurationByCluster;
+        this.enabledProvidersOnCluster = enabledProvidersOnCluster;
+        this.providerOverrideOnCluster = providerOverrideOnCluster;
         this.providerStatusConfigurationRepository = providerStatusConfigurationRepository;
     }
 
@@ -44,7 +44,7 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
     }
 
     public List<se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration> findAllByClusterId(String clusterId){
-        return providerEnabledByCluster.get(clusterId).stream()
+        return enabledProvidersOnCluster.get(clusterId).stream()
                 .map(providerName -> getProviderConfigurationForCluster(clusterId, providerName))
                 .map(provider -> StorageProviderConfigurationConverter.translate(provider, getProviderStatus(provider)))
                 .collect(Collectors.toList());
@@ -74,9 +74,9 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
     }
 
     private ProviderConfiguration getProviderConfigurationForCluster(String clusterId, String providerName){
-        if (providerConfigurationByCluster.containsKey(clusterId) &&
-                providerConfigurationByCluster.get(clusterId).containsKey(providerName)) {
-            return providerConfigurationByCluster.get(clusterId).get(providerName);
+        if (providerOverrideOnCluster.containsKey(clusterId) &&
+                providerOverrideOnCluster.get(clusterId).containsKey(providerName)) {
+            return providerOverrideOnCluster.get(clusterId).get(providerName);
         } else{
             return providerConfigurationByName.get(providerName);
         }
