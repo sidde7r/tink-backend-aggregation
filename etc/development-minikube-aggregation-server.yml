@@ -106,6 +106,12 @@ sqsQueueConfiguration:
   awsSecretKey: foobar
   queueName: queue
 
+s3StorageConfiguration:
+  enabled: true
+  url: http://localhost:4572
+  region: local
+  agentDebugBucketName: local-agent-debug-bucket
+
 logging:
   level: INFO
   loggers:

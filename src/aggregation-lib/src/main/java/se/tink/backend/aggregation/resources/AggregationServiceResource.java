@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
@@ -37,7 +36,6 @@ import se.tink.backend.aggregation.workers.ratelimit.OverridingProviderRateLimit
 import se.tink.backend.aggregation.workers.ratelimit.ProviderRateLimiterFactory;
 import se.tink.backend.common.ServiceContext;
 import se.tink.backend.queue.QueueProducer;
-import se.tink.backend.aggregation.s3storage.AgentDebugS3Storage;
 import se.tink.libraries.http.utils.HttpResponseHelper;
 import se.tink.libraries.metrics.MetricRegistry;
 

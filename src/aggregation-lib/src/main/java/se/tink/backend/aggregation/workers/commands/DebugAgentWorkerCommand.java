@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.workers.commands;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;

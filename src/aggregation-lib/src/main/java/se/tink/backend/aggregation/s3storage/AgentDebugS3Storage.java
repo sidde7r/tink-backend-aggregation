@@ -59,6 +59,7 @@ public class AgentDebugS3Storage implements AgentDebugStorageHandler {
         return Objects.nonNull(configuration) &&
                 configuration.isEnabled() &&
                 Objects.nonNull(configuration.getUrl()) &&
+                Objects.nonNull(configuration.getAgentDebugBucketName()) &&
                 Objects.nonNull(configuration.getRegion());
     }
 
