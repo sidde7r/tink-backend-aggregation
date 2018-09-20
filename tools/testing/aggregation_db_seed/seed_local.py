@@ -2,10 +2,8 @@
 import json
 import pymysql
 import yaml
-import substring
-import os, sys, select, subprocess
+import os, sys, subprocess
 import getopt
-import time
 
 
 #########################
@@ -41,68 +39,57 @@ username = ""
 market = ""
 currency = ""
 
-
-def join(columns, rowdict):
-    for row in rowdict:
-        row = row.lower()
-
-    rowdict = {k.lower(): v for k, v in rowdict.items()}
-    returnDict = {}
-    for column in columns:
-        if column['Field'].lower() in rowdict:
-            returnDict[column['Field']] = rowdict[column['Field']]
-
-    return returnDict
-
-def findPrimaryKey(definedColumns):
-    for a in definedColumns:
-        if a['Key']:
-            return a['Field']
-
-def mysql_insert(conn, table, row):
-    cols = row.keys()
-    vals = row.values()
+def mysql_insert(db, tableName, dataDict):
+    cols = dataDict.keys()
+    vals = dataDict.values()
     sql = "INSERT INTO {} ({}) VALUES ({})".format(
-        table,
+        tableName,
         ', '.join(cols),
-        ', '.join(['%s'] * len(cols)));
-    conn.cursor().execute(sql, vals)
-    conn.commit()
+        ', '.join(['%s'] * len(cols)))
+    db.cursor().execute(sql, vals)
+    db.commit()
 
-def rowExist(conn, selectWhat, table, primaryKey, primaryValue):
-    sql = "select %s from (%s) where (%s) = %s"
-    print "Looking for rows with the column set to: " + primaryValue
-    cursor = conn.cursor()
-    primaryValue = "'" + primaryValue + "'"
-    cursor.execute(sql % (selectWhat, table,primaryKey, primaryValue))
-    val = cursor.fetchall()
-    conn.commit()
-    return not val
+def mysql_delete(db, tableName, clusterid):
+    sql = "DELETE FROM {} WHERE clusterid = %s".format(tableName)
+    db.cursor().execute(sql, clusterid)
+    db.commit()
 
-def insertLocalDevelopmentCrypto(conn):
-    if rowExist(conn, "clusterid", clusterCryptoConfigurationTable, "clusterid", clusterCryptoConfigurationDefaultValues['clusterid']):
-        mysql_insert(conn, clusterCryptoConfigurationTable, clusterCryptoConfigurationDefaultValues)
-    else:
-        print "cluster_crypto_configurations already up to date"
+def row_exist(db, selectWhat, tableName, primaryKey, primaryValue):
+    sql = "SELECT %s FROM {} WHERE {} = %s".format(tableName, primaryKey)
+    cursor = db.cursor()
+    cursor.execute(sql, (selectWhat, primaryValue))
+    val = cursor.fetchone()
+    db.commit()
+    return val is not None
 
-def insertIntoClusterHostConfiguration(conn):
-    if rowExist(conn, "clusterid", clusterHostConfigurationTable, "clusterid", clusterHostDefaultValues['clusterid']):
-        mysql_insert(conn, clusterHostConfigurationTable, clusterHostDefaultValues)
-    else:
-        print "cluster_configurations already up to date"
-    sqlExecutor(conn, deleteQuery)
-    sqlExecutor(conn, joinQuery)
+def insert_local_development_crypto(db):
+    if row_exist(db, "clusterid", clusterCryptoConfigurationTable, "clusterid", clusterCryptoConfigurationDefaultValues['clusterid']):
+        print "Deleting previous configuration for cluster crypto configuration table."
+        mysql_delete(db, clusterCryptoConfigurationTable, clusterCryptoConfigurationDefaultValues['clusterid'])
+
+    print "Inserting configuration for cluster crypto configuration table."
+    mysql_insert(db, clusterCryptoConfigurationTable, clusterCryptoConfigurationDefaultValues)
+
+def insert_into_cluster_host_configuration(db):
+    if row_exist(db, "clusterid", clusterHostConfigurationTable, "clusterid", clusterHostDefaultValues['clusterid']):
+        print "Deleting previous configuration for cluster host configuration table."
+        mysql_delete(db, clusterHostConfigurationTable, clusterCryptoConfigurationDefaultValues['clusterid'])
+
+    print "Inserting configuration for cluster host configuration table."
+    mysql_insert(db, clusterHostConfigurationTable, clusterHostDefaultValues)
+    sql_executor(db, deleteQuery)
+    sql_executor(db, joinQuery)
 
 
-def sqlExecutor(conn, sql):
-    cursor = conn.cursor()
+def sql_executor(db, sql):
+    cursor = db.cursor()
     cursor.execute(sql)
     val = cursor.fetchall()
-    conn.commit()
+    db.commit()
     return val
 
 
-def getConnection():
+def get_connection():
     with open(aggregatonConfigurationsFile, 'r') as stream:
         try:
             aggregatonConfigurations = (yaml.load(stream))
@@ -123,9 +110,9 @@ def getConnection():
         except yaml.YAMLError as exc:
             print(exc)
 
-def seedDatabase(os):
+def seed_providers(os, seedMarket):
     os.chdir(bazelRelativePath)
-    serverArgs = ['bazel run :aggregation seed-providers-for-market --jvmopt="-Dmarket=' + sys.argv[1].upper() + '" etc/development-minikube-aggregation-server.yml']
+    serverArgs = ['bazel run :aggregation seed-providers-for-market --jvmopt="-Dmarket=' + seedMarket.upper() + '" etc/development-minikube-aggregation-server.yml']
     server = subprocess.Popen(serverArgs, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     
     while True:
@@ -163,12 +150,14 @@ def main(argv):
 
     global clusterHostDefaultValues
     seedMarket = ""
+    isSeedProviders = False
     for opt, arg in opts:
         if opt in ("-f", "--full"):
             clusterHostDefaultValues['host'] = 'http://127.0.0.1:9098'
         elif opt in ("-a", "--aggregation"):
             clusterHostDefaultValues['host'] = 'http://127.0.0.1:5000'
         elif opt in ("-m", "--market"):
+            isSeedProviders = True
             seedMarket = arg
         elif opt in ("-c", "--custom-host"):
             clusterHostDefaultValues['host'] = arg
@@ -179,20 +168,24 @@ def main(argv):
     filePath = os.path.abspath(__file__)
     os.chdir(os.path.dirname(filePath))
 
-    db = getConnection()
+    db = get_connection()
 
     tablename = "provider_configurations"
-    path = "../../../data/seeding/providers-" + seedMarket + ".json"
-    inputfile = file(path, "r")
-    jsonString = inputfile.read()
-    providers = json.loads(jsonString)
-    market = providers['market']
-    currency = providers['currency']
 
-    seedDatabase(os)
+    if isSeedProviders:
+        path = "../../../data/seeding/providers-" + seedMarket + ".json"
+        inputfile = file(path, "r")
+        jsonString = inputfile.read()
+        providers = json.loads(jsonString)
+        market = providers['market']
+        currency = providers['currency']
+        seed_providers(os, seedMarket)
 
-    insertLocalDevelopmentCrypto(db)
-    insertIntoClusterHostConfiguration(db)
+    insert_local_development_crypto(db)
+    insert_into_cluster_host_configuration(db)
+    print """
+*** Seeding finished succesfully ***
+    """
     return 0
 
 if __name__ == "__main__":
