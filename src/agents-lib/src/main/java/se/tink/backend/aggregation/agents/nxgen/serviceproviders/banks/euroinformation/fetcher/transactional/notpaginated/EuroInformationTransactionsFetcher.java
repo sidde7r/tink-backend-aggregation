@@ -44,7 +44,7 @@ public class EuroInformationTransactionsFetcher implements TransactionFetcher<Tr
     }
 
     private Optional<TransactionSummaryResponse> getTransactionsForAccount(String webId) {
-        TransactionSummaryResponse details = apiClient.getTransactionsNotPaginated(webId);
+        TransactionSummaryResponse details = apiClient.getTransactionsWhenNoPfm(webId);
         String returnCode = details.getReturnCode();
         if (!EuroInformationUtils.isSuccess(returnCode)) {
             LOGGER.info(EuroInformationErrorCodes.getByCodeNumber(returnCode).toString() + SerializationUtils.serializeToString(details));

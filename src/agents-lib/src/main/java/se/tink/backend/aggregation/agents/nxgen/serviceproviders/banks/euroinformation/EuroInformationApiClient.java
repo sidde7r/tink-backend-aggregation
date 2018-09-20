@@ -83,16 +83,17 @@ public class EuroInformationApiClient {
         Optional.ofNullable(details.getAccountDetailsList()).orElseGet(Collections::emptyList).stream()
                 .filter(a -> a.getTinkTypeByTypeNumber() == AccountTypeEnum.UNKNOWN)
                 .forEach(acc -> AGGREGATION_LOGGER
-                        .infoExtraLong(SerializationUtils.serializeToString(acc), EuroInformationConstants.LoggingTags.unknownAccountTypesTag));
+                        .infoExtraLong(SerializationUtils.serializeToString(acc),
+                                EuroInformationConstants.LoggingTags.unknownAccountTypesTag));
         return details;
     }
 
-    public TransactionSummaryResponse getTransactionsNotPaginated(String webId) {
+    public TransactionSummaryResponse getTransactionsWhenNoPfm(String webId) {
         return buildRequestHeaders(EuroInformationConstants.Url.TRANSACTIONS_NOT_PAGINATED)
                 .post(TransactionSummaryResponse.class, new TransactionSummaryRequest(webId));
     }
 
-    public OperationSummaryResponse getTransactionsPaginated(String webId, String recoveryKey) {
+    public OperationSummaryResponse getTransactionsWithPfm(String webId, String recoveryKey) {
         return buildRequestHeaders(EuroInformationConstants.Url.TRANSACTIONS_PAGINATED)
                 .post(OperationSummaryResponse.class, new TransactionSummaryRequest(webId, recoveryKey));
     }
