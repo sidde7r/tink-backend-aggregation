@@ -53,6 +53,8 @@ public class AccountEntity {
         case SabadellConstants.AccountTypes.SALARY_ACCOUNT:
         case SabadellConstants.AccountTypes.CUENTA_RELACION:
             return AccountTypes.CHECKING;
+        case SabadellConstants.AccountTypes.CURRENCY_ACCOUNT:
+            return AccountTypes.SAVINGS; // Seems to be a foreign currency account, guessing that's not a checking account
         default:
             log.warn("{}: Unknown type: {}", SabadellConstants.Tags.UNKNOWN_ACCOUNT_TYPE, description);
             return AccountTypes.OTHER;
