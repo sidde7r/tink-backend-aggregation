@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.creditmutuel.fetchers.c
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.creditmutuel.fetchers.creditcard.pfm.rpc.CreditCardResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationConstants;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -23,7 +22,7 @@ public class CreditMutuelApiClient extends EuroInformationApiClient {
     }
 
     public CreditCardResponse requestCreditCardAccountsEndpoint() {
-        String response = buildRequestHeaders(EuroInformationConstants.Url.CREDIT_CARD_ACCOUNTS)
+        String response = buildRequestHeaders(CreditMutuelConstants.Url.CREDIT_CARD_ACCOUNTS)
                 .post(String.class, new CreditCardRequest());
         return SerializationUtils.deserializeFromString(response, CreditCardResponse.class);
     }

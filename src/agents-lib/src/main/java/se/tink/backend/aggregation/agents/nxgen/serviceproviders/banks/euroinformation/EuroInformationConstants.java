@@ -65,7 +65,7 @@ public class EuroInformationConstants {
         public static final String INIT = "init";
         public static final String ACTION = "action";
 
-       // Investment accounts
+        // Investment accounts
         public static final String CURRENT_PAGE = "CurrentPage";
         public static final String MAX_ELEMENTS = "NbElemMaxByPage";
         public static final String MAX_ELEMENTS_VALUE = "25";
@@ -75,10 +75,6 @@ public class EuroInformationConstants {
         public static final String RECOVERY_KEY = "recoveryKey";
         public static final String MAX_ITEMS = "max_items";
         public static final String MAX_ITEMS_VALUE = String.valueOf(100);
-
-        //Credit Cards
-        public static final String SPID = "spid_version";
-        public static final String SPID_VALUE = "3.0.0";
     }
 
     public static class Url {
@@ -90,6 +86,5 @@ public class EuroInformationConstants {
         public static final String LOGOUT = "DCNX.html";
         public static final String INVESTMENT_ACCOUNT = "bourse/SecurityAccountOverview.aspx";
         public static final String INVESTMENT_ACCOUNTS = "bourse/SecurityAccountList.aspx";
-        public static final String CREDIT_CARD_ACCOUNTS = "SCIM_default.aspx";
     }
 }

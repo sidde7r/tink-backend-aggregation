@@ -44,8 +44,8 @@ public class EuroInformationPasswordAuthenticator implements PasswordAuthenticat
         }
         //TODO: Doublechek PFM was actually enabled
         PfmInitResponse pfmInitResponse = apiClient.actionInit();
-        if (!EuroInformationUtils.isSuccess(pfmInitResponse.getReturnCode())
-                || !pfmInitResponse.getInitialization().getUserInfos().contains(PFM_ENABLED)) {
+        if (!EuroInformationUtils.isSuccess(pfmInitResponse.getReturnCode())) {
+            //                || !pfmInitResponse.getInitialization().getUserInfos().contains(PFM_ENABLED)) {
             LOGGER.info("PFM initialization error: " + SerializationUtils.serializeToString(pfmInitResponse));
             return;
         }
@@ -62,7 +62,8 @@ public class EuroInformationPasswordAuthenticator implements PasswordAuthenticat
         case TECHNICAL_PROBLEM:
             throw new IllegalStateException(EuroInformationErrorCodes.TECHNICAL_PROBLEM.getCodeNumber());
         case NO_ENUM_VALUE:
-            throw new  IllegalArgumentException("Unknown bank value code " + SerializationUtils.serializeToString(logon));
+            throw new IllegalArgumentException(
+                    "Unknown bank value code " + SerializationUtils.serializeToString(logon));
         }
     }
 

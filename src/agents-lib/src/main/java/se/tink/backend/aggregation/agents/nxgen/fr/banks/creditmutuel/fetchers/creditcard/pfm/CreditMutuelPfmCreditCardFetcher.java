@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.creditmutuel.fetchers.c
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.creditmutuel.fetchers.creditcard.pfm.utils.CreditMutuelPmfPredicates;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.creditmutuel.fetchers.creditcard.pfm.utils.CreditMututelPmfCreditCardStringParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationUtils;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -53,13 +52,10 @@ public class CreditMutuelPfmCreditCardFetcher implements AccountFetcher<CreditCa
                     .getByCodeNumber(returnCode) + " " + SerializationUtils.serializeToString(creditCardResponse));
             return Collections.emptyList();
         }
-        AGGREGATION_LOGGER.infoExtraLong(SerializationUtils.serializeToString(creditCardResponse),
-                EuroInformationConstants.LoggingTags.creditcardLogTag);
 
         //TODO: Need to double check how multiple cards are handled in the response
         List<ValueEntity> valueEntityStream = CreditMutuelPmfPredicates.getItemEntitiesFromResponse
                 .apply(creditCardResponse).collect(Collectors.toList());
-        //Rethink it it should not be list?
         Optional<ValueEntity> subtitle = valueEntityStream.stream()
                 .filter(CreditMutuelPmfPredicates.filterValueEntityByName(SUBTITLE))
                 .findFirst();
