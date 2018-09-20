@@ -33,12 +33,15 @@ public class AgentTestServerClient {
             return url;
         }
 
-        private static final String BASE_URL = "http://127.0.0.1:7357/api/v1/";
+        private static final String BASE_URL = "https://127.0.0.1:7357/api/v1/";
     }
 
     private static TinkHttpClient constructHttpClient() {
         TinkHttpClient client = new TinkHttpClient(null, null);
         client.setTimeout(TIMEOUT_MS);
+
+        // Disable ssl verification because of self signed certificate.
+        client.disableSslVerification();
         return client;
     }
 
