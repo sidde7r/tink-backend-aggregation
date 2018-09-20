@@ -169,12 +169,6 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
 
             log.debug(String.format("User enrollment in progress (Retry = '%d').", retry));
 
-            // Check every 10s if the credential is deleted during the long polling
-            if (retry % 5 == 0 && context.isCredentialDeleted(credentials.getId())) {
-                log.warn("Credential deleted during long poll. Aborting.");
-                return Optional.empty();
-            }
-
             retry++;
             Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
         }
