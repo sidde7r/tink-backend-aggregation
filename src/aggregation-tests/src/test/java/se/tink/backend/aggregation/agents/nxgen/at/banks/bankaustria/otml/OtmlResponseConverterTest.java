@@ -1,15 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.otml;
 
+import java.util.Collection;
+import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.BankAustriaTestData;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.entities.RtaMessage;
 import se.tink.backend.aggregation.nxgen.core.account.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.core.Amount;
-
-import java.util.Collection;
 
 public class OtmlResponseConverterTest {
 
@@ -58,6 +59,15 @@ public class OtmlResponseConverterTest {
         Transaction transaction = transactions.iterator().next();
         Assert.assertEquals("PORTO", transaction.getDescription());
         Assert.assertEquals(Double.valueOf(-0.68), transaction.getAmount().getValue());
+    }
+
+    @Test
+    public void testRtaMessageDetector() {
+        Optional<RtaMessage> rtaMessage = otmlResponseConverter.anyRtaMessageToAccept(BankAustriaTestData.RTA_MESSAGE);
+
+        Assert.assertTrue(rtaMessage.isPresent());
+
+        Assert.assertEquals("5010536", rtaMessage.get().getRtaMessageID());
     }
 
 }

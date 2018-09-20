@@ -1,5 +1,24 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.otml;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +27,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.BankAustriaConstants;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.entities.RtaMessage;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.SavingsAccount;
@@ -15,17 +35,6 @@ import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.core.Amount;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.*;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class OtmlResponseConverter {
     private static final Logger LOGGER = LoggerFactory.getLogger(OtmlResponseConverter.class);
@@ -92,7 +101,7 @@ public class OtmlResponseConverter {
         String accountKey = getValue(getNode(accountNode, BankAustriaConstants.XPathExpression.XPATH_ACCOUNT_KEY));
         String accountType = getValue(getNode(accountNode, BankAustriaConstants.XPathExpression.XPATH_SETTINGS_ACCOUNT_TYPE));
         if (accountType.equalsIgnoreCase(BankAustriaConstants.CURRENT))
-            return SavingsAccount.builder(accountNumber, Amount.inEUR(0D))
+            return CheckingAccount.builder(accountNumber, Amount.inEUR(0D))
                     .setAccountNumber(accountNumber)
                     .setName(accountNickName)
                     .setBankIdentifier(accountKey)
@@ -232,5 +241,17 @@ public class OtmlResponseConverter {
 
     private String withTag(LogTag logTag, String string) {
         return String.format("%s: %s", logTag.toString(), string);
+    }
+
+    public Optional<RtaMessage> anyRtaMessageToAccept(String xml) {
+        Document document = parseDocument(xml);
+        NodeList nodeList = getNodeList(document, BankAustriaConstants.XPathExpression.XPATH_RTA_MESSAGE);
+        if (nodeList == null || nodeList.getLength() == 0) {
+            return Optional.empty();
+        }
+
+        String rtaMessageID = getValue(getNode(nodeList.item(0), BankAustriaConstants.XPathExpression.XPATH_RTA_MESSAGE_ID));
+
+        return Optional.of(new RtaMessage(rtaMessageID));
     }
 }

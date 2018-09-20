@@ -34,7 +34,7 @@ public class BankAustriaAuthenticator implements PasswordAuthenticator {
     public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
         bankAustriaSessionStorage.setXOtmlManifest(apiClient.getMD5OfUpdatePage());
 
-        OtmlResponse response = apiClient.login(username, password);
+        OtmlResponse response = apiClient.login(removeDotsNotUsedByApp(username), password);
 
         if (successful(response)) {
             return;
@@ -45,6 +45,10 @@ public class BankAustriaAuthenticator implements PasswordAuthenticator {
         }
 
         throw new IllegalStateException("Could not authenticate");
+    }
+
+    private String removeDotsNotUsedByApp(String username) {
+        return username.replace(".", "");
     }
 
     private boolean successful(OtmlResponse response) {

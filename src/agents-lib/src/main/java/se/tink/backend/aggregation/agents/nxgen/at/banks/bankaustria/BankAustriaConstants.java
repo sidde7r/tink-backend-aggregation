@@ -17,6 +17,7 @@ public class BankAustriaConstants {
         static final URL MOVEMENTS = new URL(HOST + "/IBOA/balanceMovements.htm");
         static final URL UPDATE_PAGE = new URL(HOST + "/IBOA/otmlUpdate.htm");
         static final URL LOGOUT = new URL(HOST + "/IBOA/otml_v2.0/maps/generic/logout_popup.xml");
+        static final URL RTA_MESSAGE = new URL(HOST + "/IBOA/rtaMessage.htm");
     }
 
     public static final class Application {
@@ -48,6 +49,11 @@ public class BankAustriaConstants {
         public static final String SETTINGS_TARGET_VALUE = "xxx";
     }
 
+    public static final class GenericForm {
+        public static final String SOURCE = "source";
+        public static final String SOURCE_OTML = "otml";
+    }
+
     public static final class LoginForm {
         public static final String PASSWORD = "password";
         public static final String OTML_SECURE_ENCLAVE_PARAMS = "otml_secure_enclave_params";
@@ -73,7 +79,6 @@ public class BankAustriaConstants {
         public static final String END_MONTH = "end.month";
         public static final String END_DAY = "end.day";
         public static final String TYPE = "type";
-        public static final String SOURCE = "source";
         public static final String AMOUNT_TO_POSITIVITY = "amountToPositivity";
         public static final String AMOUNT_FROM_POSITIVITY = "amountFromPositivity";
         public static final String OTML_BIND_SIDE_CONTENT = ".otmlBind->side_content";
@@ -84,15 +89,20 @@ public class BankAustriaConstants {
         public static final String TEXT = "text";
         public static final String SEARCH_TYPE_VALUE_LAST_30_DAYS = "30";
         public static final String TYPE_ALL = "all";
-        public static final String SOURCE_OTML = "otml";
         public static final String FINISH_VALUE = "xxx";
         public static final String OTML_FIRST_SEARCH_VALUE_FALSE = "false";
         public static final String SEARCH_TYPE_VALUE_CUSTOM = "custom";
     }
 
+    public static final class RtaMessageForm {
+        public static final String MESSAGE_ID = "idMessage";
+        public static final String CANCEL = "cancel";
+    }
+
     public static final class XPathExpression {
         public static final String XPATH_RESPONSE_RESULT = "/datasources/datasource[@key='response']/element[@key='result']";
         public static final String XPATH_SETTINGS_RESPONSE_ACCOUNTS = "/datasources/datasource[@key='response']/element[@key='customizedAccountMetaModelsList']/element";
+        public static final String XPATH_RTA_MESSAGE = "/datasources/datasource[@key='response']/element[@key='rtaMessage']";
         public static final String XPATH_ACCOUNT_NUMBER = ".//element[@key='accountNumber']";
         public static final String XPATH_ACCOUNT_NICKNAME = ".//element[@key='accountNickname']";
         public static final String XPATH_ACCOUNT_KEY = ".//element[@key='accountKey']";
@@ -111,6 +121,7 @@ public class BankAustriaConstants {
         public static final String XPATH_TRANSACTION_DESCRIPTION = ".//element[@key='bookingText']";
         public static final String XPATH_TRANSACTION_DATE = ".//element[@key='transactionDate']/element[@key='date']";
         public static final String XPATH_RESPONSE_WITH_ACCOUNT = "/datasources/datasource[@key='otml_store_session']/element[@key='account']/element";
+        public static final String XPATH_RTA_MESSAGE_ID = ".//element[@key='id']";
     }
 
     public static class LogTags {
