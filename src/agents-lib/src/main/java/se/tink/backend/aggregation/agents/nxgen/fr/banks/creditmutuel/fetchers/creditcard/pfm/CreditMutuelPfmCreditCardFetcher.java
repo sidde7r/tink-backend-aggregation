@@ -54,6 +54,8 @@ public class CreditMutuelPfmCreditCardFetcher implements AccountFetcher<CreditCa
         }
 
         //TODO: Need to double check how multiple cards are handled in the response
+
+        // Parsing Card number
         List<ValueEntity> valueEntityStream = CreditMutuelPmfPredicates.getItemEntitiesFromResponse
                 .apply(creditCardResponse).collect(Collectors.toList());
         Optional<ValueEntity> subtitle = valueEntityStream.stream()
@@ -64,12 +66,14 @@ public class CreditMutuelPfmCreditCardFetcher implements AccountFetcher<CreditCa
                 .map(s -> CreditMututelPmfCreditCardStringParsingUtils.parseCreditCardNumber(s))
                 .orElseThrow(IllegalStateException::new);
 
+        // Parsing card name
         Stream<ValueEntity> valueEntityForTitleStream = CreditMutuelPmfPredicates.getItemEntitiesFromResponse
                 .apply(creditCardResponse);
         Optional<ValueEntity> title = valueEntityForTitleStream
                 .filter(CreditMutuelPmfPredicates.filterValueEntityByName(TITLE))
                 .findFirst();
 
+        // Parsing card limits
         Stream<SubItemsEntity> subItemsEntityStream = CreditMutuelPmfPredicates.getSubItemsValueStreamFromResponse
                 .apply(creditCardResponse);
         Stream<ValueEntity> outputsEntityStream = subItemsEntityStream.flatMap(s -> s.stream())
@@ -80,8 +84,9 @@ public class CreditMutuelPfmCreditCardFetcher implements AccountFetcher<CreditCa
                 .filter(CreditMutuelPmfPredicates.filterValueEntityByName(MAX_PAYMENTS_LIMIT))
                 .findFirst().orElseThrow(IllegalStateException::new).getValue();
 
-        AGGREGATION_LOGGER.info("max amount: " + maximalLimitString);
         Amount maxAmount = CreditMututelPmfCreditCardStringParsingUtils.extractAmountFromString(maximalLimitString);
+
+        // Parsing card balance
         Stream<SubItemsEntity> subItemsEntityStream2 = CreditMutuelPmfPredicates.getSubItemsValueStreamFromResponse
                 .apply(creditCardResponse);
         Stream<ValueEntity> outputsEntityStream2 = subItemsEntityStream2.flatMap(s -> s.stream())
@@ -89,7 +94,6 @@ public class CreditMutuelPfmCreditCardFetcher implements AccountFetcher<CreditCa
         String amount = outputsEntityStream2
                 .filter(CreditMutuelPmfPredicates.filterValueEntityByType(AMOUNT))
                 .findFirst().orElseThrow(IllegalStateException::new).getValue();
-        AGGREGATION_LOGGER.info("amount: " + amount);
         Amount balance = EuroInformationUtils.parseAmount(amount);
 
         CreditCardAccount build = CreditCardAccount.builder(cardNumber)
