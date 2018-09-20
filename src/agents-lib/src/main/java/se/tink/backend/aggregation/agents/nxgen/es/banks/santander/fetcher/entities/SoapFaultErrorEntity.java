@@ -27,16 +27,16 @@ public class SoapFaultErrorEntity {
     }
 
     public static Optional<SoapFaultErrorEntity> parseFaultErrorFromSoapError(String xmlErrorResponseString) {
-        String errorAsString = SerializationUtils.serializeToString(
-                SantanderEsXmlUtils.getTagNodeFromSoapString(
-                        xmlErrorResponseString, SantanderEsConstants.NodeTags.FAULT_ERROR)
-        );
+        String errorAsString = SerializationUtils.deserializeFromString(
+                SerializationUtils.serializeToString(
+                        SantanderEsXmlUtils.getTagNodeFromSoapString(
+                                xmlErrorResponseString, SantanderEsConstants.NodeTags.FAULT_ERROR)
+                ), String.class);
 
         if (Strings.isNullOrEmpty(errorAsString)) {
             return Optional.empty();
         }
-        SoapFaultErrorEntity soapFaultErrorEntity =
-                SerializationUtils.deserializeFromString(errorAsString, SoapFaultErrorEntity.class);
+        SoapFaultErrorEntity soapFaultErrorEntity = SantanderEsXmlUtils.parseXmlStringToJson(errorAsString, SoapFaultErrorEntity.class);
 
         return Optional.ofNullable(soapFaultErrorEntity);
     }
