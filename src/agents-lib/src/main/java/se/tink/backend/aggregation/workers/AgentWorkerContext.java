@@ -745,12 +745,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
     }
 
     @Override
-    public boolean isCredentialDeleted(String credentialsId) {
-        Preconditions.checkState(!Strings.isNullOrEmpty(credentialsId), "CredentialsId must not be null or empty.");
-        return aggregationCredentialsRepository.findOne(credentialsId) == null;
-    }
-
-    @Override
     public void setAccountsToAggregate(List<Account> accounts) {
         accountsToAggregate = accounts;
     }

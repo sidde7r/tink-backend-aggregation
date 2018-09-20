@@ -278,11 +278,6 @@ public class NewAgentTestContext extends AgentContext {
     }
 
     @Override
-    public boolean isCredentialDeleted(String credentialsId) {
-        return false;
-    }
-
-    @Override
     public CuratorFramework getCoordinationClient() {
         return null;
     }

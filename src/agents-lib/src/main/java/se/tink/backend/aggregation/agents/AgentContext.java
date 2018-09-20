@@ -175,8 +175,6 @@ public abstract class AgentContext {
 
     public abstract void updateCredentialsOnlySensitiveInformation(Credentials credentials);
 
-    public abstract boolean isCredentialDeleted(String credentialsId);
-
     public abstract void updateFraudDetailsContent(List<FraudDetailsContent> detailsContent);
 
     public void clear() {
