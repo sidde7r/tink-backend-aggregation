@@ -35,7 +35,6 @@ public class BanquePopulaireAgent extends NextGenerationAgent {
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
-        client.setProxy("http://127.0.0.1:8888");
         client.addRedirectHandler(new BanquePopulaireRedirectHandler(sessionStorage));
     }
 
