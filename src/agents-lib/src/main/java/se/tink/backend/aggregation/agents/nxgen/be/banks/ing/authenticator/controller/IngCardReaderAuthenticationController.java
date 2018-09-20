@@ -91,7 +91,7 @@ public class IngCardReaderAuthenticationController implements MultiFactorAuthent
     String helpText =
         catalog.getString(
             "1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png) Insert your ING bank card in your ING Card Reader\n"
-                    + "2$ Press ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_SIGN.png) Press\n"
+                    + "2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_SIGN.png) Press\n"
                     + "3$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png) Enter your PIN and press\n"
                     + "4$ Enter the following number []");
 
