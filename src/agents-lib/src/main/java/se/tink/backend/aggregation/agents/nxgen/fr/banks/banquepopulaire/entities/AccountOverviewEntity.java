@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.entiti
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.BanquePopulaireConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.authenticator.entities.ContractIdentifierEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -26,11 +27,9 @@ public class AccountOverviewEntity {
     private ClientEntity client;
 
     public boolean isUnknownType() {
-        if (contractType == null || contractType.getCode() == null) {
-            return true;
-        }
-
-        return !BanquePopulaireConstants.AccountType.isHandled(contractType.getCode());
+        return Optional.ofNullable(contractType.getCode())
+                .map(code -> !BanquePopulaireConstants.AccountType.isHandled(contractType.getCode()))
+                .orElse(true);
     }
 
     public TransactionalAccount toTinkAccount() {

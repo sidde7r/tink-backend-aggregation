@@ -71,10 +71,9 @@ public class BanquePopulaireApiClient {
                 .queryParam(BanquePopulaireConstants.Query.BRAND, BanquePopulaireConstants.Query.BRAND_VALUE)
                 .queryParam(BanquePopulaireConstants.Query.OS, BanquePopulaireConstants.Query.OS_VALUE);
 
-        HttpResponse rawResponse = baseRequest(url)
-                .get(HttpResponse.class);
+        BankConfigResponse bankConfig = baseRequest(url)
+                .get(BankConfigResponse.class);
 
-        BankConfigResponse bankConfig = rawResponse.getBody(BankConfigResponse.class);
         cachedAppConfig = bankConfig.getAppConfig();
         sessionStorage.put(BanquePopulaireConstants.Storage.APP_CONFIGURATION, cachedAppConfig);
 
@@ -123,9 +122,7 @@ public class BanquePopulaireApiClient {
                     .get(HttpResponse.class);
             return rawResponse.getBody(AccountsResponse.class);
         } catch (Exception e) {
-            if (rawResponse != null && rawResponse.hasBody()) {
-                LOGGER.warnExtraLong(rawResponse.getBody(String.class), BanquePopulaireConstants.LogTags.PAGINATION_RESPONSE);
-            }
+            logPaginationResponse(rawResponse);
             throw e;
         }
     }
@@ -149,9 +146,7 @@ public class BanquePopulaireApiClient {
 
             return rawResponse.getBody(BanquePopulaireTransactionsResponse.class);
         } catch (Exception e) {
-            if (rawResponse != null && rawResponse.hasBody()) {
-                LOGGER.warnExtraLong(rawResponse.getBody(String.class), BanquePopulaireConstants.LogTags.PAGINATION_RESPONSE);
-            }
+            logPaginationResponse(rawResponse);
             throw e;
         }
     }
@@ -175,6 +170,28 @@ public class BanquePopulaireApiClient {
         String response = keepAliveResponse.getBody(String.class);
 
         return response.toLowerCase().contains(BanquePopulaireConstants.TRUE);
+    }
+
+    public void logout() {
+        try {
+            baseRequest(getAppConfigEntity().getAuthBaseUrl() +
+                    getBankEntity().getApplicationAPIContextRoot() +
+                    BanquePopulaireConstants.Urls.LOGOUT_PATH)
+                    .get(HttpResponse.class);
+
+            baseRequest(getAppConfigEntity().getAuthBaseUrl() +
+                    getAppConfigEntity().getWebSSOv3LogoutURL())
+                    .get(HttpResponse.class);
+        } catch (Exception e) {
+            LOGGER.info("Error logging out", e);
+        }
+    }
+
+    private void logPaginationResponse(HttpResponse rawResponse) {
+        if (rawResponse != null && rawResponse.hasBody()) {
+            LOGGER.warnExtraLong(rawResponse.getBody(String.class),
+                    BanquePopulaireConstants.LogTags.PAGINATION_RESPONSE);
+        }
     }
 
     private void addCookiesForAuthDomain(String newDomainUri) {
@@ -227,21 +244,16 @@ public class BanquePopulaireApiClient {
     }
 
     private BankEntity getBankEntity() {
-        if (cachedBankEntity == null) {
-            cachedBankEntity = sessionStorage.get(BanquePopulaireConstants.Storage.BANK_ENTITY,
-                    BankEntity.class).orElseThrow(() -> new IllegalStateException("No BankEntity available"));
-        }
-
-        return cachedBankEntity;
+        return Optional.ofNullable(cachedBankEntity).orElseGet(() -> cachedBankEntity =
+                sessionStorage.get(BanquePopulaireConstants.Storage.BANK_ENTITY,
+                        BankEntity.class).orElseThrow(() -> new IllegalStateException("No BankEntity available")));
     }
 
     private AppConfigEntity getAppConfigEntity() {
-        if (cachedAppConfig == null) {
-            cachedAppConfig = sessionStorage.get(BanquePopulaireConstants.Storage.APP_CONFIGURATION,
-                    AppConfigEntity.class).orElseThrow(() -> new IllegalStateException("No AppConfigEntity available"));
-        }
-
-        return cachedAppConfig;
+        return Optional.ofNullable(cachedAppConfig).orElseGet(() -> cachedAppConfig =
+                sessionStorage.get(BanquePopulaireConstants.Storage.APP_CONFIGURATION,
+                        AppConfigEntity.class)
+                        .orElseThrow(() -> new IllegalStateException("No AppConfigEntity available")));
     }
 
     private RequestBuilder baseRequest(String url) {
