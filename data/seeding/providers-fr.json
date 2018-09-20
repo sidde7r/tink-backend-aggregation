@@ -3,6 +3,31 @@
   "currency": "EUR",
   "providers": [
     {
+      "name": "fr-lcl-password",
+      "displayName": "LCL",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.fr.banks.lcl.LclAgent",
+      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+      "transactional": true,
+      "fields": [
+        {
+          "description": "Username",
+          "name": "username",
+          "immutable": true
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "name": "password",
+          "sensitive": true
+        }
+      ]
+    },
+    {
       "name": "fr-banquepopulaire-alsace-password",
       "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
       "credentialsType": "PASSWORD",
