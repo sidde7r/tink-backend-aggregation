@@ -51,7 +51,7 @@ public class ProviderFileModule extends AbstractModule {
         return loadProviderOverrideOnClusterFromJson();
     }
 
-    private Map<String, ProviderConfiguration> loadProviderConfigurationFromJson() throws IOException {
+    protected Map<String, ProviderConfiguration> loadProviderConfigurationFromJson() throws IOException {
         File directory = new File("data/seeding");
         File[] providerFiles = directory.listFiles((dir, fileName) -> fileName.matches("providers-[a-z]{2}.json"));
 
@@ -69,7 +69,7 @@ public class ProviderFileModule extends AbstractModule {
         return providerConfigurationByProviderName;
     }
 
-    private Map<String, List<String>> loadEnabledProvidersOnClusterFromJson() throws IOException {
+    protected Map<String, List<String>> loadEnabledProvidersOnClusterFromJson() throws IOException {
         String clusterProviderFilePath = "data/seeding/cluster-provider-configuration.json";
         File clusterProviderFile = new File(clusterProviderFilePath);
         ProviderOverrideOnClusterModel providerOverrideOnClusterModel =
@@ -81,7 +81,7 @@ public class ProviderFileModule extends AbstractModule {
                 .collect(Collectors.toMap(ClusterProviderListModel::getClusterId, ClusterProviderListModel::getProviderName));
     }
 
-    private Map<String, Map<String, ProviderConfiguration>> loadProviderOverrideOnClusterFromJson() throws IOException {
+    protected Map<String, Map<String, ProviderConfiguration>> loadProviderOverrideOnClusterFromJson() throws IOException {
         File directory = new File("data/seeding");
         File[] providerSpecificationFiles = directory.listFiles((dir, fileName) -> fileName.matches("provider-specification.*.json"));
         Map<String, Map<String, ProviderConfiguration>> providerSpecificationByCluster = Maps.newHashMap();

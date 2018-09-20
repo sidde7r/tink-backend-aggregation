@@ -26,13 +26,13 @@ public class ProviderFileModuleTest {
     }
 
     @Test
-    public void testLoaderLoadsFileSuccess() throws IOException{
-        module.loadClusterSpecificProviderConfigurationFromJson();
+    public void loaderLoadsFileSuccessTest() throws IOException{
+        module.loadProviderOverrideOnClusterFromJson();
     }
 
     @Test
-    public void testLoadEnabledProviders() throws IOException{
-        Map<String, List<String>> clusterProvider = module.loadClusterEnabledProviderNamesFromJson();
+    public void loadEnabledProvidersTest() throws IOException{
+        Map<String, List<String>> clusterProvider = module.loadEnabledProvidersOnClusterFromJson();
         List<List<String>> emptyProviders = clusterProvider.values().stream()
                 .filter(List::isEmpty)
                 .collect(Collectors.toList());
