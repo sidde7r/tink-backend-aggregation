@@ -487,7 +487,6 @@ java_library(
     name = "com_google_http_client_google_http_client",
     visibility = ["//visibility:public"],
     exports = [
-        ":se_tink_httpclient",
         "@com_google_code_findbugs_jsr305//jar",
         "@com_google_http_client_google_http_client//jar",
         "@org_apache_httpcomponents_httpclient//jar",
@@ -1978,14 +1977,6 @@ java_library(
     ],
 )
 
-java_library(
-    name = "tink_org_apache_httpcomponents_httpclient",
-    visibility = ["//visibility:public"],
-    exports = [
-        ":se_tink_httpclient",
-        ":se_tink_httpcore",
-    ],
-)
 
 java_library(
     name = "org_apache_httpcomponents_httpcore",
@@ -1994,14 +1985,6 @@ java_library(
         "@org_apache_httpcomponents_httpcore//jar",
     ],
 )
-java_library(
-    name = "tink_org_apache_httpcomponents_httpcore",
-    visibility = ["//visibility:public"],
-    exports = [
-        ":se_tink_httpcore",
-    ],
-)
-
 java_library(
     name = "org_apache_httpcomponents_httpmime",
     visibility = ["//visibility:public"],

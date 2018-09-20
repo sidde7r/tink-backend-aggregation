@@ -26,7 +26,7 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import tink.org.apache.http.cookie.Cookie;
+import org.apache.http.cookie.Cookie;
 
 public class BanquePopulaireApiClient {
     private static final AggregationLogger LOGGER = new AggregationLogger(BanquePopulaireApiClient.class);
@@ -221,9 +221,9 @@ public class BanquePopulaireApiClient {
         }
     }
 
-    private tink.org.apache.http.cookie.Cookie createCookieForDomain(String name, String value, String domain) {
-        tink.org.apache.http.impl.cookie.BasicClientCookie newCookie =
-                new tink.org.apache.http.impl.cookie.BasicClientCookie(name, value);
+    private org.apache.http.cookie.Cookie createCookieForDomain(String name, String value, String domain) {
+        org.apache.http.impl.cookie.BasicClientCookie newCookie =
+                new org.apache.http.impl.cookie.BasicClientCookie(name, value);
         newCookie.setDomain(domain);
         newCookie.setPath("/");
         newCookie.setSecure(true);
@@ -231,10 +231,10 @@ public class BanquePopulaireApiClient {
         return newCookie;
     }
 
-    private tink.org.apache.http.cookie.Cookie copyCookieToDomain(tink.org.apache.http.cookie.Cookie clientCookie,
+    private org.apache.http.cookie.Cookie copyCookieToDomain(org.apache.http.cookie.Cookie clientCookie,
             String domain) {
-        tink.org.apache.http.impl.cookie.BasicClientCookie newCookie =
-                new tink.org.apache.http.impl.cookie.BasicClientCookie(clientCookie.getName(), clientCookie.getValue());
+        org.apache.http.impl.cookie.BasicClientCookie newCookie =
+                new org.apache.http.impl.cookie.BasicClientCookie(clientCookie.getName(), clientCookie.getValue());
         newCookie.setDomain(domain);
         newCookie.setPath(clientCookie.getPath());
         newCookie.setExpiryDate(clientCookie.getExpiryDate());
