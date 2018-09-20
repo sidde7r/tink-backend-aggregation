@@ -7,7 +7,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
 import org.apache.commons.codec.binary.Hex;
-import tink.org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.conn.ssl.TrustStrategy;
 
 // Leaf certificate pinning. Code taken from JavaPinning.
 class PinServerCertificateTrustStrategy implements TrustStrategy {

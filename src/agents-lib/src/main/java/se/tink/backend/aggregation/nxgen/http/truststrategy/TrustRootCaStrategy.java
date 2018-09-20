@@ -8,7 +8,7 @@ import java.security.cert.X509Certificate;
 import java.util.Objects;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
-import tink.org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.conn.ssl.TrustStrategy;
 
 public class TrustRootCaStrategy implements TrustStrategy {
     private final X509TrustManager customCaTrustManager;

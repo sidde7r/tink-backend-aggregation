@@ -8,8 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import tink.org.apache.http.cookie.Cookie;
-import tink.org.apache.http.impl.cookie.BasicClientCookie;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.cookie.BasicClientCookie;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 
 /**

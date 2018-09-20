@@ -4,7 +4,7 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import java.net.URI;
 import javax.ws.rs.core.MediaType;
-import tink.org.apache.http.client.utils.URIBuilder;
+import org.apache.http.client.utils.URIBuilder;
 import org.joda.time.DateTime;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.banks.crosskey.errors.CrossKeyErrorHandler;
