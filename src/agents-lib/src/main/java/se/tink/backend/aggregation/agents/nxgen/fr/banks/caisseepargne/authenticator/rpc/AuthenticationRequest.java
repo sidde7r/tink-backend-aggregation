@@ -50,6 +50,10 @@ public class AuthenticationRequest extends GenericRequest {
         this.deviceId = deviceId;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
     @Override
     public String action() {
         return CaisseEpargneConstants.SoapAction.AUTHENTIFIER;

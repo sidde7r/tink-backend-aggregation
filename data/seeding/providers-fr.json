@@ -2013,14 +2013,14 @@
           "name": "username",
           "numeric": true,
           "immutable": true,
-          "pattern": "[0-9]{10}"
+          "pattern": "^[0-9]{9,10}$"
         },
         {
           "description": "Password",
           "sensitive": true,
           "masked": true,
           "name": "password",
-          "pattern": "[0-9]{8}"
+          "pattern": "^[0-9]{8}$"
         }
       ],
       "type": "BANK",

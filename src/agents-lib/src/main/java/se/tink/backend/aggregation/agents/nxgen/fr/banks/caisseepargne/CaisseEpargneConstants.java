@@ -34,10 +34,6 @@ public class CaisseEpargneConstants {
         public static final String SOAP_ACTION = "SOAPAction";
     }
 
-    public static class HeaderValue {
-        public static final String X_AUTH_KEY = "60626852464971856873";
-    }
-
     public static class LogMessage {
         public static final String UNKNOWN_ACCOUNT_TYPE = "{} Unknown account type: {}";
     }

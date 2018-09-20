@@ -31,18 +31,28 @@ public class CaisseEpargneApiClient {
         this.client = client;
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    private static String toAuthKey(String username) {
 
-        RequestBuilder builder = client.request(CaisseEpargneConstants.Url.WS_BAD);
+        String padded = String.format("%010d", Long.parseLong(username));
 
-        String response = builder
-                .header(CaisseEpargneConstants.HeaderKey.SOAP_ACTION, request.action())
-                .header(CaisseEpargneConstants.HeaderKey.X_AUTH_KEY,
-                        CaisseEpargneConstants.HeaderValue.X_AUTH_KEY)
-                .body(this.write(request), MediaType.TEXT_XML)
-                .post(String.class);
+        int[] digits = new int[10];
+        digits[0] = Integer.parseInt(padded.substring(0, 1)) + 56;
+        digits[1] = Integer.parseInt(padded.substring(1, 2)) + 57;
+        digits[2] = Integer.parseInt(padded.substring(2, 3)) + 67;
+        digits[3] = Integer.parseInt(padded.substring(3, 4)) + 51;
+        digits[4] = Integer.parseInt(padded.substring(4, 5)) + 45;
+        digits[5] = Integer.parseInt(padded.substring(5, 6)) + 45;
+        digits[6] = Integer.parseInt(padded.substring(6, 7)) + 66;
+        digits[7] = Integer.parseInt(padded.substring(7, 8)) + 80;
+        digits[8] = Integer.parseInt(padded.substring(8, 9)) + 67;
+        digits[9] = Integer.parseInt(padded.substring(9, 10)) + 69;
 
-        return this.read(response, AuthenticationResponse.class);
+        StringBuilder retVal = new StringBuilder(2 * digits.length);
+        for (int i = 0; i < digits.length; i++) {
+            retVal.append(digits[i]);
+        }
+
+        return retVal.toString();
     }
 
     public AccountsResponse fetchAccounts(AccountsRequest request) {
@@ -126,4 +136,19 @@ public class CaisseEpargneApiClient {
 
         return retVal;
     }
+
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+
+        RequestBuilder builder = client.request(CaisseEpargneConstants.Url.WS_BAD);
+
+        String response = builder
+                .header(CaisseEpargneConstants.HeaderKey.SOAP_ACTION, request.action())
+                .header(CaisseEpargneConstants.HeaderKey.X_AUTH_KEY,
+                        toAuthKey(request.getUsername()))
+                .body(this.write(request), MediaType.TEXT_XML)
+                .post(String.class);
+
+        return this.read(response, AuthenticationResponse.class);
+    }
+
 }
