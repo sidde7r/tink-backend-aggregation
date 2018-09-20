@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.creditcard;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.creditcard.nopfm;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -15,21 +15,21 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class EuroInformationCreditCardFetcher implements AccountFetcher<CreditCardAccount> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(EuroInformationCreditCardFetcher.class);
+public class EuroInformationNoPfmCreditCardFetcher implements AccountFetcher<CreditCardAccount> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(EuroInformationNoPfmCreditCardFetcher.class);
     private static final AggregationLogger AGGREGATION_LOGGER = new AggregationLogger(
-            EuroInformationCreditCardFetcher.class);
+            EuroInformationNoPfmCreditCardFetcher.class);
     private final EuroInformationApiClient apiClient;
     private final SessionStorage sessionStorage;
 
-    private EuroInformationCreditCardFetcher(EuroInformationApiClient apiClient, SessionStorage sessionStorage) {
+    private EuroInformationNoPfmCreditCardFetcher(EuroInformationApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
     }
 
-    public static EuroInformationCreditCardFetcher create(EuroInformationApiClient apiClient,
+    public static EuroInformationNoPfmCreditCardFetcher create(EuroInformationApiClient apiClient,
             SessionStorage sessionStorage) {
-        return new EuroInformationCreditCardFetcher(apiClient, sessionStorage);
+        return new EuroInformationNoPfmCreditCardFetcher(apiClient, sessionStorage);
     }
 
     @Override

@@ -42,6 +42,7 @@ public class EuroInformationPasswordAuthenticator implements PasswordAuthenticat
         if (!EuroInformationUtils.isSuccess(logon.getReturnCode())) {
             handleError(logon);
         }
+        //TODO: Doublechek PFM was actually enabled
         PfmInitResponse pfmInitResponse = apiClient.actionInit();
         if (!EuroInformationUtils.isSuccess(pfmInitResponse.getReturnCode())
                 || !pfmInitResponse.getInitialization().getUserInfos().contains(PFM_ENABLED)) {
