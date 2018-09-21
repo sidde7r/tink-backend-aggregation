@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.rpc.CredentialsRequestType;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.rpc.User;
-import se.tink.backend.aggregation.s3storage.AgentDebugStorageHandler;
+import se.tink.backend.aggregation.storage.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
@@ -77,27 +77,20 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
                 logContent = logContent.replace(credentials.getPassword(), "******");
             }
 
-            String key = String.format(
+            File logFile = new File(debugDirectory, String.format(
                     "%s_%s_u%s_c%s.log",
                     credentials.getProviderName(),
                     ThreadSafeDateFormat.FORMATTER_FILENAME_SAFE.format(new Date()),
                     credentials.getUserId(),
-                    credentials.getId());
+                    credentials.getId()));
 
-            String storageLocation;
-            if (agentDebugStorage.isAvailable()) {
-                storageLocation = agentDebugStorage.store(key, logContent);
-            } else {
-                File logFile = new File(debugDirectory, key);
-                storageLocation = logFile.getAbsolutePath();
-            }
-
+            String storagePath = agentDebugStorage.store(logContent, logFile);
 
             if (transferRequest != null) {
                 String id = UUIDUtils.toTinkUUID(transferRequest.getTransfer().getId());
-                log.info("Flushed transfer (" + id + ") debug log for further investigation: " + storageLocation);
+                log.info("Flushed transfer (" + id + ") debug log for further investigation: " + storagePath);
             } else {
-                log.info("Flushed debug log for further investigation: " + storageLocation);
+                log.info("Flushed debug log for further investigation: " + storagePath);
             }
 
         } catch (IOException e) {

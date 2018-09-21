@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.s3storage;
+package se.tink.backend.aggregation.storage;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.client.builder.AwsClientBuilder;
@@ -6,15 +6,12 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.Bucket;
-import com.amazonaws.services.s3.model.ListObjectsV2Result;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
+import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 import com.google.inject.Inject;
 import java.util.Objects;
 import se.tink.backend.common.config.S3StorageConfiguration;
-import se.tink.backend.queue.sqs.configuration.SqsQueueConfiguration;
 
 public class AgentDebugS3Storage implements AgentDebugStorageHandler {
 
@@ -47,9 +44,10 @@ public class AgentDebugS3Storage implements AgentDebugStorageHandler {
     }
 
     @Override
-    public String store(String name, String content) throws IOException {
+    public String store(String content, File file) throws IOException {
         try {
-            return putObject(name, content);
+            String fileName = file.getName();
+            return putObject(content, fileName);
         } catch(AmazonServiceException e) {
             throw new IOException(e.getMessage());
         }
@@ -88,8 +86,8 @@ public class AgentDebugS3Storage implements AgentDebugStorageHandler {
         return bucket;
     }
 
-    public String putObject(String keyName, String content) throws AmazonServiceException {
-            awsStorageClient.putObject(bucketName, keyName, content);
-            return awsStorageClient.getUrl(bucketName, keyName).toExternalForm();
+    public String putObject(String content, String file) throws AmazonServiceException {
+            awsStorageClient.putObject(bucketName, file, content);
+            return awsStorageClient.getUrl(bucketName, file).toExternalForm();
     }
 }
