@@ -21,10 +21,8 @@ import se.tink.libraries.dropwizard.DropwizardObjectMapperConfigurator;
 public class ProviderConfigurationServiceContainer extends AbstractServiceContainer {
 
     private static final ImmutableList<Command> COMMANDS = ImmutableList.of(
-//            new ChangeProviderRefreshFrequencyFactorCommand(),
             new DebugProviderCommand(),
-            new ProviderStatusCommand()//,
-//            new SeedProvidersForMarketCommand()
+            new ProviderStatusCommand()
     );
 
     public static void main(String[] args) throws Exception {
