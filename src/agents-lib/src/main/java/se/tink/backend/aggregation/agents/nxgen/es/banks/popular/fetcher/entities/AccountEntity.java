@@ -2,15 +2,23 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.entiti
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Optional;
 import org.assertj.core.util.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularConstants;
 import se.tink.backend.aggregation.annotations.JsonDouble;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.core.Amount;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 public class AccountEntity {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccountEntity.class);
+
     @JsonProperty("numIntContrato")
     private int contractNumber;
     private String iban;
@@ -88,7 +96,16 @@ public class AccountEntity {
 
     @JsonIgnore
     public TransactionalAccount toTinkAccount() {
-        return CheckingAccount.builder(formatAccountNumber().toLowerCase(), getTinkBalance())
+
+        Optional<AccountTypes> type = BancoPopularConstants.ProductCode.translate(product);
+
+        if (!type.isPresent()) {
+            LOGGER.info("{} Unknown product code for: {}", BancoPopularConstants.Tags.UNKNOWN_PRODUCT_CODE,
+                    SerializationUtils.serializeToString(this));
+        }
+
+        return TransactionalAccount
+                .builder(type.orElse(AccountTypes.OTHER), formatAccountNumber().toLowerCase(), getTinkBalance())
                 .setAccountNumber(formatAccountNumber())
                 .setName(contractType)
                 .setBankIdentifier(Integer.toString(contractNumber))
