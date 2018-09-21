@@ -1,15 +1,12 @@
 package se.tink.backend.aggregation.provider.configuration.core;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import io.swagger.annotations.ApiModelProperty;
-import org.hibernate.annotations.Type;
 import se.tink.backend.core.CredentialsTypes;
 import se.tink.backend.core.Field;
 import se.tink.backend.core.ProviderRefreshSchedule;
@@ -17,21 +14,12 @@ import se.tink.backend.core.ProviderStatuses;
 import se.tink.backend.core.ProviderTypes;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 
-
-// FIXME: remove all annotations and remove unused code
 public class ProviderConfiguration {
     private static final String DEMO_AGENT_CLASS_NAME = "demo.DemoAgent";
 
@@ -299,13 +287,11 @@ public class ProviderConfiguration {
     }
 
     @JsonIgnore
-    @Transient
     public double getCurrentRefreshFrequency() {
         return refreshFrequency * refreshFrequencyFactor;
     }
 
     @JsonIgnore
-    @Transient
     public String getCleanDisplayName() {
         // Some of our display names have the authetication method in a parenthesis after.
         // e.g. Handelsbanken (Mobilt BankID)
@@ -313,7 +299,6 @@ public class ProviderConfiguration {
     }
 
     @JsonIgnore
-    @Transient
     public boolean isUsingDemoAgent() {
         return DEMO_AGENT_CLASS_NAME.equals(getClassName());
     }
@@ -332,7 +317,6 @@ public class ProviderConfiguration {
     }
 
     @JsonIgnore
-    @Transient
     public Optional<ProviderRefreshSchedule> getRefreshSchedule() {
         if (Strings.isNullOrEmpty(refreshScheduleSerialized)) {
             return Optional.empty();
@@ -342,5 +326,3 @@ public class ProviderConfiguration {
                 SerializationUtils.deserializeFromString(refreshScheduleSerialized, ProviderRefreshSchedule.class));
     }
 }
-
-
