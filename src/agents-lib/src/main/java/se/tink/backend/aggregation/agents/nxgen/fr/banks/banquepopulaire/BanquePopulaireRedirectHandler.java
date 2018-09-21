@@ -40,7 +40,7 @@ public class BanquePopulaireRedirectHandler extends RedirectHandler {
             List<NameValuePair> parts = URLEncodedUtils.parse(redirectUri, "UTF-8");
 
             String transactionId = parts.stream()
-                    .filter(p -> BanquePopulaireConstants.QueryParams.TRANSACTION_ID.equalsIgnoreCase(p.getName()))
+                    .filter(p -> BanquePopulaireConstants.Query.TRANSACTION_ID.equalsIgnoreCase(p.getName()))
                     .map(NameValuePair::getValue)
                     .findFirst().orElseThrow(() -> new IllegalStateException("No transactionId found"));
 
