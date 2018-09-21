@@ -1924,6 +1924,25 @@ java_library(
 )
 
 
+
+java_import(
+    name = "com_amazonaws_aws_java_sdk_sqs",
+    jars = [
+        # This should be a java_librar w/ exports instead, see:
+        # https://github.com/bazelbuild/intellij/issues/66
+        "@tink_aws_sdk_1_11//:libaws-java-sdk-core.jar",
+    ],
+    visibility = ["//visibility:public"],
+    exports = [
+        "@com_amazonaws_aws_java_sdk_code_generator//jar",
+        "@com_amazonaws_jmespath_java//jar",
+        "@tink_httpcore_4_4_9//:tink_httpcore_4_4_9",
+        "@tink_httpclient_4_5_5//:tink_httpclient_4_5_5",
+        "@com_amazonaws_aws_java_sdk_core//jar",
+        "@com_amazonaws_aws_java_sdk_sqs//jar",
+
+    ],
+)
 java_library(
     name = "tink_apache_httpcomponents_httpcore",
     visibility = ["//visibility:public"],
@@ -1965,14 +1984,6 @@ java_library(
     ],
 )
 
-java_library(
-    name = "com_amazonaws_aws_java_sdk_sqs",
-    visibility = ["//visibility:public"],
-    exports = [
-     ":tink_aws_sdk_sqs",
-     ":tink_aws_sdk_core",
-    ],
-)
 
 java_library(
     name = "org_apache_httpcomponents_httpcore",

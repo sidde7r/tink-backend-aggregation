@@ -1319,11 +1319,6 @@ maven_jar(
     sha1 = "2fd58d1de64553db427ae4fbc1a6691adea460e2",
 )
 
-maven_jar(
-    name = "com_amazonaws_aws_java_sdk",
-    artifact = "com.amazonaws:aws-java-sdk:1.4.4.2",
-    sha1 = "aed880d0fc444c0d147c58dc337ec94204042b58",
-)
 
 maven_jar(
     name = "com_amazonaws_jmespath_java",
