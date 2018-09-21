@@ -90,9 +90,15 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
     public void updateStatus(String providerName, ProviderStatuses providerStatus) {
         ProviderStatusConfiguration providerStatusConfiguration = providerStatusConfigurationRepository.getOne(providerName);
         if (providerStatusConfiguration != null) {
-            providerStatusConfiguration.setStatus(providerStatus);
-            providerStatusConfigurationRepository.save(providerStatusConfiguration);
-            logger.info("Provider status updated");
+            ProviderStatuses oldStatus = providerStatusConfiguration.getStatus();
+            if (oldStatus.equals(providerStatus)){
+                logger.warn("Provider {} already has status {}", providerName, providerStatus);
+            } else {
+                providerStatusConfiguration.setStatus(providerStatus);
+                providerStatusConfigurationRepository.save(providerStatusConfiguration);
+                logger.info("Provider status updated - Provider name: {}, old status: {}, new status: {}",
+                        providerName, providerStatusConfiguration.getStatus(), oldStatus, providerStatus);
+            }
         } else {
             logger.warn(String.format("Provider '%s' could not be found.", providerName));
         }
