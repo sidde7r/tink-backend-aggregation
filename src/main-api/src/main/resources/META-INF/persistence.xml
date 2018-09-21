@@ -59,9 +59,6 @@
 	<persistence-unit name="tink-provider-api"
 					  transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
-		<class>se.tink.backend.core.ClusterHostConfiguration</class>
-		<class>se.tink.backend.core.ClusterCryptoConfiguration</class>
-		<class>se.tink.backend.core.ClusterProviderConfiguration</class>
 		<class>se.tink.backend.aggregation.provider.configuration.storage.models.ProviderStatusConfiguration</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
