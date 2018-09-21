@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.provider.configuration.cli;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration;
 import se.tink.backend.aggregation.provider.configuration.core.ProviderConfigurationDAO;
 import se.tink.backend.core.ProviderStatuses;
 
