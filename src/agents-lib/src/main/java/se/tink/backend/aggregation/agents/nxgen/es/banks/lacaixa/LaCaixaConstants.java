@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa;
 
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class LaCaixaConstants {
@@ -78,4 +79,7 @@ public class LaCaixaConstants {
         public static final String TRANSFER_MESSAGE = "Concepto transferencia";
     }
 
+    public static class LogTags {
+        public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("lacaixa_unknown-accountype");
+    }
 }
