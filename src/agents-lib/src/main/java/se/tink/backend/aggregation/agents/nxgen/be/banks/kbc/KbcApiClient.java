@@ -446,7 +446,6 @@ public class KbcApiClient {
                 .setPaymentDashboardIndicator(true)
                 .build();
 
-        //        AccountsResponse response = post(KbcConstants.Url.ACCOUNTS, accountsRequest, AccountsResponse.class);
         this.accountResponse = post(KbcConstants.Url.ACCOUNTS, accountsRequest, AccountsResponse.class);
         verifyDoubleZeroResponseCode(this.accountResponse.getHeader());
 
