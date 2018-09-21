@@ -85,15 +85,6 @@ public class ProviderConfiguration {
     }
 
     @Override
-    public ProviderConfiguration clone() {
-        try {
-            return (ProviderConfiguration) super.clone();
-        } catch (CloneNotSupportedException e) {
-            return null;
-        }
-    }
-
-    @Override
     public boolean equals(Object obj) {
         // Generated using Eclipse
         if (this == obj) {
