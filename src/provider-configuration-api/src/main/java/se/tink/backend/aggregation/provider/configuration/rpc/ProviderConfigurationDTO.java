@@ -6,17 +6,13 @@ import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import org.hibernate.annotations.Type;
-import se.tink.backend.aggregation.credit.safe.rpc.CredentialsTypes;
+import se.tink.backend.core.CredentialsTypes;
 import se.tink.backend.core.Field;
 import se.tink.backend.core.ProviderRefreshSchedule;
 import se.tink.backend.core.ProviderStatuses;
 import se.tink.backend.core.ProviderTypes;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,22 +29,18 @@ public class ProviderConfigurationDTO {
     private static class FieldsList extends ArrayList<Field> {
     }
 
-    @Column(name = "capabilities")
     private String capabilitiesSerialized;
     private String className;
-    @Enumerated(EnumType.STRING)
     private CredentialsTypes credentialsType;
     private String currency;
     private String displayName;
     private String displayDescription;
     @JsonProperty("fields")
-    @Column(name = "fields")
     @Type(type = "text")
     private String fieldsSerialized;
     private String groupDisplayName;
     private String market;
     private boolean multiFactor;
-    @Id
     private String name;
     @Type(type = "text")
     private String passwordHelpText;
@@ -56,12 +48,9 @@ public class ProviderConfigurationDTO {
     private boolean popular;
     private double refreshFrequency;
     private double refreshFrequencyFactor;
-    @Enumerated(EnumType.STRING)
     private ProviderStatuses status;
     private boolean transactional;
-    @Enumerated(EnumType.STRING)
     private ProviderTypes type;
-    @Column(name = "refreshschedule")
     @Type(type = "text")
     private String refreshScheduleSerialized;
 
