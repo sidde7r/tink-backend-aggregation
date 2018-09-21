@@ -23,7 +23,7 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
     private final Map<String, Map<String, ProviderConfiguration>> providerOverrideOnCluster;
     private final ProviderStatusConfigurationRepository providerStatusConfigurationRepository;
 
-    private final static Logger logger = LoggerFactory.getLogger(ProviderConfigurationProvider.class);
+    private final static Logger log = LoggerFactory.getLogger(ProviderConfigurationProvider.class);
 
     @Inject
     public ProviderConfigurationProvider(
@@ -92,15 +92,15 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
         if (providerStatusConfiguration != null) {
             ProviderStatuses oldStatus = providerStatusConfiguration.getStatus();
             if (oldStatus.equals(providerStatus)){
-                logger.warn("Provider {} already has status {}", providerName, providerStatus);
+                log.warn("Provider {} already has status {}", providerName, providerStatus);
             } else {
                 providerStatusConfiguration.setStatus(providerStatus);
                 providerStatusConfigurationRepository.save(providerStatusConfiguration);
-                logger.info("Provider status updated - Provider name: {}, old status: {}, new status: {}",
+                log.info("Provider status updated - Provider name: {}, old status: {}, new status: {}",
                         providerName, providerStatusConfiguration.getStatus(), oldStatus, providerStatus);
             }
         } else {
-            logger.warn(String.format("Provider '%s' could not be found.", providerName));
+            log.warn("Provider {} could not be found.", providerName);
         }
     }
 }

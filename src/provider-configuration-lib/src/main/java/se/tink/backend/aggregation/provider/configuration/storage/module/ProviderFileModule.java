@@ -62,7 +62,7 @@ public class ProviderFileModule extends AbstractModule {
         Map<String, ProviderConfiguration> providerConfigurationByProviderName = Maps.newHashMap();
 
         for (File providerFile : providerFiles) {
-            log.info("Seeding from file " + providerFile.getName());
+            log.info("Seeding from file {}", providerFile.getName());
             parseProviderConfigurations(providerFile, providerConfigurationByProviderName);
         }
 
@@ -91,7 +91,7 @@ public class ProviderFileModule extends AbstractModule {
         }
 
         for (File providerSpecificationFile : providerSpecificationFiles) {
-            log.info("Seeding provider specific from file %s", providerSpecificationFile.getName());
+            log.info("Seeding provider specific from file {}", providerSpecificationFile.getName());
             parseProviderOverrideOnCluster(providerSpecificationFile, providerSpecificationByCluster);
         }
         return providerSpecificationByCluster;
@@ -107,14 +107,14 @@ public class ProviderFileModule extends AbstractModule {
 
         for (ProviderConfiguration providerConfiguration : providers) {
             Preconditions.checkNotNull(market,
-                    "no market found for provider configuration file %s", providerFile.getName());
+                    "no market found for provider configuration file {}", providerFile.getName());
             Preconditions.checkNotNull(currency,
-                    "no currency found for provider configuration file %s", providerFile.getName());
+                    "no currency found for provider configuration file {}", providerFile.getName());
             providerConfiguration.setMarket(market);
             providerConfiguration.setCurrency(currency);
             providerConfigurationByProviderName.put(providerConfiguration.getName(), providerConfiguration);
         }
-        log.info("Seeded %d providers for cluster %s " , providers.size(), market);
+        log.info("Seeded {} providers for cluster {} " , providers.size(), market);
     }
 
     private void parseProviderOverrideOnCluster(File providerSpecificationFile, Map<String, Map<String, ProviderConfiguration>> providerOverrideOnCluster)
@@ -125,13 +125,13 @@ public class ProviderFileModule extends AbstractModule {
         List<ProviderConfiguration> providerSpecificConfiguration = providerSpecificationModel.getProviderSpecificConfiguration();
 
         Preconditions.checkNotNull(clusterId,
-                "no cluster id found for provider specification file %s",providerSpecificationFile.getName());
+                "no cluster id found for provider specification file {}",providerSpecificationFile.getName());
 
         Map<String, ProviderConfiguration> providerConfigurationMap = Maps.newHashMap();
 
         if (providerSpecificConfiguration == null || providerSpecificConfiguration.isEmpty()){
             // assume these files can be empty when there is no provider specification for the cluster
-            log.warn("No providers specified for file %s" , providerSpecificationFile.getName());
+            log.warn("No providers specified for file {}" , providerSpecificationFile.getName());
             return;
         }
 
@@ -140,6 +140,6 @@ public class ProviderFileModule extends AbstractModule {
         }
 
         providerOverrideOnCluster.put(clusterId, providerConfigurationMap);
-        log.info("Seeded %d provider specification for cluster %s " , providerConfigurationMap.size(), clusterId);
+        log.info("Seeded {} provider specification for cluster {} " , providerConfigurationMap.size(), clusterId);
     }
 }

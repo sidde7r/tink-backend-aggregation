@@ -44,7 +44,7 @@ public class ProviderStatusesFetcher {
         if (!Strings.isNullOrEmpty(market)) {
             List<ProviderConfiguration> providers = providerConfigurationDAO.findAllByMarket(market);
             if (providers.isEmpty()) {
-                log.warn(String.format("Did not find any providers for supplied market '%s'", market));
+                log.warn("Did not find any providers for supplied market {}", market);
             }
             return providers;
         }

@@ -42,7 +42,7 @@ public class ProviderServiceController {
             return Optional.of(Localizator.translate(locale,
                     providerConfigurationDAO.findByClusterIdAndProviderName(clusterId.getId(), providerName)));
         } catch (NoResultException e) {
-            log.warn("Could not find providerConfiguration for clusterId: %s, providerName: %s",
+            log.warn("Could not find providerConfiguration for clusterId: {}, providerName: {}",
                     clusterId.getId(), providerName);
         }
         return Optional.empty();

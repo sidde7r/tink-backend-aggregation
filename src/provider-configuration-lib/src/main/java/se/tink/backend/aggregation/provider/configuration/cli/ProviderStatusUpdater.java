@@ -16,8 +16,8 @@ public class ProviderStatusUpdater {
     }
 
     public void update(String providerName, ProviderStatuses providerStatus) {
-        log.info(String.format("Attempting to update status of provider '%s' to '%s'",
-                providerName, providerStatus));
+        log.info("Attempting to update status of provider {} to {}",
+                providerName, providerStatus);
         providerConfigurationDAO.updateStatus(providerName, providerStatus);
     }
 }
