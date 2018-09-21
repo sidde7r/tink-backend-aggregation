@@ -15,9 +15,10 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.authent
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.authenticator.rpc.TokensResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.entities.AppConfigEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.entities.BankEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.fetcher.loan.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.fetcher.transactionalaccounts.rpc.BanquePopulaireTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.rpc.BankConfigResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.rpc.ContractsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.rpc.GeneralConfigrationResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
@@ -113,14 +114,14 @@ public class BanquePopulaireApiClient {
                 .post(TokensResponse.class);
     }
 
-    public AccountsResponse getAccounts() {
+    public ContractsResponse getAccountContracts() {
         HttpResponse rawResponse = null;
         try {
             rawResponse = baseRequest(getAppConfigEntity().getAuthBaseUrl() +
                     getBankEntity().getApplicationAPIContextRoot() + BanquePopulaireConstants.Urls.ACCOUNTS_PATH)
                     .header(HttpHeaders.CONTENT_TYPE, BanquePopulaireConstants.Headers.CONTENT_TYPE_JSON_UTF8)
                     .get(HttpResponse.class);
-            return rawResponse.getBody(AccountsResponse.class);
+            return rawResponse.getBody(ContractsResponse.class);
         } catch (Exception e) {
             logPaginationResponse(rawResponse);
             throw e;
@@ -129,6 +130,7 @@ public class BanquePopulaireApiClient {
 
     public BanquePopulaireTransactionsResponse getAccountTransactions(TransactionalAccount account,
             String paginationKey) {
+
         URL transactionsUrl = new URL(getAppConfigEntity().getAuthBaseUrl() +
                 getBankEntity().getApplicationAPIContextRoot() +
                 BanquePopulaireConstants.Urls.TRANSACTIONS_PATH)
@@ -149,6 +151,46 @@ public class BanquePopulaireApiClient {
             logPaginationResponse(rawResponse);
             throw e;
         }
+    }
+
+    public ContractsResponse getAllContracts() {
+        HttpResponse rawResponse = null;
+        try {
+            rawResponse = baseRequest(getAppConfigEntity().getAuthBaseUrl() +
+                    getBankEntity().getApplicationAPIContextRoot() + BanquePopulaireConstants.Urls.CONTRACTS_PATH)
+                    .header(HttpHeaders.CONTENT_TYPE, BanquePopulaireConstants.Headers.CONTENT_TYPE_JSON_UTF8)
+                    .get(HttpResponse.class);
+            return rawResponse.getBody(ContractsResponse.class);
+        } catch (Exception e) {
+            if (rawResponse != null && rawResponse.hasBody()) {
+                LOGGER.warnExtraLong(rawResponse.getBody(String.class), BanquePopulaireConstants.LogTags.PAGINATION_RESPONSE);
+            }
+            throw e;
+        }
+    }
+
+    public LoanDetailsResponse getLoanAccountDetails(String loanAccountIdentifier) {
+        return baseRequest(getAppConfigEntity().getAuthBaseUrl() +
+                getBankEntity().getApplicationAPIContextRoot() + BanquePopulaireConstants.Urls.CONTRACTS_PATH +
+                "/" + loanAccountIdentifier)
+                .header(HttpHeaders.CONTENT_TYPE, BanquePopulaireConstants.Headers.CONTENT_TYPE_JSON_UTF8)
+                .get(LoanDetailsResponse.class);
+    }
+
+    public String getAllCards() {
+        TokensResponse tokens = sessionStorage.get(BanquePopulaireConstants.Storage.TOKENS, TokensResponse.class)
+                .orElseThrow(() -> new IllegalStateException("No autorization token found"));
+
+        URL url = new URL(getAppConfigEntity().getAuthBaseUrl()
+                + getAppConfigEntity().getWebAPI2().getAuthBusinessContextRoot()
+                + getAppConfigEntity().getWebAPI2().getEntryPoint(BanquePopulaireConstants.Fetcher.CARD_ENTRY_POINT))
+                .queryParam(BanquePopulaireConstants.Query.CARD_STATUS_CODES
+                        , BanquePopulaireConstants.Query.CARD_STATUS_CODES_VALUE);
+
+        return baseRequest(url)
+                .header(HttpHeaders.AUTHORIZATION,
+                        String.format("%s %s", tokens.getTokenType(), tokens.getAccessToken()))
+                .get(String.class);
     }
 
     public boolean keepAlive() {

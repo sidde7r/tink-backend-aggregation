@@ -4,10 +4,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class ClientEntity {
-    private String idClient;
+    private IdentifierEntity idClient;
     private String descriptionClient;
 
-    public String getIdClient() {
+    public IdentifierEntity getIdClient() {
         return idClient;
     }
 
