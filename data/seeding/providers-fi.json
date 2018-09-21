@@ -282,7 +282,7 @@
           "minLength": 8,
           "name": "username",
           "numeric": true,
-          "pattern": "[0-9]{8}",
+          "pattern": "[a-zA-Z0-9]{8}",
           "patternError": "Please input a valid username."
         },
         {
@@ -305,7 +305,7 @@
         }
       ],
       "name": "fi-handelsbanken-codecard",
-      "passwordHelpText": "You use you card reader and personal code like you do in Handelsbanken's mobile app. For more information visit [Handelsbanken](https://www.handelsbanken.fi/shb/inet/Icentfi.nsf/vlookupfirstpage/sv_handelsbankenfi?Opendocument).",
+      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
       "refreshFrequency": 1,
       "refreshFrequencyFactor": 1,
       "status": "ENABLED",
