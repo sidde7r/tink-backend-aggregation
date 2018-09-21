@@ -82,13 +82,13 @@ public class CreditMutuelPfmCreditCardFetcher implements AccountFetcher<CreditCa
                 .apply(creditCardResponse);
         Stream<ValueEntity> outputsEntityStream = subItemsEntityStream.flatMap(s -> s.stream())
                 .flatMap(s -> s.getOutputs().stream());
-        String maximalLimitString = outputsEntityStream
+        String paymentLimitString = outputsEntityStream
                 //TODO: Double check if it should be secondaryValueTitle which contains limit for payments
                 //TODO: or valueTitle which contains limit for withdrawals
                 .filter(CreditMutuelPmfPredicates.filterValueEntityByName(MAX_PAYMENTS_LIMIT))
                 .findFirst().orElseThrow(IllegalStateException::new).getValue();
 
-        Amount maxAmount = CreditMututelPmfCreditCardStringParsingUtils.extractAmountFromString(maximalLimitString);
+        Amount paymentLimit = CreditMututelPmfCreditCardStringParsingUtils.extractAmountFromString(paymentLimitString);
 
         // Parsing card balance
         Stream<SubItemsEntity> subItemsEntityStream2 = CreditMutuelPmfPredicates.getSubItemsValueStreamFromResponse
@@ -103,7 +103,7 @@ public class CreditMutuelPfmCreditCardFetcher implements AccountFetcher<CreditCa
         CreditCardAccount build = CreditCardAccount.builder(cardNumber)
                 .setAccountNumber(cardNumber)
                 .setBalance(balance)
-                .setAvailableCredit(balance.add(maxAmount))
+                .setAvailableCredit(balance.add(paymentLimit))
                 .setName(title.map(t -> t.getValue()).orElse("")).build();
 
         return Collections.singleton(build);
