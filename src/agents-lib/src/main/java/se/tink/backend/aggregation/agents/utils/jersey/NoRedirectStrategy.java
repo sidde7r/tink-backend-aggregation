@@ -1,11 +1,11 @@
 package se.tink.backend.aggregation.agents.utils.jersey;
 
-import tink.org.apache.http.HttpRequest;
-import tink.org.apache.http.HttpResponse;
-import tink.org.apache.http.ProtocolException;
-import tink.org.apache.http.client.RedirectStrategy;
-import tink.org.apache.http.client.methods.HttpUriRequest;
-import tink.org.apache.http.protocol.HttpContext;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse;
+import org.apache.http.ProtocolException;
+import org.apache.http.client.RedirectStrategy;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.protocol.HttpContext;
 
 public class NoRedirectStrategy implements RedirectStrategy {
     @Override

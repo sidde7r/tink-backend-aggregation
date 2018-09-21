@@ -25,18 +25,6 @@ load(
     container_repositories = "repositories",
 )
 
-git_repository(
-    name = "se_tink_httpcore",
-    remote = "git@github.com:tink-ab/httpcomponents-core.git",
-    commit = "8d0c9b6a4555b748bebff8d318287772bb49d885"
-)
-
-git_repository(
-    name = "se_tink_httpclient",
-    remote = "git@github.com:tink-ab/httpcomponents-client.git",
-    commit = "7a015e1ffd784983faf73ec07f06c71d2032ba69"
-)
-
 container_repositories()
 
 container_pull(
@@ -557,8 +545,8 @@ maven_jar(
 
 maven_jar(
     name = "org_apache_httpcomponents_httpclient",
-    artifact = "org.apache.httpcomponents:httpclient:4.5.5",
-    sha1 = "1603dfd56ebcd583ccdf337b6c3984ac55d89e58",
+    artifact = "org.apache.httpcomponents:httpclient:4.3.4",
+    sha1 = "a9a1fef2faefed639ee0d0fba5b3b8e4eb2ff2d8",
 )
 
 maven_jar(
@@ -1014,8 +1002,8 @@ maven_jar(
 
 maven_jar(
     name = "commons_codec_commons_codec",
-    artifact = "commons-codec:commons-codec:1.10",
-    sha1 = "4b95f4897fa13f2cd904aee711aeafc0c5295cd8",
+    artifact = "commons-codec:commons-codec:1.6",
+    sha1 = "b7f0fc8f61ecadeb3695f0b9464755eee44374d4",
 )
 
 maven_jar(
@@ -1176,8 +1164,8 @@ maven_jar(
 
 maven_jar(
     name = "org_apache_httpcomponents_httpcore",
-    artifact = "org.apache.httpcomponents:httpcore:4.4.9",
-    sha1 = "a86ce739e5a7175b4b234c290a00a5fdb80957a0",
+    artifact = "org.apache.httpcomponents:httpcore:4.3.2",
+    sha1 = "31fbbff1ddbf98f3aa7377c94d33b0447c646b6e",
 )
 
 maven_jar(

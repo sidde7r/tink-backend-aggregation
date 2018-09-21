@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.framework;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
-import tink.org.apache.http.HttpStatus;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;

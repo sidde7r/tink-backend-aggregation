@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest;
 import java.util.Date;
 import java.util.Objects;
 import javax.ws.rs.core.MediaType;
-import tink.org.apache.http.cookie.Cookie;
+import org.apache.http.cookie.Cookie;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.authenticator.entities.SecurityParamsRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.creditcard.entities.BankIdentifier;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.creditcard.rpc.CreditCardTransactionsResponse;

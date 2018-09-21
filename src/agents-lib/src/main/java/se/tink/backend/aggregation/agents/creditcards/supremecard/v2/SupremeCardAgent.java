@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import tink.org.apache.http.client.utils.URIBuilder;
+import org.apache.http.client.utils.URIBuilder;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.RefreshableItemExecutor;

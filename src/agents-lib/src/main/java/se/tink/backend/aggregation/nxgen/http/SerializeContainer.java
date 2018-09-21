@@ -7,8 +7,8 @@ import com.google.common.collect.Sets;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import tink.org.apache.http.cookie.Cookie;
-import tink.org.apache.http.impl.cookie.BasicClientCookie;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.cookie.BasicClientCookie;
 import se.tink.backend.aggregation.nxgen.http.persistent.Header;
 
 public class SerializeContainer {

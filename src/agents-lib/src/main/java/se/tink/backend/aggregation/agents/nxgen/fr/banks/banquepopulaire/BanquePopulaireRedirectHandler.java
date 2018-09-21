@@ -8,8 +8,8 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.entities.AppConfigEntity;
 import se.tink.backend.aggregation.nxgen.http.redirect.RedirectHandler;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import tink.org.apache.http.NameValuePair;
-import tink.org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
 
 public class BanquePopulaireRedirectHandler extends RedirectHandler {
 

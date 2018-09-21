@@ -55,15 +55,15 @@ import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
 import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-import tink.org.apache.http.HttpHost;
-import tink.org.apache.http.client.config.RequestConfig;
-import tink.org.apache.http.client.params.ClientPNames;
-import tink.org.apache.http.conn.ssl.SSLContextBuilder;
-import tink.org.apache.http.cookie.Cookie;
-import tink.org.apache.http.impl.client.BasicCookieStore;
-import tink.org.apache.http.impl.client.CloseableHttpClient;
-import tink.org.apache.http.impl.client.HttpClientBuilder;
-import tink.org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.HttpHost;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.params.ClientPNames;
+import org.apache.http.conn.ssl.SSLContextBuilder;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.params.CoreConnectionPNames;
 
 
 public class TinkHttpClient extends Filterable<TinkHttpClient> {
