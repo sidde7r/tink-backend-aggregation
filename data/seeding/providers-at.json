@@ -51,8 +51,7 @@
                 {
                     "name": "password",
                     "description": "PIN",
-                    "masked": true,
-                    "numeric": true
+                    "masked": true
                 }
             ]
         },
@@ -78,8 +77,7 @@
                 {
                     "name": "password",
                     "description": "PIN",
-                    "masked": true,
-                    "numeric": true
+                    "masked": true
                 }
             ]
         },
