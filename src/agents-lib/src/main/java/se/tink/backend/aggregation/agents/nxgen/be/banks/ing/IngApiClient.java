@@ -125,13 +125,6 @@ public class IngApiClient {
                 .getMobileResponse();
     }
 
-    public HttpResponse autoLogin(String url, String ingId, String virtualCardNumber, String deviceId) {
-        LoginRequestBody loginRequestBody = new LoginRequestBody(ingId, virtualCardNumber, deviceId);
-        URL loginUrl = getUrlWithQueryParams(new URL(IngConstants.Urls.HOST + url));
-
-        return this.client.request(loginUrl).post(HttpResponse.class, loginRequestBody);
-    }
-
     public HttpResponse getMenuItems() {
         return this.client.request(IngConstants.Urls.MENU_ITEMS).get(HttpResponse.class);
     }
