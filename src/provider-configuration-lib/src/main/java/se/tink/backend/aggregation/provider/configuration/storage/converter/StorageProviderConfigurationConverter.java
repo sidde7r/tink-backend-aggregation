@@ -7,7 +7,7 @@ import se.tink.backend.core.ProviderStatuses;
 import java.util.Optional;
 
 public class StorageProviderConfigurationConverter {
-    public static se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration translate(
+    public static se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration convert(
             ProviderConfiguration providerConfiguration, Optional<ProviderStatusConfiguration> providerStatusConfiguration) {
         se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration core =
                 new se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration();

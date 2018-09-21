@@ -28,12 +28,12 @@ public class ProviderServiceResource implements ProviderService {
 
     @Override
     public List<ProviderConfigurationDTO> list(String lang, ClusterInfo clusterInfo) {
-        return HttpProviderConfigurationConverter.translate(providerController.list(Locale.forLanguageTag(lang), clusterInfo.getClusterId()));
+        return HttpProviderConfigurationConverter.convert(providerController.list(Locale.forLanguageTag(lang), clusterInfo.getClusterId()));
     }
 
     @Override
     public List<ProviderConfigurationDTO> listByMarket(String lang, String market, ClusterInfo clusterInfo) {
-        return HttpProviderConfigurationConverter.translate(providerController.listByMarket(Locale.forLanguageTag(lang), clusterInfo.getClusterId(), market));
+        return HttpProviderConfigurationConverter.convert(providerController.listByMarket(Locale.forLanguageTag(lang), clusterInfo.getClusterId(), market));
     }
 
     @Override
@@ -44,6 +44,6 @@ public class ProviderServiceResource implements ProviderService {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
 
-        return HttpProviderConfigurationConverter.translate(providerConfiguration.get());
+        return HttpProviderConfigurationConverter.convert(providerConfiguration.get());
     }
 }

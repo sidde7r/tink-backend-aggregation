@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class HttpProviderConfigurationConverter {
-    public static ProviderConfigurationDTO translate(ProviderConfiguration providerConfiguration) {
+    public static ProviderConfigurationDTO convert(ProviderConfiguration providerConfiguration) {
         ProviderConfigurationDTO dto = new ProviderConfigurationDTO();
         dto.setCapabilitiesSerialized(providerConfiguration.getCapabilitiesSerialized());
         dto.setClassName(providerConfiguration.getClassName());
@@ -33,9 +33,9 @@ public class HttpProviderConfigurationConverter {
         return dto;
     }
 
-    public static List<ProviderConfigurationDTO> translate(List<ProviderConfiguration> providerConfigurationList) {
+    public static List<ProviderConfigurationDTO> convert(List<ProviderConfiguration> providerConfigurationList) {
         return providerConfigurationList.stream()
-                .map(HttpProviderConfigurationConverter::translate)
+                .map(HttpProviderConfigurationConverter::convert)
                 .collect(Collectors.toList());
     }
 }
