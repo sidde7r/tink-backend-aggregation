@@ -7,32 +7,6 @@ java_library(
 )
 
 java_library(
-    name = "se_tink_http",
-    visibility = ["//visibility:public"],
-    exports = [
-        ":se_tink_httpclient",
-        ":se_tink_httpcore",
-    ],
-)
-
-java_library(
-    name = "se_tink_httpcore",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@se_tink_httpcore//:tink_httpcore",
-    ],
-)
-
-java_library(
-    name = "se_tink_httpclient",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@se_tink_httpclient//:tink_httpclient",
-    ],
-)
-
-
-java_library(
     name = "aopalliance_aopalliance",
     visibility = ["//visibility:public"],
     exports = [
