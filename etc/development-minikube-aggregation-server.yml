@@ -107,7 +107,7 @@ sqsQueueConfiguration:
   queueName: queue
 
 s3StorageConfiguration:
-  enabled: true
+  enabled: false
   url: http://localhost:4572
   region: local
   agentDebugBucketName: local-agent-debug-bucket
