@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.provider.configuration.config;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Module;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
+import se.tink.backend.aggregation.provider.configuration.storage.module.ProviderFileModule;
 import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.backend.guice.configuration.ConfigurationModule;
 import se.tink.libraries.discovery.CoordinationModule;
@@ -14,6 +15,7 @@ public class ProviderModuleFactory {
                 new CoordinationModule(),
                 new ConfigurationModule(configuration),
                 new ProviderServiceModule(configuration, jersey),
+                new ProviderFileModule(),
                 new ProviderRepositoryModule(configuration.getDatabase()));
     }
 }

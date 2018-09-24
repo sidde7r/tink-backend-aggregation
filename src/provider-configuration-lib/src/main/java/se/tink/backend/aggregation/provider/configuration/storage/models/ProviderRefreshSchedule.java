@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.provider.configuration.repositories;
+package se.tink.backend.aggregation.provider.configuration.storage.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;

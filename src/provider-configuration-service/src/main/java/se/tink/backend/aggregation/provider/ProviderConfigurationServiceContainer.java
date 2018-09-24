@@ -7,10 +7,8 @@ import com.google.inject.Injector;
 import io.dropwizard.cli.Command;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import se.tink.backend.aggregation.provider.configuration.cli.ChangeProviderRefreshFrequencyFactorCommand;
 import se.tink.backend.aggregation.provider.configuration.cli.DebugProviderCommand;
 import se.tink.backend.aggregation.provider.configuration.cli.ProviderStatusCommand;
-import se.tink.backend.aggregation.provider.configuration.cli.SeedProvidersForMarketCommand;
 import se.tink.backend.aggregation.provider.configuration.config.ProviderModuleFactory;
 import se.tink.backend.common.AbstractServiceContainer;
 import se.tink.backend.common.config.ServiceConfiguration;
@@ -23,10 +21,9 @@ import se.tink.libraries.dropwizard.DropwizardObjectMapperConfigurator;
 public class ProviderConfigurationServiceContainer extends AbstractServiceContainer {
 
     private static final ImmutableList<Command> COMMANDS = ImmutableList.of(
-            new ChangeProviderRefreshFrequencyFactorCommand(),
             new DebugProviderCommand(),
-            new ProviderStatusCommand(),
-            new SeedProvidersForMarketCommand());
+            new ProviderStatusCommand()
+    );
 
     public static void main(String[] args) throws Exception {
         new ProviderConfigurationServiceContainer().run(args);

@@ -7,9 +7,9 @@ import io.dropwizard.setup.Bootstrap;
 import net.sourceforge.argparse4j.inf.Namespace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.provider.configuration.repositories.mysql.ProviderConfigurationRepository;
+import se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration;
+import se.tink.backend.aggregation.provider.configuration.core.ProviderConfigurationDAO;
 import se.tink.backend.common.config.ServiceConfiguration;
-import se.tink.backend.core.ProviderConfiguration;
 import se.tink.libraries.cli.printutils.CliPrintUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -56,9 +56,9 @@ public class DebugProviderCommand extends ProviderConfigurationCommand<ServiceCo
         final String providerName = System.getProperty("providerName");
         Preconditions.checkNotNull(providerName, "providerName must not be null.");
 
-        ProviderConfigurationRepository providerRepository = injector.getInstance(
-                ProviderConfigurationRepository.class);
-        ProviderConfiguration provider = providerRepository.findOne(providerName);
+        ProviderConfigurationDAO providerConfigurationDAO = injector.getInstance(
+                ProviderConfigurationDAO.class);
+        ProviderConfiguration provider = providerConfigurationDAO.findByName(providerName);
 
         if (provider == null) {
             log.warn(String.format("Provider %s not found in database", providerName));

@@ -1,9 +1,9 @@
-package se.tink.backend.aggregation.provider.configuration.cli;
+package se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import se.tink.backend.core.ProviderConfiguration;
+import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
 
 import java.util.List;
 
