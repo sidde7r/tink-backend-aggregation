@@ -55,6 +55,7 @@ public class BanquePopulaireConstants {
         public static final String INITIATE_SESSION_PATH = "/mon-profil";
         public static final String ACCOUNTS_PATH = "/comptes/1.1";
         public static final String CONTRACTS_PATH = "/contrats";
+        public static final String CONTRACT_DETAILS_PATH = "/contrats/{" + Fetcher.ACCOUNT_PARAMETER + "}";
         public static final String TRANSACTIONS_PATH = "/comptes/{" + Fetcher.ACCOUNT_PARAMETER + "}/operations";
         public static final String LOGOUT_PATH = "/logout";
     }

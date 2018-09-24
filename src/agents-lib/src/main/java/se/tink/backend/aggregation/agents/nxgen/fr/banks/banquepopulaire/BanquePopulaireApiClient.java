@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
+import org.apache.http.cookie.Cookie;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.authenticator.entities.Saml2PostEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.authenticator.rpc.PasswordValidationRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.authenticator.rpc.PasswordValidationResponse;
@@ -27,7 +28,6 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import org.apache.http.cookie.Cookie;
 
 public class BanquePopulaireApiClient {
     private static final AggregationLogger LOGGER = new AggregationLogger(BanquePopulaireApiClient.class);
@@ -140,6 +140,9 @@ public class BanquePopulaireApiClient {
                 .queryParam(BanquePopulaireConstants.Query.TRANSACTION_STATUS,
                         BanquePopulaireConstants.Query.TRANSACTION_STATUS_VALUE);
 
+        // this try catch is for parsing the response as I suspect we can have a different response object for
+        // pagination. We have not seen any pagination response yet but the smali code looks like it differentiates
+        // between list-response and pagination response
         HttpResponse rawResponse = null;
         try {
             rawResponse = baseRequest(transactionsUrl)
@@ -155,6 +158,9 @@ public class BanquePopulaireApiClient {
 
     public ContractsResponse getAllContracts() {
         HttpResponse rawResponse = null;
+        // this try catch is for parsing the response as I suspect we can have a different response object for
+        // pagination. We have not seen any pagination response yet but the smali code looks like it differentiates
+        // between list-response and pagination response
         try {
             rawResponse = baseRequest(getAppConfigEntity().getAuthBaseUrl() +
                     getBankEntity().getApplicationAPIContextRoot() + BanquePopulaireConstants.Urls.CONTRACTS_PATH)
@@ -170,9 +176,11 @@ public class BanquePopulaireApiClient {
     }
 
     public LoanDetailsResponse getLoanAccountDetails(String loanAccountIdentifier) {
-        return baseRequest(getAppConfigEntity().getAuthBaseUrl() +
-                getBankEntity().getApplicationAPIContextRoot() + BanquePopulaireConstants.Urls.CONTRACTS_PATH +
-                "/" + loanAccountIdentifier)
+        URL url = new URL(getAppConfigEntity().getAuthBaseUrl() +
+                getBankEntity().getApplicationAPIContextRoot() + BanquePopulaireConstants.Urls.CONTRACT_DETAILS_PATH)
+                .parameter(BanquePopulaireConstants.Fetcher.ACCOUNT_PARAMETER, loanAccountIdentifier);
+
+        return baseRequest(url)
                 .header(HttpHeaders.CONTENT_TYPE, BanquePopulaireConstants.Headers.CONTENT_TYPE_JSON_UTF8)
                 .get(LoanDetailsResponse.class);
     }
