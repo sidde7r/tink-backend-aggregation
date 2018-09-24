@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.storage.IcaBankenSessionStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import tink.org.apache.http.HttpStatus;
+import org.apache.http.HttpStatus;
 
 public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String> {
     private final IcaBankenApiClient apiClient;
