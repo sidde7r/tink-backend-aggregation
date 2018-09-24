@@ -25,6 +25,9 @@ public class InvestmentAccount extends Account {
         return new DefaultInvestmentAccountsBuilder(uniqueIdentifier);
     }
 
+    /**
+     * @deprecated Use {@link #builder(String)} and {@link Builder#setCashBalance(Amount)} instead
+     */
     public static Builder<InvestmentAccount, DefaultInvestmentAccountsBuilder> builder(
             String uniqueIdentifier, Amount balance) {
         return builder(uniqueIdentifier)
@@ -65,8 +68,9 @@ public class InvestmentAccount extends Account {
             return cashBalance;
         }
 
-        public void setCashBalance(Amount cashBalance) {
+        public Builder<A, T> setCashBalance(Amount cashBalance) {
             this.cashBalance = cashBalance;
+            return this;
         }
 
         @Override
