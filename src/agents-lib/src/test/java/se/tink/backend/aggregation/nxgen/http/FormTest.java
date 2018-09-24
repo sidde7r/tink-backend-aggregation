@@ -68,6 +68,14 @@ public final class FormTest {
     }
 
     @Test
+    public void ensureValuelessRebuiltForm() {
+        final Form form = new Form.Builder()
+                .put("compressResponse")
+                .build();
+        Assert.assertEquals(form.serialize(), new Form.Builder(form).build().serialize());
+    }
+
+    @Test
     public void ensureCombinedForm() {
         final Form form = new Form.Builder()
                 .put("coding", "fun")
@@ -75,5 +83,35 @@ public final class FormTest {
                 .put("immutability", "good")
                 .build();
         Assert.assertEquals(form.serialize(), "coding=fun&compressResponse&immutability=good");
+    }
+
+    @Test
+    public void ensureRebuiltForm() {
+        final Form form = new Form.Builder()
+                .put("coding", "fun")
+                .put("compressResponse")
+                .put("immutability", "good")
+                .build();
+
+        Assert.assertEquals(form.serialize(), new Form.Builder(form).build().serialize());
+    }
+
+    @Test
+    public void ensureRebuiltForm2() {
+        final Form form1 = new Form.Builder()
+                .put("coding", "fun")
+                .put("compressResponse")
+                .put("immutability", "good")
+                .build();
+
+        final Form form2 = new Form.Builder(form1)
+                .put("immutability", "better")
+                .put("compressResponse", "yes")
+                .put("coding")
+                .put("new thing", "shining")
+                .put("new empty entry")
+                .build();
+
+        Assert.assertEquals(form2.serialize(), "coding&compressResponse=yes&immutability=better&new+thing=shining&new+empty+entry");
     }
 }

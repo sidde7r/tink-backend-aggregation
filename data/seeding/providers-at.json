@@ -102,6 +102,294 @@
                     "masked": true
                 }
             ]
+        },
+        {
+            "name": "at-raiffeisen0-password",
+            "displayName": "Raiffeisen (Burgenland)",
+            "groupDisplayName": "Raiffeisen",
+            "popular": true,
+            "status": "ENABLED",
+            "type": "BANK",
+            "credentialsType": "PASSWORD",
+            "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
+            "transactional": "true",
+            "payload": "{\"region\": \"Burgenland\", \"regionIndex\": \"0\", \"regionCode\": \"ELVIE33V\"}",
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "Signatory number",
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "PIN",
+                    "masked": true
+                }
+            ]
+        },
+        {
+            "name": "at-raiffeisen1-password",
+            "displayName": "Raiffeisen (Kärnten)",
+            "groupDisplayName": "Raiffeisen",
+            "popular": true,
+            "status": "ENABLED",
+            "type": "BANK",
+            "credentialsType": "PASSWORD",
+            "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
+            "transactional": "true",
+            "payload": "{\"region\": \"Kärnten\", \"regionIndex\": \"1\", \"regionCode\": \"ELOOE03V\"}",
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "Signatory number",
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "PIN",
+                    "masked": true
+                }
+            ]
+        },
+        {
+            "name": "at-raiffeisen2-password",
+            "displayName": "Raiffeisen (Niederösterreich/Wien)",
+            "groupDisplayName": "Raiffeisen",
+            "popular": true,
+            "status": "ENABLED",
+            "type": "BANK",
+            "credentialsType": "PASSWORD",
+            "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
+            "transactional": "true",
+            "payload": "{\"region\": \"Niederösterreich/Wien\", \"regionIndex\": \"2\", \"regionCode\": \"ELVIE32V\"}",
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "Signatory number",
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "PIN",
+                    "masked": true
+                }
+            ]
+        },
+        {
+            "name": "at-raiffeisen3-password",
+            "displayName": "Raiffeisen (Oberösterreich)",
+            "groupDisplayName": "Raiffeisen",
+            "popular": true,
+            "status": "ENABLED",
+            "type": "BANK",
+            "credentialsType": "PASSWORD",
+            "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
+            "transactional": "true",
+            "payload": "{\"region\": \"Oberösterreich\", \"regionIndex\": \"3\", \"regionCode\": \"ELOOE01V\"}",
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "Signatory number",
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "PIN",
+                    "masked": true
+                }
+            ]
+        },
+        {
+            "name": "at-raiffeisen4-password",
+            "displayName": "Raiffeisen (Salzburg)",
+            "groupDisplayName": "Raiffeisen",
+            "popular": true,
+            "status": "ENABLED",
+            "type": "BANK",
+            "credentialsType": "PASSWORD",
+            "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
+            "transactional": "true",
+            "payload": "{\"region\": \"Salzburg\", \"regionIndex\": \"4\", \"regionCode\": \"ELOOE05V\"}",
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "Signatory number",
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "PIN",
+                    "masked": true
+                }
+            ]
+        },
+        {
+            "name": "at-raiffeisen5-password",
+            "displayName": "Raiffeisen (Steiermark)",
+            "groupDisplayName": "Raiffeisen",
+            "popular": true,
+            "status": "ENABLED",
+            "type": "BANK",
+            "credentialsType": "PASSWORD",
+            "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
+            "transactional": "true",
+            "payload": "{\"region\": \"Steiermark\", \"regionIndex\": \"5\", \"regionCode\": \"ELVIE38V\"}",
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "Signatory number",
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "PIN",
+                    "masked": true
+                }
+            ]
+        },
+        {
+            "name": "at-raiffeisen6-password",
+            "displayName": "Raiffeisen (Tirol)",
+            "groupDisplayName": "Raiffeisen",
+            "popular": true,
+            "status": "ENABLED",
+            "type": "BANK",
+            "credentialsType": "PASSWORD",
+            "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
+            "transactional": "true",
+            "payload": "{\"region\": \"Tirol\", \"regionIndex\": \"6\", \"regionCode\": \"ELOOE11V\"}",
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "Signatory number",
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "PIN",
+                    "masked": true
+                }
+            ]
+        },
+        {
+            "name": "at-raiffeisen7-password",
+            "displayName": "Raiffeisen (Vorarlberg)",
+            "groupDisplayName": "Raiffeisen",
+            "popular": true,
+            "status": "ENABLED",
+            "type": "BANK",
+            "credentialsType": "PASSWORD",
+            "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
+            "transactional": "true",
+            "payload": "{\"region\": \"Vorarlberg\", \"regionIndex\": \"7\", \"regionCode\": \"ELVIE37V\"}",
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "Signatory number",
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "PIN",
+                    "masked": true
+                }
+            ]
+        },
+        {
+            "name": "at-raiffeisen8-password",
+            "displayName": "Raiffeisen (Kärnten/Posojilnica Bank)",
+            "groupDisplayName": "Raiffeisen",
+            "popular": true,
+            "status": "ENABLED",
+            "type": "BANK",
+            "credentialsType": "PASSWORD",
+            "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
+            "transactional": "true",
+            "payload": "{\"region\": \"Kärnten/Posojilnica Bank\", \"regionIndex\": \"8\", \"regionCode\": \"ELVIE91V\"}",
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "Signatory number",
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "PIN",
+                    "masked": true
+                }
+            ]
+        },
+        {
+            "name": "at-raiffeisen9-password",
+            "displayName": "Raiffeisen (Oberösterreich/bankdirekt.at)",
+            "groupDisplayName": "Raiffeisen",
+            "popular": true,
+            "status": "ENABLED",
+            "type": "BANK",
+            "credentialsType": "PASSWORD",
+            "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
+            "transactional": "true",
+            "payload": "{\"region\": \"Oberösterreich/bankdirekt.at\", \"regionIndex\": \"9\", \"regionCode\": \"ELOOE01V\"}",
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "Signatory number",
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "PIN",
+                    "masked": true
+                }
+            ]
+        },
+        {
+            "name": "at-raiffeisen10-password",
+            "displayName": "Raiffeisen (Oberösterreich/PRIVAT BANK)",
+            "groupDisplayName": "Raiffeisen",
+            "popular": true,
+            "status": "ENABLED",
+            "type": "BANK",
+            "credentialsType": "PASSWORD",
+            "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
+            "transactional": "true",
+            "payload": "{\"region\": \"Oberösterreich/PRIVAT BANK\", \"regionIndex\": \"10\", \"regionCode\": \"ELOOE01V\"}",
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "Signatory number",
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "PIN",
+                    "masked": true
+                }
+            ]
+        },
+        {
+            "name": "at-raiffeisen11-password",
+            "displayName": "Raiffeisen (Tirol/Jungholz)",
+            "groupDisplayName": "Raiffeisen",
+            "popular": true,
+            "status": "ENABLED",
+            "type": "BANK",
+            "credentialsType": "PASSWORD",
+            "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
+            "transactional": "true",
+            "payload": "{\"region\": \"Tirol/Jungholz\", \"regionIndex\": \"11\", \"regionCode\": \"ELOOE11V\"}",
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "Signatory number",
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "PIN",
+                    "masked": true
+                }
+            ]
         }
     ]
 }

@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
 public final class Form {
-    private Map<String, String> parameters = new LinkedHashMap<>();
+    private LinkedHashMap<String, String> parameters = new LinkedHashMap<>();
 
     private static final String JOINING_DELIMITER = "&";
     private static final String NAME_VALUE_FORMAT = "%s=%s";
@@ -35,7 +35,14 @@ public final class Form {
 
     public static class Builder {
 
-        private final Map<String, String> parameters = new LinkedHashMap<>();
+        private final LinkedHashMap<String, String> parameters = new LinkedHashMap<>();
+
+        public Builder() {
+        }
+
+        public Builder(Form form) {
+            parameters.putAll(form.parameters);
+        }
 
         /**
          * Add key-value parameter.

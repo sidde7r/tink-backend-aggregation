@@ -1,0 +1,121 @@
+package se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.authenticator;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.apache.commons.codec.binary.Hex;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.RaiffeisenConstants;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.RaiffeisenSessionStorage;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.RaiffeisenWebApiClient;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.authenticator.rpc.WebLoginResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.URL;
+
+public class RaiffeisenPasswordAuthenticator implements PasswordAuthenticator {
+
+    private final RaiffeisenWebApiClient apiClient;
+    private final RaiffeisenSessionStorage sessionStorage;
+
+    public RaiffeisenPasswordAuthenticator(final RaiffeisenWebApiClient apiClient,
+            final RaiffeisenSessionStorage sessionStorage) {
+        this.apiClient = apiClient;
+        this.sessionStorage = sessionStorage;
+    }
+
+    private static boolean isWrongPin(HttpResponse passwordResponse) {
+        return passwordResponse.getBody(String.class).toLowerCase().contains("die pin ist falsch");
+    }
+
+    private static URL getSsoUrl(HttpResponse radSessionIdResponse) {
+        InputStream is = radSessionIdResponse.getBodyInputStream();
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+        try {
+            while (br.ready()) {
+                final String line = br.readLine();
+                final int startIdx = line.indexOf(RaiffeisenConstants.Url.SSO_BASE.toString());
+                if (startIdx != -1) {
+                    final int endIdxSingleQuote = line.indexOf('\'', startIdx);
+                    final int endIdxDoubleQuote = line.indexOf('"', startIdx);
+                    final int min = Integer.min(endIdxSingleQuote, endIdxDoubleQuote);
+                    final int max = Integer.max(endIdxSingleQuote, endIdxDoubleQuote);
+                    if (max == -1) {
+                        continue;
+                    } else if (min == -1) {
+                        return new URL(line.substring(startIdx, max));
+                    } else {
+                        return new URL(line.substring(startIdx, min));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+        throw new IllegalStateException("Failed to find SSO URL");
+    }
+
+    private static String getToken(URL url, Pattern pattern) {
+        String s = url.toUri().getFragment();
+        Matcher m = pattern.matcher(s);
+        if (m.find()) {
+            return m.group(1);
+        }
+        throw new IllegalStateException("Failed to extract token from URL: " + url);
+    }
+
+    private static String getAccessToken(URL url) {
+        return getToken(url, Pattern.compile(RaiffeisenConstants.RegExpPatterns.ACCESS_TOKEN));
+    }
+
+    private static String getTokenType(URL url) {
+        return getToken(url, Pattern.compile(RaiffeisenConstants.RegExpPatterns.TOKEN_TYPE));
+    }
+
+    private MessageDigest getMD5() {
+        // Every implementation of the Java platform is required to support the MD5 MessageDigest algorithm...
+        try {
+            return MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String getEncryptedPassword(final String plaintextPassword) {
+        final MessageDigest md = getMD5();
+        md.update(plaintextPassword.getBytes(StandardCharsets.UTF_8));
+        final byte[] digest = md.digest();
+        return Hex.encodeHexString(digest).toLowerCase(Locale.US);
+    }
+
+    @Override
+    public void authenticate(final String username, final String password)
+            throws AuthenticationException, AuthorizationException {
+        final String encryptedPassword = getEncryptedPassword(password);
+
+        final HttpResponse homeResponse = apiClient.getHomePage();
+        final HttpResponse refreshRegionResponse = apiClient.RefreshRegion(homeResponse);
+        final HttpResponse usernameResponse = apiClient.sendUsername(refreshRegionResponse, username);
+        final HttpResponse passwordResponse = apiClient.sendPassword(usernameResponse, encryptedPassword);
+        if (isWrongPin(passwordResponse)) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
+        final HttpResponse selectionResponse = apiClient.sendSelection(passwordResponse);
+        final HttpResponse radSessionIdResponse = apiClient.sendRadSessionId(selectionResponse);
+        final URL ssoUrl = getSsoUrl(radSessionIdResponse);
+        apiClient.sendSsoRequest(ssoUrl);
+        final URL url = apiClient.sso();
+        final WebLoginResponse webLoginResponse = new WebLoginResponse(getTokenType(url), getAccessToken(url));
+        sessionStorage.setWebLoginResponse(webLoginResponse);
+    }
+}
