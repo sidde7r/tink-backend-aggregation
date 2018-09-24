@@ -103,7 +103,8 @@ public class AlandsBankenAccount {
     }
 
     public InvestmentAccount toInvestmentAccount(Portfolio portfolio) {
-        return InvestmentAccount.builder(accountId, new Amount(currency, balance))
+        return InvestmentAccount.builder(accountId)
+                .setCashBalance(new Amount(currency, 0))
                 .setAccountNumber(bbanFormatted)
                 .setName(accountNickname)
                 .addIdentifier(new IbanIdentifier(bic, accountNumber))
