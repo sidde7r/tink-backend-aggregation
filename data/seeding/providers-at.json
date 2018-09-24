@@ -106,6 +106,7 @@
         {
             "name": "at-raiffeisen0-password",
             "displayName": "Raiffeisen (Burgenland)",
+            "groupDisplayName": "Raiffeisen",
             "popular": true,
             "status": "ENABLED",
             "type": "BANK",
@@ -129,6 +130,7 @@
         {
             "name": "at-raiffeisen1-password",
             "displayName": "Raiffeisen (Kärnten)",
+            "groupDisplayName": "Raiffeisen",
             "popular": true,
             "status": "ENABLED",
             "type": "BANK",
@@ -152,6 +154,7 @@
         {
             "name": "at-raiffeisen2-password",
             "displayName": "Raiffeisen (Niederösterreich/Wien)",
+            "groupDisplayName": "Raiffeisen",
             "popular": true,
             "status": "ENABLED",
             "type": "BANK",
@@ -175,6 +178,7 @@
         {
             "name": "at-raiffeisen3-password",
             "displayName": "Raiffeisen (Oberösterreich)",
+            "groupDisplayName": "Raiffeisen",
             "popular": true,
             "status": "ENABLED",
             "type": "BANK",
@@ -198,6 +202,7 @@
         {
             "name": "at-raiffeisen4-password",
             "displayName": "Raiffeisen (Salzburg)",
+            "groupDisplayName": "Raiffeisen",
             "popular": true,
             "status": "ENABLED",
             "type": "BANK",
@@ -221,6 +226,7 @@
         {
             "name": "at-raiffeisen5-password",
             "displayName": "Raiffeisen (Steiermark)",
+            "groupDisplayName": "Raiffeisen",
             "popular": true,
             "status": "ENABLED",
             "type": "BANK",
@@ -244,6 +250,7 @@
         {
             "name": "at-raiffeisen6-password",
             "displayName": "Raiffeisen (Tirol)",
+            "groupDisplayName": "Raiffeisen",
             "popular": true,
             "status": "ENABLED",
             "type": "BANK",
@@ -267,6 +274,7 @@
         {
             "name": "at-raiffeisen7-password",
             "displayName": "Raiffeisen (Vorarlberg)",
+            "groupDisplayName": "Raiffeisen",
             "popular": true,
             "status": "ENABLED",
             "type": "BANK",
@@ -290,6 +298,7 @@
         {
             "name": "at-raiffeisen8-password",
             "displayName": "Raiffeisen (Kärnten/Posojilnica Bank)",
+            "groupDisplayName": "Raiffeisen",
             "popular": true,
             "status": "ENABLED",
             "type": "BANK",
@@ -313,6 +322,7 @@
         {
             "name": "at-raiffeisen9-password",
             "displayName": "Raiffeisen (Oberösterreich/bankdirekt.at)",
+            "groupDisplayName": "Raiffeisen",
             "popular": true,
             "status": "ENABLED",
             "type": "BANK",
@@ -336,6 +346,7 @@
         {
             "name": "at-raiffeisen10-password",
             "displayName": "Raiffeisen (Oberösterreich/PRIVAT BANK)",
+            "groupDisplayName": "Raiffeisen",
             "popular": true,
             "status": "ENABLED",
             "type": "BANK",
@@ -359,6 +370,7 @@
         {
             "name": "at-raiffeisen11-password",
             "displayName": "Raiffeisen (Tirol/Jungholz)",
+            "groupDisplayName": "Raiffeisen",
             "popular": true,
             "status": "ENABLED",
             "type": "BANK",
