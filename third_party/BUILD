@@ -1943,47 +1943,6 @@ java_import(
 
     ],
 )
-java_library(
-    name = "tink_apache_httpcomponents_httpcore",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@tink_httpcore_4_4_9//:tink_httpcore_4_4_9"
-    ],
-)
-
-java_library(
-    name = "tink_apache_httpcomponents_httpclient",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@tink_httpclient_4_5_5//:tink_httpclient_4_5_5"
-    ],
-)
-
-java_library(
-    name = "tink_aws_sdk_core",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@tink_aws_sdk_1_11//:aws-java-sdk-core"
-    ],
-)
-
-java_library(
-    name = "tink_aws_sdk_sqs",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@tink_aws_sdk_1_11//:aws-java-sdk-sqs",
-        ":tink_aws_sdk_core",
-        ":tink_apache_httpcomponents_httpcore",
-        ":tink_apache_httpcomponents_httpclient",
-        "@com_fasterxml_jackson_core_jackson_annotations//jar",
-        "@com_fasterxml_jackson_core_jackson_core//jar",
-        "@com_fasterxml_jackson_dataformat_jackson_dataformat_cbor//jar",
-        "@com_amazonaws_jmespath_java//jar",
-        "@software_amazon_ion_ion_java//jar",
-        "@commons_logging_commons_logging//jar",
-    ],
-)
-
 
 java_library(
     name = "org_apache_httpcomponents_httpcore",
