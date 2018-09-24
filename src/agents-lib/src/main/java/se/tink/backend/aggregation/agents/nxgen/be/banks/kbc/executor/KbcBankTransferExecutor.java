@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.executor;
 
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
@@ -16,9 +17,11 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.executor.dto.Valida
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.AgreementDto;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.Field;
+import se.tink.backend.core.Amount;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
@@ -33,7 +36,8 @@ public class KbcBankTransferExecutor implements BankTransferExecutor {
     private final SupplementalInformationController supplementalInformationController;
 
     public KbcBankTransferExecutor(Credentials credentials, PersistentStorage persistentStorage,
-            KbcApiClient apiClient, Catalog catalog, SupplementalInformationController supplementalInformationController) {
+            KbcApiClient apiClient, Catalog catalog,
+            SupplementalInformationController supplementalInformationController) {
         this.credentials = credentials;
         this.persistentStorage = persistentStorage;
         this.apiClient = apiClient;
@@ -45,7 +49,12 @@ public class KbcBankTransferExecutor implements BankTransferExecutor {
     public void executeTransfer(Transfer transfer) throws TransferExecutionException {
         List<GeneralAccountEntity> ownAccounts = fetchOwnAccounts();
 
-        checkSourceAccount(transfer.getSource(), ownAccounts);
+        TransactionalAccount sourceAccount = getSourceAccount(transfer.getSource(), ownAccounts);
+        // For immediate transfer it is not allowed to do transfers that are not covered by the balance. Blocked in app.
+        if (immediateTransfer(transfer)) {
+            validateAmountCoveredByBalance(sourceAccount, transfer.getAmount());
+        }
+
         boolean isTransferToOwnAccount = GeneralUtils.isAccountExisting(transfer.getDestination(), ownAccounts);
 
         String signType = validateTransfer(transfer, isTransferToOwnAccount);
@@ -54,7 +63,22 @@ public class KbcBankTransferExecutor implements BankTransferExecutor {
             transfer(transfer, signType, isTransferToOwnAccount);
         } catch (AuthenticationException e) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(catalog.getString(TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED))
+                    .setEndUserMessage(
+                            catalog.getString(TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED))
+                    .build();
+        }
+    }
+
+    private boolean immediateTransfer(Transfer transfer) {
+        return transfer.getDueDate() == null;
+    }
+
+    private void validateAmountCoveredByBalance(TransactionalAccount sourceAccount, Amount amount) {
+        if (sourceAccount.getBalance()
+                .isLessThan(amount.doubleValue())) {
+            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                    .setMessage(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT.getKey().get())
+                    .setEndUserMessage(catalog.getString(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT))
                     .build();
         }
     }
@@ -66,15 +90,18 @@ public class KbcBankTransferExecutor implements BankTransferExecutor {
         return GeneralUtils.concat(accountsForTransferToOwn, accountsForTransferToOther);
     }
 
-    private void checkSourceAccount(final AccountIdentifier accountIdentifier,
+    private TransactionalAccount getSourceAccount(final AccountIdentifier accountIdentifier,
             List<GeneralAccountEntity> sourceAccounts) {
 
-        if (!GeneralUtils.isAccountExisting(accountIdentifier, sourceAccounts)) {
+        Optional<GeneralAccountEntity> sourceAccount = GeneralUtils.find(accountIdentifier, sourceAccounts);
+
+        if (!sourceAccount.isPresent()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setMessage(catalog.getString(TransferExecutionException.EndUserMessage.INVALID_SOURCE))
                     .setEndUserMessage(catalog.getString(TransferExecutionException.EndUserMessage.INVALID_SOURCE))
                     .build();
         }
+        return ((AgreementDto) sourceAccount.get()).toTransactionalAccount();
     }
 
     private String validateTransfer(Transfer transfer, boolean isTransferToOwnAccount) {
