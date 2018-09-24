@@ -32,6 +32,13 @@ public class RaiffeisenConstants {
         public static final String UPGRADE_INSECURE_REQUESTS_KEY = "Upgrade-Insecure-Requests";
      }
 
+    public static class RegExpPatterns {
+        public static final String ACCESS_TOKEN = ".*access_token=([^&]+)";
+        public static final String TOKEN_TYPE = ".*token_type=([^&]+)";
+
+    }
+
+
     public enum Storage {
         WEB_LOGIN_RESPONSE
     }

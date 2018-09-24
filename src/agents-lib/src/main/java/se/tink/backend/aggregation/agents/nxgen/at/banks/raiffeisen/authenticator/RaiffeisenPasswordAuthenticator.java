@@ -75,11 +75,11 @@ public class RaiffeisenPasswordAuthenticator implements PasswordAuthenticator {
     }
 
     private static String getAccessToken(URL url) {
-        return getToken(url, Pattern.compile(".*access_token=([^&]+)"));
+        return getToken(url, Pattern.compile(RaiffeisenConstants.RegExpPatterns.ACCESS_TOKEN));
     }
 
     private static String getTokenType(URL url) {
-        return getToken(url, Pattern.compile(".*token_type=([^&]+)"));
+        return getToken(url, Pattern.compile(RaiffeisenConstants.RegExpPatterns.TOKEN_TYPE));
     }
 
     private MessageDigest getMD5() {
