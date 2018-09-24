@@ -1,95 +1,119 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.ICABankenUtils;
+import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaBankenExecutorUtils;
+import se.tink.backend.aggregation.annotations.JsonDouble;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.core.Amount;
 import se.tink.backend.core.enums.TransferType;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.core.transfer.TransferPayloadType;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.i18n.Catalog;
 
 @JsonObject
 public class EInvoiceEntity {
     @JsonProperty("UniqueId")
-    private String uuid;
+    private String uniqueId;
     @JsonProperty("RecipientName")
-    private String name;
+    private String recipientName;
     @JsonProperty("RecipientType")
-    private String type;
+    private String recipientType;
     @JsonProperty("RecipientAccountNumber")
-    private String accountNumber;
+    private String recipientAccountNumber;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonProperty("PayDate")
-    private String date;
+    private Date payDate;
+    @JsonDouble
     @JsonProperty("Amount")
-    private Double amount;
+    private double amount;
+    @JsonProperty("IsChangeableAmount")
+    private boolean isChangeableAmount;
+    @JsonProperty("HasLink")
+    private boolean hasLink;
+    @JsonProperty("InvoiceLink")
+    private String invoiceLink;
     @JsonProperty("IsRecipientConfirmed")
-    private boolean recipientConfirmed;
+    private boolean isRecipientConfirmed;
 
+    // This method is directly moved over from the old ICABanken agent.
+    @JsonIgnore
     public Transfer toTinkTransfer(Catalog catalog) {
         AccountIdentifier destination = getIdentifier();
 
         Transfer transfer = new Transfer();
 
-        String uuid = getUuid();
-        Preconditions.checkState(!Strings.isNullOrEmpty(uuid), "Could not find Unique ID for invoice");
-        transfer.addPayload(TransferPayloadType.PROVIDER_UNIQUE_ID, uuid);
+        Preconditions.checkState(!Strings.isNullOrEmpty(uniqueId), "Could not find Unique ID for invoice");
+        transfer.addPayload(TransferPayloadType.PROVIDER_UNIQUE_ID, uniqueId);
 
         transfer.setAmount(Amount.inSEK(getAmount()));
-        transfer.setDueDate(DateUtils.flattenTime(DateUtils.parseDate(getDate())));
+        transfer.setDueDate(payDate);
         transfer.setDestination(destination);
         transfer.setType(TransferType.EINVOICE);
-        transfer.setSourceMessage(name);
+        transfer.setSourceMessage(recipientName);
 
         // ICA Banken doesn't supply a message or OCR to us, but the app requires that we fill in that field to confirm
-        // the payment. Using a prepopulated value here. In ICABankenAgent we later make sure that the user hasn't
-        // changes this field.
+        // the payment. Using a prepopulated value here. We later make sure that the user hasn't
+        // changed this field.
         transfer.setDestinationMessage(catalog.getString(IcaBankenConstants.IdTags.NOT_AVAILABLE_TAG));
 
         return transfer;
     }
 
+    @JsonIgnore
     private AccountIdentifier getIdentifier() {
 
-        AccountIdentifier.Type type = ICABankenUtils.paymentTypeToIdentifierType(getType());
+        AccountIdentifier.Type type = IcaBankenExecutorUtils.paymentTypeToIdentifierType(recipientType);
         Preconditions.checkNotNull(type, "Invalid identifier type. It must not be null.");
 
-        String accountNumber = getAccountNumber();
-        Preconditions.checkState(!Strings.isNullOrEmpty(accountNumber), "No destination accountNumber");
+        Preconditions.checkState(!Strings.isNullOrEmpty(recipientAccountNumber), "No destination accountNumber");
 
-        return AccountIdentifier.create(type, accountNumber, name);
+        return AccountIdentifier.create(type, recipientAccountNumber, recipientName);
     }
 
-    public String getUuid() {
-        return uuid;
+    public String getUniqueId() {
+        return uniqueId;
     }
 
-    public String getName() {
-        return name;
+    public String getRecipientName() {
+        return recipientName;
     }
 
-    public String getType() {
-        return type;
+    public String getRecipientType() {
+        return recipientType;
     }
 
-    public String getAccountNumber() {
-        return accountNumber;
+    public String getRecipientAccountNumber() {
+        return recipientAccountNumber;
     }
 
-    public String getDate() {
-        return date;
+    public Date getPayDate() {
+        return payDate;
     }
 
-    public Double getAmount() {
+    public double getAmount() {
         return amount;
     }
 
+    public boolean isChangeableAmount() {
+        return isChangeableAmount;
+    }
+
+    public boolean isHasLink() {
+        return hasLink;
+    }
+
+    public String getInvoiceLink() {
+        return invoiceLink;
+    }
+
     public boolean isRecipientConfirmed() {
-        return recipientConfirmed;
+        return isRecipientConfirmed;
     }
 }

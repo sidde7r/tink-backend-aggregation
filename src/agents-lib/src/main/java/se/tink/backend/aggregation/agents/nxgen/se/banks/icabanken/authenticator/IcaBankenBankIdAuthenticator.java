@@ -1,46 +1,60 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator;
 
-import com.google.api.client.repackaged.com.google.common.base.Preconditions;
-import java.util.Objects;
 import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.bankid.BankIdResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.bankid.SessionBodyEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.BankIdResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.storage.IcaBankenSessionStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import org.apache.http.HttpStatus;
 
 public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String> {
-
     private final IcaBankenApiClient apiClient;
-    private final SessionStorage sessionStorage;
+    private final IcaBankenSessionStorage icaBankenSessionStorage;
 
-    public IcaBankenBankIdAuthenticator(IcaBankenApiClient apiClient, SessionStorage sessionStorage) {
+    public IcaBankenBankIdAuthenticator(IcaBankenApiClient apiClient, IcaBankenSessionStorage icaBankenSessionStorage) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
+        this.icaBankenSessionStorage = icaBankenSessionStorage;
     }
 
     @Override
-    public String init(String ssn) {
+    public String init(String ssn) throws BankIdException {
+        try {
+            return apiClient.initBankId(ssn);
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
+                throw BankIdError.ALREADY_IN_PROGRESS.exception();
+            }
 
-        BankIdResponse response = apiClient.initBankId(ssn);
-        SessionBodyEntity responseBody = response.getBody();
-
-        return response.getBody().getRequestId();
+            throw e;
+        }
     }
 
     @Override
-    public BankIdStatus collect(String reference) throws BankIdException {
-        BankIdResponse response = apiClient.authenticate(reference);
+    public BankIdStatus collect(String reference) throws AuthenticationException {
 
-        SessionBodyEntity sessionBody = response.getBody();
-        if (Objects.requireNonNull(sessionBody).getBankIdStatus().equals(BankIdStatus.DONE)) {
-            // Authentication was successful. Save the session id.
-            sessionStorage.put(IcaBankenConstants.IdTags.SESSION_ID_TAG, sessionBody.getSessionId());
+        BankIdResponse response = getPollResponse(reference);
+        BankIdStatus bankIdStatus = response.getBankIdStatus();
+
+        if (bankIdStatus == BankIdStatus.DONE) {
+            icaBankenSessionStorage.saveSessionId(response.getBody().getSessionId());
         }
 
-        return response.getBody().getBankIdStatus();
+        return bankIdStatus;
+    }
+
+    private BankIdResponse getPollResponse(String reference) throws BankIdException {
+        try {
+            return apiClient.pollBankId(reference);
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
+                throw BankIdError.INTERRUPTED.exception();
+            }
+
+            throw e;
+        }
     }
 }

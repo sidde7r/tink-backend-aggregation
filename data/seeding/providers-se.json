@@ -615,9 +615,8 @@
                 "TRANSFERS",
                 "MORTGAGE_AGGREGATION"
             ],
-            "className": "banks.se.icabanken.ICABankenAgent",
+            "className": "nxgen.se.banks.icabanken.IcaBankenAgent",
             "credentialsType": "MOBILE_BANKID",
-            "currency": "SEK",
             "displayName": "ICAbanken",
             "fields": [
                 {
@@ -633,12 +632,9 @@
                 }
             ],
             "groupDisplayName": "ICAbanken",
-            "market": "SE",
-            "multiFactor": false,
             "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+            "multiFactor": true,
             "popular": true,
-            "refreshFrequency": 0,
-            "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
             "type": "BANK"
