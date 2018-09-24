@@ -44,6 +44,7 @@ public class IngTransferExecutor implements BankTransferExecutor {
                         .setMessage(TransferExecutionException.EndUserMessage.INVALID_SOURCE.getKey().get())
                         .build());
 
+        // For immediate transfers it is not allowed transfer amount not covered by the balance. Blocked in app.
         if (immediateTransfer(transfer)) {
             validateAmountCoveredByBalance(sourceAccount, transfer.getAmount());
         }
