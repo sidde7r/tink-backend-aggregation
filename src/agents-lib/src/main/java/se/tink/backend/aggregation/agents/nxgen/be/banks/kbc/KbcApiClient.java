@@ -40,6 +40,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.SignRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.SignTypesResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.SignValidationRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.SignValidationResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeEncValueTuple;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeValuePair;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.executor.dto.SigningChallengeSotpResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.executor.dto.SigningChallengeUcrResponse;
@@ -48,6 +49,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.executor.dto.Transf
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.executor.dto.ValidateTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.AccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.AgreementDto;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.BeneficiariesResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.FutureTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.FutureTransactionsResponse;
@@ -67,6 +69,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class KbcApiClient {
     private final SessionStorage sessionStorage;
     private final TinkHttpClient client;
+    private AccountsResponse accountResponse;
 
     private KbcApiClient(SessionStorage sessionStorage, TinkHttpClient client) {
         this.sessionStorage = sessionStorage;
@@ -101,7 +104,7 @@ public class KbcApiClient {
         return Optional.ofNullable(header)
                 .map(HeaderDto::getResultCode)
                 .map(TypeValuePair::getValue).orElseThrow(
-                () -> new IllegalStateException("Did not get any result code in response."));
+                        () -> new IllegalStateException("Did not get any result code in response."));
     }
 
     private void verifyDoubleZeroResponseCode(HeaderDto header) {
@@ -110,7 +113,6 @@ public class KbcApiClient {
 
     private void verifyResponseCode(HeaderDto header, final String expectedValue) {
         String resultValue = getResultCodeOrThrow(header);
-
         if (!Objects.equals(expectedValue, resultValue)) {
             notEnoughFundsCancelTransfer(header, resultValue);
             throwInvalidResultCodeError(header, resultValue);
@@ -118,8 +120,9 @@ public class KbcApiClient {
     }
 
     private void notEnoughFundsCancelTransfer(HeaderDto header, String resultValue) {
-        if(resultValue.equalsIgnoreCase(KbcConstants.ResultCode.ZERO_TWO)
-                && matchesErrorMessage(header.getResultMessage(), KbcConstants.ErrorMessage.ACCOUNT_HAS_INSUFFICIENT_FUNDS) ) {
+        if (resultValue.equalsIgnoreCase(KbcConstants.ResultCode.ZERO_TWO)
+                && matchesErrorMessage(header.getResultMessage(),
+                KbcConstants.ErrorMessage.ACCOUNT_HAS_INSUFFICIENT_FUNDS)) {
             cancelTransfer(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT.getKey().get());
         }
     }
@@ -466,30 +469,33 @@ public class KbcApiClient {
                 .setPaymentDashboardIndicator(true)
                 .build();
 
-        AccountsResponse response = post(KbcConstants.Url.ACCOUNTS, accountsRequest, AccountsResponse.class);
-        verifyDoubleZeroResponseCode(response.getHeader());
+        this.accountResponse = post(KbcConstants.Url.ACCOUNTS, accountsRequest, AccountsResponse.class);
+        verifyDoubleZeroResponseCode(this.accountResponse.getHeader());
 
-        return response;
+        return this.accountResponse;
     }
 
     public TransactionsHistoryResponse fetchTransactions(String accountNo, String repositioningKey) {
         Preconditions.checkNotNull(accountNo);
 
+        AgreementDto targetAgreement = this.accountResponse.getAgreements().stream()
+                .filter(agreementDto -> agreementDto.getAgreementNo().getValue().equals(accountNo)).findFirst()
+                .orElseThrow(IllegalStateException::new);
+
         TransactionsHistoryRequest request = TransactionsHistoryRequest.builder()
-                .setAccountNo(accountNo)
-                .setRepositioningKey(repositioningKey != null ? repositioningKey : "")
-                .setCompanyNo(KbcConstants.RequestInput.COMPANY_ID)
-                .setCurrency(KbcConstants.RequestInput.CURRENCY)
-                .setRoleCode(KbcConstants.RequestInput.ROLE_CODE)
+                .setAccountNo(targetAgreement.getAgreementNo())
+                .setRepositioningKey(repositioningKey != null ? SerializationUtils.deserializeFromString(repositioningKey,
+                        TypeEncValueTuple.class) : null)
+                .setCompanyNo(targetAgreement.getCompanyNo())
+                .setCurrency(targetAgreement.getCurrency())
+                .setRoleCode(targetAgreement.getRoleCode())
                 .setSearchAmount(KbcConstants.RequestInput.SEARCH_AMOUNT)
                 .setSearchMessage(KbcConstants.RequestInput.SEARCH_MESSAGE)
                 .setTransactionsQuantity(KbcConstants.RequestInput.TRANSACTIONS_QUANTITY)
                 .build();
-
         TransactionsHistoryResponse response =
                 post(KbcConstants.Url.TRANSACTIONS_HISTORY, request, TransactionsHistoryResponse.class);
         verifyDoubleZeroResponseCode(response.getHeader());
-
         return response;
     }
 
@@ -599,7 +605,8 @@ public class KbcApiClient {
         SignValidationRequest signValidationRequest = SignValidationRequest.create(signingResponse, panNr, signingId);
 
         SignValidationResponse signValidationResponse =
-                post(KbcConstants.Url.MOB_A031_SIGNING_VALIDATION_SOTP, signValidationRequest, SignValidationResponse.class);
+                post(KbcConstants.Url.MOB_A031_SIGNING_VALIDATION_SOTP, signValidationRequest,
+                        SignValidationResponse.class);
         verifyDoubleZeroResponseCode(signValidationResponse.getHeader());
     }
 
@@ -617,7 +624,8 @@ public class KbcApiClient {
         SignValidationRequest signValidationRequest = SignValidationRequest.create(signingResponse, panNr, signingId);
 
         SignValidationResponse signValidationResponse =
-                post(KbcConstants.Url.MOB_A031_SIGNING_VALIDATION_UCR, signValidationRequest, SignValidationResponse.class);
+                post(KbcConstants.Url.MOB_A031_SIGNING_VALIDATION_UCR, signValidationRequest,
+                        SignValidationResponse.class);
         verifyDoubleZeroResponseCode(signValidationResponse.getHeader());
     }
 

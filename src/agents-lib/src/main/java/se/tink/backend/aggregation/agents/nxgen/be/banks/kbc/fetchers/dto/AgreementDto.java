@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto;
 
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeEncValueTuple;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeValuePair;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
@@ -16,34 +17,34 @@ import java.util.Collections;
 
 @JsonObject
 public class AgreementDto implements GeneralAccountEntity {
-    private TypeValuePair agreementNo;
+    private TypeEncValueTuple agreementNo;
     private TypeValuePair structureCode;
     private TypeValuePair productType;
-    private TypeValuePair productTypeNr;
+    private TypeEncValueTuple productTypeNr;
     private TypeValuePair agreementType;
-    private TypeValuePair agreementName;
+    private TypeEncValueTuple agreementName;
     private TypeValuePair rubricName;
     private TypeValuePair balance;
-    private TypeValuePair currency;
+    private TypeEncValueTuple currency;
     private TypeValuePair counterValueBalance;
     private TypeValuePair counterValueCurrency;
     private TypeValuePair transactionsAvailable;
     private TypeValuePair showBalance;
-    private TypeValuePair companyNo;
-    private TypeValuePair roleCode;
-    private TypeValuePair statusCode;
+    private TypeEncValueTuple companyNo;
+    private TypeEncValueTuple roleCode;
+    private TypeEncValueTuple statusCode;
     private TypeValuePair isBusiness;
     private TypeValuePair isCompleted;
     private AgreementMakeUpDto agreementMakeUp;
     private TypeValuePair visibilityIndicator;
-    private TypeValuePair principalAccountHolder;
+    private TypeEncValueTuple principalAccountHolder;
     private TypeValuePair balanceIncludingReservations;
     private TypeValuePair balanceIncludinReservationAmountEur;
     private TypeValuePair reservationAmount;
     private TypeValuePair reservationIndicator;
     private TypeValuePair agreementStructuredMessage;
 
-    public TypeValuePair getAgreementNo() {
+    public TypeEncValueTuple getAgreementNo() {
         return agreementNo;
     }
 
@@ -55,7 +56,7 @@ public class AgreementDto implements GeneralAccountEntity {
         return productType;
     }
 
-    public TypeValuePair getProductTypeNr() {
+    public TypeEncValueTuple getProductTypeNr() {
         return productTypeNr;
     }
 
@@ -63,7 +64,7 @@ public class AgreementDto implements GeneralAccountEntity {
         return agreementType;
     }
 
-    public TypeValuePair getAgreementName() {
+    public TypeEncValueTuple getAgreementName() {
         return agreementName;
     }
 
@@ -75,7 +76,7 @@ public class AgreementDto implements GeneralAccountEntity {
         return balance;
     }
 
-    public TypeValuePair getCurrency() {
+    public TypeEncValueTuple getCurrency() {
         return currency;
     }
 
@@ -95,15 +96,15 @@ public class AgreementDto implements GeneralAccountEntity {
         return showBalance;
     }
 
-    public TypeValuePair getCompanyNo() {
+    public TypeEncValueTuple getCompanyNo() {
         return companyNo;
     }
 
-    public TypeValuePair getRoleCode() {
+    public TypeEncValueTuple getRoleCode() {
         return roleCode;
     }
 
-    public TypeValuePair getStatusCode() {
+    public TypeEncValueTuple getStatusCode() {
         return statusCode;
     }
 
@@ -123,7 +124,7 @@ public class AgreementDto implements GeneralAccountEntity {
         return visibilityIndicator;
     }
 
-    public TypeValuePair getPrincipalAccountHolder() {
+    public TypeEncValueTuple getPrincipalAccountHolder() {
         return principalAccountHolder;
     }
 
