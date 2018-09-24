@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsb
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.HandelsbankenAutoAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.creditcard.HandelsbankenCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.loan.HandelsbankenLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.transactionalaccount.HandelsbankenTransactionalAccountFetcher;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -12,6 +11,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthent
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
@@ -106,15 +106,18 @@ public abstract class HandelsbankenAgent<API extends HandelsbankenApiClient, Con
             API client,
             HandelsbankenSessionStorage sessionStorage);
 
+    protected abstract AccountFetcher<CreditCardAccount> constructCreditCardAccountFetcher(
+            API client,
+            HandelsbankenSessionStorage sessionStorage
+    );
+
     protected abstract TransactionPaginator<TransactionalAccount> constructAccountTransactionPaginator(
             API client,
             HandelsbankenSessionStorage sessionStorage);
 
-    protected UpcomingTransactionFetcher<TransactionalAccount> constructUpcomingTransactionFetcher(
+    protected abstract UpcomingTransactionFetcher<TransactionalAccount> constructUpcomingTransactionFetcher(
             API client,
-            HandelsbankenSessionStorage sessionStorage) {
-        return null;
-    }
+            HandelsbankenSessionStorage sessionStorage);
 
     protected abstract TransactionPaginator<CreditCardAccount> constructCreditCardTransactionPaginator(
             API client,
@@ -150,7 +153,7 @@ public abstract class HandelsbankenAgent<API extends HandelsbankenApiClient, Con
 
         return Optional.of(new CreditCardRefreshController(this.metricRefreshController,
                 this.updateController,
-                new HandelsbankenCreditCardAccountFetcher(
+                constructCreditCardAccountFetcher(
                         this.bankClient, this.handelsbankenSessionStorage),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,

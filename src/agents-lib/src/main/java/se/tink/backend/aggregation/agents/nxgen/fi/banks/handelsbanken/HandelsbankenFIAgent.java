@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.handelsbanken;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.handelsbanken.authenticator.HandelsbankenFICardDeviceAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.handelsbanken.fetcher.creditcard.HandelsbankenFICreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.handelsbanken.fetcher.creditcard.HandelsbankenFICreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.handelsbanken.fetcher.transactionalaccount.HandelsbankenFIAccountTransactionPaginator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenAgent;
@@ -10,8 +11,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.HandelsbankenAutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
@@ -85,11 +88,22 @@ public class HandelsbankenFIAgent
     }
 
     @Override
+    protected AccountFetcher<CreditCardAccount> constructCreditCardAccountFetcher(
+            HandelsbankenFIApiClient client, HandelsbankenSessionStorage sessionStorage) {
+        return new HandelsbankenFICreditCardAccountFetcher(client, sessionStorage);
+    }
+
+    @Override
     protected TransactionPaginator<TransactionalAccount> constructAccountTransactionPaginator(
             HandelsbankenFIApiClient client, HandelsbankenSessionStorage sessionStorage) {
-
         return new TransactionKeyPaginationController<>(
                 new HandelsbankenFIAccountTransactionPaginator(client, sessionStorage));
+    }
+
+    @Override
+    protected UpcomingTransactionFetcher<TransactionalAccount> constructUpcomingTransactionFetcher(
+            HandelsbankenFIApiClient client, HandelsbankenSessionStorage sessionStorage) {
+        return null;
     }
 
     @Override

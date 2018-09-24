@@ -5,7 +5,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenApiClient;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.handelsbanken.HandelsbankenFIApiClient;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.handelsbanken.fetcher.creditcard.entities.HandelsbankenFICreditCard;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.handelsbanken.fetcher.transactionalaccount.HandelsbankenFIAccountTransactionPaginator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAccount;
@@ -14,23 +16,19 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class HandelsbankenFICreditCardTransactionFetcher extends
-        HandelsbankenCreditCardTransactionPaginator {
+        HandelsbankenCreditCardTransactionPaginator<HandelsbankenFIApiClient> {
     private final AggregationLogger log = new AggregationLogger(
             HandelsbankenFICreditCardTransactionFetcher.class);
 
-    private final HandelsbankenApiClient client;
-    private final HandelsbankenSessionStorage sessionStorage;
-
     public HandelsbankenFICreditCardTransactionFetcher(
-            HandelsbankenApiClient client,
+            HandelsbankenFIApiClient client,
             HandelsbankenSessionStorage sessionStorage) {
         super(client, sessionStorage);
-        this.client = client;
-        this.sessionStorage = sessionStorage;
     }
 
     @Override
@@ -76,12 +74,14 @@ public class HandelsbankenFICreditCardTransactionFetcher extends
                 })
                 .orElse(Collections.emptyList());
         List<Transaction> transactions = new ArrayList<>(accountTransactions);
-        List<Transaction> creditCardTransactions = sessionStorage.creditCards()
-                .flatMap(creditCards -> creditCards.find(account))
-                .map(creditCard -> client.creditCardTransactions(creditCard)
-                        .tinkTransactions(creditCard, account))
-                .orElse(Collections.emptyList());
+        List<CreditCardTransaction> creditCardTransactions =
+                sessionStorage.<HandelsbankenFICreditCard>creditCards()
+                        .flatMap(creditCards -> creditCards.find(account))
+                        .map(creditCard -> client.creditCardTransactions(creditCard)
+                                .tinkTransactions(creditCard, account))
+                        .orElse(Collections.emptyList());
         transactions.addAll(creditCardTransactions);
+
         return transactions;
     }
 
@@ -91,6 +91,27 @@ public class HandelsbankenFICreditCardTransactionFetcher extends
                         .equalsIgnoreCase(transaction.getDescription()))
                 .collect(Collectors.toList());
 
+    }
+
+    @Override
+    protected List<Transaction> fetchAccountTransactions(
+            HandelsbankenAccount handelsbankenAccount) {
+
+        HandelsbankenFIAccountTransactionPaginator paginator = new HandelsbankenFIAccountTransactionPaginator(
+                client, sessionStorage);
+
+        List<Transaction> transactions = new ArrayList<>();
+        URL nextKey = null;
+        do {
+
+            TransactionKeyPaginatorResponse<URL> response = paginator
+                    .getTransactionsFor(handelsbankenAccount, nextKey);
+            transactions.addAll(response.getTinkTransactions());
+            nextKey = response.nextKey();
+
+        } while (nextKey != null);
+
+        return transactions;
     }
 
 }

@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.ValidateRecipientRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.ValidateRecipientResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.creditcard.rpc.CreditCardSETransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.creditcard.rpc.CreditCardsSEResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.einvoice.rpc.PendingEInvoicesResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.CustodyAccount;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.HandelsbankenSEPensionFund;
@@ -45,6 +46,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.device.CreateProfileResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.device.EncryptedUserCredentialsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.device.InitNewProfileResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.creditcard.entities.HandelsbankenCreditCard;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -53,14 +55,16 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.ha
 
 public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
 
-    public HandelsbankenSEApiClient(TinkHttpClient client, HandelsbankenSEConfiguration configuration) {
+    public HandelsbankenSEApiClient(TinkHttpClient client,
+            HandelsbankenSEConfiguration configuration) {
         super(client, configuration);
     }
 
     public InitBankIdResponse initBankId(
             EntryPointResponse entryPoint,
             InitBankIdRequest initBankIdRequest) {
-        return createPostRequest(entryPoint.toBankIdLogin()).post(InitBankIdResponse.class, initBankIdRequest);
+        return createPostRequest(entryPoint.toBankIdLogin())
+                .post(InitBankIdResponse.class, initBankIdRequest);
     }
 
     public AuthenticateResponse authenticate(InitBankIdResponse initBankId) {
@@ -85,10 +89,15 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
         return createPostRequest(validateSignature.toAuthorize()).post(AuthorizeResponse.class);
     }
 
-    public TransactionsSEResponse transactions(URL url, int from, int to, String authToken){
-        
+    @Override
+    public TransactionsSEResponse transactions(HandelsbankenAccount account) {
+        return createRequest(account.toTransactions()).get(TransactionsSEResponse.class);
+    }
+
+    public TransactionsSEResponse transactions(URL url, int from, int to, String authToken) {
+
         return createRequest(url)
-                .queryParam(HandelsbankenSEConstants.QueryParams.IS_CARD, 
+                .queryParam(HandelsbankenSEConstants.QueryParams.IS_CARD,
                         HandelsbankenSEConstants.QueryParams.Defaults.FALSE)
                 .queryParam(HandelsbankenSEConstants.QueryParams.FROM, String.valueOf(from))
                 .queryParam(HandelsbankenSEConstants.QueryParams.TO, String.valueOf(to))
@@ -98,15 +107,19 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
 
     public PendingTransactionsResponse pendingTransactions(
             ApplicationEntryPointResponse applicationEntryPoint) {
-        return createRequest(applicationEntryPoint.toPendingTransactions()).get(PendingTransactionsResponse.class);
+        return createRequest(applicationEntryPoint.toPendingTransactions())
+                .get(PendingTransactionsResponse.class);
     }
 
-    public PendingEInvoicesResponse pendingEInvoices(ApplicationEntryPointResponse applicationEntryPoint) {
-        return createRequest(applicationEntryPoint.toPendingEInvoices()).get(PendingEInvoicesResponse.class);
+    public PendingEInvoicesResponse pendingEInvoices(
+            ApplicationEntryPointResponse applicationEntryPoint) {
+        return createRequest(applicationEntryPoint.toPendingEInvoices())
+                .get(PendingEInvoicesResponse.class);
     }
 
     public Optional<EInvoiceDetails> eInvoiceDetails(EInvoice eInvoice) {
-        return eInvoice.toEInvoiceDetails().map(url -> createRequest(url).get(EInvoiceDetails.class));
+        return eInvoice.toEInvoiceDetails()
+                .map(url -> createRequest(url).get(EInvoiceDetails.class));
     }
 
     public Optional<ApproveEInvoiceResponse> approveEInvoice(EInvoiceDetails eInvoiceDetails,
@@ -115,30 +128,44 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
                 .map(url -> createPostRequest(url).post(ApproveEInvoiceResponse.class, request));
     }
 
-    public Optional<SignEInvoicesResponse> signEInvoice(ApproveEInvoiceResponse approveEInvoiceResponse) {
-        return approveEInvoiceResponse.toSignature().map(url -> createPostRequest(url).post(SignEInvoicesResponse.class));
+    public Optional<SignEInvoicesResponse> signEInvoice(
+            ApproveEInvoiceResponse approveEInvoiceResponse) {
+        return approveEInvoiceResponse.toSignature()
+                .map(url -> createPostRequest(url).post(SignEInvoicesResponse.class));
     }
 
     public HandelsbankenSEPaymentContext paymentContext(UpdatablePayment updatablePayment) {
-        return createRequest(updatablePayment.toPaymentContext()).get(HandelsbankenSEPaymentContext.class);
+        return createRequest(updatablePayment.toPaymentContext())
+                .get(HandelsbankenSEPaymentContext.class);
     }
 
     public Optional<PaymentDetails> createPayment(HandelsbankenSEPaymentContext paymentContext,
             CreatePaymentRequest request) {
-        return paymentContext.toCreate().map(url -> createPostRequest(url).post(PaymentDetails.class, request));
+        return paymentContext.toCreate()
+                .map(url -> createPostRequest(url).post(PaymentDetails.class, request));
     }
 
-    public Optional<UpdatablePayment> updatePayment(UpdatablePayment updatablePayment, UpdatePaymentRequest request) {
-        return updatablePayment.toUpdate().map(url -> createPostRequest(url).put(updatablePayment.getClass(), request));
+    public Optional<UpdatablePayment> updatePayment(UpdatablePayment updatablePayment,
+            UpdatePaymentRequest request) {
+        return updatablePayment.toUpdate()
+                .map(url -> createPostRequest(url).put(updatablePayment.getClass(), request));
     }
 
     public Optional<PaymentDetails> signPayment(PaymentDetails paymentDetails) {
-        return paymentDetails.toSignature().map(url -> createPostRequest(url).post(PaymentDetails.class));
+        return paymentDetails.toSignature()
+                .map(url -> createPostRequest(url).post(PaymentDetails.class));
+    }
+
+    public CreditCardsSEResponse creditCards(ApplicationEntryPointResponse applicationEntryPoint) {
+        return createRequest(handelsbankenConfiguration.toCards(applicationEntryPoint))
+                .get(CreditCardsSEResponse.class);
     }
 
     @Override
-    public CreditCardSETransactionsResponse creditCardTransactions(HandelsbankenCreditCard creditCard) {
-        return createRequest(creditCard.toCardTransactions()).get(CreditCardSETransactionsResponse.class);
+    public CreditCardSETransactionsResponse creditCardTransactions(
+            HandelsbankenCreditCard creditCard) {
+        return createRequest(creditCard.toCardTransactions())
+                .get(CreditCardSETransactionsResponse.class);
     }
 
     @Override
@@ -147,36 +174,46 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
     }
 
     public Optional<PaymentDetails> paymentDetails(PendingTransaction pendingTransaction) {
-        return pendingTransaction.toPaymentDetails().map(url -> createRequest(url).get(PaymentDetails.class));
+        return pendingTransaction.toPaymentDetails()
+                .map(url -> createRequest(url).get(PaymentDetails.class));
     }
 
-    public SecurityHoldingsResponse securitiesHoldings(ApplicationEntryPointResponse applicationEntryPoint) {
-        return createRequest(applicationEntryPoint.toSecuritiesHoldings()).get(SecurityHoldingsResponse.class);
+    public SecurityHoldingsResponse securitiesHoldings(
+            ApplicationEntryPointResponse applicationEntryPoint) {
+        return createRequest(applicationEntryPoint.toSecuritiesHoldings())
+                .get(SecurityHoldingsResponse.class);
     }
 
     public Optional<FundHoldingsResponse> fundHoldings(CustodyAccount custodyAccount) {
-        return custodyAccount.toFundHoldings().map(url -> createRequest(url).get(FundHoldingsResponse.class));
+        return custodyAccount.toFundHoldings()
+                .map(url -> createRequest(url).get(FundHoldingsResponse.class));
     }
 
     public Optional<CustodyAccountResponse> custodyAccount(CustodyAccount custodyAccount) {
-        return custodyAccount.toCustodyAccount().map(url -> createRequest(url).get(CustodyAccountResponse.class));
+        return custodyAccount.toCustodyAccount()
+                .map(url -> createRequest(url).get(CustodyAccountResponse.class));
     }
 
     public Optional<PensionDetailsResponse> pensionDetails(CustodyAccount custodyAccount) {
-        return custodyAccount.toPensionDetails().map(url -> createRequest(url).get(PensionDetailsResponse.class));
+        return custodyAccount.toPensionDetails()
+                .map(url -> createRequest(url).get(PensionDetailsResponse.class));
     }
 
     public Optional<SecurityHoldingContainer> securityHolding(SecurityHolding securityHolding) {
-        return securityHolding.toSecurityHolding().map(url -> createRequest(url).get(SecurityHoldingContainer.class));
+        return securityHolding.toSecurityHolding()
+                .map(url -> createRequest(url).get(SecurityHoldingContainer.class));
     }
 
-    public Optional<HandelsbankenSEFundAccountHoldingDetail> fundHoldingDetail(HandelsbankenSEPensionFund pensionFund) {
+    public Optional<HandelsbankenSEFundAccountHoldingDetail> fundHoldingDetail(
+            HandelsbankenSEPensionFund pensionFund) {
         return pensionFund.toFundHoldingDetail().map(url ->
                 createRequest(url).get(HandelsbankenSEFundAccountHoldingDetail.class));
     }
 
-    public HandelsbankenSETransferContext transferContext(ApplicationEntryPointResponse applicationEntryPoint) {
-        return createRequest(applicationEntryPoint.toTransferContext()).get(HandelsbankenSETransferContext.class);
+    public HandelsbankenSETransferContext transferContext(
+            ApplicationEntryPointResponse applicationEntryPoint) {
+        return createRequest(applicationEntryPoint.toTransferContext())
+                .get(HandelsbankenSETransferContext.class);
     }
 
     public TransferSpecificationResponse createTransfer(Creatable creatable,
@@ -195,7 +232,8 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
                 .post(TransferSignatureResponse.class);
     }
 
-    public ValidateRecipientResponse validateRecipient(HandelsbankenSETransferContext transferContext,
+    public ValidateRecipientResponse validateRecipient(
+            HandelsbankenSETransferContext transferContext,
             ValidateRecipientRequest validateRecipient) {
         return createPostRequest(transferContext.toValidateRecipient())
                 .post(ValidateRecipientResponse.class, validateRecipient);
@@ -203,12 +241,15 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
 
     public PaymentRecipient lookupRecipient(HandelsbankenSEPaymentContext paymentContext,
             String giroNumberFormatted) {
-        return createRequest(paymentContext.toLookupRecipient().parameter(GIRO_NUMBER, giroNumberFormatted))
+        return createRequest(
+                paymentContext.toLookupRecipient().parameter(GIRO_NUMBER, giroNumberFormatted))
                 .get(PaymentRecipient.class);
     }
 
-    public HandelsbankenSEPaymentContext paymentContext(ApplicationEntryPointResponse applicationEntryPoint) {
-        return createRequest(applicationEntryPoint.toPaymentContext()).get(HandelsbankenSEPaymentContext.class);
+    public HandelsbankenSEPaymentContext paymentContext(
+            ApplicationEntryPointResponse applicationEntryPoint) {
+        return createRequest(applicationEntryPoint.toPaymentContext())
+                .get(HandelsbankenSEPaymentContext.class);
     }
 
     public interface Creatable {

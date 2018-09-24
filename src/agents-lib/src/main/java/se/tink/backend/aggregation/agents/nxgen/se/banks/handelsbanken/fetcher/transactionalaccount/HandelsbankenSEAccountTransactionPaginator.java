@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.Handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAccount;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.index.TransactionIndexPaginator;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -35,19 +34,25 @@ public class HandelsbankenSEAccountTransactionPaginator
 
         return sessionStorage.accountList()
                 .flatMap(accountList -> accountList.find(account))
-                .map(HandelsbankenAccount::toTransactions)
-                .map(url -> {
+                .map(handelsbankenAccount ->
+                        getTransactionsFor(handelsbankenAccount,
+                                numberOfTransactions,
+                                startIndex))
+                .orElse(null);
+    }
 
-                    // toTtransactions gives us full url including query.
-                    // Break it apart and send components to client, substituting the default
-                    // from/to indices with our pagination values.
-                    URL baseUrl = url.getUrl();
-                    String authToken = getAuthTokenFromURL(url);
-                    return client.transactions(baseUrl, startIndex,
-                            startIndex + numberOfTransactions, authToken)
-                            .toTinkTransactions();
-                })
-                .map(PaginatorResponseImpl::create).orElse(null);
+    public PaginatorResponse getTransactionsFor(HandelsbankenAccount account,
+            int numberOfTransactions, int startIndex) {
+
+        // toTtransactions gives us full url including query.
+        // Break it apart and send components to client, substituting the default
+        // from/to indices with our pagination values.
+        URL url = account.toTransactions();
+        URL baseUrl = url.getUrl();
+        String authToken = getAuthTokenFromURL(url);
+
+        return client.transactions(baseUrl, startIndex,
+                startIndex + numberOfTransactions, authToken);
     }
 
     private static String getAuthTokenFromURL(URL url) {

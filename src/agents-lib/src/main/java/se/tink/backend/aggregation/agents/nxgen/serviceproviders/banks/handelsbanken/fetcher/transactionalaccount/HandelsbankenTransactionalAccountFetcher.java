@@ -9,7 +9,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 
-public class HandelsbankenTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
+public class HandelsbankenTransactionalAccountFetcher
+        implements AccountFetcher<TransactionalAccount> {
     private final HandelsbankenApiClient client;
     private final HandelsbankenSessionStorage sessionStorage;
 
@@ -21,6 +22,7 @@ public class HandelsbankenTransactionalAccountFetcher implements AccountFetcher<
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
+
         return sessionStorage.applicationEntryPoint().map(applicationEntryPoint -> {
                     AccountListResponse accountList = client.accountList(applicationEntryPoint);
                     sessionStorage.persist(accountList);
