@@ -19,7 +19,7 @@ public class SoapFaultErrorEntity {
     private String errorCode;
 
     public String getErrorDescription() {
-        return errorDescription != null ? errorDescription : "";
+        return errorDescription;
     }
 
     public String getErrorCode() {
@@ -43,7 +43,9 @@ public class SoapFaultErrorEntity {
 
     @JsonIgnore
     public boolean matchesErrorMessage(String errorMessage) {
-        return errorMessage.equalsIgnoreCase(getErrorDescription()) ||
-                getErrorDescription().startsWith(errorMessage);
+        // normalize error description
+        String errordesc = Optional.ofNullable(errorDescription).orElse("").toLowerCase();
+
+        return errordesc.startsWith(errorMessage);
     }
 }
