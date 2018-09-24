@@ -50,6 +50,7 @@ public class KbcBankTransferExecutor implements BankTransferExecutor {
         List<GeneralAccountEntity> ownAccounts = fetchOwnAccounts();
 
         TransactionalAccount sourceAccount = getSourceAccount(transfer.getSource(), ownAccounts);
+        // For immediate transfer it is not allowed to do transfers that are not covered by the balance. Blocked in app.
         if (immediateTransfer(transfer)) {
             validateAmountCoveredByBalance(sourceAccount, transfer.getAmount());
         }
