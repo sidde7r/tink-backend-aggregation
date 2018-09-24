@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 public class AccountEntity {
@@ -49,6 +50,9 @@ public class AccountEntity {
 
     @JsonIgnore
     private AccountTypes getTinkAccountType() {
+        // Temporarily log accounts so that we can re-implement account/product type matching later
+        // There is productType field but description field is used to for the mapping
+        log.warn("{}: Unknown type for: {}", SabadellConstants.Tags.UNKNOWN_ACCOUNT_TYPE, SerializationUtils.serializeToString(this));
         switch (description.toUpperCase()) {
         case SabadellConstants.AccountTypes.SALARY_ACCOUNT:
         case SabadellConstants.AccountTypes.CUENTA_RELACION:

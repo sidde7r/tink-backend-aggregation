@@ -1,9 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.popular;
 
+import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.rpc.AccountTypes;
 
 public class BancoPopularConstants {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BancoPopularConstants.class);
 
     public static class PersistentStorage {
         public static final String LOGIN_CONTRACTS = "LoginContracts";
@@ -37,7 +43,7 @@ public class BancoPopularConstants {
         public static final int CONCEP_ECRMVTO_2 = 98;
 
         public static final String CHECKING_ACCOUNT_IDENTIFIER = "A32";  // account
-        public static final String CREDIT_CARD_ACCOUNT_IDENTIFIER = "A45";  // credit account
+        public static final String CREDIT_CARD_ACCOUNT_IDENTIFIER = "A45";  // credit card account
         public static final String FUND_ACCOUNT_IDENTIFIER = "J01";  // funds
         public static final String LOAN_ACCOUNT_IDENTIFIER = "K11";   // loan
         public static final String INSURANCE_ACCOUNT_IDENTIFIER = "F99";   // securities (stocks?)
@@ -91,4 +97,34 @@ public class BancoPopularConstants {
         public static final int INCORRECT_USERNAME_PASSWORD = 401;
         public static final int INCORRECT_TOKEN = 412;
     }
+
+    public static final class Tags {
+        public static final LogTag UNKNOWN_PRODUCT_CODE = LogTag.from("es_popular_unknown_product_code");
+    }
+
+    public static class ProductCode {
+
+        /**
+         * CUENTA CORRIENTE
+         */
+        private static final int CHECKING_ACCOUNT = 100;
+        /**
+         * CUENTA DE AHORRO
+         */
+        private static final int SAVINGS_ACCOUNT = 110;
+
+        public static Optional<AccountTypes> translate(int productCode) {
+            switch (productCode) {
+            case CHECKING_ACCOUNT:
+                return Optional.of(AccountTypes.CHECKING);
+            case SAVINGS_ACCOUNT:
+                return Optional.of(AccountTypes.SAVINGS);
+            default:
+                LOGGER.info("{} Unknown product code: {}", BancoPopularConstants.Tags.UNKNOWN_PRODUCT_CODE,
+                        productCode);
+                return Optional.empty();
+            }
+        }
+    }
+
 }
