@@ -25,6 +25,25 @@ load(
     container_repositories = "repositories",
 )
 
+
+git_repository(
+    name = "tink_httpcore_4_4_9",
+    remote = "git@github.com:tink-ab/httpcomponents-core.git",
+    commit = "0f72fa2c392fee8388d327cb3462cd10d675c2e2"
+)
+
+git_repository(
+    name = "tink_httpclient_4_5_5",
+    remote = "git@github.com:tink-ab/httpcomponents-client.git",
+    commit = "1ed65fa09a4b7bc9f469fbb3625ac5b087f9cc3e"
+)
+
+git_repository(
+    name = "tink_aws_sdk_1_11",
+    remote = "git@github.com:tink-ab/aws-sdk-java.git",
+    commit = "1bd88709966b245373b4b71f5bca4c0d7202bf1a"
+)
+
 container_repositories()
 
 container_pull(
@@ -277,6 +296,18 @@ maven_jar(
     name = "com_googlecode_libphonenumber_libphonenumber",
     artifact = "com.googlecode.libphonenumber:libphonenumber:5.7",
     sha1 = "20140c130456845cc73f3b2a4bf50c7fe3a37b77",
+)
+
+maven_jar(
+    name = "software_amazon_ion_ion_java",
+    artifact = "software.amazon.ion:ion-java:1.0.2",
+    sha1 = "ee9dacea7726e495f8352b81c12c23834ffbc564",
+)
+
+maven_jar(
+    name = "com_fasterxml_jackson_dataformat_jackson_dataformat_cbor",
+    artifact = "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.8.8",
+    sha1 = "a443b2f10c105a0207ccdeb15b131d1350be2952",
 )
 
 maven_jar(
@@ -1288,11 +1319,6 @@ maven_jar(
     sha1 = "2fd58d1de64553db427ae4fbc1a6691adea460e2",
 )
 
-maven_jar(
-    name = "com_amazonaws_aws_java_sdk",
-    artifact = "com.amazonaws:aws-java-sdk:1.4.4.2",
-    sha1 = "aed880d0fc444c0d147c58dc337ec94204042b58",
-)
 
 maven_jar(
     name = "com_amazonaws_jmespath_java",
