@@ -28,7 +28,7 @@
       ]
     },
     {
-      "name": "fr-banquepopulaire-alsace-password",
+      "name": "fr-banquepopulairealsace-password",
       "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
       "credentialsType": "PASSWORD",
       "groupDisplayName": "Banque Populaire",
@@ -56,7 +56,7 @@
       "type": "BANK"
     },
     {
-      "name": "fr-banquepopulaire-aquitaine-password",
+      "name": "fr-banquepopulaireaquitaine-password",
       "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
       "credentialsType": "PASSWORD",
       "groupDisplayName": "Banque Populaire",
@@ -84,7 +84,7 @@
       "type": "BANK"
     },
     {
-      "name": "fr-banquepopulaire-ouest-password",
+      "name": "fr-banquepopulaireouest-password",
       "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
       "credentialsType": "PASSWORD",
       "groupDisplayName": "Banque Populaire",
@@ -112,7 +112,7 @@
       "type": "BANK"
     },
     {
-      "name": "fr-banquepopulaire-auvergne-password",
+      "name": "fr-banquepopulaireauvergne-password",
       "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
       "credentialsType": "PASSWORD",
       "groupDisplayName": "Banque Populaire",
@@ -140,7 +140,7 @@
       "type": "BANK"
     },
     {
-      "name": "fr-banquepopulaire-bourgogne-password",
+      "name": "fr-banquepopulairebourgogne-password",
       "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
       "credentialsType": "PASSWORD",
       "groupDisplayName": "Banque Populaire",
@@ -168,7 +168,7 @@
       "type": "BANK"
     },
     {
-      "name": "fr-banquepopulaire-bred-password",
+      "name": "fr-banquepopulairebred-password",
       "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
       "credentialsType": "PASSWORD",
       "groupDisplayName": "Banque Populaire",
@@ -196,7 +196,7 @@
       "type": "BANK"
     },
     {
-      "name": "fr-banquepopulaire-mediterranee-password",
+      "name": "fr-banquepopulairemediterranee-password",
       "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
       "credentialsType": "PASSWORD",
       "groupDisplayName": "Banque Populaire",
@@ -224,7 +224,7 @@
       "type": "BANK"
     },
     {
-      "name": "fr-banquepopulaire-nord-password",
+      "name": "fr-banquepopulairenord-password",
       "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
       "credentialsType": "PASSWORD",
       "groupDisplayName": "Banque Populaire",
@@ -252,7 +252,7 @@
       "type": "BANK"
     },
     {
-      "name": "fr-banquepopulaire-occitane-password",
+      "name": "fr-banquepopulaireoccitane-password",
       "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
       "credentialsType": "PASSWORD",
       "groupDisplayName": "Banque Populaire",
@@ -280,7 +280,7 @@
       "type": "BANK"
     },
     {
-      "name": "fr-banquepopulaire-rivesdeparis-password",
+      "name": "fr-banquepopulairerivesdeparis-password",
       "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
       "credentialsType": "PASSWORD",
       "groupDisplayName": "Banque Populaire",
@@ -308,7 +308,7 @@
       "type": "BANK"
     },
     {
-      "name": "fr-banquepopulaire-sud-password",
+      "name": "fr-banquepopulairesud-password",
       "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
       "credentialsType": "PASSWORD",
       "groupDisplayName": "Banque Populaire",
@@ -336,7 +336,7 @@
       "type": "BANK"
     },
     {
-      "name": "fr-banquepopulaire-valdefrance-password",
+      "name": "fr-banquepopulairevaldefrance-password",
       "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
       "credentialsType": "PASSWORD",
       "groupDisplayName": "Banque Populaire",
