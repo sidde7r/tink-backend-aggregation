@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.authenticator.BanquePopulaireAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.fetcher.creditcard.BanquePopulaireCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.fetcher.loan.BanquePopulaireLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.fetcher.transactionalaccounts.BanquePopulaireTransactionalAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.session.BanquePopulaireSessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -60,7 +62,15 @@ public class BanquePopulaireAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.empty();
+        BanquePopulaireCreditCardFetcher creditCardFetcher = new BanquePopulaireCreditCardFetcher(apiClient);
+
+        CreditCardRefreshController creditCardController = new CreditCardRefreshController(metricRefreshController,
+                updateController,
+                creditCardFetcher,
+                new TransactionFetcherController<>(transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(creditCardFetcher)));
+
+        return Optional.of(creditCardController);
     }
 
     @Override
@@ -70,7 +80,9 @@ public class BanquePopulaireAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.empty();
+        return Optional.of(new LoanRefreshController(metricRefreshController,
+                updateController,
+                new BanquePopulaireLoanFetcher(apiClient)));
     }
 
     @Override

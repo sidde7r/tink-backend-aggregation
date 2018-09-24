@@ -19,7 +19,8 @@ public class AccountTransaction {
     private String transactionId;
     @JsonProperty("libelleMouvement")
     private String transactionLabel;
-    private String libelle1ODC;
+    @JsonProperty("libelle1ODC")
+    private String secondTransactionLabel;
     private String libelle2ODC;
     @JsonProperty("dateOperation")
     private Date transactionDate;
@@ -39,12 +40,17 @@ public class AccountTransaction {
     @JsonIgnore
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setDescription(transactionLabel)
+                .setDescription(getTransactionDescription())
                 .setDate(transactionDate)
                 .setAmount(amount.toTinkAmount())
                 .setExternalId(transactionId)
                 .setPending(isPending())
                 .build();
+    }
+
+    private String getTransactionDescription() {
+        return BanquePopulaireConstants.Fetcher.CARD_TRANSACTION_DESCRIPTION_PATTERN.matcher(transactionLabel)
+                .matches() ? secondTransactionLabel : transactionLabel;
     }
 
     private boolean isPending() {

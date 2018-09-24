@@ -4,16 +4,14 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.BanquePopulaireApiClient;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.BanquePopulaireConstants;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.entities.AccountOverviewEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.entities.ContractOverviewEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.fetcher.transactionalaccounts.rpc.BanquePopulaireTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.rpc.ContractsResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BanquePopulaireTransactionalAccountsFetcher implements AccountFetcher<TransactionalAccount>,
         TransactionKeyPaginator<TransactionalAccount, String> {
@@ -29,19 +27,11 @@ public class BanquePopulaireTransactionalAccountsFetcher implements AccountFetch
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
 
-        AccountsResponse accountsResponse = apiClient.getAccounts();
+        ContractsResponse accountsResponse = apiClient.getAccountContracts();
 
         return accountsResponse.stream()
-                .filter(account -> {
-                    if (account.isUnknownType()) {
-                        LOGGER.infoExtraLong(SerializationUtils.serializeToString(account),
-                                BanquePopulaireConstants.LogTags.UNKNOWN_ACCOUNT_TYPE);
-                        return false;
-                    }
-
-                    return true;
-                })
-                .map(AccountOverviewEntity::toTinkAccount)
+                .filter(account -> !account.isUnknownContractType())
+                .map(ContractOverviewEntity::toTinkTransactionalAccount)
                 .collect(Collectors.toList());
     }
 

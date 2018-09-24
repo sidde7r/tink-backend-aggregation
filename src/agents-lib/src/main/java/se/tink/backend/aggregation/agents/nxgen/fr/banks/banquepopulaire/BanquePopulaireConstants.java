@@ -1,9 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.Arrays;
 import java.util.Map;
+import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.core.account.LoanDetails;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 
 public class BanquePopulaireConstants {
@@ -22,6 +23,8 @@ public class BanquePopulaireConstants {
 
     public static final class Fetcher {
         public static final String ACCOUNT_PARAMETER = "ACCOUNT_PARAMETER";
+        public static final Pattern CARD_TRANSACTION_DESCRIPTION_PATTERN = Pattern.compile("[0-9]{6,8}.*\\*{2,6}[0-9]{4}");
+        public static final String CARD_ENTRY_POINT = "CRD";
     }
 
     public static final class Cookies {
@@ -51,6 +54,8 @@ public class BanquePopulaireConstants {
         public static final String BANK_CONFIG_PATH = "/app-config";
         public static final String INITIATE_SESSION_PATH = "/mon-profil";
         public static final String ACCOUNTS_PATH = "/comptes/1.1";
+        public static final String CONTRACTS_PATH = "/contrats";
+        public static final String CONTRACT_DETAILS_PATH = "/contrats/{" + Fetcher.ACCOUNT_PARAMETER + "}";
         public static final String TRANSACTIONS_PATH = "/comptes/{" + Fetcher.ACCOUNT_PARAMETER + "}/operations";
         public static final String LOGOUT_PATH = "/logout";
     }
@@ -65,17 +70,18 @@ public class BanquePopulaireConstants {
         public static final String OS = "os";
         public static final String OS_VALUE = "ios";
 
+        public static final String CARD_STATUS_CODES = "statutCarte.codes";
+        public static final String CARD_STATUS_CODES_VALUE = "100,930,020,030,040,050";
+
         public static final String PAGE_KEY = "pageKey";
         public static final String TRANSACTION_STATUS = "statutMouvement";
         public static final String TRANSACTION_STATUS_VALUE = "000";
+
+        public static final String TRANSACTION_ID = "transactionID";
     }
 
     public static final class Form {
         public static final String SAML_RESPONSE = "SAMLResponse";
-    }
-
-    public static final class QueryParams {
-        public static final String TRANSACTION_ID = "transactionID";
     }
 
     public static final class Storage {
@@ -88,32 +94,46 @@ public class BanquePopulaireConstants {
         public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("bp_unknown_account_type");
         public static final LogTag UNKNOWN_TRANSACTION_STATUS = LogTag.from("bp_unknown_transaction_status");
         public static final LogTag PAGINATION_RESPONSE = LogTag.from("bp_pagination_response");
+        public static final LogTag UNKNOWN_LOAN_TYPE = LogTag.from("bp_unknown_loantype");
+        public static final LogTag CREDIT_CARD = LogTag.from("bp_credit_card");
     }
 
-    public enum AccountType {
-        CURRENT_ACCOUNT("000", AccountTypes.CHECKING),
-        SAVINGS("004", AccountTypes.SAVINGS),
-        UNKNOWN("", AccountTypes.OTHER);
+    // this is a first attempt to type the different accounts
+    public static final class Account {
+        public static final AccountTypes DEFAULT_ACCOUNT_TYPE = AccountTypes.OTHER;
+        public static final Map<String, AccountTypes>  ACCOUNT_TYPE_MAPPER = ImmutableMap.of(
+                "007", AccountTypes.CREDIT_CARD,
+                "000", AccountTypes.CHECKING,
+                "004", AccountTypes.SAVINGS,
+                "058", AccountTypes.LOAN
+        );
 
-        private final String contractTypeCode;
-        private final AccountTypes tinkType;
+        public static final Map<String, AccountTypes>  NON_ACCOUNT_TYPE_MAPPER = ImmutableMap.<String, AccountTypes>builder()
+                .put("028", AccountTypes.DUMMY)
+                .put("053", AccountTypes.DUMMY)
+                .put("016", AccountTypes.DUMMY)
+                .put("073", AccountTypes.DUMMY)
+                .put("017", AccountTypes.DUMMY)
+                .put("018", AccountTypes.DUMMY)
+                .put("005", AccountTypes.DUMMY).build();
 
-        AccountType(String contractTypeCode, AccountTypes tinkType) {
-            this.contractTypeCode = contractTypeCode;
-            this.tinkType = tinkType;
+        public static boolean isNonAccountContract(String contractCode) {
+            return NON_ACCOUNT_TYPE_MAPPER.containsKey(contractCode);
         }
 
-        public static boolean isHandled(String contractType) {
-            return fromContractTypeCode(contractType) != UNKNOWN;
+        public static AccountTypes toTinkAccountType(String contractCode) {
+            return ACCOUNT_TYPE_MAPPER.getOrDefault(contractCode, DEFAULT_ACCOUNT_TYPE);
         }
-        public static AccountType fromContractTypeCode(String contractType) {
-            return Arrays.stream(AccountType.values())
-                    .filter(accountType -> accountType.contractTypeCode.equalsIgnoreCase(contractType))
-                    .findFirst().orElse(UNKNOWN);
-        }
+    }
 
-        public AccountTypes getTinkType() {
-            return tinkType;
+    public static final class Loan {
+        public static final LoanDetails.Type DEFAULT_LOAN_TYPE = LoanDetails.Type.OTHER;
+        public static final Map<String, LoanDetails.Type>  LOAN_TYPE_MAPPER = ImmutableMap.of(
+                "01634", LoanDetails.Type.STUDENT
+        );
+
+        public static LoanDetails.Type toTinkLoanType(String productCode) {
+            return LOAN_TYPE_MAPPER.getOrDefault(productCode, DEFAULT_LOAN_TYPE);
         }
     }
 
@@ -127,7 +147,7 @@ public class BanquePopulaireConstants {
                 "756", "CHF"
         );
 
-        public static final String toTinkCurrency(String currency) {
+        public static String toTinkCurrency(String currency) {
             return CURRENCY_CODE_MAPPER.getOrDefault(currency, DEFAULT_CURRENCY_CODE);
         }
     }

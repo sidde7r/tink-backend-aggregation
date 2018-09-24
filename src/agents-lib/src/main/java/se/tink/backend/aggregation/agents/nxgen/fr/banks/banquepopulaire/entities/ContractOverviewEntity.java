@@ -1,16 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.BanquePopulaireConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.authenticator.entities.ContractIdentifierEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-
+import se.tink.backend.aggregation.rpc.AccountTypes;
 @JsonObject
-public class AccountOverviewEntity {
+public class ContractOverviewEntity {
     @JsonProperty("idContrat")
     private IdentifierEntity contractId;
     @JsonProperty("referenceExterneContrat")
@@ -26,25 +27,53 @@ public class AccountOverviewEntity {
     private AmountEntity balance;
     private ClientEntity client;
 
-    public boolean isUnknownType() {
-        return Optional.ofNullable(contractType.getCode())
-                .map(code -> !BanquePopulaireConstants.AccountType.isHandled(contractType.getCode()))
-                .orElse(true);
+    @JsonIgnore
+    public boolean isUnknownContractType() {
+        return getTinkAccountType() == AccountTypes.OTHER;
+
     }
 
-    public TransactionalAccount toTinkAccount() {
-        return TransactionalAccount.builder(BanquePopulaireConstants.AccountType
-                        .fromContractTypeCode(contractType.getCode()).getTinkType(),
+    @JsonIgnore
+    public boolean isNonAccountContract() {
+        return BanquePopulaireConstants.Account.isNonAccountContract(contractType.getCode());
+    }
+    @JsonIgnore
+    public boolean isUnhandledLoanType() {
+        return BanquePopulaireConstants.Loan.toTinkLoanType(productId.getCode()) == LoanDetails.Type.OTHER;
+    }
+    @JsonIgnore
+    public AccountTypes getTinkAccountType() {
+        return BanquePopulaireConstants.Account.toTinkAccountType(contractType.getCode());
+    }
+
+    public AmountEntity getBalance() {
+        return balance;
+    }
+
+    public TypeEntity getProductId() {
+        return productId;
+    }
+
+    public ClientEntity getClient() {
+        return client;
+    }
+
+    public TransactionalAccount toTinkTransactionalAccount() {
+        return TransactionalAccount.builder(getTinkAccountType(),
                 externalReference,
                 balance.toTinkAmount())
                 .setName(productId.getLabel())
                 .setAccountNumber(externalReference)
                 .setHolderName(new HolderName(client.getDescriptionClient()))
-                .setBankIdentifier(createBankIdentifier())
+                .setBankIdentifier(createTransactionalAccountBankIdentifier())
                 .build();
     }
 
-    private String createBankIdentifier() {
+    public String createTransactionalAccountBankIdentifier() {
         return String.format("%s-%s-%s", contractId.getBankCode(), contractType.getCode(), contractId.getIdentifier());
+    }
+
+    public String createContractBankIdentifier() {
+        return String.format("%s-%s", contractId.getBankCode(), contractId.getIdentifier());
     }
 }
