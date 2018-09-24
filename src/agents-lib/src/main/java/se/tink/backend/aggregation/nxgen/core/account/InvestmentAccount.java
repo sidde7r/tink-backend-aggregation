@@ -46,6 +46,7 @@ public class InvestmentAccount extends Account {
             A extends InvestmentAccount, T extends InvestmentAccount.Builder<A, T>>
             extends Account.Builder<InvestmentAccount, Builder<A, T>> {
         private List<Portfolio> portfolios;
+        private Amount cashBalance = null;
 
         public Builder(String uniqueIdentifier) {
             super(uniqueIdentifier);
@@ -58,6 +59,36 @@ public class InvestmentAccount extends Account {
         public Builder<A, T> setPortfolios(List<Portfolio> portfolios) {
             this.portfolios = portfolios;
             return self();
+        }
+
+        Amount getCashBalance() {
+            return cashBalance;
+        }
+
+        public void setCashBalance(Amount cashBalance) {
+            this.cashBalance = cashBalance;
+        }
+
+        @Override
+        public Amount getBalance() {
+            if (cashBalance != null) {
+                Amount retVal = cashBalance;
+                for (Portfolio portfolio : portfolios) {
+                    retVal.add(portfolio.getTotalValue());
+                }
+                return retVal;
+            } else {
+                return super.getBalance();
+            }
+        }
+
+        /**
+         * @deprecated Use {@link #setCashBalance(Amount)} instead
+         */
+        @Override
+        @Deprecated
+        public Builder<A, T> setBalance(Amount balance) {
+            return super.setBalance(balance);
         }
     }
 
