@@ -30,6 +30,16 @@ import javax.net.ssl.SSLContext;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
+import org.apache.http.HttpHost;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.params.ClientPNames;
+import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
+import org.apache.http.conn.ssl.SSLContextBuilder;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.params.CoreConnectionPNames;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
@@ -55,15 +65,6 @@ import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
 import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-import org.apache.http.HttpHost;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.params.ClientPNames;
-import org.apache.http.conn.ssl.SSLContextBuilder;
-import org.apache.http.cookie.Cookie;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.params.CoreConnectionPNames;
 
 
 public class TinkHttpClient extends Filterable<TinkHttpClient> {
@@ -302,6 +303,8 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
     public void disableSslVerification() {
         loadTrustMaterial(null, new TrustAllCertificatesStrategy());
+        this.internalHttpClientBuilder = this.internalHttpClientBuilder.setHostnameVerifier(
+                new AllowAllHostnameVerifier());
     }
 
     public void loadTrustMaterial(KeyStore truststore, TrustAllCertificatesStrategy trustStrategy) {
