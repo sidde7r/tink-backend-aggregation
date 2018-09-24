@@ -33,6 +33,7 @@ public class LclAgent extends NextGenerationAgent {
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
+        // We have to disable the Tink signature header, otherwise LCL will reject our requests.
         client.disableSignatureRequestHeader();
     }
 
