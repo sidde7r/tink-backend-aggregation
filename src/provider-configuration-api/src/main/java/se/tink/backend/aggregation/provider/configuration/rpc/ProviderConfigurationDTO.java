@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
-import org.hibernate.annotations.Type;
 import se.tink.backend.core.CredentialsTypes;
 import se.tink.backend.core.Field;
 import se.tink.backend.core.ProviderRefreshSchedule;
@@ -36,13 +35,11 @@ public class ProviderConfigurationDTO {
     private String displayName;
     private String displayDescription;
     @JsonProperty("fields")
-    @Type(type = "text")
     private String fieldsSerialized;
     private String groupDisplayName;
     private String market;
     private boolean multiFactor;
     private String name;
-    @Type(type = "text")
     private String passwordHelpText;
     private String payload;
     private boolean popular;
@@ -51,7 +48,6 @@ public class ProviderConfigurationDTO {
     private ProviderStatuses status;
     private boolean transactional;
     private ProviderTypes type;
-    @Type(type = "text")
     private String refreshScheduleSerialized;
 
     @JsonProperty("capabilities")
