@@ -11,12 +11,14 @@ import java.io.IOException;
 import com.google.inject.Inject;
 import java.util.Objects;
 import java.util.Optional;
-import se.tink.backend.aggregation.log.AggregationLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.common.config.S3StorageConfiguration;
+
 
 public class AgentDebugS3Storage implements AgentDebugStorageHandler {
 
-    private static final AggregationLogger log = new AggregationLogger(AgentDebugS3Storage.class);
+    private static final Logger log = LoggerFactory.getLogger(AgentDebugS3Storage.class);
     private final S3StorageConfiguration configuration;
     private final AmazonS3 awsStorageClient;
     private final String bucketName;
