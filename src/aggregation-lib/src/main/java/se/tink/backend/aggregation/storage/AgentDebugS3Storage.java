@@ -8,13 +8,15 @@ import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.Bucket;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import com.google.inject.Inject;
 import java.util.Objects;
+import java.util.Optional;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.common.config.S3StorageConfiguration;
 
 public class AgentDebugS3Storage implements AgentDebugStorageHandler {
 
+    private static final AggregationLogger log = new AggregationLogger(AgentDebugS3Storage.class);
     private final S3StorageConfiguration configuration;
     private final AmazonS3 awsStorageClient;
     private final String bucketName;
@@ -25,12 +27,12 @@ public class AgentDebugS3Storage implements AgentDebugStorageHandler {
         if (isValidConfiguration(configuration)) {
             this.configuration = configuration;
             this.bucketName = configuration.getAgentDebugBucketName();
-            awsStorageClient = AmazonS3ClientBuilder.standard()
+            this.awsStorageClient = AmazonS3ClientBuilder.standard()
                     .withEndpointConfiguration(
                             new AwsClientBuilder.EndpointConfiguration(configuration.getUrl(),
                                     configuration.getRegion())
                     ).build();
-            this.isAvailable = Objects.nonNull(getBucket());
+            this.isAvailable = getBucket().isPresent();
         } else {
             this.configuration = null;
             this.awsStorageClient = null;
@@ -53,7 +55,7 @@ public class AgentDebugS3Storage implements AgentDebugStorageHandler {
         }
     }
 
-    public boolean isValidConfiguration(S3StorageConfiguration configuration) {
+    public static boolean isValidConfiguration(S3StorageConfiguration configuration) {
         return Objects.nonNull(configuration) &&
                 configuration.isEnabled() &&
                 Objects.nonNull(configuration.getUrl()) &&
@@ -61,29 +63,24 @@ public class AgentDebugS3Storage implements AgentDebugStorageHandler {
                 Objects.nonNull(configuration.getRegion());
     }
 
-    public Bucket getBucket() {
-        Bucket b = null;
+    public Optional<Bucket> getBucket() {
         if (awsStorageClient.doesBucketExist(bucketName)) {
-            b = fetchExistingBucket(bucketName);
-        } else {
-            try {
-                b = awsStorageClient.createBucket(bucketName);
-            } catch (AmazonS3Exception e) {
-                System.err.println(e.getErrorMessage());
-            }
+            return fetchExistingBucket(bucketName);
         }
-        return b;
+
+        try {
+            return Optional.ofNullable(awsStorageClient.createBucket(bucketName));
+        } catch (AmazonS3Exception e) {
+            log.error(e.getErrorMessage());
+        }
+
+        return Optional.empty();
     }
 
-    public Bucket fetchExistingBucket(String bucketName) {
-        Bucket bucket = null;
-        List<Bucket> buckets = awsStorageClient.listBuckets();
-        for (Bucket b : buckets) {
-            if (b.getName().equals(bucketName)) {
-                bucket = b;
-            }
-        }
-        return bucket;
+    public Optional<Bucket> fetchExistingBucket(String bucketName) {
+        return awsStorageClient.listBuckets().stream()
+                .filter(bucket -> bucket.getName().equals(bucketName))
+                .findFirst();
     }
 
     public String putObject(String content, String file) throws AmazonServiceException {

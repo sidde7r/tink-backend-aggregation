@@ -53,11 +53,12 @@ public class AggregationModule extends AbstractModule {
         bind(ProviderServiceController.class).in(Scopes.SINGLETON);
         bind(ClusterInfoProvider.class).in(Scopes.SINGLETON);
         bind(AgentWorker.class).in(Scopes.SINGLETON);
-        bind(AgentDebugStorageHandler.class).to(
-                (Objects.nonNull(configuration.getS3StorageConfiguration()) &&
-                        configuration.getS3StorageConfiguration().isEnabled()) ?
-                            AgentDebugS3Storage.class : AgentDebugLocalStorage.class
-        ).in(Scopes.SINGLETON);
+        if (Objects.nonNull(configuration.getS3StorageConfiguration()) &&
+                configuration.getS3StorageConfiguration().isEnabled()) {
+            bind(AgentDebugStorageHandler.class).to(AgentDebugS3Storage.class).in(Scopes.SINGLETON);
+        } else {
+            bind(AgentDebugStorageHandler.class).to(AgentDebugLocalStorage.class).in(Scopes.SINGLETON);
+        }
 
         // TODO Remove these lines after getting rid of dependencies on ServiceContext
         bind(ServiceContext.class).in(Scopes.SINGLETON);
