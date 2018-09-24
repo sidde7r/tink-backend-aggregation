@@ -41,9 +41,9 @@ public class BanquePopulaireLoanFetcher implements AccountFetcher<LoanAccount> {
                                 BanquePopulaireConstants.LogTags.UNKNOWN_LOAN_TYPE);
                         LOGGER.infoExtraLong(SerializationUtils.serializeToString(loanDetails),
                                 BanquePopulaireConstants.LogTags.UNKNOWN_LOAN_TYPE);
+                    } else {
+                        loans.add(loan);
                     }
-
-                    loans.add(loan);
                 });
 
         return loans;
