@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.DateUtils;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CreditCardFetcher
         implements AccountFetcher<CreditCardAccount>, TransactionDatePaginator<CreditCardAccount> {
@@ -108,6 +109,12 @@ public class CreditCardFetcher
                                 .matchesErrorMessage(SantanderEsConstants.SoapErrorMessages.NO_MORE_TRANSACTIONS)) {
                     // OK, this is a no more transactions for this query
                     return transactions;
+                }
+                // log error if we get other error than 'no more transactions' since this is string matching
+                if (soapFaultError.isPresent()) {
+                    log.warn("ERROR: " + SerializationUtils.serializeToString(soapFaultError.get()));
+                } else {
+                    log.warn("Fetch transactions returned error");
                 }
             }
             throw hre;
