@@ -41,10 +41,11 @@ public class FetchFundInvestmentsResponse extends ArrayList<FundInvestmentEntity
 
     private InvestmentAccount createAccount(TmpAccount investmentItem,
             Portfolio portfolio) {
-        return InvestmentAccount.builder(investmentItem.accountNumber, Amount.inNOK(investmentItem.accountBalance))
+        return InvestmentAccount.builder(investmentItem.accountNumber)
                 .setAccountNumber(investmentItem.accountNumber)
                 .setName(investmentItem.accountName)
                 .setBankIdentifier(investmentItem.accountNumber)
+                .setCashBalance(Amount.inNOK(0))
                 .setPortfolios(Collections.singletonList(portfolio))
                 .build();
     }

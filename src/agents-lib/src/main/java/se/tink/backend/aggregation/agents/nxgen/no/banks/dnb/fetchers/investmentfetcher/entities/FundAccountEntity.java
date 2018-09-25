@@ -99,9 +99,10 @@ public class FundAccountEntity {
     }
 
     public InvestmentAccount toInvestmentAccount() {
-        return InvestmentAccount.builder(accountNumber, Amount.inNOK(balance))
+        return InvestmentAccount.builder(accountNumber)
                 .setAccountNumber(accountNumber)
                 .setName(accountName)
+                .setCashBalance(Amount.inNOK(0))
                 .setPortfolios(Collections.singletonList(toTinkPortfolio()))
                 .build();
     }
