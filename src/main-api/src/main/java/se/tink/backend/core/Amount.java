@@ -136,6 +136,11 @@ public class Amount extends Number {
     }
 
     @JsonIgnore
+    public boolean isZero() {
+        return value == 0;
+    }
+
+    @JsonIgnore
     public boolean isPositive() {
         return Double.isFinite(value) && value > 0;
     }
