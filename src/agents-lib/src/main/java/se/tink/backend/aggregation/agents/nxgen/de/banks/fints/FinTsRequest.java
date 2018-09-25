@@ -42,7 +42,7 @@ public class FinTsRequest {
 
         this.profileVersion = 1;
         this.securityFunction = DEFAULT_SECURITY_FUNC;
-        if (tanMechs != null && !tanMechs.contains(this.securityFunction)) {
+        if (tanMechs != null && tanMechs.size() != 0 && !tanMechs.contains(this.securityFunction)) {
             this.profileVersion = 2;
             this.securityFunction = tanMechs.get(0);
         }
