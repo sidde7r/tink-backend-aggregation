@@ -69,7 +69,7 @@ public class BawagPskTransactionalAccountFetcher implements AccountFetcher<Trans
         );
 
         for (IbanIdentifier iban : loginResponse.getInvalidIbans()) {
-            logger.warn(String.format("Retrieved invalid BIC/IBAN: %s/%s", iban.getBic(), iban.getIban()));
+            logger.warn("Retrieved invalid BIC/IBAN: {}/{}", iban.getBic(), iban.getIban());
         }
 
         return toTransactionalAccounts(loginResponse, accountResponse);
