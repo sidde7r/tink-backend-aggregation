@@ -17,7 +17,7 @@
             "tutorialUrl":null,
             "fields":[
                 {
-                    "name":"usernumber",
+                    "name":"username",
                     "description":"User number",
                     "immutable":true
                 },
