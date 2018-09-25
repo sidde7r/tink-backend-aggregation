@@ -80,6 +80,13 @@ public interface AggregationService {
     void transfer(TransferRequest request, @ClusterContext ClusterInfo clusterInfo) throws Exception;
 
     @POST
+    @Path("transfer/whitelist")
+    @TeamOwnership(Team.INTEGRATION)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    void whitelistedTransfer(WhitelistedTransferRequest request, @ClusterContext ClusterInfo clusterInfo) throws Exception;
+
+    @POST
     @Path("keepalive")
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)

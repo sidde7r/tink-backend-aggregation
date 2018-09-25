@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentFactory;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
+import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
@@ -236,29 +237,55 @@ public class AgentWorkerOperationFactory {
         AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
                 aggregationControllerAggregationClient, clusterInfo);
 
-        List<AgentWorkerCommand> commands = Lists.newArrayList();
+        String operationName = "execute-transfer";
 
-        commands.add(new ValidateProviderAgentWorkerStatus(context,
-                aggregationControllerAggregationClient, clusterInfo));
-        commands.add(new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
-        commands.add(new ReportProviderMetricsAgentWorkerCommand(context, "execute-transfer",
-                reportMetricsAgentWorkerCommandState));
-        commands.add(new ReportProviderTransferMetricsAgentWorkerCommand(context,  "execute-transfer"));
-        commands.add(new LockAgentWorkerCommand(context));
-        commands.add(new DecryptCredentialsWorkerCommand(clusterInfo, cacheClient,
-                clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context));
-        commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState, agentDebugStorageHandler));
-        commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
-        commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)));
-        commands.add(new TransferAgentWorkerCommand(context, request, createMetricState(request)));
-
+        List<AgentWorkerCommand> commands = createTransferBaseCommands(clusterInfo, request, operationName);
         commands.addAll(createRefreshAccountsCommandChain(request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
         commands.add(new SelectAccountsToAggregateCommand(context, request));
         // Refresh everything
         commands.addAll(createRefreshableItemsChain(request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
 
-        return new AgentWorkerOperation(agentWorkerOperationState, "execute-transfer", request, commands,
+        return new AgentWorkerOperation(agentWorkerOperationState, operationName, request, commands,
                 context);
+    }
+
+    public AgentWorkerOperation createExecuteWhitelistedTransferOperation(ClusterInfo clusterInfo,
+            WhitelistedTransferRequest request) {
+
+        AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
+                aggregationControllerAggregationClient, clusterInfo);
+
+        String operationName = "execute-whitelisted-transfer";
+
+        List<AgentWorkerCommand> commands = createTransferBaseCommands(clusterInfo, request, operationName);
+        commands.addAll(
+                createWhitelistRefreshableItemsChain(request, context, clusterInfo,
+                        RefreshableItem.REFRESHABLE_ITEMS_ALL));
+
+        return new AgentWorkerOperation(agentWorkerOperationState, operationName, request, commands,
+                context);
+    }
+
+    private ImmutableList<AgentWorkerCommand> createTransferBaseCommands(ClusterInfo clusterInfo, TransferRequest request,
+            String operationName) {
+        AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
+                aggregationControllerAggregationClient, clusterInfo);
+
+        return ImmutableList.<AgentWorkerCommand>builder()
+                .add(new ValidateProviderAgentWorkerStatus(context,
+                        aggregationControllerAggregationClient, clusterInfo))
+                .add(new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState))
+                .add(new ReportProviderMetricsAgentWorkerCommand(context, operationName,
+                        reportMetricsAgentWorkerCommandState))
+                .add(new ReportProviderTransferMetricsAgentWorkerCommand(context,  operationName))
+                .add(new LockAgentWorkerCommand(context))
+                .add(new DecryptCredentialsWorkerCommand(clusterInfo, cacheClient,
+                        clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context))
+                .add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState, agentDebugStorageHandler))
+                .add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState))
+                .add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)))
+                .add(new TransferAgentWorkerCommand(context, request, createMetricState(request)))
+                .build();
     }
 
     public AgentWorkerOperation createCreateCredentialsOperation(ClusterInfo clusterInfo, CredentialsRequest request) {

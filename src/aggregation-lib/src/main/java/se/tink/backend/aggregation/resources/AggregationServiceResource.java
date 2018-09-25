@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.api.AggregationService;
+import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.models.RefreshInformation;
@@ -164,6 +165,11 @@ public class AggregationServiceResource implements AggregationService {
     @Override
     public void transfer(final TransferRequest request, ClusterInfo clusterInfo) throws Exception {
         agentWorker.execute(agentWorkerCommandFactory.createExecuteTransferOperation(clusterInfo, request));
+    }
+
+    @Override
+    public void whitelistedTransfer(final WhitelistedTransferRequest request, ClusterInfo clusterInfo) throws Exception {
+        agentWorker.execute(agentWorkerCommandFactory.createExecuteWhitelistedTransferOperation(clusterInfo, request));
     }
 
     @Override
