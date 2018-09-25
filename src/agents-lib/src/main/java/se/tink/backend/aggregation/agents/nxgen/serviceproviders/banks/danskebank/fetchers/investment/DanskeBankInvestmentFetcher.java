@@ -35,7 +35,7 @@ public class DanskeBankInvestmentFetcher implements AccountFetcher<InvestmentAcc
                             ListSecuritiesRequest.createFromCustodyAccount(custodyAccount.getAccountIdentifier()));
 
                     return custodyAccount.toInvestmentAccount(
-                            listSecurities.getTinkAmount(),
+                            listSecurities.getMarketValueCurrency(),
                             createPortfolio(custodyAccount, listSecurities));
                 }).collect(Collectors.toList());
     }
