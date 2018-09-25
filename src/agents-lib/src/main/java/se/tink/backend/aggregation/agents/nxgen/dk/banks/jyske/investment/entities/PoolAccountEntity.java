@@ -28,9 +28,10 @@ public class PoolAccountEntity {
         }
         String uniqueIdentifier = IdEntity.createUniqueIdentifier(id);
         return Optional.of(
-                InvestmentAccount.builder(uniqueIdentifier, Amount.inDKK(balance))
+                InvestmentAccount.builder(uniqueIdentifier)
                         .setAccountNumber(uniqueIdentifier)
                         .setName(name)
+                        .setCashBalance(Amount.inDKK(balance))
                         .setPortfolios(Collections.singletonList(toPortfolio(uniqueIdentifier)))
                         .build()
         );
