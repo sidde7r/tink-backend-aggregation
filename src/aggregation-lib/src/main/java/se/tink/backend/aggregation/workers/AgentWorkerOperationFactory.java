@@ -239,7 +239,7 @@ public class AgentWorkerOperationFactory {
 
         String operationName = "execute-transfer";
 
-        List<AgentWorkerCommand> commands = createTransferBaseCommands(clusterInfo, request, operationName);
+        List<AgentWorkerCommand> commands = createTransferBaseCommands(clusterInfo, request, context, operationName);
         commands.addAll(createRefreshAccountsCommandChain(request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
         commands.add(new SelectAccountsToAggregateCommand(context, request));
         // Refresh everything
@@ -257,7 +257,7 @@ public class AgentWorkerOperationFactory {
 
         String operationName = "execute-whitelisted-transfer";
 
-        List<AgentWorkerCommand> commands = createTransferBaseCommands(clusterInfo, request, operationName);
+        List<AgentWorkerCommand> commands = createTransferBaseCommands(clusterInfo, request, context, operationName);
         commands.addAll(
                 createWhitelistRefreshableItemsChain(request, context, clusterInfo,
                         RefreshableItem.REFRESHABLE_ITEMS_ALL));
@@ -267,9 +267,7 @@ public class AgentWorkerOperationFactory {
     }
 
     private List<AgentWorkerCommand> createTransferBaseCommands(ClusterInfo clusterInfo, TransferRequest request,
-            String operationName) {
-        AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
-                aggregationControllerAggregationClient, clusterInfo);
+            AgentWorkerContext context, String operationName) {
 
         return Lists.newArrayList(
                 new ValidateProviderAgentWorkerStatus(context, aggregationControllerAggregationClient, clusterInfo),
