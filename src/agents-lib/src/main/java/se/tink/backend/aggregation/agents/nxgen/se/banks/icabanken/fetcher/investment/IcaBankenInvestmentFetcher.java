@@ -31,9 +31,10 @@ public class IcaBankenInvestmentFetcher implements AccountFetcher<InvestmentAcco
 
     public InvestmentAccount toInvestmentAccount(DepotEntity depot) {
 
-        return InvestmentAccount.builder(depot.getDepotNumber(), Amount.inSEK(depot.getTotalDepotValue()))
+        return InvestmentAccount.builder(depot.getDepotNumber())
                 .setAccountNumber(depot.getDepotNumber())
                 .setName(depot.getDepotName())
+                .setCashBalance(Amount.inSEK(depot.getDisposable()))
                 .setPortfolios(Collections.singletonList(addPortfolio(depot)))
                 .build();
     }
