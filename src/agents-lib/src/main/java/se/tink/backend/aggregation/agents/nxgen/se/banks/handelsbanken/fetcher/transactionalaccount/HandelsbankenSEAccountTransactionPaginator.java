@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount;
 
-import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -57,11 +56,12 @@ public class HandelsbankenSEAccountTransactionPaginator
 
     private static String getAuthTokenFromURL(URL url) {
 
-        List<NameValuePair> query = URLEncodedUtils.parse(url.toUri(), Charset.forName("UTF-8"));
+        List<NameValuePair> query = URLEncodedUtils.parse(url.toUri(), "UTF-8");
         Map<String, String> m = query.stream().collect(
-                Collectors.toMap(NameValuePair::getName,
+                Collectors.toMap(
+                        key -> key.getName().toLowerCase(),
                         NameValuePair::getValue));
 
-        return m.get(HandelsbankenSEConstants.QueryParams.AUTH_TOKEN);
+        return m.get(HandelsbankenSEConstants.QueryParams.AUTH_TOKEN.toLowerCase());
     }
 }
