@@ -266,26 +266,24 @@ public class AgentWorkerOperationFactory {
                 context);
     }
 
-    private ImmutableList<AgentWorkerCommand> createTransferBaseCommands(ClusterInfo clusterInfo, TransferRequest request,
+    private List<AgentWorkerCommand> createTransferBaseCommands(ClusterInfo clusterInfo, TransferRequest request,
             String operationName) {
         AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
                 aggregationControllerAggregationClient, clusterInfo);
 
-        return ImmutableList.<AgentWorkerCommand>builder()
-                .add(new ValidateProviderAgentWorkerStatus(context,
-                        aggregationControllerAggregationClient, clusterInfo))
-                .add(new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState))
-                .add(new ReportProviderMetricsAgentWorkerCommand(context, operationName,
-                        reportMetricsAgentWorkerCommandState))
-                .add(new ReportProviderTransferMetricsAgentWorkerCommand(context,  operationName))
-                .add(new LockAgentWorkerCommand(context))
-                .add(new DecryptCredentialsWorkerCommand(clusterInfo, cacheClient,
-                        clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context))
-                .add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState, agentDebugStorageHandler))
-                .add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState))
-                .add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)))
-                .add(new TransferAgentWorkerCommand(context, request, createMetricState(request)))
-                .build();
+        return Lists.newArrayList(
+                new ValidateProviderAgentWorkerStatus(context, aggregationControllerAggregationClient, clusterInfo),
+                new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState),
+                new ReportProviderMetricsAgentWorkerCommand(context, operationName,
+                        reportMetricsAgentWorkerCommandState),
+                new ReportProviderTransferMetricsAgentWorkerCommand(context,  operationName),
+                new LockAgentWorkerCommand(context),
+                new DecryptCredentialsWorkerCommand(clusterInfo, cacheClient,
+                        clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context),
+                new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState, agentDebugStorageHandler),
+                new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState),
+                new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)),
+                new TransferAgentWorkerCommand(context, request, createMetricState(request)));
     }
 
     public AgentWorkerOperation createCreateCredentialsOperation(ClusterInfo clusterInfo, CredentialsRequest request) {
