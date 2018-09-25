@@ -60,13 +60,13 @@ public abstract class HandelsbankenCreditCardTransactionPaginator<API extends Ha
 
                     // Fetch the card transactions.
                     subTransactions.addAll(
-                            client.creditCardTransactions(handelsbankenAccount.toCardTransactions())
+                            client.creditCardTransactions(handelsbankenAccount.getCardTransactionsUrl())
                                     .tinkTransactions(account)
                     );
 
                     CreditCardTransactionsResponse<HandelsbankenSECreditCard> response =
                             client.creditCardTransactions(
-                                    handelsbankenAccount.toCardTransactions());
+                                    handelsbankenAccount.getCardTransactionsUrl());
 
                     HandelsbankenPaginatorResponse paginatorResponse =
                             new HandelsbankenPaginatorResponse(

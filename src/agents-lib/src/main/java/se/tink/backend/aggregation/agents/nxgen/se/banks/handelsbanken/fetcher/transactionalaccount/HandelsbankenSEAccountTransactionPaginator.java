@@ -46,7 +46,7 @@ public class HandelsbankenSEAccountTransactionPaginator
         // toTtransactions gives us full url including query.
         // Break it apart and send components to client, substituting the default
         // from/to indices with our pagination values.
-        URL url = account.toTransactions();
+        URL url = account.getAccountTransactionsUrl();
         URL baseUrl = url.getUrl();
         String authToken = getAuthTokenFromURL(url);
 

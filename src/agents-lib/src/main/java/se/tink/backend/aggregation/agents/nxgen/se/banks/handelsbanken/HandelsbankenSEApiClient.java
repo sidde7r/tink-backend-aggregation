@@ -91,7 +91,7 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
 
     @Override
     public TransactionsSEResponse transactions(HandelsbankenAccount account) {
-        return createRequest(account.toTransactions()).get(TransactionsSEResponse.class);
+        return createRequest(account.getAccountTransactionsUrl()).get(TransactionsSEResponse.class);
     }
 
     public TransactionsSEResponse transactions(URL url, int from, int to, String authToken) {
@@ -164,7 +164,7 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
     @Override
     public CreditCardSETransactionsResponse creditCardTransactions(
             HandelsbankenCreditCard creditCard) {
-        return createRequest(creditCard.toCardTransactions())
+        return createRequest(creditCard.getCardTransactionsUrl())
                 .get(CreditCardSETransactionsResponse.class);
     }
 

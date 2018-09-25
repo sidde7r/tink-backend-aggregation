@@ -67,7 +67,7 @@ public class HandelsbankenFICreditCardTransactionFetcher extends
                             client.transactions(handelsbankenAccount).toTinkTransactions());
                     // Fetch the card transactions.
                     subTransactions.addAll(
-                            client.creditCardTransactions(handelsbankenAccount.toCardTransactions())
+                            client.creditCardTransactions(handelsbankenAccount.getCardTransactionsUrl())
                                     .tinkTransactions(account)
                     );
                     return subTransactions;

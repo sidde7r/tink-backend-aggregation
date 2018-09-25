@@ -46,7 +46,7 @@ public class HandelsbankenFIApiClient extends HandelsbankenApiClient {
 
     @Override
     public TransactionsFIResponse transactions(HandelsbankenAccount handelsbankenAccount) {
-        return createRequest(handelsbankenAccount.toTransactions())
+        return createRequest(handelsbankenAccount.getAccountTransactionsUrl())
                 .get(TransactionsFIResponse.class);
     }
 
@@ -57,7 +57,7 @@ public class HandelsbankenFIApiClient extends HandelsbankenApiClient {
     @Override
     public  CreditCardFITransactionsResponse creditCardTransactions(
             HandelsbankenCreditCard creditcard) {
-        return createRequest(creditcard.toCardTransactions())
+        return createRequest(creditcard.getCardTransactionsUrl())
                 .get(CreditCardFITransactionsResponse.class);
     }
 
