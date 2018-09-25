@@ -29,7 +29,12 @@ public class BawagPskSessionHandler implements SessionHandler {
             return; // Session already expired; nothing to do
         }
         final LogoutRequest request = new LogoutRequest(serverSessionID);
+
+        // Tell ourselves that we are closing the session
+        bawagPskApiClient.closeSession();
+
         try {
+            // Tell the server that we are closing the session
             bawagPskApiClient.logout(request.getXml());
         } catch (JAXBException e) {
             throw new IllegalStateException("Unable to marshal JAXB ", e);
@@ -49,6 +54,7 @@ public class BawagPskSessionHandler implements SessionHandler {
         try {
             response = bawagPskApiClient.checkIfSessionAlive();
             if (!response.requestWasSuccessful()) {
+                // The session already expired
                 throw SessionError.SESSION_EXPIRED.exception();
             }
         } catch (NoSuchElementException e) {

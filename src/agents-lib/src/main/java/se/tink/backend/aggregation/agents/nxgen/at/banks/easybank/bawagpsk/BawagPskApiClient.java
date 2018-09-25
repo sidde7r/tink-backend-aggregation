@@ -81,6 +81,10 @@ public class BawagPskApiClient {
         }
     }
 
+    public void closeSession() {
+        storage.clear();
+    }
+
     public Optional<String> getFromStorage(final String key) {
         return Optional.ofNullable(storage.get(key));
     }
