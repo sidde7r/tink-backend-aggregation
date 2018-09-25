@@ -1,13 +1,10 @@
 package se.tink.backend.aggregation;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Injector;
 import io.dropwizard.cli.Command;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import java.util.Objects;
 import javax.ws.rs.Path;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.cli.provider.ChangeProviderRefreshFrequencyFactorCommand;
@@ -19,15 +16,11 @@ import se.tink.backend.aggregation.client.InProcessAggregationServiceFactory;
 import se.tink.backend.aggregation.guice.configuration.AggregationModuleFactory;
 import se.tink.backend.aggregation.resources.AggregationServiceResource;
 import se.tink.backend.aggregation.resources.CreditSafeServiceResource;
+import se.tink.backend.aggregation.storage.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.backend.common.AbstractServiceContainer;
 import se.tink.backend.common.ServiceContext;
 import se.tink.backend.common.config.ServiceConfiguration;
-import se.tink.libraries.auth.ApiTokenAuthorizationHeaderPredicate;
-import se.tink.libraries.auth.ContainerAuthorizationResourceFilterFactory;
-import se.tink.libraries.auth.YubicoAuthorizationHeaderPredicate;
-import se.tink.libraries.cluster.Cluster;
-import se.tink.libraries.discovery.ServiceDiscoveryHelper;
 import se.tink.libraries.dropwizard.DropwizardLifecycleInjectorFactory;
 import se.tink.libraries.dropwizard.DropwizardObjectMapperConfigurator;
 import se.tink.libraries.metrics.MetricRegistry;
@@ -72,13 +65,15 @@ public class AggregationServiceContainer extends AbstractServiceContainer {
     private void buildContainer(ServiceConfiguration configuration, Environment environment,
             ServiceContext serviceContext, Injector injector) {
         AgentWorker agentWorker = injector.getInstance(AgentWorker.class);
+        AgentDebugStorageHandler agentDebugStorageHandler = injector.getInstance(AgentDebugStorageHandler.class);
 
         final AggregationServiceResource aggregationServiceResource = new AggregationServiceResource(serviceContext,
                 injector.getInstance(MetricRegistry.class),
                 new AggregationControllerAggregationClient(
                         configuration.getEndpoints().getAggregationcontroller(),
                         serviceContext.getCoordinationClient()),
-                        agentWorker);
+                        agentWorker,
+                agentDebugStorageHandler);
 
         environment.lifecycle().manage(agentWorker);
 

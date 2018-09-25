@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
@@ -27,6 +26,7 @@ import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.rpc.SupplementInformationRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.rpc.UpdateCredentialsRequest;
+import se.tink.backend.aggregation.storage.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.backend.aggregation.workers.AgentWorkerOperation;
 import se.tink.backend.aggregation.workers.AgentWorkerRefreshOperationCreatorWrapper;
@@ -49,7 +49,6 @@ public class AggregationServiceResource implements AggregationService {
     private AgentWorkerOperationFactory agentWorkerCommandFactory;
     private ServiceContext serviceContext;
     private SupplementalInformationController supplementalInformationController;
-
     public static Logger logger = LoggerFactory.getLogger(AggregationServiceResource.class);
 
     /**
@@ -59,11 +58,12 @@ public class AggregationServiceResource implements AggregationService {
      */
     public AggregationServiceResource(ServiceContext context, MetricRegistry metricRegistry,
             AggregationControllerAggregationClient aggregationControllerAggregationClient,
-            AgentWorker agentWorker) {
+            AgentWorker agentWorker,
+            AgentDebugStorageHandler agentDebugStorageHandler) {
         this.serviceContext = context;
         this.agentWorker = agentWorker;
         this.agentWorkerCommandFactory = new AgentWorkerOperationFactory(serviceContext, metricRegistry,
-                aggregationControllerAggregationClient);
+                aggregationControllerAggregationClient, agentDebugStorageHandler);
         this.supplementalInformationController = new SupplementalInformationController(serviceContext.getCacheClient(),
                 serviceContext.getCoordinationClient());
         this.producer = this.serviceContext.getProducer();

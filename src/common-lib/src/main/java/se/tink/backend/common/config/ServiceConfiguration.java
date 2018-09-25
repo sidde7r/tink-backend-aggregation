@@ -66,6 +66,9 @@ public class ServiceConfiguration extends Configuration {
     @JsonProperty
     private SqsQueueConfiguration sqsQueueConfiguration = new SqsQueueConfiguration();
 
+    @JsonProperty
+    private S3StorageConfiguration s3StorageConfiguration = new S3StorageConfiguration();
+
     public AbnAmroConfiguration getAbnAmroStaging() {
         return abnAmroStaging;
     }
@@ -153,6 +156,10 @@ public class ServiceConfiguration extends Configuration {
 
     public SqsQueueConfiguration getSqsQueueConfiguration() {
         return sqsQueueConfiguration;
+    }
+
+    public S3StorageConfiguration getS3StorageConfiguration() {
+        return s3StorageConfiguration;
     }
 
     public void setSqsQueueConfiguration(SqsQueueConfiguration sqsQueueConfiguration) {
