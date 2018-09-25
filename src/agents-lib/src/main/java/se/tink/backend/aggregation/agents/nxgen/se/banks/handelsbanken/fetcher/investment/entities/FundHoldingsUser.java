@@ -51,9 +51,10 @@ public class FundHoldingsUser {
     }
 
     public InvestmentAccount toAccount(CustodyAccount custodyAccount) {
-        return InvestmentAccount.builder(getIdentifier(), Amount.inSEK(toSummaryMarketValue()))
+        return InvestmentAccount.builder(getIdentifier())
                 .setAccountNumber(getIdentifier())
                 .setName(custodyAccount.getTitle())
+                .setCashBalance(Amount.inSEK(0))
                 .setPortfolios(Collections.singletonList(toPortfolio(custodyAccount)))
                 .build();
     }

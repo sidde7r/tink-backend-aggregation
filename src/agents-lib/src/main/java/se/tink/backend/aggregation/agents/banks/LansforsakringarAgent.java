@@ -1368,7 +1368,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
             Double balance = investmentDepotWrapper.getAccount().getBalance();
             Double marketValue = totalValue != null && balance != null ? (totalValue - balance) : null;
 
-            Account account = investmentDepotWrapper.getAccount().toAccount(marketValue);
+            Account account = investmentDepotWrapper.getAccount().toAccount(totalValue);
             String depotNumber = investmentDepotWrapper.getDepot().getDepotNumber();
             Double cashValue = null;
 

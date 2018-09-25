@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.fetchers.investmentfetcher.entities;
 
+import java.util.Collections;
 import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
@@ -81,9 +82,11 @@ public class PensionDataEntity {
     }
 
     public InvestmentAccount toTinkAccount() {
-        return InvestmentAccount.builder(accountNumbers.get(0), Amount.inNOK(totalHolding))
+        return InvestmentAccount.builder(accountNumbers.get(0))
                 .setAccountNumber(accountNumbers.get(0))
                 .setName("Pension")
+                .setCashBalance(Amount.inNOK(0))
+                .setPortfolios(Collections.singletonList(toTinkPortfolio()))
                 .build();
     }
 

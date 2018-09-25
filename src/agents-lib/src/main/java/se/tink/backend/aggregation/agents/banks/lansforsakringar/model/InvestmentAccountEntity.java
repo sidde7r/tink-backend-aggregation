@@ -35,14 +35,14 @@ public class InvestmentAccountEntity {
         this.customName = customName;
     }
 
-    public Account toAccount(Double marketValue) {
+    public Account toAccount(Double totalValue) {
         Account account = new Account();
 
         account.setAccountNumber(getAccountNumber());
         account.setBankId(getAccountNumber());
         account.setName(getCustomName().isEmpty() ? getAccountNumber() : getCustomName());
         account.setType(AccountTypes.INVESTMENT);
-        account.setBalance(marketValue);
+        account.setBalance(totalValue);
 
         return account;
     }

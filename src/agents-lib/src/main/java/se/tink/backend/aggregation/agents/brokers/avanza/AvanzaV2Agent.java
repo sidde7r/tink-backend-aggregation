@@ -343,6 +343,8 @@ public class AvanzaV2Agent extends AbstractAgent implements RefreshableItemExecu
             });
             portfolio.setInstruments(instruments);
 
+            account.setBalance(account.getBalance() + accountDetailsEntity.getBuyingPower());
+
             context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
         });
     }

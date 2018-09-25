@@ -135,9 +135,10 @@ public class PortfolioEntity {
     }
 
     public InvestmentAccount toAccount(Portfolio portfolio) {
-        return InvestmentAccount.builder(id, Amount.inNOK(getTotalMarketValue()))
+        return InvestmentAccount.builder(id)
                 .setAccountNumber(id)
                 .setName(name)
+                .setCashBalance(Amount.inNOK(0))
                 .setPortfolios(Collections.singletonList(portfolio))
                 .build();
     }

@@ -20,9 +20,10 @@ public class PensionDetailsResponse extends BaseResponse {
     private List<HandelsbankenSEPensionFund> funds;
 
     public InvestmentAccount toInvestmentAccount(HandelsbankenSEApiClient client, CustodyAccount custodyAccount) {
-        return InvestmentAccount.builder(custodyAccount.getCustodyAccountNumber(), custodyAccount.getTinkAmount())
+        return InvestmentAccount.builder(custodyAccount.getCustodyAccountNumber())
                 .setAccountNumber(custodyAccount.getCustodyAccountNumber())
                 .setName(pensionName)
+                .setCashBalance(Amount.inSEK(0))
                 .setPortfolios(Collections.singletonList(toPortfolio(client, custodyAccount)))
                 .build();
     }

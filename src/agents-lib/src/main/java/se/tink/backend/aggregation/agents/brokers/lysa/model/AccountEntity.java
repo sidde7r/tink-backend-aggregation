@@ -102,7 +102,7 @@ public class AccountEntity {
     public Account toAccount() {
         Account a = new Account();
 
-        a.setBalance(worth);
+        a.setBalance(worth+cash);
         a.setName(name);
         a.setType(AccountTypes.INVESTMENT);
         a.setBankId(accountId);

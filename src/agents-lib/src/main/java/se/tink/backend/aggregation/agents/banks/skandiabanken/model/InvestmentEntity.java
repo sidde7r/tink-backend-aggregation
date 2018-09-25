@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.banks.skandiabanken.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
+import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.system.rpc.Portfolio;
@@ -25,8 +26,8 @@ public class InvestmentEntity {
     private int investmentStatus;
     private String disposableAmount;
 
-    public String getDisposableAmount() {
-        return disposableAmount;
+    public double getDisposableAmount() {
+        return Strings.isNullOrEmpty(disposableAmount) ? 0D : StringUtils.parseAmount(disposableAmount);
     }
 
     public String getId() {
@@ -150,7 +151,7 @@ public class InvestmentEntity {
         account.setBankId(getId());
         account.setName(getSubType());
         account.setType(AccountTypes.INVESTMENT);
-        account.setBalance(getInvestmentAmount());
+        account.setBalance(getInvestmentAmount() + getDisposableAmount());
 
         return account;
     }

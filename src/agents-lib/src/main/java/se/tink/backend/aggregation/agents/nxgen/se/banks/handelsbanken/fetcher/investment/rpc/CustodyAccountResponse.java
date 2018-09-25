@@ -28,9 +28,10 @@ public class CustodyAccountResponse extends BaseResponse {
     private List<SecurityHoldingList> holdingLists;
 
     public InvestmentAccount toInvestmentAccount(HandelsbankenSEApiClient client) {
-        return InvestmentAccount.builder(custodyAccountNumber, Amount.inSEK(toMarketValue()))
+        return InvestmentAccount.builder(custodyAccountNumber)
                 .setAccountNumber(custodyAccountNumber)
                 .setName(title)
+                .setCashBalance(mainDepositAccountBalance.asAmount())
                 .setPortfolios(Collections.singletonList(toPortfolio(client)))
                 .build();
     }
