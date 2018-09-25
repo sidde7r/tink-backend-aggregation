@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.authenticator;
 
-import javax.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -29,11 +28,7 @@ public class BawagPskPasswordAuthenticator implements PasswordAuthenticator {
         final String bankName = bawagPskApiClient.getBankName();
         final LoginRequest request = new LoginRequest(username, password, bankName);
         final String requestBody;
-        try {
-            requestBody = request.getXml();
-        } catch (JAXBException e) {
-            throw new IllegalStateException("Unable to marshal JAXB ", e);
-        }
+        requestBody = request.getXml();
 
         try {
             final LoginResponse response = bawagPskApiClient.login(requestBody);

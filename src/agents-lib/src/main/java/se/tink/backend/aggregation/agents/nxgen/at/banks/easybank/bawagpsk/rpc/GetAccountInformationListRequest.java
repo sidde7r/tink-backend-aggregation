@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc;
 
 import java.util.List;
-import javax.xml.bind.JAXBException;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskConstants;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskUtils;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Body;
@@ -33,7 +32,7 @@ public class GetAccountInformationListRequest {
         envelope.setBody(body);
     }
 
-    public String getXml() throws JAXBException {
-        return BawagPskUtils.envelopeToXml(envelope);
+    public String getXml() {
+        return BawagPskUtils.entityToXml(envelope);
     }
 }

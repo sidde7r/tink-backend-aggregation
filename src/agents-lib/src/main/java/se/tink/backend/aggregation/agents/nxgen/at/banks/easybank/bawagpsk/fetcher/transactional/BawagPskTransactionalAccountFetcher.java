@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskApiClient;
@@ -39,11 +38,7 @@ public class BawagPskTransactionalAccountFetcher implements AccountFetcher<Trans
         );
 
         final String requestString;
-        try {
-            requestString = request.getXml();
-        } catch (JAXBException e) {
-            throw new IllegalStateException("Unable to marshal JAXB ", e);
-        }
+        requestString = request.getXml();
         return bawagPskApiClient.getGetAccountInformationListResponse(requestString);
     }
 

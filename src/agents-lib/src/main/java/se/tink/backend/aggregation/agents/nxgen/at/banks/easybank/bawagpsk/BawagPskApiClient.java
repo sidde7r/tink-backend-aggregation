@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk;
 import java.util.Optional;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import javax.xml.bind.JAXBException;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Envelope;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.GetAccountInformationListResponse;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.GetAccountStatementItemsResponse;
@@ -74,11 +73,7 @@ public class BawagPskApiClient {
         final ServiceRequest request = new ServiceRequest(
                 storage.get(BawagPskConstants.Storage.SERVER_SESSION_ID.name()));
 
-        try {
-            return new ServiceResponse(getRequest().post(Envelope.class, request.getXml()));
-        } catch (JAXBException e) {
-            throw new IllegalStateException("Unable to marshal JAXB ", e);
-        }
+        return new ServiceResponse(getRequest().post(Envelope.class, request.getXml()));
     }
 
     public void closeSession() {

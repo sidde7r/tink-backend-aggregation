@@ -4,7 +4,6 @@ import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
-import javax.xml.bind.JAXBException;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskApiClient;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskConstants;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.ProductID;
@@ -50,11 +49,7 @@ public class BawagPskTransactionFetcher implements TransactionDatePaginator<Tran
         );
 
         final String requestString;
-        try {
-            requestString = request.getXml();
-        } catch (JAXBException e) {
-            throw new IllegalStateException("Unable to marshal JAXB ", e);
-        }
+        requestString = request.getXml();
         final GetAccountStatementItemsResponse response = apiClient
                 .getGetAccountStatementItemsResponse(requestString);
 

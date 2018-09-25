@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc;
 
-import javax.xml.bind.JAXBException;
 import org.apache.commons.lang.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskConstants;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskUtils;
@@ -53,7 +52,7 @@ public class LoginRequest {
         return loginRequestEntity;
     }
 
-    public String getXml() throws JAXBException {
-        return BawagPskUtils.envelopeToXml(envelope);
+    public String getXml() {
+        return BawagPskUtils.entityToXml(envelope);
     }
 }
