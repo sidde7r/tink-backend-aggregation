@@ -8,6 +8,10 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 public class BawagPskUtils {
+    private BawagPskUtils() {
+        throw new AssertionError();
+    }
+
     public static <T> String entityToXml(final T entity) {
         final StringWriter stringWriter;
 

@@ -12,6 +12,10 @@ import static com.google.common.base.Objects.equal;
 public class GeneralUtils {
     private static final DefaultAccountIdentifierFormatter DEFAULT_FORMATTER = new DefaultAccountIdentifierFormatter();
 
+    private GeneralUtils() {
+        throw new AssertionError();
+    }
+
     @SafeVarargs
     public static List<GeneralAccountEntity> concat(List<? extends GeneralAccountEntity>... accounts) {
         return Stream.of(accounts)
