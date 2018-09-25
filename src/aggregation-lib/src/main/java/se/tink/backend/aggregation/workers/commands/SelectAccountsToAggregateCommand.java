@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.workers.commands;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
@@ -45,7 +46,8 @@ public class SelectAccountsToAggregateCommand extends AgentWorkerCommand {
 
         // handle black list removal
         List<Account> allExceptForBlacklisted = allAccounts.stream().filter(x -> !shouldNotAggregateDataForAccount(accountsFromRequest, x)).collect(Collectors.toList());
-        if (!(refreshInformationRequest instanceof WhitelistRequest)) {
+        if (!(refreshInformationRequest instanceof WhitelistRequest ||
+                refreshInformationRequest instanceof WhitelistedTransferRequest)) {
             context.setAccountsToAggregate(allExceptForBlacklisted);
             return AgentWorkerCommandResult.CONTINUE;
         }

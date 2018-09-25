@@ -255,6 +255,8 @@ public class AgentWorkerOperationFactory {
         AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
                 aggregationControllerAggregationClient, clusterInfo);
 
+        context.setWhitelistRefresh(true);
+
         String operationName = "execute-whitelisted-transfer";
 
         List<AgentWorkerCommand> commands = createTransferBaseCommands(clusterInfo, request, context, operationName);
