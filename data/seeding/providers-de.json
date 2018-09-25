@@ -8544,7 +8544,7 @@
       "className": "nxgen.de.banks.fints.FinTsAgent",
       "passwordHelpText": "Use the same password as you would in your bank's web login.",
       "transactional": true,
-      "payload": "10077777 https://fints.norisbank.de/",
+      "payload": "10077777 https://fints.deutsche-bank.de/",
       "fields": [
         {
           "description": "Username",
@@ -8571,7 +8571,7 @@
       "className": "nxgen.de.banks.fints.FinTsAgent",
       "passwordHelpText": "Use the same password as you would in your bank's web login.",
       "transactional": true,
-      "payload": "76026000 https://fints.norisbank.de/",
+      "payload": "76026000 https://fints.deutsche-bank.de/",
       "fields": [
         {
           "description": "Username",
