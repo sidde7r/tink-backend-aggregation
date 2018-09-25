@@ -116,6 +116,7 @@ public class SdcConstants {
 
         public static class Investment {
             public static final LogTag INSTRUMENTS = LogTag.from("#sdc_investment_instrument");
+            public static final LogTag CASH_BALANCE = LogTag.from("#sdc_investment_cashbalance");
 
             public enum PortfolioTypes {
                 PENSION(Portfolio.Type.PENSION),
