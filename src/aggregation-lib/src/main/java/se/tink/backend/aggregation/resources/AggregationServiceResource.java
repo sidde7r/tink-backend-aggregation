@@ -169,7 +169,7 @@ public class AggregationServiceResource implements AggregationService {
 
     @Override
     public void whitelistedTransfer(final WhitelistedTransferRequest request, ClusterInfo clusterInfo) throws Exception {
-        return;
+        agentWorker.execute(agentWorkerCommandFactory.createExecuteWhitelistedTransferOperation(clusterInfo, request));
     }
 
     @Override

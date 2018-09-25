@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentFactory;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
+import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
@@ -258,6 +259,37 @@ public class AgentWorkerOperationFactory {
         commands.addAll(createRefreshableItemsChain(request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
 
         return new AgentWorkerOperation(agentWorkerOperationState, "execute-transfer", request, commands,
+                context);
+    }
+
+    public AgentWorkerOperation createExecuteWhitelistedTransferOperation(ClusterInfo clusterInfo,
+            WhitelistedTransferRequest request) {
+
+        String operationName = "execute-whitelisted-transfer";
+
+        AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
+                aggregationControllerAggregationClient, clusterInfo);
+
+        List<AgentWorkerCommand> commands = Lists.newArrayList();
+
+        commands.add(new ValidateProviderAgentWorkerStatus(context,
+                aggregationControllerAggregationClient, clusterInfo));
+        commands.add(new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
+        commands.add(new ReportProviderMetricsAgentWorkerCommand(context, operationName,
+                reportMetricsAgentWorkerCommandState));
+        commands.add(new ReportProviderTransferMetricsAgentWorkerCommand(context,  operationName));
+        commands.add(new LockAgentWorkerCommand(context));
+        commands.add(new DecryptCredentialsWorkerCommand(clusterInfo, cacheClient,
+                clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context));
+        commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState, agentDebugStorageHandler));
+        commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
+        commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)));
+        commands.add(new TransferAgentWorkerCommand(context, request, createMetricState(request)));
+        commands.addAll(
+                createWhitelistRefreshableItemsChain(request, context, clusterInfo,
+                        RefreshableItem.REFRESHABLE_ITEMS_ALL));
+
+        return new AgentWorkerOperation(agentWorkerOperationState, operationName, request, commands,
                 context);
     }
 
