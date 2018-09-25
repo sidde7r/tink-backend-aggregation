@@ -164,7 +164,7 @@ public class DepotEntity {
     public Portfolio toPortfolio() {
         Portfolio portfolio = new Portfolio();
         portfolio.setCashValue(getDisposable());
-        portfolio.setTotalValue(getTotalDepotValue());
+        portfolio.setTotalValue(getInvestedAmount());
         portfolio.setUniqueIdentifier(getDepotNumber());
         portfolio.setType(getPortfolioType());
         portfolio.setRawType(getInvestmentAccountType());
