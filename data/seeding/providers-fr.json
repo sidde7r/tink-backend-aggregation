@@ -429,7 +429,7 @@
       "credentialsType": "PASSWORD",
       "multiFactor": false,
       "className": "nxgen.fr.banks.bnpparibas.BnpParibasAgent",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your mobile banking app.",
+      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
       "transactional": "true",
       "fields": [
         {
@@ -455,7 +455,7 @@
       "credentialsType": "PASSWORD",
       "multiFactor": false,
       "className": "nxgen.fr.banks.banquetransatlantique.BanqueTransatlantiqueAgent",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in Banque Transatlantique's mobile banking app.",
+      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
       "transactional": "true",
       "tutorialUrl": null,
       "fields": [
@@ -481,7 +481,7 @@
       "credentialsType": "PASSWORD",
       "multiFactor": false,
       "className": "nxgen.fr.banks.creditmutuel.CreditMutuelAgent",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in CM's mobile banking app.",
+      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
       "transactional": "true",
       "payload": "CM",
       "tutorialUrl": null,
@@ -509,7 +509,7 @@
       "credentialsType": "PASSWORD",
       "multiFactor": false,
       "className": "nxgen.fr.banks.cic.CicBankAgent",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in CIC's mobile banking app.",
+      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
       "transactional": "true",
       "payload": "CIC",
       "tutorialUrl": null,
@@ -537,7 +537,7 @@
       "credentialsType": "PASSWORD",
       "multiFactor": false,
       "className": "nxgen.fr.banks.monabanq.MonaBanqAgent",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in MonaBanq's mobile banking app.",
+      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
       "transactional": "true",
       "tutorialUrl": null,
       "fields": [
@@ -2341,7 +2341,8 @@
       "displayName": "Société Générale",
       "credentialsType": "PASSWORD",
       "multiFactor": false,
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your mobile banking app.",
+      "transactional": true,
+      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
       "fields": [
         {
           "description": "Username",
@@ -2367,7 +2368,8 @@
       "displayName": "Caisse d'Épargne",
       "credentialsType": "PASSWORD",
       "multiFactor": false,
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your mobile banking app.",
+      "transactional": true,
+      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
       "fields": [
         {
           "description": "Username",
@@ -2393,7 +2395,8 @@
       "displayName": "La Banque Postale",
       "credentialsType": "PASSWORD",
       "multiFactor": false,
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your mobile banking app.",
+      "transactional": true,
+      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
       "fields": [
         {
           "description": "Username",
