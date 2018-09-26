@@ -26,7 +26,7 @@ public class BankdataConstants {
 
     public static class Headers {
         public static final String X_VERSION = "x-version";
-        public static final String X_VERSION_VALUE = "5.12.0";
+        public static final String X_VERSION_VALUE = "5.15.0";
         public static final String X_BANK_NO = "x-bankNo";
         public static final String X_APPID = "x-appid";
         public static final String X_APPID_VALUE = "androidmobilbank";
