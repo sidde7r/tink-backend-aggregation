@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.provider.configuration.storage.module;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Functions;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -10,7 +12,6 @@ import com.google.inject.name.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
-import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ProviderOverrideOnClusterModel;
 import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ClusterProviderListModel;
 import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ProviderConfigModel;
 import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ProviderSpecificationModel;
@@ -18,14 +19,19 @@ import se.tink.backend.aggregation.provider.configuration.storage.module.cluster
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ProviderFileModule extends AbstractModule {
 
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final Logger log = LoggerFactory.getLogger(ProviderFileModule.class);
+    private static final String GLOBAL_PROVIDER_FILE_PATH = "data/seeding";
+    private static final String AVAILABLE_PROVIDERS_FILE_PATH = "data/seeding/providers/available-providers";
+    private static final String PROVIDER_OVERRIDE_FILE_PATH = "data/seeding/providers/overriding-providers";
 
     @Override
     protected void configure() { }
@@ -47,12 +53,12 @@ public class ProviderFileModule extends AbstractModule {
     @Provides
     @Singleton
     @Named("providerOverrideOnCluster")
-    public Map<String, Map<String, ProviderConfiguration>> provideClusterSpecificProviderConfiguraiton() throws IOException {
+    public Map<String, Map<String, ProviderConfiguration>> provideClusterSpecificProviderConfiguration() throws IOException {
         return loadProviderOverrideOnClusterFromJson();
     }
 
     protected Map<String, ProviderConfiguration> loadProviderConfigurationFromJson() throws IOException {
-        File directory = new File("data/seeding");
+        File directory = new File(GLOBAL_PROVIDER_FILE_PATH);
         File[] providerFiles = directory.listFiles((dir, fileName) -> fileName.matches("providers-[a-z]{2}.json"));
 
         if (providerFiles == null) {
@@ -70,31 +76,117 @@ public class ProviderFileModule extends AbstractModule {
     }
 
     protected Map<String, List<String>> loadEnabledProvidersOnClusterFromJson() throws IOException {
-        String clusterProviderFilePath = "data/seeding/cluster-provider-configuration.json";
-        File clusterProviderFile = new File(clusterProviderFilePath);
-        ProviderOverrideOnClusterModel providerOverrideOnClusterModel =
-                mapper.readValue(clusterProviderFile, ProviderOverrideOnClusterModel.class);
 
-        List<ClusterProviderListModel> clusterProviderListModelList = providerOverrideOnClusterModel.getClusters();
+        File[] availableProviderDirectories = new File(AVAILABLE_PROVIDERS_FILE_PATH).listFiles();
 
-        return clusterProviderListModelList.stream()
-                .collect(Collectors.toMap(ClusterProviderListModel::getClusterId, ClusterProviderListModel::getProviderName));
+        Preconditions.checkNotNull(availableProviderDirectories,
+                "no available path found for loading available providers on cluster");
+
+        Map<String, List<String>> availableProvidersByCluster = Maps.newHashMap();
+
+        for(File availableProviderDirectory : availableProviderDirectories){
+            File[] availableProviderFiles = availableProviderDirectory.listFiles(
+                    (dir, fileName) -> fileName.matches("available-providers-[A-Z]{2}.json"));
+            Preconditions.checkNotNull(availableProviderFiles,
+                    "no available file found for loading available providers on cluster in path {}",
+                    availableProviderDirectory.getName());
+
+            parseAvailableProvidersOnCluster(availableProviderFiles, availableProvidersByCluster);
+        }
+
+        return availableProvidersByCluster;
     }
 
     protected Map<String, Map<String, ProviderConfiguration>> loadProviderOverrideOnClusterFromJson() throws IOException {
-        File directory = new File("data/seeding");
-        File[] providerSpecificationFiles = directory.listFiles((dir, fileName) -> fileName.matches("provider-specification.*.json"));
-        Map<String, Map<String, ProviderConfiguration>> providerSpecificationByCluster = Maps.newHashMap();
 
-        if (providerSpecificationFiles == null) {
-            throw new IOException("no provider specification file found");
+        File[] overridingProviderDirectories = new File(PROVIDER_OVERRIDE_FILE_PATH).listFiles();
+        Preconditions.checkNotNull(overridingProviderDirectories,
+                "no available path found for loading overriding providers on cluster");
+
+        Map<String, Map<String, ProviderConfiguration>> overridingProvidersByCluster = Maps.newHashMap();
+
+        for (File overridingProviderDirectory : overridingProviderDirectories) {
+            File[] availableProviderFiles = overridingProviderDirectory.listFiles(
+                    (dir, fileName) -> fileName.matches("provider-override-[A-Z]{2}.json"));
+            Preconditions.checkNotNull(availableProviderFiles,
+                    "no available file found for loading overriding providers on cluster in path {}",
+                    overridingProviderDirectory.getName());
+
+            parseOverridingProvidersOnCluster(availableProviderFiles, overridingProvidersByCluster);
+        }
+        return overridingProvidersByCluster;
+    }
+
+    private void parseAvailableProvidersOnCluster(
+            File[] availableProviderFiles, Map<String, List<String>> providersAvailableOnCluster) throws IOException{
+
+        List<String> availableProviderNames = Lists.newLinkedList();
+        String clusterId = null;
+
+        for (File availableProviderFile : availableProviderFiles) {
+            ClusterProviderListModel providerOverrideOnClusterModel =
+                    mapper.readValue(availableProviderFile, ClusterProviderListModel.class);
+
+            String clusterIdInFile = providerOverrideOnClusterModel.getClusterId();
+
+            Preconditions.checkNotNull(clusterIdInFile,
+                    "no available cluster id for file {}", availableProviderFile.getName());
+
+            if (clusterId == null){
+                clusterId = clusterIdInFile;
+            }
+
+            Preconditions.checkState(Objects.equals(clusterId, clusterIdInFile),
+                    "wrong cluster id set in file {}, which cluster is this intended for?",
+                    availableProviderFile.getAbsolutePath());
+
+            List<String> providerNames = providerOverrideOnClusterModel.getProviderName();
+
+            log.info("found {} providers for cluster {} in from file {}",
+                    providerNames.size(), clusterId, availableProviderFile.getName());
+
+            availableProviderNames.addAll(providerNames);
         }
 
-        for (File providerSpecificationFile : providerSpecificationFiles) {
-            log.info("Seeding provider specific from file {}", providerSpecificationFile.getName());
-            parseProviderOverrideOnCluster(providerSpecificationFile, providerSpecificationByCluster);
+        providersAvailableOnCluster.put(clusterId, availableProviderNames);
+
+    }
+
+    private void parseOverridingProvidersOnCluster(
+            File[] overridingProviderFiles,
+            Map<String, Map<String, ProviderConfiguration>> overridingProvidersOnCluster) throws IOException{
+
+        String clusterId = null;
+
+        for (File overridingProviderFile : overridingProviderFiles) {
+            ProviderSpecificationModel providerOverrideOnClusterModel =
+                    mapper.readValue(overridingProviderFile, ProviderSpecificationModel.class);
+
+            String clusterIdInFile = providerOverrideOnClusterModel.getClusterId();
+
+            Preconditions.checkNotNull(clusterIdInFile,
+                    "no available cluster id for file {}", overridingProviderFile.getName());
+
+            if (clusterId == null){
+                clusterId = clusterIdInFile;
+            }
+
+            Preconditions.checkState(Objects.equals(clusterId, clusterIdInFile),
+                    "wrong cluster id set in file {}, which cluster is this intended for?",
+                    overridingProviderFile.getAbsolutePath());
+
+            List<ProviderConfiguration> providersOnCluster =
+                    providerOverrideOnClusterModel.getProviderSpecificConfiguration();
+
+            log.info("{} provider overriding for cluster {} in from file {}",
+                    providersOnCluster.size(), clusterId, overridingProviderFile.getName());
+
+            Map<String, ProviderConfiguration> providerConfigurationMap = providersOnCluster.stream()
+                    .collect(Collectors.toMap(ProviderConfiguration::getName, Functions.identity()));
+
+            overridingProvidersOnCluster.put(clusterId, providerConfigurationMap);
         }
-        return providerSpecificationByCluster;
+
     }
 
     private void parseProviderConfigurations(File providerFile, Map<String, ProviderConfiguration> providerConfigurationByProviderName)
