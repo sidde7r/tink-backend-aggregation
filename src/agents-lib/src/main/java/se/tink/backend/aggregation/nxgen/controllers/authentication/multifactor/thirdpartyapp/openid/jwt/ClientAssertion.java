@@ -3,52 +3,44 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-import java.security.interfaces.RSAPrivateKey;
 import java.util.Date;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils.OpenIdSignUtils;
 
 public class ClientAssertion {
 
     public static class Builder {
-        private String keyId;
-        private Algorithm algorithm;
-        private String clientId;
-        private String tokenEndpoint;
+        private WellKnownResponse wellknownConfiguration;
+        private SoftwareStatement softwareStatement;
+        private ClientInfo clientInfo;
 
-        public Builder withRsaKey(String keyId, RSAPrivateKey privateKey) {
-            this.keyId = keyId;
-            this.algorithm = Algorithm.RSA256(null, privateKey);
+        public Builder withSoftwareStatement(SoftwareStatement softwareStatement) {
+            this.softwareStatement = softwareStatement;
             return this;
         }
 
-        public Builder withClientId(String clientId) {
-            this.clientId = clientId;
+        public Builder withWellknownConfiguration(WellKnownResponse wellknownConfiguration) {
+            this.wellknownConfiguration = wellknownConfiguration;
             return this;
         }
 
-        public Builder withTokenEndpoint(String tokenEndpoint) {
-            this.tokenEndpoint = tokenEndpoint;
+        public Builder withClientInfo(ClientInfo clientInfo) {
+            this.clientInfo = clientInfo;
             return this;
-        }
-
-        private void verifyInput() {
-            Preconditions.checkNotNull(algorithm, "A private key and keyId must be specified.");
-
-            if (Strings.isNullOrEmpty(keyId)) {
-                throw new IllegalStateException("KeyId cannot be null or empty.");
-            }
-
-            if (Strings.isNullOrEmpty(clientId)) {
-                throw new IllegalStateException("ClientId cannot be null or empty.");
-            }
-
-            if (Strings.isNullOrEmpty(tokenEndpoint)) {
-                throw new IllegalStateException("TokenEndpoint cannot be null or empty.");
-            }
         }
 
         public String build() {
-            verifyInput();
+            Preconditions.checkNotNull(wellknownConfiguration, "WellknownConfiguration must be specified.");
+            Preconditions.checkNotNull(softwareStatement, "SoftwareStatement must be specified.");
+            Preconditions.checkNotNull(clientInfo, "ClientInfo must be specified.");
+
+            String keyId = softwareStatement.getSigningKeyId();
+            Algorithm algorithm = OpenIdSignUtils.getSignatureAlgorithm(softwareStatement.getSigningKey());
+
+            String clientId = clientInfo.getClientId();
+            String tokenEndpoint = wellknownConfiguration.getTokenEndpoint().toString();
 
             // Issued = Now, Expires = Now + 1h
             Date issuedAt = new Date();

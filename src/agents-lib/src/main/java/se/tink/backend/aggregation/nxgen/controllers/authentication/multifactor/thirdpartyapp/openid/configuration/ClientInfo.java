@@ -10,4 +10,24 @@ public class ClientInfo {
     private String RegistrationId;
     private Date issuedAt;
     private Date expiresAt;
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public String getClientSecret() {
+        return clientSecret;
+    }
+
+    public String getRegistrationId() {
+        return RegistrationId;
+    }
+
+    public Date getIssuedAt() {
+        return issuedAt;
+    }
+
+    public Date getExpiresAt() {
+        return expiresAt;
+    }
 }
