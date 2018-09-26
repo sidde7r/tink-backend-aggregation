@@ -95,9 +95,11 @@ public class ClientRegistration {
                     .withClaim(OpenIdConstants.ClaimParams.TOKEN_ENDPOINT_AUTH_SIGNING_ALG, tokenEndpointSigningAlg)
                     .withClaim(OpenIdConstants.ClaimParams.REQUEST_OBJECT_SIGNING_ALG, requestObjectSigningAlg)
                     .withClaim(OpenIdConstants.ClaimParams.APPLICATION_TYPE, OpenIdConstants.ClaimDefaults.WEB)
-                    .withArrayClaim(OpenIdConstants.ClaimParams.REDIRECT_URIS, softwareStatement.getRedirectUris())
+                    .withArrayClaim(OpenIdConstants.ClaimParams.REDIRECT_URIS,
+                            new String[] { softwareStatement.getRedirectUri() })
                     .withArrayClaim(OpenIdConstants.ClaimParams.GRANT_TYPES, JwtUtils.listToStringArray(grantTypes))
-                    .withArrayClaim(OpenIdConstants.ClaimParams.RESPONSE_TYPES, JwtUtils.listToStringArray(responseTypes))
+                    .withArrayClaim(OpenIdConstants.ClaimParams.RESPONSE_TYPES,
+                            JwtUtils.listToStringArray(responseTypes))
                     .sign(algorithm);
         }
     }

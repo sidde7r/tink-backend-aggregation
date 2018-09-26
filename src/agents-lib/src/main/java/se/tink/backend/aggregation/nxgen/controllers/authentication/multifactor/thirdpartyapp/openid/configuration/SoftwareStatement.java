@@ -37,8 +37,8 @@ public class SoftwareStatement {
         return softwareStatementAssertion.getSoftwareId();
     }
 
-    public String[] getRedirectUris() {
-        return softwareStatementAssertion.getRedirectUris();
+    public String getRedirectUri() {
+        return softwareStatementAssertion.getRedirectUri();
     }
 
     public ProviderConfiguration getProviderConfiguration(String name) {
