@@ -17,13 +17,13 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 
-public class BawagPskTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
+public final class BawagPskTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
-    private final BawagPskApiClient bawagPskApiClient;
+    private final BawagPskApiClient apiClient;
     private static final Logger logger = LoggerFactory.getLogger(BawagPskTransactionalAccountFetcher.class);
 
     public BawagPskTransactionalAccountFetcher(BawagPskApiClient bawagPskApiClient) {
-        this.bawagPskApiClient = bawagPskApiClient;
+        this.apiClient = bawagPskApiClient;
     }
 
     private GetAccountInformationListResponse fetchAccountInformationResponse(
@@ -39,9 +39,8 @@ public class BawagPskTransactionalAccountFetcher implements AccountFetcher<Trans
                         .collect(Collectors.toList())
         );
 
-        final String requestString;
-        requestString = request.getXml();
-        return bawagPskApiClient.getGetAccountInformationListResponse(requestString);
+        final String requestString = request.getXml();
+        return apiClient.getGetAccountInformationListResponse(requestString);
     }
 
     private Collection<TransactionalAccount> toTransactionalAccounts(
@@ -54,12 +53,12 @@ public class BawagPskTransactionalAccountFetcher implements AccountFetcher<Trans
     public Collection<TransactionalAccount> fetchAccounts() {
         final String errorMsg = "Could not find products in session storage needed for fetching accounts";
         final Products products = BawagPskUtils.xmlToEntity(
-                bawagPskApiClient.getFromStorage(BawagPskConstants.Storage.PRODUCTS.name())
+                apiClient.getFromStorage(BawagPskConstants.Storage.PRODUCTS.name())
                         .orElseThrow(() -> new IllegalStateException(errorMsg)),
                 Products.class);
-        final String serverSessionId = bawagPskApiClient.getFromStorage(
+        final String serverSessionId = apiClient.getFromStorage(
                 BawagPskConstants.Storage.SERVER_SESSION_ID.name()).orElseThrow(IllegalStateException::new);
-        final String qid = bawagPskApiClient.getFromStorage(
+        final String qid = apiClient.getFromStorage(
                 BawagPskConstants.Storage.QID.name()).orElseThrow(IllegalStateException::new);
 
         final GetAccountInformationListResponse accountResponse = fetchAccountInformationResponse(
@@ -67,11 +66,11 @@ public class BawagPskTransactionalAccountFetcher implements AccountFetcher<Trans
                 serverSessionId,
                 qid);
 
-        for (IbanIdentifier iban : loginResponse.getInvalidIbans()) {
+        for (final IbanIdentifier iban : accountResponse.getInvalidIbans()) {
             logger.warn("Retrieved invalid BIC/IBAN: {}/{}", iban.getBic(), iban.getIban());
         }
 
-        final Map<String, String> accountNosToProductCodes = bawagPskApiClient.getProductCodes();
+        final Map<String, String> accountNosToProductCodes = apiClient.getProductCodes();
 
         return toTransactionalAccounts(accountResponse, accountNosToProductCodes);
     }

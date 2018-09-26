@@ -15,23 +15,23 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class BawagPskPasswordAuthenticator implements PasswordAuthenticator {
 
-    private final BawagPskApiClient bawagPskApiClient;
+    private final BawagPskApiClient apiClient;
     private static final Logger logger = LoggerFactory.getLogger(BawagPskApiClient.class);
 
     public BawagPskPasswordAuthenticator(BawagPskApiClient client) {
-        this.bawagPskApiClient = client;
+        this.apiClient = client;
     }
 
     @Override
     public void authenticate(final String username, final String password)
             throws AuthenticationException, AuthorizationException {
-        final String bankName = bawagPskApiClient.getBankName();
+        final String bankName = apiClient.getBankName();
         final LoginRequest request = new LoginRequest(username, password, bankName);
         final String requestBody;
         requestBody = request.getXml();
 
         try {
-            final LoginResponse response = bawagPskApiClient.login(requestBody);
+            final LoginResponse response = apiClient.login(requestBody);
             if (response.accountIsLocked()) {
                 throw AuthorizationError.ACCOUNT_BLOCKED.exception();
             }

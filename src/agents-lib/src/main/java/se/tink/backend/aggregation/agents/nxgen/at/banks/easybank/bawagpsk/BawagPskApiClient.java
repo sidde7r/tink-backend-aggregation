@@ -36,7 +36,7 @@ public class BawagPskApiClient {
         this.storage = storage;
         this.persistentStorage = persistentStorage;
 
-        String[] providerStrings = provider.getPayload().split(",");
+        final String[] providerStrings = provider.getPayload().split(",");
         this.baseUrl = providerStrings[0];
         this.bankName = providerStrings[1].trim();
     }
@@ -51,11 +51,10 @@ public class BawagPskApiClient {
     }
 
     private URL getUrl() {
-        return new URL(
-                String.format("https://%s%s", this.baseUrl, BawagPskConstants.URLS.SERVICE_ENDPOINT));
+        return new URL(String.format("https://%s%s", this.baseUrl, BawagPskConstants.URLS.SERVICE_ENDPOINT));
     }
 
-    public String getBankName(){
+    public String getBankName() {
         return this.bankName;
     }
 
