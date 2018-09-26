@@ -1,12 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl;
 
+import java.util.Collections;
+import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator.rpc.DeviceConfigurationRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator.rpc.DeviceConfigurationResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator.rpc.LoginResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.entities.AccountGroupEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.entities.RibEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.rpc.AccessSummaryResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.rpc.BaseMobileRequest;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.rpc.RibResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.rpc.TransactionsRequest;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.storage.LclPersistentStorage;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -14,6 +24,7 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class LclApiClient {
+    private static final AggregationLogger log = new AggregationLogger(LclApiClient.class);
 
     private final TinkHttpClient client;
     private final LclPersistentStorage lclPersistentStorage;
@@ -53,6 +64,49 @@ public class LclApiClient {
                 .get(HttpResponse.class);
 
         return httpResponse.getRedirects().size() == 0;
+    }
+
+    public Optional<RibEntity> getRib(String accountNumber) {
+        BaseMobileRequest body = BaseMobileRequest.create();
+
+        String responseString = getPostFormRequest(LclConstants.Urls.ACCOUNT_RIB)
+                .post(String.class, body.getBodyValue());
+
+        RibResponse ribResponse = SerializationUtils.deserializeFromString(responseString, RibResponse.class);
+
+        if (ribResponse == null || ribResponse.getRib() == null) {
+            log.warnExtraLong(responseString, LclConstants.Logs.RIB_RESPONSE_PARSING_FAILED);
+            return Optional.empty();
+        }
+
+        if (!accountNumber.equalsIgnoreCase(ribResponse.getRib().getAccountNumber())) {
+            log.warnExtraLong(responseString, LclConstants.Logs.ACCOUNT_NOT_IN_RIB_RESPONSE);
+            return Optional.empty();
+        }
+
+        return Optional.of(ribResponse.getRib());
+    }
+
+
+    public Optional<AccountGroupEntity> getCheckingAccountGroup() {
+        BaseMobileRequest body = BaseMobileRequest.create();
+
+        AccessSummaryResponse response = postFormAndGetJsonResponse(
+                getPostFormRequest(LclConstants.Urls.ACCESS_SUMMARY), body.getBodyValue(),
+                AccessSummaryResponse.class);
+
+        return Optional.ofNullable(response.getAccountGroupList())
+                .orElse(Collections.emptyList())
+                .stream()
+                .filter(AccountGroupEntity::isCheckingAccountGroup).findFirst();
+        }
+
+
+    public TransactionsResponse getTransactions(RibEntity ribEntity) {
+        TransactionsRequest body = TransactionsRequest.create(ribEntity);
+
+        return postFormAndGetJsonResponse(getPostFormRequest(LclConstants.Urls.TRANSACTIONS),
+                body.getBodyValue(), TransactionsResponse.class);
     }
 
     private RequestBuilder getPostFormRequest(URL url) {

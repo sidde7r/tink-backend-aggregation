@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator.LclAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.LclTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.LclTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.session.LclSessionHandler;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.storage.LclPersistentStorage;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -44,7 +46,12 @@ public class LclAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        return Optional.empty();
+        return Optional.of(new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                new LclTransactionalAccountFetcher(apiClient),
+                new LclTransactionFetcher(apiClient)
+        ));
     }
 
     @Override
