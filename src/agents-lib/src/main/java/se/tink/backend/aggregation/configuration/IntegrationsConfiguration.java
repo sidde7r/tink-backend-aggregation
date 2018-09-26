@@ -19,6 +19,8 @@ public class IntegrationsConfiguration {
 
     @JsonProperty private String proxyUri;
 
+    @JsonProperty private ICSConfiguration icsConfiguration;
+
     public SbabConfiguration getSbab() {
         return sbab;
     }
@@ -45,5 +47,9 @@ public class IntegrationsConfiguration {
 
     public String getProxyUri() {
         return proxyUri;
+    }
+
+    public ICSConfiguration getIcsConfiguration() {
+        return icsConfiguration;
     }
 }

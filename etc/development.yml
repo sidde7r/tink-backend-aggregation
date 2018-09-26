@@ -102,6 +102,13 @@ notifications:
 
 agentsServiceConfiguration:
   integrations:
+    icsConfiguration:
+      clientId: ""
+      clientSecret: ""
+      redirectUri: ""
+      clientSSLCertificate: ""
+      rootCACertificate: ""
+      rootCAPassword: ""
     fints:
       regNumber: "dummyId"
     sbab:

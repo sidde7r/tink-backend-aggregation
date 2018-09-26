@@ -96,6 +96,7 @@
   "nxgen.no.banks.sparebank1.Sparebank1Agent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "INVESTMENTS", "LOANS"],
   "nxgen.no.banks.sparebankensor.SparebankenSorAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "LOANS"],
   "nxgen.no.banks.sparebankenvest.SparebankenVestAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "LOANS", "INVESTMENTS"],
+  "nxgen.nl.creditcards.ICS.ICSAgent": ["CREDIT_CARDS"],
   "nxgen.ro.banks.raiffeisen.RaiffeisenAgent": ["CHECKING_ACCOUNTS"],
   "nxgen.se.banks.handelsbanken.HandelsbankenSEAgent": ["MORTGAGE_AGGREGATION", "TRANSFERS", "CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "INVESTMENTS", "LOANS", "PAYMENTS"],
   "nxgen.se.banks.icabanken.IcaBankenAgent": ["MORTGAGE_AGGREGATION", "TRANSFERS", "CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "INVESTMENTS", "LOANS", "PAYMENTS"],
