@@ -4,7 +4,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.jersey.core.util.Base64;
-import java.security.SecureRandom;
 import java.util.Date;
 import java.util.Objects;
 import javax.ws.rs.core.MediaType;
@@ -19,11 +18,8 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class OpenIdApiClient {
-    private static final SecureRandom random = new SecureRandom();
-
 
     private final TinkHttpClient httpClient;
-//    private final URL wellKnownEndpoint;
     private final SoftwareStatement softwareStatement;
     private final ProviderConfiguration providerConfiguration;
 
@@ -31,7 +27,8 @@ public class OpenIdApiClient {
     private WellKnownResponse cachedWellKnownResponse;
     private JsonWebKeySet cachedProviderKeys;
 
-    public OpenIdApiClient(TinkHttpClient httpClient, SoftwareStatement softwareStatement, ProviderConfiguration providerConfiguration) {
+    public OpenIdApiClient(TinkHttpClient httpClient, SoftwareStatement softwareStatement,
+            ProviderConfiguration providerConfiguration) {
         this.httpClient = httpClient;
         this.softwareStatement = softwareStatement;
         this.providerConfiguration = providerConfiguration;
