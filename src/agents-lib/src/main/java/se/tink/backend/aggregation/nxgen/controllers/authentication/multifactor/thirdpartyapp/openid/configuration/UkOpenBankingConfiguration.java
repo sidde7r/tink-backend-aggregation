@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class UKOB {
+public class UkOpenBankingConfiguration {
 
     private String rootCAData;
     private String rootCAPassword;
