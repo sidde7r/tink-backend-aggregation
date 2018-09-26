@@ -3,8 +3,6 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 import java.security.interfaces.RSAPrivateKey;
 import java.util.Map;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.SignatureKey;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.TransportKey;
 
 @JsonObject
 public class SoftwareStatement {
