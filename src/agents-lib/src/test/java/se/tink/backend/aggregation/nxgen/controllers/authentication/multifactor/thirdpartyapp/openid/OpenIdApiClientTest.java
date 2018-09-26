@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.util.Arrays;
 import org.apache.http.HttpStatus;
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,7 +16,7 @@ public class OpenIdApiClientTest {
 
     private TinkHttpClient httpClient;
     private OpenIdApiClient apiClient;
-    private static final UkOpenBankingConfiguration UKOB_TEST_CONFIG = fromJson("CENCORED", UkOpenBankingConfiguration.class);
+    private static final UkOpenBankingConfiguration UKOB_TEST_CONFIG = fromJson("CENSORED", UkOpenBankingConfiguration.class);
 
     @Before
     public void setup() {
@@ -46,9 +45,6 @@ public class OpenIdApiClientTest {
         WellKnownResponse conf = apiClient.getProviderConfiguration();
 
         Assert.assertNotNull(conf);
-        Assert.assertTrue(conf.verifyAndGetResponseTypes(
-                Arrays.asList(OpenIdConstants.RESPONSE_TYPES))
-                .isPresent());
         Assert.assertTrue(conf.verifyAndGetScopes(
                 OpenIdConstants.SCOPES)
                 .isPresent());
@@ -59,6 +55,8 @@ public class OpenIdApiClientTest {
 
         //TODO: Validate response
         RegistrationResponse response = apiClient.registerClient();
+
+        // Assert.fail(SerializationUtils.serializeToString(response));
         Assert.assertNotNull(response);
     }
 

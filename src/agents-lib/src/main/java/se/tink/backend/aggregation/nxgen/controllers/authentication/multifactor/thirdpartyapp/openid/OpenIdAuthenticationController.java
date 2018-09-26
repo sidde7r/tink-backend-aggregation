@@ -95,15 +95,6 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
 
     private URL buildAuthorizationRequest(URL authorizationEndpoint) {
         WellKnownResponse providerConfiguration = apiClient.getProviderConfiguration();
-        String responseType = providerConfiguration.verifyAndGetResponseTypes(RESPONSE_TYPES)
-                .orElseThrow(
-                        () -> new IllegalStateException(
-                                String.format(
-                                        "NYI, response types not supported: %s",
-                                        providerConfiguration
-                                )
-                        )
-                );
 
         String scope = providerConfiguration.verifyAndGetScopes(OpenIdConstants.SCOPES)
                 .orElseThrow(
