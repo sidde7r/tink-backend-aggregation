@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils;
 
 import com.auth0.jwt.algorithms.Algorithm;
-import java.security.PrivateKey;
 import java.security.interfaces.RSAPrivateKey;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
@@ -10,7 +9,7 @@ public class OpenIdSignUtils {
 
     private static final String RS256 = "RS256";
 
-    public static Algorithm getSignatureAlgorithm(RSAPrivateKey privateKey){
+    public static Algorithm getSignatureAlgorithm(RSAPrivateKey privateKey) {
         return Algorithm.RSA256(null, privateKey);
     }
 

@@ -89,12 +89,25 @@ public class WellKnownResponse {
         return new URL(jwksUri);
     }
 
-    public Optional<String> verifyAndGetResponseTypes(List<String> types) {
-        if (!responseTypesSupported.containsAll(types)) {
-            return Optional.empty();
-        }
+    public boolean hasResponseTypes(List<String> responseTypes) {
+        // responseTypesSupported will contain, for example: <"code", "code id_token">
+        // We want to make sure that it contains any variation of, for example: "code" and "id_token", regardless
+        // of which order they are specified ("id_token code" <> "code id_token").
+        return responseTypesSupported.stream()
+                .map(s -> Arrays.asList(s.split(" ")))
+                .anyMatch(supportedTypes -> supportedTypes.containsAll(responseTypes));
+    }
 
-        return Optional.of(types.stream().collect(Collectors.joining(" ")));
+    public List<String> getResponseTypesSupported() {
+        return responseTypesSupported;
+    }
+
+    public boolean hasGrantTypes(List<String> grantTypes) {
+        return grantTypesSupported.containsAll(grantTypes);
+    }
+
+    public List<String> getGrantTypesSupported() {
+        return grantTypesSupported;
     }
 
     public Optional<String> verifyAndGetScopes(List<String> scopes) {
@@ -105,7 +118,7 @@ public class WellKnownResponse {
         return Optional.of(scopes.stream().collect(Collectors.joining(" ")));
     }
 
-    public Optional<String> vertfyAndGetEnpointAuthMethod(String authMethod){
+    public Optional<String> vertfyAndGetEnpointAuthMethod(String authMethod) {
         if(!tokenEndpointAuthMethodsSupported.contains(authMethod)){
             return Optional.empty();
         }
@@ -113,21 +126,27 @@ public class WellKnownResponse {
         return Optional.of(authMethod);
     }
 
-    public Optional<String> getPreferredIdTokenSigningAlg(String[] supportedAlgs){
-        return Arrays.stream(supportedAlgs)
+    public Optional<String> getPreferredIdTokenSigningAlg(List<String> supportedAlgs) {
+        return supportedAlgs.stream()
                 .filter(alg -> idTokenSigningAlgValuesSupported.contains(alg))
                 .findFirst();
     }
 
-    public Optional<String> getPreferredTokenEndpointSigningAlg(String[] supportedAlgs){
-        return Arrays.stream(supportedAlgs)
+    public Optional<String> getPreferredTokenEndpointSigningAlg(List<String> supportedAlgs) {
+        return supportedAlgs.stream()
                 .filter(alg -> tokenEndpointAuthSigningAlgValuesSupported.contains(alg))
                 .findFirst();
     }
 
-    public Optional<String> getPreferredRequestObjectSigningAlg(String[] supportedAlgs){
-        return Arrays.stream(supportedAlgs)
+    public Optional<String> getPreferredRequestObjectSigningAlg(List<String> supportedAlgs) {
+        return supportedAlgs.stream()
                 .filter(alg -> requestObjectSigningAlgValuesSupported.contains(alg))
+                .findFirst();
+    }
+
+    public Optional<String> getPreferredTokenEndpointAuthMethod(List<String> supportedMethods) {
+        return supportedMethods.stream()
+                .filter(method -> tokenEndpointAuthMethodsSupported.contains(method))
                 .findFirst();
     }
 

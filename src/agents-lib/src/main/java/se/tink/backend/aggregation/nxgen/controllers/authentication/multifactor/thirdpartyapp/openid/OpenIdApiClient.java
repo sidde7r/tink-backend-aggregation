@@ -1,19 +1,15 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.jersey.core.util.Base64;
-import java.util.Date;
 import java.util.Objects;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.JwtUtils;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.ClientRegistration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.JsonWebKeySet;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.RegistrationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils.OpenIdSignUtils;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
@@ -68,46 +64,18 @@ public class OpenIdApiClient {
     }
 
     public RegistrationResponse registerClient() {
-
         WellKnownResponse wellKnownResponse = getProviderConfiguration();
         URL registrationEndpoint = wellKnownResponse.getRegistrationEndpoint();
 
-        String jwtId = JwtUtils.generateId();
-        Date issuedAt = new Date();
-        Date expiresAt = JwtUtils.addHours(issuedAt, 1);
+        String postData = ClientRegistration.create()
+                .withSoftwareStatement(softwareStatement)
+                .withWellknownConfiguration(wellKnownResponse)
+                .build();
 
-        //TODO: Move to config and make dynamic
-        String idTokenSigningAlg = wellKnownResponse.getPreferredIdTokenSigningAlg(new String[]{"RS256"}).get();
-        String tokenEndpointSigningAlg = wellKnownResponse.getPreferredTokenEndpointSigningAlg(new String[]{"RS256"}).get();
-        String requestObjectSigningAlg = wellKnownResponse.getPreferredRequestObjectSigningAlg(new String[]{"RS256"}).get();
-        Algorithm algorithm = OpenIdSignUtils.getSignatureAlgorithm(softwareStatement.getSigningKey());
-
-        String postData = JWT.create()
-                .withKeyId(softwareStatement.getSigningKeyId())
-                .withJWTId(jwtId)
-                .withIssuedAt(issuedAt)
-                .withExpiresAt(expiresAt)
-                .withIssuer(softwareStatement.getSoftwareId())
-                .withAudience(wellKnownResponse.getIssuer())
-                .withClaim(OpenIdConstants.ClaimParams.SOFTWARE_ID, softwareStatement.getSoftwareId())
-                .withClaim(OpenIdConstants.ClaimParams.SOFTWARE_STATEMENT, softwareStatement.getAssertion())
-                .withClaim(OpenIdConstants.ClaimParams.SCOPE, wellKnownResponse.verifyAndGetScopes(OpenIdConstants.SCOPES).get())
-                .withClaim(OpenIdConstants.ClaimParams.TOKEN_ENDPOINT_AUTH_METHOD, "private_key_jwt")
-                .withClaim(OpenIdConstants.ClaimParams.ID_TOKEN_SIGNED_RESPONSE_ALG, idTokenSigningAlg)
-                .withClaim(OpenIdConstants.ClaimParams.TOKEN_ENDPOINT_AUTH_SIGNING_ALG, tokenEndpointSigningAlg)
-                .withClaim(OpenIdConstants.ClaimParams.REQUEST_OBJECT_SIGNING_ALG, requestObjectSigningAlg)
-                .withClaim(OpenIdConstants.ClaimParams.APPLICATION_TYPE, OpenIdConstants.ClaimDefaults.WEB)
-                .withArrayClaim(OpenIdConstants.ClaimParams.REDIRECT_URIS, softwareStatement.getRedirectUris())
-                .withArrayClaim(OpenIdConstants.ClaimParams.GRANT_TYPES, OpenIdConstants.GRANT_TYPES)
-                .withArrayClaim(OpenIdConstants.ClaimParams.RESPONSE_TYPES, OpenIdConstants.RESPONSE_TYPES)
-                .sign(algorithm);
-
-        printEncodedJson(postData);
         return httpClient.request(registrationEndpoint)
                 .type("application/jwt")
                 .accept(MediaType.APPLICATION_JSON_TYPE)
-                .body(postData)
-                .post(RegistrationResponse.class);
+                .post(RegistrationResponse.class, postData);
     }
 
     private static void printEncodedJson(String base64Json) {
