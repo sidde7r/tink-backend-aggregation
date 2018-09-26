@@ -1,0 +1,4 @@
+{
+  "clusterid" : "oxford-staging",
+  "providers" : [ "mt-bov", "mt-hsbc-bank" ]
+}
