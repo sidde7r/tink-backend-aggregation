@@ -13,12 +13,10 @@ import se.tink.backend.aggregation.cluster.exception.ClusterNotValid;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.cluster.provider.ClusterIdProvider;
-import se.tink.backend.aggregation.cluster.provider.ClusterInfoProvider;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.lang.reflect.Type;
-
 
 public class JerseyClusterIdProvider extends AbstractHttpContextInjectable<ClusterInfo>
         implements InjectableProvider<ClusterContext, Type> {
@@ -34,10 +32,7 @@ public class JerseyClusterIdProvider extends AbstractHttpContextInjectable<Clust
 
     @Override
     public Injectable<ClusterInfo> getInjectable(ComponentContext ic, ClusterContext a, Type c) {
-        if (c.equals(ClusterInfo.class)) {
-            return this;
-        }
-        return null;
+        return c.equals(ClusterInfo.class) ? this : null;
     }
 
     @Override
