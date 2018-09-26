@@ -4,16 +4,13 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.jersey.core.util.Base64;
-import java.io.IOException;
 import java.security.SecureRandom;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.OpenIdKeyConfiguration;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.JwtUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.JsonWebKeySet;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.RegistrationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
@@ -73,27 +70,14 @@ public class OpenIdApiClient {
         return providerConfiguration.getAuthorizationEndpoint();
     }
 
-    private Date addHours(Date input, int hours) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(input);
-        cal.add(Calendar.HOUR_OF_DAY, hours);
-        return cal.getTime();
-    }
-
-    private String generateId() {
-        byte[] id = new byte[16];
-        random.nextBytes(id);
-        return EncodingUtils.encodeAsBase64String(id);
-    }
-
     public RegistrationResponse registerClient() {
 
         WellKnownResponse wellKnownResponse = getProviderConfiguration();
         URL registrationEndpoint = wellKnownResponse.getRegistrationEndpoint();
 
-        String jwtId = generateId();
+        String jwtId = JwtUtils.generateId();
         Date issuedAt = new Date();
-        Date expiresAt = addHours(issuedAt, 1);
+        Date expiresAt = JwtUtils.addHours(issuedAt, 1);
 
         //TODO: Move to config and make dynamic
         String idTokenSigningAlg = wellKnownResponse.getPreferredIdTokenSigningAlg(new String[]{"RS256"}).get();
