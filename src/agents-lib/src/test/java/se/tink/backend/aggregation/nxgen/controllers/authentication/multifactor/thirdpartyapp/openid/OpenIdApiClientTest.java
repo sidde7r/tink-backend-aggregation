@@ -7,10 +7,7 @@ import org.apache.http.HttpStatus;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.UKOB;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.UkOpenBankingConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.RegistrationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -20,7 +17,7 @@ public class OpenIdApiClientTest {
 
     private TinkHttpClient httpClient;
     private OpenIdApiClient apiClient;
-    private static final UKOB UKOB_TEST_CONFIG = fromJson("CENCORED", UKOB.class);
+    private static final UkOpenBankingConfiguration UKOB_TEST_CONFIG = fromJson("CENCORED", UkOpenBankingConfiguration.class);
 
     @Before
     public void setup() {
