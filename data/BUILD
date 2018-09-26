@@ -64,7 +64,7 @@ filegroup(
 filegroup(
     name = "provider-configuration-test",
     srcs = glob([
-        "seeding/*.json",
+        "seeding/**",
     ]),
     visibility = ["//visibility:public"],
 )
