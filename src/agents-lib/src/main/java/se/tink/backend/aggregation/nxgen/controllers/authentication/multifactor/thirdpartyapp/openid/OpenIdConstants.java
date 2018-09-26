@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 import com.google.common.collect.ImmutableList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class OpenIdConstants {
     public static final List<String> SCOPES = Arrays.asList("openid", "accounts", "payments");
@@ -49,6 +50,7 @@ public class OpenIdConstants {
     public static class ClaimParams {
         public static final String SOFTWARE_ID = "software_id";
         public static final String REDIRECT_URIS = "redirect_uris";
+        public static final String REDIRECT_URI = "redirect_uri";
         public static final String SOFTWARE_STATEMENT = "software_statement";
         public static final String SCOPE = "scope";
         public static final String GRANT_TYPES = "grant_types";
@@ -58,9 +60,20 @@ public class OpenIdConstants {
         public static final String TOKEN_ENDPOINT_AUTH_SIGNING_ALG = "token_endpoint_auth_signing_alg";
         public static final String REQUEST_OBJECT_SIGNING_ALG = "request_object_signing_alg";
         public static final String APPLICATION_TYPE = "application_type";
+        public static final String CLIENT_ID = "client_id";
+        public static final String STATE = "state";
+        public static final String MAX_AGE = "max_age";
+        public static final String CLAIMS = "claims";
+
     }
 
-    public static class ClaimDefaults{
+    public static class ClaimDefaults {
         public static final String WEB = "web";
     }
+
+    // "To indiciate that secure customer authentication must be carried out as mandated by the PSD2 RTS"
+    public static final String ACR_SECURE_AUTHENTICATION_RTS = "urn:openbanking:psd2:sca";
+
+    // According to examples the max age is 24h
+    public static final long MAX_AGE = TimeUnit.DAYS.toSeconds(1);
 }
