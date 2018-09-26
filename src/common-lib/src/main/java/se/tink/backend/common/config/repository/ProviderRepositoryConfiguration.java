@@ -12,8 +12,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableJpaRepositories(basePackages = {
-        "se.tink.backend.aggregation.provider.configuration.storage.repositories",
-        "se.tink.backend.common.repository.mysql.aggregation.clusterhostconfiguration"
+        "se.tink.backend.aggregation.provider.configuration.storage.repositories"
 })
 @EnableTransactionManagement
 public class ProviderRepositoryConfiguration  implements RepositoryConfigurator {
