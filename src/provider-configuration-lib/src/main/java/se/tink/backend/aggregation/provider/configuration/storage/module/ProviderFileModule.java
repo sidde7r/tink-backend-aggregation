@@ -32,6 +32,7 @@ public class ProviderFileModule extends AbstractModule {
     private static final String GLOBAL_PROVIDER_FILE_PATH = "data/seeding";
     private static final String AVAILABLE_PROVIDERS_FILE_PATH = "data/seeding/providers/available-providers";
     private static final String PROVIDER_OVERRIDE_FILE_PATH = "data/seeding/providers/overriding-providers";
+    private static final String LOCAL_DEVELOPMENT_KEY_STRING = "local-development";
 
     @Override
     protected void configure() { }
@@ -94,6 +95,7 @@ public class ProviderFileModule extends AbstractModule {
             parseAvailableProvidersOnCluster(availableProviderFiles, availableProvidersByCluster);
         }
 
+        enableAllProvidersForLocalDevelopment(availableProvidersByCluster);
         return availableProvidersByCluster;
     }
 
@@ -114,9 +116,20 @@ public class ProviderFileModule extends AbstractModule {
 
             parseOverridingProvidersOnCluster(availableProviderFiles, overridingProvidersByCluster);
         }
+        loadEmptyOverrideForLocalDevelopment(overridingProvidersByCluster);
         return overridingProvidersByCluster;
     }
 
+    private void loadEmptyOverrideForLocalDevelopment(Map<String, Map<String, ProviderConfiguration>> overridingProvidersOnCluster){
+        overridingProvidersOnCluster.put(LOCAL_DEVELOPMENT_KEY_STRING, Collections.EMPTY_MAP);
+    }
+
+    private void enableAllProvidersForLocalDevelopment(Map<String, List<String>> availableProvidersByCluster) throws IOException{
+        List<String> providerNames = loadProviderConfigurationFromJson().values().stream()
+                .map(ProviderConfiguration::getName).collect(Collectors.toList());
+        availableProvidersByCluster.put(LOCAL_DEVELOPMENT_KEY_STRING, providerNames);
+    }
+    
     private void parseAvailableProvidersOnCluster(
             File[] availableProviderFiles, Map<String, List<String>> providersAvailableOnCluster) throws IOException{
 
