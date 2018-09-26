@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 import java.security.SecureRandom;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 
 public class JwtUtils {
@@ -19,5 +20,9 @@ public class JwtUtils {
         byte[] id = new byte[16];
         random.nextBytes(id);
         return EncodingUtils.encodeAsBase64String(id);
+    }
+
+    public static String[] listToStringArray(List<String> list) {
+        return list.toArray(new String[list.size()]);
     }
 }
