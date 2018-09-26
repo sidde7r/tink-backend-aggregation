@@ -4,10 +4,11 @@ import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
-import javax.xml.bind.JAXBException;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskApiClient;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskConstants;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskUtils;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.ProductID;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Products;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.GetAccountStatementItemsRequest;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.GetAccountStatementItemsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -30,11 +31,14 @@ public class BawagPskTransactionFetcher implements TransactionDatePaginator<Tran
             final Date fromDate,
             final Date toDate) {
 
-        final ProductID productID = apiClient.getLoginResponse()
-                .orElseThrow(() -> new IllegalStateException("Login response not found."))
-                .getProductId(account.getAccountNumber());
+        final String errorMsg = "Could not find products from session storage necessary for fetching transactions";
+        final Products products = BawagPskUtils.xmlToEntity(
+                apiClient.getFromStorage(BawagPskConstants.Storage.PRODUCTS.name())
+                        .orElseThrow(() -> new IllegalStateException(errorMsg)), Products.class);
 
-        final String serverSessionId = apiClient.getFromStorage(
+        final ProductID productID = products.getProductIDByAccountNumber(account.getAccountNumber())
+                .orElseThrow(IllegalStateException::new);
+        final String sessionID = apiClient.getFromStorage(
                 BawagPskConstants.Storage.SERVER_SESSION_ID.name())
                 .orElseThrow(IllegalStateException::new);
         final String qid = apiClient.getFromStorage(
@@ -42,7 +46,7 @@ public class BawagPskTransactionFetcher implements TransactionDatePaginator<Tran
                 .orElseThrow(IllegalStateException::new);
 
         final GetAccountStatementItemsRequest request = new GetAccountStatementItemsRequest(
-                serverSessionId,
+                sessionID,
                 qid,
                 productID,
                 fromDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(),
@@ -50,16 +54,13 @@ public class BawagPskTransactionFetcher implements TransactionDatePaginator<Tran
         );
 
         final String requestString;
-        try {
-            requestString = request.getXml();
-        } catch (JAXBException e) {
-            throw new IllegalStateException("Unable to marshal JAXB ", e);
-        }
+        requestString = request.getXml();
         final GetAccountStatementItemsResponse response = apiClient
                 .getGetAccountStatementItemsResponse(requestString);
 
         // Get transactions, filter zero amounts since they are not shown in the app
         final Collection<? extends Transaction> transactions = response.getTransactions().stream()
+                .filter(transaction -> !transaction.getAmount().isZero())
                 .collect(Collectors.toSet());
 
         return PaginatorResponseImpl.create(transactions);

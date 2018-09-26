@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.session;
 
 import java.util.NoSuchElementException;
-import javax.xml.bind.JAXBException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskApiClient;
@@ -29,11 +28,12 @@ public class BawagPskSessionHandler implements SessionHandler {
             return; // Session already expired; nothing to do
         }
         final LogoutRequest request = new LogoutRequest(serverSessionID);
-        try {
-            bawagPskApiClient.logout(request.getXml());
-        } catch (JAXBException e) {
-            throw new IllegalStateException("Unable to marshal JAXB ", e);
-        }
+
+        // Tell ourselves that we are closing the session
+        bawagPskApiClient.closeSession();
+
+        // Tell the server that we are closing the session
+        bawagPskApiClient.logout(request.getXml());
     }
 
     private boolean hasSessionToken() {
@@ -49,6 +49,7 @@ public class BawagPskSessionHandler implements SessionHandler {
         try {
             response = bawagPskApiClient.checkIfSessionAlive();
             if (!response.requestWasSuccessful()) {
+                // The session already expired
                 throw SessionError.SESSION_EXPIRED.exception();
             }
         } catch (NoSuchElementException e) {

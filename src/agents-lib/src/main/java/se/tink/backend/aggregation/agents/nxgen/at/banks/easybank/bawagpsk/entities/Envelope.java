@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities;
 
 import java.util.Optional;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskConstants;
@@ -43,7 +42,7 @@ public class Envelope {
                 .map(Fault::getFaultString);
     }
 
-    public String getXml() throws JAXBException {
-        return BawagPskUtils.envelopeToXml(this);
+    public String getXml() {
+        return BawagPskUtils.entityToXml(this);
     }
 }

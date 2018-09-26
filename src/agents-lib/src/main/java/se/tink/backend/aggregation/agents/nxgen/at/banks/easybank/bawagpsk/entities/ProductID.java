@@ -90,37 +90,4 @@ public class ProductID {
     public String getAccountOwner() {
         return accountOwner;
     }
-
-    /**
-     * It is assumed -- but not verified -- that the app infers the account type from the first character of the
-     * account's product code. We cannot use <ProductType> to infer the account type because it has been shown that the
-     * server incorrectly sets it to "CHECKING" even in cases where it should be "SAVINGS".
-     */
-    public AccountTypes getAccountType() {
-        switch (productCode.charAt(0)) {
-        case 'B':
-            return AccountTypes.CHECKING;
-        case 'D':
-            return AccountTypes.SAVINGS;
-        default:
-            logger.error(String.format(
-                    "Account type could not be inferred from product code '%s'. Expected prefix B or D.",
-                    productCode));
-        }
-
-        logger.warn(String.format("Falling back to inferring from product type string '%s'.", productType));
-
-        switch (productType.toUpperCase()) {
-        case "CHECKING":
-            return AccountTypes.CHECKING;
-        case "SAVINGS":
-            return AccountTypes.SAVINGS;
-        default:
-            logger.error(String.format(
-                    "Account type could not be inferred from product type '%s'. Expected 'CHECKING' or 'SAVINGS'.",
-                    productCode));
-        }
-        logger.warn("Falling back to setting the product type to CHECKING");
-        return AccountTypes.CHECKING;
-    }
 }
