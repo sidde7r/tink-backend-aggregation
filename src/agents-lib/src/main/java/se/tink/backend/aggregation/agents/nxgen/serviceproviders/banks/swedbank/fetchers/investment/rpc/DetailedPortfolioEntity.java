@@ -107,7 +107,11 @@ public class DetailedPortfolioEntity extends AbstractInvestmentAccountEntity {
             return Optional.empty();
         }
 
-        return Optional.of(InvestmentAccount.builder(accountNumber, marketValue.toTinkAmount(defaultCurrency))
+        // sum cash value from portfolios and add to account
+        double cashBalance = portfolios.stream().mapToDouble(Portfolio::getCashValue).sum();
+
+        return Optional.of(InvestmentAccount.builder(accountNumber)
+                .setCashBalance(new Amount(defaultCurrency, cashBalance))
                 .setAccountNumber(accountNumber)
                 .setName(name)
                 .setPortfolios(portfolios)

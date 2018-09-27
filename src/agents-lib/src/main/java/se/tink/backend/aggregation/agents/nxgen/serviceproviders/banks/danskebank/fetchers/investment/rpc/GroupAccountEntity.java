@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
 import se.tink.backend.core.Amount;
 import se.tink.backend.system.rpc.Portfolio;
@@ -37,8 +37,9 @@ public class GroupAccountEntity {
         return displayAccountIdentifier;
     }
 
-    public InvestmentAccount toInvestmentAccount(Amount balance, List<Portfolio> portfolios) {
-        return InvestmentAccount.builder(accountIdentifier, balance)
+    public InvestmentAccount toInvestmentAccount(String currency, List<Portfolio> portfolios) {
+        return InvestmentAccount.builder(accountIdentifier)
+                .setCashBalance(new Amount(currency, 0))
                 .setAccountNumber(displayAccountIdentifier)
                 .setName(name)
                 .setPortfolios(portfolios)
