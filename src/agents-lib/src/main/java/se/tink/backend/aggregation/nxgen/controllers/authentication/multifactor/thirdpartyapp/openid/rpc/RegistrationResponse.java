@@ -1,8 +1,12 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Date;
 import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
 
 @JsonObject
 public class RegistrationResponse {
@@ -35,5 +39,24 @@ public class RegistrationResponse {
     @JsonProperty("_id")
     private String id;
 
+    public ClientInfo createClientInfo() {
+//        return new ClientInfo(
+//                clientId,
+//                clientSecret,
+//                "",
+//                new Date(clientIdIssuedAt),
+//                new Date(clientSecretExpiresAt));
+        return null;
+    }
 
+    @Override
+    public String toString() {
+        ObjectMapper m = new ObjectMapper();
+        try {
+            return m.writerWithDefaultPrettyPrinter().writeValueAsString(this);
+
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

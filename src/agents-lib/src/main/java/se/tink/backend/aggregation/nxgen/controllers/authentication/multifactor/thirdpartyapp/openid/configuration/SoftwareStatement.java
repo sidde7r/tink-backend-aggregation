@@ -44,4 +44,8 @@ public class SoftwareStatement {
     public ProviderConfiguration getProviderConfiguration(String name) {
         return providerConfigurations.get(name);
     }
+
+    public void validate(){
+        providerConfigurations.forEach((k,v) -> v.validate());
+    }
 }
