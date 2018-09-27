@@ -167,13 +167,13 @@ public class Amount extends Number {
 
     @JsonIgnore
     public Amount add(double toAdd) {
-        Preconditions.checkArgument(toAdd > 0, VALUE_ERROR_MESSAGE, "add");
+        Preconditions.checkArgument(toAdd >= 0, VALUE_ERROR_MESSAGE, "add");
         return new Amount(this.currency, this.value + toAdd);
     }
 
     @JsonIgnore
     public Amount subtract(double toSubtract) {
-        Preconditions.checkArgument(toSubtract > 0, VALUE_ERROR_MESSAGE, "subtract");
+        Preconditions.checkArgument(toSubtract >= 0, VALUE_ERROR_MESSAGE, "subtract");
         return new Amount(this.currency, this.value - toSubtract);
     }
 
