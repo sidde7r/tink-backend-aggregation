@@ -13,6 +13,7 @@ public class RaiffeisenAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
                 .doLogout(true)
+                .transactionsToPrint(0) // 0 ~ no limit
                 .build()
                 .testRefresh();
     }
@@ -25,6 +26,7 @@ public class RaiffeisenAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
                 .doLogout(true)
+                .transactionsToPrint(0) // 0 ~ no limit
                 .build()
                 .testRefresh();
     }
