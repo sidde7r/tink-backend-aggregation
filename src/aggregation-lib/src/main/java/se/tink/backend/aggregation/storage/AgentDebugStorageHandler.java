@@ -5,8 +5,6 @@ import java.io.IOException;
 
 public interface AgentDebugStorageHandler {
 
-    boolean isAvailable();
-
     String store(String content, File file) throws IOException;
 
 }
