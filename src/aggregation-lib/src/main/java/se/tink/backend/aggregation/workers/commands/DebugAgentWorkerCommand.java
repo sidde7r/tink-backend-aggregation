@@ -3,9 +3,11 @@ package se.tink.backend.aggregation.workers.commands;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.Objects;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.CredentialsRequestType;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
+import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.aggregation.storage.AgentDebugStorageHandler;
@@ -66,16 +68,23 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
         }
     }
 
+    private String maskSensitiveOutputLog(String logContent, Credentials credentials){
+        for (Field providerField : context.getRequest().getProvider().getFields()) {
+            String credentialFieldValue = credentials.getField(providerField.getName());
+
+            if (Objects.nonNull(credentialFieldValue)) {
+                logContent = logContent.replace(credentialFieldValue, "***" + providerField + "***");
+            }
+        }
+
+        return logContent;
+    }
+
     private void writeToDebugFile(Credentials credentials, TransferRequest transferRequest) {
         try {
             File debugDirectory = state.getDebugDirectory();
             String logContent = context.getLogOutputStream().toString("UTF-8");
-
-            if (credentials.getPassword() != null) {
-                // TODO: Mask all fields that are set as masked in the provider.
-
-                logContent = logContent.replace(credentials.getPassword(), "******");
-            }
+            logContent = maskSensitiveOutputLog(logContent, credentials);
 
             File logFile = new File(debugDirectory, String.format(
                     "%s_%s_u%s_c%s.log",
