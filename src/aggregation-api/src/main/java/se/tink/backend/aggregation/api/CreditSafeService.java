@@ -18,63 +18,32 @@ import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PortfolioList
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.RemoveMonitoredConsumerCreditSafeRequest;
 
 @Path("/creditsafe")
-@Consumes({
-    MediaType.APPLICATION_JSON
-})
-@Produces({
-    MediaType.APPLICATION_JSON
-})
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 @Deprecated
 public interface CreditSafeService {
     @DELETE
     @Path("consumermonitoring")
     @TeamOwnership(Team.PFM)
-    @Consumes({
-        MediaType.APPLICATION_JSON
-    })
-    public void removeConsumerMonitoring(RemoveMonitoredConsumerCreditSafeRequest request);
+    void removeConsumerMonitoring(RemoveMonitoredConsumerCreditSafeRequest request);
 
     @POST
     @Path("consumermonitoring")
     @TeamOwnership(Team.PFM)
-    @Consumes({
-        MediaType.APPLICATION_JSON
-    })
-    @Produces({
-        MediaType.APPLICATION_JSON
-    })
-    public Response addConsumerMonitoring(AddMonitoredConsumerCreditSafeRequest request);
+    Response addConsumerMonitoring(AddMonitoredConsumerCreditSafeRequest request);
 
     @GET
     @Path("consumermonitoring/portfolios")
     @TeamOwnership(Team.PFM)
-    @Consumes({
-            MediaType.APPLICATION_JSON
-    })
-    @Produces({
-            MediaType.APPLICATION_JSON
-    })
-    public PortfolioListResponse listPortfolios();
+    PortfolioListResponse listPortfolios();
 
     @POST
     @Path("consumermonitoring/all")
     @TeamOwnership(Team.PFM)
-    @Consumes({
-        MediaType.APPLICATION_JSON
-    })
-    @Produces({
-        MediaType.APPLICATION_JSON
-    })
-    public PageableConsumerCreditSafeResponse listMonitoredConsumers(PageableConsumerCreditSafeRequest request);
+    PageableConsumerCreditSafeResponse listMonitoredConsumers(PageableConsumerCreditSafeRequest request);
 
     @POST
     @Path("consumermonitoring/changed")
     @TeamOwnership(Team.PFM)
-    @Consumes({
-        MediaType.APPLICATION_JSON
-    })
-    @Produces({
-        MediaType.APPLICATION_JSON
-    })
-    public PageableConsumerCreditSafeResponse listChangedConsumers(ChangedConsumerCreditSafeRequest request);
+    PageableConsumerCreditSafeResponse listChangedConsumers(ChangedConsumerCreditSafeRequest request);
 }
