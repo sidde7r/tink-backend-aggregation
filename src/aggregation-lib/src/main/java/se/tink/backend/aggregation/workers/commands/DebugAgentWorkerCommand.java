@@ -44,8 +44,6 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
     @Override
     public void postProcess() {
-        Credentials credentials = context.getRequest().getCredentials();
-
         String clusterId = context.getClusterInfo().getClusterId().getId();
         List<String> excludedDebugClusters = context.getServiceContext().getConfiguration()
                 .getExcludedDebugClusters().getExcludedClusters();
@@ -53,6 +51,8 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
         if (Objects.nonNull(excludedDebugClusters) && excludedDebugClusters.contains(clusterId)) {
             return;
         }
+
+        Credentials credentials = context.getRequest().getCredentials();
 
         if (context.getRequest().getType() == CredentialsRequestType.TRANSFER) {
             TransferRequest transferRequest = (TransferRequest) context.getRequest();
