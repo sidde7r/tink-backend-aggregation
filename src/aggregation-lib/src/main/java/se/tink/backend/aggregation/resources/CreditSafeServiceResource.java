@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.resources;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import se.tink.backend.aggregation.api.CreditSafeService;
+import se.tink.backend.aggregation.cluster.annotation.ClusterContext;
+import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.ConsumerMonitoringWrapper;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.AddMonitoredConsumerCreditSafeRequest;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.ChangedConsumerCreditSafeRequest;
@@ -27,7 +29,8 @@ public class CreditSafeServiceResource implements CreditSafeService {
     }
 
     @Override
-    public void removeConsumerMonitoring(RemoveMonitoredConsumerCreditSafeRequest request) {
+    public void removeConsumerMonitoring(RemoveMonitoredConsumerCreditSafeRequest request,
+            @ClusterContext ClusterInfo clusterInfo) {
         SocialSecurityNumber.Sweden socialSecurityNumber = new SocialSecurityNumber.Sweden(request.getPnr());
         if (!socialSecurityNumber.isValid()) {
             HttpResponseHelper.error(Status.BAD_REQUEST);
@@ -37,7 +40,8 @@ public class CreditSafeServiceResource implements CreditSafeService {
     }
 
     @Override
-    public Response addConsumerMonitoring(AddMonitoredConsumerCreditSafeRequest request) {
+    public Response addConsumerMonitoring(AddMonitoredConsumerCreditSafeRequest request,
+            @ClusterContext ClusterInfo clusterInfo) {
         SocialSecurityNumber.Sweden socialSecurityNumber = new SocialSecurityNumber.Sweden(request.getPnr());
         if (!socialSecurityNumber.isValid()) {
             HttpResponseHelper.error(Status.BAD_REQUEST);
@@ -48,17 +52,19 @@ public class CreditSafeServiceResource implements CreditSafeService {
     }
 
     @Override
-    public PortfolioListResponse listPortfolios() {
+    public PortfolioListResponse listPortfolios(@ClusterContext ClusterInfo clusterInfo) {
         return consumerMonitoringWrapper.listPortfolios();
     }
 
     @Override
-    public PageableConsumerCreditSafeResponse listChangedConsumers(ChangedConsumerCreditSafeRequest request) {
+    public PageableConsumerCreditSafeResponse listChangedConsumers(ChangedConsumerCreditSafeRequest request,
+            @ClusterContext ClusterInfo clusterInfo) {
         return consumerMonitoringWrapper.listChangedConsumers(request);
     }
 
     @Override
-    public PageableConsumerCreditSafeResponse listMonitoredConsumers(PageableConsumerCreditSafeRequest request) {
+    public PageableConsumerCreditSafeResponse listMonitoredConsumers(PageableConsumerCreditSafeRequest request,
+            @ClusterContext ClusterInfo clusterInfo) {
         return consumerMonitoringWrapper.listMonitoredConsumers(request);
     }
 }

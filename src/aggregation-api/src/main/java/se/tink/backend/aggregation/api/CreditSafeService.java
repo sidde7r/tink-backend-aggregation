@@ -10,6 +10,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import se.tink.api.annotations.Team;
 import se.tink.api.annotations.TeamOwnership;
+import se.tink.backend.aggregation.cluster.annotation.ClusterContext;
+import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.AddMonitoredConsumerCreditSafeRequest;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.ChangedConsumerCreditSafeRequest;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PageableConsumerCreditSafeRequest;
@@ -25,25 +27,29 @@ public interface CreditSafeService {
     @DELETE
     @Path("consumermonitoring")
     @TeamOwnership(Team.INTEGRATION)
-    void removeConsumerMonitoring(RemoveMonitoredConsumerCreditSafeRequest request);
+    void removeConsumerMonitoring(RemoveMonitoredConsumerCreditSafeRequest request,
+            @ClusterContext ClusterInfo clusterInfo);
 
     @POST
     @Path("consumermonitoring")
     @TeamOwnership(Team.INTEGRATION)
-    Response addConsumerMonitoring(AddMonitoredConsumerCreditSafeRequest request);
+    Response addConsumerMonitoring(AddMonitoredConsumerCreditSafeRequest request,
+            @ClusterContext ClusterInfo clusterInfo);
 
     @GET
     @Path("consumermonitoring/portfolios")
     @TeamOwnership(Team.INTEGRATION)
-    PortfolioListResponse listPortfolios();
+    PortfolioListResponse listPortfolios(@ClusterContext ClusterInfo clusterInfo);
 
     @POST
     @Path("consumermonitoring/all")
     @TeamOwnership(Team.INTEGRATION)
-    PageableConsumerCreditSafeResponse listMonitoredConsumers(PageableConsumerCreditSafeRequest request);
+    PageableConsumerCreditSafeResponse listMonitoredConsumers(PageableConsumerCreditSafeRequest request,
+            @ClusterContext ClusterInfo clusterInfo);
 
     @POST
     @Path("consumermonitoring/changed")
     @TeamOwnership(Team.INTEGRATION)
-    PageableConsumerCreditSafeResponse listChangedConsumers(ChangedConsumerCreditSafeRequest request);
+    PageableConsumerCreditSafeResponse listChangedConsumers(ChangedConsumerCreditSafeRequest request,
+            @ClusterContext ClusterInfo clusterInfo);
 }
