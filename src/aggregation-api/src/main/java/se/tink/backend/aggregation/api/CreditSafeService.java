@@ -24,26 +24,26 @@ import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.RemoveMonitor
 public interface CreditSafeService {
     @DELETE
     @Path("consumermonitoring")
-    @TeamOwnership(Team.PFM)
+    @TeamOwnership(Team.INTEGRATION)
     void removeConsumerMonitoring(RemoveMonitoredConsumerCreditSafeRequest request);
 
     @POST
     @Path("consumermonitoring")
-    @TeamOwnership(Team.PFM)
+    @TeamOwnership(Team.INTEGRATION)
     Response addConsumerMonitoring(AddMonitoredConsumerCreditSafeRequest request);
 
     @GET
     @Path("consumermonitoring/portfolios")
-    @TeamOwnership(Team.PFM)
+    @TeamOwnership(Team.INTEGRATION)
     PortfolioListResponse listPortfolios();
 
     @POST
     @Path("consumermonitoring/all")
-    @TeamOwnership(Team.PFM)
+    @TeamOwnership(Team.INTEGRATION)
     PageableConsumerCreditSafeResponse listMonitoredConsumers(PageableConsumerCreditSafeRequest request);
 
     @POST
     @Path("consumermonitoring/changed")
-    @TeamOwnership(Team.PFM)
+    @TeamOwnership(Team.INTEGRATION)
     PageableConsumerCreditSafeResponse listChangedConsumers(ChangedConsumerCreditSafeRequest request);
 }
