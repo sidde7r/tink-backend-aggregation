@@ -7,7 +7,7 @@ public class SoftwareStatementAssertion {
 
     private String assertion;
     private String softwareId;
-    private String[] redirectUris;
+    private String redirectUri;
 
     public String getAssertion() {
         return assertion;
@@ -17,7 +17,7 @@ public class SoftwareStatementAssertion {
         return softwareId;
     }
 
-    public String[] getRedirectUris() {
-        return redirectUris;
+    public String getRedirectUri() {
+        return redirectUri;
     }
 }
