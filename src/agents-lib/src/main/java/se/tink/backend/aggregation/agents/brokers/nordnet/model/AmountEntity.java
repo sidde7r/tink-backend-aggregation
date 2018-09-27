@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AmountEntity {
+
     private String currency;
     private double value;
 
@@ -22,4 +23,10 @@ public class AmountEntity {
     public void setValue(double value) {
         this.value = value;
     }
+
+    @Override
+    public String toString() {
+        return value + " " + currency;
+    }
+
 }

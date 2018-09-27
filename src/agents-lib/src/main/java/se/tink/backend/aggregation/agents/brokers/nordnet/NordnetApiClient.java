@@ -16,6 +16,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder;
@@ -27,6 +28,8 @@ import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.protocol.HttpContext;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.brokers.nordnet.model.AccountEntity;
+import se.tink.backend.aggregation.agents.brokers.nordnet.model.AccountInfoEntity;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.AuthenticateBasicLoginRequest;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.AuthenticateBasicLoginResponse;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.LoginAnonymousPostResponse;
@@ -35,7 +38,8 @@ import se.tink.backend.aggregation.agents.brokers.nordnet.model.Request.CollectB
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.Request.FetchTokenRequest;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.Request.InitBankIdRequest;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.Request.SAMLRequest;
-import se.tink.backend.aggregation.agents.brokers.nordnet.model.Response.AccountEntities;
+import se.tink.backend.aggregation.agents.brokers.nordnet.model.Response.AccountInfoResponse;
+import se.tink.backend.aggregation.agents.brokers.nordnet.model.Response.AccountResponse;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.Response.ArtifactResponse;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.Response.BankIdInitSamlResponse;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.Response.CollectBankIdResponse;
@@ -63,7 +67,9 @@ public class NordnetApiClient {
     private static final String LOGIN_PAGE_URL = BASE_URL + "/oauth2/authorize?authType=&client_id=MOBILE_IOS&response_type=code&redirect_uri=https://www.nordnet.se/now/mobile/token.html";
     private static final String LOGIN_BANKID_PAGE_URL = BASE_URL + "/api/2/authentication/eid/saml/request?eid_method=sbidAnother";
     private static final String FETCH_TOKEN_URL = BASE_URL + "/oauth2/token";
-    private static final String GET_ACCOUNTS_URL = BASE_URL + "/api/2/accounts/summary";
+    private static final String GET_ACCOUNTS_SUMMARY_URL = BASE_URL + "/api/2/accounts/summary";
+    private static final String GET_ACCOUNTS_URL = BASE_URL + "/api/2/accounts";
+    private static final String GET_ACCOUNTS_INFO_URL = BASE_URL + "/api/2/accounts/%s/info";
     private static final String GET_POSITIONS_URL = BASE_URL + "/api/2/accounts/%s/positions";
 
     private static final AggregationLogger log = new AggregationLogger(NordnetApiClient.class);
@@ -77,6 +83,11 @@ public class NordnetApiClient {
     private String accessToken;
     private String ntag;
     private final String aggregator;
+    /**
+     * A concatenated string of account's bank-id (seems to be a simple client specific index)
+     */
+    private String accids;
+
 
     public NordnetApiClient(TinkApacheHttpClient4 client, String aggregator) {
         this.aggregator = aggregator;
@@ -270,16 +281,30 @@ public class NordnetApiClient {
         return Optional.ofNullable(accessToken);
     }
 
-    public AccountEntities fetchAccounts() {
-        String uri = UriBuilder.fromUri(GET_ACCOUNTS_URL)
-                .queryParam("now", System.currentTimeMillis())
-                .build().toASCIIString();
+    public AccountResponse fetchAccounts() {
 
-        return get(uri, AccountEntities.class);
-    }
+        String uri = UriBuilder.fromUri(GET_ACCOUNTS_URL).build().toASCIIString();
+        AccountResponse accounts = this.get(uri, AccountResponse.class);
 
-    public List<Account> getAccounts() {
-        return fetchAccounts().toAccounts();
+        accids = accounts.stream().map(a -> Integer.toString(a.getAccid())).collect(Collectors.joining(","));
+        AccountInfoResponse infos = this.get(String.format(GET_ACCOUNTS_INFO_URL, accids), AccountInfoResponse.class);
+
+        for (int i = 0; i < accounts.size(); i++) {
+            AccountEntity accountEntity = accounts.get(i);
+            int accid = accountEntity.getAccid();
+
+            for (int j = 0; j < infos.size(); j++) {
+                AccountInfoEntity infoEntity = infos.get(j);
+                int infoid = infoEntity.getAccid();
+
+                if (accid == infoid) {
+                    accountEntity.setInfo(infoEntity);
+                    break;
+                }
+            }
+        }
+
+        return accounts;
     }
 
     private <T> T post(String url, Object request, Class<T> responseEntity) {
@@ -373,9 +398,12 @@ public class NordnetApiClient {
         }
     };
 
-    public Optional<PositionsResponse> getPositions(String bankId) {
+    public Optional<PositionsResponse> getPositions() {
+        // Always fetches positions for all accounts/portfolios, but called once for each.
         try {
-            return Optional.of(get(String.format(GET_POSITIONS_URL, bankId)).getEntity(PositionsResponse.class));
+            ClientResponse clientResponse = get(String.format(GET_POSITIONS_URL, accids));
+            PositionsResponse response = clientResponse.getEntity(PositionsResponse.class);
+            return Optional.of(response);
         } catch (UniformInterfaceException e) {
             ClientResponse response = e.getResponse();
             if (response.getStatus() != 204) {
