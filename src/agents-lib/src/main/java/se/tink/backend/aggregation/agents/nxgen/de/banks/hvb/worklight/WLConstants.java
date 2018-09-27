@@ -68,6 +68,9 @@ public final class WLConstants {
     }
 
     public enum LogTags {
+        WL_AUTHENTICATION_FEEDBACK,
+        WL_AUTHENTICATION_NOT_SUCCESSFUL,
+        WL_AUTHENTICATION_NOT_LEGIT,
         WL_RECEIVED_PLAINTEXT,
         WL_SENT_PLAINTEXT;
 

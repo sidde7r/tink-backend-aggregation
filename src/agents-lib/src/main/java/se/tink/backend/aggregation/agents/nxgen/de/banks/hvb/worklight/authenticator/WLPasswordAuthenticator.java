@@ -236,6 +236,15 @@ public final class WLPasswordAuthenticator implements PasswordAuthenticator {
         return response.getPx2();
     }
 
+    private static void logAuthenticationFeedback(final InvokeResponse response) {
+        if (response.isPasswordIncorrect())
+            response.getMessages().ifPresent(message -> {
+                logger.warn("{} - Authentication feedback: {}",
+                        WLConstants.LogTags.WL_AUTHENTICATION_FEEDBACK.toTag(),
+                        message);
+            });
+    }
+
     /**
      * Send username + px2 string
      * Assert isSuccessful, legitimation, authentication/authorization error codes
@@ -256,17 +265,20 @@ public final class WLPasswordAuthenticator implements PasswordAuthenticator {
 
         final InvokeResponse response = WLUtils.encasedJsonToEntity(httpResponse, InvokeResponse.class);
 
-        response.getMessages().ifPresent(logger::warn);
-
         if (response.isPasswordIncorrect()) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         } else if (response.isAccountLocked()) {
             throw AuthorizationError.ACCOUNT_BLOCKED.exception();
         } else if (!response.getIsSuccessful()) {
-            logger.warn("Potential failure in /invoke/: expected isSuccessful to be true");
+            logger.warn("{} - Potential failure in /invoke/: expected isSuccessful to be true",
+                    WLConstants.LogTags.WL_AUTHENTICATION_NOT_SUCCESSFUL.toTag());
         } else if (!response.isLegit()) {
             final String legitimation = response.getLegitimation();
-            logger.warn("Potential failure in /invoke/: expected legitimation to be >= 1, found {}", legitimation);
+            logger.warn("{} - Potential failure in /invoke/: expected legitimation to be >= 1, found {}",
+                    WLConstants.LogTags.WL_AUTHENTICATION_NOT_LEGIT.toTag(), legitimation);
+        } else {
+            logAuthenticationFeedback(response);
         }
+
     }
 }
