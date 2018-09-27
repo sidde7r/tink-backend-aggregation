@@ -69,7 +69,8 @@ public class JsonWebKey {
 
     @JsonIgnore
     private PublicKey createEcKey() {
-        if (Strings.isNullOrEmpty(ecXPoint) || Strings.isNullOrEmpty(ecYPoint) || Strings.isNullOrEmpty(curve)) {
+        if (Strings.isNullOrEmpty(ecXPoint) || Strings.isNullOrEmpty(ecYPoint) || Strings
+                .isNullOrEmpty(curve)) {
             throw new IllegalStateException(String.format("Invalid EC key: %s", keyId));
         }
 
@@ -89,13 +90,13 @@ public class JsonWebKey {
         }
     }
 
-    public static JsonWebKey fromJsonString(String json){
+    public static JsonWebKey fromJsonString(String json) {
 
         ObjectMapper mapper = new ObjectMapper();
 
-        try{
+        try {
             return mapper.readValue(json, JsonWebKey.class);
-        }catch (IOException e){
+        } catch (IOException e) {
             throw new IllegalStateException(String.format("Could not pars: %s", json));
         }
     }

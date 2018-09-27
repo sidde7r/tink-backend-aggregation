@@ -24,7 +24,8 @@ final class TinkJwtCreator {
     private final String headerJson;
     private final String payloadJson;
 
-    private TinkJwtCreator(Algorithm algorithm, Map<String, Object> headerClaims, Map<String, Object> payloadClaims)
+    private TinkJwtCreator(Algorithm algorithm, Map<String, Object> headerClaims,
+            Map<String, Object> payloadClaims)
             throws JWTCreationException {
         this.algorithm = algorithm;
         try {
@@ -36,7 +37,8 @@ final class TinkJwtCreator {
             headerJson = mapper.writeValueAsString(headerClaims);
             payloadJson = mapper.writeValueAsString(new ClaimsHolder(payloadClaims));
         } catch (JsonProcessingException e) {
-            throw new JWTCreationException("Some of the Claims couldn't be converted to a valid JSON format.", e);
+            throw new JWTCreationException(
+                    "Some of the Claims couldn't be converted to a valid JSON format.", e);
         }
     }
 
@@ -270,7 +272,8 @@ final class TinkJwtCreator {
          * @return this same Builder instance.
          * @throws IllegalArgumentException if the name is null.
          */
-        public Builder withArrayClaim(String name, Integer[] items) throws IllegalArgumentException {
+        public Builder withArrayClaim(String name, Integer[] items)
+                throws IllegalArgumentException {
             assertNonNull(name);
             addClaim(name, items);
             return this;
@@ -298,7 +301,8 @@ final class TinkJwtCreator {
          * @throws IllegalArgumentException if the provided algorithm is null.
          * @throws JWTCreationException     if the claims could not be converted to a valid JSON or there was a problem with the signing key.
          */
-        public String sign(Algorithm algorithm) throws IllegalArgumentException, JWTCreationException {
+        public String sign(Algorithm algorithm)
+                throws IllegalArgumentException, JWTCreationException {
             if (algorithm == null) {
                 throw new IllegalArgumentException("The Algorithm cannot be null.");
             }
@@ -331,8 +335,10 @@ final class TinkJwtCreator {
     }
 
     private String sign() throws SignatureGenerationException {
-        String header = Base64.encodeBase64URLSafeString(headerJson.getBytes(StandardCharsets.UTF_8));
-        String payload = Base64.encodeBase64URLSafeString(payloadJson.getBytes(StandardCharsets.UTF_8));
+        String header = Base64
+                .encodeBase64URLSafeString(headerJson.getBytes(StandardCharsets.UTF_8));
+        String payload = Base64
+                .encodeBase64URLSafeString(payloadJson.getBytes(StandardCharsets.UTF_8));
         String content = String.format("%s.%s", header, payload);
 
         byte[] signatureBytes = algorithm.sign(content.getBytes(StandardCharsets.UTF_8));

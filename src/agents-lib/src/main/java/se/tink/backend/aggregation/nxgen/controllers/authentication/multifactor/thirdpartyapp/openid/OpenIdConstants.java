@@ -46,6 +46,30 @@ public class OpenIdConstants {
             .add(TOKEN_ENDPOINT_AUTH_METHODS.client_secret_basic.toString())
             .build();
 
+    public static final ImmutableList<String> ACCOUNT_PERMISSIONS = ImmutableList.<String>builder()
+            .add("ReadAccountsDetail",
+                    "ReadBalances",
+                    "ReadBeneficiariesDetail",
+                    "ReadDirectDebits",
+                    "ReadProducts",
+                    "ReadStandingOrdersDetail",
+                    "ReadTransactionsCredits",
+                    "ReadTransactionsDebits",
+                    "ReadTransactionsDetail").build();
+
+    public static class ApiServices {
+        public static final String ACCOUNT_REQUESTS = "/account-requests";
+        public static final String PAYMENTS = "/payments";
+        public static final String PAYMENT_SUBMISSIONS = "/payment-submissions/";
+    }
+
+    public static class Headers {
+        public static final String AUTHORIZATION = "Authorization";
+        public static final String X_FAPI_FINANCIAL_ID = "x-fapi-financial-id";
+        public static final String X_FAPI_CUSTOMER_LAST_LOGGED_TIME = "x-fapi-customer-last-logged-time";
+        public static final String X_FAPI_CUSTOMER_IP_ADDRESS = "x-fapi-customer-ip-address";
+        public static final String X_FAPI_INTERACTION_ID = "x-fapi-interaction-id";
+    }
 
     public static class ClaimParams {
         public static final String SOFTWARE_ID = "software_id";
@@ -69,6 +93,11 @@ public class OpenIdConstants {
 
     public static class ClaimDefaults {
         public static final String WEB = "web";
+    }
+
+    public static class DevParams {
+        public static final String TINK_IP = "158.174.56.4";
+        public static final String LAST_LOGIN = "Tue, 11 Sep 2012 19:43:31 UTC";
     }
 
     // "To indiciate that secure customer authentication must be carried out as mandated by the PSD2 RTS"

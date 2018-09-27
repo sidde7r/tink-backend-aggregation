@@ -48,7 +48,8 @@ public class UkOpenBankingAuthorizeRequest {
         }
 
         public String build() {
-            Preconditions.checkNotNull(wellknownConfiguration, "WellknownConfiguration must be specified.");
+            Preconditions.checkNotNull(wellknownConfiguration,
+                    "WellknownConfiguration must be specified.");
             Preconditions.checkNotNull(softwareStatement, "SoftwareStatement must be specified.");
             Preconditions.checkNotNull(clientInfo, "ClientInfo must be specified.");
 
@@ -61,13 +62,15 @@ public class UkOpenBankingAuthorizeRequest {
             }
 
             String keyId = softwareStatement.getSigningKeyId();
-            Algorithm algorithm = OpenIdSignUtils.getSignatureAlgorithm(softwareStatement.getSigningKey());
+            Algorithm algorithm = OpenIdSignUtils
+                    .getSignatureAlgorithm(softwareStatement.getSigningKey());
 
             String issuer = wellknownConfiguration.getIssuer();
             String clientId = clientInfo.getClientId();
             String redirectUri = softwareStatement.getRedirectUri();
             String scopes = OpenIdConstants.SCOPES.stream().collect(Collectors.joining(" "));
-            String responseTypes = OpenIdConstants.MANDATORY_RESPONSE_TYPES.stream().collect(Collectors.joining(" "));
+            String responseTypes = OpenIdConstants.MANDATORY_RESPONSE_TYPES.stream()
+                    .collect(Collectors.joining(" "));
 
             AuthorizeRequestClaims authorizeRequestClaims = new AuthorizeRequestClaims(intentId,
                     OpenIdConstants.ACR_SECURE_AUTHENTICATION_RTS);

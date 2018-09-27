@@ -9,7 +9,7 @@ public class IdTokenEntity {
     private OpenbankingIntentIdEntity openbankingIntentId;
     private AcrEntity acr;
 
-    public IdTokenEntity(String intentId, String ...acrValues) {
+    public IdTokenEntity(String intentId, String... acrValues) {
         this.openbankingIntentId = new OpenbankingIntentIdEntity(intentId, true);
         this.acr = new AcrEntity(true, acrValues);
     }

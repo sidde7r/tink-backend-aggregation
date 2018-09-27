@@ -119,7 +119,7 @@ public class WellKnownResponse {
     }
 
     public Optional<String> vertfyAndGetEnpointAuthMethod(String authMethod) {
-        if(!tokenEndpointAuthMethodsSupported.contains(authMethod)){
+        if (!tokenEndpointAuthMethodsSupported.contains(authMethod)) {
             return Optional.empty();
         }
 

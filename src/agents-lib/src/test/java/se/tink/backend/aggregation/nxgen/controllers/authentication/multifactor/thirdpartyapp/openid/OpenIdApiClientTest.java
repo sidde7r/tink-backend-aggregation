@@ -7,6 +7,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.UkOpenBankingConfiguration;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.AccountPermissionResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.ClientCredentials;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.RegistrationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -16,14 +19,19 @@ public class OpenIdApiClientTest {
 
     private TinkHttpClient httpClient;
     private OpenIdApiClient apiClient;
-    private static final UkOpenBankingConfiguration UKOB_TEST_CONFIG = fromJson("CENSORED", UkOpenBankingConfiguration.class);
+    private static final UkOpenBankingConfiguration UKOB_TEST_CONFIG = fromJson("C",
+            UkOpenBankingConfiguration.class);
+
+    private ClientInfo clientInfo;
 
     @Before
     public void setup() {
+        UKOB_TEST_CONFIG.validate();
 
         httpClient = new TinkHttpClient(null, null);
         httpClient.disableSignatureRequestHeader();
-        httpClient.trustRootCaCertificate(UKOB_TEST_CONFIG.getRootCAData(), UKOB_TEST_CONFIG.getRootCAPassword());
+        httpClient.trustRootCaCertificate(UKOB_TEST_CONFIG.getRootCAData(),
+                UKOB_TEST_CONFIG.getRootCAPassword());
 
         apiClient = new OpenIdApiClient(httpClient,
                 UKOB_TEST_CONFIG.getSoftwareStatement("tink"),
@@ -31,11 +39,11 @@ public class OpenIdApiClientTest {
                         .getProviderConfiguration("modelo"));
     }
 
-    private static <T extends Object> T fromJson(String json, Class<T> type) {
+    private static <T> T fromJson(String json, Class<T> type) {
         ObjectMapper mapper = new ObjectMapper();
         try {
             return mapper.readValue(json, type);
-        }catch (IOException e){
+        } catch (IOException e) {
             throw new IllegalStateException(e);
         }
     }
@@ -55,8 +63,20 @@ public class OpenIdApiClientTest {
 
         //TODO: Validate response
         RegistrationResponse response = apiClient.registerClient();
+        System.out.println(response.toString());
+        Assert.assertNotNull(response);
+    }
 
-        // Assert.fail(SerializationUtils.serializeToString(response));
+    @Test
+    public void testCredentialRequest() {
+        ClientCredentials clientCredentials = apiClient.requestClientCredentials();
+        clientCredentials.validate();
+    }
+
+    @Test
+    public void TestAccountPermissionRequest() {
+        ClientCredentials clientCredentials = apiClient.requestClientCredentials();
+        AccountPermissionResponse response = apiClient.requestAccountsApi(clientCredentials);
         Assert.assertNotNull(response);
     }
 
