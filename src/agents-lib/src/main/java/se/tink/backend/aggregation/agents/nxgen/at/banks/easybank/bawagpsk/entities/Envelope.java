@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.enti
 import java.util.Optional;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.apache.commons.lang.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskConstants;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskUtils;
 
@@ -29,17 +30,22 @@ public class Envelope {
         return header;
     }
 
+    private static boolean errorMessageIndicatesIncorrectCredentials(final String message) {
+        return message.equalsIgnoreCase(BawagPskConstants.MESSAGES.STRING_TOO_SHORT)
+                || StringUtils.containsIgnoreCase(message, BawagPskConstants.MESSAGES.INPUT_NOT_17_DIGITS);
+    }
+
     public boolean credentialsAreIncorrect() {
         return getErrorMessage()
-                .map(String::trim)
-                .map(message -> message.equalsIgnoreCase(BawagPskConstants.MESSAGES.STRING_TOO_SHORT))
+                .map(Envelope::errorMessageIndicatesIncorrectCredentials)
                 .orElse(false);
     }
 
     public Optional<String> getErrorMessage() {
         return Optional.ofNullable(body)
                 .map(Body::getFault)
-                .map(Fault::getFaultString);
+                .map(Fault::getFaultString)
+                .map(String::trim);
     }
 
     public String getXml() {
