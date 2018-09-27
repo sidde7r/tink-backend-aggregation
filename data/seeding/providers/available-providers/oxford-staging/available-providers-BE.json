@@ -1,4 +1,9 @@
 {
-  "clusterid" : "oxford-staging",
-  "providers" : [ "be-belfius-cardreader", "be-demo", "be-ing-cardreader", "be-kbc-cardreader" ]
+  "clusterid": "oxford-staging",
+  "providers": [
+    "be-belfius-cardreader",
+    "be-demo",
+    "be-ing-cardreader",
+    "be-kbc-cardreader"
+  ]
 }

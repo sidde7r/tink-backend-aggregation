@@ -1,4 +1,11 @@
 {
-  "clusterid" : "oxford-staging",
-  "providers" : [ "pl-bank-handlowy", "pl-bank-pekao", "pl-inteligo", "pl-mbank", "pl-pko-bank-polski", "pl-raiffeisen-bank" ]
+  "clusterid": "oxford-staging",
+  "providers": [
+    "pl-bank-handlowy",
+    "pl-bank-pekao",
+    "pl-inteligo",
+    "pl-mbank",
+    "pl-pko-bank-polski",
+    "pl-raiffeisen-bank"
+  ]
 }

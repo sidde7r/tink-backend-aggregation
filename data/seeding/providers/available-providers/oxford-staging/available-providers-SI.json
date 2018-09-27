@@ -1,4 +1,10 @@
 {
-  "clusterid" : "oxford-staging",
-  "providers" : [ "si-abanka", "si-banka-koper", "si-nkbm", "si-nlb", "si-sberbank-banka" ]
+  "clusterid": "oxford-staging",
+  "providers": [
+    "si-abanka",
+    "si-banka-koper",
+    "si-nkbm",
+    "si-nlb",
+    "si-sberbank-banka"
+  ]
 }

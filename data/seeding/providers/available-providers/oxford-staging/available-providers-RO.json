@@ -1,4 +1,11 @@
 {
-  "clusterid" : "oxford-staging",
-  "providers" : [ "ro-banca-comerciala-romana", "ro-banca-transilvania", "ro-brd", "ro-ing-bank", "ro-raiffeisen-bank", "ro-unicredit-tirirac-bank" ]
+  "clusterid": "oxford-staging",
+  "providers": [
+    "ro-banca-comerciala-romana",
+    "ro-banca-transilvania",
+    "ro-brd",
+    "ro-ing-bank",
+    "ro-raiffeisen-bank",
+    "ro-unicredit-tirirac-bank"
+  ]
 }

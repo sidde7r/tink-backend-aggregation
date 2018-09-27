@@ -1,4 +1,14 @@
 {
-  "clusterid" : "oxford-staging",
-  "providers" : [ "hr-erste-and-steiermarkische-bank", "hr-hpb", "hr-hypo", "hr-otp-banka", "hr-pbz", "hr-raiffeisen-bank", "hr-splitska-banka", "hr-unicredit-bank", "hr-zaba" ]
+  "clusterid": "oxford-staging",
+  "providers": [
+    "hr-erste-and-steiermarkische-bank",
+    "hr-hpb",
+    "hr-hypo",
+    "hr-otp-banka",
+    "hr-pbz",
+    "hr-raiffeisen-bank",
+    "hr-splitska-banka",
+    "hr-unicredit-bank",
+    "hr-zaba"
+  ]
 }

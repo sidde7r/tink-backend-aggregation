@@ -1,4 +1,10 @@
 {
-  "clusterid" : "oxford-staging",
-  "providers" : [ "pt-banco-portugues-de-investimento", "pt-bbva", "pt-credito-agricola", "pt-novo-banco", "pt-santander-totta" ]
+  "clusterid": "oxford-staging",
+  "providers": [
+    "pt-banco-portugues-de-investimento",
+    "pt-bbva",
+    "pt-credito-agricola",
+    "pt-novo-banco",
+    "pt-santander-totta"
+  ]
 }

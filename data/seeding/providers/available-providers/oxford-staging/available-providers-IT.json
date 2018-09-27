@@ -1,4 +1,11 @@
 {
-  "clusterid" : "oxford-staging",
-  "providers" : [ "it-cartasi", "it-finecobank", "it-ing-direct", "it-postepay", "it-ubibanca", "it-unicredit" ]
+  "clusterid": "oxford-staging",
+  "providers": [
+    "it-cartasi",
+    "it-finecobank",
+    "it-ing-direct",
+    "it-postepay",
+    "it-ubibanca",
+    "it-unicredit"
+  ]
 }

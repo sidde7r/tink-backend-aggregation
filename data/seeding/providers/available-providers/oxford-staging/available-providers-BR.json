@@ -1,4 +1,17 @@
 {
-  "clusterid" : "oxford-staging",
-  "providers" : [ "br-alelo", "br-americanexpress", "br-banco-do-brasil", "br-banrisul", "br-bradesco", "br-cielo", "br-citibank", "br-hsbc", "br-itau-unibanco", "br-itaucard", "br-nubank", "br-santander" ]
+  "clusterid": "oxford-staging",
+  "providers": [
+    "br-alelo",
+    "br-americanexpress",
+    "br-banco-do-brasil",
+    "br-banrisul",
+    "br-bradesco",
+    "br-cielo",
+    "br-citibank",
+    "br-hsbc",
+    "br-itau-unibanco",
+    "br-itaucard",
+    "br-nubank",
+    "br-santander"
+  ]
 }
