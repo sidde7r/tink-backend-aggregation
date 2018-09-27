@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.resources;
 
+import com.google.common.collect.ImmutableList;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import se.tink.backend.aggregation.api.CreditSafeService;
@@ -19,6 +22,8 @@ import se.tink.libraries.http.utils.HttpResponseHelper;
 
 public class CreditSafeServiceResource implements CreditSafeService {
 
+    private static final ImmutableList<String> VALID_CLUSTERS = ImmutableList.of(
+            "oxford-production", "oxford-staging", "local-development");
     private ConsumerMonitoringWrapper consumerMonitoringWrapper;
 
     public CreditSafeServiceResource(ServiceContext serviceContext) {
@@ -86,15 +91,7 @@ public class CreditSafeServiceResource implements CreditSafeService {
             HttpResponseHelper.error(Status.BAD_REQUEST);
         }
 
-        if (clusterId.getId().equalsIgnoreCase("oxford-production")) {
-            return;
-        }
-
-        if (clusterId.getId().equalsIgnoreCase("oxford-staging")) {
-            return;
-        }
-
-        if (clusterId.getId().equalsIgnoreCase("local-development")) {
+        if (VALID_CLUSTERS.contains(clusterId.getId())) {
             return;
         }
 
