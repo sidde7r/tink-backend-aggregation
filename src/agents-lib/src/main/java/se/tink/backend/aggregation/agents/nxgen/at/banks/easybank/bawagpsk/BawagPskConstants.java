@@ -41,6 +41,7 @@ public class BawagPskConstants {
 
     public static class MESSAGES {
         public static final String STRING_TOO_SHORT = "String too short, minimum is 5";
+        public static final String INPUT_NOT_17_DIGITS = "doesn't match [0-9]{17}";
         public static final String ACCOUNT_LOCKED = "ERR_DISPOSER_DEACTIVATED";
         public static final String INCORRECT_CREDENTIALS = "ERR_LOGIN";
     }
