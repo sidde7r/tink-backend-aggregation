@@ -17,16 +17,17 @@ public class ProviderConfiguration {
         return wellKnownURL;
     }
 
-    public URL getAccountRequestsURL(){
+    public URL getAccountRequestsURL() {
         return apiBaseURL.concat(OpenIdConstants.ApiServices.ACCOUNT_REQUESTS);
     }
 
-    public URL getPaymentsURL(){
+    public URL getPaymentsURL() {
         return apiBaseURL.concat(OpenIdConstants.ApiServices.PAYMENTS);
     }
 
-    public URL getPaymentSubmissionsURL(String paymentSubmissionId){
-        return apiBaseURL.concat(OpenIdConstants.ApiServices.PAYMENT_SUBMISSIONS + paymentSubmissionId);
+    public URL getPaymentSubmissionsURL(String paymentSubmissionId) {
+        return apiBaseURL
+                .concat(OpenIdConstants.ApiServices.PAYMENT_SUBMISSIONS + paymentSubmissionId);
     }
 
     public void validate() {

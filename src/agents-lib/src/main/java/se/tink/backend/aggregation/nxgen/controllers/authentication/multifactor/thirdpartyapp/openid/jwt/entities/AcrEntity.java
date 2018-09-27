@@ -9,7 +9,7 @@ public class AcrEntity {
     private boolean essential;
     private List<String> values;
 
-    public AcrEntity(boolean essential, String ...values) {
+    public AcrEntity(boolean essential, String... values) {
         this.essential = essential;
         this.values = Arrays.asList(values);
     }

@@ -26,7 +26,7 @@ public class ClientCredentials {
         return expiresIn;
     }
 
-    public void validate(){
+    public void validate() {
         Preconditions.checkState(!Strings.isNullOrEmpty(accessToken), "Access token myst exist.");
         Preconditions.checkState(!Strings.isNullOrEmpty(tokenType), "Token type must be defined.");
         Preconditions.checkState(expiresIn > 0, "Expiration time must be defined.");

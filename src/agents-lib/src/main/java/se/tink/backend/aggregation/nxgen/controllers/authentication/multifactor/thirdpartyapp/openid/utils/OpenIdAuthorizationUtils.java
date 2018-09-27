@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 
 public class OpenIdAuthorizationUtils {
 
-
     private final SoftwareStatement clientConfiguration;
     private final WellKnownResponse providerConfiguration;
 
@@ -17,6 +16,5 @@ public class OpenIdAuthorizationUtils {
         this.providerConfiguration = providerConfiguration;
         this.state = "HEJ";
     }
-
 
 }

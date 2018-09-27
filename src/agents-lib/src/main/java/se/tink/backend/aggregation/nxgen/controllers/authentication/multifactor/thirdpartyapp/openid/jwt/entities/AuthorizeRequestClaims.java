@@ -9,7 +9,7 @@ public class AuthorizeRequestClaims {
     @JsonProperty("id_token")
     private IdTokenEntity idToken;
 
-    public AuthorizeRequestClaims(String intentId, String ...acrValues) {
+    public AuthorizeRequestClaims(String intentId, String... acrValues) {
         this.userinfo = new UserinfoEntity(intentId);
         this.idToken = new IdTokenEntity(intentId, acrValues);
     }

@@ -45,7 +45,7 @@ public class SoftwareStatement {
         return providerConfigurations.get(name);
     }
 
-    public void validate(){
-        providerConfigurations.forEach((k,v) -> v.validate());
+    public void validate() {
+        providerConfigurations.forEach((k, v) -> v.validate());
     }
 }

@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.entities.AccountPermissionDataEntity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.entities.AccountPermissionsDataResponseEntity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.entities.RiskEntity;
 

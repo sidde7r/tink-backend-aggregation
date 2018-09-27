@@ -27,10 +27,10 @@ public class UkOpenBankingConfiguration {
     }
 
     @JsonIgnore
-    public void validate(){
+    public void validate() {
 
         Preconditions.checkNotNullOrEmpty(rootCAData);
         Preconditions.checkNotNullOrEmpty(rootCAPassword);
-        softwareStatements.forEach((k,v) -> v.validate());
+        softwareStatements.forEach((k, v) -> v.validate());
     }
 }

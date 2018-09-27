@@ -97,7 +97,7 @@ public class OpenIdConstants {
 
     public static class DevParams {
         public static final String TINK_IP = "158.174.56.4";
-        public static final String  LAST_LOGIN = "Tue, 11 Sep 2012 19:43:31 UTC";
+        public static final String LAST_LOGIN = "Tue, 11 Sep 2012 19:43:31 UTC";
     }
 
     // "To indiciate that secure customer authentication must be carried out as mandated by the PSD2 RTS"

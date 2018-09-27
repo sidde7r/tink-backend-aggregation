@@ -16,7 +16,7 @@ public class SignatureKey {
         return keyId;
     }
 
-    public RSAPrivateKey getRSAPrivateKey(){
+    public RSAPrivateKey getRSAPrivateKey() {
         return RSA.getPrivateKeyFromBytes(EncodingUtils.decodeBase64String(key));
     }
 }
