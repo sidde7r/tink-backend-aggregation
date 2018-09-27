@@ -109,8 +109,8 @@ public class NordeaFiParser extends NordeaV21Parser {
 
     @Override
     public InvestmentAccount parseInvestmentAccount(CustodyAccount custodyAccount) {
-        return InvestmentAccount.builder(custodyAccount.getAccountId(),
-                new Amount(custodyAccount.getCurrency(), custodyAccount.getMarketValue()))
+        return InvestmentAccount.builder(custodyAccount.getAccountId())
+                .setCashBalance(new Amount(custodyAccount.getCurrency(), 0))
                 .setName(custodyAccount.getName())
                 .setAccountNumber(custodyAccount.getAccountNumber())
                 .setPortfolios(Collections.singletonList(parsePortfolio(custodyAccount)))
