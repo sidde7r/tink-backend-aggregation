@@ -23,7 +23,6 @@ public class LclConstants {
     public static final class Storage {
         public static final String DEVICE_ID = "deviceId";
         public static final String AGENT_KEY = "agentKey";
-        public static final String ACCOUNT_LIST = "accountList";
         public static final String ACCOUNT_DETAILS_ENTITY = "accountDetailsEntity";
     }
 
