@@ -86,5 +86,6 @@ public class AggregationServiceContainer extends AbstractServiceContainer {
         inProcessAggregationServiceFactory.setCreditSafeService(creditSafeServiceResource);
 
         environment.jersey().register(inProcessAggregationServiceFactory.getAggregationService());
+        environment.jersey().register(inProcessAggregationServiceFactory.getCreditSafeService());
     }
 }
