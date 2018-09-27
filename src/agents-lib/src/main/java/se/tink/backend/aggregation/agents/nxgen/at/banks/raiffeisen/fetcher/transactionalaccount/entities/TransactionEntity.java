@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class TransactionEntity {
     private long id;
     private BalanceEntity balance;
-    private Date date;
+    private Date bookingDate;
     private String paymentReference;
     private String description;
 
@@ -21,9 +21,9 @@ public class TransactionEntity {
         return balance;
     }
 
-    @JsonProperty("valuta")
-    public Date getDate() {
-        return date;
+    @JsonProperty("buchungstag")
+    public Date getBookingDate() {
+        return bookingDate;
     }
 
     @JsonProperty("zahlungsreferenz")
