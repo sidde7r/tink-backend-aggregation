@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ClientInfo {
     private String clientId;
     private String clientSecret;
-    private String RegistrationId;
     private Date issuedAt;
     private Date expiresAt;
 
@@ -17,10 +16,6 @@ public class ClientInfo {
 
     public String getClientSecret() {
         return clientSecret;
-    }
-
-    public String getRegistrationId() {
-        return RegistrationId;
     }
 
     public Date getIssuedAt() {
