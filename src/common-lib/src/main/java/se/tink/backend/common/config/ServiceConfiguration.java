@@ -69,6 +69,9 @@ public class ServiceConfiguration extends Configuration {
     @JsonProperty
     private S3StorageConfiguration s3StorageConfiguration = new S3StorageConfiguration();
 
+    @JsonProperty
+    private ExcludedDebugClusters excludedDebugClusters = new ExcludedDebugClusters();
+
     public AbnAmroConfiguration getAbnAmroStaging() {
         return abnAmroStaging;
     }
@@ -160,6 +163,10 @@ public class ServiceConfiguration extends Configuration {
 
     public S3StorageConfiguration getS3StorageConfiguration() {
         return s3StorageConfiguration;
+    }
+
+    public ExcludedDebugClusters getExcludedDebugClusters() {
+        return excludedDebugClusters;
     }
 
     public void setSqsQueueConfiguration(SqsQueueConfiguration sqsQueueConfiguration) {
