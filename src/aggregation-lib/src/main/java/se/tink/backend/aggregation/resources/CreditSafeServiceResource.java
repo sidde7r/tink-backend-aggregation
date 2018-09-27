@@ -27,10 +27,12 @@ public class CreditSafeServiceResource implements CreditSafeService {
     private ConsumerMonitoringWrapper consumerMonitoringWrapper;
 
     public CreditSafeServiceResource(ServiceContext serviceContext) {
-        String user = serviceContext.getConfiguration().getCreditSafe().getUsername();
-        String pass = serviceContext.getConfiguration().getCreditSafe().getPassword();
-        boolean logTraffic = serviceContext.getConfiguration().getCreditSafe().isLogConsumerMonitoringTraffic();
+        this(serviceContext.getConfiguration().getCreditSafe().getUsername(),
+                serviceContext.getConfiguration().getCreditSafe().getPassword(),
+                serviceContext.getConfiguration().getCreditSafe().isLogConsumerMonitoringTraffic());
+    }
 
+    CreditSafeServiceResource(String user, String pass, boolean logTraffic) {
         consumerMonitoringWrapper = new ConsumerMonitoringWrapper(user, pass, logTraffic);
     }
 
