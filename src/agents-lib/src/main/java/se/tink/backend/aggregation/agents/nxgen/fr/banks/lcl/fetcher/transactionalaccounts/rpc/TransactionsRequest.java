@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.rpc;
 
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.LclConstants;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.entities.RibEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.entities.AccountDetailsEntity;
 import se.tink.backend.aggregation.nxgen.http.AbstractForm;
 
 public class TransactionsRequest extends AbstractForm {
@@ -17,9 +17,10 @@ public class TransactionsRequest extends AbstractForm {
                 LclConstants.AuthenticationValuePairs.MOBILE.getValue());
     }
 
-    public static TransactionsRequest create(RibEntity ribEntity) {
-        String cleLetter = ribEntity.getClefLetter();
+    public static TransactionsRequest create(AccountDetailsEntity accountDetailsEntity) {
+        String cleLetter = accountDetailsEntity.getClefLetter();
 
-        return new TransactionsRequest(ribEntity.getAgency(), ribEntity.getAccountNumber() + cleLetter, cleLetter);
+        return new TransactionsRequest(
+                accountDetailsEntity.getAgency(), accountDetailsEntity.getAccountNumber() + cleLetter, cleLetter);
     }
 }

@@ -14,7 +14,7 @@ public class LclConstants {
         public static final URL LOGIN = new URL(SECURITY_HOST + "outil/UAUT/AccueilService/login");
         public static final URL KEEP_ALIVE = new URL(SECURITY_HOST + "outil/UWOA/api/v2/auth/token");
 
-        public static final URL ACCOUNT_RIB = new URL(SECURITY_HOST + "outil/UWRI/AccueilService");
+        public static final URL ACCOUNT_DETAILS = new URL(SECURITY_HOST + "outil/UWRI/AccueilService");
         public static final URL ACCESS_SUMMARY = new URL(SECURITY_HOST + "outil/UWSP/Synthese/accesSynthese");
         public static final URL TRANSACTIONS =
                 new URL(SECURITY_HOST + "outil/UWLM/ListeMouvementsPar/accesListeMouvementsPar");
@@ -24,7 +24,7 @@ public class LclConstants {
         public static final String DEVICE_ID = "deviceId";
         public static final String AGENT_KEY = "agentKey";
         public static final String ACCOUNT_LIST = "accountList";
-        public static final String RIB_ENTIY = "ribEntity";
+        public static final String ACCOUNT_DETAILS_ENTITY = "accountDetailsEntity";
     }
 
     public static final class DeviceConfiguration {
@@ -135,7 +135,8 @@ public class LclConstants {
 
     public static final class Logs {
         public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("lcl_unknown_account_type");
-        public static final LogTag RIB_RESPONSE_PARSING_FAILED = LogTag.from("lcl_rib_response_parsing_failed");
-        public static final LogTag ACCOUNT_NOT_IN_RIB_RESPONSE = LogTag.from("lcl_account_not_in_rib_response");
+        public static final LogTag ACCOUNT_DETAILS_RESPONSE_PARSING_FAILED =
+                LogTag.from("lcl_account_details_response_parsing_failed");
+        public static final LogTag ACCOUNT_NOT_IN_DETAILS_RESPONSE = LogTag.from("lcl_account_not_in_details_response");
     }
 }

@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.LclApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.entities.AccountGroupEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.entities.GroupListEntity;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.entities.RibEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.entities.AccountDetailsEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 
@@ -49,12 +49,12 @@ public class LclTransactionalAccountFetcher implements AccountFetcher<Transactio
     }
 
     private TransactionalAccount getTinkAccount(AccountEntity accountEntity) {
-        Optional<RibEntity> ribEntity = apiClient.getRib(accountEntity.getAccountNumber());
+        Optional<AccountDetailsEntity> accountDetails = apiClient.getAccountDetails(accountEntity.getAccountNumber());
 
-        if (!ribEntity.isPresent()) {
+        if (!accountDetails.isPresent()) {
             return null;
         }
 
-        return accountEntity.toTinkAccount(ribEntity.get());
+        return accountEntity.toTinkAccount(accountDetails.get());
     }
 }

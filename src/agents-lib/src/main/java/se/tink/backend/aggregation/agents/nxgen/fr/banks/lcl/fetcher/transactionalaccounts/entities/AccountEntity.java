@@ -49,12 +49,12 @@ public class AccountEntity {
     private String operNotIncludedBalanceSign;
 
     @JsonIgnore
-    public TransactionalAccount toTinkAccount(RibEntity ribEntity) {
-        return TransactionalAccount.builder(getTinkAccountType(), ribEntity.getIban().toLowerCase(), getAmount())
-                .setAccountNumber(ribEntity.getIban())
+    public TransactionalAccount toTinkAccount(AccountDetailsEntity accountDetailsEntity) {
+        return TransactionalAccount.builder(getTinkAccountType(), accountDetailsEntity.getIban().toLowerCase(), getAmount())
+                .setAccountNumber(accountDetailsEntity.getIban())
                 .setName(getTypeLabel())
-                .setHolderName(new HolderName(ribEntity.getHolderName()))
-                .putInTemporaryStorage(LclConstants.Storage.RIB_ENTIY, ribEntity)
+                .setHolderName(new HolderName(accountDetailsEntity.getHolderName()))
+                .putInTemporaryStorage(LclConstants.Storage.ACCOUNT_DETAILS_ENTITY, accountDetailsEntity)
                 .build();
     }
 

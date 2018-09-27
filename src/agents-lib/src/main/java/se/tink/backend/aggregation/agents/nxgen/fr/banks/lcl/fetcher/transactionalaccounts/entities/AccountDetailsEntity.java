@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class RibEntity {
+public class AccountDetailsEntity {
     private int id;
     @JsonProperty("agence")
     private String agency;

@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.LclApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.LclConstants;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.entities.RibEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.entities.AccountDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
@@ -28,11 +28,11 @@ public class LclTransactionFetcher implements TransactionFetcher<TransactionalAc
      */
     @Override
     public List<AggregationTransaction> fetchTransactionsFor(TransactionalAccount account) {
-        RibEntity ribEntity = account
-                .getFromTemporaryStorage(LclConstants.Storage.RIB_ENTIY, RibEntity.class)
-                .orElseThrow(() -> new IllegalStateException("No rib entity found."));
+        AccountDetailsEntity accountDetailsEntity = account
+                .getFromTemporaryStorage(LclConstants.Storage.ACCOUNT_DETAILS_ENTITY, AccountDetailsEntity.class)
+                .orElseThrow(() -> new IllegalStateException("No account details entity found."));
 
-        TransactionsResponse transactionsResponse = apiClient.getTransactions(ribEntity);
+        TransactionsResponse transactionsResponse = apiClient.getTransactions(accountDetailsEntity);
 
         return Optional.ofNullable(transactionsResponse.getTransactionsList())
                 .orElse(Collections.emptyList())
