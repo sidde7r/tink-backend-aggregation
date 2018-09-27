@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration;
 
-import java.util.Date;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -24,11 +26,11 @@ public class ClientInfo {
         return clientSecret;
     }
 
-    public Date getIssuedAt() {
-        return new Date(issuedAt);
+    public ZonedDateTime getIssuedAt() {
+        return ZonedDateTime.ofInstant(Instant.ofEpochMilli(issuedAt), ZoneOffset.UTC);
     }
 
-    public Date getExpiresAt() {
-        return new Date(expiresAt);
+    public ZonedDateTime getExpiresAt() {
+        return ZonedDateTime.ofInstant(Instant.ofEpochMilli(expiresAt), ZoneOffset.UTC);
     }
 }

@@ -19,7 +19,7 @@ public class OpenIdApiClientTest {
 
     private TinkHttpClient httpClient;
     private OpenIdApiClient apiClient;
-    private static final UkOpenBankingConfiguration UKOB_TEST_CONFIG = fromJson("CENSORED",
+    private static final UkOpenBankingConfiguration UKOB_TEST_CONFIG = fromJson("C",
             UkOpenBankingConfiguration.class);
 
     private ClientInfo clientInfo;

@@ -3,10 +3,8 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.jersey.core.util.Base64;
 import java.io.IOException;
-import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
-import javax.annotation.Nonnull;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;

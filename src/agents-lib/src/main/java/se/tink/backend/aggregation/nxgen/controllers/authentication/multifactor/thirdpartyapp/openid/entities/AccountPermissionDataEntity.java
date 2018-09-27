@@ -2,12 +2,13 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.Duration;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.JwtUtils;
 
 @JsonObject
 public class AccountPermissionDataEntity {
@@ -16,7 +17,8 @@ public class AccountPermissionDataEntity {
     @JsonProperty("ExpirationDateTime")
     private String expirationDateTime;
 
-    protected AccountPermissionDataEntity() { }
+    protected AccountPermissionDataEntity() {
+    }
 
     @JsonIgnore
     protected AccountPermissionDataEntity(List<String> permissions, String expirationDateTime) {
@@ -25,13 +27,10 @@ public class AccountPermissionDataEntity {
     }
 
     public static AccountPermissionDataEntity create() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX"); //TODO: Create util for this.
 
-        String expireAt = format.format(JwtUtils.addHours(new Date(), 24));
-
+        ZonedDateTime expireAt = ZonedDateTime.now(ZoneOffset.UTC).plus(Duration.ofHours(24));
         return new AccountPermissionDataEntity(
                 OpenIdConstants.ACCOUNT_PERMISSIONS,
-                expireAt);
+                expireAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
     }
 }
-    //Fri Sep 28 11:55:39 UTC 2018
