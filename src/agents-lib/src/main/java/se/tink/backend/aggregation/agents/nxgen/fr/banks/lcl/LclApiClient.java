@@ -1,12 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl;
 
+import java.util.Collections;
+import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator.rpc.DeviceConfigurationRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator.rpc.DeviceConfigurationResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator.rpc.LoginResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.entities.AccountGroupEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.entities.AccountDetailsEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.rpc.AccessSummaryResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.rpc.BaseMobileRequest;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.rpc.AccountDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.rpc.TransactionsRequest;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.storage.LclPersistentStorage;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -14,6 +24,7 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class LclApiClient {
+    private static final AggregationLogger log = new AggregationLogger(LclApiClient.class);
 
     private final TinkHttpClient client;
     private final LclPersistentStorage lclPersistentStorage;
@@ -53,6 +64,50 @@ public class LclApiClient {
                 .get(HttpResponse.class);
 
         return httpResponse.getRedirects().size() == 0;
+    }
+
+    public Optional<AccountDetailsEntity> getAccountDetails(String accountNumber) {
+        BaseMobileRequest body = BaseMobileRequest.create();
+
+        String responseString = getPostFormRequest(LclConstants.Urls.ACCOUNT_DETAILS)
+                .post(String.class, body.getBodyValue());
+
+        AccountDetailsResponse accountDetailsResponse = SerializationUtils.deserializeFromString(
+                responseString, AccountDetailsResponse.class);
+
+        if (accountDetailsResponse == null || accountDetailsResponse.getAccountDetails() == null) {
+            log.warnExtraLong(responseString, LclConstants.Logs.ACCOUNT_DETAILS_RESPONSE_PARSING_FAILED);
+            return Optional.empty();
+        }
+
+        if (!accountNumber.equalsIgnoreCase(accountDetailsResponse.getAccountDetails().getAccountNumber())) {
+            log.warnExtraLong(responseString, LclConstants.Logs.ACCOUNT_NOT_IN_DETAILS_RESPONSE);
+            return Optional.empty();
+        }
+
+        return Optional.of(accountDetailsResponse.getAccountDetails());
+    }
+
+
+    public Optional<AccountGroupEntity> getCheckingAccountGroup() {
+        BaseMobileRequest body = BaseMobileRequest.create();
+
+        AccessSummaryResponse response = postFormAndGetJsonResponse(
+                getPostFormRequest(LclConstants.Urls.ACCESS_SUMMARY), body.getBodyValue(),
+                AccessSummaryResponse.class);
+
+        return Optional.ofNullable(response.getAccountGroupList())
+                .orElse(Collections.emptyList())
+                .stream()
+                .filter(AccountGroupEntity::isCheckingAccountGroup).findFirst();
+        }
+
+
+    public TransactionsResponse getTransactions(AccountDetailsEntity accountDetailsEntity) {
+        TransactionsRequest body = TransactionsRequest.create(accountDetailsEntity);
+
+        return postFormAndGetJsonResponse(getPostFormRequest(LclConstants.Urls.TRANSACTIONS),
+                body.getBodyValue(), TransactionsResponse.class);
     }
 
     private RequestBuilder getPostFormRequest(URL url) {

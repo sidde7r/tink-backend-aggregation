@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl;
 
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class LclConstants {
@@ -10,13 +11,19 @@ public class LclConstants {
 
         public static final URL DEVICE_CONFIGURATION = new URL(HOST + "v4/sdk/devices");
         public static final URL SET_IDENTITY = new URL(SECURITY_HOST + "outil/UAUT/AccueilService/setIdentSC");
-        public static final URL LOGIN = new URL(SECURITY_HOST + "/outil/UAUT/AccueilService/login");
-        public static final URL KEEP_ALIVE = new URL(SECURITY_HOST + "/outil/UWOA/api/v2/auth/token");
+        public static final URL LOGIN = new URL(SECURITY_HOST + "outil/UAUT/AccueilService/login");
+        public static final URL KEEP_ALIVE = new URL(SECURITY_HOST + "outil/UWOA/api/v2/auth/token");
+
+        public static final URL ACCOUNT_DETAILS = new URL(SECURITY_HOST + "outil/UWRI/AccueilService");
+        public static final URL ACCESS_SUMMARY = new URL(SECURITY_HOST + "outil/UWSP/Synthese/accesSynthese");
+        public static final URL TRANSACTIONS =
+                new URL(SECURITY_HOST + "outil/UWLM/ListeMouvementsPar/accesListeMouvementsPar");
     }
 
     public static final class Storage {
         public static final String DEVICE_ID = "deviceId";
         public static final String AGENT_KEY = "agentKey";
+        public static final String ACCOUNT_DETAILS_ENTITY = "accountDetailsEntity";
     }
 
     public static final class DeviceConfiguration {
@@ -99,5 +106,36 @@ public class LclConstants {
         public String getValue() {
             return value;
         }
+    }
+
+    public static final class AccountTypes {
+        public static final String CHECKING_ACCOUNT_TAG = "familleDepot";
+        public static final String CHECKING_ACCOUNT = "Compte de dépôts";
+    }
+
+    public static final class TransactionsRequest {
+        public static final String AGENCY = "agence";
+        public static final String ACCOUNT_NUMBER = "compte";
+        public static final String CLE_LETTER = "lettreCle";
+        public static final String MODE_KEY = "mode";
+        public static final String MODE_VALUE = "45";
+        public static final String TYPE_KEY = "nature";
+        public static final String TYPE_VALUE = "006";
+        public static final String TAG_HTML_KEY = "tagHtml";
+        public static final String TAG_HTML_VALUE = "CD";
+    }
+
+    public static final class TransactionDescrFormatting {
+        public static final String DATE_PATTERN = "dd/MM/yyyy";
+        public static final String MERCHANT_NAME = "merchantName";
+        public static final String REGEX = String.format(
+                "^CB\\s*(?<%s>.*)\\s*([0-9]{2}\\/[0-9]{2}\\/[0-9]{2})+$", MERCHANT_NAME);
+    }
+
+    public static final class Logs {
+        public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("lcl_unknown_account_type");
+        public static final LogTag ACCOUNT_DETAILS_RESPONSE_PARSING_FAILED =
+                LogTag.from("lcl_account_details_response_parsing_failed");
+        public static final LogTag ACCOUNT_NOT_IN_DETAILS_RESPONSE = LogTag.from("lcl_account_not_in_details_response");
     }
 }

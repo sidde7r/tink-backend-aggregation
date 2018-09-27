@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator.rpc;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator.entities.InfoClientEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator.entities.TopClientEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator.entities.AccountListEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -17,6 +18,8 @@ public class LoginResponse extends BaseErrorResponse {
     @JsonProperty("numContrat")
     private String contractNumber;
     private String date;
+    @JsonProperty("comptes")
+    private AccountListEntity accounts;
 
     public TopClientEntity getTopClient() {
         return topClient;
@@ -44,5 +47,9 @@ public class LoginResponse extends BaseErrorResponse {
 
     public String getDate() {
         return date;
+    }
+
+    public AccountListEntity getAccounts() {
+        return accounts;
     }
 }
