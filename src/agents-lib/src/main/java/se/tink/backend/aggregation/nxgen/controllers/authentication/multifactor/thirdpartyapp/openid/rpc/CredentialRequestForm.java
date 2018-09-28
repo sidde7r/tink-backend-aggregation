@@ -10,7 +10,7 @@ public class CredentialRequestForm extends AbstractForm {
         form.put("client_id", clientId);
         form.put("client_secret", clientSecret);
         form.put("grant_type", "client_credentials");
-        form.put("scope", "accounts");
+        form.put("scope", "openid accounts");
         return form;
     }
 }

@@ -16,4 +16,20 @@ public class AccountPermissionResponse {
     private Map<String, String> links;
     @JsonProperty("Meta")
     private Map<String, Object> meta;
+
+    public AccountPermissionsDataResponseEntity getData() {
+        return data;
+    }
+
+    public RiskEntity getRisk() {
+        return risk;
+    }
+
+    public Map<String, String> getLinks() {
+        return links;
+    }
+
+    public Map<String, Object> getMeta() {
+        return meta;
+    }
 }

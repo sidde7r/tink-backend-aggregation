@@ -25,7 +25,7 @@ public class OpenIdConstants {
 
     public static final ImmutableList<String> MANDATORY_RESPONSE_TYPES = ImmutableList.<String>builder()
             .add("code")
-            .add("id_token")
+//            .add("id_token") //TODO: Enable when we have fragment implemented or when response_mode=query has effect.
             .build();
 
     public static final ImmutableList<String> PREFERRED_ID_TOKEN_SIGNING_ALGORITHM = ImmutableList.<String>builder()
@@ -71,28 +71,32 @@ public class OpenIdConstants {
         public static final String X_FAPI_INTERACTION_ID = "x-fapi-interaction-id";
     }
 
-    public static class ClaimParams {
+    public static class Params {
+        public static final String CLIENT_ID = "client_id";
         public static final String SOFTWARE_ID = "software_id";
         public static final String REDIRECT_URIS = "redirect_uris";
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String SOFTWARE_STATEMENT = "software_statement";
         public static final String SCOPE = "scope";
         public static final String GRANT_TYPES = "grant_types";
+        public static final String RESPONSE_TYPE = "response_type";
         public static final String RESPONSE_TYPES = "response_types";
         public static final String TOKEN_ENDPOINT_AUTH_METHOD = "token_endpoint_auth_method";
         public static final String ID_TOKEN_SIGNED_RESPONSE_ALG = "id_token_signed_response_alg";
         public static final String TOKEN_ENDPOINT_AUTH_SIGNING_ALG = "token_endpoint_auth_signing_alg";
         public static final String REQUEST_OBJECT_SIGNING_ALG = "request_object_signing_alg";
         public static final String APPLICATION_TYPE = "application_type";
-        public static final String CLIENT_ID = "client_id";
         public static final String STATE = "state";
         public static final String MAX_AGE = "max_age";
         public static final String CLAIMS = "claims";
-
+        public static final String NONCE = "nonce";
+        public static final String REQUEST = "request";
     }
 
-    public static class ClaimDefaults {
+    public static class ParamDefaults {
         public static final String WEB = "web";
+        public static final String RESPONSE_MODE = "query";
+
     }
 
     public static class DevParams {

@@ -77,15 +77,15 @@ public class UkOpenBankingAuthorizeRequest {
 
             return TinkJwtCreator.create()
                     .withKeyId(keyId)
-                    .withIssuer(issuer)
-                    .withAudience(clientId)
-                    .withClaim(OpenIdConstants.ClaimParams.RESPONSE_TYPES, responseTypes)
-                    .withClaim(OpenIdConstants.ClaimParams.CLIENT_ID, clientId)
-                    .withClaim(OpenIdConstants.ClaimParams.REDIRECT_URI, redirectUri)
-                    .withClaim(OpenIdConstants.ClaimParams.SCOPE, scopes)
-                    .withClaim(OpenIdConstants.ClaimParams.STATE, state)
-                    .withClaim(OpenIdConstants.ClaimParams.MAX_AGE, OpenIdConstants.MAX_AGE)
-                    .withClaim(OpenIdConstants.ClaimParams.CLAIMS, authorizeRequestClaims)
+                    .withIssuer(clientId)
+                    .withAudience(issuer)
+                    .withClaim(OpenIdConstants.Params.RESPONSE_TYPE, responseTypes)
+                    .withClaim(OpenIdConstants.Params.CLIENT_ID, clientId)
+                    .withClaim(OpenIdConstants.Params.REDIRECT_URI, redirectUri)
+                    .withClaim(OpenIdConstants.Params.SCOPE, scopes)
+                    .withClaim(OpenIdConstants.Params.STATE, state)
+                    .withClaim(OpenIdConstants.Params.MAX_AGE, OpenIdConstants.MAX_AGE)
+                    .withClaim(OpenIdConstants.Params.CLAIMS, authorizeRequestClaims)
                     .sign(algorithm);
         }
     }

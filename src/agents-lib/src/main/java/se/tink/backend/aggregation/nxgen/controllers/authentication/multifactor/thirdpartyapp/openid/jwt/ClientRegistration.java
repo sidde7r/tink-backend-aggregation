@@ -87,18 +87,18 @@ public class ClientRegistration {
                     .withExpiresAt(expiresAt)
                     .withIssuer(softwareId)
                     .withAudience(issuer)
-                    .withClaim(OpenIdConstants.ClaimParams.SOFTWARE_ID, softwareId)
-                    .withClaim(OpenIdConstants.ClaimParams.SOFTWARE_STATEMENT, softwareStatementAssertion)
-                    .withClaim(OpenIdConstants.ClaimParams.SCOPE, scopes)
-                    .withClaim(OpenIdConstants.ClaimParams.TOKEN_ENDPOINT_AUTH_METHOD, tokenEndpointAuthMethod)
-                    .withClaim(OpenIdConstants.ClaimParams.ID_TOKEN_SIGNED_RESPONSE_ALG, idTokenSigningAlg)
-                    .withClaim(OpenIdConstants.ClaimParams.TOKEN_ENDPOINT_AUTH_SIGNING_ALG, tokenEndpointSigningAlg)
-                    .withClaim(OpenIdConstants.ClaimParams.REQUEST_OBJECT_SIGNING_ALG, requestObjectSigningAlg)
-                    .withClaim(OpenIdConstants.ClaimParams.APPLICATION_TYPE, OpenIdConstants.ClaimDefaults.WEB)
-                    .withArrayClaim(OpenIdConstants.ClaimParams.REDIRECT_URIS,
+                    .withClaim(OpenIdConstants.Params.SOFTWARE_ID, softwareId)
+                    .withClaim(OpenIdConstants.Params.SOFTWARE_STATEMENT, softwareStatementAssertion)
+                    .withClaim(OpenIdConstants.Params.SCOPE, scopes)
+                    .withClaim(OpenIdConstants.Params.TOKEN_ENDPOINT_AUTH_METHOD, tokenEndpointAuthMethod)
+                    .withClaim(OpenIdConstants.Params.ID_TOKEN_SIGNED_RESPONSE_ALG, idTokenSigningAlg)
+                    .withClaim(OpenIdConstants.Params.TOKEN_ENDPOINT_AUTH_SIGNING_ALG, tokenEndpointSigningAlg)
+                    .withClaim(OpenIdConstants.Params.REQUEST_OBJECT_SIGNING_ALG, requestObjectSigningAlg)
+                    .withClaim(OpenIdConstants.Params.APPLICATION_TYPE, OpenIdConstants.ParamDefaults.WEB)
+                    .withArrayClaim(OpenIdConstants.Params.REDIRECT_URIS,
                             new String[] { softwareStatement.getRedirectUri() })
-                    .withArrayClaim(OpenIdConstants.ClaimParams.GRANT_TYPES, JwtUtils.listToStringArray(grantTypes))
-                    .withArrayClaim(OpenIdConstants.ClaimParams.RESPONSE_TYPES,
+                    .withArrayClaim(OpenIdConstants.Params.GRANT_TYPES, JwtUtils.listToStringArray(grantTypes))
+                    .withArrayClaim(OpenIdConstants.Params.RESPONSE_TYPES,
                             JwtUtils.listToStringArray(responseTypes))
                     .sign(algorithm);
         }
