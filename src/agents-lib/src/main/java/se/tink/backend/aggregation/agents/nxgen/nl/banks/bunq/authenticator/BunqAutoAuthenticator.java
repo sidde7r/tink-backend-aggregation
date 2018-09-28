@@ -35,11 +35,11 @@ public class BunqAutoAuthenticator implements AutoAuthenticator {
     public void autoAuthenticate() throws SessionException {
         try {
             // Here we need to use the token got from installation
-            sessionStorage.put(BunqConstants.StorageKeys.SESSION_TOKEN,
-                    persistentStorage.get(BunqConstants.StorageKeys.SESSION_TOKEN));
+            sessionStorage.put(BunqConstants.StorageKeys.CLIENT_AUTH_TOKEN,
+                    persistentStorage.get(BunqConstants.StorageKeys.CLIENT_AUTH_TOKEN));
             String apiKey = credentials.getField(Field.Key.PASSWORD);
             CreateSessionResponse createSessionResponse = apiClient.createSession(apiKey);
-            sessionStorage.put(BunqConstants.StorageKeys.SESSION_TOKEN, createSessionResponse.getToken());
+            sessionStorage.put(BunqConstants.StorageKeys.CLIENT_AUTH_TOKEN, createSessionResponse.getToken());
             sessionStorage.put(BunqConstants.StorageKeys.USER_ID, createSessionResponse.getUserPerson().getId());
         } catch (HttpResponseException e) {
             HttpResponse response = e.getResponse();

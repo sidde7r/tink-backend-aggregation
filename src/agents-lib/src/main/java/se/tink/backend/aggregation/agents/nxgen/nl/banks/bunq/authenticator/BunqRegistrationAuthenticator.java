@@ -47,9 +47,9 @@ public class BunqRegistrationAuthenticator implements Authenticator {
             InstallResponse installationResponse = apiClient.installation(keyPair.getPublic());
 
             // This token is used in one of the required headers. This must be set before the next request is done.
-            // Persist the session token here, cus it will be used in the auto auth
-            persistentStorage.put(BunqConstants.StorageKeys.SESSION_TOKEN, installationResponse.getToken());
-            sessionStorage.put(BunqConstants.StorageKeys.SESSION_TOKEN, installationResponse.getToken());
+            // Persist the client auth token here, cus it will be used in the auto auth
+            persistentStorage.put(BunqConstants.StorageKeys.CLIENT_AUTH_TOKEN, installationResponse.getToken());
+            sessionStorage.put(BunqConstants.StorageKeys.CLIENT_AUTH_TOKEN, installationResponse.getToken());
 
             // This is just to make it obvious that it's a api key we're using
             String apiKey = credentials.getField(Field.Key.PASSWORD);
@@ -61,7 +61,7 @@ public class BunqRegistrationAuthenticator implements Authenticator {
 
             // Create the session and save session values
             CreateSessionResponse createSessionResponse = apiClient.createSession(apiKey);
-            sessionStorage.put(BunqConstants.StorageKeys.SESSION_TOKEN, createSessionResponse.getToken());
+            sessionStorage.put(BunqConstants.StorageKeys.CLIENT_AUTH_TOKEN, createSessionResponse.getToken());
             sessionStorage.put(BunqConstants.StorageKeys.USER_ID, createSessionResponse.getUserPerson().getId());
         } catch (HttpResponseException e) {
             HttpResponse response = e.getResponse();

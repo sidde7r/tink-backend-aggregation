@@ -55,7 +55,7 @@ public class BunqConstants {
         public static final String DEVICE_RSA_SIGNING_KEY_PAIR = "deviceRsaSigningKeyPair";
         public static final String BUNQ_PUBLIC_KEY = "bunqPublicKey";
         public static final String DEVICE_SERVER_ID = "deviceServerId";
-        public static final String SESSION_TOKEN = "sessionToken";
+        public static final String CLIENT_AUTH_TOKEN = "clientAuthToken";
         public static final String USER_ID = "userId";
     }
 
