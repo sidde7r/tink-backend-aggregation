@@ -94,7 +94,7 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
     }
 
     private URL buildAuthorizationRequest(URL authorizationEndpoint) {
-        WellKnownResponse providerConfiguration = apiClient.getProviderConfiguration();
+        WellKnownResponse providerConfiguration = apiClient.getWellKnownConfiguration();
 
         String scope = providerConfiguration.verifyAndGetScopes(OpenIdConstants.SCOPES)
                 .orElseThrow(

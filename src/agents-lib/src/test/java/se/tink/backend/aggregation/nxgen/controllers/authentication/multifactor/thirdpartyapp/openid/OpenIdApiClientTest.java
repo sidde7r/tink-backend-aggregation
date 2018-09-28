@@ -1,28 +1,27 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Strings;
 import java.io.IOException;
 import org.apache.http.HttpStatus;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.UkOpenBankingConfiguration;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.ClientCredentials;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.RegistrationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class OpenIdApiClientTest {
 
     private TinkHttpClient httpClient;
     private OpenIdApiClient apiClient;
-    private static final UkOpenBankingConfiguration UKOB_TEST_CONFIG = fromJson("C",
+    private static final UkOpenBankingConfiguration UKOB_TEST_CONFIG = fromJson("",
             UkOpenBankingConfiguration.class);
-
-    private ClientInfo clientInfo;
 
     @Before
     public void setup() {
@@ -50,7 +49,7 @@ public class OpenIdApiClientTest {
 
     @Test
     public void testGetConfiguration() {
-        WellKnownResponse conf = apiClient.getProviderConfiguration();
+        WellKnownResponse conf = apiClient.getWellKnownConfiguration();
 
         Assert.assertNotNull(conf);
         Assert.assertTrue(conf.verifyAndGetScopes(
@@ -74,10 +73,19 @@ public class OpenIdApiClientTest {
     }
 
     @Test
-    public void TestAccountPermissionRequest() {
+    public void testAccountPermissionRequest() {
         ClientCredentials clientCredentials = apiClient.requestClientCredentials();
         AccountPermissionResponse response = apiClient.requestAccountsApi(clientCredentials);
         Assert.assertNotNull(response);
+    }
+
+    @Test
+    public void testAuthorizeConsent(){
+        ClientCredentials clientCredentials = apiClient.requestClientCredentials();
+        AccountPermissionResponse response = apiClient.requestAccountsApi(clientCredentials);
+        URL authUrl = apiClient.authorizeConsent(response.getData().getAccountRequestId());
+        System.out.println(authUrl.toString());
+        Assert.assertTrue(!Strings.isNullOrEmpty(authUrl.toString()));
     }
 
     @Test(expected = HttpResponseException.class)
