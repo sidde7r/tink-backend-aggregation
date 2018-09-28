@@ -19,5 +19,4 @@ public class CardsListEntity {
     boolean canFetchMore() {
         return moreData;
     }
-
 }

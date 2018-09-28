@@ -15,7 +15,7 @@ public class ImaginBankConstants {
         static final String ACCOUNTS_PATH = "cuentas/lista";
         static final String ACCOUNT_TRANSACTION_PATH = "cuentas/extracto";
 
-        static final String CHECK_FOTO_PATH = "smartContent/consultaFoto"; // Used for keep alive. TODO: Evaluate
+        static final String CHECK_FOTO_PATH = "smartContent/consultaFoto";
         static final String GENERIC_CARDS_PATH = "tarjetas/listadoTarjetasGenerica";
         static final String CARD_TRANSACTIONS_PATH = "tarjetasHCE/listaMovimientosGenerica";
     }
@@ -36,10 +36,10 @@ public class ImaginBankConstants {
     }
 
     public static class DefaultRequestParams {
-        public static final String LANGUAGE_EN = "en"; // English TODO: Language constants already exists somewhere?
-        public static final String ORIGIN = "13190"; // Can seemingly be anything as long as it exists, purpose unknown.
-        public static final String CHANNEL = "3"; // Only some valid values (1, 2, O, ...), purpose unknown.
-        public static final String INSTALLATION_ID = "eIAPPLPh8,1+SfeQDnFvsPWCKY4QFdUJ9ofXhc="; // App install ID?
+        public static final String LANGUAGE_EN = "en";
+        public static final String ORIGIN = "13190";
+        public static final String CHANNEL = "3";
+        public static final String INSTALLATION_ID = "eIAPPLPh8,1+SfeQDnFvsPWCKY4QFdUJ9ofXhc="; // App install ID
         public static final String VIRTUAL_KEYBOARD = "false";
         public static final String DEMO = "false";
         public static final String ALTA_IMAGINE = "false";
