@@ -126,7 +126,9 @@ public class ProviderFileModule extends AbstractModule {
 
     private void enableAllProvidersForLocalDevelopment(Map<String, List<String>> availableProvidersByCluster) throws IOException{
         List<String> providerNames = loadProviderConfigurationFromJson().values().stream()
-                .map(ProviderConfiguration::getName).collect(Collectors.toList());
+                .map(ProviderConfiguration::getName)
+                .collect(Collectors.toList());
+        
         availableProvidersByCluster.put(LOCAL_DEVELOPMENT_KEY_STRING, providerNames);
     }
     
