@@ -49,6 +49,7 @@ import se.tink.backend.aggregation.agents.brokers.nordnet.model.html.CompleteBan
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.net.TinkApacheHttpClient4;
@@ -73,6 +74,7 @@ public class NordnetApiClient {
     private static final String GET_POSITIONS_URL = BASE_URL + "/api/2/accounts/%s/positions";
 
     private static final AggregationLogger log = new AggregationLogger(NordnetApiClient.class);
+    private static final LogTag LOG_ACCOUNT_INFO = LogTag.from("Nordnet-account-info");
 
     private String bankIdUrl;
 
@@ -298,6 +300,7 @@ public class NordnetApiClient {
                 int infoid = infoEntity.getAccid();
 
                 if (accid == infoid) {
+                    log.info(LOG_ACCOUNT_INFO + ": " + infoEntity.toString());
                     accountEntity.setInfo(infoEntity);
                     break;
                 }

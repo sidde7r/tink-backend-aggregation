@@ -57,4 +57,31 @@ public class AccountInfoEntity {
         return fullMarketvalue;
     }
 
+    @Override
+    public String toString() {
+        return "AccountInfoEntity{" +
+                "accountCredit=" + accountCredit +
+                ", collateral=" + collateral +
+                ", pawnValue=" + pawnValue +
+                ", tradingPower=" + tradingPower +
+                ", loanLimit=" + loanLimit +
+                ", forwardSum=" + forwardSum +
+                ", futureSum=" + futureSum +
+                ", accountCurrency='" + accountCurrency + '\'' +
+                ", interest=" + interest +
+                ", accountSum=" + accountSum +
+                ", unrealizedFutureProfitLoss=" + unrealizedFutureProfitLoss +
+                ", ownCapital=" + ownCapital +
+                ", ownCapitalMorning=" + ownCapitalMorning +
+                ", fullMarketvalue=" + fullMarketvalue +
+                ", accountCode='" + accountCode + '\'' +
+                ", bankAccno='" + bankAccno + '\'' +
+                ", bankAccount=" + bankAccount +
+                ", interestRate=" + interestRate +
+                ", registrationDate='" + registrationDate + '\'' +
+                ", accno=" + accno +
+                ", accid=" + accid +
+                '}';
+    }
+    
 }
