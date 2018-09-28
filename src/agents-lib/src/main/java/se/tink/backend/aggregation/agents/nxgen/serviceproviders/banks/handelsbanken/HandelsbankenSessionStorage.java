@@ -2,8 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsb
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.ApplicationEntryPointResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.transactionalaccount.rpc.AccountListResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.creditcard.entities.HandelsbankenCreditCard;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.creditcard.rpc.CreditCardsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.transactionalaccount.rpc.AccountListResponse;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class HandelsbankenSessionStorage {
@@ -25,7 +26,8 @@ public class HandelsbankenSessionStorage {
     }
 
     public Optional<ApplicationEntryPointResponse> applicationEntryPoint() {
-        return retrieve(HandelsbankenConstants.Storage.APPLICATION_ENTRY_POINT, ApplicationEntryPointResponse.class);
+        return retrieve(HandelsbankenConstants.Storage.APPLICATION_ENTRY_POINT,
+                ApplicationEntryPointResponse.class);
     }
 
     public void removeApplicationEntryPoint() {
@@ -37,15 +39,17 @@ public class HandelsbankenSessionStorage {
     }
 
     public Optional<? extends AccountListResponse> accountList() {
-        return retrieve(HandelsbankenConstants.Storage.ACCOUNT_LIST, configuration.getAccountListResponse());
+        return retrieve(HandelsbankenConstants.Storage.ACCOUNT_LIST,
+                configuration.getAccountListResponse());
     }
 
     public void persist(CreditCardsResponse cards) {
         persist(HandelsbankenConstants.Storage.CREDIT_CARDS, cards);
     }
 
-    public Optional<CreditCardsResponse<?>> creditCards() {
-        return retrieve(HandelsbankenConstants.Storage.CREDIT_CARDS, configuration.getCreditCardsResponse());
+    public <CreditCard extends HandelsbankenCreditCard> Optional<CreditCardsResponse<CreditCard>> creditCards() {
+        return retrieve(HandelsbankenConstants.Storage.CREDIT_CARDS,
+                configuration.getCreditCardsResponse());
     }
 
     private <T> Optional<T> retrieve(String key, Class<T> valueType) {

@@ -23,7 +23,7 @@ public class HandelsbankenFICreditCard extends HandelsbankenCreditCard {
     }
 
     @Override
-    public URL toCardTransactions() {
+    public URL getCardTransactionsUrl() {
         return findLink(HandelsbankenConstants.URLS.Links.TRANSINFO);
     }
 

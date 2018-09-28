@@ -29,7 +29,7 @@ public class HandelsbankenSECreditCard extends HandelsbankenCreditCard {
                 .build();
     }
 
-    public URL toCardTransactions() {
+    public URL getCardTransactionsUrl() {
         return findLink(HandelsbankenConstants.URLS.Links.CARD_TRANSACTIONS);
     }
 

@@ -7,17 +7,10 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.handelsbanken.fetcher.c
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.creditcard.rpc.CreditCardsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 
-public class CreditCardsFIResponse extends CreditCardsResponse<HandelsbankenFIApiClient> {
+public class CreditCardsFIResponse extends CreditCardsResponse<HandelsbankenFICreditCard> {
 
-    private List<HandelsbankenFICreditCard> cards;
-    @Override
-    public List<CreditCardAccount> toTinkAccounts(HandelsbankenFIApiClient client) {
+    public List<CreditCardAccount> toTinkAccounts() {
         return cards.stream()
                 .map(HandelsbankenFICreditCard::toTinkAccount).collect(Collectors.toList());
-    }
-
-    @Override
-    protected List<HandelsbankenFICreditCard> getCards() {
-        return cards;
     }
 }
