@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.jersey.core.util.Base64;
 import java.io.IOException;
 import java.util.Objects;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
@@ -15,11 +14,13 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.UkOpenBankingAuthorizeRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.AccountPermissionRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.AccountPermissionResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.ClientCredentials;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.CredentialRequestForm;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.TokenResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.JsonWebKeySet;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.RegistrationResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.TokenRequestForm;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils.HttpAuthUtils;
+import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
@@ -88,42 +89,118 @@ public class OpenIdApiClient {
                 .post(RegistrationResponse.class, postData);
     }
 
-    public ClientCredentials requestClientCredentials() {
+    private TokenRequestForm createTokenRequestForm(String grantType) {
+        WellKnownResponse wellknownConfiguration = getWellKnownConfiguration();
 
         ClientInfo clientInfo = providerConfiguration.getClientInfo();
 
-        return httpClient.request(getWellKnownConfiguration().getTokenEndpoint())
-                .type("application/x-www-form-urlencoded")
-                .accept(MediaType.APPLICATION_JSON_TYPE)
-                .body(CredentialRequestForm.create(
-                        clientInfo.getClientId(),
-                        clientInfo.getClientSecret()))
-                .post(ClientCredentials.class);
+        String scopes = wellknownConfiguration.verifyAndGetScopes(OpenIdConstants.SCOPES)
+                .orElseThrow(() -> new IllegalStateException("Provider does not support the mandatory scopes."));
+
+        TokenRequestForm requestForm = new TokenRequestForm()
+                .withGrantType(grantType)
+                .withScope(scopes)
+                .withRedirectUri(softwareStatement.getRedirectUri());
+
+        OpenIdConstants.TOKEN_ENDPOINT_AUTH_METHOD authMethod = wellknownConfiguration.getPreferredTokenEndpointAuthMethod(
+                OpenIdConstants.PREFERRED_TOKEN_ENDPOINT_AUTH_METHODS)
+                .orElseThrow(() -> new IllegalStateException("Preferred token endpoint auth method not found."));
+
+        switch (authMethod) {
+        case client_secret_post:
+            requestForm.withClientSecretPost(clientInfo.getClientId(), clientInfo.getClientSecret());
+            break;
+
+        case private_key_jwt:
+            requestForm.withPrivateKeyJwt(softwareStatement, wellknownConfiguration, clientInfo);
+            break;
+
+        case client_secret_basic:
+            // Add to header.
+            break;
+
+        default:
+            throw new IllegalStateException(String.format("Not yet implemented auth method: %s",
+                    authMethod.toString()));
+        }
+
+        return requestForm;
     }
 
-    public AccountPermissionResponse requestAccountsApi(ClientCredentials clientCredentials) {
+    private RequestBuilder createTokenRequest() {
+        WellKnownResponse wellknownConfiguration = getWellKnownConfiguration();
 
-        String bearerToken = String.format("Bearer %s", clientCredentials.getAccessToken());
+        RequestBuilder requestBuilder = httpClient.request(wellknownConfiguration.getTokenEndpoint())
+                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .accept(MediaType.APPLICATION_JSON_TYPE);
+
+        ClientInfo clientInfo = providerConfiguration.getClientInfo();
+
+        OpenIdConstants.TOKEN_ENDPOINT_AUTH_METHOD authMethod = wellknownConfiguration.getPreferredTokenEndpointAuthMethod(
+                OpenIdConstants.PREFERRED_TOKEN_ENDPOINT_AUTH_METHODS)
+                .orElseThrow(() -> new IllegalStateException("Preferred token endpoint auth method not found."));
+
+        switch (authMethod) {
+        case client_secret_basic:
+            requestBuilder = requestBuilder.header(OpenIdConstants.HttpHeaders.AUTHORIZATION,
+                    HttpAuthUtils.createBasicAuth(clientInfo.getClientId(), clientInfo.getClientSecret()));
+            break;
+
+        default:
+            // fall through
+        }
+
+        return requestBuilder;
+    }
+
+    public AuthenticationToken requestClientCredentials() {
+        TokenRequestForm postData = createTokenRequestForm("client_credentials");
+
+        return createTokenRequest()
+                .body(postData)
+                .post(TokenResponse.class)
+                .toAuthToken();
+    }
+
+    public AuthenticationToken refreshAuthenticationToken(String refreshToken) {
+        TokenRequestForm postData = createTokenRequestForm("refresh_token")
+                .withRefreshToken(refreshToken);
+
+        return createTokenRequest()
+                .body(postData)
+                .post(TokenResponse.class)
+                .toAuthToken();
+    }
+
+    public AuthenticationToken exchangeAccessCode(String code) {
+        TokenRequestForm postData = createTokenRequestForm("authorization_code")
+                .withCode(code);
+
+        return createTokenRequest()
+                .body(postData)
+                .post(TokenResponse.class)
+                .toAuthToken();
+    }
+
+
+    public AccountPermissionResponse requestAccountsApi(AuthenticationToken clientCredentials) {
+        OpenIdAuthenticatedHttpFilter authFilter = new OpenIdAuthenticatedHttpFilter(
+                clientCredentials,
+                providerConfiguration,
+                OpenIdConstants.DevParams.TINK_IP,
+                OpenIdConstants.DevParams.LAST_LOGIN
+        );
+
         return httpClient
                 .request(providerConfiguration.getAccountRequestsURL())
-                .header(OpenIdConstants.Headers.AUTHORIZATION, bearerToken)
-                .header(OpenIdConstants.Headers.X_FAPI_FINANCIAL_ID,
-                        providerConfiguration.getOrganizationId())
-                .header(OpenIdConstants.Headers.X_FAPI_CUSTOMER_LAST_LOGGED_TIME,
-                        OpenIdConstants.DevParams.LAST_LOGIN)
-                .header(OpenIdConstants.Headers.X_FAPI_CUSTOMER_IP_ADDRESS,
-                        OpenIdConstants.DevParams.TINK_IP)
-                .header(OpenIdConstants.Headers.X_FAPI_INTERACTION_ID, UUID.randomUUID())
+                .addFilter(authFilter)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .body(AccountPermissionRequest.create())
                 .post(AccountPermissionResponse.class);
     }
 
-    public URL authorizeConsent(String intentId) {
-
-        String nonce = UUID.randomUUID().toString();
-        String state = UUID.randomUUID().toString();
+    public URL buildAuthorizeUrl(String state, String intentId) {
 
         //TODO: Create util for these?
         String responseType = OpenIdConstants.MANDATORY_RESPONSE_TYPES.stream()
@@ -143,7 +220,6 @@ public class OpenIdApiClient {
                         providerConfiguration.getClientInfo().getClientId())
                 .queryParam(OpenIdConstants.Params.STATE, state)
                 .queryParam(OpenIdConstants.Params.SCOPE, scope)
-                .queryParam(OpenIdConstants.Params.NONCE, nonce)
                 .queryParam(OpenIdConstants.Params.REDIRECT_URI, softwareStatement.getRedirectUri())
                 .queryParam(OpenIdConstants.Params.REQUEST, UkOpenBankingAuthorizeRequest.create()
                         .withClientInfo(providerConfiguration.getClientInfo())
@@ -153,6 +229,17 @@ public class OpenIdApiClient {
                         .withIntentId(intentId)
                         .build())
                 .getUrl();
+    }
+
+    public void registerAuthFilter(AuthenticationToken token) {
+        httpClient.addFilter(
+                new OpenIdAuthenticatedHttpFilter(
+                        token,
+                        providerConfiguration,
+                        OpenIdConstants.DevParams.TINK_IP,
+                        OpenIdConstants.DevParams.LAST_LOGIN
+                )
+        );
     }
 
     private static void printJson(Object json) {

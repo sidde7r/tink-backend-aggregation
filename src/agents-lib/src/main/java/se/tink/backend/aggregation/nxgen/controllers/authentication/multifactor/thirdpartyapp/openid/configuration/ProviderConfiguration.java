@@ -26,8 +26,7 @@ public class ProviderConfiguration {
     }
 
     public URL getPaymentSubmissionsURL(String paymentSubmissionId) {
-        return apiBaseURL
-                .concat(OpenIdConstants.ApiServices.PAYMENT_SUBMISSIONS + paymentSubmissionId);
+        return apiBaseURL.concat(OpenIdConstants.ApiServices.PAYMENT_SUBMISSIONS + paymentSubmissionId);
     }
 
     public void validate() {

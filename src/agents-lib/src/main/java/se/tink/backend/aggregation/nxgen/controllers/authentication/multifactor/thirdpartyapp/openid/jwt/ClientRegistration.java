@@ -60,7 +60,8 @@ public class ClientRegistration {
 
             String tokenEndpointAuthMethod = wellknownConfiguration.getPreferredTokenEndpointAuthMethod(
                     OpenIdConstants.PREFERRED_TOKEN_ENDPOINT_AUTH_METHODS)
-                    .orElseThrow(() -> new IllegalStateException("Preferred token endpoint auth method not found."));
+                    .orElseThrow(() -> new IllegalStateException("Preferred token endpoint auth method not found."))
+                    .toString();
 
             String issuer = wellknownConfiguration.getIssuer();
 

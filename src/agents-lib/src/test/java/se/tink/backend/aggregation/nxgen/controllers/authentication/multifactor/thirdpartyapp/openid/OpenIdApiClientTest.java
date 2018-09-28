@@ -9,17 +9,18 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.UkOpenBankingConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.AccountPermissionResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.ClientCredentials;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.RegistrationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class OpenIdApiClientTest {
 
     private TinkHttpClient httpClient;
     private OpenIdApiClient apiClient;
+
     private static final UkOpenBankingConfiguration UKOB_TEST_CONFIG = fromJson("",
             UkOpenBankingConfiguration.class);
 
@@ -68,22 +69,23 @@ public class OpenIdApiClientTest {
 
     @Test
     public void testCredentialRequest() {
-        ClientCredentials clientCredentials = apiClient.requestClientCredentials();
-        clientCredentials.validate();
+        AuthenticationToken clientCredentials = apiClient.requestClientCredentials();
+        Assert.assertTrue(clientCredentials.isValid());
+        Assert.fail(SerializationUtils.serializeToString(clientCredentials));
     }
 
     @Test
-    public void testAccountPermissionRequest() {
-        ClientCredentials clientCredentials = apiClient.requestClientCredentials();
+    public void TestAccountPermissionRequest() {
+        AuthenticationToken clientCredentials = apiClient.requestClientCredentials();
         AccountPermissionResponse response = apiClient.requestAccountsApi(clientCredentials);
         Assert.assertNotNull(response);
     }
 
     @Test
     public void testAuthorizeConsent(){
-        ClientCredentials clientCredentials = apiClient.requestClientCredentials();
+        AuthenticationToken clientCredentials = apiClient.requestClientCredentials();
         AccountPermissionResponse response = apiClient.requestAccountsApi(clientCredentials);
-        URL authUrl = apiClient.authorizeConsent(response.getData().getAccountRequestId());
+        URL authUrl = apiClient.buildAuthorizeUrl("test", response.getData().getAccountRequestId());
         System.out.println(authUrl.toString());
         Assert.assertTrue(!Strings.isNullOrEmpty(authUrl.toString()));
     }
