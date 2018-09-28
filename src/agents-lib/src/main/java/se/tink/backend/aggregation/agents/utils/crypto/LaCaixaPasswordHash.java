@@ -1,11 +1,10 @@
-package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator;
+package se.tink.backend.aggregation.agents.utils.crypto;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class LaCaixaPasswordHash {
-
 
     private static final String HASH_ALGORITHM = "MD5";
     private static final String PADDING = "                " +
