@@ -4,19 +4,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class ImaginBankAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     private final ImaginBankApiClient apiClient;
-    private final SessionStorage sessionStorage;
+    private final ImaginBankSessionStorage sessionStorage;
 
-    public ImaginBankAccountFetcher(ImaginBankApiClient apiClient, SessionStorage sessionStorage) {
+    public ImaginBankAccountFetcher(ImaginBankApiClient apiClient, ImaginBankSessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
     }
@@ -27,14 +26,14 @@ public class ImaginBankAccountFetcher implements AccountFetcher<TransactionalAcc
 
         boolean fetchMore = true;
         boolean fromBeginning = true;
+        HolderName holderName = sessionStorage.getHolderName();
+
         while (fetchMore) {
             AccountsResponse accountsResponse;
             accountsResponse = apiClient.fetchAccounts(fromBeginning);
             fromBeginning = false;
 
-            accounts.addAll(accountsResponse.getTinkAccounts(
-                    new HolderName(sessionStorage.get(ImaginBankConstants.Storage.USER_NAME))
-            ));
+            accounts.addAll(accountsResponse.getTinkAccounts(holderName));
 
             fetchMore = accountsResponse.isMoreData();
         }

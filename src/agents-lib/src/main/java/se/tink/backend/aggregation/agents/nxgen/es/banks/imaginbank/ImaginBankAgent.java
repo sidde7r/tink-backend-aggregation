@@ -32,10 +32,12 @@ import se.tink.backend.common.config.SignatureKeyPair;
 public class ImaginBankAgent extends NextGenerationAgent {
 
     private final ImaginBankApiClient apiClient;
+    private final ImaginBankSessionStorage imaginBankSessionStorage;
 
     public ImaginBankAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         apiClient = new ImaginBankApiClient(client);
+        imaginBankSessionStorage = new ImaginBankSessionStorage(sessionStorage);
     }
 
     @Override
@@ -45,13 +47,13 @@ public class ImaginBankAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
-                new ImaginBankPasswordAuthenticator(apiClient, sessionStorage)
+                new ImaginBankPasswordAuthenticator(apiClient, imaginBankSessionStorage)
         );
     }
 
     @Override
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        ImaginBankAccountFetcher accountFetcher = new ImaginBankAccountFetcher(apiClient, sessionStorage);
+        ImaginBankAccountFetcher accountFetcher = new ImaginBankAccountFetcher(apiClient, imaginBankSessionStorage);
         ImaginBankTransactionFetcher transactionFetcher = new ImaginBankTransactionFetcher(apiClient);
 
         return Optional.of(new TransactionalAccountRefreshController(metricRefreshController,
