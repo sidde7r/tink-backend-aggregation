@@ -202,8 +202,6 @@ public class OpenIdApiClient {
 
     public URL buildAuthorizeUrl(String state, String intentId) {
 
-        //String nonce = UUID.randomUUID().toString();
-
         //TODO: Create util for these?
         String responseType = OpenIdConstants.MANDATORY_RESPONSE_TYPES.stream()
                 .collect(Collectors.joining(" "));
@@ -222,7 +220,6 @@ public class OpenIdApiClient {
                         providerConfiguration.getClientInfo().getClientId())
                 .queryParam(OpenIdConstants.Params.STATE, state)
                 .queryParam(OpenIdConstants.Params.SCOPE, scope)
-                //.queryParam(OpenIdConstants.Params.NONCE, nonce)
                 .queryParam(OpenIdConstants.Params.REDIRECT_URI, softwareStatement.getRedirectUri())
                 .queryParam(OpenIdConstants.Params.REQUEST, UkOpenBankingAuthorizeRequest.create()
                         .withClientInfo(providerConfiguration.getClientInfo())
