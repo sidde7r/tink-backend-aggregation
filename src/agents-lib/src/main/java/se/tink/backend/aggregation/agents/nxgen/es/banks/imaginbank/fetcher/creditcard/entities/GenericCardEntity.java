@@ -95,7 +95,7 @@ public class GenericCardEntity {
     }
 
     private Amount getAvailableCredit() {
-        return "P".equalsIgnoreCase(cardType) ?
+        return ImaginBankConstants.CreditCard.PREPAID.equalsIgnoreCase(cardType) ?
                 liquidationData.getPrepaidAmount() :
                 liquidationData.getAvailableCredit();
     }
@@ -103,5 +103,4 @@ public class GenericCardEntity {
     private Amount getBalance() {
         return liquidationData.getBalance();
     }
-
 }
