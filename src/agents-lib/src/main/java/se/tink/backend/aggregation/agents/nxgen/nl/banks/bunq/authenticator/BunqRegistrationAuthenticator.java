@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+// Refer to https://doc.bunq.com/ for BUNQ API DOC
 public class BunqRegistrationAuthenticator implements Authenticator {
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
@@ -46,6 +47,8 @@ public class BunqRegistrationAuthenticator implements Authenticator {
             InstallResponse installationResponse = apiClient.installation(keyPair.getPublic());
 
             // This token is used in one of the required headers. This must be set before the next request is done.
+            // Persist the session token here, cus it will be used in the auto auth
+            persistentStorage.put(BunqConstants.StorageKeys.SESSION_TOKEN, installationResponse.getToken());
             sessionStorage.put(BunqConstants.StorageKeys.SESSION_TOKEN, installationResponse.getToken());
 
             // This is just to make it obvious that it's a api key we're using

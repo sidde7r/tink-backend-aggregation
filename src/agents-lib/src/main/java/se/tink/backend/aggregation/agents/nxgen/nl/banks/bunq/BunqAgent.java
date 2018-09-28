@@ -47,7 +47,7 @@ public class BunqAgent extends NextGenerationAgent {
     protected Authenticator constructAuthenticator() {
         return new BunqAuthenticator(request,
                 new BunqRegistrationAuthenticator(persistentStorage, sessionStorage, apiClient, getAggregator()),
-                new BunqAutoAuthenticator(credentials, sessionStorage, apiClient));
+                new BunqAutoAuthenticator(credentials, persistentStorage, sessionStorage, apiClient));
     }
 
     @Override
