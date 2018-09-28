@@ -78,7 +78,7 @@ public class InvestmentAccount extends Account {
             if (cashBalance != null) {
                 Amount retVal = cashBalance;
                 for (Portfolio portfolio : portfolios) {
-                    retVal.add(portfolio.getTotalValue());
+                    retVal = retVal.add(portfolio.getTotalValue());
                 }
                 return retVal;
             } else {
