@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.cre
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.creditcard.entities.CardsListEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.creditcard.entities.GenericCardEntity;
@@ -21,10 +23,13 @@ public class GenericCardsResponse {
     private String keyContinuationNumtar;
 
     public Collection<CreditCardAccount> toTinkCards() {
-        return cards.getCards().stream()
+        if (cards == null) {
+            return Collections.emptyList();
+        }
+
+        return Optional.ofNullable(cards.getCards()).orElse(Collections.emptyList()).stream()
                 .filter(GenericCardEntity::isCreditCard)
                 .map(GenericCardEntity::toTinkCard)
                 .collect(Collectors.toList());
     }
-
 }

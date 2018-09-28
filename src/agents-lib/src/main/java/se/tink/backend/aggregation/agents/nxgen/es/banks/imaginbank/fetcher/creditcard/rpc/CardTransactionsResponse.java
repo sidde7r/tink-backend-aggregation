@@ -21,9 +21,9 @@ public class CardTransactionsResponse implements PaginatorResponse {
 
     @Override
     public List<CreditCardTransaction> getTinkTransactions() {
-        return movement != null ?
-                movement.stream().map(MovementEntity::toTinkTransaction).collect(Collectors.toList()) :
-                Collections.emptyList();
+        return Optional.ofNullable(movement).orElse(Collections.emptyList()).stream()
+                .map(MovementEntity::toTinkTransaction)
+                .collect(Collectors.toList());
     }
 
     /**
