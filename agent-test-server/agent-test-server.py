@@ -144,7 +144,7 @@ def thirdparty_callback():
 
     # Put the parameters on the queue so that it can be picked up
     # when the agent asks for the supplemental information.
-    queue.put(state, parameters)
+    queue.put("tpcb_%s" % state, parameters)
 
     return ""
 
