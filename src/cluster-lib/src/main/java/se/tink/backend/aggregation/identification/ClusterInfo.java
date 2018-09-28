@@ -38,6 +38,16 @@ public class ClusterInfo {
                 Aggregator.getDefault());
     }
 
+    public static ClusterInfo createForTesting(ClusterId clusterId) {
+        return new ClusterInfo(
+                clusterId,
+                null,
+                null,
+                null,
+                false,
+                Aggregator.getDefault());
+    }
+
     public ClusterId getClusterId() {
         return clusterId;
     }

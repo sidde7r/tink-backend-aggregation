@@ -631,6 +631,7 @@ junit_test(
         "//src/libraries/i18n",
         "//src/libraries/strings:strings",
         "//src/libraries/abnamro:abn_amro",
+        "//src/libraries/creditsafe_consumer_monitoring",
 
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_google_guava_guava",

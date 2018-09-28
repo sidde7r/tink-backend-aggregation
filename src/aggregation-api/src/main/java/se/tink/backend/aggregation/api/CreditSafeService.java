@@ -10,6 +10,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import se.tink.api.annotations.Team;
 import se.tink.api.annotations.TeamOwnership;
+import se.tink.backend.aggregation.cluster.annotation.ClusterContext;
+import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.AddMonitoredConsumerCreditSafeRequest;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.ChangedConsumerCreditSafeRequest;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PageableConsumerCreditSafeRequest;
@@ -18,63 +20,36 @@ import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PortfolioList
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.RemoveMonitoredConsumerCreditSafeRequest;
 
 @Path("/creditsafe")
-@Consumes({
-    MediaType.APPLICATION_JSON
-})
-@Produces({
-    MediaType.APPLICATION_JSON
-})
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 @Deprecated
 public interface CreditSafeService {
     @DELETE
     @Path("consumermonitoring")
-    @TeamOwnership(Team.PFM)
-    @Consumes({
-        MediaType.APPLICATION_JSON
-    })
-    public void removeConsumerMonitoring(RemoveMonitoredConsumerCreditSafeRequest request);
+    @TeamOwnership(Team.INTEGRATION)
+    void removeConsumerMonitoring(RemoveMonitoredConsumerCreditSafeRequest request,
+            @ClusterContext ClusterInfo clusterInfo);
 
     @POST
     @Path("consumermonitoring")
-    @TeamOwnership(Team.PFM)
-    @Consumes({
-        MediaType.APPLICATION_JSON
-    })
-    @Produces({
-        MediaType.APPLICATION_JSON
-    })
-    public Response addConsumerMonitoring(AddMonitoredConsumerCreditSafeRequest request);
+    @TeamOwnership(Team.INTEGRATION)
+    Response addConsumerMonitoring(AddMonitoredConsumerCreditSafeRequest request,
+            @ClusterContext ClusterInfo clusterInfo);
 
     @GET
     @Path("consumermonitoring/portfolios")
-    @TeamOwnership(Team.PFM)
-    @Consumes({
-            MediaType.APPLICATION_JSON
-    })
-    @Produces({
-            MediaType.APPLICATION_JSON
-    })
-    public PortfolioListResponse listPortfolios();
+    @TeamOwnership(Team.INTEGRATION)
+    PortfolioListResponse listPortfolios(@ClusterContext ClusterInfo clusterInfo);
 
     @POST
     @Path("consumermonitoring/all")
-    @TeamOwnership(Team.PFM)
-    @Consumes({
-        MediaType.APPLICATION_JSON
-    })
-    @Produces({
-        MediaType.APPLICATION_JSON
-    })
-    public PageableConsumerCreditSafeResponse listMonitoredConsumers(PageableConsumerCreditSafeRequest request);
+    @TeamOwnership(Team.INTEGRATION)
+    PageableConsumerCreditSafeResponse listMonitoredConsumers(PageableConsumerCreditSafeRequest request,
+            @ClusterContext ClusterInfo clusterInfo);
 
     @POST
     @Path("consumermonitoring/changed")
-    @TeamOwnership(Team.PFM)
-    @Consumes({
-        MediaType.APPLICATION_JSON
-    })
-    @Produces({
-        MediaType.APPLICATION_JSON
-    })
-    public PageableConsumerCreditSafeResponse listChangedConsumers(ChangedConsumerCreditSafeRequest request);
+    @TeamOwnership(Team.INTEGRATION)
+    PageableConsumerCreditSafeResponse listChangedConsumers(ChangedConsumerCreditSafeRequest request,
+            @ClusterContext ClusterInfo clusterInfo);
 }
