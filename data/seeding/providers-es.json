@@ -169,6 +169,34 @@
             ]
         },
         {
+            "name":"es-imaginbank-password",
+            "displayName":"ImaginBank",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"nxgen.es.banks.imaginbank.ImaginBankAgent",
+            "passwordHelpText":null,
+            "transactional":true,
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"DNI/NIE ID number",
+                    "immutable":true
+                },
+                {
+                    "name":"password",
+                    "description":"Password",
+                    "masked":true,
+                    "sensitive":true,
+                    "minLength":1
+                }
+            ]
+        },
+        {
             "name": "es-americanexpress-password",
             "className": "nxgen.es.creditcards.amex.AmericanExpressESAgent",
             "credentialsType": "PASSWORD",
