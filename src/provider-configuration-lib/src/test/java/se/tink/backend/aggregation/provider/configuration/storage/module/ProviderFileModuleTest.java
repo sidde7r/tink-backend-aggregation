@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.provider.configuration.storage.models.Provide
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ProviderFileModuleTest {
@@ -26,16 +27,16 @@ public class ProviderFileModuleTest {
     }
 
     @Test
-    public void loaderLoadsFileSuccessTest() throws IOException{
+    public void loaderLoadsOverrideFileSuccessTest() throws IOException{
         module.loadProviderOverrideOnClusterFromJson();
     }
 
     @Test
-    public void loadEnabledProvidersTest() throws IOException{
-        Map<String, List<String>> clusterProvider = module.loadEnabledProvidersOnClusterFromJson();
-        List<List<String>> emptyProviders = clusterProvider.values().stream()
-                .filter(List::isEmpty)
+    public void loadEnabledProvidersEnsureNotEmptyTest() throws IOException{
+        Map<String, Set<String>> clusterProvider = module.loadEnabledProvidersOnClusterFromJson();
+        List<Set<String>> emptyProviderSets = clusterProvider.values().stream()
+                .filter(Set::isEmpty)
                 .collect(Collectors.toList());
-        Assert.assertTrue(emptyProviders.isEmpty());
+        Assert.assertTrue(emptyProviderSets.isEmpty());
     }
 }
