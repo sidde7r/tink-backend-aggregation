@@ -5,6 +5,7 @@ import com.google.common.base.Functions;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
@@ -23,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ProviderFileModule extends AbstractModule {
@@ -47,7 +49,7 @@ public class ProviderFileModule extends AbstractModule {
     @Provides
     @Singleton
     @Named("enabledProvidersOnCluster")
-    public Map<String, List<String>> provideEnabledProvidersForCluster() throws IOException {
+    public Map<String, Set<String>> provideEnabledProvidersForCluster() throws IOException {
         return loadEnabledProvidersOnClusterFromJson();
     }
 
@@ -76,14 +78,14 @@ public class ProviderFileModule extends AbstractModule {
         return providerConfigurationByProviderName;
     }
 
-    protected Map<String, List<String>> loadEnabledProvidersOnClusterFromJson() throws IOException {
+    protected Map<String, Set<String>> loadEnabledProvidersOnClusterFromJson() throws IOException {
 
         File[] availableProviderDirectories = new File(AVAILABLE_PROVIDERS_FILE_PATH).listFiles();
 
         Preconditions.checkNotNull(availableProviderDirectories,
                 "no available path found for loading available providers on cluster");
 
-        Map<String, List<String>> availableProvidersByCluster = Maps.newHashMap();
+        Map<String, Set<String>> availableProvidersByCluster = Maps.newHashMap();
 
         for(File availableProviderDirectory : availableProviderDirectories){
             File[] availableProviderFiles = availableProviderDirectory.listFiles(
@@ -124,18 +126,18 @@ public class ProviderFileModule extends AbstractModule {
         overridingProvidersOnCluster.put(LOCAL_DEVELOPMENT_KEY_STRING, Collections.emptyMap());
     }
 
-    private void enableAllProvidersForLocalDevelopment(Map<String, List<String>> availableProvidersByCluster) throws IOException{
-        List<String> providerNames = loadProviderConfigurationFromJson().values().stream()
+    private void enableAllProvidersForLocalDevelopment(Map<String, Set<String>> availableProvidersByCluster) throws IOException{
+        Set<String> providerNames = loadProviderConfigurationFromJson().values().stream()
                 .map(ProviderConfiguration::getName)
-                .collect(Collectors.toList());
-        
+                .collect(Collectors.toSet());
+
         availableProvidersByCluster.put(LOCAL_DEVELOPMENT_KEY_STRING, providerNames);
     }
     
     private void parseAvailableProvidersOnCluster(
-            File[] availableProviderFiles, Map<String, List<String>> providersAvailableOnCluster) throws IOException{
+            File[] availableProviderFiles, Map<String, Set<String>> providersAvailableOnCluster) throws IOException{
 
-        List<String> availableProviderNames = Lists.newLinkedList();
+        Set<String> availableProviderNames = Sets.newHashSet();
         String clusterId = null;
 
         for (File availableProviderFile : availableProviderFiles) {
