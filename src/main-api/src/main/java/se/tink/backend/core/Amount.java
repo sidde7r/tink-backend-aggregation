@@ -15,8 +15,6 @@ import javax.persistence.Embeddable;
 public class Amount extends Number {
     @JsonIgnore
     private static final String CURRENCY_ERROR_MESSAGE = "The currencies must be the same.";
-    @JsonIgnore
-    private static final String VALUE_ERROR_MESSAGE = "You must input a positive number to %s.";
     private static final int SCALE = 2;
 
     @Tag(1)
@@ -167,13 +165,12 @@ public class Amount extends Number {
 
     @JsonIgnore
     public Amount add(double toAdd) {
-        Preconditions.checkArgument(toAdd >= 0, VALUE_ERROR_MESSAGE, "add");
         return new Amount(this.currency, this.value + toAdd);
     }
 
     @JsonIgnore
     public Amount subtract(double toSubtract) {
-        Preconditions.checkArgument(toSubtract >= 0, VALUE_ERROR_MESSAGE, "subtract");
+
         return new Amount(this.currency, this.value - toSubtract);
     }
 
