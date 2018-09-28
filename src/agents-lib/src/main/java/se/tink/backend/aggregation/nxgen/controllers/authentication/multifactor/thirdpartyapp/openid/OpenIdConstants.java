@@ -13,6 +13,7 @@ public class OpenIdConstants {
     }
 
     public enum TOKEN_ENDPOINT_AUTH_METHOD {
+        tls_client_auth,
         client_secret_post,
         client_secret_basic,
         private_key_jwt
@@ -42,6 +43,7 @@ public class OpenIdConstants {
 
     public static final ImmutableList<TOKEN_ENDPOINT_AUTH_METHOD> PREFERRED_TOKEN_ENDPOINT_AUTH_METHODS =
             ImmutableList.<TOKEN_ENDPOINT_AUTH_METHOD>builder()
+                    .add(TOKEN_ENDPOINT_AUTH_METHOD.tls_client_auth)
                     .add(TOKEN_ENDPOINT_AUTH_METHOD.client_secret_post)
                     .add(TOKEN_ENDPOINT_AUTH_METHOD.private_key_jwt)
                     .add(TOKEN_ENDPOINT_AUTH_METHOD.client_secret_basic)
