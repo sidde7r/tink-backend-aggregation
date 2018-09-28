@@ -12,7 +12,7 @@ public class OpenIdConstants {
         RS256
     }
 
-    public enum TOKEN_ENDPOINT_AUTH_METHODS {
+    public enum TOKEN_ENDPOINT_AUTH_METHOD {
         client_secret_post,
         client_secret_basic,
         private_key_jwt
@@ -40,11 +40,12 @@ public class OpenIdConstants {
             .add(SIGNING_ALGORITHM.RS256.toString())
             .build();
 
-    public static final ImmutableList<String> PREFERRED_TOKEN_ENDPOINT_AUTH_METHODS = ImmutableList.<String>builder()
-            .add(TOKEN_ENDPOINT_AUTH_METHODS.client_secret_post.toString())
-            .add(TOKEN_ENDPOINT_AUTH_METHODS.private_key_jwt.toString())
-            .add(TOKEN_ENDPOINT_AUTH_METHODS.client_secret_basic.toString())
-            .build();
+    public static final ImmutableList<TOKEN_ENDPOINT_AUTH_METHOD> PREFERRED_TOKEN_ENDPOINT_AUTH_METHODS =
+            ImmutableList.<TOKEN_ENDPOINT_AUTH_METHOD>builder()
+                    .add(TOKEN_ENDPOINT_AUTH_METHOD.client_secret_post)
+                    .add(TOKEN_ENDPOINT_AUTH_METHOD.private_key_jwt)
+                    .add(TOKEN_ENDPOINT_AUTH_METHOD.client_secret_basic)
+                    .build();
 
     public static final ImmutableList<String> ACCOUNT_PERMISSIONS = ImmutableList.<String>builder()
             .add("ReadAccountsDetail",
@@ -61,14 +62,6 @@ public class OpenIdConstants {
         public static final String ACCOUNT_REQUESTS = "/account-requests";
         public static final String PAYMENTS = "/payments";
         public static final String PAYMENT_SUBMISSIONS = "/payment-submissions/";
-    }
-
-    public static class Headers {
-        public static final String AUTHORIZATION = "Authorization";
-        public static final String X_FAPI_FINANCIAL_ID = "x-fapi-financial-id";
-        public static final String X_FAPI_CUSTOMER_LAST_LOGGED_TIME = "x-fapi-customer-last-logged-time";
-        public static final String X_FAPI_CUSTOMER_IP_ADDRESS = "x-fapi-customer-ip-address";
-        public static final String X_FAPI_INTERACTION_ID = "x-fapi-interaction-id";
     }
 
     public static class Params {
@@ -104,9 +97,28 @@ public class OpenIdConstants {
         public static final String LAST_LOGIN = "Tue, 11 Sep 2012 19:43:31 UTC";
     }
 
+    public static final String CLIENT_ASSERTION_TYPE = "client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer";
+
     // "To indiciate that secure customer authentication must be carried out as mandated by the PSD2 RTS"
     public static final String ACR_SECURE_AUTHENTICATION_RTS = "urn:openbanking:psd2:sca";
 
     // According to examples the max age is 24h
     public static final long MAX_AGE = TimeUnit.DAYS.toSeconds(1);
+
+    public static class CallbackParams {
+        public static final String CODE = "code";
+        public static final String ID_TOKEN = "id_token";
+    }
+
+    public static class PersistentStorageKeys {
+        public static final String AUTH_TOKEN = "open_id_auth_token";
+    }
+
+    public static class HttpHeaders {
+        public static final String AUTHORIZATION = "Authorization";
+        public static final String X_FAPI_FINANCIAL_ID = "x-fapi-financial-id";
+        public static final String X_FAPI_CUSTOMER_LAST_LOGGED_TIME = "x-fapi-customer-last-logged-time";
+        public static final String X_FAPI_CUSTOMER_IP_ADDRESS = "x-fapi-customer-ip-address";
+        public static final String X_FAPI_INTERACTION_ID = "x-fapi-interaction-id";
+    }
 }
