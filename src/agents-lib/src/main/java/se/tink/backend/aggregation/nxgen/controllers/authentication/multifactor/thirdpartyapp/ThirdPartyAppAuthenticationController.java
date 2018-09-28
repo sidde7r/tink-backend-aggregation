@@ -78,9 +78,9 @@ public class ThirdPartyAppAuthenticationController<T> implements MultiFactorAuth
         NotImplementedException.throwIf(!Objects.equals(credentials.getType(), getType()),
                 String.format("Authentication method not implemented for CredentialsType: %s", credentials.getType()));
 
-        openThirdPartyApp();
-
         ThirdPartyAppResponse<T> response = authenticator.init();
+
+        openThirdPartyApp();
 
         handleStatus(response.getStatus());
 
