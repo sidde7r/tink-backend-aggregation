@@ -121,7 +121,7 @@ public class ProviderFileModule extends AbstractModule {
     }
 
     private void loadEmptyOverrideForLocalDevelopment(Map<String, Map<String, ProviderConfiguration>> overridingProvidersOnCluster){
-        overridingProvidersOnCluster.put(LOCAL_DEVELOPMENT_KEY_STRING, Collections.EMPTY_MAP);
+        overridingProvidersOnCluster.put(LOCAL_DEVELOPMENT_KEY_STRING, Collections.emptyMap());
     }
 
     private void enableAllProvidersForLocalDevelopment(Map<String, List<String>> availableProvidersByCluster) throws IOException{
