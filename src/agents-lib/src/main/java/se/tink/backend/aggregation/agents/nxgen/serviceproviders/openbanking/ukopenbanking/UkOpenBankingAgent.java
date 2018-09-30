@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.UkOpenBankingConfiguration;
@@ -23,6 +22,8 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.aggregation.rpc.Provider;
+import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -31,32 +32,57 @@ public class UkOpenBankingAgent extends NextGenerationAgent {
     private static final UkOpenBankingConfiguration UKOB_TEST_CONFIG = SerializationUtils.deserializeFromString("",
             UkOpenBankingConfiguration.class);
 
+    private final Provider tinkProvider;
+    private UkOpenBankingApiClient apiClient;
+
     public UkOpenBankingAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+
+        tinkProvider = request.getProvider();
     }
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
+        client.disableSignatureRequestHeader();
+    }
 
+    private String getSoftwareStatementName() {
+        return tinkProvider.getPayload().split(":")[0];
+    }
+
+    private String getProviderName() {
+        return tinkProvider.getPayload().split(":")[1];
+    }
+
+    @Override
+    public void setConfiguration(ServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
+
+        String softwareStatementName = getSoftwareStatementName();
+        String providerName = getProviderName();
+
+        SoftwareStatement softwareStatement = UKOB_TEST_CONFIG.getSoftwareStatement(softwareStatementName)
+                .orElseThrow(() -> new IllegalStateException(
+                        String.format("Could not find softwareStatement: %s", softwareStatementName)));
+
+        ProviderConfiguration providerConfiguration = softwareStatement.getProviderConfiguration(providerName)
+                .orElseThrow(() -> new IllegalStateException(
+                        String.format("Could not find provider conf: %s", providerName)));
+
+        client.trustRootCaCertificate(UKOB_TEST_CONFIG.getRootCAData(), UKOB_TEST_CONFIG.getRootCAPassword());
+
+        apiClient = new UkOpenBankingApiClient(client, softwareStatement, providerConfiguration);
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-        OpenIdAuthenticator authenticator = new UkOpenBankingAuthenticator();
-        SoftwareStatement softwareStatement = UKOB_TEST_CONFIG.getSoftwareStatement("tink");
-        ProviderConfiguration providerConfiguration = softwareStatement.getProviderConfiguration("modelo");
-
-        client.disableSignatureRequestHeader();
-        client.trustRootCaCertificate(UKOB_TEST_CONFIG.getRootCAData(),
-                UKOB_TEST_CONFIG.getRootCAPassword());
+        UkOpenBankingAuthenticator authenticator = new UkOpenBankingAuthenticator(apiClient);
 
         OpenIdAuthenticationController openIdAuthenticationController = new OpenIdAuthenticationController(
                 persistentStorage,
                 supplementalInformationController,
-                client,
-                authenticator,
-                softwareStatement,
-                providerConfiguration
+                apiClient,
+                authenticator
         );
 
         return new AutoAuthenticationController(
