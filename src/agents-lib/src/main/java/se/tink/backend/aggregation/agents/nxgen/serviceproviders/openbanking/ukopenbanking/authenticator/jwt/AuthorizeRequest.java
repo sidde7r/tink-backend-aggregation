@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils.OpenIdSignUtils;
 
 // This is an Authorize request JWT that is used by UK OpenBanking.
-public class UkOpenBankingAuthorizeRequest {
+public class AuthorizeRequest {
 
     public static class Builder {
         private WellKnownResponse wellknownConfiguration;
@@ -95,8 +95,8 @@ public class UkOpenBankingAuthorizeRequest {
                     .withClaim(OpenIdConstants.Params.SCOPE, scopes)
                     .withClaim(OpenIdConstants.Params.STATE, state)
                     .withClaim(OpenIdConstants.Params.NONCE, nonce)
-                    .withClaim(OpenIdConstants.Params.MAX_AGE, OpenIdConstants.MAX_AGE)
-                    .withClaim(OpenIdConstants.Params.CLAIMS, authorizeRequestClaims)
+                    .withClaim(UkOpenBankingConstants.Params.MAX_AGE, UkOpenBankingConstants.MAX_AGE)
+                    .withClaim(UkOpenBankingConstants.Params.CLAIMS, authorizeRequestClaims)
                     .sign(algorithm);
         }
     }
