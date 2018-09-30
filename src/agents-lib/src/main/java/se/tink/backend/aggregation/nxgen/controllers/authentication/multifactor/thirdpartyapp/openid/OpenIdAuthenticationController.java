@@ -18,11 +18,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.common.payloads.ThirdPartyAppAuthenticationPayload;
@@ -39,32 +35,27 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
 
     private final PersistentStorage persistentStorage;
     private final SupplementalInformationController supplementalInformationController;
+    private final OpenIdApiClient apiClient;
     private final OpenIdAuthenticator authenticator;
 
-    private final SoftwareStatement softwareStatement;
-    private final ProviderConfiguration providerConfiguration;
-
-    private final OpenIdApiClient apiClient;
     private final String state;
+    private final String nonce;
     private AuthenticationToken clientAuthToken;
 
     public OpenIdAuthenticationController(PersistentStorage persistentStorage,
             SupplementalInformationController supplementalInformationController,
-            TinkHttpClient httpClient,
-            OpenIdAuthenticator authenticator,
-            SoftwareStatement softwareStatement,
-            ProviderConfiguration providerConfiguration) {
+            OpenIdApiClient apiClient,
+            OpenIdAuthenticator authenticator) {
         this.persistentStorage = persistentStorage;
         this.supplementalInformationController = supplementalInformationController;
+        this.apiClient = apiClient;
         this.authenticator = authenticator;
-        this.softwareStatement = softwareStatement;
-        this.providerConfiguration = providerConfiguration;
 
-        this.apiClient = new OpenIdApiClient(httpClient, softwareStatement, providerConfiguration);
-        this.state = generateRandomState();
+        this.state = generateRandomId();
+        this.nonce = generateRandomId();
     }
 
-    private static String generateRandomState() {
+    private static String generateRandomId() {
         byte[] randomData = new byte[32];
         random.nextBytes(randomData);
         return encoder.encodeToString(randomData);
@@ -91,13 +82,11 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
             // fall through.
         }
 
-        registerAuthToken(authToken);
+        apiClient.attachAuthFilter(authToken);
     }
 
     @Override
     public ThirdPartyAppResponse<String> init() {
-        // make openid requests to init the auth.
-
         clientAuthToken = apiClient.requestClientCredentials();
         if (!clientAuthToken.isValid()) {
             throw new IllegalStateException("Client auth token is not valid.");
@@ -108,14 +97,16 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
 
     @Override
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
-        AccountPermissionResponse accountPermissionResponse = apiClient.requestAccountsApi(clientAuthToken);
 
-        URL authorizeUrl = apiClient.buildAuthorizeUrl(state,
-                accountPermissionResponse.getData().getAccountRequestId());
+        URL authorizeUrl = apiClient.buildAuthorizeUrl(state, nonce);
 
-        // Let the agent add to or change the URL before we send it to the front-end.
-        authorizeUrl = authenticator.buildAuthorizeUrl(authorizeUrl);
-
+        apiClient.attachAuthFilter(clientAuthToken);
+        try {
+            // Let the agent add to or change the URL before we send it to the front-end.
+            authorizeUrl = authenticator.decorateAuthorizeUrl(authorizeUrl, state, nonce);
+        } finally {
+            apiClient.detachAuthFilter();
+        }
 
         ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
 
@@ -141,10 +132,14 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
                 TimeUnit.MINUTES
         ).orElseThrow(LoginError.INCORRECT_CREDENTIALS::exception);
 
-        String code = getCallbackItem(callbackData, OpenIdConstants.CallbackParams.CODE);
+        handleErrors(callbackData);
+
+        String code = getCallbackElement(callbackData, OpenIdConstants.CallbackParams.CODE)
+                .orElseThrow(() -> new IllegalStateException("callbackData did not contain code."));
 
         // todo: verify idToken{s_hash, c_hash}
-        //String idToken = getCallbackItem(callbackData, OpenIdConstants.CallbackParams.ID_TOKEN);
+        String idToken = getCallbackElement(callbackData, OpenIdConstants.CallbackParams.ID_TOKEN)
+                .orElseThrow(() -> new IllegalStateException("callbackData did not contain id_token."));
 
         AuthenticationToken authToken = apiClient.exchangeAccessCode(code);
 
@@ -158,7 +153,7 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
 
         persistentStorage.put(OpenIdConstants.PersistentStorageKeys.AUTH_TOKEN, authToken);
 
-        registerAuthToken(authToken);
+        apiClient.attachAuthFilter(authToken);
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
@@ -168,22 +163,42 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
         return Optional.empty();
     }
 
-    private String getCallbackItem(Map<String, String> callbackData, String key) {
+    private Optional<String> getCallbackElement(Map<String, String> callbackData, String key) {
         String value = callbackData.getOrDefault(key, null);
         if (Strings.isNullOrEmpty(value)) {
-            throw new IllegalStateException(String.format("callbackData did not contain '%s'.", key));
+            return Optional.empty();
         }
 
-        return value;
+        return Optional.of(value);
+    }
+
+    private void handleErrors(Map<String, String> callbackData) throws AuthenticationException,
+            AuthorizationException {
+        Optional<String> error = getCallbackElement(callbackData, OpenIdConstants.CallbackParams.ERROR);
+        Optional<String> errorDescription = getCallbackElement(callbackData,
+                OpenIdConstants.CallbackParams.ERROR_DESCRIPTION);
+
+        if (!error.isPresent()) {
+            return;
+        }
+
+        String errorType = error.get();
+        if (OpenIdConstants.Errors.ACCESS_DENIED.equalsIgnoreCase(errorType)) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
+
+        throw new IllegalStateException(
+                String.format(
+                        "Unknown error: %s:%s.",
+                        errorType,
+                        errorDescription.orElse("")
+                )
+        );
     }
 
     private String formatSupplementalKey(String key) {
         // Ensure third party callback information does not collide with other Supplemental Information by using a
         // prefix. This prefix is the same in MAIN.
         return String.format("tpcb_%s", key);
-    }
-
-    private void registerAuthToken(AuthenticationToken authToken) {
-        apiClient.registerAuthFilter(authToken);
     }
 }
