@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import java.security.interfaces.RSAPrivateKey;
 import java.util.Map;
+import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -41,8 +42,8 @@ public class SoftwareStatement {
         return softwareStatementAssertion.getRedirectUri();
     }
 
-    public ProviderConfiguration getProviderConfiguration(String name) {
-        return providerConfigurations.get(name);
+    public Optional<ProviderConfiguration> getProviderConfiguration(String name) {
+        return Optional.ofNullable(providerConfigurations.getOrDefault(name, null));
     }
 
     public void validate() {

@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Map;
+import java.util.Optional;
 import org.assertj.core.util.Preconditions;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -22,13 +23,12 @@ public class UkOpenBankingConfiguration {
         return rootCAPassword;
     }
 
-    public SoftwareStatement getSoftwareStatement(String name) {
-        return softwareStatements.get(name);
+    public Optional<SoftwareStatement> getSoftwareStatement(String name) {
+        return Optional.ofNullable(softwareStatements.getOrDefault(name, null));
     }
 
     @JsonIgnore
     public void validate() {
-
         Preconditions.checkNotNullOrEmpty(rootCAData);
         Preconditions.checkNotNullOrEmpty(rootCAPassword);
         softwareStatements.forEach((k, v) -> v.validate());
