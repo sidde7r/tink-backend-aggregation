@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.creditmutuel.CreditMutuelApiClient;
@@ -59,10 +58,11 @@ public class CreditMutuelPfmCreditCardFetcher implements AccountFetcher<CreditCa
 
         //TODO: Need to double check how multiple cards are handled in the response
 
-        // Parsing Card number
-        List<ValueEntity> valueEntityStream = CreditMutuelPmfPredicates.getItemEntitiesFromResponse
+        List<ValueEntity> valueEntityList = CreditMutuelPmfPredicates.getItemEntitiesFromResponse
                 .apply(creditCardResponse).collect(Collectors.toList());
-        Optional<ValueEntity> subtitle = valueEntityStream.stream()
+
+        // Parsing Card number
+        Optional<ValueEntity> subtitle = valueEntityList.stream()
                 .filter(CreditMutuelPmfPredicates.filterValueEntityByName(SUBTITLE))
                 .findFirst();
 
@@ -71,18 +71,19 @@ public class CreditMutuelPfmCreditCardFetcher implements AccountFetcher<CreditCa
                 .orElseThrow(IllegalStateException::new);
 
         // Parsing card name
-        Stream<ValueEntity> valueEntityForTitleStream = CreditMutuelPmfPredicates.getItemEntitiesFromResponse
-                .apply(creditCardResponse);
-        Optional<ValueEntity> title = valueEntityForTitleStream
+        Optional<ValueEntity> title = valueEntityList.stream()
                 .filter(CreditMutuelPmfPredicates.filterValueEntityByName(TITLE))
                 .findFirst();
 
         // Parsing card limits
-        Stream<SubItemsEntity> subItemsEntityStream = CreditMutuelPmfPredicates.getSubItemsValueStreamFromResponse
-                .apply(creditCardResponse);
-        Stream<ValueEntity> outputsEntityStream = subItemsEntityStream.flatMap(s -> s.stream())
-                .flatMap(s -> s.getOutputs().stream());
-        String paymentLimitString = outputsEntityStream
+        List<SubItemsEntity> subItemsEntityList = CreditMutuelPmfPredicates.getSubItemsValueStreamFromResponse
+                .apply(creditCardResponse).collect(Collectors.toList());
+
+        List<ValueEntity> outputsEntityList = subItemsEntityList.stream().flatMap(s -> s.stream())
+                .flatMap(s -> s.getOutputs().stream()).collect(Collectors.toList());
+
+        String paymentLimitString = outputsEntityList
+                .stream()
                 //TODO: Double check if it should be secondaryValueTitle which contains limit for payments
                 //TODO: or valueTitle which contains limit for withdrawals
                 .filter(CreditMutuelPmfPredicates.filterValueEntityByName(MAX_PAYMENTS_LIMIT))
@@ -91,11 +92,8 @@ public class CreditMutuelPfmCreditCardFetcher implements AccountFetcher<CreditCa
         Amount paymentLimit = CreditMututelPmfCreditCardStringParsingUtils.extractAmountFromString(paymentLimitString);
 
         // Parsing card balance
-        Stream<SubItemsEntity> subItemsEntityStream2 = CreditMutuelPmfPredicates.getSubItemsValueStreamFromResponse
-                .apply(creditCardResponse);
-        Stream<ValueEntity> outputsEntityStream2 = subItemsEntityStream2.flatMap(s -> s.stream())
-                .flatMap(s -> s.getOutputs().stream());
-        String amount = outputsEntityStream2
+
+        String amount = outputsEntityList.stream()
                 .filter(CreditMutuelPmfPredicates.filterValueEntityByType(AMOUNT))
                 .findFirst().orElseThrow(IllegalStateException::new).getValue();
         Amount balance = EuroInformationUtils.parseAmount(amount);
