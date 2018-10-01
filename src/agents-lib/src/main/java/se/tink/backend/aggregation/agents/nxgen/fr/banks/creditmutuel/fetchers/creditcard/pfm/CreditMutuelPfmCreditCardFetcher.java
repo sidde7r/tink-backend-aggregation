@@ -92,7 +92,6 @@ public class CreditMutuelPfmCreditCardFetcher implements AccountFetcher<CreditCa
         Amount paymentLimit = CreditMututelPmfCreditCardStringParsingUtils.extractAmountFromString(paymentLimitString);
 
         // Parsing card balance
-
         String amount = outputsEntityList.stream()
                 .filter(CreditMutuelPmfPredicates.filterValueEntityByType(AMOUNT))
                 .findFirst().orElseThrow(IllegalStateException::new).getValue();
@@ -104,6 +103,10 @@ public class CreditMutuelPfmCreditCardFetcher implements AccountFetcher<CreditCa
                 .setAvailableCredit(balance.add(paymentLimit))
                 .setName(title.map(t -> t.getValue()).orElse("")).build();
 
-        return Collections.singleton(build);
+        AGGREGATION_LOGGER.infoExtraLong(SerializationUtils.serializeToString(build),
+                EuroInformationConstants.LoggingTags.creditcardLogTag);
+
+        //TODO: Return empty list till we learn how to handle multiple cards
+        return Collections.emptyList();
     }
 }
