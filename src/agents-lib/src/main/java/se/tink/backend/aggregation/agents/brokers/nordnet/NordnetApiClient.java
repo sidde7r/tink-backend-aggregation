@@ -289,7 +289,6 @@ public class NordnetApiClient {
                 .collect(Collectors.joining(","));
         AccountInfoResponse infos = this.get(String.format(GET_ACCOUNTS_INFO_URL, accountBankIds), AccountInfoResponse.class);
 
-
         for (AccountEntity accountEntity: accounts) {
             String accId = accountEntity.getAccountId();
 
