@@ -55,7 +55,7 @@ public abstract class EuroInformationAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
-                EuroInformationPasswordAuthenticator.create(this.apiClient, this.sessionStorage));
+                EuroInformationPasswordAuthenticator.create(this.apiClient, this.sessionStorage, this.config));
     }
 
     @Override

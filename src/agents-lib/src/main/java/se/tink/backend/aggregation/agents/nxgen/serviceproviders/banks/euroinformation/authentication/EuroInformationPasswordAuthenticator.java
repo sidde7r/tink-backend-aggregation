@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.authentication.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.session.rpc.PfmInitResponse;
@@ -24,16 +25,19 @@ public class EuroInformationPasswordAuthenticator implements PasswordAuthenticat
     private final Logger LOGGER = LoggerFactory.getLogger(EuroInformationPasswordAuthenticator.class);
     private final EuroInformationApiClient apiClient;
     private final SessionStorage sessionStorage;
+    private final EuroInformationConfiguration config;
 
     private EuroInformationPasswordAuthenticator(EuroInformationApiClient apiClient,
-            SessionStorage sessionStorage) {
+            SessionStorage sessionStorage,
+            EuroInformationConfiguration config) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
+        this.config = config;
     }
 
     public static EuroInformationPasswordAuthenticator create(EuroInformationApiClient apiClient,
-            SessionStorage sessionStorage) {
-        return new EuroInformationPasswordAuthenticator(apiClient, sessionStorage);
+            SessionStorage sessionStorage, EuroInformationConfiguration config) {
+        return new EuroInformationPasswordAuthenticator(apiClient, sessionStorage, config);
     }
 
     @Override
@@ -42,14 +46,15 @@ public class EuroInformationPasswordAuthenticator implements PasswordAuthenticat
         if (!EuroInformationUtils.isSuccess(logon.getReturnCode())) {
             handleError(logon);
         }
-        //TODO: Doublechek PFM was actually enabled
-        PfmInitResponse pfmInitResponse = apiClient.actionInit();
-        if (!EuroInformationUtils.isSuccess(pfmInitResponse.getReturnCode())) {
-            //                || !pfmInitResponse.getInitialization().getUserInfos().contains(PFM_ENABLED)) {
-            LOGGER.info("PFM initialization error: " + SerializationUtils.serializeToString(pfmInitResponse));
-            return;
-        }
-        sessionStorage.put(EuroInformationConstants.Tags.PFM_ENABLED, true);
+
+        config.getInitEndpoint().ifPresent(endpoint -> {
+            PfmInitResponse pfmInitResponse = apiClient.actionInit(endpoint);
+            if (!EuroInformationUtils.isSuccess(pfmInitResponse.getReturnCode())) {
+                LOGGER.info("PFM initialization error: " + SerializationUtils.serializeToString(pfmInitResponse));
+                return;
+            }
+            sessionStorage.put(EuroInformationConstants.Tags.PFM_ENABLED, true);
+        });
     }
 
     public void handleError(LoginResponse logon) throws SessionException, LoginException {

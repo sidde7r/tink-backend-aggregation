@@ -98,8 +98,8 @@ public class EuroInformationApiClient {
                 .post(OperationSummaryResponse.class, new TransactionSummaryRequest(webId, recoveryKey));
     }
 
-    public PfmInitResponse actionInit() {
-        return buildRequestHeaders(EuroInformationConstants.Url.INIT)
+    public PfmInitResponse actionInit(String endpoint) {
+        return buildRequestHeaders(endpoint)
                 .post(PfmInitResponse.class, new PfmInitRequest());
     }
 }
