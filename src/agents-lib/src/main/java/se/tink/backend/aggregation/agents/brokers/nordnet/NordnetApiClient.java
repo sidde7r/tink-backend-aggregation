@@ -10,7 +10,6 @@ import com.sun.jersey.core.util.MultivaluedMapImpl;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -26,7 +25,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.RedirectStrategy;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.protocol.HttpContext;
-import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.AccountEntity;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.AccountInfoEntity;
@@ -50,7 +48,6 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 
@@ -88,8 +85,7 @@ public class NordnetApiClient {
     /**
      * A concatenated string of account's bank-id (seems to be a simple client specific index)
      */
-    private String accids;
-
+    private String accountBankIds;
 
     public NordnetApiClient(TinkApacheHttpClient4 client, String aggregator) {
         this.aggregator = aggregator;
@@ -288,18 +284,19 @@ public class NordnetApiClient {
         String uri = UriBuilder.fromUri(GET_ACCOUNTS_URL).build().toASCIIString();
         AccountResponse accounts = this.get(uri, AccountResponse.class);
 
-        accids = accounts.stream().map(a -> Integer.toString(a.getAccid())).collect(Collectors.joining(","));
-        AccountInfoResponse infos = this.get(String.format(GET_ACCOUNTS_INFO_URL, accids), AccountInfoResponse.class);
+        accountBankIds = accounts.stream()
+                .map(a -> a.getAccountId())
+                .collect(Collectors.joining(","));
+        AccountInfoResponse infos = this.get(String.format(GET_ACCOUNTS_INFO_URL, accountBankIds), AccountInfoResponse.class);
 
-        for (int i = 0; i < accounts.size(); i++) {
-            AccountEntity accountEntity = accounts.get(i);
-            int accid = accountEntity.getAccid();
 
-            for (int j = 0; j < infos.size(); j++) {
-                AccountInfoEntity infoEntity = infos.get(j);
-                int infoid = infoEntity.getAccid();
+        for (AccountEntity accountEntity: accounts) {
+            String accId = accountEntity.getAccountId();
 
-                if (accid == infoid) {
+            for (AccountInfoEntity infoEntity: infos) {
+                String infoId = infoEntity.getAccountId();
+
+                if (accId.equalsIgnoreCase(infoId)) {
                     log.info(LOG_ACCOUNT_INFO + ": " + infoEntity.toString());
                     accountEntity.setInfo(infoEntity);
                     break;
@@ -404,7 +401,7 @@ public class NordnetApiClient {
     public Optional<PositionsResponse> getPositions() {
         // Always fetches positions for all accounts/portfolios, but called once for each.
         try {
-            ClientResponse clientResponse = get(String.format(GET_POSITIONS_URL, accids));
+            ClientResponse clientResponse = get(String.format(GET_POSITIONS_URL, accountBankIds));
             PositionsResponse response = clientResponse.getEntity(PositionsResponse.class);
             return Optional.of(response);
         } catch (UniformInterfaceException e) {

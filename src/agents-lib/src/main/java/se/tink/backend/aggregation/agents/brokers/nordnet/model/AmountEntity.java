@@ -28,5 +28,4 @@ public class AmountEntity {
     public String toString() {
         return value + " " + currency;
     }
-
 }

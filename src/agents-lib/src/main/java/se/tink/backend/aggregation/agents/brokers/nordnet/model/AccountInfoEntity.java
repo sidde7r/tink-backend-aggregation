@@ -35,18 +35,20 @@ public class AccountInfoEntity {
     @JsonProperty("account_code")
     private String accountCode;
     @JsonProperty("bank_accno")
-    private String bankAccno;
+    private String bankAccountNumber;
     @JsonProperty("bank_account")
     private BankAccountEntity bankAccount;
     @JsonProperty("interest_rate")
     private double interestRate;
     @JsonProperty("registration_date")
     private String registrationDate;
-    private int accno;
-    private int accid;
+    @JsonProperty("accno")
+    private String accountNumber;
+    @JsonProperty("accid")
+    private String accountId;
 
-    public int getAccid() {
-        return accid;
+    public String getAccountId() {
+        return accountId;
     }
 
     public AmountEntity getAccountSum() {
@@ -75,13 +77,12 @@ public class AccountInfoEntity {
                 ", ownCapitalMorning=" + ownCapitalMorning +
                 ", fullMarketvalue=" + fullMarketvalue +
                 ", accountCode='" + accountCode + '\'' +
-                ", bankAccno='" + bankAccno + '\'' +
+                ", bankAccno='" + bankAccountNumber + '\'' +
                 ", bankAccount=" + bankAccount +
                 ", interestRate=" + interestRate +
                 ", registrationDate='" + registrationDate + '\'' +
-                ", accno=" + accno +
-                ", accid=" + accid +
+                ", accno=" + accountNumber +
+                ", accid=" + accountId +
                 '}';
     }
-    
 }

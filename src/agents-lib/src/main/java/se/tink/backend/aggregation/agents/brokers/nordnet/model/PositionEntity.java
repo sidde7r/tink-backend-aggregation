@@ -6,7 +6,7 @@ import java.util.Optional;
 import se.tink.backend.system.rpc.Instrument;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class  PositionEntity {
+public class PositionEntity {
     @JsonProperty("accno")
     private String accountNumber;
     @JsonProperty("accid")

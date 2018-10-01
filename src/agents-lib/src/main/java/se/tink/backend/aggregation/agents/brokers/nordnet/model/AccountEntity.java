@@ -13,12 +13,13 @@ import se.tink.libraries.account.AccountIdentifier;
 public class AccountEntity {
 
     @JsonProperty("accno")
-    private String accountId;
+    private String accountNumber;
     @JsonProperty("bank_account")
     private BankAccountEntity bankAccount;
-    private int accid;
+    @JsonProperty("accid")
+    private String accountId;
     @JsonProperty("bank_accno")
-    private String bankAccno;
+    private String bankAccountNumber;
     private String type;
     private String symbol;
     @JsonProperty("account_code")
@@ -31,24 +32,24 @@ public class AccountEntity {
     @JsonIgnore
     private AccountInfoEntity info;
 
-    public String getAccountNumber() {
-        return bankAccno;
+    public String getBankAccountNumber() {
+        return bankAccountNumber;
     }
 
     public void setInfo(AccountInfoEntity info) {
         this.info = info;
     }
 
-    public int getAccid() {
-        return accid;
+    public String getAccountId() {
+        return accountId;
     }
 
     public String getAccountCode() {
         return accountCode;
     }
 
-    public String getAccountId() {
-        return accountId;
+    public String getAccountNumber() {
+        return accountNumber;
     }
 
     public double getCashBalance() {
@@ -67,12 +68,12 @@ public class AccountEntity {
 
         Account account = new Account();
 
-        account.setBankId(getAccountId());
-        account.setAccountNumber(this.getAccountNumber());
-        account.putIdentifier(AccountIdentifier.create(AccountIdentifier.Type.SE, this.getAccountNumber()));
+        account.setBankId(this.getAccountNumber());
+        account.setAccountNumber(this.getBankAccountNumber());
+        account.putIdentifier(AccountIdentifier.create(AccountIdentifier.Type.SE, this.getBankAccountNumber()));
         account.setType(accountType);
-        account.setName(getName());
-        account.setBalance(getCashBalance() + getMarketValue());
+        account.setName(this.getName());
+        account.setBalance(this.getCashBalance() + this.getMarketValue());
 
         return account;
     }
@@ -81,10 +82,10 @@ public class AccountEntity {
 
         Portfolio portfolio = new Portfolio();
 
-        portfolio.setRawType(getAccountCode());
-        portfolio.setType(getPortfolioType());
-        portfolio.setTotalValue(getMarketValue());
-        portfolio.setUniqueIdentifier(getAccountId());
+        portfolio.setRawType(this.getAccountCode());
+        portfolio.setType(this.getPortfolioType());
+        portfolio.setTotalValue(this.getMarketValue());
+        portfolio.setUniqueIdentifier(this.getAccountNumber());
 
         return portfolio;
     }

@@ -84,7 +84,7 @@ public class NordnetAgent extends AbstractAgent implements RefreshableItemExecut
 
             List<Instrument> instruments = Lists.newArrayList();
             for (PositionEntity positionEntity : positions.get()) {
-                if (positionEntity.getAccountId().equalsIgnoreCase(Integer.toString(accountEntity.getAccid()))) {
+                if (positionEntity.getAccountId().equalsIgnoreCase(accountEntity.getAccountId())) {
                     // If, this position actually belongs to this account/portfolio
                     positionEntity.toInstrument().ifPresent(instruments::add);
                 }
