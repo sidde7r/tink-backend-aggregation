@@ -8,8 +8,14 @@ public class IntegrationsConfiguration {
     @JsonProperty
     private SbabIntegrationConfiguration sbab;
 
+    @JsonProperty
+    private String ukOpenBankingJson;
+
     public SbabIntegrationConfiguration getSbab() {
         return sbab;
     }
-    
+
+    public String getUkOpenBankingJson() {
+        return ukOpenBankingJson;
+    }
 }
