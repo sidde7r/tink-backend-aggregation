@@ -45,7 +45,7 @@ public class CreditMutuelPfmCreditCardFetcher implements AccountFetcher<CreditCa
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        CreditCardResponse creditCardResponse = apiClient.requestCreditCardAccountsEndpoint();
+        CreditCardResponse creditCardResponse = apiClient.requestCreditCardAccounts();
 
         String returnCode = creditCardResponse.getReturnCode();
         if (!EuroInformationUtils.isSuccess(returnCode)) {

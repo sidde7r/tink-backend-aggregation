@@ -21,7 +21,7 @@ public class CreditMutuelApiClient extends EuroInformationApiClient {
         super(client, sessionStorage, config);
     }
 
-    public CreditCardResponse requestCreditCardAccountsEndpoint() {
+    public CreditCardResponse requestCreditCardAccounts() {
         String response = buildRequestHeaders(CreditMutuelConstants.Url.CREDIT_CARD_ACCOUNTS)
                 .post(String.class, new CreditCardRequest());
         return SerializationUtils.deserializeFromString(response, CreditCardResponse.class);
