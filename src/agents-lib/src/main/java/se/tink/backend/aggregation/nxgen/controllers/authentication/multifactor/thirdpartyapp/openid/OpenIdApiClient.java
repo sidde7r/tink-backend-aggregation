@@ -1,10 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
-import com.sun.jersey.core.util.Base64;
-import java.io.IOException;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
@@ -225,44 +221,6 @@ public class OpenIdApiClient {
             httpClient.removeFilter(authFilter);
         } finally {
             authFilter = null;
-        }
-    }
-
-    private static void printJson(Object json) {
-        try {
-            System.out.println(new ObjectMapper()
-                    .writerWithDefaultPrettyPrinter()
-                    .writeValueAsString(json));
-        } catch (JsonProcessingException je) {
-            throw new IllegalStateException(je);
-        }
-    }
-
-    private static <T> T fromJson(String json, Class<T> type) {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            return mapper.readValue(json, type);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    private static void printEncodedJson(String base64Json) {
-
-        final ObjectMapper mapper = new ObjectMapper();
-        final String[] parts = base64Json.split("\\.");
-
-        for (String part : parts) {
-            try {
-                String jsonString = Base64.base64Decode(part);
-                Object json = mapper.readValue(jsonString, Object.class);
-                System.out
-                        .println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
-
-            } catch (Exception e) {
-
-                System.out.println(String.format("{ %s }", part));
-            }
         }
     }
 }
