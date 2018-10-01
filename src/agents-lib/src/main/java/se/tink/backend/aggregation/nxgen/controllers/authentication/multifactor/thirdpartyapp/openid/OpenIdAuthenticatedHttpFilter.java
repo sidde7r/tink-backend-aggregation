@@ -13,17 +13,17 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
 
 public class OpenIdAuthenticatedHttpFilter extends Filter {
-    private final OAuth2Token authToken;
+    private final OAuth2Token accessToken;
     private final ProviderConfiguration providerConfiguration;
     private final String customerIp;
     private final String customerLastLoggedInTime;
 
     public OpenIdAuthenticatedHttpFilter(
-            OAuth2Token authToken,
+            OAuth2Token accessToken,
             ProviderConfiguration providerConfiguration,
             String customerIp,
             String customerLastLoggedInTime) {
-        this.authToken = authToken;
+        this.accessToken = accessToken;
         this.providerConfiguration = providerConfiguration;
         this.customerIp = customerIp;
         this.customerLastLoggedInTime = customerLastLoggedInTime;
@@ -54,7 +54,7 @@ public class OpenIdAuthenticatedHttpFilter extends Filter {
         String interactionId = generateInteractionId();
 
         MultivaluedMap<String, Object> headers = httpRequest.getHeaders();
-        headers.add(OpenIdConstants.HttpHeaders.AUTHORIZATION, authToken.toAuthorizeHeader());
+        headers.add(OpenIdConstants.HttpHeaders.AUTHORIZATION, accessToken.toAuthorizeHeader());
         headers.add(OpenIdConstants.HttpHeaders.X_FAPI_FINANCIAL_ID, providerConfiguration.getOrganizationId());
         headers.add(OpenIdConstants.HttpHeaders.X_FAPI_CUSTOMER_LAST_LOGGED_TIME, customerLastLoggedInTime);
         headers.add(OpenIdConstants.HttpHeaders.X_FAPI_CUSTOMER_IP_ADDRESS, customerIp);

@@ -94,7 +94,7 @@ public class OpenIdConstants {
     }
 
     public static class PersistentStorageKeys {
-        public static final String AUTH_TOKEN = "open_id_auth_token";
+        public static final String ACCESS_TOKEN = "open_id_access_token";
     }
 
     public static class HttpHeaders {

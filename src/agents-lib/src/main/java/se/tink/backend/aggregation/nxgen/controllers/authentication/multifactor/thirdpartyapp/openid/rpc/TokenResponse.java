@@ -15,7 +15,7 @@ public class TokenResponse {
     @JsonProperty("expires_in")
     private int expiresIn;
 
-    public OAuth2Token toAuthToken() {
+    public OAuth2Token toAccessToken() {
         return OAuth2Token.create(tokenType, accessToken, refreshToken, expiresIn);
     }
 }

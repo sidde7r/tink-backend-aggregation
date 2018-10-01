@@ -160,17 +160,17 @@ public class OpenIdApiClient {
         return createTokenRequest()
                 .body(postData)
                 .post(TokenResponse.class)
-                .toAuthToken();
+                .toAccessToken();
     }
 
-    public OAuth2Token refreshAuthenticationToken(String refreshToken) {
+    public OAuth2Token refreshAccessToken(String refreshToken) {
         TokenRequestForm postData = createTokenRequestForm("refresh_token")
                 .withRefreshToken(refreshToken);
 
         return createTokenRequest()
                 .body(postData)
                 .post(TokenResponse.class)
-                .toAuthToken();
+                .toAccessToken();
     }
 
     public OAuth2Token exchangeAccessCode(String code) {
@@ -180,7 +180,7 @@ public class OpenIdApiClient {
         return createTokenRequest()
                 .body(postData)
                 .post(TokenResponse.class)
-                .toAuthToken();
+                .toAccessToken();
     }
 
     public URL buildAuthorizeUrl(String state, String nonce) {
