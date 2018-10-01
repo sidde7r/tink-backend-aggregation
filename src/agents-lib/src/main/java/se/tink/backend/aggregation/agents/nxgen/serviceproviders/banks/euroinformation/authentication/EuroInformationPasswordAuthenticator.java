@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.authentication;
 
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -49,11 +50,17 @@ public class EuroInformationPasswordAuthenticator implements PasswordAuthenticat
 
         config.getInitEndpoint().ifPresent(endpoint -> {
             PfmInitResponse pfmInitResponse = apiClient.actionInit(endpoint);
-            if (!EuroInformationUtils.isSuccess(pfmInitResponse.getReturnCode())) {
-                LOGGER.info("PFM initialization error: " + SerializationUtils.serializeToString(pfmInitResponse));
-                return;
-            }
-            sessionStorage.put(EuroInformationConstants.Tags.PFM_ENABLED, true);
+            Optional.ofNullable(pfmInitResponse).filter(m -> EuroInformationUtils.isSuccess(m.getReturnCode()))
+                    .map(v -> {
+                        sessionStorage.put(EuroInformationConstants.Tags.PFM_ENABLED, true);
+                        return v;
+                    })
+                    .orElseGet(() -> {
+                        LOGGER.info(
+                                "PFM initialization error: " + SerializationUtils
+                                        .serializeToString(pfmInitResponse));
+                        return null;
+                    });
         });
     }
 
