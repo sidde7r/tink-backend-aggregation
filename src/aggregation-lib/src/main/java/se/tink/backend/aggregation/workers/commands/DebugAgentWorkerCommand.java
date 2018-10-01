@@ -44,7 +44,7 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
     @Override
     public void postProcess() {
         Credentials credentials = context.getRequest().getCredentials();
-
+        
         if (context.getRequest().getType() == CredentialsRequestType.TRANSFER) {
             TransferRequest transferRequest = (TransferRequest) context.getRequest();
 
@@ -91,7 +91,8 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
                     credentials.getProviderName(),
                     ThreadSafeDateFormat.FORMATTER_FILENAME_SAFE.format(new Date()),
                     credentials.getUserId(),
-                    credentials.getId()));
+                    credentials.getId())
+                    .replace(":", "."));
 
             String storagePath = agentDebugStorage.store(logContent, logFile);
 
