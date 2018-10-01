@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid;
+package se.tink.backend.aggregation.nxgen.core.authentication;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public class AuthenticationToken {
+public class OAuth2Token {
     private String tokenType;
     private String accessToken;
     @JsonProperty
@@ -19,7 +19,7 @@ public class AuthenticationToken {
     private long expiresInSeconds;
     private long issuedAt;
 
-    private AuthenticationToken(@JsonProperty("tokenType") String tokenType,
+    private OAuth2Token(@JsonProperty("tokenType") String tokenType,
             @JsonProperty("accessToken") String accessToken,
             @JsonProperty("refreshToken") String refreshToken,
             @JsonProperty("expiresInSeconds") long expiresInSeconds,
@@ -32,9 +32,9 @@ public class AuthenticationToken {
     }
 
     @JsonIgnore
-    public static AuthenticationToken create(String tokenType, String accessToken, String refreshToken,
+    public static OAuth2Token create(String tokenType, String accessToken, String refreshToken,
             long expiresInSeconds) {
-        return new AuthenticationToken(
+        return new OAuth2Token(
                 tokenType,
                 accessToken,
                 refreshToken,
