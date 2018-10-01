@@ -8,11 +8,12 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator.rpc.D
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator.rpc.DeviceConfigurationResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator.rpc.LoginResponse;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.entities.AccountGroupEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.entities.AccountDetailsEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.entities.AccountGroupEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.rpc.AccessSummaryResponse;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.rpc.BaseMobileRequest;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.rpc.AccountDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.rpc.AccountDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.rpc.BaseMobileRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.rpc.TransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.storage.LclPersistentStorage;
@@ -66,26 +67,22 @@ public class LclApiClient {
         return httpResponse.getRedirects().size() == 0;
     }
 
-    public Optional<AccountDetailsEntity> getAccountDetails(String accountNumber) {
-        BaseMobileRequest body = BaseMobileRequest.create();
+    public AccountDetailsEntity getAccountDetails(String agency, String accountNumber, String cleLetter) {
+        BaseMobileRequest detailListRequest = BaseMobileRequest.create();
 
-        String responseString = getPostFormRequest(LclConstants.Urls.ACCOUNT_DETAILS)
-                .post(String.class, body.getBodyValue());
+        // We have to make this request in order to not get a redirect when fetching the account details for a
+        // specific account. The returned value is not needed.
+        client.request(getPostFormRequest(LclConstants.Urls.ACCOUNT_DETAILS_LIST)
+                .post(String.class, detailListRequest.getBodyValue()));
 
-        AccountDetailsResponse accountDetailsResponse = SerializationUtils.deserializeFromString(
-                responseString, AccountDetailsResponse.class);
+        AccountDetailsRequest detailsRequest = AccountDetailsRequest.create(agency, accountNumber, cleLetter);
 
-        if (accountDetailsResponse == null || accountDetailsResponse.getAccountDetails() == null) {
-            log.warnExtraLong(responseString, LclConstants.Logs.ACCOUNT_DETAILS_RESPONSE_PARSING_FAILED);
-            return Optional.empty();
-        }
+        // Fetching the account details for a specific account
+        AccountDetailsResponse detailsResponse = postFormAndGetJsonResponse(
+                getPostFormRequest(LclConstants.Urls.ACCOUNT_DETAILS), detailsRequest.getBodyValue(),
+                AccountDetailsResponse.class);
 
-        if (!accountNumber.equalsIgnoreCase(accountDetailsResponse.getAccountDetails().getAccountNumber())) {
-            log.warnExtraLong(responseString, LclConstants.Logs.ACCOUNT_NOT_IN_DETAILS_RESPONSE);
-            return Optional.empty();
-        }
-
-        return Optional.of(accountDetailsResponse.getAccountDetails());
+        return detailsResponse.getAccountDetails();
     }
 
 
