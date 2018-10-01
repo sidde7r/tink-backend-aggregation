@@ -1,7 +1,7 @@
 import sys
 import argparse
 import os
-from flask import Flask, jsonify, request, abort, Response
+from flask import Flask, jsonify, request, abort, Response, redirect
 from functools import wraps
 import webbrowser
 
@@ -129,14 +129,37 @@ def thirdparty_open():
 
 # This endpoint will be accessed/opened by the web browser as a result
 # of a redirect from the bank's backend.
-@app.route("/api/v1/thirdparty/callback", methods=("GET",))
+@app.route("/api/v1/thirdparty/callback", methods=("GET", "POST"))
 def thirdparty_callback():
 
-    args = request.args
+    args = request.args or request.form
 
     state = args.get("state", None)
     if not state:
-        abort(400, "invalid request")
+        if request.method == "POST":
+            abort(400, "invalid request")
+
+        # No state means that it was an openid request (# instead of ?
+        # in the url).
+        # We must return a small script to the browser to send the
+        # parameters as a POST to this endpoint.
+        return """<html>
+    <head>
+        <script>
+            var path = window.location.pathname;
+            var data = window.location.hash.substr(1);
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if(this.readyState == XMLHttpRequest.DONE && this.status == 200) {
+                    window.location.replace(this.responseText);
+                }
+            };
+            xhr.open("POST", path, true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send(data);
+        </script>
+    </head>
+</html>"""
 
     # turn it into a dict from a ImmutableMultiDict (we don't expect or
     # support lists)
@@ -146,7 +169,9 @@ def thirdparty_callback():
     # when the agent asks for the supplemental information.
     queue.put("tpcb_%s" % state, parameters)
 
-    return ""
+    if request.method == "GET":
+        return redirect("tink://open", 302)
+    return "tink://open"
 
 
 def main():

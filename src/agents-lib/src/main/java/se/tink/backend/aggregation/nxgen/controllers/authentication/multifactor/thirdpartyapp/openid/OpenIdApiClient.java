@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Preconditions;
 import com.sun.jersey.core.util.Base64;
 import java.io.IOException;
 import java.util.Objects;
@@ -11,13 +12,10 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.ClientRegistration;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.UkOpenBankingAuthorizeRequest;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.AccountPermissionRequest;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.AccountPermissionResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.TokenResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.JsonWebKeySet;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.RegistrationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.TokenRequestForm;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.TokenResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils.HttpAuthUtils;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -26,13 +24,14 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class OpenIdApiClient {
 
-    private final TinkHttpClient httpClient;
-    private final SoftwareStatement softwareStatement;
-    private final ProviderConfiguration providerConfiguration;
+    protected final TinkHttpClient httpClient;
+    protected final SoftwareStatement softwareStatement;
+    protected final ProviderConfiguration providerConfiguration;
 
     // Internal caching. Do not use these fields directly, always use the getters!
     private WellKnownResponse cachedWellKnownResponse;
     private JsonWebKeySet cachedProviderKeys;
+    private OpenIdAuthenticatedHttpFilter authFilter;
 
     public OpenIdApiClient(TinkHttpClient httpClient, SoftwareStatement softwareStatement,
             ProviderConfiguration providerConfiguration) {
@@ -57,6 +56,14 @@ public class OpenIdApiClient {
         return cachedWellKnownResponse;
     }
 
+    public SoftwareStatement getSoftwareStatement() {
+        return softwareStatement;
+    }
+
+    public ProviderConfiguration getProviderConfiguration() {
+        return providerConfiguration;
+    }
+
     public JsonWebKeySet getProviderKeys() {
         if (Objects.nonNull(cachedProviderKeys)) {
             return cachedProviderKeys;
@@ -67,11 +74,6 @@ public class OpenIdApiClient {
                 .get(JsonWebKeySet.class);
 
         return cachedProviderKeys;
-    }
-
-    public URL getAuthorizationEndpoint() {
-        WellKnownResponse providerConfiguration = getWellKnownConfiguration();
-        return providerConfiguration.getAuthorizationEndpoint();
     }
 
     public RegistrationResponse registerClient() {
@@ -119,6 +121,10 @@ public class OpenIdApiClient {
             // Add to header.
             break;
 
+        case tls_client_auth:
+            // Do nothing. We authenticate using client certificate.
+            break;
+
         default:
             throw new IllegalStateException(String.format("Not yet implemented auth method: %s",
                     authMethod.toString()));
@@ -140,14 +146,10 @@ public class OpenIdApiClient {
                 OpenIdConstants.PREFERRED_TOKEN_ENDPOINT_AUTH_METHODS)
                 .orElseThrow(() -> new IllegalStateException("Preferred token endpoint auth method not found."));
 
-        switch (authMethod) {
-        case client_secret_basic:
+        if (authMethod == OpenIdConstants.TOKEN_ENDPOINT_AUTH_METHOD.client_secret_basic) {
+            // `client_secret_basic` does not add data to the body, but on the header.
             requestBuilder = requestBuilder.header(OpenIdConstants.HttpHeaders.AUTHORIZATION,
                     HttpAuthUtils.createBasicAuth(clientInfo.getClientId(), clientInfo.getClientSecret()));
-            break;
-
-        default:
-            // fall through
         }
 
         return requestBuilder;
@@ -182,31 +184,14 @@ public class OpenIdApiClient {
                 .toAuthToken();
     }
 
+    public URL buildAuthorizeUrl(String state, String nonce) {
+        WellKnownResponse wellknownConfiguration = getWellKnownConfiguration();
+        ClientInfo clientInfo = providerConfiguration.getClientInfo();
 
-    public AccountPermissionResponse requestAccountsApi(AuthenticationToken clientCredentials) {
-        OpenIdAuthenticatedHttpFilter authFilter = new OpenIdAuthenticatedHttpFilter(
-                clientCredentials,
-                providerConfiguration,
-                OpenIdConstants.DevParams.TINK_IP,
-                OpenIdConstants.DevParams.LAST_LOGIN
-        );
-
-        return httpClient
-                .request(providerConfiguration.getAccountRequestsURL())
-                .addFilter(authFilter)
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .accept(MediaType.APPLICATION_JSON_TYPE)
-                .body(AccountPermissionRequest.create())
-                .post(AccountPermissionResponse.class);
-    }
-
-    public URL buildAuthorizeUrl(String state, String intentId) {
-
-        //TODO: Create util for these?
         String responseType = OpenIdConstants.MANDATORY_RESPONSE_TYPES.stream()
                 .collect(Collectors.joining(" "));
 
-        String scope = getWellKnownConfiguration().verifyAndGetScopes(OpenIdConstants.SCOPES)
+        String scope = wellknownConfiguration.verifyAndGetScopes(OpenIdConstants.SCOPES)
                 .orElseThrow(() -> new IllegalStateException(
                         "Provider does not support the mandatory scopes.")
                 );
@@ -214,32 +199,34 @@ public class OpenIdApiClient {
         /*  'response_type=id_token' only supports 'response_mode=fragment',
          *  setting 'response_mode=query' has no effect the the moment.
          */
-        return httpClient.request(cachedWellKnownResponse.getAuthorizationEndpoint())
+        return wellknownConfiguration.getAuthorizationEndpoint()
                 .queryParam(OpenIdConstants.Params.RESPONSE_TYPE, responseType)
-                .queryParam(OpenIdConstants.Params.CLIENT_ID,
-                        providerConfiguration.getClientInfo().getClientId())
-                .queryParam(OpenIdConstants.Params.STATE, state)
+                .queryParam(OpenIdConstants.Params.CLIENT_ID, clientInfo.getClientId())
                 .queryParam(OpenIdConstants.Params.SCOPE, scope)
-                .queryParam(OpenIdConstants.Params.REDIRECT_URI, softwareStatement.getRedirectUri())
-                .queryParam(OpenIdConstants.Params.REQUEST, UkOpenBankingAuthorizeRequest.create()
-                        .withClientInfo(providerConfiguration.getClientInfo())
-                        .withSoftwareStatement(softwareStatement)
-                        .withState(state)
-                        .withWellknownConfiguration(cachedWellKnownResponse)
-                        .withIntentId(intentId)
-                        .build())
-                .getUrl();
+                .queryParam(OpenIdConstants.Params.STATE, state)
+                .queryParam(OpenIdConstants.Params.NONCE, nonce)
+                .queryParam(OpenIdConstants.Params.REDIRECT_URI, softwareStatement.getRedirectUri());
     }
 
-    public void registerAuthFilter(AuthenticationToken token) {
-        httpClient.addFilter(
-                new OpenIdAuthenticatedHttpFilter(
-                        token,
-                        providerConfiguration,
-                        OpenIdConstants.DevParams.TINK_IP,
-                        OpenIdConstants.DevParams.LAST_LOGIN
-                )
+    public void attachAuthFilter(AuthenticationToken token) {
+        Preconditions.checkState(Objects.isNull(authFilter), "Auth filter cannot be attached twice.");
+        authFilter = new OpenIdAuthenticatedHttpFilter(
+                token,
+                providerConfiguration,
+                OpenIdConstants.DevParams.TINK_IP,
+                OpenIdConstants.DevParams.LAST_LOGIN
         );
+
+        httpClient.addFilter(authFilter);
+    }
+
+    public void detachAuthFilter() {
+        Preconditions.checkNotNull(authFilter, "Auth filter must be attach before it can be detached.");
+        try {
+            httpClient.removeFilter(authFilter);
+        } finally {
+            authFilter = null;
+        }
     }
 
     private static void printJson(Object json) {
@@ -278,6 +265,5 @@ public class OpenIdApiClient {
                 System.out.println(String.format("{ %s }", part));
             }
         }
-
     }
 }
