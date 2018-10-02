@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.TokenResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils.HttpAuthUtils;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -155,7 +156,7 @@ public class OpenIdApiClient {
         return requestBuilder;
     }
 
-    public AuthenticationToken requestClientCredentials() {
+    public OAuth2Token requestClientCredentials() {
         TokenRequestForm postData = createTokenRequestForm("client_credentials");
 
         return createTokenRequest()
@@ -164,7 +165,7 @@ public class OpenIdApiClient {
                 .toAuthToken();
     }
 
-    public AuthenticationToken refreshAuthenticationToken(String refreshToken) {
+    public OAuth2Token refreshAuthenticationToken(String refreshToken) {
         TokenRequestForm postData = createTokenRequestForm("refresh_token")
                 .withRefreshToken(refreshToken);
 
@@ -174,7 +175,7 @@ public class OpenIdApiClient {
                 .toAuthToken();
     }
 
-    public AuthenticationToken exchangeAccessCode(String code) {
+    public OAuth2Token exchangeAccessCode(String code) {
         TokenRequestForm postData = createTokenRequestForm("authorization_code")
                 .withCode(code);
 
@@ -208,7 +209,7 @@ public class OpenIdApiClient {
                 .queryParam(OpenIdConstants.Params.REDIRECT_URI, softwareStatement.getRedirectUri());
     }
 
-    public void attachAuthFilter(AuthenticationToken token) {
+    public void attachAuthFilter(OAuth2Token token) {
         Preconditions.checkState(Objects.isNull(authFilter), "Auth filter cannot be attached twice.");
         authFilter = new OpenIdAuthenticatedHttpFilter(
                 token,

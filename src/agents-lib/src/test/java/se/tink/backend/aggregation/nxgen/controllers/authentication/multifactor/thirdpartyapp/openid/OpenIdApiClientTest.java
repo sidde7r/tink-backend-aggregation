@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.configuration.UkOpenBankingConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.RegistrationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -65,7 +66,7 @@ public class OpenIdApiClientTest {
 
     @Test
     public void testCredentialRequest() {
-        AuthenticationToken clientCredentials = apiClient.requestClientCredentials();
+        OAuth2Token clientCredentials = apiClient.requestClientCredentials();
         Assert.assertTrue(clientCredentials.isValid());
         Assert.fail(SerializationUtils.serializeToString(clientCredentials));
     }

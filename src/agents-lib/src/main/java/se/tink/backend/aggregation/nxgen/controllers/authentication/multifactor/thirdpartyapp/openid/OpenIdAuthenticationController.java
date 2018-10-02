@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.common.payloads.ThirdPartyAppAuthenticationPayload;
@@ -40,7 +41,7 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
 
     private final String state;
     private final String nonce;
-    private AuthenticationToken clientAuthToken;
+    private OAuth2Token clientAuthToken;
 
     public OpenIdAuthenticationController(PersistentStorage persistentStorage,
             SupplementalInformationController supplementalInformationController,
@@ -63,8 +64,8 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
 
     @Override
     public void autoAuthenticate() throws SessionException, BankServiceException {
-        AuthenticationToken authToken = persistentStorage.get(OpenIdConstants.PersistentStorageKeys.AUTH_TOKEN,
-                AuthenticationToken.class)
+        OAuth2Token authToken = persistentStorage.get(OpenIdConstants.PersistentStorageKeys.AUTH_TOKEN,
+                OAuth2Token.class)
                 .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
         if (authToken.hasExpired()) {
@@ -141,7 +142,7 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
         String idToken = getCallbackElement(callbackData, OpenIdConstants.CallbackParams.ID_TOKEN)
                 .orElseThrow(() -> new IllegalStateException("callbackData did not contain id_token."));
 
-        AuthenticationToken authToken = apiClient.exchangeAccessCode(code);
+        OAuth2Token authToken = apiClient.exchangeAccessCode(code);
 
         if (!authToken.isValid()) {
             throw new IllegalStateException("Invalid auth token.");
