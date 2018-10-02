@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.client.InProcessAggregationServiceFactory;
 import se.tink.backend.aggregation.clients.ProviderServiceFactoryProvider;
 import se.tink.backend.aggregation.cluster.JerseyClusterInfoProvider;
 import se.tink.backend.aggregation.cluster.provider.ClusterInfoProvider;
-import se.tink.backend.aggregation.controllers.ProviderServiceController;
 import se.tink.backend.aggregation.log.AggregationLoggerRequestFilter;
 import se.tink.backend.aggregation.provider.configuration.client.InterContainerProviderServiceFactory;
 import se.tink.backend.aggregation.resources.ProviderServiceResource;
@@ -50,7 +49,6 @@ public class AggregationModule extends AbstractModule {
 
         bind(ProviderService.class).to(ProviderServiceResource.class).in(Scopes.SINGLETON);
         bind(InterContainerProviderServiceFactory.class).toProvider(ProviderServiceFactoryProvider.class).in(Scopes.SINGLETON);
-        bind(ProviderServiceController.class).in(Scopes.SINGLETON);
         bind(ClusterInfoProvider.class).in(Scopes.SINGLETON);
         bind(AgentWorker.class).in(Scopes.SINGLETON);
         if (Objects.nonNull(configuration.getS3StorageConfiguration()) &&
