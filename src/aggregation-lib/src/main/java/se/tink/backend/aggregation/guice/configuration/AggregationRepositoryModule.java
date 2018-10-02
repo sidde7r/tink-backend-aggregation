@@ -9,8 +9,6 @@ import se.tink.backend.common.repository.mysql.aggregation.aggregationcredential
 import se.tink.backend.common.repository.mysql.aggregation.clustercryptoconfiguration.ClusterCryptoConfigurationRepository;
 import se.tink.backend.common.repository.mysql.aggregation.clusterhostconfiguration.ClusterHostConfigurationRepository;
 import se.tink.backend.common.config.DatabaseConfiguration;
-import se.tink.backend.common.repository.mysql.aggregation.clusterprovider.ClusterProviderConfigurationRepository;
-import se.tink.backend.common.repository.mysql.aggregation.providerconfiguration.ProviderConfigurationRepository;
 import se.tink.backend.core.ClusterHostConfiguration;
 import se.tink.backend.guice.configuration.RepositoryModule;
 
@@ -24,8 +22,6 @@ public class AggregationRepositoryModule extends RepositoryModule {
         bindSpringBean(AggregationCredentialsRepository.class);
         bindSpringBean(ClusterHostConfigurationRepository.class);
         bindSpringBean(ClusterCryptoConfigurationRepository.class);
-        bindSpringBean(ClusterProviderConfigurationRepository.class);
-        bindSpringBean(ProviderConfigurationRepository.class);
     }
 
     @Provides
