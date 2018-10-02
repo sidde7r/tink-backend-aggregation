@@ -2,10 +2,12 @@ package se.tink.backend.aggregation.nxgen.http;
 
 import com.sun.jersey.core.header.OutBoundHeaders;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.Cookie;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import org.slf4j.Logger;
@@ -468,6 +470,17 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
     public RequestBuilder header(HeaderEnum header) {
         headers.add(header.getKey(), header.getValue());
         return this;
+    }
+
+    public RequestBuilder addBasicAuth(String username, String password) {
+        String value = String.format(
+                "Basic %s",
+                Base64.getUrlEncoder().encodeToString(String.format("%s:%s", username, password).getBytes()));
+        return header(HttpHeaders.AUTHORIZATION, value);
+    }
+
+    public RequestBuilder addBearerToken(String token) {
+        return header(HttpHeaders.AUTHORIZATION, String.format("Bearer %s", token));
     }
 
     private void addCookiesToHeader() {

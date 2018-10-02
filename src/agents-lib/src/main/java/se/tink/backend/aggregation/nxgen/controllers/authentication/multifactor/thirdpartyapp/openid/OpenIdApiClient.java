@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.TokenRequestForm;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.TokenResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils.HttpAuthUtils;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -149,8 +148,7 @@ public class OpenIdApiClient {
 
         if (authMethod == OpenIdConstants.TOKEN_ENDPOINT_AUTH_METHOD.client_secret_basic) {
             // `client_secret_basic` does not add data to the body, but on the header.
-            requestBuilder = requestBuilder.header(OpenIdConstants.HttpHeaders.AUTHORIZATION,
-                    HttpAuthUtils.createBasicAuth(clientInfo.getClientId(), clientInfo.getClientSecret()));
+            requestBuilder = requestBuilder.addBasicAuth(clientInfo.getClientId(), clientInfo.getClientSecret());
         }
 
         return requestBuilder;
