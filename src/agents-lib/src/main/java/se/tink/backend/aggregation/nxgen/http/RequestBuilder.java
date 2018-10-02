@@ -12,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
@@ -479,8 +480,8 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
         return header(HttpHeaders.AUTHORIZATION, value);
     }
 
-    public RequestBuilder addBearerToken(String token) {
-        return header(HttpHeaders.AUTHORIZATION, String.format("Bearer %s", token));
+    public RequestBuilder addBearerToken(OAuth2Token token) {
+        return header(HttpHeaders.AUTHORIZATION, token.toAuthorizeHeader());
     }
 
     private void addCookiesToHeader() {
