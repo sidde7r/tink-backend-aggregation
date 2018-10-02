@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinfo
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.authentication.EuroInformationPasswordAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.creditcard.EuroInformationCreditCardFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.creditcard.EuroInformationCreditCardTransactionsFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.creditcard.nopfm.EuroInformationNoPfmCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.creditcard.nopfm.EuroInformationNoPfmCreditCardTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.investment.EuroInformationInvestmentAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.transactional.EuroInformationAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.transactional.notpaginated.EuroInformationTransactionsFetcher;
@@ -55,7 +55,7 @@ public abstract class EuroInformationAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
-                EuroInformationPasswordAuthenticator.create(this.apiClient, this.sessionStorage));
+                EuroInformationPasswordAuthenticator.create(this.apiClient, this.sessionStorage, this.config));
     }
 
     @Override
@@ -83,8 +83,8 @@ public abstract class EuroInformationAgent extends NextGenerationAgent {
         return Optional.of(new CreditCardRefreshController(
                 metricRefreshController,
                 updateController,
-                EuroInformationCreditCardFetcher.create(this.apiClient, this.sessionStorage),
-                EuroInformationCreditCardTransactionsFetcher.create(this.apiClient)
+                EuroInformationNoPfmCreditCardFetcher.create(this.apiClient, this.sessionStorage),
+                EuroInformationNoPfmCreditCardTransactionsFetcher.create(this.apiClient)
         ));
     }
 
@@ -114,7 +114,7 @@ public abstract class EuroInformationAgent extends NextGenerationAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return EuroInformationSessionHandler.create(apiClient);
+        return EuroInformationSessionHandler.create(this.apiClient, this.config);
     }
 
     @Override

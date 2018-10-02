@@ -31,6 +31,18 @@ public class EuroInformationUtilsTest {
     }
 
     @Test
+    public void parseAmount_zeroWithSign() {
+        Amount amount = EuroInformationUtils.parseAmount("+0.00SEK", CURRENCY_INPUT);
+        assertEquals(Amount.inEUR(0.00d), amount);
+    }
+
+    @Test
+    public void parseAmount_zeroWithoutSign() {
+        Amount amount = EuroInformationUtils.parseAmount("0.00SEK", CURRENCY_INPUT);
+        assertEquals(Amount.inEUR(0.00d), amount);
+    }
+
+    @Test
     public void isSuccess_whenLoginErrorCode() {
         assertFalse(EuroInformationUtils.isSuccess(EuroInformationErrorCodes.LOGIN_ERROR.getCodeNumber()));
     }

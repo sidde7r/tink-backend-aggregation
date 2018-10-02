@@ -32,7 +32,7 @@ public class EuroInformationOperationsFetcher implements
     }
 
     private OperationSummaryResponse getOperationsForAccount(String webId, String key) {
-        OperationSummaryResponse operations = apiClient.getTransactionsPaginated(webId, key);
+        OperationSummaryResponse operations = apiClient.getTransactionsWithPfm(webId, key);
         String returnCode = operations.getReturnCode();
         if (!EuroInformationUtils.isSuccess(operations.getReturnCode())) {
             LOGGER.info(EuroInformationErrorCodes.getByCodeNumber(returnCode).toString() +

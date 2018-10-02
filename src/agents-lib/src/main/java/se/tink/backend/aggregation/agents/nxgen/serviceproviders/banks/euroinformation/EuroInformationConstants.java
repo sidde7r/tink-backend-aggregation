@@ -65,10 +65,13 @@ public class EuroInformationConstants {
         public static final String INIT = "init";
         public static final String ACTION = "action";
 
+        // Investment accounts
         public static final String CURRENT_PAGE = "CurrentPage";
         public static final String MAX_ELEMENTS = "NbElemMaxByPage";
         public static final String MAX_ELEMENTS_VALUE = "25";
         public static final String SECURITY_ACCOUNT = "SecurityAccount";
+
+        // Transactions with PFM enabled
         public static final String RECOVERY_KEY = "recoveryKey";
         public static final String MAX_ITEMS = "max_items";
         public static final String MAX_ITEMS_VALUE = String.valueOf(100);

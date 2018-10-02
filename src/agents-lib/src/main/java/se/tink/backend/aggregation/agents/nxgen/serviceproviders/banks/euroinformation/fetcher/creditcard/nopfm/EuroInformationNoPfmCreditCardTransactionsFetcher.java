@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.creditcard;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.creditcard.nopfm;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,17 +16,19 @@ import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class EuroInformationCreditCardTransactionsFetcher implements TransactionFetcher<CreditCardAccount> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(EuroInformationCreditCardTransactionsFetcher.class);
-    private static final AggregationLogger AGGREGATION_LOGGER = new AggregationLogger(EuroInformationApiClient.class);
+public class EuroInformationNoPfmCreditCardTransactionsFetcher implements TransactionFetcher<CreditCardAccount> {
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(EuroInformationNoPfmCreditCardTransactionsFetcher.class);
+    private static final AggregationLogger AGGREGATION_LOGGER = new AggregationLogger(
+            EuroInformationNoPfmCreditCardTransactionsFetcher.class);
     private final EuroInformationApiClient apiClient;
 
-    private EuroInformationCreditCardTransactionsFetcher(EuroInformationApiClient apiClient) {
+    private EuroInformationNoPfmCreditCardTransactionsFetcher(EuroInformationApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
-    public static EuroInformationCreditCardTransactionsFetcher create(EuroInformationApiClient apiClient) {
-        return new EuroInformationCreditCardTransactionsFetcher(apiClient);
+    public static EuroInformationNoPfmCreditCardTransactionsFetcher create(EuroInformationApiClient apiClient) {
+        return new EuroInformationNoPfmCreditCardTransactionsFetcher(apiClient);
     }
 
     @Override
@@ -44,10 +46,11 @@ public class EuroInformationCreditCardTransactionsFetcher implements Transaction
     }
 
     private Optional<TransactionSummaryResponse> getTransactionsForAccount(String webId) {
-        TransactionSummaryResponse details = apiClient.getTransactionsNotPaginated(webId);
+        TransactionSummaryResponse details = apiClient.getTransactionsWhenNoPfm(webId);
         if (!EuroInformationUtils.isSuccess(details.getReturnCode())) {
             //TODO: We do not know if creditcard uses same endpoint for transactions, so we try to use it and log error
-            AGGREGATION_LOGGER.infoExtraLong(SerializationUtils.serializeToString(details), EuroInformationConstants.LoggingTags.creditcardTransactionsTag);
+            AGGREGATION_LOGGER.infoExtraLong(SerializationUtils.serializeToString(details),
+                    EuroInformationConstants.LoggingTags.creditcardTransactionsTag);
             return Optional.empty();
         }
         return Optional.of(details);

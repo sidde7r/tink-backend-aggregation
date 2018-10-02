@@ -12,7 +12,7 @@ public class EuroInformationUtils {
     // By default we try to use currency provided in separate field (`currencyInput`)
     // if not available, we parse currency out of amount in `input`.
     // Example `input` format: +1.11SEK
-    public static final String AMOUNT_REGEX = "^([-+])(\\d+\\.\\d{2})(|\\w{3})$";
+    public static final String AMOUNT_REGEX = "^([-+]?\\d+\\.\\d{2})(|\\w{3})$";
 
     private static final Pattern pattern = Pattern.compile(AMOUNT_REGEX);
 
@@ -32,9 +32,8 @@ public class EuroInformationUtils {
             throw new IllegalArgumentException("Cannot parse amount: " + input);
 
         }
-        int sign = "+".equals(matcher.group(1)) ? 1 : -1;
-        Double amountInDouble = Double.parseDouble(matcher.group(2)) * sign;
-        return new Amount(currencyOptional.orElse(matcher.group(3)), amountInDouble);
+        Double amountInDouble = Double.parseDouble(matcher.group(1));
+        return new Amount(currencyOptional.orElse(matcher.group(2)), amountInDouble);
     }
 
     public static boolean isSuccess(String responseReturnCode) {
