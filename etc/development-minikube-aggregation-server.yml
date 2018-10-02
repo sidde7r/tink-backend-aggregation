@@ -112,6 +112,10 @@ s3StorageConfiguration:
   region: local
   agentDebugBucketName: local-agent-debug-bucket
 
+excludedDebugClusters:
+  excludedClusters:
+    - local-development
+
 logging:
   level: INFO
   loggers:

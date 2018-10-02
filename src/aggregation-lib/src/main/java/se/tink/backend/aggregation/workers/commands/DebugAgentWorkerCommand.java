@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Objects;
+import java.util.List;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.CredentialsRequestType;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
@@ -43,6 +44,14 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
     @Override
     public void postProcess() {
+        String clusterId = context.getClusterInfo().getClusterId().getId();
+        List<String> excludedDebugClusters = context.getServiceContext().getConfiguration()
+                .getExcludedDebugClusters().getExcludedClusters();
+
+        if (Objects.nonNull(excludedDebugClusters) && excludedDebugClusters.contains(clusterId)) {
+            return;
+        }
+
         Credentials credentials = context.getRequest().getCredentials();
         
         if (context.getRequest().getType() == CredentialsRequestType.TRANSFER) {

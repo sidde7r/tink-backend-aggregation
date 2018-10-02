@@ -104,6 +104,10 @@ sqsQueueConfiguration:
   awsSecretKey: foobar
   queueName: queue
 
+excludedDebugClusters:
+  excludedClusters:
+    - local-development
+
 logging:
   level: INFO
   loggers:
