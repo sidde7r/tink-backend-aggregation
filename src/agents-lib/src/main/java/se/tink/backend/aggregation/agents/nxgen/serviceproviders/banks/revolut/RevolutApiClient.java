@@ -86,6 +86,7 @@ public class RevolutApiClient {
                 RevolutConstants.AppAuthenticationValues.APP_AUTHORIZATION.getKey(),
                 RevolutConstants.AppAuthenticationValues.APP_AUTHORIZATION.getValue());
 
+        persistentStorage.put(RevolutConstants.Headers.AUTHORIZATION_HEADER, RevolutConstants.Headers.BASIC + authStringB64);
         return client.request(url)
                 .header(RevolutConstants.Headers.AUTHORIZATION_HEADER,
                         RevolutConstants.Headers.BASIC + authStringB64)

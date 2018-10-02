@@ -68,6 +68,8 @@ public class RevolutConstants {
     public static final class Accounts {
         public static final String ACTIVE_STATE = "ACTIVE";
         public static final String REQUIRED_REFERENCE = "requiredReference";
+        public static final String IBAN = "iban";
+        public static final String ACCOUNT_ID = "id";
     }
 
     public static final class Pockets {
@@ -77,5 +79,11 @@ public class RevolutConstants {
 
     public static class Pagination {
         public static final int COUNT = 120;
+    }
+    public static class TransactionTypes{
+        public static final String CARD_PAYMENT = "CARD_PAYMENT";
+        public static final String TRANSFER = "TRANSFER";
+        public static final String REWARD = "REWARD";
+        public static final String TOP_UP = "TOPUP";
     }
 }
