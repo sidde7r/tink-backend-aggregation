@@ -447,6 +447,37 @@
             "status": "ENABLED",
             "transactional": true,
             "type": "BANK"
+        },
+        {
+            "name": "at-americanexpress-password",
+            "className": "nxgen.at.creditcards.amex.AmericanExpressATAgent",
+            "credentialsType": "PASSWORD",
+            "currency": "EUR",
+            "displayName": "American Express",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "groupDisplayName": "American Express",
+            "market": "AT",
+            "multiFactor": false,
+            "passwordHelpText": "Use the same credentials as when you log in to americanexpress.at. You can order new passwords at [American Express](https://global.americanexpress.com/myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=de_AT).",
+            "payload": "AT",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
         }
     ]
 }
