@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.backend.core.Amount;
@@ -22,7 +23,7 @@ public final class UpdateControllerTest {
 
     @Test
     public void ensureLoansRemain_whenTransactions_areRefreshed() {
-        final UpdateController updateController = new UpdateController(context, "SE", "SEK");
+        final UpdateController updateController = new UpdateController(context, MarketCode.SE, "SEK");
 
         final LoanAccount loanAccount = LoanAccount.builder("1337")
                 .setAccountNumber("777")
