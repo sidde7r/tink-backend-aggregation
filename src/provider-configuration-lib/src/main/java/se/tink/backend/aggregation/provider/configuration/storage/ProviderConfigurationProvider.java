@@ -15,11 +15,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
     private final Map<String, ProviderConfiguration> providerConfigurationByName;
-    private final Map<String, List<String>> enabledProvidersOnCluster;
+    private final Map<String, Set<String>> enabledProvidersOnCluster;
     private final Map<String, Map<String, ProviderConfiguration>> providerOverrideOnCluster;
     private final ProviderStatusConfigurationRepository providerStatusConfigurationRepository;
 
@@ -28,7 +29,7 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
     @Inject
     public ProviderConfigurationProvider(
             @Named("providerConfiguration") Map<String, ProviderConfiguration> providerConfigurationByName,
-            @Named("enabledProvidersOnCluster") Map<String, List<String>> enabledProvidersOnCluster,
+            @Named("enabledProvidersOnCluster") Map<String, Set<String>> enabledProvidersOnCluster,
             @Named("providerOverrideOnCluster") Map<String, Map<String, ProviderConfiguration>> providerOverrideOnCluster,
             ProviderStatusConfigurationRepository providerStatusConfigurationRepository){
         this.providerConfigurationByName = providerConfigurationByName;
