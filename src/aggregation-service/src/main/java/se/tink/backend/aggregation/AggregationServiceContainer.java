@@ -1,16 +1,10 @@
 package se.tink.backend.aggregation;
 
-import com.google.common.collect.ImmutableList;
 import com.google.inject.Injector;
-import io.dropwizard.cli.Command;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import javax.ws.rs.Path;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
-import se.tink.backend.aggregation.cli.provider.ChangeProviderRefreshFrequencyFactorCommand;
-import se.tink.backend.aggregation.cli.provider.DebugProviderCommand;
-import se.tink.backend.aggregation.cli.provider.ProviderStatusCommand;
-import se.tink.backend.aggregation.cli.provider.SeedProvidersForMarketCommand;
 import se.tink.backend.aggregation.client.AggregationServiceFactory;
 import se.tink.backend.aggregation.client.InProcessAggregationServiceFactory;
 import se.tink.backend.aggregation.guice.configuration.AggregationModuleFactory;
@@ -29,12 +23,6 @@ import se.tink.libraries.draining.DrainModeTask;
 @Path("/aggregation")
 public class AggregationServiceContainer extends AbstractServiceContainer {
 
-    private static final ImmutableList<Command> COMMANDS = ImmutableList.of(
-            new ChangeProviderRefreshFrequencyFactorCommand(),
-            new DebugProviderCommand(),
-            new ProviderStatusCommand(),
-            new SeedProvidersForMarketCommand());
-
     public static void main(String[] args) throws Exception {
         new AggregationServiceContainer().run(args);
     }
@@ -47,7 +35,6 @@ public class AggregationServiceContainer extends AbstractServiceContainer {
     @Override
     public void initialize(Bootstrap<ServiceConfiguration> bootstrap) {
         DropwizardObjectMapperConfigurator.doNotFailOnUnknownProperties(bootstrap);
-        COMMANDS.forEach(bootstrap::addCommand);
     }
 
     @SuppressWarnings("unchecked")

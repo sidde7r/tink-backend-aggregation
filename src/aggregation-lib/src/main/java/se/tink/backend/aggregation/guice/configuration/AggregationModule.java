@@ -5,16 +5,13 @@ import com.google.inject.Scopes;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
 import java.util.Objects;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
-import se.tink.backend.aggregation.api.ProviderService;
 import se.tink.backend.aggregation.client.AggregationServiceFactory;
 import se.tink.backend.aggregation.client.InProcessAggregationServiceFactory;
 import se.tink.backend.aggregation.clients.ProviderServiceFactoryProvider;
 import se.tink.backend.aggregation.cluster.JerseyClusterInfoProvider;
 import se.tink.backend.aggregation.cluster.provider.ClusterInfoProvider;
-import se.tink.backend.aggregation.controllers.ProviderServiceController;
 import se.tink.backend.aggregation.log.AggregationLoggerRequestFilter;
 import se.tink.backend.aggregation.provider.configuration.client.InterContainerProviderServiceFactory;
-import se.tink.backend.aggregation.resources.ProviderServiceResource;
 import se.tink.backend.aggregation.storage.AgentDebugLocalStorage;
 import se.tink.backend.aggregation.storage.AgentDebugS3Storage;
 import se.tink.backend.aggregation.storage.AgentDebugStorageHandler;
@@ -48,9 +45,7 @@ public class AggregationModule extends AbstractModule {
         bind(EncryptionServiceFactory.class).toProvider(EncryptionServiceFactoryProvider.class).in(Scopes.SINGLETON);
         bind(AggregationControllerAggregationClient.class).in(Scopes.SINGLETON);
 
-        bind(ProviderService.class).to(ProviderServiceResource.class).in(Scopes.SINGLETON);
         bind(InterContainerProviderServiceFactory.class).toProvider(ProviderServiceFactoryProvider.class).in(Scopes.SINGLETON);
-        bind(ProviderServiceController.class).in(Scopes.SINGLETON);
         bind(ClusterInfoProvider.class).in(Scopes.SINGLETON);
         bind(AgentWorker.class).in(Scopes.SINGLETON);
         if (Objects.nonNull(configuration.getS3StorageConfiguration()) &&
@@ -69,7 +64,6 @@ public class AggregationModule extends AbstractModule {
                 .addFilterFactories(ResourceTimerFilterFactory.class)
                 .addRequestFilters(AccessLoggingFilter.class, AggregationLoggerRequestFilter.class)
                 .addResponseFilters(AccessLoggingFilter.class)
-                .addResources(ProviderService.class)
                 //This is not a resource, but a provider
                 .addResources(JerseyClusterInfoProvider.class)
                 .bind();
