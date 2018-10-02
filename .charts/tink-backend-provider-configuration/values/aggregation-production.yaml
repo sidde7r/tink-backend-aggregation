@@ -1,6 +1,5 @@
 coordinationHosts: 10.88.54.160:2181
 
-applicationCluster: TINK
 developmentMode: false
 
 providerdb:
