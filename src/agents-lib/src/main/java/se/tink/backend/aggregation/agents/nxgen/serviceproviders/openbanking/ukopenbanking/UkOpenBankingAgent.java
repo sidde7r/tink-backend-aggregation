@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.authenticator.UkOpenBankingAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.configuration.UkOpenBankingConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.session.UkOpenBankingSessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -11,7 +12,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.UkOpenBankingConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
@@ -28,9 +28,6 @@ import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class UkOpenBankingAgent extends NextGenerationAgent {
-
-    private static final UkOpenBankingConfiguration UKOB_TEST_CONFIG = SerializationUtils.deserializeFromString("",
-            UkOpenBankingConfiguration.class);
 
     private final Provider tinkProvider;
     private UkOpenBankingApiClient apiClient;
@@ -58,10 +55,13 @@ public class UkOpenBankingAgent extends NextGenerationAgent {
     public void setConfiguration(ServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
+        UkOpenBankingConfiguration ukOpenBankingConfiguration = SerializationUtils.deserializeFromString(
+                configuration.getIntegrations().getUkOpenBankingJson(), UkOpenBankingConfiguration.class);
+
         String softwareStatementName = getSoftwareStatementName();
         String providerName = getProviderName();
 
-        SoftwareStatement softwareStatement = UKOB_TEST_CONFIG.getSoftwareStatement(softwareStatementName)
+        SoftwareStatement softwareStatement = ukOpenBankingConfiguration.getSoftwareStatement(softwareStatementName)
                 .orElseThrow(() -> new IllegalStateException(
                         String.format("Could not find softwareStatement: %s", softwareStatementName)));
 
@@ -69,7 +69,8 @@ public class UkOpenBankingAgent extends NextGenerationAgent {
                 .orElseThrow(() -> new IllegalStateException(
                         String.format("Could not find provider conf: %s", providerName)));
 
-        client.trustRootCaCertificate(UKOB_TEST_CONFIG.getRootCAData(), UKOB_TEST_CONFIG.getRootCAPassword());
+        client.trustRootCaCertificate(ukOpenBankingConfiguration.getRootCAData(),
+                ukOpenBankingConfiguration.getRootCAPassword());
 
         apiClient = new UkOpenBankingApiClient(client, softwareStatement, providerConfiguration);
     }

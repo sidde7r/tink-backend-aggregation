@@ -3,20 +3,15 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class ClientInfo {
 
-    @JsonProperty("client_id")
     private String clientId;
-    @JsonProperty("client_secret")
     private String clientSecret;
-    @JsonProperty("client_id_issued_at")
-    private long issuedAt;
-    @JsonProperty("client_secret_expires_at")
-    private long expiresAt;
+    private long clientIdIssuedAt;
+    private long clientSecretExpiresAt;
 
     public String getClientId() {
         return clientId;
@@ -26,11 +21,11 @@ public class ClientInfo {
         return clientSecret;
     }
 
-    public ZonedDateTime getIssuedAt() {
-        return ZonedDateTime.ofInstant(Instant.ofEpochMilli(issuedAt), ZoneOffset.UTC);
+    public ZonedDateTime getClientIdIssuedAt() {
+        return ZonedDateTime.ofInstant(Instant.ofEpochMilli(clientIdIssuedAt), ZoneOffset.UTC);
     }
 
-    public ZonedDateTime getExpiresAt() {
-        return ZonedDateTime.ofInstant(Instant.ofEpochMilli(expiresAt), ZoneOffset.UTC);
+    public ZonedDateTime getClientSecretExpiresAt() {
+        return ZonedDateTime.ofInstant(Instant.ofEpochMilli(clientSecretExpiresAt), ZoneOffset.UTC);
     }
 }

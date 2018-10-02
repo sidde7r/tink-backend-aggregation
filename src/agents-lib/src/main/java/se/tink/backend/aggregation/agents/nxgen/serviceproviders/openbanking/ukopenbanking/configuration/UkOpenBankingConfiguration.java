@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.configuration;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Map;
@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.assertj.core.util.Preconditions;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
 
 @JsonObject
 public class UkOpenBankingConfiguration {
