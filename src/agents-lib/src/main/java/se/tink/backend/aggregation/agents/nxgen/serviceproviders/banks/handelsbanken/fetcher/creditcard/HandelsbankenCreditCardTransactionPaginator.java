@@ -58,12 +58,6 @@ public abstract class HandelsbankenCreditCardTransactionPaginator<API extends Ha
                     List<Transaction> subTransactions = removeSummaryTransactions(
                             fetchAccountTransactions(handelsbankenAccount));
 
-                    // Fetch the card transactions.
-                    subTransactions.addAll(
-                            client.creditCardTransactions(handelsbankenAccount.getCardTransactionsUrl())
-                                    .tinkTransactions(account)
-                    );
-
                     CreditCardTransactionsResponse<HandelsbankenSECreditCard> response =
                             client.creditCardTransactions(
                                     handelsbankenAccount.getCardTransactionsUrl());
