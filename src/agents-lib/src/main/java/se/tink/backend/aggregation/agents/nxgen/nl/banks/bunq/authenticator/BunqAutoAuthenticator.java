@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.Field;
@@ -18,21 +19,27 @@ public class BunqAutoAuthenticator implements AutoAuthenticator {
     private static final AggregationLogger log = new AggregationLogger(BunqAutoAuthenticator.class);
     private final Credentials credentials;
     private final SessionStorage sessionStorage;
+    private final PersistentStorage persistentStorage;
     private final BunqApiClient apiClient;
 
-    public BunqAutoAuthenticator(Credentials credentials, SessionStorage sessionStorage,
+    public BunqAutoAuthenticator(Credentials credentials, PersistentStorage persistentStorage,
+            SessionStorage sessionStorage,
             BunqApiClient apiClient) {
         this.credentials = credentials;
         this.sessionStorage = sessionStorage;
+        this.persistentStorage = persistentStorage;
         this.apiClient = apiClient;
     }
 
     @Override
     public void autoAuthenticate() throws SessionException {
         try {
+            // Here we need to use the token got from installation
+            sessionStorage.put(BunqConstants.StorageKeys.CLIENT_AUTH_TOKEN,
+                    persistentStorage.get(BunqConstants.StorageKeys.CLIENT_AUTH_TOKEN));
             String apiKey = credentials.getField(Field.Key.PASSWORD);
             CreateSessionResponse createSessionResponse = apiClient.createSession(apiKey);
-            sessionStorage.put(BunqConstants.StorageKeys.SESSION_TOKEN, createSessionResponse.getToken());
+            sessionStorage.put(BunqConstants.StorageKeys.CLIENT_AUTH_TOKEN, createSessionResponse.getToken());
             sessionStorage.put(BunqConstants.StorageKeys.USER_ID, createSessionResponse.getUserPerson().getId());
         } catch (HttpResponseException e) {
             HttpResponse response = e.getResponse();
