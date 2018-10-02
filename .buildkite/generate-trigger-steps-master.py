@@ -20,6 +20,7 @@ PROJECTS = {
         'chart': True,
         'salt': False,
         'branches': [
+            'aggregation-production',
             'aggregation-staging',
         ],
     },
