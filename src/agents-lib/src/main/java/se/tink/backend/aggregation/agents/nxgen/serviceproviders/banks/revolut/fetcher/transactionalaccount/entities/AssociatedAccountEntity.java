@@ -5,4 +5,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class AssociatedAccountEntity {
     private String id;
+
+    public String getId() {
+        return id;
+    }
 }
