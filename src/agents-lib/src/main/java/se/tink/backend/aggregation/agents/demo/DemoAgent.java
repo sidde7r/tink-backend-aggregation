@@ -230,14 +230,20 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
     }
 
     private AccountFeatures createAccountAsset() {
-        Loan loan = new Loan();
-        loan.setInterest(0.019);
-        loan.setName("Bolån");
-        loan.setBalance(-2300000D);
-        loan.setNumMonthsBound(1);
-        loan.setType(se.tink.backend.system.rpc.Loan.Type.MORTGAGE);
+        Loan mortgageLoan = new Loan();
+        mortgageLoan.setInterest(0.019);
+        mortgageLoan.setName("Bolån");
+        mortgageLoan.setBalance(-2300000D);
+        mortgageLoan.setNumMonthsBound(1);
+        mortgageLoan.setType(se.tink.backend.system.rpc.Loan.Type.MORTGAGE);
 
-        return AccountFeatures.createForLoan(loan);
+        Loan privateLoan = new Loan();
+        privateLoan.setInterest(0.9);
+        privateLoan.setName("Blanco");
+        privateLoan.setBalance(-50000D);
+        privateLoan.setType(Loan.Type.BLANCO);
+
+        return AccountFeatures.createForLoans(Lists.newArrayList(mortgageLoan, privateLoan));
     }
 
     @Override
