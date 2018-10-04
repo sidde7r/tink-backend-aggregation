@@ -45,23 +45,7 @@ STEP = """
       TINK_KUBERNETES_DEPLOY: "{kubernetes_deploy}"
 """
 
-TRIGGER_ALL_PIPELINE_STEP = """
-- name: "Trigger release all {project}"
-  trigger: "release-all-{project}"
-  async: true
-  build:
-    message: "Release {version}"
-    commit: "HEAD"
-    branch: "master"
-    env:
-      TINK_VERSION: "{version}"
-"""
-
 version = os.environ['VERSION']
-
-print(TRIGGER_ALL_PIPELINE_STEP.format(
-    version=version, project='tink-backend-aggregation'))
-
 
 for project, project_settings in PROJECTS.items():
     for branch in project_settings['branches']:
