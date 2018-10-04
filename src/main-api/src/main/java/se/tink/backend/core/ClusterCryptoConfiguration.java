@@ -1,5 +1,6 @@
 package se.tink.backend.core;
 
+import java.util.Objects;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -36,5 +37,21 @@ public class ClusterCryptoConfiguration {
 
     public void setBase64EncodedKey(String base64EncodedKey) {
         this.base64EncodedKey = base64EncodedKey;
+    }
+
+    public boolean isValid() {
+        if (Objects.isNull(cryptoId)) {
+            return false;
+        }
+
+        if (!cryptoId.isValid()) {
+            return false;
+        }
+
+        if (Objects.isNull(base64EncodedKey)) {
+            return false;
+        }
+
+        return true;
     }
 }
