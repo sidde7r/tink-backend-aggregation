@@ -803,7 +803,7 @@
                 "MORTGAGE_AGGREGATION"
             ],
             "className": "banks.nordea.NordeaAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "Nordea",
             "fields": [
