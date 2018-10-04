@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.google.common.base.Strings;
 import java.util.regex.Matcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.entities.BalanceEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.entities.DateEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
@@ -22,10 +24,10 @@ public class TransactionEntity {
     private String sender;
 
     @JsonProperty("fechaValor")
-    private ImagenBankDate valueDate;
+    private DateEntity valueDate;
 
     @JsonProperty("fechaOperacion")
-    private ImagenBankDate transactionDate;
+    private DateEntity transactionDate;
 
     @JsonIgnore
     private String getTransactionDescription() {

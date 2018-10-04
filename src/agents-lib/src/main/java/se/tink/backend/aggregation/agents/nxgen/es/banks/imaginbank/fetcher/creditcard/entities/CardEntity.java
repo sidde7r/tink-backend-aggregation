@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.creditcard.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.entities.BalanceEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.entities.ImagenBankDate;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.entities.BalanceEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.entities.DateEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -21,8 +21,8 @@ public class CardEntity {
     private String formatoTap;
     private String permiteHCE;
     private String permiteTandem;
-    private ImagenBankDate fechaContratacion;
-    private ImagenBankDate fechaCaducidad;
+    private DateEntity fechaContratacion;
+    private DateEntity fechaCaducidad;
     private String codigoEstado;
     private String permiteModificarPin;
     private String tipoTarjetaMovil;
