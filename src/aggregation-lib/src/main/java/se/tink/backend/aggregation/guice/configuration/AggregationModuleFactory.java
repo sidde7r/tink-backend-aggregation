@@ -9,12 +9,24 @@ import se.tink.backend.guice.configuration.ConfigurationModule;
 import se.tink.libraries.discovery.CoordinationModule;
 
 public class AggregationModuleFactory {
-    public static ImmutableList<Module> build(ServiceConfiguration configuration,
-            Environment environment) {
+    public static ImmutableList<Module> build(ServiceConfiguration configuration, Environment environment) {
         return ImmutableList.of(
                 new CommonModule(),
                 new CoordinationModule(),
                 new AggregationRepositoryModule(configuration.getDatabase()),
+                new ConfigurationModule(configuration),
+                new AggregationModule(configuration, environment.jersey()),
+                new QueueModule(configuration.getSqsQueueConfiguration(), environment.lifecycle())
+        );
+    }
+
+    public static ImmutableList<Module> buildForDevelopment(ServiceConfiguration configuration,
+            Environment environment) {
+        return ImmutableList.of(
+                new CommonModule(),
+                new CoordinationModule(),
+                new AggregationDevelopmentRepositoryModule(configuration.getDatabase(),
+                        configuration.getDevelopmentConfiguration()),
                 new ConfigurationModule(configuration),
                 new AggregationModule(configuration, environment.jersey()),
                 new QueueModule(configuration.getSqsQueueConfiguration(), environment.lifecycle())

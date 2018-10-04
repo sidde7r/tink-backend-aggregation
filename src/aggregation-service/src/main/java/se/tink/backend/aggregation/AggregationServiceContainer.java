@@ -20,10 +20,7 @@ import se.tink.backend.common.ServiceContext;
 import se.tink.backend.common.config.AggregationDevelopmentConfiguration;
 import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.backend.common.repository.mysql.aggregation.clustercryptoconfiguration.ClusterCryptoConfigurationRepository;
-import se.tink.backend.common.repository.mysql.aggregation.clusterhostconfiguration.ClusterHostConfigurationRepository;
 import se.tink.backend.core.ClusterCryptoConfiguration;
-import se.tink.backend.core.ClusterHostConfiguration;
-import se.tink.backend.core.CryptoId;
 import se.tink.libraries.dropwizard.DropwizardLifecycleInjectorFactory;
 import se.tink.libraries.dropwizard.DropwizardObjectMapperConfigurator;
 import se.tink.libraries.metrics.MetricRegistry;
@@ -52,7 +49,9 @@ public class AggregationServiceContainer extends AbstractServiceContainer {
     protected void build(ServiceConfiguration configuration, Environment environment) throws Exception {
         Injector injector = DropwizardLifecycleInjectorFactory.build(
                 environment.lifecycle(),
-                AggregationModuleFactory.build(configuration, environment));
+                configuration.isDevelopmentMode() ?
+                        AggregationModuleFactory.buildForDevelopment(configuration, environment):
+                        AggregationModuleFactory.build(configuration, environment));
 
         ServiceContext serviceContext = injector.getInstance(ServiceContext.class);
         environment.admin().addTask(injector.getInstance(DrainModeTask.class));
@@ -86,29 +85,16 @@ public class AggregationServiceContainer extends AbstractServiceContainer {
         environment.jersey().register(inProcessAggregationServiceFactory.getCreditSafeService());
 
         if (configuration.isDevelopmentMode()) {
-            setUpDevelopmentMode(injector);
+            setUpDevelopmentCryptoConfiguration(injector);
         }
     }
 
-    private void setUpDevelopmentMode(Injector injector) {
+    private void setUpDevelopmentCryptoConfiguration(Injector injector) {
         AggregationDevelopmentConfiguration developmentConfig = injector.getInstance(
                 AggregationDevelopmentConfiguration.class);
 
         if (developmentConfig == null || !developmentConfig.isValid()) {
             return;
-        }
-
-        ClusterHostConfiguration hostConfiguration = developmentConfig.getClusterHostConfiguration();
-
-        ClusterHostConfigurationRepository clusterHostConfigurationRepository = injector.getInstance(
-                ClusterHostConfigurationRepository.class);
-
-        ClusterHostConfiguration clusterHostConfigurationInDb = clusterHostConfigurationRepository.findOne(
-                hostConfiguration.getClusterId());
-
-        if (Objects.isNull(clusterHostConfigurationInDb)) {
-            log.info("Seeding cluster host configuration for local development.");
-            clusterHostConfigurationRepository.save(hostConfiguration);
         }
 
         ClusterCryptoConfiguration clusterCryptoConfiguration = developmentConfig.getClusterCryptoConfiguration();
