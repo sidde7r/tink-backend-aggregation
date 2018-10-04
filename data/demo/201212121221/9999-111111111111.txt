@@ -1,35 +1,33 @@
 date	description	amount	type	pending
-2018-07-06	Nytorget 6 Bar	-345.11
-2018-07-06	Swish Markus	100.66
-2018-07-06	Swish Emil	150.33
-2018-07-04	Dobelns pasta	-300
-2018-07-04	Swish Henrik Karlsson	100
+2018-09-22	Reload food bar	-218
+2018-09-16	Reload food bar	-109
+2018-09-06	Reload food bar	-109
+2018-09-01	Nytorget 6 Bar	-345.11
+2018-08-06	Swish Markus	100.66
+2018-08-06	Swish Emil	150.33
+2018-08-04	Dobelns pasta	-300
+2018-08-04	Swish Henrik Karlsson	100
 2018-07-04	Swish Boris Johansson	100
 2018-07-04	Spy bar	-1200
 2018-07-04	Swish Alice Wallander	500
-2018-07-01	Salong Betong	-2000
-2018-07-01	Swish hyra	4000
-2018-08-25	Sevenday	-2500
-2018-07-24	Sevenday	-2500
-2018-06-25	Sevenday	-2500
-2018-05-25	Sevenday	-2500
-2018-04-25	Sevenday	-2500
-2018-03-23	Sevenday	-2500
-2018-08-25	Lendify blanko	-1789
-2018-07-24	Lendify blanko	-1800
-2018-06-25	Lendify blanko	-1811
-2018-05-25	Lendify blanko	-1822
-2018-04-25	Lendify blanko	-1833
-2018-03-23	Lendify blanko	-1844
-2018-08-25	SVEA EKO	-789
-2018-07-24	SVEA EKO	-800
-2018-06-25	SVEA EKO	-811
-2018-05-25	SVEA EKO	-822
-2018-04-25	SVEA EKO	-833
-2018-03-23	SVEA EKO	-844
-2018-08-25  262-5705    -3000
-2018-07-24  262-5705    -3011
-2018-06-25  262-5705    -3023
-2018-05-25  262-5705    -3036
-2018-04-25  262-5705    -3040
-2018-03-23  262-5705    -3055
+2018-06-01	Salong Betong	-2000
+2018-06-01	Swish hyra	4000
+2018-09-25	IkanoBank  -1000
+2018-08-25	IkanoBank  -1000
+2018-07-24	IkanoBank  -1000
+2018-06-25	IkanoBank  -1000
+2018-05-25	IkanoBank  -1000
+2018-04-25	IkanoBank  -1000
+2018-03-23	IkanoBank  -1000
+2018-09-25	Lendify	-1800
+2018-08-25	Lendify	-1800
+2018-07-24	Lendify	-1800
+2018-06-25	Lendify	-1800
+2018-05-25	Lendify	-1800
+2018-04-25	Lendify	-1800
+2018-03-23	Lendify	-1800
+2018-08-25	SVEA EKO	-750
+2018-08-25	SVEA EKO	-825
+2018-07-24	SVEA EKO	-890
+2018-06-25	SVEA EKO	-1050
+2018-05-25	SVEA EKO	-950
