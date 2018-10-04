@@ -30,9 +30,6 @@ clusterCryptoConfigurationDefaultValues = {
     "keyid": "1",
     "base64encodedkey":"'QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUE='"}
 
-deleteQuery = "delete from cluster_provider_configurations where (clusterid, providername) in (select 'local-development', name from provider_configurations); "
-joinQuery = "insert into cluster_provider_configurations (clusterid, providername) select 'local-development', name from provider_configurations;"
-
 host = ""
 password = ""
 username = ""
@@ -77,8 +74,6 @@ def insert_into_cluster_host_configuration(db):
 
     print "Inserting configuration for cluster host configuration table."
     mysql_insert(db, clusterHostConfigurationTable, clusterHostDefaultValues)
-    sql_executor(db, deleteQuery)
-    sql_executor(db, joinQuery)
 
 
 def sql_executor(db, sql):
@@ -110,24 +105,6 @@ def get_connection():
         except yaml.YAMLError as exc:
             print(exc)
 
-def seed_providers(os, seedMarket):
-    os.chdir(bazelRelativePath)
-    serverArgs = ['bazel run :aggregation seed-providers-for-market --jvmopt="-Dmarket=' + seedMarket.upper() + '" etc/development-minikube-aggregation-server.yml']
-    server = subprocess.Popen(serverArgs, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    
-    while True:
-        serverNextLine = server.stdout.readline()
-        if serverNextLine != '' :
-            if  '[' in serverNextLine and ']' in serverNextLine and 'INFO' not in serverNextLine: 
-                print "Building bazel seeder. \n Progress: " + serverNextLine.split(']')[0].split('[')[1]
-            elif 'INFO' in serverNextLine:
-                print "Seeding"
-            else:
-                sys.stdout.write(serverNextLine)
-                sys.stdout.flush
-        if server.poll() != None:
-            break
-
 def showHelp(f, argv):
     h = "%s [-h] [-a] [-c Aggregation controller host] [-f] [-m Market]\n" % argv[0]
     h += "  -h/--help     	  This menu\n"
@@ -156,9 +133,6 @@ def main(argv):
             clusterHostDefaultValues['host'] = 'http://127.0.0.1:9098'
         elif opt in ("-a", "--aggregation"):
             clusterHostDefaultValues['host'] = 'http://127.0.0.1:5000'
-        elif opt in ("-m", "--market"):
-            isSeedProviders = True
-            seedMarket = arg
         elif opt in ("-c", "--custom-host"):
             clusterHostDefaultValues['host'] = arg
         elif opt in ("-h", "--help"):
@@ -169,17 +143,6 @@ def main(argv):
     os.chdir(os.path.dirname(filePath))
 
     db = get_connection()
-
-    tablename = "provider_configurations"
-
-    if isSeedProviders:
-        path = "../../../data/seeding/providers-" + seedMarket + ".json"
-        inputfile = file(path, "r")
-        jsonString = inputfile.read()
-        providers = json.loads(jsonString)
-        market = providers['market']
-        currency = providers['currency']
-        seed_providers(os, seedMarket)
 
     insert_local_development_crypto(db)
     insert_into_cluster_host_configuration(db)
