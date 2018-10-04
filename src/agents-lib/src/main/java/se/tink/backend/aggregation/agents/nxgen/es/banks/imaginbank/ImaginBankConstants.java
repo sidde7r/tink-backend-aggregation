@@ -16,8 +16,8 @@ public class ImaginBankConstants {
         static final String ACCOUNT_TRANSACTION_PATH = "cuentas/extracto";
 
         static final String CHECK_FOTO_PATH = "smartContent/consultaFoto";
-        static final String GENERIC_CARDS_PATH = "tarjetas/listadoTarjetasGenerica";
-        static final String CARD_TRANSACTIONS_PATH = "tarjetasHCE/listaMovimientosGenerica";
+        static final String CARDS_PATH = "tarbox/listadoTarjetas";
+        static final String CARD_TRANSACTIONS_PATH = "tarbox/listaMovimientos";
     }
 
     public static class Urls {
@@ -31,7 +31,7 @@ public class ImaginBankConstants {
 
         public static final URL KEEP_ALIVE = new URL(BASE + ApiService.CHECK_FOTO_PATH);
         public static final URL FETCH_ACCOUNT_TRANSACTION = new URL(BASE + ApiService.ACCOUNT_TRANSACTION_PATH);
-        public static final URL FETCH_CARDS = new URL(BASE + ApiService.GENERIC_CARDS_PATH);
+        public static final URL FETCH_CARDS = new URL(BASE + ApiService.CARDS_PATH);
         public static final URL FETCH_CARD_TRANSACTIONS = new URL(BASE + ApiService.CARD_TRANSACTIONS_PATH);
     }
 
@@ -54,6 +54,16 @@ public class ImaginBankConstants {
     public static class QueryParams {
         public static final String FROM_BEGIN = "inicio";
         public static final String ACCOUNT_NUMBER = "numeroCuenta";
+
+        // credit cards
+        public static final String INITIALIZED_BOXES = "boxesInicializados";
+        public static final String INITIALIZED_BOXES_VALUE = "S";
+        public static final String CARD_STATUS = "estadoTarjeta";
+        public static final String CARD_STATUS_VALUE = "A";
+        public static final String MORE_DATA = "masDatos";
+        public static final String MORE_DATA_VALUE = "false";
+        public static final String PROFILE = "perfil";
+        public static final String PROFILE_VALUE = "I";
     }
 
     public static class TemporaryStorage {
@@ -79,6 +89,7 @@ public class ImaginBankConstants {
     public static class LogTags {
         public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("imaginbank_unknown_accountype");
         public static final LogTag MULTIPLE_ACCOUNTS = LogTag.from("imaginbank_multiple_accounts");
+        public static final LogTag CREDIT_CARD = LogTag.from("imaginbank_credirt_card");
     }
 
     public static class Storage {

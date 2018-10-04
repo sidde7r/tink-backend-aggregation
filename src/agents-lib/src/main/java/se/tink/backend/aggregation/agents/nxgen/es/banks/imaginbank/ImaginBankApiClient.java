@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank;
 
+import java.time.LocalDate;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -7,10 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticato
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.rpc.SessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.rpc.SessionResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.creditcard.rpc.CardTransactionsRequest;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.creditcard.rpc.CardTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.creditcard.rpc.GenericCardsRequest;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.creditcard.rpc.GenericCardsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.creditcard.rpc.ImaginBankCardTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.rpc.AccountTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -88,16 +86,28 @@ public class ImaginBankApiClient {
                 .get(AccountTransactionResponse.class);
     }
 
-    public GenericCardsResponse fetchCards() {
-        return createRequest(ImaginBankConstants.Urls.FETCH_CARDS)
-                .body(new GenericCardsRequest(true, ImaginBankConstants.DefaultRequestParams.NUM_CARDS))
-                .post(GenericCardsResponse.class);
+    public String fetchCards() {
+        return createRequest(
+                ImaginBankConstants.Urls.FETCH_CARDS
+                        .queryParam(ImaginBankConstants.QueryParams.INITIALIZED_BOXES,
+                                ImaginBankConstants.QueryParams.INITIALIZED_BOXES_VALUE)
+                        .queryParam(ImaginBankConstants.QueryParams.CARD_STATUS,
+                                ImaginBankConstants.QueryParams.CARD_STATUS_VALUE)
+                        .queryParam(ImaginBankConstants.QueryParams.MORE_DATA,
+                                ImaginBankConstants.QueryParams.MORE_DATA_VALUE)
+                        .queryParam(ImaginBankConstants.QueryParams.PROFILE,
+                                ImaginBankConstants.QueryParams.PROFILE_VALUE))
+                .get(String.class);
     }
 
-    public CardTransactionsResponse fetchCardTransactions(String cardId, boolean fromBegin) {
+    public String fetchCardTransactions(String cardId, LocalDate fromDate,
+            LocalDate toDate, boolean moreData) {
+        ImaginBankCardTransactionsRequest request =
+                ImaginBankCardTransactionsRequest.createCardTransactionsRequest(false,
+                        cardId, fromDate, toDate);
+
         return createRequest(ImaginBankConstants.Urls.FETCH_CARD_TRANSACTIONS)
-                .body(new CardTransactionsRequest(cardId, fromBegin))
-                .post(CardTransactionsResponse.class);
+                .post(String.class, request);
     }
 
     public void logout() {
