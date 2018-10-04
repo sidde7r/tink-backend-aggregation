@@ -174,6 +174,7 @@ public class ProviderFileModule extends AbstractModule {
             Map<String, Map<String, ProviderConfiguration>> overridingProvidersOnCluster) throws IOException{
 
         String clusterId = null;
+        Map<String, ProviderConfiguration> providerConfigurationMap = Maps.newHashMap();
 
         for (File overridingProviderFile : overridingProviderFiles) {
             ProviderSpecificationModel providerOverrideOnClusterModel =
@@ -198,11 +199,10 @@ public class ProviderFileModule extends AbstractModule {
             log.info("{} provider overriding for cluster {} in from file {}",
                     providersOnCluster.size(), clusterId, overridingProviderFile.getName());
 
-            Map<String, ProviderConfiguration> providerConfigurationMap = providersOnCluster.stream()
-                    .collect(Collectors.toMap(ProviderConfiguration::getName, Functions.identity()));
-
-            overridingProvidersOnCluster.put(clusterId, providerConfigurationMap);
+            providersOnCluster.forEach(providerConfig ->
+                    providerConfigurationMap.put(providerConfig.getName(), providerConfig));
         }
+        overridingProvidersOnCluster.put(clusterId, providerConfigurationMap);
 
     }
 
