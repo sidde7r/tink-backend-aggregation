@@ -41,7 +41,7 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
 
     private final String state;
     private final String nonce;
-    private OAuth2Token clientAuthToken;
+    private OAuth2Token clientAccessToken;
 
     public OpenIdAuthenticationController(PersistentStorage persistentStorage,
             SupplementalInformationController supplementalInformationController,
@@ -64,33 +64,33 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
 
     @Override
     public void autoAuthenticate() throws SessionException, BankServiceException {
-        OAuth2Token authToken = persistentStorage.get(OpenIdConstants.PersistentStorageKeys.AUTH_TOKEN,
+        OAuth2Token accessToken = persistentStorage.get(OpenIdConstants.PersistentStorageKeys.ACCESS_TOKEN,
                 OAuth2Token.class)
                 .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
-        if (authToken.hasExpired()) {
+        if (accessToken.hasExpired()) {
             // Refresh token is not always present, if it's absent we fall back to the manual authentication again.
-            String refreshToken = authToken.getRefreshToken().orElseThrow(SessionError.SESSION_EXPIRED::exception);
+            String refreshToken = accessToken.getRefreshToken().orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
-            authToken = apiClient.refreshAuthenticationToken(refreshToken);
-            if (!authToken.isValid()) {
+            accessToken = apiClient.refreshAccessToken(refreshToken);
+            if (!accessToken.isValid()) {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
-            // Store the new authToken on the persistent storage again.
-            persistentStorage.put(OpenIdConstants.PersistentStorageKeys.AUTH_TOKEN, authToken);
+            // Store the new accessToken on the persistent storage again.
+            persistentStorage.put(OpenIdConstants.PersistentStorageKeys.ACCESS_TOKEN, accessToken);
 
             // fall through.
         }
 
-        apiClient.attachAuthFilter(authToken);
+        apiClient.attachAuthFilter(accessToken);
     }
 
     @Override
     public ThirdPartyAppResponse<String> init() {
-        clientAuthToken = apiClient.requestClientCredentials();
-        if (!clientAuthToken.isValid()) {
-            throw new IllegalStateException("Client auth token is not valid.");
+        clientAccessToken = apiClient.requestClientCredentials();
+        if (!clientAccessToken.isValid()) {
+            throw new IllegalStateException("Client access token is not valid.");
         }
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
@@ -101,7 +101,7 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
 
         URL authorizeUrl = apiClient.buildAuthorizeUrl(state, nonce);
 
-        apiClient.attachAuthFilter(clientAuthToken);
+        apiClient.attachAuthFilter(clientAccessToken);
         try {
             // Let the agent add to or change the URL before we send it to the front-end.
             authorizeUrl = authenticator.decorateAuthorizeUrl(authorizeUrl, state, nonce);
@@ -142,19 +142,19 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
         String idToken = getCallbackElement(callbackData, OpenIdConstants.CallbackParams.ID_TOKEN)
                 .orElseThrow(() -> new IllegalStateException("callbackData did not contain id_token."));
 
-        OAuth2Token authToken = apiClient.exchangeAccessCode(code);
+        OAuth2Token accessToken = apiClient.exchangeAccessCode(code);
 
-        if (!authToken.isValid()) {
-            throw new IllegalStateException("Invalid auth token.");
+        if (!accessToken.isValid()) {
+            throw new IllegalStateException("Invalid access token.");
         }
 
-        if (!authToken.isBearer()) {
-            throw new IllegalStateException(String.format("Unknown token type '%s'.", authToken.getTokenType()));
+        if (!accessToken.isBearer()) {
+            throw new IllegalStateException(String.format("Unknown token type '%s'.", accessToken.getTokenType()));
         }
 
-        persistentStorage.put(OpenIdConstants.PersistentStorageKeys.AUTH_TOKEN, authToken);
+        persistentStorage.put(OpenIdConstants.PersistentStorageKeys.ACCESS_TOKEN, accessToken);
 
-        apiClient.attachAuthFilter(authToken);
+        apiClient.attachAuthFilter(accessToken);
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
