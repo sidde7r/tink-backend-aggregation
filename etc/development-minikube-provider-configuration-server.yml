@@ -33,9 +33,6 @@ database:
   persistenceUnitName: tink-provider-api
   generateDdl: true
 
-coordination:
-  hosts: 192.168.99.100:31003
-
 logging:
   level: INFO
   loggers:

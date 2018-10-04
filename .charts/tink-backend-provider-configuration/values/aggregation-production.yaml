@@ -1,5 +1,3 @@
-coordinationHosts: 10.88.54.160:2181
-
 developmentMode: false
 
 providerdb:

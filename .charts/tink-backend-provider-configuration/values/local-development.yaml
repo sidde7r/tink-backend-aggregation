@@ -3,8 +3,6 @@ createDevelopmentSecrets: True
 doNotCreateLoadBalancerService: True
 replicas: 1
 
-coordinationHosts: coordination.default.svc.cluster.local:2181
-
 aggregationdb:
   username: tink
   host: providerdb.default.svc.cluster.local
