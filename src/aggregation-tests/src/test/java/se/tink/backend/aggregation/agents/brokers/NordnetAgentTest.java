@@ -27,7 +27,7 @@ public class NordnetAgentTest extends AbstractAgentTest<NordnetAgent> {
 
     @Test
     public void testBankID() throws Exception {
-        testAgent(TestSSN.DL, null, CredentialsTypes.MOBILE_BANKID, false);
+        testAgent(TestSSN.DL, null, CredentialsTypes.MOBILE_BANKID, true);
     }
 
     @Test

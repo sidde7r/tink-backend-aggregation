@@ -13,8 +13,9 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
 import se.tink.backend.aggregation.agents.brokers.nordnet.NordnetApiClient;
+import se.tink.backend.aggregation.agents.brokers.nordnet.model.PositionEntity;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.PositionsResponse;
-import se.tink.backend.aggregation.agents.brokers.nordnet.model.Response.AccountEntities;
+import se.tink.backend.aggregation.agents.brokers.nordnet.model.Response.AccountResponse;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
@@ -40,7 +41,7 @@ public class NordnetAgent extends AbstractAgent implements RefreshableItemExecut
     private final NordnetApiClient apiClient;
 
     // cache
-    private AccountEntities accounts = null;
+    private AccountResponse accounts = null;
 
     public NordnetAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
@@ -50,7 +51,7 @@ public class NordnetAgent extends AbstractAgent implements RefreshableItemExecut
                 NordnetApiClient.REDIRECT_STRATEGY), DEFAULT_USER_AGENT);
     }
 
-    private void refreshSavingsAccounts(AccountEntities accountEntities) {
+    private void refreshSavingsAccounts(AccountResponse accountEntities) {
         accountEntities.forEach(accountEntity -> {
 
             // A sparkonto don't hold instruments
@@ -62,7 +63,7 @@ public class NordnetAgent extends AbstractAgent implements RefreshableItemExecut
         });
     }
 
-    private void refreshInvestmentAccounts(AccountEntities accountEntities) {
+    private void refreshInvestmentAccounts(AccountResponse accountEntities) {
         accountEntities.forEach(accountEntity -> {
 
             // A sparkonto don't hold instruments
@@ -73,7 +74,8 @@ public class NordnetAgent extends AbstractAgent implements RefreshableItemExecut
             Account account = accountEntity.toAccount(AccountTypes.INVESTMENT);
             Portfolio portfolio = accountEntity.toPortfolio();
 
-            Optional<PositionsResponse> positions = apiClient.getPositions(accountEntity.getAccountId());
+            // Contains all positions, regardless of account/portfolio
+            Optional<PositionsResponse> positions = apiClient.getPositions();
 
             if (!positions.isPresent()) {
                 context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
@@ -81,14 +83,20 @@ public class NordnetAgent extends AbstractAgent implements RefreshableItemExecut
             }
 
             List<Instrument> instruments = Lists.newArrayList();
-            positions.get().forEach(positionEntity -> positionEntity.toInstrument().ifPresent(instruments::add));
+            for (PositionEntity positionEntity : positions.get()) {
+                if (positionEntity.getAccountId().equalsIgnoreCase(accountEntity.getAccountId())) {
+                    // If, this position actually belongs to this account/portfolio
+                    positionEntity.toInstrument().ifPresent(instruments::add);
+                }
+            }
             portfolio.setInstruments(instruments);
 
             context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
         });
     }
 
-    private AccountEntities getAccounts() {
+    private AccountResponse getAccounts() {
+
         if (accounts != null) {
             return accounts;
         }
@@ -123,7 +131,7 @@ public class NordnetAgent extends AbstractAgent implements RefreshableItemExecut
     public boolean login() throws AuthenticationException, AuthorizationException {
         resetToMobileBankIdIfNeeded();
 
-        switch(credentials.getType()) {
+        switch (credentials.getType()) {
         case PASSWORD:
             return loginWithPassword();
         case MOBILE_BANKID:
@@ -187,15 +195,16 @@ public class NordnetAgent extends AbstractAgent implements RefreshableItemExecut
 
             log.info(String.format("Collecting BankID, status: %s", status));
 
-            switch(status) {
-                case WAITING:
-                    break;
-                case DONE:
-                    return apiClient.completeBankId(orderRef);
-                case NO_CLIENT:
-                    throw BankIdError.NO_CLIENT.exception();
-                default:
-                    throw new IllegalStateException("#login-refactoring - Unknown error detected while collecting BankID status: " + status);
+            switch (status) {
+            case WAITING:
+                break;
+            case DONE:
+                return apiClient.completeBankId(orderRef);
+            case NO_CLIENT:
+                throw BankIdError.NO_CLIENT.exception();
+            default:
+                throw new IllegalStateException(
+                        "#login-refactoring - Unknown error detected while collecting BankID status: " + status);
             }
 
             Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
