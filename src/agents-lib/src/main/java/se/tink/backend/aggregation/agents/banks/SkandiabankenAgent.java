@@ -742,7 +742,7 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
     }
 
     private enum UserMessage implements LocalizableEnum {
-        CONFIRM_BANKID(new LocalizableKey("You need to confirm your BankID to Skandiabanken. You do it by logging in with the Skandiabanken app once and confirm that your BankID is yours. You can then continue using Tink with BankID.")),
+        CONFIRM_BANKID(new LocalizableKey("You need to confirm your BankID to Skandiabanken. You do it by logging in with the Skandiabanken app once to confirm that the BankID is yours. You may then continue using BankID here.")),
         WRONG_BANKID(new LocalizableKey("Wrong BankID signature. Did you log in with the wrong personnummer?")),
         UNDERAGE(new LocalizableKey("Could not login to Skandiabanken. Unfortunately we don't support Skandiabanken for customers under the age of 18 years."));
 
