@@ -22,9 +22,9 @@ public class AggregationModuleFactory {
         return ImmutableList.of(
                 new CommonModule(),
                 new CoordinationModule(),
+                new ConfigurationModule(configuration),
                 new AggregationDevelopmentRepositoryModule(configuration.getDatabase(),
                         configuration.getDevelopmentConfiguration()),
-                new ConfigurationModule(configuration),
                 new AggregationModule(configuration, environment.jersey()),
                 new QueueModule(configuration.getSqsQueueConfiguration(), environment.lifecycle())
         );

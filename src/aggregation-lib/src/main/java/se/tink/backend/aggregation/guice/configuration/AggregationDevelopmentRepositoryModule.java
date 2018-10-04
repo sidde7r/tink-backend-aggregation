@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.guice.configuration;
 
 import com.google.inject.Provides;
+import com.google.inject.Scopes;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import java.util.Map;
@@ -15,9 +16,9 @@ import se.tink.backend.guice.configuration.RepositoryModule;
 public class AggregationDevelopmentRepositoryModule extends RepositoryModule {
     private AggregationDevelopmentConfiguration developmentConfiguration;
 
-    public AggregationDevelopmentRepositoryModule(DatabaseConfiguration databaseConfiguration,
+    AggregationDevelopmentRepositoryModule(DatabaseConfiguration databaseConfiguration,
             AggregationDevelopmentConfiguration developmentConfiguration) {
-        super(databaseConfiguration);
+        super(databaseConfiguration, true);
         this.developmentConfiguration = developmentConfiguration;
     }
 
@@ -25,6 +26,11 @@ public class AggregationDevelopmentRepositoryModule extends RepositoryModule {
     protected void bindRepositories() {
         bindSpringBean(ClusterHostConfigurationRepository.class);
         bindSpringBean(ClusterCryptoConfigurationRepository.class);
+    }
+
+    @Override
+    protected void configureDevelopment() {
+        bind(DevelopmentConfigurationSeeder.class).in(Scopes.SINGLETON);
     }
 
     @Provides
@@ -41,8 +47,6 @@ public class AggregationDevelopmentRepositoryModule extends RepositoryModule {
         }
 
         ClusterHostConfiguration clusterHostConfiguration = developmentConfiguration.getClusterHostConfiguration();
-
-        repository.save(clusterHostConfiguration);
         clusterHostConfigurations.put(clusterHostConfiguration.getClusterId(), clusterHostConfiguration);
 
         return clusterHostConfigurations;
