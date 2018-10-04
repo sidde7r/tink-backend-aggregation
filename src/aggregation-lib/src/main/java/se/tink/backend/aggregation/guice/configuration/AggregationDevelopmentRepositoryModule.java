@@ -30,7 +30,7 @@ public class AggregationDevelopmentRepositoryModule extends RepositoryModule {
     @Provides
     @Singleton
     @Named("clusterHostConfigurations")
-    public Map<String, ClusterHostConfiguration> provideCategoryCodesById(
+    public Map<String, ClusterHostConfiguration> provideClusterHostConfigurations(
             ClusterHostConfigurationRepository repository) {
 
         Map<String, ClusterHostConfiguration> clusterHostConfigurations = repository.findAll().stream()
