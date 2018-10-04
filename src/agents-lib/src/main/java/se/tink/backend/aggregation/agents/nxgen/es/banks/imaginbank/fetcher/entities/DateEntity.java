@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.entities;
+package se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class ImagenBankDate {
+public class DateEntity {
     @JsonProperty("valor")
     private String value;
 
