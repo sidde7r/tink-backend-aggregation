@@ -1510,7 +1510,7 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
     }
 
     private enum UserMessage implements LocalizableEnum {
-        KNOW_YOUR_CUSTOMER(new LocalizableKey("To be able to refresh your accounts in Tink you need to updated your customer info in the ICA bank app.")),
+        KNOW_YOUR_CUSTOMER(new LocalizableKey("To be able to refresh your accounts you need to update your customer info in the ICA bank app.")),
         EINVOICE_MODIFIED_IN_BANK_APP(new LocalizableKey("If the e-invoice has been modified in the ICA Banken app, please refresh you credentials."));
 
         private LocalizableKey userMessage;
