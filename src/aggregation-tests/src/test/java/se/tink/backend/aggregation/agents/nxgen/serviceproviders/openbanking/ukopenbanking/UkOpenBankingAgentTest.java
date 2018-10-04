@@ -11,6 +11,7 @@ public class UkOpenBankingAgentTest {
         new AgentIntegrationTest.Builder("uk", "uk-modelo-oauth2")
                 .loadCredentialsBefore(true)
                 .saveCredentialsAfter(true)
+                .expectLoggedIn(false)
                 .build()
                 .testRefresh();
     }
