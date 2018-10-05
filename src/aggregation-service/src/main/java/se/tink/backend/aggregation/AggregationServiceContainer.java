@@ -45,21 +45,18 @@ public class AggregationServiceContainer extends AbstractServiceContainer {
 
         ServiceContext serviceContext = injector.getInstance(ServiceContext.class);
         environment.admin().addTask(injector.getInstance(DrainModeTask.class));
-        buildContainer(configuration, environment, serviceContext, injector);
+
+        buildContainer(environment, serviceContext, injector);
     }
 
-    private void buildContainer(ServiceConfiguration configuration, Environment environment,
-            ServiceContext serviceContext, Injector injector) {
+    private void buildContainer(Environment environment, ServiceContext serviceContext, Injector injector) {
         AgentWorker agentWorker = injector.getInstance(AgentWorker.class);
-        AgentDebugStorageHandler agentDebugStorageHandler = injector.getInstance(AgentDebugStorageHandler.class);
 
-        final AggregationServiceResource aggregationServiceResource = new AggregationServiceResource(serviceContext,
+        final AggregationServiceResource aggregationServiceResource = new AggregationServiceResource(
+                serviceContext,
                 injector.getInstance(MetricRegistry.class),
-                new AggregationControllerAggregationClient(
-                        configuration.getEndpoints().getAggregationcontroller(),
-                        serviceContext.getCoordinationClient()),
-                        agentWorker,
-                agentDebugStorageHandler);
+                injector.getInstance(AggregationControllerAggregationClient.class),
+                agentWorker, injector.getInstance(AgentDebugStorageHandler.class));
 
         environment.lifecycle().manage(agentWorker);
 
