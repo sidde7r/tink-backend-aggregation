@@ -77,6 +77,10 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
     public se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration findByName(
             String providerName) {
         ProviderConfiguration providerConfiguration = providerConfigurationByName.get(providerName);
+        if (Objects.isNull(providerConfiguration)) {
+            log.warn("Could not find provider by name: " + providerName);
+            return null;
+        }
         return StorageProviderConfigurationConverter
                 .convert(providerConfiguration, getProviderStatus(providerConfiguration));
     }
