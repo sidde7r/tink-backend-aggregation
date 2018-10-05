@@ -69,7 +69,12 @@ public class HttpResponse {
      * @return true if there is a body present in the response.
      */
     public boolean hasBody() {
-        return internalResponse.hasEntity();
+        try {
+            internalResponse.getEntityInputStream().reset();
+            return internalResponse.hasEntity();
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     /**
