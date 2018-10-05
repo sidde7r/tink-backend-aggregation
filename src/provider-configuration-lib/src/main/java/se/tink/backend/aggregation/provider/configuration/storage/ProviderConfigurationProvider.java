@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.provider.configuration.storage.models.Provide
 import se.tink.backend.aggregation.provider.configuration.storage.repositories.ProviderStatusConfigurationRepository;
 import se.tink.backend.core.ProviderStatuses;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -45,7 +46,13 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
     }
 
     public List<se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration> findAllByClusterId(String clusterId){
-        return enabledProvidersOnCluster.get(clusterId).stream()
+        Set<String> providerNamesForCluster = enabledProvidersOnCluster.get(clusterId);
+        if (Objects.isNull(providerNamesForCluster) || providerNamesForCluster.isEmpty()) {
+            log.warn("Could not find any enabled providers for clusterId: " + clusterId);
+            return Collections.emptyList();
+        }
+
+        return providerNamesForCluster.stream()
                 .map(providerName -> getProviderConfigurationForCluster(clusterId, providerName))
                 .map(provider -> StorageProviderConfigurationConverter.convert(provider, getProviderStatus(provider)))
                 .collect(Collectors.toList());
