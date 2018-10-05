@@ -66,6 +66,10 @@ public class HttpResponse {
     /**
      * Checks if there is a body available.
      *
+     * reset() is called on getEntityInputStream() before check is done. This is because hasEntity()
+     * returns false when we receive "exceptions", i.e. http status >= 400 otherwise.
+     * Should IOException be thrown during reset(), false is returned.
+     *
      * @return true if there is a body present in the response.
      */
     public boolean hasBody() {
