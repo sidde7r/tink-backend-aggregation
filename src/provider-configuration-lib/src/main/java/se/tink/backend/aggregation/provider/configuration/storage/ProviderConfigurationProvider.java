@@ -110,8 +110,9 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
         }
     }
 
-    private Optional<ProviderStatusConfiguration> getProviderStatus(ProviderConfiguration providerConfiguration){
-        ProviderStatusConfiguration providerStatusConfiguration = providerStatusConfigurationRepository.findOne(providerConfiguration.getName());
+    private Optional<ProviderStatusConfiguration> getProviderStatus(ProviderConfiguration providerConfiguration) {
+        ProviderStatusConfiguration providerStatusConfiguration = providerStatusConfigurationRepository
+                .findOne(providerConfiguration.getName());
         return Optional.ofNullable(providerStatusConfiguration);
     }
 
