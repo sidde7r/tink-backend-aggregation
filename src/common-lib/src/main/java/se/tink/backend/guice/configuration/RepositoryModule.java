@@ -10,15 +10,9 @@ import se.tink.backend.guice.annotations.Centralized;
 
 public abstract class RepositoryModule extends AbstractModule {
     private final DatabaseConfiguration databaseConfiguration;
-    private final boolean isDevelopment;
-
-    public RepositoryModule(DatabaseConfiguration databaseConfiguration, boolean isDevelopment) {
-        this.databaseConfiguration = databaseConfiguration;
-        this.isDevelopment = isDevelopment;
-    }
 
     public RepositoryModule(DatabaseConfiguration databaseConfiguration) {
-        this(databaseConfiguration, false);
+        this.databaseConfiguration = databaseConfiguration;
     }
 
     @Override
@@ -35,10 +29,6 @@ public abstract class RepositoryModule extends AbstractModule {
         bindCentralizedDaos();
 
         bindRepositories();
-
-        if (isDevelopment) {
-            configureDevelopment();
-        }
     }
 
     protected void bindCentralizedDaos() {
@@ -48,10 +38,6 @@ public abstract class RepositoryModule extends AbstractModule {
     }
 
     protected void bindCaches() {
-    }
-
-    protected void configureDevelopment() {
-
     }
 
     private AnnotationConfigApplicationContext centralizedApplicationContext() {

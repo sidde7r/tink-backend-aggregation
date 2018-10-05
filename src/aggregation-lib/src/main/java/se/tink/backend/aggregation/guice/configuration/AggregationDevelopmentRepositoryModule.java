@@ -18,19 +18,20 @@ public class AggregationDevelopmentRepositoryModule extends RepositoryModule {
 
     AggregationDevelopmentRepositoryModule(DatabaseConfiguration databaseConfiguration,
             AggregationDevelopmentConfiguration developmentConfiguration) {
-        super(databaseConfiguration, true);
+        super(databaseConfiguration);
         this.developmentConfiguration = developmentConfiguration;
+    }
+
+    @Override
+    protected void configure() {
+        super.configure();
+        bind(DevelopmentConfigurationSeeder.class).in(Scopes.SINGLETON);
     }
 
     @Override
     protected void bindRepositories() {
         bindSpringBean(ClusterHostConfigurationRepository.class);
         bindSpringBean(ClusterCryptoConfigurationRepository.class);
-    }
-
-    @Override
-    protected void configureDevelopment() {
-        bind(DevelopmentConfigurationSeeder.class).in(Scopes.SINGLETON);
     }
 
     @Provides
