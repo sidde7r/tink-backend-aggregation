@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.resources;
 
 import com.google.common.collect.ImmutableList;
+import com.google.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.core.Response;
@@ -26,6 +27,7 @@ public class CreditSafeServiceResource implements CreditSafeService {
             "oxford-production", "oxford-staging", "local-development");
     private ConsumerMonitoringWrapper consumerMonitoringWrapper;
 
+    @Inject
     public CreditSafeServiceResource(ServiceContext serviceContext) {
         this(serviceContext.getConfiguration().getCreditSafe().getUsername(),
                 serviceContext.getConfiguration().getCreditSafe().getPassword(),

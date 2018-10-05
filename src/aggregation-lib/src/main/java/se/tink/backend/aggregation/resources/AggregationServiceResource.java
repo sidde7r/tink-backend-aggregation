@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.resources;
 
+import com.google.inject.Inject;
 import java.util.Objects;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
@@ -57,6 +58,7 @@ public class AggregationServiceResource implements AggregationService {
      *  @param context used between all instances of this service
      * @param metricRegistry
      */
+    @Inject
     public AggregationServiceResource(ServiceContext context, MetricRegistry metricRegistry,
             AggregationControllerAggregationClient aggregationControllerAggregationClient,
             AgentWorker agentWorker,
