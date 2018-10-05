@@ -8,7 +8,6 @@ import com.sun.jersey.api.client.UniformInterfaceException;
 import io.dropwizard.lifecycle.Managed;
 import java.util.AbstractMap;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -42,33 +41,19 @@ import se.tink.backend.common.mapper.CoreCredentialsMapper;
 import se.tink.backend.common.repository.mysql.aggregation.aggregationcredentials.AggregationCredentialsRepository;
 import se.tink.backend.common.utils.MetricsUtils;
 import se.tink.backend.common.utils.Pair;
-import se.tink.backend.core.AggregationCredentials;
 import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.core.FraudDetailsContent;
 import se.tink.backend.core.StatisticMode;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.signableoperation.SignableOperation;
 import se.tink.backend.core.transfer.Transfer;
-import se.tink.backend.encryption.api.EncryptionService;
-import se.tink.backend.encryption.rpc.EncryptionKeySet;
-import se.tink.backend.encryption.rpc.EncryptionRequest;
-import se.tink.backend.system.client.SystemServiceFactory;
 import se.tink.backend.system.rpc.AccountFeatures;
-import se.tink.backend.system.rpc.GenerateStatisticsAndActivitiesRequest;
-import se.tink.backend.system.rpc.ProcessAccountsRequest;
 import se.tink.backend.system.rpc.Transaction;
 import se.tink.backend.system.rpc.TransactionTypes;
-import se.tink.backend.system.rpc.UpdateAccountRequest;
-import se.tink.backend.system.rpc.UpdateCredentialsStatusRequest;
-import se.tink.backend.system.rpc.UpdateDocumentRequest;
 import se.tink.backend.system.rpc.UpdateDocumentResponse;
 import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;
-import se.tink.backend.system.rpc.UpdateTransactionsRequest;
-import se.tink.backend.system.rpc.UpdateTransferDestinationPatternsRequest;
-import se.tink.backend.system.rpc.UpdateTransfersRequest;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.cluster.Cluster;
-import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.Counter;
 import se.tink.libraries.metrics.MetricId;
@@ -101,7 +86,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
     private List<Transfer> transfers = Lists.newArrayList();
     private AggregationCredentialsRepository aggregationCredentialsRepository;
     private List<AgentEventListener> eventListeners = Lists.newArrayList();
-    private SystemServiceFactory systemServiceFactory;
     private SupplementalInformationController supplementalInformationController;
     private AggregationControllerAggregationClient aggregationControllerAggregationClient;
     //private final ClusterInfo clusterInfo;
@@ -133,7 +117,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         this.serviceContext = serviceContext;
 
         // _Not_ instanciating a SystemService from the ServiceFactory here.
-        this.systemServiceFactory = serviceContext.getSystemServiceFactory();
         this.coordinationClient = serviceContext.getCoordinationClient();
 
         this.aggregationCredentialsRepository = serviceContext.getRepository(AggregationCredentialsRepository.class);
@@ -163,10 +146,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         refreshTotal = metricRegistry.meter(
                 MetricId.newId("accounts_refresh")
                         .label(defaultMetricLabels));
-    }
-
-    public SystemServiceFactory getSystemServiceFactory() {
-        return systemServiceFactory;
     }
 
     public void addEventListener(AgentEventListener eventListener) {

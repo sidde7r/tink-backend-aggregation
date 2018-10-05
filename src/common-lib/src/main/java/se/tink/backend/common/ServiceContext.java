@@ -11,9 +11,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import org.apache.curator.framework.CuratorFramework;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import se.tink.backend.aggregation.client.AggregationServiceFactory;
 import se.tink.backend.aggregation.provider.configuration.client.InterContainerProviderServiceFactory;
-import se.tink.backend.client.ServiceFactory;
 import se.tink.backend.common.cache.CacheClient;
 import se.tink.backend.common.concurrency.ListenableThreadPoolExecutor;
 import se.tink.backend.common.config.DatabaseConfiguration;
@@ -23,7 +21,6 @@ import se.tink.backend.common.config.repository.SingletonRepositoryConfiguration
 import se.tink.backend.common.repository.RepositoryFactory;
 import se.tink.backend.common.utils.ExecutorServiceUtils;
 import se.tink.backend.queue.QueueProducer;
-import se.tink.backend.system.client.SystemServiceFactory;
 import se.tink.backend.utils.LogUtils;
 import se.tink.libraries.draining.ApplicationDrainMode;
 import se.tink.libraries.metrics.MetricRegistry;
@@ -37,14 +34,11 @@ import se.tink.libraries.metrics.MetricRegistry;
 public class ServiceContext implements Managed, RepositoryFactory {
     private static final LogUtils log = new LogUtils(ServiceContext.class);
 
-    private final AggregationServiceFactory aggregationServiceFactory;
     private AnnotationConfigApplicationContext applicationContext;
     private CacheClient cacheClient;
     private final ServiceConfiguration configuration;
     private CuratorFramework zookeeperClient;
     private final MetricRegistry metricRegistry;
-    private final ServiceFactory serviceFactory;
-    private final SystemServiceFactory systemServiceFactory;
     private final InterContainerProviderServiceFactory providerServiceFactory;
     private LoadingCache<Class<?>, Object> DAOs;
     private final boolean isProvidersOnAggregation;
@@ -62,16 +56,11 @@ public class ServiceContext implements Managed, RepositoryFactory {
     @Inject
     public ServiceContext(final ServiceConfiguration configuration, MetricRegistry metricRegistry,
             CacheClient cacheClient, CuratorFramework zookeeperClient,
-            ServiceFactory serviceFactory, SystemServiceFactory systemServiceFactory,
             InterContainerProviderServiceFactory providerServiceFactory,
-            AggregationServiceFactory aggregationServiceFactory,
             @Named("executor") ListenableThreadPoolExecutor<Runnable> executorService,
             @Named("trackingExecutor") ListenableThreadPoolExecutor<Runnable> trackingExecutorService,
             @Named("isProvidersOnAggregation") boolean isProvidersOnAggregation,
             QueueProducer producer, ApplicationDrainMode applicationDrainMode) {
-        this.serviceFactory = serviceFactory;
-        this.systemServiceFactory = systemServiceFactory;
-        this.aggregationServiceFactory = aggregationServiceFactory;
         this.cacheClient = cacheClient;
         this.zookeeperClient = zookeeperClient;
         this.configuration = configuration;
@@ -86,10 +75,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
 
     public QueueProducer getProducer() {
         return producer;
-    }
-
-    public AggregationServiceFactory getAggregationServiceFactory() {
-        return aggregationServiceFactory;
     }
 
     public CacheClient getCacheClient() {
@@ -142,14 +127,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
             // Default to centralized
             return getRepository(cls, RepositorySource.CENTRALIZED);
         }
-    }
-
-    public ServiceFactory getServiceFactory() {
-        return serviceFactory;
-    }
-
-    public SystemServiceFactory getSystemServiceFactory() {
-        return systemServiceFactory;
     }
 
     public InterContainerProviderServiceFactory getProviderServiceFactory() {
