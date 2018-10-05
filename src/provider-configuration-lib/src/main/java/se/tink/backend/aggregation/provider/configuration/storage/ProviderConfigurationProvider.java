@@ -40,6 +40,15 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
     }
 
     public List<se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration> findAll() {
+        if (Objects.isNull(providerConfigurationByName)) {
+            log.error("Provider Configuration by name map should not be null.");
+            return Collections.emptyList();
+        }
+
+        if (providerConfigurationByName.values().isEmpty()) {
+            log.error("Provider Configuration by name map should not be empty.");
+        }
+
         return providerConfigurationByName.values().stream()
                 .map(provider -> StorageProviderConfigurationConverter.convert(provider, getProviderStatus(provider)))
                 .collect(Collectors.toList());
