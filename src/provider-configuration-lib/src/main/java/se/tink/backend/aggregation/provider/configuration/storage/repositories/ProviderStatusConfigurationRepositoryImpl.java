@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.provider.configuration.storage.models.Provide
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class ProviderStatusConfigurationRepositoryImpl implements ProviderStatusConfigurationRepositoryCustom {
@@ -18,7 +19,7 @@ public class ProviderStatusConfigurationRepositoryImpl implements ProviderStatus
                 , ProviderStatusConfiguration.class)
                 .setParameter("providername", providerName)
                 .getResultList();
-        if (l.isEmpty()) {
+        if (Objects.isNull(l) || l.isEmpty()) {
             return Optional.empty();
         }
         return Optional.of(l.get(0));
