@@ -70,5 +70,4 @@ data:
   providerdb-password: ZGV2dG9rZW4=
   # Is set to changeme for the development keystore
   keystore-password: Y2hhbmdlbWU=
-  system-access-token: ZGV2dG9rZW4=
 {{ end }}
