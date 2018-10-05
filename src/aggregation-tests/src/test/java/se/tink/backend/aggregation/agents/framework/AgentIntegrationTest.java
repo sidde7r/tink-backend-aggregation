@@ -48,6 +48,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     private final boolean requestFlagManual;
 
     private final boolean doLogout;
+    private final boolean expectLoggedIn;
 
     private final Set<RefreshableItem> refreshableItems;
 
@@ -64,6 +65,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         this.requestFlagUpdate = builder.getRequestFlagUpdate();
         this.requestFlagManual = builder.isRequestFlagManual();
         this.doLogout = builder.isDoLogout();
+        this.expectLoggedIn = builder.isExpectLoggedIn();
         this.refreshableItems = builder.getRefreshableItems();
 
         this.context = new NewAgentTestContext(user, credential, builder.getTransactionsToPrint());
@@ -240,7 +242,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         try {
             login(agent);
             refresh(agent);
-            Assert.assertTrue("Expected to be logged in.", keepAlive(agent));
+            Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
             if (doLogout) {
                 logout(agent);
@@ -272,6 +274,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         private boolean requestFlagManual = true;
 
         private boolean doLogout = false;
+        private boolean expectLoggedIn = true;
 
         private Set<RefreshableItem> refreshableItems = new HashSet<>();
 
@@ -357,6 +360,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             return doLogout;
         }
 
+        public boolean isExpectLoggedIn() {
+            return expectLoggedIn;
+        }
+
         public Set<RefreshableItem> getRefreshableItems() {
             return refreshableItems;
         }
@@ -400,6 +407,11 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
         public Builder doLogout(boolean doLogout) {
             this.doLogout = doLogout;
+            return this;
+        }
+
+        public Builder expectLoggedIn(boolean expectLoggedIn) {
+            this.expectLoggedIn = expectLoggedIn;
             return this;
         }
 

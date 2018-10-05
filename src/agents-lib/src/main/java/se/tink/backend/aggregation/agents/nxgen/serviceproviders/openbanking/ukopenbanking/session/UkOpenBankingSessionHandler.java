@@ -12,6 +12,7 @@ public class UkOpenBankingSessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
+        // Session is handled by OpenIdAuthenticationController.autoAuthenticate().
         throw SessionError.SESSION_EXPIRED.exception();
     }
 }
