@@ -626,45 +626,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
     }
 
     @Override
-    public void updateCredentialsOnlySensitiveInformation(Credentials credentials) {
-        AggregationCredentials aggregationCredentials = aggregationCredentialsRepository.findOne(credentials
-                .getId());
-
-        if (aggregationCredentials == null) {
-            return;
-        }
-
-        // Prepare the encryption request.
-
-        EncryptionRequest encryptionRequest = new EncryptionRequest();
-        encryptionRequest.setKeySet(new EncryptionKeySet(credentials.getSecretKey(), aggregationCredentials
-                .getSecretKey()));
-
-        // Encrypt sensitive information.
-
-        EncryptionService encryptionService = serviceContext.getEncryptionServiceFactory().getEncryptionService();
-
-        Credentials sensitiveInformationCredentials = credentials.clone();
-        sensitiveInformationCredentials.onlySensitiveInformation(request.getProvider());
-
-        encryptionRequest.setPayload(sensitiveInformationCredentials.getFieldsSerialized());
-        aggregationCredentials.setEncryptedFields(encryptionService.encrypt(encryptionRequest).getPayload());
-
-        String encryptedPayload = null;
-
-        if (!Strings.isNullOrEmpty(sensitiveInformationCredentials.getSensitivePayloadSerialized())) {
-            encryptionRequest.setPayload(sensitiveInformationCredentials.getSensitivePayloadSerialized());
-            encryptedPayload = encryptionService.encrypt(encryptionRequest).getPayload();
-        }
-
-        aggregationCredentials.setEncryptedPayload(encryptedPayload);
-
-        // Save the encrypted aggregation credentials locally.
-
-        aggregationCredentialsRepository.save(aggregationCredentials);
-    }
-
-    @Override
     public void updateSignableOperation(SignableOperation signableOperation) {
         aggregationControllerAggregationClient.updateSignableOperation(getClusterInfo(),
                 signableOperation);

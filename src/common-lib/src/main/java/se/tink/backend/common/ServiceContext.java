@@ -22,7 +22,6 @@ import se.tink.backend.common.config.repository.PersistenceUnit;
 import se.tink.backend.common.config.repository.SingletonRepositoryConfiguration;
 import se.tink.backend.common.repository.RepositoryFactory;
 import se.tink.backend.common.utils.ExecutorServiceUtils;
-import se.tink.backend.encryption.client.EncryptionServiceFactory;
 import se.tink.backend.queue.QueueProducer;
 import se.tink.backend.system.client.SystemServiceFactory;
 import se.tink.backend.utils.LogUtils;
@@ -66,7 +65,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
             ServiceFactory serviceFactory, SystemServiceFactory systemServiceFactory,
             InterContainerProviderServiceFactory providerServiceFactory,
             AggregationServiceFactory aggregationServiceFactory,
-            EncryptionServiceFactory encryptionServiceFactory,
             @Named("executor") ListenableThreadPoolExecutor<Runnable> executorService,
             @Named("trackingExecutor") ListenableThreadPoolExecutor<Runnable> trackingExecutorService,
             @Named("isProvidersOnAggregation") boolean isProvidersOnAggregation,
@@ -79,7 +77,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
         this.configuration = configuration;
         this.metricRegistry = metricRegistry;
         this.providerServiceFactory = providerServiceFactory;
-        this.encryptionServiceFactory = encryptionServiceFactory;
         this.executorService = executorService;
         this.trackingExecutorService = trackingExecutorService;
         this.isProvidersOnAggregation = isProvidersOnAggregation;
@@ -114,8 +111,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
     }
 
     private AtomicReference<ManagedState> managedState = new AtomicReference<>(ManagedState.STOPPED);
-
-    private final EncryptionServiceFactory encryptionServiceFactory;
 
     public enum RepositorySource {
         /**
@@ -254,10 +249,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
 
     public <T> T getDao(Class<T> key) {
         return key.cast(DAOs.getUnchecked(key));
-    }
-
-    public EncryptionServiceFactory getEncryptionServiceFactory() {
-        return encryptionServiceFactory;
     }
 
     public boolean isProvidersOnAggregation() {

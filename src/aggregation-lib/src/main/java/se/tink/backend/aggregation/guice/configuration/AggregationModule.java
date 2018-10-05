@@ -18,11 +18,9 @@ import se.tink.backend.aggregation.storage.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.backend.client.ServiceFactory;
 import se.tink.backend.common.ServiceContext;
-import se.tink.backend.common.client.EncryptionServiceFactoryProvider;
 import se.tink.backend.common.client.ServiceFactoryProvider;
 import se.tink.backend.common.client.SystemServiceFactoryProvider;
 import se.tink.backend.common.config.ServiceConfiguration;
-import se.tink.backend.encryption.client.EncryptionServiceFactory;
 import se.tink.backend.system.client.SystemServiceFactory;
 import se.tink.libraries.jersey.guice.JerseyResourceRegistrar;
 import se.tink.libraries.jersey.logging.AccessLoggingFilter;
@@ -42,7 +40,6 @@ public class AggregationModule extends AbstractModule {
         bind(ServiceFactory.class).toProvider(ServiceFactoryProvider.class).in(Scopes.SINGLETON);
         bind(SystemServiceFactory.class).toProvider(SystemServiceFactoryProvider.class).in(Scopes.SINGLETON);
         bind(AggregationServiceFactory.class).to(InProcessAggregationServiceFactory.class).in(Scopes.SINGLETON);
-        bind(EncryptionServiceFactory.class).toProvider(EncryptionServiceFactoryProvider.class).in(Scopes.SINGLETON);
         bind(AggregationControllerAggregationClient.class).in(Scopes.SINGLETON);
 
         bind(InterContainerProviderServiceFactory.class).toProvider(ProviderServiceFactoryProvider.class).in(Scopes.SINGLETON);
