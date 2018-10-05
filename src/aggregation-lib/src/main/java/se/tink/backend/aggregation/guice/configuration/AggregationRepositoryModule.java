@@ -27,7 +27,7 @@ public class AggregationRepositoryModule extends RepositoryModule {
     @Provides
     @Singleton
     @Named("clusterHostConfigurations")
-    public Map<String, ClusterHostConfiguration> provideCategoryCodesById(ClusterHostConfigurationRepository repository) {
+    public Map<String, ClusterHostConfiguration> provideClusterHostConfigurations(ClusterHostConfigurationRepository repository) {
         return repository.findAll().stream().collect(
                 Collectors.toMap(ClusterHostConfiguration::getClusterId, x -> x)
         );

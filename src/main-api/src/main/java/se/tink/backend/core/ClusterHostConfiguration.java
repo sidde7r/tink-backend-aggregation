@@ -1,5 +1,6 @@
 package se.tink.backend.core;
 
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -49,5 +50,29 @@ public class ClusterHostConfiguration {
 
     public String getAggregatorIdentifier(){
         return aggregatorIdentifier;
+    }
+
+    public boolean isValid() {
+        if (Objects.isNull(clusterId)) {
+            return false;
+        }
+
+        if (Objects.isNull(host)) {
+            return false;
+        }
+
+        if (Objects.isNull(apiToken)) {
+            return false;
+        }
+
+        if (Objects.isNull(base64EncodedClientCertificate)) {
+            return false;
+        }
+
+        if (Objects.isNull(aggregatorIdentifier)) {
+            return false;
+        }
+
+        return true;
     }
 }

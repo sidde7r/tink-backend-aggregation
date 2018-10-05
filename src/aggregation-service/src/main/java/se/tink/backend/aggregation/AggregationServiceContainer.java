@@ -41,8 +41,7 @@ public class AggregationServiceContainer extends AbstractServiceContainer {
     @Override
     protected void build(ServiceConfiguration configuration, Environment environment) throws Exception {
         Injector injector = DropwizardLifecycleInjectorFactory.build(
-                environment.lifecycle(),
-                AggregationModuleFactory.build(configuration, environment));
+                environment.lifecycle(), AggregationModuleFactory.build(configuration, environment));
 
         ServiceContext serviceContext = injector.getInstance(ServiceContext.class);
         environment.admin().addTask(injector.getInstance(DrainModeTask.class));

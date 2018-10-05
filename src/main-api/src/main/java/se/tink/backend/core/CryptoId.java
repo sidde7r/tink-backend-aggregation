@@ -54,4 +54,16 @@ public class CryptoId implements Serializable {
     public int hashCode() {
         return Objects.hash(clusterId, keyId);
     }
+
+    public boolean isValid() {
+        if (Objects.isNull(clusterId)) {
+            return false;
+        }
+
+        if (keyId == 0) {
+            return false;
+        }
+
+        return true;
+    }
 }

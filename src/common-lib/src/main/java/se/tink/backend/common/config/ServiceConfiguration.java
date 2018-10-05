@@ -72,6 +72,9 @@ public class ServiceConfiguration extends Configuration {
     @JsonProperty
     private ExcludedDebugClusters excludedDebugClusters = new ExcludedDebugClusters();
 
+    @JsonProperty
+    private AggregationDevelopmentConfiguration developmentConfiguration = new AggregationDevelopmentConfiguration();
+
     public AbnAmroConfiguration getAbnAmroStaging() {
         return abnAmroStaging;
     }
@@ -171,5 +174,9 @@ public class ServiceConfiguration extends Configuration {
 
     public void setSqsQueueConfiguration(SqsQueueConfiguration sqsQueueConfiguration) {
         this.sqsQueueConfiguration = sqsQueueConfiguration;
+    }
+
+    public AggregationDevelopmentConfiguration getDevelopmentConfiguration() {
+        return developmentConfiguration;
     }
 }
