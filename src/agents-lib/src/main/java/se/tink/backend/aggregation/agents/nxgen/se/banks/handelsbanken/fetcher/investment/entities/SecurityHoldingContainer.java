@@ -15,6 +15,9 @@ public class SecurityHoldingContainer {
         if (holdingDetail == null || holdingDetail.hasNoValue()) {
             return Optional.empty();
         }
+        if (identifier == null && instrumentSummary == null) {
+            return Optional.empty();
+        }
         return Optional.of(new Instrument())
                 .map(instrument -> enrich(holdingDetail, instrument))
                 .map(instrument -> enrich(instrumentSummary, instrument))
