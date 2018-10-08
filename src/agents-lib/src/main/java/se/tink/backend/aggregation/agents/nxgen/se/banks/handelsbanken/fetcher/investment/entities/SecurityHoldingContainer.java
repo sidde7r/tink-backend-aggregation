@@ -35,6 +35,16 @@ public class SecurityHoldingContainer {
         this.holdingDetail = holdingDetail;
     }
 
+    @VisibleForTesting
+    void setInstrumentSummary(InstrumentSummary instrumentSummary) {
+        this.instrumentSummary = instrumentSummary;
+    }
+
+    @VisibleForTesting
+    void setSecurityIdentifier(SecurityIdentifier identifier) {
+        this.identifier = identifier;
+    }
+
     public interface InstrumentEnricher {
         Instrument applyTo(Instrument instrument);
     }
