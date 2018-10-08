@@ -173,8 +173,6 @@ public abstract class AgentContext {
     public abstract void updateCredentialsExcludingSensitiveInformation(Credentials credentials,
             boolean doStatusUpdate);
 
-    public abstract void updateCredentialsOnlySensitiveInformation(Credentials credentials);
-
     public abstract void updateFraudDetailsContent(List<FraudDetailsContent> detailsContent);
 
     public void clear() {
