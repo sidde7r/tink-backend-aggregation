@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.core.Amount;
 
 public class HandelsbankenFICreditCard extends HandelsbankenCreditCard {
 
@@ -15,7 +16,13 @@ public class HandelsbankenFICreditCard extends HandelsbankenCreditCard {
     private String numberMasked;
 
     public CreditCardAccount toTinkAccount() {
-        return CreditCardAccount.builder(numberMasked, amountAvailable.asAmount(), creditLimit.asAmount())
+        Amount credLimit = creditLimit.asAmount();
+        Amount credAvailable = amountAvailable.asAmount();
+        // calculate balance, nordea-presented as positive value, negate
+        Amount balance = credLimit.subtract(credAvailable).negate();
+
+
+        return CreditCardAccount.builder(numberMasked, balance, credAvailable)
                 .setAccountNumber(numberMasked)
                 .setBankIdentifier(numberMasked)
                 .setName(name)
