@@ -70,6 +70,7 @@ public class ExecutorExceptionResolver {
         switch (code) {
         case "1010":// "The transfer amount exceeds the available amount on the account"
         case "11041"://  "Payment exceeds the allowed maximum"
+        case "6242": // "The payment date is too soon or not a business day"
             return SignableOperationStatuses.CANCELLED;
         default:
             return SignableOperationStatuses.FAILED;
