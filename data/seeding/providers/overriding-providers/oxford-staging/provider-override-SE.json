@@ -1175,7 +1175,7 @@
     "capabilities" : [ "MORTGAGE_AGGREGATION", "TRANSFERS" ]
   }, {
     "capabilitiesSerialized" : "[\"MORTGAGE_AGGREGATION\",\"TRANSFERS\"]",
-    "className" : "banks.se.icabanken.ICABankenAgent",
+    "className" : "nxgen.se.banks.icabanken.IcaBankenAgent",
     "credentialsType" : "MOBILE_BANKID",
     "currency" : "SEK",
     "displayName" : "ICAbanken",
