@@ -7,7 +7,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.authenticator.UkOpenBankingAuthenticatorConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -30,7 +30,7 @@ public class AccountPermissionDataEntity {
 
         ZonedDateTime expireAt = ZonedDateTime.now(ZoneOffset.UTC).plus(Duration.ofHours(24));
         return new AccountPermissionDataEntity(
-                UkOpenBankingConstants.ACCOUNT_PERMISSIONS,
+                UkOpenBankingAuthenticatorConstants.ACCOUNT_PERMISSIONS,
                 expireAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
     }
 }

@@ -4,7 +4,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.authenticator.UkOpenBankingAuthenticatorConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
@@ -83,7 +83,7 @@ public class AuthorizeRequest {
                     .collect(Collectors.joining(" "));
 
             AuthorizeRequestClaims authorizeRequestClaims = new AuthorizeRequestClaims(intentId,
-                    UkOpenBankingConstants.ACR_SECURE_AUTHENTICATION_RTS);
+                    UkOpenBankingAuthenticatorConstants.ACR_SECURE_AUTHENTICATION_RTS);
 
             return TinkJwtCreator.create()
                     .withKeyId(keyId)
@@ -95,8 +95,8 @@ public class AuthorizeRequest {
                     .withClaim(OpenIdConstants.Params.SCOPE, scopes)
                     .withClaim(OpenIdConstants.Params.STATE, state)
                     .withClaim(OpenIdConstants.Params.NONCE, nonce)
-                    .withClaim(UkOpenBankingConstants.Params.MAX_AGE, UkOpenBankingConstants.MAX_AGE)
-                    .withClaim(UkOpenBankingConstants.Params.CLAIMS, authorizeRequestClaims)
+                    .withClaim(UkOpenBankingAuthenticatorConstants.Params.MAX_AGE, UkOpenBankingAuthenticatorConstants.MAX_AGE)
+                    .withClaim(UkOpenBankingAuthenticatorConstants.Params.CLAIMS, authorizeRequestClaims)
                     .sign(algorithm);
         }
     }

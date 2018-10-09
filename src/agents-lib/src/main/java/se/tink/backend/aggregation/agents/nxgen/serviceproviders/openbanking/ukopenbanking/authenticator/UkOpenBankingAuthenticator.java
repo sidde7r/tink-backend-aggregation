@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.authenticator;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.authenticator.jwt.AuthorizeRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
@@ -29,7 +28,7 @@ public class UkOpenBankingAuthenticator implements OpenIdAuthenticator {
 
         WellKnownResponse wellKnownConfiguration = apiClient.getWellKnownConfiguration();
 
-        return authorizeUrl.queryParam(UkOpenBankingConstants.Params.REQUEST,
+        return authorizeUrl.queryParam(UkOpenBankingAuthenticatorConstants.Params.REQUEST,
                 AuthorizeRequest.create()
                         .withClientInfo(providerConfiguration.getClientInfo())
                         .withSoftwareStatement(softwareStatement)
