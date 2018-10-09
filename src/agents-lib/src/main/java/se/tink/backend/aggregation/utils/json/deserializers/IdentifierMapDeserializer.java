@@ -76,7 +76,7 @@ public abstract class IdentifierMapDeserializer<T> extends StdDeserializer<HashM
                     result.put(key, codec.treeToValue(node, entityType));
                 } else {
 
-                    throw new IllegalStateException(String.format("AccountDetailsEntity does not have attribute %s",
+                    throw new IllegalStateException(String.format("Object does not have attribute %s",
                             keyAttribute));
                 }
             }
