@@ -32,10 +32,10 @@ import java.util.HashMap;
  *
  * {
  *     "item_1": {
- *         "name: item_1,
+ *         "name": "item_1",
  *         "content": "some_important_text"
  *     },
- *     "item_2: {
+ *     "item_2": {
  *         "name": "item_2",
  *         "content": "some_other_text"
  *     }
