@@ -73,7 +73,7 @@ public class DebugProviderCommand extends ProviderConfigurationCommand<ServiceCo
         ProviderConfiguration provider = providers.findByClusterIdAndProviderName(clusterId, providerName);
 
         if (provider == null) {
-            log.warn(String.format("Provider %s not found", providerName));
+            log.warn("Provider {} not found in {}" , providerName, clusterId);
             return;
         }
 
