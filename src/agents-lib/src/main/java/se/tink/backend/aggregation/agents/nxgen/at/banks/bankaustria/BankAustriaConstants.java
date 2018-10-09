@@ -33,10 +33,8 @@ public class BankAustriaConstants {
     }
 
     public static final class Device {
-        static final String IPHONE7_RESOLUTION = "{750, 1334}";
-        static final String IPHONE7_DEVICEID = "Apple_iPhone7,2_iOS_11.1.2";
         static final String IPHONE7_OTML_LAYOUT_INITIAL = "583702078EBA306BEAC2CD899D3FD206";
-        static final String IPHONE7_USERAGENT = "Mozilla/5.0 (iPhone; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10";
+        static final String USERAGENT_EXTENSION = "Mobile/7B334b Safari/531.21.10";
     }
 
     public static final class Header {
