@@ -90,6 +90,10 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
     public se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration findByClusterIdAndProviderName(
             String clusterId, String providerName) {
         ProviderConfiguration providerConfiguration = getProviderConfigurationForCluster(clusterId, providerName);
+        if (Objects.isNull(providerConfiguration)){
+            log.warn("Could not find provider by name {} in cluster {} ", providerName, clusterId);
+            return null;
+        }
 
         return StorageProviderConfigurationConverter
                 .convert(providerConfiguration, getProviderStatus(providerConfiguration));
@@ -114,6 +118,10 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
     }
 
     private ProviderConfiguration getProviderConfigurationForCluster(String clusterId, String providerName) {
+        if (!enabledProvidersOnCluster.containsKey(clusterId) ||
+                !enabledProvidersOnCluster.get(clusterId).contains(providerName)){
+            return null;
+        }
         if (providerOverrideOnCluster.containsKey(clusterId) &&
                 providerOverrideOnCluster.get(clusterId).containsKey(providerName)) {
             return providerOverrideOnCluster.get(clusterId).get(providerName);
