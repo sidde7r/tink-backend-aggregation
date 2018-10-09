@@ -22,7 +22,8 @@ public class UkOpenBankingV30Agent extends UkOpenBankingAgent {
     }
 
     @Override
-    protected UkOpenBankingAccountFetcher<?, ?, TransactionalAccount> makeTransactionalAccountFetcher(UkOpenBankingApiClient apiClient) {
+    protected UkOpenBankingAccountFetcher<?, ?, TransactionalAccount> makeTransactionalAccountFetcher(
+            UkOpenBankingApiClient apiClient) {
         return new UkOpenBankingAccountFetcher<>(apiClient,
                 AccountsV30Response.class,
                 AccountBalanceV30Response.class,
@@ -30,7 +31,8 @@ public class UkOpenBankingV30Agent extends UkOpenBankingAgent {
     }
 
     @Override
-    protected UkOpenBankingTransactionPaginator<?, TransactionalAccount> makeAccountTransactionPaginator(UkOpenBankingApiClient apiClient) {
+    protected UkOpenBankingTransactionPaginator<?, TransactionalAccount> makeAccountTransactionPaginator(
+            UkOpenBankingApiClient apiClient) {
         return new UkOpenBankingTransactionPaginator<>(apiClient,
                 AccountTransactionsV30Response.class,
                 AccountTransactionsV30Response::toAccountTransactionPaginationResponse);

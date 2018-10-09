@@ -21,9 +21,6 @@ public class AccountEntity {
                 .build();
     }
 
-
-
-
     public static CreditCardAccount toCreditCardAccount(AccountEntity account, AccountBalanceEntity balance) {
 
         // TODO: Verify balance and avaliable credit
@@ -34,7 +31,6 @@ public class AccountEntity {
                 .setName(account.getNickname())
                 .build();
     }
-
 
     @JsonProperty("AccountId")
     private String accountId;

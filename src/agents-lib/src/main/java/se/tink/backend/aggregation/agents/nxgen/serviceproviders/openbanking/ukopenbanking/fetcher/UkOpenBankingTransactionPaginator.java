@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
  * Generic transaction paginator for ukob.
  *
  * @param <ResponseType> The transaction response entity
- * @param <AccountType> The type of account to fetch transactions for. eg. TransactionalAccount, CreditCard, etc.
+ * @param <AccountType>  The type of account to fetch transactions for. eg. TransactionalAccount, CreditCard, etc.
  */
 public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends Account>
         implements TransactionKeyPaginator<AccountType, String> {
@@ -20,11 +20,10 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
     private final TransactionConverter<ResponseType, AccountType> transactionConverter;
 
     /**
-     *
-     * @param apiClient Ukob api client
-     * @param responseType Class type of the account response entity
+     * @param apiClient            Ukob api client
+     * @param responseType         Class type of the account response entity
      * @param transactionConverter A method taking the TransactionEntity and a Tink account and converting it
-     *                         to a key pagination response. See: {@link se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.TransactionConverter#toPaginatorResponse(Object, Account)}
+     *                             to a key pagination response. See: {@link se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.TransactionConverter#toPaginatorResponse(Object, Account)}
      */
     public UkOpenBankingTransactionPaginator(
             UkOpenBankingApiClient apiClient,

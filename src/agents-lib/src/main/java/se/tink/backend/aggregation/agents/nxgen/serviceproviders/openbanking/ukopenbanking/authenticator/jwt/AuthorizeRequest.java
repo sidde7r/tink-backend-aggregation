@@ -5,10 +5,10 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.authenticator.UkOpenBankingAuthenticatorConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.authenticator.jwt.entities.AuthorizeRequestClaims;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.authenticator.jwt.entities.AuthorizeRequestClaims;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils.OpenIdSignUtils;
 
@@ -95,7 +95,8 @@ public class AuthorizeRequest {
                     .withClaim(OpenIdConstants.Params.SCOPE, scopes)
                     .withClaim(OpenIdConstants.Params.STATE, state)
                     .withClaim(OpenIdConstants.Params.NONCE, nonce)
-                    .withClaim(UkOpenBankingAuthenticatorConstants.Params.MAX_AGE, UkOpenBankingAuthenticatorConstants.MAX_AGE)
+                    .withClaim(UkOpenBankingAuthenticatorConstants.Params.MAX_AGE,
+                            UkOpenBankingAuthenticatorConstants.MAX_AGE)
                     .withClaim(UkOpenBankingAuthenticatorConstants.Params.CLAIMS, authorizeRequestClaims)
                     .sign(algorithm);
         }

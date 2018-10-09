@@ -3,11 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.UkOpenBankingAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.UkOpenBankingTransactionPaginator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.v20.rpc.account.AccountBalanceV20Response;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.v20.rpc.account.AccountsV20Response;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.v20.rpc.transaction.AccountTransactionsV20Response;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.UkOpenBankingAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.UkOpenBankingTransactionPaginator;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
@@ -22,7 +22,8 @@ public class UkOpenBankingV20Agent extends UkOpenBankingAgent {
     }
 
     @Override
-    protected UkOpenBankingAccountFetcher<?, ?, TransactionalAccount> makeTransactionalAccountFetcher(UkOpenBankingApiClient apiClient) {
+    protected UkOpenBankingAccountFetcher<?, ?, TransactionalAccount> makeTransactionalAccountFetcher(
+            UkOpenBankingApiClient apiClient) {
 
         return new UkOpenBankingAccountFetcher<>(apiClient,
                 AccountsV20Response.class,
@@ -32,7 +33,8 @@ public class UkOpenBankingV20Agent extends UkOpenBankingAgent {
     }
 
     @Override
-    protected UkOpenBankingTransactionPaginator<?, TransactionalAccount> makeAccountTransactionPaginator(UkOpenBankingApiClient apiClient) {
+    protected UkOpenBankingTransactionPaginator<?, TransactionalAccount> makeAccountTransactionPaginator(
+            UkOpenBankingApiClient apiClient) {
 
         return new UkOpenBankingTransactionPaginator<>(apiClient,
                 AccountTransactionsV20Response.class,

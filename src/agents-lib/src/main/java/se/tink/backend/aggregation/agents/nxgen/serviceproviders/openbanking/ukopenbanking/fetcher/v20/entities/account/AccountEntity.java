@@ -86,7 +86,7 @@ public class AccountEntity {
                         balance.getAmount(),
                         balance.getAvaliableCredit()
                                 .orElseThrow(() -> new IllegalStateException(
-                                                "CreditCardAccount has no credit.")))
+                                        "CreditCardAccount has no credit.")))
                 .setAccountNumber(account.getUniqueIdentifier())
                 .setBankIdentifier(account.getAccountId())
                 .setName(account.getNickname())

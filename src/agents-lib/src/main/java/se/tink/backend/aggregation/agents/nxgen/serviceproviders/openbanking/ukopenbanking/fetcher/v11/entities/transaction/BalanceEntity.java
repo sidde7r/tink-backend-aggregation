@@ -14,5 +14,4 @@ public class BalanceEntity {
     @JsonProperty("Type")
     private String type;
 
-
 }

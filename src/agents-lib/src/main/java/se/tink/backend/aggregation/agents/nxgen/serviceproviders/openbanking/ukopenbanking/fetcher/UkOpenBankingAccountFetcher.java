@@ -7,9 +7,10 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 
 /**
  * Generic account fetcher for ukob.
+ *
  * @param <AccountResponseType> The account response entity
  * @param <BalanceResponseType> The account balance response entity
- * @param <AccountType> The type of account to fetch. eg. TransactionalAccount, CreditCard, etc.
+ * @param <AccountType>         The type of account to fetch. eg. TransactionalAccount, CreditCard, etc.
  */
 public class UkOpenBankingAccountFetcher<AccountResponseType, BalanceResponseType, AccountType extends Account>
         implements AccountFetcher<AccountType> {
@@ -20,12 +21,11 @@ public class UkOpenBankingAccountFetcher<AccountResponseType, BalanceResponseTyp
     private final AccountConverter<AccountResponseType, BalanceResponseType, AccountType> accountConverter;
 
     /**
-     *
-     * @param apiClient Ukob api client
+     * @param apiClient            Ukob api client
      * @param accountsResponseType Class type of the account response entity
      * @param balancesResponseType Class type of the account balance response entity
-     * @param accountConverter A method taking the AccountEntity and AccountBalanceEntity and converting it
-     *                         to a Tink account. See: {@link se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.AccountConverter#toTinkAccount(Object, Object)}
+     * @param accountConverter     A method taking the AccountEntity and AccountBalanceEntity and converting it
+     *                             to a Tink account. See: {@link se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.AccountConverter#toTinkAccount(Object, Object)}
      */
     public UkOpenBankingAccountFetcher(UkOpenBankingApiClient apiClient,
             Class<AccountResponseType> accountsResponseType,
