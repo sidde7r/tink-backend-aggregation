@@ -10,6 +10,7 @@ import net.sourceforge.argparse4j.inf.Namespace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.provider.configuration.config.ProviderRepositoryModule;
+import se.tink.backend.aggregation.provider.configuration.storage.module.ProviderFileModule;
 import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.backend.guice.configuration.CommonModule;
 import se.tink.backend.guice.configuration.ConfigurationModule;
@@ -33,6 +34,7 @@ public abstract class ProviderConfigurationCommand<T extends ServiceConfiguratio
                 new CommonModule(),
                 new CoordinationModule(),
                 new ConfigurationModule(configuration),
+                new ProviderFileModule(),
                 new ProviderRepositoryModule(configuration.getDatabase()));
 
         Injector injector = Guice.createInjector(modules);
