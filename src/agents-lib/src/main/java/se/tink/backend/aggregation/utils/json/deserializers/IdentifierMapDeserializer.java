@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.common.base.Strings;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 // @formatter:off
 /**
@@ -42,7 +43,7 @@ import java.util.HashMap;
  * }
  */
 // @formatter:on
-public abstract class IdentifierMapDeserializer<T> extends StdDeserializer<HashMap<String, T>> {
+public abstract class IdentifierMapDeserializer<T> extends StdDeserializer<Map<String, T>> {
 
     private final String keyAttribute;
     private final Class<T> entityType;
@@ -54,13 +55,13 @@ public abstract class IdentifierMapDeserializer<T> extends StdDeserializer<HashM
     }
 
     @Override
-    public HashMap<String, T> deserialize(JsonParser parser, DeserializationContext ctx)
+    public Map<String, T> deserialize(JsonParser parser, DeserializationContext ctx)
             throws IOException {
 
         ObjectCodec codec = parser.getCodec();
         TreeNode treeNode = codec.readTree(parser);
 
-        HashMap<String, T> result = new HashMap<>();
+        Map<String, T> result = new HashMap<>();
         if (treeNode.isArray()) {
             for (JsonNode node : (ArrayNode) treeNode) {
 
@@ -75,7 +76,6 @@ public abstract class IdentifierMapDeserializer<T> extends StdDeserializer<HashM
 
                     result.put(key, codec.treeToValue(node, entityType));
                 } else {
-
                     throw new IllegalStateException(String.format("Object does not have attribute %s",
                             keyAttribute));
                 }

@@ -11,11 +11,6 @@ import org.junit.Test;
 
 public class IdentifierMapDeserializerTest {
 
-    private static final String VALID_JSON = "{\"TestEntities\":[{\"name\":\"adam\",\"data\":\"oranges\"},{\"name\":\"steve\",\"data\":\"thoughts\"}]}";
-    private static final String MISSING_NAME_ATTR = "{\"TestEntities\":[{\"data\":\"oranges\"},{\"data\":\"thoughts\"}]}";
-    private static final String NOT_AN_ARRAY = "{\"TestEntities\":{\"data\":\"oranges\"}}";
-    private static final String NAME_IS_NOT_STRING = "{\"TestEntities\":[{\"name\":{\"value\":\"adam\"},\"data\":\"oranges\"}]}";
-
     private ImmutableMap<String, TestResultEntity> expectedResult;
 
     @Before
@@ -30,7 +25,7 @@ public class IdentifierMapDeserializerTest {
     public void testValidInput() {
 
         try {
-            Map<String, TestResultEntity> resultMap = deserialize(VALID_JSON).getEntities();
+            Map<String, TestResultEntity> resultMap = deserialize(TestData.VALID_JSON).getEntities();
             Assert.assertEquals(resultMap, expectedResult);
         } catch (Exception e) {
             Assert.fail(e.getMessage());
@@ -39,17 +34,17 @@ public class IdentifierMapDeserializerTest {
 
     @Test(expected = JsonMappingException.class)
     public void testMissingName() throws IOException {
-        deserialize(MISSING_NAME_ATTR);
+        deserialize(TestData.MISSING_NAME_ATTR);
     }
 
     @Test(expected = JsonMappingException.class)
     public void testNotArray() throws IOException {
-        deserialize(NOT_AN_ARRAY);
+        deserialize(TestData.NOT_AN_ARRAY);
     }
 
     @Test(expected = JsonMappingException.class)
     public void testNameNotString() throws IOException {
-        deserialize(NAME_IS_NOT_STRING);
+        deserialize(TestData.NAME_IS_NOT_STRING);
     }
 
     private TestRootEntity deserialize(String json) throws IOException {

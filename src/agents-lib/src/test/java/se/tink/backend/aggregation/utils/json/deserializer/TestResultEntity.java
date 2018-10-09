@@ -19,14 +19,12 @@ public class TestResultEntity {
 
     @Override
     public boolean equals(Object o) {
-
         if (o instanceof TestResultEntity) {
             TestResultEntity other = (TestResultEntity) o;
 
             return other.data.equals(data)
                     && other.name.equals(name);
         }
-
         return false;
     }
 }
