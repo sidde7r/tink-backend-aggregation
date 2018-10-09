@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.core.transaction;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import se.tink.backend.core.Amount;
@@ -90,6 +91,10 @@ public abstract class AggregationTransaction {
 
         public Builder setDate(LocalDate date) {
             return setDate(DateUtils.toJavaUtilDate(date));
+        }
+
+        public Builder setDateTime(ZonedDateTime dateTime) {
+            return setDate(dateTime.toLocalDate());
         }
 
         public Builder setDate(CharSequence date, DateTimeFormatter formatter) {
