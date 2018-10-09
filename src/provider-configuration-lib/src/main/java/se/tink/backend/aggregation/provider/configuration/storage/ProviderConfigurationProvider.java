@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.provider.configuration.storage;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.provider.configuration.storage.converter.StorageProviderConfigurationConverter;
@@ -49,8 +50,11 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
             log.error("Provider Configuration by name map should not be empty.");
         }
 
+        Map<String, ProviderStatusConfiguration> allProviderStatuses = getAllProviderStatuses();
+
         return providerConfigurationByName.values().stream()
-                .map(provider -> StorageProviderConfigurationConverter.convert(provider, getProviderStatus(provider)))
+                .map(provider -> StorageProviderConfigurationConverter.convert(provider,
+                        Optional.ofNullable(allProviderStatuses.get(provider.getName()))))
                 .collect(Collectors.toList());
     }
 
@@ -62,23 +66,31 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
             return Collections.emptyList();
         }
 
+        Map<String, ProviderStatusConfiguration> allProviderStatuses = getAllProviderStatuses();
+
         return providerNamesForCluster.stream()
                 .map(providerName -> getProviderConfigurationForCluster(clusterId, providerName))
-                .map(provider -> StorageProviderConfigurationConverter.convert(provider, getProviderStatus(provider)))
+                .map(provider -> StorageProviderConfigurationConverter.convert(provider,
+                        Optional.ofNullable(allProviderStatuses.get(provider.getName()))))
                 .collect(Collectors.toList());
     }
 
     public List<se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration> findAllByMarket(
             String market) {
+
+        Map<String, ProviderStatusConfiguration> allProviderStatuses = getAllProviderStatuses();
+
         return providerConfigurationByName.values().stream()
                 .filter(providerConfiguration -> Objects.equals(market, providerConfiguration.getMarket()))
-                .map(provider -> StorageProviderConfigurationConverter.convert(provider, getProviderStatus(provider)))
+                .map(provider -> StorageProviderConfigurationConverter.convert(provider,
+                        Optional.ofNullable(allProviderStatuses.get(provider.getName()))))
                 .collect(Collectors.toList());
     }
 
     public se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration findByClusterIdAndProviderName(
             String clusterId, String providerName) {
         ProviderConfiguration providerConfiguration = getProviderConfigurationForCluster(clusterId, providerName);
+
         return StorageProviderConfigurationConverter
                 .convert(providerConfiguration, getProviderStatus(providerConfiguration));
     }
@@ -108,6 +120,18 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
         } else {
             return providerConfigurationByName.get(providerName);
         }
+    }
+
+    private Map<String, ProviderStatusConfiguration> getAllProviderStatuses() {
+        List<ProviderStatusConfiguration> providerStatusConfigurations = providerStatusConfigurationRepository.findAll();
+        if (Objects.isNull(providerStatusConfigurations)) {
+            return Collections.emptyMap();
+        }
+
+        return providerStatusConfigurations.stream()
+                .collect(Collectors.toMap(
+                        ProviderStatusConfiguration::getProviderName,
+                        Function.identity()));
     }
 
     private Optional<ProviderStatusConfiguration> getProviderStatus(ProviderConfiguration providerConfiguration) {
