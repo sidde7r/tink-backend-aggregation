@@ -4,6 +4,8 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.authenticator.UkOpenBankingAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.configuration.UkOpenBankingConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.UkOpenBankingAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.UkOpenBankingTransactionPaginator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.session.UkOpenBankingSessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -16,10 +18,14 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCa
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
+import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.Provider;
@@ -27,7 +33,7 @@ import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class UkOpenBankingAgent extends NextGenerationAgent {
+public abstract class UkOpenBankingAgent extends NextGenerationAgent {
 
     private final Provider tinkProvider;
     private UkOpenBankingApiClient apiClient;
@@ -99,12 +105,28 @@ public class UkOpenBankingAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        return Optional.empty();
+        return Optional.of(new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        makeTransactionalAccountFetcher(apiClient),
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionKeyPaginationController<>(
+                                        makeAccountTransactionPaginator(apiClient)))
+                )
+        );
     }
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.empty();
+        return Optional.of(new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                makeCreditCardAccountFetcher(apiClient),
+                new TransactionFetcherController<>(transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(
+                                makeCreditCardTransactionPaginator(apiClient))))
+        );
     }
 
     @Override
@@ -136,4 +158,16 @@ public class UkOpenBankingAgent extends NextGenerationAgent {
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
     }
+
+    protected abstract UkOpenBankingAccountFetcher<?, ?, TransactionalAccount> makeTransactionalAccountFetcher(
+            UkOpenBankingApiClient apiClient);
+
+    protected abstract UkOpenBankingTransactionPaginator<?, TransactionalAccount> makeAccountTransactionPaginator(
+            UkOpenBankingApiClient apiClient);
+
+    protected abstract UkOpenBankingAccountFetcher<?, ?, CreditCardAccount> makeCreditCardAccountFetcher(
+            UkOpenBankingApiClient apiClient);
+
+    protected abstract UkOpenBankingTransactionPaginator<?, CreditCardAccount> makeCreditCardTransactionPaginator(
+            UkOpenBankingApiClient apiClient);
 }

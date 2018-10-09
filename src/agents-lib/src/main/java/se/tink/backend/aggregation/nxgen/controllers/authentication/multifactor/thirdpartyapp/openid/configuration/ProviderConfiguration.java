@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration;
 
 import com.google.common.base.Preconditions;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -17,8 +18,20 @@ public class ProviderConfiguration {
         return wellKnownURL;
     }
 
+    public URL getApiBaseURL() {
+        return apiBaseURL;
+    }
+
     public URL getAccountRequestsURL() {
         return apiBaseURL.concat(OpenIdConstants.ApiServices.ACCOUNT_REQUESTS);
+    }
+
+    public URL getFetchAccountURL() {
+        return apiBaseURL.concat(UkOpenBankingConstants.ApiServices.ACCOUNT_BULK_REQUEST);
+    }
+
+    public URL getFetchAccountBalancleURL() {
+        return apiBaseURL.concat(UkOpenBankingConstants.ApiServices.ACCOUNT_BALANCE_BULK_REQUEST);
     }
 
     public URL getPaymentsURL() {
