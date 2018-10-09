@@ -47,9 +47,7 @@ public class StorageProviderConfigurationConverter {
      */
     private static ProviderStatuses determineProviderStatus(ProviderConfiguration providerConfiguration,
                                                      Optional<ProviderStatusConfiguration> providerStatusConfiguration){
-        ProviderStatuses providerStatuses = providerConfiguration.getStatus();
-        providerStatusConfiguration.ifPresent(psc -> providerConfiguration.setStatus(psc.getStatus()));
-
-        return providerStatuses;
+        return providerStatusConfiguration.isPresent() ?
+                providerStatusConfiguration.get().getStatus() : providerConfiguration.getStatus();
     }
 }
