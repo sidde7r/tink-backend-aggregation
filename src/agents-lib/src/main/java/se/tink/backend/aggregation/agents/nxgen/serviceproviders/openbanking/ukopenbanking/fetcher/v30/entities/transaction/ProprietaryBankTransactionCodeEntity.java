@@ -1,0 +1,12 @@
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.v30.entities.transaction;
+
+import se.tink.backend.aggregation.annotations.JsonObject;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+@JsonObject
+public class ProprietaryBankTransactionCodeEntity {
+    @JsonProperty("Code")
+    private String code;
+    @JsonProperty("Issuer")
+    private String issuer;
+}
