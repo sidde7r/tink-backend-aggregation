@@ -52,7 +52,7 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
     }
 
     private static final int BANKID_MAX_ATTEMPTS = 80;
-    private static final String AUTHENTICATION_BANKID_URL = "https://id.signicat.com/std/method/seb?method=sbid-mobil&profile=nis_cobrand&language=sv&target=https%3A%2F%2Fsecure.sebkort.com%2Fsea%2Fexternal%2FProcessSignicatResponse%3Fmethod%3Dsbid-mobil%26target%3D%252Fnis%252Fm%252F{0}%252Fexternal%252FvalidateEidLogin%26prodgroup%3D{1}%26SEB_Referer%3D%252Fnis%26uname%26countryCode%3DSE";
+    private static final String AUTHENTICATION_BANKID_URL = "https://id.signicat.com/std/method/seb?method={0}&profile=nis_cobrand&language=sv&target=https%3A%2F%2Fsecure.sebkort.com%2Fsea%2Fexternal%2FProcessSignicatResponse%3Fmethod%3D{0}%26target%3D%252Fnis%252Fm%252F{1}%252Fexternal%252FvalidateEidLogin%26prodgroup%3D{2}%26SEB_Referer%3D%252Fnis%26uname%26countryCode%3DSE";
     private static final String BASE_URL = "https://application.sebkort.com/nis/m/";
 
     private final Client client;
@@ -106,7 +106,13 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
     private boolean authenticateWithMobileBankId() throws BankIdException {
         // Fetch and parse a dynamically created endpoint for making requests to.
 
-        String authenticationUrl = Catalog.format(AUTHENTICATION_BANKID_URL, code, product);
+        String bankIdMethod = "sbid-remote-seb";
+
+        if (code.equalsIgnoreCase("ecse")) {
+            bankIdMethod = "sbid-remote-ec";
+        }
+
+        String authenticationUrl = Catalog.format(AUTHENTICATION_BANKID_URL, bankIdMethod, code, product);
 
         String authenticationReponse = createClientRequest(authenticationUrl, client, DEFAULT_USER_AGENT).get(String.class);
 
