@@ -105,6 +105,9 @@ excludedDebugClusters:
   excludedClusters:
     - local-development
 
+coordination:
+  hosts: 172.16.42.2:2181
+
 logging:
   level: INFO
   loggers:
