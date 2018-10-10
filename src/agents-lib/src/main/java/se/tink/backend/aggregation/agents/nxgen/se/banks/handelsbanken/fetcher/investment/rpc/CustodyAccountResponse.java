@@ -31,7 +31,7 @@ public class CustodyAccountResponse extends BaseResponse {
         return InvestmentAccount.builder(custodyAccountNumber)
                 .setAccountNumber(custodyAccountNumber)
                 .setName(title)
-                .setCashBalance(mainDepositAccountBalance.asAmount())
+                .setCashBalance(Amount.inSEK(0))
                 .setPortfolios(Collections.singletonList(toPortfolio(client)))
                 .build();
     }
@@ -57,8 +57,6 @@ public class CustodyAccountResponse extends BaseResponse {
         portfolio.setTotalValue(toMarketValue());
         portfolio.setUniqueIdentifier(constructUniqueIdentifier());
         portfolio.setInstruments(toInstruments(client));
-        portfolio.setCashValue(mainDepositAccountBalance != null ?
-                mainDepositAccountBalance.asDouble() : null);
 
         return portfolio;
     }
