@@ -275,11 +275,6 @@ public class NewAgentTestContext extends AgentContext {
     }
 
     @Override
-    public void updateCredentialsOnlySensitiveInformation(Credentials credentials) {
-        // noop
-    }
-
-    @Override
     public CuratorFramework getCoordinationClient() {
         return null;
     }
