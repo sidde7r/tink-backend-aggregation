@@ -148,12 +148,47 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
         return Optional.ofNullable(providerStatusConfiguration);
     }
 
+    private ProviderStatusConfiguration createProviderStatusConfiguration(String providerName,
+                                                                          ProviderStatuses providerStatuses){
+        ProviderStatusConfiguration providerStatusConfiguration = new ProviderStatusConfiguration();
+        providerStatusConfiguration.setProviderName(providerName);
+        providerStatusConfiguration.setStatus(providerStatuses);
+
+        return providerStatusConfiguration;
+    }
+
+    /**
+     * update the global provider status
+     * @param providerName
+     * @param providerStatus
+     * this method handles updating the provider status:
+     *   disregard a non valid provider name
+     *   disregard if user try to update status to ENABLED (we do not want to allow global enable
+     *   TODO build DAOstatus that does not allow ENABLED
+     *   add status if provider does not have global status
+     *   replace status if provider has a different status
+     *   give warning if user try to update to the same status
+     */
     @Override
     public void updateStatus(String providerName, ProviderStatuses providerStatus) {
+        if (!providerConfigurationByName.containsKey(providerName)) {
+            log.warn("Provider name {} is not a valid provider.", providerName);
+            return;
+        }
+
         ProviderStatusConfiguration providerStatusConfiguration = providerStatusConfigurationRepository
-                .getOne(providerName);
+                .findOne(providerName);
+
+        if (Objects.equals(providerStatus, ProviderStatuses.ENABLED)) {
+                log.error("Can not globally enable provider");
+                return;
+        }
+
         if (Objects.isNull(providerStatusConfiguration)) {
-            log.warn("Provider {} could not be found.", providerName);
+            providerStatusConfiguration = createProviderStatusConfiguration(providerName, providerStatus);
+
+            providerStatusConfigurationRepository.save(providerStatusConfiguration);
+            log.info("Provider status updated - Provider name: old global status: NONE, new global status {}.", providerName, providerStatus);
             return;
         }
 
@@ -165,7 +200,28 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
 
         providerStatusConfiguration.setStatus(providerStatus);
         providerStatusConfigurationRepository.save(providerStatusConfiguration);
-        log.info("Provider status updated - Provider name: {}, old status: {}, new status: {}",
-                providerName, providerStatusConfiguration.getStatus(), oldStatus, providerStatus);
+        log.info("Provider status updated - Provider name: {}, old global status: {}, new global status: {}",
+                providerName, oldStatus, providerStatus);
+    }
+
+    @Override
+    public void removeStatus(String providerName) {
+        if (!providerConfigurationByName.containsKey(providerName)) {
+            log.warn("Provider name {} is not a valid provider.", providerName);
+            return;
+        }
+
+        ProviderStatusConfiguration providerStatusConfiguration = providerStatusConfigurationRepository
+                .findOne(providerName);
+
+        if (Objects.isNull(providerStatusConfiguration)) {
+            log.error("Provider {} does not have a global status", providerName);
+            return;
+        }
+
+        ProviderStatuses oldStatus = providerStatusConfigurationRepository.findOne(providerName).getStatus();
+        providerStatusConfigurationRepository.delete(providerName);
+        log.info("Provider {} has old global status: {}, now deleted",
+                providerName, oldStatus);
     }
 }
