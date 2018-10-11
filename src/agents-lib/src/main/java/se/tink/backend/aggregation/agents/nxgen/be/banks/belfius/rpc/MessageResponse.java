@@ -93,8 +93,12 @@ public class MessageResponse extends ResponseEntity {
         return findError(response, BelfiusConstants.Messages.EXCEED_BENEFICIARY, "");
     }
 
-    public static boolean requireSignOfBeneficiary(BelfiusResponse response) {
-        return findError(response, BelfiusConstants.Messages.ADD_BENEFICIARY, "");
+    public static boolean requireSignOfBeneficiaryLimit(BelfiusResponse response) {
+        return findError(response, BelfiusConstants.Messages.ADD_BENEFICIARY_LIMIT, "");
+    }
+
+    public static boolean beneficiaryOverWeeklyLimit(BelfiusResponse response) {
+        return findError(response, BelfiusConstants.Messages.ADD_BENEFICIARY_WEEKLY_LIMIT, "");
     }
 
     public static boolean transferSignFailed(BelfiusResponse response) {

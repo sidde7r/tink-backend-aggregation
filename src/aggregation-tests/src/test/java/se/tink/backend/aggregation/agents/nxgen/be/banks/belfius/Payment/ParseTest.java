@@ -5,8 +5,8 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusTest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.BelfiusPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.getsigningprotocol.SignProtocolResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.preparetransfer.PrepareRoot;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.preparetransfer.BeneficiariesContacts;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.preparetransfer.PrepareRoot;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import static junit.framework.TestCase.assertTrue;
 
@@ -1212,6 +1212,7 @@ public class ParseTest  extends BelfiusTest {
             + "\t}]\n"
             + "}";
 
+    private final String signBeneficiaryRequire = "{\"pendingResponseSets\":false,\"responseSets\":[{\"requestCounter\":15,\"applicationId\":\"BDM\",\"responses\":[{\"LoadScreen\":[{\"screenName\":\"gef0.gef1.gemd.Native_BeneficiaryManagement\"},{\"screenVersion\":\"%24Revision%3A+1.14+%24+%5BP060%5D\"},{\"parentWidgetId\":\"Container@reuse_BeneficiaryManagement\"},{\"modal\":false}]},{\"LoadScreen\":[{\"screenName\":\"gef0.gef1.gemd.Native_Signature_Reuse\"},{\"screenVersion\":\"%24Revision%3A+1.2+%24+%5BP060%5D\"},{\"parentWidgetId\":\"Container@reuse_BeneficiaryManagement@reuse_signature\"},{\"modal\":false}]},{\"LoadScreen\":[{\"screenName\":\"gef0.gef1.gemd.Native_ProtocolDetermination_Reuse\"},{\"screenVersion\":\"%24Revision%3A+1.11+%24+%5BP060%5D\"},{\"parentWidgetId\":\"Container@reuse_BeneficiaryManagement@reuse_protocolDetermination\"},{\"modal\":false}]},{\"LoadScreen\":[{\"screenName\":\"gef0.gef1.gemd.Native_Signature_Reuse_ItsMe\"},{\"screenVersion\":\"%24Revision%3A+1.7+%24+%5BP060%5D\"},{\"parentWidgetId\":\"Container@reuse_BeneficiaryManagement@reuse_ItsMeSignature\"},{\"modal\":false}]},{\"ScreenUpdate\":[{\"widgetId\":\"Container@reuse_BeneficiaryManagement@minp_CommChange\",\"properties\":[{\"text\":\"\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@minp_Amount\",\"properties\":[{\"text\":\"\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@minp_Alias\",\"properties\":[{\"text\":\"\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@minp_HouseNumber\",\"properties\":[{\"text\":\"\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@mlb_RegResult\",\"properties\":[{\"text\":\"\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@minp_City\",\"properties\":[{\"text\":\"\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@minp_Name\",\"properties\":[{\"text\":\"\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@minp_Bic\",\"properties\":[{\"text\":\"\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@rep_AccountTypes\",\"properties\":[{\"contentList\":{\"staticcontent\":{},\"dynamiccontent\":[],\"type\":\"full\"}}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@minp_Communication\",\"properties\":[{\"text\":\"\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@minp_StructuredCommunication\",\"properties\":[{\"text\":\"\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@minp_Key1_ListNumber\",\"properties\":[{\"text\":\"\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@mlb_RegistrationResultDescription\",\"properties\":[{\"text\":\"\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@minp_Street\",\"properties\":[{\"text\":\"\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@minp_Key2_SequenceNumber\",\"properties\":[{\"text\":\"\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@minp_Ext_Int_Account\",\"properties\":[{\"text\":\"\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@minp_CodeCountry\",\"properties\":[{\"text\":\"\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@minp_ZipCode\",\"properties\":[{\"text\":\"\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@rep_EntityAccounts\",\"properties\":[{\"contentList\":{\"staticcontent\":{},\"dynamiccontent\":[],\"type\":\"full\"}}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@minp_TransferOrigin\",\"properties\":[{\"text\":\"\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@reuse_signature@rep_scenarios\",\"properties\":[{\"contentList\":{\"staticcontent\":{},\"dynamiccontent\":[],\"type\":\"full\"}}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@reuse_ItsMeSignature@mlb_ActionIdentifier\",\"properties\":[{\"text\":\"\"}]}]}]},{\"requestCounter\":15,\"applicationId\":\"BDM\",\"responses\":[{\"ScreenUpdate\":[{\"widgetId\":\"Container@reuse_BeneficiaryManagement@minp_CommChange\",\"properties\":[{\"text\":\"\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@minp_Amount\",\"properties\":[{\"text\":\"\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@minp_Alias\",\"properties\":[{\"text\":\"\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@minp_HouseNumber\",\"properties\":[{\"text\":\"\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@mlb_RegResult\",\"properties\":[{\"text\":\"N\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@minp_City\",\"properties\":[{\"text\":\"\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@minp_Bic\",\"properties\":[{\"text\":\"\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@minp_Key1_ListNumber\",\"properties\":[{\"text\":\"\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@minp_Street\",\"properties\":[{\"text\":\"\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@minp_Key2_SequenceNumber\",\"properties\":[{\"text\":\"\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@minp_ZipCode\",\"properties\":[{\"text\":\"\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@reuse_signature@rep_scenarios\",\"properties\":[{\"contentList\":{\"staticcontent\":{},\"dynamiccontent\":[{\"RP_Scenario\":{\"lb_scen_data_formatted\":{\"text\":\"\"},\"lb_scen_type\":{\"text\":\"03\"},\"lb_scen_label\":{\"text\":\"Een begunstigde aanmaken?\"},\"lb_scen_data\":{\"text\":\"\"}},\"key\":\"1\"},{\"RP_Scenario\":{\"lb_scen_data_formatted\":{\"text\":\"917360\"},\"lb_scen_type\":{\"text\":\"00\"},\"lb_scen_label\":{\"text\":\"Controlegetal:\"},\"lb_scen_data\":{\"text\":\"917360\"}},\"key\":\"2\"}],\"type\":\"full\"}}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@reuse_signature@lb_Challenge\",\"properties\":[{\"text\":\"3812 9670 9279\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@reuse_signature@mlb_BuyIcon\",\"properties\":[{\"text\":\"N\"}]},{\"widgetId\":\"Container@reuse_BeneficiaryManagement@reuse_signature@lb_Protocol\",\"properties\":[{\"text\":\"PROTIMSC\"}]}]}]}]}";
 
     public boolean isBeneficiary(String accountNum, List<BeneficiariesContacts> beneficiaries){
         boolean ret = false;
@@ -1222,7 +1223,7 @@ public class ParseTest  extends BelfiusTest {
     }
 
     @Test
-    public void parseResponseTest() throws Exception{
+    public void parseResponseTest() {
         PrepareRoot pr = SerializationUtils.deserializeFromString(beneficiaryResponse, PrepareRoot.class);
         List<BeneficiariesContacts> beneficiaries = pr.getBeneficiaries();
 
@@ -1236,8 +1237,13 @@ public class ParseTest  extends BelfiusTest {
         assertTrue(spr.getSignType().equals("2000"));
         spr = SerializationUtils.deserializeFromString(beneficiaryAddString, SignProtocolResponse.class);
         assertTrue(spr.getChallenge().equals("3154 7130 2300"));
+    }
 
-
+    @Test
+    public void parseSignBeneficiaryRequiredResponseTest() {
+        SignProtocolResponse spr = SerializationUtils.deserializeFromString(signBeneficiaryRequire, SignProtocolResponse.class);
+        assertTrue(spr.getChallenge().equals("3812 9670 9279")); //beneficiaryAddString
+        assertTrue(spr.getSignType().equals("917360"));
     }
 
 }

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.getsigningprotocol;
 
+import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.BelfiusResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.MessageResponse;
@@ -28,11 +29,15 @@ public class SignProtocolResponse extends BelfiusResponse {
     }
 
     public String getSignType() {
-        Widget widget = ScreenUpdateResponse.widgetContains(this,
+        List<Widget> widgets = ScreenUpdateResponse.widgetsContains(this,
                 BelfiusConstants.Response.REUSE_SIGNATURE);
-        PropertiesEntity properties = widget.getProperties(PropertiesEntity.class);
 
-        return properties.getSignType();
+        return widgets.stream()
+                .filter(widget ->
+                        widget.getProperties(PropertiesEntity.class).getSignType().length() > 0)
+                .map(widget -> widget.getProperties(PropertiesEntity.class).getSignType())
+                .findFirst()
+                .orElse("");
     }
 
     public String getChallenge() {
