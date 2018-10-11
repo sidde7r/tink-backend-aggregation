@@ -27,6 +27,7 @@ public class ProviderStatusCommand extends ProviderConfigurationCommand<ServiceC
     private static final String SHOW_FIELD = "showList";
     private static final String MARKET_FIELD = "market";
     private static final String CLUSTER_FIELD = "cluster";
+    private static final String SET_FIELD = "setStatus";
 
     public ProviderStatusCommand() {
         super("provider-status",
@@ -53,16 +54,18 @@ public class ProviderStatusCommand extends ProviderConfigurationCommand<ServiceC
                 .required(true)
                 .help("Cluster to list provider for");
 
-        Subparser updateProvider = subparsers.addParser("update")
+        Subparser updateProviderstatus = subparsers.addParser("update")
                 .description("Update provider status by name")
-                .setDefault(SHOW_FIELD, false);// need to set default otherwise it's a null pointer
-        updateProvider.addArgument("-n", "--name")
+                .setDefault(SHOW_FIELD, false) // need to set default otherwise it's a null pointer
+                .setDefault(SET_FIELD, true);
+
+        updateProviderstatus.addArgument("-n", "--name")
                 .dest(NAME_FIELD)
                 .type(String.class)
                 .required(true)
                 .help("Provider name to change status of");
 
-        updateProvider.addArgument("-s", "--status")
+        updateProviderstatus.addArgument("-s", "--status")
                 .dest(STATUS_FIELD)
                 .type(ProviderStatuses.class)
                 .required(true)
@@ -102,7 +105,6 @@ public class ProviderStatusCommand extends ProviderConfigurationCommand<ServiceC
         String market = namespace.get(MARKET_FIELD);
         String clusterId = namespace.get(CLUSTER_FIELD);
 
-        boolean updateProviderStatus = !Strings.isNullOrEmpty(providerName) && providerStatus != null;
 
         ProviderConfigurationProvider configurationProvider = createConfigurationProvider(injector);
 
@@ -114,6 +116,11 @@ public class ProviderStatusCommand extends ProviderConfigurationCommand<ServiceC
                 providerConfigurationList = configurationProvider.findAllByClusterIdAndMarket(clusterId, market);
             }
             printProviderStatus(providerConfigurationList);
+            return;
+        }
+
+        if (namespace.getBoolean(SET_FIELD)) {
+            configurationProvider.updateStatus(providerName, providerStatus);
             return;
         }
     }
