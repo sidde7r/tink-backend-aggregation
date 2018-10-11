@@ -5,17 +5,16 @@ import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.entities.AmountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.v11.entities.transaction.BalanceEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.core.Amount;
 
 @JsonObject
-public class AccountBalanceEntity extends BalanceEntity {
+public class AccountBalanceEntity {
 
     @JsonProperty("AccountId")
     private String accountId;
     @JsonProperty("Amount")
-    private AmountEntity amount;
+    private AmountEntity balance;
     @JsonProperty("CreditDebitIndicator")
     private UkOpenBankingConstants.CreditDebitIndicator creditDebitIndicator;
     @JsonProperty("Type")
@@ -29,9 +28,9 @@ public class AccountBalanceEntity extends BalanceEntity {
         return accountId;
     }
 
-    public Amount getAmount() {
+    public Amount getBalance() {
 
-        Amount total = amount;
+        Amount total = balance;
 
         if (creditDebitIndicator == UkOpenBankingConstants.CreditDebitIndicator.CREDIT) {
             for (CreditLineEntity credit : creditLine) {
@@ -50,7 +49,7 @@ public class AccountBalanceEntity extends BalanceEntity {
             return Optional.empty();
         }
 
-        Amount total = new Amount(amount.getCurrency(), 0D);
+        Amount total = new Amount(balance.getCurrency(), 0D);
         for (CreditLineEntity credit : creditLine) {
             if (credit.isIncluded()) {
                 total = total.add(credit.getAmount());

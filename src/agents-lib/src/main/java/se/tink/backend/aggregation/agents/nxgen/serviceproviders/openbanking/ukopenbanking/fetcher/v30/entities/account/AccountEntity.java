@@ -50,7 +50,7 @@ public class AccountEntity {
         return TransactionalAccount
                 .builder(AccountTypes.CHECKING,
                         account.getUniqueIdentifier(),
-                        balance.getAmount())
+                        balance.getBalance())
                 .setAccountNumber(account.getUniqueIdentifier())
                 .setBankIdentifier(account.getAccountId())
                 .setName(account.getNickname())
@@ -62,7 +62,7 @@ public class AccountEntity {
 
         return CreditCardAccount
                 .builder(account.getUniqueIdentifier(),
-                        balance.getAmount(),
+                        balance.getBalance(),
                         balance.getAvaliableCredit()
                                 .orElseThrow(() -> new IllegalStateException(
                                         "CreditCardAccount has no credit.")))

@@ -14,7 +14,7 @@ public class AccountEntity {
         return TransactionalAccount
                 .builder(account.getAccountType(),
                         account.getUniqueIdentifier(),
-                        balance.getAmount())
+                        balance.getBalance())
                 .setAccountNumber(account.getUniqueIdentifier())
                 .setName(account.getNickname())
                 .setBankIdentifier(account.getAccountId())
@@ -25,7 +25,7 @@ public class AccountEntity {
 
         // TODO: Verify balance and avaliable credit
         return CreditCardAccount
-                .builder(account.getUniqueIdentifier(), balance.getAmount(), balance.getAvaliableCredit().get())
+                .builder(account.getUniqueIdentifier(), balance.getBalance(), balance.getAvaliableCredit().get())
                 .setAccountNumber(account.getUniqueIdentifier())
                 .setBankIdentifier(account.getAccountId())
                 .setName(account.getNickname())
