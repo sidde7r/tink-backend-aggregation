@@ -39,7 +39,7 @@ data:
         - type: console
           threshold: ALL
           timeZone: Europe/Stockholm
-          logFormat: '%date{"yyyy-MM-dd HH:mm:ss,SSSXXX"} %level [%thread] R:%X{requestId} %logger %message%n%xException'
+          logFormat: '{"date":"%date{"yyyy-MM-dd HH:mm:ss,SSSXXX"}","level":"%level","thread":"%thread","requestId":"%X{requestId}","logger":"%logger","message":"%replace(%m){"\n","\\n"}","exception":"%replace(%ex){"[\r\n]+","\\n"}"}%nopex%n'
 
     database:
       driverClass: com.mysql.jdbc.Driver
