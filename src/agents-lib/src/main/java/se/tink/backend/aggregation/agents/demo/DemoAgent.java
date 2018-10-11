@@ -232,7 +232,8 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
     private AccountFeatures createLoanAsset(Account account) {
         Loan loan = new Loan();
 
-        if (Objects.equal(account.getType(), AccountTypes.MORTGAGE) || account.getName().equalsIgnoreCase("Bolån")) {
+        if (Objects.equal(account.getType(), AccountTypes.MORTGAGE) ||
+                account.getName().toLowerCase().contains("bolån")) {
             loan.setInterest(0.019);
             loan.setName("Bolån");
             loan.setBalance(-2300000D);
