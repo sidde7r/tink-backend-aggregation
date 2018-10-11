@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.provider.configuration.cli;
 
-import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.google.inject.Injector;
 import io.dropwizard.setup.Bootstrap;
 import net.sourceforge.argparse4j.inf.Namespace;
@@ -15,6 +15,10 @@ import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.libraries.cli.printutils.CliPrintUtils;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ProviderStatusCommand extends ProviderConfigurationCommand<ServiceConfiguration> {
 
@@ -22,6 +26,7 @@ public class ProviderStatusCommand extends ProviderConfigurationCommand<ServiceC
     private static final String NAME_FIELD = "providerName";
     private static final String SHOW_FIELD = "showList";
     private static final String MARKET_FIELD = "market";
+    private static final String CLUSTER_FIELD = "cluster";
 
     public ProviderStatusCommand() {
         super("provider-status",
@@ -42,6 +47,11 @@ public class ProviderStatusCommand extends ProviderConfigurationCommand<ServiceC
                 .type(String.class)
                 .required(false)
                 .help("Market to list provider for");
+        listProviders.addArgument("-c", "--cluster")
+                .dest(CLUSTER_FIELD)
+                .type(String.class)
+                .required(true)
+                .help("Cluster to list provider for");
 
         Subparser updateProvider = subparsers.addParser("update")
                 .description("Update provider status by name")
@@ -68,6 +78,20 @@ public class ProviderStatusCommand extends ProviderConfigurationCommand<ServiceC
                 injector.getInstance(ProviderStatusConfigurationRepository.class)
         );
     }
+    
+    private void printProviderStatuses(Map<String, ProviderStatuses> providerStatuses){
+        List<Map<String, String>> output = Lists.newArrayList();
+        for (Map.Entry<String, ProviderStatuses> entry : providerStatuses.entrySet()) {
+            output.add(CliPrintUtils.keyValueEntry(entry.getKey(), entry.getValue().toString()));
+        }
+        CliPrintUtils.printTable(output);
+    }
+
+    private void printProviderStatus(List<ProviderConfiguration> providerConfigurationList) {
+        Map<String, ProviderStatuses> providerStatusesList = providerConfigurationList.stream()
+                .collect(Collectors.toMap(ProviderConfiguration::getName, ProviderConfiguration::getStatus));
+        printProviderStatuses(providerStatusesList);
+    }
 
     @Override
     protected void run(Bootstrap<ServiceConfiguration> bootstrap, Namespace namespace,
@@ -76,13 +100,21 @@ public class ProviderStatusCommand extends ProviderConfigurationCommand<ServiceC
         ProviderStatuses providerStatus = namespace.get(STATUS_FIELD);
         String providerName = namespace.getString(NAME_FIELD);
         String market = namespace.get(MARKET_FIELD);
+        String clusterId = namespace.get(CLUSTER_FIELD);
 
         boolean updateProviderStatus = !Strings.isNullOrEmpty(providerName) && providerStatus != null;
 
         ProviderConfigurationProvider configurationProvider = createConfigurationProvider(injector);
 
-//        if (namespace.getBoolean(SHOW_FIELD)){
-//            new ProviderStatusesFetcher(providerConfigurationDAO, market).fetch(CliPrintUtils::printTable);
-//        }
+        if (namespace.getBoolean(SHOW_FIELD)){
+            List<ProviderConfiguration> providerConfigurationList ;
+            if (Objects.isNull(market)) {
+                providerConfigurationList = configurationProvider.findAllByClusterId(clusterId);
+            } else {
+                providerConfigurationList = configurationProvider.findAllByClusterIdAndMarket(clusterId, market);
+            }
+            printProviderStatus(providerConfigurationList);
+            return;
+        }
     }
 }
