@@ -29,7 +29,7 @@ public final class SabadellConstants {
     }
 
     public static final class Headers {
-        public static final String SABADELL_ACCEPT = "application/vnd.idk.bsmobil-v1840+json";
+        public static final String SABADELL_ACCEPT = "application/vnd.idk.bsmobil-v1852+json";
     }
 
     public enum QueryParamPairs {
