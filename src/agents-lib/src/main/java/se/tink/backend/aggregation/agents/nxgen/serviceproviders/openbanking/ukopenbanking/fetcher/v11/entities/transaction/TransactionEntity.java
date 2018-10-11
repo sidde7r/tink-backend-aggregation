@@ -18,9 +18,8 @@ public class TransactionEntity {
                 .setExternalId(transactionId)
                 .setAmount(amount)
                 .setDescription(transactionInformation)
-                .setPending(UkOpenBankingConstants.EntryStatusCode.PENDING.equals(status))
+                .setPending(status == UkOpenBankingConstants.EntryStatusCode.PENDING)
                 .setDateTime(bookingDateTime)
-                //TODO: finish it
                 .build();
     }
 
@@ -30,7 +29,7 @@ public class TransactionEntity {
                 .setCreditAccount(account)
                 .setAmount(amount)
                 .setDescription(transactionInformation)
-                .setPending(UkOpenBankingConstants.EntryStatusCode.PENDING.equals(status))
+                .setPending(status == UkOpenBankingConstants.EntryStatusCode.PENDING)
                 .setDateTime(bookingDateTime)
                 .build();
     }

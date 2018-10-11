@@ -41,7 +41,7 @@ public class TransactionEntity {
                 .setExternalId(transactionId)
                 .setAmount(amount)
                 .setDescription(transactionInformation)
-                .setPending(EntryStatusCode.PENDING.equals(status))
+                .setPending(status == EntryStatusCode.PENDING)
                 .setDateTime(bookingDateTime)
                 .build();
     }
@@ -52,7 +52,7 @@ public class TransactionEntity {
                 .setCreditAccount(account)
                 .setAmount(amount)
                 .setDescription(transactionInformation)
-                .setPending(EntryStatusCode.PENDING.equals(status))
+                .setPending(status == EntryStatusCode.PENDING)
                 .setDateTime(bookingDateTime)
                 .build();
     }
