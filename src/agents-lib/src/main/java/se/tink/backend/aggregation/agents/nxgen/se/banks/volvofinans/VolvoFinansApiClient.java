@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.authenticat
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.authenticator.rpc.bankid.InitBankIdRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.creditcards.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.creditcards.rpc.CreditCardsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.transactionalaccounts.rpc.SavingsAccountsResponse;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -77,10 +78,9 @@ public class VolvoFinansApiClient {
                 .get(CreditCardsResponse.class);
     }
 
-    // NOTE: Currently for logging only
-    public String savingsAccounts() {
+    public SavingsAccountsResponse savingsAccounts() {
         return createRequest(VolvoFinansConstants.Urls.SAVINGS_ACCOUNTS)
-                .get(String.class);
+                .get(SavingsAccountsResponse.class);
     }
 
     /* Transactions */
