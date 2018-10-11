@@ -6,10 +6,15 @@ import io.dropwizard.setup.Bootstrap;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 import net.sourceforge.argparse4j.inf.Subparsers;
-import se.tink.backend.aggregation.provider.configuration.core.ProviderConfigurationDAO;
+import se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration;
+import se.tink.backend.aggregation.provider.configuration.storage.ProviderConfigurationProvider;
+import se.tink.backend.aggregation.provider.configuration.storage.module.ProviderFileModule;
+import se.tink.backend.aggregation.provider.configuration.storage.repositories.ProviderStatusConfigurationRepository;
 import se.tink.backend.core.ProviderStatuses;
 import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.libraries.cli.printutils.CliPrintUtils;
+
+import java.io.IOException;
 
 public class ProviderStatusCommand extends ProviderConfigurationCommand<ServiceConfiguration> {
 
@@ -54,6 +59,16 @@ public class ProviderStatusCommand extends ProviderConfigurationCommand<ServiceC
                 .help("Status to change provider to");
     }
 
+    private ProviderConfigurationProvider createConfigurationProvider(Injector injector) throws IOException {
+        ProviderFileModule fileModule = injector.getInstance(ProviderFileModule.class);
+        return new ProviderConfigurationProvider(
+                fileModule.providerConfigurationByProviderName(),
+                fileModule.provideEnabledProvidersForCluster(),
+                fileModule.provideClusterSpecificProviderConfiguration(),
+                injector.getInstance(ProviderStatusConfigurationRepository.class)
+        );
+    }
+
     @Override
     protected void run(Bootstrap<ServiceConfiguration> bootstrap, Namespace namespace,
             ServiceConfiguration configuration, Injector injector) throws Exception {
@@ -64,13 +79,10 @@ public class ProviderStatusCommand extends ProviderConfigurationCommand<ServiceC
 
         boolean updateProviderStatus = !Strings.isNullOrEmpty(providerName) && providerStatus != null;
 
-        ProviderConfigurationDAO providerConfigurationDAO = injector.getInstance(
-                ProviderConfigurationDAO.class);
-        if (updateProviderStatus) {
-            new ProviderStatusUpdater(providerConfigurationDAO).update(providerName, providerStatus);
-        }
-        if (namespace.getBoolean(SHOW_FIELD)){
-            new ProviderStatusesFetcher(providerConfigurationDAO, market).fetch(CliPrintUtils::printTable);
-        }
+        ProviderConfigurationProvider configurationProvider = createConfigurationProvider(injector);
+
+//        if (namespace.getBoolean(SHOW_FIELD)){
+//            new ProviderStatusesFetcher(providerConfigurationDAO, market).fetch(CliPrintUtils::printTable);
+//        }
     }
 }
