@@ -50,7 +50,7 @@ public class UkOpenBankingV11Agent extends UkOpenBankingAgent {
                 apiClient,
                 AccountsV11Response.class,
                 AccountBalanceV11Response.class,
-                AccountsV11Response::toCreditCardlAccount
+                AccountsV11Response::toCreditCardAccount
         );
     }
 

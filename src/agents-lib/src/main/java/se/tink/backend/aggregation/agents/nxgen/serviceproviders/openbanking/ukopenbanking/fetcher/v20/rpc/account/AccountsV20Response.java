@@ -25,7 +25,7 @@ public class AccountsV20Response extends BaseResponse<List<AccountEntity>> {
                 .collect(Collectors.toList());
     }
 
-    public static List<CreditCardAccount> toCreditCardlAccount(AccountsV20Response accounts,
+    public static List<CreditCardAccount> toCreditCardAccount(AccountsV20Response accounts,
             AccountBalanceV20Response balances) {
 
         Map<String, AccountBalanceEntity> accountBalances = balances.toMap();

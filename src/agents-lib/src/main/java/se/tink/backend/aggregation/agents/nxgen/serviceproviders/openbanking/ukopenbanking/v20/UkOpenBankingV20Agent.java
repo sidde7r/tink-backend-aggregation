@@ -47,7 +47,7 @@ public class UkOpenBankingV20Agent extends UkOpenBankingAgent {
         return new UkOpenBankingAccountFetcher<>(apiClient,
                 AccountsV20Response.class,
                 AccountBalanceV20Response.class,
-                AccountsV20Response::toCreditCardlAccount);
+                AccountsV20Response::toCreditCardAccount);
     }
 
     @Override

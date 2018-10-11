@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.Strings;
 import java.util.Map;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.v20.entities.deserializer.AccountDetailsDeserializer;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.v20.entities.deserializer.AccountIdentifierDeserializer;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Constants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
@@ -25,8 +25,8 @@ public class AccountEntity {
     @JsonProperty("AccountSubType")
     private String rawAccountSubType;
     @JsonProperty("Account")
-    @JsonDeserialize(using = AccountDetailsDeserializer.class)
-    private Map<String, AccountDetailsEntity> accountDetails;
+    @JsonDeserialize(using = AccountIdentifierDeserializer.class)
+    private Map<String, AccountIdentifierEntity> accountDetails;
 
     public String getAccountId() {
         return accountId;

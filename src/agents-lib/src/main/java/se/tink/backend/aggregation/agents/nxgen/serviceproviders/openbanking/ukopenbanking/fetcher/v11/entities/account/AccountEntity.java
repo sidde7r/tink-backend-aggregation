@@ -39,7 +39,7 @@ public class AccountEntity {
     @JsonProperty("Nickname")
     private String nickname;
     @JsonProperty("Account")
-    private AccountDetailsEntity accountDetails;
+    private AccountIdentifierEntity accountDetails;
 
     public String getAccountId() {
         return accountId;

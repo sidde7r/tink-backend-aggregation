@@ -30,7 +30,7 @@ public class AccountsV30Response extends BaseResponse<List<AccountEntity>> {
                 .collect(Collectors.toList());
     }
 
-    public static List<CreditCardAccount> toCreditCardlAccount(AccountsV30Response accounts,
+    public static List<CreditCardAccount> toCreditCardAccount(AccountsV30Response accounts,
             AccountBalanceV30Response balances) {
 
         Map<String, AccountBalanceEntity> accountBalances = balances.toMap();

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class AccountDetailsEntity {
+public class AccountIdentifierEntity {
 
     @JsonProperty("SchemeName")
     private String schemeName;
