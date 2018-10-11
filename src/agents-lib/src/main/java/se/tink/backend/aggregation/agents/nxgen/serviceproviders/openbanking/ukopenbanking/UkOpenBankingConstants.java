@@ -1,17 +1,26 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.strings.StringUtils;
 
 public abstract class UkOpenBankingConstants {
 
     public static class ApiServices {
 
-        public static final String ACCOUNT_BULK_REQUEST = "/accounts";
-        public static final String ACCOUNT_BALANCE_BULK_REQUEST = "/balances";
+        private static final String ACCOUNT_BULK_REQUEST = "/accounts";
+        private static final String ACCOUNT_BALANCE_BULK_REQUEST = "/balances";
         private static final String ACCOUNT_TRANSACTIONS_REQUEST = "/accounts/%s/transactions";
 
-        public static String getTransactionsRequest(String accountId) {
+        public static URL getBulkAccountRequestURL(URL apiBaseUrl) {
+            return apiBaseUrl.concat(ACCOUNT_BULK_REQUEST);
+        }
+
+        public static URL getBulkAccountBalanceRequestURL(URL apiBaseUrl) {
+            return apiBaseUrl.concat(ACCOUNT_BALANCE_BULK_REQUEST);
+        }
+
+        public static String getInitialTransactionsPaginationKey(String accountId) {
             return String.format(ACCOUNT_TRANSACTIONS_REQUEST, accountId);
         }
     }

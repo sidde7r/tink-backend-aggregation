@@ -4,7 +4,7 @@
     "providers": [
         {
             "name": "uk-modelo-oauth2",
-            "className": "nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingAgent",
+            "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
             "credentialsType": "PASSWORD",
             "displayName": "Modelo test",
             "fields": [ ],

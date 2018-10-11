@@ -38,7 +38,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(AccountType account, String key) {
 
         if (key == null) {
-            key = UkOpenBankingConstants.ApiServices.getTransactionsRequest(account.getBankIdentifier());
+            key = UkOpenBankingConstants.ApiServices.getInitialTransactionsPaginationKey(account.getBankIdentifier());
         }
 
         return transactionConverter.toPaginatorResponse(apiClient.fetchAccountTransactions(key, responseType), account);

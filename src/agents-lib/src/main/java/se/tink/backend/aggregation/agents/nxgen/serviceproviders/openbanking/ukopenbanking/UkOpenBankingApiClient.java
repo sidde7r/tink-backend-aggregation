@@ -7,12 +7,16 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class UkOpenBankingApiClient extends OpenIdApiClient {
+
+    private final URL apiBaseUrl;
 
     public UkOpenBankingApiClient(TinkHttpClient httpClient, SoftwareStatement softwareStatement,
             ProviderConfiguration providerConfiguration) {
         super(httpClient, softwareStatement, providerConfiguration);
+        apiBaseUrl = providerConfiguration.getApiBaseURL();
     }
 
     public AccountPermissionResponse createAccountIntentId() {
@@ -24,17 +28,17 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     }
 
     public <T> T fetchAccounts(Class<T> responseType) {
-        return httpClient.request(providerConfiguration.getFetchAccountURL())
+        return httpClient.request(UkOpenBankingConstants.ApiServices.getBulkAccountRequestURL(apiBaseUrl))
                 .get(responseType);
     }
 
     public <T> T fetchAccountBalance(Class<T> responseType) {
-        return httpClient.request(providerConfiguration.getFetchAccountBalancleURL())
+        return httpClient.request(UkOpenBankingConstants.ApiServices.getBulkAccountBalanceRequestURL(apiBaseUrl))
                 .get(responseType);
     }
 
     public <T> T fetchAccountTransactions(String paginationKey, Class<T> responseType) {
-        return httpClient.request(providerConfiguration.getApiBaseURL().concat(paginationKey))
+        return httpClient.request(apiBaseUrl.concat(paginationKey))
                 .get(responseType);
     }
 }
