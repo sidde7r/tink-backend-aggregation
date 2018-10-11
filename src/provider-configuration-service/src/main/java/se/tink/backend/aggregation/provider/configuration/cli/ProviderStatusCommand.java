@@ -54,7 +54,7 @@ public class ProviderStatusCommand extends ProviderConfigurationCommand<ServiceC
                 .required(true)
                 .help("Cluster to list provider for");
 
-        Subparser updateProviderstatus = subparsers.addParser("update")
+        Subparser updateProviderstatus = subparsers.addParser("global_status")
                 .description("Update provider status by name")
                 .setDefault(SHOW_FIELD, false) // need to set default otherwise it's a null pointer
                 .setDefault(SET_FIELD, true);
@@ -71,7 +71,7 @@ public class ProviderStatusCommand extends ProviderConfigurationCommand<ServiceC
                 .required(true)
                 .help("Status to change provider to");
 
-        Subparser removeProviderStatus = subparsers.addParser("remove")
+        Subparser removeProviderStatus = subparsers.addParser("no_global_status")
                 .description("Update provider status by name")
                 .setDefault(SHOW_FIELD, false) // need to set default otherwise it's a null pointer
                 .setDefault(SET_FIELD, false);
