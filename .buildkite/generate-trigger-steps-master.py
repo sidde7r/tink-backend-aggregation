@@ -5,7 +5,7 @@ import os
 
 BRANCHES = {
     'aggregation-production': {'block': True},
-    'aggregation-staging': {'block': True},
+    'aggregation-staging': {'block': False},
 }
 
 PROJECTS = {
