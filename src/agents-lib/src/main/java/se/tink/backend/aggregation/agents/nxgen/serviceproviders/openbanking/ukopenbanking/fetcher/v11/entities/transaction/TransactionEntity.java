@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.v11.entities.transaction;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
 import java.time.ZonedDateTime;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.entities.AmountEntity;
@@ -59,12 +60,16 @@ public class TransactionEntity {
 
     @JsonProperty("BookingDateTime")
     private void setBookingDateTime(String date) {
-        bookingDateTime = ZonedDateTime.parse(date);
+        if (!Strings.isNullOrEmpty(date)) {
+            bookingDateTime = ZonedDateTime.parse(date);
+        }
     }
 
     @JsonProperty("ValueDateTime")
     private void setValueDateTime(String date) {
-        valueDateTime = ZonedDateTime.parse(date);
+        if(!Strings.isNullOrEmpty(date)) {
+            valueDateTime = ZonedDateTime.parse(date);
+        }
     }
 
 }
