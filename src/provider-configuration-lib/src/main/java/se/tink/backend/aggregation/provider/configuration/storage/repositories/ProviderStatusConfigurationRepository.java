@@ -7,4 +7,5 @@ public interface ProviderStatusConfigurationRepository extends JpaRepository<Pro
         ProviderStatusConfigurationRepositoryCustom {
     ProviderStatusConfiguration findOne(String providerName);
     ProviderStatusConfiguration save(ProviderStatusConfiguration s);
+    void delete(String providerName);
 }

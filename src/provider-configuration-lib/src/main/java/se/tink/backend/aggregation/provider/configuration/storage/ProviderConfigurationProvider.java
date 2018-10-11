@@ -204,5 +204,24 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
                 providerName, oldStatus, providerStatus);
     }
 
+    @Override
+    public void removeStatus(String providerName) {
+        if (!providerConfigurationByName.containsKey(providerName)) {
+            log.warn("Provider name {} is not a valid provider.", providerName);
+            return;
+        }
+
+        ProviderStatusConfiguration providerStatusConfiguration = providerStatusConfigurationRepository
+                .findOne(providerName);
+
+        if (Objects.isNull(providerStatusConfiguration)) {
+            log.error("Provider {} does not have a global status", providerName);
+            return;
+        }
+
+        ProviderStatuses oldStatus = providerStatusConfigurationRepository.findOne(providerName).getStatus();
+        providerStatusConfigurationRepository.delete(providerName);
+        log.info("Provider {} has old global status: {}, now deleted",
+                providerName, oldStatus);
     }
 }

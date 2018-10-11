@@ -70,7 +70,19 @@ public class ProviderStatusCommand extends ProviderConfigurationCommand<ServiceC
                 .type(ProviderStatuses.class)
                 .required(true)
                 .help("Status to change provider to");
+
+        Subparser removeProviderStatus = subparsers.addParser("remove")
+                .description("Update provider status by name")
+                .setDefault(SHOW_FIELD, false) // need to set default otherwise it's a null pointer
+                .setDefault(SET_FIELD, false);
+
+        removeProviderStatus.addArgument("-n", "--name")
+                .dest(NAME_FIELD)
+                .type(String.class)
+                .required(true)
+                .help("Provider name to change status of");
     }
+
 
     private ProviderConfigurationProvider createConfigurationProvider(Injector injector) throws IOException {
         ProviderFileModule fileModule = injector.getInstance(ProviderFileModule.class);
@@ -123,5 +135,7 @@ public class ProviderStatusCommand extends ProviderConfigurationCommand<ServiceC
             configurationProvider.updateStatus(providerName, providerStatus);
             return;
         }
+
+        configurationProvider.removeStatus(providerName);
     }
 }
