@@ -1,13 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v11.fetcher.entities.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.IdentifiableAccount;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 
 @JsonObject
-public class AccountEntity {
+public class AccountEntity implements IdentifiableAccount {
 
     public static TransactionalAccount toTransactionalAccount(AccountEntity account, AccountBalanceEntity balance) {
 
@@ -58,5 +59,10 @@ public class AccountEntity {
 
     public String getUniqueIdentifier() {
         return accountDetails.getIdentification();
+    }
+
+    @Override
+    public String getBankIdentifier() {
+        return accountId;
     }
 }

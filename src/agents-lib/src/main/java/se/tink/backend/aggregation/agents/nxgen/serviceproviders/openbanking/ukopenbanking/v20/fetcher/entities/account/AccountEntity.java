@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.Strings;
 import java.util.Map;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.IdentifiableAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v20.fetcher.entities.deserializer.AccountIdentifierDeserializer;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Constants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -12,7 +13,7 @@ import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 
 @JsonObject
-public class AccountEntity {
+public class AccountEntity implements IdentifiableAccount {
 
     @JsonProperty("AccountId")
     private String accountId;
@@ -91,5 +92,10 @@ public class AccountEntity {
                 .setBankIdentifier(account.getAccountId())
                 .setName(account.getNickname())
                 .build();
+    }
+
+    @Override
+    public String getBankIdentifier() {
+        return accountId;
     }
 }

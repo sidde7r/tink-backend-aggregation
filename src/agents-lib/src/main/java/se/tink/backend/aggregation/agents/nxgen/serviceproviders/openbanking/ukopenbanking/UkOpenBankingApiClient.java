@@ -28,12 +28,14 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     }
 
     public <T> T fetchAccounts(Class<T> responseType) {
-        return httpClient.request(UkOpenBankingConstants.ApiServices.getBulkAccountRequestURL(apiBaseUrl))
+        return httpClient.request(
+                UkOpenBankingConstants.ApiServices.getBulkAccountRequestURL(apiBaseUrl))
                 .get(responseType);
     }
 
-    public <T> T fetchAccountBalance(Class<T> responseType) {
-        return httpClient.request(UkOpenBankingConstants.ApiServices.getBulkAccountBalanceRequestURL(apiBaseUrl))
+    public <T> T fetchAccountBalance(String accountId, Class<T> responseType) {
+        return httpClient.request(
+                UkOpenBankingConstants.ApiServices.getAccountBalanceRequestURL(apiBaseUrl, accountId))
                 .get(responseType);
     }
 

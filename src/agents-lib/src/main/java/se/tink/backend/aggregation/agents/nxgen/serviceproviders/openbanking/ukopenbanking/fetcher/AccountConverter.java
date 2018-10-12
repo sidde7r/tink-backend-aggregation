@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher;
 
-import java.util.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 
 /**
@@ -14,5 +14,5 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
  */
 public interface AccountConverter<AccountResponse, BalanceResponse, AccountType extends Account> {
 
-    List<AccountType> toTinkAccount(AccountResponse accountResponse, BalanceResponse balanceResponse);
+    Optional<? extends AccountType> toTinkAccount(AccountResponse accountResponse, BalanceResponse balanceResponse);
 }

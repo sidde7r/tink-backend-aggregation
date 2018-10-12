@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
@@ -12,7 +14,7 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
  * @param <BalanceResponseType> The account balance response entity
  * @param <AccountType>         The type of account to fetch. eg. TransactionalAccount, CreditCard, etc.
  */
-public class UkOpenBankingAccountFetcher<AccountResponseType, BalanceResponseType, AccountType extends Account>
+public class UkOpenBankingAccountFetcher<AccountResponseType extends AccountStream, BalanceResponseType, AccountType extends Account>
         implements AccountFetcher<AccountType> {
 
     private final UkOpenBankingApiClient apiClient;
@@ -45,8 +47,13 @@ public class UkOpenBankingAccountFetcher<AccountResponseType, BalanceResponseTyp
 
         AccountResponseType accounts = apiClient.fetchAccounts(accountEntityType);
 
-        BalanceResponseType balances = apiClient.fetchAccountBalance(balanceEntityType);
-
-        return accountConverter.toTinkAccount(accounts, balances);
+        // In order to keep the model simple we accept that we are revisiting the accounts list multiple time.
+        return accounts.stream()
+                .map(account -> accountConverter.toTinkAccount(
+                        accounts,
+                        apiClient.fetchAccountBalance(account.getBankIdentifier(), balanceEntityType)))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 }

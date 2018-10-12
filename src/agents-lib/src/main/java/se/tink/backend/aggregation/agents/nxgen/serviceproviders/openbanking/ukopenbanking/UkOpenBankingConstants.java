@@ -9,7 +9,7 @@ public abstract class UkOpenBankingConstants {
     public static class ApiServices {
 
         private static final String ACCOUNT_BULK_REQUEST = "/accounts";
-        private static final String ACCOUNT_BALANCE_BULK_REQUEST = "/balances";
+        private static final String ACCOUNT_BALANCE_REQUEST = "/accounts/%s/balances";
         private static final String ACCOUNT_TRANSACTIONS_REQUEST = "/accounts/%s/transactions";
         private static final String ACCOUNT_UPCOMING_TRANSACTIONS_REQUEST = "/accounts/%s/scheduled-payments";
 
@@ -17,8 +17,8 @@ public abstract class UkOpenBankingConstants {
             return apiBaseUrl.concat(ACCOUNT_BULK_REQUEST);
         }
 
-        public static URL getBulkAccountBalanceRequestURL(URL apiBaseUrl) {
-            return apiBaseUrl.concat(ACCOUNT_BALANCE_BULK_REQUEST);
+        public static URL getAccountBalanceRequestURL(URL apiBaseUrl, String accountId) {
+            return apiBaseUrl.concat(String.format(ACCOUNT_BALANCE_REQUEST, accountId));
         }
 
         public static String getInitialTransactionsPaginationKey(String accountId) {
