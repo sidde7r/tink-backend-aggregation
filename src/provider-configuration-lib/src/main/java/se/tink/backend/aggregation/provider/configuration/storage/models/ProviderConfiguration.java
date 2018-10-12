@@ -51,8 +51,8 @@ public class ProviderConfiguration {
     private String passwordHelpText;
     private String payload;
     private boolean popular;
-    private double refreshFrequency;
-    private double refreshFrequencyFactor;
+    private double refreshFrequency = 1d;
+    private double refreshFrequencyFactor = 1d;
     private ProviderStatuses status;
     private boolean transactional;
     private ProviderTypes type;
