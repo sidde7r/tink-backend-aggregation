@@ -44,8 +44,8 @@ STEP = """
 version = os.environ['VERSION']
 
 for project, project_settings in PROJECTS.items():
-    for branch in project_settings['branches']:
-        if project_settings['branches'][branch].get('block', True):
+    for branch, branch_settings in project_settings['branches'].items():
+        if branch_settings.get('block', True):
             block = 'true'
         else:
             block = ''
