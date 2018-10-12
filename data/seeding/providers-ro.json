@@ -1,0 +1,21 @@
+{
+  "market": "RO",
+  "currency": "LEU",
+  "providers": [
+    {
+      "name":"ro-raiffeisen-psd2",
+      "displayName":"Raiffeisen",
+      "popular":true,
+      "type":"BANK",
+      "status":"ENABLED",
+      "credentialsType":"PASSWORD",
+      "multiFactor":false,
+      "className":"nxgen.ro.banks.raiffeisen.RaiffeisenAgent",
+      "passwordHelpText":null,
+      "transactional":"true",
+      "payload":null,
+      "tutorialUrl":null,
+      "fields":[]
+    }
+  ]
+}
