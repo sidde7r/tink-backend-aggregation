@@ -25,6 +25,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.RedirectStrategy;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.protocol.HttpContext;
+import org.eclipse.jetty.http.HttpStatus;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.AccountEntity;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.AccountInfoEntity;
@@ -218,7 +219,7 @@ public class NordnetApiClient {
         return response.getStatus();
     }
 
-    public Optional<String> completeBankId(String orderRef) {
+    public Optional<String> completeBankId(String orderRef) throws LoginException {
         String html = post(bankIdUrl + "complete", new CollectBankIdRequest(orderRef), String.class);
         CompleteBankIdPage completePage = new CompleteBankIdPage(html);
 
@@ -237,10 +238,23 @@ public class NordnetApiClient {
         MultivaluedMapImpl artifactMap = new MultivaluedMapImpl();
         artifactMap.putSingle("artifact", samlArtifact);
 
-        ArtifactResponse artifactResponse = createClientRequest(AUTHENTICATION_SAML_ARTIFACT)
-                        .header("ntag", ntag)
-                        .type(MediaType.APPLICATION_FORM_URLENCODED)
-                        .post(ArtifactResponse.class, artifactMap);
+        ArtifactResponse artifactResponse;
+
+        try {
+            artifactResponse = createClientRequest(AUTHENTICATION_SAML_ARTIFACT)
+                    .header("ntag", ntag)
+                    .type(MediaType.APPLICATION_FORM_URLENCODED)
+                    .post(ArtifactResponse.class, artifactMap);
+
+        } catch (UniformInterfaceException e) {
+            ClientResponse response = e.getResponse();
+
+            if (response != null && response.getStatus() == HttpStatus.FORBIDDEN_403) {
+                throw LoginError.NOT_CUSTOMER.exception();
+            }
+
+            throw e;
+        }
 
         if (!artifactResponse.isLogged_in()) {
             return Optional.empty();
