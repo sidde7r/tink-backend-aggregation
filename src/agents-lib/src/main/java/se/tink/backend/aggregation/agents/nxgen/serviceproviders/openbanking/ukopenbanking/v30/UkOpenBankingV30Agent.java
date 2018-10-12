@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v30;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingApiClient;
@@ -10,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v30.fetcher.rpc.account.AccountsV30Response;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v30.fetcher.rpc.transaction.AccountTransactionsV30Response;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v30.fetcher.rpc.transaction.UpcomingTransactionsV30Response;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
@@ -33,19 +35,21 @@ public class UkOpenBankingV30Agent extends UkOpenBankingAgent {
     }
 
     @Override
-    protected UkOpenBankingTransactionPaginator<?, TransactionalAccount> makeAccountTransactionPaginator(
+    protected TransactionKeyPaginationController<TransactionalAccount, ?> makeAccountTransactionPaginatorController(
             UkOpenBankingApiClient apiClient) {
-        return new UkOpenBankingTransactionPaginator<>(apiClient,
-                AccountTransactionsV30Response.class,
-                AccountTransactionsV30Response::toAccountTransactionPaginationResponse);
+        return new TransactionKeyPaginationController<>(
+                new UkOpenBankingTransactionPaginator<>(
+                        apiClient,
+                        AccountTransactionsV30Response.class,
+                        AccountTransactionsV30Response::toAccountTransactionPaginationResponse));
     }
 
     @Override
-    protected UkOpenBankingUpcomingTransactionFetcher<?> makeUpcomingTransactionFetcher(
+    protected Optional<UkOpenBankingUpcomingTransactionFetcher<?>> makeUpcomingTransactionFetcher(
             UkOpenBankingApiClient apiClient) {
-        return new UkOpenBankingUpcomingTransactionFetcher<>(apiClient,
+        return Optional.of(new UkOpenBankingUpcomingTransactionFetcher<>(apiClient,
                 UpcomingTransactionsV30Response.class,
-                UpcomingTransactionsV30Response::toUpcomingTransactions);
+                UpcomingTransactionsV30Response::toUpcomingTransactions));
     }
 
     @Override
@@ -58,10 +62,12 @@ public class UkOpenBankingV30Agent extends UkOpenBankingAgent {
     }
 
     @Override
-    protected UkOpenBankingTransactionPaginator<?, CreditCardAccount> makeCreditCardTransactionPaginator(
+    protected TransactionKeyPaginationController<CreditCardAccount, ?> makeCreditCardTransactionPaginatorController(
             UkOpenBankingApiClient apiClient) {
-        return new UkOpenBankingTransactionPaginator<>(apiClient,
-                AccountTransactionsV30Response.class,
-                AccountTransactionsV30Response::toCreditCardPaginationResponse);
+        return new TransactionKeyPaginationController<>(
+                new UkOpenBankingTransactionPaginator<>(
+                        apiClient,
+                        AccountTransactionsV30Response.class,
+                        AccountTransactionsV30Response::toCreditCardPaginationResponse));
     }
 }

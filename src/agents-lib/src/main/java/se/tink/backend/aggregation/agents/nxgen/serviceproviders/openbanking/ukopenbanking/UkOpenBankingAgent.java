@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRe
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
@@ -112,9 +113,9 @@ public abstract class UkOpenBankingAgent extends NextGenerationAgent {
                         makeTransactionalAccountFetcher(apiClient),
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
-                                new TransactionKeyPaginationController<>(
-                                        makeAccountTransactionPaginator(apiClient)),
-                                makeUpcomingTransactionFetcher(apiClient))
+                                makeAccountTransactionPaginatorController(apiClient),
+                                makeUpcomingTransactionFetcher(apiClient)
+                                        .orElse(null))
                 )
         );
     }
@@ -126,8 +127,7 @@ public abstract class UkOpenBankingAgent extends NextGenerationAgent {
                 updateController,
                 makeCreditCardAccountFetcher(apiClient),
                 new TransactionFetcherController<>(transactionPaginationHelper,
-                        new TransactionKeyPaginationController<>(
-                                makeCreditCardTransactionPaginator(apiClient))))
+                        makeCreditCardTransactionPaginatorController(apiClient)))
         );
     }
 
@@ -164,16 +164,16 @@ public abstract class UkOpenBankingAgent extends NextGenerationAgent {
     protected abstract UkOpenBankingAccountFetcher<?, ?, TransactionalAccount> makeTransactionalAccountFetcher(
             UkOpenBankingApiClient apiClient);
 
-    protected abstract UkOpenBankingTransactionPaginator<?, TransactionalAccount> makeAccountTransactionPaginator(
+    protected abstract TransactionPaginator<TransactionalAccount> makeAccountTransactionPaginatorController(
             UkOpenBankingApiClient apiClient);
 
-    protected abstract UkOpenBankingUpcomingTransactionFetcher<?> makeUpcomingTransactionFetcher(
+    protected abstract Optional<UkOpenBankingUpcomingTransactionFetcher<?>> makeUpcomingTransactionFetcher(
             UkOpenBankingApiClient apiClient);
 
     protected abstract UkOpenBankingAccountFetcher<?, ?, CreditCardAccount> makeCreditCardAccountFetcher(
             UkOpenBankingApiClient apiClient);
 
-    protected abstract UkOpenBankingTransactionPaginator<?, CreditCardAccount> makeCreditCardTransactionPaginator(
+    protected abstract TransactionPaginator<CreditCardAccount> makeCreditCardTransactionPaginatorController(
             UkOpenBankingApiClient apiClient);
 
 }
