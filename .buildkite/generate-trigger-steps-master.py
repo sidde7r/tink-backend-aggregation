@@ -3,26 +3,22 @@
 from __future__ import print_function
 import os
 
-BRANCHES = {
-    'aggregation-production': {'block': True},
-    'aggregation-staging': {'block': False},
-}
-
 PROJECTS = {
     'tink-backend-aggregation': {
         'chart': False,
         'salt': True,
-        'branches': [
-            'aggregation-production',
-            'aggregation-staging'
-        ],},
+        'branches': {
+            'aggregation-production': {'block': True},
+            'aggregation-staging': {'block': False},
+        },
+    },
     'tink-backend-provider-configuration': {
         'chart': True,
         'salt': False,
-        'branches': [
-            'aggregation-production',
-            'aggregation-staging',
-        ],
+        'branches': {
+            'aggregation-production': {'block': False},
+            'aggregation-staging': {'block': False},
+        },
     },
 }
 
@@ -49,8 +45,7 @@ version = os.environ['VERSION']
 
 for project, project_settings in PROJECTS.items():
     for branch in project_settings['branches']:
-        settings = BRANCHES[branch]
-        if settings.get('block'):
+        if project_settings['branches'][branch].get('block', True):
             block = 'true'
         else:
             block = ''
