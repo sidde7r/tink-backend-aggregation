@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.configuration.UkOpenBankingConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.UkOpenBankingAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.UkOpenBankingTransactionPaginator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.UkOpenBankingUpcomingTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.session.UkOpenBankingSessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -112,7 +113,8 @@ public abstract class UkOpenBankingAgent extends NextGenerationAgent {
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
                                 new TransactionKeyPaginationController<>(
-                                        makeAccountTransactionPaginator(apiClient)))
+                                        makeAccountTransactionPaginator(apiClient)),
+                                makeUpcomingTransactionFetcher(apiClient))
                 )
         );
     }
@@ -165,9 +167,13 @@ public abstract class UkOpenBankingAgent extends NextGenerationAgent {
     protected abstract UkOpenBankingTransactionPaginator<?, TransactionalAccount> makeAccountTransactionPaginator(
             UkOpenBankingApiClient apiClient);
 
+    protected abstract UkOpenBankingUpcomingTransactionFetcher<?> makeUpcomingTransactionFetcher(
+            UkOpenBankingApiClient apiClient);
+
     protected abstract UkOpenBankingAccountFetcher<?, ?, CreditCardAccount> makeCreditCardAccountFetcher(
             UkOpenBankingApiClient apiClient);
 
     protected abstract UkOpenBankingTransactionPaginator<?, CreditCardAccount> makeCreditCardTransactionPaginator(
             UkOpenBankingApiClient apiClient);
+
 }

@@ -41,4 +41,17 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         return httpClient.request(apiBaseUrl.concat(paginationKey))
                 .get(responseType);
     }
+
+    public <T> T fetchUpcomingTransactions(String accountId, Class<T> responseType) {
+        try {
+
+            return httpClient
+                    .request(UkOpenBankingConstants.ApiServices.getUpcomingTransactionRequestURL(apiBaseUrl, accountId))
+                    .get(responseType);
+        } catch (Exception e) {
+            // TODO: Ukob testdata has an error in it which makes some transactions impossible to parse.
+            // TODO: This combined with the null check in UpcomingTransactionFetcher discards those transactions to prevents crash.
+            return null;
+        }
+    }
 }

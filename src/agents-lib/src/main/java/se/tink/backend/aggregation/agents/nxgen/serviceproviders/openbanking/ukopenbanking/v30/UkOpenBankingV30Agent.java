@@ -5,9 +5,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.UkOpenBankingAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.UkOpenBankingTransactionPaginator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.UkOpenBankingUpcomingTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v30.fetcher.rpc.account.AccountBalanceV30Response;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v30.fetcher.rpc.account.AccountsV30Response;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v30.fetcher.rpc.transaction.AccountTransactionsV30Response;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v30.fetcher.rpc.transaction.UpcomingTransactionsV30Response;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
@@ -36,6 +38,14 @@ public class UkOpenBankingV30Agent extends UkOpenBankingAgent {
         return new UkOpenBankingTransactionPaginator<>(apiClient,
                 AccountTransactionsV30Response.class,
                 AccountTransactionsV30Response::toAccountTransactionPaginationResponse);
+    }
+
+    @Override
+    protected UkOpenBankingUpcomingTransactionFetcher<?> makeUpcomingTransactionFetcher(
+            UkOpenBankingApiClient apiClient) {
+        return new UkOpenBankingUpcomingTransactionFetcher<>(apiClient,
+                UpcomingTransactionsV30Response.class,
+                UpcomingTransactionsV30Response::toUpcomingTransactions);
     }
 
     @Override
