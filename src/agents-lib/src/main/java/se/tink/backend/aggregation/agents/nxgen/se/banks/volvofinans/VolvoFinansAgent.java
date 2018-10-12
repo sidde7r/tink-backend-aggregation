@@ -49,8 +49,8 @@ public class VolvoFinansAgent extends NextGenerationAgent {
                 updateController,
                 new VolvoFinansTransactionalAccountFetcher(apiClient),
                 new TransactionFetcherController<>(transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(new VolvoFinansTransactionalAccountFetcher(apiClient)))));
-
+                        new TransactionDatePaginationController<>(
+                                new VolvoFinansTransactionalAccountFetcher(apiClient)))));
     }
 
     @Override
