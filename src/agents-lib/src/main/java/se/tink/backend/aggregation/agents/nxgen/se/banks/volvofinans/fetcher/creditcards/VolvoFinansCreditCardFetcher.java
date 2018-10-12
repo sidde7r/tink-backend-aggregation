@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.creditcards;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -17,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
+import se.tink.libraries.date.DateUtils;
 import static org.apache.commons.lang3.ObjectUtils.max;
 
 public class VolvoFinansCreditCardFetcher implements AccountFetcher<CreditCardAccount>,
@@ -38,8 +38,8 @@ public class VolvoFinansCreditCardFetcher implements AccountFetcher<CreditCardAc
     @Override
     public PaginatorResponse getTransactionsFor(CreditCardAccount account, Date fromDate, Date toDate) {
 
-        LocalDate localStartDate = fromDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate localToDate = toDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate localStartDate = DateUtils.toJavaTimeLocalDate(fromDate);
+        LocalDate localToDate = DateUtils.toJavaTimeLocalDate(toDate);
 
         List<CreditCardTransaction> transactions = new ArrayList<>();
 
