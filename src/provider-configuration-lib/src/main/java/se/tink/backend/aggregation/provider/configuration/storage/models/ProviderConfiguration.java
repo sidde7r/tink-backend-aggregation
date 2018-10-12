@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import javax.persistence.Transient;
 import se.tink.backend.core.CredentialsTypes;
 import se.tink.backend.core.Field;
 import se.tink.backend.core.ProviderRefreshSchedule;
@@ -22,7 +21,6 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProviderConfiguration {
-    private static final String DEMO_AGENT_CLASS_NAME = "demo.DemoAgent";
 
     @SuppressWarnings("serial")
     private static class CapabilityList extends ArrayList<Capability> {}
@@ -276,24 +274,6 @@ public class ProviderConfiguration {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(ProviderConfiguration.class).add("name", name).toString();
-    }
-
-    @JsonIgnore
-    public double getCurrentRefreshFrequency() {
-        return refreshFrequency * refreshFrequencyFactor;
-    }
-
-    @JsonIgnore
-    @Transient
-    public String getCleanDisplayName() {
-        // Some of our display names have the authetication method in a parenthesis after.
-        // e.g. Handelsbanken (Mobilt BankID)
-        return displayName.replaceAll(" \\([\\w \\-]+\\)", "");
-    }
-
-    @JsonIgnore
-    public boolean isUsingDemoAgent() {
-        return DEMO_AGENT_CLASS_NAME.equals(getClassName());
     }
 
     /**
