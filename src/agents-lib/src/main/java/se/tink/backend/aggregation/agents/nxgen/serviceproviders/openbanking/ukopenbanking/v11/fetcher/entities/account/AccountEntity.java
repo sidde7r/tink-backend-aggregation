@@ -23,9 +23,12 @@ public class AccountEntity {
 
     public static CreditCardAccount toCreditCardAccount(AccountEntity account, AccountBalanceEntity balance) {
 
-        // TODO: Verify balance and avaliable credit
         return CreditCardAccount
-                .builder(account.getUniqueIdentifier(), balance.getBalance(), balance.getAvaliableCredit().get())
+                .builder(account.getUniqueIdentifier(),
+                        balance.getBalance(),
+                        balance.getAvaliableCredit()
+                                .orElseThrow(() -> new IllegalStateException(
+                                        "CreditCardAccount has no credit.")))
                 .setAccountNumber(account.getUniqueIdentifier())
                 .setBankIdentifier(account.getAccountId())
                 .setName(account.getNickname())
