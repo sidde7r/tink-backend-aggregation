@@ -490,6 +490,15 @@ public class StringUtils {
             return trimmedString;
     }
 
+    /**
+     * Removes all non-alphanumeric [A-Za-z0-9]
+     * @param s The string to operate on
+     * @return The input string without non-alphanumerics
+     */
+    public static String removeNonAlphaNumeric(String s) {
+        return s.replaceAll("[^A-Za-z0-9]", "");
+    }
+
     public static String maskSSN(String ssn) {
         return ssn.substring(0, 8) + "****";
     }

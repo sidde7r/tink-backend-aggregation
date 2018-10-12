@@ -17,6 +17,10 @@ public class ProviderConfiguration {
         return wellKnownURL;
     }
 
+    public URL getApiBaseURL() {
+        return apiBaseURL;
+    }
+
     public URL getAccountRequestsURL() {
         return apiBaseURL.concat(OpenIdConstants.ApiServices.ACCOUNT_REQUESTS);
     }

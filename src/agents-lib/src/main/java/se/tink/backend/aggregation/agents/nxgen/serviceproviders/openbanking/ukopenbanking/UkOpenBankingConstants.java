@@ -1,29 +1,75 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking;
 
-import com.google.common.collect.ImmutableList;
-import java.util.concurrent.TimeUnit;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.libraries.strings.StringUtils;
 
-public class UkOpenBankingConstants {
-    public static class Params {
-        public static final String REQUEST = "request";
-        public static final String MAX_AGE = "max_age";
-        public static final String CLAIMS = "claims";
+public abstract class UkOpenBankingConstants {
+
+    public static class ApiServices {
+
+        private static final String ACCOUNT_BULK_REQUEST = "/accounts";
+        private static final String ACCOUNT_BALANCE_REQUEST = "/accounts/%s/balances";
+        private static final String ACCOUNT_TRANSACTIONS_REQUEST = "/accounts/%s/transactions";
+        private static final String ACCOUNT_UPCOMING_TRANSACTIONS_REQUEST = "/accounts/%s/scheduled-payments";
+
+        public static URL getBulkAccountRequestURL(URL apiBaseUrl) {
+            return apiBaseUrl.concat(ACCOUNT_BULK_REQUEST);
+        }
+
+        public static URL getAccountBalanceRequestURL(URL apiBaseUrl, String accountId) {
+            return apiBaseUrl.concat(String.format(ACCOUNT_BALANCE_REQUEST, accountId));
+        }
+
+        public static String getInitialTransactionsPaginationKey(String accountId) {
+            return String.format(ACCOUNT_TRANSACTIONS_REQUEST, accountId);
+        }
+
+        public static URL getUpcomingTransactionRequestURL(URL apiBaseUrl, String accountId) {
+            return apiBaseUrl.concat(String.format(ACCOUNT_UPCOMING_TRANSACTIONS_REQUEST, accountId));
+        }
     }
 
-    // "To indiciate that secure customer authentication must be carried out as mandated by the PSD2 RTS"
-    public static final String ACR_SECURE_AUTHENTICATION_RTS = "urn:openbanking:psd2:sca";
+    public enum CreditDebitIndicator {
 
-    // According to examples the max age is 24h
-    public static final long MAX_AGE = TimeUnit.DAYS.toSeconds(1);
+        DEBIT,
+        CREDIT;
 
-    public static final ImmutableList<String> ACCOUNT_PERMISSIONS = ImmutableList.<String>builder()
-            .add("ReadAccountsDetail",
-                    "ReadBalances",
-                    "ReadBeneficiariesDetail",
-                    "ReadDirectDebits",
-                    "ReadProducts",
-                    "ReadStandingOrdersDetail",
-                    "ReadTransactionsCredits",
-                    "ReadTransactionsDebits",
-                    "ReadTransactionsDetail").build();
+        @JsonCreator
+        public static CreditDebitIndicator fromString(String key) {
+            return (key != null) ?
+                    CreditDebitIndicator.valueOf(
+                            StringUtils.removeNonAlphaNumeric(key).toUpperCase()) : null;
+        }
+    }
+
+    public enum EntryStatusCode {
+
+        BOOKED,
+        PENDING;
+
+        @JsonCreator
+        public static EntryStatusCode fromString(String key) {
+            return (key != null) ?
+                    EntryStatusCode.valueOf(
+                            StringUtils.removeNonAlphaNumeric(key).toUpperCase()) : null;
+        }
+    }
+
+    public enum ExternalLimitType {
+
+        AVAILABLE,
+        CREDIT,
+        EMERGENCY,
+        PREAGREED,
+        TEMPORARY;
+
+        @JsonCreator
+        public static ExternalLimitType fromString(String key) {
+            return (key != null) ?
+                    ExternalLimitType.valueOf(
+                            StringUtils.removeNonAlphaNumeric(key).toUpperCase()) : null;
+        }
+    }
+
 }

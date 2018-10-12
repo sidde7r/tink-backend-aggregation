@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks.sbab.util;
+package se.tink.backend.aggregation.utils.json;
 
 import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
