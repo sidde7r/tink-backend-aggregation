@@ -1,0 +1,280 @@
+package se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank;
+
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.authenticator.entities.ExtensionsForm;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.authenticator.entities.ExtensionsOtpLoginForm;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.authenticator.entities.GenerateBindingFinalActionForm;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.authenticator.entities.GenerateBindingQuickIdActionForm;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.authenticator.entities.GenerateBindingQuickIdChangeForm;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.authenticator.entities.GenerateBindingSkipActionForm;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.authenticator.entities.GenerateBindingTouchIdActionForm;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.authenticator.entities.LoginOtpForm;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.authenticator.entities.LoginUserNamePasswordForm;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.authenticator.entities.MainForm;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.authenticator.entities.MobileDevicesRequest;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+
+public class VolksbankApiClient {
+
+    private static final Pattern SAVE_BINDING = Pattern.compile(
+            "GeraeteBindung\\.saveGeraeteBindung\\('(?<app>.*?)','(?<mandant>.*?)','(?<userId>.*?)','(?<secret>.*?)'\\)");
+    private final TinkHttpClient apiclient;
+    private final PersistentStorage persistentStorage;
+    private String viewState;
+    private String pushToken;
+
+    public VolksbankApiClient(PersistentStorage persistentStorage, TinkHttpClient apiclient) {
+        this.persistentStorage = persistentStorage;
+        this.apiclient = apiclient;
+    }
+
+    public static VolksbankApiClient create(PersistentStorage persistentStorage, TinkHttpClient client) {
+        return new VolksbankApiClient(persistentStorage, client);
+    }
+
+    public void getLogin() {
+        HttpResponse getLoginResponse = constructGetRequest(VolksbankConstants.Url.LOGIN)
+                .queryParam(VolksbankConstants.QueryParam.M_KEY, VolksbankConstants.QueryParam.M_VALUE)
+                .queryParam(VolksbankConstants.QueryParam.A_KEY, VolksbankConstants.QueryParam.A_VALUE)
+                .get(HttpResponse.class);
+        extractViewState(getLoginResponse);
+    }
+
+    public void getLoginKeepSession() {
+        HttpResponse getLoginKeepSessionResponse = constructGetRequest(VolksbankConstants.Url.LOGIN)
+                .queryParam(VolksbankConstants.QueryParam.QUICK_KEY, VolksbankConstants.QueryParam.QUICK_VALUE)
+                .queryParam(VolksbankConstants.QueryParam.KEEPSESSION_KEY,
+                        VolksbankConstants.QueryParam.KEEPSESSION_VALUE)
+                .get(HttpResponse.class);
+
+        extractViewState(getLoginKeepSessionResponse);
+    }
+
+    public void getLoginUpgradeKeepSession() {
+        HttpResponse getLoginUpgradeResponse = constructGetRequest(VolksbankConstants.Url.LOGIN)
+                .queryParam(VolksbankConstants.QueryParam.UPGRADE_KEY, VolksbankConstants.TRUE)
+                .queryParam(VolksbankConstants.QueryParam.KEEPSESSION_KEY,
+                        VolksbankConstants.QueryParam.KEEPSESSION_VALUE)
+                .get(HttpResponse.class);
+
+        extractViewState(getLoginUpgradeResponse);
+    }
+
+    public void postLoginOtp() {
+        HttpResponse postLoginOtpResponse = constructPostRequest(VolksbankConstants.Url.LOGIN,
+                new URL(VolksbankConstants.Url.LOGIN)
+                        .queryParam(VolksbankConstants.QueryParam.QUICK_KEY, VolksbankConstants.QueryParam.QUICK_VALUE)
+                        .queryParam(VolksbankConstants.QueryParam.KEEPSESSION_KEY,
+                                VolksbankConstants.QueryParam.KEEPSESSION_VALUE).toString())
+                .body(new LoginOtpForm(this.viewState))
+                .post(HttpResponse.class);
+        extractViewState(postLoginOtpResponse);
+    }
+
+    public void postLoginOtp(String userId, String generateId, String secret) {
+        constructPostRequest(VolksbankConstants.Url.LOGIN,
+                new URL(VolksbankConstants.Url.LOGIN)
+                        .queryParam(VolksbankConstants.QueryParam.QUICK_KEY, VolksbankConstants.QueryParam.QUICK_VALUE)
+                        .queryParam(VolksbankConstants.QueryParam.KEEPSESSION_KEY,
+                                VolksbankConstants.QueryParam.KEEPSESSION_VALUE).toString())
+                .body(new LoginOtpForm(this.viewState, userId, generateId, VolksbankCryptoHelper.getTotp(secret)))
+                .post(HttpResponse.class);
+    }
+
+    public void postLoginUserNamePassword(String userId, String userName, String password) {
+        constructPostRequest(VolksbankConstants.Url.LOGIN,
+                new URL(VolksbankConstants.Url.LOGIN)
+                        .queryParam(VolksbankConstants.QueryParam.QUICK_KEY, VolksbankConstants.QueryParam.QUICK_VALUE)
+                        .queryParam(VolksbankConstants.QueryParam.KEEPSESSION_KEY,
+                                VolksbankConstants.QueryParam.KEEPSESSION_VALUE).toString())
+                .body(new LoginUserNamePasswordForm(userId, userName, VolksbankCryptoHelper.encryptPin(password),
+                        this.viewState))
+                .post(HttpResponse.class);
+    }
+
+    public void postLoginUserNamePasswordWithGid(String generateId, String userId, String userName, String password) {
+        constructPostRequest(VolksbankConstants.Url.LOGIN,
+                new URL(VolksbankConstants.Url.LOGIN)
+                        .queryParam(VolksbankConstants.QueryParam.QUICK_KEY, VolksbankConstants.QueryParam.QUICK_VALUE)
+                        .queryParam(VolksbankConstants.QueryParam.KEEPSESSION_KEY,
+                                VolksbankConstants.QueryParam.KEEPSESSION_VALUE).toString())
+                .body(new LoginUserNamePasswordForm(generateId, userId, userName,
+                        VolksbankCryptoHelper.encryptPin(password),
+                        this.viewState))
+                .post(HttpResponse.class);
+    }
+
+    public void postExtensions() {
+        constructPostRequest(VolksbankConstants.Url.EXTENSIONS,
+                VolksbankConstants.Url.EXTENSIONS)
+                .header(VolksbankConstants.Header.ORIGIN_KEY, VolksbankConstants.Header.ORIGIN_VALUE)
+                .body(new ExtensionsForm(this.viewState))
+                .post(HttpResponse.class);
+    }
+
+    public void postExtensionsOtpLogin() {
+        HttpResponse postExtensionsOtpLoginResponse = constructPostRequest(VolksbankConstants.Url.EXTENSIONS,
+                VolksbankConstants.Url.EXTENSIONS)
+                .body(new ExtensionsOtpLoginForm(this.viewState))
+                .post(HttpResponse.class);
+        extractViewState(postExtensionsOtpLoginResponse);
+    }
+
+    public void postExtensionsOtpLogin(String userId, String generateId, String secret) {
+        HttpResponse postExtensionsOtpLoginResponse = constructPostRequest(VolksbankConstants.Url.EXTENSIONS,
+                VolksbankConstants.Url.EXTENSIONS)
+                .header(VolksbankConstants.Header.ORIGIN_KEY, VolksbankConstants.Header.ORIGIN_VALUE)
+                .body(new ExtensionsOtpLoginForm(this.viewState, userId, generateId,
+                        VolksbankCryptoHelper.getTotp(secret)))
+                .post(HttpResponse.class);
+        extractViewState(postExtensionsOtpLoginResponse);
+    }
+
+    public void getGenerateBinding() {
+        HttpResponse getGenerateConnResponse = constructGetRequest(VolksbankConstants.Url.GENERATE_BINDING)
+                .header(VolksbankConstants.Header.REFERER_KEY, new URL(VolksbankConstants.Url.LOGIN)
+                        .queryParam(VolksbankConstants.QueryParam.QUICK_KEY, VolksbankConstants.QueryParam.QUICK_VALUE)
+                        .queryParam(VolksbankConstants.QueryParam.KEEPSESSION_KEY,
+                                VolksbankConstants.QueryParam.KEEPSESSION_VALUE).toString())
+                .get(HttpResponse.class);
+        extractViewState(getGenerateConnResponse);
+    }
+
+    public void postGenerateBindingQuickIdAction() {
+        HttpResponse postGenerateBindingQuickIdAction = constructPostRequest(VolksbankConstants.Url.GENERATE_BINDING,
+                VolksbankConstants.Url.GENERATE_BINDING)
+                .body(new GenerateBindingQuickIdActionForm(this.viewState))
+                .post(HttpResponse.class);
+
+        extractViewState(postGenerateBindingQuickIdAction);
+    }
+
+    public void postGenerateBindingQuickIdChange() {
+        HttpResponse postGenerateBindingQuickIdChange = constructPostRequest(VolksbankConstants.Url.GENERATE_BINDING,
+                VolksbankConstants.Url.GENERATE_BINDING)
+                .body(new GenerateBindingQuickIdChangeForm(this.viewState))
+                .post(HttpResponse.class);
+
+        extractViewState(postGenerateBindingQuickIdChange);
+    }
+
+    public void postGenerateBindingTouchIdAction() {
+        HttpResponse postGenerateBindingTouchIdAction = constructPostRequest(VolksbankConstants.Url.GENERATE_BINDING,
+                VolksbankConstants.Url.GENERATE_BINDING)
+                .body(new GenerateBindingTouchIdActionForm(this.viewState))
+                .post(HttpResponse.class);
+
+        extractViewState(postGenerateBindingTouchIdAction);
+
+        Document binding = Jsoup
+                .parse(postGenerateBindingTouchIdAction.getBody(String.class), VolksbankConstants.UTF_8);
+        String formText = binding.getElementById(VolksbankConstants.Body.GBFORM_ELEMENT_ID).text();
+        Matcher matcher = SAVE_BINDING.matcher(formText);
+        if (matcher.find()) {
+            String secret = matcher.group("secret");
+            persistentStorage.put(VolksbankConstants.Storage.SECRET, secret);
+        } else {
+            throw new IllegalStateException("No binding found, or the format is changed");
+        }
+    }
+
+    public void postGenerateBindingFinalAction() {
+        String deviceId = UUID.randomUUID().toString().toUpperCase();
+        String secret = persistentStorage.get(VolksbankConstants.Storage.SECRET);
+        this.pushToken = VolksbankCryptoHelper.generateRandomHex().toLowerCase();
+        persistentStorage.put(VolksbankConstants.Storage.GENERATE_ID, deviceId);
+
+        constructPostRequest(VolksbankConstants.Url.GENERATE_BINDING,
+                VolksbankConstants.Url.GENERATE_BINDING)
+                .body(new GenerateBindingFinalActionForm(this.viewState, deviceId, secret, pushToken))
+                .post(HttpResponse.class);
+    }
+
+    public void postGenerateBindingSkipAction() {
+        constructPostRequest(VolksbankConstants.Url.GENERATE_BINDING,
+                VolksbankConstants.Url.GENERATE_BINDING)
+                .body(new GenerateBindingSkipActionForm(this.viewState))
+                .post(HttpResponse.class);
+    }
+
+    public void postMobileDevices() {
+        MobileDevicesRequest request = new MobileDevicesRequest();
+        request.setGeraeteId(persistentStorage.get(VolksbankConstants.Storage.GENERATE_ID));
+        request.setGeraeteName(VolksbankConstants.Form.SECRET_NAME_VALUE);
+        request.setGeraeteOs("iOS");
+        request.setPushToken(this.pushToken);
+
+        constructPostRequest(VolksbankConstants.Url.MOBILEDEVICES, VolksbankConstants.Url.DASHBOARD)
+                .header(VolksbankConstants.Header.ORIGIN_KEY, VolksbankConstants.Header.ORIGIN_VALUE)
+                .type(VolksbankConstants.Header.TYPE_JSON)
+                .post(HttpResponse.class, request);
+
+    }
+
+    // Mobile Auth is not a mandadory steps for now
+    //    public void getMobileAuth() {
+    //
+    //        HttpResponse getMobileAuthResponse = constructGetRequest(VolksbankConstants.Url.MOBILEAUTH)
+    //                .header(VolksbankConstants.Header.REFERER_KEY, new URL(VolksbankConstants.Url.LOGIN)
+    //                        .queryParam(VolksbankConstants.QueryParam.QUICK_KEY, VolksbankConstants.QueryParam.QUICK_VALUE)
+    //                        .queryParam(VolksbankConstants.QueryParam.KEEPSESSION_KEY,
+    //                                VolksbankConstants.QueryParam.KEEPSESSION_VALUE).toString())
+    //                .get(HttpResponse.class);
+    //        extractViewState(getMobileAuthResponse);
+    //    }
+    //
+    //    public void postMobileAuth() {
+    //        constructPostRequest(VolksbankConstants.Url.MOBILEAUTH, VolksbankConstants.Url.MOBILEAUTH)
+    //                .body(new MobileAuthForm(this.viewState))
+    //                .post();
+    //    }
+
+    public HttpResponse getMain() {
+        HttpResponse getMainResponse = constructGetRequest(VolksbankConstants.Url.MAIN)
+                .header(VolksbankConstants.Header.REFERER_KEY, VolksbankConstants.Url.GENERATE_BINDING)
+                .get(HttpResponse.class);
+        extractViewState(getMainResponse);
+        return getMainResponse;
+    }
+
+    public HttpResponse postMain() {
+        return constructPostRequest(VolksbankConstants.Url.MAIN,
+                VolksbankConstants.Url.DASHBOARD)
+                .body(new MainForm(this.viewState))
+                .post(HttpResponse.class);
+    }
+
+    private void extractViewState(HttpResponse response) {
+        Element viewStateElement = Jsoup.parse(response.getBody(String.class), VolksbankConstants.UTF_8)
+                .getElementById(VolksbankConstants.Body.VIEW_STATE_ID);
+
+        if (viewStateElement.tagName().equals(VolksbankConstants.Body.INPUT_TAG)) {
+            this.viewState = viewStateElement.val();
+        } else if (viewStateElement.tagName().equals(VolksbankConstants.Body.UPDATE_TAG)) {
+            this.viewState = viewStateElement.text();
+        }
+    }
+
+    private RequestBuilder constructGetRequest(String url) {
+        return apiclient.request(url)
+                .accept(VolksbankConstants.Header.ACCEPT)
+                .header(VolksbankConstants.Header.ACCEPT_LANGUAGE_KEY, VolksbankConstants.Header.ACCEPT_LANGUAGE_VALUE)
+                .header(VolksbankConstants.Header.ACCEPT_ENCODING_KEY, VolksbankConstants.Header.ACCEPT_ENCODING_VALUE);
+    }
+
+    private RequestBuilder constructPostRequest(String url, String referer) {
+        return this.constructGetRequest(url)
+                .header(VolksbankConstants.Header.REFERER_KEY, referer)
+                .type(VolksbankConstants.Header.CONTENT_TYPE_VALUE)
+                .header(VolksbankConstants.Header.FACES_REQUEST_KEY, VolksbankConstants.Header.FACES_REQUEST_VALUE);
+    }
+}
