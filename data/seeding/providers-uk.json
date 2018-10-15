@@ -88,6 +88,23 @@
             "type": "BANK"
         },
         {
+            "name": "uk-bankofscotland-oauth2",
+            "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Bank of Scotland",
+            "fields": [ ],
+            "payload": "tink:bankofscotland",
+            "groupDisplayName": "",
+            "multiFactor": false,
+            "passwordhelptext": "Change me.",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "DISABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
             "name": "uk-americanexpress-password",
             "className": "nxgen.uk.creditcards.amex.v62.AmericanExpressV62UKAgent",
             "credentialsType": "PASSWORD",
