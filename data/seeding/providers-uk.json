@@ -71,6 +71,23 @@
             "type": "BANK"
         },
         {
+            "name": "uk-santander-oauth2",
+            "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Santander",
+            "fields": [ ],
+            "payload": "tink:santander",
+            "groupDisplayName": "",
+            "multiFactor": false,
+            "passwordhelptext": "Change me.",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "DISABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
             "name": "uk-americanexpress-password",
             "className": "nxgen.uk.creditcards.amex.v62.AmericanExpressV62UKAgent",
             "credentialsType": "PASSWORD",
