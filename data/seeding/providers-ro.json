@@ -4,7 +4,7 @@
   "providers": [
     {
       "name":"ro-raiffeisen-psd2",
-      "displayName":"Raiffeisen",
+      "displayName":"Raiffeisen Bank International",
       "popular":true,
       "type":"BANK",
       "status":"ENABLED",

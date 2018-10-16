@@ -1,13 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.authenticator.rpc;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.authenticator.entity.RefreshEntity;
-import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
-@JsonObject
-public class RefreshRequest { //TODO: USE FORM
-    @JsonProperty("refresh_token")
+
+public class RefreshRequest {
     private RefreshEntity refreshEntity;
 
     public RefreshRequest(String refreshToken) {
@@ -15,6 +11,6 @@ public class RefreshRequest { //TODO: USE FORM
     }
 
     public String toTinkRefresh() {
-        return SerializationUtils.serializeToString(refreshEntity);
+        return refreshEntity.toForm();
     }
 }
