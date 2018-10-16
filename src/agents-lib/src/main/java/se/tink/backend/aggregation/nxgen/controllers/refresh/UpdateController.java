@@ -45,11 +45,14 @@ public class UpdateController {
     }
 
     private boolean updateAccount(Account account, AccountFeatures accountFeatures) {
+        /*
         if (!currency.equalsIgnoreCase(account.getBalance().getCurrency())) {
             log.info(String.format("Found incompatible Account currencies (expected: %s, but was: %s)",
                     currency, account.getBalance().getCurrency()));
             return false;
+
         }
+        */
         if (accounts.contains(account)) {
             log.warn("Updating an already updated account");
         }
