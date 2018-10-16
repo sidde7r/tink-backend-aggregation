@@ -9,11 +9,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AccountBalanceV30Response extends BaseResponse<List<AccountBalanceEntity>> {
 
     public AccountBalanceEntity getBalance() {
-        if (getData().size() == 1) {
+        if (getData().size() > 0) {
             return getData().get(0);
         } else {
-            throw new IllegalStateException("Balance response should only contain exactly one element.");
+            throw new IllegalStateException("Accounts should have at least one balance entity.");
         }
-
     }
 }
