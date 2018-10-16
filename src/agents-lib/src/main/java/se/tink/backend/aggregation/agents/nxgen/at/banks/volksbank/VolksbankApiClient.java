@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.authenticator
 import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.authenticator.entities.ExtensionsOtpLoginForm;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.authenticator.entities.GenerateBindingFinalActionForm;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.authenticator.entities.GenerateBindingQuickIdActionForm;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.authenticator.entities.GenerateBindingQuickIdChangeForm;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.authenticator.entities.GenerateBindingSkipActionForm;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.authenticator.entities.GenerateBindingTouchIdActionForm;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.authenticator.entities.LoginOtpForm;
@@ -162,15 +161,6 @@ public class VolksbankApiClient {
                 .post(HttpResponse.class);
 
         extractViewState(postGenerateBindingQuickIdAction);
-    }
-
-    public void postGenerateBindingQuickIdChange() {
-        HttpResponse postGenerateBindingQuickIdChange = constructPostRequest(VolksbankConstants.Url.GENERATE_BINDING,
-                VolksbankConstants.Url.GENERATE_BINDING)
-                .body(new GenerateBindingQuickIdChangeForm(sessionStorage.get(VolksbankConstants.Storage.VIEWSTATE)))
-                .post(HttpResponse.class);
-
-        extractViewState(postGenerateBindingQuickIdChange);
     }
 
     public void postGenerateBindingTouchIdAction() {

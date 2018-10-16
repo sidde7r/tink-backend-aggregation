@@ -6,6 +6,8 @@ import java.util.Locale;
 
 public final class VolksbankConstants {
 
+    public static final String ONE = "1";
+    public static final String COLOMN = ":";
     public static final String UTF_8 = "UTF-8";
     public static final String TRUE = "true";
     public static final String FALSE = "false";
@@ -52,6 +54,7 @@ public final class VolksbankConstants {
         public static final String JSF_PARTIAL_AJAX_KEY = "javax.faces.partial.ajax";
         public static final String JSF_PARTIAL_EXECUTE_KEY = "javax.faces.partial.execute";
         public static final String JSF_PARTIAL_RENDER_KEY = "javax.faces.partial.render";
+        public static final String JSF_PARTIAL_RENDER_VALUE = "startseite-repeated-item-2680441:actual-widget startseite-repeated-item-2680442:actual-widget startseite-repeated-item-2680443:actual-widget";
         public static final String JSF_PARTIAL_RESET_KEY = "javax.faces.partial.resetValues";
         public static final String GBFORM = "gbform";
         public static final String SHORTPIN_SWITCH_KEY = "shortpin-switch";
@@ -63,6 +66,16 @@ public final class VolksbankConstants {
         public static final String SECRET_NAME_KEY = "secretName";
         public static final String SECRET_NAME_VALUE = "iPhone7,1";
         public static final String START_SITE = "startseite";
+        public static final String ENTRIES_MBE = "entries:0:mbe:j_id_bg";
+        public static final String GBFORM_SETUPID_KEY = "geraetebindung-herstellen-einstellungen:geraeteanbindung-name";
+        public static final String SKIP = "skip";
+        public static final String REFRESH = "refresh";
+        public static final String USERID = "userId";
+        public static final String USERNAME = "userName";
+        public static final String ENC_PASSWORD = "password.encrypted";
+        public static final String LOGIN_TOKEN = "loginToken";
+        public static final String SIGNATURE = "signature";
+
     }
 
     static class QueryParam {

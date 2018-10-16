@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.nxgen.http.AbstractForm;
 public class GenerateBindingFinalActionForm extends AbstractForm {
     public GenerateBindingFinalActionForm(String viewState, String deviceId, String secret, String pushToken) {
         this.put("fingerprint-switch", VolksbankConstants.FALSE);
-        this.put(VolksbankConstants.Form.GBFORM_SUBMIT_KEY, "1");
+        this.put(VolksbankConstants.Form.GBFORM_SUBMIT_KEY, VolksbankConstants.ONE);
         this.put(VolksbankConstants.Form.JSF_VIEWSTATE_KEY, viewState);
         this.put("deviceId", deviceId);
         this.put("secret", secret);

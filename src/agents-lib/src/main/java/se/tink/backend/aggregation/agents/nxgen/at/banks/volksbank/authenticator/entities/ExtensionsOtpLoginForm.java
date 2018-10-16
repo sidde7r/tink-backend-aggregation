@@ -10,7 +10,7 @@ public class ExtensionsOtpLoginForm extends AbstractForm {
 
     // For manual auth
     public ExtensionsOtpLoginForm(String viewState) {
-        this.put("otplogin:otpform_SUBMIT", "1");
+        this.put("otplogin:otpform_SUBMIT", VolksbankConstants.ONE);
         this.put(VolksbankConstants.Form.JSF_VIEWSTATE_KEY, viewState);
         this.put(VolksbankConstants.Form.JSF_EVENT_KEY, VolksbankConstants.Form.JSF_EVENT_ACTION);
         this.put(VolksbankConstants.Form.JSF_SOURCE_KEY, VolksbankConstants.Form.OTPLOGINOTPFORM + ":noOTPData");
@@ -22,7 +22,7 @@ public class ExtensionsOtpLoginForm extends AbstractForm {
     // For auto auth
     public ExtensionsOtpLoginForm(String viewState, String userId, String generateId, String totp) {
         DATEFORMAT.setTimeZone(TimeZone.getTimeZone("Europe/Stockholm"));
-        this.put("otplogin:otpform_SUBMIT", "1");
+        this.put("otplogin:otpform_SUBMIT", VolksbankConstants.ONE);
         this.put(VolksbankConstants.Form.JSF_VIEWSTATE_KEY, viewState);
         this.put("verfuegerNr", userId);
         this.put("geraeteId", generateId);

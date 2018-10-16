@@ -5,9 +5,9 @@ import se.tink.backend.aggregation.nxgen.http.AbstractForm;
 
 public class GenerateBindingQuickIdActionForm extends AbstractForm {
     public GenerateBindingQuickIdActionForm(String viewState) {
-        this.put(VolksbankConstants.Form.GBFORM + "geraetebindung-herstellen-einstellungen:geraeteanbindung-name",
+        this.put(VolksbankConstants.Form.GBFORM + VolksbankConstants.COLOMN + VolksbankConstants.Form.GBFORM_SETUPID_KEY,
                 VolksbankConstants.Form.SECRET_NAME_VALUE);
-        this.put(VolksbankConstants.Form.GBFORM_SUBMIT_KEY, "1");
+        this.put(VolksbankConstants.Form.GBFORM_SUBMIT_KEY, VolksbankConstants.ONE);
         this.put(VolksbankConstants.Form.JSF_VIEWSTATE_KEY, viewState);
         this.put(VolksbankConstants.Form.JSF_EVENT_KEY, VolksbankConstants.Form.JSF_EVENT_ACTION);
         this.put(VolksbankConstants.Form.JSF_SOURCE_KEY, VolksbankConstants.Form.GBFORM + ":nextPage");

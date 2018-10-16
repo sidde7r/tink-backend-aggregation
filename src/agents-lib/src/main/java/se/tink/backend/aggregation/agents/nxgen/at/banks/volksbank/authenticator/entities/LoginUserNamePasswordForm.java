@@ -6,12 +6,12 @@ import se.tink.backend.aggregation.nxgen.http.AbstractForm;
 public class LoginUserNamePasswordForm extends AbstractForm {
     public LoginUserNamePasswordForm(String userId, String userName, String encryptedPassword, String viewState) {
         this.put(VolksbankConstants.Form.LOGINFORM + ":ignored-ids");
-        this.put(VolksbankConstants.Form.LOGINFORM + ":userId", userId);
-        this.put(VolksbankConstants.Form.LOGINFORM + ":userName", userName);
-        this.put(VolksbankConstants.Form.LOGINFORM + ":password.encrypted", encryptedPassword);
-        this.put(VolksbankConstants.Form.LOGINFORM + ":loginToken");
-        this.put(VolksbankConstants.Form.LOGINFORM + ":signature");
-        this.put("loginform_SUBMIT", "1");
+        this.put(VolksbankConstants.Form.LOGINFORM + VolksbankConstants.COLOMN + VolksbankConstants.Form.USERID, userId);
+        this.put(VolksbankConstants.Form.LOGINFORM + VolksbankConstants.COLOMN + VolksbankConstants.Form.USERNAME, userName);
+        this.put(VolksbankConstants.Form.LOGINFORM + VolksbankConstants.COLOMN + VolksbankConstants.Form.ENC_PASSWORD, encryptedPassword);
+        this.put(VolksbankConstants.Form.LOGINFORM + VolksbankConstants.COLOMN + VolksbankConstants.Form.LOGIN_TOKEN);
+        this.put(VolksbankConstants.Form.LOGINFORM + VolksbankConstants.COLOMN + VolksbankConstants.Form.SIGNATURE);
+        this.put("loginform_SUBMIT", VolksbankConstants.ONE);
         this.put(VolksbankConstants.Form.JSF_VIEWSTATE_KEY, viewState);
         this.put(VolksbankConstants.Form.JSF_EVENT_KEY, VolksbankConstants.Form.JSF_EVENT_CLICK);
         this.put(VolksbankConstants.Form.JSF_SOURCE_KEY, VolksbankConstants.Form.LOGINFORM + ":loginButton");
@@ -26,12 +26,12 @@ public class LoginUserNamePasswordForm extends AbstractForm {
             String viewState) {
         this.put(VolksbankConstants.Form.LOGINFORM + ":gid", generateId);
         this.put(VolksbankConstants.Form.LOGINFORM + ":ignored-ids");
-        this.put(VolksbankConstants.Form.LOGINFORM + ":userId", userId);
-        this.put(VolksbankConstants.Form.LOGINFORM + ":userName", userName);
-        this.put(VolksbankConstants.Form.LOGINFORM + ":password.encrypted", encryptedPassword);
-        this.put(VolksbankConstants.Form.LOGINFORM + ":loginToken");
-        this.put(VolksbankConstants.Form.LOGINFORM + ":signature");
-        this.put("loginform_SUBMIT", "1");
+        this.put(VolksbankConstants.Form.LOGINFORM + VolksbankConstants.COLOMN + VolksbankConstants.Form.USERID, userId);
+        this.put(VolksbankConstants.Form.LOGINFORM + VolksbankConstants.COLOMN + VolksbankConstants.Form.USERNAME, userName);
+        this.put(VolksbankConstants.Form.LOGINFORM + VolksbankConstants.COLOMN + VolksbankConstants.Form.ENC_PASSWORD, encryptedPassword);
+        this.put(VolksbankConstants.Form.LOGINFORM + VolksbankConstants.COLOMN + VolksbankConstants.Form.LOGIN_TOKEN);
+        this.put(VolksbankConstants.Form.LOGINFORM + VolksbankConstants.COLOMN + VolksbankConstants.Form.SIGNATURE);
+        this.put("loginform_SUBMIT", VolksbankConstants.ONE);
         this.put(VolksbankConstants.Form.JSF_VIEWSTATE_KEY, viewState);
         this.put(VolksbankConstants.Form.JSF_EVENT_KEY, VolksbankConstants.Form.JSF_EVENT_CLICK);
         this.put(VolksbankConstants.Form.JSF_SOURCE_KEY, VolksbankConstants.Form.LOGINFORM + ":loginButton");
