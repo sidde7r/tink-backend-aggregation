@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.LoanInterpreter;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
+import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.system.rpc.AccountFeatures;
 
@@ -24,11 +25,13 @@ public class UpdateController {
     protected final String currency;
     private final HashSet<Account> accounts = Sets.newHashSet();
     private final LoanInterpreter loanInterpreter;
+    private final Credentials credentials;
 
-    public UpdateController(AgentContext baseContext, MarketCode market, String currency) {
+    public UpdateController(AgentContext baseContext, MarketCode market, String currency, Credentials credentials) {
         this.baseContext = baseContext;
         this.loanInterpreter = LoanInterpreter.getInstance(market);
         this.currency = currency;
+        this.credentials = credentials;
     }
 
     public boolean updateAccount(Account account) {
@@ -45,14 +48,15 @@ public class UpdateController {
     }
 
     private boolean updateAccount(Account account, AccountFeatures accountFeatures) {
-        /*
-        if (!currency.equalsIgnoreCase(account.getBalance().getCurrency())) {
+
+        if (!credentials.getProviderName().equalsIgnoreCase("ro-raiffeisen-psd2") &&
+                !currency.equalsIgnoreCase(account.getBalance().getCurrency())) {
             log.info(String.format("Found incompatible Account currencies (expected: %s, but was: %s)",
                     currency, account.getBalance().getCurrency()));
             return false;
 
         }
-        */
+
         if (accounts.contains(account)) {
             log.warn("Updating an already updated account");
         }

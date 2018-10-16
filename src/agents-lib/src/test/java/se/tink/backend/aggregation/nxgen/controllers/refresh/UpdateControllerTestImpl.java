@@ -26,7 +26,7 @@ public class UpdateControllerTestImpl extends UpdateController {
     private Set<Account> accounts = Sets.newHashSet();
 
     public UpdateControllerTestImpl(MarketCode market, String currency) {
-        super(Mockito.mock(AgentContext.class), market, currency);
+        super(Mockito.mock(AgentContext.class), market, currency, Mockito.mock(Credentials.class));
     }
 
     @Override
