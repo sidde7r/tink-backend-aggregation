@@ -253,6 +253,12 @@ public class VolksbankApiClient {
                 .post(HttpResponse.class);
     }
 
+    public void logout() {
+        constructGetRequest(VolksbankConstants.Url.LOGOUT)
+                .header(VolksbankConstants.Header.REFERER_KEY, VolksbankConstants.Url.DASHBOARD)
+                .get(HttpResponse.class);
+    }
+
     private void extractViewState(HttpResponse response) {
         Element viewStateElement = Jsoup.parse(response.getBody(String.class), VolksbankConstants.UTF_8)
                 .getElementById(VolksbankConstants.Body.VIEW_STATE_ID);
