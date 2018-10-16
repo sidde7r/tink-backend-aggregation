@@ -44,7 +44,7 @@ public class RaiffeisenTransactionFetcher implements TransactionMonthPaginator<T
             }
 
         } catch (Exception e) {
-            return PaginatorResponseImpl.createEmpty();
+            return PaginatorResponseImpl.create(transactions);
         }
         return PaginatorResponseImpl.create(transactions);
     }
