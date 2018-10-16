@@ -22,7 +22,7 @@ public class AccountEntity {
     private String bic;
     private List<BalanceEntity> balances;
     @JsonProperty("_links")
-    private LinksEntity links;
+    private AccountLinksEntity links;
 
     public Amount toTinkAmount() {
         return new Amount(balances.get(0).getBalanceAmount().getCurrency(),

@@ -17,6 +17,17 @@ public class TransactionsResponse implements PaginatorResponse {
         return transactions.toTinkTransactions();
     }
 
+
+    public int getTotalPages() {
+        try {
+            return Integer.parseInt(transactions.getTotalPages());
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+
+
     @Override
     public Optional<Boolean> canFetchMore() {
         try {
