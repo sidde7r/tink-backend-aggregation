@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.core.AccountFlag;
 import se.tink.backend.core.Amount;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public abstract class Account {
     private static final String BANK_IDENTIFIER_KEY = "bankIdentifier";
@@ -28,6 +29,7 @@ public abstract class Account {
     private HolderName holderName;
     private TemporaryStorage temporaryStorage;
     private List<AccountFlag> accountFlags;
+    private String payload;
 
     protected Account(Builder<? extends Account, ? extends Account.Builder> builder) {
         this.name = builder.getName();
@@ -39,6 +41,7 @@ public abstract class Account {
         this.holderName = builder.getHolderName();
         this.temporaryStorage = builder.getTransientStorage();
         this.accountFlags = ImmutableList.copyOf(builder.getAccountFlags());
+        this.payload = builder.getPayload();
         // Safe-guard against uniqueIdentifiers containing only formatting characters (e.g. '*' or '-').
         Preconditions.checkState(!Strings.isNullOrEmpty(uniqueIdentifier),
                 "Unique identifier was empty after sanitation.");
@@ -127,6 +130,7 @@ public abstract class Account {
         account.setBankId(this.uniqueIdentifier);
         account.setHolderName(HolderName.toString(this.holderName));
         account.setFlags(this.accountFlags);
+        account.setPayload(payload);
 
         return account;
     }
@@ -157,6 +161,7 @@ public abstract class Account {
         protected String uniqueIdentifier;
         protected HolderName holderName;
         private T thisObj;
+        private String payload;
 
         protected Builder(String uniqueIdentifier) {
             this.thisObj = self();
@@ -245,6 +250,20 @@ public abstract class Account {
         public <K> T putInTemporaryStorage(String key, K value) {
             temporaryStorage.put(key, value);
             return self();
+        }
+
+        public String getPayload() {
+            return payload;
+        }
+
+        public void setPayload(Object payload) {
+            if (payload != null) {
+                if (payload instanceof String) {
+                    this.payload = (String)payload;
+                } else {
+                    this.payload = SerializationUtils.serializeToString(payload);
+                }
+            }
         }
 
         private String getBankIdentifier() {
