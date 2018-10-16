@@ -111,9 +111,16 @@ public class BookedEntity {
         return new Date(); // TODO: fix
     }
 
+    private String getDescription() {
+        if(!Strings.isNullOrEmpty(remittanceInformationUnstructured)) {
+            return remittanceInformationUnstructured;
+        }
+        return remittanceInformationStructured;
+    }
+
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setDescription(remittanceInformationStructured)
+                .setDescription(getDescription())
                 .setExternalId(transactionId)
                 .setDate(toTinkDate())
                 .setAmount(toTinkAmount())
