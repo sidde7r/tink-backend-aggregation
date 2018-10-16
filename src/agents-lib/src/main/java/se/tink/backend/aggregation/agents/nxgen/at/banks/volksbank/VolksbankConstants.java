@@ -26,6 +26,7 @@ public final class VolksbankConstants {
         static final String DASHBOARD = BASE + "dashboard";
         public static final String MOBILEAUTH = BASE + "mobileauth.xhtml";
         static final String MOBILEDEVICES = BASE + "rest/mobiledevices";
+        static final String LOGOUT = "logout.xhtml";
     }
 
     public static class Crypto {
