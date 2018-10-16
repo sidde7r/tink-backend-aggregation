@@ -375,7 +375,7 @@ public final class VolksbankCryptoHelper {
 
     // Hide Ctor
     private VolksbankCryptoHelper() {
-        throw new IllegalStateException();
+        throw new AssertionError();
     }
 
     static String generateRandomHex() {

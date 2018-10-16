@@ -14,7 +14,7 @@ public final class VolksbankConstants {
     public static final String USER_AGENT = "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_1 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Mobile/14E304 EBPMG";
     public static final String CREDENTIAL_USERNUMBER = "usernumber";
     private VolksbankConstants() {
-        throw new IllegalStateException();
+        throw new AssertionError();
     }
 
     public static class Url {
