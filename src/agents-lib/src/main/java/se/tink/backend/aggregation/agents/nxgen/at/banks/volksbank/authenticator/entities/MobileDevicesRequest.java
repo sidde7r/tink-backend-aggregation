@@ -1,36 +1,40 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.authenticator.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class MobileDevicesRequest {
-    private String geraeteId;
-    private String geraeteName;
-    private String geraeteOs;
+    @JsonProperty("geraeteId")
+    private String setupId;
+    @JsonProperty("geraeteName")
+    private String setupName;
+    @JsonProperty("geraeteOs")
+    private String setupOs;
     private String pushToken;
 
-    public String getGeraeteId() {
-        return geraeteId;
+    public String getSetupId() {
+        return setupId;
     }
 
-    public void setGeraeteId(String geraeteId) {
-        this.geraeteId = geraeteId;
+    public void setSetupId(String setupId) {
+        this.setupId = setupId;
     }
 
-    public String getGeraeteName() {
-        return geraeteName;
+    public String getSetupName() {
+        return setupName;
     }
 
-    public void setGeraeteName(String geraeteName) {
-        this.geraeteName = geraeteName;
+    public void setSetupName(String setupName) {
+        this.setupName = setupName;
     }
 
-    public String getGeraeteOs() {
-        return geraeteOs;
+    public String getSetupOs() {
+        return setupOs;
     }
 
-    public void setGeraeteOs(String geraeteOs) {
-        this.geraeteOs = geraeteOs;
+    public void setSetupOs(String setupOs) {
+        this.setupOs = setupOs;
     }
 
     public String getPushToken() {

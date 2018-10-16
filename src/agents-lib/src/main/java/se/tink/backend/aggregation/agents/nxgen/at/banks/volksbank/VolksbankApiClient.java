@@ -216,10 +216,10 @@ public class VolksbankApiClient {
 
     public void postMobileDevices() {
         MobileDevicesRequest request = new MobileDevicesRequest();
-        request.setGeraeteId(persistentStorage.get(VolksbankConstants.Storage.GENERATE_ID));
-        request.setGeraeteName(VolksbankConstants.Form.SECRET_NAME_VALUE);
-        request.setGeraeteOs("iOS");
-        request.setPushToken(this.pushToken);
+        request.setSetupId(persistentStorage.get(VolksbankConstants.Storage.GENERATE_ID));
+        request.setSetupName(VolksbankConstants.Form.SECRET_NAME_VALUE);
+        request.setSetupOs("iOS");
+        request.setPushToken(sessionStorage.get(VolksbankConstants.Storage.PUSHTOKEN));
 
         constructPostRequest(VolksbankConstants.Url.MOBILEDEVICES, VolksbankConstants.Url.DASHBOARD)
                 .header(VolksbankConstants.Header.ORIGIN_KEY, VolksbankConstants.Header.ORIGIN_VALUE)
