@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.authenticato
 
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.VolksbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.VolksbankConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
@@ -28,7 +29,10 @@ public class VolksbankPasswordAuthenticator implements MultiFactorAuthenticator 
         apiClient.postExtensions();
         apiClient.getLoginKeepSession();
         apiClient.postLoginOtp();
-        apiClient.postLoginUserNamePassword(userId, userName, password);
+        String response = apiClient.postLoginUserNamePassword(userId, userName, password);
+        if (response.toLowerCase().contains(VolksbankConstants.Errors.INVALID_ACCESS)) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
         apiClient.getGenerateBinding();
         apiClient.postGenerateBindingQuickIdAction();
         apiClient.postGenerateBindingTouchIdAction();

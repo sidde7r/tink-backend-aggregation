@@ -97,6 +97,7 @@ public final class VolksbankConstants {
         static final String GBFORM_ELEMENT_ID = "gbform";
         static final String INPUT_TAG = "input";
         static final String UPDATE_TAG = "update";
+        static final String MESSAGE_FALLBACK_ID = "messagesfallback";
     }
 
     public static class Storage {
@@ -106,5 +107,7 @@ public final class VolksbankConstants {
         public static final String PUSHTOKEN = "pushToken";
     }
 
+    public static class Errors {
+        public static final String INVALID_ACCESS = "bitte überprüfen sie ihre zugangsdaten und versuchen sie es erneut";
     }
 }

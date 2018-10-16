@@ -94,8 +94,8 @@ public class VolksbankApiClient {
                 .post(HttpResponse.class);
     }
 
-    public void postLoginUserNamePassword(String userId, String userName, String password) {
-        constructPostRequest(VolksbankConstants.Url.LOGIN,
+    public String postLoginUserNamePassword(String userId, String userName, String password) {
+        HttpResponse response = constructPostRequest(VolksbankConstants.Url.LOGIN,
                 new URL(VolksbankConstants.Url.LOGIN)
                         .queryParam(VolksbankConstants.QueryParam.QUICK_KEY, VolksbankConstants.QueryParam.QUICK_VALUE)
                         .queryParam(VolksbankConstants.QueryParam.KEEPSESSION_KEY,
@@ -103,6 +103,7 @@ public class VolksbankApiClient {
                 .body(new LoginUserNamePasswordForm(userId, userName, VolksbankCryptoHelper.encryptPin(password),
                         sessionStorage.get(VolksbankConstants.Storage.VIEWSTATE)))
                 .post(HttpResponse.class);
+        return this.getMessageFallback(response);
     }
 
     public void postLoginUserNamePasswordWithGid(String generateId, String userId, String userName, String password) {
@@ -289,5 +290,11 @@ public class VolksbankApiClient {
                 .header(VolksbankConstants.Header.REFERER_KEY, referer)
                 .type(VolksbankConstants.Header.CONTENT_TYPE_VALUE)
                 .header(VolksbankConstants.Header.FACES_REQUEST_KEY, VolksbankConstants.Header.FACES_REQUEST_VALUE);
+    }
+
+    private String getMessageFallback(HttpResponse response) {
+        Element messageFallback = Jsoup.parse(response.getBody(String.class), VolksbankConstants.UTF_8)
+                .getElementById(VolksbankConstants.Body.MESSAGE_FALLBACK_ID);
+        return messageFallback == null ? "" : messageFallback.text();
     }
 }
