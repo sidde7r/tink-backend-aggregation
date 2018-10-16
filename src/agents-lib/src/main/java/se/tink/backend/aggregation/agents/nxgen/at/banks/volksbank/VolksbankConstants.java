@@ -102,5 +102,9 @@ public final class VolksbankConstants {
     public static class Storage {
         public static final String SECRET = "secret";
         public static final String GENERATE_ID = "generate_id";
+        public static final String VIEWSTATE = "viewState";
+        public static final String PUSHTOKEN = "pushToken";
+    }
+
     }
 }

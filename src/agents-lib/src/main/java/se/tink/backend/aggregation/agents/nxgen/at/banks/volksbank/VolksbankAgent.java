@@ -30,7 +30,7 @@ public class VolksbankAgent extends NextGenerationAgent {
             AgentContext context,
             SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        this.apiClient = VolksbankApiClient.create(persistentStorage, client);
+        this.apiClient = VolksbankApiClient.create(persistentStorage, sessionStorage, client);
     }
 
     @Override

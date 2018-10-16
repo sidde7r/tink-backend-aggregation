@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class VolksbankApiClient {
 
@@ -29,16 +30,18 @@ public class VolksbankApiClient {
             "GeraeteBindung\\.saveGeraeteBindung\\('(?<app>.*?)','(?<mandant>.*?)','(?<userId>.*?)','(?<secret>.*?)'\\)");
     private final TinkHttpClient apiclient;
     private final PersistentStorage persistentStorage;
-    private String viewState;
-    private String pushToken;
+    private final SessionStorage sessionStorage;
 
-    public VolksbankApiClient(PersistentStorage persistentStorage, TinkHttpClient apiclient) {
+    public VolksbankApiClient(PersistentStorage persistentStorage, SessionStorage sessionStorage,
+            TinkHttpClient apiclient) {
         this.persistentStorage = persistentStorage;
+        this.sessionStorage = sessionStorage;
         this.apiclient = apiclient;
     }
 
-    public static VolksbankApiClient create(PersistentStorage persistentStorage, TinkHttpClient client) {
-        return new VolksbankApiClient(persistentStorage, client);
+    public static VolksbankApiClient create(PersistentStorage persistentStorage, SessionStorage sessionStorage,
+            TinkHttpClient client) {
+        return new VolksbankApiClient(persistentStorage, sessionStorage, client);
     }
 
     public void getLogin() {
@@ -75,7 +78,7 @@ public class VolksbankApiClient {
                         .queryParam(VolksbankConstants.QueryParam.QUICK_KEY, VolksbankConstants.QueryParam.QUICK_VALUE)
                         .queryParam(VolksbankConstants.QueryParam.KEEPSESSION_KEY,
                                 VolksbankConstants.QueryParam.KEEPSESSION_VALUE).toString())
-                .body(new LoginOtpForm(this.viewState))
+                .body(new LoginOtpForm(sessionStorage.get(VolksbankConstants.Storage.VIEWSTATE)))
                 .post(HttpResponse.class);
         extractViewState(postLoginOtpResponse);
     }
@@ -86,7 +89,8 @@ public class VolksbankApiClient {
                         .queryParam(VolksbankConstants.QueryParam.QUICK_KEY, VolksbankConstants.QueryParam.QUICK_VALUE)
                         .queryParam(VolksbankConstants.QueryParam.KEEPSESSION_KEY,
                                 VolksbankConstants.QueryParam.KEEPSESSION_VALUE).toString())
-                .body(new LoginOtpForm(this.viewState, userId, generateId, VolksbankCryptoHelper.getTotp(secret)))
+                .body(new LoginOtpForm(sessionStorage.get(VolksbankConstants.Storage.VIEWSTATE), userId, generateId,
+                        VolksbankCryptoHelper.getTotp(secret)))
                 .post(HttpResponse.class);
     }
 
@@ -97,7 +101,7 @@ public class VolksbankApiClient {
                         .queryParam(VolksbankConstants.QueryParam.KEEPSESSION_KEY,
                                 VolksbankConstants.QueryParam.KEEPSESSION_VALUE).toString())
                 .body(new LoginUserNamePasswordForm(userId, userName, VolksbankCryptoHelper.encryptPin(password),
-                        this.viewState))
+                        sessionStorage.get(VolksbankConstants.Storage.VIEWSTATE)))
                 .post(HttpResponse.class);
     }
 
@@ -109,7 +113,7 @@ public class VolksbankApiClient {
                                 VolksbankConstants.QueryParam.KEEPSESSION_VALUE).toString())
                 .body(new LoginUserNamePasswordForm(generateId, userId, userName,
                         VolksbankCryptoHelper.encryptPin(password),
-                        this.viewState))
+                        sessionStorage.get(VolksbankConstants.Storage.VIEWSTATE)))
                 .post(HttpResponse.class);
     }
 
@@ -117,14 +121,14 @@ public class VolksbankApiClient {
         constructPostRequest(VolksbankConstants.Url.EXTENSIONS,
                 VolksbankConstants.Url.EXTENSIONS)
                 .header(VolksbankConstants.Header.ORIGIN_KEY, VolksbankConstants.Header.ORIGIN_VALUE)
-                .body(new ExtensionsForm(this.viewState))
+                .body(new ExtensionsForm(sessionStorage.get(VolksbankConstants.Storage.VIEWSTATE)))
                 .post(HttpResponse.class);
     }
 
     public void postExtensionsOtpLogin() {
         HttpResponse postExtensionsOtpLoginResponse = constructPostRequest(VolksbankConstants.Url.EXTENSIONS,
                 VolksbankConstants.Url.EXTENSIONS)
-                .body(new ExtensionsOtpLoginForm(this.viewState))
+                .body(new ExtensionsOtpLoginForm(sessionStorage.get(VolksbankConstants.Storage.VIEWSTATE)))
                 .post(HttpResponse.class);
         extractViewState(postExtensionsOtpLoginResponse);
     }
@@ -133,7 +137,8 @@ public class VolksbankApiClient {
         HttpResponse postExtensionsOtpLoginResponse = constructPostRequest(VolksbankConstants.Url.EXTENSIONS,
                 VolksbankConstants.Url.EXTENSIONS)
                 .header(VolksbankConstants.Header.ORIGIN_KEY, VolksbankConstants.Header.ORIGIN_VALUE)
-                .body(new ExtensionsOtpLoginForm(this.viewState, userId, generateId,
+                .body(new ExtensionsOtpLoginForm(sessionStorage.get(VolksbankConstants.Storage.VIEWSTATE), userId,
+                        generateId,
                         VolksbankCryptoHelper.getTotp(secret)))
                 .post(HttpResponse.class);
         extractViewState(postExtensionsOtpLoginResponse);
@@ -152,7 +157,7 @@ public class VolksbankApiClient {
     public void postGenerateBindingQuickIdAction() {
         HttpResponse postGenerateBindingQuickIdAction = constructPostRequest(VolksbankConstants.Url.GENERATE_BINDING,
                 VolksbankConstants.Url.GENERATE_BINDING)
-                .body(new GenerateBindingQuickIdActionForm(this.viewState))
+                .body(new GenerateBindingQuickIdActionForm(sessionStorage.get(VolksbankConstants.Storage.VIEWSTATE)))
                 .post(HttpResponse.class);
 
         extractViewState(postGenerateBindingQuickIdAction);
@@ -161,7 +166,7 @@ public class VolksbankApiClient {
     public void postGenerateBindingQuickIdChange() {
         HttpResponse postGenerateBindingQuickIdChange = constructPostRequest(VolksbankConstants.Url.GENERATE_BINDING,
                 VolksbankConstants.Url.GENERATE_BINDING)
-                .body(new GenerateBindingQuickIdChangeForm(this.viewState))
+                .body(new GenerateBindingQuickIdChangeForm(sessionStorage.get(VolksbankConstants.Storage.VIEWSTATE)))
                 .post(HttpResponse.class);
 
         extractViewState(postGenerateBindingQuickIdChange);
@@ -170,7 +175,7 @@ public class VolksbankApiClient {
     public void postGenerateBindingTouchIdAction() {
         HttpResponse postGenerateBindingTouchIdAction = constructPostRequest(VolksbankConstants.Url.GENERATE_BINDING,
                 VolksbankConstants.Url.GENERATE_BINDING)
-                .body(new GenerateBindingTouchIdActionForm(this.viewState))
+                .body(new GenerateBindingTouchIdActionForm(sessionStorage.get(VolksbankConstants.Storage.VIEWSTATE)))
                 .post(HttpResponse.class);
 
         extractViewState(postGenerateBindingTouchIdAction);
@@ -190,19 +195,21 @@ public class VolksbankApiClient {
     public void postGenerateBindingFinalAction() {
         String deviceId = UUID.randomUUID().toString().toUpperCase();
         String secret = persistentStorage.get(VolksbankConstants.Storage.SECRET);
-        this.pushToken = VolksbankCryptoHelper.generateRandomHex().toLowerCase();
+        String pushToken = VolksbankCryptoHelper.generateRandomHex().toLowerCase();
+        sessionStorage.put(VolksbankConstants.Storage.PUSHTOKEN, pushToken);
         persistentStorage.put(VolksbankConstants.Storage.GENERATE_ID, deviceId);
 
         constructPostRequest(VolksbankConstants.Url.GENERATE_BINDING,
                 VolksbankConstants.Url.GENERATE_BINDING)
-                .body(new GenerateBindingFinalActionForm(this.viewState, deviceId, secret, pushToken))
+                .body(new GenerateBindingFinalActionForm(sessionStorage.get(VolksbankConstants.Storage.VIEWSTATE),
+                        deviceId, secret, pushToken))
                 .post(HttpResponse.class);
     }
 
     public void postGenerateBindingSkipAction() {
         constructPostRequest(VolksbankConstants.Url.GENERATE_BINDING,
                 VolksbankConstants.Url.GENERATE_BINDING)
-                .body(new GenerateBindingSkipActionForm(this.viewState))
+                .body(new GenerateBindingSkipActionForm(sessionStorage.get(VolksbankConstants.Storage.VIEWSTATE)))
                 .post(HttpResponse.class);
     }
 
@@ -249,7 +256,7 @@ public class VolksbankApiClient {
     public HttpResponse postMain() {
         return constructPostRequest(VolksbankConstants.Url.MAIN,
                 VolksbankConstants.Url.DASHBOARD)
-                .body(new MainForm(this.viewState))
+                .body(new MainForm(sessionStorage.get(VolksbankConstants.Storage.VIEWSTATE)))
                 .post(HttpResponse.class);
     }
 
@@ -264,9 +271,9 @@ public class VolksbankApiClient {
                 .getElementById(VolksbankConstants.Body.VIEW_STATE_ID);
 
         if (viewStateElement.tagName().equals(VolksbankConstants.Body.INPUT_TAG)) {
-            this.viewState = viewStateElement.val();
+            sessionStorage.put(VolksbankConstants.Storage.VIEWSTATE, viewStateElement.val());
         } else if (viewStateElement.tagName().equals(VolksbankConstants.Body.UPDATE_TAG)) {
-            this.viewState = viewStateElement.text();
+            sessionStorage.put(VolksbankConstants.Storage.VIEWSTATE, viewStateElement.text());
         }
     }
 
