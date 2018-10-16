@@ -47,9 +47,11 @@ public class UkOpenBankingV30Agent extends UkOpenBankingAgent {
     @Override
     protected Optional<UkOpenBankingUpcomingTransactionFetcher<?>> makeUpcomingTransactionFetcher(
             UkOpenBankingApiClient apiClient) {
-        return Optional.of(new UkOpenBankingUpcomingTransactionFetcher<>(apiClient,
-                UpcomingTransactionsV30Response.class,
-                UpcomingTransactionsV30Response::toUpcomingTransactions));
+        return Optional.empty();
+        //TODO: Enable when this feature is mandatory for the banks to implement
+//        return Optional.of(new UkOpenBankingUpcomingTransactionFetcher<>(apiClient,
+//                UpcomingTransactionsV30Response.class,
+//                UpcomingTransactionsV30Response::toUpcomingTransactions));
     }
 
     @Override

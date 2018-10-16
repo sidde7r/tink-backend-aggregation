@@ -24,9 +24,7 @@ public abstract class UkOpenBankingAuthenticatorConstants {
                     "ReadStandingOrdersDetail",
                     "ReadTransactionsCredits",
                     "ReadTransactionsDebits",
-                    "ReadTransactionsDetail",
-                    "ReadScheduledPaymentsBasic",
-                    "ReadScheduledPaymentsDetail")
+                    "ReadTransactionsDetail")
             .build();
 
     public static class Params {
