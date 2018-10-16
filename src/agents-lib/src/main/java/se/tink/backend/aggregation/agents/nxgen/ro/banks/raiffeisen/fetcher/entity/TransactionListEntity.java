@@ -19,4 +19,12 @@ public class TransactionListEntity {
                 .collect(Collectors.toList()));
         return result;
     }
+
+    public List<BookedEntity> getBooked() {
+        return booked;
+    }
+
+    public List<PendingEntity> getPending() {
+        return pending;
+    }
 }

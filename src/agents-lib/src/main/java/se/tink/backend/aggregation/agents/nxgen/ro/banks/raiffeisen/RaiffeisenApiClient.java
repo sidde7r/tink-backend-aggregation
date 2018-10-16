@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.authenticator.rpc.TokenRequest;
@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import javax.ws.rs.core.HttpHeaders;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class RaiffeisenApiClient {
@@ -95,11 +94,11 @@ public class RaiffeisenApiClient {
                 .get(AccountsResponse.class);
     }
 
-    private String formatDate(Date date) {
-        return new SimpleDateFormat("yyyy-MM-dd").format(date);
+    private String formatDate(LocalDate date) {
+        return RaiffeisenConstants.DATE.FORMATTER.format(date);
     }
 
-    public TransactionsResponse fetchTransctions(String accountId, Date fromDate, Date toDate) {
+    public TransactionsResponse fetchTransctions(String accountId, LocalDate fromDate, LocalDate toDate, int page) {
         return getAPIRequest(String.format(RaiffeisenConstants.URL.TRANSACTIONS, accountId))
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
                 .addBearerToken(getToken())
@@ -108,6 +107,7 @@ public class RaiffeisenApiClient {
                 .queryParam(RaiffeisenConstants.QUERY.DATE_FROM, formatDate(fromDate))
                 .queryParam(RaiffeisenConstants.QUERY.DATE_TO, formatDate(toDate))
                 .queryParam(RaiffeisenConstants.QUERY.BOOKING_STATUS, RaiffeisenConstants.QUERY.BOOKING_STATUS_BOTH)
+                .queryParam(RaiffeisenConstants.QUERY.PAGE, String.valueOf(page))
                 .get(TransactionsResponse.class);
     }
 

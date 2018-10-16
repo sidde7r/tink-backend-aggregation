@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen;
 
+import java.time.format.DateTimeFormatter;
+
 public class RaiffeisenConstants {
 
     //TODO: Move to development.yaml
@@ -27,6 +29,7 @@ public class RaiffeisenConstants {
         public static final String DATE_FROM = "dateFrom";
         public static final String DATE_TO = "dateTo";
         public static final String BOOKING_STATUS = "bookingStatus";
+        public static final String PAGE = "page";
 
         public static final String SCOPE_VALUE = "AISP";
         public static final String RESPONSE_TYPE_CODE = "code";
@@ -55,7 +58,8 @@ public class RaiffeisenConstants {
     }
 
     public static final class DATE {
-        public static final String FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+        public static final String FORMAT = "yyyy-MM-dd";
+        public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(FORMAT);
     }
 
     public static final class FORM {
