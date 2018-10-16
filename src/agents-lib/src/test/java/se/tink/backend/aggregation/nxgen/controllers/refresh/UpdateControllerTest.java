@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
+import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.core.Amount;
 import se.tink.backend.system.rpc.AccountFeatures;
 import se.tink.backend.system.rpc.Loan;
@@ -21,9 +22,15 @@ public final class UpdateControllerTest {
     @Spy
     private FakeAgentContext context;
 
+    private Credentials getCredential() {
+        Credentials credentials = new Credentials();
+        credentials.setProviderName("Test");
+        return credentials;
+    }
+
     @Test
     public void ensureLoansRemain_whenTransactions_areRefreshed() {
-        final UpdateController updateController = new UpdateController(context, MarketCode.SE, "SEK");
+        final UpdateController updateController = new UpdateController(context, MarketCode.SE, "SEK", getCredential());
 
         final LoanAccount loanAccount = LoanAccount.builder("1337")
                 .setAccountNumber("777")
