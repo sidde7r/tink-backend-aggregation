@@ -256,7 +256,7 @@ public abstract class Account {
             return payload;
         }
 
-        public void setPayload(Object payload) {
+        public T setPayload(Object payload) {
             if (payload != null) {
                 if (payload instanceof String) {
                     this.payload = (String)payload;
@@ -264,6 +264,7 @@ public abstract class Account {
                     this.payload = SerializationUtils.serializeToString(payload);
                 }
             }
+            return self();
         }
 
         private String getBankIdentifier() {

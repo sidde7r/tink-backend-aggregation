@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.fetcher.ent
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
+import java.util.HashMap;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.RaiffeisenConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -40,10 +41,19 @@ public class AccountEntity {
         return resourceId;
     }
 
+    private HashMap<String, String> getPayload() {
+        HashMap<String, String> result = new HashMap<>();
+
+        result.put("currency", currency);
+
+        return result;
+    }
+
     public TransactionalAccount toTransactionalAccount() {
         return TransactionalAccount.builder(AccountTypes.CHECKING, iban, toTinkAmount())
                 .setName(accountName)
                 .setAccountNumber(getAccountNumber())
+                .setPayload(getPayload())
                 .putInTemporaryStorage(RaiffeisenConstants.STORAGE.TRANSACTIONS_URL, links.getTransactionUrl())
                 .putInTemporaryStorage(RaiffeisenConstants.STORAGE.BALANCE_URL, links.getBalanceUrl())
                 .putInTemporaryStorage(RaiffeisenConstants.STORAGE.ACCOUNT_ID, resourceId)
