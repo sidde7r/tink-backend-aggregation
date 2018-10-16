@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.entities.AmountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v11.fetcher.entities.account.CreditLineEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.core.Amount;
 
@@ -34,9 +33,11 @@ public class AccountBalanceEntity {
         Amount total = balance;
 
         if (creditDebitIndicator == UkOpenBankingConstants.CreditDebitIndicator.CREDIT) {
-            for (CreditLineEntity credit : creditLine) {
-                if (credit.isIncluded()) {
-                    total = total.subtract(credit.getAmount());
+            if (creditLine != null) {
+                for (CreditLineEntity credit : creditLine) {
+                    if (credit.isIncluded()) {
+                        total = total.subtract(credit.getAmount());
+                    }
                 }
             }
         }
@@ -46,7 +47,7 @@ public class AccountBalanceEntity {
 
     public Optional<Amount> getAvaliableCredit() {
 
-        if (creditLine.isEmpty()) {
+        if (creditLine == null || creditLine.isEmpty()) {
             return Optional.empty();
         }
 

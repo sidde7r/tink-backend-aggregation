@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class OpenIdConstants {
-    public static final List<String> SCOPES = Arrays.asList("openid", "accounts", "payments");
+    public static final List<String> SCOPES = Arrays.asList("openid", "accounts");
 
     public enum SIGNING_ALGORITHM {
         RS256
