@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.fetcher.entity;
 
+import com.google.common.base.Strings;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -98,7 +99,12 @@ public class PendingEntity {
 
     private Date toTinkDate() {
         try {
+            if(!Strings.isNullOrEmpty(bookingDate))
+            {
+                return new SimpleDateFormat(RaiffeisenConstants.DATE.FORMAT).parse(bookingDate);
+            }
             return new SimpleDateFormat(RaiffeisenConstants.DATE.FORMAT).parse(valueDate);
+
         } catch (ParseException e) {
             e.printStackTrace();
         }

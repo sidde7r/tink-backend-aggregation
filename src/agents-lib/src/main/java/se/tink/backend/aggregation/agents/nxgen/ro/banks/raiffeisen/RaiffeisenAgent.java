@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen;
 
+import java.time.ZoneId;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.authenticator.RaiffeisenOAuth2Authenticator;
@@ -15,7 +16,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRe
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionMonthPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
@@ -34,7 +35,8 @@ public class RaiffeisenAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {}
+    protected void configureHttpClient(TinkHttpClient client) {
+    }
 
     @Override
     protected Authenticator constructAuthenticator() {
@@ -59,8 +61,8 @@ public class RaiffeisenAgent extends NextGenerationAgent {
                 updateController,
                 new RaiffeisenAccountFetcher(raiffeisenApiClient),
                 new TransactionFetcherController<>(transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new RaiffeisenTransactionFetcher(raiffeisenApiClient)))));
+                        new TransactionMonthPaginationController<>(
+                                new RaiffeisenTransactionFetcher(raiffeisenApiClient), ZoneId.of("Europe/Madrid")))));
     }
 
     @Override

@@ -19,7 +19,11 @@ public class TransactionsResponse implements PaginatorResponse {
 
     @Override
     public Optional<Boolean> canFetchMore() {
-        return Optional.empty();
+        try {
+            return Optional.of(transactions.toTinkTransactions().isEmpty());
+        } catch (Exception e) {
+            return Optional.of(false);
+        }
     }
 
 }
