@@ -139,8 +139,9 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
                 .orElseThrow(() -> new IllegalStateException("callbackData did not contain code."));
 
         // todo: verify idToken{s_hash, c_hash}
-        String idToken = getCallbackElement(callbackData, OpenIdConstants.CallbackParams.ID_TOKEN)
-                .orElseThrow(() -> new IllegalStateException("callbackData did not contain id_token."));
+        // TODO: Right now many banks don't give us idToken to verify, enable when this standard is mandatory.
+//        String idToken = getCallbackElement(callbackData, OpenIdConstants.CallbackParams.ID_TOKEN)
+//                .orElseThrow(() -> new IllegalStateException("callbackData did not contain id_token."));
 
         OAuth2Token accessToken = apiClient.exchangeAccessCode(code);
 
