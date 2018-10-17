@@ -57,7 +57,7 @@ public class IngTransferExecutorTest {
         // Change each test round
         this.persistentStorage.put(OTP_COUNTER, "");
         this.ingHelper = ingTestConfig.getTestIngHelper();
-        ingHelper.setCardNumber(VIRTUAL_CARD_NUMBER);
+        this.persistentStorage.put(IngConstants.Storage.VIRTUAL_CARDNUMBER, VIRTUAL_CARD_NUMBER);
 
         this.autoAuthenticator = new IngAutoAuthenticator(apiClient, persistentStorage, ingHelper);
         autoAuthenticator.autoAuthenticate();
