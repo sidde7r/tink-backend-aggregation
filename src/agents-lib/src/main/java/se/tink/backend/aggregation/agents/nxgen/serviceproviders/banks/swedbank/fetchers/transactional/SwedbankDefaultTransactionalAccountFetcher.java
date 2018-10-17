@@ -33,15 +33,11 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
     private static final Logger log = LoggerFactory.getLogger(SwedbankDefaultTransactionalAccountFetcher.class);
 
     private final SwedbankDefaultApiClient apiClient;
-    private final String defaultCurrency;
     private List<String> investmentAccountNumbers;
     private Date earliestDateSeen;
 
-    private PaymentsConfirmedResponse paymentsConfirmedResponse;
-
-    public SwedbankDefaultTransactionalAccountFetcher(SwedbankDefaultApiClient apiClient, String defaultCurrency) {
+    public SwedbankDefaultTransactionalAccountFetcher(SwedbankDefaultApiClient apiClient) {
         this.apiClient = apiClient;
-        this.defaultCurrency = defaultCurrency;
     }
 
     @Override
