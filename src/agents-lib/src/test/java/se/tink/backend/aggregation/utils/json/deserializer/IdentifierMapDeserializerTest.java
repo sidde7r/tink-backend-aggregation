@@ -44,7 +44,7 @@ public class IdentifierMapDeserializerTest {
 
     @Test(expected = JsonMappingException.class)
     public void testNameNotString() throws IOException {
-        deserialize(TestData.NAME_IS_NOT_STRING);
+         deserialize(TestData.NAME_IS_NOT_STRING);
     }
 
     private TestRootEntity deserialize(String json) throws IOException {
