@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.rpc;
+package se.tink.backend.aggregation.nxgen.core.account;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
@@ -8,8 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.rpc.AccountTypes;
 
 public class AccountTypeMapper {
 
