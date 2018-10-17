@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableSet;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.utils.StringUtils;
+import se.tink.libraries.strings.StringUtils;
 
 public abstract class UkOpenBankingConstants {
 
