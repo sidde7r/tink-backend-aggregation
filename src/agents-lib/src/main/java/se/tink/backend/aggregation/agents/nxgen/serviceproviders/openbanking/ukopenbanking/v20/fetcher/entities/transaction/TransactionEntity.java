@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.core.Amount;
 
 @JsonObject
 public class TransactionEntity {
@@ -40,7 +41,7 @@ public class TransactionEntity {
 
         return Transaction.builder()
                 .setExternalId(transactionId)
-                .setAmount(amount)
+                .setAmount(getSignedAmount())
                 .setDescription(transactionInformation)
                 .setPending(status == EntryStatusCode.PENDING)
                 .setDateTime(bookingDateTime)
@@ -51,11 +52,19 @@ public class TransactionEntity {
 
         return CreditCardTransaction.builder()
                 .setCreditAccount(account)
-                .setAmount(amount)
+                .setAmount(getSignedAmount())
                 .setDescription(transactionInformation)
                 .setPending(status == EntryStatusCode.PENDING)
                 .setDateTime(bookingDateTime)
                 .build();
+    }
+
+    private Amount getSignedAmount() {
+
+        if (bankTransactionCode.getCode().isOutGoing()) {
+            return amount.negate();
+        }
+        return amount;
     }
 
     @JsonProperty("BookingDateTime")
@@ -67,7 +76,7 @@ public class TransactionEntity {
 
     @JsonProperty("ValueDateTime")
     private void setValueDateTime(String date) {
-        if(!Strings.isNullOrEmpty(date)) {
+        if (!Strings.isNullOrEmpty(date)) {
             valueDateTime = ZonedDateTime.parse(date);
         }
     }

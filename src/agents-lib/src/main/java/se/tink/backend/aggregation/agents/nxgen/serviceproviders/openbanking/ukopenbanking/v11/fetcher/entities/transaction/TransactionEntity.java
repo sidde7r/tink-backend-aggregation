@@ -9,31 +9,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.core.Amount;
 
 @JsonObject
 public class TransactionEntity {
-
-    public Transaction toTinkTransaction() {
-
-        return Transaction.builder()
-                .setExternalId(transactionId)
-                .setAmount(amount)
-                .setDescription(transactionInformation)
-                .setPending(status == UkOpenBankingConstants.EntryStatusCode.PENDING)
-                .setDateTime(bookingDateTime)
-                .build();
-    }
-
-    public CreditCardTransaction toCreditCardTransaction(CreditCardAccount account) {
-
-        return CreditCardTransaction.builder()
-                .setCreditAccount(account)
-                .setAmount(amount)
-                .setDescription(transactionInformation)
-                .setPending(status == UkOpenBankingConstants.EntryStatusCode.PENDING)
-                .setDateTime(bookingDateTime)
-                .build();
-    }
 
     @JsonProperty("AccountId")
     private String accountId;
@@ -58,6 +37,36 @@ public class TransactionEntity {
     @JsonProperty("Balance")
     private BalanceEntity balance;
 
+    public Transaction toTinkTransaction() {
+
+        return Transaction.builder()
+                .setExternalId(transactionId)
+                .setAmount(getSignedAmount())
+                .setDescription(transactionInformation)
+                .setPending(status == UkOpenBankingConstants.EntryStatusCode.PENDING)
+                .setDateTime(bookingDateTime)
+                .build();
+    }
+
+    public CreditCardTransaction toCreditCardTransaction(CreditCardAccount account) {
+
+        return CreditCardTransaction.builder()
+                .setCreditAccount(account)
+                .setAmount(getSignedAmount())
+                .setDescription(transactionInformation)
+                .setPending(status == UkOpenBankingConstants.EntryStatusCode.PENDING)
+                .setDateTime(bookingDateTime)
+                .build();
+    }
+
+    private Amount getSignedAmount() {
+
+        if (bankTransactionCode.getCode().isOutGoing()) {
+            return amount.negate();
+        }
+        return amount;
+    }
+
     @JsonProperty("BookingDateTime")
     private void setBookingDateTime(String date) {
         if (!Strings.isNullOrEmpty(date)) {
@@ -67,7 +76,7 @@ public class TransactionEntity {
 
     @JsonProperty("ValueDateTime")
     private void setValueDateTime(String date) {
-        if(!Strings.isNullOrEmpty(date)) {
+        if (!Strings.isNullOrEmpty(date)) {
             valueDateTime = ZonedDateTime.parse(date);
         }
     }
