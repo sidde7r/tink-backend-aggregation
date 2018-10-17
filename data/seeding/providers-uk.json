@@ -164,6 +164,31 @@
             "status": "ENABLED",
             "transactional": true,
             "type": "BANK"
+        },
+        {
+            "name": "uk-n26-password",
+            "displayName": "N26",
+            "popular": false,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.serviceproviders.banks.n26.N26Agent",
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "transactional": true,
+            "fields": [
+                {
+                    "description": "Username",
+                    "name": "username",
+                    "immutable": true
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "name": "password",
+                    "sensitive": true
+                }
+            ]
         }
     ]
 }
