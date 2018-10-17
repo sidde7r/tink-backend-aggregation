@@ -11,6 +11,8 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entit
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.aggregation.rpc.Field;
 
 public class IngAutoAuthenticator implements AutoAuthenticator {
     private final IngApiClient apiClient;
@@ -25,6 +27,7 @@ public class IngAutoAuthenticator implements AutoAuthenticator {
 
     @Override
     public void autoAuthenticate() throws SessionException, BankServiceException {
+
         MobileHelloResponseEntity mobileHelloResponseEntity = this.apiClient.mobileHello();
         this.ingHelper.addRequestUrls(mobileHelloResponseEntity.getRequests());
 
@@ -35,7 +38,7 @@ public class IngAutoAuthenticator implements AutoAuthenticator {
         this.apiClient.trustBuilderLogin(
                 authUrl,
                 this.persistentStorage.get(IngConstants.Storage.ING_ID),
-                this.ingHelper.getCardNumber(),
+                this.persistentStorage.get(IngConstants.Storage.VIRTUAL_CARDNUMBER),
                 otp,
                 this.persistentStorage.get(IngConstants.Storage.DEVICE_ID),
                 this.persistentStorage.get(IngConstants.Storage.PSN));
@@ -45,7 +48,7 @@ public class IngAutoAuthenticator implements AutoAuthenticator {
         LoginResponseEntity loginResponseEntity = this.apiClient.login(
                 loginUrl,
                 this.persistentStorage.get(IngConstants.Storage.ING_ID),
-                this.ingHelper.getCardNumber(),
+                this.persistentStorage.get(IngConstants.Storage.VIRTUAL_CARDNUMBER),
                 this.persistentStorage.get(IngConstants.Storage.DEVICE_ID));
 
         this.ingHelper.persist(loginResponseEntity);

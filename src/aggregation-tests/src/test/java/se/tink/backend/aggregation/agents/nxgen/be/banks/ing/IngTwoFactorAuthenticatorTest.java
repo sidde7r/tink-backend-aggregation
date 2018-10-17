@@ -36,7 +36,6 @@ public class IngTwoFactorAuthenticatorTest {
     public void tearDown() throws Exception {
         System.out.println("Save the following values to the test config in order to auto authenticate: " + persistentStorage);
         System.out.println("VirtualCardnumber: " + persistentStorage.get(IngConstants.Storage.VIRTUAL_CARDNUMBER));
-        System.out.println("VirtualCardnumber: " + ingHelper.getCardNumber());
         persistentStorage.keySet().iterator().forEachRemaining(key -> System.out.println("this.persistentStorage.put(\"" + key + "\", \"" + persistentStorage.get(key) + "\");" ));
     }
 
