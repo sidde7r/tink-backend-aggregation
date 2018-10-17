@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.google.common.base.CaseFormat;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
+import java.util.Optional;
+import java.util.Set;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.strings.StringUtils;
 
@@ -126,4 +128,43 @@ public abstract class UkOpenBankingConstants {
         }
     }
 
+    public enum AccountBalanceType {
+        CLOSING_AVAILABLE,
+        CLOSING_BOOKED,
+        EXPECTED,
+        FORWARD_AVAILABLE,
+        INFORMATION,
+        INTERIM_AVAILABLE,
+        INTERIM_BOOKED,
+        OPENING_AVAILABLE,
+        OPENING_BOOKED,
+        PREVIOUSLY_CLOSED_BOOKED;
+
+        private static final ImmutableList<AccountBalanceType> PREFERRED_TYPE_LIST =
+                ImmutableList.<AccountBalanceType>builder()
+                        .add(INTERIM_AVAILABLE)
+                        .add(INTERIM_BOOKED)
+                        .add(EXPECTED)
+                        .add(OPENING_AVAILABLE)
+                        .add(CLOSING_AVAILABLE)
+                        .add(OPENING_BOOKED)
+                        .add(CLOSING_BOOKED)
+                        .build();
+
+        public static Optional<AccountBalanceType> getPreferredIdentifierType(Set<AccountBalanceType> typeSet) {
+            for (AccountBalanceType id : PREFERRED_TYPE_LIST) {
+                if (typeSet.contains(id)) {
+                    return Optional.of(id);
+                }
+            }
+            return Optional.empty();
+        }
+
+        @JsonCreator
+        private static AccountBalanceType fromString(String key) {
+            return (key != null) ?
+                    AccountBalanceType.valueOf(
+                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key)) : null;
+        }
+    }
 }
