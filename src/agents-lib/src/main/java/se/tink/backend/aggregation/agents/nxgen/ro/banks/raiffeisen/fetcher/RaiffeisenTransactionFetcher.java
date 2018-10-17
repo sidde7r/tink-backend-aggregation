@@ -49,7 +49,9 @@ public class RaiffeisenTransactionFetcher implements TransactionMonthPaginator<T
                 totalPages = response.getTotalPages();
             }
 
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            return PaginatorResponseImpl.createEmpty(false);
+        }
         return PaginatorResponseImpl.create(transactions);
     }
 }
