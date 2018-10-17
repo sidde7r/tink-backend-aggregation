@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,14 +33,11 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
     private static final Logger log = LoggerFactory.getLogger(SwedbankDefaultTransactionalAccountFetcher.class);
 
     private final SwedbankDefaultApiClient apiClient;
-    private final String defaultCurrency;
     private List<String> investmentAccountNumbers;
+    private Date earliestDateSeen;
 
-    private PaymentsConfirmedResponse paymentsConfirmedResponse;
-
-    public SwedbankDefaultTransactionalAccountFetcher(SwedbankDefaultApiClient apiClient, String defaultCurrency) {
+    public SwedbankDefaultTransactionalAccountFetcher(SwedbankDefaultApiClient apiClient) {
         this.apiClient = apiClient;
-        this.defaultCurrency = defaultCurrency;
     }
 
     @Override
@@ -111,6 +111,25 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
         return paymentsConfirmedResponse.toTinkUpcomingTransactions(account.getAccountNumber());
     }
 
+    // 2018-10-17: Swedbank has had a problem where they hand us the same page multiple times during pagination.
+    // We solve this on our end by comparing the earliest date in each batch and compare the saved date to
+    // see if we have encountered the page before.
+    private void updateEarliestDateSeen(TransactionKeyPaginatorResponse<LinkEntity> response) {
+        Optional<? extends Transaction> earliestTransaction = response.getTinkTransactions()
+                .stream()
+                .min(Comparator.comparing(Transaction::getDate));
+
+        earliestTransaction.ifPresent(transaction -> earliestDateSeen = transaction.getDate());
+    }
+
+    private boolean hasSeenPageBefore(TransactionKeyPaginatorResponse<LinkEntity> response) {
+        return response.getTinkTransactions()
+                .stream()
+                .min(Comparator.comparing(Transaction::getDate))
+                .filter(trans -> !trans.getDate().before(earliestDateSeen))
+                .isPresent();
+    }
+
     @Override
     public TransactionKeyPaginatorResponse<LinkEntity> getTransactionsFor(
             TransactionalAccount account, LinkEntity key) {
@@ -120,8 +139,18 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
         apiClient.selectProfile(bankProfile);
 
         if (key != null) {
-            return apiClient.engagementTransactions(key);
+            TransactionKeyPaginatorResponse<LinkEntity> response = apiClient.engagementTransactions(key);
+
+            if (hasSeenPageBefore(response)) {
+                // Return an empty response but with the correct next key set.
+                return new TransactionKeyPaginatorResponseImpl<>(Collections.emptyList(), response.nextKey());
+            }
+
+            // Only update the earliestDateSeen if we haven't seen the page before.
+            updateEarliestDateSeen(response);
+            return response;
         }
+
 
         LinkEntity nextLink =
                 account.getFromTemporaryStorage(SwedbankBaseConstants.StorageKey.NEXT_LINK, LinkEntity.class)
@@ -129,6 +158,7 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
 
         TransactionKeyPaginatorResponseImpl<LinkEntity> transactionKeyPaginatorResponse =
                 new TransactionKeyPaginatorResponseImpl<>();
+
         if (nextLink == null) {
             // Return empty response
             return transactionKeyPaginatorResponse;
@@ -144,6 +174,8 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
 
         transactionKeyPaginatorResponse.setNext(engagementTransactionsResponse.nextKey());
         transactionKeyPaginatorResponse.setTransactions(transactions);
+
+        updateEarliestDateSeen(transactionKeyPaginatorResponse);
 
         return transactionKeyPaginatorResponse;
     }
