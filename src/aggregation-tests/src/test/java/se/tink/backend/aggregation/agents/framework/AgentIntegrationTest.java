@@ -456,6 +456,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
             Preconditions.checkNotNull(provider, "Provider was not set.");
             Preconditions.checkNotNull(credential, "Credential was not set.");
+            credential.setProviderName(provider.getName());
             credential.setType(provider.getCredentialsType());
 
             return new AgentIntegrationTest(this);
