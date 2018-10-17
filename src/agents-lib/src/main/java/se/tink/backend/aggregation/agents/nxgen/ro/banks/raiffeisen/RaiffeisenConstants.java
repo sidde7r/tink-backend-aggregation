@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen;
 
 import java.time.format.DateTimeFormatter;
+import java.util.regex.Pattern;
 
 public class RaiffeisenConstants {
 
@@ -69,6 +70,10 @@ public class RaiffeisenConstants {
         public static final String CODE = "code";
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String REFRESH_TOKEN = "refresh_token";
+    }
+
+    public static final class REGEX {
+        public static final Pattern PAGE = Pattern.compile("page=(.*)");
     }
 
 }
