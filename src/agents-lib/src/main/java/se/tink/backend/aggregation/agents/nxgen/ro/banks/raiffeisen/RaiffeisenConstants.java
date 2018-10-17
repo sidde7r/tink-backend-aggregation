@@ -31,6 +31,7 @@ public class RaiffeisenConstants {
         public static final String DATE_TO = "dateTo";
         public static final String BOOKING_STATUS = "bookingStatus";
         public static final String PAGE = "page";
+        public static final String PAGE_SIZE = "pageSize";
 
         public static final String SCOPE_VALUE = "AISP";
         public static final String RESPONSE_TYPE_CODE = "code";
