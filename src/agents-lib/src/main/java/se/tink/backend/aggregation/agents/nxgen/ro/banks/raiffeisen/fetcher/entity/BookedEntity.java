@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.RaiffeisenConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -118,6 +119,14 @@ public class BookedEntity {
         return remittanceInformationStructured;
     }
 
+    private HashMap<String, String> getPayload() {
+        HashMap<String, String> result = new HashMap<>();
+
+        result.put("currency", transactionAmount.getCurrency());
+
+        return result;
+    }
+
     public Transaction toTinkTransaction() {
         return Transaction.builder()
                 .setDescription(getDescription())
@@ -125,6 +134,7 @@ public class BookedEntity {
                 .setDate(toTinkDate())
                 .setAmount(toTinkAmount())
                 .setPending(false)
+                .setRawDetails(getPayload())
                 .build();
     }
 }
