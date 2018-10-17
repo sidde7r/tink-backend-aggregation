@@ -286,7 +286,7 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         return field;
     }
 
-    private Field inputDescriptionField(String descriptionName, String description) {
+    private static Field inputDescriptionField(String descriptionName, String description) {
         Field field = new Field();
         field.setMasked(false);
         field.setDescription(descriptionName);
@@ -298,13 +298,4 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         return field;
     }
 
-    private Field createInputField(String name) {
-        Field field = new Field();
-        field.setMasked(false);
-        field.setDescription(BelfiusConstants.InputFieldConstants.RESPONSE_CODE_FIELD_DESCRIPTION.getKey().get());
-        field.setName(name);
-        field.setNumeric(true);
-        field.setHint("NNNNNNN");
-        return field;
-    }
 }
