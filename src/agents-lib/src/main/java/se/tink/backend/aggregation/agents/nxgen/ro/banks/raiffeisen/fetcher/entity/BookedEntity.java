@@ -123,6 +123,7 @@ public class BookedEntity {
         HashMap<String, String> result = new HashMap<>();
 
         result.put("currency", transactionAmount.getCurrency());
+        result.put("provider", "ro-raiffeisen-psd2");
 
         return result;
     }
