@@ -108,6 +108,7 @@ public class RaiffeisenApiClient {
                 .queryParam(RaiffeisenConstants.QUERY.DATE_TO, formatDate(toDate))
                 .queryParam(RaiffeisenConstants.QUERY.BOOKING_STATUS, RaiffeisenConstants.QUERY.BOOKING_STATUS_BOTH)
                 .queryParam(RaiffeisenConstants.QUERY.PAGE, String.valueOf(page))
+                .queryParam(RaiffeisenConstants.QUERY.PAGE_SIZE, "100")
                 .get(TransactionsResponse.class);
     }
 
