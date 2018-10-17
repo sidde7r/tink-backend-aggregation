@@ -931,10 +931,10 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
         responseField.setDescription("Sändkod");
         responseField.setName("response");
         responseField.setNumeric(true);
-        responseField.setHint("NNNNNN");
-        responseField.setMaxLength(6);
+        responseField.setHint("(6-8 siffror)");
+        responseField.setMaxLength(8);
         responseField.setMinLength(6);
-        responseField.setPattern("([0-9]{6})");
+        responseField.setPattern("([0-9]{6}|[0-9]{8})");
 
         return Lists.newArrayList(challengeField, responseField);
     }
