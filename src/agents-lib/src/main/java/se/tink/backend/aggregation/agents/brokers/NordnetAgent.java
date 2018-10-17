@@ -189,7 +189,7 @@ public class NordnetAgent extends AbstractAgent implements RefreshableItemExecut
         return true;
     }
 
-    private Optional<String> collectBankID(String orderRef) throws BankIdException {
+    private Optional<String> collectBankID(String orderRef) throws BankIdException, LoginException {
         for (int i = 0; i < MAX_ATTEMPTS; i++) {
             BankIdStatus status = apiClient.collectBankId(orderRef);
 
