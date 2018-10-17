@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.creditcards.amex;
 
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.AmericanExpressConstants;
 
-public class AmericanExpressBEConstants extends AmericanExpressConstants {
+public class AmericanExpressBEConstants {
 
     public static final String MARKET = "BE";
     public static final String PROVIDER_NAME = "be-americanexpress-password";

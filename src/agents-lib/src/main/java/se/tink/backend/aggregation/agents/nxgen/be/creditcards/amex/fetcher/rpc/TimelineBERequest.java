@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.be.creditcards.amex.fetcher.rpc;
 
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.fetcher.rpc.TimelineRequest;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class TimelineBERequest extends TimelineRequest {
+public class TimelineBERequest {
 
     private boolean cmlEnabled;
 
