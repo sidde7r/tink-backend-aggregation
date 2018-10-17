@@ -3,8 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.fetcher.transact
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.MonzoConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -43,19 +41,6 @@ public class TransactionEntity {
     @JsonProperty("include_in_spending")
     private boolean includeInSpending;
 
-    Amount getAmount() {
-        return Amount.valueOf(currency, amount, 2);
-    }
-
-    @JsonProperty("created")
-    public void setCreated(String created) {
-        if (Strings.isNullOrEmpty(created)) {
-            this.created = null;
-        } else {
-            this.created = Instant.parse(created);
-        }
-    }
-
     @JsonProperty("settled")
     public void setSettled(String settled) {
         if (Strings.isNullOrEmpty(settled)) {
@@ -69,8 +54,13 @@ public class TransactionEntity {
         return created;
     }
 
-    ZonedDateTime getCreated(ZoneId zoneId) {
-        return created.atZone(zoneId);
+    @JsonProperty("created")
+    public void setCreated(String created) {
+        if (Strings.isNullOrEmpty(created)) {
+            this.created = null;
+        } else {
+            this.created = Instant.parse(created);
+        }
     }
 
     public String getId() {
@@ -79,9 +69,9 @@ public class TransactionEntity {
 
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setDateTime(this.getCreated(MonzoConstants.ZONE_ID))
+                .setDateTime(created.atZone(MonzoConstants.ZONE_ID))
                 .setDescription(description)
-                .setAmount(this.getAmount())
+                .setAmount(Amount.valueOf(currency, amount, 2))
                 .setPending(settled == null)
                 .build();
     }

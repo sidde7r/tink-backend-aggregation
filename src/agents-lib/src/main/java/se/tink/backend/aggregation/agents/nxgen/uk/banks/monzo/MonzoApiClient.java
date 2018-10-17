@@ -63,12 +63,12 @@ public class MonzoApiClient {
         return accounts;
     }
 
-    public TransactionsResponse fetchTransactions(String accountId, Object since, Object before) {
+    public TransactionsResponse fetchTransactions(String accountId, Object since, Object before, int fetchLimit) {
 
         RequestBuilder builder = client.request(MonzoConstants.URL.AIS_TRANSACTIONS)
                 .header(HttpHeaders.AUTHORIZATION, this.getBearerHeaderValue())
                 .queryParam(MonzoConstants.RequestKey.ACCOUNT_ID, accountId)
-                .queryParam(MonzoConstants.RequestKey.LIMIT, Integer.toString(MonzoConstants.FetchControl.LIMIT))
+                .queryParam(MonzoConstants.RequestKey.LIMIT, Integer.toString(fetchLimit))
                 .accept(MediaType.APPLICATION_JSON);
 
         if (since != null) {

@@ -19,7 +19,6 @@ public class MonzoSessionHandler implements SessionHandler {
 
     @Override
     public void logout() {
-        ;
     }
 
     @Override

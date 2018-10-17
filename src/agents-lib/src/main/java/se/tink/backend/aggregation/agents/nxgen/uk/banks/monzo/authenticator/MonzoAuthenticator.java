@@ -23,7 +23,7 @@ public class MonzoAuthenticator implements OAuth2Authenticator {
 
     @Override
     public URL buildAuthorizeUrl(String state) {
-        return new URL(MonzoConstants.URL.HTTPS_AUTH_MONZO_COM)
+        return new URL(MonzoConstants.URL.AUTH_MONZO_COM)
                 .queryParam(MonzoConstants.RequestKey.CLIENT_ID, this.getClientId())
                 .queryParam(MonzoConstants.RequestKey.REDIRECT_URI, this.getRedirectUrl())
                 .queryParam(MonzoConstants.RequestKey.RESPONSE_TYPE, MonzoConstants.RequestValue.CODE)
@@ -69,7 +69,7 @@ public class MonzoAuthenticator implements OAuth2Authenticator {
         persistentStorage.put(MonzoConstants.StorageKey.OAUTH_TOKEN, accessToken);
     }
 
-    String getClientId() {
+    private String getClientId() {
 
         String clientId = persistentStorage.get(MonzoConstants.StorageKey.CLIENT_ID);
 
@@ -80,7 +80,7 @@ public class MonzoAuthenticator implements OAuth2Authenticator {
         return clientId;
     }
 
-    String getClientSecret() {
+    private String getClientSecret() {
 
         String clientSecret = persistentStorage.get(MonzoConstants.StorageKey.CLIENT_SECRET);
 
@@ -91,7 +91,7 @@ public class MonzoAuthenticator implements OAuth2Authenticator {
         return clientSecret;
     }
 
-    String getRedirectUrl() {
+    private String getRedirectUrl() {
 
         String redirectUrl = persistentStorage.get(MonzoConstants.StorageKey.REDIRECT_URL);
 
