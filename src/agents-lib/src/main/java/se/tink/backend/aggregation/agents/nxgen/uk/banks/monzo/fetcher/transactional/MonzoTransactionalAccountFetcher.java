@@ -16,7 +16,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.aggregation.rpc.AccountTypes;
 
 public class MonzoTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>, TransactionPaginator<TransactionalAccount>, PaginatorResponse {
@@ -42,7 +41,7 @@ public class MonzoTransactionalAccountFetcher
         return apiClient.fetchAccounts()
                 .getAccounts()
                 .stream()
-                .filter(entity -> MonzoConstants.AccountType.verify(entity.getType(), AccountTypes.CHECKING))
+                .filter(entity -> MonzoConstants.ACCOUNT_TYPE.isTransactionalAccount(entity.getType()))
                 .map(AccountEntity::toTinkAccount)
                 .collect(Collectors.toList());
     }

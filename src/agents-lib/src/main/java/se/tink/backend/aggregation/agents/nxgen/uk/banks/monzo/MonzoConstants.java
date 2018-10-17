@@ -1,46 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo;
 
-import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableMap;
 import java.time.ZoneId;
-import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 
 public class MonzoConstants {
 
     public static final ZoneId ZONE_ID = ZoneId.of("Europe/London");
 
-    private static final Logger logger = LoggerFactory.getLogger(MonzoConstants.class);
-
-    public static class AccountType {
-
-        private static final ImmutableMap<String, AccountTypes> ACCOUNT_TYPES_MAP = ImmutableMap.<String, AccountTypes>builder()
-                .put("uk_retail", AccountTypes.CHECKING)
-                .build();
-
-        public static boolean verify(String key, AccountTypes value) {
-            Optional<AccountTypes> translated = translate(key);
-            return translated.isPresent() && translated.get() == value;
-        }
-
-        public static Optional<AccountTypes> translate(String accountType) {
-            if (Strings.isNullOrEmpty(accountType)) {
-                return Optional.empty();
-            }
-            Optional<AccountTypes> retVal = Optional.ofNullable(ACCOUNT_TYPES_MAP.get(accountType.toLowerCase()));
-            if (!retVal.isPresent()) {
-                logger.info("{} for account type: {}", Logging.UNKNOWN_ACCOUNT_TYPE, accountType);
-            }
-            return retVal;
-        }
-    }
-
-    public static class Logging {
-        public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("uk-monzo-oauth2-unknown-account-type");
-    }
+    public static final AccountTypeMapper ACCOUNT_TYPE = AccountTypeMapper.builder()
+            .add(AccountTypes.CHECKING, "uk_retail").build();
 
     public class URL {
         private static final String API_MONZO_COM = "https://api.monzo.com/";

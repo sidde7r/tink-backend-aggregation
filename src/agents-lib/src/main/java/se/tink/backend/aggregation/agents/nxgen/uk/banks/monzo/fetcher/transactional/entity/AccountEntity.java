@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.fetcher.transact
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.MonzoConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
-import se.tink.backend.aggregation.rpc.AccountTypes;
 
 @JsonObject
 public class AccountEntity {
@@ -35,7 +35,7 @@ public class AccountEntity {
 
     public TransactionalAccount toTinkAccount() {
         return TransactionalAccount
-                .builder(AccountTypes.CHECKING, accountNumber, balance.getBalance())
+                .builder(MonzoConstants.ACCOUNT_TYPE.translate(type).get(), accountNumber, balance.getBalance())
                 .setAccountNumber(accountNumber)
                 .setBankIdentifier(this.getId())
                 .setName(description)
