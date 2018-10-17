@@ -27,12 +27,18 @@ public class RaiffeisenTransactionFetcher implements TransactionMonthPaginator<T
     public PaginatorResponse getTransactionsFor(TransactionalAccount account, Year year, Month month) {
         LocalDate fromDate = LocalDate.of(year.getValue(), month, 1);
         LocalDate toDate = fromDate.with(TemporalAdjusters.lastDayOfMonth());
+
+        if(toDate.isAfter(LocalDate.now())){
+            toDate = LocalDate.now();
+        }
+
         int page = 0;
         Collection<Transaction> transactions = new ArrayList<>();
 
         try {
             TransactionsResponse response = client.fetchTransctions(account.getFromTemporaryStorage(RaiffeisenConstants.STORAGE.ACCOUNT_ID), fromDate , toDate, page);
             transactions.addAll(response.getTinkTransactions());
+
             page++;
             int totalPages = response.getTotalPages();
 
@@ -43,9 +49,7 @@ public class RaiffeisenTransactionFetcher implements TransactionMonthPaginator<T
                 totalPages = response.getTotalPages();
             }
 
-        } catch (Exception e) {
-            return PaginatorResponseImpl.create(transactions);
-        }
+        } catch (Exception e) {}
         return PaginatorResponseImpl.create(transactions);
     }
 }
