@@ -105,6 +105,20 @@
             "type": "BANK"
         },
         {
+            "name": "uk-monzo-oauth2",
+            "displayName": "Monzo",
+            "groupDisplayName": "Monzo",
+            "popular": false,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.uk.banks.monzo.MonzoAgent",
+            "passwordHelpText": "",
+            "transactional": true,
+            "fields": []
+        },
+        {
             "name": "uk-americanexpress-password",
             "className": "nxgen.uk.creditcards.amex.v62.AmericanExpressV62UKAgent",
             "credentialsType": "PASSWORD",

@@ -11,11 +11,18 @@ public class IntegrationsConfiguration {
     @JsonProperty
     private String ukOpenBankingJson;
 
+    @JsonProperty
+    private MonzoConfiguration monzoConfiguration;
+
     public SbabIntegrationConfiguration getSbab() {
         return sbab;
     }
 
     public String getUkOpenBankingJson() {
         return ukOpenBankingJson;
+    }
+
+    public MonzoConfiguration getMonzoConfiguration() {
+        return monzoConfiguration;
     }
 }
