@@ -18,8 +18,7 @@ public class AccountBalanceV11Response extends BaseResponse<List<AccountBalanceE
         Map<UkOpenBankingConstants.AccountBalanceType, AccountBalanceEntity> balanceTypeMap = toMap();
 
         return UkOpenBankingConstants.AccountBalanceType
-                .getPreferredIdentifierType(balanceTypeMap.keySet())
-                .map(balanceTypeMap::get)
+                .getPreferredBalanceEntity(balanceTypeMap)
                 .orElseThrow(() -> new IllegalStateException(
                         "Account does not have any balance type that we recognize as useful."));
     }

@@ -3,8 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.strings.StringUtils;
 
@@ -151,10 +152,10 @@ public abstract class UkOpenBankingConstants {
                         .add(CLOSING_BOOKED)
                         .build();
 
-        public static Optional<AccountBalanceType> getPreferredIdentifierType(Set<AccountBalanceType> typeSet) {
+        public static <T> Optional<T> getPreferredBalanceEntity(Map<AccountBalanceType, T> typeMap) {
             for (AccountBalanceType id : PREFERRED_TYPE_LIST) {
-                if (typeSet.contains(id)) {
-                    return Optional.of(id);
+                if (typeMap.containsKey(id)) {
+                    return Optional.of(typeMap.get(id));
                 }
             }
             return Optional.empty();
