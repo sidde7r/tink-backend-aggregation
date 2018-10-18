@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.fetcher.transact
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.MonzoConstants;
+import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.fetcher.transactional.rpc.BalanceResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 
@@ -19,9 +20,9 @@ public class AccountEntity {
     private String type;
 
     @JsonIgnore
-    private BalanceEntity balance;
+    private BalanceResponse balance;
 
-    public void setBalance(BalanceEntity balance) {
+    public void setBalance(BalanceResponse balance) {
         this.balance = balance;
     }
 

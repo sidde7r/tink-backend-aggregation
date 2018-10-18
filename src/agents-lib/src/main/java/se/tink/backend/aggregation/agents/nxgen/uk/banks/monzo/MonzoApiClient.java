@@ -6,9 +6,8 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.authenticator.rpc.ExchangeRequest;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.authenticator.rpc.TokenResponse;
-import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.fetcher.transactional.entity.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.fetcher.transactional.entity.BalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.fetcher.transactional.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.fetcher.transactional.rpc.BalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.fetcher.transactional.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -40,34 +39,26 @@ public class MonzoApiClient {
     }
 
     public AccountsResponse fetchAccounts() {
-
-        String bearerHeaderValue = this.getBearerHeaderValue();
-
-        AccountsResponse accounts = client.request(MonzoConstants.URL.AIS_ACCOUNTS)
-                .header(HttpHeaders.AUTHORIZATION, bearerHeaderValue)
+        return client.request(MonzoConstants.URL.AIS_ACCOUNTS)
+                .header(HttpHeaders.AUTHORIZATION, this.getBearerHeaderValue())
                 .accept(MediaType.APPLICATION_JSON)
                 .get(AccountsResponse.class);
-
-        for (AccountEntity account : accounts.getAccounts()) {
-
-            BalanceEntity balance = client.request(MonzoConstants.URL.AIS_BALANCE)
-                    .header(HttpHeaders.AUTHORIZATION, bearerHeaderValue)
-                    .queryParam(MonzoConstants.RequestKey.ACCOUNT_ID, account.getId())
-                    .accept(MediaType.APPLICATION_JSON)
-                    .get(BalanceEntity.class);
-
-            account.setBalance(balance);
-        }
-
-        return accounts;
     }
 
-    public TransactionsResponse fetchTransactions(String accountId, Object since, Object before, int fetchLimit) {
+    public BalanceResponse fetchBalance(String accountId) {
+        return client.request(MonzoConstants.URL.AIS_BALANCE)
+                .header(HttpHeaders.AUTHORIZATION, this.getBearerHeaderValue())
+                .queryParam(MonzoConstants.RequestKey.ACCOUNT_ID, accountId)
+                .accept(MediaType.APPLICATION_JSON)
+                .get(BalanceResponse.class);
+    }
+
+    public TransactionsResponse fetchTransactions(String accountId, Object since, Object before, int limit) {
 
         RequestBuilder builder = client.request(MonzoConstants.URL.AIS_TRANSACTIONS)
                 .header(HttpHeaders.AUTHORIZATION, this.getBearerHeaderValue())
                 .queryParam(MonzoConstants.RequestKey.ACCOUNT_ID, accountId)
-                .queryParam(MonzoConstants.RequestKey.LIMIT, Integer.toString(fetchLimit))
+                .queryParam(MonzoConstants.RequestKey.LIMIT, Integer.toString(limit))
                 .accept(MediaType.APPLICATION_JSON);
 
         if (since != null) {

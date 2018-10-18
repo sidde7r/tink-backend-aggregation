@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.fetcher.transactional.entity;
+package se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.fetcher.transactional.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.core.Amount;
 
 @JsonObject
-public class BalanceEntity {
+public class BalanceResponse {
 
     private int balance;
     @JsonProperty("total_balance")
@@ -23,7 +23,7 @@ public class BalanceEntity {
     @JsonProperty("overdraft_limit")
     private int overdraftLimit;
 
-    Amount getBalance() {
+    public Amount getBalance() {
         return Amount.valueOf(currency, balance, 2);
     }
 

@@ -42,6 +42,7 @@ public class MonzoTransactionalAccountFetcher
                 .getAccounts()
                 .stream()
                 .filter(entity -> MonzoConstants.ACCOUNT_TYPE.isTransactionalAccount(entity.getType()))
+                .peek(entity -> entity.setBalance(apiClient.fetchBalance(entity.getId())))
                 .map(AccountEntity::toTinkAccount)
                 .collect(Collectors.toList());
     }
