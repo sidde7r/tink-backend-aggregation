@@ -94,14 +94,26 @@ public class BookedEntity {
         return debtorAccount;
     }
 
+    private boolean isNegative() {
+
+        if (!Strings.isNullOrEmpty(debtorName) || (
+                debtorAccount != null &&
+                        (!Strings.isNullOrEmpty(debtorAccount.getAccountNumber()) ||
+                        !Strings.isNullOrEmpty(debtorAccount.getIban()))))
+        {
+            return false;
+        }
+
+            return true;
+    }
+
     private Amount toTinkAmount() {
-        return new Amount(transactionAmount.getCurrency(), transactionAmount.getAmount());
+        return new Amount(transactionAmount.getCurrency(), transactionAmount.getAmount(isNegative()));
     }
 
     private Date toTinkDate() {
         try {
-            if(!Strings.isNullOrEmpty(bookingDate))
-            {
+            if (!Strings.isNullOrEmpty(bookingDate)) {
                 return new SimpleDateFormat(RaiffeisenConstants.DATE.FORMAT).parse(bookingDate);
             }
             return new SimpleDateFormat(RaiffeisenConstants.DATE.FORMAT).parse(valueDate);
@@ -113,7 +125,7 @@ public class BookedEntity {
     }
 
     private String getDescription() {
-        if(!Strings.isNullOrEmpty(remittanceInformationUnstructured)) {
+        if (!Strings.isNullOrEmpty(remittanceInformationUnstructured)) {
             return remittanceInformationUnstructured;
         }
         return remittanceInformationStructured;

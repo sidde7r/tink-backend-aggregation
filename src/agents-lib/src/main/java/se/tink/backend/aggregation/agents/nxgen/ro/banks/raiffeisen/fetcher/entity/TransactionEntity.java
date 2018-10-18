@@ -7,7 +7,10 @@ public class TransactionEntity {
     private double amount;
     private String currency;
 
-    public double getAmount() {
+    public double getAmount(boolean isNegative) {
+        if(isNegative) {
+            return amount * -1;
+        }
         return amount;
     }
 
