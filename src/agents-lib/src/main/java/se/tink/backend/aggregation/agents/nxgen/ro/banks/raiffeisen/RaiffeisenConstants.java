@@ -75,6 +75,7 @@ public class RaiffeisenConstants {
 
     public static final class REGEX {
         public static final Pattern PAGE = Pattern.compile("page=(.*)");
+        public static final Pattern PATTERN_STRUCTURED_INFO = Pattern.compile(".*\\\"MerchantName\\\" ?: ?\\\"(.*)\\\".*");
     }
 
 }
