@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.authenticator;
 
+import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.RaiffeisenApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -24,7 +26,7 @@ public class RaiffeisenOAuth2Authenticator implements OAuth2Authenticator {
     }
 
     @Override
-    public OAuth2Token refreshAccessToken(String refreshToken) {
+    public OAuth2Token refreshAccessToken(String refreshToken) throws SessionException {
         OAuth2Token token = client.refreshToken(refreshToken);
         client.setToken(token);
         return token;

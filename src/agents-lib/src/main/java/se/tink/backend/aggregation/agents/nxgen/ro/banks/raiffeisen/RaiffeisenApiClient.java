@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen;
 import java.time.LocalDate;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.authenticator.rpc.TokenResponse;
@@ -12,6 +14,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class RaiffeisenApiClient {
@@ -52,6 +55,7 @@ public class RaiffeisenApiClient {
     }
 
     public OAuth2Token getToken(String code) {
+
         TokenRequest request = new TokenRequest(RaiffeisenConstants.BODY.GRANT_TYPE_CODE,
                 RaiffeisenConstants.CLIENT_ID_VALUE, RaiffeisenConstants.CLIENT_SECRET_VALUE, code,
                 RaiffeisenConstants.REDIRECT_URL_VALUE);
@@ -62,13 +66,21 @@ public class RaiffeisenApiClient {
                 .post(TokenResponse.class, request.toData()).toTinkToken();
     }
 
-    public OAuth2Token refreshToken(String refreshToken) {
-        RefreshRequest refreshRequest = new RefreshRequest(refreshToken, RaiffeisenConstants.CLIENT_ID_VALUE, RaiffeisenConstants.CLIENT_SECRET_VALUE);
+    public OAuth2Token refreshToken(String refreshToken) throws SessionException {
+        try {
+            RefreshRequest refreshRequest = new RefreshRequest(refreshToken, RaiffeisenConstants.CLIENT_ID_VALUE,
+                    RaiffeisenConstants.CLIENT_SECRET_VALUE, RaiffeisenConstants.REDIRECT_URL_VALUE);
 
-        return getRequest(RaiffeisenConstants.URL.TOKEN)
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-                .post(TokenResponse.class, refreshRequest.toTinkRefresh()).toTinkToken();
+            return getRequest(RaiffeisenConstants.URL.TOKEN)
+                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
+                    .post(TokenResponse.class, refreshRequest.toTinkRefresh()).toTinkToken();
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == 401) {
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
+            throw e;
+        }
     }
 
     public void setToken(OAuth2Token token) {
