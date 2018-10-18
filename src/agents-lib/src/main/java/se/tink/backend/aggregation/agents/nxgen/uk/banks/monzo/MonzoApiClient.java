@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.fetcher.transacti
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.fetcher.transactional.entity.BalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.fetcher.transactional.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.fetcher.transactional.rpc.TransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.session.rpc.PingResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -79,13 +78,6 @@ public class MonzoApiClient {
         }
 
         return builder.get(TransactionsResponse.class);
-    }
-
-    public PingResponse ping() {
-        return client.request(MonzoConstants.URL.PING_WHOAMI)
-                .header(HttpHeaders.AUTHORIZATION, this.getBearerHeaderValue())
-                .accept(MediaType.APPLICATION_JSON)
-                .get(PingResponse.class);
     }
 
     private String getBearerHeaderValue() {

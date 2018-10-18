@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.authenticator;
 
 import com.google.common.base.Strings;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.MonzoApiClient;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.MonzoConstants;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.authenticator.rpc.ExchangeRequest;
@@ -9,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.authenticator.rpc
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class MonzoAuthenticator implements OAuth2Authenticator {
@@ -43,6 +46,7 @@ public class MonzoAuthenticator implements OAuth2Authenticator {
         TokenResponse response = apiClient.exchangeAuthorizationCode(request);
 
         return this.convert(response);
+
     }
 
     private OAuth2Token convert(TokenResponse response) {
@@ -51,17 +55,23 @@ public class MonzoAuthenticator implements OAuth2Authenticator {
     }
 
     @Override
-    public OAuth2Token refreshAccessToken(String refreshToken) {
+    public OAuth2Token refreshAccessToken(String refreshToken) throws SessionException {
 
-        RefreshRequest request = new RefreshRequest();
-        request.put(MonzoConstants.RequestKey.GRANT_TYPE, MonzoConstants.RequestValue.REFRESH_TOKEN);
-        request.put(MonzoConstants.RequestKey.CLIENT_ID, this.getClientId());
-        request.put(MonzoConstants.RequestKey.CLIENT_SECRET, this.getClientSecret());
-        request.put(MonzoConstants.RequestKey.REFRESH_TOKEN, refreshToken);
+        try {
 
-        TokenResponse response = apiClient.refreshAccessToken(request);
+            RefreshRequest request = new RefreshRequest();
+            request.put(MonzoConstants.RequestKey.GRANT_TYPE, MonzoConstants.RequestValue.REFRESH_TOKEN);
+            request.put(MonzoConstants.RequestKey.CLIENT_ID, this.getClientId());
+            request.put(MonzoConstants.RequestKey.CLIENT_SECRET, this.getClientSecret());
+            request.put(MonzoConstants.RequestKey.REFRESH_TOKEN, refreshToken);
 
-        return this.convert(response);
+            TokenResponse response = apiClient.refreshAccessToken(request);
+
+            return this.convert(response);
+
+        } catch (HttpResponseException x) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
     }
 
     @Override

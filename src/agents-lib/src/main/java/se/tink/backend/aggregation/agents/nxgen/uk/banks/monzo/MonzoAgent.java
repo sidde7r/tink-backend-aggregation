@@ -4,7 +4,6 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.authenticator.MonzoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.fetcher.transactional.MonzoTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.session.MonzoSessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -108,7 +107,7 @@ public class MonzoAgent extends NextGenerationAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new MonzoSessionHandler(apiClient, persistentStorage);
+        return SessionHandler.alwaysFail();
     }
 
     @Override
