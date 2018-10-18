@@ -49,7 +49,7 @@ public class UpdateController {
 
     private boolean updateAccount(Account account, AccountFeatures accountFeatures) {
 
-        if (!credentials.getProviderName().equalsIgnoreCase("ro-raiffeisen-psd2") &&
+        if (!"ro-raiffeisen-psd2".equalsIgnoreCase(credentials.getProviderName()) &&
                 !currency.equalsIgnoreCase(account.getBalance().getCurrency())) {
             log.info(String.format("Found incompatible Account currencies (expected: %s, but was: %s)",
                     currency, account.getBalance().getCurrency()));
