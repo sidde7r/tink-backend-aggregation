@@ -144,7 +144,6 @@ public class PendingEntity {
     public Transaction toTinkTransaction() {
         return Transaction.builder()
                 .setDescription(getDescription())
-                .setExternalId(transactionId)
                 .setDate(toTinkDate())
                 .setAmount(toTinkAmount())
                 .setRawDetails(getPayload())
