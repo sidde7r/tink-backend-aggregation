@@ -10,8 +10,15 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor.rpc.Valida
 import se.tink.backend.core.enums.MessageType;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.libraries.date.ThreadSafeDateFormat;
+import se.tink.libraries.i18n.Catalog;
 
 public class IngTransferHelper {
+
+    private final Catalog catalog;
+
+    public IngTransferHelper(Catalog catalog) {
+        this.catalog = catalog;
+    }
 
     /**
      * For transfers between own accounts and 3rd party accounts where recipient is manually entered
@@ -79,13 +86,13 @@ public class IngTransferHelper {
     /**
      * For transfers to saved beneficiaries and third party accounts the validation response is in JSON.
      */
-    static void verifyTransferValidationJsonResponse(BaseMobileResponseEntity mobileResponseEntity) {
+    void verifyTransferValidationJsonResponse(BaseMobileResponseEntity mobileResponseEntity) {
         if (returnCodeIsOk(mobileResponseEntity.getReturnCode())) {
             return;
         }
 
         mobileResponseEntity.getErrorCode()
-                .ifPresent(IngTransferHelper::throwKnownErrorException);
+                .ifPresent(this::throwKnownErrorException);
 
         failTransfer(IngConstants.EndUserMessage.TRANSFER_VALIDATION_FAILED.getKey().get());
     }
@@ -93,13 +100,13 @@ public class IngTransferHelper {
     /**
      * For transfers to internal accounts the validation response is in XML.
      */
-    static void verifyTransferValidationXmlResponse(ValidateInternalTransferResponse transferResponse) {
+    void verifyTransferValidationXmlResponse(ValidateInternalTransferResponse transferResponse) {
         if (returnCodeIsOk(transferResponse.getReturnCode())) {
             return;
         }
 
         transferResponse.getErrors().getErrorCode()
-                .ifPresent(IngTransferHelper::throwKnownErrorException);
+                .ifPresent(this::throwKnownErrorException);
 
         failTransfer(IngConstants.EndUserMessage.TRANSFER_VALIDATION_FAILED.getKey().get());
     }
@@ -108,7 +115,7 @@ public class IngTransferHelper {
         return IngConstants.ReturnCodes.OK.equalsIgnoreCase(returnCode);
     }
 
-    private static void throwKnownErrorException(String errorCode) {
+    private void throwKnownErrorException(String errorCode) {
         if (IngConstants.ErrorCodes.TRANSFER_AMOUNT_EXCEEDS_LIMIT_CODE.equalsIgnoreCase(errorCode)) {
             cancelTransfer(IngConstants.EndUserMessage.TRANSFER_AMOUNT_EXCEEDS_LIMIT.getKey().get());
         }
@@ -118,23 +125,25 @@ public class IngTransferHelper {
         }
     }
 
-    static void ensureTransferExecutionWasSuccess(String returnCode) {
+    void ensureTransferExecutionWasSuccess(String returnCode) {
         if (!IngConstants.ReturnCodes.OK.equalsIgnoreCase(returnCode)) {
             failTransfer(IngConstants.EndUserMessage.TRANSFER_EXECUTION_FAILED.getKey().get());
         }
     }
 
-    static void failTransfer(String message) {
-        throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setEndUserMessage(message)
-                .setMessage(message)
-                .build();
+    void failTransfer(String message) {
+        throw buildTranslatedTransferException(message, SignableOperationStatuses.FAILED);
     }
 
-    static void cancelTransfer(String message) throws TransferExecutionException {
-        throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                .setEndUserMessage(message)
-                .setMessage(message)
+    void cancelTransfer(String message) throws TransferExecutionException {
+        throw buildTranslatedTransferException(message, SignableOperationStatuses.CANCELLED);
+    }
+
+    TransferExecutionException buildTranslatedTransferException(String message, SignableOperationStatuses status) {
+        String translatedMessage = catalog.getString(message);
+        return TransferExecutionException.builder(status)
+                .setEndUserMessage(translatedMessage)
+                .setMessage(translatedMessage)
                 .build();
     }
 }

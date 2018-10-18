@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngCryptoUtils;
@@ -25,12 +24,14 @@ public class IngExternalTransferExecutor {
     private final IngApiClient apiClient;
     private final LoginResponseEntity loginResponse;
     private final PersistentStorage persistentStorage;
+    private final IngTransferHelper ingTransferHelper;
 
     public IngExternalTransferExecutor(IngApiClient apiClient, LoginResponseEntity loginResponse,
-            PersistentStorage persistentStorage) {
+            PersistentStorage persistentStorage, IngTransferHelper ingTransferHelper) {
         this.apiClient = apiClient;
         this.loginResponse = loginResponse;
         this.persistentStorage = persistentStorage;
+        this.ingTransferHelper = ingTransferHelper;
     }
 
     public void executeExternalTransfer(Transfer transfer, AccountEntity sourceAccount) {
@@ -51,22 +52,22 @@ public class IngExternalTransferExecutor {
         ValidateExternalTransferResponseEntity validateExternalTransferResponseEntity = apiClient
                 .validateTrustedTransfer(loginResponse, transfer, sourceAccount, destinationAccount.getIbanNumber());
 
-        IngTransferHelper.verifyTransferValidationJsonResponse(validateExternalTransferResponseEntity);
+        ingTransferHelper.verifyTransferValidationJsonResponse(validateExternalTransferResponseEntity);
 
         int otp = calcOtp(validateExternalTransferResponseEntity.getSignature().getChallenges());
 
         BaseMobileResponseEntity response =
                 apiClient.executeTrustedTransfer(validateExternalTransferResponseEntity, otp);
 
-        IngTransferHelper.ensureTransferExecutionWasSuccess(response.getReturnCode());
+        ingTransferHelper.ensureTransferExecutionWasSuccess(response.getReturnCode());
     }
 
     private void executeThirdPartyTransfer(Transfer transfer, AccountEntity sourceAccount) {
         String transferDestinationName = transfer.getDestination().getName()
-                .orElseThrow(() -> TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                        .setEndUserMessage(IngConstants.EndUserMessage.MISSING_DESTINATION_NAME.getKey().get())
-                        .setMessage(IngConstants.EndUserMessage.MISSING_DESTINATION_NAME.getKey().get())
-                        .build());
+                .orElseThrow(() -> ingTransferHelper
+                        .buildTranslatedTransferException(
+                                IngConstants.EndUserMessage.MISSING_DESTINATION_NAME.getKey().get(),
+                                SignableOperationStatuses.CANCELLED));
 
         String validatedDestinationName = getDestinationNameWithinMaxLength(transferDestinationName);
 
@@ -74,14 +75,14 @@ public class IngExternalTransferExecutor {
                 .validateThirdPartyTransfer(loginResponse, transfer, sourceAccount,
                         transfer.getDestination().getIdentifier(), validatedDestinationName);
 
-        IngTransferHelper.verifyTransferValidationJsonResponse(validateExternalTransferResponseEntity);
+        ingTransferHelper.verifyTransferValidationJsonResponse(validateExternalTransferResponseEntity);
 
         int otp = calcOtp(validateExternalTransferResponseEntity.getSignature().getChallenges());
 
         BaseMobileResponseEntity response =
                 apiClient.executeThirdPartyTransfer(validateExternalTransferResponseEntity, otp);
 
-        IngTransferHelper.ensureTransferExecutionWasSuccess(response.getReturnCode());
+        ingTransferHelper.ensureTransferExecutionWasSuccess(response.getReturnCode());
     }
 
     private Optional<BeneficiaryEntity> tryFindSavedBeneficiary(AccountIdentifier accountIdentifier) {
@@ -124,7 +125,7 @@ public class IngExternalTransferExecutor {
             return;
         }
 
-        IngTransferHelper.cancelTransfer(
+        ingTransferHelper.cancelTransfer(
                 IngConstants.EndUserMessage.TRANSFER_TO_EXTERNAL_ACCOUNTS_NOT_ALLOWED.getKey().get());
     }
 }

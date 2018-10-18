@@ -10,10 +10,13 @@ import se.tink.backend.core.transfer.Transfer;
 public class IngInternalTransferExecutor {
     private final IngApiClient apiClient;
     private final LoginResponseEntity loginResponse;
+    private final IngTransferHelper ingTransferHelper;
 
-    public IngInternalTransferExecutor(IngApiClient apiClient, LoginResponseEntity loginResponse) {
+    public IngInternalTransferExecutor(IngApiClient apiClient, LoginResponseEntity loginResponse,
+            IngTransferHelper ingTransferHelper) {
         this.apiClient = apiClient;
         this.loginResponse = loginResponse;
+        this.ingTransferHelper = ingTransferHelper;
     }
 
     public void executeInternalTransfer(Transfer transfer, AccountEntity sourceAccount,
@@ -22,10 +25,10 @@ public class IngInternalTransferExecutor {
                 apiClient.validateInternalTransfer(loginResponse, sourceAccount.getBbanNumber(),
                         destinationAccount.getBbanNumber(), transfer);
 
-        IngTransferHelper.verifyTransferValidationXmlResponse(validateTransferResponse);
+        ingTransferHelper.verifyTransferValidationXmlResponse(validateTransferResponse);
 
         ExecuteInternalTransferResponse response = apiClient.executeInternalTransfer(validateTransferResponse);
 
-        IngTransferHelper.ensureTransferExecutionWasSuccess(response.getReturnCode());
+        ingTransferHelper.ensureTransferExecutionWasSuccess(response.getReturnCode());
     }
 }
