@@ -215,6 +215,37 @@
       "status": "ENABLED",
       "transactional": true,
       "type": "BANK"
+    },
+    {
+      "name": "be-americanexpress-password",
+      "className": "nxgen.be.creditcards.amex.AmericanExpressBEAgent",
+      "credentialsType": "PASSWORD",
+      "currency": "EUR",
+      "displayName": "American Express",
+      "fields": [
+        {
+          "description": "Username",
+          "immutable": true,
+          "name": "username"
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "sensitive": true,
+          "name": "password"
+        }
+      ],
+      "groupDisplayName": "American Express",
+      "market": "BE",
+      "multiFactor": false,
+      "passwordHelpText": "Use the same credentials as when you log in to americanexpress.be. You can order new passwords at [American Express](https://global.americanexpress.com/myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=fr_BE).",
+      "payload": "BE",
+      "popular": false,
+      "refreshFrequency": 1,
+      "refreshFrequencyFactor": 1,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "CREDIT_CARD"
     }
   ]
 }
