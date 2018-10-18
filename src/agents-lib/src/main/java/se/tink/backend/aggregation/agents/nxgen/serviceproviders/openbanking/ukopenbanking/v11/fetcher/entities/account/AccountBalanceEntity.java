@@ -18,7 +18,7 @@ public class AccountBalanceEntity {
     @JsonProperty("CreditDebitIndicator")
     private UkOpenBankingConstants.CreditDebitIndicator creditDebitIndicator;
     @JsonProperty("Type")
-    private String type;
+    private UkOpenBankingConstants.AccountBalanceType type;
     @JsonProperty("DateTime")
     private String dateTime;
     @JsonProperty("CreditLine")
@@ -59,5 +59,9 @@ public class AccountBalanceEntity {
         }
 
         return Optional.of(total);
+    }
+
+    public UkOpenBankingConstants.AccountBalanceType getType() {
+        return type;
     }
 }
