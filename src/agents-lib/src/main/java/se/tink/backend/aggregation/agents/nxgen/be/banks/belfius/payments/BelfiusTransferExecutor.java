@@ -176,7 +176,7 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
                 name = addBeneficiaryName();
             }
             SignProtocolResponse signProtocolResponse = apiClient.addBeneficiary(transfer, isStructuredMessage, name);
-            response = waitForSignCode(signProtocolResponse.getChallenge(), signProtocolResponse.getSignType());
+            response = waitForSignCodeBeneficiary(signProtocolResponse.getChallenge(), signProtocolResponse.getSignType());
         } catch (SupplementalInfoException e) {
             throw createFailedTransferException(TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED,
                     TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED);
@@ -223,14 +223,24 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
 
     private String waitForSignCode(String challenge, String descriptionCode) throws SupplementalInfoException {
         return waitForSupplementalInformation(
-                BelfiusConstants.InputFieldConstants.WAIT_FOR_SIGN_CODE_HELP_TEXT_1.getKey().get(),
+                catalog.getString(BelfiusConstants.InputFieldConstants.SIGN_FOR_TRANSFER_1.getKey().get()),
                 challenge,
-                BelfiusConstants.InputFieldConstants.WAIT_FOR_SIGN_CODE_HELP_TEXT_2.getKey().get(),
-                descriptionCode);
+                catalog.getString(BelfiusConstants.InputFieldConstants.SIGN_FOR_TRANSFER_2.getKey().get()),
+                descriptionCode,
+                catalog.getString(BelfiusConstants.InputFieldConstants.SIGN_FOR_TRANSFER_3.getKey().get()));
+    }
+
+    private String waitForSignCodeBeneficiary(String challenge, String descriptionCode) throws SupplementalInfoException {
+        return waitForSupplementalInformation(
+                catalog.getString(BelfiusConstants.InputFieldConstants.SIGN_FOR_BENEFICIARY_1.getKey().get()),
+                challenge,
+                catalog.getString(BelfiusConstants.InputFieldConstants.SIGN_FOR_BENEFICIARY_2.getKey().get()),
+                descriptionCode,
+                catalog.getString(BelfiusConstants.InputFieldConstants.SIGN_FOR_BENEFICIARY_3.getKey().get()));
     }
 
     private String waitForSupplementalInformation(String helpText, String controlCode, String descriptionCodeHelp,
-            String descriptionCode) throws SupplementalInfoException {
+            String descriptionCode, String extraText) throws SupplementalInfoException {
         return supplementalInformationController.askSupplementalInformation(
                 createDescriptionField(
                         BelfiusConstants.InputFieldConstants.CONTROL_CODE_FIELD_DESCRIPTION.getKey().get(),
@@ -240,7 +250,8 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
                         BelfiusConstants.InputFieldConstants.DESCRIPTION_CODE_FIELD_DESCRIPTION.getKey().get(),
                         descriptionCodeHelp,
                         descriptionCode),
-                createInputField(BelfiusConstants.MultiFactorAuthentication.CODE))
+                inputDescriptionField(BelfiusConstants.InputFieldConstants.RESPONSE_CODE_FIELD_DESCRIPTION.getKey().get(),
+                        extraText))
                 .get(BelfiusConstants.MultiFactorAuthentication.CODE);
     }
 
@@ -275,13 +286,16 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         return field;
     }
 
-    private Field createInputField(String name) {
+    private static Field inputDescriptionField(String descriptionName, String description) {
         Field field = new Field();
         field.setMasked(false);
-        field.setDescription(BelfiusConstants.InputFieldConstants.RESPONSE_CODE_FIELD_DESCRIPTION.getKey().get());
-        field.setName(name);
+        field.setDescription(descriptionName);
+        field.setName(BelfiusConstants.MultiFactorAuthentication.CODE);
+        field.setHelpText(description);
         field.setNumeric(true);
         field.setHint("NNNNNNN");
+        field.setImmutable(false);
         return field;
     }
+
 }
