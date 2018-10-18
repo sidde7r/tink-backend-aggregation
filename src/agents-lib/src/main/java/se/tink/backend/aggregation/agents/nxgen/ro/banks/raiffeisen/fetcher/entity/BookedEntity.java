@@ -131,7 +131,6 @@ public class BookedEntity {
     public Transaction toTinkTransaction() {
         return Transaction.builder()
                 .setDescription(getDescription())
-                .setExternalId(transactionId)
                 .setDate(toTinkDate())
                 .setAmount(toTinkAmount())
                 .setPending(false)
