@@ -74,7 +74,7 @@ public class RaiffeisenApiClient {
             return getRequest(RaiffeisenConstants.URL.TOKEN)
                     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
                     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-                    .post(TokenResponse.class, refreshRequest.toTinkRefresh()).toTinkToken();
+                    .post(TokenResponse.class, refreshRequest.toBody()).toTinkToken();
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == 401) {
                 throw SessionError.SESSION_EXPIRED.exception();

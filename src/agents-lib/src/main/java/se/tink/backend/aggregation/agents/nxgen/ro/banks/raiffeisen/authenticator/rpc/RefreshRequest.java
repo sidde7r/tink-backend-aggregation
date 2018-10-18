@@ -10,7 +10,7 @@ public class RefreshRequest {
         this.refreshEntity = new RefreshEntity(refreshToken, clientId, clientSecret, redirectUrl);
     }
 
-    public String toTinkRefresh() {
+    public String toBody() {
         return refreshEntity.toForm();
     }
 }
