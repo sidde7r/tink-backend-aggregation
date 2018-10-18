@@ -63,7 +63,7 @@ public class RaiffeisenApiClient {
     }
 
     public OAuth2Token refreshToken(String refreshToken) {
-        RefreshRequest refreshRequest = new RefreshRequest(refreshToken);
+        RefreshRequest refreshRequest = new RefreshRequest(refreshToken, RaiffeisenConstants.CLIENT_ID_VALUE, RaiffeisenConstants.CLIENT_SECRET_VALUE);
 
         return getRequest(RaiffeisenConstants.URL.TOKEN)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)

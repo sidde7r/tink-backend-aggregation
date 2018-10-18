@@ -6,9 +6,13 @@ import se.tink.backend.aggregation.nxgen.http.Form;
 public class RefreshEntity {
     private String grantType = RaiffeisenConstants.BODY.GRANT_TYPE_REFRESH_TOKEN;
     private String refreshToken;
+    private String clientId;
+    private String clientSecret;
 
-    public RefreshEntity(String refreshToken) {
+    public RefreshEntity(String refreshToken, String clientId, String clientSecret) {
         this.refreshToken = refreshToken;
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
     }
 
 
@@ -16,6 +20,8 @@ public class RefreshEntity {
         return new Form.Builder()
                 .put(RaiffeisenConstants.FORM.GRANT_TYPE, grantType)
                 .put(RaiffeisenConstants.FORM.REFRESH_TOKEN, refreshToken)
+                .put(RaiffeisenConstants.FORM.CLIENT_ID, clientId)
+                .put(RaiffeisenConstants.FORM.CLIENT_SECRET, clientSecret)
                 .build().serialize();
     }
 

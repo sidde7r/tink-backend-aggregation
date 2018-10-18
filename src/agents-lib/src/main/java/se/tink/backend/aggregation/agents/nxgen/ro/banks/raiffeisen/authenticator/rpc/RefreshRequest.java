@@ -6,8 +6,8 @@ import se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.authenticato
 public class RefreshRequest {
     private RefreshEntity refreshEntity;
 
-    public RefreshRequest(String refreshToken) {
-        this.refreshEntity = new RefreshEntity(refreshToken);
+    public RefreshRequest(String refreshToken, String clientId, String clientSecret) {
+        this.refreshEntity = new RefreshEntity(refreshToken, clientId, clientSecret);
     }
 
     public String toTinkRefresh() {

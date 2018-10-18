@@ -25,7 +25,9 @@ public class RaiffeisenOAuth2Authenticator implements OAuth2Authenticator {
 
     @Override
     public OAuth2Token refreshAccessToken(String refreshToken) {
-        return client.refreshToken(refreshToken);
+        OAuth2Token token = client.refreshToken(refreshToken);
+        client.setToken(token);
+        return token;
     }
 
     @Override
