@@ -43,7 +43,7 @@ public class AccountEntity implements IdentifiableAccount {
     }
 
     public AccountTypes getAccountType() {
-        return UkOpenBankingV20Constants.AccountTypeTranslator.translate(rawAccountSubType)
+        return UkOpenBankingV20Constants.ACCOUNT_TYPE_MAPPER.translate(rawAccountSubType)
                 .orElse(AccountTypes.OTHER);
     }
 
