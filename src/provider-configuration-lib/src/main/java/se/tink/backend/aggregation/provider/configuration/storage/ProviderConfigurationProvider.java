@@ -69,7 +69,19 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
         Map<String, ProviderStatusConfiguration> allProviderStatuses = getAllProviderStatuses();
 
         return providerNamesForCluster.stream()
-                .map(providerName -> getProviderConfigurationForCluster(clusterId, providerName))
+                .map(providerName -> {
+                    ProviderConfiguration providerConfigurationForCluster = getProviderConfigurationForCluster(
+                            clusterId, providerName);
+
+                    if (Objects.isNull(providerConfigurationForCluster)) {
+                        log.warn("Could not find configuration for provider name:[{}]. "
+                                + "Either add the provider to the global configuration or remove the provider from "
+                                + "available providers for cluster:[{}]", providerName, clusterId);
+                    }
+
+                    return providerConfigurationForCluster;
+                })
+                .filter(Objects::nonNull)
                 .map(provider -> StorageProviderConfigurationConverter.convert(provider,
                         Optional.ofNullable(allProviderStatuses.get(provider.getName()))))
                 .collect(Collectors.toList());
