@@ -18,4 +18,8 @@ public class AccountIdentifierEntity {
     public String getIdentification() {
         return identification;
     }
+
+    public String getName() {
+        return name;
+    }
 }

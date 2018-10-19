@@ -21,29 +21,29 @@ public class AccountEntity implements IdentifiableAccount {
     @JsonProperty("Nickname")
     private String nickname;
     @JsonProperty("Account")
-    private AccountIdentifierEntity accountDetails;
+    private AccountIdentifierEntity identifierEntity;
 
     public String getAccountId() {
         return accountId;
     }
 
-    public String getNickname() {
-        return nickname;
-    }
-
     public String getUniqueIdentifier() {
 
-        if (accountDetails == null) {
+        if (identifierEntity == null) {
             throw new IllegalStateException("Account details did not specify an identifier.");
         }
 
-        return accountDetails.getIdentification();
+        return identifierEntity.getIdentification();
     }
 
     public AccountTypes getAccountType() {
 
         return UkOpenBankingV30Constants.AccountTypeTranslator.translate(rawAccountSubType)
                 .orElse(AccountTypes.OTHER);
+    }
+
+    public String getDisplayName() {
+        return nickname != null ? nickname : identifierEntity.getName();
     }
 
     public static TransactionalAccount toTransactionalAccount(AccountEntity account, AccountBalanceEntity balance) {
@@ -54,7 +54,7 @@ public class AccountEntity implements IdentifiableAccount {
                         balance.getBalance())
                 .setAccountNumber(account.getUniqueIdentifier())
                 .setBankIdentifier(account.getAccountId())
-                .setName(account.getNickname())
+                .setName(account.getDisplayName())
                 .build();
 
     }
@@ -69,7 +69,7 @@ public class AccountEntity implements IdentifiableAccount {
                                         "CreditCardAccount has no credit.")))
                 .setAccountNumber(account.getUniqueIdentifier())
                 .setBankIdentifier(account.getAccountId())
-                .setName(account.getNickname())
+                .setName(account.getDisplayName())
                 .build();
     }
 
