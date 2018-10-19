@@ -77,7 +77,7 @@ public class KbcBankTransferExecutor implements BankTransferExecutor {
         if (sourceAccount.getBalance()
                 .isLessThan(amount.doubleValue())) {
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                    .setMessage(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT.getKey().get())
+                    .setMessage(catalog.getString(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT.getKey().get()))
                     .setEndUserMessage(catalog.getString(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT))
                     .build();
         }
