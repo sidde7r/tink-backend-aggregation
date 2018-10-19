@@ -56,4 +56,11 @@ public class ScreenUpdateResponse extends ResponseEntity {
         return null;
     }
 
+    public static List<Widget> widgetsContains(BelfiusResponse response, String widgetId) {
+        return response.filter(ScreenUpdateResponse.class)
+                .flatMap(r -> r.getWidgets().stream())
+                .filter(widget -> widget.getWidgetId().contains(widgetId))
+                .collect(Collectors.toList());
+    }
+
 }
