@@ -15,9 +15,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinfor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.investment.rpc.InvestmentAccountsListResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.AccountSummaryRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.AccountSummaryResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.paginated.OperationSummaryResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.notpaginated.TransactionSummaryRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.notpaginated.TransactionSummaryResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.paginated.OperationSummaryResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.session.rpc.PfmInitRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.session.rpc.PfmInitResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -83,23 +83,23 @@ public class EuroInformationApiClient {
         Optional.ofNullable(details.getAccountDetailsList()).orElseGet(Collections::emptyList).stream()
                 .filter(a -> a.getTinkTypeByTypeNumber() == AccountTypeEnum.UNKNOWN)
                 .forEach(acc -> AGGREGATION_LOGGER
-                        .infoExtraLong(SerializationUtils.serializeToString(acc), EuroInformationConstants.LoggingTags.unknownAccountTypesTag));
+                        .infoExtraLong(SerializationUtils.serializeToString(acc),
+                                EuroInformationConstants.LoggingTags.unknownAccountTypesTag));
         return details;
     }
 
-    public TransactionSummaryResponse getTransactionsNotPaginated(String webId) {
+    public TransactionSummaryResponse getTransactionsWhenNoPfm(String webId) {
         return buildRequestHeaders(EuroInformationConstants.Url.TRANSACTIONS_NOT_PAGINATED)
                 .post(TransactionSummaryResponse.class, new TransactionSummaryRequest(webId));
     }
 
-    public OperationSummaryResponse getTransactionsPaginated(String webId, String recoveryKey) {
+    public OperationSummaryResponse getTransactionsWithPfm(String webId, String recoveryKey) {
         return buildRequestHeaders(EuroInformationConstants.Url.TRANSACTIONS_PAGINATED)
                 .post(OperationSummaryResponse.class, new TransactionSummaryRequest(webId, recoveryKey));
     }
 
-    public PfmInitResponse actionInit() {
-        return buildRequestHeaders(EuroInformationConstants.Url.INIT)
+    public PfmInitResponse actionInit(String endpoint) {
+        return buildRequestHeaders(endpoint)
                 .post(PfmInitResponse.class, new PfmInitRequest());
     }
-
 }

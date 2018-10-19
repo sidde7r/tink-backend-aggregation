@@ -14,7 +14,7 @@ public class AgentTestServerClient {
     private static final String CREDENTIAL_ID_KEY = "credentialId";
     private static final String SUPPLEMENTAL_KEY_KEY = "key";
     private static final String SUPPLEMENTAL_TIMEOUT_KEY = "timeout";
-    private final static int TIMEOUT_MS = Math.toIntExact(TimeUnit.MINUTES.toMillis(2));
+    private final static int TIMEOUT_MS = Math.toIntExact(TimeUnit.MINUTES.toMillis(20));
     private static final TinkHttpClient client = constructHttpClient();
 
     private enum Urls {

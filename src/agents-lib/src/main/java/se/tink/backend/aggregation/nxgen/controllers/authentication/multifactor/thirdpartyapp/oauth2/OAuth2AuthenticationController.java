@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2;
 
-import com.google.common.base.Preconditions;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Map;
@@ -20,34 +19,34 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.common.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.libraries.i18n.LocalizableKey;
 
-// This authentication controller implements a basic execution flow around RFC 6749: The OAuth 2.0 Authorization Framework
-// (https://tools.ietf.org/html/rfc6749).
-// It does not perform any HTTP operations, the agent code that implements OAuth2Authenticator must perform the
-// HTTP requests towards the URI this controller constructs.
 public class OAuth2AuthenticationController implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
 
     private static final Random random = new SecureRandom();
     private static final Base64.Encoder encoder = Base64.getUrlEncoder();
+
+    private final PersistentStorage persistentStorage;
     private final SupplementalInformationController supplementalInformationController;
     private final OAuth2Authenticator authenticator;
-    private final OAuth2Authenticator.Configuration configuration;
-    private final String redirectUri;
+
     private final String state;
 
     // This wait time is for the whole user authentication. Different banks have different cumbersome
     // authentication flows.
-    private static final long WAIT_FOR_MINUTES = 10;
+    private static final long WAIT_FOR_MINUTES = 9;
 
-    public OAuth2AuthenticationController(SupplementalInformationController supplementalInformationController,
-            OAuth2Authenticator authenticator, String redirectUri) {
+    public OAuth2AuthenticationController(PersistentStorage persistentStorage,
+            SupplementalInformationController supplementalInformationController,
+            OAuth2Authenticator authenticator) {
+        this.persistentStorage = persistentStorage;
         this.supplementalInformationController = supplementalInformationController;
-        this.authenticator = Preconditions.checkNotNull(authenticator);
-        this.configuration = Preconditions.checkNotNull(authenticator.getConfiguration());
-        this.redirectUri = Preconditions.checkNotNull(redirectUri);
+        this.authenticator = authenticator;
+
         this.state = generateRandomState();
     }
 
@@ -59,14 +58,30 @@ public class OAuth2AuthenticationController implements AutoAuthenticator, ThirdP
 
     @Override
     public void autoAuthenticate() throws SessionException, BankServiceException {
-        // Request previously generated token from agent and verify it.
-
-        OAuth2Token token = authenticator.loadToken()
+        OAuth2Token accessToken = persistentStorage.get(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN,
+                OAuth2Token.class)
                 .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
-        if (!token.isValid()) {
-            throw SessionError.SESSION_EXPIRED.exception();
+        if (accessToken.hasExpired()) {
+
+            persistentStorage.remove(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN);
+
+            // Refresh token is not always present, if it's absent we fall back to the manual authentication.
+            String refreshToken = accessToken.getRefreshToken().orElseThrow(SessionError.SESSION_EXPIRED::exception);
+
+            accessToken = authenticator.refreshAccessToken(refreshToken);
+            if (!accessToken.isValid()) {
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
+
+            // Store the new access token on the persistent storage again.
+            persistentStorage.put(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN, accessToken);
+
+            // Fall through.
         }
+
+        // Tell the authenticator which access token it can use.
+        authenticator.useAccessToken(accessToken);
     }
 
     @Override
@@ -75,50 +90,54 @@ public class OAuth2AuthenticationController implements AutoAuthenticator, ThirdP
     }
 
     @Override
-    public ThirdPartyAppResponse<String> collect(String reference) throws AuthenticationException,
-            AuthorizationException {
-
-        Map<String, String> callbackData = supplementalInformationController.waitForSupplementalInformation(
-                this.state,
-                WAIT_FOR_MINUTES,
-                TimeUnit.MINUTES
-        ).orElseThrow(LoginError.INCORRECT_CREDENTIALS::exception); // todo: change this exception
-
-        String code = callbackData.getOrDefault("code", null);
-        if (Strings.isNullOrEmpty(code)) {
-            throw new IllegalStateException("callbackData did not contain 'code'");
-        }
-
-        URL accessTokenRequestUrl = buildAccessTokenRequestUrl(code);
-        OAuth2TokenResponse response = authenticator.performAccessTokenRequest(accessTokenRequestUrl);
-
-        OAuth2Token token = OAuth2Token.create(response);
-        if (!token.isValid()) {
-            return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.UNKNOWN);
-        }
-
-        // Let the agent store the token as it will be used by the agent.
-        authenticator.storeToken(token);
-
-        return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
-    }
-
-    @Override
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
-        URL authorizationUrl = buildAuthorizationUrl();
+        URL authorizeUrl = authenticator.buildAuthorizeUrl(state);
 
         ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
 
         ThirdPartyAppAuthenticationPayload.Android androidPayload = new ThirdPartyAppAuthenticationPayload.Android();
-        androidPayload.setIntent(authorizationUrl.get());
+        androidPayload.setIntent(authorizeUrl.get());
         payload.setAndroid(androidPayload);
 
         ThirdPartyAppAuthenticationPayload.Ios iOsPayload = new ThirdPartyAppAuthenticationPayload.Ios();
-        iOsPayload.setAppScheme(authorizationUrl.getScheme());
-        iOsPayload.setDeepLinkUrl(authorizationUrl.get());
+        iOsPayload.setAppScheme(authorizeUrl.getScheme());
+        iOsPayload.setDeepLinkUrl(authorizeUrl.get());
         payload.setIos(iOsPayload);
 
         return payload;
+    }
+
+    @Override
+    public ThirdPartyAppResponse<String> collect(String reference) throws AuthenticationException,
+            AuthorizationException {
+
+        Map<String, String> callbackData = supplementalInformationController.waitForSupplementalInformation(
+                formatSupplementalKey(state),
+                WAIT_FOR_MINUTES,
+                TimeUnit.MINUTES
+        ).orElseThrow(LoginError.INCORRECT_CREDENTIALS::exception); // todo: change this exception
+
+        String code = callbackData.getOrDefault(OAuth2Constants.CallbackParams.CODE, null);
+        if (Strings.isNullOrEmpty(code)) {
+            throw new IllegalStateException("callbackData did not contain 'code'");
+        }
+
+        OAuth2Token accessToken = authenticator.exchangeAuthorizationCode(code);
+
+        if (!accessToken.isValid()) {
+            throw new IllegalStateException("Invalid access token.");
+        }
+
+        if (!accessToken.isBearer()) {
+            throw new IllegalStateException(String.format("Unknown token type '%s'.", accessToken.getTokenType()));
+        }
+
+        persistentStorage.put(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN, accessToken);
+
+        // Tell the authenticator which access token it can use.
+        authenticator.useAccessToken(accessToken);
+
+        return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
 
     @Override
@@ -126,26 +145,9 @@ public class OAuth2AuthenticationController implements AutoAuthenticator, ThirdP
         return Optional.empty();
     }
 
-    private URL buildAccessTokenRequestUrl(String code) {
-        return configuration.getAccessTokenUrl()
-                .queryParam("grant_type", configuration.getGrantType())
-                .queryParam("code", code)
-                .queryParam("redirect_uri", redirectUri)
-                .queryParam("client_id", configuration.getClientId());
-    }
-
-    private URL buildAuthorizationUrl() {
-        URL authorizationUrl = configuration.getAuthorizationUrl()
-                .queryParam("response_type", configuration.getResponseType())
-                .queryParam("client_id", configuration.getClientId())
-                .queryParam("redirect_uri", redirectUri)
-                .queryParam("state", state);
-
-        Optional<String> scope = configuration.getScope();
-        if (scope.isPresent()) {
-            authorizationUrl = authorizationUrl.queryParam("scope", scope.get());
-        }
-
-        return authorizationUrl;
+    private String formatSupplementalKey(String key) {
+        // Ensure third party callback information does not collide with other Supplemental Information by using a
+        // prefix. This prefix is the same in MAIN.
+        return String.format("tpcb_%s", key);
     }
 }

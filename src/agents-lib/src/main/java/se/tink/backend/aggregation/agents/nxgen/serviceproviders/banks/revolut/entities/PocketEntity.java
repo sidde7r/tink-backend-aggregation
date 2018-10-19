@@ -24,20 +24,21 @@ public class PocketEntity {
     private String name;
 
     @JsonIgnore
-    public TransactionalAccount toTinkAccount(AccountEntity accountEntity) {
+    public TransactionalAccount toTinkAccount(String requiredReference) {
+        String accountName = Optional.ofNullable(getName()).orElse("Revolut " + getCurrency());
 
-        String accountNumber = Optional.of(accountEntity.getIban()).orElse(accountEntity.getAccountNumber());
         TransactionalAccount.Builder builder = TransactionalAccount
                 .builder(
                     getTinkAccountType(),
-                    accountNumber,
+                    getId(),
                     new Amount(currency.toUpperCase(), getBalance()))
-                .setAccountNumber(accountNumber);
+                .setName(accountName)
+                .setAccountNumber(getId());
 
-        if (accountEntity.getRequiredReference() != null) {
+        if (requiredReference != null) {
             builder.putInTemporaryStorage(
                     RevolutConstants.Accounts.REQUIRED_REFERENCE,
-                    accountEntity.getRequiredReference());
+                    requiredReference);
         }
 
         builder.putInTemporaryStorage(RevolutConstants.Storage.CURRENCY, currency);
@@ -45,10 +46,11 @@ public class PocketEntity {
         return builder.build();
     }
 
+    /*
     @JsonIgnore
     public TransactionalAccount toTinkAccount(List<AccountEntity> accountEntities) {
 
-        /* These are the accounts displayed in the Revolut app when requesting details for top up via bank transfer */
+        // These are the accounts displayed in the Revolut app when requesting details for top up via bank transfer
         List<AccountEntity> AccountEntitiesForTopUp = accountEntities.stream()
                 .filter(account -> account.getRequiredReference() != null)
                 .collect(Collectors.toList());
@@ -59,6 +61,7 @@ public class PocketEntity {
 
         return toTinkAccount(accountEntities.get(0));
     }
+    */
 
     @JsonIgnore
     private AccountTypes getTinkAccountType() {

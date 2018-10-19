@@ -3,6 +3,7 @@ package se.tink.backend.guice.configuration;
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 import com.google.inject.util.Providers;
+import se.tink.backend.common.config.AggregationDevelopmentConfiguration;
 import se.tink.backend.common.config.CacheConfiguration;
 import se.tink.backend.common.config.GrpcConfiguration;
 import se.tink.backend.common.config.S3StorageConfiguration;
@@ -60,6 +61,12 @@ public class ConfigurationModule extends AbstractModule {
         bind(Cluster.class).toInstance(configuration.getCluster());
         bind(ServiceConfiguration.class).toInstance(configuration);
         bind(GrpcConfiguration.class).toInstance(configuration.getGrpc());
+
+        if (configuration.isDevelopmentMode() &&
+                configuration.getDevelopmentConfiguration().isValid()) {
+            bind(AggregationDevelopmentConfiguration.class).toProvider(
+                    Providers.of(configuration.getDevelopmentConfiguration()));
+        }
 
         // Tink public library configurations
         bind(CoordinationConfiguration.class).toProvider(Providers.of(configuration.getCoordination()));

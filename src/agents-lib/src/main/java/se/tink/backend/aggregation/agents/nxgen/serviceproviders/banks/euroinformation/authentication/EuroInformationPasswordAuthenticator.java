@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.authentication;
 
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -9,6 +10,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.authentication.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.session.rpc.PfmInitResponse;
@@ -24,16 +26,19 @@ public class EuroInformationPasswordAuthenticator implements PasswordAuthenticat
     private final Logger LOGGER = LoggerFactory.getLogger(EuroInformationPasswordAuthenticator.class);
     private final EuroInformationApiClient apiClient;
     private final SessionStorage sessionStorage;
+    private final EuroInformationConfiguration config;
 
     private EuroInformationPasswordAuthenticator(EuroInformationApiClient apiClient,
-            SessionStorage sessionStorage) {
+            SessionStorage sessionStorage,
+            EuroInformationConfiguration config) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
+        this.config = config;
     }
 
     public static EuroInformationPasswordAuthenticator create(EuroInformationApiClient apiClient,
-            SessionStorage sessionStorage) {
-        return new EuroInformationPasswordAuthenticator(apiClient, sessionStorage);
+            SessionStorage sessionStorage, EuroInformationConfiguration config) {
+        return new EuroInformationPasswordAuthenticator(apiClient, sessionStorage, config);
     }
 
     @Override
@@ -42,13 +47,21 @@ public class EuroInformationPasswordAuthenticator implements PasswordAuthenticat
         if (!EuroInformationUtils.isSuccess(logon.getReturnCode())) {
             handleError(logon);
         }
-        PfmInitResponse pfmInitResponse = apiClient.actionInit();
-        if (!EuroInformationUtils.isSuccess(pfmInitResponse.getReturnCode())
-                || !pfmInitResponse.getInitialization().getUserInfos().contains(PFM_ENABLED)) {
-            LOGGER.info("PFM initialization error: " + SerializationUtils.serializeToString(pfmInitResponse));
-            return;
-        }
-        sessionStorage.put(EuroInformationConstants.Tags.PFM_ENABLED, true);
+
+        config.getInitEndpoint().ifPresent(endpoint -> {
+            PfmInitResponse pfmInitResponse = apiClient.actionInit(endpoint);
+            Optional.ofNullable(pfmInitResponse).filter(m -> EuroInformationUtils.isSuccess(m.getReturnCode()))
+                    .map(v -> {
+                        sessionStorage.put(EuroInformationConstants.Tags.PFM_ENABLED, true);
+                        return v;
+                    })
+                    .orElseGet(() -> {
+                        LOGGER.info(
+                                "PFM initialization error: " + SerializationUtils
+                                        .serializeToString(pfmInitResponse));
+                        return null;
+                    });
+        });
     }
 
     public void handleError(LoginResponse logon) throws SessionException, LoginException {
@@ -61,7 +74,8 @@ public class EuroInformationPasswordAuthenticator implements PasswordAuthenticat
         case TECHNICAL_PROBLEM:
             throw new IllegalStateException(EuroInformationErrorCodes.TECHNICAL_PROBLEM.getCodeNumber());
         case NO_ENUM_VALUE:
-            throw new  IllegalArgumentException("Unknown bank value code " + SerializationUtils.serializeToString(logon));
+            throw new IllegalArgumentException(
+                    "Unknown bank value code " + SerializationUtils.serializeToString(logon));
         }
     }
 

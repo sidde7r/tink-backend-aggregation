@@ -27,6 +27,10 @@ public class ProviderStatusConfiguration {
         return status;
     }
 
+    public void setProviderName(String providerName) {
+        this.providerName = providerName;
+    }
+
     public void setStatus(ProviderStatuses status) {
         this.status = status;
     }

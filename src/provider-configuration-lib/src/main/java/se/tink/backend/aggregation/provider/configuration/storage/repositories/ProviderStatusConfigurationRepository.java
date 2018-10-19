@@ -5,4 +5,7 @@ import se.tink.backend.aggregation.provider.configuration.storage.models.Provide
 
 public interface ProviderStatusConfigurationRepository extends JpaRepository<ProviderStatusConfiguration, String>,
         ProviderStatusConfigurationRepositoryCustom {
+    ProviderStatusConfiguration findOne(String providerName);
+    ProviderStatusConfiguration save(ProviderStatusConfiguration s);
+    void delete(String providerName);
 }

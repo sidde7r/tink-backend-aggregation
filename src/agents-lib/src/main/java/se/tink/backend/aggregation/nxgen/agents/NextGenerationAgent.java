@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.log.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
@@ -75,8 +76,9 @@ public abstract class NextGenerationAgent extends AbstractAgent implements Refre
         this.sessionStorage = new SessionStorage();
         this.credentials = request.getCredentials();
         this.updateController = new UpdateController(context,
-                request.getProvider().getMarket(),
-                request.getProvider().getCurrency());
+                // TODO: Remove when provider uses MarketCode
+                MarketCode.valueOf(request.getProvider().getMarket()),
+                request.getProvider().getCurrency(), credentials);
         this.client = new TinkHttpClient(context, credentials, signatureKeyPair);
         this.transactionPaginationHelper = new TransactionPaginationHelper(request);
         this.supplementalInformationController = new SupplementalInformationController(context, credentials);

@@ -8,6 +8,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.authenticat
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.authenticator.rpc.bankid.InitBankIdRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.creditcards.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.creditcards.rpc.CreditCardsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.transactionalaccounts.rpc.AccountTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.transactionalaccounts.rpc.SavingsAccountsResponse;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -77,10 +79,9 @@ public class VolvoFinansApiClient {
                 .get(CreditCardsResponse.class);
     }
 
-    // NOTE: Currently for logging only
-    public String savingsAccounts() {
+    public SavingsAccountsResponse savingsAccounts() {
         return createRequest(VolvoFinansConstants.Urls.SAVINGS_ACCOUNTS)
-                .get(String.class);
+                .get(SavingsAccountsResponse.class);
     }
 
     /* Transactions */
@@ -96,8 +97,7 @@ public class VolvoFinansApiClient {
         return requestBuilder.get(CreditCardTransactionsResponse.class);
     }
 
-    // NOTE: Currently for logging only
-    public String savingsAccountTransactions(String accountId, LocalDate fromDate, LocalDate toDate,
+    public AccountTransactionsResponse savingsAccountTransactions(String accountId, LocalDate fromDate, LocalDate toDate,
             int limit, int offset) {
         URL url = VolvoFinansConstants.Urls.SAVINGS_ACCOUNTS_TRANSACTIONS;
         return createRequest(url.parameter(VolvoFinansConstants.UrlParameters.ACCOUNT_ID, accountId))
@@ -105,6 +105,6 @@ public class VolvoFinansApiClient {
                 .queryParam(VolvoFinansConstants.QueryParameters.TO_DATE,  toDate.toString())
                 .queryParam(VolvoFinansConstants.QueryParameters.LIMIT, Integer.toString(limit))
                 .queryParam(VolvoFinansConstants.QueryParameters.OFFSET, Integer.toString(offset))
-                .get(String.class);
+                .get(AccountTransactionsResponse.class);
     }
 }

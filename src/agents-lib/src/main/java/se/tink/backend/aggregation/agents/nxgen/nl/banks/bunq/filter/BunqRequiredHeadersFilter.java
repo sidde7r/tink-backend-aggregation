@@ -24,7 +24,7 @@ public class BunqRequiredHeadersFilter extends Filter {
     @Override
     public HttpResponse handle(HttpRequest httpRequest) throws HttpClientException, HttpResponseException {
         TokenEntity tokenEntity = sessionStorage.get(
-                BunqConstants.StorageKeys.SESSION_TOKEN, TokenEntity.class).orElse(null);
+                BunqConstants.StorageKeys.CLIENT_AUTH_TOKEN, TokenEntity.class).orElse(null);
 
         MultivaluedMap<String, Object> headers = httpRequest.getHeaders();
         headers.add("Accept", MediaType.APPLICATION_JSON);

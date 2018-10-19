@@ -20,6 +20,7 @@ import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -65,6 +66,7 @@ public class NewAgentTestContext extends AgentContext {
         this.transactionsToPrint = transactionsToPrint;
 
         setTestContext(true);
+        setAggregator(Aggregator.getDefault());
     }
 
     @Override
@@ -269,11 +271,6 @@ public class NewAgentTestContext extends AgentContext {
 
     @Override
     public void updateCredentialsExcludingSensitiveInformation(Credentials credentials, boolean doUpdateStatus) {
-        // noop
-    }
-
-    @Override
-    public void updateCredentialsOnlySensitiveInformation(Credentials credentials) {
         // noop
     }
 

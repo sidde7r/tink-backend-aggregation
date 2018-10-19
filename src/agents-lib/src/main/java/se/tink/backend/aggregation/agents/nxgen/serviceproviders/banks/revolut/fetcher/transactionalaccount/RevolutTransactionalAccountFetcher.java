@@ -2,8 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.RevolutApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.RevolutConstants;
@@ -23,46 +24,38 @@ public class RevolutTransactionalAccountFetcher implements AccountFetcher<Transa
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
+
+        AccountsResponse topUpAccountEntities = apiClient.fetchAccounts();
+        AccountEntity topUpAccount = (topUpAccountEntities.stream()
+                .filter(accountEntity -> accountEntity.getCurrency()
+                        .equalsIgnoreCase(RevolutConstants.Storage.CURRENCY))
+                .findFirst()
+                .orElse(null));
         WalletEntity wallet = apiClient.fetchWallet();
+        String requiredReference = wallet.getRef();
 
-        if (wallet == null) {
-           return Collections.emptyList();
-        }
-
-        AccountsResponse accountsResponse = apiClient.fetchAccounts();
-
-        return wallet.getPockets().stream()
-                .filter(this::isActive)
-                .map(pocket -> convertToTinkAccount(pocket, accountsResponse))
-                .filter(Objects::nonNull)
+        Collection<TransactionalAccount> transactionalAccounts = wallet.getPockets().stream().filter(pocketEntity -> isActive(pocketEntity))
+                .filter(pocketEntity -> sameCurrencyAsBaseCurrency(pocketEntity, wallet))
+                .map(pocketEntity -> convertToTinkAccount(pocketEntity, requiredReference, topUpAccount))
                 .collect(Collectors.toList());
+
+        return transactionalAccounts;
     }
 
-    private TransactionalAccount convertToTinkAccount(PocketEntity pocket, AccountsResponse accountsResponse) {
+    private TransactionalAccount convertToTinkAccount(PocketEntity pocket, String requiredReference, AccountEntity topUpAccount) {
         // Local and global account, some pockets only have a global account
-        List<AccountEntity> accountsWithSameCurrencyAsPocket = accountsResponse.stream()
-                .filter(accountEntity -> sameCurrencyAsPocket(pocket, accountEntity))
-                .collect(Collectors.toList());
-
-        if (accountsWithSameCurrencyAsPocket.isEmpty()) {
+        if (pocket.isClosed()) {
             return null;
-        } else if (accountsWithSameCurrencyAsPocket.size() == 1) {
-            return pocket.toTinkAccount(accountsWithSameCurrencyAsPocket.get(0));
-        } else if (accountsWithSameCurrencyAsPocket.size() == 2) {
-            return pocket.toTinkAccount(accountsWithSameCurrencyAsPocket);
+        } else {
+            return pocket.toTinkAccount(requiredReference);
         }
-
-        throw new IllegalStateException(String.format(
-                "There are %d accounts matching the pocket. We can only handle cases of 0, 1 or 2 accounts.",
-                accountsWithSameCurrencyAsPocket.size())
-        );
     }
 
     private boolean isActive(PocketEntity pocket) {
         return RevolutConstants.Accounts.ACTIVE_STATE.equalsIgnoreCase(pocket.getState());
     }
 
-    private boolean sameCurrencyAsPocket(PocketEntity pocket, AccountEntity accountEntity) {
-        return accountEntity.getCurrency().equalsIgnoreCase(pocket.getCurrency());
+    private boolean sameCurrencyAsBaseCurrency(PocketEntity pocket, WalletEntity walletEntity) {
+        return walletEntity.getBaseCurrency().equalsIgnoreCase(pocket.getCurrency());
     }
 }

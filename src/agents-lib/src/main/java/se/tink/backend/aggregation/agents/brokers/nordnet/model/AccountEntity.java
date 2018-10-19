@@ -3,128 +3,95 @@ package se.tink.backend.aggregation.agents.brokers.nordnet.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
-import java.util.Objects;
+import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.system.rpc.Portfolio;
 import se.tink.libraries.account.AccountIdentifier;
 
+@JsonObject
 public class AccountEntity {
+
     @JsonProperty("accno")
+    private String accountNumber;
+    @JsonProperty("bank_account")
+    private BankAccountEntity bankAccount;
+    @JsonProperty("accid")
     private String accountId;
     @JsonProperty("bank_accno")
-    private String accountNumber;
+    private String bankAccountNumber;
+    private String type;
+    private String symbol;
     @JsonProperty("account_code")
     private String accountCode;
-    @JsonProperty("type")
-    private String accountType;
+    private String role;
     @JsonProperty("default")
-    private boolean isMainAccount;
-    @JsonProperty("alias")
-    private String name;
-    @JsonProperty("today")
-    private double todaysMarketChange;
-    @JsonProperty("own_capital")
-    private BalanceEntity balance;
+    private boolean defaultAccount;
+    private String alias;
 
-    public Account toAccount(AccountTypes accountType) {
-        Account account = new Account();
-        account.setBankId(accountId);
-        account.setAccountNumber(accountNumber);
-        account.putIdentifier(AccountIdentifier.create(AccountIdentifier.Type.SE, accountNumber));
-        account.setType(accountType);
-        account.setName(name);
-        account.setBalance(balance.getAmount());
+    @JsonIgnore
+    private AccountInfoEntity info;
 
-        return account;
+    public String getBankAccountNumber() {
+        return bankAccountNumber;
     }
 
-    public boolean isSwedishAccount() {
-        return balance != null && Objects.equals(balance.getCurrency(), "SEK");
+    public void setInfo(AccountInfoEntity info) {
+        this.info = info;
     }
 
     public String getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(String accountId) {
-        this.accountId = accountId;
+    public String getAccountCode() {
+        return accountCode;
     }
 
     public String getAccountNumber() {
         return accountNumber;
     }
 
-    public void setAccountNumber(String accountNumber) {
-        this.accountNumber = accountNumber;
+    public double getCashBalance() {
+        return info.getAccountSum().getValue();
     }
 
-    public String getAccountCode() {
-        return accountCode;
-    }
-
-    public void setAccountCode(String accountCode) {
-        this.accountCode = accountCode;
-    }
-
-    public String getAccountType() {
-        return accountType;
-    }
-
-    public void setAccountType(String accountType) {
-        this.accountType = accountType;
-    }
-
-    public boolean isMainAccount() {
-        return isMainAccount;
-    }
-
-    public void setMainAccount(boolean mainAccount) {
-        isMainAccount = mainAccount;
+    public double getMarketValue() {
+        return info.getFullMarketvalue().getValue();
     }
 
     public String getName() {
-        return name;
+        return alias;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public Account toAccount(AccountTypes accountType) {
 
-    public double getTodaysMarketChange() {
-        return todaysMarketChange;
-    }
+        Account account = new Account();
 
-    public void setTodaysMarketChange(double todaysMarketChange) {
-        this.todaysMarketChange = todaysMarketChange;
-    }
+        account.setBankId(this.getAccountNumber());
+        account.setAccountNumber(this.getBankAccountNumber());
+        account.putIdentifier(AccountIdentifier.create(AccountIdentifier.Type.SE, this.getBankAccountNumber()));
+        account.setType(accountType);
+        account.setName(this.getName());
+        account.setBalance(this.getCashBalance() + this.getMarketValue());
 
-    public BalanceEntity getBalance() {
-        return balance;
-    }
-
-    public void setBalance(BalanceEntity balance) {
-        this.balance = balance;
+        return account;
     }
 
     public Portfolio toPortfolio() {
+
         Portfolio portfolio = new Portfolio();
 
-        portfolio.setRawType(getAccountCode());
-        portfolio.setType(getPortfolioType());
-        portfolio.setTotalValue(getBalance().getAmount());
-        portfolio.setUniqueIdentifier(getAccountId());
+        portfolio.setRawType(this.getAccountCode());
+        portfolio.setType(this.getPortfolioType());
+        portfolio.setTotalValue(this.getMarketValue());
+        portfolio.setUniqueIdentifier(this.getAccountNumber());
 
         return portfolio;
     }
 
-    @JsonIgnore
-    private boolean isTypeOccupationalPension() {
-        return Strings.nullToEmpty(accountType).toLowerCase().contains("btp1");
-    }
-
     private Portfolio.Type getPortfolioType() {
-        switch (Strings.nullToEmpty(accountCode).toLowerCase()) {
+        switch (Strings.nullToEmpty(getAccountCode()).toLowerCase()) {
         case "dep":
             return Portfolio.Type.DEPOT;
         case "isk":
@@ -137,4 +104,10 @@ public class AccountEntity {
             return (isTypeOccupationalPension() ? Portfolio.Type.PENSION : Portfolio.Type.OTHER);
         }
     }
+
+    @JsonIgnore
+    private boolean isTypeOccupationalPension() {
+        return Strings.nullToEmpty(type).toLowerCase().contains("btp1");
+    }
+
 }

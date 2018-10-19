@@ -1,7 +1,3 @@
-# coordination-0
-coordinationHosts: 10.89.60.29:2181
-
-applicationCluster: TINK
 developmentMode: false
 
 providerdb:

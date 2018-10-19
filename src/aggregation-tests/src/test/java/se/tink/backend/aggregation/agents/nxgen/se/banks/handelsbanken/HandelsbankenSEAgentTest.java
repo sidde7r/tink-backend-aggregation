@@ -10,8 +10,8 @@ public class HandelsbankenSEAgentTest {
     private final String USERNAME = ""; // 12 digit SSN
 
     @Test
-    public void testLogin() throws Exception {
-        new AgentIntegrationTest.Builder("se", "se-handelsbanken-bankid")
+    public void test() throws Exception {
+        new AgentIntegrationTest.Builder("se", "handelsbanken-bankid")
                 .addCredentialField(Field.Key.USERNAME, USERNAME)
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)

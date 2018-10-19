@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2018-09-07 06:58+0000\n"
-"PO-Revision-Date: 2018-09-07 06:58+0000\n"
+"POT-Creation-Date: 2018-10-04 06:49+0000\n"
+"PO-Revision-Date: 2018-10-04 06:49+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: sv\n"
@@ -11,441 +11,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#, java-format
-msgid "Updating {0}..."
-msgstr "Uppdaterar {0}..."
-
-msgid "Error from"
-msgstr "Fel från"
-
-#, java-format
-msgid "{0} account"
-msgid_plural "{0} accounts"
-msgstr[0] "{0} konto"
-msgstr[1] "{0} konton"
-
-msgid "and"
-msgstr "och"
-
-#, java-format
-msgid "{0} transaction"
-msgid_plural "{0} transactions"
-msgstr[0] "{0} transaktion"
-msgstr[1] "{0} transaktioner"
-
-msgid "No response from Mobile BankID. Have you opened the app?"
-msgstr "Inget svar från Mobilt BankID. Har du öppnat appen?"
-
-msgid ""
-"The information is fetched from Statens personadressregister. SPAR includes "
-"all persons who are registered as resident in Sweden. The data in SPAR is "
-"updated each day with data from the Swedish Population Register."
-msgstr ""
-"Uppgifterna är hämtade från SPAR. Statens personadressregister, SPAR, är ett "
-"offentligt register som omfattar alla personer som är folkbokförda i "
-"Sverige, både svenska och utländska medborgare. Uppgifterna i SPAR "
-"uppdateras varje dygn med uppgifter från folkbokföringsregistret."
-
-msgid ""
-"The information is fetched from Kronofogden. Kronofogden is a neutral "
-"administrative authority. The assignment is to create a balance between the "
-"one paying and the one who is payed. It is the duty of Kronofogden to help "
-"the one not getting payed, but also supporting the one who cannot pay a debt."
-msgstr ""
-"Uppgifterna är hämtade från Kronofogden. Kronofogden är en myndighet med en "
-"opartisk roll. Uppdraget är att skapa balans mellan den som ska ha betalt "
-"och den som ska betala. Det är Kronofogdens uppgifter att hjälpa den som "
-"inte fått betalt men också se till att den som har en skuld får stöd och "
-"vägledning för att reda ut sin situation."
-
-msgid ""
-"Every day Tink scans all of your transactions to find things that differ "
-"from you normal behaviour and things we want to keep you extra alerted on. "
-"In this case we have notices there was an unusual large expense on your "
-"account."
-msgstr ""
-"Tink analyserar varje dag alla transaktioner för att hitta saker som skiljer "
-"sig från det normala och som vi vill hålla dig extra uppmärksam på. Den här "
-"händelsen varnar dig om att ett ovanligt stort belopp har dragits från ditt "
-"konto."
-
-msgid ""
-"Every day Tink scans all of your transactions to find things that differ "
-"from you normal behaviour and things we want to keep you extra alerted on. "
-"In this case we have notices there was an unusual large cash withdrawal on "
-"your account."
-msgstr ""
-"Tink analyserar varje dag alla transaktioner för att hitta saker som skiljer "
-"sig från det normala och som vi vill hålla dig extra uppmärksam på. Den här "
-"händelsen varnar dig om att ett ovanligt stort kontantuttag har gjorts på "
-"ditt konto."
-
-msgid "Source"
-msgstr "Källa"
-
-msgid ""
-"If any of the information is incorrect, please contact Skatteverket on %s."
-msgstr ""
-"Om någon av uppgifterna inte stämmer, ta kontakt med Skatteverket på %s."
-
-msgid ""
-"If any of the information is incorrect, please contact Lantmäteriet on %s."
-msgstr ""
-"Om någon av uppgifterna inte stämmer, ta kontakt med Lantmäteriet på %s."
-
-msgid ""
-"If any of the information is incorrect, please contact Kronofogden on %s."
-msgstr ""
-"Om någon av uppgifterna inte stämmer, ta kontakt med Kronofogden på %s."
-
-msgid ""
-"If you don’t recognise the transactions, please contact your bank and let "
-"them check who registered the transactions."
-msgstr ""
-"Om du inte känner igen transaktionerna, ta kontakt med din bank och be dem "
-"kolla vem som registrerat köpen."
-
-msgid ""
-"If you don’t recognise the transaction, please contact your bank and let "
-"them check who registered the purchase."
-msgstr ""
-"Om du inte känner igen transaktionen, ta kontakt med din bank och be dem "
-"kolla vem som registrerat köpet."
-
-msgid "Where does this information come from?"
-msgstr "Var kommer den här informationen ifrån?"
-
-msgid "What can I do if this looks weird?"
-msgstr "Vad kan jag göra om informationen inte stämmer?"
-
-msgid ""
-"Every day Tink scans all of your transactions to find things that differ "
-"from you normal behaviour and things we want to keep you extra alerted on. "
-"In this case we have notices there was an unusual high activity on one of "
-"you accounts with more transactions than usual."
-msgstr ""
-"Tink analyserar varje dag alla transaktioner för att hitta saker som skiljer "
-"sig från det normala och som vi vill hålla dig extra uppmärksam på. Den här "
-"händelsen varnar dig om att ovanligt många transaktioner har skett under "
-"samma dag på ett av dina konton. Det kan vara någon som handlar på ditt "
-"kort, men det kan också vara du som bara gjort ovanligt många köp just den "
-"här dagen."
-
-msgid ""
-"If you have any questions about you credit score, please contact Creditsafe "
-"on %s."
-msgstr ""
-"Om du har några frågor angående ditt kreditscore, vänligen kontakta "
-"Creditsafe på %s."
-
-msgid ""
-"Creditsafe scoring is a tool to determine the solvency level for a person. "
-"The scoring is done by a number of generic credit scoring models and is "
-"mainly based on income, assets, age, company engagements, civil status and "
-"non-payments. The scoring is a scale from 1 to 100 where 1-19 means low "
-"solvency, 20-39 medium solvency, 40-69 high solvency and 70-100 very high "
-"solvency."
-msgstr ""
-"Creditsafe scoring är ett verktyg för att prognostisera privatpersoners "
-"betalningsförmåga. Scoringen beräknas genom ett antal generiska "
-"kreditscoremodeller som framförallt baseras på inkomst, tillgångar, ålder, "
-"näringsverksamhet, civilstånd och betalningsanmärkningar.  Scoringen är en "
-"skala från 1 till 100 där 1-19 betyder låg betalningsförmåga, 20-39 medium "
-"betalningsförmåga, 40-69 hög betalningsförmåga och 70-100 mycket hög "
-"betalningsförmåga."
-
-msgid ""
-"The information is fetched from Kronofogden. A non-payment is a sign of you "
-"not being able to handle your payments. The effect could for example be that "
-"your are not getting a mortgage, apartment, job or phone subscription."
-msgstr ""
-"Uppgifterna är hämtade från Kronofogden. En betalningsanmärkning är ett "
-"tecken på att du inte har skött dina betalningar. Betalningsanmärkningar kan "
-"exempelvis leda till att du inte får lån, lägenhet, arbete eller "
-"telefonabonnemang."
-
-msgid ""
-"Every day Tink scans all of your transactions to find things that differ "
-"from you normal behaviour and things we want to keep you extra alerted on. "
-"In this case we have notices there were two transactions deducted from your "
-"account the same day with the same amount and description. It could be "
-"someone with bad intentions that has charged you twice but it could of "
-"course also been you buying the same thing twice the same day."
-msgstr ""
-"Tink analyserar varje dag alla transaktioner för att hitta saker som skiljer "
-"sig från det normala och som Tink vill hålla dig extra uppmärksam på. I det "
-"här fallet har vi noterat att två transaktioner har gjorts med samma summa "
-"på samma kort samma dag. Det kan vara någon som i oärligt syfte dragit ditt "
-"kort dubbelt men det kan också vara du som gjort två köp med samma belopp."
-
-msgid ""
-"The information is fetched from Lantmäteriet. Lantmäteriet is the authority "
-"that handles geographical information, appoints district names and is "
-"responsible for real estate classification."
-msgstr ""
-"Uppgifterna är hämtade från Lantmäteriet. Lantmäteriet är den myndighet som "
-"har till uppgift att tillhandahålla geografisk information, fastställa "
-"ortnamn och ansvara för fastighetsindelningen i Sverige."
-
-msgid ""
-"The information is fetched from Skatteverket when your tax return has been "
-"approved."
-msgstr ""
-"Den här informationen hämtas från Skatteverket när din deklaration är "
-"godkänd."
-
-msgid "person"
-msgstr "person"
-
-msgid "protected identity"
-msgstr "skyddad identitet"
-
-msgid "locked identity"
-msgstr "spärrad identitet"
-
-msgid "deceased"
-msgstr "avliden"
-
-msgid "removed from register"
-msgstr "bortagen från register"
-
-msgid "emigrated"
-msgstr "emigrerad"
-
-msgid "changed person number"
-msgstr "har ändrat personnummer"
-
-msgid "BankID session already in progress, please try again."
-msgstr "Mobilt BankID är upptaget, vänta någon minut och testa igen."
-
-msgid "BankID authentication failed. Please verify your Mobil BankID is OK."
-msgstr "BankID autentisering misslyckades. Verifiera att din BankID är OK."
-
-#, java-format
-msgid ""
-"If any of the information is incorrect, please contact Bolagsverket on {0} "
-"or Skatteverket on {1}."
-msgstr ""
-"Om någon av uppgifterna inte stämmer, ta kontakt med Bolagsverket på {0} "
-"eller Skatteverket på {1}."
-
-msgid ""
-"The information is fetched from Bolagsverket and Skatteveket. Bolagsverket "
-"is a public authority whose main purpose is to register new companies and "
-"handle changes in register for existing companies, such as changes in "
-"address and changes of board and accountants. Skatteverket handled F-tax and "
-"moms."
-msgstr ""
-"Uppgifterna är hämtade från Bolagsverket och Skatteverket. Bolagsverket är "
-"en statlig myndighet som huvudsakligen hanterar registreringen av nya "
-"företag och registerändringar för befintliga företag, såsom ändring av "
-"adress och byte av styrelse och revisorer. Skatteverket sköter registrering "
-"av F-skatt och moms."
-
-msgid "What can I do if this is not correct?"
-msgstr "Vad kan jag göra om detta inte stämmer?"
-
-msgid "Could not find source account"
-msgstr "Kunde inte hitta frånkonto"
-
-msgid "Source account not found"
-msgstr "Från-konto finns inte"
-
-msgid "Invalid destination account"
-msgstr "Mottagarkontot är inte giltigt"
-
-msgid "Recipient name"
-msgstr "Mottagarnamn"
-
-msgid ""
-"Because this is the first time you transfer money to this account, you'll "
-"need to register a name for it."
-msgstr ""
-"Eftersom det är första gången du överför pengar till detta konto måste du "
-"registrera ett namn för det"
-
-msgid "Unable to create new recipient account"
-msgstr "Det gick inte att skapa det nya mottagarkontot"
-
-msgid "Invalid source account"
-msgstr "Från-kontot är inte giltigt"
-
-msgid "Wrong BankID signature. Did you log in with the wrong personnummer?"
-msgstr "Felaktig BankID-signatur. Loggade du in med fel personnummer?"
-
-msgid "Could not login, please try again."
-msgstr "Kunde inte logga in, vänligen försök igen."
-
-msgid "Destination account is not valid"
-msgstr "Till-konto är inte korrekt"
-
-msgid "Something went wrong."
-msgstr "Något gick fel."
-
-msgid "Failed to sign transfer with BankID"
-msgstr "Det gick inte att signa överföringen med BankID"
-
-msgid "Failed to sign payment using BankID"
-msgstr "Signering av betalning med BankID misslyckades"
+msgid "You need to activate your BankID in the Handelsbanken app."
+msgstr "Du behöver aktivera ditt BankID i Handelsbankens app."
 
 msgid "Unsupported transfer type"
 msgstr "Överföringstypen stöds inte"
-
-msgid "The destination message is not a valid OCR reference"
-msgstr "Meddelandet till mottagaren är inte en giltig OCR-referens"
-
-msgid "The destination message is not valid"
-msgstr "Meddelandet till mottagaren är ogiltigt"
-
-msgid "Transfer amount is too small"
-msgstr "Överföringsbeloppet är för litet"
-
-#, java-format
-msgid ""
-"For the selected source, the destination message cannot be longer than {0} "
-"characters. Please adjust the message and try again."
-msgstr ""
-"För valt avsändarkonto kan meddelandet till mottagaren inte vara längre än "
-"{0} tecken. Justera meddelandet och försök igen."
-
-msgid "Not able to update this e-invoice"
-msgstr "Kan inte ändra den här e-fakturan"
-
-msgid "Source account not available"
-msgstr "Från-kontot är inte tillgängligt"
-
-msgid "Cannot find e-invoice in list from bank"
-msgstr "Kunde inte hitta e-faktura hos banken"
-
-msgid "E-invoice cannot be signed on bank"
-msgstr "Kunde inte signera e-fakturan hos banken"
-
-msgid "Something went wrong when signing e-invoice"
-msgstr "Något gick fel vid signering av e-faktura"
-
-msgid "Found more than one eInvoices that exactly matches the transfer"
-msgstr "Fler än en e-faktura hittades som stämmer överens med överföringen"
-
-msgid "The message given is not valid"
-msgstr "Meddelandet är inte giltigt"
-
-msgid "It's not possible to modify the amount of this transfer"
-msgstr "Det är inte möjligt att ändra beloppet på denna överföring"
-
-msgid "It's not possible to modify this transfer"
-msgstr "Det är inte möjligt att ändra denna överföring"
-
-msgid "It's not possible to modify OCR/message of this transfer"
-msgstr "Det är inte möjligt att ändra OCR/meddelande på denna överföring"
-
-#, java-format
-msgid "The message length exceeds maximum of {0} letters."
-msgstr "Meddelandets längd är längre än det maximala, {0} tecken."
-
-msgid ""
-"It's not possible to modify the source or destination account of this "
-"transfer"
-msgstr ""
-"Det är inte möjligt att ändra från- eller tillkonto på denna överföring"
-
-msgid "It's not possible to modify the destination of this transfer"
-msgstr "Det är inte möjligt att ändra mottagare på denna överföring"
-
-msgid "It's not possible to modify the amount of this e-invoice"
-msgstr "Det är inte möjligt att ändra beloppet på denna e-faktura"
-
-msgid "It's not possible to modify the source message of this e-invoice"
-msgstr "Det är inte möjligt att ändra eget meddelande på denna e-faktura"
-
-msgid "It's not possible to modify the destination account of this e-invoice"
-msgstr "Det är inte möjligt att ändra mottagare på denna e-faktura"
-
-msgid "It's not possible to modify the destination message of this e-invoice"
-msgstr "Det är inte möjligt att ändra OCR/meddelande på denna e-faktura"
-
-msgid "An error occurred when confirming the transfer"
-msgstr "Ett fel uppstod när överföringen skulle bekräftas"
-
-msgid "Could not execute transfer"
-msgstr "Överföringen kunde inte genomföras"
-
-msgid "Could not validate e-invoice"
-msgstr "Det gick inte att validera e-fakturan"
-
-msgid "Could not delete transfer"
-msgstr "Det gick inte att ta bort överföringen"
-
-msgid "Could not create payment"
-msgstr "Det gick inte att skapa betalningen"
-
-msgid "Could not update payment"
-msgstr "Det gick inte att uppdatera betalningen"
-
-msgid "Transfer or payment was not signed with security token device"
-msgstr "Överföringen eller betalningen signerades inte med kodboxen"
-
-msgid "You have another BankID session in progress. Please try again."
-msgstr "Du har en pågående inloggning via BankID. Vänligen försök igen."
-
-msgid "You cancelled the BankID process. Please try again."
-msgstr "Du avbröt BankID. Vänligen försök igen."
-
-msgid ""
-"You have existing unsigned transfers, please sign these in your bank's app "
-"before executing a new transfer"
-msgstr ""
-"Du har osignerade överföringar sedan tidigare. Var god signera dessa i din "
-"bank-app innan du utför en ny överföring."
-
-msgid "It's not possible to modify the payment date of this transfer"
-msgstr "Det är inte möjligt att ändra betalningsdatumet på denna överföring"
-
-msgid "The payment date is not a business day"
-msgstr "Betalningsdatumet är inte en bankdag"
-
-msgid "It's not possible to modify the payment date of this e-invoice"
-msgstr "Det är inte möjligt att ändra betalningsdatumet på denna e-faktura"
-
-msgid "Payment date has to be within one year from now"
-msgstr "Betalningsdatumet måste vara inom ett år från idag"
-
-msgid "It's not possible to modify the source account of this e-invoice"
-msgstr "Det är inte möjligt att ändra från-konto på denna e-faktura"
-
-msgid "It's not possible to modify this e-invoice"
-msgstr "Det är inte möjligt att ändra denna e-faktura"
-
-msgid "The BankID authentication failed"
-msgstr "Autentiseringen med BankID misslyckades"
-
-msgid "You can only make transfers to Swedish accounts"
-msgstr "Du kan endast göra överföringar till svenska konton"
-
-msgid ""
-"You do not have any accounts at Swedbank. Use Sparbankerna (Mobile BankID) "
-"instead."
-msgstr ""
-"Du har inga konton hos Swedbank. Använd Sparbankerna (Mobilt BankID) "
-"istället."
-
-msgid "You must specify a recipient name"
-msgstr "Du måste ange ett namn för mottagaren"
-
-msgid ""
-"You do not have any accounts at Sparbankerna. Use Swedbank (Mobile BankID) "
-"instead."
-msgstr ""
-"Du har inga konton hos Sparbankerna. Använd Swedbank (Mobilt BankID) "
-"istället."
-
-msgid "The e-invoice could not be found at your bank"
-msgstr "E-fakturan hittades inte hos din bank"
-
-msgid "The payment could not be found at your bank"
-msgstr "Betalningen hittades inte hos din bank"
-
-msgid "You can only make payments to Swedish destinations"
-msgstr "Du kan endast göra betalningar till svenska mottagare"
 
 msgid ""
 "Could not find a bank for the given destination account. Check the account "
@@ -453,61 +23,6 @@ msgid ""
 msgstr ""
 "Ingen bank kunde hittas för det angivna mottagarkontot. Kontrollera "
 "kontonumret och försök igen."
-
-msgid "Could not sign the e-invoice"
-msgstr "Signeringen av e-fakturan misslyckades"
-
-msgid ""
-"You need to confirm your BankID to Skandiabanken. You do it by logging in "
-"with the Skandiabanken app once and confirm that your BankID is yours. You "
-"can then continue using Tink with BankID."
-msgstr ""
-"Du behöver bekräfta för Skandiabanken att ditt BankID är säkert. Du gör det "
-"genom att logga in med Skandiabankens app en gång och bekräfta att ditt "
-"BankID är just ditt. Du kan sen fortsätta använda Tink som vanligt."
-
-msgid "You need to activate your BankID in the Handelsbanken app."
-msgstr "Du behöver aktivera ditt BankID i Handelsbankens app."
-
-msgid ""
-"In order to add new recipients you need to activate Mobile BankID for "
-"extended use. This is done in the Internet bank on the page BankID (found in "
-"the tab Tillval)."
-msgstr ""
-"För att lägga till mottagare behöver du aktivera Mobilt BankID för utökad "
-"användning. Detta gör du i internetbanken på sidan BankID (under fliken "
-"Tillval)."
-
-msgid ""
-"To be able to refresh your accounts in Tink you need to updated your "
-"customer info in the ICA bank app."
-msgstr ""
-"För att kunna uppdatera dina konton i Tink behöver du förnya dina "
-"kunduppgifter i ICA-bankens app."
-
-msgid ""
-"To use the mobile services you need to sign an agreement for Service code. "
-"Log in at Hembanken and and look in Mobila tjänster - Se och ändra "
-"servicekod."
-msgstr ""
-"För att använda mobiltjänsten behöver du godkänna villkoret för servicekod. "
-"Logga in på Hembanken och gå till Mobila tjänster - Se och ändra servicekod."
-
-msgid ""
-"You have enter incorrect service code to many times. For safety reasons the "
-"service code is now blocked. You may unlock your safety in Hembanken, in "
-"Mobila tjänster."
-msgstr ""
-"Du har fyllt i en felaktig servicekod för många gånger. Av säkerhetsskäl har "
-"din servicekod nu spärrats. Du kan låsa upp den i Hembanken, i Mobila "
-"tjänster."
-
-msgid ""
-"Wrong personal number or service code. Please try again or control your "
-"service code in Hembanken, in Mobila tjänster."
-msgstr ""
-"Felaktigt personnummer eller servicekod. Var god försök igen eller "
-"kontrollera din servicekod i Hembanken, under Mobila tjänster."
 
 msgid ""
 "Your personal code has been locked. Contact Nordea customer services "
@@ -533,65 +48,34 @@ msgstr ""
 "för internet- och telefonbanken."
 
 msgid ""
-"The first time you use your mobile BankId you have to verify it with your "
-"Digipass. Login to the SEB-app with your mobile BankID to do this."
-msgstr ""
-"Första gången du loggar in med ditt mobila BankID måste du godkänna det med "
-"ditt Digipass. Logga in i SEB-appen med ditt mobila BankID för att göra "
-"detta."
-
-msgid ""
-"Could not find any engagements in Swedbank Ung. Use Swedbank (Mobile BankID) "
+"You do not have any accounts at Swedbank. Use Sparbankerna (Mobile BankID) "
 "instead."
 msgstr ""
-"Kunde inte hitta några engagemang i Swedbank Ung. Använd Swedbank (Mobilt "
-"BankID) istället."
+"Du har inga konton hos Swedbank. Använd Sparbankerna (Mobilt BankID) "
+"istället."
 
 msgid ""
-"Could not find any engagements in Sparbankerna Ung. Use Sparbankerna (Mobile "
-"BankID) instead."
+"You do not have any accounts at Sparbankerna. Use Swedbank (Mobile BankID) "
+"instead."
 msgstr ""
-"Kunde inte hitta några engagemang i Sparbankerna Ung. Använd Sparbankerna "
-"(Mobilt BankID) istället."
+"Du har inga konton hos Sparbankerna. Använd Swedbank (Mobilt BankID) "
+"istället."
 
-msgid "You are not authorized to use this service."
-msgstr "Du har inte behörighet att använda denna tjänst."
-
-msgid "You do not have a valid profile."
-msgstr "Du har ingen giltig profil."
-
-msgid "You must be over the age of 16 to use Mobilt BankID."
-msgstr "Du måste vara över 16 år för att använda Mobilt BankID."
+msgid "Recipient name"
+msgstr "Mottagarnamn"
 
 msgid ""
-"Could not login to Skandiabanken. Unfortunately we don't support "
-"Skandiabanken for customers under the age of 18 years."
+"Because this is the first time you transfer money to this account, you'll "
+"need to register a name for it."
 msgstr ""
-"Kunde inte logga in till Skandiabanken. Tyvärr stöds inte Skandiabanken för "
-"kunder under 18 år."
+"Eftersom det är första gången du överför pengar till detta konto måste du "
+"registrera ett namn för det"
 
-msgid "Your identity could not be validated. Please try again."
-msgstr "Din identitet kunde inte bekräftas. Försök igen."
+msgid "You can only make payments to Swedish destinations"
+msgstr "Du kan endast göra betalningar till svenska mottagare"
 
-msgid "Your BankID is not authorized for this service."
-msgstr "Ditt BankID har inte behörighet för denna tjänst."
-
-msgid ""
-"It looks like you have SEB Ung. Unfortunately we currently only support "
-"SEB's standard login."
-msgstr ""
-"Det ser ut som att du använder SEB Ung. Tyvärr stödjer vi idag endast SEBs "
-"ordinarie app."
-
-#, java-format
-msgid ""
-"We are currently having technical issues with {0}. Please try again later."
-msgstr ""
-"Vi har för närvarande tekniska problem med {0}. Vänligen försök igen senare."
-
-msgid ""
-"You need to activate the connection with your Handelsbanken card reader."
-msgstr "Du behöver aktivera anslutningen med din kortläsare."
+msgid "You can only make transfers to Swedish accounts"
+msgstr "Du kan endast göra överföringar till svenska konton"
 
 msgid ""
 "Are you trying to use your charge card to login? Please use your login card "
@@ -608,27 +92,11 @@ msgstr ""
 "internetbanken."
 
 msgid ""
-"Handelsbanken is no longer active for the specified user. This could be due "
-"to that the Handelsbanken app for this device has not been active in 90 "
-"days. To login again you need to activate the app again."
-msgstr ""
-"Handelsbanken är inte längre aktiv för angiven användare. Det kan bero på "
-"att Handelsbankens app inte använts på den här enheten på 90 dagar. För att "
-"logga in behöver du aktivera appen på nytt."
-
-msgid ""
 "Incorrect answer code. The challenge code is only active for four minutes. "
 "Press OK to restart."
 msgstr ""
 "Felaktig svarskod. Tänk på att kontrollkoden endast är giltig i fyra "
 "minuter. Tryck OK för att börja om."
-
-msgid ""
-"The card you are using is blocked. Please contact Handelsbanken technical "
-"support or visit your local bank office to order a new login card."
-msgstr ""
-"Kortet är spärrat. Kontakta Teknisk support eller ditt bankkontor för att "
-"beställa ett nytt inloggningskort."
 
 msgid ""
 "The activation could not be completed. It is not possible to activate more "
@@ -645,8 +113,477 @@ msgstr ""
 "För många felaktiga försök. Kortet är låst i 60 min för signering med "
 "kortläsaren utan sladd. Kontakta Teknisk support för mer information."
 
+msgid ""
+"The card you are using is blocked. Please contact Handelsbanken technical "
+"support or visit your local bank office to order a new login card."
+msgstr ""
+"Kortet är spärrat. Kontakta Teknisk support eller ditt bankkontor för att "
+"beställa ett nytt inloggningskort."
+
+msgid ""
+"Handelsbanken is no longer active for the specified user. This could be due "
+"to that the Handelsbanken app for this device has not been active in 90 "
+"days. To login again you need to activate the app again."
+msgstr ""
+"Handelsbanken är inte längre aktiv för angiven användare. Det kan bero på "
+"att Handelsbankens app inte använts på den här enheten på 90 dagar. För att "
+"logga in behöver du aktivera appen på nytt."
+
+msgid "No response from Mobile BankID. Have you opened the app?"
+msgstr "Inget svar från Mobilt BankID. Har du öppnat appen?"
+
+msgid "You have another BankID session in progress. Please try again."
+msgstr "Du har en pågående inloggning via BankID. Vänligen försök igen."
+
+msgid "You cancelled the BankID process. Please try again."
+msgstr "Du avbröt BankID. Vänligen försök igen."
+
+msgid "The BankID authentication failed"
+msgstr "Autentiseringen med BankID misslyckades"
+
+msgid "and"
+msgstr "och"
+
+#, java-format
+msgid "{0} account"
+msgid_plural "{0} accounts"
+msgstr[0] "{0} konto"
+msgstr[1] "{0} konton"
+
+#, java-format
+msgid "{0} transaction"
+msgid_plural "{0} transactions"
+msgstr[0] "{0} transaktion"
+msgstr[1] "{0} transaktioner"
+
+#, java-format
+msgid "Updating {0}..."
+msgstr "Uppdaterar {0}..."
+
+msgid "person"
+msgstr "person"
+
+msgid "protected identity"
+msgstr "skyddad identitet"
+
+msgid "locked identity"
+msgstr "spärrad identitet"
+
+msgid "deceased"
+msgstr "avliden"
+
+msgid "removed from register"
+msgstr "bortagen från register"
+
+msgid "emigrated"
+msgstr "emigrerad"
+
+msgid "changed person number"
+msgstr "har ändrat personnummer"
+
+msgid "You are not authorized to use this service."
+msgstr "Du har inte behörighet att använda denna tjänst."
+
+msgid "You do not have a valid profile."
+msgstr "Du har ingen giltig profil."
+
+msgid "Your identity could not be validated. Please try again."
+msgstr "Din identitet kunde inte bekräftas. Försök igen."
+
+msgid "Your BankID is not authorized for this service."
+msgstr "Ditt BankID har inte behörighet för denna tjänst."
+
 msgid "The social security number has been updated, please try again"
 msgstr "Personnumret har uppdaterats, vänligen försök igen"
+
+msgid "Wrong BankID signature. Did you log in with the wrong personnummer?"
+msgstr "Felaktig BankID-signatur. Loggade du in med fel personnummer?"
+
+msgid "Failed to sign transfer with BankID"
+msgstr "Det gick inte att signa överföringen med BankID"
+
+msgid "Transfer or payment was not signed with security token device"
+msgstr "Överföringen eller betalningen signerades inte med kodboxen"
+
+msgid "Not able to update this e-invoice"
+msgstr "Kan inte ändra den här e-fakturan"
+
+msgid "Could not validate e-invoice"
+msgstr "Det gick inte att validera e-fakturan"
+
+msgid "The e-invoice could not be found at your bank"
+msgstr "E-fakturan hittades inte hos din bank"
+
+msgid "Could not sign the e-invoice"
+msgstr "Signeringen av e-fakturan misslyckades"
+
+msgid "Found more than one eInvoices that exactly matches the transfer"
+msgstr "Fler än en e-faktura hittades som stämmer överens med överföringen"
+
+msgid ""
+"You have existing unsigned transfers, please sign these in your bank's app "
+"before executing a new transfer"
+msgstr ""
+"Du har osignerade överföringar sedan tidigare. Var god signera dessa i din "
+"bank-app innan du utför en ny överföring."
+
+msgid "Invalid destination account"
+msgstr "Mottagarkontot är inte giltigt"
+
+msgid "The payment date is not a business day"
+msgstr "Betalningsdatumet är inte en bankdag"
+
+msgid "The destination message is not valid"
+msgstr "Meddelandet till mottagaren är ogiltigt"
+
+msgid "The destination message is not a valid OCR reference"
+msgstr "Meddelandet till mottagaren är inte en giltig OCR-referens"
+
+msgid "The message given is not valid"
+msgstr "Meddelandet är inte giltigt"
+
+msgid "Invalid source account"
+msgstr "Från-kontot är inte giltigt"
+
+msgid "Could not find source account"
+msgstr "Kunde inte hitta frånkonto"
+
+msgid "Unable to create new recipient account"
+msgstr "Det gick inte att skapa det nya mottagarkontot"
+
+msgid "You must specify a recipient name"
+msgstr "Du måste ange ett namn för mottagaren"
+
+msgid "It's not possible to modify the amount of this transfer"
+msgstr "Det är inte möjligt att ändra beloppet på denna överföring"
+
+msgid "It's not possible to modify the destination of this transfer"
+msgstr "Det är inte möjligt att ändra mottagare på denna överföring"
+
+msgid "It's not possible to modify the payment date of this transfer"
+msgstr "Det är inte möjligt att ändra betalningsdatumet på denna överföring"
+
+msgid "It's not possible to modify OCR/message of this transfer"
+msgstr "Det är inte möjligt att ändra OCR/meddelande på denna överföring"
+
+msgid "It's not possible to modify this transfer"
+msgstr "Det är inte möjligt att ändra denna överföring"
+
+msgid ""
+"It's not possible to modify the source or destination account of this "
+"transfer"
+msgstr ""
+"Det är inte möjligt att ändra från- eller tillkonto på denna överföring"
+
+msgid "Could not execute transfer"
+msgstr "Överföringen kunde inte genomföras"
+
+msgid "Could not delete transfer"
+msgstr "Det gick inte att ta bort överföringen"
+
+msgid "An error occurred when confirming the transfer"
+msgstr "Ett fel uppstod när överföringen skulle bekräftas"
+
+msgid "It's not possible to modify the amount of this e-invoice"
+msgstr "Det är inte möjligt att ändra beloppet på denna e-faktura"
+
+msgid "It's not possible to modify the payment date of this e-invoice"
+msgstr "Det är inte möjligt att ändra betalningsdatumet på denna e-faktura"
+
+msgid "It's not possible to modify the destination account of this e-invoice"
+msgstr "Det är inte möjligt att ändra mottagare på denna e-faktura"
+
+msgid "It's not possible to modify the source message of this e-invoice"
+msgstr "Det är inte möjligt att ändra eget meddelande på denna e-faktura"
+
+msgid "It's not possible to modify the destination message of this e-invoice"
+msgstr "Det är inte möjligt att ändra OCR/meddelande på denna e-faktura"
+
+msgid "It's not possible to modify the source account of this e-invoice"
+msgstr "Det är inte möjligt att ändra från-konto på denna e-faktura"
+
+msgid "It's not possible to modify this e-invoice"
+msgstr "Det är inte möjligt att ändra denna e-faktura"
+
+msgid "The payment could not be found at your bank"
+msgstr "Betalningen hittades inte hos din bank"
+
+msgid "Could not create payment"
+msgstr "Det gick inte att skapa betalningen"
+
+msgid "Could not update payment"
+msgstr "Det gick inte att uppdatera betalningen"
+
+#, java-format
+msgid "The message length exceeds maximum of {0} letters."
+msgstr "Meddelandets längd är längre än det maximala, {0} tecken."
+
+msgid "Something went wrong."
+msgstr "Något gick fel."
+
+msgid ""
+"The first time you use your mobile BankId you have to verify it with your "
+"Digipass. Login to the SEB-app with your mobile BankID to do this."
+msgstr ""
+"Första gången du loggar in med ditt mobila BankID måste du godkänna det med "
+"ditt Digipass. Logga in i SEB-appen med ditt mobila BankID för att göra "
+"detta."
+
+msgid ""
+"It looks like you have SEB Ung. Unfortunately we currently only support "
+"SEB's standard login."
+msgstr ""
+"Det ser ut som att du använder SEB Ung. Tyvärr stödjer vi idag endast SEBs "
+"ordinarie app."
+
+msgid ""
+"You need to confirm your BankID to Skandiabanken. You do it by logging in "
+"with the Skandiabanken app once to confirm that the BankID is yours. You may "
+"then continue using BankID here."
+msgstr ""
+"Du behöver bekräfta för Skandiabanken att ditt BankID är säkert. Du gör det "
+"genom att logga in med Skandiabankens app en gång och bekräfta att ditt "
+"BankID är just ditt. Därefter kan du fortsätta som vanligt."
+
+msgid ""
+"Could not login to Skandiabanken. Unfortunately we don't support "
+"Skandiabanken for customers under the age of 18 years."
+msgstr ""
+"Kunde inte logga in till Skandiabanken. Tyvärr stöds inte Skandiabanken för "
+"kunder under 18 år."
+
+msgid "Could not login, please try again."
+msgstr "Kunde inte logga in, vänligen försök igen."
+
+msgid ""
+"You have enter incorrect service code to many times. For safety reasons the "
+"service code is now blocked. You may unlock your safety in Hembanken, in "
+"Mobila tjänster."
+msgstr ""
+"Du har fyllt i en felaktig servicekod för många gånger. Av säkerhetsskäl har "
+"din servicekod nu spärrats. Du kan låsa upp den i Hembanken, i Mobila "
+"tjänster."
+
+msgid ""
+"To use the mobile services you need to sign an agreement for Service code. "
+"Log in at Hembanken and and look in Mobila tjänster - Se och ändra "
+"servicekod."
+msgstr ""
+"För att använda mobiltjänsten behöver du godkänna villkoret för servicekod. "
+"Logga in på Hembanken och gå till Mobila tjänster - Se och ändra servicekod."
+
+msgid ""
+"Wrong personal number or service code. Please try again or control your "
+"service code in Hembanken, in Mobila tjänster."
+msgstr ""
+"Felaktigt personnummer eller servicekod. Var god försök igen eller "
+"kontrollera din servicekod i Hembanken, under Mobila tjänster."
+
+msgid "Failed to sign payment using BankID"
+msgstr "Signering av betalning med BankID misslyckades"
+
+msgid "You must be over the age of 16 to use Mobilt BankID."
+msgstr "Du måste vara över 16 år för att använda Mobilt BankID."
+
+#, java-format
+msgid ""
+"For the selected source, the destination message cannot be longer than {0} "
+"characters. Please adjust the message and try again."
+msgstr ""
+"För valt avsändarkonto kan meddelandet till mottagaren inte vara längre än "
+"{0} tecken. Justera meddelandet och försök igen."
+
+msgid "Error from"
+msgstr "Fel från"
+
+msgid "What can I do if this is not correct?"
+msgstr "Vad kan jag göra om detta inte stämmer?"
+
+msgid ""
+"If any of the information is incorrect, please contact Skatteverket on %s."
+msgstr ""
+"Om någon av uppgifterna inte stämmer, ta kontakt med Skatteverket på %s."
+
+#, java-format
+msgid ""
+"If any of the information is incorrect, please contact Bolagsverket on {0} "
+"or Skatteverket on {1}."
+msgstr ""
+"Om någon av uppgifterna inte stämmer, ta kontakt med Bolagsverket på {0} "
+"eller Skatteverket på {1}."
+
+msgid ""
+"If any of the information is incorrect, please contact Lantmäteriet on %s."
+msgstr ""
+"Om någon av uppgifterna inte stämmer, ta kontakt med Lantmäteriet på %s."
+
+msgid ""
+"If any of the information is incorrect, please contact Kronofogden on %s."
+msgstr ""
+"Om någon av uppgifterna inte stämmer, ta kontakt med Kronofogden på %s."
+
+msgid ""
+"If you have any questions about you credit score, please contact Creditsafe "
+"on %s."
+msgstr ""
+"Om du har några frågor angående ditt kreditscore, vänligen kontakta "
+"Creditsafe på %s."
+
+msgid ""
+"If you don’t recognise the transactions, please contact your bank and let "
+"them check who registered the transactions."
+msgstr ""
+"Om du inte känner igen transaktionerna, ta kontakt med din bank och be dem "
+"kolla vem som registrerat köpen."
+
+msgid ""
+"If you don’t recognise the transaction, please contact your bank and let "
+"them check who registered the purchase."
+msgstr ""
+"Om du inte känner igen transaktionen, ta kontakt med din bank och be dem "
+"kolla vem som registrerat köpet."
+
+msgid ""
+"The information is fetched from Statens personadressregister. SPAR includes "
+"all persons who are registered as resident in Sweden. The data in SPAR is "
+"updated each day with data from the Swedish Population Register."
+msgstr ""
+"Uppgifterna är hämtade från SPAR. Statens personadressregister, SPAR, är ett "
+"offentligt register som omfattar alla personer som är folkbokförda i "
+"Sverige, både svenska och utländska medborgare. Uppgifterna i SPAR "
+"uppdateras varje dygn med uppgifter från folkbokföringsregistret."
+
+msgid ""
+"The information is fetched from Bolagsverket and Skatteveket. Bolagsverket "
+"is a public authority whose main purpose is to register new companies and "
+"handle changes in register for existing companies, such as changes in "
+"address and changes of board and accountants. Skatteverket handled F-tax and "
+"moms."
+msgstr ""
+"Uppgifterna är hämtade från Bolagsverket och Skatteverket. Bolagsverket är "
+"en statlig myndighet som huvudsakligen hanterar registreringen av nya "
+"företag och registerändringar för befintliga företag, såsom ändring av "
+"adress och byte av styrelse och revisorer. Skatteverket sköter registrering "
+"av F-skatt och moms."
+
+msgid ""
+"The information is fetched from Lantmäteriet. Lantmäteriet is the authority "
+"that handles geographical information, appoints district names and is "
+"responsible for real estate classification."
+msgstr ""
+"Uppgifterna är hämtade från Lantmäteriet. Lantmäteriet är den myndighet som "
+"har till uppgift att tillhandahålla geografisk information, fastställa "
+"ortnamn och ansvara för fastighetsindelningen i Sverige."
+
+msgid ""
+"The information is fetched from Kronofogden. Kronofogden is a neutral "
+"administrative authority. The assignment is to create a balance between the "
+"one paying and the one who is payed. It is the duty of Kronofogden to help "
+"the one not getting payed, but also supporting the one who cannot pay a debt."
+msgstr ""
+"Uppgifterna är hämtade från Kronofogden. Kronofogden är en myndighet med en "
+"opartisk roll. Uppdraget är att skapa balans mellan den som ska ha betalt "
+"och den som ska betala. Det är Kronofogdens uppgifter att hjälpa den som "
+"inte fått betalt men också se till att den som har en skuld får stöd och "
+"vägledning för att reda ut sin situation."
+
+msgid ""
+"The information is fetched from Kronofogden. A non-payment is a sign of you "
+"not being able to handle your payments. The effect could for example be that "
+"your are not getting a mortgage, apartment, job or phone subscription."
+msgstr ""
+"Uppgifterna är hämtade från Kronofogden. En betalningsanmärkning är ett "
+"tecken på att du inte har skött dina betalningar. Betalningsanmärkningar kan "
+"exempelvis leda till att du inte får lån, lägenhet, arbete eller "
+"telefonabonnemang."
+
+msgid ""
+"The information is fetched from Skatteverket when your tax return has been "
+"approved."
+msgstr ""
+"Den här informationen hämtas från Skatteverket när din deklaration är "
+"godkänd."
+
+msgid ""
+"Creditsafe scoring is a tool to determine the solvency level for a person. "
+"The scoring is done by a number of generic credit scoring models and is "
+"mainly based on income, assets, age, company engagements, civil status and "
+"non-payments. The scoring is a scale from 1 to 100 where 1-19 means low "
+"solvency, 20-39 medium solvency, 40-69 high solvency and 70-100 very high "
+"solvency."
+msgstr ""
+"Creditsafe scoring är ett verktyg för att prognostisera privatpersoners "
+"betalningsförmåga. Scoringen beräknas genom ett antal generiska "
+"kreditscoremodeller som framförallt baseras på inkomst, tillgångar, ålder, "
+"näringsverksamhet, civilstånd och betalningsanmärkningar.  Scoringen är en "
+"skala från 1 till 100 där 1-19 betyder låg betalningsförmåga, 20-39 medium "
+"betalningsförmåga, 40-69 hög betalningsförmåga och 70-100 mycket hög "
+"betalningsförmåga."
+
+msgid ""
+"Every day we scan all your transactions to find deviations from your normal "
+"behavior and things to pay extra attention to. In this case we noticed there "
+"were two transactions deducted from your account the same day with the same "
+"amount and description. It could be someone with bad intentions that has "
+"charged you twice but it could of course also been you buying the same thing "
+"twice the same day."
+msgstr ""
+"Varje dag skannar vi alla dina transaktioner för att hitta avvikelser från "
+"ditt normala beteende och saker att vara extra uppmärksam på. I det här "
+"fallet märkte vi att två transaktioner drogs från ditt konto samma dag med "
+"samma belopp och beskrivning. Det kan vara någon med dåliga avsikter som har "
+"laddat dig två gånger, men det kunde självklart också vara att du köpte "
+"samma sak två gånger samma dag."
+
+msgid ""
+"Every day we scan all your transactions to find deviations from your normal "
+"behavior and things to pay extra attention to. In this case we noticed there "
+"was an unusual large expense on your account."
+msgstr ""
+"Varje dag skannar vi alla dina transaktioner för att hitta avvikelser från "
+"ditt normala beteende och saker att vara extra uppmärksam på. I det här "
+"fallet märkte vi att det var en ovanlig stor kostnad på ditt konto."
+
+msgid ""
+"Every day we scan all your transactions to find deviations from your normal "
+"behavior and things to pay extra attention to. In this case we noticed there "
+"was an unusual large cash withdrawal on your account."
+msgstr ""
+"Varje dag skannar vi alla dina transaktioner för att hitta avvikelser från "
+"ditt normala beteende och saker att vara extra uppmärksam på. I det här "
+"fallet märkte vi att det var ett ovanligt stort kontantuttag på ditt konto."
+
+msgid ""
+"Every day we scan all your transactions to find deviations from your normal "
+"behavior and things to pay extra attention to. In this case we noticed there "
+"was an unusual high activity on one of you accounts with more transactions "
+"than usual."
+msgstr ""
+"Varje dag skannar vi alla dina transaktioner för att hitta avvikelser från "
+"ditt normala beteende och saker att vara extra uppmärksam på. I det här "
+"fallet märkte vi att det var en ovanlig hög aktivitet på en av er konton med "
+"fler transaktioner än vanligt."
+
+msgid "Source"
+msgstr "Källa"
+
+msgid "Where does this information come from?"
+msgstr "Var kommer den här informationen ifrån?"
+
+msgid "What can I do if this looks weird?"
+msgstr "Vad kan jag göra om informationen inte stämmer?"
+
+#, java-format
+msgid ""
+"We are currently having technical issues with {0}. Please try again later."
+msgstr ""
+"Vi har för närvarande tekniska problem med {0}. Vänligen försök igen senare."
+
+msgid "BankID session already in progress, please try again."
+msgstr "Mobilt BankID är upptaget, vänta någon minut och testa igen."
+
+msgid "BankID authentication failed. Please verify your Mobil BankID is OK."
+msgstr "BankID autentisering misslyckades. Verifiera att din BankID är OK."
 
 #, java-format
 msgid ""
@@ -663,10 +600,6 @@ msgid ""
 "Use the same username and password as you would in the card issuer's mobile "
 "app."
 msgstr "Använd samma användarnamn och lösenord som i kortutgivarens mobilapp."
-
-msgid ""
-"Use the same username and password as you would in the broker's mobile app."
-msgstr "Använd samma användarnamn och lösenord som i mäklarens mobilapp."
 
 msgid ""
 "To connect your broker, you need to identify yourself using Mobile BankID."
@@ -749,6 +682,10 @@ msgstr ""
 "med Bank-ID en gång. Om du glömde din kod kan du välja en ny i bankens "
 "mobilapp. Genom att fylla i detta kan transaktioner hämtas automatiskt i "
 "bakgrunden, så du behöver inte använda Bank-ID varje gång."
+
+msgid ""
+"Use the same username and password as you would in the broker's mobile app."
+msgstr "Använd samma användarnamn och lösenord som i mäklarens mobilapp."
 
 msgid ""
 "You use Mobile BankID the same way as in the bank's mobile app. If you have "

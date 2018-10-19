@@ -180,16 +180,16 @@ public class IdentityTextUtils {
                     .getString("Creditsafe scoring is a tool to determine the solvency level for a person. The scoring is done by a number of generic credit scoring models and is mainly based on income, assets, age, company engagements, civil status and non-payments. The scoring is a scale from 1 to 100 where 1-19 means low solvency, 20-39 medium solvency, 40-69 high solvency and 70-100 very high solvency.");
         case DOUBLE_CHARGE:
             return catalog
-                    .getString("Every day Tink scans all of your transactions to find things that differ from you normal behaviour and things we want to keep you extra alerted on. In this case we have notices there were two transactions deducted from your account the same day with the same amount and description. It could be someone with bad intentions that has charged you twice but it could of course also been you buying the same thing twice the same day.");
+                    .getString("Every day we scan all your transactions to find deviations from your normal behavior and things to pay extra attention to. In this case we noticed there were two transactions deducted from your account the same day with the same amount and description. It could be someone with bad intentions that has charged you twice but it could of course also been you buying the same thing twice the same day.");
         case LARGE_EXPENSE:
             return catalog
-                    .getString("Every day Tink scans all of your transactions to find things that differ from you normal behaviour and things we want to keep you extra alerted on. In this case we have notices there was an unusual large expense on your account.");
+                    .getString("Every day we scan all your transactions to find deviations from your normal behavior and things to pay extra attention to. In this case we noticed there was an unusual large expense on your account.");
         case LARGE_WITHDRAWAL:
             return catalog
-                    .getString("Every day Tink scans all of your transactions to find things that differ from you normal behaviour and things we want to keep you extra alerted on. In this case we have notices there was an unusual large cash withdrawal on your account.");
+                    .getString("Every day we scan all your transactions to find deviations from your normal behavior and things to pay extra attention to. In this case we noticed there was an unusual large cash withdrawal on your account.");
         case FREQUENT_ACCOUNT_ACTIVITY:
             return catalog
-                    .getString("Every day Tink scans all of your transactions to find things that differ from you normal behaviour and things we want to keep you extra alerted on. In this case we have notices there was an unusual high activity on one of you accounts with more transactions than usual.");
+                    .getString("Every day we scan all your transactions to find deviations from your normal behavior and things to pay extra attention to. In this case we noticed there was an unusual high activity on one of you accounts with more transactions than usual.");
         }
         return "";
     }

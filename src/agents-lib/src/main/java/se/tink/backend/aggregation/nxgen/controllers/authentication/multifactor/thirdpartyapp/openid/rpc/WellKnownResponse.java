@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -144,9 +145,10 @@ public class WellKnownResponse {
                 .findFirst();
     }
 
-    public Optional<String> getPreferredTokenEndpointAuthMethod(List<String> supportedMethods) {
+    public Optional<OpenIdConstants.TOKEN_ENDPOINT_AUTH_METHOD> getPreferredTokenEndpointAuthMethod(
+            List<OpenIdConstants.TOKEN_ENDPOINT_AUTH_METHOD> supportedMethods) {
         return supportedMethods.stream()
-                .filter(method -> tokenEndpointAuthMethodsSupported.contains(method))
+                .filter(method -> tokenEndpointAuthMethodsSupported.contains(method.toString()))
                 .findFirst();
     }
 

@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.fetcher.transactionalaccount.entities;
 
 import java.util.Date;
+import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.RevolutConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.core.Amount;
@@ -69,5 +71,20 @@ public class TransactionEntity {
                 .setDate(new Date(startedDate))
                 .setDescription(description)
                 .build();
+    }
+    public String getType() {
+        return type;
+    }
+
+    public Optional<AssociatedAccountEntity> getAccount() {
+        return Optional.ofNullable(account);
+    }
+
+    public boolean isCardPayment(){
+        return getType().equalsIgnoreCase(RevolutConstants.TransactionTypes.CARD_PAYMENT);
+    }
+
+    public boolean isTopUp() {
+        return getType().equalsIgnoreCase(RevolutConstants.TransactionTypes.TOP_UP);
     }
 }

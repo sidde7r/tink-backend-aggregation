@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
+import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
@@ -24,8 +25,8 @@ import se.tink.backend.core.transfer.Transfer;
 public class UpdateControllerTestImpl extends UpdateController {
     private Set<Account> accounts = Sets.newHashSet();
 
-    public UpdateControllerTestImpl(String market, String currency) {
-        super(Mockito.mock(AgentContext.class), market, currency);
+    public UpdateControllerTestImpl(MarketCode market, String currency) {
+        super(Mockito.mock(AgentContext.class), market, currency, Mockito.mock(Credentials.class));
     }
 
     @Override

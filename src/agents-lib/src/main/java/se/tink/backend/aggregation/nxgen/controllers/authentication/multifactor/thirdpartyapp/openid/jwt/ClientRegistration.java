@@ -8,6 +8,7 @@ import java.util.List;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils.JwtUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils.OpenIdSignUtils;
 
 public class ClientRegistration {
@@ -60,7 +61,8 @@ public class ClientRegistration {
 
             String tokenEndpointAuthMethod = wellknownConfiguration.getPreferredTokenEndpointAuthMethod(
                     OpenIdConstants.PREFERRED_TOKEN_ENDPOINT_AUTH_METHODS)
-                    .orElseThrow(() -> new IllegalStateException("Preferred token endpoint auth method not found."));
+                    .orElseThrow(() -> new IllegalStateException("Preferred token endpoint auth method not found."))
+                    .toString();
 
             String issuer = wellknownConfiguration.getIssuer();
 

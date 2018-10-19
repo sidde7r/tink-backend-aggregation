@@ -13,6 +13,17 @@ import se.tink.libraries.i18n.LocalizableKey;
 
 public class HandelsbankenSEConstants {
 
+    public static final class QueryParams{
+        public static final String IS_CARD = "isCard";
+        public static final String FROM = "from";
+        public static final String TO = "to";
+        public static final String AUTH_TOKEN = "authToken";
+
+        public static final class Defaults{
+            public static final String FALSE = "false";
+        }
+    }
+
     public static final class Urls {
         public static final URL ENTRY_POINT = new URL("https://m.handelsbanken.se/open/entrypoint/priv");
     }

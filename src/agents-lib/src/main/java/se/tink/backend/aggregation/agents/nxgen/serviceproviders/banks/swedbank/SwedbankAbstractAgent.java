@@ -66,7 +66,7 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
         SwedbankDefaultTransactionalAccountFetcher transactionalFetcher =
-                new SwedbankDefaultTransactionalAccountFetcher(apiClient, request.getProvider().getCurrency());
+                new SwedbankDefaultTransactionalAccountFetcher(apiClient);
 
         TransactionFetcherController<TransactionalAccount> transactionFetcherController =
                 new TransactionFetcherController<>(transactionPaginationHelper,

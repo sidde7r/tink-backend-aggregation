@@ -49,12 +49,9 @@ public class LclTransactionalAccountFetcher implements AccountFetcher<Transactio
     }
 
     private TransactionalAccount getTinkAccount(AccountEntity accountEntity) {
-        Optional<AccountDetailsEntity> accountDetails = apiClient.getAccountDetails(accountEntity.getAccountNumber());
+        AccountDetailsEntity accountDetails = apiClient.getAccountDetails(accountEntity.getAgency(),
+                accountEntity.getAccountNumber(), accountEntity.getCleLetter());
 
-        if (!accountDetails.isPresent()) {
-            return null;
-        }
-
-        return accountEntity.toTinkAccount(accountDetails.get());
+        return accountEntity.toTinkAccount(accountDetails);
     }
 }

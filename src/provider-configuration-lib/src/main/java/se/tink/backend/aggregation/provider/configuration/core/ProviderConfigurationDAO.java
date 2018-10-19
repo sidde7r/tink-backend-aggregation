@@ -18,4 +18,6 @@ public interface ProviderConfigurationDAO {
     ProviderConfiguration findByName(String providerName);
 
     void updateStatus(String providerName, ProviderStatuses providerStatus);
+
+    void removeStatus(String providerName);
 }

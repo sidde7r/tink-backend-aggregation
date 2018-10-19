@@ -8,6 +8,15 @@ public class TransactionKeyPaginatorResponseImpl<T> implements TransactionKeyPag
     private Collection<? extends Transaction> transactions;
     private T next;
 
+    public TransactionKeyPaginatorResponseImpl() {
+    }
+
+    public TransactionKeyPaginatorResponseImpl(
+            Collection<? extends Transaction> transactions, T next) {
+        this.transactions = transactions;
+        this.next = next;
+    }
+
     public void setTransactions(Collection<? extends Transaction> transactions) {
         this.transactions = transactions;
     }

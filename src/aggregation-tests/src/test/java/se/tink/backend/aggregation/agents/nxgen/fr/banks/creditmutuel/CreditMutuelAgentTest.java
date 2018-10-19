@@ -18,7 +18,7 @@ public class CreditMutuelAgentTest {
     }
 
     @Test
-    public void testCicbankFr() throws Exception {
+    public void testCreditMutuelFr() throws Exception {
         builder()
                 .addCredentialField(Field.Key.USERNAME, USERNAME)
                 .addCredentialField(Field.Key.PASSWORD, PASSWORD)

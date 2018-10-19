@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank
 import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
@@ -40,9 +39,9 @@ public class SwedbankDefaultLoanFetcher implements AccountFetcher<LoanAccount> {
 
             List<LoanAccountEntity> loanAccountEntities = engagementOverviewResponse.getLoanAccounts();
 
-            // check if user has loans, if not return empty
+            // check if user has loans, if not, continue
             if (loanAccountEntities == null || loanAccountEntities.size() < 1) {
-                return Collections.emptyList();
+                continue;
             }
 
             for (LoanAccountEntity loanAccountEntity : loanAccountEntities) {
@@ -74,8 +73,6 @@ public class SwedbankDefaultLoanFetcher implements AccountFetcher<LoanAccount> {
             // log loan info for endpoints we do not yet have full info for
             logLoanInfo();
         }
-
-
 
         return loanAccounts;
     }

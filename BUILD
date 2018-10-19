@@ -631,6 +631,7 @@ junit_test(
         "//src/libraries/i18n",
         "//src/libraries/strings:strings",
         "//src/libraries/abnamro:abn_amro",
+        "//src/libraries/creditsafe_consumer_monitoring",
 
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_google_guava_guava",
@@ -858,11 +859,8 @@ java_library(
 
          "//third_party:org_springframework_spring_expression",
          "//third_party:org_springframework_data_spring_data_jpa",
-         "//third_party:org_apache_curator_curator_framework",
-         "//third_party:org_apache_curator_curator_x_discovery",
          "//third_party:com_google_guava_guava",
          "//third_party:com_google_inject_guice",
-         "//third_party:com_netflix_governator",
          "//third_party:io_dropwizard_dropwizard_core",
      ],
 )
@@ -911,11 +909,8 @@ java_binary(
 
          "//third_party:org_springframework_spring_expression",
          "//third_party:org_springframework_data_spring_data_jpa",
-         "//third_party:org_apache_curator_curator_framework",
-         "//third_party:org_apache_curator_curator_x_discovery",
          "//third_party:com_google_guava_guava",
          "//third_party:com_google_inject_guice",
-         "//third_party:com_netflix_governator",
          "//third_party:io_dropwizard_dropwizard_core",
     ],
 )

@@ -39,10 +39,7 @@ data:
         - type: console
           threshold: ALL
           timeZone: Europe/Stockholm
-          logFormat: '%date{"yyyy-MM-dd HH:mm:ss,SSSXXX"} %level [%thread] R:%X{requestId} %logger %message%n%xException'
-
-    coordination:
-      hosts: {{ default "coordination.provider.svc.cluster.local:2181" .Values.coordinationHosts }}
+          logFormat: '{"date":"%date{"yyyy-MM-dd HH:mm:ss,SSSXXX"}","level":"%level","thread":"%thread","requestId":"%X{requestId}","logger":"%logger","message":"%replace(%m){"\n","\\n"}","exception":"%replace(%ex){"[\r\n]+","\\n"}"}%nopex%n'
 
     database:
       driverClass: com.mysql.jdbc.Driver
@@ -73,5 +70,4 @@ data:
   providerdb-password: ZGV2dG9rZW4=
   # Is set to changeme for the development keystore
   keystore-password: Y2hhbmdlbWU=
-  system-access-token: ZGV2dG9rZW4=
 {{ end }}

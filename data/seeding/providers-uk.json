@@ -1,67 +1,194 @@
 {
-    "market": "UK",
-    "currency": "GBP",
-    "providers": [
+  "market": "UK",
+  "currency": "GBP",
+  "providers": [
+    {
+      "name": "uk-modelo-oauth2",
+      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
+      "credentialsType": "PASSWORD",
+      "displayName": "Modelo test",
+      "fields": [],
+      "payload": "tink:modelo",
+      "groupDisplayName": "",
+      "multiFactor": false,
+      "passwordhelptext": "Change me.",
+      "popular": false,
+      "refreshFrequency": 1,
+      "refreshFrequencyFactor": 1,
+      "status": "DISABLED",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
+      "name": "uk-barclays-oauth2",
+      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
+      "credentialsType": "PASSWORD",
+      "displayName": "Barclays",
+      "fields": [],
+      "payload": "tink:barclays",
+      "groupDisplayName": "",
+      "multiFactor": false,
+      "passwordhelptext": "Authentication is done on external page",
+      "popular": true,
+      "refreshFrequency": 1,
+      "refreshFrequencyFactor": 1,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
+      "name": "uk-halifax-oauth2",
+      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
+      "credentialsType": "PASSWORD",
+      "displayName": "Halifax",
+      "fields": [],
+      "payload": "tink:halifax",
+      "groupDisplayName": "",
+      "multiFactor": false,
+      "passwordhelptext": "Authentication is done on external page",
+      "popular": false,
+      "refreshFrequency": 1,
+      "refreshFrequencyFactor": 1,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
+      "name": "uk-lloyds-oauth2",
+      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
+      "credentialsType": "PASSWORD",
+      "displayName": "Lloyds",
+      "fields": [],
+      "payload": "tink:lloyds",
+      "groupDisplayName": "",
+      "multiFactor": false,
+      "passwordhelptext": "Authentication is done on external page",
+      "popular": false,
+      "refreshFrequency": 1,
+      "refreshFrequencyFactor": 1,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
+      "name": "uk-bankofscotland-oauth2",
+      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
+      "credentialsType": "PASSWORD",
+      "displayName": "Bank of Scotland",
+      "fields": [],
+      "payload": "tink:bankofscotland",
+      "groupDisplayName": "",
+      "multiFactor": false,
+      "passwordhelptext": "Authentication is done on external page",
+      "popular": false,
+      "refreshFrequency": 1,
+      "refreshFrequencyFactor": 1,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
+      "name": "uk-santander-oauth2",
+      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11Agent",
+      "credentialsType": "PASSWORD",
+      "displayName": "Santander",
+      "fields": [],
+      "payload": "tink:santander",
+      "groupDisplayName": "",
+      "multiFactor": false,
+      "passwordhelptext": "Authentication is done on external page",
+      "popular": false,
+      "refreshFrequency": 1,
+      "refreshFrequencyFactor": 1,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
+      "name": "uk-americanexpress-password",
+      "className": "nxgen.uk.creditcards.amex.v62.AmericanExpressV62UKAgent",
+      "credentialsType": "PASSWORD",
+      "displayName": "American Express",
+      "fields": [
         {
-            "name": "uk-americanexpress-password",
-            "className": "nxgen.uk.creditcards.amex.v62.AmericanExpressV62UKAgent",
-            "credentialsType": "PASSWORD",
-            "displayName": "American Express",
-            "fields": [
-                {
-                    "description": "Username",
-                    "name": "username",
-                    "immutable": true,
-                    "minLength": 1
-                },
-                {
-                    "description": "Password",
-                    "masked": true,
-                    "sensitive": true,
-                    "name": "password",
-                    "minLength": 1
-                }
-            ],
-            "groupDisplayName": "American Express",
-            "multiFactor": false,
-            "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
-            "popular": false,
-            "refreshFrequency": 1,
-            "refreshFrequencyFactor": 1,
-            "status": "ENABLED",
-            "transactional": true,
-            "type": "CREDIT_CARD"
+          "description": "Username",
+          "name": "username",
+          "immutable": true,
+          "minLength": 1
         },
         {
-            "name": "uk-revolut-password",
-            "className": "nxgen.serviceproviders.banks.revolut.RevolutAgent",
-            "displayName": "Revolut",
-            "credentialsType": "PASSWORD",
-            "multiFactor": true,
-            "fields": [
-                {
-                    "description": "Phone number",
-                    "name": "username",
-                    "pattern": "\\+?[1-9][0-9]+",
-                    "minLength": 5,
-                    "maxLength": 16,
-                    "patternError": "Please enter your full phone number in international format, starting with '+' and including country code. Example: +44 NNN NNN NNNN"
-                },
-                {
-                    "description": "Passcode",
-                    "pattern": "[0-9]{4}",
-                    "sensitive": true,
-                    "name": "password",
-                    "masked": true,
-                    "minLength": 4,
-                    "maxLength": 4,
-                    "patternError": "Please enter your four digit passcode."
-                }
-            ],
-            "passwordhelptext": "Enter your full phone number in international format starting with '+', and the four digit passcode you set up in your Revolut app.",
-            "status": "ENABLED",
-            "transactional": true,
-            "type": "BANK"
+          "description": "Password",
+          "masked": true,
+          "sensitive": true,
+          "name": "password",
+          "minLength": 1
         }
-    ]
+      ],
+      "groupDisplayName": "American Express",
+      "multiFactor": false,
+      "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
+      "popular": false,
+      "refreshFrequency": 1,
+      "refreshFrequencyFactor": 1,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "CREDIT_CARD"
+    },
+    {
+      "name": "uk-revolut-password",
+      "className": "nxgen.serviceproviders.banks.revolut.RevolutAgent",
+      "displayName": "Revolut",
+      "credentialsType": "PASSWORD",
+      "multiFactor": true,
+      "fields": [
+        {
+          "description": "Phone number",
+          "name": "username",
+          "pattern": "\\+?[1-9][0-9]+",
+          "minLength": 5,
+          "maxLength": 16,
+          "patternError": "Please enter your full phone number in international format, starting with '+' and including country code. Example: +44 NNN NNN NNNN"
+        },
+        {
+          "description": "Passcode",
+          "pattern": "[0-9]{4}",
+          "sensitive": true,
+          "name": "password",
+          "masked": true,
+          "minLength": 4,
+          "maxLength": 4,
+          "patternError": "Please enter your four digit passcode."
+        }
+      ],
+      "passwordhelptext": "Enter your full phone number in international format starting with '+', and the four digit passcode you set up in your Revolut app.",
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
+      "name": "uk-n26-password",
+      "displayName": "N26",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.serviceproviders.banks.n26.N26Agent",
+      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+      "transactional": true,
+      "fields": [
+          {
+              "description": "Username",
+              "name": "username",
+              "immutable": true
+          },
+          {
+              "description": "Password",
+              "masked": true,
+              "name": "password",
+              "sensitive": true
+          }
+      ]
+    }
+  ]
 }

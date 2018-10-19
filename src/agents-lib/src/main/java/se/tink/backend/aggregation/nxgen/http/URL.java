@@ -85,6 +85,10 @@ public final class URL {
     public String getScheme() {
         return toUri().getScheme();
     }
+    
+    public URL getUrl(){
+        return new URL(url);
+    }
 
     public URI toUri() {
         // Ensure there are no unpopulated parameters before converting to URI

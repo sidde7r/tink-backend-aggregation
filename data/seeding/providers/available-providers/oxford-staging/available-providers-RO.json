@@ -1,0 +1,8 @@
+{
+  "clusterid": "oxford-staging",
+  "providers": [
+    "ro-raiffeisen-psd2",
+    "ro-n26-password",
+    "ro-revolut-password"
+  ]
+}

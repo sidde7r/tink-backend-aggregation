@@ -17,6 +17,10 @@ public class ProviderConfiguration {
         return wellKnownURL;
     }
 
+    public URL getApiBaseURL() {
+        return apiBaseURL;
+    }
+
     public URL getAccountRequestsURL() {
         return apiBaseURL.concat(OpenIdConstants.ApiServices.ACCOUNT_REQUESTS);
     }
@@ -26,8 +30,7 @@ public class ProviderConfiguration {
     }
 
     public URL getPaymentSubmissionsURL(String paymentSubmissionId) {
-        return apiBaseURL
-                .concat(OpenIdConstants.ApiServices.PAYMENT_SUBMISSIONS + paymentSubmissionId);
+        return apiBaseURL.concat(OpenIdConstants.ApiServices.PAYMENT_SUBMISSIONS + paymentSubmissionId);
     }
 
     public void validate() {

@@ -9,8 +9,6 @@ import se.tink.backend.common.repository.mysql.aggregation.aggregationcredential
 import se.tink.backend.common.repository.mysql.aggregation.clustercryptoconfiguration.ClusterCryptoConfigurationRepository;
 import se.tink.backend.common.repository.mysql.aggregation.clusterhostconfiguration.ClusterHostConfigurationRepository;
 import se.tink.backend.common.config.DatabaseConfiguration;
-import se.tink.backend.common.repository.mysql.aggregation.clusterprovider.ClusterProviderConfigurationRepository;
-import se.tink.backend.common.repository.mysql.aggregation.providerconfiguration.ProviderConfigurationRepository;
 import se.tink.backend.core.ClusterHostConfiguration;
 import se.tink.backend.guice.configuration.RepositoryModule;
 
@@ -24,14 +22,12 @@ public class AggregationRepositoryModule extends RepositoryModule {
         bindSpringBean(AggregationCredentialsRepository.class);
         bindSpringBean(ClusterHostConfigurationRepository.class);
         bindSpringBean(ClusterCryptoConfigurationRepository.class);
-        bindSpringBean(ClusterProviderConfigurationRepository.class);
-        bindSpringBean(ProviderConfigurationRepository.class);
     }
 
     @Provides
     @Singleton
     @Named("clusterHostConfigurations")
-    public Map<String, ClusterHostConfiguration> provideCategoryCodesById(ClusterHostConfigurationRepository repository) {
+    public Map<String, ClusterHostConfiguration> provideClusterHostConfigurations(ClusterHostConfigurationRepository repository) {
         return repository.findAll().stream().collect(
                 Collectors.toMap(ClusterHostConfiguration::getClusterId, x -> x)
         );

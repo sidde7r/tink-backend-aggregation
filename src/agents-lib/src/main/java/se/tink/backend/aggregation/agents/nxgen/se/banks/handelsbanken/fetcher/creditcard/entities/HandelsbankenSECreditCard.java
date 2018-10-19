@@ -29,7 +29,7 @@ public class HandelsbankenSECreditCard extends HandelsbankenCreditCard {
                 .build();
     }
 
-    public URL toCardTransactions() {
+    public URL getCardTransactionsUrl() {
         return findLink(HandelsbankenConstants.URLS.Links.CARD_TRANSACTIONS);
     }
 
@@ -42,7 +42,7 @@ public class HandelsbankenSECreditCard extends HandelsbankenCreditCard {
 
     @Override
     public boolean is(Account account) {
-        return numberMasked != null && numberMasked.equals(account.getBankIdentifier());
+        return isCreditCard() && numberMasked != null && numberMasked.equals(account.getBankIdentifier());
     }
 
     public boolean hasInvertedTransactions() {

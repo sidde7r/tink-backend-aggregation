@@ -15,6 +15,9 @@ public class SecurityHoldingContainer {
         if (holdingDetail == null || holdingDetail.hasNoValue()) {
             return Optional.empty();
         }
+        if (identifier == null && instrumentSummary == null) {
+            return Optional.empty();
+        }
         return Optional.of(new Instrument())
                 .map(instrument -> enrich(holdingDetail, instrument))
                 .map(instrument -> enrich(instrumentSummary, instrument))
@@ -30,6 +33,16 @@ public class SecurityHoldingContainer {
     @VisibleForTesting
     void setHoldingDetail(CustodyHoldings holdingDetail) {
         this.holdingDetail = holdingDetail;
+    }
+
+    @VisibleForTesting
+    void setInstrumentSummary(InstrumentSummary instrumentSummary) {
+        this.instrumentSummary = instrumentSummary;
+    }
+
+    @VisibleForTesting
+    void setSecurityIdentifier(SecurityIdentifier identifier) {
+        this.identifier = identifier;
     }
 
     public interface InstrumentEnricher {

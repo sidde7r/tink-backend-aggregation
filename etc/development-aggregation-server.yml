@@ -82,9 +82,6 @@ creditsafe:
   username: TINKTESTIN
   password: cU7356rwx
 
-coordination:
-  hosts: 172.16.42.2:2181
-
 cache:
   hosts: 172.16.42.2:11211
   enabled: true
@@ -103,6 +100,13 @@ sqsQueueConfiguration:
   awsAccessKeyId: foobar
   awsSecretKey: foobar
   queueName: queue
+
+excludedDebugClusters:
+  excludedClusters:
+    - local-development
+
+coordination:
+  hosts: 172.16.42.2:2181
 
 logging:
   level: INFO

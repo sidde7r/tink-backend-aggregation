@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.core.transaction;
 
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Optional;
@@ -65,6 +66,11 @@ public final class CreditCardTransaction extends Transaction {
         @Override
         public Builder setDate(LocalDate date) {
             return (Builder) super.setDate(date);
+        }
+
+        @Override
+        public Builder setDateTime(ZonedDateTime dateTime) {
+            return (Builder) super.setDate(dateTime.toLocalDate());
         }
 
         @Override

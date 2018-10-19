@@ -8,19 +8,10 @@ import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import org.hibernate.annotations.Type;
 import se.tink.backend.core.CredentialsTypes;
 import se.tink.backend.core.Field;
 import se.tink.backend.core.ProviderRefreshSchedule;
@@ -28,56 +19,34 @@ import se.tink.backend.core.ProviderStatuses;
 import se.tink.backend.core.ProviderTypes;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-@Entity
-@Table(name = "provider_configurations")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProviderConfiguration {
-    private static final String DEMO_AGENT_CLASS_NAME = "demo.DemoAgent";
 
     @SuppressWarnings("serial")
     private static class CapabilityList extends ArrayList<Capability> {}
     @SuppressWarnings("serial")
     private static class FieldsList extends ArrayList<Field> {}
 
-
-    @Column(name = "`capabilities`")
-//    @Type(type = "text")
-    @ApiModelProperty(name = "capabilitiesSerialized", hidden = true)
     private String capabilitiesSerialized;
-    @ApiModelProperty(name = "className", hidden = true)
     private String className;
-    @Enumerated(EnumType.STRING)
     private CredentialsTypes credentialsType;
     private String currency;
     private String displayName;
     @JsonProperty("fields")
-    @Column(name = "`fields`")
-    @Type(type = "text")
     private String fieldsSerialized;
     private String groupDisplayName;
     private String market;
     private boolean multiFactor;
-    @Id
     private String name;
-    @Type(type = "text")
     private String passwordHelpText;
-//    @Type(type = "text")
-    @ApiModelProperty(name = "payload", hidden = true)
     private String payload;
     private boolean popular;
-    @JsonIgnore
-    @ApiModelProperty(name = "refreshFrequency", hidden = true)
-    private double refreshFrequency;
-    @JsonIgnore
-    private double refreshFrequencyFactor;
-    @Enumerated(EnumType.STRING)
+    private double refreshFrequency = 1d;
+    private double refreshFrequencyFactor = 1d;
     private ProviderStatuses status;
     private boolean transactional;
-    @Enumerated(EnumType.STRING)
     private ProviderTypes type;
     private String displayDescription;
-    @Column(name = "`refreshschedule`")
-    @Type(type = "text")
     private String refreshScheduleSerialized;
 
     public ProviderConfiguration() {
@@ -107,8 +76,6 @@ public class ProviderConfiguration {
         return true;
     }
 
-
-    @ApiModelProperty(name = "capabilities", hidden = true)
     @JsonProperty("capabilities")
     public Set<Capability> getCapabilities() {
         if (Strings.isNullOrEmpty(capabilitiesSerialized)) {
@@ -126,22 +93,18 @@ public class ProviderConfiguration {
         return className;
     }
 
-    @ApiModelProperty(name = "credentialsType", value="The type of credentials the provider creates", example = "MOBILE_BANKID", allowableValues = CredentialsTypes.DOCUMENTED)
     public CredentialsTypes getCredentialsType() {
         return credentialsType;
     }
 
-    @ApiModelProperty(name = "currency", value="The default currency of the provider", example = "SEK")
     public String getCurrency() {
         return currency;
     }
 
-    @ApiModelProperty(name = "displayName", value="The display name of the provider", example = "Handelsbanken")
     public String getDisplayName() {
         return displayName;
     }
 
-    @ApiModelProperty(name = "displayDescription", value="The display description of the provider", example = "Mobilt BankID")
     public String getDisplayDescription() {
         return displayDescription;
     }
@@ -166,17 +129,14 @@ public class ProviderConfiguration {
         return SerializationUtils.deserializeFromString(fieldsSerialized, FieldsList.class);
     }
 
-    @ApiModelProperty(name = "groupDisplayName", value="The grouped display name of the provider")
     public String getGroupDisplayName() {
         return groupDisplayName;
     }
 
-    @ApiModelProperty(name = "market", value="The market of the provider")
     public String getMarket() {
         return market;
     }
 
-    @ApiModelProperty(name = "name", value="The short name of the provider")
     public String getName() {
         return name;
     }
@@ -197,12 +157,10 @@ public class ProviderConfiguration {
         return refreshFrequencyFactor;
     }
 
-    @ApiModelProperty(name = "status", value="The current status of the provider")
     public ProviderStatuses getStatus() {
         return status;
     }
 
-    @ApiModelProperty(name = "type", value="The type of the provider")
     public ProviderTypes getType() {
         return type;
     }
@@ -216,17 +174,14 @@ public class ProviderConfiguration {
         return result;
     }
 
-    @ApiModelProperty(name = "multiFactor", value="Flag to indicate if the provider requires multi-factor authentication")
     public boolean isMultiFactor() {
         return multiFactor;
     }
 
-    @ApiModelProperty(name = "popular", value="Flag to indicate if the provider is popular")
     public boolean isPopular() {
         return popular;
     }
 
-    @ApiModelProperty(name = "transactional", value="Flag to indicate if the provider provides transactional data")
     public boolean isTransactional() {
         return transactional;
     }
@@ -321,26 +276,6 @@ public class ProviderConfiguration {
         return MoreObjects.toStringHelper(ProviderConfiguration.class).add("name", name).toString();
     }
 
-    @JsonIgnore
-    @Transient
-    public double getCurrentRefreshFrequency() {
-        return refreshFrequency * refreshFrequencyFactor;
-    }
-
-    @JsonIgnore
-    @Transient
-    public String getCleanDisplayName() {
-        // Some of our display names have the authetication method in a parenthesis after.
-        // e.g. Handelsbanken (Mobilt BankID)
-        return displayName.replaceAll(" \\([\\w \\-]+\\)", "");
-    }
-
-    @JsonIgnore
-    @Transient
-    public boolean isUsingDemoAgent() {
-        return DEMO_AGENT_CLASS_NAME.equals(getClassName());
-    }
-
     /**
      * Used on providers to indicate different tasks it can handle in terms of agents, since it's not possible now in
      * main to know if an agent implements an interface e.g. TransferExecutor.
@@ -355,7 +290,6 @@ public class ProviderConfiguration {
     }
 
     @JsonIgnore
-    @Transient
     public Optional<ProviderRefreshSchedule> getRefreshSchedule() {
         if (Strings.isNullOrEmpty(refreshScheduleSerialized)) {
             return Optional.empty();

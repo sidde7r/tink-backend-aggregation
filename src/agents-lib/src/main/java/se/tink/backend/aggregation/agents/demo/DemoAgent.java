@@ -9,8 +9,6 @@ import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.io.File;
 import java.io.IOException;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -31,6 +29,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.utils.demo.DemoDataUtils;
 import se.tink.backend.aggregation.log.ClientFilterFactory;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
@@ -41,7 +40,6 @@ import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.common.bankid.signicat.SignicatBankIdAuthenticator;
-import se.tink.backend.aggregation.agents.utils.demo.DemoDataUtils;
 import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.core.SwedishGiroType;
 import se.tink.backend.core.account.TransferDestinationPattern;
@@ -59,8 +57,6 @@ import se.tink.credentials.demo.DemoCredentials.DemoUserFeature;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.uuid.UUIDUtils;
-import static java.time.temporal.TemporalAdjusters.next;
-import static java.util.Calendar.SUNDAY;
 
 public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor, TransferExecutor {
     private static final String BASE_PATH = "data/demo";
@@ -217,7 +213,7 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
         case LOAN_ACCOUNTS:
             getAccounts().stream()
                     .filter(account -> RefreshableItem.LOAN_ACCOUNTS.isAccountType(account.getType()))
-                    .forEach(account -> context.cacheAccount(account, createAccountAsset()));
+                    .forEach(account -> context.cacheAccount(account, createLoanAsset(account)));
             break;
 
         case INVESTMENT_ACCOUNTS:
@@ -229,15 +225,28 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
         }
     }
 
-    private AccountFeatures createAccountAsset() {
+    /**
+     * Create a mortgage asset if the type is mortgage or the name "Bolån". Rest of the assets are considered to be
+     * blanco loans assets.
+     */
+    private AccountFeatures createLoanAsset(Account account) {
         Loan loan = new Loan();
-        loan.setInterest(0.019);
-        loan.setName("Bolån");
-        loan.setBalance(-2300000D);
-        loan.setNumMonthsBound(1);
-        loan.setType(se.tink.backend.system.rpc.Loan.Type.MORTGAGE);
 
-        return AccountFeatures.createForLoan(loan);
+        if (Objects.equal(account.getType(), AccountTypes.MORTGAGE) ||
+                account.getName().toLowerCase().contains("bolån")) {
+            loan.setInterest(0.019);
+            loan.setName("Bolån");
+            loan.setBalance(-2300000D);
+            loan.setNumMonthsBound(1);
+            loan.setType(se.tink.backend.system.rpc.Loan.Type.MORTGAGE);
+        } else {
+            loan.setInterest(0.9);
+            loan.setName("Blanco");
+            loan.setBalance(-50000D);
+            loan.setType(Loan.Type.BLANCO);
+        }
+
+        return AccountFeatures.createForLoans(Lists.newArrayList(loan));
     }
 
     @Override

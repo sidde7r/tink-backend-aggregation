@@ -3,25 +3,22 @@
 from __future__ import print_function
 import os
 
-BRANCHES = {
-    'aggregation-production': {'block': True},
-    'aggregation-staging': {'block': True},
-}
-
 PROJECTS = {
     'tink-backend-aggregation': {
         'chart': False,
         'salt': True,
-        'branches': [
-            'aggregation-production',
-            'aggregation-staging'
-        ],},
+        'branches': {
+            'aggregation-production': {'block': True},
+            'aggregation-staging': {'block': False},
+        },
+    },
     'tink-backend-provider-configuration': {
         'chart': True,
         'salt': False,
-        'branches': [
-            'aggregation-staging',
-        ],
+        'branches': {
+            'aggregation-production': {'block': False},
+            'aggregation-staging': {'block': False},
+        },
     },
 }
 
@@ -44,28 +41,11 @@ STEP = """
       TINK_KUBERNETES_DEPLOY: "{kubernetes_deploy}"
 """
 
-TRIGGER_ALL_PIPELINE_STEP = """
-- name: "Trigger release all {project}"
-  trigger: "release-all-{project}"
-  async: true
-  build:
-    message: "Release {version}"
-    commit: "HEAD"
-    branch: "master"
-    env:
-      TINK_VERSION: "{version}"
-"""
-
 version = os.environ['VERSION']
 
-print(TRIGGER_ALL_PIPELINE_STEP.format(
-    version=version, project='tink-backend-aggregation'))
-
-
 for project, project_settings in PROJECTS.items():
-    for branch in project_settings['branches']:
-        settings = BRANCHES[branch]
-        if settings.get('block'):
+    for branch, branch_settings in project_settings['branches'].items():
+        if branch_settings.get('block', True):
             block = 'true'
         else:
             block = ''

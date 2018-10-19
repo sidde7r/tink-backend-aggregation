@@ -8,7 +8,9 @@ import net.sourceforge.argparse4j.inf.Namespace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration;
-import se.tink.backend.aggregation.provider.configuration.core.ProviderConfigurationDAO;
+import se.tink.backend.aggregation.provider.configuration.storage.ProviderConfigurationProvider;
+import se.tink.backend.aggregation.provider.configuration.storage.module.ProviderFileModule;
+import se.tink.backend.aggregation.provider.configuration.storage.repositories.ProviderStatusConfigurationRepository;
 import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.libraries.cli.printutils.CliPrintUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -46,7 +48,7 @@ public class DebugProviderCommand extends ProviderConfigurationCommand<ServiceCo
         output.add(CliPrintUtils.keyValueEntry("transactional", String.valueOf(provider.isTransactional())));
         output.add(CliPrintUtils.keyValueEntry("type", provider.getType().name()));
 
-        CliPrintUtils.printTable(output);
+        CliPrintUtils.printTableLong(output);
     }
 
     @Override
@@ -55,13 +57,23 @@ public class DebugProviderCommand extends ProviderConfigurationCommand<ServiceCo
 
         final String providerName = System.getProperty("providerName");
         Preconditions.checkNotNull(providerName, "providerName must not be null.");
+        final String clusterId = System.getProperty("clusterId");
+        Preconditions.checkNotNull(clusterId, "clusterId must not be null.");
 
-        ProviderConfigurationDAO providerConfigurationDAO = injector.getInstance(
-                ProviderConfigurationDAO.class);
-        ProviderConfiguration provider = providerConfigurationDAO.findByName(providerName);
+        ProviderFileModule fileModule = injector.getInstance(ProviderFileModule.class);
+        ProviderStatusConfigurationRepository statusRepository =
+                injector.getInstance(ProviderStatusConfigurationRepository.class);
+
+        ProviderConfigurationProvider providers = new ProviderConfigurationProvider(
+                fileModule.providerConfigurationByProviderName(),
+                fileModule.provideEnabledProvidersForCluster(),
+                fileModule.provideClusterSpecificProviderConfiguration(),
+                statusRepository
+        );
+        ProviderConfiguration provider = providers.findByClusterIdAndProviderName(clusterId, providerName);
 
         if (provider == null) {
-            log.warn(String.format("Provider %s not found in database", providerName));
+            log.warn("Provider {} not found in {}" , providerName, clusterId);
             return;
         }
 
