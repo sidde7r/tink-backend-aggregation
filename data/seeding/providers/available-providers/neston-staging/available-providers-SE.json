@@ -1,6 +1,7 @@
 {
   "clusterid": "neston-staging",
   "providers": [
+    "se-neston-abstract",
     "alandsbanken",
     "americanexpress",
     "avanza-bankid",
