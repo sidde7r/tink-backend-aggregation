@@ -72,7 +72,7 @@
         },
         {
             "name": "uk-santander-oauth2",
-            "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
+            "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11Agent",
             "credentialsType": "PASSWORD",
             "displayName": "Santander",
             "fields": [ ],
