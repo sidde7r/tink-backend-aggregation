@@ -20,6 +20,9 @@ public class KbcHttpFilter extends Filter {
     public HttpResponse handle(HttpRequest httpRequest) throws HttpClientException, HttpResponseException {
         MultivaluedMap<String, Object> headers = httpRequest.getHeaders();
         headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
+        headers.add(KbcConstants.Headers.COMPANY_KEY, KbcConstants.Headers.COMPANY_VALUE);
+        headers.add(KbcConstants.Headers.APPVERSION_KEY, KbcConstants.Headers.APPVERSION_VALUE);
+        headers.add(KbcConstants.Headers.ACCEPT_LANG_KEY, KbcConstants.Headers.ACCEPT_LANG_VALUE);
 
         if (xXsrfToken != null) {
             headers.add(KbcConstants.Headers.X_XSRF_TOKEN, xXsrfToken);

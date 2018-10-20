@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang3.time.DateUtils;
 import com.google.common.base.Strings;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeEncValueTuple;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeValuePair;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -16,12 +17,12 @@ import se.tink.backend.core.Amount;
 public class TransactionDto {
     private TypeValuePair transactionDate;
     private TypeValuePair amount;
-    private TypeValuePair appendixType;
+    private TypeEncValueTuple appendixType;
     private TypeValuePair descriptionLine01;
     private TypeValuePair descriptionLine02;
-    private TypeValuePair subAccountNo;
-    private TypeValuePair registrationTs;
-    private TypeValuePair bookingDate;
+    private TypeEncValueTuple subAccountNo;
+    private TypeEncValueTuple registrationTs;
+    private TypeEncValueTuple bookingDate;
 
     public TypeValuePair getTransactionDate() {
         return transactionDate;
@@ -31,7 +32,7 @@ public class TransactionDto {
         return amount;
     }
 
-    public TypeValuePair getAppendixType() {
+    public TypeEncValueTuple getAppendixType() {
         return appendixType;
     }
 
@@ -43,15 +44,15 @@ public class TransactionDto {
         return descriptionLine02;
     }
 
-    public TypeValuePair getSubAccountNo() {
+    public TypeEncValueTuple getSubAccountNo() {
         return subAccountNo;
     }
 
-    public TypeValuePair getRegistrationTs() {
+    public TypeEncValueTuple getRegistrationTs() {
         return registrationTs;
     }
 
-    public TypeValuePair getBookingDate() {
+    public TypeEncValueTuple getBookingDate() {
         return bookingDate;
     }
 
