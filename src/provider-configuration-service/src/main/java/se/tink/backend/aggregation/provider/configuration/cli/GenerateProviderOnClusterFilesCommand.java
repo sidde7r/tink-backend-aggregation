@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.provider.configuration.cli;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.core.util.DefaultIndenter;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -212,12 +214,11 @@ public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<Ser
 
             ProviderSpecificationModel providerSpecification = new ProviderSpecificationModel();
             providerSpecification.setClusterId(clusterId);
-            providerSpecification.setProviderSpecificConfiguration(overrideProviders);
-            ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-            mapper.disable(MapperFeature.USE_ANNOTATIONS);
+            providerSpecification.setProviderSpecificConfiguration(Lists.newArrayList(overrideProviders));
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
-            mapper.writerWithDefaultPrettyPrinter().writeValue(byteStream, providerSpecification);
-            writeToFile(byteStream,
+            String out = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(providerSpecification);
+            log.info("\nwriting override provider to path {}", OVERRIDING_PROVIDERS_PATH);
+            writeToFile(out,
                     OVERRIDING_PROVIDERS_PATH + "/provider-override-" + market+".json", "provider override");
         }
     }
@@ -234,16 +235,18 @@ public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<Ser
 
             ClusterProviderListModel clusterProviderList = new ClusterProviderListModel();
             clusterProviderList.setClusterId(clusterId);
-            clusterProviderList.setProviderName(availableProviders);
-            ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-            mapper.disable(MapperFeature.USE_ANNOTATIONS);
+            clusterProviderList.setProviderName(Lists.newArrayList(availableProviders));
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
-            mapper.writerWithDefaultPrettyPrinter().writeValue(byteStream, clusterProviderList);
-            writeToFile(byteStream, AVAILABLE_PROVIDERS_PATH + "/available-providers-" + market+".json", "available providers");
+            DefaultPrettyPrinter defaultPrettyPrinter = new DefaultPrettyPrinter();
+            defaultPrettyPrinter.indentArraysWith(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE);
+            mapper.setDefaultPrettyPrinter(defaultPrettyPrinter);
+            String out = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(clusterProviderList);
+            log.info("\nwriting avaiable provider to path {}", AVAILABLE_PROVIDERS_PATH);
+            writeToFile(out, AVAILABLE_PROVIDERS_PATH + "/available-providers-" + market+".json", "available providers");
         }
     }
 
-    private void writeToFile(ByteArrayOutputStream out, String filepath, String fileContent) throws IOException {
+    private void writeToFile(String out, String filepath, String fileContent) throws IOException {
         File file = new File(filepath);
         if (!file.exists()) {
             file.createNewFile();
@@ -251,7 +254,7 @@ public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<Ser
 
         FileWriter fw = new FileWriter(file.getAbsoluteFile());
         try {
-            fw.write(out.toString());
+            fw.write(out);
         } finally {
             fw.close();
         }
