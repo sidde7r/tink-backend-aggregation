@@ -25,6 +25,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,8 +33,7 @@ import java.util.stream.Collectors;
 
 /*
     run this command using bazel :
-        bazel run :provider-configuration --jvmopt='-Dinput={provider file downloaded from cluster}
-        -Doutput={where to store result files}' generate-provider-override-on-cluster etc/development-minikube-provider-configuration-server.yml
+        bazel run --jvmopt="-Dclusterid=oxford-staging -Dpath=$(pwd)" -- //:provider-configuration generate-provider-override-on-cluster etc/development-minikube-provider-configuration-server.yml
     note that this command will generate all files in the same directory. files will be looking like:
     available-providers-AT.json ...
     provider-override-AT.json ...
@@ -46,6 +46,10 @@ import java.util.stream.Collectors;
 public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<ServiceConfiguration> {
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final Logger log = LoggerFactory.getLogger(GenerateProviderOnClusterFilesCommand.class);
+    private String RAW_PROVIDER_DATA_PATH;
+    private String AVAILABLE_PROVIDERS_PATH;
+    private String OVERRIDING_PROVIDERS_PATH;
+    private boolean testrun = false;
 
     public GenerateProviderOnClusterFilesCommand() {
         super("generate-provider-override-on-cluster", "taking provider configuration on cluster from json, " +
@@ -97,8 +101,8 @@ public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<Ser
     }
 
 
-    private Map<String, List<String>> generateAvailableProvidersOnCluster(String filePath) throws IOException {
-        File clusterExportFile = new File(filePath);
+    private Map<String, List<String>> generateAvailableProvidersOnCluster() throws IOException {
+        File clusterExportFile = new File(RAW_PROVIDER_DATA_PATH);
 
         // read in a list of providers from the exported file from cluster
         List<ProviderConfiguration> providers =
@@ -113,9 +117,9 @@ public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<Ser
         return availableProviders;
     }
 
-    private Map<String, Map<String, ProviderConfiguration>> loadProvidersFromClusterExport(String filePath)
+    private Map<String, Map<String, ProviderConfiguration>> loadProvidersFromClusterExport()
             throws IOException{
-        File clusterExportFile = new File(filePath);
+        File clusterExportFile = new File(RAW_PROVIDER_DATA_PATH);
 
         // read in a list of providers from the exported file from cluster
         List<ProviderConfiguration> providers =
@@ -196,7 +200,7 @@ public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<Ser
     }
 
     private void writeMarketOverrideToFile(Map<String, List<ProviderConfiguration>> overrideProvidersByMarket,
-                                           String dir, String clusterId) throws IOException {
+                                           String clusterId) throws IOException {
 
         for (Map.Entry<String, List<ProviderConfiguration>> entry: overrideProvidersByMarket.entrySet()) {
             String market = entry.getKey();
@@ -213,12 +217,13 @@ public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<Ser
             mapper.disable(MapperFeature.USE_ANNOTATIONS);
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
             mapper.writerWithDefaultPrettyPrinter().writeValue(byteStream, providerSpecification);
-            writeToFile(byteStream, dir + "" + market+".json", "provider override");
+            writeToFile(byteStream,
+                    OVERRIDING_PROVIDERS_PATH + "/provider-override-" + market+".json", "provider override");
         }
     }
 
     private void writeMarketAvailableProvidersToFile(Map<String,List<String>> providersAvailableByMarket,
-                                                     String dir, String clusterId) throws IOException {
+                                                     String clusterId) throws IOException {
         for (Map.Entry<String, List<String>> entry: providersAvailableByMarket.entrySet()) {
             String market = entry.getKey();
             List<String> availableProviders = entry.getValue();
@@ -234,7 +239,7 @@ public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<Ser
             mapper.disable(MapperFeature.USE_ANNOTATIONS);
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
             mapper.writerWithDefaultPrettyPrinter().writeValue(byteStream, clusterProviderList);
-            writeToFile(byteStream, dir + "" + market+".json", "available providers");
+            writeToFile(byteStream, AVAILABLE_PROVIDERS_PATH + "/available-providers-" + market+".json", "available providers");
         }
     }
 
@@ -254,29 +259,52 @@ public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<Ser
         log.info("Exported {} configurations to: {} ", fileContent, file.getAbsolutePath());
     }
 
+    private void setPaths(String clusterid, String projectPath) {
+        RAW_PROVIDER_DATA_PATH = System.getProperty("user.dir") + "/providerdata/raw/" + clusterid + ".providers.json";
+        if (testrun) {
+            AVAILABLE_PROVIDERS_PATH = System.getProperty("user.dir") + "/../available-providers/";
+            OVERRIDING_PROVIDERS_PATH = System.getProperty("user.dir") + "/../overriding-providers/";
+        } else {
+            AVAILABLE_PROVIDERS_PATH = projectPath + "/data/seeding/providers/available-providers/" + clusterid;
+            OVERRIDING_PROVIDERS_PATH = projectPath + "/data/seeding/providers/overriding-providers/" + clusterid;
+        }
+    }
+
+    private void createDirectories(String dir) throws IOException {
+        File file = new File(dir);
+        if (file.exists()) {
+            log.warn("directory already exist, file already exported and they will be overridden");
+            return;
+        }
+
+        boolean success = new File(dir).mkdir();
+        if (!success) {
+            throw new IOException("can not create path " + dir);
+        }
+    }
+
     @Override
     protected void run(Bootstrap<ServiceConfiguration> bootstrap, Namespace namespace, ServiceConfiguration ServiceConfiguration) throws Exception {
-        final String inputExportFile = System.getProperty("input");
-        final String outputFilePath = System.getProperty("output");
-        final String clusterId = System.getProperty("clusterId");
-        log.info("input file path "+ inputExportFile);
-        final String overrideFilePath = outputFilePath + "/overriding-providers/provider-override-";
-        final String availableProvidersFilePath = outputFilePath + "/available-providers/available-providers-";
+        String clusterId = System.getProperty("clusterid");
+        String projectPath = System.getProperty("path");
+        setPaths(clusterId, projectPath);
+        createDirectories(AVAILABLE_PROVIDERS_PATH);
+        createDirectories(OVERRIDING_PROVIDERS_PATH);
 
         Map<String, Map<String, ProviderConfiguration>> providersFromSeedingFiles =
                 loadProvidersSeedingFilesByMarket();
 
         Map<String, Map<String, ProviderConfiguration>> providersFromClusterExport =
-                loadProvidersFromClusterExport(inputExportFile);
+                loadProvidersFromClusterExport();
 
         Map<String, List<ProviderConfiguration>> overrideProvidersByMarket =
                 generateProviderOverride(providersFromClusterExport, providersFromSeedingFiles);
 
         Map<String, List<String>> providersAvailableByMarket =
-                generateAvailableProvidersOnCluster(inputExportFile);
+                generateAvailableProvidersOnCluster();
 
-        writeMarketOverrideToFile(overrideProvidersByMarket, overrideFilePath, clusterId);
+        writeMarketOverrideToFile(overrideProvidersByMarket, clusterId);
 
-        writeMarketAvailableProvidersToFile(providersAvailableByMarket, availableProvidersFilePath, clusterId);
+        writeMarketAvailableProvidersToFile(providersAvailableByMarket, clusterId);
     }
 }
