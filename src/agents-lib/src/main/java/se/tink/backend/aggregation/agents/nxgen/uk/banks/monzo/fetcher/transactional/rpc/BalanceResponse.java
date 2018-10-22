@@ -5,6 +5,11 @@ import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.core.Amount;
 
+/**
+ * Monzo has something called "pots" - some sort of subaccounts. The balance of the pots is not included in "balance",
+ * but it is included in "total_balance". Either you use balance and get the pots/subaccounts separately, or you use
+ * totalBalance and disregard the pots. Since Tink doesn't have the concept of subaccounts, we use totalBalance.
+ */
 @JsonObject
 public class BalanceResponse {
 
@@ -25,6 +30,10 @@ public class BalanceResponse {
 
     public Amount getBalance() {
         return Amount.valueOf(currency, balance, 2);
+    }
+
+    public Amount getTotalBalance() {
+        return Amount.valueOf(currency, totalBalance, 2);
     }
 
 }
