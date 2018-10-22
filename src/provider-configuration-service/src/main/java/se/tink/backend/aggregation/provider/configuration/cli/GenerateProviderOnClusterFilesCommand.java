@@ -35,10 +35,6 @@ import java.util.stream.Collectors;
     note that this command will generate all files in the same directory. files will be looking like:
     available-providers-AT.json ...
     provider-override-AT.json ...
-
-    the content of the files needs to be further processed before we can upload them.
-    TODO: script for formatting the file needs to uploaded
-    TODO: unit test for the generating difference. So other team member can investigate if the data quality is validated
  */
 
 public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<ServiceConfiguration> {
