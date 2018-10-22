@@ -48,6 +48,10 @@ public class Field {
     private String value;
     @Exclude
     private boolean sensitive;
+    @Tag(17)
+    private boolean checkbox;
+    @Tag(18)
+    private String additionalInfo;
 
     public String getDefaultValue() {
         return defaultValue;
@@ -153,7 +157,7 @@ public class Field {
     }
 
     public void setImmutable(boolean immutable) {
-        this.immutable = immutable; 
+        this.immutable = immutable;
     }
 
     public void setMasked(boolean masked) {
@@ -210,6 +214,24 @@ public class Field {
 
     public void setSensitive(boolean sensitive) {
         this.sensitive = sensitive;
+    }
+
+    @ApiModelProperty(name = "checkbox", value = "Display boolean value as checkbox")
+    public boolean isCheckbox() {
+        return checkbox;
+    }
+
+    public void setCheckbox(boolean checkbox) {
+        this.checkbox = checkbox;
+    }
+
+    @ApiModelProperty(name = "additionalInfo", value = "A serialized JSON containing additional information that could be useful")
+    public String getAdditionalInfo() {
+        return additionalInfo;
+    }
+
+    public void setAdditionalInfo(String additionalInfo) {
+        this.additionalInfo = additionalInfo;
     }
 
     /**
