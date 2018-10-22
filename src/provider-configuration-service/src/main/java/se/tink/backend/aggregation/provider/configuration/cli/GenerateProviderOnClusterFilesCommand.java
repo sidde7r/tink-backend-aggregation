@@ -256,6 +256,7 @@ public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<Ser
         FileWriter fw = new FileWriter(file.getAbsoluteFile());
         try {
             fw.write(out);
+            fw.write("\n");
         } finally {
             fw.close();
         }
