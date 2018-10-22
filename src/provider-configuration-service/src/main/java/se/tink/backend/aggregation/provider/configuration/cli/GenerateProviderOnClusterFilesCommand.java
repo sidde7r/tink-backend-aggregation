@@ -14,6 +14,7 @@ import io.dropwizard.setup.Bootstrap;
 import net.sourceforge.argparse4j.inf.Namespace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.provider.configuration.cli.util.ProviderConfigurationComparator;
 import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
 import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ClusterProviderListModel;
 import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ProviderConfigModel;
@@ -86,9 +87,7 @@ public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<Ser
                     if (providerFromFile == null) {
                         providerOverride.add(providerFromCluster);
                     } else {
-                        ObjectNode providerFromClusterNode = mapper.valueToTree(providerFromCluster);
-                        ObjectNode providerFromFileNode = mapper.valueToTree(providerFromFile);
-                        if ( ! providerFromClusterNode.equals(providerFromFileNode) ) {
+                        if ( !ProviderConfigurationComparator.equals(providerFromFile, providerFromCluster)){
                             providerOverride.add(providerFromCluster);
                         }
                     }
