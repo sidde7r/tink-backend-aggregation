@@ -97,8 +97,7 @@ public class ClientRegistration {
                     .withClaim(OpenIdConstants.Params.TOKEN_ENDPOINT_AUTH_SIGNING_ALG, tokenEndpointSigningAlg)
                     .withClaim(OpenIdConstants.Params.REQUEST_OBJECT_SIGNING_ALG, requestObjectSigningAlg)
                     .withClaim(OpenIdConstants.Params.APPLICATION_TYPE, OpenIdConstants.ParamDefaults.WEB)
-                    .withArrayClaim(OpenIdConstants.Params.REDIRECT_URIS,
-                            new String[] { softwareStatement.getRedirectUri() })
+                    .withArrayClaim(OpenIdConstants.Params.REDIRECT_URIS, softwareStatement.getAllRedirectUris())
                     .withArrayClaim(OpenIdConstants.Params.GRANT_TYPES, JwtUtils.listToStringArray(grantTypes))
                     .withArrayClaim(OpenIdConstants.Params.RESPONSE_TYPES,
                             JwtUtils.listToStringArray(responseTypes))
