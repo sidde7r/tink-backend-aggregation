@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants;
@@ -33,7 +34,7 @@ public class HandelsbankenSEBankTransferExecutor implements BankTransferExecutor
     }
 
     @Override
-    public void executeTransfer(Transfer transfer) throws TransferExecutionException {
+    public Optional<String> executeTransfer(Transfer transfer) throws TransferExecutionException {
         exceptionResolver
                 .throwIf(transfer.getAmount().getValue() < 1,
                         HandelsbankenSEConstants.Executor.ExceptionMessages.TRANSFER_AMOUNT_TOO_SMALL);
@@ -52,6 +53,7 @@ public class HandelsbankenSEBankTransferExecutor implements BankTransferExecutor
 
             transferSignature.validateState(exceptionResolver);
         });
+        return Optional.empty();
     }
 
     private HandelsbankenSEPaymentAccount getSourceAccount(Transfer transfer,
