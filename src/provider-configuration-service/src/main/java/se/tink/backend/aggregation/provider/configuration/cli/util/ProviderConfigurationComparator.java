@@ -18,7 +18,7 @@ public class ProviderConfigurationComparator {
     private static boolean equals = true;
 
     public static boolean equals(final ProviderConfiguration providerConfiguration1,
-                          final ProviderConfiguration providerConfiguration2){
+                                 final ProviderConfiguration providerConfiguration2) {
         compareProvider(providerConfiguration1, providerConfiguration2);
         return equals;
     }
