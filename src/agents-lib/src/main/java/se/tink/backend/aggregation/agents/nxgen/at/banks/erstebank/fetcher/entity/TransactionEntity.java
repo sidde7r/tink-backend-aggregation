@@ -72,7 +72,7 @@ public class TransactionEntity {
         } catch (ParseException e) {
 
             if (isYesterday(getDate())) {
-                getYesterdayDate();
+                return getYesterdayDate();
             }
 
             LONGLOGGER.errorExtraLong("DateParsing error", ErsteBankConstants.LOGTAG.ERROR_DATE_PARSING, e);
