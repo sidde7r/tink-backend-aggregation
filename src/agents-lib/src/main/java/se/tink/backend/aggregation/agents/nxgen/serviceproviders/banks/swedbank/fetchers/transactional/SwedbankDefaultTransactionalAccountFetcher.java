@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
@@ -26,6 +27,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount>,
@@ -139,7 +142,23 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
         apiClient.selectProfile(bankProfile);
 
         if (key != null) {
-            TransactionKeyPaginatorResponse<LinkEntity> response = apiClient.engagementTransactions(key);
+            TransactionKeyPaginatorResponse<LinkEntity> response;
+
+            // Swedbank sometimes responds with 500 in the middle of the pagination. Return an empty response
+            // with key as null to quit the paginating and return the transactions that we managed to fetch so far.
+            try {
+                response = apiClient.engagementTransactions(key);
+            } catch (HttpResponseException e) {
+
+                HttpResponse httpResponse = e.getResponse();
+
+                if (httpResponse != null && httpResponse.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+                    log.warn("Got internal server error when paginating transactions.");
+                    return new TransactionKeyPaginatorResponseImpl<>(Collections.emptyList(), null);
+                }
+
+                throw e;
+            }
 
             if (hasSeenPageBefore(response)) {
                 // Return an empty response but with the correct next key set.
