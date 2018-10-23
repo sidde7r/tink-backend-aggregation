@@ -6,7 +6,5 @@ package se.tink.api.annotations;
 public enum Team {
     DATA,
     INTEGRATION,
-    PFM,
-    FINANCIAL_SERVICES,
-    GROWTH
+    PFM
 }
