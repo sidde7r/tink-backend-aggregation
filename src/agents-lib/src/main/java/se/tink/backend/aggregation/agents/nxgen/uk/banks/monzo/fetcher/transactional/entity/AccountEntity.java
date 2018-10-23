@@ -36,7 +36,7 @@ public class AccountEntity {
 
     public TransactionalAccount toTinkAccount() {
         return TransactionalAccount
-                .builder(MonzoConstants.ACCOUNT_TYPE.translate(type).get(), accountNumber, balance.getBalance())
+                .builder(MonzoConstants.ACCOUNT_TYPE.translate(type).get(), accountNumber, balance.getTotalBalance())
                 .setAccountNumber(accountNumber)
                 .setBankIdentifier(this.getId())
                 .setName(description)
