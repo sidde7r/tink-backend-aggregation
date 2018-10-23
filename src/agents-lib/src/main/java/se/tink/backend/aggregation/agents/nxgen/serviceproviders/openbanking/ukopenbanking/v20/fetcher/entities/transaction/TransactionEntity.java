@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.time.ZonedDateTime;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingConstants.EntryStatusCode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -23,7 +24,7 @@ public class TransactionEntity {
     @JsonProperty("Amount")
     private AmountEntity amount;
     @JsonProperty("CreditDebitIndicator")
-    private String creditDebitIndicator;
+    private UkOpenBankingConstants.CreditDebitIndicator creditDebitIndicator;
     @JsonProperty("Status")
     private EntryStatusCode status;
     private ZonedDateTime bookingDateTime;
@@ -60,8 +61,7 @@ public class TransactionEntity {
     }
 
     private Amount getSignedAmount() {
-
-        if (bankTransactionCode.getCode().isOutGoing()) {
+        if (UkOpenBankingConstants.CreditDebitIndicator.DEBIT == creditDebitIndicator) {
             return amount.negate();
         }
         return amount;

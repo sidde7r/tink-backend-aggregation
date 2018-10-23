@@ -21,7 +21,7 @@
     },
     {
       "name": "uk-barclays-oauth2",
-      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
+      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11Agent",
       "credentialsType": "PASSWORD",
       "displayName": "Barclays",
       "fields": [],
