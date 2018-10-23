@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.rpc.Field;
 public class BawagPskAgentTest {
     private final ArgumentHelper helper = new ArgumentHelper("tink.username", "tink.password");
 
-    private static final AgentIntegrationTest.Builder builder = new AgentIntegrationTest.Builder("at",
+    private final AgentIntegrationTest.Builder builder = new AgentIntegrationTest.Builder("at",
             "at-bawagpsk-password")
             .loadCredentialsBefore(false)
             .saveCredentialsAfter(false);
