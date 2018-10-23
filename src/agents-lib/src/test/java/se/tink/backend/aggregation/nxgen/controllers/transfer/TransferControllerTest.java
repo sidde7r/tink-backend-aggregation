@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.transfer;
 
+import java.util.Optional;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -9,7 +10,7 @@ import se.tink.backend.core.enums.MessageType;
 import se.tink.backend.core.enums.TransferType;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
 public class TransferControllerTest {
@@ -111,7 +112,7 @@ public class TransferControllerTest {
         transfer.setMessageType(MessageType.STRUCTURED);
         transfer.setDestinationMessage("+++010/8068/17183+++");
 
-        doNothing().when(bankTransferExecutor).executeTransfer(transfer);
+        doReturn(Optional.empty()).when(bankTransferExecutor).executeTransfer(transfer);
 
         transferControllerWithAllExecutors.execute(transfer);
     }
@@ -134,7 +135,7 @@ public class TransferControllerTest {
         Transfer transfer = createBelgianTransfer();
         transfer.setMessageType(MessageType.FREE_TEXT);
 
-        doNothing().when(bankTransferExecutor).executeTransfer(transfer);
+        doReturn(Optional.empty()).when(bankTransferExecutor).executeTransfer(transfer);
 
         transferControllerWithAllExecutors.execute(transfer);
     }
