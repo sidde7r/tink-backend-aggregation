@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.nxgen.core.account;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import java.util.Collection;
 import java.util.HashMap;
@@ -18,7 +17,7 @@ public class AccountTypeMapper {
 
     public static class Builder {
 
-        private final Map<AccountTypes, String[]> reversed = new HashMap<>();
+        private final Map<AccountTypes, Object[]> reversed = new HashMap<>();
 
         public AccountTypeMapper build() {
             return new AccountTypeMapper(this);
@@ -27,7 +26,7 @@ public class AccountTypeMapper {
         /**
          * Known keys, and the account type they should be mapped to.
          */
-        public AccountTypeMapper.Builder add(AccountTypes value, String... keys) {
+        public AccountTypeMapper.Builder add(AccountTypes value, Object... keys) {
             reversed.put(value, keys);
             return this;
         }
@@ -35,11 +34,11 @@ public class AccountTypeMapper {
         /**
          * Known keys that should not be mapped to any specific account type.
          */
-        public AccountTypeMapper.Builder add(String... keys) {
+        public AccountTypeMapper.Builder add(Object... keys) {
             return this.add(AccountTypes.DUMMY, keys);
         }
 
-        Map<AccountTypes, String[]> getReversed() {
+        Map<AccountTypes, Object[]> getReversed() {
             return reversed;
         }
     }
@@ -49,9 +48,9 @@ public class AccountTypeMapper {
         super();
 
         ImmutableMap.Builder<String, AccountTypes> tmpTranslator = ImmutableMap.builder();
-        for (Map.Entry<AccountTypes, String[]> entry : builder.getReversed().entrySet()) {
-            for (String key : entry.getValue()) {
-                tmpTranslator.put(key.toLowerCase(), entry.getKey());
+        for (Map.Entry<AccountTypes, Object[]> entry : builder.getReversed().entrySet()) {
+            for (Object key : entry.getValue()) {
+                tmpTranslator.put(toKeyString(key), entry.getKey());
             }
         }
         translator = tmpTranslator.build();
@@ -61,26 +60,22 @@ public class AccountTypeMapper {
         return new AccountTypeMapper.Builder();
     }
 
-    public boolean verify(String key, AccountTypes value) {
+    public boolean verify(Object key, AccountTypes value) {
         Optional<AccountTypes> translated = translate(key);
         return translated.isPresent() && translated.get() == value;
     }
 
-    public boolean verify(String key, Collection<AccountTypes> values) {
+    public boolean verify(Object key, Collection<AccountTypes> values) {
         Optional<AccountTypes> translated = translate(key);
         return translated.isPresent() && values.contains(translated.get());
     }
 
-    public Optional<AccountTypes> translate(String accountTypeKey) {
+    public Optional<AccountTypes> translate(Object accountTypeKey) {
 
-        if (Strings.isNullOrEmpty(accountTypeKey)) {
-            return Optional.empty();
-        }
-
-        AccountTypes type = translator.get(accountTypeKey.toLowerCase());
+        AccountTypes type = translator.get(toKeyString(accountTypeKey));
 
         if (type == null) {
-            logger.warn("Unknown account type for type key: {}", accountTypeKey);
+            logger.warn("Unknown account type for key: {}", accountTypeKey);
             return Optional.empty();
         } else if (type == AccountTypes.DUMMY) {
             return Optional.empty();
@@ -89,27 +84,31 @@ public class AccountTypeMapper {
         }
     }
 
-    public boolean isInvestmentAccount(String accountTypeKey) {
+    static String toKeyString(Object accountTypeKey) {
+        return String.valueOf(accountTypeKey).toLowerCase();
+    }
+
+    public boolean isInvestmentAccount(Object accountTypeKey) {
         return verify(accountTypeKey, InvestmentAccount.ALLOWED_ACCOUNT_TYPES);
     }
 
-    public boolean isTransactionalAccount(String accountTypeKey) {
+    public boolean isTransactionalAccount(Object accountTypeKey) {
         return verify(accountTypeKey, TransactionalAccount.ALLOWED_ACCOUNT_TYPES);
     }
 
-    public boolean isSavingsAccount(String accountTypeKey) {
+    public boolean isSavingsAccount(Object accountTypeKey) {
         return verify(accountTypeKey, AccountTypes.SAVINGS);
     }
 
-    public boolean isCheckingAccount(String accountTypeKey) {
+    public boolean isCheckingAccount(Object accountTypeKey) {
         return verify(accountTypeKey, AccountTypes.CHECKING);
     }
 
-    public boolean isLoanAccount(String accountTypeKey) {
+    public boolean isLoanAccount(Object accountTypeKey) {
         return verify(accountTypeKey, AccountTypes.LOAN);
     }
 
-    public boolean isCreditCardAccount(String accountTypeKey) {
+    public boolean isCreditCardAccount(Object accountTypeKey) {
         return verify(accountTypeKey, AccountTypes.CREDIT_CARD);
     }
 

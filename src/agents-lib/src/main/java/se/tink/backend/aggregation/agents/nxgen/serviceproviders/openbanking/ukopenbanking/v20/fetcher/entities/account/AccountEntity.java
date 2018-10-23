@@ -43,8 +43,8 @@ public class AccountEntity implements IdentifiableAccount {
     }
 
     public AccountTypes getAccountType() {
-        return UkOpenBankingV20Constants.AccountTypeTranslator.translate(rawAccountSubType)
-                .orElse(AccountTypes.OTHER);
+        return UkOpenBankingV20Constants.ACCOUNT_TYPE_MAPPER.translate(rawAccountSubType)
+                .orElseThrow(() -> new IllegalStateException("Unknown account types should have been filtered out before reaching this point!"));
     }
 
     public String getDisplayName() {
@@ -60,6 +60,9 @@ public class AccountEntity implements IdentifiableAccount {
                 );
     }
 
+    public String getRawAccountSubType() {
+        return rawAccountSubType;
+    }
 
     public static TransactionalAccount toTransactionalAccount(AccountEntity account, AccountBalanceEntity balance) {
 
