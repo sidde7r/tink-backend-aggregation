@@ -40,7 +40,13 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     }
 
     public <T> T fetchAccountTransactions(String paginationKey, Class<T> responseType) {
-        return httpClient.request(apiBaseUrl.concat(paginationKey))
+
+        // Check if the key provided is a complete url or if it should be appended on the apiBase
+        URL url = new URL(paginationKey);
+        if (url.getScheme() == null)
+            url = apiBaseUrl.concat(paginationKey);
+
+        return httpClient.request(url)
                 .get(responseType);
     }
 
