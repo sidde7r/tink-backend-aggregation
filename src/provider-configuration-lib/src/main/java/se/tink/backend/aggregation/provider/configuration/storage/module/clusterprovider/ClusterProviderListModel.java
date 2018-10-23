@@ -23,4 +23,12 @@ public class ClusterProviderListModel {
     public List<String> getProviderName() {
         return providerName;
     }
+
+    public void setClusterId(String clusterId) {
+        this.clusterId = clusterId;
+    }
+
+    public void setProviderName(List<String> providerName) {
+        this.providerName = providerName;
+    }
 }
