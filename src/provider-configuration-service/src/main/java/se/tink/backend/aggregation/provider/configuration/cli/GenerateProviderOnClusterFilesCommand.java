@@ -63,12 +63,13 @@ public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<Ser
 
             if (providersFromSeeding == null || providersFromSeeding.isEmpty()) {
                 providerOverrideByMarket.put(market, new ArrayList<>(providersFromCluster.values()));
-            } else {
-                List<ProviderConfiguration> providerOverrideOnMarket =
-                        generateProviderOverridePerMarket(providersFromCluster, providersFromSeeding);
-                log.info("different provider on market {}: {} ", market, providerOverrideOnMarket.size());
-                providerOverrideByMarket.put(market, providerOverrideOnMarket);
+                continue;
             }
+
+            List<ProviderConfiguration> providerOverrideOnMarket =
+                    generateProviderOverridePerMarket(providersFromCluster, providersFromSeeding);
+            log.info("different provider on market {}: {} ", market, providerOverrideOnMarket.size());
+            providerOverrideByMarket.put(market, providerOverrideOnMarket);
         }
 
         return providerOverrideByMarket;
@@ -82,13 +83,16 @@ public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<Ser
         providersFromClusterExport.forEach(
                 (name, providerFromCluster) -> {
                     ProviderConfiguration providerFromFile = providersFromSeedingFiles.get(name);
+
                     if (providerFromFile == null) {
                         providerOverride.add(providerFromCluster);
-                    } else {
-                        if (!ProviderConfigurationComparator.equals(providerFromFile, providerFromCluster)) {
-                            providerOverride.add(providerFromCluster);
-                        }
+                        return;
                     }
+
+                    if (!ProviderConfigurationComparator.equals(providerFromFile, providerFromCluster)) {
+                        providerOverride.add(providerFromCluster);
+                    }
+
                 }
         );
 
@@ -182,7 +186,9 @@ public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<Ser
 
     private Map<String, ProviderConfiguration> mapProviderConfigurationByProviderName(
             List<ProviderConfiguration> providerConfigurations) {
+        
         Map<String, ProviderConfiguration> providerConfigurationByProviderName = Maps.newHashMap();
+
         for (ProviderConfiguration providerConfiguration : providerConfigurations) {
             String providerCapabilitySerialized = providerConfiguration.getCapabilitiesSerialized();
 
