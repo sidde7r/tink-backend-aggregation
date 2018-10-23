@@ -8,9 +8,9 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import org.assertj.core.util.Preconditions;
+import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
-import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.ActivationInstanceRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.ActivationInstanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.ActivationLicenseRequest;
@@ -95,7 +95,7 @@ public class KbcApiClient {
 
     private void checkBlockedAccount(HeaderDto header) throws AuthorizationException {
         String resultValue = getResultCodeOrThrow(header);
-        if (Objects.equals(KbcConstants.ResultCode.ZERO_TWO, resultValue)){
+        if (Objects.equals(KbcConstants.ResultCode.ZERO_TWO, resultValue)) {
             throw AuthorizationError.ACCOUNT_BLOCKED.exception();
         }
     }
@@ -484,8 +484,9 @@ public class KbcApiClient {
 
         TransactionsHistoryRequest request = TransactionsHistoryRequest.builder()
                 .setAccountNo(targetAgreement.getAgreementNo())
-                .setRepositioningKey(repositioningKey != null ? SerializationUtils.deserializeFromString(repositioningKey,
-                        TypeEncValueTuple.class) : null)
+                .setRepositioningKey(
+                        repositioningKey != null ? SerializationUtils.deserializeFromString(repositioningKey,
+                                TypeEncValueTuple.class) : null)
                 .setCompanyNo(targetAgreement.getCompanyNo())
                 .setCurrency(targetAgreement.getCurrency())
                 .setRoleCode(targetAgreement.getRoleCode())

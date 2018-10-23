@@ -29,12 +29,12 @@ public class KbcConstants {
         CHALLENGE_SOTP(createUrlWithHost("/SAI/A054/service/challenge/sotp/1")),
         LOGIN_SOTP(createUrlWithHost("/SAI/A054/service/login/sotp/1")),
         LOGOUT(createUrlWithHost("/SAI/A054/service/logout/1")),
-        ACCOUNTS(createUrlWithHost("/MOB/A031/accounts/3")),
-        TRANSACTIONS_HISTORY(createUrlWithHost("/MOB/A031/transactions/history/2")),
-        CARDS(createUrlWithHost("/MOB/A031/cards/4")),
-        FUTURE_TRANSACTIONS(createUrlWithHost("/MOB/A031/future-transactions/2")),
-        ACCOUNTS_FOR_TRANSFER_TO_OWN(createUrlWithHost("/MOB/A031/accounts/for-transfer-to/own/2")),
-        ACCOUNTS_FOR_TRANSFER_TO_OTHER(createUrlWithHost("/MOB/A031/accounts/for-transfer-to/other/2")),
+        ACCOUNTS(createUrlWithHost("/MOB/A031/accounts/dashboard/1")),
+        TRANSACTIONS_HISTORY(createUrlWithHost("/MOB/A031/transactions/history/1")),
+        CARDS(createUrlWithHost("/MOB/A031/cards/1")),
+        FUTURE_TRANSACTIONS(createUrlWithHost("/MOB/A031/future-transactions/1")),
+        ACCOUNTS_FOR_TRANSFER_TO_OWN(createUrlWithHost("/MOB/A031/accounts/for-transfer-to/own/1")),
+        ACCOUNTS_FOR_TRANSFER_TO_OTHER(createUrlWithHost("/MOB/A031/accounts/for-transfer-to/other/1")),
         BENEFICIARIES_HISTORY(createUrlWithHost("/MOB/A031/beneficiaries/history/1")),
         TRANSFER_VALIDATE(createUrlWithHost("/MOB/A031/transfer/validate/1")),
         TRANSFER_TO_OTHER(createUrlWithHost("/MOB/A031/transfer/other/1")),
@@ -67,7 +67,7 @@ public class KbcConstants {
         }
 
         public static final String HOST = "https://mobile.kbc-group.com";
-        public static final String VERSION = "1805";
+        public static final String VERSION = "1808";
 
         private static String createUrlWithHost(String uri) {
             return HOST + uri;
@@ -85,8 +85,8 @@ public class KbcConstants {
 
     public static class RequestInput {
         public static final String APP_FAMILY = "PHNIOSV1";
-        public static final String VERSION_NUMBER = "18.8.0";
-        public static final String APPLICATION_ID = "3700";
+        public static final String VERSION_NUMBER = "18.9.0";
+        public static final String APPLICATION_ID = "A031";
         public static final String COMPANY_ID = "0001";
 
         // == Start UCR Challenge ==
@@ -124,6 +124,13 @@ public class KbcConstants {
         public static final String X_XSRF_TOKEN = "X-XSRF-TOKEN";
 
         public static final String USER_AGENT_VALUE = "KBC iPhone " + RequestInput.VERSION_NUMBER;
+
+        public static final String COMPANY_KEY = "company";
+        public static final String COMPANY_VALUE = RequestInput.COMPANY_ID;
+        public static final String APPVERSION_KEY = "appVersion";
+        public static final String APPVERSION_VALUE = RequestInput.VERSION_NUMBER;
+        public static final String ACCEPT_LANG_KEY = "Accept-Language";
+        public static final String ACCEPT_LANG_VALUE = "en";
     }
 
     public static class Predicates {

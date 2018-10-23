@@ -94,7 +94,8 @@ public class KbcAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransferController> constructTransferController() {
         return Optional.of(new TransferController(null,
-                new KbcBankTransferExecutor(credentials, persistentStorage, apiClient, catalog, supplementalInformationController),
+                new KbcBankTransferExecutor(credentials, persistentStorage, apiClient, catalog,
+                        supplementalInformationController),
                 null, null));
     }
 }
