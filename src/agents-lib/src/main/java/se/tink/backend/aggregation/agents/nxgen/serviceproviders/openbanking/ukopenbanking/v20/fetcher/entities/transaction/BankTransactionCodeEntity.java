@@ -7,11 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class BankTransactionCodeEntity {
     @JsonProperty("Code")
-    private UkOpenBankingConstants.BankTransactionCode code;
+    private String code;
     @JsonProperty("SubCode")
     private String subCode;
-
-    public UkOpenBankingConstants.BankTransactionCode getCode() {
-        return code;
-    }
 }
