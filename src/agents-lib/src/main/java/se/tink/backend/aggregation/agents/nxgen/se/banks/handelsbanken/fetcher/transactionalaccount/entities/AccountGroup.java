@@ -23,7 +23,13 @@ public class AccountGroup {
                     TransactionsSEResponse transactionsResponse =
                             (TransactionsSEResponse)client.transactions(handelsbankenAccount);
 
-                    return handelsbankenAccount.toTransactionalAccount(transactionsResponse);
+                    // useUniqueIdWithoutClearingNumber
+                    // temporary method to feature toggle what unique id to use for Handelsbanken SE
+                    // this support should be removed once all clusters have been migrated to use
+                    // Handelsbanken internal account number for transactional accounts and account
+                    // based credit cards (allkort)
+                    return handelsbankenAccount.toTransactionalAccount(transactionsResponse,
+                            client.useUniqueIdWithoutClearingNumber());
                 })
                 .filter(Optional::isPresent)
                 .map(Optional::get);
@@ -35,7 +41,13 @@ public class AccountGroup {
                     TransactionsSEResponse transactionsResponse =
                             (TransactionsSEResponse)client.transactions(handelsbankenAccount);
 
-                    return handelsbankenAccount.toCreditCardAccount(transactionsResponse);
+                    // useUniqueIdWithoutClearingNumber
+                    // temporary method to feature toggle what unique id to use for Handelsbanken SE
+                    // this support should be removed once all clusters have been migrated to use
+                    // Handelsbanken internal account number for transactional accounts and account
+                    // based credit cards (allkort)
+                    return handelsbankenAccount.toCreditCardAccount(transactionsResponse,
+                            client.useUniqueIdWithoutClearingNumber());
                 })
                 .filter(Optional::isPresent)
                 .map(Optional::get);

@@ -45,7 +45,13 @@ public class HandelsbankenSEAgent
 
     public HandelsbankenSEAgent(CredentialsRequest request, AgentContext context,
             SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair, new HandelsbankenSEConfiguration());
+        // useUniqueIdWithoutClearingNumber
+        // temporary method to feature toggle what unique id to use for Handelsbanken SE
+        // this support should be removed once all clusters have been migrated to use
+        // Handelsbanken internal account number for transactional accounts and account
+        // based credit cards (allkort)
+        // *** the request costructor argument
+        super(request, context, signatureKeyPair, new HandelsbankenSEConfiguration(request));
     }
 
     @Override
