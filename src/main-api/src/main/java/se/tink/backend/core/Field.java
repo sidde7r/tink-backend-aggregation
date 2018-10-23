@@ -2,55 +2,32 @@ package se.tink.backend.core;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.MoreObjects;
-import io.protostuff.Exclude;
-import io.protostuff.Tag;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Field {
 
-    @Exclude
     private String defaultValue;
-    @Tag(1)
     private String description;
-    @Exclude
     private boolean exposed = true;
-    @Tag(15)
     private List<Field> children;
-    @Tag(13)
     private String helpText;
-    @Tag(2)
     private String hint;
-    @Tag(7)
     private boolean immutable;
-    @Tag(5)
     private boolean masked;
-    @Tag(3)
     private Integer maxLength;
-    @Tag(4)
     private Integer minLength;
-    @Tag(9)
     private String name;
-    @Tag(6)
     private boolean numeric;
-    @Tag(8)
     private boolean optional;
-    @Tag(16)
     private List<String> options;
-    @Tag(11)
     private String pattern;
-    @Tag(12)
     private String patternError;
-    @Tag(14)
     private String type;
-    @Tag(10)
     private String value;
-    @Exclude
     private boolean sensitive;
-    @Tag(17)
     private boolean checkbox;
-    @Tag(18)
     private String additionalInfo;
 
     public String getDefaultValue() {
