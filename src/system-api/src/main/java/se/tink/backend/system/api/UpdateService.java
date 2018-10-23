@@ -131,7 +131,7 @@ public interface UpdateService {
 
     @POST
     @Path("/accounts/transfer-destinations/update")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.PAYMENTS)
     @Consumes({
             MediaType.APPLICATION_JSON
     })
@@ -209,7 +209,7 @@ public interface UpdateService {
     
     @POST
     @Path("/transfer/process")
-    @TeamOwnership(Team.INTEGRATION)
+    @TeamOwnership(Team.PAYMENTS)
     @Consumes({
             MediaType.APPLICATION_JSON
     })

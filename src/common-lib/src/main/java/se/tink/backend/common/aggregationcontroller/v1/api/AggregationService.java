@@ -67,7 +67,7 @@ public interface AggregationService {
 
     @POST
     @Path("transfer")
-    @TeamOwnership(Team.INTEGRATION)
+    @TeamOwnership(Team.PAYMENTS)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     void transfer(TransferRequest request) throws Exception;

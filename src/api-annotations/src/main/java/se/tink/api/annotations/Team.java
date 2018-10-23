@@ -7,5 +7,6 @@ public enum Team {
     @Deprecated
     DATA,
     INTEGRATION,
-    PFM
+    PFM,
+    PAYMENTS
 }
