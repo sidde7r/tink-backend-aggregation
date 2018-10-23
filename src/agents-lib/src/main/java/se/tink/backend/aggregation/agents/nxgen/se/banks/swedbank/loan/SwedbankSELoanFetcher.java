@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.DetailedLoanResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.LoanOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.loan.SwedbankDefaultLoanFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.BankProfile;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.EngagementOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
@@ -36,16 +37,21 @@ public class SwedbankSELoanFetcher extends SwedbankDefaultLoanFetcher {
     public Collection<LoanAccount> fetchAccounts() {
         ArrayList<LoanAccount> loanAccounts = new ArrayList<>();
 
-        LoanOverviewResponse loanOverviewResponse = apiClient.loanOverview();
-        if (Objects.isNull(loanOverviewResponse)) {
-            return Collections.emptyList();
+        for (BankProfile bankProfile : apiClient.getBankProfiles()) {
+            apiClient.selectProfile(bankProfile);
+
+            LoanOverviewResponse loanOverviewResponse = apiClient.loanOverview();
+
+            if (Objects.isNull(loanOverviewResponse)) {
+                continue;
+            }
+
+            fetchCollateralLoans(loanAccounts, loanOverviewResponse);
+
+            fetchCarLoans(loanAccounts, loanOverviewResponse);
+
+            fetchConsumptionLoans(loanAccounts, loanOverviewResponse);
         }
-
-        fetchCollateralLoans(loanAccounts, loanOverviewResponse);
-
-        fetchCarLoans(loanAccounts, loanOverviewResponse);
-
-        fetchConsumptionLoans(loanAccounts, loanOverviewResponse);
 
         return loanAccounts;
     }
