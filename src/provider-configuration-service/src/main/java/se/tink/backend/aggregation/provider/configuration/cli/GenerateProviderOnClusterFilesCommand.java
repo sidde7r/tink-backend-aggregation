@@ -51,15 +51,15 @@ public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<Ser
     }
 
     private Map<String, List<ProviderConfiguration>> generateProviderOverride(
-            Map<String, Map<String, ProviderConfiguration>> providersFromClusterExportByCluster,
-            Map<String, Map<String, ProviderConfiguration>> providersFromSeedingFilesByCluster) {
+            Map<String, Map<String, ProviderConfiguration>> providersFromClusterExportByMarket,
+            Map<String, Map<String, ProviderConfiguration>> providersFromSeedingFilesByMarket) {
 
         Map<String, List<ProviderConfiguration>> providerOverrideByMarket = Maps.newHashMap();
 
-        for (Map.Entry<String, Map<String, ProviderConfiguration>> entry : providersFromClusterExportByCluster.entrySet()) {
+        for (Map.Entry<String, Map<String, ProviderConfiguration>> entry : providersFromClusterExportByMarket.entrySet()) {
             String market = entry.getKey();
             Map<String, ProviderConfiguration> providersFromCluster = entry.getValue();
-            Map<String, ProviderConfiguration> providersFromSeeding = providersFromSeedingFilesByCluster.get(market);
+            Map<String, ProviderConfiguration> providersFromSeeding = providersFromSeedingFilesByMarket.get(market);
 
             if (providersFromSeeding == null || providersFromSeeding.isEmpty()) {
                 providerOverrideByMarket.put(market, new ArrayList<>(providersFromCluster.values()));
