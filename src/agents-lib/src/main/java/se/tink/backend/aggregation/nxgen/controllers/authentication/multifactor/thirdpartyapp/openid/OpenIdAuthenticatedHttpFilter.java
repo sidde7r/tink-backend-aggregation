@@ -56,8 +56,12 @@ public class OpenIdAuthenticatedHttpFilter extends Filter {
         MultivaluedMap<String, Object> headers = httpRequest.getHeaders();
         headers.add(OpenIdConstants.HttpHeaders.AUTHORIZATION, accessToken.toAuthorizeHeader());
         headers.add(OpenIdConstants.HttpHeaders.X_FAPI_FINANCIAL_ID, providerConfiguration.getOrganizationId());
-        headers.add(OpenIdConstants.HttpHeaders.X_FAPI_CUSTOMER_LAST_LOGGED_TIME, customerLastLoggedInTime);
-        headers.add(OpenIdConstants.HttpHeaders.X_FAPI_CUSTOMER_IP_ADDRESS, customerIp);
+        // Setting these 2 headers is optional according to the OpenID and OpenBanking specs.
+        // If we set the timestamp then the actually accepted formats don't follow the specifications.
+        // We don't have the client IP.
+        // Decided to not set these headers until they're actually required.
+        // headers.add(OpenIdConstants.HttpHeaders.X_FAPI_CUSTOMER_LAST_LOGGED_TIME, customerLastLoggedInTime);
+        // headers.add(OpenIdConstants.HttpHeaders.X_FAPI_CUSTOMER_IP_ADDRESS, customerIp);
         headers.add(OpenIdConstants.HttpHeaders.X_FAPI_INTERACTION_ID, interactionId);
 
         HttpResponse httpResponse = nextFilter(httpRequest);

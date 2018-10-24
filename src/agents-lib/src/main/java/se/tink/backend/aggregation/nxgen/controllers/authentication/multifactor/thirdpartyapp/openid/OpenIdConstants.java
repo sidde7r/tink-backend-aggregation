@@ -80,11 +80,6 @@ public class OpenIdConstants {
 
     }
 
-    public static class DevParams {
-        public static final String TINK_IP = "158.174.56.4";
-        public static final String LAST_LOGIN = "Tue, 11 Sep 2012 19:43:31 UTC";
-    }
-
     public static final String CLIENT_ASSERTION_TYPE = "client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer";
 
     public static class CallbackParams {
