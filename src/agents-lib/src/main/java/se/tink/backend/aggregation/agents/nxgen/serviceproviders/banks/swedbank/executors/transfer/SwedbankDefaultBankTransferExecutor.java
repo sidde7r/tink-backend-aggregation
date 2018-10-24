@@ -30,7 +30,7 @@ public class SwedbankDefaultBankTransferExecutor extends BaseTransferExecutor im
     }
 
     @Override
-    public void executeTransfer(Transfer transfer) throws TransferExecutionException {
+    public Optional<String> executeTransfer(Transfer transfer) throws TransferExecutionException {
         // this is the current implementation for transfers, only use the last profile for transfers
         apiClient.selectTransferProfile();
 
@@ -40,6 +40,7 @@ public class SwedbankDefaultBankTransferExecutor extends BaseTransferExecutor im
         RegisteredTransfersResponse registeredTransfersResponse = registerTransfer(transfer);
 
         signAndConfirmTransfer(registeredTransfersResponse);
+        return Optional.empty();
     }
 
     private RegisteredTransfersResponse registerTransfer(Transfer transfer) {

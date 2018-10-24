@@ -204,11 +204,11 @@ public abstract class NextGenerationAgent extends AbstractAgent implements Refre
     }
 
     @Override
-    public void execute(Transfer transfer) {
+    public Optional<String> execute(Transfer transfer) {
         Optional<TransferController> transferController = getTransferController();
         TransferExecutionException.throwIf(!transferController.isPresent());
 
-        transferController.get().execute(transfer);
+        return transferController.get().execute(transfer);
     }
 
     @Override

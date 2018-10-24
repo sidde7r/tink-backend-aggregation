@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.workers.commands;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.HttpLoggableExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
@@ -20,17 +20,16 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
 import se.tink.backend.aggregation.workers.metrics.MetricAction;
-import se.tink.libraries.i18n.Catalog;
 import se.tink.backend.core.signableoperation.SignableOperation;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.uuid.UUIDUtils;
 
 public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerCommand implements MetricsCommand {
     private static final AggregationLogger log = new AggregationLogger(TransferAgentWorkerCommand.class);
     private static final String LOG_TAG_TRANSFER = "EXECUTE_TRANSFER";
-    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private final TransferRequest transferRequest;
     private final AgentWorkerCommandMetricState metrics;
@@ -67,6 +66,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         ClientFilterFactory loggingFilterFactory = createHttpLoggingFilterFactory(
                 getLogTagTransfer(transfer), httpLoggableExecutor.getClass(), credentials);
 
+        Optional<String> operationStatusMessage = Optional.empty();
         try {
             // We want to explicitly log everything that has to do with transfers.
             httpLoggableExecutor.attachHttpFilters(loggingFilterFactory);
@@ -84,12 +84,16 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                 if (transferRequest.isUpdate()) {
                     transferExecutorNxgen.update(transfer);
                 } else {
-                    transferExecutorNxgen.execute(transfer);
+                    operationStatusMessage = transferExecutorNxgen.execute(transfer);
                 }
             }
 
             metricAction.completed();
-            context.updateSignableOperationStatus(signableOperation, SignableOperationStatuses.EXECUTED);
+            if (operationStatusMessage.isPresent()) {
+                context.updateSignableOperationStatus(signableOperation, SignableOperationStatuses.EXECUTED, operationStatusMessage.get());
+            } else {
+                context.updateSignableOperationStatus(signableOperation, SignableOperationStatuses.EXECUTED);
+            }
             return AgentWorkerCommandResult.CONTINUE;
 
         } catch (TransferExecutionException e) {

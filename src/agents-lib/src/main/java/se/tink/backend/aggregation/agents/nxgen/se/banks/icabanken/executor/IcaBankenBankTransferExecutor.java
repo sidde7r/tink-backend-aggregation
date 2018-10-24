@@ -31,7 +31,7 @@ public class IcaBankenBankTransferExecutor implements BankTransferExecutor {
 	}
 
 	@Override
-	public void executeTransfer(Transfer transfer) {
+	public Optional<String> executeTransfer(Transfer transfer) {
 
 		executorHelper.validateNoUnsignedTransfers();
 
@@ -43,6 +43,7 @@ public class IcaBankenBankTransferExecutor implements BankTransferExecutor {
 		BankTransferRequest transferRequest = BankTransferRequest.create(transfer, sourceAccount,
 				destinationAccount, transferMessageFormatter);
 		executeBankTransfer(transferRequest, transfer, sourceAccount);
+		return Optional.empty();
 	}
 
 	/**

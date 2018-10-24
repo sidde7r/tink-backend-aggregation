@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecut
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.rpc.Field;
+import se.tink.backend.core.Amount;
 import se.tink.backend.core.enums.MessageType;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
@@ -54,11 +55,12 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
     }
 
     @Override
-    public void executeTransfer(Transfer transfer) throws TransferExecutionException {
-        validateDates(transfer);
+    public Optional<String> executeTransfer(Transfer transfer) throws TransferExecutionException {
+        boolean immediateTransfer = immediateTransfer(transfer);
+        validateAndSetDueDate(transfer);
 
         Collection<TransactionalAccount> accounts = getTransactionalAccounts();
-        getSourceAccount(transfer, accounts);
+        Amount sourceAccountBalance = getSourceAccount(transfer, accounts).getBalance();
         boolean ownAccount = tryFindAccount(accounts, transfer.getDestination()).isPresent();
 
         if (transfer.getMessageType().equals(MessageType.STRUCTURED)) {
@@ -89,8 +91,17 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         if (!signed && paymentResponse.requireSign()) {
             signPayments();
         }
+
+        if (immediateTransfer && sourceAccountBalance.isLessThan(transfer.getAmount().doubleValue())) {
+            return Optional.of(catalog.getString(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT_AWAITING_PROCESSING));
+        }
+        return Optional.empty();
     }
 
+
+    private boolean immediateTransfer(Transfer transfer) {
+        return transfer.getDueDate() == null;
+    }
 
     private TransactionalAccount getSourceAccount(Transfer transfer, Collection<TransactionalAccount> accounts) {
         return tryFindAccount(accounts, transfer.getSource())
@@ -207,7 +218,7 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         checkThrowableErrors(apiClient.signBeneficiary(response));
     }
 
-    public void validateDates(Transfer transfer) {
+    public void validateAndSetDueDate(Transfer transfer) {
         if (transfer.getDueDate() == null) {
             transfer.setDueDate(Date.from(LocalDate.now().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
         }
