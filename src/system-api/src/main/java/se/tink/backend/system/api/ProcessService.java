@@ -24,7 +24,7 @@ import se.tink.backend.system.rpc.UpdateTransactionsRequest;
 public interface ProcessService {
     @POST
     @Path("/transactions/update")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes({
             MediaType.APPLICATION_JSON
     })
@@ -35,7 +35,7 @@ public interface ProcessService {
 
     @POST
     @Path("/transactions/update/wait")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes({
             MediaType.APPLICATION_JSON
     })
@@ -46,7 +46,7 @@ public interface ProcessService {
 
     @POST
     @Path("/statisticsandactivities/generate")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes({
             MediaType.APPLICATION_JSON
     })
@@ -57,7 +57,7 @@ public interface ProcessService {
 
     @POST
     @Path("/statisticsandactivities/generate/wait")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes({
             MediaType.APPLICATION_JSON
     })
@@ -68,16 +68,16 @@ public interface ProcessService {
 
     @POST
     @Path("/queue/reset")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     Response resetConnectorQueues(ReplayQueueRequest request);
 
     @POST
     @Path("/{id}/statisticsandactivities/generate")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     void generateStatisticsAndActivitiesWithoutNotifications(@PathParam("id") String userId, StatisticMode mode);
 
     @POST
     @Path("/{id}/properties/generate")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     void generateProperties(@PathParam("id") String userId);
 }

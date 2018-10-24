@@ -17,14 +17,14 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransactio
 public interface ProcessService {
     @POST
     @Path("/statisticsandactivities/generate")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response generateStatisticsAndActivityAsynchronously(GenerateStatisticsAndActivitiesRequest request);
 
     @POST
     @Path("/transactions/update")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response updateTransactionsAsynchronously(UpdateTransactionsRequest request);

@@ -30,7 +30,7 @@ import se.tink.backend.aggregation.credit.safe.rpc.SeedPersonDataResponse;
 public interface CreditSafeService {
     @DELETE
     @Path("consumermonitoring")
-    @TeamOwnership(Team.PFM)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes({
         MediaType.APPLICATION_JSON
     })
@@ -38,7 +38,7 @@ public interface CreditSafeService {
 
     @POST
     @Path("consumermonitoring")
-    @TeamOwnership(Team.PFM)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes({
         MediaType.APPLICATION_JSON
     })
@@ -49,7 +49,7 @@ public interface CreditSafeService {
 
     @GET
     @Path("consumermonitoring/portfolios")
-    @TeamOwnership(Team.PFM)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes({
             MediaType.APPLICATION_JSON
     })
@@ -60,7 +60,7 @@ public interface CreditSafeService {
 
     @POST
     @Path("consumermonitoring/all")
-    @TeamOwnership(Team.PFM)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes({
         MediaType.APPLICATION_JSON
     })
@@ -71,7 +71,7 @@ public interface CreditSafeService {
 
     @POST
     @Path("consumermonitoring/changed")
-    @TeamOwnership(Team.PFM)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes({
         MediaType.APPLICATION_JSON
     })
@@ -82,7 +82,7 @@ public interface CreditSafeService {
     
     @POST
     @Path("seedPersonData")
-    @TeamOwnership(Team.PFM)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes({
         MediaType.APPLICATION_JSON
     })

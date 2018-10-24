@@ -45,7 +45,7 @@ import se.tink.libraries.http.annotations.auth.AllowAnonymous;
 public interface UpdateService {
     @GET
     @Path("/ping")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     @Produces({
             MediaType.TEXT_PLAIN
     })
@@ -54,7 +54,7 @@ public interface UpdateService {
 
     @DELETE
     @Path("/user/{userid)/transaction/{transactionid}")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes({
             MediaType.APPLICATION_JSON
     })
@@ -65,7 +65,7 @@ public interface UpdateService {
 
     @POST
     @Path("/transactions/update")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes({
             MediaType.APPLICATION_JSON
     })
@@ -76,7 +76,7 @@ public interface UpdateService {
 
     @DELETE
     @Path("/user/{userid)/activities")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes({
             MediaType.APPLICATION_JSON
     })
@@ -87,7 +87,7 @@ public interface UpdateService {
 
     @DELETE
     @Path("/user/{userid)/activities")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes({
             MediaType.APPLICATION_JSON
     })
@@ -98,7 +98,7 @@ public interface UpdateService {
 
     @POST
     @Path("/user/delete")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes({
             MediaType.APPLICATION_JSON
     })
@@ -120,7 +120,7 @@ public interface UpdateService {
 
     @POST
     @Path("/accounts/update")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes({
         MediaType.APPLICATION_JSON
     })
@@ -142,7 +142,7 @@ public interface UpdateService {
 
     @POST
     @Path("/accounts/process")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes({
             MediaType.APPLICATION_JSON
     })
@@ -153,7 +153,7 @@ public interface UpdateService {
 
     @POST
     @Path("/accounts/opt-out")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes({
             MediaType.APPLICATION_JSON
     })
@@ -176,7 +176,7 @@ public interface UpdateService {
 
     @POST
     @Path("/credentials/update")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes({
         MediaType.APPLICATION_JSON
     })
@@ -187,7 +187,7 @@ public interface UpdateService {
 
     @POST
     @Path("/fraud/update")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes({
             MediaType.APPLICATION_JSON
     })
@@ -198,7 +198,7 @@ public interface UpdateService {
 
     @POST
     @Path("/credentials/operation/update")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes({
             MediaType.APPLICATION_JSON
     })
@@ -256,11 +256,11 @@ public interface UpdateService {
      */
     @PUT
     @Path("/{token}/flags")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     User updateUserFlags(@PathParam(value = "token") String userId, List<String> userFlags);
 
     @POST
     @Consumes({ MediaType.APPLICATION_JSON })
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     void deleteAccount(DeleteAccountRequest deleteAccountRequest);
 }
