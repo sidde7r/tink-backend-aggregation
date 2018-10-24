@@ -186,7 +186,7 @@ public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<Ser
 
     private Map<String, ProviderConfiguration> mapProviderConfigurationByProviderName(
             List<ProviderConfiguration> providerConfigurations) {
-        
+
         Map<String, ProviderConfiguration> providerConfigurationByProviderName = Maps.newHashMap();
 
         for (ProviderConfiguration providerConfiguration : providerConfigurations) {
@@ -284,7 +284,7 @@ public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<Ser
             return;
         }
 
-        if (new File(dir).mkdir()) {
+        if (!new File(dir).mkdir()) {
             throw new IOException("can not create path " + dir);
         }
     }
