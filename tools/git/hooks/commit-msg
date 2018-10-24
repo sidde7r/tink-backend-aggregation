@@ -10,19 +10,19 @@ from subprocess import check_output
 
 # Length of first line and tags allowed
 maxFirstLineLength = 72
-allowedTags = "doc|fea|fix|log|per|ref|sty|tes"
+allowedTags = "build|chore|ci|copy|docs|feat|fix|log|perf|refactor|revert|style|test"
 
 # Message format
 re_tag = "({0})".format(allowedTags)
 re_category = "\(.+\)"
-re_space = "\s"
+re_space = ":\s"
 re_description = ".+"
 
 re_messagePattern = "{0}{1}{2}{3}".format(re_tag, re_category, re_space, re_description)
 
 def printMessageFormatMessage():
 	print "```"
-	print "tag(Category) Short message on line within {0} chars".format(maxFirstLineLength)
+	print "tag(Category): Short message on line within {0} chars".format(maxFirstLineLength)
 	print ""
 	print "Further description useful when digging into this commit at later point."
 	print "```"
