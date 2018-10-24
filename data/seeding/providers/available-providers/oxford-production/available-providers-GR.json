@@ -1,0 +1,10 @@
+{
+  "clusterid" : "oxford-production",
+  "providers" : [
+    "gr-alpha-bank",
+    "gr-eurobank-ergasias",
+    "gr-hsbc-bank",
+    "gr-national-bank-of-greece",
+    "gr-piraeus-bank"
+  ]
+}
