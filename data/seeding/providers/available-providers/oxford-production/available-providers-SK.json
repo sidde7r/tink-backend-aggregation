@@ -1,0 +1,7 @@
+{
+  "clusterid" : "oxford-production",
+  "providers" : [
+    "sk-slovenska-sporitelna",
+    "sk-zuno-bank"
+  ]
+}
