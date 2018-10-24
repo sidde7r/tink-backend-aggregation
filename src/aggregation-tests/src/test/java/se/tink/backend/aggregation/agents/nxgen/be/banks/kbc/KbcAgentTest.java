@@ -12,7 +12,7 @@ public class KbcAgentTest {
     // See ../tools/libkbc_wbaes_src/README
     private static final String USERNAME = "";
 
-    private static final AgentIntegrationTest.Builder builder =
+    private final AgentIntegrationTest.Builder builder =
             new AgentIntegrationTest.Builder("be", "be-kbc-cardreader")
                     .addCredentialField(Field.Key.USERNAME, USERNAME)
                     .loadCredentialsBefore(true)

@@ -14,7 +14,7 @@ public class HVBAgentTest {
         helper = new ArgumentHelper("tink.username", "tink.password");
     }
 
-    private static final AgentIntegrationTest.Builder builder = new AgentIntegrationTest.Builder("de",
+    private final AgentIntegrationTest.Builder builder = new AgentIntegrationTest.Builder("de",
             "de-hypovereinsbank-password")
             .loadCredentialsBefore(false)
             .saveCredentialsAfter(false);
