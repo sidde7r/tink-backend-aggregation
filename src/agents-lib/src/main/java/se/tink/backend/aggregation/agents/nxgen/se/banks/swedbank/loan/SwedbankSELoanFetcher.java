@@ -46,14 +46,18 @@ public class SwedbankSELoanFetcher extends SwedbankDefaultLoanFetcher {
                 continue;
             }
 
-            fetchCollateralLoans(loanAccounts, loanOverviewResponse);
-
-            fetchCarLoans(loanAccounts, loanOverviewResponse);
-
-            fetchConsumptionLoans(loanAccounts, loanOverviewResponse);
+            fetchLoans(loanAccounts, loanOverviewResponse);
         }
 
         return loanAccounts;
+    }
+
+    void fetchLoans(ArrayList<LoanAccount> loanAccounts, LoanOverviewResponse loanOverviewResponse) {
+        fetchCollateralLoans(loanAccounts, loanOverviewResponse);
+
+        fetchCarLoans(loanAccounts, loanOverviewResponse);
+
+        fetchConsumptionLoans(loanAccounts, loanOverviewResponse);
     }
 
     private void fetchCollateralLoans(ArrayList<LoanAccount> loanAccounts,
