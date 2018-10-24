@@ -55,9 +55,23 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.ha
 
 public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
 
+    // useUniqueIdWithoutClearingNumber
+    // temporary method to feature toggle what unique id to use for Handelsbanken SE
+    // this support should be removed once all clusters have been migrated to use
+    // Handelsbanken internal account number for transactional accounts and account
+    // based credit cards (allkort)
+    private final boolean uniqueIdWithoutClearingNumber;
+
     public HandelsbankenSEApiClient(TinkHttpClient client,
             HandelsbankenSEConfiguration configuration) {
         super(client, configuration);
+
+        // useUniqueIdWithoutClearingNumber
+        // temporary method to feature toggle what unique id to use for Handelsbanken SE
+        // this support should be removed once all clusters have been migrated to use
+        // Handelsbanken internal account number for transactional accounts and account
+        // based credit cards (allkort)
+        this.uniqueIdWithoutClearingNumber = configuration.useUniqueIdentifierWithoutClearing();
     }
 
     public InitBankIdResponse initBankId(
@@ -258,5 +272,15 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
 
     public interface Signable {
         URL toSignature();
+    }
+
+    // useUniqueIdWithoutClearingNumber
+    // temporary method to feature toggle what unique id to use for Handelsbanken SE
+    // this support should be removed once all clusters have been migrated to use
+    // Handelsbanken internal account number for transactional accounts and account
+    // based credit cards (allkort)
+    @Override
+    public boolean useUniqueIdWithoutClearingNumber() {
+        return uniqueIdWithoutClearingNumber;
     }
 }

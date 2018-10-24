@@ -31,7 +31,13 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
     private String holderName;
     private boolean isCard;
 
-    public Optional<TransactionalAccount> toTransactionalAccount(TransactionsSEResponse transactionsResponse) {
+    // useUniqueIdWithoutClearingNumber
+    // temporary method to feature toggle what unique id to use for Handelsbanken SE
+    // this support should be removed once all clusters have been migrated to use
+    // Handelsbanken internal account number for transactional accounts and account
+    // based credit cards (allkort)
+    public Optional<TransactionalAccount> toTransactionalAccount(TransactionsSEResponse transactionsResponse,
+            boolean uniqueIdWithoutClearingNumber) {
         if (isCreditCard()) {
             return Optional.empty();
         }
@@ -40,12 +46,19 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
 
         final String accountNumber = getAccountNumber(transactionsResponse);
 
+        // useUniqueIdWithoutClearingNumber
+        // temporary method to feature toggle what unique id to use for Handelsbanken SE
+        // this support should be removed once all clusters have been migrated to use
+        // Handelsbanken internal account number for transactional accounts and account
+        // based credit cards (allkort)
+        final String uniqueIdentifier = uniqueIdWithoutClearingNumber ? number : accountNumber;
+
         AccountTypes accountType = AccountTypes.CHECKING;
         if (NAME_SAVINGS_1.equalsIgnoreCase(name) || NAME_SAVINGS_2.equalsIgnoreCase(name)) {
             accountType = AccountTypes.SAVINGS;
         }
 
-        return Optional.of(TransactionalAccount.builder(accountType, accountNumber, findBalanceAmount().asAmount())
+        return Optional.of(TransactionalAccount.builder(accountType, uniqueIdentifier, findBalanceAmount().asAmount())
                 .setHolderName(new HolderName(holderName))
                 .setBankIdentifier(number)
                 .setAccountNumber(accountNumber)
@@ -55,7 +68,13 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
                 .build());
     }
 
-    public Optional<CreditCardAccount> toCreditCardAccount(TransactionsSEResponse transactionsResponse) {
+    // useUniqueIdWithoutClearingNumber
+    // temporary method to feature toggle what unique id to use for Handelsbanken SE
+    // this support should be removed once all clusters have been migrated to use
+    // Handelsbanken internal account number for transactional accounts and account
+    // based credit cards (allkort)
+    public Optional<CreditCardAccount> toCreditCardAccount(TransactionsSEResponse transactionsResponse,
+            boolean uniqueIdWithoutClearingNumber) {
         if (!isCreditCard()) {
             return Optional.empty();
         }
@@ -63,9 +82,17 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
         BankIdValidator.validate(number);
 
         final String accountNumber = getAccountNumber(transactionsResponse);
+
+        // useUniqueIdWithoutClearingNumber
+        // temporary method to feature toggle what unique id to use for Handelsbanken SE
+        // this support should be removed once all clusters have been migrated to use
+        // Handelsbanken internal account number for transactional accounts and account
+        // based credit cards (allkort)
+        final String uniqueIdentifier = uniqueIdWithoutClearingNumber ? number : accountNumber;
+
         CardInvoiceInfo cardInvoiceInfo = transactionsResponse.getCardInvoiceInfo();
 
-        return Optional.of(CreditCardAccount.builder(accountNumber)
+        return Optional.of(CreditCardAccount.builder(uniqueIdentifier)
                 .setAvailableCredit(cardInvoiceInfo.getCredit().asAmount())
                 .setHolderName(new HolderName(holderName))
                 .setBalance(new Amount(balance.getCurrency(), calculateBalance(transactionsResponse)))
