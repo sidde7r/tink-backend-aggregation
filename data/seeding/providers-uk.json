@@ -54,6 +54,20 @@
       "type": "BANK"
     },
     {
+      "name": "uk-monzo-oauth2",
+      "displayName": "Monzo",
+      "groupDisplayName": "Monzo",
+      "popular": false,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.uk.banks.monzo.MonzoAgent",
+      "passwordHelpText": "",
+      "transactional": true,
+      "fields": []
+    },
+    {
       "name": "uk-halifax-oauth2",
       "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
       "credentialsType": "PASSWORD",
