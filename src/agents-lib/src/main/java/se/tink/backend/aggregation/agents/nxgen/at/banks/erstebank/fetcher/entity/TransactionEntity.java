@@ -62,6 +62,14 @@ public class TransactionEntity {
         return c.getTime();
     }
 
+    private Date getTodaysDate() {
+        return Calendar.getInstance().getTime();
+    }
+
+    private boolean isToday(String date) {
+        return ErsteBankConstants.DATE.TODAY.equalsIgnoreCase(date);
+    }
+
     private boolean isYesterday(String date) {
         return ErsteBankConstants.DATE.YESTERDAY.equalsIgnoreCase(date);
     }
@@ -70,6 +78,10 @@ public class TransactionEntity {
         try {
             return new SimpleDateFormat(ErsteBankConstants.PATTERN.DATE_FORMAT).parse(getDate());
         } catch (ParseException e) {
+
+            if (isToday(getDate())) {
+                return getTodaysDate();
+            }
 
             if (isYesterday(getDate())) {
                 return getYesterdayDate();
