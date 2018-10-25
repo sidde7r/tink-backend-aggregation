@@ -112,9 +112,13 @@ public final class GetAccountInformationListResponse {
             return AccountTypes.CHECKING;
         case 'D':
             return AccountTypes.SAVINGS;
+        case '0': // Observed values: "00EC", "00PD"
+            return AccountTypes.CREDIT_CARD;
+        case 'S': // Observed values: "S132"
+            return AccountTypes.LOAN;
         default:
             logger.error(String.format(
-                    "Account type could not be inferred from product code '%s'. Expected prefix B or D.",
+                    "Account type could not be inferred from product code '%s'. Expected prefix B, D, S or 0.",
                     productCode));
         }
 
