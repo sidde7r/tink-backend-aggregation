@@ -128,7 +128,7 @@ public final class GetAccountInformationListResponse {
         default:
             logger.error(String.format(
                     "Account type could not be inferred from product type '%s'. Expected 'CHECKING' or 'SAVINGS'.",
-                    productCode));
+                    productType));
         }
         logger.warn("Falling back to setting the product type to CHECKING");
         return AccountTypes.CHECKING;
