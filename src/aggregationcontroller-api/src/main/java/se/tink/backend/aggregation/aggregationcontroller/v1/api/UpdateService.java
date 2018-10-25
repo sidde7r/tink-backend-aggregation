@@ -32,91 +32,91 @@ import se.tink.libraries.http.annotations.auth.AllowAnonymous;
 public interface UpdateService {
     @GET
     @Path("/ping")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     @Produces(MediaType.TEXT_PLAIN)
     @AllowAnonymous
     String ping();
 
     @POST
     @Path("/credentials/supplementalInformation")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     SupplementalInformationResponse getSupplementalInformation(SupplementalInformationRequest request);
 
     @POST
     @Path("/accounts/update")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Account updateAccount(UpdateAccountRequest request);
 
     @POST
     @Path("/accounts/transfer-destinations/update")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response updateTransferDestinationPatterns(UpdateTransferDestinationPatternsRequest request);
 
     @POST
     @Path("/accounts/process")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response processAccounts(ProcessAccountsRequest request);
 
     @POST
     @Path("/accounts/opt-out")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response optOutAccounts(OptOutAccountsRequest request);
 
     @POST
     @Path("/credentials/update")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response updateCredentials(UpdateCredentialsStatusRequest request);
 
     @POST
     @Path("/credentials/operation/update")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response updateSignableOperation(SignableOperation signableOperation);
 
     @POST
     @Path("/transfer/process")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.PAYMENTS)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response processEinvoices(UpdateTransfersRequest request);
 
     @POST
     @Path("/document")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     UpdateDocumentResponse updateDocument(UpdateDocumentRequest request);
 
     @POST
     @Path("/product/information")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response updateProductInformation(UpdateProductInformationRequest updateProductInformationRequest);
 
     @POST
     @Path("/application")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response updateApplication(UpdateApplicationRequest updateApplicationRequest);
 
     @POST
     @Path("/fraud/update")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateFraudDetails(UpdateFraudDetailsRequest request);
