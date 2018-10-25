@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
@@ -32,6 +33,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount>,
@@ -39,12 +43,15 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
     private static final Logger log = LoggerFactory.getLogger(SwedbankDefaultTransactionalAccountFetcher.class);
 
     private final SwedbankDefaultApiClient apiClient;
+    private final PersistentStorage persistentStorage;
     private List<String> investmentAccountNumbers;
     private Date earliestDateSeen;
     private Map<String, Set<String>> transactionIdsSeen = new HashMap<>();
 
-    public SwedbankDefaultTransactionalAccountFetcher(SwedbankDefaultApiClient apiClient) {
+    public SwedbankDefaultTransactionalAccountFetcher(SwedbankDefaultApiClient apiClient,
+            PersistentStorage persistentStorage) {
         this.apiClient = apiClient;
+        this.persistentStorage = persistentStorage;
     }
 
     @Override
@@ -188,10 +195,32 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
     }
 
     private EngagementTransactionsResponse fetchTransactions(TransactionalAccount account,
-        LinkEntity key) {
-        EngagementTransactionsResponse rawResponse = apiClient.engagementTransactions(key);
-        // temporary fix to detect and filter duplicate transactions
-        return filterTransactionIdDuplicates(account, rawResponse);
+            LinkEntity key) {
+        try {
+            EngagementTransactionsResponse rawResponse = apiClient.engagementTransactions(key);
+            // temporary fix to detect and filter duplicate transactions
+            return filterTransactionIdDuplicates(account, rawResponse);
+        } catch (HttpResponseException hre) {
+            HttpResponse response = hre.getResponse();
+            // check if we are paginating and receive INTERNAL SERVER ERROR
+            // In that case we have a temporary fix to return "done". This is because Swedbank
+            // have an issue with their paginated transaction fetching currently. Remove
+            // this temporary fix when we now Swedbank provides a working paginating endpoint again
+            // NB! We mark the credentials receiving this error for future clean up activities.
+            // PersistentStorage is used for setting mark
+            if (key != null && response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+                // mark credential with PAGINATION_ERROR in persistent storage
+                persistentStorage.put(SwedbankBaseConstants.PaginationError.PAGINATION_ERROR,
+                        account.getAccountNumber());
+                // Log to notify we still have the problem
+                log.warn(SwedbankBaseConstants.PaginationError.PAGINATION_ERROR_MSG);
+
+                // return fetching is "done"
+                return new EngagementTransactionsResponse();
+            }
+
+            throw hre;
+        }
     }
 
     private EngagementTransactionsResponse filterTransactionIdDuplicates(TransactionalAccount account,
@@ -218,7 +247,6 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
 
     private Set<String> getfetchedTransactionsIds(String accountNumber) {
         if (!transactionIdsSeen.containsKey(accountNumber)) {
-
             transactionIdsSeen.clear();
             transactionIdsSeen.put(accountNumber, new HashSet<>());
         }

@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.UrlEnum;
 import se.tink.backend.utils.StringUtils;
-import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class SwedbankBaseConstants {
@@ -314,5 +313,11 @@ public class SwedbankBaseConstants {
     public static class BankId {
         public static final int MAX_ATTEMPTS = 90;
         public static final int BANKID_SLEEP_INTERVAL = 2000;
+    }
+
+    // Temporary constants while Swedbank is having problems with their pagination
+    public static class PaginationError {
+        public static final String PAGINATION_ERROR = "PAGINATION_ERROR";
+        public static final String PAGINATION_ERROR_MSG = "Error_paginating_transactions ";
     }
 }
