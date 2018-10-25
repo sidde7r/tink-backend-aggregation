@@ -88,7 +88,7 @@ public interface UpdateService {
 
     @POST
     @Path("/transfer/process")
-    @TeamOwnership(Team.INTEGRATION)
+    @TeamOwnership(Team.PAYMENTS)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response processEinvoices(UpdateTransfersRequest request);
