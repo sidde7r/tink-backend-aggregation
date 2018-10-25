@@ -78,7 +78,7 @@ public class AuthorizeRequest {
             String issuer = wellknownConfiguration.getIssuer();
             String clientId = clientInfo.getClientId();
             String redirectUri = softwareStatement.getRedirectUri();
-            String scopes = OpenIdConstants.SCOPES.stream().collect(Collectors.joining(" "));
+            String scopes = OpenIdConstants.Scopes.getAllSupported().stream().collect(Collectors.joining(" "));
             String responseTypes = OpenIdConstants.MANDATORY_RESPONSE_TYPES.stream()
                     .collect(Collectors.joining(" "));
 

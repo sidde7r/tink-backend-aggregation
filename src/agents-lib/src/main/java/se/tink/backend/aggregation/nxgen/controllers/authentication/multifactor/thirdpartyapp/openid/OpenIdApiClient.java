@@ -92,12 +92,12 @@ public class OpenIdApiClient {
 
         ClientInfo clientInfo = providerConfiguration.getClientInfo();
 
-        String scopes = wellknownConfiguration.verifyAndGetScopes(OpenIdConstants.SCOPES)
+        String scopes = wellknownConfiguration.verifyAndGetScopes(OpenIdConstants.Scopes.getAllSupported())
                 .orElseThrow(() -> new IllegalStateException("Provider does not support the mandatory scopes."));
 
         TokenRequestForm requestForm = new TokenRequestForm()
                 .withGrantType(grantType)
-                .withScope(scopes)
+                .withScope(OpenIdConstants.Scopes.ACCOUNTS)
                 .withRedirectUri(softwareStatement.getRedirectUri());
 
         OpenIdConstants.TOKEN_ENDPOINT_AUTH_METHOD authMethod = wellknownConfiguration.getPreferredTokenEndpointAuthMethod(
@@ -186,7 +186,7 @@ public class OpenIdApiClient {
         String responseType = OpenIdConstants.MANDATORY_RESPONSE_TYPES.stream()
                 .collect(Collectors.joining(" "));
 
-        String scope = wellknownConfiguration.verifyAndGetScopes(OpenIdConstants.SCOPES)
+        String scope = wellknownConfiguration.verifyAndGetScopes(OpenIdConstants.Scopes.getAllSupported())
                 .orElseThrow(() -> new IllegalStateException(
                         "Provider does not support the mandatory scopes.")
                 );

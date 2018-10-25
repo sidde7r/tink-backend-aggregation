@@ -5,7 +5,20 @@ import java.util.Arrays;
 import java.util.List;
 
 public class OpenIdConstants {
-    public static final List<String> SCOPES = Arrays.asList("openid", "accounts");
+
+    public static class Scopes {
+        public static final String OPEN_ID = "openid";
+        public static final String ACCOUNTS = "accounts";
+        public static final String TRANSACTIONS = "transactions"; // Not yet supported
+
+        private static final ImmutableList<String> allSupported = ImmutableList.<String>builder()
+                .add(OPEN_ID, ACCOUNTS)
+                .build();
+
+        public static ImmutableList<String> getAllSupported() {
+            return allSupported;
+        }
+    }
 
     public enum SIGNING_ALGORITHM {
         RS256
