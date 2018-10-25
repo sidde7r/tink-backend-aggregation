@@ -129,9 +129,13 @@ public final class GetAccountInformationListResponse {
             return AccountTypes.CHECKING;
         case "SAVINGS":
             return AccountTypes.SAVINGS;
+        case "CREDIT_CARD":
+            return AccountTypes.CREDIT_CARD;
+        case "LOAN":
+            return AccountTypes.LOAN;
         default:
             logger.error(String.format(
-                    "Account type could not be inferred from product type '%s'. Expected 'CHECKING' or 'SAVINGS'.",
+                    "Account type could not be inferred from product type '%s'. Expected 'CHECKING', 'SAVINGS', 'CREDIT_CARD' or 'LOAN'.",
                     productType));
         }
         logger.warn("Falling back to setting the product type to CHECKING");
