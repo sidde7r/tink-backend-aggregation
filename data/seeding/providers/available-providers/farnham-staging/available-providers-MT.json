@@ -1,0 +1,7 @@
+{
+  "clusterid" : "farnham-staging",
+  "providers" : [
+    "mt-bov",
+    "mt-hsbc-bank"
+  ]
+}

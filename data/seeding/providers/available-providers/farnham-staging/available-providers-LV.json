@@ -1,0 +1,11 @@
+{
+  "clusterid" : "farnham-staging",
+  "providers" : [
+    "lv-citadele-banka",
+    "lv-dnb",
+    "lv-nordea",
+    "lv-norvik-banka",
+    "lv-seb",
+    "lv-swedbank"
+  ]
+}
