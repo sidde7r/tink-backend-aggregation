@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Arrays;
 import java.util.List;
@@ -156,8 +157,4 @@ public class WellKnownResponse {
         return requestParameterSupported;
     }
 
-    @Override
-    public String toString() {
-        return SerializationUtils.serializeToString(this);
-    }
 }
