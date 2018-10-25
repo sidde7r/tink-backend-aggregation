@@ -66,7 +66,7 @@ public class ClientRegistration {
 
             String issuer = wellknownConfiguration.getIssuer();
 
-            String scopes = wellknownConfiguration.verifyAndGetScopes(OpenIdConstants.SCOPES)
+            String scopes = wellknownConfiguration.verifyAndGetScopes(OpenIdConstants.Scopes.getAllSupported())
                     .orElseThrow(() -> new IllegalStateException("Provider does not support the mandatory scopes."));
 
             String keyId = softwareStatement.getSigningKeyId();

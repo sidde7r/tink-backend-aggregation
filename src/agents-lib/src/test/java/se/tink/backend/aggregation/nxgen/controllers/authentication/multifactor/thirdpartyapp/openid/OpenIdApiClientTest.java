@@ -51,7 +51,7 @@ public class OpenIdApiClientTest {
 
         Assert.assertNotNull(conf);
         Assert.assertTrue(conf.verifyAndGetScopes(
-                OpenIdConstants.SCOPES)
+                OpenIdConstants.Scopes.getAllSupported())
                 .isPresent());
     }
 
