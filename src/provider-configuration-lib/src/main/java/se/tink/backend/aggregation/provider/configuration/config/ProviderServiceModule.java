@@ -21,11 +21,9 @@ import se.tink.libraries.jersey.logging.ResourceTimerFilterFactory;
 import se.tink.libraries.metrics.PrometheusConfiguration;
 
 public class ProviderServiceModule extends AbstractModule {
-    private ServiceConfiguration configuration;
     private final JerseyEnvironment jersey;
 
-    ProviderServiceModule(ServiceConfiguration configuration, JerseyEnvironment jersey) {
-        this.configuration = configuration;
+    ProviderServiceModule(JerseyEnvironment jersey) {
         this.jersey = jersey;
     }
 
@@ -36,9 +34,6 @@ public class ProviderServiceModule extends AbstractModule {
         bind(ClusterIdProvider.class).in(Scopes.SINGLETON);
         bind(ProviderServiceController.class).in(Scopes.SINGLETON);
         bind(ProviderConfigurationDAO.class).to(ProviderConfigurationProvider.class).in(Scopes.SINGLETON);
-
-        bind(CoordinationConfiguration.class).toProvider(Providers.of(configuration.getCoordination()));
-        bind(PrometheusConfiguration.class).toInstance(configuration.getPrometheus());
 
         JerseyResourceRegistrar.build()
                 .binder(binder())

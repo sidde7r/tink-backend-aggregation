@@ -813,6 +813,7 @@ java_library(
         "//src/libraries/i18n",
         
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:io_dropwizard_dropwizard_core",
         "//third_party:io_dropwizard_dropwizard_jersey",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
