@@ -21,11 +21,11 @@ public class ClientInfo {
         return clientSecret;
     }
 
-    public ZonedDateTime getClientIdIssuedAt() {
-        return ZonedDateTime.ofInstant(Instant.ofEpochMilli(clientIdIssuedAt), ZoneOffset.UTC);
+    public Instant getClientIdIssuedAt() {
+        return Instant.ofEpochMilli(clientIdIssuedAt);
     }
 
-    public ZonedDateTime getClientSecretExpiresAt() {
-        return ZonedDateTime.ofInstant(Instant.ofEpochMilli(clientSecretExpiresAt), ZoneOffset.UTC);
+    public Instant getClientSecretExpiresAt() {
+        return Instant.ofEpochMilli(clientSecretExpiresAt);
     }
 }

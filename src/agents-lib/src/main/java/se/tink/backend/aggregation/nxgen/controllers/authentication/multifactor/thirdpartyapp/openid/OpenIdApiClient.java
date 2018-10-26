@@ -208,8 +208,8 @@ public class OpenIdApiClient {
         authFilter = new OpenIdAuthenticatedHttpFilter(
                 token,
                 providerConfiguration,
-                OpenIdConstants.DevParams.TINK_IP,
-                OpenIdConstants.DevParams.LAST_LOGIN
+                null,
+                null
         );
 
         httpClient.addFilter(authFilter);

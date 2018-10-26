@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.Optional;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -53,7 +51,7 @@ public class OAuth2Token {
 
     @JsonIgnore
     private static long getCurrentEpoch() {
-        return LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+        return System.currentTimeMillis() / 1000L;
     }
 
     @JsonIgnore
