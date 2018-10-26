@@ -464,7 +464,7 @@
       "masked" : false,
       "maxLength" : null,
       "minLength" : null,
-      "name" : "usernumber",
+      "name" : "username",
       "numeric" : false,
       "optional" : false,
       "options" : null,
