@@ -1,0 +1,7 @@
+{
+  "clusterid" : "leeds-staging",
+  "providers" : [
+    "sk-slovenska-sporitelna",
+    "sk-zuno-bank"
+  ]
+}
