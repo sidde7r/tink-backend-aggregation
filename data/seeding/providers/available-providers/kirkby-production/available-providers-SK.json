@@ -1,0 +1,7 @@
+{
+  "clusterid" : "kirkby-production",
+  "providers" : [
+    "sk-slovenska-sporitelna",
+    "sk-zuno-bank"
+  ]
+}
