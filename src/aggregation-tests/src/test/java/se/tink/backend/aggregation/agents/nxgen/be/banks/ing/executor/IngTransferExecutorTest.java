@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor;
 
 import java.util.Date;
+import java.util.Locale;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -23,6 +24,7 @@ import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 import se.tink.libraries.date.DateUtils;
+import se.tink.libraries.i18n.Catalog;
 import static se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Storage.OTP_COUNTER;
 
 @Ignore
@@ -44,6 +46,7 @@ public class IngTransferExecutorTest {
     private AccountIdentifier savingsAccountSource;
     private AccountIdentifier savedBeneficiaryDestination;
     private AccountIdentifier thirdPartyDestination;
+    private IngTransferHelper ingTransferHelper;
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
@@ -58,10 +61,10 @@ public class IngTransferExecutorTest {
         this.persistentStorage.put(OTP_COUNTER, "");
         this.ingHelper = ingTestConfig.getTestIngHelper();
         this.persistentStorage.put(IngConstants.Storage.VIRTUAL_CARDNUMBER, VIRTUAL_CARD_NUMBER);
-
+        this.ingTransferHelper = new IngTransferHelper(new Catalog(new Locale("fr", "BE")));
         this.autoAuthenticator = new IngAutoAuthenticator(apiClient, persistentStorage, ingHelper);
         autoAuthenticator.autoAuthenticate();
-        this.ingTransferExecutor =  new IngTransferExecutor(apiClient, persistentStorage, ingHelper);
+        this.ingTransferExecutor =  new IngTransferExecutor(apiClient, persistentStorage, ingHelper, ingTransferHelper);
         this.transferController = new TransferController(null, ingTransferExecutor, null, null);
 
         // Populate with account numbers for test user

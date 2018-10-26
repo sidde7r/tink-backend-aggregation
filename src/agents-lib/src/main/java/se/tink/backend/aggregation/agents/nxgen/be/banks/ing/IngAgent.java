@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngAu
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngCardReaderAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.controller.IngCardReaderAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor.IngTransferExecutor;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor.IngTransferHelper;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.creditcard.IngCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.IngTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.IngTransactionalAccountFetcher;
@@ -34,11 +35,13 @@ import static se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants
 public class IngAgent extends NextGenerationAgent {
     private final IngApiClient apiClient;
     private final IngHelper ingHelper;
+    private final IngTransferHelper ingTransferHelper;
 
     public IngAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.apiClient = new IngApiClient(client);
         this.ingHelper = new IngHelper(sessionStorage);
+        this.ingTransferHelper = new IngTransferHelper(catalog);
     }
 
     @Override
@@ -123,7 +126,7 @@ public class IngAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransferController> constructTransferController() {
-        BankTransferExecutor bankTransferExecutor = new IngTransferExecutor(apiClient, persistentStorage, ingHelper);
+        BankTransferExecutor bankTransferExecutor = new IngTransferExecutor(apiClient, persistentStorage, ingHelper, ingTransferHelper);
 
         return Optional.of(new TransferController(null, bankTransferExecutor, null, null));
     }

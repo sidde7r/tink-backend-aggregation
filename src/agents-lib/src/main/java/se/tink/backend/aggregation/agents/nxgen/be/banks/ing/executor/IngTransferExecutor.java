@@ -23,14 +23,18 @@ import se.tink.libraries.date.CountryDateUtils;
 public class IngTransferExecutor implements BankTransferExecutor {
     private final IngApiClient apiClient;
     private final LoginResponseEntity loginResponse;
+    private final IngTransferHelper ingTransferHelper;
     private final PersistentStorage persistentStorage;
 
-    public IngTransferExecutor(IngApiClient apiClient, PersistentStorage persistentStorage, IngHelper ingHelper) {
+    public IngTransferExecutor(IngApiClient apiClient, PersistentStorage persistentStorage, IngHelper ingHelper,
+            IngTransferHelper ingTransferHelper) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.loginResponse = ingHelper.retrieveLoginResponse()
                 .orElseThrow(() -> new IllegalStateException(IngConstants.LogMessage.LOGIN_RESPONSE_NOT_FOUND));
+        this.ingTransferHelper = ingTransferHelper;
     }
+
 
     @Override
     public Optional<String> executeTransfer(Transfer transfer) throws TransferExecutionException {
@@ -40,9 +44,9 @@ public class IngTransferExecutor implements BankTransferExecutor {
                 .orElseThrow(() -> new IllegalStateException(IngConstants.LogMessage.TRANSFER_ACCOUNTS_NOT_FOUND));
 
         AccountEntity sourceAccount = tryFindOwnAccount(accounts, transfer.getSource())
-                .orElseThrow(() -> TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                        .setMessage(TransferExecutionException.EndUserMessage.INVALID_SOURCE.getKey().get())
-                        .build());
+                .orElseThrow(() -> ingTransferHelper.buildTranslatedTransferException(
+                        TransferExecutionException.EndUserMessage.INVALID_SOURCE.getKey().get(),
+                        SignableOperationStatuses.FAILED));
 
         // For immediate transfers it is not allowed transfer amount not covered by the balance. Blocked in app.
         if (immediateTransfer(transfer)) {
@@ -52,10 +56,10 @@ public class IngTransferExecutor implements BankTransferExecutor {
         Optional<AccountEntity> destinationAccount = tryFindOwnAccount(accounts, transfer.getDestination());
 
         if (destinationAccount.isPresent()) {
-            new IngInternalTransferExecutor(apiClient, loginResponse)
+            new IngInternalTransferExecutor(apiClient, loginResponse, ingTransferHelper)
                     .executeInternalTransfer(transfer, sourceAccount, destinationAccount.get());
         } else {
-            new IngExternalTransferExecutor(apiClient, loginResponse, persistentStorage)
+            new IngExternalTransferExecutor(apiClient, loginResponse, persistentStorage, ingTransferHelper)
                     .executeExternalTransfer(transfer, sourceAccount);
         }
         return Optional.empty();
@@ -68,7 +72,7 @@ public class IngTransferExecutor implements BankTransferExecutor {
     private void validateAmountCoveredByBalance(AccountEntity sourceAccount, Amount amount) {
         if (Amount.inEUR(IngHelper.parseAmountStringToDouble(sourceAccount.getBalance()))
                 .isLessThan(amount.doubleValue())) {
-            IngTransferHelper.cancelTransfer(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT.getKey().get());
+            ingTransferHelper.cancelTransfer((TransferExecutionException.EndUserMessage.EXCESS_AMOUNT.getKey().get()));
         }
     }
 
@@ -87,7 +91,7 @@ public class IngTransferExecutor implements BankTransferExecutor {
         calendar.setTime(dueDate);
 
         if (!belgianDateUtils.isBusinessDay(calendar)) {
-            IngTransferHelper.cancelTransfer(IngConstants.EndUserMessage.DATE_MUST_BE_BUSINESS_DAY.getKey().get());
+            ingTransferHelper.cancelTransfer(IngConstants.EndUserMessage.DATE_MUST_BE_BUSINESS_DAY.getKey().get());
         }
     }
 
