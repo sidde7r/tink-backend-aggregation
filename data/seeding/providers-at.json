@@ -83,7 +83,7 @@
         },
         {
             "name": "at-erstebank-password",
-            "displayName": "Erste bank und Sparkasse",
+            "displayName": "Erste Bank und Sparkasse",
             "popular": true,
             "status": "ENABLED",
             "type": "BANK",

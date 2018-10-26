@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing;
 
 import com.google.common.base.Preconditions;
+import java.util.List;
 import java.util.Optional;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.LoginResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.MobileHelloResponseEntity;
@@ -17,25 +20,25 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.M
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.MobileHelloResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.PrepareEnrollResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.TrustBuilderRequestBody;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities.PendingPaymentsResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.entites.json.BaseMobileResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor.entities.ValidateExternalTransferResponseEntity;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor.rpc.ExecuteInternalTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor.rpc.ExecuteExternalTransferBody;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor.rpc.ExecuteInternalTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor.rpc.ValidateInternalTransferBody;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor.rpc.ValidateInternalTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor.rpc.ValidateThirdPartyTransferBody;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor.rpc.ValidateThirdPartyTransferResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor.rpc.ValidateInternalTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor.rpc.ValidateTrustedTransferBody;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor.rpc.ValidateTrustedTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities.PendingPaymentsResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.rpc.PendingPaymentsRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.rpc.PendingPaymentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.rpc.TransactionsRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.rpc.TransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.rpc.TrustedBeneficiariesResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.rpc.BaseResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.rpc.TrustedBeneficiariesResponse;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -236,11 +239,20 @@ public class IngApiClient {
         ExecuteExternalTransferBody body = new ExecuteExternalTransferBody(Integer.toString(otp));
 
         return validateExternalTransferResponseEntity.findExecuteThirdPartyTransferRequest()
-                .map(url -> client.request(getUrlWithQueryParams(url))
-                        .post(BaseResponse.class, body).getMobileResponse())
+                .map(url -> {
+                    addQueryParamsToBody(body, url);
+                    return client.request(getUrlWithQueryParams(new URL(IngConstants.Urls.BASE_SSO_REQUEST)))
+                        .post(BaseResponse.class, body).getMobileResponse();})
                 .orElseThrow(() -> TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                         .setMessage("Could not find the execute third party transfer request url.")
                         .build());
+    }
+
+    private void addQueryParamsToBody(ExecuteExternalTransferBody body, URL url) {
+        List<NameValuePair> queryParams = URLEncodedUtils.parse(url.toUri(), "UTF-8");
+        for (NameValuePair param : queryParams) {
+            body.add(param.getName(), param.getValue());
+        }
     }
 
     private URL getUrlWithQueryParams(URL url) {

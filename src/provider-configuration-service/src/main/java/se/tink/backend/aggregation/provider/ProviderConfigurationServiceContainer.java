@@ -1,20 +1,15 @@
 package se.tink.backend.aggregation.provider;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
-import com.google.inject.Injector;
 import io.dropwizard.cli.Command;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import se.tink.backend.aggregation.provider.configuration.cli.DebugProviderCommand;
+import se.tink.backend.aggregation.provider.configuration.cli.GenerateProviderOnClusterFilesCommand;
 import se.tink.backend.aggregation.provider.configuration.cli.ProviderStatusCommand;
 import se.tink.backend.aggregation.provider.configuration.config.ProviderModuleFactory;
 import se.tink.backend.common.AbstractServiceContainer;
 import se.tink.backend.common.config.ServiceConfiguration;
-import se.tink.libraries.auth.ApiTokenAuthorizationHeaderPredicate;
-import se.tink.libraries.auth.ContainerAuthorizationResourceFilterFactory;
-import se.tink.libraries.auth.YubicoAuthorizationHeaderPredicate;
 import se.tink.libraries.dropwizard.DropwizardLifecycleInjectorFactory;
 import se.tink.libraries.dropwizard.DropwizardObjectMapperConfigurator;
 
@@ -22,7 +17,8 @@ public class ProviderConfigurationServiceContainer extends AbstractServiceContai
 
     private static final ImmutableList<Command> COMMANDS = ImmutableList.of(
             new DebugProviderCommand(),
-            new ProviderStatusCommand()
+            new ProviderStatusCommand(),
+            new GenerateProviderOnClusterFilesCommand()
     );
 
     public static void main(String[] args) throws Exception {

@@ -21,10 +21,10 @@ public class AgreementDto implements GeneralAccountEntity {
     private TypeValuePair structureCode;
     private TypeValuePair productType;
     private TypeEncValueTuple productTypeNr;
-    private TypeValuePair agreementType;
+    private TypeEncValueTuple agreementType;
     private TypeEncValueTuple agreementName;
     private TypeValuePair rubricName;
-    private TypeValuePair balance;
+    private TypeEncValueTuple balance;
     private TypeEncValueTuple currency;
     private TypeValuePair counterValueBalance;
     private TypeValuePair counterValueCurrency;
@@ -39,10 +39,16 @@ public class AgreementDto implements GeneralAccountEntity {
     private TypeValuePair visibilityIndicator;
     private TypeEncValueTuple principalAccountHolder;
     private TypeValuePair balanceIncludingReservations;
-    private TypeValuePair balanceIncludinReservationAmountEur;
+    private TypeValuePair balanceIncludingReservationAmountEur;
     private TypeValuePair reservationAmount;
     private TypeValuePair reservationIndicator;
     private TypeValuePair agreementStructuredMessage;
+    private TypeValuePair ribbonStatusCode;
+    private TypeValuePair color;
+    private TypeValuePair statusDescription;
+    private TypeValuePair acceptThirdPartyClause;
+    private TypeValuePair manageAccountInsurance;
+    private TypeValuePair settleSavingsAccount;
 
     public TypeEncValueTuple getAgreementNo() {
         return agreementNo;
@@ -60,7 +66,7 @@ public class AgreementDto implements GeneralAccountEntity {
         return productTypeNr;
     }
 
-    public TypeValuePair getAgreementType() {
+    public TypeEncValueTuple getAgreementType() {
         return agreementType;
     }
 
@@ -72,7 +78,7 @@ public class AgreementDto implements GeneralAccountEntity {
         return rubricName;
     }
 
-    public TypeValuePair getBalance() {
+    public TypeEncValueTuple getBalance() {
         return balance;
     }
 
@@ -132,8 +138,8 @@ public class AgreementDto implements GeneralAccountEntity {
         return balanceIncludingReservations;
     }
 
-    public TypeValuePair getBalanceIncludinReservationAmountEur() {
-        return balanceIncludinReservationAmountEur;
+    public TypeValuePair getBalanceIncludingReservationAmountEur() {
+        return balanceIncludingReservationAmountEur;
     }
 
     public TypeValuePair getReservationAmount() {
@@ -146,6 +152,30 @@ public class AgreementDto implements GeneralAccountEntity {
 
     public TypeValuePair getAgreementStructuredMessage() {
         return agreementStructuredMessage;
+    }
+
+    public TypeValuePair getRibbonStatusCode() {
+        return ribbonStatusCode;
+    }
+
+    public TypeValuePair getColor() {
+        return color;
+    }
+
+    public TypeValuePair getStatusDescription() {
+        return statusDescription;
+    }
+
+    public TypeValuePair getAcceptThirdPartyClause() {
+        return acceptThirdPartyClause;
+    }
+
+    public TypeValuePair getManageAccountInsurance() {
+        return manageAccountInsurance;
+    }
+
+    public TypeValuePair getSettleSavingsAccount() {
+        return settleSavingsAccount;
     }
 
     public Amount getAmount() {

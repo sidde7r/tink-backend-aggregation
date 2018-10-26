@@ -1,0 +1,12 @@
+{
+  "clusterid" : "farnham-staging",
+  "providers" : [
+    "de-americanexpress",
+    "de-commerzbank",
+    "de-deutschebank",
+    "de-dkb",
+    "de-postbank",
+    "de-sparkasse",
+    "de-vrbank"
+  ]
+}

@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.transfer;
 
 import com.google.common.base.Preconditions;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.validators.StructuredMessageValidator;
 import se.tink.backend.core.enums.MessageType;
@@ -22,19 +23,19 @@ public class TransferController {
         this.updatePaymentExecutor = updatePaymentExecutor;
     }
 
-    public void execute(final Transfer transfer) {
+    public Optional<String> execute(final Transfer transfer) {
         Preconditions.checkNotNull(transfer);
 
         switch (transfer.getType()) {
         case BANK_TRANSFER:
-            executeBankTransfer(transfer);
-            break;
+            return executeBankTransfer(transfer);
         case PAYMENT:
             executePayment(transfer);
             break;
         default:
             TransferExecutionException.throwIf(true);
         }
+        return Optional.empty();
     }
 
     public void update(Transfer transfer) {
@@ -52,7 +53,7 @@ public class TransferController {
         }
     }
 
-    private void executeBankTransfer(final Transfer transfer) {
+    private Optional<String> executeBankTransfer(final Transfer transfer) {
         Preconditions.checkNotNull(bankTransferExecutor);
 
         if (transfer.getSource().is(AccountIdentifier.Type.BE)
@@ -60,7 +61,7 @@ public class TransferController {
             validateTransferMessageType(transfer);
         }
 
-        bankTransferExecutor.executeTransfer(transfer);
+        return bankTransferExecutor.executeTransfer(transfer);
     }
 
     private void executePayment(final Transfer transfer) {

@@ -1,13 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transactional;
 
+import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
@@ -18,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.EngagementOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.EngagementTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinkEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.TransactionEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
@@ -26,6 +33,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount>,
@@ -33,11 +43,15 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
     private static final Logger log = LoggerFactory.getLogger(SwedbankDefaultTransactionalAccountFetcher.class);
 
     private final SwedbankDefaultApiClient apiClient;
+    private final PersistentStorage persistentStorage;
     private List<String> investmentAccountNumbers;
     private Date earliestDateSeen;
+    private Map<String, Set<String>> transactionIdsSeen = new HashMap<>();
 
-    public SwedbankDefaultTransactionalAccountFetcher(SwedbankDefaultApiClient apiClient) {
+    public SwedbankDefaultTransactionalAccountFetcher(SwedbankDefaultApiClient apiClient,
+            PersistentStorage persistentStorage) {
         this.apiClient = apiClient;
+        this.persistentStorage = persistentStorage;
     }
 
     @Override
@@ -139,7 +153,7 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
         apiClient.selectProfile(bankProfile);
 
         if (key != null) {
-            TransactionKeyPaginatorResponse<LinkEntity> response = apiClient.engagementTransactions(key);
+            TransactionKeyPaginatorResponse<LinkEntity> response = fetchTransactions(account, key);
 
             if (hasSeenPageBefore(response)) {
                 // Return an empty response but with the correct next key set.
@@ -148,9 +162,9 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
 
             // Only update the earliestDateSeen if we haven't seen the page before.
             updateEarliestDateSeen(response);
+
             return response;
         }
-
 
         LinkEntity nextLink =
                 account.getFromTemporaryStorage(SwedbankBaseConstants.StorageKey.NEXT_LINK, LinkEntity.class)
@@ -166,7 +180,7 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
 
         // Every time we fetch the transactions for an account we get all reserved transactions.
         // This is a hack to only get the reserved transactions from the first response.
-        EngagementTransactionsResponse engagementTransactionsResponse = apiClient.engagementTransactions(nextLink);
+        EngagementTransactionsResponse engagementTransactionsResponse = fetchTransactions(account, nextLink);
 
         List<Transaction> transactions = new ArrayList<>();
         transactions.addAll(engagementTransactionsResponse.toTransactions());
@@ -178,6 +192,80 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
         updateEarliestDateSeen(transactionKeyPaginatorResponse);
 
         return transactionKeyPaginatorResponse;
+    }
+
+    private EngagementTransactionsResponse fetchTransactions(TransactionalAccount account,
+            LinkEntity key) {
+        try {
+            EngagementTransactionsResponse rawResponse = apiClient.engagementTransactions(key);
+            // temporary fix to detect and filter duplicate transactions
+            return filterTransactionIdDuplicates(account, rawResponse);
+        } catch (HttpResponseException hre) {
+            HttpResponse response = hre.getResponse();
+            // check if we are paginating and receive INTERNAL SERVER ERROR
+            // In that case we have a temporary fix to return "done". This is because Swedbank
+            // have an issue with their paginated transaction fetching currently. Remove
+            // this temporary fix when we now Swedbank provides a working paginating endpoint again
+            // NB! We mark the credentials receiving this error for future clean up activities.
+            // PersistentStorage is used for setting mark
+            if (key != null && response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+                // mark credential with PAGINATION_ERROR in persistent storage
+                persistentStorage.put(SwedbankBaseConstants.PaginationError.PAGINATION_ERROR,
+                        account.getAccountNumber());
+                // Log to notify we still have the problem
+                log.warn(SwedbankBaseConstants.PaginationError.PAGINATION_ERROR_MSG);
+
+                // return fetching is "done"
+                return new EngagementTransactionsResponse();
+            }
+
+            throw hre;
+        }
+    }
+
+    private EngagementTransactionsResponse filterTransactionIdDuplicates(TransactionalAccount account,
+            EngagementTransactionsResponse rawResponse) {
+
+        // no need to filter non-existing data
+        if (rawResponse.getTransactions() == null) {
+            return rawResponse;
+        }
+
+        Set<String> fetchedTransactionIds = getfetchedTransactionsIds(account.getAccountNumber());
+
+        List<TransactionEntity> filteredTransactions =
+                rawResponse.getTransactions()
+                        .stream()
+                        .filter(transaction -> checkIfNewAndStoreTransactionId(transaction, fetchedTransactionIds))
+                        .collect(Collectors.toList());
+
+        rawResponse.getTransactions().clear();
+        rawResponse.getTransactions().addAll(filteredTransactions);
+
+        return rawResponse;
+    }
+
+    private Set<String> getfetchedTransactionsIds(String accountNumber) {
+        if (!transactionIdsSeen.containsKey(accountNumber)) {
+            transactionIdsSeen.clear();
+            transactionIdsSeen.put(accountNumber, new HashSet<>());
+        }
+
+        return transactionIdsSeen.get(accountNumber);
+    }
+
+    private boolean checkIfNewAndStoreTransactionId(TransactionEntity transaction, Set<String> seenTransactionIds) {
+        String txId = transaction.getId();
+
+        // if transaction id is not set, we cannot filter, accept transaction
+        if (Strings.isNullOrEmpty(txId)) {
+            return true;
+        }
+
+        boolean isNewId = !seenTransactionIds.contains(txId);
+        seenTransactionIds.add(txId);
+
+        return isNewId;
     }
 
     // fetch all account number from investment accounts BUT savings accounts, this is because we want savings accounts

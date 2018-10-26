@@ -123,6 +123,8 @@ public class TransferExecutionException extends RuntimeException {
         EXISTING_UNSIGNED_TRANSFERS(new LocalizableKey(
                 "You have existing unsigned transfers, please sign these in your bank's app before executing a new transfer")),
         EXCESS_AMOUNT(new LocalizableKey("The transfer amount is larger than what is available on the account.")),
+        EXCESS_AMOUNT_FOR_BENEFICIARY(new LocalizableKey("The transfer amount will exceed the total allowed weekly limit for the beneficiary.")),
+        EXCESS_AMOUNT_AWAITING_PROCESSING(new LocalizableKey("The transfer has been sent to your bank and will be executed when funds are available")),
         INVALID_DESTINATION(new LocalizableKey("Invalid destination account")),
         INVALID_DUEDATE_NOT_BUSINESSDAY(new LocalizableKey("The payment date is not a business day")),
         INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY(new LocalizableKey("The payment date is too soon or not a business day")),

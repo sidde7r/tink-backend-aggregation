@@ -887,6 +887,7 @@ java_binary(
         "etc/development-provider-configuration-server.yml",
         "etc/development-minikube-provider-configuration-server.yml",
         "//data",
+        "//providerdata:providerdata"
     ],
     main_class = "se.tink.backend.aggregation.provider.ProviderConfigurationServiceContainer",
     visibility = ["//visibility:public"],

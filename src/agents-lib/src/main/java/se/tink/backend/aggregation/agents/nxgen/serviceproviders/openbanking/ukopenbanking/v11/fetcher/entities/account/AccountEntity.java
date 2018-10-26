@@ -10,6 +10,41 @@ import se.tink.backend.aggregation.rpc.AccountTypes;
 @JsonObject
 public class AccountEntity implements IdentifiableAccount {
 
+    @JsonProperty("AccountId")
+    private String accountId;
+    @JsonProperty("Currency")
+    private String currency;
+    @JsonProperty("Nickname")
+    private String nickname;
+    @JsonProperty("Account")
+    private AccountIdentifierEntity identifierEntity;
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public AccountTypes getAccountType() {
+        return AccountTypes.CHECKING;
+    }
+
+    public String getUniqueIdentifier() {
+        return identifierEntity.getIdentification();
+    }
+
+    public String getDisplayName() {
+        return nickname != null ? nickname : identifierEntity.getName();
+    }
+
+    @Override
+    public String getBankIdentifier() {
+        return accountId;
+    }
+
+
     public static TransactionalAccount toTransactionalAccount(AccountEntity account, AccountBalanceEntity balance) {
 
         return TransactionalAccount
@@ -17,7 +52,7 @@ public class AccountEntity implements IdentifiableAccount {
                         account.getUniqueIdentifier(),
                         balance.getBalance())
                 .setAccountNumber(account.getUniqueIdentifier())
-                .setName(account.getNickname())
+                .setName(account.getDisplayName())
                 .setBankIdentifier(account.getAccountId())
                 .build();
     }
@@ -32,37 +67,7 @@ public class AccountEntity implements IdentifiableAccount {
                                         "CreditCardAccount has no credit.")))
                 .setAccountNumber(account.getUniqueIdentifier())
                 .setBankIdentifier(account.getAccountId())
-                .setName(account.getNickname())
+                .setName(account.getDisplayName())
                 .build();
-    }
-
-    @JsonProperty("AccountId")
-    private String accountId;
-    @JsonProperty("Currency")
-    private String currency;
-    @JsonProperty("Nickname")
-    private String nickname;
-    @JsonProperty("Account")
-    private AccountIdentifierEntity accountDetails;
-
-    public String getAccountId() {
-        return accountId;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public AccountTypes getAccountType() {
-        return AccountTypes.CHECKING;
-    }
-
-    public String getUniqueIdentifier() {
-        return accountDetails.getIdentification();
-    }
-
-    @Override
-    public String getBankIdentifier() {
-        return accountId;
     }
 }

@@ -37,7 +37,7 @@ public class IngTransferExecutor implements BankTransferExecutor {
 
 
     @Override
-    public void executeTransfer(Transfer transfer) throws TransferExecutionException {
+    public Optional<String> executeTransfer(Transfer transfer) throws TransferExecutionException {
         validateDueDate(transfer.getDueDate());
 
         AccountListEntity accounts = apiClient.fetchAccounts(loginResponse).map(AccountsResponse::getAccounts)
@@ -58,11 +58,11 @@ public class IngTransferExecutor implements BankTransferExecutor {
         if (destinationAccount.isPresent()) {
             new IngInternalTransferExecutor(apiClient, loginResponse, ingTransferHelper)
                     .executeInternalTransfer(transfer, sourceAccount, destinationAccount.get());
-            return;
+        } else {
+            new IngExternalTransferExecutor(apiClient, loginResponse, persistentStorage)
+                    .executeExternalTransfer(transfer, sourceAccount);
         }
-
-        new IngExternalTransferExecutor(apiClient, loginResponse, persistentStorage, ingTransferHelper)
-                .executeExternalTransfer(transfer, sourceAccount);
+        return Optional.empty();
     }
 
     private boolean immediateTransfer(Transfer transfer) {

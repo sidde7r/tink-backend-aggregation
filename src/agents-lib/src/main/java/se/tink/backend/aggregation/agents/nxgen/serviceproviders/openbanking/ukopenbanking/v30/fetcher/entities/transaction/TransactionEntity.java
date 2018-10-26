@@ -22,7 +22,7 @@ public class TransactionEntity {
     @JsonProperty("Amount")
     private AmountEntity amount;
     @JsonProperty("CreditDebitIndicator")
-    private String creditDebitIndicator;
+    private UkOpenBankingConstants.CreditDebitIndicator creditDebitIndicator;
     @JsonProperty("Status")
     private UkOpenBankingConstants.EntryStatusCode status;
     private ZonedDateTime bookingDateTime;
@@ -61,8 +61,7 @@ public class TransactionEntity {
     }
 
     private Amount getSignedAmount() {
-
-        if (bankTransactionCode.getCode().isOutGoing()) {
+        if (UkOpenBankingConstants.CreditDebitIndicator.DEBIT == creditDebitIndicator) {
             return amount.negate();
         }
         return amount;

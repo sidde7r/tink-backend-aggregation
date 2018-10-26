@@ -1,0 +1,13 @@
+{
+  "clusterid": "oxford-staging",
+  "providers": [
+    "uk-barclays-oauth2",
+    "uk-halifax-oauth2",
+    "uk-lloyds-oauth2",
+    "uk-bankofscotland-oauth2",
+    "uk-santander-oauth2",
+    "uk-americanexpress-password",
+    "uk-revolut-password",
+    "uk-n26-password"
+  ]
+}

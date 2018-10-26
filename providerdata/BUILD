@@ -1,11 +1,7 @@
 filegroup(
     name = "providerdata",
-    srcs = glob(
-        include = ["**"],
-        exclude = [
-            "BUILD",
-            "test/**",
-        ],
-    ),
+    srcs = glob([
+        "raw/**"
+    ]),
     visibility = ["//visibility:public"],
 )

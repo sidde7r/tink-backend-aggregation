@@ -81,5 +81,11 @@ public class ErsteBankConstants {
 
     public static class LOGTAG {
         public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("ERSTEBANK_SPARKASSE_ACCOUNT_TYPE");
+        public static final LogTag ERROR_DATE_PARSING = LogTag.from("ERSTEBANK_ERROR_PARSING_DATE");
+    }
+
+    public static class DATE {
+        public static final String YESTERDAY = "Yesterday";
+        public static final String TODAY = "Today";
     }
 }

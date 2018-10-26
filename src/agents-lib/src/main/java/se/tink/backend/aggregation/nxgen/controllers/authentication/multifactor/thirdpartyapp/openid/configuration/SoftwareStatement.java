@@ -42,6 +42,10 @@ public class SoftwareStatement {
         return softwareStatementAssertion.getRedirectUri();
     }
 
+    public String[] getAllRedirectUris() {
+        return softwareStatementAssertion.getAllRedirectUris();
+    }
+
     public Optional<ProviderConfiguration> getProviderConfiguration(String name) {
         return Optional.ofNullable(providerConfigurations.getOrDefault(name, null));
     }

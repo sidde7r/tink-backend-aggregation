@@ -24,4 +24,12 @@ public class ProviderSpecificationModel {
     public List<ProviderConfiguration> getProviderSpecificConfiguration() {
         return providerSpecificConfiguration;
     }
+
+    public void setClusterId(String clusterId) {
+        this.clusterId = clusterId;
+    }
+
+    public void setProviderSpecificConfiguration(List<ProviderConfiguration> providerSpecificConfiguration) {
+        this.providerSpecificConfiguration = providerSpecificConfiguration;
+    }
 }

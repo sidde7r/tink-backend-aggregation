@@ -10,7 +10,7 @@ public class BankAustriaAgentTest {
     private static final String USERNAME = "";
     private static final String PIN = "";
 
-    private static final AgentIntegrationTest.Builder builder =
+    private final AgentIntegrationTest.Builder builder =
             new AgentIntegrationTest.Builder("at", "at-bankaustria-password")
                     .addCredentialField(Field.Key.USERNAME, USERNAME)
                     .addCredentialField(Field.Key.PASSWORD, PIN)

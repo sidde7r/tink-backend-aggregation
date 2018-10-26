@@ -46,7 +46,7 @@ public class KbcBankTransferExecutor implements BankTransferExecutor {
     }
 
     @Override
-    public void executeTransfer(Transfer transfer) throws TransferExecutionException {
+    public Optional<String> executeTransfer(Transfer transfer) throws TransferExecutionException {
         List<GeneralAccountEntity> ownAccounts = fetchOwnAccounts();
 
         TransactionalAccount sourceAccount = getSourceAccount(transfer.getSource(), ownAccounts);
@@ -60,7 +60,7 @@ public class KbcBankTransferExecutor implements BankTransferExecutor {
         String signType = validateTransfer(transfer, isTransferToOwnAccount);
 
         try {
-            transfer(transfer, signType, isTransferToOwnAccount);
+            return transfer(transfer, signType, isTransferToOwnAccount);
         } catch (AuthenticationException e) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setEndUserMessage(
@@ -77,7 +77,7 @@ public class KbcBankTransferExecutor implements BankTransferExecutor {
         if (sourceAccount.getBalance()
                 .isLessThan(amount.doubleValue())) {
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                    .setMessage(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT.getKey().get())
+                    .setMessage(catalog.getString(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT.getKey().get()))
                     .setEndUserMessage(catalog.getString(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT))
                     .build();
         }
@@ -109,7 +109,7 @@ public class KbcBankTransferExecutor implements BankTransferExecutor {
         return response.getSignType();
     }
 
-    private void transfer(Transfer transfer, String signType, boolean isTransferToOwnAccount)
+    private Optional<String> transfer(Transfer transfer, String signType, boolean isTransferToOwnAccount)
             throws AuthenticationException {
         String signingId = apiClient.prepareTransfer(transfer, isTransferToOwnAccount);
 
@@ -120,6 +120,7 @@ public class KbcBankTransferExecutor implements BankTransferExecutor {
         String finalSigningId = signingChallengeAndValidation(signType, signTypeId, signTypeSigningId);
 
         apiClient.signTransfer(finalSigningId, isTransferToOwnAccount);
+        return Optional.empty();
     }
 
     private String signingChallengeAndValidation(String signType, String signTypeId, String signTypeSigningId)

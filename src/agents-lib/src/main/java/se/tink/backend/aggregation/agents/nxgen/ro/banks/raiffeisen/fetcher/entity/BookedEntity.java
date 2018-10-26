@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
 import se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.RaiffeisenConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -125,10 +126,49 @@ public class BookedEntity {
     }
 
     private String getDescription() {
+
+        /**
+         * Prio:
+         * 1. We have creditorName and unstructured message
+         * 1.5. We have creditorName
+         * 2. We have debtorName and unstructured message
+         * 2.5. We have debtorName
+         * 3. We have merchant name though structure info
+         * 4. We have unstructured info
+         * 5. We have something else in structured info
+         * 6. We have nothing => "Missing Description"
+         */
+
+        if (!Strings.isNullOrEmpty(creditorName)) {
+            if (!Strings.isNullOrEmpty(remittanceInformationUnstructured)) {
+                return creditorName +": "+remittanceInformationUnstructured;
+            }
+            return creditorName;
+        }
+
+        if (!Strings.isNullOrEmpty(debtorName)) {
+            if (!Strings.isNullOrEmpty(remittanceInformationUnstructured)) {
+                return debtorName +": "+remittanceInformationUnstructured;
+            }
+            return debtorName;
+        }
+
+        if (!Strings.isNullOrEmpty(remittanceInformationStructured)) {
+            Matcher matcher = RaiffeisenConstants.REGEX.PATTERN_STRUCTURED_INFO.matcher(remittanceInformationStructured);
+            if (matcher.matches()) {
+                return matcher.group(1);
+            }
+        }
+
         if (!Strings.isNullOrEmpty(remittanceInformationUnstructured)) {
             return remittanceInformationUnstructured;
         }
-        return remittanceInformationStructured;
+
+        if (!Strings.isNullOrEmpty(remittanceInformationStructured)) {
+            return remittanceInformationStructured;
+        }
+
+        return "<Missing Description>";
     }
 
     private HashMap<String, String> getPayload() {

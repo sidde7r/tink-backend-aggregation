@@ -1,0 +1,25 @@
+{
+  "clusterid" : "oxford-production",
+  "providers" : [
+    "es-americanexpress",
+    "es-banco-de-sabadell",
+    "es-banco-popular",
+    "es-banco-santander",
+    "es-bancopopular-password",
+    "es-bancosabadell-password",
+    "es-bancosantander-password",
+    "es-bankia",
+    "es-bankia-password",
+    "es-bbva",
+    "es-bbva-password",
+    "es-evo-banco",
+    "es-imaginbank-password",
+    "es-ing-direct",
+    "es-ing-password",
+    "es-la-caixa",
+    "es-lacaixa-password",
+    "es-n26-password",
+    "es-revolut-password",
+    "es-targobank-password"
+  ]
+}

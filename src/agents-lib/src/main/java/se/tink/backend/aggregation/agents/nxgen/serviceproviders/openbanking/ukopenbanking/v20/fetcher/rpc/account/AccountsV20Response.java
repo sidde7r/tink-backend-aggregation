@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.IdentifiableAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.AccountStream;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.rpc.BaseResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v20.fetcher.entities.account.AccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
@@ -24,8 +25,8 @@ public class AccountsV20Response extends BaseResponse<List<AccountEntity>> imple
             AccountBalanceV20Response balance) {
 
         return accounts.getData().stream()
-                .filter(e -> e.getAccountType().equals(AccountTypes.CHECKING))
                 .filter(e -> e.getAccountId().equals(balance.getBalance().getAccountId()))
+                .filter(e -> UkOpenBankingV20Constants.ACCOUNT_TYPE_MAPPER.isTransactionalAccount(e.getRawAccountSubType()))
                 .findFirst()
                 .map(e -> AccountEntity.toTransactionalAccount(e, balance.getBalance()));
     }
@@ -34,8 +35,8 @@ public class AccountsV20Response extends BaseResponse<List<AccountEntity>> imple
             AccountBalanceV20Response balance) {
 
         return accounts.getData().stream()
-                .filter(e -> e.getAccountType().equals(AccountTypes.CREDIT_CARD))
                 .filter(e -> e.getAccountId().equals(balance.getBalance().getAccountId()))
+                .filter(e -> UkOpenBankingV20Constants.ACCOUNT_TYPE_MAPPER.isCreditCardAccount(e.getRawAccountSubType()))
                 .findFirst()
                 .map(e -> AccountEntity.toCreditCardAccount(e, balance.getBalance()));
 

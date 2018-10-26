@@ -8,6 +8,6 @@ import se.tink.api.annotations.TeamOwnership;
 public interface PassingTestInterface {
     @GET
     @Path("/some/random/path")
-    @TeamOwnership(Team.DATA)
+    @TeamOwnership(Team.INTEGRATION)
     void someApiMethod();
 }

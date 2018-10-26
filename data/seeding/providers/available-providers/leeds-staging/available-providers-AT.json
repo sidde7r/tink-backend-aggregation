@@ -1,0 +1,10 @@
+{
+  "clusterid" : "leeds-staging",
+  "providers" : [
+    "at-bank-austria",
+    "at-bawag-psk",
+    "at-erste-bank-and-sparkasse",
+    "at-raiffeisen-bank",
+    "at-volksbank"
+  ]
+}

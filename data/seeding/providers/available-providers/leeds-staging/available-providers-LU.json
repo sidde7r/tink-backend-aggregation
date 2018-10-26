@@ -1,0 +1,7 @@
+{
+  "clusterid" : "leeds-staging",
+  "providers" : [
+    "lu-bcee",
+    "lu-keytrade-bank"
+  ]
+}

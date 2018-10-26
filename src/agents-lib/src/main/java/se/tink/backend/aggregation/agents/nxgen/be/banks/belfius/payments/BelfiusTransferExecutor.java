@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusApiClient;
@@ -13,11 +13,11 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusSessionS
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.BelfiusTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.BelfiusPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.getsigningprotocol.SignProtocolResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.preparetransfer.BeneficiariesContacts;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.rpc.Field;
+import se.tink.backend.core.Amount;
 import se.tink.backend.core.enums.MessageType;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
@@ -55,9 +55,13 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
     }
 
     @Override
-    public void executeTransfer(Transfer transfer) throws TransferExecutionException {
-        validateDates(transfer);
-        boolean ownAccount = isOwnAccount(transfer.getDestination());
+    public Optional<String> executeTransfer(Transfer transfer) throws TransferExecutionException {
+        boolean immediateTransfer = immediateTransfer(transfer);
+        validateAndSetDueDate(transfer);
+
+        Collection<TransactionalAccount> accounts = getTransactionalAccounts();
+        Amount sourceAccountBalance = getSourceAccount(transfer, accounts).getBalance();
+        boolean ownAccount = tryFindAccount(accounts, transfer.getDestination()).isPresent();
 
         if (transfer.getMessageType().equals(MessageType.STRUCTURED)) {
             transfer.setDestinationMessage(formatStructuredMessage(transfer.getDestinationMessage()));
@@ -69,9 +73,13 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
 
         boolean signed = false;
 
-        if ( paymentResponse.requireSignOfBeneficiary() && !ownAccount
-                && !containsAccount(((SepaEurIdentifier) (transfer.getDestination())).getIban(),
-                apiClient.prepareTransfer().getBeneficiaries())) {
+        // In the app(07.04.003) signing required two times with confirmation but ends up with technical error
+        if (paymentResponse.weeklyBeneficiaryLimitReached()) {
+            throw createCancelledTransferException(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT_FOR_BENEFICIARY,
+                    TransferExecutionException.EndUserMessage.EXCESS_AMOUNT_FOR_BENEFICIARY);
+        }
+
+        if (paymentResponse.requireSignOfBeneficiary()) {
             addBeneficiary(transfer, transfer.getMessageType().equals(MessageType.STRUCTURED));
             signed = true;
         }
@@ -83,12 +91,30 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         if (!signed && paymentResponse.requireSign()) {
             signPayments();
         }
+
+        if (immediateTransfer && sourceAccountBalance.isLessThan(transfer.getAmount().doubleValue())) {
+            return Optional.of(catalog.getString(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT_AWAITING_PROCESSING));
+        }
+        return Optional.empty();
     }
+
+
+    private boolean immediateTransfer(Transfer transfer) {
+        return transfer.getDueDate() == null;
+    }
+
+    private TransactionalAccount getSourceAccount(Transfer transfer, Collection<TransactionalAccount> accounts) {
+        return tryFindAccount(accounts, transfer.getSource())
+                .orElseThrow(() -> TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                    .setMessage(TransferExecutionException.EndUserMessage.INVALID_SOURCE.getKey().get())
+                    .build());
+    }
+
 
     public void signPayments() {
         apiClient.getSignProtocol().cardReaderAllowed();
         SignProtocolResponse transferSignChallenge = apiClient.getTransferSignChallenge();
-        String response = "";
+        String response;
 
         try {
             response = waitForSignCode(transferSignChallenge.getChallenge(), transferSignChallenge.getSignType());
@@ -121,17 +147,17 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
     }
 
     public void multiSignTransfer(SignProtocolResponse signProtocolResponse) throws TransferExecutionException {
-        boolean sucess = false;
+        boolean success = false;
         if (signProtocolResponse.signTempError()) {
             try {
-                sucess = doubleSignedPayment();
+                success = doubleSignedPayment();
             } catch (SupplementalInfoException e) {
                 throw createFailedTransferException(TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED,
                         TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED);
             }
         }
 
-        if (!sucess) {
+        if (!success) {
             checkThrowableErrors(signProtocolResponse);
         }
     }
@@ -139,6 +165,14 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
     public TransferExecutionException createFailedTransferException(TransferExecutionException.EndUserMessage message,
             TransferExecutionException.EndUserMessage endUserMessage){
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setMessage(catalog.getString(message))
+                .setEndUserMessage(catalog.getString(endUserMessage))
+                .build();
+    }
+
+    public TransferExecutionException createCancelledTransferException(TransferExecutionException.EndUserMessage message,
+            TransferExecutionException.EndUserMessage endUserMessage){
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(catalog.getString(message))
                 .setEndUserMessage(catalog.getString(endUserMessage))
                 .build();
@@ -163,20 +197,19 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         return false;
     }
 
-    public boolean containsAccount(String accountNum, List<BeneficiariesContacts> beneficiaries) {
-        return beneficiaries.stream()
-                .anyMatch(beneficiary -> beneficiary.isAccount(accountNum));
-    }
-
     public void addBeneficiary(Transfer transfer, boolean isStructuredMessage) throws TransferExecutionException {
-        String response = "";
+        String response;
         try {
             String name = transfer.getDestination().getName().orElse(null);
             if (name == null) {
                 name = addBeneficiaryName();
             }
             SignProtocolResponse signProtocolResponse = apiClient.addBeneficiary(transfer, isStructuredMessage, name);
-            response = waitForSignCode(signProtocolResponse.getChallenge(), signProtocolResponse.getSignType());
+            if (signProtocolResponse.getChallenge().isEmpty() || signProtocolResponse.getSignType().isEmpty()) {
+                throw createFailedTransferException(TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED,
+                        TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED);
+            }
+            response = waitForSignCodeBeneficiary(signProtocolResponse.getChallenge(), signProtocolResponse.getSignType());
         } catch (SupplementalInfoException e) {
             throw createFailedTransferException(TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED,
                     TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED);
@@ -185,7 +218,7 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         checkThrowableErrors(apiClient.signBeneficiary(response));
     }
 
-    public void validateDates(Transfer transfer) {
+    public void validateAndSetDueDate(Transfer transfer) {
         if (transfer.getDueDate() == null) {
             transfer.setDueDate(Date.from(LocalDate.now().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
         }
@@ -195,14 +228,20 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         }
     }
 
-    private boolean isOwnAccount(AccountIdentifier accountIdentifier) {
-        BelfiusTransactionalAccountFetcher accountFetcher = new BelfiusTransactionalAccountFetcher(apiClient);
-        Collection<TransactionalAccount> transactionalAccounts = accountFetcher.fetchAccounts();
+    private Optional<TransactionalAccount> tryFindAccount(Collection<TransactionalAccount> accounts,
+            AccountIdentifier accountIdentifier) {
+        return accounts.stream()
+                .filter(account -> matchingAccount(account, accountIdentifier))
+                .findFirst();
+    }
 
-        return transactionalAccounts.stream()
-                .map(TransactionalAccount::getIdentifiers)
-                .flatMap(List::stream)
-                .anyMatch(identifier -> identifier.equals(accountIdentifier));
+    private boolean matchingAccount(TransactionalAccount accountEntity, AccountIdentifier accountIdentifier) {
+        return accountEntity.getIdentifiers().stream().anyMatch(identifier -> identifier.equals(accountIdentifier));
+    }
+
+    private Collection<TransactionalAccount> getTransactionalAccounts() {
+        BelfiusTransactionalAccountFetcher accountFetcher = new BelfiusTransactionalAccountFetcher(apiClient);
+        return accountFetcher.fetchAccounts();
     }
 
     public String createClientSha(Transfer transfer) {
@@ -223,14 +262,24 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
 
     private String waitForSignCode(String challenge, String descriptionCode) throws SupplementalInfoException {
         return waitForSupplementalInformation(
-                BelfiusConstants.InputFieldConstants.WAIT_FOR_SIGN_CODE_HELP_TEXT_1.getKey().get(),
+                catalog.getString(BelfiusConstants.InputFieldConstants.SIGN_FOR_TRANSFER_1.getKey().get()),
                 challenge,
-                BelfiusConstants.InputFieldConstants.WAIT_FOR_SIGN_CODE_HELP_TEXT_2.getKey().get(),
-                descriptionCode);
+                catalog.getString(BelfiusConstants.InputFieldConstants.SIGN_FOR_TRANSFER_2.getKey().get()),
+                descriptionCode,
+                catalog.getString(BelfiusConstants.InputFieldConstants.SIGN_FOR_TRANSFER_3.getKey().get()));
+    }
+
+    private String waitForSignCodeBeneficiary(String challenge, String descriptionCode) throws SupplementalInfoException {
+        return waitForSupplementalInformation(
+                catalog.getString(BelfiusConstants.InputFieldConstants.SIGN_FOR_BENEFICIARY_1.getKey().get()),
+                challenge,
+                catalog.getString(BelfiusConstants.InputFieldConstants.SIGN_FOR_BENEFICIARY_2.getKey().get()),
+                descriptionCode,
+                catalog.getString(BelfiusConstants.InputFieldConstants.SIGN_FOR_BENEFICIARY_3.getKey().get()));
     }
 
     private String waitForSupplementalInformation(String helpText, String controlCode, String descriptionCodeHelp,
-            String descriptionCode) throws SupplementalInfoException {
+            String descriptionCode, String extraText) throws SupplementalInfoException {
         return supplementalInformationController.askSupplementalInformation(
                 createDescriptionField(
                         BelfiusConstants.InputFieldConstants.CONTROL_CODE_FIELD_DESCRIPTION.getKey().get(),
@@ -240,7 +289,8 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
                         BelfiusConstants.InputFieldConstants.DESCRIPTION_CODE_FIELD_DESCRIPTION.getKey().get(),
                         descriptionCodeHelp,
                         descriptionCode),
-                createInputField(BelfiusConstants.MultiFactorAuthentication.CODE))
+                inputDescriptionField(BelfiusConstants.InputFieldConstants.RESPONSE_CODE_FIELD_DESCRIPTION.getKey().get(),
+                        extraText))
                 .get(BelfiusConstants.MultiFactorAuthentication.CODE);
     }
 
@@ -275,13 +325,16 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         return field;
     }
 
-    private Field createInputField(String name) {
+    private static Field inputDescriptionField(String descriptionName, String description) {
         Field field = new Field();
         field.setMasked(false);
-        field.setDescription(BelfiusConstants.InputFieldConstants.RESPONSE_CODE_FIELD_DESCRIPTION.getKey().get());
-        field.setName(name);
+        field.setDescription(descriptionName);
+        field.setName(BelfiusConstants.MultiFactorAuthentication.CODE);
+        field.setHelpText(description);
         field.setNumeric(true);
         field.setHint("NNNNNNN");
+        field.setImmutable(false);
         return field;
     }
+
 }

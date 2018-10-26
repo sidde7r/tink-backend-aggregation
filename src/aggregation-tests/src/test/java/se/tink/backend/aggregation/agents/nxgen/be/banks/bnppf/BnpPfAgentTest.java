@@ -10,7 +10,7 @@ public class BnpPfAgentTest {
 
     private static final String ACCESS_TOKEN = "";
 
-    private static final AgentIntegrationTest.Builder builder =
+    private final AgentIntegrationTest.Builder builder =
             new AgentIntegrationTest.Builder("be", "be-bnppf-jwt")
             .addCredentialField(Field.Key.ACCESS_TOKEN, ACCESS_TOKEN)
             .loadCredentialsBefore(false)
