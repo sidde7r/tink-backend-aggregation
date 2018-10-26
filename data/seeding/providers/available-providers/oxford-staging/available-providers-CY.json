@@ -1,6 +1,6 @@
 {
-  "clusterid": "oxford-staging",
-  "providers": [
+  "clusterid" : "oxford-staging",
+  "providers" : [
     "cy-bank-of-cyprus",
     "cy-eurobank-ergasias",
     "cy-piraeus-bank"

@@ -1,6 +1,6 @@
 {
-  "clusterid": "oxford-staging",
-  "providers": [
+  "clusterid" : "oxford-staging",
+  "providers" : [
     "hr-erste-and-steiermarkische-bank",
     "hr-hpb",
     "hr-hypo",

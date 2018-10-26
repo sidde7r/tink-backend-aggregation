@@ -1,6 +1,6 @@
 {
-  "clusterid": "oxford-staging",
-  "providers": [
+  "clusterid" : "oxford-staging",
+  "providers" : [
     "hu-axa-bank",
     "hu-citibank",
     "hu-kereskedelmi-es-hitelbank",

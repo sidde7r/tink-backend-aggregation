@@ -1,10 +1,11 @@
 {
-  "clusterid": "oxford-staging",
-  "providers": [
+  "clusterid" : "oxford-staging",
+  "providers" : [
     "es-americanexpress",
     "es-banco-de-sabadell",
     "es-banco-popular",
     "es-bankia",
+    "es-imaginbank-password",
     "es-la-caixa"
   ]
 }

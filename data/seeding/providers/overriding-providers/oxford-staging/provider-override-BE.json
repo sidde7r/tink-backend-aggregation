@@ -13,6 +13,8 @@
     "passwordHelpText" : "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
     "payload" : null,
     "popular" : false,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "BANK",
@@ -36,7 +38,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Password",
@@ -56,9 +60,76 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : true
+      "sensitive" : true,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ "TRANSFERS" ]
+  }, {
+    "capabilitiesSerialized" : "[]",
+    "className" : "demo.DemoAgent",
+    "credentialsType" : "PASSWORD",
+    "currency" : "EUR",
+    "displayName" : "Demo",
+    "groupDisplayName" : null,
+    "market" : "BE",
+    "multiFactor" : false,
+    "name" : "be-demo",
+    "passwordHelpText" : "",
+    "payload" : null,
+    "popular" : false,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
+    "status" : "ENABLED",
+    "transactional" : true,
+    "type" : "TEST",
+    "displayDescription" : null,
+    "fields" : [ {
+      "defaultValue" : null,
+      "description" : "Username",
+      "exposed" : true,
+      "children" : null,
+      "helpText" : null,
+      "hint" : null,
+      "immutable" : true,
+      "masked" : false,
+      "maxLength" : null,
+      "minLength" : null,
+      "name" : "username",
+      "numeric" : false,
+      "optional" : false,
+      "options" : null,
+      "pattern" : null,
+      "patternError" : null,
+      "type" : null,
+      "value" : null,
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
+    }, {
+      "defaultValue" : null,
+      "description" : "Password",
+      "exposed" : true,
+      "children" : null,
+      "helpText" : null,
+      "hint" : null,
+      "immutable" : false,
+      "masked" : true,
+      "maxLength" : null,
+      "minLength" : null,
+      "name" : "password",
+      "numeric" : false,
+      "optional" : false,
+      "options" : null,
+      "pattern" : null,
+      "patternError" : null,
+      "type" : null,
+      "value" : null,
+      "sensitive" : true,
+      "checkbox" : false,
+      "additionalInfo" : null
+    } ],
+    "capabilities" : [ ]
   }, {
     "capabilitiesSerialized" : "[]",
     "className" : "nxgen.be.banks.kbc.KbcAgent",
@@ -72,6 +143,8 @@
     "passwordHelpText" : "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
     "payload" : null,
     "popular" : false,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "BANK",
@@ -95,7 +168,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ ]
   }, {
@@ -111,6 +186,8 @@
     "passwordHelpText" : "By connecting to this bank, you confirm that you have accepted the bank’s [terms and conditions] (https://www.ing.be/static/legacy/SiteCollectionDocuments/GeneralRegulationsNewEN.pdf).",
     "payload" : null,
     "popular" : false,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "BANK",
@@ -134,7 +211,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Card ID",
@@ -154,7 +233,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Response code",
@@ -174,7 +255,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : true
+      "sensitive" : true,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ "TRANSFERS" ]
   } ]

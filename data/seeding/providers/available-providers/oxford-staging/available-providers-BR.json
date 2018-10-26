@@ -1,6 +1,6 @@
 {
-  "clusterid": "oxford-staging",
-  "providers": [
+  "clusterid" : "oxford-staging",
+  "providers" : [
     "br-alelo",
     "br-americanexpress",
     "br-banco-do-brasil",

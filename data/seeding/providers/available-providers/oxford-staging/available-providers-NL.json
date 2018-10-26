@@ -1,6 +1,6 @@
 {
-  "clusterid": "oxford-staging",
-  "providers": [
+  "clusterid" : "oxford-staging",
+  "providers" : [
     "nl-abnamro",
     "nl-abnamro-abstract",
     "nl-abnamro-ics-abstract",

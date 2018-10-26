@@ -1,6 +1,6 @@
 {
-  "clusterid": "oxford-staging",
-  "providers": [
+  "clusterid" : "oxford-staging",
+  "providers" : [
     "pl-bank-handlowy",
     "pl-bank-pekao",
     "pl-inteligo",

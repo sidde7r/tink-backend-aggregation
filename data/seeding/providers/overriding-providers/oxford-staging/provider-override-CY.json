@@ -13,6 +13,8 @@
     "passwordHelpText" : null,
     "payload" : null,
     "popular" : true,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "BANK",
@@ -36,7 +38,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Password",
@@ -56,7 +60,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "extraPIN",
@@ -76,7 +82,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ ]
   }, {
@@ -92,6 +100,8 @@
     "passwordHelpText" : null,
     "payload" : null,
     "popular" : true,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "BANK",
@@ -115,7 +125,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Password",
@@ -135,7 +147,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ ]
   }, {
@@ -151,6 +165,8 @@
     "passwordHelpText" : null,
     "payload" : null,
     "popular" : true,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "BANK",
@@ -174,7 +190,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Passcode",
@@ -194,7 +212,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ ]
   } ]

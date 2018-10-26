@@ -1,6 +1,6 @@
 {
-  "clusterid": "oxford-staging",
-  "providers": [
+  "clusterid" : "oxford-staging",
+  "providers" : [
     "fi-aktia-codecard",
     "fi-alandsbanken-codecard",
     "fi-americanexpress-password",

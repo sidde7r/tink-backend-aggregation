@@ -13,6 +13,8 @@
     "passwordHelpText" : "In order to use United Overseas Bank with Tink, please authenticate yourself using the same credentials you normally use in United Overseas Bank's mobile banking app.",
     "payload" : null,
     "popular" : true,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "BANK",
@@ -36,7 +38,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Password",
@@ -56,7 +60,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ ]
   }, {
@@ -72,6 +78,8 @@
     "passwordHelpText" : "In order to use DBS Bank with Tink, please authenticate yourself using the same credentials you normally use in DBS Bank's mobile banking app.",
     "payload" : null,
     "popular" : true,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "BANK",
@@ -95,7 +103,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "PIN",
@@ -115,7 +125,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "DBS iB Secure PIN",
@@ -135,7 +147,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ ]
   }, {
@@ -151,6 +165,8 @@
     "passwordHelpText" : "In order to use OCBC Bank with Tink, please authenticate yourself using the same credentials you normally use in OCBC Bank's mobile banking app.",
     "payload" : null,
     "popular" : true,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "BANK",
@@ -174,7 +190,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "PIN",
@@ -194,7 +212,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ ]
   }, {
@@ -210,6 +230,8 @@
     "passwordHelpText" : "In order to use American Express with Tink, please authenticate yourself using the same credentials you normally use in American Express' mobile app or at their website.",
     "payload" : "en_SG",
     "popular" : false,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "CREDIT_CARD",
@@ -233,7 +255,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Password",
@@ -253,7 +277,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ ]
   }, {
@@ -269,6 +295,8 @@
     "passwordHelpText" : "In order to use Maybank with Tink, please authenticate yourself using the same credentials you normally use in Maybank's mobile banking app.",
     "payload" : null,
     "popular" : true,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "BANK",
@@ -292,7 +320,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Password",
@@ -312,7 +342,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ ]
   }, {
@@ -328,6 +360,8 @@
     "passwordHelpText" : "In order to use POSB Bank with Tink, please authenticate yourself using the same credentials you normally use in POSB Bank's mobile banking app.",
     "payload" : null,
     "popular" : true,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "BANK",
@@ -351,7 +385,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "PIN",
@@ -371,7 +407,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "DBS iB Secure PIN",
@@ -391,7 +429,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ ]
   }, {
@@ -407,6 +447,8 @@
     "passwordHelpText" : "In order to use Citibank with Tink, please authenticate yourself using the same credentials you normally use in Citibank's mobile banking app.",
     "payload" : null,
     "popular" : true,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "BANK",
@@ -430,7 +472,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Password",
@@ -450,7 +494,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ ]
   }, {
@@ -466,6 +512,8 @@
     "passwordHelpText" : "In order to use Standard Chartered with Tink, please authenticate yourself using the same credentials you normally use in Standard Chartered's mobile banking app.",
     "payload" : null,
     "popular" : true,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "BANK",
@@ -489,7 +537,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Password",
@@ -509,7 +559,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ ]
   }, {
@@ -525,6 +577,8 @@
     "passwordHelpText" : "In order to use Alipay with Tink, please authenticate yourself using the same credentials you normally use in Alipay's mobile banking app.",
     "payload" : null,
     "popular" : false,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "OTHER",
@@ -548,7 +602,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Password",
@@ -568,7 +624,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ ]
   } ]
