@@ -858,14 +858,29 @@ junit_test(
     name = "provider-configuration-lib-test",
     srcs = glob(["src/provider-configuration-lib/src/test/**/*.java"]),
     data = [
-        "//data:provider-configuration-test"
+        "//data:provider-configuration-test",
+        "etc/development-provider-configuration-server.yml",
         ],
     visibility = ["//visibility:public"],
     deps = [
+        ":provider-configuration-api",
         ":provider-configuration-lib",
         ":main-api",
         ":agents-lib",
-        ":common-lib"
+        ":common-lib",
+
+        "//src/cluster-lib",
+        "//src/libraries/metrics",
+
+        "//third_party:org_objenesis_objenesis",
+        "//third_party:net_bytebuddy_byte_buddy",
+        "//third_party:org_mockito_mockito_core",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_google_inject_guice",
+        "//third_party:io_dropwizard_dropwizard_configuration",
+        "//third_party:javax_validation_validation_api",
+        "//third_party:org_assertj_assertj_core",
+        "//third_party:com_fasterxml_jackson_core_jackson_databind",
     ]
 )
 

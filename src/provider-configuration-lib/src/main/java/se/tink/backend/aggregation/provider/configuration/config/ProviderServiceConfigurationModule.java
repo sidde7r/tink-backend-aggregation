@@ -6,7 +6,7 @@ import se.tink.libraries.metrics.PrometheusConfiguration;
 public class ProviderServiceConfigurationModule extends AbstractModule {
     private final ProviderServiceConfiguration configuration;
 
-    ProviderServiceConfigurationModule(ProviderServiceConfiguration configuration) {
+    public ProviderServiceConfigurationModule(ProviderServiceConfiguration configuration) {
         this.configuration = configuration;
     }
 
