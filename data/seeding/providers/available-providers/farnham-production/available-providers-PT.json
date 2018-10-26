@@ -1,0 +1,10 @@
+{
+  "clusterid" : "farnham-production",
+  "providers" : [
+    "pt-banco-portugues-de-investimento",
+    "pt-bbva",
+    "pt-credito-agricola",
+    "pt-novo-banco",
+    "pt-santander-totta"
+  ]
+}

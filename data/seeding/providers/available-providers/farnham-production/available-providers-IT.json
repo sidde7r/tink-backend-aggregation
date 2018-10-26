@@ -1,0 +1,11 @@
+{
+  "clusterid" : "farnham-production",
+  "providers" : [
+    "it-cartasi",
+    "it-finecobank",
+    "it-ing-direct",
+    "it-postepay",
+    "it-ubibanca",
+    "it-unicredit"
+  ]
+}

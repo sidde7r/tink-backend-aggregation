@@ -1,0 +1,7 @@
+{
+  "clusterid" : "farnham-production",
+  "providers" : [
+    "sk-slovenska-sporitelna",
+    "sk-zuno-bank"
+  ]
+}
