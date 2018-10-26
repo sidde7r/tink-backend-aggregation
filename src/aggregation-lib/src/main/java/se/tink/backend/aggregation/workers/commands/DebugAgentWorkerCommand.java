@@ -81,8 +81,9 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
         for (Field providerField : context.getRequest().getProvider().getFields()) {
             String credentialFieldValue = credentials.getField(providerField.getName());
 
+
             if (Objects.nonNull(credentialFieldValue)) {
-                logContent = logContent.replace(credentialFieldValue, "***" + providerField + "***");
+                logContent = logContent.replace(credentialFieldValue, "***" + providerField.getName() + "***");
             }
         }
 
