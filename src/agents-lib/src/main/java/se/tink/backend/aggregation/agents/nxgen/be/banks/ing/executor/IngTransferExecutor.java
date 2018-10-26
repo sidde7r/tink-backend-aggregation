@@ -59,7 +59,7 @@ public class IngTransferExecutor implements BankTransferExecutor {
             new IngInternalTransferExecutor(apiClient, loginResponse, ingTransferHelper)
                     .executeInternalTransfer(transfer, sourceAccount, destinationAccount.get());
         } else {
-            new IngExternalTransferExecutor(apiClient, loginResponse, persistentStorage)
+            new IngExternalTransferExecutor(apiClient, loginResponse, persistentStorage, ingTransferHelper)
                     .executeExternalTransfer(transfer, sourceAccount);
         }
         return Optional.empty();
