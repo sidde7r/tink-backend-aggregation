@@ -92,9 +92,9 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
     }
 
     private static String getFormattedSize(String str) throws UnsupportedEncodingException {
-        int lines = str.split("\r\n|\r|\n").length;
+        int lines = str.split("\n").length;
         int bytesUtf8 = str.getBytes("UTF-8").length;
-        return  String.format("%dB_%d", bytesUtf8, lines);
+        return String.format("%dB_%d", bytesUtf8, lines);
     }
 
     private void writeToDebugFile(Credentials credentials, TransferRequest transferRequest) {
