@@ -13,6 +13,8 @@
     "passwordHelpText" : "In order to use Bradesco with Tink, please authenticate yourself using the same credentials you normally use in Bradesco's mobile banking app.",
     "payload" : null,
     "popular" : true,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "BANK",
@@ -36,7 +38,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Conta",
@@ -56,7 +60,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Senha eletrônica",
@@ -76,7 +82,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ ]
   }, {
@@ -92,6 +100,8 @@
     "passwordHelpText" : "In order to use Cielo with Tink, please authenticate yourself using the same credentials you normally use in Cielo's mobile banking app.",
     "payload" : null,
     "popular" : false,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "CREDIT_CARD",
@@ -115,7 +125,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Usuário",
@@ -135,7 +147,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Senha",
@@ -155,7 +169,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ ]
   }, {
@@ -171,6 +187,8 @@
     "passwordHelpText" : "In order to use Nubank with Tink, please authenticate yourself using the same credentials you normally use in Nubank's mobile banking app.",
     "payload" : null,
     "popular" : false,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "BANK",
@@ -194,7 +212,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Senha da sua conta",
@@ -214,7 +234,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ ]
   }, {
@@ -230,6 +252,8 @@
     "passwordHelpText" : "In order to use Banrisul with Tink, please authenticate yourself using the same credentials you normally use in Banrisul's mobile banking app.",
     "payload" : null,
     "popular" : false,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "BANK",
@@ -253,7 +277,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Conta",
@@ -273,7 +299,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Senha eletrônica",
@@ -293,7 +321,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ ]
   }, {
@@ -309,6 +339,8 @@
     "passwordHelpText" : "In order to use Citibank with Tink, please authenticate yourself using the same credentials you normally use in Citibank's mobile banking app.",
     "payload" : null,
     "popular" : false,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "BANK",
@@ -332,7 +364,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Senha eletrônica",
@@ -352,7 +386,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ ]
   }, {
@@ -368,6 +404,8 @@
     "passwordHelpText" : "In order to use Itaú Unibanco with Tink, please authenticate yourself using the same credentials you normally use in Itaú Unibanco's mobile banking app.",
     "payload" : null,
     "popular" : true,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "BANK",
@@ -391,7 +429,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Conta",
@@ -411,7 +451,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Senha eletrônica",
@@ -431,7 +473,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ ]
   }, {
@@ -447,6 +491,8 @@
     "passwordHelpText" : "In order to use Itaúcard with Tink, please authenticate yourself using the same credentials you normally use in Itaúcard's mobile banking app.",
     "payload" : null,
     "popular" : false,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "CREDIT_CARD",
@@ -470,7 +516,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Senha do cartão",
@@ -490,7 +538,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ ]
   }, {
@@ -506,6 +556,8 @@
     "passwordHelpText" : "In order to use Santander with Tink, please authenticate yourself using the same credentials you normally use in Santander's mobile banking app.",
     "payload" : null,
     "popular" : true,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "BANK",
@@ -529,7 +581,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Conta",
@@ -549,7 +603,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Senha eletrônica",
@@ -569,7 +625,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ ]
   }, {
@@ -585,6 +643,8 @@
     "passwordHelpText" : "In order to use Banco do Brasil with Tink, please authenticate yourself using the same credentials you normally use in Banco do Brasil's mobile banking app.",
     "payload" : null,
     "popular" : true,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "BANK",
@@ -608,7 +668,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Conta",
@@ -628,7 +690,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Senha eletrônica",
@@ -648,7 +712,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ ]
   }, {
@@ -664,6 +730,8 @@
     "passwordHelpText" : "In order to use Alelo with Tink, please authenticate yourself using the same credentials you normally use in Alelo's mobile banking app.",
     "payload" : null,
     "popular" : false,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "CREDIT_CARD",
@@ -687,7 +755,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Senha eletrônica",
@@ -707,7 +777,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ ]
   }, {
@@ -723,6 +795,8 @@
     "passwordHelpText" : "In order to use American Express with Tink, please authenticate yourself using the same credentials you normally use in American Express's mobile banking app.",
     "payload" : null,
     "popular" : false,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "CREDIT_CARD",
@@ -746,7 +820,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Senha eletrônica",
@@ -766,7 +842,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ ]
   }, {
@@ -782,6 +860,8 @@
     "passwordHelpText" : "In order to use HSBC Bank with Tink, please authenticate yourself using the same credentials you normally use in HSBC Bank's mobile banking app.",
     "payload" : null,
     "popular" : false,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "BANK",
@@ -805,7 +885,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Senha eletrônica",
@@ -825,7 +907,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ ]
   } ]

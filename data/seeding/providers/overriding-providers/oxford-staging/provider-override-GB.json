@@ -13,6 +13,8 @@
     "passwordHelpText" : "",
     "payload" : null,
     "popular" : false,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "TEST",
@@ -36,7 +38,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Lösenord",
@@ -56,7 +60,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ ]
   }, {
@@ -72,6 +78,8 @@
     "passwordHelpText" : "In order to use American Express with Tink, please authenticate yourself using the same credentials you normally use in American Express' mobile app or at their website.",
     "payload" : "GB",
     "popular" : false,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "CREDIT_CARD",
@@ -95,7 +103,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Password",
@@ -115,7 +125,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ ]
   }, {
@@ -131,6 +143,8 @@
     "passwordHelpText" : "In order to use Danske Bank with Tink, please authenticate yourself using the same credentials you normally use in Danske Bank's mobile banking app.",
     "payload" : "UK",
     "popular" : true,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "BANK",
@@ -154,7 +168,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Passcode",
@@ -174,7 +190,9 @@
       "patternError" : "Please enter 4 digits",
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ ]
   }, {
@@ -190,6 +208,8 @@
     "passwordHelpText" : "In order to use Citibank with Tink, please authenticate yourself using the same credentials you normally use in Citibank's mobile banking app.",
     "payload" : null,
     "popular" : false,
+    "refreshFrequency" : 0.0,
+    "refreshFrequencyFactor" : 0.0,
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "BANK",
@@ -213,7 +233,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     }, {
       "defaultValue" : null,
       "description" : "Password",
@@ -233,7 +255,9 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false
+      "sensitive" : false,
+      "checkbox" : false,
+      "additionalInfo" : null
     } ],
     "capabilities" : [ ]
   } ]
