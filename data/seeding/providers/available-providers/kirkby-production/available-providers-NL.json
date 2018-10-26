@@ -1,0 +1,7 @@
+{
+  "clusterid" : "kirkby-production",
+  "providers" : [
+    "nl-abnamro-abstract",
+    "nl-abnamro-ics-abstract"
+  ]
+}
