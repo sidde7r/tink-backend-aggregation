@@ -806,6 +806,7 @@ java_library(
         "//src/libraries/metrics:metrics",
         "//src/libraries/serialization_utils:serialization-utils",
         "//src/libraries/i18n",
+        "//src/libraries/http:http-utils",
         
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:io_dropwizard_dropwizard_core",
@@ -881,6 +882,7 @@ junit_test(
         "//third_party:javax_validation_validation_api",
         "//third_party:org_assertj_assertj_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:com_sun_jersey_jersey_core",
     ]
 )
 

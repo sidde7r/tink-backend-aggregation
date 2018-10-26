@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.provider.configuration;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Injector;
 import java.util.List;
+import javax.ws.rs.WebApplicationException;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -51,5 +52,11 @@ public class ProviderServiceTest {
                 "en", ClusterInfo.createForTesting(CLUSTERS.get("no-available-providers")));
 
         assertThat(emptyList).isEmpty();
+    }
+
+    @Test(expected = WebApplicationException.class)
+    public void whenInvalidClusterId_expectedWebApplicationException() {
+        List<ProviderConfigurationDTO> en = resource
+                .list("en", ClusterInfo.createForTesting(CLUSTERS.get("empty-clusterid")));
     }
 }
