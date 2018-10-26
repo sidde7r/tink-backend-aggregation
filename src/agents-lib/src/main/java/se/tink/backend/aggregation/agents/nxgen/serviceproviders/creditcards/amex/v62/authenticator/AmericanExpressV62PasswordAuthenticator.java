@@ -42,20 +42,12 @@ public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenti
         LogonRequest logonRequest = new LogonRequest();
         logonRequest.setUsernameAndPassword(username, password);
 
-        try {
-            persistentStorage
-                    .get(AmericanExpressV62Constants.Tags.HARDWARE_ID, String.class)
-                    .orElseGet(() -> generateAndStoreUuidFromValue(AmericanExpressV62Constants.Tags.HARDWARE_ID,
-                            username));
-            persistentStorage
-                    .get(AmericanExpressV62Constants.Tags.INSTALLATION_ID, String.class)
-                    .orElseGet(() -> generateAndStoreUuidFromValue(AmericanExpressV62Constants.Tags.INSTALLATION_ID,
-                            password));
-        } catch (Exception e) {
-            // Serialization failure due to old credentials with old persistent data format.
-            generateAndStoreUuidFromValue(AmericanExpressV62Constants.Tags.HARDWARE_ID, username);
-            generateAndStoreUuidFromValue(AmericanExpressV62Constants.Tags.INSTALLATION_ID, password);
-        }
+        persistentStorage
+                .get(AmericanExpressV62Constants.Tags.HARDWARE_ID, String.class)
+                .orElseGet(() -> generateAndStoreUuidFromValue(AmericanExpressV62Constants.Tags.HARDWARE_ID, username));
+        persistentStorage
+                .get(AmericanExpressV62Constants.Tags.INSTALLATION_ID, String.class)
+                .orElseGet(() -> generateAndStoreUuidFromValue(AmericanExpressV62Constants.Tags.INSTALLATION_ID, password));
 
         LogonResponse logonResponse = apiClient.logon(logonRequest);
 
