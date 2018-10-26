@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.provider.configuration.config;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
-import com.google.inject.util.Providers;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
 import se.tink.backend.aggregation.cluster.JerseyClusterIdProvider;
 import se.tink.backend.aggregation.cluster.provider.ClusterIdProvider;
@@ -13,12 +12,9 @@ import se.tink.backend.aggregation.provider.configuration.core.ProviderConfigura
 import se.tink.backend.aggregation.provider.configuration.http.resources.MonitoringServiceResource;
 import se.tink.backend.aggregation.provider.configuration.http.resources.ProviderServiceResource;
 import se.tink.backend.aggregation.provider.configuration.storage.ProviderConfigurationProvider;
-import se.tink.backend.common.config.ServiceConfiguration;
-import se.tink.libraries.discovery.CoordinationConfiguration;
 import se.tink.libraries.jersey.guice.JerseyResourceRegistrar;
 import se.tink.libraries.jersey.logging.AccessLoggingFilter;
 import se.tink.libraries.jersey.logging.ResourceTimerFilterFactory;
-import se.tink.libraries.metrics.PrometheusConfiguration;
 
 public class ProviderServiceModule extends AbstractModule {
     private final JerseyEnvironment jersey;
