@@ -1,13 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.session;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.RaiffeisenSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.RaiffeisenWebApiClient;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.authenticator.rpc.WebLoginResponse;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class RaiffeisenSessionHandler implements SessionHandler {
+    private static final Logger logger = LoggerFactory.getLogger(RaiffeisenSessionHandler.class);
     final private RaiffeisenWebApiClient apiClient;
     final private RaiffeisenSessionStorage raiffeisenSessionStorage;
 
@@ -24,8 +28,13 @@ public class RaiffeisenSessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
-        final WebLoginResponse loginResponse = raiffeisenSessionStorage.getWebLoginResponse().orElseThrow(SessionError.SESSION_EXPIRED::exception);
-        apiClient.keepAlive(loginResponse);
+        final WebLoginResponse loginResponse = raiffeisenSessionStorage.getWebLoginResponse()
+                .orElseThrow(SessionError.SESSION_EXPIRED::exception);
+        try {
+            apiClient.keepAlive(loginResponse);
+        } catch (HttpResponseException e) {
+            logger.warn("keepAlive failed: {}", e);
+        }
     }
 }
 
