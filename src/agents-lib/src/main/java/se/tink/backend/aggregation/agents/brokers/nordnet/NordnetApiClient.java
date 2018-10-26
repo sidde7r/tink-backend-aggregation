@@ -72,7 +72,6 @@ public class NordnetApiClient {
     private static final String GET_POSITIONS_URL = BASE_URL + "/api/2/accounts/%s/positions";
 
     private static final AggregationLogger log = new AggregationLogger(NordnetApiClient.class);
-    private static final LogTag LOG_ACCOUNT_INFO = LogTag.from("Nordnet-account-info");
 
     private String bankIdUrl;
 
@@ -310,7 +309,6 @@ public class NordnetApiClient {
                 String infoId = infoEntity.getAccountId();
 
                 if (accId.equalsIgnoreCase(infoId)) {
-                    log.info(LOG_ACCOUNT_INFO + ": " + infoEntity.toString());
                     accountEntity.setInfo(infoEntity);
                     break;
                 }
