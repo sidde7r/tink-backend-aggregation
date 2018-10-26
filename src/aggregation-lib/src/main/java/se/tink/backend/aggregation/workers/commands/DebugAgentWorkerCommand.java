@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.workers.commands;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Objects;
 import java.util.List;
@@ -90,6 +91,12 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
         return logContent;
     }
 
+    private static String getFormattedSize(String str) throws UnsupportedEncodingException {
+        int lines = str.split("\r\n|\r|\n").length;
+        int bytesUtf8 = str.getBytes("UTF-8").length;
+        return  String.format("%dB_%d", bytesUtf8, lines);
+    }
+
     private void writeToDebugFile(Credentials credentials, TransferRequest transferRequest) {
         try {
             File debugDirectory = state.getDebugDirectory();
@@ -97,11 +104,12 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
             logContent = maskSensitiveOutputLog(logContent, credentials);
 
             File logFile = new File(debugDirectory, String.format(
-                    "%s_%s_u%s_c%s.log",
+                    "%s_%s_u%s_c%s_%s.log",
                     credentials.getProviderName(),
                     ThreadSafeDateFormat.FORMATTER_FILENAME_SAFE.format(new Date()),
                     credentials.getUserId(),
-                    credentials.getId())
+                    credentials.getId(),
+                    getFormattedSize(logContent))
                     .replace(":", "."));
 
             String storagePath = agentDebugStorage.store(logContent, logFile);
