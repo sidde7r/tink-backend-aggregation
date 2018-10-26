@@ -1,6 +1,6 @@
 {
-  "clusterid": "oxford-staging",
-  "providers": [
+  "clusterid" : "oxford-staging",
+  "providers" : [
     "de-1822direkt-password",
     "de-aachener-password",
     "de-agrarBank-password",

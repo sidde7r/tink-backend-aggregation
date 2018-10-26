@@ -1,6 +1,6 @@
 {
-  "clusterid": "oxford-staging",
-  "providers": [
+  "clusterid" : "oxford-staging",
+  "providers" : [
     "be-belfius-cardreader",
     "be-demo",
     "be-ing-cardreader",
