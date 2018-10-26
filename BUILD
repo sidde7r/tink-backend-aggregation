@@ -800,16 +800,11 @@ java_library(
         ":common-lib",
         "//src/cluster-lib",
         "//src/api-annotations",
-        "//src/libraries/auth:auth",
         "//src/libraries/jersey_log:jersey-log",
         "//src/libraries/jersey_guice:jersey-guice",
-        "//src/libraries/dropwizard_utils:dropwizard-utils",
-        "//src/libraries/discovery:discovery",
         "//src/cluster-lib-jersey:cluster-lib-jersey",
         "//src/libraries/metrics:metrics",
-        "//src/libraries/date",
         "//src/libraries/serialization_utils:serialization-utils",
-        "//src/libraries/protobuf_serialization_utils:protobuf-serialization-utils",
         "//src/libraries/i18n",
         
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
@@ -828,13 +823,6 @@ java_library(
         "//third_party:org_springframework_spring_core",
         "//third_party:org_springframework_data_spring_data_jpa",
         "//third_party:org_springframework_data_spring_data_commons",
-        "//third_party:io_swagger_swagger_annotations",
-        "//third_party:joda_time_joda_time",
-        "//third_party:io_protostuff_protostuff_api",
-        "//third_party:io_protostuff_protostuff_core",
-        "//third_party:io_protostuff_protostuff_runtime",
-        "//third_party:net_sourceforge_tess4j",
-
     ],
 )
 
