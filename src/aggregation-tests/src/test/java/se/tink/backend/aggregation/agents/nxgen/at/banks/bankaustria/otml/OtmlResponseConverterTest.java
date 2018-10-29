@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.otml;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Before;
@@ -10,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.entities.Rt
 import se.tink.backend.aggregation.nxgen.core.account.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.core.Amount;
 
 public class OtmlResponseConverterTest {
@@ -26,9 +28,15 @@ public class OtmlResponseConverterTest {
         Collection<TransactionalAccount> accountsFromSettings = otmlResponseConverter.getAccountsFromSettings(BankAustriaTestData.SETTINGS_ASSUMED_DATA_SOURCES);
         Assert.assertEquals(2, accountsFromSettings.size());
 
-        TransactionalAccount account = accountsFromSettings.iterator().next();
+        Iterator<TransactionalAccount> iterator = accountsFromSettings.iterator();
+        TransactionalAccount account = iterator.next();
         Assert.assertEquals(account.getAccountNumber(), BankAustriaTestData.RandomData.IBAN_1);
         Assert.assertEquals(account.getBankIdentifier(), BankAustriaTestData.RandomData.BANK_ID_ACCOUNT_KEY_1);
+        Assert.assertEquals(AccountTypes.CHECKING, account.getType());
+        account = iterator.next();
+        Assert.assertEquals(account.getAccountNumber(), BankAustriaTestData.RandomData.IBAN_2);
+        Assert.assertEquals(account.getBankIdentifier(), BankAustriaTestData.RandomData.BANK_ID_ACCOUNT_KEY_2);
+        Assert.assertEquals(AccountTypes.SAVINGS, account.getType());
     }
 
     @Test
