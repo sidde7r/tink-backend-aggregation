@@ -351,13 +351,22 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         }
     }
 
-    public void setProxy(String uri) {
+    private void setProxy(String uri) {
         Preconditions.checkState(this.internalClient == null);
+
         URI u = URI.create(uri);
         HttpHost proxyHost = new HttpHost(u.getHost(), u.getPort(), u.getScheme());
         this.internalHttpClientBuilder = this.internalHttpClientBuilder.setProxy(proxyHost);
+    }
 
+    public void setDebugProxy(String uri) {
+        setProxy(uri);
         disableSslVerification();
+    }
+
+    public void setProductionProxy(String uri, String username, String password) {
+        setProxy(uri);
+        requestExecutor.setProxyCredentials(username, password);
     }
 
     public void addRedirectHandler(RedirectHandler handler) {
