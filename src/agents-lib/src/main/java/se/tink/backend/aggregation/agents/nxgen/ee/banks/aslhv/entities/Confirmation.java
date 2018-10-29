@@ -4,19 +4,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.annotation.Generated;
 
 @Generated("com.robohorse.robopojogenerator")
-public class Confirmation{
+public class Confirmation {
 
-	@JsonProperty("unsigned")
-	private Object unsigned;
+    @JsonProperty("unsigned")
+    private Object unsigned;
 
-	@JsonProperty("signed")
-	private Object signed;
+    @JsonProperty("signed")
+    private Object signed;
 
-	public Object getUnsigned(){
-		return unsigned;
-	}
+    public Object getUnsigned() {
+        return unsigned;
+    }
 
-	public Object getSigned(){
-		return signed;
-	}
+    public Object getSigned() {
+        return signed;
+    }
 }

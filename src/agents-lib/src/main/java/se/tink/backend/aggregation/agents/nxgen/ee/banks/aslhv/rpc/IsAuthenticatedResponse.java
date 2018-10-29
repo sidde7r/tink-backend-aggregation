@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.entities.CurrentU
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class IsAuthenticatedResponse extends BaseResponse{
+public class IsAuthenticatedResponse extends BaseResponse {
     boolean authenticated;
     @JsonProperty("user_id")
     int userId;

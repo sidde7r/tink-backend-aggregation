@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
-import se.tink.backend.aggregation.annotations.JsonObject;
-
 import java.util.List;
+import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
 public class BaseResponse {
@@ -25,18 +25,6 @@ public class BaseResponse {
     }
 
     public String getErrorMessage() {
-        String result = new String();
-        if (error != null) {
-            for (int i = 0; i < error.size(); ++i) {
-                result += error.get(i);
-                if (i != error.size() - 1)
-                {
-                    result += ", ";
-                } else {
-                    result += ".";
-                }
-            }
-        }
-        return result;
+        return StringUtils.join(error, ", ", ".");
     }
 }

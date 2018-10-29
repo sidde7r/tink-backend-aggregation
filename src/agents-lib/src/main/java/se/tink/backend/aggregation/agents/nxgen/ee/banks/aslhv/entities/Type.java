@@ -4,26 +4,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.annotation.Generated;
 
 @Generated("com.robohorse.robopojogenerator")
-public class Type{
+public class Type {
 
-	@JsonProperty("subfamily")
-	private Object subfamily;
+    @JsonProperty("subfamily")
+    private Object subfamily;
 
-	@JsonProperty("domain")
-	private Object domain;
+    @JsonProperty("domain")
+    private Object domain;
 
-	@JsonProperty("family")
-	private Object family;
+    @JsonProperty("family")
+    private Object family;
 
-	public Object getSubfamily(){
-		return subfamily;
-	}
+    public Object getSubfamily() {
+        return subfamily;
+    }
 
-	public Object getDomain(){
-		return domain;
-	}
+    public Object getDomain() {
+        return domain;
+    }
 
-	public Object getFamily(){
-		return family;
-	}
+    public Object getFamily() {
+        return family;
+    }
 }

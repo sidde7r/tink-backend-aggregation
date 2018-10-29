@@ -101,7 +101,6 @@ public class AsLhvApiClient {
                 .post(LoginResponse.class);
         if (response.isAuthenticated()) {
             storage.setUserId(response.getUserId());
-            // TODO maybe add some stuff to storage.
         }
 
         return response;
@@ -141,14 +140,12 @@ public class AsLhvApiClient {
     }
 
     public GetUsersResponse getUsers() {
-        GetUsersResponse response = getBaseRequest(getGetUsersUrl())
+        return getBaseRequest(getGetUsersUrl())
                 .header(HttpHeaders.ACCEPT, AsLhvConstants.Header.ACCEPT_JSON)
                 .header(HttpHeaders.ACCEPT_LANGUAGE, AsLhvConstants.Header.ACCEPT_LANGUAGE)
                 .header(HttpHeaders.CONTENT_TYPE,  AsLhvConstants.Header.CONTENT_TYPE_FORM_URLENCODED)
                 .header(AsLhvConstants.Header.LHV_APPLICATION_LANGUAGE_HEADER, AsLhvConstants.Header.LHV_APPLICATION_LANUGAGE_US)
                 .post(GetUsersResponse.class);
-        // TODO save account holder name for account fetcher here.
-        return response;
     }
 
     public LogoutResponse logout() {

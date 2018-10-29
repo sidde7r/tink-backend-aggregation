@@ -6,17 +6,17 @@ import javax.annotation.Generated;
 @Generated("com.robohorse.robopojogenerator")
 public class CurrenciesItem {
 
-	@JsonProperty("name")
-	private String name;
+    @JsonProperty("name")
+    private String name;
 
-	@JsonProperty("currency_id")
-	private int currencyId;
+    @JsonProperty("currency_id")
+    private int currencyId;
 
-	public String getName(){
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public int getCurrencyId(){
-		return currencyId;
-	}
+    public int getCurrencyId() {
+        return currencyId;
+    }
 }

@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.entities;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
-import org.codehaus.jackson.annotate.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject

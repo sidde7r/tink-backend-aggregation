@@ -1,12 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv;
 
-import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.entities.CurrenciesItem;
-import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc.GetCurrenciesResponse;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.entities.CurrenciesItem;
+import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc.GetCurrenciesResponse;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class AsLhvSessionStorage {
     SessionStorage sessionStorage;
@@ -48,11 +47,14 @@ public class AsLhvSessionStorage {
     }
 
     public Optional<String> getCurrency(int currencyId) {
-        Optional<String> result = Optional.empty();
-        Optional<GetCurrenciesResponse> res = sessionStorage.get(AsLhvConstants.Storage.CURRENCIES, GetCurrenciesResponse.class);
+        Optional<GetCurrenciesResponse> res = sessionStorage.get(AsLhvConstants.Storage.CURRENCIES,
+                                                                 GetCurrenciesResponse.class);
+        Optional<String> result;
         if (res.isPresent()) {
             HashMap<Integer, String> currencies = convertCurrenciesToMap(res.get().getCurrencies());
             result = Optional.ofNullable(currencies.get(currencyId));
+        } else {
+            result = Optional.empty();
         }
         return result;
     }

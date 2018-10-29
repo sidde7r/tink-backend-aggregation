@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.authenticator;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -17,8 +16,7 @@ public class AsLhvPasswordAuthenticator implements PasswordAuthenticator {
     private final AsLhvApiClient apiClient;
     private static final Logger logger = LoggerFactory.getLogger(AsLhvApiClient.class);
 
-    public AsLhvPasswordAuthenticator(AsLhvApiClient client)
-    {
+    public AsLhvPasswordAuthenticator(AsLhvApiClient client) {
         this.apiClient = client;
     }
 

@@ -6,22 +6,14 @@ import javax.annotation.Generated;
 @Generated("com.robohorse.robopojogenerator")
 public class Action {
 
-	@JsonProperty("payments")
-	private Payments payments;
+    @JsonProperty("payments")
+    private Payments payments;
 
-	public void setPayments(Payments payments){
-		this.payments = payments;
-	}
+    public void setPayments(Payments payments) {
+        this.payments = payments;
+    }
 
-	public Payments getPayments(){
-		return payments;
-	}
-
-	@Override
- 	public String toString(){
-		return 
-			"ActionsItem{" + 
-			"payments = '" + payments + '\'' + 
-			"}";
-		}
+    public Payments getPayments() {
+        return payments;
+    }
 }

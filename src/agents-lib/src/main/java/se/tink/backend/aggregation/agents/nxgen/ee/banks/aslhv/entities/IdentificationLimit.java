@@ -4,48 +4,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.annotation.Generated;
 
 @Generated("com.robohorse.robopojogenerator")
-public class IdentificationLimit{
+public class IdentificationLimit {
 
-	@JsonProperty("amount")
-	private Object amount;
+    @JsonProperty("amount")
+    private Object amount;
 
-	@JsonProperty("enabled")
-	private boolean enabled;
+    @JsonProperty("enabled")
+    private boolean enabled;
 
-	@JsonProperty("free_amount")
-	private Object freeAmount;
+    @JsonProperty("free_amount")
+    private Object freeAmount;
 
-	public void setAmount(Object amount){
-		this.amount = amount;
-	}
+    public Object getAmount() {
+        return amount;
+    }
 
-	public Object getAmount(){
-		return amount;
-	}
+    public boolean isEnabled() {
+        return enabled;
+    }
 
-	public void setEnabled(boolean enabled){
-		this.enabled = enabled;
-	}
-
-	public boolean isEnabled(){
-		return enabled;
-	}
-
-	public void setFreeAmount(Object freeAmount){
-		this.freeAmount = freeAmount;
-	}
-
-	public Object getFreeAmount(){
-		return freeAmount;
-	}
-
-	@Override
- 	public String toString(){
-		return 
-			"IdentificationLimit{" + 
-			"amount = '" + amount + '\'' + 
-			",enabled = '" + enabled + '\'' + 
-			",free_amount = '" + freeAmount + '\'' + 
-			"}";
-		}
+    public Object getFreeAmount() {
+        return freeAmount;
+    }
 }

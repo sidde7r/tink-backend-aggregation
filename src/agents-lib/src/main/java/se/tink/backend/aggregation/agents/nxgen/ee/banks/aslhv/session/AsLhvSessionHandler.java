@@ -21,7 +21,6 @@ public class AsLhvSessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
-        // TODO: Handle keep alive properly.
         IsAuthenticatedResponse isAuthenticatedResponse = asLhvApiClient.isAuthenticated();
         if (!isAuthenticatedResponse.isAuthenticated()) {
             throw SessionError.SESSION_EXPIRED.exception();

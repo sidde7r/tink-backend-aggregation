@@ -1,15 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.fetcher.transactionalaccount;
 
+import java.util.Collection;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.AsLhvApiClient;
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc.GetUserDataResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
-
-import java.util.Collection;
-import java.util.Optional;
 
 public class AsLhvTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
     private final AsLhvApiClient apiClient;

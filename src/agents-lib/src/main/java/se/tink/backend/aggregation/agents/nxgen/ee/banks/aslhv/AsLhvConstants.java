@@ -10,9 +10,8 @@ public class AsLhvConstants {
     public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER = AccountTypeMapper.builder()
             .add(AccountTypes.CHECKING, 11001)
             .add(AccountTypes.SAVINGS, 11002)
-            //.add(11003, 11004, 11005, 11006, 11007, 11008)
+            .add(11003, 11004, 11005, 11006, 11007, 11008)
             .add(AccountTypes.CREDIT_CARD, 11009)
-            .add(11003)
             .build();
 
     public static class Storage {

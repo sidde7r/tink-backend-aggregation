@@ -57,18 +57,6 @@ public class AsLhvAgent extends NextGenerationAgent {
                         new TransactionDatePaginationController<>(transactionFetcher)
                 )
         ));
-        //return Optional.empty();
-//        final BawagPskTransactionFetcher transactionFetcher = new BawagPskTransactionFetcher(apiClient);
-//        return Optional.of(new TransactionalAccountRefreshController(
-//                metricRefreshController,
-//                updateController,
-//                new BawagPskTransactionalAccountFetcher(apiClient),
-//                new TransactionFetcherController<>(
-//                        this.transactionPaginationHelper,
-//                        // TODO Alternatively, implement a custom pagination controller which keeps fetching
-//                        // transactions until AccountStatementItem/Position equals 1 (signifying the earliest entry)
-//                        new TransactionDatePaginationController<>(transactionFetcher)
-//                )));
     }
 
     @Override
