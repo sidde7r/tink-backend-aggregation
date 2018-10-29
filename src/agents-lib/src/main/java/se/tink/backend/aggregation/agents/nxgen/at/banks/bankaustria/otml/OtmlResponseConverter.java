@@ -153,17 +153,11 @@ public class OtmlResponseConverter {
         String balanceCurrency = getValue(getNode(balanceNode, BankAustriaConstants.XPathExpression.XPATH_CURRENCY));
         String balanceValue = getValue(getNode(balanceNode, BankAustriaConstants.XPathExpression.XPATH_VALUE));
         Amount amount = new Amount(balanceCurrency, Double.valueOf(balanceValue));
-
         String iban = getNodeValueFromDocument(document, BankAustriaConstants.XPathExpression.XPATH_ACCOUNT_IBAN);
         logAdditonalDataToIdentifyAccountTypes(account, document);
 
         nodeList = getNodeList(document, BankAustriaConstants.XPathExpression.XPATH_ACCOUNT_COMPANIES);
-        if (nodeList.getLength() > 1) {
-            LOGGER.warn(withTag(BankAustriaConstants.LogTags.LOG_TAG_ACCOUNT, "Multiple companies/account holders"));
-        }
-        Node companyNode = nodeList.item(0);
-        String name = getValue(getNode(companyNode, BankAustriaConstants.XPathExpression.XPATH_NAME));
-        HolderName holderName = new HolderName(name);
+        HolderName holderName = getHolderName(nodeList);
 
         TransactionalAccount filledAccount;
         switch (account.getType()) {
@@ -193,6 +187,18 @@ public class OtmlResponseConverter {
         }
 
         return filledAccount;
+    }
+
+    private HolderName getHolderName(NodeList nodeList) {
+        HolderName holderName = new HolderName("");
+        if(nodeList.getLength() > 1) {
+            LOGGER.warn(withTag(BankAustriaConstants.LogTags.LOG_TAG_ACCOUNT, "Multiple companies/account holders"));
+        } else if (nodeList.getLength() == 1) {
+            Node companyNode = nodeList.item(0);
+            String name = getValue(getNode(companyNode, BankAustriaConstants.XPathExpression.XPATH_NAME));
+            holderName = new HolderName(name);
+        }
+        return holderName;
     }
 
     private void logAdditonalDataToIdentifyAccountTypes(TransactionalAccount account, Document document) {

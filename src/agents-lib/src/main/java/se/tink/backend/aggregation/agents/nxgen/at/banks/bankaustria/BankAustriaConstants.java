@@ -20,6 +20,7 @@ public class BankAustriaConstants {
         static final URL LOGIN = new URL(HOST + "/IBOA/login.htm");
         static final URL SETTINGS = new URL(HOST + "/IBOA/manageFavouritesAccountController.htm");
         static final URL MOVEMENTS = new URL(HOST + "/IBOA/balanceMovements.htm");
+        static final URL SAVINGS_MOVEMENTS = new URL(HOST + "/IBOA/savingBalanceMovements.htm");
         static final URL UPDATE_PAGE = new URL(HOST + "/IBOA/otmlUpdate.htm");
         static final URL LOGOUT = new URL(HOST + "/IBOA/otml_v2.0/maps/generic/logout_popup.xml");
         static final URL RTA_MESSAGE = new URL(HOST + "/IBOA/rtaMessage.htm");
