@@ -3,11 +3,14 @@ package se.tink.backend.aggregation.nxgen.http.legacy;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.google.common.base.Strings;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
@@ -93,64 +96,68 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         }
 
         // This header needs to be added before we fetch the headers to create the signature.
+        // Note: This header can be removed if this URL is added to the JWT.
         request.addHeader("X-Signature-Info",
                 "Visit https://cdn.tink.se/aggregation-signature/how-to-verify.txt for more info.");
 
         RequestLine requestLine = request.getRequestLine();
-        Header[] allHeaders = request.getAllHeaders();
 
-        JWTCreator.Builder requestSignatureHeader = JWT.create()
+        JWTCreator.Builder jwtBuilder = JWT.create()
                 .withIssuedAt(new Date())
                 .withClaim("method", requestLine.getMethod())
-                .withClaim("uri", requestLine.getUri())
-                .withClaim("headers", toSignatureFormat(allHeaders));
+                .withClaim("uri", requestLine.getUri());
 
         // Only add keyId for request where we use signatureKeyPair
         if (signatureKeyPair != null) {
-            requestSignatureHeader.withKeyId(signatureKeyPair.getKeyId());
+            jwtBuilder.withKeyId(signatureKeyPair.getKeyId());
         }
 
+        getHttpHeadersHashAsBase64(request)
+                .ifPresent(hash -> jwtBuilder.withClaim("headers", hash));
+
+        getHttpBodyHashAsBase64(request)
+                .ifPresent(hash -> jwtBuilder.withClaim("body", hash));
+
+        request.addHeader(SIGNATURE_HEADER_KEY, jwtBuilder.sign(algorithm));
+    }
+
+    private Optional<String> getHttpBodyHashAsBase64(HttpRequest request) {
         if (!(request instanceof HttpEntityEnclosingRequest)) {
-            request.addHeader(SIGNATURE_HEADER_KEY, requestSignatureHeader.sign(algorithm));
-            return;
+            return Optional.empty();
+        }
+
+        HttpEntity entity = ((HttpEntityEnclosingRequest) request).getEntity();
+        if (entity == null) {
+            // Handle the case of an empty post request
+            return Optional.empty();
         }
 
         try {
-            HttpEntity entity = ((HttpEntityEnclosingRequest) request).getEntity();
+            byte[] bodyBytes = IOUtils.toByteArray(entity.getContent());
+            byte[] digest = Hash.sha256(bodyBytes);
 
-            // Handle the case of a empty post request
-            if (entity == null) {
-                request.addHeader(SIGNATURE_HEADER_KEY, requestSignatureHeader.sign(algorithm));
-                return;
-            }
-
-            String requestBody = IOUtils.toString(entity.getContent(), "UTF-8");
-            byte[] hashedRequestBody = Hash.sha256(requestBody);
-            requestSignatureHeader.withClaim("body", EncodingUtils.encodeAsBase64String(hashedRequestBody));
+            return Optional.of(EncodingUtils.encodeAsBase64String(digest));
         } catch (IOException e) {
             log.error("Could not get the request body from the entity content", e);
+            return Optional.empty();
+        }
+    }
+
+    private Optional<String> getHttpHeadersHashAsBase64(HttpRequest request) {
+        Header[] allHeaders = request.getAllHeaders();
+
+        String sortedHeaders = Arrays.stream(allHeaders)
+                .filter(Objects::nonNull)
+                .map(header -> String.format("%s: %s", header.getName(), header.getValue()))
+                .sorted(String::compareTo)
+                .collect(Collectors.joining("\n"));
+
+        if (Strings.isNullOrEmpty(sortedHeaders)) {
+            return Optional.empty();
         }
 
-        request.addHeader(SIGNATURE_HEADER_KEY, requestSignatureHeader.sign(algorithm));
-    }
-
-    private static String toSignatureFormat(Header[] headers) {
-        List<String> signatureHeaders = new ArrayList<>();
-        Arrays.stream(headers).forEach(header -> signatureHeaders.add(toSignatureFormat(header)));
-
-        signatureHeaders.sort(String::compareTo);
-        return signatureHeaders.toString();
-    }
-
-    private static String toSignatureFormat(Header header) {
-        if (header == null) {
-            return null;
-        }
-
-        return toSignatureFormat(header.getName(), header.getValue());
-    }
-
-    private static String toSignatureFormat(String key, String value) {
-        return key + ": " + value;
+        byte[] headerBytes = sortedHeaders.getBytes(Charset.forName("UTF-8"));
+        byte[] digest = Hash.sha256(headerBytes);
+        return Optional.of(EncodingUtils.encodeAsBase64String(digest));
     }
 }
