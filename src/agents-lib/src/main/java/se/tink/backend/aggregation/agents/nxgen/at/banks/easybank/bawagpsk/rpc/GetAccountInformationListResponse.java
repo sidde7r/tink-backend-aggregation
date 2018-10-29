@@ -76,19 +76,27 @@ public final class GetAccountInformationListResponse {
 
     public Collection<TransactionalAccount> toTransactionalAccounts(final Map<String, String> productCodes) {
         return getAccountInfoList().stream()
-                .map(accountInfo -> toTransactionalAccount(
-                        accountInfo,
-                        productCodes.get(accountInfo.getAccountNumber())))
+                .map(accInfo -> toTransactionalAccount(accInfo, productCodes.get(accInfo.getAccountNumber())))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toSet());
     }
 
-    private static TransactionalAccount toTransactionalAccount(
+    private static Optional<TransactionalAccount> toTransactionalAccount(
             final AccountInfo accountInfo,
             final String productCode) {
-        return TransactionalAccount
-                .builder(inferAccountType(
-                        productCode,
-                        accountInfo.getProductID().getProductType()),
+
+        final Optional<AccountTypes> accountType = inferAccountType(
+                productCode,
+                accountInfo.getProductID().getProductType()
+        );
+
+        if (!accountType.isPresent()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(TransactionalAccount.builder(
+                accountType.get(),
                         accountInfo.getAccountNumber(),
                         new Amount(
                                 accountInfo.getAmountEntity().getCurrency(),
@@ -98,47 +106,40 @@ public final class GetAccountInformationListResponse {
                 .setAccountNumber(accountInfo.getAccountNumber())
                 .addIdentifier(getIban(accountInfo.getProductID()))
                 .setHolderName(new HolderName(accountInfo.getProductID().getAccountOwner().trim()))
-                .build();
+                .build());
     }
 
     /**
      * It is assumed -- but not verified -- that the app infers the account type from the first character of the
      * account's product code. We cannot use <ProductType> to infer the account type because it has been shown that the
      * server incorrectly sets it to "CHECKING" even in cases where it should be "SAVINGS".
+     *
+     * @return Optional.empty() if the product is not a transactional account (e.g. credit card, loan)
      */
-    private static AccountTypes inferAccountType(final String productCode, final String productType) {
+    private static Optional<AccountTypes> inferAccountType(final String productCode, final String productType) {
         switch (productCode.charAt(0)) {
         case 'B':
-            return AccountTypes.CHECKING;
+            return Optional.of(AccountTypes.CHECKING);
         case 'D':
-            return AccountTypes.SAVINGS;
-        case '0': // Observed values: "00EC", "00PD"
-            return AccountTypes.CREDIT_CARD;
-        case 'S': // Observed values: "S132"
-            return AccountTypes.LOAN;
-        default:
-            logger.error(String.format(
-                    "Account type could not be inferred from product code '%s'. Expected prefix B, D, S or 0.",
-                    productCode));
+            return Optional.of(AccountTypes.SAVINGS);
         }
 
-        logger.warn(String.format("Falling back to inferring from product type string '%s'.", productType));
+        logger.error(
+                "{} - Account type could not be inferred from product code '{}'. Expected prefix B or D. Inferring instead from product type '{}'",
+                BawagPskConstants.LogTags.TRANSACTION_UNKNOWN_PRODUCT_CODE, productCode, productType);
 
         switch (productType.toUpperCase()) {
         case "CHECKING":
-            return AccountTypes.CHECKING;
+            return Optional.of(AccountTypes.CHECKING);
         case "SAVINGS":
-            return AccountTypes.SAVINGS;
-        case "CREDIT_CARD":
-            return AccountTypes.CREDIT_CARD;
-        case "LOAN":
-            return AccountTypes.LOAN;
+            return Optional.of(AccountTypes.SAVINGS);
         default:
-            logger.error(String.format(
-                    "Account type could not be inferred from product type '%s'. Expected 'CHECKING', 'SAVINGS', 'CREDIT_CARD' or 'LOAN'.",
-                    productType));
+            logger.error(
+                    "{} - Account type could not be inferred from product type '{}'. Expected 'CHECKING' or 'SAVINGS'.",
+                    BawagPskConstants.LogTags.TRANSACTION_UNKNOWN_PRODUCT_TYPE, productType);
         }
-        logger.warn("Falling back to setting the product type to CHECKING");
-        return AccountTypes.CHECKING;
+
+        // Assuming this is a non-transactional account
+        return Optional.empty();
     }
 }
