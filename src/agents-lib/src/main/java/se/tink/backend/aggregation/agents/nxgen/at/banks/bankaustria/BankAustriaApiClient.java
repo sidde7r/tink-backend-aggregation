@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.libraries.strings.StringUtils;
 
 import javax.ws.rs.core.MediaType;
@@ -24,7 +25,7 @@ public class BankAustriaApiClient {
     }
 
 
-    public OtmlResponse login(String userId, String password)  {
+    public OtmlResponse login(String userId, String password) {
         OtmlResponse response = getRequestWithHeaders(BankAustriaConstants.Urls.LOGIN)
                 .post(OtmlResponse.class, loginForm(userId, password));
         return response;
@@ -73,9 +74,12 @@ public class BankAustriaApiClient {
         return form;
     }
 
-    public OtmlResponse getAccountInformationFromAccountMovement(String bankIdentifier) {
-        OtmlResponse response = getRequestWithHeaders(BankAustriaConstants.Urls.MOVEMENTS)
-                .post(OtmlResponse.class, getFormForGenericAccount(bankIdentifier));
+    public OtmlResponse getAccountInformationFromAccountMovement(TransactionalAccount account) {
+        URL url = getUrlForAccountType(account);
+
+        OtmlResponse response = getRequestWithHeaders(url)
+                .post(OtmlResponse.class, getFormForGenericAccount(account.getBankIdentifier()));
+
         return response;
     }
 
@@ -86,9 +90,18 @@ public class BankAustriaApiClient {
     }
 
     public OtmlResponse getTransactionsForDatePeriod(TransactionalAccount account, Date fromDate, Date toDate) {
-        OtmlResponse response = getRequestWithHeaders(BankAustriaConstants.Urls.MOVEMENTS)
+        URL url = getUrlForAccountType(account);
+        OtmlResponse response = getRequestWithHeaders(url)
                 .post(OtmlResponse.class, getFormForDatePagination(account.getBankIdentifier(), fromDate, toDate));
         return response;
+    }
+
+    private URL getUrlForAccountType(TransactionalAccount account) {
+        URL url = BankAustriaConstants.Urls.MOVEMENTS;
+        if (account.getType().equals(AccountTypes.SAVINGS)) {
+            url = BankAustriaConstants.Urls.SAVINGS_MOVEMENTS;
+        }
+        return url;
     }
 
     private RequestBuilder getRequestWithHeaders(URL url) {
@@ -127,7 +140,7 @@ public class BankAustriaApiClient {
     }
 
 
-        private Form getFormForDatePagination(String bankIdentifier, Date fromDate, Date toDate) {
+    private Form getFormForDatePagination(String bankIdentifier, Date fromDate, Date toDate) {
         LocalDate localfromDate = fromDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate localtoDate = toDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         Form form = new Form();
