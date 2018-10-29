@@ -1,0 +1,42 @@
+package se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc;
+
+import com.fasterxml.jackson.annotation.JsonGetter;
+import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.AsLhvConstants;
+import se.tink.backend.aggregation.annotations.JsonObject;
+
+import java.util.List;
+
+@JsonObject
+public class LoginResponse extends BaseResponse {
+    boolean authentication;
+    int userId; List<String> errorFields;
+
+    public boolean isAuthenticated() {
+        return authentication;
+    }
+
+    @JsonGetter("user_id")
+    public int getUserId() {
+        return userId;
+    }
+
+    public boolean incorrectCredentials () {
+        boolean result = false;
+        if (error != null && !error.isEmpty()) {
+            if (error.get(0).equalsIgnoreCase(AsLhvConstants.Messages.INCORRECT_CREDENTIALS)) {
+                result = true;
+            }
+
+            if (error.get(0).equalsIgnoreCase(AsLhvConstants.Messages.INVALID_PARAMETERS))
+            {
+                if (errorFields != null || !errorFields.isEmpty()) {
+                    if (errorFields.contains(AsLhvConstants.Form.PASSWORD_PARAMETER) ||
+                        errorFields.contains(AsLhvConstants.Form.USERNAME_PARAMETER)) {
+                        result = true;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+}

@@ -96,6 +96,10 @@ public class AccountTypeMapper {
         return verify(accountTypeKey, TransactionalAccount.ALLOWED_ACCOUNT_TYPES);
     }
 
+    public boolean isTransactionalAccount(AccountTypes type) {
+        return TransactionalAccount.ALLOWED_ACCOUNT_TYPES.contains(type);
+    }
+
     public boolean isSavingsAccount(Object accountTypeKey) {
         return verify(accountTypeKey, AccountTypes.SAVINGS);
     }
