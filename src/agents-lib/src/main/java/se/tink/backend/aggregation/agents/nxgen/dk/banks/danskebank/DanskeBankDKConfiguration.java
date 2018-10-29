@@ -8,13 +8,31 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.system.rpc.Loan;
 
 public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
-    private static final String APP_CULTURE = "da_DK";
+    private static final String APP_CULTURE = "en-GB";
     private static final String APP_NAME = "com.danskebank.mobilebank3dk";
     private static final String APP_REFERER = "MobileBanking3 DK";
-    private static final String APP_VERSION = "0.38.1";
+    private static final String APP_VERSION = "0.41.0";
     private static final String BRAND = "DB";
     private static final String LANGUAGE_CODE = "DA";
     private static final String MARKET_CODE = "DK";
+    private static final String CLIENT_ID = "5ec4b8ad-a93d-43e1-831c-8e78ee6e661a";
+    private static final String CLIENT_SECRET = "NRRM1W2ckjUdBwhbHtP38yIZevM9yr46v0wosfIWM4sYSFuCNy";
+    private static final String APP_VERSION_HEADER = "MobileBank ios DK 1120961";
+
+    @Override
+    public String getAppVersionHeader() {
+        return APP_VERSION_HEADER;
+    }
+
+    @Override
+    public String getClientId() {
+        return CLIENT_ID;
+    }
+
+    @Override
+    public String getClientSecret() {
+        return CLIENT_SECRET;
+    }
 
     @Override
     public String getAppCulture() {

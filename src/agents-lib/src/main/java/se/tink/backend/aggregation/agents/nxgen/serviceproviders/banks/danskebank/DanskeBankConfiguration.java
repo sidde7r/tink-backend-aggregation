@@ -5,6 +5,9 @@ import java.util.Map;
 import se.tink.backend.system.rpc.Loan;
 
 public interface DanskeBankConfiguration {
+    String getAppVersionHeader();
+    String getClientId();
+    String getClientSecret();
     String getAppCulture();
     String getAppName();
     String getAppReferer();

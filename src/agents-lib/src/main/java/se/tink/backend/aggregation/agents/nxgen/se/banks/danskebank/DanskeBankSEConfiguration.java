@@ -8,15 +8,33 @@ import se.tink.backend.system.rpc.Loan;
 
 public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
     // == START Standard configuration ==
-    private static final String APP_CULTURE = "sv_SE";
+    private static final String APP_CULTURE = "sv-SE";
     private static final String APP_NAME = "com.danskebank.mobilebank3se";
     private static final String APP_REFERER = "MobileBanking3 SE";
-    private static final String APP_VERSION = "0.38.1";
+    private static final String APP_VERSION = "0.41.0";
     private static final String BRAND = "OEB";
     private static final String LANGUAGE_CODE = "SV";
     private static final String MARKET_CODE = "SE";
     private static final String SECURITY_SYSTEM = "SV";
+    private static final String CLIENT_ID = "5ec4b8ad-a93d-43e1-831c-8e78ee6e661a";
+    private static final String CLIENT_SECRET = "NRRM1W2ckjUdBwhbHtP38yIZevM9yr46v0wosfIWM4sYSFuCNy";
+    private static final String APP_VERSION_HEADER = "MobileBank ios SE 1121105";
     // == END Standard configuration ==
+
+    @Override
+    public String getAppVersionHeader() {
+        return APP_VERSION_HEADER;
+    }
+
+    @Override
+    public String getClientId() {
+        return CLIENT_ID;
+    }
+
+    @Override
+    public String getClientSecret() {
+        return CLIENT_SECRET;
+    }
 
     @Override
     public String getAppCulture() {
