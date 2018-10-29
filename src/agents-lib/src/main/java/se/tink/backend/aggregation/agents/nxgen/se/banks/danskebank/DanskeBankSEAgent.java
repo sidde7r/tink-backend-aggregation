@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank;
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticator.bankid.DanskeBankBankIdAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.filters.DanskeBankSeHttpFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
@@ -29,7 +28,6 @@ public class DanskeBankSEAgent extends DanskeBankAgent {
     protected void configureHttpClient(TinkHttpClient client) {
         client.setUserAgent("Mobilbank/813854 CFNetwork/808.2.16 Darwin/16.3.0");
         client.setDebugOutput(false);
-        client.addFilter(new DanskeBankSeHttpFilter());
     }
 
     @Override

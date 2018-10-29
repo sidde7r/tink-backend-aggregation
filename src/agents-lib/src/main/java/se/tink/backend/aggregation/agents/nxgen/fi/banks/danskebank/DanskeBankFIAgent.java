@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.danskebank;
 
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.danskebank.filters.DanskeBankFIHttpFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
@@ -25,7 +24,7 @@ public class DanskeBankFIAgent extends DanskeBankAgent {
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
-        client.addFilter(new DanskeBankFIHttpFilter());
+
     }
 
     @Override
