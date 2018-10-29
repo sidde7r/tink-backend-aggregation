@@ -48,12 +48,12 @@ public class AccountTypeMapper {
             return this.put(AccountTypes.DUMMY, keys);
         }
 
-        Map<AccountTypes, Object[]> getReversed() {
+        private Map<AccountTypes, Object[]> getReversed() {
             return reversed;
         }
     }
 
-    AccountTypeMapper(AccountTypeMapper.Builder builder) {
+    private AccountTypeMapper(AccountTypeMapper.Builder builder) {
 
         super();
 
@@ -70,12 +70,12 @@ public class AccountTypeMapper {
         return new AccountTypeMapper.Builder();
     }
 
-    public boolean verify(Object key, AccountTypes value) {
+    private boolean verify(Object key, AccountTypes value) {
         Optional<AccountTypes> translated = translate(key);
         return translated.isPresent() && translated.get() == value;
     }
 
-    public boolean verify(Object key, Collection<AccountTypes> values) {
+    private boolean verify(Object key, Collection<AccountTypes> values) {
         Optional<AccountTypes> translated = translate(key);
         return translated.isPresent() && values.contains(translated.get());
     }
@@ -94,7 +94,7 @@ public class AccountTypeMapper {
         }
     }
 
-    static String toKeyString(Object accountTypeKey) {
+    private static String toKeyString(Object accountTypeKey) {
         return String.valueOf(accountTypeKey).toLowerCase();
     }
 
