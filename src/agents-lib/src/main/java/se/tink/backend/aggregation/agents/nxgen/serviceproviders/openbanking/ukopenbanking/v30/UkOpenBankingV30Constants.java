@@ -11,11 +11,11 @@ public class UkOpenBankingV30Constants extends UkOpenBankingConstants {
     }
 
     public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER = AccountTypeMapper.builder()
-            .add(AccountTypes.CHECKING, "CurrentAccount")
-            .add(AccountTypes.CREDIT_CARD, "CreditCard")
-            .add(AccountTypes.SAVINGS, "Savings")
-            .add(AccountTypes.LOAN, "Loan")
-            .add(AccountTypes.MORTGAGE, "Mortgage")
+            .put(AccountTypes.CHECKING, "CurrentAccount")
+            .put(AccountTypes.CREDIT_CARD, "CreditCard")
+            .put(AccountTypes.SAVINGS, "Savings")
+            .put(AccountTypes.LOAN, "Loan")
+            .put(AccountTypes.MORTGAGE, "Mortgage")
             .add("ChargeCard", "EMoney", "PrePaidCard")
             .build();
 

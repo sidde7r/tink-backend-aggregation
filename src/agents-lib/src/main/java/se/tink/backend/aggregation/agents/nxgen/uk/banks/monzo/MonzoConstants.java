@@ -10,7 +10,7 @@ public class MonzoConstants {
     public static final ZoneId ZONE_ID = ZoneId.of("Europe/London");
 
     public static final AccountTypeMapper ACCOUNT_TYPE = AccountTypeMapper.builder()
-            .add(AccountTypes.CHECKING, "uk_retail").build();
+            .put(AccountTypes.CHECKING, "uk_retail").build();
 
     public class URL {
         private static final String API_MONZO_COM = "https://api.monzo.com/";
