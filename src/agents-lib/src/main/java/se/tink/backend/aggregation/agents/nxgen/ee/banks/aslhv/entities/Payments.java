@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
-import javax.annotation.Generated;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
-@Generated("com.robohorse.robopojogenerator")
+@JsonObject
 public class Payments {
 
     @JsonProperty("target_portfolio_id")

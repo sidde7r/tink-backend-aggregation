@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import javax.annotation.Generated;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
-@Generated("com.robohorse.robopojogenerator")
+@JsonObject
 public class NotificationTokens {
 
     @JsonProperty("android")
