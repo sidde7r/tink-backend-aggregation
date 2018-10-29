@@ -25,8 +25,18 @@ public class AccountTypeMapper {
 
         /**
          * Known keys, and the account type they should be mapped to.
+         * @deprecated Use {@link #put(AccountTypes, Object...)} instead
          */
+        @Deprecated
         public AccountTypeMapper.Builder add(AccountTypes value, Object... keys) {
+            reversed.put(value, keys);
+            return this;
+        }
+
+        /**
+         * Known keys, and the account type they should be mapped to.
+         */
+        public AccountTypeMapper.Builder put(AccountTypes value, Object... keys) {
             reversed.put(value, keys);
             return this;
         }
@@ -35,7 +45,7 @@ public class AccountTypeMapper {
          * Known keys that should not be mapped to any specific account type.
          */
         public AccountTypeMapper.Builder add(Object... keys) {
-            return this.add(AccountTypes.DUMMY, keys);
+            return this.put(AccountTypes.DUMMY, keys);
         }
 
         Map<AccountTypes, Object[]> getReversed() {
