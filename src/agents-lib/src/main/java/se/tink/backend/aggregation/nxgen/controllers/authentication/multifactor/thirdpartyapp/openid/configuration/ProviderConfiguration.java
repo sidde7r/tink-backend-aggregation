@@ -10,6 +10,7 @@ public class ProviderConfiguration {
 
     private String organizationId;
     private URL apiBaseURL;
+    private URL authBaseURL;
     private URL wellKnownURL;
     private ClientInfo clientInfo;
 
@@ -21,16 +22,20 @@ public class ProviderConfiguration {
         return apiBaseURL;
     }
 
+    public URL getAuthBaseURL() {
+        return authBaseURL != null ? authBaseURL : apiBaseURL;
+    }
+
     public URL getAccountRequestsURL() {
-        return apiBaseURL.concat(OpenIdConstants.ApiServices.ACCOUNT_REQUESTS);
+        return getAuthBaseURL().concat(OpenIdConstants.ApiServices.ACCOUNT_REQUESTS);
     }
 
     public URL getPaymentsURL() {
-        return apiBaseURL.concat(OpenIdConstants.ApiServices.PAYMENTS);
+        return getApiBaseURL().concat(OpenIdConstants.ApiServices.PAYMENTS);
     }
 
     public URL getPaymentSubmissionsURL(String paymentSubmissionId) {
-        return apiBaseURL.concat(OpenIdConstants.ApiServices.PAYMENT_SUBMISSIONS + paymentSubmissionId);
+        return getApiBaseURL().concat(OpenIdConstants.ApiServices.PAYMENT_SUBMISSIONS + paymentSubmissionId);
     }
 
     public void validate() {
