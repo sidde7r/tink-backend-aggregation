@@ -10,7 +10,7 @@ public class BankAustriaTestData {
         static final String NATIONAL_NUMBER = "00000000010011011011";
 
         public static final String IBAN_2 = "AT022050303300646365"; // http://randomiban.com/?country=Austria
-        static final String BANK_ID_ACCOUNT_KEY_2 = "2012-12-12-12.12.12.822222";
+        public static final String BANK_ID_ACCOUNT_KEY_2 = "2012-12-12-12.12.12.822222";
 
         public static final String NAME = "Hilda Hoffman"; // https://randomuser.me/
         
@@ -69,7 +69,7 @@ public class BankAustriaTestData {
             "            <element key=\"accountKey\" val=\""+ RandomData.BANK_ID_ACCOUNT_KEY_2 + "\"/>" +
             "            <element key=\"accountNickname\" val=\"\"/>" +
             "            <element key=\"accountNumber\" val=\"" + RandomData.IBAN_2 + "\"/>" +
-            "            <element key=\"accountType\" val=\"CURRENT\"/>" +
+            "            <element key=\"accountType\" val=\"SAVING\"/>" +
             "            <element key=\"favorite\" val=\"true\"/>" +
             "            <element key=\"frontEndId\" val=\"" + RandomData.RANDOM_UUID_NOT_USED_IN_TEST + "\"/>" +
             "        </element>" +

@@ -7,7 +7,12 @@ public class BankAustriaConstants {
 
     public static final String NOT_OK = "ko";
     public static final String OK = "ok";
-    public static final String CURRENT = "CURRENT";
+
+    public static final class BankAustriaAccountTypes {
+        public static final String CURRENT = "CURRENT";
+        public static final String CARDS = "CARDS";
+        public static final String SAVING = "SAVING";
+    }
 
 
     public static final class Urls {

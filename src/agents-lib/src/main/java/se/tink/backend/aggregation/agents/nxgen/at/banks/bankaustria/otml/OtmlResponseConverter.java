@@ -19,6 +19,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,7 +83,7 @@ public class OtmlResponseConverter {
         Document document = parseDocument(xml);
         NodeList nodeList = getNodeList(document, BankAustriaConstants.XPathExpression.XPATH_SETTINGS_RESPONSE_ACCOUNTS);
         if (nodeList == null) {
-            LOGGER.warn(withTag(BankAustriaConstants.LogTags.LOG_TAG_ACCOUNT,"No accounts found."));
+            LOGGER.warn(withTag(BankAustriaConstants.LogTags.LOG_TAG_ACCOUNT, "No accounts found."));
             return Collections.EMPTY_LIST;
         }
 
@@ -100,15 +101,25 @@ public class OtmlResponseConverter {
         String accountNickName = getValue(getNode(accountNode, BankAustriaConstants.XPathExpression.XPATH_ACCOUNT_NICKNAME));
         String accountKey = getValue(getNode(accountNode, BankAustriaConstants.XPathExpression.XPATH_ACCOUNT_KEY));
         String accountType = getValue(getNode(accountNode, BankAustriaConstants.XPathExpression.XPATH_SETTINGS_ACCOUNT_TYPE));
-        if (accountType.equalsIgnoreCase(BankAustriaConstants.CURRENT))
-            return CheckingAccount.builder(accountNumber, Amount.inEUR(0D))
-                    .setAccountNumber(accountNumber)
-                    .setName(accountNickName)
-                    .setBankIdentifier(accountKey)
-                    .build();
-        else {
-            LOGGER.error(withTag(BankAustriaConstants.LogTags.LOG_TAG_ACCOUNT, String.format("Unknown account type %s", accountType)));
-            return null;
+        switch (accountType.toUpperCase()) {
+            case BankAustriaConstants.BankAustriaAccountTypes.CURRENT:
+                return CheckingAccount.builder(accountNumber, Amount.inEUR(0D))
+                        .setAccountNumber(accountNumber)
+                        .setName(accountNickName)
+                        .setBankIdentifier(accountKey)
+                        .build();
+            case BankAustriaConstants.BankAustriaAccountTypes.SAVING:
+                return SavingsAccount.builder(accountNumber, Amount.inEUR(0))
+                        .setAccountNumber(accountNumber)
+                        .setName(accountNickName)
+                        .setBankIdentifier(accountKey)
+                        .build();
+            case BankAustriaConstants.BankAustriaAccountTypes.CARDS:
+                return null;
+            default:
+                LOGGER.error(withTag(BankAustriaConstants.LogTags.LOG_TAG_ACCOUNT, String.format("Unknown account type %s", accountType)));
+                return null;
+
         }
     }
 
@@ -135,7 +146,7 @@ public class OtmlResponseConverter {
         return xpathNodeList;
     }
 
-    public TransactionalAccount fillAccountInformation(String accountMovementXml, TransactionalAccount account)  {
+    public TransactionalAccount fillAccountInformation(String accountMovementXml, TransactionalAccount account) {
         Document document = parseDocument(accountMovementXml);
         NodeList nodeList = getNodeList(document, BankAustriaConstants.XPathExpression.XPATH_ACCOUNT_BALANCE);
         Node balanceNode = nodeList.item(0);
@@ -147,7 +158,7 @@ public class OtmlResponseConverter {
         logAdditonalDataToIdentifyAccountTypes(account, document);
 
         nodeList = getNodeList(document, BankAustriaConstants.XPathExpression.XPATH_ACCOUNT_COMPANIES);
-        if(nodeList.getLength() > 1) {
+        if (nodeList.getLength() > 1) {
             LOGGER.warn(withTag(BankAustriaConstants.LogTags.LOG_TAG_ACCOUNT, "Multiple companies/account holders"));
         }
         Node companyNode = nodeList.item(0);
@@ -197,7 +208,7 @@ public class OtmlResponseConverter {
         return getValue(node);
     }
 
-    public Collection<? extends Transaction> getTransactions(String balanceMovementsForAccount)  {
+    public Collection<? extends Transaction> getTransactions(String balanceMovementsForAccount) {
         Document document = parseDocument(balanceMovementsForAccount);
         NodeList movements = getNodeList(document, BankAustriaConstants.XPathExpression.XPATH_TRANSACTIONS_MOVEMENTS);
         List<Transaction> transactions =
@@ -208,7 +219,7 @@ public class OtmlResponseConverter {
         return transactions;
     }
 
-    private Transaction getTransactionFromMovement(Node movement)  {
+    private Transaction getTransactionFromMovement(Node movement) {
         String amountCurrency = getValue(getNode(movement, BankAustriaConstants.XPathExpression.XPATH_TRANSACTION_CURRENCY));
         String amountValue = getValue(getNode(movement, BankAustriaConstants.XPathExpression.XPATH_TRANSACTION_VALUE));
 
@@ -223,7 +234,7 @@ public class OtmlResponseConverter {
             throw new IllegalStateException(String.format("Unable to parse %s", movementDate), e);
         }
 
-        Amount amount = new Amount(amountCurrency, Double.valueOf(amountValue) );
+        Amount amount = new Amount(amountCurrency, Double.valueOf(amountValue));
 
         return Transaction.builder()
                 .setAmount(amount)
