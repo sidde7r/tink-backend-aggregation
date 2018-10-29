@@ -18,7 +18,13 @@ public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
     private static final String SECURITY_SYSTEM = "SV";
     private static final String CLIENT_ID = "5ec4b8ad-a93d-43e1-831c-8e78ee6e661a";
     private static final String CLIENT_SECRET = "NRRM1W2ckjUdBwhbHtP38yIZevM9yr46v0wosfIWM4sYSFuCNy";
+    private static final String APP_VERSION_HEADER = "MobileBank ios SE 1121105";
     // == END Standard configuration ==
+
+    @Override
+    public String getAppVersionHeader() {
+        return APP_VERSION_HEADER;
+    }
 
     @Override
     public String getClientId() {
