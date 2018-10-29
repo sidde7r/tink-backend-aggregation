@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.system.rpc.Loan;
 
 public class DanskeBankNOConfiguration implements DanskeBankConfiguration {
-    private static final String APP_CULTURE = "nb_NO";
+    private static final String APP_CULTURE = "nb-NO";
     private static final String APP_NAME = "com.danskebank.mobilebank3no";
     private static final String APP_REFERER = "MobileBanking3 NO";
     private static final String APP_VERSION = "0.38.1";

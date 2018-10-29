@@ -8,7 +8,7 @@ import se.tink.backend.system.rpc.Loan;
 
 public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
     // == START Standard configuration ==
-    private static final String APP_CULTURE = "sv_SE";
+    private static final String APP_CULTURE = "sv-SE";
     private static final String APP_NAME = "com.danskebank.mobilebank3se";
     private static final String APP_REFERER = "MobileBanking3 SE";
     private static final String APP_VERSION = "0.38.1";
