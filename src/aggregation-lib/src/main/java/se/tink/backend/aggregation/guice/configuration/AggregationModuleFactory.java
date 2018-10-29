@@ -30,6 +30,12 @@ public class AggregationModuleFactory {
 
     private static ImmutableList.Builder<Module> buildForDevelopment(ServiceConfiguration configuration,
             Environment environment) {
+
+        if (configuration.isSupportingMultiClient()){
+            return baseBuilder(configuration, environment).add(
+                    new AggregationDevelopmentMultiClientRepositoryModule(configuration.getDatabase()));
+        }
+
         return baseBuilder(configuration, environment).add(
                 new AggregationDevelopmentSingleClientRepositoryModule(configuration.getDatabase(),
                         configuration.getDevelopmentConfiguration()));
@@ -37,6 +43,12 @@ public class AggregationModuleFactory {
 
     private static ImmutableList.Builder<Module> buildForProduction(ServiceConfiguration configuration,
             Environment environment) {
+
+        if (configuration.isSupportingMultiClient()) {
+            return baseBuilder(configuration, environment).add(
+                    new AggregationMultiClientRepositoryModule(configuration.getDatabase()));
+        }
+        
         return baseBuilder(configuration, environment).add(
                 new AggregationSingleClientRepositoryModule(configuration.getDatabase()));
     }
