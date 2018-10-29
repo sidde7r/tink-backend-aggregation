@@ -33,7 +33,7 @@ public class RaiffeisenSessionHandler implements SessionHandler {
         try {
             apiClient.keepAlive(loginResponse);
         } catch (HttpResponseException e) {
-            logger.warn("keepAlive failed: {}", e);
+            throw SessionError.SESSION_EXPIRED.exception();
         }
     }
 }
