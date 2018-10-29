@@ -54,7 +54,9 @@ public class BawagPskConstants {
     }
 
     public enum LogTags {
-        RESPONSE_NOT_OK;
+        RESPONSE_NOT_OK,
+        TRANSACTION_UNKNOWN_PRODUCT_CODE,
+        TRANSACTION_UNKNOWN_PRODUCT_TYPE;
 
         public LogTag toTag() {
             return LogTag.from(name());
