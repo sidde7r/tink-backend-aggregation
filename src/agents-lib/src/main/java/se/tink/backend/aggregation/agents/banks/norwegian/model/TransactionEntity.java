@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.norwegian.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
@@ -132,5 +133,13 @@ public class TransactionEntity {
                         !Strings.isNullOrEmpty(getMessage())));
 
         return t;
+    }
+
+    // Recent payments are not listed in the billed transactions for current month. They're first listed in
+    // pending transactions. This method returns true if the accountTransactionId is 0 and the transactionTypeText
+    // is "betalning".
+    @JsonIgnore
+    public boolean isNotBilledPayment() {
+        return accountTransactionId == 0 && "betalning".equalsIgnoreCase(transactionTypeText);
     }
 }
