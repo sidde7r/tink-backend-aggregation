@@ -287,7 +287,7 @@
     "className" : "nxgen.at.banks.erstebank.ErsteBankAgent",
     "credentialsType" : "PASSWORD",
     "currency" : "EUR",
-    "displayName" : "Erste bank und Sparkasse",
+    "displayName" : "Erste Bank und Sparkasse",
     "groupDisplayName" : null,
     "market" : "AT",
     "multiFactor" : false,
