@@ -93,7 +93,7 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
         Map<String, ProviderStatusConfiguration> allProviderStatuses = getAllProviderStatuses();
 
         return providerConfigurationByName.values().stream()
-                .filter(providerConfiguration -> Objects.equals(market, providerConfiguration.getMarket()))
+                .filter(providerConfiguration -> market.equalsIgnoreCase(providerConfiguration.getMarket()))
                 .map(provider -> StorageProviderConfigurationConverter.convert(provider,
                         Optional.ofNullable(allProviderStatuses.get(provider.getName()))))
                 .collect(Collectors.toList());
@@ -125,7 +125,7 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
     public List<se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration> findAllByClusterIdAndMarket(
             String clusterId, String market) {
         return findAllByClusterId(clusterId).stream()
-                .filter(providerConfiguration -> Objects.equals(market, providerConfiguration.getMarket()))
+                .filter(providerConfiguration -> market.equalsIgnoreCase(providerConfiguration.getMarket()))
                 .collect(Collectors.toList());
     }
 
