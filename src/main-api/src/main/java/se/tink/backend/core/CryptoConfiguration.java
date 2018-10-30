@@ -1,38 +1,45 @@
 package se.tink.backend.core;
 
+import javax.persistence.Embedded;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import org.hibernate.annotations.Type;
 
 @Entity
-@Table(name = "crypto_configurations")
-public class CryptoConfigurations {
+@Table(name = "crypto_configuration")
+public class CryptoConfiguration {
+    /*
     @Id
     private int keyId;
     @Type(type = "text")
     private String cryptoId;
+   */
+    @EmbeddedId
+    private CryptoConfigurationId cryptoConfigurationId;
+
     @Type(type = "text")
     private String base64encodedkey;
 
-    public CryptoConfigurations() {
+    public CryptoConfiguration() {
         // Ok.
     }
 
     public int getKeyId() {
-        return keyId;
+        return cryptoConfigurationId.getKeyId();
     }
 
     public void setKeyId(int keyId) {
-        this.keyId = keyId;
+        this.cryptoConfigurationId.setKeyId(keyId);
     }
 
     public String getCryptoId() {
-        return cryptoId;
+        return cryptoConfigurationId.getClusterId();
     }
 
     public void setCryptoId(String cryptoId) {
-        this.cryptoId = cryptoId;
+        this.cryptoConfigurationId.setClusterId(cryptoId);
     }
 
     public String getBase64encodedkey() {

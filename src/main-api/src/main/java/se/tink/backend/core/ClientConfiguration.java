@@ -6,8 +6,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Type;
 
 @Entity
-@Table(name = "client_configurations")
-public class ClientConfigurations {
+@Table(name = "client_configuration")
+public class ClientConfiguration {
     @Id
     private String clientId;
     @Type(type = "text")
@@ -17,7 +17,7 @@ public class ClientConfigurations {
     @Type(type = "text")
     private String aggregatorId;
 
-    public ClientConfigurations() {
+    public ClientConfiguration() {
         // Ok.
     }
 

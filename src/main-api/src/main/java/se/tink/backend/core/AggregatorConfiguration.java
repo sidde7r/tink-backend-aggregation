@@ -6,14 +6,14 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Type;
 
 @Entity
-@Table(name = "aggregator_configurations")
-public class AggregatorConfigurations {
+@Table(name = "aggregator_configuration")
+public class AggregatorConfiguration {
     @Id
     private String aggregatorId;
     @Type(type = "text")
     private String aggregatorInfo;
 
-    public AggregatorConfigurations() {
+    public AggregatorConfiguration() {
         // Ok.
     }
 

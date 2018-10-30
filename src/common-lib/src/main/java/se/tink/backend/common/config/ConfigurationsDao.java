@@ -1,25 +1,25 @@
 package se.tink.backend.common.config;
 
 import java.util.List;
-import se.tink.backend.core.AggregatorConfigurations;
-import se.tink.backend.core.ClientConfigurations;
-import se.tink.backend.core.ClusterConfigurations;
-import se.tink.backend.core.CryptoConfigurations;
+import se.tink.backend.core.AggregatorConfiguration;
+import se.tink.backend.core.ClientConfiguration;
+import se.tink.backend.core.ClusterConfiguration;
+import se.tink.backend.core.CryptoConfiguration;
 
 public interface ConfigurationsDao {
-    List<CryptoConfigurations> getCryptoConfigurations();
+    List<CryptoConfiguration> getCryptoConfigurations();
 
-    List<ClientConfigurations> getClientConfigurations();
+    List<ClientConfiguration> getClientConfigurations();
 
-    List<AggregatorConfigurations> getAggregatorConfigurations();
+    List<AggregatorConfiguration> getAggregatorConfigurations();
 
-    List<ClusterConfigurations> getClusterConfigurations();
+    List<ClusterConfiguration> getClusterConfigurations();
 
-    CryptoConfigurations findCryptoConfiguration(int keyId);
+    CryptoConfiguration findCryptoConfiguration(int keyId, String cryptoId);
 
-    ClientConfigurations findClientConfigurations(String clientId);
+    ClientConfiguration findClientConfigurations(String clientId);
 
-    AggregatorConfigurations findAggregatorConfigurations(String aggregatorId);
+    AggregatorConfiguration findAggregatorConfigurations(String aggregatorId);
 
-    ClusterConfigurations findClusterConfigurations(String clusterId);
+    ClusterConfiguration findClusterConfigurations(String clusterId);
 }

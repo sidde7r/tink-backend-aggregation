@@ -6,8 +6,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Type;
 
 @Entity
-@Table(name = "cluster_configurations")
-public class ClusterConfigurations {
+@Table(name = "cluster_configuration")
+public class ClusterConfiguration {
     @Id
     private String clusterId;
     @Type(type = "text")
@@ -19,7 +19,7 @@ public class ClusterConfigurations {
     @Type(type = "boolean")
     private boolean disablerequestcompression;
 
-    public ClusterConfigurations() {
+    public ClusterConfiguration() {
         // Ok.
     }
 

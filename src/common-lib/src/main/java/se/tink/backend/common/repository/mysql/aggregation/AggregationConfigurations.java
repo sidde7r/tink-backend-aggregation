@@ -8,10 +8,10 @@ import se.tink.backend.common.repository.mysql.aggregation.aggregatorconfigurati
 import se.tink.backend.common.repository.mysql.aggregation.clientconfigurations.ClientConfigurationsRepository;
 import se.tink.backend.common.repository.mysql.aggregation.clusterconfigurations.ClusterConfigurationsRepository;
 import se.tink.backend.common.repository.mysql.aggregation.cryptoconfigurations.CryptoConfigurationsRepository;
-import se.tink.backend.core.AggregatorConfigurations;
-import se.tink.backend.core.ClientConfigurations;
-import se.tink.backend.core.ClusterConfigurations;
-import se.tink.backend.core.CryptoConfigurations;
+import se.tink.backend.core.AggregatorConfiguration;
+import se.tink.backend.core.ClientConfiguration;
+import se.tink.backend.core.ClusterConfiguration;
+import se.tink.backend.core.CryptoConfiguration;
 
 public class AggregationConfigurations implements ConfigurationsDao {
 
@@ -32,42 +32,46 @@ public class AggregationConfigurations implements ConfigurationsDao {
     }
 
     @Override
-    public List<CryptoConfigurations> getCryptoConfigurations() {
+    public List<CryptoConfiguration> getCryptoConfigurations() {
         return cryptoConfigurationsRepository.findAll();
     }
 
     @Override
-    public List<ClientConfigurations> getClientConfigurations() {
+    public List<ClientConfiguration> getClientConfigurations() {
         return clientConfigurationsRepository.findAll();
     }
 
     @Override
-    public List<AggregatorConfigurations> getAggregatorConfigurations() {
+    public List<AggregatorConfiguration> getAggregatorConfigurations() {
         return aggregatorConfigurationsRepository.findAll();
     }
 
     @Override
-    public List<ClusterConfigurations> getClusterConfigurations() {
+    public List<ClusterConfiguration> getClusterConfigurations() {
         return clusterConfigurationsRepository.findAll();
     }
 
     @Override
-    public CryptoConfigurations findCryptoConfiguration(int keyId) {
-        return cryptoConfigurationsRepository.findAll().stream().filter(e -> e.getKeyId() == keyId).findFirst().get();
+    public CryptoConfiguration findCryptoConfiguration(int keyId, String cryptoId) {
+        return cryptoConfigurationsRepository.findAll()
+                .stream()
+                .filter(e -> e.getKeyId() == keyId && e.getCryptoId().equalsIgnoreCase(cryptoId))
+                .findFirst()
+                .get();
     }
 
     @Override
-    public ClientConfigurations findClientConfigurations(String clientId) {
+    public ClientConfiguration findClientConfigurations(String clientId) {
         return clientConfigurationsRepository.findOne(clientId);
     }
 
     @Override
-    public AggregatorConfigurations findAggregatorConfigurations(String aggregatorId) {
+    public AggregatorConfiguration findAggregatorConfigurations(String aggregatorId) {
         return aggregatorConfigurationsRepository.findOne(aggregatorId);
     }
 
     @Override
-    public ClusterConfigurations findClusterConfigurations(String clusterId) {
+    public ClusterConfiguration findClusterConfigurations(String clusterId) {
         return clusterConfigurationsRepository.findOne(clusterId);
     }
 }
