@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.banks.norwegian;
 
 import com.google.api.client.http.HttpStatusCodes;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.sun.jersey.api.client.ClientResponse;
@@ -12,8 +14,6 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import org.joda.time.DateTime;
 import org.jsoup.Jsoup;
@@ -286,14 +286,11 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
 
         String encodedAccountNumber = URLEncoder.encode(accountNumber, "UTF-8");
 
-        // Add reserved (not booked) transactions and recent payments which are not yet billed to the user.
+        // Add transactions which are not yet billed to the user
         TransactionListResponse pendingTransactions = createClientRequest(
                 String.format(TRANSACTIONS_URL, encodedAccountNumber, 0, 0)).get(TransactionListResponse.class);
-
-        List<TransactionEntity> filteredPendingTransactions = pendingTransactions.stream()
-                .filter(isReservedPurchaseOrNotBilledPayment())
-                .collect(Collectors.toList());
-
+        ImmutableList<TransactionEntity> filteredPendingTransactions = FluentIterable.from(pendingTransactions)
+                .filter(transactionEntity -> !transactionEntity.isBooked()).toList();
         for (TransactionEntity transactionEntity : filteredPendingTransactions) {
             transactions.add(transactionEntity.toTransaction());
         }
@@ -317,10 +314,6 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
         } while (!isContentWithRefresh(account, transactions));
 
         context.updateTransactions(account, transactions);
-    }
-
-    private Predicate<TransactionEntity> isReservedPurchaseOrNotBilledPayment() {
-        return transactionEntity -> !transactionEntity.isBooked() || transactionEntity.isNotBilledPayment();
     }
 
     private WebResource.Builder createClientRequest(String url) {
