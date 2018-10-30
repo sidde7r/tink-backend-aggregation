@@ -53,7 +53,7 @@ public class AggregationConfigurations implements ConfigurationsDao {
 
     @Override
     public CryptoConfigurations findCryptoConfiguration(int keyId) {
-        return cryptoConfigurationsRepository.findOne(""+keyId);
+        return cryptoConfigurationsRepository.findAll().stream().filter(e -> e.getKeyId() == keyId).findFirst().get();
     }
 
     @Override

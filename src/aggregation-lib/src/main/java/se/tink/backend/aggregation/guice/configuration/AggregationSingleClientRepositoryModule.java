@@ -33,12 +33,12 @@ public class AggregationSingleClientRepositoryModule extends RepositoryModule {
         bindSpringBean(AggregationCredentialsRepository.class);
         bindSpringBean(ClusterHostConfigurationRepository.class);
         bindSpringBean(ClusterCryptoConfigurationRepository.class);
-
         bindSpringBean(CryptoConfigurationsRepository.class);
         bindSpringBean(ClientConfigurationsRepository.class);
         bindSpringBean(AggregatorConfigurationsRepository.class);
         bindSpringBean(ClusterConfigurationsRepository.class);
         bind(ConfigurationsDao.class).to(AggregationConfigurations.class).in(Scopes.SINGLETON);
+
     }
 
     @Provides
