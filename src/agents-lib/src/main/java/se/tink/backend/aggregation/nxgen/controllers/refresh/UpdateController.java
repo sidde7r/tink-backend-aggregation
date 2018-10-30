@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.utils.AccountFeaturesFactory;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
@@ -35,22 +36,7 @@ public class UpdateController {
     }
 
     public <A extends Account> boolean updateAccount(A account) {
-        return updateAccount(account, getFeatures(account));
-    }
-
-    private <A extends Account> AccountFeatures getFeatures(A account) {
-        Class<? extends Account> accountClass = account.getClass();
-        if (LoanAccount.class.equals(accountClass)) {
-            LoanAccount loan = (LoanAccount) account;
-            return AccountFeatures.createForLoan(
-                    loan.getDetails().toSystemLoan(loan, loanInterpreter));
-        }
-        if (InvestmentAccount.class.equals(accountClass)) {
-            InvestmentAccount investment = (InvestmentAccount) account;
-            return AccountFeatures.createForPortfolios(
-                    investment.getPortfolios());
-        }
-        return AccountFeatures.createEmpty();
+        return updateAccount(account, AccountFeaturesFactory.createForAnAccount(account, loanInterpreter));
     }
 
     private boolean updateAccount(Account account, AccountFeatures accountFeatures) {
