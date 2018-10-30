@@ -15,23 +15,11 @@ public class Account {
     @JsonProperty("type")
     private int type;
 
-    @JsonProperty("free_credit_amount")
-    private double freeCreditAmount;
-
-    @JsonProperty("pending_payments")
-    private PendingPayments pendingPayments;
-
-    @JsonProperty("securities")
-    private Securities securities;
-
     @JsonProperty("number")
     private long number;
 
     @JsonProperty("balance")
     private List<Balance> balances;
-
-    @JsonProperty("reserved_amount")
-    private double reservedAmount;
 
     @JsonProperty("iban")
     private String iban;
@@ -41,12 +29,6 @@ public class Account {
 
     @JsonProperty("portfolio_id")
     private String portfolioId;
-
-    @JsonProperty("einvoices")
-    private Einvoices einvoices;
-
-    @JsonProperty("actions")
-    private List<Action> actions;
 
     @JsonProperty("free_amount")
     private double freeAmount;
@@ -59,18 +41,6 @@ public class Account {
         return AsLhvConstants.ACCOUNT_TYPE_MAPPER.translate(type)
                 .orElseThrow(() -> new IllegalStateException(
                         "Unknown account types should have been filtered out before reaching this point!"));
-    }
-
-    public double getFreeCreditAmount() {
-        return freeCreditAmount;
-    }
-
-    public PendingPayments getPendingPayments() {
-        return pendingPayments;
-    }
-
-    public Securities getSecurities() {
-        return securities;
     }
 
     public long getNumber() {
@@ -86,10 +56,6 @@ public class Account {
         return 0;
     }
 
-    public double getReservedAmount() {
-        return reservedAmount;
-    }
-
     public String getIban() {
         return iban;
     }
@@ -100,14 +66,6 @@ public class Account {
 
     public String getPortfolioId() {
         return portfolioId;
-    }
-
-    public Einvoices getEinvoices() {
-        return einvoices;
-    }
-
-    public List<Action> getActions() {
-        return actions;
     }
 
     public double getFreeAmount() {

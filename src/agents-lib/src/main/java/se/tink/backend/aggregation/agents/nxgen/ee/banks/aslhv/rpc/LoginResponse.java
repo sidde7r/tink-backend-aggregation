@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LoginResponse extends BaseResponse {
     boolean authentication;
     int userId;
-    List<String> errorFields;
 
     public boolean isAuthenticated() {
         return authentication;

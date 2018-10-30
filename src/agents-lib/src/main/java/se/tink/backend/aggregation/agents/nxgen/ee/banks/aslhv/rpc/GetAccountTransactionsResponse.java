@@ -32,7 +32,8 @@ public class GetAccountTransactionsResponse extends BaseResponse {
         return endOfStatement;
     }
 
-    private Optional<? extends Transaction> buildTransaction(final TransactionItem transaction,
+    private Optional<? extends Transaction> buildTransaction(
+            final TransactionItem transaction,
             final AsLhvSessionStorage storage) {
         Optional<Transaction> result = Optional.empty();
         Optional<String> currency = storage.getCurrency(transaction.getCurrencyId());

@@ -4,7 +4,6 @@ import java.util.Date;
 
 import org.apache.http.HttpHeaders;
 
-import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.entities.GetUsersResponse;
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc.*;
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -137,15 +136,6 @@ public class AsLhvApiClient {
                 .body(form.serialize())
                 .post(GetAccountTransactionsResponse.class);
         return response;
-    }
-
-    public GetUsersResponse getUsers() {
-        return getBaseRequest(getGetUsersUrl())
-                .header(HttpHeaders.ACCEPT, AsLhvConstants.Header.ACCEPT_JSON)
-                .header(HttpHeaders.ACCEPT_LANGUAGE, AsLhvConstants.Header.ACCEPT_LANGUAGE)
-                .header(HttpHeaders.CONTENT_TYPE,  AsLhvConstants.Header.CONTENT_TYPE_FORM_URLENCODED)
-                .header(AsLhvConstants.Header.LHV_APPLICATION_LANGUAGE_HEADER, AsLhvConstants.Header.LHV_APPLICATION_LANUGAGE_US)
-                .post(GetUsersResponse.class);
     }
 
     public LogoutResponse logout() {
