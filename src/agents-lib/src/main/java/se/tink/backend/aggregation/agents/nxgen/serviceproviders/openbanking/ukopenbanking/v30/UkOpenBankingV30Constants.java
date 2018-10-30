@@ -16,7 +16,7 @@ public class UkOpenBankingV30Constants extends UkOpenBankingConstants {
             .put(AccountTypes.SAVINGS, "Savings")
             .put(AccountTypes.LOAN, "Loan")
             .put(AccountTypes.MORTGAGE, "Mortgage")
-            .add("ChargeCard", "EMoney", "PrePaidCard")
+            .ignoreKeys("ChargeCard", "EMoney", "PrePaidCard")
             .build();
 
 }

@@ -16,7 +16,7 @@ public final class AccountTypeMapperTest {
     @Test
     public void ensureIsCheckingAccount_withKnownButUnmapped_returnsFalse() {
         final AccountTypeMapper mapper = AccountTypeMapper.builder()
-                .add("CHECKING_ACCOUNT")
+                .ignoreKeys("CHECKING_ACCOUNT")
                 .build();
 
         Assert.assertFalse(mapper.isCheckingAccount("CHECKING_ACCOUNT"));

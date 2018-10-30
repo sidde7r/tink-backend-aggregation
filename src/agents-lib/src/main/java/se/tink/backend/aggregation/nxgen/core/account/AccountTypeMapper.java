@@ -25,16 +25,6 @@ public class AccountTypeMapper {
 
         /**
          * Known keys, and the account type they should be mapped to.
-         * @deprecated Use {@link #put(AccountTypes, Object...)} instead
-         */
-        @Deprecated
-        public AccountTypeMapper.Builder add(AccountTypes value, Object... keys) {
-            reversed.put(value, keys);
-            return this;
-        }
-
-        /**
-         * Known keys, and the account type they should be mapped to.
          */
         public AccountTypeMapper.Builder put(AccountTypes value, Object... keys) {
             reversed.put(value, keys);
@@ -44,7 +34,7 @@ public class AccountTypeMapper {
         /**
          * Known keys that should not be mapped to any specific account type.
          */
-        public AccountTypeMapper.Builder add(Object... keys) {
+        public AccountTypeMapper.Builder ignoreKeys(Object... keys) {
             return this.put(AccountTypes.DUMMY, keys);
         }
 
