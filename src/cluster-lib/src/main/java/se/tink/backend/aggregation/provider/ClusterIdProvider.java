@@ -9,6 +9,10 @@ public class ClusterIdProvider {
     public ClusterInfo getClusterInfo(String clusterName, String clusterEnvironment) throws ClusterNotValid {
         ClusterId clusterId = ClusterId.of(clusterName, clusterEnvironment);
 
+        if (!clusterId.isValidId()) {
+            throw new ClusterNotValid();
+        }
+
         return ClusterInfo.createForProviderConfigurationService(clusterId);
     }
 }
