@@ -13,8 +13,8 @@ import se.tink.backend.aggregation.provider.configuration.http.resources.Provide
 import se.tink.backend.aggregation.provider.configuration.rpc.ProviderConfigurationDTO;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ProviderServiceResourceTest {
-    private static Injector injector;
+public class ProviderServiceResourceTest extends ProviderConfigurationServiceTestBase {
+
     private static final ImmutableMap<String, ClusterId> CLUSTERS = ImmutableMap.<String, ClusterId>builder()
             .put("cornwall-testing", ClusterId.of("cornwall", "testing"))
             .put("cornwall-production", ClusterId.of("cornwall", "production"))
@@ -35,11 +35,6 @@ public class ProviderServiceResourceTest {
             .put("empty_clusterid", ClusterId.createEmpty())
             .build();
     private ProviderServiceResource resource;
-
-    @BeforeClass
-    public static void init() {
-        injector = InjectorFactory.get("etc/development-provider-configuration-server.yml");
-    }
 
     @Before
     public void setup() {
