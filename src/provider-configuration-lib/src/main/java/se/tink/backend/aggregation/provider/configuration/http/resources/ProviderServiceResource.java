@@ -30,38 +30,21 @@ public class ProviderServiceResource implements ProviderService {
 
     @Override
     public List<ProviderConfigurationDTO> list(String lang, ClusterInfo clusterInfo) {
-        validateClusterInfo(clusterInfo);
         return HttpProviderConfigurationConverter.convert(providerController.list(Locale.forLanguageTag(lang), clusterInfo.getClusterId()));
     }
 
     @Override
     public List<ProviderConfigurationDTO> listByMarket(String lang, String market, ClusterInfo clusterInfo) {
-        validateClusterInfo(clusterInfo);
         return HttpProviderConfigurationConverter.convert(providerController.listByMarket(Locale.forLanguageTag(lang), clusterInfo.getClusterId(), market));
     }
 
     @Override
     public ProviderConfigurationDTO getProviderByName(String lang, String providerName, ClusterInfo clusterInfo) {
-        validateClusterInfo(clusterInfo);
         Optional<ProviderConfiguration> providerConfiguration = providerController.getProviderByName(Locale.forLanguageTag(lang), clusterInfo.getClusterId(), providerName);
         if (!providerConfiguration.isPresent()) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
 
         return HttpProviderConfigurationConverter.convert(providerConfiguration.get());
-    }
-
-    private void validateClusterInfo(ClusterInfo clusterInfo) {
-        if (Objects.isNull(clusterInfo)) {
-            HttpResponseHelper.error(Response.Status.BAD_REQUEST);
-        }
-
-        if (Objects.isNull(clusterInfo.getClusterId())) {
-            HttpResponseHelper.error(Response.Status.BAD_REQUEST);
-        }
-
-        if (!clusterInfo.getClusterId().isValidId()) {
-            HttpResponseHelper.error(Response.Status.BAD_REQUEST);
-        }
     }
 }
