@@ -12,8 +12,10 @@ import se.tink.backend.common.config.DatabaseConfiguration;
 import se.tink.backend.core.ClusterHostConfiguration;
 import se.tink.backend.guice.configuration.RepositoryModule;
 
-// database configuration for running aggregation in production environment.
-// intended for cluster hosting only 1 client structure
+/*
+    database configuration for running aggregation in production environment.
+    intended for cluster hosting only 1 client structure
+ */
 public class AggregationSingleClientRepositoryModule extends RepositoryModule {
     public AggregationSingleClientRepositoryModule(DatabaseConfiguration databaseConfiguration) {
         super(databaseConfiguration);

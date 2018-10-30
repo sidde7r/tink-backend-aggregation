@@ -13,8 +13,10 @@ import se.tink.backend.common.repository.mysql.aggregation.clusterhostconfigurat
 import se.tink.backend.core.ClusterHostConfiguration;
 import se.tink.backend.guice.configuration.RepositoryModule;
 
-// database configuration for running aggregation locally.
-// intended for cluster hosting only 1 client structure
+/*
+    database configuration for running aggregation locally.
+    intended for cluster hosting only 1 client structure
+ */
 public class AggregationDevelopmentSingleClientRepositoryModule extends RepositoryModule {
     private AggregationDevelopmentConfiguration developmentConfiguration;
 
