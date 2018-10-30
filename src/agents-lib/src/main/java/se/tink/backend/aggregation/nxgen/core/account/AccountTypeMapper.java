@@ -26,7 +26,7 @@ public class AccountTypeMapper {
         /**
          * Known keys, and the account type they should be mapped to.
          */
-        public AccountTypeMapper.Builder add(AccountTypes value, Object... keys) {
+        public AccountTypeMapper.Builder put(AccountTypes value, Object... keys) {
             reversed.put(value, keys);
             return this;
         }
@@ -34,16 +34,16 @@ public class AccountTypeMapper {
         /**
          * Known keys that should not be mapped to any specific account type.
          */
-        public AccountTypeMapper.Builder add(Object... keys) {
-            return this.add(AccountTypes.DUMMY, keys);
+        public AccountTypeMapper.Builder ignoreKeys(Object... keys) {
+            return this.put(AccountTypes.DUMMY, keys);
         }
 
-        Map<AccountTypes, Object[]> getReversed() {
+        private Map<AccountTypes, Object[]> getReversed() {
             return reversed;
         }
     }
 
-    AccountTypeMapper(AccountTypeMapper.Builder builder) {
+    private AccountTypeMapper(AccountTypeMapper.Builder builder) {
 
         super();
 
@@ -60,12 +60,12 @@ public class AccountTypeMapper {
         return new AccountTypeMapper.Builder();
     }
 
-    public boolean verify(Object key, AccountTypes value) {
+    private boolean verify(Object key, AccountTypes value) {
         Optional<AccountTypes> translated = translate(key);
         return translated.isPresent() && translated.get() == value;
     }
 
-    public boolean verify(Object key, Collection<AccountTypes> values) {
+    private boolean verify(Object key, Collection<AccountTypes> values) {
         Optional<AccountTypes> translated = translate(key);
         return translated.isPresent() && values.contains(translated.get());
     }
@@ -84,7 +84,7 @@ public class AccountTypeMapper {
         }
     }
 
-    static String toKeyString(Object accountTypeKey) {
+    private static String toKeyString(Object accountTypeKey) {
         return String.valueOf(accountTypeKey).toLowerCase();
     }
 
