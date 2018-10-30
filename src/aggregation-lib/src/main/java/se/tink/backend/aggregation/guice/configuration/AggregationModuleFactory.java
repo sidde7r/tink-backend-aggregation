@@ -9,6 +9,7 @@ import se.tink.backend.guice.configuration.ConfigurationModule;
 import se.tink.libraries.discovery.CoordinationModule;
 
 public class AggregationModuleFactory {
+
     public static ImmutableList<Module> build(ServiceConfiguration configuration, Environment environment) {
         if (configuration.isDevelopmentMode()) {
             return buildForDevelopment(configuration, environment);
@@ -23,7 +24,7 @@ public class AggregationModuleFactory {
                 new CommonModule(),
                 new CoordinationModule(),
                 new ConfigurationModule(configuration),
-                new AggregationDevelopmentRepositoryModule(configuration.getDatabase(),
+                new AggregationDevelopmentSingleClientRepositoryModule(configuration.getDatabase(),
                         configuration.getDevelopmentConfiguration()),
                 new AggregationModule(configuration, environment.jersey()),
                 new QueueModule(configuration.getSqsQueueConfiguration(), environment.lifecycle())
@@ -35,7 +36,7 @@ public class AggregationModuleFactory {
         return ImmutableList.of(
                 new CommonModule(),
                 new CoordinationModule(),
-                new AggregationRepositoryModule(configuration.getDatabase()),
+                new AggregationSingleClientRepositoryModule(configuration.getDatabase()),
                 new ConfigurationModule(configuration),
                 new AggregationModule(configuration, environment.jersey()),
                 new QueueModule(configuration.getSqsQueueConfiguration(), environment.lifecycle())
