@@ -31,7 +31,7 @@ public class UpdateControllerTestImpl extends UpdateController {
 
     @Override
     @VisibleForTesting
-    public boolean updateAccount(Account account) {
+    public <A extends Account> boolean updateAccount(A account) {
         if (!Objects.equals(account.getBalance().getCurrency(), currency)) {
             return false;
         }
@@ -39,22 +39,23 @@ public class UpdateControllerTestImpl extends UpdateController {
         accounts.add(account);
         return true;
     }
+//
+//    @Override
+//    @VisibleForTesting
+//    public boolean updateAccount(LoanAccount account) {
+//        return updateAccount((Account) account);
+//    }
+//
+//    @Override
+//    @VisibleForTesting
+//    public boolean updateAccount(InvestmentAccount account) {
+//        return updateAccount((Account) account);
+//    }
 
     @Override
     @VisibleForTesting
-    public boolean updateAccount(LoanAccount account) {
-        return updateAccount((Account) account);
-    }
-
-    @Override
-    @VisibleForTesting
-    public boolean updateAccount(InvestmentAccount account) {
-        return updateAccount((Account) account);
-    }
-
-    @Override
-    @VisibleForTesting
-    public boolean updateTransactions(Account account, Collection<AggregationTransaction> transactions) {
+    public <A extends Account> boolean updateTransactions(A account, Collection<AggregationTransaction> transactions) {
+//    public boolean updateTransactions(Account account, Collection<AggregationTransaction> transactions) {
         if (!updateAccount(account)) {
             return false;
         }
