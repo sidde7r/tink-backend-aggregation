@@ -53,10 +53,4 @@ public class ProviderServiceTest {
 
         assertThat(emptyList).isEmpty();
     }
-
-    @Test(expected = WebApplicationException.class)
-    public void whenInvalidClusterId_expectedWebApplicationException() {
-        List<ProviderConfigurationDTO> en = resource
-                .list("en", ClusterInfo.createForTesting(CLUSTERS.get("empty-clusterid")));
-    }
 }
