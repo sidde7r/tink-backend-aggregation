@@ -54,6 +54,8 @@ public class ConfigurationModule extends AbstractModule {
                 .to(configuration.isProvidersOnAggregation());
         bindConstant().annotatedWith(Names.named("queueAvailable"))
                 .to(configuration.getSqsQueueConfiguration().isEnabled());
+        bindConstant().annotatedWith(Names.named("isSupportingMultiClient"))
+                .to(configuration.isSupportingMultiClient());
 
         // Tink monolith (common-lib and main-api) configurations
         bind(CacheConfiguration.class).toProvider(Providers.of(configuration.getCacheConfiguration()));
