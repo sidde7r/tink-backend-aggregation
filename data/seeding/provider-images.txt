@@ -3,6 +3,14 @@ default	NULL
 icon:alandsbanken	https://cdn.tink.se/provider-images/alandsbanken_v2.png
 icon:americanexpress	https://cdn.tink.se/provider-images/americanexpress.png
 icon:amfabank	https://cdn.tink.se/provider-images/amfabank.png
+icon:at-americanexpress https://cdn.tink.se/provider-images/at/at-americanexpress.png
+icon:at-bankaustria https://cdn.tink.se/provider-images/at/at-bankaustria.png
+icon:at-bawagpsk https://cdn.tink.se/provider-images/at/at-bawagpsk.png
+icon:at-easybank https://cdn.tink.se/provider-images/at/at-easybank.png
+icon:at-erstebank https://cdn.tink.se/provider-images/at/at-erstebank.png
+icon:at-n26 https://cdn.tink.se/provider-images/at/at-n26.png
+icon:at-raiffeisen https://cdn.tink.se/provider-images/at/at-raiffeisen.png
+icon:at-revolut https://cdn.tink.se/provider-images/at/at-revolut.png
 icon:avanza	https://cdn.tink.se/provider-images/avanza.png
 icon:be-belfius-cardreader	https://www.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_Logo.png
 icon:be-ing-cardreader	https://www.bnpparibasfortis.be/rsc/serv/bank/ING/ING_Logo.png
