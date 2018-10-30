@@ -9,8 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.provider.configuration.config.ProviderServiceConfiguration;
 
-public class ConfigurationFactory {
-    private static final Logger LOG = LoggerFactory.getLogger(ConfigurationFactory.class);
+public class ProviderConfigurationFactory {
+    private static final Logger LOG = LoggerFactory.getLogger(ProviderConfigurationFactory.class);
 
     private static final Validator VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();
     private static final ObjectMapper MAPPER = Jackson.newObjectMapper();

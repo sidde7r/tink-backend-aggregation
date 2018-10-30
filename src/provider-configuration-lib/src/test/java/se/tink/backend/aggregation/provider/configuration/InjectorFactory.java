@@ -20,7 +20,7 @@ public class InjectorFactory {
     }
 
     public static synchronized Injector get(String configPath) {
-        ProviderServiceConfiguration configuration = ConfigurationFactory.get(configPath);
+        ProviderServiceConfiguration configuration = ProviderConfigurationFactory.get(configPath);
         return get(configuration);
     }
 
