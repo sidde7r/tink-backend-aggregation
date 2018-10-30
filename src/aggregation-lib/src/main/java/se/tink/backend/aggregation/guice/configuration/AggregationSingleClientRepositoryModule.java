@@ -1,10 +1,13 @@
 package se.tink.backend.aggregation.guice.configuration;
 
 import com.google.inject.Provides;
+import com.google.inject.Scopes;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import java.util.Map;
 import java.util.stream.Collectors;
+import se.tink.backend.common.config.ConfigurationsDao;
+import se.tink.backend.common.repository.mysql.aggregation.AggregationConfigurations;
 import se.tink.backend.common.repository.mysql.aggregation.aggregationcredentials.AggregationCredentialsRepository;
 import se.tink.backend.common.repository.mysql.aggregation.aggregatorconfigurations.AggregatorConfigurationsRepository;
 import se.tink.backend.common.repository.mysql.aggregation.clientconfigurations.ClientConfigurationsRepository;
@@ -35,7 +38,7 @@ public class AggregationSingleClientRepositoryModule extends RepositoryModule {
         bindSpringBean(ClientConfigurationsRepository.class);
         bindSpringBean(AggregatorConfigurationsRepository.class);
         bindSpringBean(ClusterConfigurationsRepository.class);
-
+        bind(ConfigurationsDao.class).to(AggregationConfigurations.class).in(Scopes.SINGLETON);
     }
 
     @Provides
