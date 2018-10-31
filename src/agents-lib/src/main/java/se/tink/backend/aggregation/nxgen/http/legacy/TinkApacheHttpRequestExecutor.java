@@ -7,6 +7,7 @@ import com.google.common.base.Strings;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -46,6 +47,9 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private Algorithm algorithm;
     private boolean shouldAddRequestSignature = true;
 
+    private String proxyUsername;
+    private String proxyPassword;
+
     public TinkApacheHttpRequestExecutor(SignatureKeyPair signatureKeyPair) {
         if (signatureKeyPair == null || signatureKeyPair.getPrivateKey() == null) {
             return;
@@ -56,6 +60,11 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         algorithm = Algorithm.RSA256(signatureKeyPair.getPublicKey(), signatureKeyPair.getPrivateKey());
     }
 
+    public void setProxyCredentials(String username, String password) {
+        this.proxyUsername = username;
+        this.proxyPassword = password;
+    }
+
     @Override
     public HttpResponse execute(HttpRequest request, HttpClientConnection conn, HttpContext context)
             throws IOException, HttpException {
@@ -63,11 +72,34 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         request.removeHeaders("Cookie2");
         mergeCookieHeaders(request);
 
-        if (shouldAddRequestSignature) {
+        if (isHttpProxyRequest(request)) {
+            addProxyAuthorizationHeader(request);
+        } else if (shouldAddRequestSignature) {
+            // Do not add a signature header on the proxy requests.
+            // This is because we don't want to leak unnecessary information to proxy providers.
             addRequestSignature(request);
         }
 
         return super.execute(request, conn, context);
+    }
+
+    private boolean isHttpProxyRequest(HttpRequest request) {
+        return "connect".equalsIgnoreCase(request.getRequestLine().getMethod());
+    }
+
+    private void addProxyAuthorizationHeader(HttpRequest request) {
+        if (Strings.isNullOrEmpty(proxyUsername) || Strings.isNullOrEmpty(proxyPassword)) {
+            return;
+        }
+
+        // Note: The apache version we use cannot automatically add the `Proxy-Authorization` via proxy authentication
+        // configuration.
+        // Remove this code once Apache has been updated to a new version where that functionality works.
+        request.addHeader("Proxy-Authorization", String.format(
+                "Basic %s",
+                Base64.getUrlEncoder().encodeToString(String.format("%s:%s", proxyUsername, proxyPassword).getBytes())
+            )
+        );
     }
 
     public void disableSignatureRequestHeader() {
