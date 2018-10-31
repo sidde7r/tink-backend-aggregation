@@ -31,8 +31,10 @@ public class AsLhvPasswordAuthenticator implements PasswordAuthenticator {
                     throw LoginError.INCORRECT_CREDENTIALS.exception();
                 }
             } else {
+                // TODO maybe validate state here?
                 apiClient.getCurrencies();
                 apiClient.isAuthenticated();
+                apiClient.getUserData();
             }
         } catch (HttpResponseException e) {
             e.printStackTrace();

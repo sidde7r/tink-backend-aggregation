@@ -116,4 +116,7 @@ public class AccountTypeMapper {
         return verify(accountTypeKey, AccountTypes.CREDIT_CARD);
     }
 
+    public boolean isCreditCardAccount(AccountTypes type) {
+        return type == AccountTypes.CREDIT_CARD;
+    }
 }

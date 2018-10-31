@@ -1,24 +1,29 @@
 package se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.AsLhvConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class LoginResponse extends BaseResponse {
+    @JsonProperty("authentication")
     boolean authentication;
+    @JsonProperty("user_id")
     int userId;
 
+    @JsonIgnore
     public boolean isAuthenticated() {
         return authentication;
     }
 
-    @JsonGetter("user_id")
+    @JsonIgnore
     public int getUserId() {
         return userId;
     }
 
+    @JsonIgnore
     public boolean incorrectCredentials() {
         boolean result = false;
         if (error != null && !error.isEmpty()) {

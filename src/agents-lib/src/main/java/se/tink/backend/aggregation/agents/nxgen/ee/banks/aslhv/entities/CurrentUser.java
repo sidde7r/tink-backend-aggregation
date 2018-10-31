@@ -1,25 +1,31 @@
 package se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.entities;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class CurrentUser {
+    @JsonProperty("base_currency_id")
     int baseCurrencyId;
+    @JsonProperty("name")
     String name;
+    @JsonProperty("user_id")
     int userId;
 
-    @JsonGetter("base_currency_id")
+    @JsonIgnore
     public int getBaseCurrencyId() {
         return baseCurrencyId;
     }
 
-    @JsonGetter("user_id")
+    @JsonIgnore
     public int getUserId() {
         return userId;
     }
 
-    public String getName() {
-        return name;
+    @JsonIgnore
+    public Optional<String> getName() {
+        return Optional.ofNullable(name);
     }
 }

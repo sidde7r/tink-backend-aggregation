@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
 import java.util.Collections;
@@ -21,38 +22,28 @@ public class GetAccountTransactionsResponse extends BaseResponse {
     @JsonProperty("statement")
     private List<Statement> statements;
 
-    @JsonProperty("end_of_statement")
-    private boolean endOfStatement;
-
-    public List<Statement> getStatements() {
-        return statements;
-    }
-
-    public boolean isEndOfStatement() {
-        return endOfStatement;
-    }
-
+    @JsonIgnore
     private Optional<? extends Transaction> buildTransaction(
             final TransactionItem transaction,
             final AsLhvSessionStorage storage) {
-        Optional<Transaction> result = Optional.empty();
+        double amount = transaction.getAmount();
         Optional<String> currency = storage.getCurrency(transaction.getCurrencyId());
-        Optional<Double> amount = Optional.ofNullable(transaction)
-                .map(TransactionItem::getAmount);
-        Optional<Date> date = Optional.ofNullable(transaction)
-                .map(TransactionItem::getDate);
-        if (currency.isPresent() && date.isPresent() && amount.isPresent()) {
-            result = Optional.of(Transaction.builder()
-                    .setAmount(new Amount(currency.get(), amount.get()))
-                    .setDate(date.get())
-                    .setDescription(transaction.getDescription())
-                    .build());
-        } else {
-            // TODO Maybe log warning here?
+        Optional<Date> date = transaction.getDate();
+
+        if (!currency.isPresent() || !date.isPresent()) {
+            return Optional.empty();
         }
-        return result;
+
+        Optional<String> description = transaction.getDescription();
+
+        return Optional.of(Transaction.builder()
+                .setAmount(new Amount(currency.get(), amount))
+                .setDate(date.get())
+                .setDescription(description.isPresent() ? description.get(): "")
+                .build());
     }
 
+    @JsonIgnore
     public Collection<? extends Transaction> getTransactions(final AsLhvSessionStorage storage) {
         if (statements == null) {
             return Collections.emptyList();
@@ -60,10 +51,12 @@ public class GetAccountTransactionsResponse extends BaseResponse {
 
         return statements.stream()
                 .map(Statement::getTransactions)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .flatMap(Collection::stream)
                 .filter(Objects::nonNull)
                 .filter(TransactionItem::isCompleted)
-                .map(t -> buildTransaction(t, storage))
+                .map(transaction -> buildTransaction(transaction, storage))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toSet());

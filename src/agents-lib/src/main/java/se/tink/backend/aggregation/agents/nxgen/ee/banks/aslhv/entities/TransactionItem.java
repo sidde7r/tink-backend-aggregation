@@ -1,20 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
+import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class TransactionItem {
 
-    @JsonProperty("date")
-    private Date date;
-
     @JsonProperty("amount")
     private double amount;
-
-    @JsonProperty("description")
-    private String description;
 
     @JsonProperty("is_completed")
     private boolean completed;
@@ -22,23 +18,31 @@ public class TransactionItem {
     @JsonProperty("currency_id")
     private int currencyId;
 
-    public Date getDate() {
-        return date;
-    }
+    @JsonProperty("date")
+    private Date date;
+
+    @JsonProperty("description")
+    private String description;
 
     public double getAmount() {
         return amount;
     }
 
-    public String getDescription() {
-        return description;
+    public int getCurrencyId() {
+        return currencyId;
     }
 
     public boolean isCompleted() {
         return completed;
     }
 
-    public int getCurrencyId() {
-        return currencyId;
+    @JsonIgnore
+    public Optional<Date> getDate() {
+        return Optional.ofNullable(date);
+    }
+
+    @JsonIgnore
+    public Optional<String> getDescription() {
+        return Optional.ofNullable(description);
     }
 }

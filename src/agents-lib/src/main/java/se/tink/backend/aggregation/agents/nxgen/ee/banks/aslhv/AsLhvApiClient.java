@@ -2,8 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv;
 
 import java.util.Date;
 
+import java.util.Optional;
 import org.apache.http.HttpHeaders;
 
+import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.entities.CurrentUser;
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc.*;
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -44,10 +46,6 @@ public class AsLhvApiClient {
         return new URL(getUrl() + AsLhvConstants.URLS.AUTH_LOGOUT_ENDPOINT);
     }
 
-    private URL getGetUsersUrl() {
-        return new URL(getUrl() + AsLhvConstants.URLS.AUTH_GET_USERS_ENDPOINT);
-    }
-
     private URL getGetUserDataUrl() {
         return new URL(getUrl() + AsLhvConstants.URLS.GET_USER_DATA_ENDPOINT);
     }
@@ -69,8 +67,15 @@ public class AsLhvApiClient {
         requestBuilder.header(HttpHeaders.ACCEPT, AsLhvConstants.Header.ACCEPT_ALL);
         IsAuthenticatedResponse response = requestBuilder.post(IsAuthenticatedResponse.class);
         if (response.isAuthenticated()) {
-            storage.setCurrentUser(response.getCurrentUser().getName());
-            storage.setBaseCurrencyId(response.getCurrentUser().getBaseCurrencyId());
+            Optional<CurrentUser> currenUser = response.getCurrentUser();
+            if (currenUser.isPresent()) {
+                Optional<String> name = currenUser.get().getName();
+                int baseCurrencyId = currenUser.get().getBaseCurrencyId();
+                if (name.isPresent()) {
+                    storage.setCurrentUser(name.get());
+                }
+                storage.setBaseCurrencyId(baseCurrencyId);
+            }
         }
         return response;
     }
@@ -82,6 +87,9 @@ public class AsLhvApiClient {
                 .header(HttpHeaders.CONTENT_TYPE,  AsLhvConstants.Header.CONTENT_TYPE_FORM_URLENCODED)
                 .header(AsLhvConstants.Header.LHV_APPLICATION_LANGUAGE_HEADER, AsLhvConstants.Header.LHV_APPLICATION_LANUGAGE_US)
                 .post(GetUserDataResponse.class);
+        if (response.requestSuccessful()) {
+            storage.setUserData(response);
+        }
         return response;
     }
 
@@ -91,18 +99,13 @@ public class AsLhvApiClient {
                 .put(AsLhvConstants.Form.PASSWORD_PARAMETER, password)
                 .build();
         String serialized = form.serialize();
-        LoginResponse response = getBaseRequest(getLoginPasswordUrl())
+        return getBaseRequest(getLoginPasswordUrl())
                 .header(HttpHeaders.ACCEPT, AsLhvConstants.Header.ACCEPT_JSON)
                 .header(HttpHeaders.ACCEPT_LANGUAGE, AsLhvConstants.Header.ACCEPT_LANGUAGE)
                 .header(HttpHeaders.CONTENT_TYPE,  AsLhvConstants.Header.CONTENT_TYPE_FORM_URLENCODED)
                 .header(AsLhvConstants.Header.LHV_APPLICATION_LANGUAGE_HEADER, AsLhvConstants.Header.LHV_APPLICATION_LANUGAGE_US)
                 .body(serialized)
                 .post(LoginResponse.class);
-        if (response.isAuthenticated()) {
-            storage.setUserId(response.getUserId());
-        }
-
-        return response;
     }
 
     public GetCurrenciesResponse getCurrencies() {

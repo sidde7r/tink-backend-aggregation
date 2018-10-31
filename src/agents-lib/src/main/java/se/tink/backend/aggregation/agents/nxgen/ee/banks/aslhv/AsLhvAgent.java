@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.authenticator.AsLhvPasswordAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.fetcher.creditcard.AsLhvCreditCardAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.fetcher.creditcard.AsLhvCreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.fetcher.transactionalaccount.AsLhvTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.fetcher.transactionalaccount.AsLhvTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.session.AsLhvSessionHandler;
@@ -61,7 +63,16 @@ public class AsLhvAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.empty();
+        final AsLhvCreditCardTransactionFetcher transactionFetcher = new AsLhvCreditCardTransactionFetcher(apiClient);
+        return Optional.of(new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                new AsLhvCreditCardAccountFetcher(apiClient),
+                new TransactionFetcherController<>(
+                        this.transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(transactionFetcher)
+                )
+        ));
     }
 
     @Override

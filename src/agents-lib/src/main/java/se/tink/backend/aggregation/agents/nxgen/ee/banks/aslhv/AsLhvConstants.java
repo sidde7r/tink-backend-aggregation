@@ -19,6 +19,7 @@ public class AsLhvConstants {
         public static final String CURRENT_USER = "currentUser";
         public static final String CURRENCIES = "currencies";
         public static final String BASE_CURRENCY_ID = "baseCurrencyId";
+        public static final String USER_DATA = "userData";
     }
 
     public static class URLS {
@@ -33,7 +34,6 @@ public class AsLhvConstants {
         public static final String AUTH_IS_AUTHENTICATED_ENDPOINT = AUTH_ENDPOINT + "/is_authenticated" + JSON_ENDPOINT;
         public static final String AUTH_PASSWORD_ENDPOINT = AUTH_ENDPOINT + "/login_password" + JSON_ENDPOINT;
         public static final String AUTH_LOGOUT_ENDPOINT = AUTH_ENDPOINT + "/logout" + JSON_ENDPOINT;
-        public static final String AUTH_GET_USERS_ENDPOINT = AUTH_ENDPOINT + "/get_users" + JSON_ENDPOINT;
         public static final String BASE_URL = "www.lhv.ee";
     }
 
