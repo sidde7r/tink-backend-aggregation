@@ -6,7 +6,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Type;
 
 @Entity
-@Table(name = "cluster_configuration")
+@Table(name = "cluster_configurations")
 public class ClusterConfiguration {
     @Id
     private String clusterId;

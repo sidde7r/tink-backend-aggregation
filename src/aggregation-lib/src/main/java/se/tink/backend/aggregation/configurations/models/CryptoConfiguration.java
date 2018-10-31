@@ -6,7 +6,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Type;
 
 @Entity
-@Table(name = "crypto_configuration")
+@Table(name = "crypto_configurations")
 public class CryptoConfiguration {
     @EmbeddedId
     private CryptoConfigurationId cryptoConfigurationId;

@@ -6,16 +6,16 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import java.util.Map;
 import java.util.stream.Collectors;
-import se.tink.backend.common.config.ConfigurationsDao;
-import se.tink.backend.common.repository.mysql.aggregation.AggregationConfigurations;
+import se.tink.backend.aggregation.configurations.ConfigurationsDao;
+import se.tink.backend.aggregation.configurations.AggregationConfigurations;
+import se.tink.backend.aggregation.configurations.repositories.AggregatorConfigurationsRepository;
+import se.tink.backend.aggregation.configurations.repositories.ClientConfigurationsRepository;
+import se.tink.backend.aggregation.configurations.repositories.ClusterConfigurationsRepository;
 import se.tink.backend.common.repository.mysql.aggregation.aggregationcredentials.AggregationCredentialsRepository;
-import se.tink.backend.common.repository.mysql.aggregation.aggregatorconfigurations.AggregatorConfigurationsRepository;
-import se.tink.backend.common.repository.mysql.aggregation.clientconfigurations.ClientConfigurationsRepository;
-import se.tink.backend.common.repository.mysql.aggregation.clusterconfigurations.ClusterConfigurationsRepository;
 import se.tink.backend.common.repository.mysql.aggregation.clustercryptoconfiguration.ClusterCryptoConfigurationRepository;
-import se.tink.backend.common.repository.mysql.aggregation.clusterhostconfiguration.ClusterHostConfigurationRepository;
 import se.tink.backend.common.config.DatabaseConfiguration;
-import se.tink.backend.common.repository.mysql.aggregation.cryptoconfigurations.CryptoConfigurationsRepository;
+import se.tink.backend.aggregation.configurations.repositories.CryptoConfigurationsRepository;
+import se.tink.backend.common.repository.mysql.aggregation.clusterhostconfiguration.ClusterHostConfigurationRepository;
 import se.tink.backend.core.ClusterHostConfiguration;
 import se.tink.backend.guice.configuration.RepositoryModule;
 
@@ -38,7 +38,6 @@ public class AggregationSingleClientRepositoryModule extends RepositoryModule {
         bindSpringBean(AggregatorConfigurationsRepository.class);
         bindSpringBean(ClusterConfigurationsRepository.class);
         bind(ConfigurationsDao.class).to(AggregationConfigurations.class).in(Scopes.SINGLETON);
-
     }
 
     @Provides

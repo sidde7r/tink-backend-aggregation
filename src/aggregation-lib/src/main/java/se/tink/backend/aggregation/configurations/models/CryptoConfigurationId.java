@@ -41,10 +41,14 @@ public class CryptoConfigurationId implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
+        if (this == o) {
             return true;
-        if (o == null || getClass() != o.getClass())
+        }
+
+        if (o == null || getClass() != o.getClass()) {
             return false;
+        }
+
         CryptoConfigurationId cryptoId = (CryptoConfigurationId) o;
         return keyId == cryptoId.keyId &&
                 Objects.equals(cryptoId, cryptoId.cryptoId);

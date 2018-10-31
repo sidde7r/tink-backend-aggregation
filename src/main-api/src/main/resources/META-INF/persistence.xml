@@ -40,10 +40,10 @@
 		<class>se.tink.backend.core.AggregationCredentials</class>
 		<class>se.tink.backend.core.ClusterHostConfiguration</class>
 		<class>se.tink.backend.core.ClusterCryptoConfiguration</class>
-		<class>se.tink.backend.core.CryptoConfigurations</class>
-		<class>se.tink.backend.core.ClientConfigurations</class>
-		<class>se.tink.backend.core.AggregatorConfigurations</class>
-		<class>se.tink.backend.core.ClusterConfigurations</class>
+		<class>se.tink.backend.aggregation.configurations.models.CryptoConfiguration</class>
+		<class>se.tink.backend.aggregation.configurations.models.ClientConfiguration</class>
+		<class>se.tink.backend.aggregation.configurations.models.AggregatorConfiguration</class>
+		<class>se.tink.backend.aggregation.configurations.models.ClusterConfiguration</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<property name="hibernate.hbm2ddl.auto" value="validate" />
@@ -55,7 +55,6 @@
 			<property name="hibernate.connection.useUnicode" value="true" />
 		</properties>
 	</persistence-unit>
-
 
 	<!-- !!! make sure to map persistence unit names in PersistenceUnit enum. !!! -->
 	<persistence-unit name="tink-provider-api"

@@ -6,7 +6,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Type;
 
 @Entity
-@Table(name = "aggregator_configuration")
+@Table(name = "aggregator_configurations")
 public class AggregatorConfiguration {
     @Id
     private String aggregatorId;

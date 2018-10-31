@@ -1,4 +1,4 @@
-package se.tink.backend.core;
+package se.tink.backend.aggregation.configurations.models;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -6,7 +6,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Type;
 
 @Entity
-@Table(name = "client_configuration")
+@Table(name = "client_configurations")
 public class ClientConfiguration {
     @Id
     private String clientId;
