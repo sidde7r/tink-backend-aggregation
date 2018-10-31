@@ -70,10 +70,10 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         request.removeHeaders("Cookie2");
         mergeCookieHeaders(request);
 
-        if (isProxyRequest(request)) {
+        if (isHttpProxyRequest(request)) {
             addProxyAuthorizationHeader(request);
         } else if (shouldAddRequestSignature) {
-            // Do not add a signature header on the proxy request (CONNECT).
+            // Do not add a signature header on the proxy requests.
             // This is because we don't want to leak unnecessary information to proxy providers.
             addRequestSignature(request);
         }
@@ -81,7 +81,7 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         return super.execute(request, conn, context);
     }
 
-    private boolean isProxyRequest(HttpRequest request) {
+    private boolean isHttpProxyRequest(HttpRequest request) {
         return "connect".equalsIgnoreCase(request.getRequestLine().getMethod());
     }
 
