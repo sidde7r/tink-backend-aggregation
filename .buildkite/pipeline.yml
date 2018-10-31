@@ -3,51 +3,45 @@ steps:
   - name: ':white_check_mark: Test'
     branches: '!master'
     command: .buildkite/run-unit-tests.sh
-    env:
-      SSH_AUTH_SOCK:
-      BUILDKITE_DOCKER_COMPOSE_CONTAINER: app
-      BUILDKITE_DOCKER_COMPOSE_FILE: docker/docker-compose.bazel.yml
+    agents:
+      queue: new
+    plugins:
+      docker-compose#v2.5.1:
+        run: "app"
+        config: "docker/docker-compose.bazel.yml"
 
   - name: ":kubernetes: Helm Lint"
-    command: /go/bin/kubernetes-generator --mode lint --repo /tink-backend
-    env:
-      BUILDKITE_DOCKER_COMPOSE_CONTAINER: app
-      BUILDKITE_DOCKER_COMPOSE_FILE: docker/docker-compose.helm.yml
+    branches: '!master'
+    command: /go/bin/kubernetes-generator --mode lint --repo .
+    agents:
+      queue: new
+    plugins:
+      docker#v2.0.0:
+        image: gcr.io/tink-containers/kubernetes-generator:latest
+        always-pull: true
 
   - wait
 
   - name: ':docker: Build and Upload'
     branches: 'staging'
-    command: |
-      export PATH="/usr/local/bin/google-cloud-sdk/bin:$PATH";
-      echo $GOOGLE_CLOUD_ACCOUNT_JSON | base64 --decode | gcloud auth activate-service-account --key-file=-;
-
-      bazel build docker:bundle.tar;
-      docker load -i bazel-bin/docker/bundle.tar;
-
-      docker tag gcr.io/tink-containers/tink-backend-provider-configuration:latest gcr.io/tink-containers/tink-backend-provider-configuration:$VERSION;
-      gcloud docker -- push gcr.io/tink-containers/tink-backend-provider-configuration:$VERSION;
-
-    env:
-      SSH_AUTH_SOCK:
-      BUILDKITE_DOCKER_COMPOSE_CONTAINER: app
-      BUILDKITE_DOCKER_COMPOSE_FILE: docker/docker-compose.bazel.yml
+    command: .buildkite/build-and-push-docker.sh
+    agents:
+      queue: new
+    plugins:
+      docker-compose#v2.5.1:
+        run: "app"
+        config: "docker/docker-compose.bazel.yml"
     timeout_in_minutes: 30
 
   - name: ':debian: Build and Upload'
     branches: 'staging'
-    command: |
-      .buildkite/generate-version-file.sh
-      echo "--- Build deb packages"
-      bazel --batch build deb:all
-      mkdir -p debs/
-      cp bazel-bin/deb/tink-backend-* debs/
-      .buildkite/sign-debs.sh
-      .buildkite/s3-upload.sh
-    env:
-      SSH_AUTH_SOCK:
-      BUILDKITE_DOCKER_COMPOSE_CONTAINER: app
-      BUILDKITE_DOCKER_COMPOSE_FILE: docker/docker-compose.bazel.yml
+    command: .buildkite/build-and-upload-deb.sh
+    agents:
+      queue: new
+    plugins:
+      docker-compose#v2.5.1:
+        run: "app"
+        config: "docker/docker-compose.bazel.yml"
     timeout_in_minutes: 30
 
   - wait
