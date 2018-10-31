@@ -25,7 +25,8 @@
           "name":"password",
           "description":"Password",
           "masked":true,
-          "numeric":false
+          "numeric":false,
+          "sensitive":true
         }
       ]
     }
