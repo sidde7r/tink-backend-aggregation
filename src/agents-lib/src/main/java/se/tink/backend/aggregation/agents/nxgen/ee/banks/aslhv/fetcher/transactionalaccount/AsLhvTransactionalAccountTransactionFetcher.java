@@ -11,10 +11,10 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
-public class AsLhvTransactionFetcher implements TransactionDatePaginator<TransactionalAccount> {
+public class AsLhvTransactionalAccountTransactionFetcher implements TransactionDatePaginator<TransactionalAccount> {
     private final AsLhvApiClient apiClient;
 
-    public AsLhvTransactionFetcher(AsLhvApiClient apiClient) {
+    public AsLhvTransactionalAccountTransactionFetcher(AsLhvApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
