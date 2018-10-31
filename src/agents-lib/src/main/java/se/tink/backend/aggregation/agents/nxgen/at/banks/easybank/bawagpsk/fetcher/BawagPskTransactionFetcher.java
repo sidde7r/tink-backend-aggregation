@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.fetcher.transactional;
+package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.fetcher;
 
 import java.time.ZoneId;
 import java.util.Collection;
@@ -14,10 +14,11 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.G
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
-public class BawagPskTransactionFetcher implements TransactionDatePaginator<TransactionalAccount> {
+public final class BawagPskTransactionFetcher<AcccountT extends Account>
+        implements TransactionDatePaginator<AcccountT> {
 
     private final BawagPskApiClient apiClient;
 
@@ -27,21 +28,21 @@ public class BawagPskTransactionFetcher implements TransactionDatePaginator<Tran
 
     @Override
     public PaginatorResponse getTransactionsFor(
-            final TransactionalAccount account,
+            final AcccountT account,
             final Date fromDate,
             final Date toDate) {
 
         final String errorMsg = "Could not find products from session storage necessary for fetching transactions";
         final Products products = BawagPskUtils.xmlToEntity(
-                apiClient.getFromStorage(BawagPskConstants.Storage.PRODUCTS.name())
+                apiClient.getFromSessionStorage(BawagPskConstants.Storage.PRODUCTS.name())
                         .orElseThrow(() -> new IllegalStateException(errorMsg)), Products.class);
 
         final ProductID productID = products.getProductIDByAccountNumber(account.getAccountNumber())
                 .orElseThrow(IllegalStateException::new);
-        final String sessionID = apiClient.getFromStorage(
+        final String sessionID = apiClient.getFromSessionStorage(
                 BawagPskConstants.Storage.SERVER_SESSION_ID.name())
                 .orElseThrow(IllegalStateException::new);
-        final String qid = apiClient.getFromStorage(
+        final String qid = apiClient.getFromSessionStorage(
                 BawagPskConstants.Storage.QID.name())
                 .orElseThrow(IllegalStateException::new);
 

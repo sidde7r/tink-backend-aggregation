@@ -17,6 +17,8 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entit
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.GetAccountInformationListResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.OK;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.ProductID;
+import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.rpc.AccountTypes;
@@ -74,9 +76,26 @@ public final class GetAccountInformationListResponse {
         );
     }
 
-    public Collection<TransactionalAccount> toTransactionalAccounts(final Map<String, String> productCodes) {
+    // Too dumb and lazy to find a way to eliminate these dupes
+    public Collection<TransactionalAccount> extractTransactionalAccounts(final Map<String, String> productCodes) {
         return getAccountInfoList().stream()
                 .map(accInfo -> toTransactionalAccount(accInfo, productCodes.get(accInfo.getAccountNumber())))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toSet());
+    }
+
+    public Collection<CreditCardAccount> extractCreditCardAccounts(final Map<String, String> productCodes) {
+        return getAccountInfoList().stream()
+                .map(accInfo -> toCreditCardAccount(accInfo, productCodes.get(accInfo.getAccountNumber())))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toSet());
+    }
+
+    public Collection<LoanAccount> extractLoanAccounts(final Map<String, String> productCodes) {
+        return getAccountInfoList().stream()
+                .map(accInfo -> toLoanAccount(accInfo, productCodes.get(accInfo.getAccountNumber())))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toSet());
@@ -85,28 +104,65 @@ public final class GetAccountInformationListResponse {
     private static Optional<TransactionalAccount> toTransactionalAccount(
             final AccountInfo accountInfo,
             final String productCode) {
-
-        final Optional<AccountTypes> accountType = inferAccountType(
-                productCode,
-                accountInfo.getProductID().getProductType()
-        );
-
-        if (!accountType.isPresent()) {
-            return Optional.empty();
-        }
-
-        return Optional.of(TransactionalAccount.builder(
-                accountType.get(),
+        return inferAccountType(productCode, accountInfo.getProductID().getProductType())
+                .filter(type -> type == AccountTypes.CHECKING || type == AccountTypes.SAVINGS)
+                .map(type -> TransactionalAccount.builder(
+                        type,
                         accountInfo.getAccountNumber(),
                         new Amount(
-                                accountInfo.getAmountEntity().getCurrency(),
-                                accountInfo.getAmountEntity().getAmount()
+                                accountInfo.getCurrentBalanceEntity().getCurrency(),
+                                accountInfo.getCurrentBalanceEntity().getAmount()
                         )
                 )
-                .setAccountNumber(accountInfo.getAccountNumber())
-                .addIdentifier(getIban(accountInfo.getProductID()))
-                .setHolderName(new HolderName(accountInfo.getProductID().getAccountOwner().trim()))
-                .build());
+                        .setAccountNumber(accountInfo.getAccountNumber())
+                        .addIdentifier(getIban(accountInfo.getProductID()))
+                        .setHolderName(new HolderName(accountInfo.getProductID().getAccountOwner().trim()))
+                        .build());
+
+    }
+
+    private static Optional<CreditCardAccount> toCreditCardAccount(
+            final AccountInfo accountInfo,
+            final String productCode) {
+
+        return inferAccountType(productCode, accountInfo.getProductID().getProductType())
+                .filter(type -> type == AccountTypes.CREDIT_CARD)
+                .map(type -> CreditCardAccount.builder(
+                        accountInfo.getAccountNumber(),
+                        new Amount(
+                                accountInfo.getCurrentSaldoEntity().getCurrency(),
+                                accountInfo.getCurrentSaldoEntity().getAmount()
+                        ),
+                        new Amount(
+                                accountInfo.getDisposableBalanceEntity().getCurrency(),
+                                accountInfo.getDisposableBalanceEntity().getAmount()
+                        )
+                )
+                        .setAccountNumber(accountInfo.getAccountNumber())
+                        .addIdentifier(getIban(accountInfo.getProductID()))
+                        .setHolderName(new HolderName(accountInfo.getProductID().getAccountOwner().trim()))
+                        .build());
+
+    }
+
+    private static Optional<LoanAccount> toLoanAccount(
+            final AccountInfo accountInfo,
+            final String productCode) {
+
+        return inferAccountType(productCode, accountInfo.getProductID().getProductType())
+                .filter(type -> type == AccountTypes.LOAN)
+                .map(type -> LoanAccount.builder(
+                        accountInfo.getAccountNumber(),
+                        new Amount(
+                                accountInfo.getCurrentBalanceEntity().getCurrency(),
+                                accountInfo.getCurrentBalanceEntity().getAmount()
+                        )
+                )
+                        .setAccountNumber(accountInfo.getAccountNumber())
+                        .addIdentifier(getIban(accountInfo.getProductID()))
+                        .setHolderName(new HolderName(accountInfo.getProductID().getAccountOwner().trim()))
+                        .build());
+
     }
 
     /**
@@ -117,29 +173,9 @@ public final class GetAccountInformationListResponse {
      * @return Optional.empty() if the product is not a transactional account (e.g. credit card, loan)
      */
     private static Optional<AccountTypes> inferAccountType(final String productCode, final String productType) {
-        switch (productCode.charAt(0)) {
-        case 'B':
-            return Optional.of(AccountTypes.CHECKING);
-        case 'D':
-            return Optional.of(AccountTypes.SAVINGS);
-        }
-
-        logger.error(
-                "{} - Account type could not be inferred from product code '{}'. Expected prefix B or D. Inferring instead from product type '{}'",
-                BawagPskConstants.LogTags.TRANSACTION_UNKNOWN_PRODUCT_CODE, productCode, productType);
-
-        switch (productType.toUpperCase()) {
-        case "CHECKING":
-            return Optional.of(AccountTypes.CHECKING);
-        case "SAVINGS":
-            return Optional.of(AccountTypes.SAVINGS);
-        default:
-            logger.error(
-                    "{} - Account type could not be inferred from product type '{}'. Expected 'CHECKING' or 'SAVINGS'.",
-                    BawagPskConstants.LogTags.TRANSACTION_UNKNOWN_PRODUCT_TYPE, productType);
-        }
-
-        // Assuming this is a non-transactional account
-        return Optional.empty();
+        // If we cannot infer from product code, fallback to product type
+        return BawagPskConstants.PRODUCT_CODE_MAPPER.translate(productCode)
+                .map(Optional::of)
+                .orElseGet(() -> BawagPskConstants.PRODUCT_TYPE_MAPPER.translate(productType));
     }
 }

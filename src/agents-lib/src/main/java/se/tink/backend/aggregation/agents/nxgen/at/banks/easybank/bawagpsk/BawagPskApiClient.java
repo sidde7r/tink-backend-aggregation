@@ -1,10 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk;
 
+import com.google.common.base.Charsets;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Envelope;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.GetAccountInformationListResponse;
@@ -30,8 +34,11 @@ public class BawagPskApiClient {
     private final String baseUrl;
     private final String bankName;
 
-    public BawagPskApiClient(final TinkHttpClient client, final SessionStorage storage,
-            final PersistentStorage persistentStorage, final Provider provider) {
+    public BawagPskApiClient(
+            final TinkHttpClient client,
+            final SessionStorage storage,
+            final PersistentStorage persistentStorage,
+            final Provider provider) {
         this.client = client;
         this.storage = storage;
         this.persistentStorage = persistentStorage;
@@ -60,7 +67,15 @@ public class BawagPskApiClient {
 
     public LoginResponse login(final String requestString) throws HttpResponseException {
         final RequestBuilder requestBuilder = getRequest();
-        final LoginResponse response = new LoginResponse(requestBuilder.post(Envelope.class, requestString));
+
+        final String responseString = requestBuilder
+                .body(requestString)
+                .post(String.class);
+
+        final Envelope envelope = BawagPskUtils.xmlToEntity(responseString, Envelope.class);
+
+        final LoginResponse response = new LoginResponse(envelope);
+
         if (response.requestWasSuccessful()) {
             storage.put(BawagPskConstants.Storage.SERVER_SESSION_ID.name(), response.getServerSessionID());
             storage.put(BawagPskConstants.Storage.QID.name(), response.getQid());
@@ -87,7 +102,7 @@ public class BawagPskApiClient {
         storage.clear();
     }
 
-    public Optional<String> getFromStorage(final String key) {
+    public Optional<String> getFromSessionStorage(final String key) {
         return Optional.ofNullable(storage.get(key));
     }
 
@@ -99,18 +114,37 @@ public class BawagPskApiClient {
     }
 
     public GetAccountInformationListResponse getGetAccountInformationListResponse(final String requestString) {
-        final Envelope response = getRequest()
-                .post(Envelope.class, requestString);
-        return new GetAccountInformationListResponse(response);
+        final String responseString = getRequest()
+                .body(requestString)
+                .post(String.class);
+
+        final Envelope envelope = BawagPskUtils.xmlToEntity(responseString, Envelope.class);
+
+        // TODO maybe not appropriate to store this in session storage
+        storage.put(BawagPskConstants.Storage.ACCOUNTS_RESPONSE.name(), responseString);
+
+        return new GetAccountInformationListResponse(envelope);
+    }
+
+    private static String readFileContents(final String path) {
+        try {
+            return new String(FileUtils.readFileToByteArray(new File(path)), Charsets.UTF_8);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     public GetAccountStatementItemsResponse getGetAccountStatementItemsResponse(final String requestString) {
-        final Envelope response = getRequest()
-                .post(Envelope.class, requestString);
-        return new GetAccountStatementItemsResponse(response);
+        final String response = getRequest()
+                .body(requestString)
+                .post(String.class);
+
+        final Envelope envelope = BawagPskUtils.xmlToEntity(response, Envelope.class);
+
+        return new GetAccountStatementItemsResponse(envelope);
     }
 
-    public Map<String,String> getProductCodes() {
+    public Map<String, String> getProductCodes() {
         final String json = persistentStorage.get(BawagPskConstants.Storage.PRODUCT_CODES.name());
         return SerializationUtils.deserializeFromString(json, (new HashMap<String, String>()).getClass());
     }
