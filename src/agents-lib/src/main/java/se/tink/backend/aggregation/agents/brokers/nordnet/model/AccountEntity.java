@@ -52,12 +52,32 @@ public class AccountEntity {
         return accountNumber;
     }
 
+    /**
+     * The amount of cash in the account minus what is borrowed, but those numbers are not directly available.
+     * Had to guess a bit here. The exact meaning of 'pawn value', 'loan limit', 'collateral', 'account credit'
+     * and others is not known.
+     */
     public double getCashBalance() {
-        return info.getAccountSum().getValue();
+
+        // Essentially 'available cash' + 'remaining credit'
+        double tradingPower = info.getTradingPower();
+
+        // Approwed/full credit (Possible alternative here is the 'loan limit')
+        double pawnValue = info.getPawnValue();
+
+        // This should be: 'available cash' - 'actually utilised credit'
+        double balance = tradingPower - pawnValue;
+
+        // If this account/portfolio is used as collateral for some loan, and the market value of the investments don't
+        // cover the amount, then the trading power has been decreased by the remaining part.
+        // (Not 100% sure about the logic here.)
+        double cashCollateral = Math.max(info.getCollateral() - info.getFullMarketvalue(), 0.0);
+
+        return balance + cashCollateral;
     }
 
     public double getMarketValue() {
-        return info.getFullMarketvalue().getValue();
+        return info.getFullMarketvalue();
     }
 
     public String getName() {

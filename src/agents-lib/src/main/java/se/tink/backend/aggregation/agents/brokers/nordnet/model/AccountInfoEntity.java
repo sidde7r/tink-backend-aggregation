@@ -51,12 +51,26 @@ public class AccountInfoEntity {
         return accountId;
     }
 
-    public AmountEntity getAccountSum() {
-        return accountSum;
+
+    public double getAccountSum() {
+        return accountSum.getValue();
     }
 
-    public AmountEntity getFullMarketvalue() {
-        return fullMarketvalue;
+
+    public double getFullMarketvalue() {
+        return fullMarketvalue.getValue();
+    }
+
+    public double getCollateral() {
+        return collateral.getValue();
+    }
+
+    public double getPawnValue() {
+        return pawnValue.getValue();
+    }
+
+    public double getTradingPower() {
+        return tradingPower.getValue();
     }
 
     @Override
