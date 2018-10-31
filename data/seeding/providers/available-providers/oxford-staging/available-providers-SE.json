@@ -62,6 +62,7 @@
     "swedbank-bankid",
     "swedbank-bankid-youth",
     "volkswagenkortet-bankid",
-    "volvofinans-bankid"
+    "volvofinans-bankid",
+    "swedbank-payments-revamp-bankid"
   ]
 }
