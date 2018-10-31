@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.nxgen.agents;
 
+import com.google.common.base.Strings;
 import java.security.Security;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -39,6 +41,8 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
+import se.tink.backend.common.config.IntegrationsConfiguration;
+import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.i18n.Catalog;
@@ -86,6 +90,27 @@ public abstract class NextGenerationAgent extends AbstractAgent implements Refre
                 request.isManual(), request.getType());
 
         configureHttpClient(client);
+    }
+
+    protected void setMultiIpGateway(ServiceConfiguration configuration) {
+        IntegrationsConfiguration integrationsConfiguration = configuration.getIntegrations();
+        if (Objects.isNull(integrationsConfiguration)) {
+            log.warn("Proxy-setup: integrationsConfiguration is null.");
+            return;
+        }
+
+        String proxyUri = integrationsConfiguration.getProxyUri();
+        if (Strings.isNullOrEmpty(proxyUri)) {
+            log.warn("Proxy-setup: proxyUri is null or empty.");
+            return;
+        }
+
+        // The username (userId) and password (credentialsId) are used as a key in the proxy
+        // to select the public IP address in the proxy.
+        // The values themselves does not matter, as long as the same credentialsId always
+        // is routed from the same public IP.
+        client.setProductionProxy(proxyUri, credentials.getUserId(), credentials.getId());
+        log.info("Proxy-setup: successfully attached proxy.");
     }
 
     @Override
