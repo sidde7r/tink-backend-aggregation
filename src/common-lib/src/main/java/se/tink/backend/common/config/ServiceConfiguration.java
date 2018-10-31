@@ -75,6 +75,9 @@ public class ServiceConfiguration extends Configuration {
     @JsonProperty
     private AggregationDevelopmentConfiguration developmentConfiguration = new AggregationDevelopmentConfiguration();
 
+    @JsonProperty
+    private boolean isMultiClientDevelopment = false;
+
     public AbnAmroConfiguration getAbnAmroStaging() {
         return abnAmroStaging;
     }
@@ -178,5 +181,9 @@ public class ServiceConfiguration extends Configuration {
 
     public AggregationDevelopmentConfiguration getDevelopmentConfiguration() {
         return developmentConfiguration;
+    }
+
+    public boolean isMultiClientDevelopment() {
+        return isMultiClientDevelopment;
     }
 }

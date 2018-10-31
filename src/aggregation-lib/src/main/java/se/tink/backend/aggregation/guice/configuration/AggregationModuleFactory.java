@@ -9,36 +9,47 @@ import se.tink.backend.guice.configuration.ConfigurationModule;
 import se.tink.libraries.discovery.CoordinationModule;
 
 public class AggregationModuleFactory {
+
     public static ImmutableList<Module> build(ServiceConfiguration configuration, Environment environment) {
         if (configuration.isDevelopmentMode()) {
-            return buildForDevelopment(configuration, environment);
+            return buildForDevelopment(configuration, environment).build();
         }
 
-        return buildForProduction(configuration, environment);
+        return buildForProduction(configuration, environment).build();
     }
 
-    private static ImmutableList<Module> buildForDevelopment(ServiceConfiguration configuration,
-            Environment environment) {
-        return ImmutableList.of(
-                new CommonModule(),
-                new CoordinationModule(),
-                new ConfigurationModule(configuration),
-                new AggregationDevelopmentRepositoryModule(configuration.getDatabase(),
-                        configuration.getDevelopmentConfiguration()),
-                new AggregationModule(configuration, environment.jersey()),
-                new QueueModule(configuration.getSqsQueueConfiguration(), environment.lifecycle())
-        );
+    private static ImmutableList.Builder<Module> baseBuilder(ServiceConfiguration configuration,
+                                                             Environment environment) {
+        return new ImmutableList.Builder<Module>()
+                .add(new CommonModule())
+                .add(new CoordinationModule())
+                .add(new ConfigurationModule(configuration))
+                .add(new AggregationModule(configuration, environment.jersey()))
+                .add(new QueueModule(configuration.getSqsQueueConfiguration(), environment.lifecycle()));
     }
 
-    private static ImmutableList<Module> buildForProduction(ServiceConfiguration configuration,
+    private static ImmutableList.Builder<Module> buildForDevelopment(ServiceConfiguration configuration,
             Environment environment) {
-        return ImmutableList.of(
-                new CommonModule(),
-                new CoordinationModule(),
-                new AggregationRepositoryModule(configuration.getDatabase()),
-                new ConfigurationModule(configuration),
-                new AggregationModule(configuration, environment.jersey()),
-                new QueueModule(configuration.getSqsQueueConfiguration(), environment.lifecycle())
-        );
+
+        if (configuration.isMultiClientDevelopment()){
+            return baseBuilder(configuration, environment).add(
+                    new AggregationDevelopmentMultiClientRepositoryModule(configuration.getDatabase()));
+        }
+
+        return baseBuilder(configuration, environment).add(
+                new AggregationDevelopmentSingleClientRepositoryModule(configuration.getDatabase(),
+                        configuration.getDevelopmentConfiguration()));
+    }
+
+    private static ImmutableList.Builder<Module> buildForProduction(ServiceConfiguration configuration,
+            Environment environment) {
+
+        if (configuration.isMultiClientDevelopment()) {
+            return baseBuilder(configuration, environment).add(
+                    new AggregationMultiClientRepositoryModule(configuration.getDatabase()));
+        }
+        
+        return baseBuilder(configuration, environment).add(
+                new AggregationSingleClientRepositoryModule(configuration.getDatabase()));
     }
 }

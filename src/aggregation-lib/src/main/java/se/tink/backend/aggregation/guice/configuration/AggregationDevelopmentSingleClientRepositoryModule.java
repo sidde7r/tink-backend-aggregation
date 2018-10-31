@@ -13,11 +13,15 @@ import se.tink.backend.common.repository.mysql.aggregation.clusterhostconfigurat
 import se.tink.backend.core.ClusterHostConfiguration;
 import se.tink.backend.guice.configuration.RepositoryModule;
 
-public class AggregationDevelopmentRepositoryModule extends RepositoryModule {
+/*
+    database configuration for running aggregation locally.
+    intended for cluster hosting only 1 client structure
+ */
+public class AggregationDevelopmentSingleClientRepositoryModule extends RepositoryModule {
     private AggregationDevelopmentConfiguration developmentConfiguration;
 
-    AggregationDevelopmentRepositoryModule(DatabaseConfiguration databaseConfiguration,
-            AggregationDevelopmentConfiguration developmentConfiguration) {
+    AggregationDevelopmentSingleClientRepositoryModule(DatabaseConfiguration databaseConfiguration,
+                                                       AggregationDevelopmentConfiguration developmentConfiguration) {
         super(databaseConfiguration);
         this.developmentConfiguration = developmentConfiguration;
     }
