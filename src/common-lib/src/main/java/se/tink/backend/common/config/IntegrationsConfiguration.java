@@ -14,6 +14,9 @@ public class IntegrationsConfiguration {
     @JsonProperty
     private MonzoConfiguration monzoConfiguration;
 
+    @JsonProperty
+    private String proxyUri;
+
     public SbabIntegrationConfiguration getSbab() {
         return sbab;
     }
@@ -24,5 +27,9 @@ public class IntegrationsConfiguration {
 
     public MonzoConfiguration getMonzoConfiguration() {
         return monzoConfiguration;
+    }
+
+    public String getProxyUri() {
+        return proxyUri;
     }
 }
