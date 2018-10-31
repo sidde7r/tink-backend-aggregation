@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 // According to "OpenID Connect Discovery 1.0"
 
@@ -156,8 +155,4 @@ public class WellKnownResponse {
         return requestParameterSupported;
     }
 
-    @Override
-    public String toString() {
-        return SerializationUtils.serializeToString(this);
-    }
 }
