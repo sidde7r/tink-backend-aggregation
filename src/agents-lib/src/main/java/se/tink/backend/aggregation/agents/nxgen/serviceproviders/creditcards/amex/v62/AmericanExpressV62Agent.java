@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.backend.common.config.SignatureKeyPair;
 
 public class AmericanExpressV62Agent extends NextGenerationAgent {
@@ -34,6 +35,15 @@ public class AmericanExpressV62Agent extends NextGenerationAgent {
         super(request, context, signatureKeyPair);
         this.apiClient = new AmericanExpressV62ApiClient(client, sessionStorage, persistentStorage, config);
         this.config = config;
+    }
+
+    @Override
+    public void setConfiguration(ServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
+
+        // Amex is throttling how many requests we can send per IP address.
+        // Use this multiIp gateway to originate from different IP addresses.
+        setMultiIpGateway(configuration);
     }
 
     @Override
