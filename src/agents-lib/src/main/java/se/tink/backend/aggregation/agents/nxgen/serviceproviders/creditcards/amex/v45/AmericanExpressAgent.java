@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.Field;
+import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.backend.common.config.SignatureKeyPair;
 import se.tink.backend.utils.StringUtils;
 
@@ -40,6 +41,15 @@ public class AmericanExpressAgent extends NextGenerationAgent {
         String uid = credentials.getField(Field.Key.USERNAME);
         String deviceId = StringUtils.hashAsUUID(uid);
         sessionStorage.put(AmericanExpressConstants.Tags.HARDWARE_ID, deviceId);
+    }
+
+    @Override
+    public void setConfiguration(ServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
+
+        // Amex is throttling how many requests we can send per IP address.
+        // Use this multiIp gateway to originate from different IP addresses.
+        setMultiIpGateway(configuration);
     }
 
     @Override
