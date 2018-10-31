@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.entities.HandelsbankenRecipient;
@@ -42,5 +43,14 @@ public class PendingTransaction extends BaseResponse {
 
     public Optional<URL> toPaymentDetails() {
         return searchLink(HandelsbankenConstants.URLS.Links.PAYMENT_DETAIL);
+    }
+
+    @JsonIgnore
+    public Amount getTinkAmount() {
+        if (amount == null) {
+            return null;
+        }
+
+        return amount.asAmount();
     }
 }
