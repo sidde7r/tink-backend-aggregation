@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,6 +19,10 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.authenticator
 import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.authenticator.entities.LoginUserNamePasswordForm;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.authenticator.entities.MainForm;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.authenticator.entities.MobileDevicesRequest;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.fetcher.entities.MainFetchTransactionsForDatesActionForm;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.fetcher.entities.MainFetchTransactionsForDatesChangeForm;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.fetcher.entities.MainFetchTransactionsGeneralCustomForm;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.fetcher.entities.MainSelectAccountForm;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -245,10 +252,57 @@ public class VolksbankApiClient {
     }
 
     public HttpResponse postMain() {
-        return constructPostRequest(VolksbankConstants.Url.MAIN,
+        HttpResponse postMainResposne = constructPostRequest(VolksbankConstants.Url.MAIN,
                 VolksbankConstants.Url.DASHBOARD)
                 .body(new MainForm(sessionStorage.get(VolksbankConstants.Storage.VIEWSTATE)))
                 .post(HttpResponse.class);
+        extractViewState(postMainResposne);
+        return postMainResposne;
+    }
+
+    public void postMainSelectAccount(String accountId) {
+        List<String> productIds = sessionStorage
+                .get(VolksbankConstants.Storage.PRODUCT_ID, new TypeReference<List<String>>() {
+                }).get();
+
+        String commonId = accountId.substring(accountId.length() - 8);
+
+        String targetProductId = productIds.stream().filter(productId -> productId.contains(commonId)).findFirst()
+                .orElseThrow(IllegalStateException::new);
+
+        HttpResponse postMainSelectAccountResponse = constructPostRequest(VolksbankConstants.Url.MAIN,
+                VolksbankConstants.Url.DASHBOARD)
+                .body(new MainSelectAccountForm(sessionStorage.get(VolksbankConstants.Storage.VIEWSTATE),
+                        targetProductId
+                ))
+                .post(HttpResponse.class);
+        extractViewState(postMainSelectAccountResponse);
+    }
+
+    public void postMainFetchTransactionGeneralCustom() {
+        HttpResponse response = constructPostRequest(VolksbankConstants.Url.MAIN, VolksbankConstants.Url.GIROKONTO)
+                .body(new MainFetchTransactionsGeneralCustomForm(
+                        sessionStorage.get(VolksbankConstants.Storage.VIEWSTATE)))
+                .post(HttpResponse.class);
+        extractViewState(response);
+    }
+
+    public void postMainFetchTransactionForDateChange(Date start, Date end) {
+        HttpResponse response = constructPostRequest(VolksbankConstants.Url.MAIN, VolksbankConstants.Url.GIROKONTO)
+                .body(new MainFetchTransactionsForDatesChangeForm(
+                        sessionStorage.get(VolksbankConstants.Storage.VIEWSTATE), start, end))
+                .post(HttpResponse.class);
+        extractViewState(response);
+    }
+
+    public HttpResponse postMainFetchTransactionForDateAction(Date start, Date end) {
+        HttpResponse postFetchTransactionForDataResponse = constructPostRequest(VolksbankConstants.Url.MAIN,
+                VolksbankConstants.Url.GIROKONTO)
+                .body(new MainFetchTransactionsForDatesActionForm(
+                        sessionStorage.get(VolksbankConstants.Storage.VIEWSTATE), start, end))
+                .post(HttpResponse.class);
+        extractViewState(postFetchTransactionForDataResponse);
+        return postFetchTransactionForDataResponse;
     }
 
     public void logout() {

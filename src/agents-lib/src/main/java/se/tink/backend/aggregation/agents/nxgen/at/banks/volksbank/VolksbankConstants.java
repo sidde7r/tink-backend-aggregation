@@ -6,6 +6,7 @@ import java.util.Locale;
 
 public final class VolksbankConstants {
 
+    public static final String BRACKET = "[]";
     public static final String ONE = "1";
     public static final String COLOMN = ":";
     public static final String UTF_8 = "UTF-8";
@@ -15,6 +16,7 @@ public final class VolksbankConstants {
             Locale.US);
     public static final String USER_AGENT = "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_1 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Mobile/14E304 EBPMG";
     public static final String CREDENTIAL_USERNUMBER = "usernumber";
+
     private VolksbankConstants() {
         throw new AssertionError();
     }
@@ -28,7 +30,8 @@ public final class VolksbankConstants {
         static final String DASHBOARD = BASE + "dashboard";
         public static final String MOBILEAUTH = BASE + "mobileauth.xhtml";
         static final String MOBILEDEVICES = BASE + "rest/mobiledevices";
-        static final String LOGOUT = "logout.xhtml";
+        static final String LOGOUT = BASE + "logout.xhtml";
+        static final String GIROKONTO = BASE + "girokonto";
     }
 
     public static class Crypto {
@@ -47,13 +50,16 @@ public final class VolksbankConstants {
     public static class Form {
         public static final String JSF_VIEWSTATE_KEY = "javax.faces.ViewState";
         public static final String JSF_EVENT_KEY = "javax.faces.behavior.event";
+        public static final String JSF_PARTIAL_EVENT_KEY = "javax.faces.partial.event";
         public static final String JSF_EVENT_ACTION = "action";
         public static final String JSF_EVENT_CHANGE = "change";
+        public static final String JSF_EVENT_VALUE_CHANGE = "valueChange";
         public static final String JSF_EVENT_CLICK = "click";
         public static final String JSF_SOURCE_KEY = "javax.faces.source";
         public static final String JSF_PARTIAL_AJAX_KEY = "javax.faces.partial.ajax";
         public static final String JSF_PARTIAL_EXECUTE_KEY = "javax.faces.partial.execute";
         public static final String JSF_PARTIAL_RENDER_KEY = "javax.faces.partial.render";
+        // NOTE not sure this 268044X is a constant or not without having more credentials
         public static final String JSF_PARTIAL_RENDER_VALUE = "startseite-repeated-item-2680441:actual-widget startseite-repeated-item-2680442:actual-widget startseite-repeated-item-2680443:actual-widget";
         public static final String JSF_PARTIAL_RESET_KEY = "javax.faces.partial.resetValues";
         public static final String GBFORM = "gbform";
@@ -75,6 +81,48 @@ public final class VolksbankConstants {
         public static final String ENC_PASSWORD = "password.encrypted";
         public static final String LOGIN_TOKEN = "loginToken";
         public static final String SIGNATURE = "signature";
+
+        public static final String OVERLAY = "overlay-zeitraumauswahl:overlayForm";
+        public static final String OVERLAY_DATE_FROM = OVERLAY + COLOMN + "daterange:von:date";
+        public static final String OVERLAY_DATE_TO = OVERLAY + COLOMN + "daterange:bis:date";
+        public static final String OVERLAY_DATE_IS_RANGE = OVERLAY + COLOMN + "daterange:range";
+        public static final String OVERLAY_SUBMIT = OVERLAY + COLOMN + "_SUBMIT";
+        public static final String OVERLAY_RENDER = OVERLAY + COLOMN
+                + "input-date-range-container overlay-zeitraumauswahl:save overlay-zeitraumauswahl:overlayForm:daterange:von";
+
+        public static final String KONTO_UMSATZ = "content:kontenumsaetze-tab:form";
+        public static final String KONTO_UMSATZ_TABLE = KONTO_UMSATZ + COLOMN + "kontoUmsaetze:umsatzTable";
+        public static final String KONTO_UMSATZ_INLINE = KONTO_UMSATZ_TABLE + COLOMN + "zeitraumauswahl:inline-period";
+        public static final String KONTO_UMSATZ_FILTER =
+                KONTO_UMSATZ_TABLE + COLOMN + "umsaetze-filter:filter-selection";
+        public static final String KONTO_UMSATZ_SORTBOX = KONTO_UMSATZ_TABLE + COLOMN + "sortierung:box";
+        public static final String KONTO_UMSATZ_SORTBOXXS = KONTO_UMSATZ_TABLE + COLOMN + "sortierung:boxXS";
+        public static final String KONTO_UMSATZ_DESC =
+                KONTO_UMSATZ_TABLE + COLOMN + "DESC_kontoumsaetze-sortby-default";
+        public static final String KONTO_UMSATZ_TABLE_SELECTION = KONTO_UMSATZ_TABLE + COLOMN + "table_selection";
+        public static final String KONTO_UMSATZ_TABLE_SUBSELECTION = KONTO_UMSATZ_TABLE + COLOMN + "table_subselection";
+        public static final String KONTO_UMSATZ_ROW_EXPANSION = KONTO_UMSATZ_TABLE + COLOMN + "table_rowexpansion";
+        public static final String KONTO_UMSATZ_CLICKED_ELEMENTID =
+                KONTO_UMSATZ_TABLE + COLOMN + "table_clickedElementId";
+        public static final String KONTO_UMSATZ_CLICKED_SUBELEMENTID =
+                KONTO_UMSATZ_TABLE + COLOMN + "table_clickedSubElementId";
+        public static final String KONTO_UMSATZ_SUBMIT = KONTO_UMSATZ + "_SUBMIT";
+
+        // NOTE not sure this 268044X is a constant or not without having more credentials
+        public static final String START_PAGE_2680441 = "startseite-repeated-item-2680441:widget:form";
+        public static final String START_PAGE_2680441_TABLE_SELECTION =
+                START_PAGE_2680441 + COLOMN + "produkte:produkteTable:table_selection";
+        public static final String START_PAGE_2680441_TABLE_SUBSELECTION =
+                START_PAGE_2680441 + COLOMN + "produkte:produkteTable:table_subselection";
+        public static final String START_PAGE_2680441_ROW_EXPANSION =
+                START_PAGE_2680441 + COLOMN + "produkte:produkteTable:table_rowexpansion";
+        public static final String START_PAGE_2680441_CLICKED_ELEMENTID =
+                START_PAGE_2680441 + COLOMN + "produkte:produkteTable:table_clickedElementId";
+        public static final String START_PAGE_2680441_CLICKED_SUBELEMENTID =
+                START_PAGE_2680441 + COLOMN + "produkte:produkteTable:table_clickedSubElementId";
+        public static final String START_PAGE_2680441_CLICKED_ELEMENT =
+                START_PAGE_2680441 + COLOMN + "produkte:produkteTable:table_clickedElement";
+        public static final String START_PAGE_2680441_SUBMIT = START_PAGE_2680441 + "_SUBMIT";
 
     }
 
@@ -119,6 +167,16 @@ public final class VolksbankConstants {
         public static final String GENERATE_ID = "generate_id";
         public static final String VIEWSTATE = "viewState";
         public static final String PUSHTOKEN = "pushToken";
+        public static final String PRODUCT_ID = "productIds";
+    }
+
+    public static class REGEX_GROUP {
+        public static final String IBAN = "iban";
+        public static final String AMOUNT = "amount";
+        public static final String CURRENCY = "currency";
+        public static final String DATE = "date";
+        public static final String DESCRIPTION = "description";
+        public static final String PRODUCT_NAME = "productName";
     }
 
     public static class Errors {
