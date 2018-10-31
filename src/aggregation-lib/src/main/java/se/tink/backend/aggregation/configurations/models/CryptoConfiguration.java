@@ -1,21 +1,13 @@
-package se.tink.backend.core;
+package se.tink.backend.aggregation.configurations.models;
 
-import javax.persistence.Embedded;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "crypto_configuration")
 public class CryptoConfiguration {
-    /*
-    @Id
-    private int keyId;
-    @Type(type = "text")
-    private String cryptoId;
-   */
     @EmbeddedId
     private CryptoConfigurationId cryptoConfigurationId;
 

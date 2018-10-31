@@ -1,7 +1,7 @@
-package se.tink.backend.common.repository.mysql.aggregation.cryptoconfigurations;
+package se.tink.backend.aggregation.configurations.repositories.cryptoconfig;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import se.tink.backend.core.CryptoConfiguration;
+import se.tink.backend.aggregation.configurations.models.CryptoConfiguration;
 
 public interface CryptoConfigurationsRepository extends JpaRepository<CryptoConfiguration, String> {
 }

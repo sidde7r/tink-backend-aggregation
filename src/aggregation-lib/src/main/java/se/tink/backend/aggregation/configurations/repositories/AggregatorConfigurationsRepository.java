@@ -1,7 +1,7 @@
-package se.tink.backend.common.repository.mysql.aggregation.aggregatorconfigurations;
+package se.tink.backend.aggregation.configurations.repositories.aggregatorconfig;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import se.tink.backend.core.AggregatorConfiguration;
+import se.tink.backend.aggregation.configurations.models.AggregatorConfiguration;
 
 public interface AggregatorConfigurationsRepository extends JpaRepository<AggregatorConfiguration, String> {
 }

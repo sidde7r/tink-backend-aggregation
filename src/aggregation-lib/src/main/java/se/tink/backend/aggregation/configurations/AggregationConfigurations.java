@@ -1,17 +1,16 @@
-package se.tink.backend.common.repository.mysql.aggregation;
+package se.tink.backend.aggregation.configurations;
 
 
 import com.google.inject.Inject;
 import java.util.List;
-import se.tink.backend.common.config.ConfigurationsDao;
-import se.tink.backend.common.repository.mysql.aggregation.aggregatorconfigurations.AggregatorConfigurationsRepository;
-import se.tink.backend.common.repository.mysql.aggregation.clientconfigurations.ClientConfigurationsRepository;
-import se.tink.backend.common.repository.mysql.aggregation.clusterconfigurations.ClusterConfigurationsRepository;
-import se.tink.backend.common.repository.mysql.aggregation.cryptoconfigurations.CryptoConfigurationsRepository;
-import se.tink.backend.core.AggregatorConfiguration;
-import se.tink.backend.core.ClientConfiguration;
-import se.tink.backend.core.ClusterConfiguration;
-import se.tink.backend.core.CryptoConfiguration;
+import se.tink.backend.aggregation.configurations.models.AggregatorConfiguration;
+import se.tink.backend.aggregation.configurations.models.ClientConfiguration;
+import se.tink.backend.aggregation.configurations.models.ClusterConfiguration;
+import se.tink.backend.aggregation.configurations.models.CryptoConfiguration;
+import se.tink.backend.aggregation.configurations.repositories.AggregatorConfigurationsRepository;
+import se.tink.backend.aggregation.configurations.repositories.ClientConfigurationsRepository;
+import se.tink.backend.aggregation.configurations.repositories.ClusterConfigurationsRepository;
+import se.tink.backend.aggregation.configurations.repositories.CryptoConfigurationsRepository;
 
 public class AggregationConfigurations implements ConfigurationsDao {
 
@@ -73,5 +72,14 @@ public class AggregationConfigurations implements ConfigurationsDao {
     @Override
     public ClusterConfiguration findClusterConfigurations(String clusterId) {
         return clusterConfigurationsRepository.findOne(clusterId);
+    }
+
+    @Override
+    public CryptoConfiguration findOneByKeyId(int keyId) {
+        return cryptoConfigurationsRepository.findAll()
+                .stream()
+                .filter(e -> e.getKeyId() == keyId)
+                .findFirst()
+                .get();
     }
 }

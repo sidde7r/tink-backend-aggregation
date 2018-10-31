@@ -1,10 +1,10 @@
-package se.tink.backend.common.config;
+package se.tink.backend.aggregation.configurations;
 
 import java.util.List;
-import se.tink.backend.core.AggregatorConfiguration;
-import se.tink.backend.core.ClientConfiguration;
-import se.tink.backend.core.ClusterConfiguration;
-import se.tink.backend.core.CryptoConfiguration;
+import se.tink.backend.aggregation.configurations.models.AggregatorConfiguration;
+import se.tink.backend.aggregation.configurations.models.ClientConfiguration;
+import se.tink.backend.aggregation.configurations.models.ClusterConfiguration;
+import se.tink.backend.aggregation.configurations.models.CryptoConfiguration;
 
 public interface ConfigurationsDao {
     List<CryptoConfiguration> getCryptoConfigurations();
@@ -22,4 +22,6 @@ public interface ConfigurationsDao {
     AggregatorConfiguration findAggregatorConfigurations(String aggregatorId);
 
     ClusterConfiguration findClusterConfigurations(String clusterId);
+
+    CryptoConfiguration findOneByKeyId(int keyId);
 }

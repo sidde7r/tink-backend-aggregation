@@ -1,4 +1,4 @@
-package se.tink.backend.core;
+package se.tink.backend.aggregation.configurations.models;
 
 import java.io.Serializable;
 import java.util.Objects;
