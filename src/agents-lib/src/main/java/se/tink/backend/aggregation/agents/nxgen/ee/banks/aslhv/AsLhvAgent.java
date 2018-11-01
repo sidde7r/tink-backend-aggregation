@@ -33,7 +33,7 @@ public class AsLhvAgent extends NextGenerationAgent {
     public AsLhvAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         asLhvSessionStorage = new AsLhvSessionStorage(sessionStorage);
-        this.apiClient = new AsLhvApiClient(this.client, asLhvSessionStorage);
+        this.apiClient = new AsLhvApiClient(this.client);
     }
 
     @Override
@@ -44,17 +44,17 @@ public class AsLhvAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new PasswordAuthenticationController(new AsLhvPasswordAuthenticator(apiClient));
+        return new PasswordAuthenticationController(new AsLhvPasswordAuthenticator(apiClient, asLhvSessionStorage));
     }
 
     @Override
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
         final AsLhvTransactionalAccountTransactionFetcher transactionFetcher =
-                new AsLhvTransactionalAccountTransactionFetcher(apiClient);
+                new AsLhvTransactionalAccountTransactionFetcher(apiClient, asLhvSessionStorage);
         return Optional.of(new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
-                new AsLhvTransactionalAccountFetcher(apiClient),
+                new AsLhvTransactionalAccountFetcher(asLhvSessionStorage),
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
                         new TransactionDatePaginationController<>(transactionFetcher)
@@ -64,11 +64,12 @@ public class AsLhvAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        final AsLhvCreditCardTransactionFetcher transactionFetcher = new AsLhvCreditCardTransactionFetcher(apiClient);
+        final AsLhvCreditCardTransactionFetcher transactionFetcher =
+                new AsLhvCreditCardTransactionFetcher(apiClient, asLhvSessionStorage);
         return Optional.of(new CreditCardRefreshController(
                 metricRefreshController,
                 updateController,
-                new AsLhvCreditCardAccountFetcher(apiClient),
+                new AsLhvCreditCardAccountFetcher(asLhvSessionStorage),
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
                         new TransactionDatePaginationController<>(transactionFetcher)

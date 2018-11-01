@@ -11,7 +11,6 @@ public class AsLhvConstants {
             .put(AccountTypes.CHECKING, 11001)
             .put(AccountTypes.SAVINGS, 11002)
             .put(AccountTypes.CREDIT_CARD, 11009)
-            .ignoreKeys(11003, 11004, 11005, 11006, 11007, 11008)
             .build();
 
     public static class Storage {

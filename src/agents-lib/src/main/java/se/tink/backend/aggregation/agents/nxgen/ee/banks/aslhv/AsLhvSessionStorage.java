@@ -4,14 +4,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.entities.CurrenciesItem;
+import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.entities.CurrentUser;
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc.GetCurrenciesResponse;
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc.GetUserDataResponse;
+import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc.IsAuthenticatedResponse;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class AsLhvSessionStorage {
-    SessionStorage sessionStorage;
+    private final SessionStorage sessionStorage;
 
-    public AsLhvSessionStorage(SessionStorage sessionStorage) {
+    public AsLhvSessionStorage(final SessionStorage sessionStorage) {
         this.sessionStorage = sessionStorage;
     }
 
@@ -83,5 +85,17 @@ public class AsLhvSessionStorage {
             throw new IllegalStateException(message);
         }
         return userData.get();
+    }
+
+    public void setIsAuthenticatedResponseData(final IsAuthenticatedResponse isAuthenticatedResponse) {
+        Optional<CurrentUser> currentUser = isAuthenticatedResponse.getCurrentUser();
+        if (currentUser.isPresent()) {
+            Optional<String> name = currentUser.get().getName();
+            int baseCurrencyId = currentUser.get().getBaseCurrencyId();
+            if (name.isPresent()) {
+                setCurrentUser(name.get());
+            }
+            setBaseCurrencyId(baseCurrencyId);
+        }
     }
 }

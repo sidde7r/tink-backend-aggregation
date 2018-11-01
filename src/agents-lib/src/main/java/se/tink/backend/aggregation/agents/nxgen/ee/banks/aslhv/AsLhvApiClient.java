@@ -2,10 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv;
 
 import java.util.Date;
 
-import java.util.Optional;
 import org.apache.http.HttpHeaders;
 
-import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.entities.CurrentUser;
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc.*;
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -17,12 +15,9 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 public class AsLhvApiClient {
 
     private final TinkHttpClient client;
-    private final AsLhvSessionStorage storage;
 
-    public AsLhvApiClient(final TinkHttpClient client,
-                          final AsLhvSessionStorage storage) {
+    public AsLhvApiClient(final TinkHttpClient client) {
         this.client = client;
-        this.storage = storage;
     }
 
     private RequestBuilder getBaseRequest(URL url) {
@@ -58,39 +53,19 @@ public class AsLhvApiClient {
         return new URL(getUrl() + AsLhvConstants.URLS.GET_ACCOUNT_TRANSACTIONS_ENDPOINT);
     }
 
-    public AsLhvSessionStorage getSessionStorage() {
-        return storage;
-    }
-
     public IsAuthenticatedResponse isAuthenticated() throws HttpResponseException {
         RequestBuilder requestBuilder = getBaseRequest(getIsAuthenticatedUrl());
         requestBuilder.header(HttpHeaders.ACCEPT, AsLhvConstants.Header.ACCEPT_ALL);
-        IsAuthenticatedResponse response = requestBuilder.post(IsAuthenticatedResponse.class);
-        if (response.isAuthenticated()) {
-            Optional<CurrentUser> currenUser = response.getCurrentUser();
-            if (currenUser.isPresent()) {
-                Optional<String> name = currenUser.get().getName();
-                int baseCurrencyId = currenUser.get().getBaseCurrencyId();
-                if (name.isPresent()) {
-                    storage.setCurrentUser(name.get());
-                }
-                storage.setBaseCurrencyId(baseCurrencyId);
-            }
-        }
-        return response;
+        return requestBuilder.post(IsAuthenticatedResponse.class);
     }
 
     public GetUserDataResponse getUserData() {
-        GetUserDataResponse response = getBaseRequest(getGetUserDataUrl())
+        return getBaseRequest(getGetUserDataUrl())
                 .header(HttpHeaders.ACCEPT, AsLhvConstants.Header.ACCEPT_JSON)
                 .header(HttpHeaders.ACCEPT_LANGUAGE, AsLhvConstants.Header.ACCEPT_LANGUAGE)
                 .header(HttpHeaders.CONTENT_TYPE,  AsLhvConstants.Header.CONTENT_TYPE_FORM_URLENCODED)
                 .header(AsLhvConstants.Header.LHV_APPLICATION_LANGUAGE_HEADER, AsLhvConstants.Header.LHV_APPLICATION_LANUGAGE_US)
                 .post(GetUserDataResponse.class);
-        if (response.requestSuccessful()) {
-            storage.setUserData(response);
-        }
-        return response;
     }
 
     public LoginResponse login(String username, String password) throws HttpResponseException, HttpClientException {
@@ -109,16 +84,12 @@ public class AsLhvApiClient {
     }
 
     public GetCurrenciesResponse getCurrencies() {
-        GetCurrenciesResponse response = getBaseRequest(getGetCurrenciesUrl())
+        return getBaseRequest(getGetCurrenciesUrl())
                 .header(HttpHeaders.ACCEPT, AsLhvConstants.Header.ACCEPT_JSON)
                 .header(HttpHeaders.ACCEPT_LANGUAGE, AsLhvConstants.Header.ACCEPT_LANGUAGE)
                 .header(HttpHeaders.CONTENT_TYPE,  AsLhvConstants.Header.CONTENT_TYPE_FORM_URLENCODED)
                 .header(AsLhvConstants.Header.LHV_APPLICATION_LANGUAGE_HEADER, AsLhvConstants.Header.LHV_APPLICATION_LANUGAGE_US)
                 .post(GetCurrenciesResponse.class);
-        if (response.requestSuccessful()) {
-            storage.setCurrencies(response);
-        }
-        return response;
     }
 
     public GetAccountTransactionsResponse getAccountTransactions(final String portfolioId,
@@ -131,14 +102,13 @@ public class AsLhvApiClient {
                 .put(AsLhvConstants.Form.PORTFOLIO_ID, portfolioId)
                 .build();
 
-        GetAccountTransactionsResponse response = getBaseRequest(getAccountTransactionsUrl())
+        return getBaseRequest(getAccountTransactionsUrl())
                 .header(HttpHeaders.ACCEPT, AsLhvConstants.Header.ACCEPT_JSON)
                 .header(HttpHeaders.ACCEPT_LANGUAGE, AsLhvConstants.Header.ACCEPT_LANGUAGE)
                 .header(HttpHeaders.CONTENT_TYPE,  AsLhvConstants.Header.CONTENT_TYPE_FORM_URLENCODED)
                 .header(AsLhvConstants.Header.LHV_APPLICATION_LANGUAGE_HEADER, AsLhvConstants.Header.LHV_APPLICATION_LANUGAGE_US)
                 .body(form.serialize())
                 .post(GetAccountTransactionsResponse.class);
-        return response;
     }
 
     public LogoutResponse logout() {

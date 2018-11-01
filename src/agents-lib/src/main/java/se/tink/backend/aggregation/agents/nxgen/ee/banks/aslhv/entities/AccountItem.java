@@ -46,11 +46,8 @@ public class AccountItem {
         return active;
     }
 
-    @JsonIgnore
-    public AccountTypes getType() {
-        return AsLhvConstants.ACCOUNT_TYPE_MAPPER.translate(type)
-                .orElseThrow(() -> new IllegalStateException(
-                        "Unknown account types should have been filtered out before reaching this point!"));
+    public int getType() {
+        return type;
     }
 
     @JsonIgnore
@@ -79,9 +76,13 @@ public class AccountItem {
         return result;
     }
 
+    @JsonIgnore
     private boolean isInvalidAccount() {
         // portfolioId is required to fetch transactions.
-        return iban == null || number == null || portfolioId == null;
+        return !AsLhvConstants.ACCOUNT_TYPE_MAPPER.translate(type).isPresent() ||
+                iban == null ||
+                number == null ||
+                portfolioId == null;
     }
 
     @JsonIgnore
@@ -125,7 +126,7 @@ public class AccountItem {
 
         double balance = getBalance(baseCurrencyId);
         Amount accountBalance = new Amount(currency, balance);
-        return Optional.of(TransactionalAccount.builder(getType(), iban)
+        return Optional.of(TransactionalAccount.builder(AsLhvConstants.ACCOUNT_TYPE_MAPPER.translate(type).get(), iban)
                 .setBalance(accountBalance)
                 .setName(getAccountName())
                 .setHolderName(new HolderName(currentUser))
