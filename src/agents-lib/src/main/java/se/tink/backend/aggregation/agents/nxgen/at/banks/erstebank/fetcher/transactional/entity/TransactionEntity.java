@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.entity;
+package se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.transactional.entity;
 
 import com.google.common.base.Strings;
 import java.text.ParseException;
@@ -70,6 +70,16 @@ public class TransactionEntity {
         return ErsteBankConstants.DATE.TODAY.equalsIgnoreCase(date);
     }
 
+    private boolean isTomorrow(String date) {
+        return ErsteBankConstants.DATE.TOMORROW.equalsIgnoreCase(date);
+    }
+
+    private Date getTomorrowsDate() {
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, 1);
+        return c.getTime();
+    }
+
     private boolean isYesterday(String date) {
         return ErsteBankConstants.DATE.YESTERDAY.equalsIgnoreCase(date);
     }
@@ -78,6 +88,10 @@ public class TransactionEntity {
         try {
             return new SimpleDateFormat(ErsteBankConstants.PATTERN.DATE_FORMAT).parse(getDate());
         } catch (ParseException e) {
+
+            if (isTomorrow(getDate())) {
+                return getTomorrowsDate();
+            }
 
             if (isToday(getDate())) {
                 return getTodaysDate();

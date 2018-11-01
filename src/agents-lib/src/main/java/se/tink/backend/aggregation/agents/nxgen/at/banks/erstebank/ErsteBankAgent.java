@@ -3,8 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.authenticator.ErsteBankPasswordAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.ErsteBankAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.ErsteBankTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.credit.ErsteBankCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.transactional.ErsteBankAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.transactional.ErsteBankTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.session.ErsteBankSessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -53,7 +54,12 @@ public class ErsteBankAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.empty();
+        ErsteBankCreditCardFetcher creditFetcher = new ErsteBankCreditCardFetcher(ersteBankApiClient);
+
+        return Optional.of(new CreditCardRefreshController(metricRefreshController, updateController,
+                creditFetcher,
+                new TransactionFetcherController<>(transactionPaginationHelper,
+                        new TransactionPagePaginationController<>(creditFetcher, 0))));
     }
 
     @Override

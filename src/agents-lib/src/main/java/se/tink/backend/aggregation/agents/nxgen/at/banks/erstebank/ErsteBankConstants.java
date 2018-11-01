@@ -9,7 +9,9 @@ public class ErsteBankConstants {
 
     public static class ACCOUNTYPE {
         public static final String CHECKING = "GIRO";
-        public static final String SAVINGS = "BUILDING_SAVING";
+        public static final String SAVING = "SAVING";
+        public static final String BUILDING_SAVING = "BUILDING_SAVING";
+        public static final String CARD_CREDIT = "CARD_CREDIT";
     }
 
     public static class ENCRYPTION {
@@ -55,6 +57,7 @@ public class ErsteBankConstants {
     public static class STORAGE {
         public static final String TOKEN_ENTITY = "TOKEN_ENTITY";
         public static final String TRANSACTIONSURL = "ACCOUNT_URL";
+        public static final String CREDITURL = "CREDIT_URL";
     }
 
     public static class PATTERN {
@@ -82,10 +85,14 @@ public class ErsteBankConstants {
     public static class LOGTAG {
         public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("ERSTEBANK_SPARKASSE_ACCOUNT_TYPE");
         public static final LogTag ERROR_DATE_PARSING = LogTag.from("ERSTEBANK_ERROR_PARSING_DATE");
+        public static final LogTag MISSING_BALANCE_FOR_ACCOUNT_TYPE = LogTag.from("ERSTEBANK_MISSING_BALANCE_FOR_ACCOUNT_TYPE");
+        public static final LogTag CREDIT_CARD_ERROR = LogTag.from("ERSTEBANK_MISSING_BALANCE_FOR_ACCOUNT_TYPE");
+        public static final LogTag CREDIT_TRANSACTIONS_ERROR = LogTag.from("ERSTEBANK_TRANSACTIONS_ERROR");
     }
 
     public static class DATE {
         public static final String YESTERDAY = "Yesterday";
         public static final String TODAY = "Today";
+        public static final String TOMORROW = "Tomorrow";
     }
 }
