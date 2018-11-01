@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.ErsteBankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.rpc.AccountTypes;
@@ -24,6 +25,10 @@ public class ProductEntity {
     private AccountInfoEntity accountInfoEntity;
     @JsonProperty("extrasInfo")
     private ExtraInfoEntity extraInfoEntity;
+
+    @JsonProperty("cardInfo")
+    private CardInfoEntity cardInfoEntity;
+
     Logger logger = LoggerFactory.getLogger(ProductEntity.class);
 
     public String getId() {
@@ -106,6 +111,33 @@ public class ProductEntity {
                 .setHolderName(getHolderName())
                 .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, getIban()))
                 .putInTemporaryStorage(ErsteBankConstants.STORAGE.TRANSACTIONSURL, getId())
+                .build();
+    }
+
+    public boolean isCreditCardAccount() {
+        return ErsteBankConstants.ACCOUNTYPE.CARD_CREDIT.equalsIgnoreCase(getType());
+    }
+
+    public boolean isValidCreditCardAccount() {
+        try {
+            getAvailableCredit();
+            return true;
+        } catch (Exception e) {
+            logger.warn("{} {}", ErsteBankConstants.LOGTAG.CREDIT_CARD_ERROR, e.toString());
+            return false;
+        }
+    }
+
+    private Amount getAvailableCredit() {
+        return cardInfoEntity.getAvailableAmount().getTinkBalance();
+    }
+
+    public CreditCardAccount toCreditCardAccount() {
+        return CreditCardAccount.builder(id, getTinkBalance(), getAvailableCredit())
+                .setAccountNumber(identifier)
+                .setName(description)
+                .setHolderName(getHolderName())
+                .putInTemporaryStorage(ErsteBankConstants.STORAGE.CREDITURL, getId())
                 .build();
     }
 

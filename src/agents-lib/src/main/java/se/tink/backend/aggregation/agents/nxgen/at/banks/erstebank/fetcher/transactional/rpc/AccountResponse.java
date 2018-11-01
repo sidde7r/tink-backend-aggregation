@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.transactional.entity.ProductEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 
 @JsonObject
@@ -17,6 +18,13 @@ public class AccountResponse {
         return productListEntity.stream()
                 .filter(productEntity -> productEntity.isValid())
                 .map(ProductEntity::toTransactionalAccount).collect(Collectors.toList());
+    }
+
+    public List<CreditCardAccount> toCreditCardAccounts() {
+        return productListEntity.stream()
+                .filter(productEntity -> productEntity.isCreditCardAccount() && productEntity
+                        .isValidCreditCardAccount())
+                .map(ProductEntity::toCreditCardAccount).collect(Collectors.toList());
     }
 
 }

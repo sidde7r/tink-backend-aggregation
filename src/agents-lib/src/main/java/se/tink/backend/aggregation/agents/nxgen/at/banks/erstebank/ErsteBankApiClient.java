@@ -17,7 +17,7 @@ public class ErsteBankApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage storage;
-    private AccountResponse response;
+    private AccountResponse accountResponse;
 
     public ErsteBankApiClient(TinkHttpClient client, SessionStorage storage){
         this.client = client;
@@ -90,6 +90,10 @@ public class ErsteBankApiClient {
         return java.util.UUID.randomUUID().toString().toUpperCase();
     }
 
+    public AccountResponse getAccountResponse() {
+        return accountResponse;
+    }
+
     public AccountResponse fetchAccounts(){
         TokenEntity token = getTokenFromStorage();
         String bearer = ErsteBankConstants.HEADERS.BEARER + token.getToken();
@@ -99,7 +103,7 @@ public class ErsteBankApiClient {
                 .queryParam(ErsteBankConstants.QUERYPARAMS.FEATURES, ErsteBankConstants.QUERYPARAMS.FEATURES_ORDERS)
                 .get(AccountResponse.class);
 
-        this.response = response;
+        this.accountResponse = response;
 
         return response;
     }
