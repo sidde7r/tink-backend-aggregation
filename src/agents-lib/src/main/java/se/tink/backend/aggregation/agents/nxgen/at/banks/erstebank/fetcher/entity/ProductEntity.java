@@ -63,7 +63,8 @@ public class ProductEntity {
         switch (accountType) {
         case ErsteBankConstants.ACCOUNTYPE.CHECKING:
             return AccountTypes.CHECKING;
-        case ErsteBankConstants.ACCOUNTYPE.SAVINGS:
+        case ErsteBankConstants.ACCOUNTYPE.BUILDING_SAVING:
+        case ErsteBankConstants.ACCOUNTYPE.SAVING:
             return AccountTypes.SAVINGS;
         default:
             logger.warn("{} {}", ErsteBankConstants.LOGTAG.UNKNOWN_ACCOUNT_TYPE, accountType);

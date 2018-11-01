@@ -9,7 +9,8 @@ public class ErsteBankConstants {
 
     public static class ACCOUNTYPE {
         public static final String CHECKING = "GIRO";
-        public static final String SAVINGS = "BUILDING_SAVING";
+        public static final String SAVING = "SAVING";
+        public static final String BUILDING_SAVING = "BUILDING_SAVING";
     }
 
     public static class ENCRYPTION {
