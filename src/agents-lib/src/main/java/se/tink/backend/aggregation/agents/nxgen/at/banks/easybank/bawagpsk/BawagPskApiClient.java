@@ -120,8 +120,8 @@ public class BawagPskApiClient {
 
         final Envelope envelope = BawagPskUtils.xmlToEntity(responseString, Envelope.class);
 
-        // TODO maybe not appropriate to store this in session storage
-        storage.put(BawagPskConstants.Storage.ACCOUNTS_RESPONSE.name(), responseString);
+        // TODO At this point, we could store the response so it can be reused by other fetchers that are about to
+        // execute after this one. However, this cannot (easily) be done until we have a storage class for this purpose.
 
         return new GetAccountInformationListResponse(envelope);
     }

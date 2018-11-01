@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.fetcher;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -15,9 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entit
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Products;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.GetAccountInformationListRequest;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.GetAccountInformationListResponse;
-import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.common.utils.Pair;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 
@@ -49,14 +45,7 @@ public final class BawagPskAccountFetcher {
         final String requestString = request.getXml();
 
         // If the accounts were already fetched, get them from storage
-        return getAccountsFromStorage()
-                .orElseGet(() -> apiClient.getGetAccountInformationListResponse(requestString));
-    }
-
-    private Optional<GetAccountInformationListResponse> getAccountsFromStorage() {
-        return apiClient.getFromSessionStorage(BawagPskConstants.Storage.ACCOUNTS_RESPONSE.name())
-                .map(response -> BawagPskUtils.xmlToEntity(response, Envelope.class))
-                .map(GetAccountInformationListResponse::new);
+        return apiClient.getGetAccountInformationListResponse(requestString);
     }
 
     public Pair<GetAccountInformationListResponse, Map<String, String>> fetchAccountData() {

@@ -70,8 +70,7 @@ public class BawagPskConstants {
         SERVER_SESSION_ID,
         QID,
         PRODUCTS,
-        PRODUCT_CODES,
-        ACCOUNTS_RESPONSE
+        PRODUCT_CODES
     }
 
     public enum LogTags {
