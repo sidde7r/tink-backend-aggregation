@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.provider.configuration.config;
 
 import com.google.inject.AbstractModule;
-import se.tink.libraries.metrics.PrometheusConfiguration;
 
 public class ProviderServiceConfigurationModule extends AbstractModule {
     private final ProviderServiceConfiguration configuration;
