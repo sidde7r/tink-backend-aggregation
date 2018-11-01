@@ -8,10 +8,10 @@ public class AsLhvConstants {
 
     public static final ThreadSafeDateFormat DATE_FORMAT = ThreadSafeDateFormat.FORMATTER_DAILY;
     public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER = AccountTypeMapper.builder()
-            .add(AccountTypes.CHECKING, 11001)
-            .add(AccountTypes.SAVINGS, 11002)
-            .add(11003, 11004, 11005, 11006, 11007, 11008)
-            .add(AccountTypes.CREDIT_CARD, 11009)
+            .put(AccountTypes.CHECKING, 11001)
+            .put(AccountTypes.SAVINGS, 11002)
+            .put(AccountTypes.CREDIT_CARD, 11009)
+            .ignoreKeys(11003, 11004, 11005, 11006, 11007, 11008)
             .build();
 
     public static class Storage {
@@ -30,7 +30,7 @@ public class AsLhvConstants {
         public static final String GET_USER_DATA_ENDPOINT = PORTFOLIO_ENDPOINT + "/get_user_data" + JSON_ENDPOINT;
         public static final String GET_CURRENCIES_ENDPOINT = PORTFOLIO_ENDPOINT + "/get_currencies" + JSON_ENDPOINT;
         public static final String GET_ACCOUNT_TRANSACTIONS_ENDPOINT =
-            PORTFOLIO_ENDPOINT + "/get_account_transaction_history" + JSON_ENDPOINT;
+                PORTFOLIO_ENDPOINT + "/get_account_transaction_history" + JSON_ENDPOINT;
         public static final String AUTH_IS_AUTHENTICATED_ENDPOINT = AUTH_ENDPOINT + "/is_authenticated" + JSON_ENDPOINT;
         public static final String AUTH_PASSWORD_ENDPOINT = AUTH_ENDPOINT + "/login_password" + JSON_ENDPOINT;
         public static final String AUTH_LOGOUT_ENDPOINT = AUTH_ENDPOINT + "/logout" + JSON_ENDPOINT;

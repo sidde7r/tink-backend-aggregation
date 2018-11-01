@@ -27,17 +27,17 @@ public class GetAccountTransactionsResponse extends BaseResponse {
             final TransactionItem transaction,
             final AsLhvSessionStorage storage) {
         double amount = transaction.getAmount();
-        Optional<String> currency = storage.getCurrency(transaction.getCurrencyId());
+        String currency = storage.getCurrency(transaction.getCurrencyId());
         Optional<Date> date = transaction.getDate();
 
-        if (!currency.isPresent() || !date.isPresent()) {
+        if (!date.isPresent()) {
             return Optional.empty();
         }
 
         Optional<String> description = transaction.getDescription();
 
         return Optional.of(Transaction.builder()
-                .setAmount(new Amount(currency.get(), amount))
+                .setAmount(new Amount(currency, amount))
                 .setDate(date.get())
                 .setDescription(description.isPresent() ? description.get(): "")
                 .build());

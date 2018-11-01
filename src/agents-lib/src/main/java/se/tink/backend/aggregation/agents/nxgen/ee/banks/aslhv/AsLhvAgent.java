@@ -39,7 +39,7 @@ public class AsLhvAgent extends NextGenerationAgent {
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.setDebugOutput(true);
-        client.setProxy("http://127.0.0.1:8888");
+        client.setDebugProxy("http://127.0.0.1:8888");
     }
 
     @Override
@@ -49,7 +49,8 @@ public class AsLhvAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        final AsLhvTransactionalAccountTransactionFetcher transactionFetcher = new AsLhvTransactionalAccountTransactionFetcher(apiClient);
+        final AsLhvTransactionalAccountTransactionFetcher transactionFetcher =
+                new AsLhvTransactionalAccountTransactionFetcher(apiClient);
         return Optional.of(new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,

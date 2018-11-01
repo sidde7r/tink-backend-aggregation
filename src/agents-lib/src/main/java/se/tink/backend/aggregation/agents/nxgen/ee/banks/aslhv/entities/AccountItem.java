@@ -6,7 +6,11 @@ import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.AsLhvConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.core.Amount;
 
 @JsonObject
 public class AccountItem {
@@ -50,17 +54,12 @@ public class AccountItem {
     }
 
     @JsonIgnore
-    public Optional<String> getNumber() {
-        return Optional.ofNullable(number);
-    }
-
-    @JsonIgnore
     public double getBalance(int baseCurrencyId) {
         double result = freeAmount;
         if (balances != null) {
             for (Balance balance : balances) {
                 if (balance.getCurrencyId() == baseCurrencyId) {
-                    result =  balance.getFreeAmount();
+                    result = balance.getFreeAmount();
                 }
             }
         }
@@ -73,25 +72,65 @@ public class AccountItem {
         if (balances != null) {
             for (Balance balance : balances) {
                 if (balance.getCurrencyId() == baseCurrencyId) {
-                    result =  balance.getFreeCreditAmount();
+                    result = balance.getFreeCreditAmount();
                 }
             }
         }
         return result;
     }
 
-    @JsonIgnore
-    public Optional<String> getIban() {
-        return Optional.ofNullable(iban);
+    private boolean isInvalidAccount() {
+        // portfolioId is required to fetch transactions.
+        return iban == null || number == null || portfolioId == null;
     }
 
     @JsonIgnore
-    public Optional<String> getName() {
-        return Optional.ofNullable(name);
+    private String getAccountName() {
+        if (name == null) {
+            return iban;
+        }
+        return name;
     }
 
     @JsonIgnore
-    public Optional<String> getPortfolioId() {
-        return Optional.ofNullable(portfolioId);
+    public Optional<CreditCardAccount> buildCreditCardAccount(
+            final int baseCurrencyId,
+            final String currency,
+            final String currentUser) {
+        if (isInvalidAccount()) {
+            return Optional.empty();
+        }
+
+        double balance = getBalance(baseCurrencyId);
+        double freeCredit = getFreeCredit(baseCurrencyId);
+        Amount accountBalance = new Amount(currency, balance);
+        Amount availableCredit = new Amount(currency, freeCredit);
+        return Optional.of(CreditCardAccount.builder(iban, accountBalance, availableCredit)
+                .setBalance(accountBalance)
+                .setName(getAccountName())
+                .setHolderName(new HolderName(currentUser))
+                .setBankIdentifier(portfolioId)
+                .setAccountNumber(number)
+                .build());
+    }
+
+    @JsonIgnore
+    public Optional<TransactionalAccount> buildTransactionalAccount(
+            final int baseCurrencyId,
+            final String currency,
+            final String currentUser) {
+        if (isInvalidAccount()) {
+            return Optional.empty();
+        }
+
+        double balance = getBalance(baseCurrencyId);
+        Amount accountBalance = new Amount(currency, balance);
+        return Optional.of(TransactionalAccount.builder(getType(), iban)
+                .setBalance(accountBalance)
+                .setName(getAccountName())
+                .setHolderName(new HolderName(currentUser))
+                .setBankIdentifier(portfolioId)
+                .setAccountNumber(number)
+                .build());
     }
 }

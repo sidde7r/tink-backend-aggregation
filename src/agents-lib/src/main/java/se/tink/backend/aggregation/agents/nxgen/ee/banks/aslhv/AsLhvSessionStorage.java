@@ -19,8 +19,9 @@ public class AsLhvSessionStorage {
         sessionStorage.put(AsLhvConstants.Storage.CURRENT_USER, currentUser);
     }
 
-    public Optional<String> getCurrentUser() {
-        return Optional.ofNullable(sessionStorage.get(AsLhvConstants.Storage.CURRENT_USER));
+    public String getCurrentUser() {
+        return Optional.ofNullable(sessionStorage.get(AsLhvConstants.Storage.CURRENT_USER))
+                .orElseThrow(() -> new IllegalStateException("Current user was not set during session."));
     }
 
     private HashMap<Integer, String> convertCurrenciesToMap(List<CurrenciesItem> currencies) {
@@ -38,9 +39,14 @@ public class AsLhvSessionStorage {
         sessionStorage.put(AsLhvConstants.Storage.CURRENCIES, currencies);
     }
 
-    public Optional<String> getCurrency(int currencyId) {
+    public String getCurrency(int currencyId) {
+        return translateCurrency(currencyId)
+                .orElseThrow(() -> new IllegalStateException("Base currency could not be mapped during session."));
+    }
+
+    private Optional<String> translateCurrency(int currencyId) {
         Optional<GetCurrenciesResponse> res = sessionStorage.get(AsLhvConstants.Storage.CURRENCIES,
-                                                                 GetCurrenciesResponse.class);
+                GetCurrenciesResponse.class);
         if (!res.isPresent()) {
             return Optional.empty();
         }
@@ -58,15 +64,24 @@ public class AsLhvSessionStorage {
         sessionStorage.put(AsLhvConstants.Storage.BASE_CURRENCY_ID, baseCurrencyId);
     }
 
-    public Optional<Integer> getBaseCurrencyId() {
-        return sessionStorage.get(AsLhvConstants.Storage.BASE_CURRENCY_ID, Integer.class);
+    public int getBaseCurrencyId() {
+        return sessionStorage.get(AsLhvConstants.Storage.BASE_CURRENCY_ID, Integer.class)
+                .orElseThrow(() -> new IllegalStateException("Base currency was not set during session."));
     }
 
     public void setUserData(final GetUserDataResponse userData) {
         sessionStorage.put(AsLhvConstants.Storage.USER_DATA, userData);
     }
 
-    public Optional<GetUserDataResponse> getUserData() {
-        return sessionStorage.get(AsLhvConstants.Storage.USER_DATA, GetUserDataResponse.class);
+    public GetUserDataResponse getUserData() {
+        Optional<GetUserDataResponse> userData =
+                sessionStorage.get(AsLhvConstants.Storage.USER_DATA, GetUserDataResponse.class);
+        if (!userData.isPresent()) {
+            throw new IllegalStateException("No user data found.");
+        } else if (!userData.get().requestSuccessful()) {
+            final String message = String.format("User data request failed: %s", userData.get().getErrorMessage());
+            throw new IllegalStateException(message);
+        }
+        return userData.get();
     }
 }
