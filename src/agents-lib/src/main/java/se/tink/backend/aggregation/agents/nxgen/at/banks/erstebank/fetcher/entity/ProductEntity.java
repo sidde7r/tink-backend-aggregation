@@ -87,6 +87,16 @@ public class ProductEntity {
         return new HolderName(getTitle());
     }
 
+    public boolean isValid() {
+        try {
+            getTinkBalance();
+            return true;
+        } catch (Exception e) {
+            logger.warn("{} {}", ErsteBankConstants.LOGTAG.MISSING_BALANCE_FOR_ACCOUNT_TYPE, getType());
+            return false;
+        }
+    }
+
     public TransactionalAccount toTransactionalAccount() {
 
         return TransactionalAccount.builder(getAccountType(), getIban(), getTinkBalance())

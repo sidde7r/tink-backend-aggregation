@@ -82,6 +82,7 @@ public class ErsteBankConstants {
     public static class LOGTAG {
         public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("ERSTEBANK_SPARKASSE_ACCOUNT_TYPE");
         public static final LogTag ERROR_DATE_PARSING = LogTag.from("ERSTEBANK_ERROR_PARSING_DATE");
+        public static final LogTag MISSING_BALANCE_FOR_ACCOUNT_TYPE = LogTag.from("ERSTEBANK_MISSING_BALANCE_FOR_ACCOUNT_TYPE");
     }
 
     public static class DATE {

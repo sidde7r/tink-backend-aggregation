@@ -14,7 +14,9 @@ public class AccountResponse {
     private List<ProductEntity> productListEntity;
 
     public List<TransactionalAccount> toTransactionalAccounts() {
-        return productListEntity.stream().map(ProductEntity::toTransactionalAccount).collect(Collectors.toList());
+        return productListEntity.stream()
+                .filter(productEntity -> productEntity.isValid())
+                .map(ProductEntity::toTransactionalAccount).collect(Collectors.toList());
     }
 
 }
