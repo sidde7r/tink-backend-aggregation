@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.AsLhvConstants;
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.entities.AccountItem;
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.entities.Card;
 import se.tink.backend.aggregation.annotations.JsonObject;
