@@ -16,11 +16,6 @@ server:
     - type: http
       port: 8047
 
-cluster: TINK
-
-coordination:
-  hosts: 172.16.42.2:2181
-
 database:
   driverClass: com.mysql.jdbc.Driver
   username: tink

@@ -28,7 +28,7 @@ public class ClusterInfo {
     }
 
 
-    public static ClusterInfo createForLegacyAggregation(ClusterId clusterId) {
+    public static ClusterInfo createForProviderConfigurationService(ClusterId clusterId) {
         return new ClusterInfo(
                 clusterId,
                 null,

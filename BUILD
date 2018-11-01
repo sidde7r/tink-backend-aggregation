@@ -800,19 +800,16 @@ java_library(
         ":common-lib",
         "//src/cluster-lib",
         "//src/api-annotations",
-        "//src/libraries/auth:auth",
         "//src/libraries/jersey_log:jersey-log",
         "//src/libraries/jersey_guice:jersey-guice",
-        "//src/libraries/dropwizard_utils:dropwizard-utils",
-        "//src/libraries/discovery:discovery",
         "//src/cluster-lib-jersey:cluster-lib-jersey",
         "//src/libraries/metrics:metrics",
-        "//src/libraries/date",
         "//src/libraries/serialization_utils:serialization-utils",
-        "//src/libraries/protobuf_serialization_utils:protobuf-serialization-utils",
         "//src/libraries/i18n",
+        "//src/libraries/http:http-utils",
         
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:io_dropwizard_dropwizard_core",
         "//third_party:io_dropwizard_dropwizard_jersey",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
@@ -827,13 +824,6 @@ java_library(
         "//third_party:org_springframework_spring_core",
         "//third_party:org_springframework_data_spring_data_jpa",
         "//third_party:org_springframework_data_spring_data_commons",
-        "//third_party:io_swagger_swagger_annotations",
-        "//third_party:joda_time_joda_time",
-        "//third_party:io_protostuff_protostuff_api",
-        "//third_party:io_protostuff_protostuff_core",
-        "//third_party:io_protostuff_protostuff_runtime",
-        "//third_party:net_sourceforge_tess4j",
-
     ],
 )
 
@@ -869,14 +859,30 @@ junit_test(
     name = "provider-configuration-lib-test",
     srcs = glob(["src/provider-configuration-lib/src/test/**/*.java"]),
     data = [
-        "//data:provider-configuration-test"
+        "//data:provider-configuration-test",
+        "etc/development-provider-configuration-server.yml",
         ],
     visibility = ["//visibility:public"],
     deps = [
+        ":provider-configuration-api",
         ":provider-configuration-lib",
         ":main-api",
         ":agents-lib",
-        ":common-lib"
+        ":common-lib",
+
+        "//src/cluster-lib",
+        "//src/libraries/metrics",
+
+        "//third_party:org_objenesis_objenesis",
+        "//third_party:net_bytebuddy_byte_buddy",
+        "//third_party:org_mockito_mockito_core",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_google_inject_guice",
+        "//third_party:io_dropwizard_dropwizard_configuration",
+        "//third_party:javax_validation_validation_api",
+        "//third_party:org_assertj_assertj_core",
+        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:com_sun_jersey_jersey_core",
     ]
 )
 

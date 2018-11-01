@@ -1,9 +1,9 @@
-package se.tink.backend.aggregation.provider.configuration.config;
+package se.tink.backend.aggregation.provider.configuration;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
-import io.dropwizard.jersey.setup.JerseyEnvironment;
-import se.tink.backend.aggregation.cluster.JerseyClusterIdProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.cluster.provider.ClusterIdProvider;
 import se.tink.backend.aggregation.provider.configuration.api.MonitoringService;
 import se.tink.backend.aggregation.provider.configuration.api.ProviderService;
@@ -12,16 +12,11 @@ import se.tink.backend.aggregation.provider.configuration.core.ProviderConfigura
 import se.tink.backend.aggregation.provider.configuration.http.resources.MonitoringServiceResource;
 import se.tink.backend.aggregation.provider.configuration.http.resources.ProviderServiceResource;
 import se.tink.backend.aggregation.provider.configuration.storage.ProviderConfigurationProvider;
-import se.tink.libraries.jersey.guice.JerseyResourceRegistrar;
-import se.tink.libraries.jersey.logging.AccessLoggingFilter;
-import se.tink.libraries.jersey.logging.ResourceTimerFilterFactory;
+import se.tink.libraries.metrics.MetricCollector;
+import se.tink.libraries.metrics.MetricRegistry;
 
-public class ProviderServiceModule extends AbstractModule {
-    private final JerseyEnvironment jersey;
-
-    ProviderServiceModule(JerseyEnvironment jersey) {
-        this.jersey = jersey;
-    }
+public class TestServiceModule extends AbstractModule {
+    private static final Logger LOG = LoggerFactory.getLogger(TestServiceModule.class);
 
     @Override
     protected void configure() {
@@ -31,15 +26,7 @@ public class ProviderServiceModule extends AbstractModule {
         bind(ProviderServiceController.class).in(Scopes.SINGLETON);
         bind(ProviderConfigurationDAO.class).to(ProviderConfigurationProvider.class).in(Scopes.SINGLETON);
 
-        JerseyResourceRegistrar.build()
-                .binder(binder())
-                .jersey(jersey)
-                .addFilterFactories(ResourceTimerFilterFactory.class)
-                .addRequestFilters(AccessLoggingFilter.class)
-                .addResponseFilters(AccessLoggingFilter.class)
-                .addResources(ProviderService.class)
-                .addResources(MonitoringService.class)
-                .addResources(JerseyClusterIdProvider.class)
-                .bind();
+        bind(MetricCollector.class).in(Scopes.SINGLETON);
+        bind(MetricRegistry.class).in(Scopes.SINGLETON);
     }
 }

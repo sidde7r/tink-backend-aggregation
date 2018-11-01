@@ -16,13 +16,9 @@ server:
     - type: http
       port: 8047
 
-cluster: TINK
-
 serviceAuthentication:
   serverTokens:
     - devtoken
-
-developmentMode: true
 
 database:
   driverClass: com.mysql.jdbc.Driver

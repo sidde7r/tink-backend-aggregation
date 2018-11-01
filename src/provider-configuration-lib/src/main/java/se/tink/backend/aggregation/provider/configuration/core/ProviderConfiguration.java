@@ -6,7 +6,6 @@ import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import io.swagger.annotations.ApiModelProperty;
 import se.tink.backend.core.CredentialsTypes;
 import se.tink.backend.core.Field;
 import se.tink.backend.core.ProviderRefreshSchedule;
@@ -21,7 +20,6 @@ import java.util.Set;
 
 
 public class ProviderConfiguration {
-    private static final String DEMO_AGENT_CLASS_NAME = "demo.DemoAgent";
 
     @SuppressWarnings("serial")
     private static class CapabilityList extends ArrayList<Capability> {}
@@ -77,8 +75,6 @@ public class ProviderConfiguration {
         return true;
     }
 
-
-    @ApiModelProperty(name = "capabilities", hidden = true)
     @JsonProperty("capabilities")
     public Set<Capability> getCapabilities() {
         if (Strings.isNullOrEmpty(capabilitiesSerialized)) {
@@ -96,22 +92,18 @@ public class ProviderConfiguration {
         return className;
     }
 
-    @ApiModelProperty(name = "credentialsType", value="The type of credentials the provider creates", example = "MOBILE_BANKID", allowableValues = CredentialsTypes.DOCUMENTED)
     public CredentialsTypes getCredentialsType() {
         return credentialsType;
     }
 
-    @ApiModelProperty(name = "currency", value="The default currency of the provider", example = "SEK")
     public String getCurrency() {
         return currency;
     }
 
-    @ApiModelProperty(name = "displayName", value="The display name of the provider", example = "Handelsbanken")
     public String getDisplayName() {
         return displayName;
     }
 
-    @ApiModelProperty(name = "displayDescription", value="The display description of the provider", example = "Mobilt BankID")
     public String getDisplayDescription() {
         return displayDescription;
     }
@@ -136,17 +128,14 @@ public class ProviderConfiguration {
         return SerializationUtils.deserializeFromString(fieldsSerialized, FieldsList.class);
     }
 
-    @ApiModelProperty(name = "groupDisplayName", value="The grouped display name of the provider")
     public String getGroupDisplayName() {
         return groupDisplayName;
     }
 
-    @ApiModelProperty(name = "market", value="The market of the provider")
     public String getMarket() {
         return market;
     }
 
-    @ApiModelProperty(name = "name", value="The short name of the provider")
     public String getName() {
         return name;
     }
@@ -167,12 +156,10 @@ public class ProviderConfiguration {
         return refreshFrequencyFactor;
     }
 
-    @ApiModelProperty(name = "status", value="The current status of the provider")
     public ProviderStatuses getStatus() {
         return status;
     }
 
-    @ApiModelProperty(name = "type", value="The type of the provider")
     public ProviderTypes getType() {
         return type;
     }
@@ -186,17 +173,14 @@ public class ProviderConfiguration {
         return result;
     }
 
-    @ApiModelProperty(name = "multiFactor", value="Flag to indicate if the provider requires multi-factor authentication")
     public boolean isMultiFactor() {
         return multiFactor;
     }
 
-    @ApiModelProperty(name = "popular", value="Flag to indicate if the provider is popular")
     public boolean isPopular() {
         return popular;
     }
 
-    @ApiModelProperty(name = "transactional", value="Flag to indicate if the provider provides transactional data")
     public boolean isTransactional() {
         return transactional;
     }
@@ -284,23 +268,6 @@ public class ProviderConfiguration {
 
     public void setType(ProviderTypes type) {
         this.type = type;
-    }
-
-    @JsonIgnore
-    public double getCurrentRefreshFrequency() {
-        return refreshFrequency * refreshFrequencyFactor;
-    }
-
-    @JsonIgnore
-    public String getCleanDisplayName() {
-        // Some of our display names have the authetication method in a parenthesis after.
-        // e.g. Handelsbanken (Mobilt BankID)
-        return displayName.replaceAll(" \\([\\w \\-]+\\)", "");
-    }
-
-    @JsonIgnore
-    public boolean isUsingDemoAgent() {
-        return DEMO_AGENT_CLASS_NAME.equals(getClassName());
     }
 
     /**
