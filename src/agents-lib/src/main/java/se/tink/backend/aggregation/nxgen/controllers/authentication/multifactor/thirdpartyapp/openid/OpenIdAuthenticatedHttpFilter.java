@@ -67,7 +67,7 @@ public class OpenIdAuthenticatedHttpFilter extends Filter {
         HttpResponse httpResponse = nextFilter(httpRequest);
 
         if (!verifyInteractionId(interactionId, httpResponse)) {
-            throw new HttpResponseException(httpRequest, httpResponse);
+            throw new HttpResponseException(String.format("%d: %s", httpResponse.getStatus(), httpResponse.getBody(String.class)) , httpRequest, httpResponse);
         }
 
         return httpResponse;
