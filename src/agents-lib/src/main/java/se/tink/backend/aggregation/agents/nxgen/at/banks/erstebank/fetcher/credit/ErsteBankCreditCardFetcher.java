@@ -12,13 +12,13 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 
-public class ErsteBankCreditFetcher implements AccountFetcher<CreditCardAccount>,
+public class ErsteBankCreditCardFetcher implements AccountFetcher<CreditCardAccount>,
         TransactionPagePaginator<CreditCardAccount> {
 
     private final ErsteBankApiClient client;
-    private Logger logger = LoggerFactory.getLogger(ErsteBankCreditFetcher.class);
+    private Logger logger = LoggerFactory.getLogger(ErsteBankCreditCardFetcher.class);
 
-    public ErsteBankCreditFetcher(ErsteBankApiClient client) {
+    public ErsteBankCreditCardFetcher(ErsteBankApiClient client) {
         this.client = client;
     }
 
