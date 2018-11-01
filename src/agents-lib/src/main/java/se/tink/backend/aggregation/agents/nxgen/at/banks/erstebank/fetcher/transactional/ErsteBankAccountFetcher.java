@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher;
+package se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.transactional;
 
 import java.util.Collection;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.ErsteBankApiClient;

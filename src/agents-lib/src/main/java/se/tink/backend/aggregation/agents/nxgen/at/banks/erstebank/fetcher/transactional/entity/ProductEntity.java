@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.entity;
+package se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.transactional.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.slf4j.Logger;

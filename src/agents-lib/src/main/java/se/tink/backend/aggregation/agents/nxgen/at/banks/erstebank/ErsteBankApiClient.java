@@ -5,8 +5,8 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.authenticator.entity.EncryptionValuesEntity;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.authenticator.entity.TokenEntity;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.rpc.AccountResponse;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.transactional.rpc.AccountResponse;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.transactional.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -17,6 +17,7 @@ public class ErsteBankApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage storage;
+    private AccountResponse response;
 
     public ErsteBankApiClient(TinkHttpClient client, SessionStorage storage){
         this.client = client;
@@ -97,6 +98,8 @@ public class ErsteBankApiClient {
                 ErsteBankConstants.URLS.ACCOUNT, ErsteBankConstants.HEADERS.ACCEPT, bearer)
                 .queryParam(ErsteBankConstants.QUERYPARAMS.FEATURES, ErsteBankConstants.QUERYPARAMS.FEATURES_ORDERS)
                 .get(AccountResponse.class);
+
+        this.response = response;
 
         return response;
     }
