@@ -1,6 +1,7 @@
 {
   "clusterid" : "oxford-staging",
   "providers" : [
+    "at-volksbank-password",
     "at-bank-austria",
     "at-bawag-psk",
     "at-erste-bank-and-sparkasse",

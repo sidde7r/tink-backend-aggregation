@@ -3,6 +3,39 @@
     "currency": "EUR",
     "providers": [
         {
+            "name":"at-volksbank-password",
+            "displayName":"Volksbank",
+            "popular":true,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"nxgen.at.banks.volksbank.VolksbankAgent",
+            "passwordHelpText":null,
+            "transactional":"true",
+            "payload":null,
+            "tutorialUrl":null,
+            "fields":[
+                {
+                    "name":"usernumber",
+                    "description":"User number",
+                    "immutable":true,
+                    "numeric":true
+                },
+                {
+                    "name":"username",
+                    "description":"User name",
+                    "immutable":true
+                },
+                {
+                    "name":"password",
+                    "description":"PIN",
+                    "sensitive": true,
+                    "masked":true
+                }
+            ]
+        },
+        {
             "name":"at-bankaustria-password",
             "displayName":"Bank Austria",
             "popular":true,
