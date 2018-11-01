@@ -480,6 +480,13 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
         return header(HttpHeaders.AUTHORIZATION, value);
     }
 
+    public RequestBuilder addBasicAuth(String username) {
+        String value = String.format(
+                "Basic %s",
+                Base64.getUrlEncoder().encodeToString(String.format("%s", username).getBytes()));
+        return header(HttpHeaders.AUTHORIZATION, value);
+    }
+
     public RequestBuilder addBearerToken(OAuth2Token token) {
         return header(HttpHeaders.AUTHORIZATION, token.toAuthorizeHeader());
     }

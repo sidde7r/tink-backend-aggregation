@@ -142,9 +142,27 @@ public class OpenIdApiClient {
                 OpenIdConstants.PREFERRED_TOKEN_ENDPOINT_AUTH_METHODS)
                 .orElseThrow(() -> new IllegalStateException("Preferred token endpoint auth method not found."));
 
-        if (authMethod == OpenIdConstants.TOKEN_ENDPOINT_AUTH_METHOD.client_secret_basic) {
+        switch (authMethod) {
+        case client_secret_basic:
             // `client_secret_basic` does not add data to the body, but on the header.
             requestBuilder = requestBuilder.addBasicAuth(clientInfo.getClientId(), clientInfo.getClientSecret());
+            break;
+        case tls_client_auth:
+            // `tls_client_auth` needs clientId in the header.
+            requestBuilder = requestBuilder.addBasicAuth(clientInfo.getClientId());
+            break;
+
+        case private_key_jwt:
+            // Add to header.
+            break;
+
+        case client_secret_post:
+            // Do nothing. We authenticate using client certificate.
+            break;
+
+        default:
+            throw new IllegalStateException(String.format("Not yet implemented auth method: %s",
+                    authMethod.toString()));
         }
 
         return requestBuilder;
