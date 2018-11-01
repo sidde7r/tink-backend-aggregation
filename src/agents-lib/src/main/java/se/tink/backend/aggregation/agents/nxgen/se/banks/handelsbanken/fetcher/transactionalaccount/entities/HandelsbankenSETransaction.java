@@ -39,7 +39,7 @@ public class HandelsbankenSETransaction extends BaseResponse {
 
     @JsonIgnore
     public LocalDate dueDateAsLocalDate() {
-        if (dueDate != null) {
+        if (dueDate == null) {
             return null;
         }
 
@@ -51,7 +51,7 @@ public class HandelsbankenSETransaction extends BaseResponse {
         if (amount == null) {
             return null;
         }
-        Amount positiveAmount = amount.asAmount();
+        Amount positiveAmount = Amount.inSEK(amount.asDouble());
 
         if (!positiveAmount.isPositive()) {
             return positiveAmount.negate();
