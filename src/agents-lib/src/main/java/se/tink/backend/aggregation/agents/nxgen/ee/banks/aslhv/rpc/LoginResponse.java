@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.AsLhvConstants;

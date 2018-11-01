@@ -1,13 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv;
 
 import java.util.Date;
-
 import org.apache.http.HttpHeaders;
-
-import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc.*;
+import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc.GetAccountTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc.GetCurrenciesResponse;
+import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc.GetUserDataResponse;
+import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc.IsAuthenticatedResponse;
+import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc.LoginResponse;
+import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc.LogoutResponse;
 import se.tink.backend.aggregation.nxgen.http.Form;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
@@ -26,7 +29,8 @@ public class AsLhvApiClient {
     }
 
     private URL getUrl() {
-        return new URL(String.format("https://%s%s", AsLhvConstants.URLS.BASE_URL, AsLhvConstants.URLS.SERVICE_ENDPOINT));
+        return new URL(
+                String.format("https://%s%s", AsLhvConstants.URLS.BASE_URL, AsLhvConstants.URLS.SERVICE_ENDPOINT));
     }
 
     private URL getIsAuthenticatedUrl() {
@@ -63,8 +67,9 @@ public class AsLhvApiClient {
         return getBaseRequest(getGetUserDataUrl())
                 .header(HttpHeaders.ACCEPT, AsLhvConstants.Header.ACCEPT_JSON)
                 .header(HttpHeaders.ACCEPT_LANGUAGE, AsLhvConstants.Header.ACCEPT_LANGUAGE)
-                .header(HttpHeaders.CONTENT_TYPE,  AsLhvConstants.Header.CONTENT_TYPE_FORM_URLENCODED)
-                .header(AsLhvConstants.Header.LHV_APPLICATION_LANGUAGE_HEADER, AsLhvConstants.Header.LHV_APPLICATION_LANUGAGE_US)
+                .header(HttpHeaders.CONTENT_TYPE, AsLhvConstants.Header.CONTENT_TYPE_FORM_URLENCODED)
+                .header(AsLhvConstants.Header.LHV_APPLICATION_LANGUAGE_HEADER,
+                        AsLhvConstants.Header.LHV_APPLICATION_LANUGAGE_US)
                 .post(GetUserDataResponse.class);
     }
 
@@ -77,8 +82,9 @@ public class AsLhvApiClient {
         return getBaseRequest(getLoginPasswordUrl())
                 .header(HttpHeaders.ACCEPT, AsLhvConstants.Header.ACCEPT_JSON)
                 .header(HttpHeaders.ACCEPT_LANGUAGE, AsLhvConstants.Header.ACCEPT_LANGUAGE)
-                .header(HttpHeaders.CONTENT_TYPE,  AsLhvConstants.Header.CONTENT_TYPE_FORM_URLENCODED)
-                .header(AsLhvConstants.Header.LHV_APPLICATION_LANGUAGE_HEADER, AsLhvConstants.Header.LHV_APPLICATION_LANUGAGE_US)
+                .header(HttpHeaders.CONTENT_TYPE, AsLhvConstants.Header.CONTENT_TYPE_FORM_URLENCODED)
+                .header(AsLhvConstants.Header.LHV_APPLICATION_LANGUAGE_HEADER,
+                        AsLhvConstants.Header.LHV_APPLICATION_LANUGAGE_US)
                 .body(serialized)
                 .post(LoginResponse.class);
     }
@@ -87,14 +93,15 @@ public class AsLhvApiClient {
         return getBaseRequest(getGetCurrenciesUrl())
                 .header(HttpHeaders.ACCEPT, AsLhvConstants.Header.ACCEPT_JSON)
                 .header(HttpHeaders.ACCEPT_LANGUAGE, AsLhvConstants.Header.ACCEPT_LANGUAGE)
-                .header(HttpHeaders.CONTENT_TYPE,  AsLhvConstants.Header.CONTENT_TYPE_FORM_URLENCODED)
-                .header(AsLhvConstants.Header.LHV_APPLICATION_LANGUAGE_HEADER, AsLhvConstants.Header.LHV_APPLICATION_LANUGAGE_US)
+                .header(HttpHeaders.CONTENT_TYPE, AsLhvConstants.Header.CONTENT_TYPE_FORM_URLENCODED)
+                .header(AsLhvConstants.Header.LHV_APPLICATION_LANGUAGE_HEADER,
+                        AsLhvConstants.Header.LHV_APPLICATION_LANUGAGE_US)
                 .post(GetCurrenciesResponse.class);
     }
 
     public GetAccountTransactionsResponse getAccountTransactions(final String portfolioId,
-                                                                 final Date fromDate,
-                                                                 final Date toDate) {
+            final Date fromDate,
+            final Date toDate) {
 
         final Form form = new Form.Builder()
                 .put(AsLhvConstants.Form.FROM_DATE, AsLhvConstants.DATE_FORMAT.format(fromDate))
@@ -105,8 +112,9 @@ public class AsLhvApiClient {
         return getBaseRequest(getAccountTransactionsUrl())
                 .header(HttpHeaders.ACCEPT, AsLhvConstants.Header.ACCEPT_JSON)
                 .header(HttpHeaders.ACCEPT_LANGUAGE, AsLhvConstants.Header.ACCEPT_LANGUAGE)
-                .header(HttpHeaders.CONTENT_TYPE,  AsLhvConstants.Header.CONTENT_TYPE_FORM_URLENCODED)
-                .header(AsLhvConstants.Header.LHV_APPLICATION_LANGUAGE_HEADER, AsLhvConstants.Header.LHV_APPLICATION_LANUGAGE_US)
+                .header(HttpHeaders.CONTENT_TYPE, AsLhvConstants.Header.CONTENT_TYPE_FORM_URLENCODED)
+                .header(AsLhvConstants.Header.LHV_APPLICATION_LANGUAGE_HEADER,
+                        AsLhvConstants.Header.LHV_APPLICATION_LANUGAGE_US)
                 .body(form.serialize())
                 .post(GetAccountTransactionsResponse.class);
     }

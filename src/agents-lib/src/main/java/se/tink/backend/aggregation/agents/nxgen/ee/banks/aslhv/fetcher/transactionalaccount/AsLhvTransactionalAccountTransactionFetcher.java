@@ -11,7 +11,9 @@ import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 public class AsLhvTransactionalAccountTransactionFetcher implements TransactionDatePaginator<TransactionalAccount> {
     private final AsLhvTransactionFetcher transactionFetcher;
 
-    public AsLhvTransactionalAccountTransactionFetcher(final AsLhvApiClient apiClient, final AsLhvSessionStorage sessionStorage) {
+    public AsLhvTransactionalAccountTransactionFetcher(
+            final AsLhvApiClient apiClient,
+            final AsLhvSessionStorage sessionStorage) {
         transactionFetcher = new AsLhvTransactionFetcher(apiClient, sessionStorage);
     }
 
