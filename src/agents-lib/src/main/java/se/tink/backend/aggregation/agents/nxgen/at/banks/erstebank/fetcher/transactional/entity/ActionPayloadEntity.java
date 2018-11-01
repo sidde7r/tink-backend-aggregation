@@ -6,9 +6,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class ActionPayloadEntity {
 
-	@JsonProperty("state")
-	private String state;
+    @JsonProperty("state")
+    private String state;
 
-	@JsonProperty("lockReason")
-	private String lockReason;
+    @JsonProperty("lockReason")
+    private String lockReason;
 }

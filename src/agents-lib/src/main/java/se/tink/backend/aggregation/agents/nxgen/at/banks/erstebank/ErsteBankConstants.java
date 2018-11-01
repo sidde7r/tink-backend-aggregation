@@ -93,5 +93,6 @@ public class ErsteBankConstants {
     public static class DATE {
         public static final String YESTERDAY = "Yesterday";
         public static final String TODAY = "Today";
+        public static final String TOMORROW = "Tomorrow";
     }
 }
