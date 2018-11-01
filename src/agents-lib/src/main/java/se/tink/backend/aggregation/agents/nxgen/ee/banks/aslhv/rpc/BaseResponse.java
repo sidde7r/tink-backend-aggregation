@@ -31,8 +31,13 @@ public class BaseResponse {
     }
 
     @JsonIgnore
+    public boolean requestFailed() {
+        return error != null;
+    }
+
+    @JsonIgnore
     public String getErrorMessage() {
-        if (!requestSuccessful()) {
+        if (requestSuccessful()) {
             return "";
         }
 

@@ -35,20 +35,33 @@ public class AsLhvPasswordAuthenticator implements PasswordAuthenticator {
                 }
             } else {
                 GetCurrenciesResponse getCurrenciesResponse = apiClient.getCurrencies();
-                if (getCurrenciesResponse.requestSuccessful()) {
-                    sessionStorage.setCurrencies(getCurrenciesResponse);
+                if (getCurrenciesResponse.requestFailed()) {
+                    final String errorMessage = String.format(
+                            "Failed to fetch currencies: %s",
+                            getCurrenciesResponse.getErrorMessage());
+                    throw new IllegalStateException(errorMessage);
                 }
-                // TODO maybe handle the isAuthenticated check differently.
-                IsAuthenticatedResponse isAuthenticatedResponse = apiClient.isAuthenticated();
-                if (isAuthenticatedResponse.requestSuccessful() && isAuthenticatedResponse.isAuthenticated()) {
-                    sessionStorage.setIsAuthenticatedResponseData(isAuthenticatedResponse);
 
+                IsAuthenticatedResponse isAuthenticatedResponse = apiClient.isAuthenticated();
+                if (isAuthenticatedResponse.requestFailed()) {
+                    final String errorMessage = String.format(
+                            "Authentication information request failed: %s",
+                            isAuthenticatedResponse.getErrorMessage());
+                    throw new IllegalStateException(errorMessage);
                 }
+
                 // TODO maybe move this to fetcher to avoid missing new accounts on long refresh windows.
                 GetUserDataResponse userDataResponse = apiClient.getUserData();
-                if (userDataResponse.requestSuccessful()) {
-                    sessionStorage.setUserData(userDataResponse);
+                if (userDataResponse.requestFailed()) {
+                    final String errorMessage = String.format(
+                            "Failed to fetch user data: %s",
+                            userDataResponse.getErrorMessage());
+                    throw new IllegalStateException(errorMessage);
                 }
+
+                sessionStorage.setCurrencies(getCurrenciesResponse);
+                sessionStorage.setIsAuthenticatedResponseData(isAuthenticatedResponse);
+                sessionStorage.setUserData(userDataResponse);
             }
         } catch (HttpResponseException e) {
             throw new IllegalStateException("Http request failed: " + e);
