@@ -76,7 +76,7 @@ public class TransactionEntity {
 
     private Date getTomorrowsDate() {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.DATE, +1);
+        c.add(Calendar.DATE, 1);
         return c.getTime();
     }
 

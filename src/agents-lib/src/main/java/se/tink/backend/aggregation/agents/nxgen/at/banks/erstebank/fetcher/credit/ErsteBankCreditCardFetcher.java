@@ -24,7 +24,7 @@ public class ErsteBankCreditCardFetcher implements AccountFetcher<CreditCardAcco
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        return client.getAccountResponse().toCreditCardAccounts();
+        return client.fetchAccounts().toCreditCardAccounts();
     }
 
     @Override
@@ -38,7 +38,8 @@ public class ErsteBankCreditCardFetcher implements AccountFetcher<CreditCardAcco
         try {
             return client.fetchTransactions(page, creditUrl);
         } catch (Exception e) {
-            logger.error(String.format("%s: %s", ErsteBankConstants.LOGTAG.CREDIT_TRANSACTIONS_ERROR.toString(), e.toString()));
+            logger.error(String.format("%s: %s", ErsteBankConstants.LOGTAG.CREDIT_TRANSACTIONS_ERROR.toString(),
+                    e.toString()));
             return PaginatorResponseImpl.createEmpty(false);
         }
     }
