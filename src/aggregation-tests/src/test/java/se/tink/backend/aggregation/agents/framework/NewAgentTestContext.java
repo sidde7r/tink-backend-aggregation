@@ -414,7 +414,6 @@ public class NewAgentTestContext extends AgentContext {
 
         case INVESTMENT:
             Assert.assertNotNull(accountFeatures.getPortfolios());
-            Assert.assertFalse(accountFeatures.getPortfolios().isEmpty());
             printPortfolioDetails(accountFeatures.getPortfolios());
             break;
 
