@@ -33,7 +33,6 @@ public class GetUserDataResponse extends BaseResponse {
             final String currency,
             final int baseCurrencyId) {
         return accounts.stream()
-                .filter(account -> AsLhvConstants.ACCOUNT_TYPE_MAPPER.isTransactionalAccount(account.getType()))
                 .map(account -> account.buildTransactionalAccount(baseCurrencyId, currency, currentUser))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -46,7 +45,6 @@ public class GetUserDataResponse extends BaseResponse {
             final String currency,
             final int baseCurrencyId) {
         return accounts.stream()
-                .filter(account -> AsLhvConstants.ACCOUNT_TYPE_MAPPER.isCreditCardAccount(account.getType()))
                 .map(account -> account.buildCreditCardAccount(baseCurrencyId, currency, currentUser))
                 .filter(Optional::isPresent)
                 .map(Optional::get)

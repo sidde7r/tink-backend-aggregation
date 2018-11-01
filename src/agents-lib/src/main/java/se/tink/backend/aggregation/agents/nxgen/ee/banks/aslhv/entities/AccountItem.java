@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Optional;
+import javax.swing.text.html.Option;
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.AsLhvConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
@@ -44,10 +45,6 @@ public class AccountItem {
 
     public boolean isActive() {
         return active;
-    }
-
-    public int getType() {
-        return type;
     }
 
     @JsonIgnore
@@ -102,6 +99,10 @@ public class AccountItem {
             return Optional.empty();
         }
 
+        if (!AsLhvConstants.ACCOUNT_TYPE_MAPPER.isCreditCardAccount(type)) {
+            return Optional.empty();
+        }
+
         double balance = getBalance(baseCurrencyId);
         double freeCredit = getFreeCredit(baseCurrencyId);
         Amount accountBalance = new Amount(currency, balance);
@@ -124,9 +125,14 @@ public class AccountItem {
             return Optional.empty();
         }
 
+        if (!AsLhvConstants.ACCOUNT_TYPE_MAPPER.isTransactionalAccount(type)) {
+            return Optional.empty();
+        }
+
+        AccountTypes accountType = AsLhvConstants.ACCOUNT_TYPE_MAPPER.translate(type).get();
         double balance = getBalance(baseCurrencyId);
         Amount accountBalance = new Amount(currency, balance);
-        return Optional.of(TransactionalAccount.builder(AsLhvConstants.ACCOUNT_TYPE_MAPPER.translate(type).get(), iban)
+        return Optional.of(TransactionalAccount.builder(accountType, iban)
                 .setBalance(accountBalance)
                 .setName(getAccountName())
                 .setHolderName(new HolderName(currentUser))
