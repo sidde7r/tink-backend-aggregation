@@ -13,20 +13,19 @@ public class AccountFeaturesFactory {
 
     public static <A extends Account> AccountFeatures createForAnAccount(A account,
             LoanInterpreter loanInterpreter) {
-        Class<? extends Account> accountClass = account.getClass();
 
-        if (LoanAccount.class.equals(accountClass)) {
+        if (account instanceof LoanAccount) {
             LoanAccount loan = (LoanAccount) account;
             return AccountFeatures.createForLoan(
                     loan.getDetails().toSystemLoan(loan, loanInterpreter));
         }
 
-        if (InvestmentAccount.class.equals(accountClass)) {
+        if (account instanceof InvestmentAccount) {
             InvestmentAccount investment = (InvestmentAccount) account;
             return AccountFeatures.createForPortfolios(
                     investment.getPortfolios());
         }
-        
+
         return AccountFeatures.createEmpty();
     }
 
