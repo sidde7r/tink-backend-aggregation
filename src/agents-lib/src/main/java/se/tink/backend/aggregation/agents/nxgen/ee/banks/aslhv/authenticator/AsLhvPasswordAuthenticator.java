@@ -50,18 +50,8 @@ public class AsLhvPasswordAuthenticator implements PasswordAuthenticator {
                     throw new IllegalStateException(errorMessage);
                 }
 
-                // TODO maybe move this to fetcher to avoid missing new accounts on long refresh windows.
-                GetUserDataResponse userDataResponse = apiClient.getUserData();
-                if (userDataResponse.requestFailed()) {
-                    final String errorMessage = String.format(
-                            "Failed to fetch user data: %s",
-                            userDataResponse.getErrorMessage());
-                    throw new IllegalStateException(errorMessage);
-                }
-
                 sessionStorage.setCurrencies(getCurrenciesResponse);
                 sessionStorage.setIsAuthenticatedResponseData(isAuthenticatedResponse);
-                sessionStorage.setUserData(userDataResponse);
             }
         } catch (HttpResponseException e) {
             throw new IllegalStateException("Http request failed: " + e);

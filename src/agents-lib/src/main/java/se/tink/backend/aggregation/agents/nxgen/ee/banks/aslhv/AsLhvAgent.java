@@ -54,7 +54,7 @@ public class AsLhvAgent extends NextGenerationAgent {
         return Optional.of(new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
-                new AsLhvTransactionalAccountFetcher(asLhvSessionStorage),
+                new AsLhvTransactionalAccountFetcher(apiClient, asLhvSessionStorage),
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
                         new TransactionDatePaginationController<>(transactionFetcher)
@@ -69,7 +69,7 @@ public class AsLhvAgent extends NextGenerationAgent {
         return Optional.of(new CreditCardRefreshController(
                 metricRefreshController,
                 updateController,
-                new AsLhvCreditCardAccountFetcher(asLhvSessionStorage),
+                new AsLhvCreditCardAccountFetcher(apiClient, asLhvSessionStorage),
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
                         new TransactionDatePaginationController<>(transactionFetcher)
