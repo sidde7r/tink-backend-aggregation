@@ -72,21 +72,6 @@ public class OpenIdApiClient {
         return cachedProviderKeys;
     }
 
-    public RegistrationResponse registerClient() {
-        WellKnownResponse wellKnownResponse = getWellKnownConfiguration();
-        URL registrationEndpoint = wellKnownResponse.getRegistrationEndpoint();
-
-        String postData = ClientRegistration.create()
-                .withSoftwareStatement(softwareStatement)
-                .withWellknownConfiguration(wellKnownResponse)
-                .build();
-
-        return httpClient.request(registrationEndpoint)
-                .type("application/jwt")
-                .accept(MediaType.APPLICATION_JSON_TYPE)
-                .post(RegistrationResponse.class, postData);
-    }
-
     private TokenRequestForm createTokenRequestForm(String grantType) {
         WellKnownResponse wellknownConfiguration = getWellKnownConfiguration();
 
@@ -222,5 +207,23 @@ public class OpenIdApiClient {
         } finally {
             authFilter = null;
         }
+    }
+
+    public static String registerClient(SoftwareStatement softwareStatement, URL wellKnownURL, TinkHttpClient httpClient) {
+
+        httpClient.setDebugOutput(false);
+
+        WellKnownResponse wellKnownResponse = httpClient.request(wellKnownURL).get(WellKnownResponse.class);
+        URL registrationEndpoint = wellKnownResponse.getRegistrationEndpoint();
+        httpClient.setDebugOutput(false);
+        String postData = ClientRegistration.create()
+                .withSoftwareStatement(softwareStatement)
+                .withWellknownConfiguration(wellKnownResponse)
+                .build();
+
+        return httpClient.request(registrationEndpoint)
+                .type("application/jwt")
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .post(String.class, postData);
     }
 }

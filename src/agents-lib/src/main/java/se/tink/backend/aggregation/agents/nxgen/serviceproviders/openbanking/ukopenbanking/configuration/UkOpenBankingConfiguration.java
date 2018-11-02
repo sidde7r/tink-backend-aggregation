@@ -32,6 +32,5 @@ public class UkOpenBankingConfiguration {
     public void validate() {
         Preconditions.checkNotNullOrEmpty(rootCAData);
         Preconditions.checkNotNullOrEmpty(rootCAPassword);
-        softwareStatements.forEach((k, v) -> v.validate());
     }
 }

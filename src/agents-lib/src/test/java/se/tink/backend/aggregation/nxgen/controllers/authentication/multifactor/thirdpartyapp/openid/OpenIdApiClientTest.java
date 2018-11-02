@@ -18,28 +18,24 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 @Ignore
 public class OpenIdApiClientTest {
 
-    private TinkHttpClient httpClient;
     private OpenIdApiClient apiClient;
-    private SoftwareStatement softwareStatement;
-    private ProviderConfiguration providerConfiguration;
 
-    private static final UkOpenBankingConfiguration UKOB_TEST_CONFIG = SerializationUtils.deserializeFromString("{}",
+    private final UkOpenBankingConfiguration UKOB_TEST_CONFIG = SerializationUtils.deserializeFromString("{}",
             UkOpenBankingConfiguration.class);
 
     @Before
     public void setup() {
         UKOB_TEST_CONFIG.validate();
 
-        httpClient = new TinkHttpClient(null, null);
+        TinkHttpClient httpClient = new TinkHttpClient(null, null);
         httpClient.disableSignatureRequestHeader();
         httpClient.trustRootCaCertificate(UKOB_TEST_CONFIG.getRootCAData(),
                 UKOB_TEST_CONFIG.getRootCAPassword());
 
-
-        softwareStatement = UKOB_TEST_CONFIG.getSoftwareStatement("tink")
+        SoftwareStatement softwareStatement = UKOB_TEST_CONFIG.getSoftwareStatement("tink")
                 .orElseThrow(AssertionError::new);
 
-        providerConfiguration = softwareStatement.getProviderConfiguration("modelo")
+        ProviderConfiguration providerConfiguration = softwareStatement.getProviderConfiguration("modelo")
                 .orElseThrow(AssertionError::new);
 
         apiClient = new OpenIdApiClient(httpClient, softwareStatement, providerConfiguration);
@@ -53,15 +49,6 @@ public class OpenIdApiClientTest {
         Assert.assertTrue(conf.verifyAndGetScopes(
                 OpenIdConstants.Scopes.getAllSupported())
                 .isPresent());
-    }
-
-    @Test
-    public void testRegistration() {
-
-        //TODO: Validate response
-        RegistrationResponse response = apiClient.registerClient();
-        System.out.println(response.toString());
-        Assert.assertNotNull(response);
     }
 
     @Test
