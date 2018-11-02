@@ -1,6 +1,7 @@
 {
   "clusterid" : "oxford-production",
   "providers" : [
+    "at-volksbank-password",
     "at-bank-austria",
     "at-bankaustria-password",
     "at-bawag-psk",
