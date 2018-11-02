@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.configurations.models.AggregatorConfiguration
 import se.tink.backend.aggregation.configurations.models.ClientConfiguration;
 import se.tink.backend.aggregation.configurations.models.ClusterConfiguration;
 import se.tink.backend.aggregation.configurations.models.CryptoConfiguration;
+import se.tink.backend.aggregation.configurations.models.CryptoConfigurationId;
 import se.tink.backend.aggregation.configurations.repositories.AggregatorConfigurationsRepository;
 import se.tink.backend.aggregation.configurations.repositories.ClientConfigurationsRepository;
 import se.tink.backend.aggregation.configurations.repositories.ClusterConfigurationsRepository;
@@ -52,11 +53,7 @@ public class AggregationConfigurations implements ConfigurationsDao {
 
     @Override
     public CryptoConfiguration findCryptoConfiguration(int keyId, String cryptoId) {
-        return cryptoConfigurationsRepository.findAll()
-                .stream()
-                .filter(e -> e.getKeyId() == keyId && e.getCryptoId().equalsIgnoreCase(cryptoId))
-                .findFirst()
-                .get();
+        return cryptoConfigurationsRepository.findOne(new CryptoConfigurationId(keyId,cryptoId));
     }
 
     @Override
@@ -75,11 +72,7 @@ public class AggregationConfigurations implements ConfigurationsDao {
     }
 
     @Override
-    public CryptoConfiguration findOneByKeyId(int keyId) {
-        return cryptoConfigurationsRepository.findAll()
-                .stream()
-                .filter(e -> e.getKeyId() == keyId)
-                .findFirst()
-                .get();
+    public List<CryptoConfiguration> findOneByKeyId(int keyId) {
+        return cryptoConfigurationsRepository.findBycryptoConfigurationIdKeyId(keyId);
     }
 }

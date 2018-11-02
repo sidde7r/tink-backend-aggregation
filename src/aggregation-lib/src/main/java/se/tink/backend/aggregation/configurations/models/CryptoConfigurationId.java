@@ -34,7 +34,7 @@ public class CryptoConfigurationId implements Serializable {
     public CryptoConfigurationId() {
     }
 
-    public CryptoConfigurationId(String clusterId, int keyId) {
+    public CryptoConfigurationId(int keyId ,String clusterId) {
         this.cryptoId = clusterId;
         this.keyId = keyId;
     }
