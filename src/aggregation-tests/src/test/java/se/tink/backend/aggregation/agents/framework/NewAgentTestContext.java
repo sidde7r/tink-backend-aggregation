@@ -20,6 +20,7 @@ import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.framework.validation.ExtensiveAisValidator;
 import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.rpc.Account;
@@ -53,6 +54,8 @@ public class NewAgentTestContext extends AgentContext {
     private final Map<String, List<Transaction>> transactionsByAccountBankId = new HashMap<>();
     private final Map<String, List<TransferDestinationPattern>> transferDestinationPatternsByAccountBankId = new HashMap<>();
     private final List<Transfer> transfers = new ArrayList<>();
+
+    private final ExtensiveAisValidator validator = new ExtensiveAisValidator();
 
     private final User user;
     private final Credentials credential;
@@ -180,7 +183,12 @@ public class NewAgentTestContext extends AgentContext {
 
     @Override
     public void processAccounts() {
-        // noop
+        validator.validate(
+                accountsByBankId.values(),
+                transactionsByAccountBankId
+                        .values()
+                        .stream()
+                        .collect(ArrayList::new, List::addAll, List::addAll));
     }
 
     @Override
