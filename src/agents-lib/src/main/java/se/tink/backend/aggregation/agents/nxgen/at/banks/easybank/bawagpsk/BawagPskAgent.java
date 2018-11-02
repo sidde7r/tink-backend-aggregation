@@ -3,7 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.authenticator.BawagPskPasswordAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.fetcher.transactional.BawagPskTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.fetcher.BawagPskTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.fetcher.creditcard.BawagPskCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.fetcher.loan.BawagPskLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.fetcher.transactional.BawagPskTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.session.BawagPskSessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -19,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.common.config.SignatureKeyPair;
@@ -27,14 +30,16 @@ public class BawagPskAgent extends NextGenerationAgent {
 
     private final BawagPskApiClient apiClient;
 
-    public BawagPskAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public BawagPskAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        this.apiClient = new BawagPskApiClient(this.client, sessionStorage, persistentStorage, request.getProvider());
+        this.apiClient =
+                new BawagPskApiClient(
+                        this.client, sessionStorage, persistentStorage, request.getProvider());
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
@@ -42,23 +47,35 @@ public class BawagPskAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        final BawagPskTransactionFetcher transactionFetcher = new BawagPskTransactionFetcher(apiClient);
-        return Optional.of(new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                new BawagPskTransactionalAccountFetcher(apiClient),
-                new TransactionFetcherController<>(
-                        this.transactionPaginationHelper,
-                        // TODO Alternatively, implement a custom pagination controller which keeps fetching
-                        // transactions until AccountStatementItem/Position equals 1 (signifying the earliest entry)
-                        new TransactionDatePaginationController<>(transactionFetcher)
-                )));
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
+        final BawagPskTransactionFetcher<TransactionalAccount> transactionFetcher =
+                new BawagPskTransactionFetcher<TransactionalAccount>(apiClient);
+        return Optional.of(
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new BawagPskTransactionalAccountFetcher(apiClient),
+                        new TransactionFetcherController<>(
+                                this.transactionPaginationHelper,
+                                // TODO Alternatively, implement a custom pagination controller
+                                // which keeps fetching
+                                // transactions until AccountStatementItem/Position equals 1
+                                // (signifying the earliest entry)
+                                new TransactionDatePaginationController<>(transactionFetcher))));
     }
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.empty();
+        return Optional.of(
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new BawagPskCreditCardFetcher(apiClient),
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionDatePaginationController<>(
+                                        new BawagPskTransactionFetcher<>(apiClient)))));
     }
 
     @Override
@@ -68,7 +85,15 @@ public class BawagPskAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.empty();
+        return Optional.of(
+                new LoanRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new BawagPskLoanFetcher(apiClient),
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionDatePaginationController<>(
+                                        new BawagPskTransactionFetcher<>(apiClient)))));
     }
 
     @Override
@@ -77,7 +102,8 @@ public class BawagPskAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

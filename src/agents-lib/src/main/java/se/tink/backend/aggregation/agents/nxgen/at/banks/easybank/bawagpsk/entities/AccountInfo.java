@@ -9,7 +9,9 @@ public class AccountInfo {
     private String accountNumber;
     private String accountCurrency;
     private ProductID productID;
-    private AmountEntity amountEntity;
+    private AmountEntity currentBalanceEntity;
+    private AmountEntity currentSaldoEntity;
+    private AmountEntity disposableBalanceEntity;
 
     public String getBankCode() {
         return bankCode;
@@ -47,12 +49,30 @@ public class AccountInfo {
         this.productID = productID;
     }
 
-    public AmountEntity getAmountEntity() {
-        return amountEntity;
+    public AmountEntity getCurrentBalanceEntity() {
+        return currentBalanceEntity;
+    }
+
+    public AmountEntity getCurrentSaldoEntity() {
+        return currentSaldoEntity;
+    }
+
+    public AmountEntity getDisposableBalanceEntity() {
+        return disposableBalanceEntity;
     }
 
     @XmlElement(name = "CurrentBalance")
-    public void setAmountEntity(AmountEntity amountEntity) {
-        this.amountEntity = amountEntity;
+    public void setCurrentBalanceEntity(AmountEntity amountEntity) {
+        currentBalanceEntity = amountEntity;
+    }
+
+    @XmlElement(name = "CurrentSaldo")
+    public void setCurrentSaldoEntity(AmountEntity amountEntity) {
+        currentSaldoEntity = amountEntity;
+    }
+
+    @XmlElement(name = "DisposableBalance")
+    public void setDisposableBalanceEntity(AmountEntity amountEntity) {
+        disposableBalanceEntity = amountEntity;
     }
 }

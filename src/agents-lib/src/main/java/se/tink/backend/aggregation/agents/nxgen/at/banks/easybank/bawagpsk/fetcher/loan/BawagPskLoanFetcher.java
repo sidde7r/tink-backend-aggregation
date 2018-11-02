@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.fetcher.transactional;
+package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.fetcher.loan;
 
 import java.util.Collection;
 import java.util.Map;
@@ -6,23 +6,22 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.Bawag
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.fetcher.BawagPskAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.GetAccountInformationListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.common.utils.Pair;
 
-public final class BawagPskTransactionalAccountFetcher
-        implements AccountFetcher<TransactionalAccount> {
+public final class BawagPskLoanFetcher implements AccountFetcher<LoanAccount> {
 
     private final BawagPskAccountFetcher accountFetcher;
 
-    public BawagPskTransactionalAccountFetcher(final BawagPskApiClient bawagPskApiClient) {
+    public BawagPskLoanFetcher(BawagPskApiClient bawagPskApiClient) {
         accountFetcher = new BawagPskAccountFetcher(bawagPskApiClient);
     }
 
     @Override
-    public Collection<TransactionalAccount> fetchAccounts() {
+    public Collection<LoanAccount> fetchAccounts() {
         final Pair<GetAccountInformationListResponse, Map<String, String>> pair =
                 accountFetcher.fetchAccountData();
 
-        return pair.first.extractTransactionalAccounts(pair.second);
+        return pair.first.extractLoanAccounts(pair.second);
     }
 }
