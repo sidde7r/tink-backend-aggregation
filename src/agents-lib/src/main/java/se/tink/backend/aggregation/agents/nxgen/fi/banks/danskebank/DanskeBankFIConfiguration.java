@@ -72,6 +72,11 @@ public class DanskeBankFIConfiguration implements DanskeBankConfiguration {
     }
 
     @Override
+    public boolean shouldAddXAppCultureHeader() {
+        return false;
+    }
+
+    @Override
     public List<String> getCheckingAccountTypes() {
         return ImmutableList.<String>builder()
                 .add("7BC")
