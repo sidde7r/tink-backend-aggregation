@@ -28,41 +28,48 @@ public final class BawagPskTransactionFetcher<AcccountT extends Account>
 
     @Override
     public PaginatorResponse getTransactionsFor(
-            final AcccountT account,
-            final Date fromDate,
-            final Date toDate) {
+            final AcccountT account, final Date fromDate, final Date toDate) {
 
-        final String errorMsg = "Could not find products from session storage necessary for fetching transactions";
-        final Products products = BawagPskUtils.xmlToEntity(
-                apiClient.getFromSessionStorage(BawagPskConstants.Storage.PRODUCTS.name())
-                        .orElseThrow(() -> new IllegalStateException(errorMsg)), Products.class);
+        final String errorMsg =
+                "Could not find products from session storage necessary for fetching transactions";
+        final Products products =
+                BawagPskUtils.xmlToEntity(
+                        apiClient
+                                .getFromSessionStorage(BawagPskConstants.Storage.PRODUCTS.name())
+                                .orElseThrow(() -> new IllegalStateException(errorMsg)),
+                        Products.class);
 
-        final ProductID productID = products.getProductIDByAccountNumber(account.getAccountNumber())
-                .orElseThrow(IllegalStateException::new);
-        final String sessionID = apiClient.getFromSessionStorage(
-                BawagPskConstants.Storage.SERVER_SESSION_ID.name())
-                .orElseThrow(IllegalStateException::new);
-        final String qid = apiClient.getFromSessionStorage(
-                BawagPskConstants.Storage.QID.name())
-                .orElseThrow(IllegalStateException::new);
+        final ProductID productID =
+                products.getProductIDByAccountNumber(account.getAccountNumber())
+                        .orElseThrow(IllegalStateException::new);
+        final String sessionID =
+                apiClient
+                        .getFromSessionStorage(BawagPskConstants.Storage.SERVER_SESSION_ID.name())
+                        .orElseThrow(IllegalStateException::new);
+        final String qid =
+                apiClient
+                        .getFromSessionStorage(BawagPskConstants.Storage.QID.name())
+                        .orElseThrow(IllegalStateException::new);
 
-        final GetAccountStatementItemsRequest request = new GetAccountStatementItemsRequest(
-                sessionID,
-                qid,
-                productID,
-                fromDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(),
-                toDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
-        );
+        final GetAccountStatementItemsRequest request =
+                new GetAccountStatementItemsRequest(
+                        sessionID,
+                        qid,
+                        productID,
+                        fromDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(),
+                        toDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
 
         final String requestString;
         requestString = request.getXml();
-        final GetAccountStatementItemsResponse response = apiClient
-                .getGetAccountStatementItemsResponse(requestString);
+        final GetAccountStatementItemsResponse response =
+                apiClient.getGetAccountStatementItemsResponse(requestString);
 
         // Get transactions, filter zero amounts since they are not shown in the app
-        final Collection<? extends Transaction> transactions = response.getTransactions().stream()
-                .filter(transaction -> !transaction.getAmount().isZero())
-                .collect(Collectors.toSet());
+        final Collection<? extends Transaction> transactions =
+                response.getTransactions()
+                        .stream()
+                        .filter(transaction -> !transaction.getAmount().isZero())
+                        .collect(Collectors.toSet());
 
         return PaginatorResponseImpl.create(transactions);
     }

@@ -6,7 +6,8 @@ import se.tink.backend.aggregation.rpc.AccountTypes;
 
 public class BawagPskConstants {
 
-    public static final int DISPOSER_NUMBER_LENGTH = 17; // Length when account number is left-padded with zeros
+    public static final int DISPOSER_NUMBER_LENGTH =
+            17; // Length when account number is left-padded with zeros
 
     public static class CLIENT {
         // Values sent in LoginRequest messages originating from the app
@@ -32,13 +33,15 @@ public class BawagPskConstants {
 
     public static class Header {
         public static final String ACCEPT = "*/*";
-        public static final String USER_AGENT = "Tink (+https://www.tink.se/; noc@tink.se) mobileBanking/bawag_5.3 target/PROD";
+        public static final String USER_AGENT =
+                "Tink (+https://www.tink.se/; noc@tink.se) mobileBanking/bawag_5.3 target/PROD";
         public static final String ACCEPT_LANGUAGE = "en-gb";
     }
 
     public static class URLS {
         public static final String SERVICE_ENDPOINT = "/ebanking.mobile/SelfServiceMobileService";
-        public static final String SOAP_NAMESPACE = "urn:selfservicemobile.bawag.com/ws/v0100-draft03";
+        public static final String SOAP_NAMESPACE =
+                "urn:selfservicemobile.bawag.com/ws/v0100-draft03";
     }
 
     public static class MESSAGES {
@@ -49,22 +52,24 @@ public class BawagPskConstants {
     }
 
     // TODO make non-static somehow
-    public static final AccountTypeMapper PRODUCT_CODE_MAPPER = AccountTypeMapper.builder()
-            .put(AccountTypes.CHECKING, "B121", "B400")
-            .put(AccountTypes.SAVINGS, "D272", "D264")
-            .put(AccountTypes.CREDIT_CARD, "00EC", "00ET", "00PD")
-            .put(AccountTypes.LOAN, "S132")
-            .build();
+    public static final AccountTypeMapper PRODUCT_CODE_MAPPER =
+            AccountTypeMapper.builder()
+                    .put(AccountTypes.CHECKING, "B121", "B400")
+                    .put(AccountTypes.SAVINGS, "D272", "D264")
+                    .put(AccountTypes.CREDIT_CARD, "00EC", "00ET", "00PD")
+                    .put(AccountTypes.LOAN, "S132")
+                    .build();
 
-    // Fallback mapper; more error-prone because the bank assigns a savings account to "CHECKING" for some reason
+    // Fallback mapper; more error-prone because the bank assigns a savings account to "CHECKING"
+    // for some reason
     // TODO make non-static somehow
-    public static final AccountTypeMapper PRODUCT_TYPE_MAPPER = AccountTypeMapper.builder()
-            .put(AccountTypes.CHECKING, "CHECKING")
-            .put(AccountTypes.SAVINGS, "SAVINGS")
-            .put(AccountTypes.CREDIT_CARD, "CREDIT_CARD")
-            .put(AccountTypes.LOAN, "LOAN")
-            .build();
-
+    public static final AccountTypeMapper PRODUCT_TYPE_MAPPER =
+            AccountTypeMapper.builder()
+                    .put(AccountTypes.CHECKING, "CHECKING")
+                    .put(AccountTypes.SAVINGS, "SAVINGS")
+                    .put(AccountTypes.CREDIT_CARD, "CREDIT_CARD")
+                    .put(AccountTypes.LOAN, "LOAN")
+                    .build();
 
     public enum Storage {
         SERVER_SESSION_ID,

@@ -19,7 +19,8 @@ public final class BawagPskLoanFetcher implements AccountFetcher<LoanAccount> {
 
     @Override
     public Collection<LoanAccount> fetchAccounts() {
-        final Pair<GetAccountInformationListResponse, Map<String, String>> pair = accountFetcher.fetchAccountData();
+        final Pair<GetAccountInformationListResponse, Map<String, String>> pair =
+                accountFetcher.fetchAccountData();
 
         return pair.first.extractLoanAccounts(pair.second);
     }

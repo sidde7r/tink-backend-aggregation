@@ -9,7 +9,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.common.utils.Pair;
 
-public final class BawagPskTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
+public final class BawagPskTransactionalAccountFetcher
+        implements AccountFetcher<TransactionalAccount> {
 
     private final BawagPskAccountFetcher accountFetcher;
 
@@ -19,7 +20,8 @@ public final class BawagPskTransactionalAccountFetcher implements AccountFetcher
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        final Pair<GetAccountInformationListResponse, Map<String, String>> pair = accountFetcher.fetchAccountData();
+        final Pair<GetAccountInformationListResponse, Map<String, String>> pair =
+                accountFetcher.fetchAccountData();
 
         return pair.first.extractTransactionalAccounts(pair.second);
     }

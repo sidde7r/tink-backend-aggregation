@@ -19,7 +19,8 @@ public final class BawagPskCreditCardFetcher implements AccountFetcher<CreditCar
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        final Pair<GetAccountInformationListResponse, Map<String, String>> pair = accountFetcher.fetchAccountData();
+        final Pair<GetAccountInformationListResponse, Map<String, String>> pair =
+                accountFetcher.fetchAccountData();
 
         return pair.first.extractCreditCardAccounts(pair.second);
     }

@@ -26,7 +26,8 @@ import se.tink.backend.core.Amount;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 public final class GetAccountInformationListResponse {
-    private static final Logger logger = LoggerFactory.getLogger(GetAccountInformationListResponse.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(GetAccountInformationListResponse.class);
 
     private Envelope envelope;
 
@@ -34,11 +35,10 @@ public final class GetAccountInformationListResponse {
         this.envelope = envelope;
     }
 
-    /**
-     * @return A collection of invalid IBANs for the accounts that have one.
-     */
+    /** @return A collection of invalid IBANs for the accounts that have one. */
     public Collection<IbanIdentifier> getInvalidIbans() {
-        return getAccountInfoList().stream()
+        return getAccountInfoList()
+                .stream()
                 .map(AccountInfo::getProductID)
                 .filter(Objects::nonNull)
                 .filter(productID -> productID.getFinancialInstitute() != null)
@@ -50,18 +50,21 @@ public final class GetAccountInformationListResponse {
     }
 
     private List<AccountInfo> getAccountInfoList() {
-        final Optional<OK> ok = Optional.ofNullable(envelope)
-                .map(Envelope::getBody)
-                .map(Body::getGetAccountInformationListResponseEntity)
-                .map(GetAccountInformationListResponseEntity::getOk);
+        final Optional<OK> ok =
+                Optional.ofNullable(envelope)
+                        .map(Envelope::getBody)
+                        .map(Body::getGetAccountInformationListResponseEntity)
+                        .map(GetAccountInformationListResponseEntity::getOk);
 
         if (!ok.isPresent()) {
-            logger.error("{} - Did not receive an OK response in account fetching response",
+            logger.error(
+                    "{} - Did not receive an OK response in account fetching response",
                     BawagPskConstants.LogTags.RESPONSE_NOT_OK.toTag());
         }
 
         return ok.map(OK::getAccountInformationListItemList)
-                .map(Stream::of).orElse(Stream.empty()) // Optional -> Stream
+                .map(Stream::of)
+                .orElse(Stream.empty()) // Optional -> Stream
                 .flatMap(Collection::stream) // Stream<Collection<T>> -> Stream<T>
                 .filter(Objects::nonNull)
                 .map(AccountInformationListItem::getAccountInfo)
@@ -71,110 +74,150 @@ public final class GetAccountInformationListResponse {
 
     private static IbanIdentifier getIban(final ProductID productID) {
         return new IbanIdentifier(
-                productID.getFinancialInstitute().getBIC().trim(),
-                productID.getIban().trim()
-        );
+                productID.getFinancialInstitute().getBIC().trim(), productID.getIban().trim());
     }
 
     // Too dumb and lazy to find a way to eliminate these dupes
-    public Collection<TransactionalAccount> extractTransactionalAccounts(final Map<String, String> productCodes) {
-        return getAccountInfoList().stream()
-                .map(accInfo -> toTransactionalAccount(accInfo, productCodes.get(accInfo.getAccountNumber())))
+    public Collection<TransactionalAccount> extractTransactionalAccounts(
+            final Map<String, String> productCodes) {
+        return getAccountInfoList()
+                .stream()
+                .map(
+                        accInfo ->
+                                toTransactionalAccount(
+                                        accInfo, productCodes.get(accInfo.getAccountNumber())))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toSet());
     }
 
-    public Collection<CreditCardAccount> extractCreditCardAccounts(final Map<String, String> productCodes) {
-        return getAccountInfoList().stream()
-                .map(accInfo -> toCreditCardAccount(accInfo, productCodes.get(accInfo.getAccountNumber())))
+    public Collection<CreditCardAccount> extractCreditCardAccounts(
+            final Map<String, String> productCodes) {
+        return getAccountInfoList()
+                .stream()
+                .map(
+                        accInfo ->
+                                toCreditCardAccount(
+                                        accInfo, productCodes.get(accInfo.getAccountNumber())))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toSet());
     }
 
     public Collection<LoanAccount> extractLoanAccounts(final Map<String, String> productCodes) {
-        return getAccountInfoList().stream()
-                .map(accInfo -> toLoanAccount(accInfo, productCodes.get(accInfo.getAccountNumber())))
+        return getAccountInfoList()
+                .stream()
+                .map(
+                        accInfo ->
+                                toLoanAccount(
+                                        accInfo, productCodes.get(accInfo.getAccountNumber())))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toSet());
     }
 
     private static Optional<TransactionalAccount> toTransactionalAccount(
-            final AccountInfo accountInfo,
-            final String productCode) {
+            final AccountInfo accountInfo, final String productCode) {
         return inferAccountType(productCode, accountInfo.getProductID().getProductType())
                 .filter(type -> type == AccountTypes.CHECKING || type == AccountTypes.SAVINGS)
-                .map(type -> TransactionalAccount.builder(
-                        type,
-                        accountInfo.getAccountNumber(),
-                        new Amount(
-                                accountInfo.getCurrentBalanceEntity().getCurrency(),
-                                accountInfo.getCurrentBalanceEntity().getAmount()
-                        )
-                )
-                        .setAccountNumber(accountInfo.getAccountNumber())
-                        .addIdentifier(getIban(accountInfo.getProductID()))
-                        .setHolderName(new HolderName(accountInfo.getProductID().getAccountOwner().trim()))
-                        .build());
-
+                .map(
+                        type ->
+                                TransactionalAccount.builder(
+                                                type,
+                                                accountInfo.getAccountNumber(),
+                                                new Amount(
+                                                        accountInfo
+                                                                .getCurrentBalanceEntity()
+                                                                .getCurrency(),
+                                                        accountInfo
+                                                                .getCurrentBalanceEntity()
+                                                                .getAmount()))
+                                        .setAccountNumber(accountInfo.getAccountNumber())
+                                        .addIdentifier(getIban(accountInfo.getProductID()))
+                                        .setHolderName(
+                                                new HolderName(
+                                                        accountInfo
+                                                                .getProductID()
+                                                                .getAccountOwner()
+                                                                .trim()))
+                                        .build());
     }
 
     private static Optional<CreditCardAccount> toCreditCardAccount(
-            final AccountInfo accountInfo,
-            final String productCode) {
+            final AccountInfo accountInfo, final String productCode) {
 
         return inferAccountType(productCode, accountInfo.getProductID().getProductType())
                 .filter(type -> type == AccountTypes.CREDIT_CARD)
-                .map(type -> CreditCardAccount.builder(
-                        accountInfo.getAccountNumber(),
-                        new Amount(
-                                accountInfo.getCurrentSaldoEntity().getCurrency(),
-                                accountInfo.getCurrentSaldoEntity().getAmount()
-                        ),
-                        new Amount(
-                                accountInfo.getDisposableBalanceEntity().getCurrency(),
-                                accountInfo.getDisposableBalanceEntity().getAmount()
-                        )
-                )
-                        .setAccountNumber(accountInfo.getAccountNumber())
-                        .addIdentifier(getIban(accountInfo.getProductID()))
-                        .setHolderName(new HolderName(accountInfo.getProductID().getAccountOwner().trim()))
-                        .build());
-
+                .map(
+                        type ->
+                                CreditCardAccount.builder(
+                                                accountInfo.getAccountNumber(),
+                                                new Amount(
+                                                        accountInfo
+                                                                .getCurrentSaldoEntity()
+                                                                .getCurrency(),
+                                                        accountInfo
+                                                                .getCurrentSaldoEntity()
+                                                                .getAmount()),
+                                                new Amount(
+                                                        accountInfo
+                                                                .getDisposableBalanceEntity()
+                                                                .getCurrency(),
+                                                        accountInfo
+                                                                .getDisposableBalanceEntity()
+                                                                .getAmount()))
+                                        .setAccountNumber(accountInfo.getAccountNumber())
+                                        .addIdentifier(getIban(accountInfo.getProductID()))
+                                        .setHolderName(
+                                                new HolderName(
+                                                        accountInfo
+                                                                .getProductID()
+                                                                .getAccountOwner()
+                                                                .trim()))
+                                        .build());
     }
 
     private static Optional<LoanAccount> toLoanAccount(
-            final AccountInfo accountInfo,
-            final String productCode) {
+            final AccountInfo accountInfo, final String productCode) {
 
         return inferAccountType(productCode, accountInfo.getProductID().getProductType())
                 .filter(type -> type == AccountTypes.LOAN)
-                .map(type -> LoanAccount.builder(
-                        accountInfo.getAccountNumber(),
-                        new Amount(
-                                accountInfo.getCurrentBalanceEntity().getCurrency(),
-                                accountInfo.getCurrentBalanceEntity().getAmount()
-                        )
-                )
-                        .setAccountNumber(accountInfo.getAccountNumber())
-                        .addIdentifier(getIban(accountInfo.getProductID()))
-                        .setHolderName(new HolderName(accountInfo.getProductID().getAccountOwner().trim()))
-                        .build());
-
+                .map(
+                        type ->
+                                LoanAccount.builder(
+                                                accountInfo.getAccountNumber(),
+                                                new Amount(
+                                                        accountInfo
+                                                                .getCurrentBalanceEntity()
+                                                                .getCurrency(),
+                                                        accountInfo
+                                                                .getCurrentBalanceEntity()
+                                                                .getAmount()))
+                                        .setAccountNumber(accountInfo.getAccountNumber())
+                                        .addIdentifier(getIban(accountInfo.getProductID()))
+                                        .setHolderName(
+                                                new HolderName(
+                                                        accountInfo
+                                                                .getProductID()
+                                                                .getAccountOwner()
+                                                                .trim()))
+                                        .build());
     }
 
     /**
-     * It is assumed -- but not verified -- that the app infers the account type from the first character of the
-     * account's product code. We cannot use <ProductType> to infer the account type because it has been shown that the
-     * server incorrectly sets it to "CHECKING" even in cases where it should be "SAVINGS".
+     * It is assumed -- but not verified -- that the app infers the account type from the first
+     * character of the account's product code. We cannot use <ProductType> to infer the account
+     * type because it has been shown that the server incorrectly sets it to "CHECKING" even in
+     * cases where it should be "SAVINGS".
      *
-     * @return Optional.empty() if the product is not a transactional account (e.g. credit card, loan)
+     * @return Optional.empty() if the product is not a transactional account (e.g. credit card,
+     *     loan)
      */
-    private static Optional<AccountTypes> inferAccountType(final String productCode, final String productType) {
+    private static Optional<AccountTypes> inferAccountType(
+            final String productCode, final String productType) {
         // If we cannot infer from product code, fallback to product type
-        return BawagPskConstants.PRODUCT_CODE_MAPPER.translate(productCode)
+        return BawagPskConstants.PRODUCT_CODE_MAPPER
+                .translate(productCode)
                 .map(Optional::of)
                 .orElseGet(() -> BawagPskConstants.PRODUCT_TYPE_MAPPER.translate(productType));
     }

@@ -21,9 +21,11 @@ public class BawagPskSessionHandler implements SessionHandler {
     public void logout() {
         final String serverSessionID;
         try {
-            serverSessionID = bawagPskApiClient.getFromSessionStorage(
-                    BawagPskConstants.Storage.SERVER_SESSION_ID.name())
-                    .orElseThrow(SessionError.SESSION_EXPIRED::exception);
+            serverSessionID =
+                    bawagPskApiClient
+                            .getFromSessionStorage(
+                                    BawagPskConstants.Storage.SERVER_SESSION_ID.name())
+                            .orElseThrow(SessionError.SESSION_EXPIRED::exception);
         } catch (SessionException e) {
             return; // Session already expired; nothing to do
         }
@@ -37,7 +39,9 @@ public class BawagPskSessionHandler implements SessionHandler {
     }
 
     private boolean hasSessionToken() {
-        return bawagPskApiClient.getFromSessionStorage(BawagPskConstants.Storage.SERVER_SESSION_ID.name()).isPresent();
+        return bawagPskApiClient
+                .getFromSessionStorage(BawagPskConstants.Storage.SERVER_SESSION_ID.name())
+                .isPresent();
     }
 
     @Override
