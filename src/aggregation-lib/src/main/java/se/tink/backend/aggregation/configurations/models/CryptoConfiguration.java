@@ -10,14 +10,9 @@ import org.hibernate.annotations.Type;
 public class CryptoConfiguration {
     @EmbeddedId
     private CryptoConfigurationId cryptoConfigurationId;
-
     @Type(type = "text")
     private String base64encodedkey;
-
-    public CryptoConfiguration() {
-        // Ok.
-    }
-
+    
     public int getKeyId() {
         return cryptoConfigurationId.getKeyId();
     }

@@ -19,10 +19,6 @@ public class ClusterConfiguration {
     @Type(type = "boolean")
     private boolean disablerequestcompression;
 
-    public ClusterConfiguration() {
-        // Ok.
-    }
-
     public String getClusterId() {
         return clusterId;
     }

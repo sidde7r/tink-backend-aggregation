@@ -31,12 +31,11 @@ public class CryptoConfigurationId implements Serializable {
         this.keyId = keyId;
     }
 
-    public CryptoConfigurationId() {
-    }
-
-    public CryptoConfigurationId(int keyId ,String clusterId) {
-        this.cryptoId = clusterId;
-        this.keyId = keyId;
+    public static CryptoConfigurationId of(int keyId, String clusterId) {
+        CryptoConfigurationId cryptoConfigurationId = new CryptoConfigurationId();
+        cryptoConfigurationId.setClusterId(clusterId);
+        cryptoConfigurationId.setKeyId(keyId);
+        return cryptoConfigurationId;
     }
 
     @Override

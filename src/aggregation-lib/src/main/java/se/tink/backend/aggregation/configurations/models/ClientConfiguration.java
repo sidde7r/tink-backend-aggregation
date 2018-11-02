@@ -17,10 +17,6 @@ public class ClientConfiguration {
     @Type(type = "text")
     private String aggregatorId;
 
-    public ClientConfiguration() {
-        // Ok.
-    }
-
     public String getClientId() {
         return clientId;
     }

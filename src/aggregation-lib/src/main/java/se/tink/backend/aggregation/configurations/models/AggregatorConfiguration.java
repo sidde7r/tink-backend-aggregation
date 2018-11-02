@@ -13,10 +13,6 @@ public class AggregatorConfiguration {
     @Type(type = "text")
     private String aggregatorInfo;
 
-    public AggregatorConfiguration() {
-        // Ok.
-    }
-
     public String getAggregatorId() {
         return aggregatorId;
     }

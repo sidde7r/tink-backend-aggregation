@@ -6,6 +6,4 @@ import se.tink.backend.aggregation.configurations.models.CryptoConfiguration;
 import se.tink.backend.aggregation.configurations.models.CryptoConfigurationId;
 
 public interface CryptoConfigurationsRepository extends JpaRepository<CryptoConfiguration, CryptoConfigurationId> {
-
-    List<CryptoConfiguration> findBycryptoConfigurationIdKeyId(int keyId);
 }
