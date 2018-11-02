@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v30.fetcher.entities.transaction;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Strings;
-import java.time.ZonedDateTime;
+import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -25,8 +25,12 @@ public class TransactionEntity {
     private UkOpenBankingConstants.CreditDebitIndicator creditDebitIndicator;
     @JsonProperty("Status")
     private UkOpenBankingConstants.EntryStatusCode status;
-    private ZonedDateTime bookingDateTime;
-    private ZonedDateTime valueDateTime;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonProperty("BookingDateTime")
+    private Date bookingDateTime;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonProperty("ValueDateTime")
+    private Date valueDateTime;
     @JsonProperty("TransactionInformation")
     private String transactionInformation;
     @JsonProperty("BankTransactionCode")
@@ -45,7 +49,7 @@ public class TransactionEntity {
                 .setAmount(getSignedAmount())
                 .setDescription(transactionInformation)
                 .setPending(status == UkOpenBankingConstants.EntryStatusCode.PENDING)
-                .setDateTime(bookingDateTime)
+                .setDate(bookingDateTime)
                 .build();
     }
 
@@ -56,7 +60,7 @@ public class TransactionEntity {
                 .setAmount(getSignedAmount())
                 .setDescription(transactionInformation)
                 .setPending(status == UkOpenBankingConstants.EntryStatusCode.PENDING)
-                .setDateTime(bookingDateTime)
+                .setDate(bookingDateTime)
                 .build();
     }
 
@@ -65,19 +69,5 @@ public class TransactionEntity {
             return amount.negate();
         }
         return amount;
-    }
-
-    @JsonProperty("BookingDateTime")
-    private void setBookingDateTime(String date) {
-        if (!Strings.isNullOrEmpty(date)) {
-            bookingDateTime = ZonedDateTime.parse(date);
-        }
-    }
-
-    @JsonProperty("ValueDateTime")
-    private void setValueDateTime(String date) {
-        if (!Strings.isNullOrEmpty(date)) {
-            valueDateTime = ZonedDateTime.parse(date);
-        }
     }
 }
