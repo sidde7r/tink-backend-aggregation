@@ -37,10 +37,7 @@ public class AsLhvAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-        client.setDebugOutput(true);
-        client.setDebugProxy("http://127.0.0.1:8888");
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
