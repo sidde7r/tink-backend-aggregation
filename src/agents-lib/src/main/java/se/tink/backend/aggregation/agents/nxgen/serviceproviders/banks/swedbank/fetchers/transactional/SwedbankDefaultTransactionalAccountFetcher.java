@@ -3,9 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank
 import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -45,8 +42,13 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
     private final SwedbankDefaultApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private List<String> investmentAccountNumbers;
-    private Date earliestDateSeen;
+
+    // FIX temporary for Swedbanks problem with pagination
+    // store transactions ids we have already seen by account
     private Map<String, Set<String>> transactionIdsSeen = new HashMap<>();
+    // store pseudo keys we have already seen by account
+    private Map<String, Set<String>> pseudoKeysSeen = new HashMap<>();
+    //
 
     public SwedbankDefaultTransactionalAccountFetcher(SwedbankDefaultApiClient apiClient,
             PersistentStorage persistentStorage) {
@@ -125,25 +127,6 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
         return paymentsConfirmedResponse.toTinkUpcomingTransactions(account.getAccountNumber());
     }
 
-    // 2018-10-17: Swedbank has had a problem where they hand us the same page multiple times during pagination.
-    // We solve this on our end by comparing the earliest date in each batch and compare the saved date to
-    // see if we have encountered the page before.
-    private void updateEarliestDateSeen(TransactionKeyPaginatorResponse<LinkEntity> response) {
-        Optional<? extends Transaction> earliestTransaction = response.getTinkTransactions()
-                .stream()
-                .min(Comparator.comparing(Transaction::getDate));
-
-        earliestTransaction.ifPresent(transaction -> earliestDateSeen = transaction.getDate());
-    }
-
-    private boolean hasSeenPageBefore(TransactionKeyPaginatorResponse<LinkEntity> response) {
-        return response.getTinkTransactions()
-                .stream()
-                .min(Comparator.comparing(Transaction::getDate))
-                .filter(trans -> !trans.getDate().before(earliestDateSeen))
-                .isPresent();
-    }
-
     @Override
     public TransactionKeyPaginatorResponse<LinkEntity> getTransactionsFor(
             TransactionalAccount account, LinkEntity key) {
@@ -153,17 +136,7 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
         apiClient.selectProfile(bankProfile);
 
         if (key != null) {
-            TransactionKeyPaginatorResponse<LinkEntity> response = fetchTransactions(account, key);
-
-            if (hasSeenPageBefore(response)) {
-                // Return an empty response but with the correct next key set.
-                return new TransactionKeyPaginatorResponseImpl<>(Collections.emptyList(), response.nextKey());
-            }
-
-            // Only update the earliestDateSeen if we haven't seen the page before.
-            updateEarliestDateSeen(response);
-
-            return response;
+            return fetchTransactions(account, key);
         }
 
         LinkEntity nextLink =
@@ -189,8 +162,6 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
         transactionKeyPaginatorResponse.setNext(engagementTransactionsResponse.nextKey());
         transactionKeyPaginatorResponse.setTransactions(transactions);
 
-        updateEarliestDateSeen(transactionKeyPaginatorResponse);
-
         return transactionKeyPaginatorResponse;
     }
 
@@ -198,8 +169,9 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
             LinkEntity key) {
         try {
             EngagementTransactionsResponse rawResponse = apiClient.engagementTransactions(key);
+
             // temporary fix to detect and filter duplicate transactions
-            return filterTransactionIdDuplicates(account, rawResponse);
+            return filterTransactionDuplicates(account, rawResponse);
         } catch (HttpResponseException hre) {
             HttpResponse response = hre.getResponse();
             // check if we are paginating and receive INTERNAL SERVER ERROR
@@ -223,7 +195,28 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
         }
     }
 
-    private EngagementTransactionsResponse filterTransactionIdDuplicates(TransactionalAccount account,
+    // fetch all account number from investment accounts BUT savings accounts, this is because we want savings accounts
+    // to be fetched by transactional fetcher to get any transactions
+    private List<String> getInvestmentAccountNumbers() {
+
+        if (investmentAccountNumbers == null) {
+            String portfolioHoldingsString = apiClient.portfolioHoldings();
+            PortfolioHoldingsResponse portfolioHoldings = SerializationUtils
+                    .deserializeFromString(portfolioHoldingsString, PortfolioHoldingsResponse.class);
+
+            investmentAccountNumbers = portfolioHoldings.investmentAccountNumbers();
+        }
+
+        return investmentAccountNumbers;
+    }
+
+
+    //
+    // FIX for Swedbank pagination problems
+    //
+    // Remove when Swedbank has fixed the problem
+    //
+    private EngagementTransactionsResponse filterTransactionDuplicates(TransactionalAccount account,
             EngagementTransactionsResponse rawResponse) {
 
         // no need to filter non-existing data
@@ -231,13 +224,21 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
             return rawResponse;
         }
 
+        // fetch all transaction ids we have seen for this account
         Set<String> fetchedTransactionIds = getfetchedTransactionsIds(account.getAccountNumber());
+        Set<String> newPseudoKeys = new HashSet<>();
+        // fetch all pseudo keys we have seen for this account
+        Set<String> fetchedPseudoKeys = getfetchedPseudoKeys(account.getAccountNumber());
 
         List<TransactionEntity> filteredTransactions =
                 rawResponse.getTransactions()
                         .stream()
                         .filter(transaction -> checkIfNewAndStoreTransactionId(transaction, fetchedTransactionIds))
+                        .filter(transaction -> checkIfNewAndStorePseudoKey(transaction, fetchedPseudoKeys, newPseudoKeys))
                         .collect(Collectors.toList());
+
+        // add all pseudo keys we have for this batch of transactions
+        fetchedPseudoKeys.addAll(newPseudoKeys);
 
         rawResponse.getTransactions().clear();
         rawResponse.getTransactions().addAll(filteredTransactions);
@@ -245,6 +246,7 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
         return rawResponse;
     }
 
+    // fetch cached transaction ids
     private Set<String> getfetchedTransactionsIds(String accountNumber) {
         if (!transactionIdsSeen.containsKey(accountNumber)) {
             transactionIdsSeen.clear();
@@ -254,6 +256,18 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
         return transactionIdsSeen.get(accountNumber);
     }
 
+    // fetch cached pseudo keys
+    private Set<String> getfetchedPseudoKeys(String accountNumber) {
+        if (!pseudoKeysSeen.containsKey(accountNumber)) {
+            pseudoKeysSeen.clear();
+            pseudoKeysSeen.put(accountNumber, new HashSet<>());
+        }
+
+        return pseudoKeysSeen.get(accountNumber);
+    }
+
+    // filter transactions to only allow new transaction ids
+    // add transaction ids to seenTransaction ids
     private boolean checkIfNewAndStoreTransactionId(TransactionEntity transaction, Set<String> seenTransactionIds) {
         String txId = transaction.getId();
 
@@ -268,18 +282,22 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
         return isNewId;
     }
 
-    // fetch all account number from investment accounts BUT savings accounts, this is because we want savings accounts
-    // to be fetched by transactional fetcher to get any transactions
-    private List<String> getInvestmentAccountNumbers() {
+    // filter transactions to only allow new pseudo keys
+    // add new pseudo keys to tmp set during current batch and add them to seenPseudoKeys
+    // after entire batch is done, this is to avoid removing non-duplicate transactions.
+    // It is not unusual with identical transactions
+    private boolean checkIfNewAndStorePseudoKey(TransactionEntity transaction, Set<String> seenKeys, Set<String> newKeys) {
 
-        if (investmentAccountNumbers == null) {
-            String portfolioHoldingsString = apiClient.portfolioHoldings();
-            PortfolioHoldingsResponse portfolioHoldings = SerializationUtils
-                    .deserializeFromString(portfolioHoldingsString, PortfolioHoldingsResponse.class);
-
-            investmentAccountNumbers = portfolioHoldings.investmentAccountNumbers();
+        // if transaction id is set we have decided it is not a duplicate
+        if (!Strings.isNullOrEmpty(transaction.getId())) {
+            return true;
         }
 
-        return investmentAccountNumbers;
+        String key = transaction.getPseudoKey();
+        newKeys.add(key);
+
+        boolean isNewKey = !seenKeys.contains(key);
+
+        return isNewKey;
     }
 }

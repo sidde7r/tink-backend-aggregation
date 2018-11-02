@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.core.Amount;
+import se.tink.libraries.date.DateUtils;
 
 @JsonObject
 public class TransactionEntity extends AbstractTransactionEntity {
@@ -81,4 +82,17 @@ public class TransactionEntity extends AbstractTransactionEntity {
 
         return Optional.of(transactionBuilder.build());
     }
+
+    // FIX temporary for Swedbanks pagination problems
+    // create a kind of key to use to identify duplicate transactions
+    public String getPseudoKey() {
+        String key = date != null ? DateUtils.toJavaTimeLocalDate(date).toString() : "";
+        key += accountingDate != null ? DateUtils.toJavaTimeLocalDate(accountingDate).toString() : "";
+        key += getAmount();
+        key += getCurrency();
+        key += getDescription();
+
+        return key;
+    }
+    //
 }
