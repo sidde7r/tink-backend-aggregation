@@ -1,14 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.regex.Matcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.entities.HandelsbankenRecipient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAmount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.core.Amount;
+import se.tink.libraries.date.DateUtils;
 
 public class HandelsbankenSETransaction extends BaseResponse {
 
@@ -33,5 +35,28 @@ public class HandelsbankenSETransaction extends BaseResponse {
                 .setDescription(description)
                 .setPending(pending)
                 .build();
+    }
+
+    @JsonIgnore
+    public LocalDate dueDateAsLocalDate() {
+        if (dueDate == null) {
+            return null;
+        }
+
+        return DateUtils.toJavaTimeLocalDate(dueDate);
+    }
+
+    @JsonIgnore
+    public Amount positiveAmount() {
+        if (amount == null) {
+            return null;
+        }
+        Amount positiveAmount = Amount.inSEK(amount.asDouble());
+
+        if (!positiveAmount.isPositive()) {
+            return positiveAmount.negate();
+        }
+
+        return positiveAmount;
     }
 }
