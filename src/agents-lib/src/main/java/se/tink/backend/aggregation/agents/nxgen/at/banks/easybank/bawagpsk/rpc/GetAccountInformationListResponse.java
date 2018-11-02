@@ -215,10 +215,31 @@ public final class GetAccountInformationListResponse {
      */
     private static Optional<AccountTypes> inferAccountType(
             final String productCode, final String productType) {
-        // If we cannot infer from product code, fallback to product type
-        return BawagPskConstants.PRODUCT_CODE_MAPPER
-                .translate(productCode)
-                .map(Optional::of)
-                .orElseGet(() -> BawagPskConstants.PRODUCT_TYPE_MAPPER.translate(productType));
+        // TODO refactor with isPresentOrElse when we are past Java 8
+
+        final Optional<AccountTypes> accountTypeFromCode =
+                BawagPskConstants.PRODUCT_CODE_MAPPER.translate(productCode);
+
+        if (accountTypeFromCode.isPresent()) {
+            return accountTypeFromCode;
+        } else {
+            logger.warn(
+                    "{} Could not infer account type from product code \"{}\"; falling back to inferring from product type \"{}\"",
+                    BawagPskConstants.LogTags.TRANSACTION_UNKNOWN_PRODUCT_CODE.toTag(),
+                    productCode,
+                    productType);
+        }
+
+        final Optional<AccountTypes> accountTypeFromType =
+                BawagPskConstants.PRODUCT_TYPE_MAPPER.translate(productType);
+
+        if (!accountTypeFromType.isPresent()) {
+            logger.warn(
+                    "{} Could not infer account type from product type \"{}\"; ignoring the account",
+                    BawagPskConstants.LogTags.TRANSACTION_UNKNOWN_PRODUCT_TYPE.toTag(),
+                    productType);
+        }
+
+        return accountTypeFromType;
     }
 }
