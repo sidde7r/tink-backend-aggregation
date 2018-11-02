@@ -64,6 +64,16 @@ public class HandelsbankenSEUpcomingTransactionFetcher
                 .orElse(null);
     }
 
+    /*
+     * Re-implementing code fron old agent:
+     * Handelsbanken sends upcoming (pending) transactions as both "Upcoming" and
+     * "Account" transactions for a brief period of time after they have been payed.
+     * This method filters any transactions with due date 'today' from "Upcoming"
+     * transactions.
+     * They are only compared by amount (and date of course) which can cause false
+     * positives, but that is accepted as it is only for a short period. After that the problem
+     * will resolve itself.
+     */
     private boolean filterUpcomingPresentAsTransaction(TransactionalAccount account,
             PendingTransaction upcomingTransaction) {
 
