@@ -70,6 +70,11 @@ public class DanskeBankNOConfiguration implements DanskeBankConfiguration {
     }
 
     @Override
+    public boolean shouldAddXAppCultureHeader() {
+        return true;
+    }
+
+    @Override
     public List<String> getCheckingAccountTypes() {
         return ImmutableList.<String>builder()
                 .add("1AP")

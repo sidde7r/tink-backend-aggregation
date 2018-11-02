@@ -15,6 +15,7 @@ public interface DanskeBankConfiguration {
     String getBrand();
     String getLanguageCode();
     String getMarketCode();
+    boolean shouldAddXAppCultureHeader();
     List<String> getCheckingAccountTypes();
     List<String> getSavingsAccountTypes();
     Map<String, Loan.Type> getLoanAccountTypes();

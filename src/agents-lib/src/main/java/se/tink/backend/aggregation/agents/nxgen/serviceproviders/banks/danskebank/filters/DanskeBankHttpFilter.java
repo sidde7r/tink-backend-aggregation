@@ -33,7 +33,11 @@ public class DanskeBankHttpFilter extends Filter {
         httpRequest.getHeaders().add(ADRUM_KEY, ADRUM_VALUE);
         httpRequest.getHeaders().add(ADRUM1_KEY, ADRUM1_VALUE);
 
-        httpRequest.getHeaders().add(APP_CULTURE_KEY, configuration.getAppCulture());
+        // Danske Bank in Finland have a header limit of 17 headers. This is solved by not adding the x-app-culture
+        // header (for Finland only).
+        if (configuration.shouldAddXAppCultureHeader()) {
+            httpRequest.getHeaders().add(APP_CULTURE_KEY, configuration.getAppCulture());
+        }
 
         httpRequest.getHeaders().add(CLIENT_ID_KEY, configuration.getClientId());
         httpRequest.getHeaders().add(CLIENT_SECRET_KEY, configuration.getClientSecret());

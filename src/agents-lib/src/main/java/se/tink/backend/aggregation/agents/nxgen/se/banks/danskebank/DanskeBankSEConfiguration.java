@@ -72,6 +72,11 @@ public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
     }
 
     @Override
+    public boolean shouldAddXAppCultureHeader() {
+        return true;
+    }
+
+    @Override
     public List<String> getCheckingAccountTypes() {
         return Collections.emptyList();
     }
