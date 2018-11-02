@@ -79,8 +79,6 @@ public class UkobRegisterCommand {
                 softwareStatement.getTransportKeyP12(),
                 softwareStatement.getTransportKeyPassword());
 
-        httpClient.setDebugOutput(false);
-
         return httpClient;
     }
 

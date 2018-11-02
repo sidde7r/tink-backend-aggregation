@@ -211,11 +211,8 @@ public class OpenIdApiClient {
 
     public static String registerClient(SoftwareStatement softwareStatement, URL wellKnownURL, TinkHttpClient httpClient) {
 
-        httpClient.setDebugOutput(false);
-
         WellKnownResponse wellKnownResponse = httpClient.request(wellKnownURL).get(WellKnownResponse.class);
         URL registrationEndpoint = wellKnownResponse.getRegistrationEndpoint();
-        httpClient.setDebugOutput(false);
         String postData = ClientRegistration.create()
                 .withSoftwareStatement(softwareStatement)
                 .withWellknownConfiguration(wellKnownResponse)
