@@ -10,6 +10,8 @@ import se.tink.backend.aggregation.api.CreditSafeService;
 import se.tink.backend.aggregation.clients.ProviderServiceFactoryProvider;
 import se.tink.backend.aggregation.cluster.JerseyClusterInfoProvider;
 import se.tink.backend.aggregation.cluster.provider.ClusterInfoProvider;
+import se.tink.backend.aggregation.configurations.AggregationConfigurations;
+import se.tink.backend.aggregation.configurations.ConfigurationsDao;
 import se.tink.backend.aggregation.log.AggregationLoggerRequestFilter;
 import se.tink.backend.aggregation.provider.configuration.client.InterContainerProviderServiceFactory;
 import se.tink.backend.aggregation.resources.AggregationServiceResource;
@@ -39,6 +41,7 @@ public class AggregationModule extends AbstractModule {
         bind(InterContainerProviderServiceFactory.class).toProvider(ProviderServiceFactoryProvider.class).in(Scopes.SINGLETON);
         bind(ClusterInfoProvider.class).in(Scopes.SINGLETON);
         bind(AgentWorker.class).in(Scopes.SINGLETON);
+        bind(ConfigurationsDao.class).to(AggregationConfigurations.class).in(Scopes.SINGLETON);
 
         if (Objects.nonNull(configuration.getS3StorageConfiguration()) &&
                 configuration.getS3StorageConfiguration().isEnabled()) {

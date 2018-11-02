@@ -6,8 +6,6 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import java.util.Map;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.configurations.AggregationConfigurations;
-import se.tink.backend.aggregation.configurations.ConfigurationsDao;
 import se.tink.backend.aggregation.configurations.repositories.AggregatorConfigurationsRepository;
 import se.tink.backend.aggregation.configurations.repositories.ClientConfigurationsRepository;
 import se.tink.backend.aggregation.configurations.repositories.ClusterConfigurationsRepository;
@@ -46,7 +44,6 @@ public class AggregationDevelopmentSingleClientRepositoryModule extends Reposito
         bindSpringBean(ClientConfigurationsRepository.class);
         bindSpringBean(AggregatorConfigurationsRepository.class);
         bindSpringBean(ClusterConfigurationsRepository.class);
-        bind(ConfigurationsDao.class).to(AggregationConfigurations.class).in(Scopes.SINGLETON);
     }
 
     @Provides
