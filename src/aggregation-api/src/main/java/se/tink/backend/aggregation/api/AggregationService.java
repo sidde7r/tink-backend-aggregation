@@ -120,12 +120,4 @@ public interface AggregationService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response reEncryptCredentials(ReEncryptCredentialsRequest request, @ClusterContext ClusterInfo clusterInfo);
-
-    // temporary endpoint for testing out provider service communication
-    @GET
-    @Path("provider/ping")
-    @TeamOwnership(Team.INTEGRATION)
-    @Produces(MediaType.TEXT_PLAIN)
-    @AllowAnonymous
-    String pingProvider();
 }

@@ -7,13 +7,11 @@ import java.util.Objects;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.api.AggregationService;
 import se.tink.backend.aggregation.api.CreditSafeService;
-import se.tink.backend.aggregation.clients.ProviderServiceFactoryProvider;
 import se.tink.backend.aggregation.cluster.JerseyClusterInfoProvider;
 import se.tink.backend.aggregation.cluster.provider.ClusterInfoProvider;
 import se.tink.backend.aggregation.configurations.AggregationConfigurations;
 import se.tink.backend.aggregation.configurations.ConfigurationsDao;
 import se.tink.backend.aggregation.log.AggregationLoggerRequestFilter;
-import se.tink.backend.aggregation.provider.configuration.client.InterContainerProviderServiceFactory;
 import se.tink.backend.aggregation.resources.AggregationServiceResource;
 import se.tink.backend.aggregation.resources.CreditSafeServiceResource;
 import se.tink.backend.aggregation.storage.AgentDebugLocalStorage;
@@ -38,7 +36,6 @@ public class AggregationModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(AggregationControllerAggregationClient.class).in(Scopes.SINGLETON);
-        bind(InterContainerProviderServiceFactory.class).toProvider(ProviderServiceFactoryProvider.class).in(Scopes.SINGLETON);
         bind(AgentWorker.class).in(Scopes.SINGLETON);
         bind(ClusterInfoProvider.class).in(Scopes.SINGLETON);
 
