@@ -4,7 +4,7 @@ import com.google.common.base.Strings;
 import se.tink.backend.aggregation.cluster.exception.ClientNotValid;
 
 public class ClientApiKey {
-    public static final String CLIENT_API_KEY_HEADER = "x-tink-client-id";
+    public static final String CLIENT_API_KEY_HEADER = "x-tink-client-api-key";
     private final String clientApiKey;
 
     private ClientApiKey(String clientApiKey) {
@@ -23,7 +23,11 @@ public class ClientApiKey {
         throw new ClientNotValid();
     }
 
+    /*
+        TODO: We should not allow empty clientApiKeys
+        TODO: We should add more validity tests
+    */
     private static boolean isValidId(String clientApiKey) {
-        return !(Strings.isNullOrEmpty(clientApiKey));
+        return true;
     }
 }
