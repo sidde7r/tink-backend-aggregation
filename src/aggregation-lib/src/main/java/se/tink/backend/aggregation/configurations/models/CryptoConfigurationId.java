@@ -15,12 +15,12 @@ public class CryptoConfigurationId implements Serializable {
     @Column(name = "keyid")
     private int keyId;
 
-    public String getClusterId() {
+    public String getCryptoId() {
         return cryptoId;
     }
 
-    public void setClusterId(String clusterId) {
-        this.cryptoId = clusterId;
+    public void setCryptoId(String cryptoId) {
+        this.cryptoId = cryptoId;
     }
 
     public int getKeyId() {
@@ -31,9 +31,9 @@ public class CryptoConfigurationId implements Serializable {
         this.keyId = keyId;
     }
 
-    public static CryptoConfigurationId of(int keyId, String clusterId) {
+    public static CryptoConfigurationId of(int keyId, String cryptoId) {
         CryptoConfigurationId cryptoConfigurationId = new CryptoConfigurationId();
-        cryptoConfigurationId.setClusterId(clusterId);
+        cryptoConfigurationId.setCryptoId(cryptoId);
         cryptoConfigurationId.setKeyId(keyId);
         return cryptoConfigurationId;
     }
