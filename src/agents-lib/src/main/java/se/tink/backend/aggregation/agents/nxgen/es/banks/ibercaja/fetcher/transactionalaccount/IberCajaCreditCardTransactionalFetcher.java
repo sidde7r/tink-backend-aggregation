@@ -1,17 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.fetcher.transactionalaccount;
 
-import java.util.List;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.IberCajaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.IberCajaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.fetcher.transactionalaccount.rpc.CreditCardResponse;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.IberCajaConstants.Storage.TICKET;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.IberCajaConstants.Storage.USERNAME;
 
-public class IberCajaCreditCardTransactionalFetcher implements TransactionFetcher<CreditCardAccount> {
+public class IberCajaCreditCardTransactionalFetcher implements TransactionDatePaginator<CreditCardAccount> {
 
     private final IberCajaApiClient bankClient;
     private final SessionStorage storage;
@@ -22,11 +24,18 @@ public class IberCajaCreditCardTransactionalFetcher implements TransactionFetche
         this.storage = storage;
     }
 
+    private static String format(Date date) {
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return dateFormat.format(date);
+    }
+
     @Override
-    public List<AggregationTransaction> fetchTransactionsFor(CreditCardAccount account) {
+    public PaginatorResponse getTransactionsFor(CreditCardAccount account, Date fromDate, Date toDate) {
         CreditCardResponse creditCardResponse = bankClient.fetchCreditCardsTransactionList(account.getBankIdentifier(),
                 IberCajaConstants.DefaultRequestParams.REQUEST_ORDER,
-                IberCajaConstants.DefaultRequestParams.REQUEST_TYPE, storage.get(TICKET), storage.get(USERNAME));
-        return creditCardResponse.toTinkTransactions();
+                IberCajaConstants.DefaultRequestParams.REQUEST_TYPE, storage.get(TICKET), storage.get(USERNAME),
+                format(fromDate), format(toDate));
+        return creditCardResponse;
     }
 }

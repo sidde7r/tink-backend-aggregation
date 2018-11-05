@@ -71,7 +71,9 @@ public class IberCajaAgent extends NextGenerationAgent {
         return Optional.of(new CreditCardRefreshController(metricRefreshController,
                 updateController,
                 creditCardFetcher,
-                transactionalFetcher
+                new TransactionFetcherController<>(transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(transactionalFetcher))
+
         ));
     }
 
