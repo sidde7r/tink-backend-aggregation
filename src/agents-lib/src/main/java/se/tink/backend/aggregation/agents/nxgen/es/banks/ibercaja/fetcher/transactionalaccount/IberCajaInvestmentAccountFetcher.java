@@ -13,9 +13,9 @@ import static se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.IberCaj
 
 public class IberCajaInvestmentAccountFetcher implements AccountFetcher<InvestmentAccount> {
 
+    private static final Logger logger = LoggerFactory.getLogger(IberCajaInvestmentAccountFetcher.class);
     private final IberCajaApiClient bankClient;
     private final SessionStorage storage;
-    private static final Logger logger = LoggerFactory.getLogger(IberCajaInvestmentAccountFetcher.class);
 
     public IberCajaInvestmentAccountFetcher(IberCajaApiClient bankClient,
             SessionStorage storage) {
@@ -36,6 +36,6 @@ public class IberCajaInvestmentAccountFetcher implements AccountFetcher<Investme
             logger.info(investmentResponse);
         }
 
-        return fetchAccount.getInvestmentAccounts();
+        return investmentAccounts;
     }
 }
