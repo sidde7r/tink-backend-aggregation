@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,11 +43,11 @@ public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenti
         LogonRequest logonRequest = new LogonRequest();
         logonRequest.setUsernameAndPassword(username, password);
 
-        persistentStorage
-                .get(AmericanExpressV62Constants.Tags.HARDWARE_ID, String.class)
+        Optional.ofNullable(persistentStorage
+                .get(AmericanExpressV62Constants.Tags.HARDWARE_ID))
                 .orElseGet(() -> generateAndStoreUuidFromValue(AmericanExpressV62Constants.Tags.HARDWARE_ID, username));
-        persistentStorage
-                .get(AmericanExpressV62Constants.Tags.INSTALLATION_ID, String.class)
+        Optional.ofNullable(persistentStorage
+                .get(AmericanExpressV62Constants.Tags.INSTALLATION_ID))
                 .orElseGet(() -> generateAndStoreUuidFromValue(AmericanExpressV62Constants.Tags.INSTALLATION_ID, password));
 
         LogonResponse logonResponse = apiClient.logon(logonRequest);
