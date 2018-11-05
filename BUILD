@@ -776,7 +776,6 @@ java_library(
     deps = [
         ":main-api",
 
-        "//src/cluster-lib",
         "//src/api-annotations",
         "//src/libraries/http:http-annotations",
         "//src/libraries/http_client:http-client",
@@ -799,11 +798,9 @@ java_library(
         ":main-api",
         ":provider-configuration-api",
         ":common-lib",
-        "//src/cluster-lib",
         "//src/api-annotations",
         "//src/libraries/jersey_log:jersey-log",
         "//src/libraries/jersey_guice:jersey-guice",
-        "//src/cluster-lib-jersey:cluster-lib-jersey",
         "//src/libraries/metrics:metrics",
         "//src/libraries/serialization_utils:serialization-utils",
         "//src/libraries/i18n",
@@ -871,7 +868,6 @@ junit_test(
         ":agents-lib",
         ":common-lib",
 
-        "//src/cluster-lib",
         "//src/libraries/metrics",
 
         "//third_party:org_objenesis_objenesis",

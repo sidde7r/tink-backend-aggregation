@@ -11,8 +11,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import se.tink.api.annotations.Team;
 import se.tink.api.annotations.TeamOwnership;
-import se.tink.backend.aggregation.cluster.annotation.ClusterContext;
-import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
+import se.tink.backend.aggregation.provider.configuration.cluster.annotations.ClusterContext;
+import se.tink.backend.aggregation.provider.configuration.cluster.identifiers.ClusterInfo;
 import se.tink.backend.aggregation.provider.configuration.rpc.ProviderConfigurationDTO;
 
 @Path("/providers")

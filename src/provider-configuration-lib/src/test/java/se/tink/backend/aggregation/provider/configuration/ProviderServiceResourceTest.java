@@ -7,8 +7,8 @@ import javax.ws.rs.WebApplicationException;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import se.tink.backend.aggregation.cluster.identification.ClusterId;
-import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
+import se.tink.backend.aggregation.provider.configuration.cluster.identifiers.ClusterId;
+import se.tink.backend.aggregation.provider.configuration.cluster.identifiers.ClusterInfo;
 import se.tink.backend.aggregation.provider.configuration.http.resources.ProviderServiceResource;
 import se.tink.backend.aggregation.provider.configuration.rpc.ProviderConfigurationDTO;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,7 +44,7 @@ public class ProviderServiceResourceTest extends ProviderConfigurationServiceTes
     @Test
     public void whenClusterDoNotHaveAvailableProviders_returnEmptyList() {
         List<ProviderConfigurationDTO> emptyList = resource.list(
-                "en", ClusterInfo.createForTesting(CLUSTERS.get("no-available-providers")));
+                "en", ClusterInfo.of(CLUSTERS.get("no-available-providers")));
 
         assertThat(emptyList).isEmpty();
     }

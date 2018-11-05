@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.cluster;
+package se.tink.backend.aggregation.provider.configuration.cluster.jersey;
 
 import com.google.inject.Inject;
 import com.sun.jersey.api.core.HttpContext;
@@ -8,15 +8,14 @@ import com.sun.jersey.core.spi.component.ComponentScope;
 import com.sun.jersey.server.impl.inject.AbstractHttpContextInjectable;
 import com.sun.jersey.spi.inject.Injectable;
 import com.sun.jersey.spi.inject.InjectableProvider;
-import se.tink.backend.aggregation.cluster.annotation.ClusterContext;
-import se.tink.backend.aggregation.cluster.exception.ClusterNotValid;
-import se.tink.backend.aggregation.cluster.identification.ClusterId;
-import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
-import se.tink.backend.aggregation.cluster.provider.ClusterIdProvider;
-
+import java.lang.reflect.Type;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import java.lang.reflect.Type;
+import se.tink.backend.aggregation.provider.configuration.cluster.annotations.ClusterContext;
+import se.tink.backend.aggregation.provider.configuration.cluster.exceptions.ClusterNotValid;
+import se.tink.backend.aggregation.provider.configuration.cluster.identifiers.ClusterId;
+import se.tink.backend.aggregation.provider.configuration.cluster.identifiers.ClusterInfo;
+import se.tink.backend.aggregation.provider.configuration.cluster.providers.ClusterIdProvider;
 
 public class JerseyClusterIdProvider extends AbstractHttpContextInjectable<ClusterInfo>
         implements InjectableProvider<ClusterContext, Type> {
