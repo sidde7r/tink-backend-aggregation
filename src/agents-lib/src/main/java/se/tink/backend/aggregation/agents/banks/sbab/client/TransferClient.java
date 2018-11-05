@@ -16,7 +16,6 @@ import se.tink.backend.aggregation.agents.banks.sbab.model.response.InitialTrans
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.MakeTransferResponse;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.SavedRecipientEntity;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.TransferEntity;
-import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;

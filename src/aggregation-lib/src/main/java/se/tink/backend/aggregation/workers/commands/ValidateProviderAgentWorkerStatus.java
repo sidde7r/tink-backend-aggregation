@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
 import se.tink.backend.common.mapper.CoreCredentialsMapper;
-import se.tink.backend.system.rpc.UpdateCredentialsStatusRequest;
 
 public class ValidateProviderAgentWorkerStatus extends AgentWorkerCommand {
     private AgentWorkerContext context;

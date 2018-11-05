@@ -1,9 +1,9 @@
-package se.tink.backend.aggregation.cluster.provider;
+package se.tink.backend.aggregation.configurations.providers;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.inject.name.Named;
-import se.tink.backend.aggregation.cluster.exception.ClusterNotValid;
+import se.tink.backend.aggregation.cluster.exceptions.ClusterNotValid;
 import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;

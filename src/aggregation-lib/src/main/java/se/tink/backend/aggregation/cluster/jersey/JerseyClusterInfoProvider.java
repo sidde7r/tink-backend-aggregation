@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.cluster;
+package se.tink.backend.aggregation.cluster.jersey;
 
 import com.google.inject.Inject;
 import com.sun.jersey.api.core.HttpContext;
@@ -8,11 +8,11 @@ import com.sun.jersey.core.spi.component.ComponentScope;
 import com.sun.jersey.server.impl.inject.AbstractHttpContextInjectable;
 import com.sun.jersey.spi.inject.Injectable;
 import com.sun.jersey.spi.inject.InjectableProvider;
-import se.tink.backend.aggregation.cluster.annotation.ClusterContext;
-import se.tink.backend.aggregation.cluster.exception.ClusterNotValid;
+import se.tink.backend.aggregation.cluster.annotations.ClusterContext;
+import se.tink.backend.aggregation.cluster.exceptions.ClusterNotValid;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
-import se.tink.backend.aggregation.cluster.provider.ClusterInfoProvider;
+import se.tink.backend.aggregation.configurations.providers.ClusterInfoProvider;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;

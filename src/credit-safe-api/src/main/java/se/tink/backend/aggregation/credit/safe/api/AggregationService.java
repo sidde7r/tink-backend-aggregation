@@ -8,7 +8,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import se.tink.api.annotations.Team;
 import se.tink.api.annotations.TeamOwnership;
-import se.tink.backend.aggregation.cluster.annotation.ClusterContext;
+import se.tink.backend.aggregation.cluster.annotations.ClusterContext;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.credit.safe.rpc.CreateCredentialsRequest;
 import se.tink.backend.aggregation.credit.safe.rpc.Credentials;
