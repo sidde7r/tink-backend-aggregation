@@ -49,7 +49,7 @@ public class AggregationModule extends AbstractModule {
             bind(AgentDebugStorageHandler.class).to(AgentDebugLocalStorage.class).in(Scopes.SINGLETON);
         }
 
-        if ( configuration.isMultiClientDevelopment()) {
+        if (configuration.isMultiClientDevelopment()) {
             bind(ConfigurationsDao.class).to(AggregationConfigurations.class).in(Scopes.SINGLETON);
         }
 
