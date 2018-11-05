@@ -22,11 +22,11 @@ public class CryptoConfiguration {
     }
 
     public String getCryptoId() {
-        return cryptoConfigurationId.getCryptoId();
+        return cryptoConfigurationId.getClientName();
     }
 
     public void setCryptoId(String cryptoId) {
-        this.cryptoConfigurationId.setCryptoId(cryptoId);
+        this.cryptoConfigurationId.setClientName(cryptoId);
     }
 
     public String getBase64encodedkey() {

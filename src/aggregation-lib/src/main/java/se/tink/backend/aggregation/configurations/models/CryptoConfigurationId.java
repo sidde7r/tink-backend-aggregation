@@ -9,18 +9,18 @@ import javax.validation.constraints.NotNull;
 @Embeddable
 public class CryptoConfigurationId implements Serializable {
     @NotNull
-    @Column(name = "cryptoId")
-    private String cryptoId;
+    @Column(name = "clientname")
+    private String clientName;
     @NotNull
     @Column(name = "keyid")
     private int keyId;
 
-    public String getCryptoId() {
-        return cryptoId;
+    public String getClientName() {
+        return clientName;
     }
 
-    public void setCryptoId(String cryptoId) {
-        this.cryptoId = cryptoId;
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
     }
 
     public int getKeyId() {
@@ -31,35 +31,15 @@ public class CryptoConfigurationId implements Serializable {
         this.keyId = keyId;
     }
 
-    public static CryptoConfigurationId of(int keyId, String cryptoId) {
+    public static CryptoConfigurationId of(int keyId, String clientName) {
         CryptoConfigurationId cryptoConfigurationId = new CryptoConfigurationId();
-        cryptoConfigurationId.setCryptoId(cryptoId);
+        cryptoConfigurationId.setClientName(clientName);
         cryptoConfigurationId.setKeyId(keyId);
         return cryptoConfigurationId;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        CryptoConfigurationId cryptoId = (CryptoConfigurationId) o;
-        return keyId == cryptoId.keyId &&
-                Objects.equals(cryptoId, cryptoId.cryptoId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(cryptoId, keyId);
-    }
-
     public boolean isValid() {
-        if (Objects.isNull(cryptoId)) {
+        if (Objects.isNull(clientName)) {
             return false;
         }
 

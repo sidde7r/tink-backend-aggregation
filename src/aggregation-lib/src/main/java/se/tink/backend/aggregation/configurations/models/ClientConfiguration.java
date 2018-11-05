@@ -9,20 +9,28 @@ import org.hibernate.annotations.Type;
 @Table(name = "client_configurations")
 public class ClientConfiguration {
     @Id
-    private String clientId;
+    private String clientName;
+    @Type(type = "text")
+    private String apiClientKey;
     @Type(type = "text")
     private String clusterId;
     @Type(type = "text")
-    private String cryptoId;
-    @Type(type = "text")
     private String aggregatorId;
 
-    public String getClientId() {
-        return clientId;
+    public String getClientName() {
+        return clientName;
     }
 
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
+    }
+
+    public String getApiClientKey() {
+        return apiClientKey;
+    }
+
+    public void setApiClientKey(String apiClientKey) {
+        this.apiClientKey = apiClientKey;
     }
 
     public String getClusterId() {
@@ -31,14 +39,6 @@ public class ClientConfiguration {
 
     public void setClusterId(String clusterId) {
         this.clusterId = clusterId;
-    }
-
-    public String getCryptoId() {
-        return cryptoId;
-    }
-
-    public void setCryptoId(String cryptoId) {
-        this.cryptoId = cryptoId;
     }
 
     public String getAggregatorId() {
