@@ -37,6 +37,7 @@ java_library(
         "//src/libraries/demo_credentials:demo-credentials",
         "//src/libraries/creditsafe_consumer_monitoring:creditsafe_consumer_monitoring",
         "//src/api-annotations",
+        "//src/client-lib:client-lib",
 
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
@@ -152,6 +153,7 @@ java_library(
         ":aggregation-api",
         ":common-lib",
         "//src/api-annotations",
+        "//src/client-lib:client-lib",
         "//src/libraries/discovery:discovery",
         "//src/libraries/discovered_web_service:discovered_web_service",
         "//src/libraries/jersey_utils:jersey-utils",
@@ -435,6 +437,10 @@ java_library(
         "//third_party:org_hibernate_hibernate_annotations",
 
         "//third_party:net_sourceforge_cssparser_cssparser",
+
+        "//src/client-lib:client-lib",
+        "//src/client-lib-jersey:client-lib-jersey",
+
     ],
 )
 
@@ -457,6 +463,7 @@ java_library(
         ":system-api",
         ":aggregationcontroller-api",
 
+        "//src/client-lib:client-lib",
         "//src/libraries/uuid:uuid",
         "//src/libraries/http:http-utils",
         "//src/libraries/serialization_utils:serialization-utils",
@@ -580,6 +587,7 @@ junit_test(
         ":main-api",
 
         "//src/api-annotations-testlib",
+        "//src/client-lib:client-lib",
 
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
@@ -613,6 +621,7 @@ junit_test(
         ":system-api",
         ":agents-lib",
 
+        "//src/client-lib:client-lib",
         "//src/libraries/serialization_utils:serialization-utils",
         "//src/libraries/metrics:metrics",
         "//src/libraries/date:date",
@@ -667,6 +676,7 @@ junit_test(
         ":system-api",
         ":agents-lib",
 
+        "//src/client-lib:client-lib",
         "//src/libraries/serialization_utils:serialization-utils",
         "//src/libraries/metrics:metrics",
         "//src/libraries/date:date",
@@ -724,6 +734,7 @@ junit_test(
         ":main-api",
         ":system-api",
         ":agents-lib",
+        "//src/client-lib:client-lib",
 
         "//src/libraries/uuid:uuid",
         "//src/libraries/serialization_utils:serialization-utils",
@@ -765,6 +776,7 @@ java_library(
     deps = [
         ":main-api",
 
+        "//src/client-lib",
         "//src/api-annotations",
         "//src/libraries/http:http-annotations",
         "//src/libraries/http_client:http-client",
@@ -787,9 +799,11 @@ java_library(
         ":main-api",
         ":provider-configuration-api",
         ":common-lib",
+        "//src/client-lib",
         "//src/api-annotations",
         "//src/libraries/jersey_log:jersey-log",
         "//src/libraries/jersey_guice:jersey-guice",
+        "//src/client-lib-jersey:client-lib-jersey",
         "//src/libraries/metrics:metrics",
         "//src/libraries/serialization_utils:serialization-utils",
         "//src/libraries/i18n",
@@ -857,6 +871,7 @@ junit_test(
         ":agents-lib",
         ":common-lib",
 
+        "//src/client-lib",
         "//src/libraries/metrics",
 
         "//third_party:org_objenesis_objenesis",
@@ -923,6 +938,7 @@ java_library(
         ":aggregation-api",
         ":main-api",
         "//src/api-annotations",
+        "//src/client-lib",
         "//src/libraries/account_identifier:account-identifier",
         "//src/libraries/cluster",
         "//src/libraries/demo_credentials:demo-credentials",
