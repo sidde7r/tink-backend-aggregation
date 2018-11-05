@@ -21,4 +21,8 @@ public class RaiffeisenSessionStorage {
         Preconditions.checkNotNull(loginResponse);
         sessionStorage.put(RaiffeisenConstants.Storage.WEB_LOGIN_RESPONSE.name(), loginResponse);
     }
+
+    public void clear() {
+        sessionStorage.clear();
+    }
 }

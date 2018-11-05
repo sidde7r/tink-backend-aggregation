@@ -23,6 +23,7 @@ public class RaiffeisenSessionHandler implements SessionHandler {
 
     @Override
     public void logout() {
+        raiffeisenSessionStorage.clear();
         apiClient.logOut();
     }
 
@@ -33,6 +34,10 @@ public class RaiffeisenSessionHandler implements SessionHandler {
         try {
             apiClient.keepAlive(loginResponse);
         } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() != 401) {
+                logger.warn("Unexpected HTTP Status code {}:{}", e.getResponse().getStatus(), e);
+            }
+            logout();
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }
