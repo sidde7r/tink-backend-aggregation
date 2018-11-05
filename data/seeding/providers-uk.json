@@ -153,6 +153,23 @@
       "type": "BANK"
     },
     {
+      "name": "uk-rbs-oauth2",
+      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
+      "credentialsType": "PASSWORD",
+      "displayName": "Royal Bank of Scotland",
+      "fields": [],
+      "payload": "tink2:rbs",
+      "groupDisplayName": "",
+      "multiFactor": false,
+      "passwordhelptext": "Authentication is done on external page",
+      "popular": false,
+      "refreshFrequency": 1,
+      "refreshFrequencyFactor": 1,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
       "name": "uk-bankofscotland-oauth2",
       "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
       "credentialsType": "PASSWORD",
