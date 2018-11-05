@@ -209,10 +209,12 @@ public class AccountDetailsEntity {
     private static AccountTypes determineType(String accountType) {
         String name = accountType.toLowerCase();
 
-        if (name.toLowerCase().contains("pension")) {
+        if (name.contains("pension")) {
             return AccountTypes.PENSION;
         } else if (name.startsWith("sparkonto")) {
             return AccountTypes.SAVINGS;
+        } else if (name.startsWith("kredit")) {
+            return AccountTypes.LOAN;
         } else {
             return AccountTypes.INVESTMENT;
         }
