@@ -27,17 +27,6 @@ public class ClusterInfo {
                 disableRequestCompression, aggregator);
     }
 
-
-    public static ClusterInfo createForProviderConfigurationService(ClusterId clusterId) {
-        return new ClusterInfo(
-                clusterId,
-                null,
-                null,
-                null,
-                false,
-                Aggregator.getDefault());
-    }
-
     public static ClusterInfo createForTesting(ClusterId clusterId) {
         return new ClusterInfo(
                 clusterId,
