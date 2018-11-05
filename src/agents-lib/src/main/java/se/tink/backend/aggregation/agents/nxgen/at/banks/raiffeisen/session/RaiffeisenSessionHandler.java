@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.RaiffeisenWe
 import se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.authenticator.rpc.WebLoginResponse;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import tink.org.apache.http.HttpStatus;
 
 public class RaiffeisenSessionHandler implements SessionHandler {
     private static final Logger logger = LoggerFactory.getLogger(RaiffeisenSessionHandler.class);
