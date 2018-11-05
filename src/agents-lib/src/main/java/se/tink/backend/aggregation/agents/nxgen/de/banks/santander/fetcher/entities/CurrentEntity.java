@@ -21,8 +21,8 @@ public class CurrentEntity {
         return accountEntity;
     }
 
-    public AccountTypes getAccountType(){
-        switch(accountEntity.getAccountType()){
+    public AccountTypes getAccountType() {
+        switch (accountEntity.getAccountType()) {
 
         case SantanderConstants.ACCOUNT_TYPE.CHECKING_ACCOUNT:
             return AccountTypes.CHECKING;
@@ -32,11 +32,11 @@ public class CurrentEntity {
                     SantanderConstants.LOGTAG.SANTANDER_UNKNOWN_ACCOUNTTYPE, accountEntity.getAccountType());
             return AccountTypes.OTHER;
         }
-
     }
 
-    public TransactionalAccount toTransactionalAccount(){
-        return TransactionalAccount.builder(AccountTypes.CHECKING, accountEntity.getAccountNumberSort(), accountEntity.getAvailableBalance().toTinkAmount())
+    public TransactionalAccount toTransactionalAccount() {
+        return TransactionalAccount.builder(getAccountType(), accountEntity.getAccountNumberSort(),
+                accountEntity.getAvailableBalance().toTinkAmount())
                 .setAccountNumber(accountEntity.getAccountNumberSort())
                 .setName(accountEntity.getAccountAlias())
                 .build();
