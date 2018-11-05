@@ -25,8 +25,9 @@ public class SessionResponse {
         return ticket;
     }
 
-    public String getUser(){
+    public String getUser() {
 
         return user;
     }
+
 }
