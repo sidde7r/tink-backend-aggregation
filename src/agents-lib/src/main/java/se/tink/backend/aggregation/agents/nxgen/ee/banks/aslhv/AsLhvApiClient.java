@@ -24,7 +24,12 @@ public class AsLhvApiClient {
 
     private RequestBuilder getBaseRequest(URL url) {
         return client.request(url)
-                .header(HttpHeaders.HOST, AsLhvConstants.URLS.BASE_URL);
+                .header(HttpHeaders.HOST, AsLhvConstants.URLS.BASE_URL)
+                .header(HttpHeaders.ACCEPT, AsLhvConstants.Header.ACCEPT_JSON)
+                .header(HttpHeaders.ACCEPT_LANGUAGE, AsLhvConstants.Header.ACCEPT_LANGUAGE)
+                .header(HttpHeaders.CONTENT_TYPE, AsLhvConstants.Header.CONTENT_TYPE_FORM_URLENCODED)
+                .header(AsLhvConstants.Header.LHV_APPLICATION_LANGUAGE_HEADER,
+                        AsLhvConstants.Header.LHV_APPLICATION_LANUGAGE_US);
     }
 
     private URL getUrl() {
@@ -64,11 +69,6 @@ public class AsLhvApiClient {
 
     public GetUserDataResponse getUserData() {
         return getBaseRequest(getGetUserDataUrl())
-                .header(HttpHeaders.ACCEPT, AsLhvConstants.Header.ACCEPT_JSON)
-                .header(HttpHeaders.ACCEPT_LANGUAGE, AsLhvConstants.Header.ACCEPT_LANGUAGE)
-                .header(HttpHeaders.CONTENT_TYPE, AsLhvConstants.Header.CONTENT_TYPE_FORM_URLENCODED)
-                .header(AsLhvConstants.Header.LHV_APPLICATION_LANGUAGE_HEADER,
-                        AsLhvConstants.Header.LHV_APPLICATION_LANUGAGE_US)
                 .post(GetUserDataResponse.class);
     }
 
@@ -79,22 +79,12 @@ public class AsLhvApiClient {
                 .build();
         String serialized = form.serialize();
         return getBaseRequest(getLoginPasswordUrl())
-                .header(HttpHeaders.ACCEPT, AsLhvConstants.Header.ACCEPT_JSON)
-                .header(HttpHeaders.ACCEPT_LANGUAGE, AsLhvConstants.Header.ACCEPT_LANGUAGE)
-                .header(HttpHeaders.CONTENT_TYPE, AsLhvConstants.Header.CONTENT_TYPE_FORM_URLENCODED)
-                .header(AsLhvConstants.Header.LHV_APPLICATION_LANGUAGE_HEADER,
-                        AsLhvConstants.Header.LHV_APPLICATION_LANUGAGE_US)
                 .body(serialized)
                 .post(LoginResponse.class);
     }
 
     public GetCurrenciesResponse getCurrencies() {
         return getBaseRequest(getGetCurrenciesUrl())
-                .header(HttpHeaders.ACCEPT, AsLhvConstants.Header.ACCEPT_JSON)
-                .header(HttpHeaders.ACCEPT_LANGUAGE, AsLhvConstants.Header.ACCEPT_LANGUAGE)
-                .header(HttpHeaders.CONTENT_TYPE, AsLhvConstants.Header.CONTENT_TYPE_FORM_URLENCODED)
-                .header(AsLhvConstants.Header.LHV_APPLICATION_LANGUAGE_HEADER,
-                        AsLhvConstants.Header.LHV_APPLICATION_LANUGAGE_US)
                 .post(GetCurrenciesResponse.class);
     }
 
@@ -114,11 +104,7 @@ public class AsLhvApiClient {
     }
 
     public void logout() {
-        getBaseRequest(getLogoutUrl())
-                .header(HttpHeaders.ACCEPT, AsLhvConstants.Header.ACCEPT_JSON)
-                .header(HttpHeaders.ACCEPT_LANGUAGE, AsLhvConstants.Header.ACCEPT_LANGUAGE)
-                .header(HttpHeaders.CONTENT_TYPE, AsLhvConstants.Header.CONTENT_TYPE_FORM_URLENCODED)
-                .post();
+        getBaseRequest(getLogoutUrl()).post();
 
     }
 }
