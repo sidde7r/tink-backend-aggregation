@@ -49,41 +49,4 @@ public class AggregationMultiClientRepositoryModule extends RepositoryModule {
                 Collectors.toMap(ClusterHostConfiguration::getClusterId, x -> x)
         );
     }
-
-    @Provides
-    @Singleton
-    @Named("cryptoConfiguration")
-    public Map<String, CryptoConfiguration> provideCryptoConfigurations(CryptoConfigurationsRepository repository) {
-        return repository.findAll().stream().collect(
-                Collectors.toMap(CryptoConfiguration::getCryptoId, x -> x)
-        );
-    }
-
-    @Provides
-    @Singleton
-    @Named("clientConfiguration")
-    public Map<String, ClientConfiguration> provideClientConfigurations(ClientConfigurationsRepository repository) {
-        return repository.findAll().stream().collect(
-                Collectors.toMap(ClientConfiguration::getClientId, x -> x)
-        );
-    }
-
-    @Provides
-    @Singleton
-    @Named("aggregatorConfiguration")
-    public Map<String, AggregatorConfiguration> provideAggregatorConfigurations(AggregatorConfigurationsRepository repository) {
-        return repository.findAll().stream().collect(
-                Collectors.toMap(AggregatorConfiguration::getAggregatorId, x -> x)
-        );
-    }
-
-    @Provides
-    @Singleton
-    @Named("clusterConfiguration")
-    public Map<String, ClusterConfiguration> provideClusterConfigurations(ClusterConfigurationsRepository repository) {
-        return repository.findAll().stream().collect(
-                Collectors.toMap(ClusterConfiguration::getClusterId, x -> x)
-        );
-    }
-
 }
