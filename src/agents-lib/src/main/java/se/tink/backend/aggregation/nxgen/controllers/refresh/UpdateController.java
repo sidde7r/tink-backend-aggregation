@@ -34,23 +34,17 @@ public class UpdateController {
         this.credentials = credentials;
     }
 
-    public <A extends Account> boolean updateAccount(A account) {
-        return updateAccount(account, getFeatures(account));
+    public boolean updateAccount(Account account) {
+        return updateAccount(account, AccountFeatures.createEmpty());
     }
 
-    private <A extends Account> AccountFeatures getFeatures(A account) {
-        Class<? extends Account> accountClass = account.getClass();
-        if (LoanAccount.class.equals(accountClass)) {
-            LoanAccount loan = (LoanAccount) account;
-            return AccountFeatures.createForLoan(
-                    loan.getDetails().toSystemLoan(loan, loanInterpreter));
-        }
-        if (InvestmentAccount.class.equals(accountClass)) {
-            InvestmentAccount investment = (InvestmentAccount) account;
-            return AccountFeatures.createForPortfolios(
-                    investment.getPortfolios());
-        }
-        return AccountFeatures.createEmpty();
+    public boolean updateAccount(LoanAccount account) {
+        return updateAccount(account, AccountFeatures.createForLoan(
+                account.getDetails().toSystemLoan(account, loanInterpreter)));
+    }
+
+    public boolean updateAccount(InvestmentAccount account) {
+        return updateAccount(account, AccountFeatures.createForPortfolios(account.getPortfolios()));
     }
 
     private boolean updateAccount(Account account, AccountFeatures accountFeatures) {
@@ -73,20 +67,19 @@ public class UpdateController {
         return true;
     }
 
-    //        public boolean updateTransactions(Account account, Collection<AggregationTransaction> transactions) {
-    //            if (!updateAccount(account)) {
-    //                return false;
-    //            }
-    //
-    //            baseContext.updateTransactions(account.toSystemAccount(), transactions.stream()
-    //                    .map(AggregationTransaction::toSystemTransaction)
-    //                    .collect(Collectors.toList()));
-    //
-    //            return true;
-    //        }
+    public boolean updateTransactions(Account account, Collection<AggregationTransaction> transactions) {
+        if (!updateAccount(account)) {
+            return false;
+        }
 
-    public <A extends Account> boolean updateTransactions(A account, Collection<AggregationTransaction> transactions) {
-        //    public <A extends Account> boolean updateTransactions(LoanAccount account, Collection<AggregationTransaction> transactions) {
+        baseContext.updateTransactions(account.toSystemAccount(), transactions.stream()
+                .map(AggregationTransaction::toSystemTransaction)
+                .collect(Collectors.toList()));
+
+        return true;
+    }
+
+    public boolean updateTransactions(LoanAccount account, Collection<AggregationTransaction> transactions) {
         if (!updateAccount(account)) {
             return false;
         }
