@@ -11,6 +11,8 @@ import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.core.Amount;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 @JsonObject
 public class AccountItem {
@@ -107,6 +109,7 @@ public class AccountItem {
         Amount accountBalance = new Amount(currency, balance);
         Amount availableCredit = new Amount(currency, freeCredit);
         return Optional.of(CreditCardAccount.builder(iban, accountBalance, availableCredit)
+                .addIdentifier(new IbanIdentifier(iban))
                 .setBalance(accountBalance)
                 .setName(getAccountName())
                 .setHolderName(new HolderName(currentUser))
@@ -132,6 +135,7 @@ public class AccountItem {
         double balance = getBalance(baseCurrencyId);
         Amount accountBalance = new Amount(currency, balance);
         return Optional.of(TransactionalAccount.builder(accountType, iban)
+                .addIdentifier(new IbanIdentifier(iban))
                 .setBalance(accountBalance)
                 .setName(getAccountName())
                 .setHolderName(new HolderName(currentUser))
