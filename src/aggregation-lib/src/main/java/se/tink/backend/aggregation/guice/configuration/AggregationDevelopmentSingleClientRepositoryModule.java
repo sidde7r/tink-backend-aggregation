@@ -40,10 +40,6 @@ public class AggregationDevelopmentSingleClientRepositoryModule extends Reposito
     protected void bindRepositories() {
         bindSpringBean(ClusterHostConfigurationRepository.class);
         bindSpringBean(ClusterCryptoConfigurationRepository.class);
-        bindSpringBean(CryptoConfigurationsRepository.class);
-        bindSpringBean(ClientConfigurationsRepository.class);
-        bindSpringBean(AggregatorConfigurationsRepository.class);
-        bindSpringBean(ClusterConfigurationsRepository.class);
     }
 
     @Provides
