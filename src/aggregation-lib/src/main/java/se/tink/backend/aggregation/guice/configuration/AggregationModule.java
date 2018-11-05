@@ -39,15 +39,18 @@ public class AggregationModule extends AbstractModule {
     protected void configure() {
         bind(AggregationControllerAggregationClient.class).in(Scopes.SINGLETON);
         bind(InterContainerProviderServiceFactory.class).toProvider(ProviderServiceFactoryProvider.class).in(Scopes.SINGLETON);
-        bind(ClusterInfoProvider.class).in(Scopes.SINGLETON);
         bind(AgentWorker.class).in(Scopes.SINGLETON);
-        bind(ConfigurationsDao.class).to(AggregationConfigurations.class).in(Scopes.SINGLETON);
+        bind(ClusterInfoProvider.class).in(Scopes.SINGLETON);
 
         if (Objects.nonNull(configuration.getS3StorageConfiguration()) &&
                 configuration.getS3StorageConfiguration().isEnabled()) {
             bind(AgentDebugStorageHandler.class).to(AgentDebugS3Storage.class).in(Scopes.SINGLETON);
         } else {
             bind(AgentDebugStorageHandler.class).to(AgentDebugLocalStorage.class).in(Scopes.SINGLETON);
+        }
+
+        if ( configuration.isMultiClientDevelopment()) {
+            bind(ConfigurationsDao.class).to(AggregationConfigurations.class).in(Scopes.SINGLETON);
         }
 
         // TODO Remove these lines after getting rid of dependencies on ServiceContext
