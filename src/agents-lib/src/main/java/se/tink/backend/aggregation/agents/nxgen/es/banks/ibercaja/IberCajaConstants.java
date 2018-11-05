@@ -63,8 +63,8 @@ public class IberCajaConstants {
         public static final String REQUEST_CARD_TYPE = "request.tipoTarjeta";
     }
 
-    public static class StatusCodes {
-        public static final int INCORRECT_USERNAME_PASSWORD = 404; // Not Found
+    public static class ErrorCodes {
+        public static final int INCORRECT_USERNAME_PASSWORD = 1025;
     }
 
     public static class Storage {

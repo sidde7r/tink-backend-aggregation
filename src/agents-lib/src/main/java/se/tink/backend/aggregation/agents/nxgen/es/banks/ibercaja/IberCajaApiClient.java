@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.authenticator.rpc.SessionRequest;
@@ -15,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class IberCajaApiClient {
 
@@ -27,20 +29,19 @@ public class IberCajaApiClient {
 
     public SessionResponse initializeSession(SessionRequest sessionRequest) throws LoginException {
 
-        try {
-            return createRequest(IberCajaConstants.Urls.INIT_LOGIN)
-                    .header(IberCajaConstants.Headers.PLAYBACK_MODE,
-                            IberCajaConstants.DefaultRequestParams.PLAYBACK_MODE_REAL)
-                    .post(SessionResponse.class, sessionRequest);
-        } catch (HttpResponseException e) {
-            int statusCode = e.getResponse().getStatus();
+        String response = createRequest(IberCajaConstants.Urls.INIT_LOGIN)
+                .header(IberCajaConstants.Headers.PLAYBACK_MODE,
+                        IberCajaConstants.DefaultRequestParams.PLAYBACK_MODE_REAL)
+                .post(String.class, sessionRequest);
 
-            if (statusCode == IberCajaConstants.StatusCodes.INCORRECT_USERNAME_PASSWORD) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
-            }
+        SessionResponse sessionResponse = SerializationUtils.deserializeFromString(response, SessionResponse.class);
 
-            throw e;
-        }
+        if (sessionResponse.getTicket() == null) {
+            ErrorResponse errorResponse = SerializationUtils.deserializeFromString(response, ErrorResponse.class);
+            errorResponse.logError();
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        } else
+            return sessionResponse;
     }
 
     public LoginResponse login(LoginRequest loginRequest, String ticket, String user) {
@@ -110,12 +111,15 @@ public class IberCajaApiClient {
     }
 
     public CreditCardResponse fetchCreditCardsTransactionList(String bankIdentifier, String requestOrden,
-            String requestTipo, String ticket, String user) {
+            String requestTipo, String ticket, String user, String dateMin,
+            String dateMax) {
 
         return createRequest(IberCajaConstants.Urls.FETCH_CREDIT_CARD_ACCOUNT)
                 .queryParam(IberCajaConstants.QueryParams.REQUEST_CARD, bankIdentifier)
                 .queryParam(IberCajaConstants.QueryParams.REQUEST_ORDER, requestOrden)
                 .queryParam(IberCajaConstants.QueryParams.REQUEST_CARD_TYPE, requestTipo)
+                .queryParam(IberCajaConstants.QueryParams.REQUEST_START_DATE, dateMin)
+                .queryParam(IberCajaConstants.QueryParams.REQUEST_END_DATE, dateMax)
                 .header(IberCajaConstants.Headers.USER, user)
                 .header(IberCajaConstants.Headers.TICKET, ticket)
                 .header(IberCajaConstants.Headers.PLAYBACK_MODE,
