@@ -139,7 +139,7 @@
       "name": "uk-markandspencer-oauth2",
       "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11Agent",
       "credentialsType": "PASSWORD",
-      "displayName": "Mark & Spencer",
+      "displayName": "M&S Bank",
       "fields": [],
       "payload": "tink:markandspencer",
       "groupDisplayName": "",
