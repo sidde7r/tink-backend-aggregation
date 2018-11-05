@@ -17,7 +17,8 @@ public class ErrorResponse {
 
     public void logError() {
 
-        if (number != IberCajaConstants.ErrorCodes.INCORRECT_USERNAME_PASSWORD)
+        if (number != IberCajaConstants.ErrorCodes.INCORRECT_USERNAME_PASSWORD) {
             logger.info(String.format("UNKNOWN ERROR %d %s", number, description));
+        }
     }
 }

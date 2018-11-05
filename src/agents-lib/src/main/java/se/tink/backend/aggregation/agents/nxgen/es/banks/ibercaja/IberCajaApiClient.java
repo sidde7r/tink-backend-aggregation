@@ -40,8 +40,9 @@ public class IberCajaApiClient {
             ErrorResponse errorResponse = SerializationUtils.deserializeFromString(response, ErrorResponse.class);
             errorResponse.logError();
             throw LoginError.INCORRECT_CREDENTIALS.exception();
-        } else
+        } else {
             return sessionResponse;
+        }
     }
 
     public LoginResponse login(LoginRequest loginRequest, String ticket, String user) {
