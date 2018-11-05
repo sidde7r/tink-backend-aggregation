@@ -268,6 +268,47 @@
             ]
         },
         {
+            "name":"es-openbank-password",
+            "displayName":"Openbank",
+            "popular":false,
+            "type":"BANK",
+            "status":"ENABLED",
+            "credentialsType":"PASSWORD",
+            "multiFactor":false,
+            "className":"nxgen.es.banks.openbank.OpenbankAgent",
+            "passwordHelpText":"Use the same credentials as when using the mobile bank app.",
+            "transactional":true,
+            "fields":[
+                {
+                    "name":"username",
+                    "description":"Username",
+                    "immutable":true,
+                    "numeric":false,
+                    "helpText":"Your NIE, NIF, passport number etc."
+                },
+                {
+                    "name":"username-type",
+                    "description":"Username type",
+                    "numeric":false,
+                    "pattern":"([NCPI]{1})",
+                    "minLength":1,
+                    "maxLength":1,
+                    "helpText":"N for NIE, C for NIF, P for Passport, I for Other Documents"
+                },
+                {
+                    "name":"password",
+                    "description":"Password",
+                    "masked":true,
+                    "sensitive":true,
+                    "pattern":"([0-9]{4})",
+                    "numeric":true,
+                    "minLength":4,
+                    "maxLength":4,
+                    "helpText":"Your 4 digit online PIN"
+                }
+            ]
+        },
+        {
             "name": "es-revolut-password",
             "className": "nxgen.serviceproviders.banks.revolut.RevolutAgent",
             "displayName": "Revolut",
