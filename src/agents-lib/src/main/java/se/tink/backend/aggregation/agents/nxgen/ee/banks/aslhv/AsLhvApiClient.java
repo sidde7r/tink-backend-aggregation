@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc.GetCurrencies
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc.GetUserDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc.IsAuthenticatedResponse;
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc.LoginResponse;
-import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc.LogoutResponse;
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -110,20 +109,16 @@ public class AsLhvApiClient {
                 .build();
 
         return getBaseRequest(getAccountTransactionsUrl())
-                .header(HttpHeaders.ACCEPT, AsLhvConstants.Header.ACCEPT_JSON)
-                .header(HttpHeaders.ACCEPT_LANGUAGE, AsLhvConstants.Header.ACCEPT_LANGUAGE)
-                .header(HttpHeaders.CONTENT_TYPE, AsLhvConstants.Header.CONTENT_TYPE_FORM_URLENCODED)
-                .header(AsLhvConstants.Header.LHV_APPLICATION_LANGUAGE_HEADER,
-                        AsLhvConstants.Header.LHV_APPLICATION_LANUGAGE_US)
                 .body(form.serialize())
                 .post(GetAccountTransactionsResponse.class);
     }
 
-    public LogoutResponse logout() {
-        return getBaseRequest(getLogoutUrl())
+    public void logout() {
+        getBaseRequest(getLogoutUrl())
                 .header(HttpHeaders.ACCEPT, AsLhvConstants.Header.ACCEPT_JSON)
                 .header(HttpHeaders.ACCEPT_LANGUAGE, AsLhvConstants.Header.ACCEPT_LANGUAGE)
                 .header(HttpHeaders.CONTENT_TYPE, AsLhvConstants.Header.CONTENT_TYPE_FORM_URLENCODED)
-                .post(LogoutResponse.class);
+                .post();
+
     }
 }
