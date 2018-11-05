@@ -14,16 +14,16 @@ import javax.ws.rs.core.Response;
 import se.tink.backend.aggregation.cluster.annotation.ClientContext;
 import se.tink.backend.aggregation.cluster.exception.ClientNotValid;
 import se.tink.backend.aggregation.cluster.identification.ClientApiKey;
-import se.tink.backend.aggregation.cluster.provider.ClientIdProvider;
+import se.tink.backend.aggregation.cluster.provider.ClientApiKeyProvider;
 
-public class JerseyClientIdProvider extends AbstractHttpContextInjectable<ClientApiKey>
+public class JerseyClientApiKeyProvider extends AbstractHttpContextInjectable<ClientApiKey>
         implements InjectableProvider<ClientContext, Type> {
 
-    private static final String CLIENT_ID_HEADER = ClientApiKey.CLIENT_API_KEY_HEADER;
-    private ClientIdProvider clientApiKey;
+    private static final String CLIENT_API_KEY_HEADER = ClientApiKey.CLIENT_API_KEY_HEADER;
+    private ClientApiKeyProvider clientApiKey;
 
     @Inject
-    public JerseyClientIdProvider(ClientIdProvider clientApiKey) {
+    public JerseyClientApiKeyProvider(ClientApiKeyProvider clientApiKey) {
         this.clientApiKey = clientApiKey;
     }
 
@@ -42,7 +42,7 @@ public class JerseyClientIdProvider extends AbstractHttpContextInjectable<Client
         HttpRequestContext request = c.getRequest();
 
         try {
-            return clientApiKey.getClientApiKey(request.getHeaderValue(CLIENT_ID_HEADER));
+            return clientApiKey.getClientApiKey(request.getHeaderValue(CLIENT_API_KEY_HEADER));
         } catch (ClientNotValid clusterNotValid) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
