@@ -34,4 +34,8 @@ public class N26Constants {
         public static final String PASSWORD = "&password=";
         public static final String USERNAME = "&username=";
     }
+
+    public static class Logging {
+        public static final LogTag TRANSACTION_PAGINATION_ERROR = LogTag.from("N26_TRANSACTION_PAGINATION_ERROR");
+    }
 }
