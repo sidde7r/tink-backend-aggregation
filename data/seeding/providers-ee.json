@@ -1,0 +1,34 @@
+{
+  "market": "EE",
+  "currency": "EUR",
+  "providers": [
+    {
+      "name":"ee-aslhv-password",
+      "displayName":"AS LHV Pank",
+      "popular":true,
+      "type":"BANK",
+      "status":"ENABLED",
+      "credentialsType":"PASSWORD",
+      "multiFactor":false,
+      "className":"nxgen.ee.banks.aslhv.AsLhvAgent",
+      "passwordHelpText":null,
+      "transactional":"true",
+      "payload": null,
+      "tutorialUrl":null,
+      "fields":[
+        {
+          "name":"username",
+          "description":"User name",
+          "immutable":true
+        },
+        {
+          "name":"password",
+          "description":"Password",
+          "masked":true,
+          "numeric":false,
+          "sensitive":true
+        }
+      ]
+    }
+  ]
+}
