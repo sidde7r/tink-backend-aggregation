@@ -115,8 +115,7 @@ public class AccountTypeMapper {
         Set<AccountTypes> accountTypeSet = new HashSet<>(matchingRestriction.values());
 
         if (accountTypeSet.size() >= 2) {
-            AccountTypes anyAccountType =
-                    associatedAccountTypes.iterator().next(); // Pop any of the elements
+            AccountTypes anyAccountType = accountTypeSet.iterator().next(); // Pop any element
             logger.error(
                     "Account type string: \"{}\" matched multiple regexes with different associated account types: {} -- using {}",
                     accountTypeString,
