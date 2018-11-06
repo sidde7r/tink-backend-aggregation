@@ -499,9 +499,6 @@ java_binary(
     name = "aggregation",
     srcs = glob(["src/aggregation-service/src/main/**/*.java"]),
     data = [
-        "etc/abn/development-aggregation-server.yml",
-        "etc/kirkby/development-aggregation-server.yml",
-        "etc/newport/development-aggregation-server.yml",
         "etc/development-aggregation-server.yml",
         "etc/development-minikube-aggregation-server.yml",
         "//data",
