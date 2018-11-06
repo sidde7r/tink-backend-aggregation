@@ -9,6 +9,7 @@ import org.apache.curator.framework.CuratorFramework;
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.CredentialsService;
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.ProcessService;
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.UpdateService;
+import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.GenerateStatisticsAndActivitiesRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest;
@@ -22,7 +23,6 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateDocumentRe
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransactionsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransferDestinationPatternsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransfersRequest;
-import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.core.signableoperation.SignableOperation;
@@ -60,20 +60,20 @@ public class AggregationControllerAggregationClient {
                 .build(serviceInterface);
     }
 
-    private <T> T buildInterClusterServiceFromInterface(ClusterInfo clusterInfo, Class<T> serviceInterface) {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(clusterInfo.getAggregationControllerHost()),
+    private <T> T buildInterClusterServiceFromInterface(HostConfiguration hostConfiguration, Class<T> serviceInterface) {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(hostConfiguration.getHost()),
                 "Aggregation controller host was not set.");
 
-        Client client = JerseyUtils.getClusterClient(clusterInfo.getClientCertificate(), EMPTY_PASSWORD,
-                clusterInfo.isDisableRequestCompression());
-        JerseyUtils.registerAPIAccessToken(client, clusterInfo.getApiToken());
+        Client client = JerseyUtils.getClusterClient(hostConfiguration.getClientCert(), EMPTY_PASSWORD,
+                hostConfiguration.isDisablerequestcompression());
+        JerseyUtils.registerAPIAccessToken(client, hostConfiguration.getApiToken());
 
         return WebResourceFactory.newResource(
-                serviceInterface, client.resource(clusterInfo.getAggregationControllerHost()));
+                serviceInterface, client.resource(hostConfiguration.getHost()));
     }
 
-    private CredentialsService getCredentialsService(ClusterInfo clusterInfo) {
-        return buildInterClusterServiceFromInterface(clusterInfo, CredentialsService.class);
+    private CredentialsService getCredentialsService(HostConfiguration hostConfiguration) {
+        return buildInterClusterServiceFromInterface(hostConfiguration, CredentialsService.class);
     }
 
     private ProcessService getProcessServiceUsingServiceDiscovery() {
@@ -83,12 +83,12 @@ public class AggregationControllerAggregationClient {
         return processService;
     }
 
-    private ProcessService getProcessService(ClusterInfo clusterInfo) {
-        return buildInterClusterServiceFromInterface(clusterInfo, ProcessService.class);
+    private ProcessService getProcessService(HostConfiguration hostConfiguration) {
+        return buildInterClusterServiceFromInterface(hostConfiguration, ProcessService.class);
     }
 
-    private UpdateService getUpdateService(ClusterInfo clusterInfo) {
-        return buildInterClusterServiceFromInterface(clusterInfo, UpdateService.class);
+    private UpdateService getUpdateService(HostConfiguration hostConfiguration) {
+        return buildInterClusterServiceFromInterface(hostConfiguration, UpdateService.class);
     }
 
     private UpdateService getUpdateServiceUsingServiceDiscovery() {
@@ -102,117 +102,117 @@ public class AggregationControllerAggregationClient {
         return getProcessServiceUsingServiceDiscovery().generateStatisticsAndActivityAsynchronously(request);
     }
 
-    public Response generateStatisticsAndActivityAsynchronously(ClusterInfo clusterInfo,
+    public Response generateStatisticsAndActivityAsynchronously(HostConfiguration hostConfiguration,
             GenerateStatisticsAndActivitiesRequest request) {
-        return getProcessService(clusterInfo).generateStatisticsAndActivityAsynchronously(request);
+        return getProcessService(hostConfiguration).generateStatisticsAndActivityAsynchronously(request);
     }
 
     public Response updateTransactionsAsynchronously(UpdateTransactionsRequest request) {
         return getProcessServiceUsingServiceDiscovery().updateTransactionsAsynchronously(request);
     }
 
-    public Response updateTransactionsAsynchronously(ClusterInfo clusterInfo,
+    public Response updateTransactionsAsynchronously(HostConfiguration hostConfiguration,
             UpdateTransactionsRequest request) {
-        return getProcessService(clusterInfo).updateTransactionsAsynchronously(request);
+        return getProcessService(hostConfiguration).updateTransactionsAsynchronously(request);
     }
 
     public String ping() {
         return getUpdateServiceUsingServiceDiscovery().ping();
     }
 
-    public String ping(ClusterInfo clusterInfo) {
-        return getUpdateService(clusterInfo).ping();
+    public String ping(HostConfiguration hostConfiguration) {
+        return getUpdateService(hostConfiguration).ping();
     }
 
     public SupplementalInformationResponse getSupplementalInformation(SupplementalInformationRequest request) {
         return getUpdateServiceUsingServiceDiscovery().getSupplementalInformation(request);
     }
 
-    public SupplementalInformationResponse getSupplementalInformation(ClusterInfo clusterInfo,
+    public SupplementalInformationResponse getSupplementalInformation(HostConfiguration hostConfiguration,
             SupplementalInformationRequest request) {
-        return getUpdateService(clusterInfo).getSupplementalInformation(request);
+        return getUpdateService(hostConfiguration).getSupplementalInformation(request);
     }
 
     public Account updateAccount(UpdateAccountRequest request) {
         return getUpdateServiceUsingServiceDiscovery().updateAccount(request);
     }
 
-    public Account updateAccount(ClusterInfo clusterInfo, UpdateAccountRequest request) {
-        return getUpdateService(clusterInfo).updateAccount(request);
+    public Account updateAccount(HostConfiguration hostConfiguration, UpdateAccountRequest request) {
+        return getUpdateService(hostConfiguration).updateAccount(request);
     }
 
     public Response updateTransferDestinationPatterns(UpdateTransferDestinationPatternsRequest request) {
         return getUpdateServiceUsingServiceDiscovery().updateTransferDestinationPatterns(request);
     }
 
-    public Response updateTransferDestinationPatterns(ClusterInfo clusterInfo,
+    public Response updateTransferDestinationPatterns(HostConfiguration hostConfiguration,
             UpdateTransferDestinationPatternsRequest request) {
-        return getUpdateService(clusterInfo).updateTransferDestinationPatterns(request);
+        return getUpdateService(hostConfiguration).updateTransferDestinationPatterns(request);
     }
 
     public Response processAccounts(ProcessAccountsRequest request) {
         return getUpdateServiceUsingServiceDiscovery().processAccounts(request);
     }
 
-    public Response processAccounts(ClusterInfo clusterInfo, ProcessAccountsRequest request) {
-        return getUpdateService(clusterInfo).processAccounts(request);
+    public Response processAccounts(HostConfiguration hostConfiguration, ProcessAccountsRequest request) {
+        return getUpdateService(hostConfiguration).processAccounts(request);
     }
 
     public Response optOutAccounts(OptOutAccountsRequest request) {
         return getUpdateServiceUsingServiceDiscovery().optOutAccounts(request);
     }
 
-    public Response optOutAccounts(ClusterInfo clusterInfo, OptOutAccountsRequest request) {
-        return getUpdateService(clusterInfo).optOutAccounts(request);
+    public Response optOutAccounts(HostConfiguration hostConfiguration, OptOutAccountsRequest request) {
+        return getUpdateService(hostConfiguration).optOutAccounts(request);
     }
 
     public Response updateCredentials(UpdateCredentialsStatusRequest request) {
         return getUpdateServiceUsingServiceDiscovery().updateCredentials(request);
     }
 
-    public Response updateCredentials(ClusterInfo clusterInfo, UpdateCredentialsStatusRequest request) {
-        return getUpdateService(clusterInfo).updateCredentials(request);
+    public Response updateCredentials(HostConfiguration hostConfiguration, UpdateCredentialsStatusRequest request) {
+        return getUpdateService(hostConfiguration).updateCredentials(request);
     }
 
     public Response updateSignableOperation(SignableOperation signableOperation) {
         return getUpdateServiceUsingServiceDiscovery().updateSignableOperation(signableOperation);
     }
 
-    public Response updateSignableOperation(ClusterInfo clusterInfo, SignableOperation signableOperation) {
-        return getUpdateService(clusterInfo).updateSignableOperation(signableOperation);
+    public Response updateSignableOperation(HostConfiguration hostConfiguration, SignableOperation signableOperation) {
+        return getUpdateService(hostConfiguration).updateSignableOperation(signableOperation);
     }
 
     public Response processEinvoices(UpdateTransfersRequest request) {
         return getUpdateServiceUsingServiceDiscovery().processEinvoices(request);
     }
 
-    public Response processEinvoices(ClusterInfo clusterInfo, UpdateTransfersRequest request) {
-        return getUpdateService(clusterInfo).processEinvoices(request);
+    public Response processEinvoices(HostConfiguration hostConfiguration, UpdateTransfersRequest request) {
+        return getUpdateService(hostConfiguration).processEinvoices(request);
     }
 
     public UpdateDocumentResponse updateDocument(UpdateDocumentRequest request) {
         return getUpdateServiceUsingServiceDiscovery().updateDocument(request);
     }
 
-    public UpdateDocumentResponse updateDocument(ClusterInfo clusterInfo, UpdateDocumentRequest request) {
-        return getUpdateService(clusterInfo).updateDocument(request);
+    public UpdateDocumentResponse updateDocument(HostConfiguration hostConfiguration, UpdateDocumentRequest request) {
+        return getUpdateService(hostConfiguration).updateDocument(request);
     }
 
-    public Response updateFraudDetails(ClusterInfo clusterInfo, UpdateFraudDetailsRequest request) {
-        return getUpdateService(clusterInfo).updateFraudDetails(request);
+    public Response updateFraudDetails(HostConfiguration hostConfiguration, UpdateFraudDetailsRequest request) {
+        return getUpdateService(hostConfiguration).updateFraudDetails(request);
     }
 
     public Response updateFraudDetails(UpdateFraudDetailsRequest updateFraudRequest) {
         return getUpdateServiceUsingServiceDiscovery().updateFraudDetails(updateFraudRequest);
     }
 
-    public Response updateCredentialSensitive(ClusterInfo clusterInfo, Credentials credentials,
+    public Response updateCredentialSensitive(HostConfiguration hostConfiguration, Credentials credentials,
             String sensitiveData) {
         UpdateCredentialsSensitiveRequest request = new UpdateCredentialsSensitiveRequest()
                 .setUserId(credentials.getUserId())
                 .setCredentialsId(credentials.getId())
                 .setSensitiveData(sensitiveData);
 
-        return getCredentialsService(clusterInfo).updateSensitive(request);
+        return getCredentialsService(hostConfiguration).updateSensitive(request);
     }
 }

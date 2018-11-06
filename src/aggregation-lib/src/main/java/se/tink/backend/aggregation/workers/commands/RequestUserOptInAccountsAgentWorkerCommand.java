@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
+import se.tink.backend.aggregation.converter.HostConfigurationConverter;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
@@ -196,7 +197,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
     private void optOutAccounts(List<String> optOutAccountIds) {
         Credentials credentials = request.getCredentials();
 
-        aggregationControllerAggregationClient.optOutAccounts(clusterInfo,
+        aggregationControllerAggregationClient.optOutAccounts(HostConfigurationConverter.convert(clusterInfo),
                 OptOutAccountsRequest.of(credentials.getUserId(), credentials.getId(), optOutAccountIds));
     }
 

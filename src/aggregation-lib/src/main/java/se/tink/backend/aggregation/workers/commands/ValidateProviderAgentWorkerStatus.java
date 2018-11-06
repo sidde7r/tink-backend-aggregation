@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.workers.commands;
 import java.util.Objects;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
+import se.tink.backend.aggregation.converter.HostConfigurationConverter;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.Provider;
@@ -48,7 +49,7 @@ public class ValidateProviderAgentWorkerStatus extends AgentWorkerCommand {
         updateCredentialsStatusRequest.setCredentials(coreCredentials);
         updateCredentialsStatusRequest.setUserId(credentials.getUserId());
 
-        aggregationControllerAggregationClient.updateCredentials(clusterInfo, updateCredentialsStatusRequest);
+        aggregationControllerAggregationClient.updateCredentials(HostConfigurationConverter.convert(clusterInfo), updateCredentialsStatusRequest);
 
         return AgentWorkerCommandResult.ABORT;
     }
