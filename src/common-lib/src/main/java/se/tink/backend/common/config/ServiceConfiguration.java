@@ -44,9 +44,6 @@ public class ServiceConfiguration extends Configuration {
     private PrometheusConfiguration prometheus = new PrometheusConfiguration();
 
     @JsonProperty
-    private boolean isProvidersOnAggregation = false;
-
-    @JsonProperty
     private SignatureKeyPair signatureKeyPair = new SignatureKeyPair();
 
     @JsonProperty
@@ -114,10 +111,6 @@ public class ServiceConfiguration extends Configuration {
 
     public PrometheusConfiguration getPrometheus() {
         return prometheus;
-    }
-
-    public boolean isProvidersOnAggregation() {
-        return isProvidersOnAggregation;
     }
 
     public SignatureKeyPair getSignatureKeyPair() {

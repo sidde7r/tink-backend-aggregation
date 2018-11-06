@@ -25,8 +25,6 @@ public class ConfigurationModule extends AbstractModule {
 
         bindConstant().annotatedWith(Names.named("developmentMode")).to(configuration.isDevelopmentMode());
         bindConstant().annotatedWith(Names.named("productionMode")).to(!configuration.isDevelopmentMode());
-        bindConstant().annotatedWith(Names.named("isProvidersOnAggregation"))
-                .to(configuration.isProvidersOnAggregation());
         bindConstant().annotatedWith(Names.named("queueAvailable"))
                 .to(configuration.getSqsQueueConfiguration().isEnabled());
         bindConstant().annotatedWith(Names.named("isMultiClientDevelopment"))
