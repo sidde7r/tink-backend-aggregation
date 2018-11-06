@@ -4,11 +4,13 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.primitives.Bytes;
 import com.google.common.primitives.Longs;
+
 import java.security.SecureRandom;
 import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import se.tink.backend.aggregation.agents.utils.crypto.AES;
 import se.tink.backend.aggregation.agents.utils.crypto.DES;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
@@ -22,11 +24,10 @@ public class IngCryptoUtils {
     public static String generateDeviceIdHexString() {
         byte[] randomDeviceId = IngCryptoUtils.getRandomBytes(16);
         String randomDeviceIdString = EncodingUtils.encodeHexAsString(randomDeviceId);
-        return  Strings.padStart(randomDeviceIdString, 40, '0');
+        return Strings.padStart(randomDeviceIdString, 40, '0');
     }
 
-    public static byte[] generateEncryptedQueryData(String registrationCode, byte[] sessionKey,
-            byte[] sessionKeyAuth) {
+    public static byte[] generateEncryptedQueryData(String registrationCode, byte[] sessionKey, byte[] sessionKeyAuth) {
         byte[] formattedRegistrationCode = getFormattedRegistrationCode(registrationCode);
         byte[] timestamp = getUtcTimestamp();
         byte[] dataToEncrypt = Bytes.concat(sessionKey, sessionKeyAuth, formattedRegistrationCode, timestamp);
@@ -76,19 +77,25 @@ public class IngCryptoUtils {
     }
 
     public static int calcOtpForSigningTransfer(byte[] key, int counter, String challenge1, String challenge2) {
-        byte[] signingKey = calcOtpData(key, counter);
+        byte[] otpData = calcOtpData(key, counter);
+        return calcOtp(counter, challenge1, challenge2, otpData);
+    }
 
-        byte[] dataToSign = getFormattedDataToSign(challenge1, challenge2);
-        byte[] otpData = DES.encryptEcbNoPadding(signingKey, dataToSign);
-
+    static int calcOtp(int counter, String challenge1, String challenge2, byte[] ac) {
+        byte[] otpData = mixTds(challenge1, challenge2, ac);
         return buildOtpWithCounterAndData(counter, otpData);
+    }
+
+    private static byte[] mixTds(String challenge1, String challenge2, byte[] ac) {
+        byte[] tds = getTdsFormattedDataToSign(challenge1, challenge2);
+        byte[] nullIv = new byte[8];
+        return DES.encryptCbcNoPadding(ac, nullIv, tds);
     }
 
     private static int buildOtpWithCounterAndData(int counter, byte[] otpData) {
         int otp = (counter & 0xff) << 16;
-        otp |= (otpData[0] & 0xff) << 8;
-        otp |= otpData[1] & 0xff;
-
+        otp |= (otpData[otpData.length - 8] & 0xff) << 8;
+        otp |= otpData[otpData.length - 7] & 0xff;
         return otp;
     }
 
@@ -98,13 +105,13 @@ public class IngCryptoUtils {
 
         byte[] nullIv = new byte[8];
 
-        byte byte0 = (byte)((counter >> 8 ) & 0xff);
-        byte byte1 = (byte)(counter & 0xff);
+        byte byte0 = (byte) ((counter >> 8) & 0xff);
+        byte byte1 = (byte) (counter & 0xff);
 
-        byte[] ctr0 = new byte[] {byte0, byte1, (byte)0xf0, 0x00, 0x00, 0x00, 0x00, 0x00 };
+        byte[] ctr0 = new byte[] {byte0, byte1, (byte) 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00};
         byte[] key0 = TripleDES.encryptEcbNoPadding(key, ctr0);
 
-        byte[] ctr1 = new byte[] {byte0, byte1, (byte)0x0f, 0x00, 0x00, 0x00, 0x00, 0x00 };
+        byte[] ctr1 = new byte[] {byte0, byte1, (byte) 0x0f, 0x00, 0x00, 0x00, 0x00, 0x00};
         byte[] key1 = TripleDES.encryptEcbNoPadding(key, ctr1);
 
         byte[] ctr2 = new byte[] {
@@ -116,11 +123,11 @@ public class IngCryptoUtils {
         byte[] tmp0 = DES.encryptCbcNoPadding(key0, nullIv, ctr2);
 
         // tmp0 is the last 8 bytes of the encrypted data (which contain the counter)
-        tmp0 = Arrays.copyOfRange(tmp0, tmp0.length-8, tmp0.length);
+        tmp0 = Arrays.copyOfRange(tmp0, tmp0.length - 8, tmp0.length);
 
         byte[] tmp1 = DES.decryptEcbNoPadding(key1, tmp0);
 
-         return DES.encryptEcbNoPadding(key0, tmp1);
+        return DES.encryptEcbNoPadding(key0, tmp1);
     }
 
     public static byte[] getRandomBytes(int numBytes) {
@@ -139,7 +146,7 @@ public class IngCryptoUtils {
         byte[] regCodeBinary = EncodingUtils.decodeHexString(registrationCode);
         byte[] formattedRegistrationCode = new byte[8];
 
-        formattedRegistrationCode[0] = (byte)(registrationCode.length() | 0x10);
+        formattedRegistrationCode[0] = (byte) (registrationCode.length() | 0x10);
         System.arraycopy(regCodeBinary, 0, formattedRegistrationCode, 1, regCodeBinary.length);
 
         for (int i = regCodeBinary.length + 1; i < 8; i++) {
@@ -165,13 +172,13 @@ public class IngCryptoUtils {
         Preconditions.checkArgument(a.length == b.length, "Mismatch of block lengths");
 
         byte[] output = new byte[a.length];
-        for (int i=0; i<a.length; i++) {
-            output[i] = (byte)(a[i] ^ b[i]);
+        for (int i = 0; i < a.length; i++) {
+            output[i] = (byte) (a[i] ^ b[i]);
         }
         return output;
     }
 
-    public static byte[] getFormattedDataToSign(String challenge1, String challenge2) {
+    static byte[] getTdsFormattedDataToSign(String challenge1, String challenge2) {
         List<Integer> nibbles = new ArrayList<>();
 
         for (int i = 0; i < challenge1.length(); i++) {
@@ -197,11 +204,11 @@ public class IngCryptoUtils {
             nibbles.add(0x0);
         }
 
-        byte[] output = new byte[nibbles.size()/2];
+        byte[] output = new byte[nibbles.size() / 2];
 
         // put the nibbles into their respective bytes in the output data
         for (int i = 0; i < nibbles.size(); i += 2) {
-            output[i/2] = (byte) (((nibbles.get(i) << 4) & 0xf0) | (nibbles.get(i+1) & 0x0f));
+            output[i / 2] = (byte) (((nibbles.get(i) << 4) & 0xf0) | (nibbles.get(i + 1) & 0x0f));
         }
 
         return output;
