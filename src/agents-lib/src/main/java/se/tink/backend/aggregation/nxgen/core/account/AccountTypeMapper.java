@@ -29,17 +29,13 @@ public class AccountTypeMapper {
             return new AccountTypeMapper(this);
         }
 
-        /**
-         * Known keys, and the account type they should be mapped to.
-         */
+        /** Known keys, and the account type they should be mapped to. */
         public AccountTypeMapper.Builder put(AccountTypes value, Object... keys) {
             reversed.put(value, keys);
             return this;
         }
 
-        /**
-         * Known keys that should not be mapped to any specific account type.
-         */
+        /** Known keys that should not be mapped to any specific account type. */
         public AccountTypeMapper.Builder ignoreKeys(Object... keys) {
             return this.put(AccountTypes.DUMMY, keys);
         }
@@ -114,13 +110,17 @@ public class AccountTypeMapper {
                 matchingPatterns.add(patternToAccountType.getKey());
             }
         }
-        Set<AccountTypes> associatedAccountTypes = regexTranslator.entrySet().stream()
-                .filter(entry -> matchingPatterns.contains(entry.getKey()))
-                .map(Map.Entry::getValue)
-                .collect(Collectors.toSet());
+        Set<AccountTypes> associatedAccountTypes =
+                regexTranslator
+                        .entrySet()
+                        .stream()
+                        .filter(entry -> matchingPatterns.contains(entry.getKey()))
+                        .map(Map.Entry::getValue)
+                        .collect(Collectors.toSet());
 
         if (associatedAccountTypes.size() >= 2) {
-            AccountTypes anyAccountType = associatedAccountTypes.iterator().next(); // Pop any of the elements
+            AccountTypes anyAccountType =
+                    associatedAccountTypes.iterator().next(); // Pop any of the elements
             logger.error(
                     "Account type string: \"{}\" matched multiple regexes with different associated account types: {} -- using {}",
                     accountTypeString,
