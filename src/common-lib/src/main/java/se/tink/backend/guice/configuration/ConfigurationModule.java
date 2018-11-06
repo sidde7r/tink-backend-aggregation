@@ -5,7 +5,6 @@ import com.google.inject.name.Names;
 import com.google.inject.util.Providers;
 import se.tink.backend.common.config.AggregationDevelopmentConfiguration;
 import se.tink.backend.common.config.CacheConfiguration;
-import se.tink.backend.common.config.GrpcConfiguration;
 import se.tink.backend.common.config.S3StorageConfiguration;
 import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.backend.queue.sqs.configuration.SqsQueueConfiguration;
@@ -37,7 +36,6 @@ public class ConfigurationModule extends AbstractModule {
         bind(CacheConfiguration.class).toProvider(Providers.of(configuration.getCacheConfiguration()));
         bind(SqsQueueConfiguration.class).toProvider(Providers.of(configuration.getSqsQueueConfiguration()));
         bind(ServiceConfiguration.class).toInstance(configuration);
-        bind(GrpcConfiguration.class).toInstance(configuration.getGrpc());
 
         if (configuration.isDevelopmentMode() &&
                 configuration.getDevelopmentConfiguration().isValid()) {

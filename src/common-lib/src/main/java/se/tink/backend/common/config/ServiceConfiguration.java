@@ -39,9 +39,6 @@ public class ServiceConfiguration extends Configuration {
     private boolean developmentMode = false;
 
     @JsonProperty
-    private GrpcConfiguration grpc = new GrpcConfiguration();
-
-    @JsonProperty
     private ServiceAuthenticationConfiguration serviceAuthentication = new ServiceAuthenticationConfiguration();
 
     private static final int YUBICO_CLIENT_ID = 11129;
@@ -104,10 +101,6 @@ public class ServiceConfiguration extends Configuration {
 
     public DatabaseConfiguration getDatabase() {
         return database;
-    }
-
-    public GrpcConfiguration getGrpc() {
-        return grpc;
     }
 
     public boolean isDevelopmentMode() {
