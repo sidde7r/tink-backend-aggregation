@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.nxgen.controllers.transfer;
 import com.google.common.base.Preconditions;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.BankTransferExecutorNxgen;
+import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.BankTransferControllerNxgen;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.validators.StructuredMessageValidator;
 import se.tink.backend.core.enums.MessageType;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
@@ -19,6 +21,14 @@ public class TransferController {
             ApproveEInvoiceExecutor approveEInvoiceExecutor, UpdatePaymentExecutor updatePaymentExecutor) {
         this.paymentExecutor = paymentExecutor;
         this.bankTransferExecutor = bankTransferExecutor;
+        this.approveEInvoiceExecutor = approveEInvoiceExecutor;
+        this.updatePaymentExecutor = updatePaymentExecutor;
+    }
+
+    public TransferController(PaymentExecutor paymentExecutor, BankTransferExecutorNxgen bankTransferExecutor,
+            ApproveEInvoiceExecutor approveEInvoiceExecutor, UpdatePaymentExecutor updatePaymentExecutor) {
+        this.paymentExecutor = paymentExecutor;
+        this.bankTransferExecutor = new BankTransferControllerNxgen(bankTransferExecutor);
         this.approveEInvoiceExecutor = approveEInvoiceExecutor;
         this.updatePaymentExecutor = updatePaymentExecutor;
     }
