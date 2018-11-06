@@ -9,8 +9,9 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.utils.AccountFeaturesFactory;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
+import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.LoanInterpreter;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -33,8 +34,17 @@ public class UpdateController {
         this.credentials = credentials;
     }
 
-    public <A extends Account> boolean updateAccount(A account) {
-        return updateAccount(account, AccountFeaturesFactory.createForAnAccount(account, loanInterpreter));
+    public boolean updateAccount(Account account) {
+        return updateAccount(account, AccountFeatures.createEmpty());
+    }
+
+    public boolean updateAccount(LoanAccount account) {
+        return updateAccount(account, AccountFeatures.createForLoan(
+                account.getDetails().toSystemLoan(account, loanInterpreter)));
+    }
+
+    public boolean updateAccount(InvestmentAccount account) {
+        return updateAccount(account, AccountFeatures.createForPortfolios(account.getPortfolios()));
     }
 
     private boolean updateAccount(Account account, AccountFeatures accountFeatures) {
@@ -57,7 +67,19 @@ public class UpdateController {
         return true;
     }
 
-    public <A extends Account> boolean updateTransactions(A account, Collection<AggregationTransaction> transactions) {
+    public boolean updateTransactions(Account account, Collection<AggregationTransaction> transactions) {
+        if (!updateAccount(account)) {
+            return false;
+        }
+
+        baseContext.updateTransactions(account.toSystemAccount(), transactions.stream()
+                .map(AggregationTransaction::toSystemTransaction)
+                .collect(Collectors.toList()));
+
+        return true;
+    }
+
+    public boolean updateTransactions(LoanAccount account, Collection<AggregationTransaction> transactions) {
         if (!updateAccount(account)) {
             return false;
         }
