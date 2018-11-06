@@ -134,8 +134,7 @@ public class ServiceContext implements Managed, RepositoryFactory {
     }
 
     /**
-     * Start the {@link ServiceContext}. Must support being called multiple times. See comment in
-     * {@link AbstractServiceContainer} as to why.
+     * Start the {@link ServiceContext}. Must support being called multiple times.
      */
     @PostConstruct
     @Override

@@ -14,9 +14,9 @@ import ch.qos.logback.classic.Level;
 public class %s {
     @BeforeClass
     public static void setLogLevelForTests() {
-        // This overrides the bootstrapping done from the parent of
-        // se.tink.backend.common.AbstractServiceContainer, which is
-        // (almost) always on the classpath.
+        // This overrides the bootstrapping done from
+        // io.dropwizard.Application which is (almost)
+        // always on the classpath.
         LoggingFactory.bootstrap(Level.INFO);
     }
 }

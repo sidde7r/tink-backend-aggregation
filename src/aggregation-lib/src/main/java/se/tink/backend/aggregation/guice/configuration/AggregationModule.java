@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.storage.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.backend.common.ServiceContext;
 import se.tink.backend.common.config.ServiceConfiguration;
+import se.tink.libraries.http.client.RequestTracingFilter;
 import se.tink.libraries.jersey.guice.JerseyResourceRegistrar;
 import se.tink.libraries.jersey.logging.AccessLoggingFilter;
 import se.tink.libraries.jersey.logging.ResourceTimerFilterFactory;
@@ -58,8 +59,9 @@ public class AggregationModule extends AbstractModule {
                 .binder(binder())
                 .jersey(jersey)
                 .addFilterFactories(ResourceTimerFilterFactory.class)
-                .addRequestFilters(AccessLoggingFilter.class, AggregationLoggerRequestFilter.class)
-                .addResponseFilters(AccessLoggingFilter.class)
+                .addRequestFilters(AccessLoggingFilter.class, AggregationLoggerRequestFilter.class,
+                        RequestTracingFilter.class)
+                .addResponseFilters(AccessLoggingFilter.class, RequestTracingFilter.class)
                 //This is not a resource, but a provider
                 .addResources(
                         JerseyClusterInfoProvider.class,
