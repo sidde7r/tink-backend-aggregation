@@ -5,7 +5,6 @@ import com.google.inject.Injector;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import javax.ws.rs.Path;
 import se.tink.backend.aggregation.guice.configuration.AggregationModuleFactory;
 import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.backend.common.config.ServiceConfiguration;
@@ -13,7 +12,6 @@ import se.tink.libraries.draining.DrainModeTask;
 import se.tink.libraries.dropwizard.DropwizardLifecycleInjectorFactory;
 import se.tink.libraries.dropwizard.DropwizardObjectMapperConfigurator;
 
-@Path("/aggregation")
 public class AggregationServiceContainer extends Application<ServiceConfiguration> {
 
     public static void main(String[] args) throws Exception {
