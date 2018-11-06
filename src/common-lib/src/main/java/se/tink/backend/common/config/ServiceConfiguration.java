@@ -38,9 +38,6 @@ public class ServiceConfiguration extends Configuration {
     @JsonProperty
     private boolean developmentMode = false;
 
-    @JsonProperty
-    private ServiceAuthenticationConfiguration serviceAuthentication = new ServiceAuthenticationConfiguration();
-
     private static final int YUBICO_CLIENT_ID = 11129;
 
     @JsonProperty
@@ -109,10 +106,6 @@ public class ServiceConfiguration extends Configuration {
 
     public CreditSafeConfiguration getCreditSafe() {
         return creditSafe;
-    }
-
-    public ServiceAuthenticationConfiguration getServiceAuthentication() {
-        return serviceAuthentication;
     }
 
     public int getYubicoClientId() {
