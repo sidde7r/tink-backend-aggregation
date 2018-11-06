@@ -38,8 +38,6 @@ public class ServiceConfiguration extends Configuration {
     @JsonProperty
     private boolean developmentMode = false;
 
-    private static final int YUBICO_CLIENT_ID = 11129;
-
     @JsonProperty
     private PrometheusConfiguration prometheus = new PrometheusConfiguration();
 
@@ -103,10 +101,6 @@ public class ServiceConfiguration extends Configuration {
 
     public CreditSafeConfiguration getCreditSafe() {
         return creditSafe;
-    }
-
-    public int getYubicoClientId() {
-        return YUBICO_CLIENT_ID;
     }
 
     public PrometheusConfiguration getPrometheus() {
