@@ -104,32 +104,30 @@ public class AccountTypeMapper {
     }
 
     private Optional<AccountTypes> translateByRegex(String accountTypeString) {
-        Set<Pattern> matchingPatterns = new HashSet<>();
-        for (Map.Entry<Pattern, AccountTypes> patternToAccountType : regexTranslator.entrySet()) {
-            if (patternToAccountType.getKey().matcher(accountTypeString).matches()) {
-                matchingPatterns.add(patternToAccountType.getKey());
-            }
-        }
-        Set<AccountTypes> associatedAccountTypes =
+        Map<Pattern, AccountTypes> matchingRestriction =
                 regexTranslator
                         .entrySet()
                         .stream()
-                        .filter(entry -> matchingPatterns.contains(entry.getKey()))
-                        .map(Map.Entry::getValue)
-                        .collect(Collectors.toSet());
+                        .filter(entry -> entry.getKey().matcher(accountTypeString).matches())
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-        if (associatedAccountTypes.size() >= 2) {
+        // Eliminate duplicates
+        Set<AccountTypes> accountTypeSet = new HashSet<>(matchingRestriction.values());
+
+        if (accountTypeSet.size() >= 2) {
             AccountTypes anyAccountType =
                     associatedAccountTypes.iterator().next(); // Pop any of the elements
             logger.error(
                     "Account type string: \"{}\" matched multiple regexes with different associated account types: {} -- using {}",
                     accountTypeString,
-                    matchingPatterns,
+                    matchingRestriction.keySet(),
                     anyAccountType);
             return Optional.of(anyAccountType);
-        } else if (associatedAccountTypes.size() == 1) {
-            Pattern matchingPattern = matchingPatterns.iterator().next();
-            AccountTypes associatedAccountType = associatedAccountTypes.iterator().next();
+        } else if (accountTypeSet.size() == 1) {
+            Map.Entry<Pattern, AccountTypes> entry =
+                    matchingRestriction.entrySet().iterator().next();
+            Pattern matchingPattern = entry.getKey();
+            AccountTypes associatedAccountType = entry.getValue();
             logger.warn(
                     "Unspecified account type for key: \"{}\" -- using {} because it matches pattern {}",
                     accountTypeString,
