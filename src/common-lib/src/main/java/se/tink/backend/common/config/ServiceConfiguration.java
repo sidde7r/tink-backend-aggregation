@@ -6,7 +6,6 @@ import io.dropwizard.Configuration;
 import se.tink.backend.queue.sqs.configuration.SqsQueueConfiguration;
 import se.tink.libraries.abnamro.config.AbnAmroConfiguration;
 import se.tink.libraries.cluster.Cluster;
-import se.tink.libraries.endpoints.EndpointsConfiguration;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ServiceConfiguration extends Configuration {
@@ -42,9 +41,6 @@ public class ServiceConfiguration extends Configuration {
 
     @JsonProperty
     private boolean developmentMode = false;
-
-    @JsonProperty
-    private EndpointsConfiguration endpoints = new EndpointsConfiguration();
 
     @JsonProperty
     private GrpcConfiguration grpc = new GrpcConfiguration();
@@ -116,10 +112,6 @@ public class ServiceConfiguration extends Configuration {
 
     public DatabaseConfiguration getDatabase() {
         return database;
-    }
-
-    public EndpointsConfiguration getEndpoints() {
-        return endpoints;
     }
 
     public GrpcConfiguration getGrpc() {
