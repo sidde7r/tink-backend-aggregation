@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.cluster.annotation;
+package se.tink.backend.aggregation.cluster.annotations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

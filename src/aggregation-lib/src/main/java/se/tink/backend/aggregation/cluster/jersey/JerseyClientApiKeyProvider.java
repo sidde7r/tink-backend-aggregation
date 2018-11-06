@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.client;
+package se.tink.backend.aggregation.cluster.jersey;
 
 import com.google.inject.Inject;
 import com.sun.jersey.api.core.HttpContext;
@@ -11,7 +11,7 @@ import com.sun.jersey.spi.inject.InjectableProvider;
 import java.lang.reflect.Type;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import se.tink.backend.aggregation.cluster.annotation.ClientContext;
+import se.tink.backend.aggregation.cluster.annotations.ClientContext;
 import se.tink.backend.aggregation.cluster.exception.ClientNotValid;
 import se.tink.backend.aggregation.cluster.identification.ClientApiKey;
 import se.tink.backend.aggregation.cluster.provider.ClientApiKeyProvider;
