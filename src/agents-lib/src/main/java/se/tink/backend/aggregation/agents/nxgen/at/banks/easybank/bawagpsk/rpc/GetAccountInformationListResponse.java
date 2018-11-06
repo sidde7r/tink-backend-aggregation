@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskConstants;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskUtils;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.AccountInfo;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.AccountInformationListItem;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Body;
@@ -218,7 +219,7 @@ public final class GetAccountInformationListResponse {
         // TODO refactor with isPresentOrElse when we are past Java 8
 
         final Optional<AccountTypes> accountTypeFromCode =
-                BawagPskConstants.PRODUCT_CODE_MAPPER.translate(productCode);
+                BawagPskUtils.getProductCodeMapper().translate(productCode);
 
         if (accountTypeFromCode.isPresent()) {
             return accountTypeFromCode;
@@ -231,7 +232,7 @@ public final class GetAccountInformationListResponse {
         }
 
         final Optional<AccountTypes> accountTypeFromType =
-                BawagPskConstants.PRODUCT_TYPE_MAPPER.translate(productType);
+                BawagPskUtils.getProductTypeMapper().translate(productType);
 
         if (!accountTypeFromType.isPresent()) {
             logger.warn(

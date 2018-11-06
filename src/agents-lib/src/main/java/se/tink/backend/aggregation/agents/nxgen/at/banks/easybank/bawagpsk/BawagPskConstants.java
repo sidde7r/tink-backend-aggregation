@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk;
 
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
-import se.tink.backend.aggregation.rpc.AccountTypes;
 
 public class BawagPskConstants {
 
@@ -50,26 +48,6 @@ public class BawagPskConstants {
         public static final String ACCOUNT_LOCKED = "ERR_DISPOSER_DEACTIVATED";
         public static final String INCORRECT_CREDENTIALS = "ERR_LOGIN";
     }
-
-    // TODO make non-static somehow
-    public static final AccountTypeMapper PRODUCT_CODE_MAPPER =
-            AccountTypeMapper.builder()
-                    .put(AccountTypes.CHECKING, "B121", "B400")
-                    .put(AccountTypes.SAVINGS, "D272", "D264")
-                    .put(AccountTypes.CREDIT_CARD, "00EC", "00ET", "00PD")
-                    .put(AccountTypes.LOAN, "S132")
-                    .build();
-
-    // Fallback mapper; more error-prone because the bank assigns a savings account to "CHECKING"
-    // for some reason
-    // TODO make non-static somehow
-    public static final AccountTypeMapper PRODUCT_TYPE_MAPPER =
-            AccountTypeMapper.builder()
-                    .put(AccountTypes.CHECKING, "CHECKING")
-                    .put(AccountTypes.SAVINGS, "SAVINGS")
-                    .put(AccountTypes.CREDIT_CARD, "CREDIT_CARD")
-                    .put(AccountTypes.LOAN, "LOAN")
-                    .build();
 
     public enum Storage {
         SERVER_SESSION_ID,

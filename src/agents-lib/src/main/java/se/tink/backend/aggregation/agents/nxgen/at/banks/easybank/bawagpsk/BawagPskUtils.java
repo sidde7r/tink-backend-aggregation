@@ -6,10 +6,21 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 
 public class BawagPskUtils {
     private BawagPskUtils() {
         throw new AssertionError();
+    }
+
+    private final static BawagPskAccountTypeMappers accountTypeMappers = new BawagPskAccountTypeMappers();
+
+    public static AccountTypeMapper getProductCodeMapper() {
+        return accountTypeMappers.getProductCodeMapper();
+    }
+
+    public static AccountTypeMapper getProductTypeMapper() {
+        return accountTypeMappers.getProductTypeMapper();
     }
 
     public static <T> String entityToXml(final T entity) {
