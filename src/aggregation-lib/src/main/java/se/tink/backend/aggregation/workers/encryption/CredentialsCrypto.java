@@ -19,15 +19,15 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class CredentialsCrypto {
     private static final AggregationLogger logger = new AggregationLogger(CredentialsCrypto.class);
 
-    private final CryptoConfigurationDao dao;
+    private final CryptoConfigurationDao cryptoConfigurationDao;
     private final ClusterInfo clusterInfo;
     private final CacheClient cacheClient;
     private final AggregationControllerAggregationClient aggregationControllerAggregationClient;
 
-    public CredentialsCrypto(CryptoConfigurationDao dao,
+    public CredentialsCrypto(CryptoConfigurationDao cryptoConfigurationDao,
             ClusterInfo clusterInfo, CacheClient cacheClient,
             AggregationControllerAggregationClient aggregationControllerAggregationClient) {
-        this.dao = dao;
+        this.cryptoConfigurationDao = cryptoConfigurationDao;
         this.clusterInfo = clusterInfo;
         this.cacheClient = cacheClient;
         this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
@@ -56,7 +56,8 @@ public class CredentialsCrypto {
         EncryptedCredentials encryptedCredentials = Preconditions.checkNotNull(
                 SerializationUtils.deserializeFromString(sensitiveData, EncryptedCredentials.class));
 
-        Optional<byte[]> key = dao.getClusterKeyFromKeyId(clusterInfo.getClusterId(), encryptedCredentials.getKeyId());
+        Optional<byte[]> key = cryptoConfigurationDao
+                .getClusterKeyFromKeyId(clusterInfo.getClusterId(), encryptedCredentials.getKeyId());
         if (!key.isPresent()) {
             logger.error(String.format("Could not find encryption key for %s:%d",
                     clusterInfo.getClusterId().getId(),
@@ -79,7 +80,7 @@ public class CredentialsCrypto {
     }
 
     public boolean encrypt(CredentialsRequest request, boolean doUpdateCredential) {
-        Optional<CryptoConfiguration> cryptoConfiguration = dao.getClusterCryptoConfigurationFromClusterId(
+        Optional<CryptoConfiguration> cryptoConfiguration = cryptoConfigurationDao.getClusterCryptoConfigurationFromClusterId(
                 clusterInfo.getClusterId());
         if (!cryptoConfiguration.isPresent()) {
             logger.error(String.format("Could not find crypto configuration %s", clusterInfo.getClusterId().getId()));
