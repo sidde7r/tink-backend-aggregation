@@ -20,6 +20,23 @@
       "type": "BANK"
     },
     {
+      "name": "uk-aib-oauth2",
+      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11Agent",
+      "credentialsType": "PASSWORD",
+      "displayName": "AIB",
+      "fields": [],
+      "payload": "tink2:aib",
+      "groupDisplayName": "",
+      "multiFactor": false,
+      "passwordhelptext": "Authentication is done on external page",
+      "popular": true,
+      "refreshFrequency": 1,
+      "refreshFrequencyFactor": 1,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
       "name": "uk-barclays-oauth2",
       "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11Agent",
       "credentialsType": "PASSWORD",
