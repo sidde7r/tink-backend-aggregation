@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.nxgen.http.AbstractForm;
 
 public class GenerateBindingQuickIdActionForm extends AbstractForm {
     public GenerateBindingQuickIdActionForm(String viewState) {
-        this.put(VolksbankConstants.Form.GBFORM + VolksbankConstants.COLOMN + VolksbankConstants.Form.GBFORM_SETUPID_KEY,
+        this.put(VolksbankConstants.Form.GBFORM + VolksbankConstants.COLUMN + VolksbankConstants.Form.GBFORM_SETUPID_KEY,
                 VolksbankConstants.Form.SECRET_NAME_VALUE);
         this.put(VolksbankConstants.Form.GBFORM_SUBMIT_KEY, VolksbankConstants.ONE);
         this.put(VolksbankConstants.Form.JSF_VIEWSTATE_KEY, viewState);

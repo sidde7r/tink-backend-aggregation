@@ -8,7 +8,7 @@ public final class VolksbankConstants {
 
     public static final String BRACKET = "[]";
     public static final String ONE = "1";
-    public static final String COLOMN = ":";
+    public static final String COLUMN = ":";
     public static final String UTF_8 = "UTF-8";
     public static final String TRUE = "true";
     public static final String FALSE = "false";
@@ -83,45 +83,45 @@ public final class VolksbankConstants {
         public static final String SIGNATURE = "signature";
 
         public static final String OVERLAY = "overlay-zeitraumauswahl:overlayForm";
-        public static final String OVERLAY_DATE_FROM = OVERLAY + COLOMN + "daterange:von:date";
-        public static final String OVERLAY_DATE_TO = OVERLAY + COLOMN + "daterange:bis:date";
-        public static final String OVERLAY_DATE_IS_RANGE = OVERLAY + COLOMN + "daterange:range";
-        public static final String OVERLAY_SUBMIT = OVERLAY + COLOMN + "_SUBMIT";
-        public static final String OVERLAY_RENDER = OVERLAY + COLOMN
+        public static final String OVERLAY_DATE_FROM = OVERLAY + COLUMN + "daterange:von:date";
+        public static final String OVERLAY_DATE_TO = OVERLAY + COLUMN + "daterange:bis:date";
+        public static final String OVERLAY_DATE_IS_RANGE = OVERLAY + COLUMN + "daterange:range";
+        public static final String OVERLAY_SUBMIT = OVERLAY + COLUMN + "_SUBMIT";
+        public static final String OVERLAY_RENDER = OVERLAY + COLUMN
                 + "input-date-range-container overlay-zeitraumauswahl:save overlay-zeitraumauswahl:overlayForm:daterange:von";
 
         public static final String KONTO_UMSATZ = "content:kontenumsaetze-tab:form";
-        public static final String KONTO_UMSATZ_TABLE = KONTO_UMSATZ + COLOMN + "kontoUmsaetze:umsatzTable";
-        public static final String KONTO_UMSATZ_INLINE = KONTO_UMSATZ_TABLE + COLOMN + "zeitraumauswahl:inline-period";
+        public static final String KONTO_UMSATZ_TABLE = KONTO_UMSATZ + COLUMN + "kontoUmsaetze:umsatzTable";
+        public static final String KONTO_UMSATZ_INLINE = KONTO_UMSATZ_TABLE + COLUMN + "zeitraumauswahl:inline-period";
         public static final String KONTO_UMSATZ_FILTER =
-                KONTO_UMSATZ_TABLE + COLOMN + "umsaetze-filter:filter-selection";
-        public static final String KONTO_UMSATZ_SORTBOX = KONTO_UMSATZ_TABLE + COLOMN + "sortierung:box";
-        public static final String KONTO_UMSATZ_SORTBOXXS = KONTO_UMSATZ_TABLE + COLOMN + "sortierung:boxXS";
+                KONTO_UMSATZ_TABLE + COLUMN + "umsaetze-filter:filter-selection";
+        public static final String KONTO_UMSATZ_SORTBOX = KONTO_UMSATZ_TABLE + COLUMN + "sortierung:box";
+        public static final String KONTO_UMSATZ_SORTBOXXS = KONTO_UMSATZ_TABLE + COLUMN + "sortierung:boxXS";
         public static final String KONTO_UMSATZ_DESC =
-                KONTO_UMSATZ_TABLE + COLOMN + "DESC_kontoumsaetze-sortby-default";
-        public static final String KONTO_UMSATZ_TABLE_SELECTION = KONTO_UMSATZ_TABLE + COLOMN + "table_selection";
-        public static final String KONTO_UMSATZ_TABLE_SUBSELECTION = KONTO_UMSATZ_TABLE + COLOMN + "table_subselection";
-        public static final String KONTO_UMSATZ_ROW_EXPANSION = KONTO_UMSATZ_TABLE + COLOMN + "table_rowexpansion";
+                KONTO_UMSATZ_TABLE + COLUMN + "DESC_kontoumsaetze-sortby-default";
+        public static final String KONTO_UMSATZ_TABLE_SELECTION = KONTO_UMSATZ_TABLE + COLUMN + "table_selection";
+        public static final String KONTO_UMSATZ_TABLE_SUBSELECTION = KONTO_UMSATZ_TABLE + COLUMN + "table_subselection";
+        public static final String KONTO_UMSATZ_ROW_EXPANSION = KONTO_UMSATZ_TABLE + COLUMN + "table_rowexpansion";
         public static final String KONTO_UMSATZ_CLICKED_ELEMENTID =
-                KONTO_UMSATZ_TABLE + COLOMN + "table_clickedElementId";
+                KONTO_UMSATZ_TABLE + COLUMN + "table_clickedElementId";
         public static final String KONTO_UMSATZ_CLICKED_SUBELEMENTID =
-                KONTO_UMSATZ_TABLE + COLOMN + "table_clickedSubElementId";
+                KONTO_UMSATZ_TABLE + COLUMN + "table_clickedSubElementId";
         public static final String KONTO_UMSATZ_SUBMIT = KONTO_UMSATZ + "_SUBMIT";
 
         // NOTE not sure this 268044X is a constant or not without having more credentials
         public static final String START_PAGE_2680441 = "startseite-repeated-item-2680441:widget:form";
         public static final String START_PAGE_2680441_TABLE_SELECTION =
-                START_PAGE_2680441 + COLOMN + "produkte:produkteTable:table_selection";
+                START_PAGE_2680441 + COLUMN + "produkte:produkteTable:table_selection";
         public static final String START_PAGE_2680441_TABLE_SUBSELECTION =
-                START_PAGE_2680441 + COLOMN + "produkte:produkteTable:table_subselection";
+                START_PAGE_2680441 + COLUMN + "produkte:produkteTable:table_subselection";
         public static final String START_PAGE_2680441_ROW_EXPANSION =
-                START_PAGE_2680441 + COLOMN + "produkte:produkteTable:table_rowexpansion";
+                START_PAGE_2680441 + COLUMN + "produkte:produkteTable:table_rowexpansion";
         public static final String START_PAGE_2680441_CLICKED_ELEMENTID =
-                START_PAGE_2680441 + COLOMN + "produkte:produkteTable:table_clickedElementId";
+                START_PAGE_2680441 + COLUMN + "produkte:produkteTable:table_clickedElementId";
         public static final String START_PAGE_2680441_CLICKED_SUBELEMENTID =
-                START_PAGE_2680441 + COLOMN + "produkte:produkteTable:table_clickedSubElementId";
+                START_PAGE_2680441 + COLUMN + "produkte:produkteTable:table_clickedSubElementId";
         public static final String START_PAGE_2680441_CLICKED_ELEMENT =
-                START_PAGE_2680441 + COLOMN + "produkte:produkteTable:table_clickedElement";
+                START_PAGE_2680441 + COLUMN + "produkte:produkteTable:table_clickedElement";
         public static final String START_PAGE_2680441_SUBMIT = START_PAGE_2680441 + "_SUBMIT";
 
     }

@@ -9,10 +9,10 @@ public class ExtensionsForm extends AbstractForm {
         this.put(VolksbankConstants.Form.JSF_VIEWSTATE_KEY, viewState);
         this.put(VolksbankConstants.Form.JSF_EVENT_KEY, VolksbankConstants.Form.JSF_EVENT_ACTION);
         this.put(VolksbankConstants.Form.JSF_SOURCE_KEY,
-                VolksbankConstants.Form.MBEFORM + VolksbankConstants.COLOMN + VolksbankConstants.Form.ENTRIES_MBE);
+                VolksbankConstants.Form.MBEFORM + VolksbankConstants.COLUMN + VolksbankConstants.Form.ENTRIES_MBE);
         this.put(VolksbankConstants.Form.JSF_PARTIAL_AJAX_KEY, VolksbankConstants.TRUE);
         this.put(VolksbankConstants.Form.JSF_PARTIAL_EXECUTE_KEY,
-                VolksbankConstants.Form.MBEFORM + VolksbankConstants.COLOMN + VolksbankConstants.Form.ENTRIES_MBE);
+                VolksbankConstants.Form.MBEFORM + VolksbankConstants.COLUMN + VolksbankConstants.Form.ENTRIES_MBE);
         this.put(VolksbankConstants.Form.MBEFORM, VolksbankConstants.Form.MBEFORM);
     }
 }
