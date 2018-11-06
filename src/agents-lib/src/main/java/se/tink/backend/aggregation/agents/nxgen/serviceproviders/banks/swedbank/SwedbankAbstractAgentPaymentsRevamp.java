@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.SwedbankTransferHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.einvoice.SwedbankDefaultApproveEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.payment.SwedbankDefaultPaymentExecutor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.transfer.SwedbankDefaultBankTransferExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.transfer.SwedbankDefaultBankTransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.updatepayment.SwedbankDefaultUpdatePaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.creditcard.SwedbankDefaultCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.einvoice.SwedbankDefaultEinvoiceFetcher;
@@ -127,7 +127,7 @@ public abstract class SwedbankAbstractAgentPaymentsRevamp extends NextGeneration
     protected Optional<TransferController> constructTransferController() {
         SwedbankTransferHelper transferHelper = new SwedbankTransferHelper(context, catalog,
                 supplementalInformationController, apiClient);
-        SwedbankDefaultBankTransferExecutor transferExecutor = new SwedbankDefaultBankTransferExecutor(
+        SwedbankDefaultBankTransferExecutorNxgen transferExecutor = new SwedbankDefaultBankTransferExecutorNxgen(
                 catalog, apiClient, transferHelper);
         SwedbankDefaultPaymentExecutor paymentExecutor = new SwedbankDefaultPaymentExecutor(catalog, apiClient,
                 transferHelper);
