@@ -6,6 +6,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import se.tink.backend.aggregation.converter.HostConfigurationConverter;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
@@ -163,7 +165,7 @@ public class CredentialsCrypto {
         if (doUpdateCredential) {
             logger.info("Updating sensitive data");
             aggregationControllerAggregationClient.updateCredentialSensitive(
-                    clusterInfo,
+                    HostConfigurationConverter.convert(clusterInfo),
                     request.getCredentials(),
                     serializedEncryptedCredentials);
         }
