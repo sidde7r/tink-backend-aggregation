@@ -2,12 +2,10 @@ package se.tink.backend.aggregation.resources;
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import se.tink.backend.aggregation.api.CreditSafeService;
-import se.tink.backend.aggregation.cluster.annotation.ClusterContext;
+import se.tink.backend.aggregation.cluster.annotations.ClusterContext;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.ConsumerMonitoringWrapper;

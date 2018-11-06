@@ -7,7 +7,7 @@ import java.util.Optional;
 import javax.persistence.NoResultException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.cluster.identification.ClusterId;
+import se.tink.backend.aggregation.provider.configuration.cluster.identifiers.ClusterId;
 import se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration;
 import se.tink.backend.aggregation.provider.configuration.core.ProviderConfigurationDAO;
 

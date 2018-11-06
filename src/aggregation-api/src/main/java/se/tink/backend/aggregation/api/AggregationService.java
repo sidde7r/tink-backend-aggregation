@@ -10,7 +10,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import se.tink.api.annotations.Team;
 import se.tink.api.annotations.TeamOwnership;
-import se.tink.backend.aggregation.cluster.annotation.ClusterContext;
+import se.tink.backend.aggregation.cluster.annotations.ClusterContext;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
@@ -120,12 +120,4 @@ public interface AggregationService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response reEncryptCredentials(ReEncryptCredentialsRequest request, @ClusterContext ClusterInfo clusterInfo);
-
-    // temporary endpoint for testing out provider service communication
-    @GET
-    @Path("provider/ping")
-    @TeamOwnership(Team.INTEGRATION)
-    @Produces(MediaType.TEXT_PLAIN)
-    @AllowAnonymous
-    String pingProvider();
 }

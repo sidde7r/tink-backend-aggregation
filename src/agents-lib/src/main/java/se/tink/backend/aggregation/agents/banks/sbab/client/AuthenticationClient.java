@@ -14,7 +14,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.AuthBankIdPollResponse;
-import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.backend.aggregation.rpc.Credentials;

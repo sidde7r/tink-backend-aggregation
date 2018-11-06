@@ -221,17 +221,4 @@ public class AggregationServiceResource implements AggregationService {
 
         return HttpResponseHelper.ok();
     }
-
-    @Override
-    public String pingProvider(){
-        try{
-            return serviceContext
-                    .getProviderServiceFactory()
-                    .getMonitoringService()
-                    .ping();
-        } catch(Exception e){
-            logger.error("Cannot connect to provider service", e);
-        }
-        return null;
-    }
 }

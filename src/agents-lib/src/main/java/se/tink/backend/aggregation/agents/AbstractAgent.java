@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents;
 
-import com.sun.jersey.client.apache4.ApacheHttpClient4;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;

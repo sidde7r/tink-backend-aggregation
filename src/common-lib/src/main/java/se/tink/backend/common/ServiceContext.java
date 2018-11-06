@@ -11,7 +11,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import org.apache.curator.framework.CuratorFramework;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import se.tink.backend.aggregation.provider.configuration.client.InterContainerProviderServiceFactory;
 import se.tink.backend.common.cache.CacheClient;
 import se.tink.backend.common.concurrency.ListenableThreadPoolExecutor;
 import se.tink.backend.common.config.DatabaseConfiguration;
@@ -39,7 +38,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
     private final ServiceConfiguration configuration;
     private CuratorFramework zookeeperClient;
     private final MetricRegistry metricRegistry;
-    private final InterContainerProviderServiceFactory providerServiceFactory;
     private LoadingCache<Class<?>, Object> DAOs;
     private final boolean isProvidersOnAggregation;
     private QueueProducer producer;
@@ -56,7 +54,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
     @Inject
     public ServiceContext(final ServiceConfiguration configuration, MetricRegistry metricRegistry,
             CacheClient cacheClient, CuratorFramework zookeeperClient,
-            InterContainerProviderServiceFactory providerServiceFactory,
             @Named("executor") ListenableThreadPoolExecutor<Runnable> executorService,
             @Named("trackingExecutor") ListenableThreadPoolExecutor<Runnable> trackingExecutorService,
             @Named("isProvidersOnAggregation") boolean isProvidersOnAggregation,
@@ -65,7 +62,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
         this.zookeeperClient = zookeeperClient;
         this.configuration = configuration;
         this.metricRegistry = metricRegistry;
-        this.providerServiceFactory = providerServiceFactory;
         this.executorService = executorService;
         this.trackingExecutorService = trackingExecutorService;
         this.isProvidersOnAggregation = isProvidersOnAggregation;
@@ -127,10 +123,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
             // Default to centralized
             return getRepository(cls, RepositorySource.CENTRALIZED);
         }
-    }
-
-    public InterContainerProviderServiceFactory getProviderServiceFactory() {
-        return providerServiceFactory;
     }
 
     public ListenableThreadPoolExecutor<Runnable> getExecutorService() {
