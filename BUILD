@@ -5,19 +5,6 @@ load("@org_pubref_rules_protobuf//java:rules.bzl", "java_proto_library")
 # have been merged to suitable components.
 
 java_library(
-    name = "encryption-api",
-    srcs = glob(["src/encryption-api/src/main/**/*.java"]),
-    visibility = ["//visibility:public"],
-    deps = [
-        "//src/libraries/http:http-annotations",
-        "//src/libraries/http_client:http-client",
-        "//src/libraries/jersey_utils:jersey-utils",
-
-        "//third_party:com_sun_jersey_jersey_client",
-    ],
-)
-
-java_library(
     name = "aggregation-api",
     srcs = glob(["src/aggregation-api/src/main/**/*.java"]),
     visibility = ["//visibility:public"],
