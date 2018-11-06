@@ -16,36 +16,32 @@ public final class AccountTypeMapperTest {
 
     @Test
     public void ensureIsCheckingAccount_withKnownButUnmapped_returnsFalse() {
-        final AccountTypeMapper mapper = AccountTypeMapper.builder()
-                .ignoreKeys("CHECKING_ACCOUNT")
-                .build();
+        final AccountTypeMapper mapper =
+                AccountTypeMapper.builder().ignoreKeys("CHECKING_ACCOUNT").build();
 
         Assert.assertFalse(mapper.isCheckingAccount("CHECKING_ACCOUNT"));
     }
 
     @Test
     public void ensureIsCheckingAccount_withCheckingStringMappedToChecking_returnsTrue() {
-        final AccountTypeMapper mapper = AccountTypeMapper.builder()
-                .put(AccountTypes.CHECKING, "CHECKING_ACCOUNT")
-                .build();
+        final AccountTypeMapper mapper =
+                AccountTypeMapper.builder().put(AccountTypes.CHECKING, "CHECKING_ACCOUNT").build();
 
         Assert.assertTrue(mapper.isCheckingAccount("CHECKING_ACCOUNT"));
     }
 
     @Test
     public void ensureIsCheckingAccount_withOtherStringMappedToChecking_returnsFalse() {
-        final AccountTypeMapper mapper = AccountTypeMapper.builder()
-                .put(AccountTypes.CHECKING, "SAVINGS_ACCOUNT")
-                .build();
+        final AccountTypeMapper mapper =
+                AccountTypeMapper.builder().put(AccountTypes.CHECKING, "SAVINGS_ACCOUNT").build();
 
         Assert.assertFalse(mapper.isCheckingAccount("CHECKING_ACCOUNT"));
     }
 
     @Test
     public void ensureTranslate_withCheckingStringMappedToChecking_returnsChecking() {
-        final AccountTypeMapper mapper = AccountTypeMapper.builder()
-                .put(AccountTypes.CHECKING, "CHECKING_ACCOUNT")
-                .build();
+        final AccountTypeMapper mapper =
+                AccountTypeMapper.builder().put(AccountTypes.CHECKING, "CHECKING_ACCOUNT").build();
 
         final Optional<AccountTypes> returned = mapper.translate("CHECKING_ACCOUNT");
 
@@ -55,22 +51,21 @@ public final class AccountTypeMapperTest {
 
     @Test
     public void ensureTranslate_withOtherStringMappedToChecking_returnsEmpty() {
-        final AccountTypeMapper mapper = AccountTypeMapper.builder()
-                .put(AccountTypes.CHECKING, "SAVINGS_ACCOUNT")
-                .build();
+        final AccountTypeMapper mapper =
+                AccountTypeMapper.builder().put(AccountTypes.CHECKING, "SAVINGS_ACCOUNT").build();
 
         final Optional<AccountTypes> returned = mapper.translate("CHECKING_ACCOUNT");
 
         Assert.assertFalse(returned.isPresent());
     }
 
-
     @Test
     public void ensureTranslate_withSavingsStringMappedToSavingsAndRegex_returnsSavings() {
-        final AccountTypeMapper mapper = AccountTypeMapper.builder()
-                .put(AccountTypes.SAVINGS, "S042", "S108")
-                .putRegex(AccountTypes.SAVINGS, Pattern.compile("S\\w\\w\\w"))
-                .build();
+        final AccountTypeMapper mapper =
+                AccountTypeMapper.builder()
+                        .put(AccountTypes.SAVINGS, "S042", "S108")
+                        .putRegex(AccountTypes.SAVINGS, Pattern.compile("S\\w\\w\\w"))
+                        .build();
 
         final Optional<AccountTypes> returned = mapper.translate("S108");
 
@@ -80,10 +75,11 @@ public final class AccountTypeMapperTest {
 
     @Test
     public void ensureTranslate_withSavingsStringMappedToRegexOnly_returnsSavings() {
-        final AccountTypeMapper mapper = AccountTypeMapper.builder()
-                .put(AccountTypes.SAVINGS, "S042", "S108")
-                .putRegex(AccountTypes.SAVINGS, Pattern.compile("S\\w\\w\\w"))
-                .build();
+        final AccountTypeMapper mapper =
+                AccountTypeMapper.builder()
+                        .put(AccountTypes.SAVINGS, "S042", "S108")
+                        .putRegex(AccountTypes.SAVINGS, Pattern.compile("S\\w\\w\\w"))
+                        .build();
 
         final Optional<AccountTypes> returned = mapper.translate("S023");
 
@@ -93,10 +89,11 @@ public final class AccountTypeMapperTest {
 
     @Test
     public void ensureTranslate_withSavingsStringMappedToNeither_returnsEmpty() {
-        final AccountTypeMapper mapper = AccountTypeMapper.builder()
-                .put(AccountTypes.SAVINGS, "S042", "S108")
-                .putRegex(AccountTypes.SAVINGS, Pattern.compile("S\\w\\w\\w"))
-                .build();
+        final AccountTypeMapper mapper =
+                AccountTypeMapper.builder()
+                        .put(AccountTypes.SAVINGS, "S042", "S108")
+                        .putRegex(AccountTypes.SAVINGS, Pattern.compile("S\\w\\w\\w"))
+                        .build();
 
         final Optional<AccountTypes> returned = mapper.translate("D023");
 
@@ -105,10 +102,11 @@ public final class AccountTypeMapperTest {
 
     @Test
     public void ensureTranslate_withTwoSavingsRegexesOneMatch_returnsSavings() {
-        final AccountTypeMapper mapper = AccountTypeMapper.builder()
-                .putRegex(AccountTypes.SAVINGS, Pattern.compile("S\\w\\w\\w"))
-                .putRegex(AccountTypes.SAVINGS, Pattern.compile("s\\w\\w\\w"))
-                .build();
+        final AccountTypeMapper mapper =
+                AccountTypeMapper.builder()
+                        .putRegex(AccountTypes.SAVINGS, Pattern.compile("S\\w\\w\\w"))
+                        .putRegex(AccountTypes.SAVINGS, Pattern.compile("s\\w\\w\\w"))
+                        .build();
 
         final Optional<AccountTypes> returned = mapper.translate("S023");
 
@@ -118,11 +116,12 @@ public final class AccountTypeMapperTest {
 
     @Test
     public void ensureTranslate_withTwoMatchingMappedToSavings_returnsSavings() {
-        final AccountTypeMapper mapper = AccountTypeMapper.builder()
-                .putRegex(AccountTypes.SAVINGS, Pattern.compile("S\\w\\w\\w"))
-                .putRegex(AccountTypes.SAVINGS, Pattern.compile("\\w\\w\\wS"))
-                .putRegex(AccountTypes.LOAN, Pattern.compile("L\\w\\w\\w"))
-                .build();
+        final AccountTypeMapper mapper =
+                AccountTypeMapper.builder()
+                        .putRegex(AccountTypes.SAVINGS, Pattern.compile("S\\w\\w\\w"))
+                        .putRegex(AccountTypes.SAVINGS, Pattern.compile("\\w\\w\\wS"))
+                        .putRegex(AccountTypes.LOAN, Pattern.compile("L\\w\\w\\w"))
+                        .build();
 
         final Optional<AccountTypes> returned = mapper.translate("S42S");
 
@@ -131,12 +130,14 @@ public final class AccountTypeMapperTest {
     }
 
     @Test
-    public void ensureTranslate_withTwoMatchingMappedToSavingsAndChecking_returnsSavingsOrChecking() {
-        final AccountTypeMapper mapper = AccountTypeMapper.builder()
-                .putRegex(AccountTypes.SAVINGS, Pattern.compile("S\\w\\w\\w"))
-                .putRegex(AccountTypes.CHECKING, Pattern.compile("\\w\\w\\wC"))
-                .putRegex(AccountTypes.LOAN, Pattern.compile("L\\w\\w\\w"))
-                .build();
+    public void
+            ensureTranslate_withTwoMatchingMappedToSavingsAndChecking_returnsSavingsOrChecking() {
+        final AccountTypeMapper mapper =
+                AccountTypeMapper.builder()
+                        .putRegex(AccountTypes.SAVINGS, Pattern.compile("S\\w\\w\\w"))
+                        .putRegex(AccountTypes.CHECKING, Pattern.compile("\\w\\w\\wC"))
+                        .putRegex(AccountTypes.LOAN, Pattern.compile("L\\w\\w\\w"))
+                        .build();
 
         final Optional<AccountTypes> returned = mapper.translate("S42C");
 
