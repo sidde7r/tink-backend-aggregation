@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
 import se.tink.backend.queue.sqs.configuration.SqsQueueConfiguration;
 import se.tink.libraries.abnamro.config.AbnAmroConfiguration;
-import se.tink.libraries.cluster.Cluster;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ServiceConfiguration extends Configuration {
@@ -26,9 +25,6 @@ public class ServiceConfiguration extends Configuration {
 
     @JsonProperty
     private CacheConfiguration cache = new CacheConfiguration();
-
-    @JsonProperty
-    private Cluster cluster;
 
     @JsonProperty
     private CoordinationConfiguration coordination = new CoordinationConfiguration();
@@ -102,10 +98,6 @@ public class ServiceConfiguration extends Configuration {
         return cache;
     }
 
-    public Cluster getCluster() {
-        return cluster;
-    }
-
     public CoordinationConfiguration getCoordination() {
         return coordination;
     }
@@ -132,15 +124,6 @@ public class ServiceConfiguration extends Configuration {
 
     public int getYubicoClientId() {
         return YUBICO_CLIENT_ID;
-    }
-
-    public void setCluster(Cluster cluster) {
-        // TODO: remove this when new cluster names are merged in tink-infrastructure.
-        if (cluster == Cluster.SEB) {
-            this.cluster = Cluster.CORNWALL;
-        } else {
-            this.cluster = cluster;
-        }
     }
 
     public PrometheusConfiguration getPrometheus() {

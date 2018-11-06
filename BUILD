@@ -78,7 +78,6 @@ java_library(
         "//src/libraries/jersey_utils:jersey-utils",
         "//src/libraries/http_client:http-client",
         "//src/libraries/date:date",
-        "//src/libraries/cluster:cluster",
         "//src/libraries/giro_validation:giro-validation",
         "//src/libraries/account_identifier:account-identifier",
         "//src/libraries/versioning:versioning",
@@ -180,7 +179,6 @@ java_library(
         "//src/libraries/http_client:http-client",
         "//src/libraries/dropwizard_utils:dropwizard-utils",
         "//src/libraries/date:date",
-        "//src/libraries/cluster:cluster",
         "//src/libraries/giro_validation:giro-validation",
         "//src/libraries/account_identifier:account-identifier",
         "//src/libraries/generic_application:generic-application",
@@ -319,7 +317,6 @@ java_library(
           "//src/libraries/discovery:discovery",
           "//src/libraries/dropwizard_utils:dropwizard-utils",
           "//src/libraries/metrics:metrics",
-          "//src/libraries/cluster:cluster",
           "//src/libraries/draining:draining",
 
          "//third_party:com_google_guava_guava",
@@ -362,7 +359,6 @@ java_library(
         "//src/libraries/jersey_guice:jersey-guice",
         "//src/libraries/jersey_log:jersey-log",
         "//src/libraries/date:date",
-        "//src/libraries/cluster:cluster",
         "//src/libraries/log:log",
         "//src/libraries/giro_validation:giro-validation",
         "//src/libraries/account_identifier:account-identifier",
@@ -445,7 +441,6 @@ java_library(
         "//src/libraries/jersey_guice:jersey-guice",
         "//src/libraries/jersey_log:jersey-log",
         "//src/libraries/date:date",
-        "//src/libraries/cluster:cluster",
         "//src/libraries/log:log",
         "//src/libraries/giro_validation:giro-validation",
         "//src/libraries/account_identifier:account-identifier",
@@ -525,7 +520,6 @@ java_binary(
         ":aggregationcontroller-api",
 
         "//src/libraries/auth:auth",
-        "//src/libraries/cluster:cluster",
         "//src/libraries/discovery:discovery",
         "//src/libraries/draining:draining",
         "//src/libraries/metrics:metrics",
@@ -808,7 +802,6 @@ java_library(
          "//src/libraries/discovery:discovery",
          "//src/libraries/dropwizard_utils:dropwizard-utils",
          "//src/libraries/metrics:metrics",
-         "//src/libraries/cluster:cluster",
 
          "//src/libraries/cli_print_utils:cli_print_utils",
          "//src/libraries/serialization_utils:serialization-utils",
@@ -875,7 +868,6 @@ java_binary(
          "//src/libraries/discovery:discovery",
          "//src/libraries/dropwizard_utils:dropwizard-utils",
          "//src/libraries/metrics:metrics",
-         "//src/libraries/cluster:cluster",
          "//src/libraries/cli_print_utils:cli_print_utils",
          "//src/libraries/serialization_utils:serialization-utils",
 

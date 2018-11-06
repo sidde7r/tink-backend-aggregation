@@ -9,7 +9,6 @@ import se.tink.backend.common.config.GrpcConfiguration;
 import se.tink.backend.common.config.S3StorageConfiguration;
 import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.backend.queue.sqs.configuration.SqsQueueConfiguration;
-import se.tink.libraries.cluster.Cluster;
 import se.tink.libraries.discovery.CoordinationConfiguration;
 import se.tink.libraries.metrics.PrometheusConfiguration;
 
@@ -37,7 +36,6 @@ public class ConfigurationModule extends AbstractModule {
         // Tink monolith (common-lib and main-api) configurations
         bind(CacheConfiguration.class).toProvider(Providers.of(configuration.getCacheConfiguration()));
         bind(SqsQueueConfiguration.class).toProvider(Providers.of(configuration.getSqsQueueConfiguration()));
-        bind(Cluster.class).toInstance(configuration.getCluster());
         bind(ServiceConfiguration.class).toInstance(configuration);
         bind(GrpcConfiguration.class).toInstance(configuration.getGrpc());
 
