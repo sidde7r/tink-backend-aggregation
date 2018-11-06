@@ -175,7 +175,6 @@ java_library(
     srcs = glob(["src/common-lib/src/main/**/*.java"]),
     deps = [
         ":aggregation-api",
-        ":encryption-api",
         ":main-api",
         ":system-api",
         ":provider-configuration-api",
@@ -326,7 +325,6 @@ java_library(
          ":aggregation-api",
          ":aggregation-lib",
          ":common-lib",
-         ":encryption-api",
          ":main-api",
          ":system-api",
          ":agents-lib",
@@ -361,7 +359,6 @@ java_library(
     deps = [
         ":aggregation-api",
         ":common-lib",
-        ":encryption-api",
         ":main-api",
         ":system-api",
         ":agents-lib",
@@ -451,7 +448,6 @@ java_library(
     ],
     deps = [
         ":common-lib",
-        ":encryption-api",
         ":main-api",
         ":aggregation-api",
         ":system-api",
