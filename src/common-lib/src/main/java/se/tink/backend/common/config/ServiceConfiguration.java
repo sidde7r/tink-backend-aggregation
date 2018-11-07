@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
 import se.tink.backend.queue.sqs.configuration.SqsQueueConfiguration;
 import se.tink.libraries.abnamro.config.AbnAmroConfiguration;
-import se.tink.libraries.cluster.Cluster;
-import se.tink.libraries.endpoints.EndpointsConfiguration;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ServiceConfiguration extends Configuration {
@@ -29,9 +27,6 @@ public class ServiceConfiguration extends Configuration {
     private CacheConfiguration cache = new CacheConfiguration();
 
     @JsonProperty
-    private Cluster cluster;
-
-    @JsonProperty
     private CoordinationConfiguration coordination = new CoordinationConfiguration();
 
     @JsonProperty("creditsafe")
@@ -44,21 +39,7 @@ public class ServiceConfiguration extends Configuration {
     private boolean developmentMode = false;
 
     @JsonProperty
-    private EndpointsConfiguration endpoints = new EndpointsConfiguration();
-
-    @JsonProperty
-    private GrpcConfiguration grpc = new GrpcConfiguration();
-
-    @JsonProperty
-    private ServiceAuthenticationConfiguration serviceAuthentication = new ServiceAuthenticationConfiguration();
-
-    private static final int YUBICO_CLIENT_ID = 11129;
-
-    @JsonProperty
     private PrometheusConfiguration prometheus = new PrometheusConfiguration();
-
-    @JsonProperty
-    private boolean isProvidersOnAggregation = false;
 
     @JsonProperty
     private SignatureKeyPair signatureKeyPair = new SignatureKeyPair();
@@ -106,24 +87,12 @@ public class ServiceConfiguration extends Configuration {
         return cache;
     }
 
-    public Cluster getCluster() {
-        return cluster;
-    }
-
     public CoordinationConfiguration getCoordination() {
         return coordination;
     }
 
     public DatabaseConfiguration getDatabase() {
         return database;
-    }
-
-    public EndpointsConfiguration getEndpoints() {
-        return endpoints;
-    }
-
-    public GrpcConfiguration getGrpc() {
-        return grpc;
     }
 
     public boolean isDevelopmentMode() {
@@ -134,29 +103,8 @@ public class ServiceConfiguration extends Configuration {
         return creditSafe;
     }
 
-    public ServiceAuthenticationConfiguration getServiceAuthentication() {
-        return serviceAuthentication;
-    }
-
-    public int getYubicoClientId() {
-        return YUBICO_CLIENT_ID;
-    }
-
-    public void setCluster(Cluster cluster) {
-        // TODO: remove this when new cluster names are merged in tink-infrastructure.
-        if (cluster == Cluster.SEB) {
-            this.cluster = Cluster.CORNWALL;
-        } else {
-            this.cluster = cluster;
-        }
-    }
-
     public PrometheusConfiguration getPrometheus() {
         return prometheus;
-    }
-
-    public boolean isProvidersOnAggregation() {
-        return isProvidersOnAggregation;
     }
 
     public SignatureKeyPair getSignatureKeyPair() {

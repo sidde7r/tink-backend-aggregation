@@ -39,7 +39,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
     private CuratorFramework zookeeperClient;
     private final MetricRegistry metricRegistry;
     private LoadingCache<Class<?>, Object> DAOs;
-    private final boolean isProvidersOnAggregation;
     private QueueProducer producer;
     private ApplicationDrainMode applicationDrainMode;
 
@@ -56,7 +55,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
             CacheClient cacheClient, CuratorFramework zookeeperClient,
             @Named("executor") ListenableThreadPoolExecutor<Runnable> executorService,
             @Named("trackingExecutor") ListenableThreadPoolExecutor<Runnable> trackingExecutorService,
-            @Named("isProvidersOnAggregation") boolean isProvidersOnAggregation,
             QueueProducer producer, ApplicationDrainMode applicationDrainMode) {
         this.cacheClient = cacheClient;
         this.zookeeperClient = zookeeperClient;
@@ -64,7 +62,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
         this.metricRegistry = metricRegistry;
         this.executorService = executorService;
         this.trackingExecutorService = trackingExecutorService;
-        this.isProvidersOnAggregation = isProvidersOnAggregation;
         this.producer = producer;
         this.applicationDrainMode = applicationDrainMode;
     }
@@ -217,10 +214,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
 
     public <T> T getDao(Class<T> key) {
         return key.cast(DAOs.getUnchecked(key));
-    }
-
-    public boolean isProvidersOnAggregation() {
-        return isProvidersOnAggregation;
     }
 
     public ApplicationDrainMode getApplicationDrainMode() {

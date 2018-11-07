@@ -54,7 +54,6 @@ import se.tink.backend.system.rpc.TransactionTypes;
 import se.tink.backend.system.rpc.UpdateDocumentResponse;
 import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.cluster.Cluster;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.Counter;
 import se.tink.libraries.metrics.MetricId;
@@ -528,28 +527,25 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         credentials.setStatus(status);
         credentials.setStatusPayload(statusPayload);
 
-        if (statusFromProvider
-                && statusPayload != null
-                && (status == CredentialsStatus.AUTHENTICATION_ERROR
-                || status == CredentialsStatus.TEMPORARY_ERROR)) {
-
-            String payload;
-
-            if (Objects.equals(serviceContext.getConfiguration().getCluster(), Cluster.ABNAMRO)) {
-                payload = statusPayload;
-            } else {
-                StringBuffer buffer = new StringBuffer();
-                buffer.append(
-                        catalog.getString("Error from") + " " + request.getProvider().getDisplayName() + ":");
-                buffer.append(" \"");
-                buffer.append(statusPayload);
-                buffer.append("\"");
-
-                payload = buffer.toString();
-            }
-
-            credentials.setStatusPayload(payload);
+        if (!statusFromProvider) {
+            updateCredentialsExcludingSensitiveInformation(credentials, true);
         }
+
+        if (statusPayload == null) {
+            updateCredentialsExcludingSensitiveInformation(credentials, true);
+        }
+
+        if ((status != CredentialsStatus.AUTHENTICATION_ERROR
+                && status != CredentialsStatus.TEMPORARY_ERROR)) {
+            updateCredentialsExcludingSensitiveInformation(credentials, true);
+        }
+
+        String payload = catalog.getString("Error from")
+                + " "
+                + request.getProvider().getDisplayName()
+                + ": \"" + statusPayload + "\"";
+
+        credentials.setStatusPayload(payload);
 
         updateCredentialsExcludingSensitiveInformation(credentials, true);
     }

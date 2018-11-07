@@ -16,52 +16,6 @@ server:
     - type: http
       port: 8095
 
-grpc:
-  port: 9995
-
-endpoints:
-  main:
-    url: http://localhost:9090/
-    pinnedCertificates:
-      - "CERTSHA256:A0A8FBAC442F4A58AC56CB1D0C185F93EE119A1B026BA3F046B0CA99EC165390"
-  system:
-    url: http://localhost:9091/
-    accessToken: devtoken
-    pinnedCertificates:
-      - "CERTSHA256:A0A8FBAC442F4A58AC56CB1D0C185F93EE119A1B026BA3F046B0CA99EC165390"
-  aggregation:
-    url: http://localhost:9095/
-    accessToken: devtoken
-    pinnedCertificates:
-      - "CERTSHA256:A0A8FBAC442F4A58AC56CB1D0C185F93EE119A1B026BA3F046B0CA99EC165390"
-  analytics:
-    url: http://localhost:9093/
-  encryption:
-    url: http://localhost:9094/
-    accessToken: devtoken
-    pinnedCertificates:
-      - "CERTSHA256:A0A8FBAC442F4A58AC56CB1D0C185F93EE119A1B026BA3F046B0CA99EC165390"
-  connector:
-    url: http://localhost:9095/
-    pinnedCertificates:
-      - "CERTSHA256:A0A8FBAC442F4A58AC56CB1D0C185F93EE119A1B026BA3F046B0CA99EC165390"
-  aggregationController:
-    url: http://localhost:9098/
-    accessToken: devtoken
-    pinnedCertificates:
-      - "CERTSHA256:A0A8FBAC442F4A58AC56CB1D0C185F93EE119A1B026BA3F046B0CA99EC165390"
-  providerConfiguration:
-    url: https://192.168.99.100:32443/provider-service/
-    accessToken: devtoken
-    pinnedCertificates:
-      - "CERTSHA256:A0A8FBAC442F4A58AC56CB1D0C185F93EE119A1B026BA3F046B0CA99EC165390"
-
-cluster: TINK
-
-serviceAuthentication:
-  serverTokens:
-    - devtoken
-
 developmentMode: true
 
 developmentConfiguration:
@@ -77,13 +31,6 @@ developmentConfiguration:
       clusterId: local-development
       keyId: 1
     base64EncodedKey: "QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUE="
-
-
-distributedDatabase:
-  seeds:
-    - 192.168.99.100
-  port: 31002
-  enabled: true
 
 database:
   driverClass: com.mysql.jdbc.Driver
