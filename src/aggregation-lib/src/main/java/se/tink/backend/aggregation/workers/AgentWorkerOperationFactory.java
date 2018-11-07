@@ -57,7 +57,6 @@ import se.tink.backend.aggregation.workers.refresh.ProcessableItem;
 import se.tink.backend.common.ServiceContext;
 import se.tink.backend.common.cache.CacheClient;
 import se.tink.backend.aggregation.configurations.repositories.ClusterCryptoConfigurationRepository;
-import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.libraries.metrics.MetricRegistry;
 
 public class AgentWorkerOperationFactory {
@@ -212,8 +211,9 @@ public class AgentWorkerOperationFactory {
         log.debug("Creating refresh operation chain for credential");
 
 
-        AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
-                aggregationControllerAggregationClient, clusterInfo);
+        AgentWorkerContext context = new AgentWorkerContext(request, metricRegistry,
+                aggregationControllerAggregationClient, clusterInfo, serviceContext.getCoordinationClient(),
+                serviceContext.getCacheClient(), serviceContext.getConfiguration());
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
@@ -241,8 +241,9 @@ public class AgentWorkerOperationFactory {
     }
 
     public AgentWorkerOperation createExecuteTransferOperation(ClusterInfo clusterInfo, TransferRequest request) {
-        AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
-                aggregationControllerAggregationClient, clusterInfo);
+        AgentWorkerContext context = new AgentWorkerContext(request, metricRegistry,
+                aggregationControllerAggregationClient, clusterInfo, serviceContext.getCoordinationClient(),
+                serviceContext.getCacheClient(), serviceContext.getConfiguration());
 
         String operationName = "execute-transfer";
 
@@ -259,8 +260,9 @@ public class AgentWorkerOperationFactory {
     public AgentWorkerOperation createExecuteWhitelistedTransferOperation(ClusterInfo clusterInfo,
             WhitelistedTransferRequest request) {
 
-        AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
-                aggregationControllerAggregationClient, clusterInfo);
+        AgentWorkerContext context = new AgentWorkerContext(request, metricRegistry,
+                aggregationControllerAggregationClient, clusterInfo, serviceContext.getCoordinationClient(),
+                serviceContext.getCacheClient(), serviceContext.getConfiguration());
 
         context.setWhitelistRefresh(true);
 
@@ -294,8 +296,9 @@ public class AgentWorkerOperationFactory {
     }
 
     public AgentWorkerOperation createCreateCredentialsOperation(ClusterInfo clusterInfo, CredentialsRequest request) {
-        AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
-                aggregationControllerAggregationClient, clusterInfo);
+        AgentWorkerContext context = new AgentWorkerContext(request, metricRegistry,
+                aggregationControllerAggregationClient, clusterInfo, serviceContext.getCoordinationClient(),
+                serviceContext.getCacheClient(), serviceContext.getConfiguration());
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
@@ -311,8 +314,9 @@ public class AgentWorkerOperationFactory {
     }
 
     public AgentWorkerOperation createUpdateOperation(ClusterInfo clusterInfo, CredentialsRequest request) {
-        AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
-                aggregationControllerAggregationClient, clusterInfo);
+        AgentWorkerContext context = new AgentWorkerContext(request, metricRegistry,
+                aggregationControllerAggregationClient, clusterInfo, serviceContext.getCoordinationClient(),
+                serviceContext.getCacheClient(), serviceContext.getConfiguration());
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
@@ -328,8 +332,9 @@ public class AgentWorkerOperationFactory {
     }
 
     public AgentWorkerOperation createKeepAliveOperation(ClusterInfo clusterInfo, KeepAliveRequest request) {
-        AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
-                aggregationControllerAggregationClient, clusterInfo);
+        AgentWorkerContext context = new AgentWorkerContext(request, metricRegistry,
+                aggregationControllerAggregationClient, clusterInfo, serviceContext.getCoordinationClient(),
+                serviceContext.getCacheClient(), serviceContext.getConfiguration());
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
@@ -349,8 +354,9 @@ public class AgentWorkerOperationFactory {
 
     public AgentWorkerOperation createReEncryptCredentialsOperation(ClusterInfo clusterInfo,
             ReEncryptCredentialsRequest request) {
-        AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
-                aggregationControllerAggregationClient, clusterInfo);
+        AgentWorkerContext context = new AgentWorkerContext(request, metricRegistry,
+                aggregationControllerAggregationClient, clusterInfo, serviceContext.getCoordinationClient(),
+                serviceContext.getCacheClient(), serviceContext.getConfiguration());
 
         ImmutableList<AgentWorkerCommand> commands = ImmutableList.of(
                 new LockAgentWorkerCommand(context),
@@ -398,8 +404,9 @@ public class AgentWorkerOperationFactory {
         log.debug("Creating whitelist refresh operation chain for credential");
 
 
-        AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
-                aggregationControllerAggregationClient, clusterInfo);
+        AgentWorkerContext context = new AgentWorkerContext(request, metricRegistry,
+                aggregationControllerAggregationClient, clusterInfo, serviceContext.getCoordinationClient(),
+                serviceContext.getCacheClient(), serviceContext.getConfiguration());
 
         context.setWhitelistRefresh(true);
 
@@ -441,8 +448,9 @@ public class AgentWorkerOperationFactory {
             request.setItemsToRefresh(RefreshableItem.REFRESHABLE_ITEMS_ALL);
         }
 
-        AgentWorkerContext context = new AgentWorkerContext(request, serviceContext, metricRegistry,
-                aggregationControllerAggregationClient, clusterInfo);
+        AgentWorkerContext context = new AgentWorkerContext(request, metricRegistry,
+                aggregationControllerAggregationClient, clusterInfo, serviceContext.getCoordinationClient(),
+                serviceContext.getCacheClient(), serviceContext.getConfiguration());
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 

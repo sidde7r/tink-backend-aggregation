@@ -48,7 +48,7 @@ public class CircuitBreakerAgentWorkerCommand extends AgentWorkerCommand {
         Provider provider = context.getRequest().getProvider();
         wasCircuitBreaked = false;
 
-        final CircuitBreakerConfiguration circuitBreakerConfiguration = context.getServiceContext().getConfiguration()
+        final CircuitBreakerConfiguration circuitBreakerConfiguration = context.getServiceConfiguration()
                 .getAggregationWorker().getCircuitBreaker();
 
         CircuitBreakerStatistics.CircuitBreakerStatus circuitBreakerStatus = state.getCircuitBreakerStatistics().get(
