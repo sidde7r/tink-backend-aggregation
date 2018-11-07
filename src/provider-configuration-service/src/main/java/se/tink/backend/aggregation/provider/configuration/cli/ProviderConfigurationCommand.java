@@ -10,15 +10,13 @@ import net.sourceforge.argparse4j.inf.Namespace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.provider.configuration.config.ProviderRepositoryModule;
+import se.tink.backend.aggregation.provider.configuration.config.ProviderServiceConfiguration;
+import se.tink.backend.aggregation.provider.configuration.config.ProviderServiceConfigurationModule;
 import se.tink.backend.aggregation.provider.configuration.storage.module.ProviderFileModule;
-import se.tink.backend.common.config.ServiceConfiguration;
-import se.tink.backend.guice.configuration.CommonModule;
-import se.tink.backend.guice.configuration.ConfigurationModule;
-import se.tink.libraries.discovery.CoordinationModule;
 
 import java.util.List;
 
-public abstract class ProviderConfigurationCommand<T extends ServiceConfiguration> extends ConfiguredCommand<T> {
+public abstract class ProviderConfigurationCommand<T extends ProviderServiceConfiguration> extends ConfiguredCommand<T> {
     private static final Logger log = LoggerFactory.getLogger(ProviderConfigurationCommand.class);
 
     protected ProviderConfigurationCommand(String name, String description) {
@@ -31,9 +29,7 @@ public abstract class ProviderConfigurationCommand<T extends ServiceConfiguratio
     @Override
     protected void run(Bootstrap<T> bootstrap, Namespace namespace, T configuration) throws Exception {
         List<AbstractModule> modules = Lists.newArrayList(
-                new CommonModule(),
-                new CoordinationModule(),
-                new ConfigurationModule(configuration),
+                new ProviderServiceConfigurationModule(configuration),
                 new ProviderFileModule(),
                 new ProviderRepositoryModule(configuration.getDatabase()));
 

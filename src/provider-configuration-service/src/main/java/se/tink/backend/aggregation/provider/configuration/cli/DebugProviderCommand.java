@@ -7,18 +7,18 @@ import io.dropwizard.setup.Bootstrap;
 import net.sourceforge.argparse4j.inf.Namespace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.provider.configuration.config.ProviderServiceConfiguration;
 import se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration;
 import se.tink.backend.aggregation.provider.configuration.storage.ProviderConfigurationProvider;
 import se.tink.backend.aggregation.provider.configuration.storage.module.ProviderFileModule;
 import se.tink.backend.aggregation.provider.configuration.storage.repositories.ProviderStatusConfigurationRepository;
-import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.libraries.cli.printutils.CliPrintUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 import java.util.List;
 import java.util.Map;
 
-public class DebugProviderCommand extends ProviderConfigurationCommand<ServiceConfiguration> {
+public class DebugProviderCommand extends ProviderConfigurationCommand<ProviderServiceConfiguration> {
     private static final Logger log = LoggerFactory.getLogger(DebugProviderCommand.class);
 
     public DebugProviderCommand() {
@@ -52,8 +52,8 @@ public class DebugProviderCommand extends ProviderConfigurationCommand<ServiceCo
     }
 
     @Override
-    protected void run(Bootstrap<ServiceConfiguration> bootstrap, Namespace namespace,
-            ServiceConfiguration configuration, Injector injector) throws Exception {
+    protected void run(Bootstrap<ProviderServiceConfiguration> bootstrap, Namespace namespace,
+            ProviderServiceConfiguration configuration, Injector injector) throws Exception {
 
         final String providerName = System.getProperty("providerName");
         Preconditions.checkNotNull(providerName, "providerName must not be null.");

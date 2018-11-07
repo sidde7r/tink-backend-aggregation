@@ -6,12 +6,12 @@ import io.dropwizard.setup.Bootstrap;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 import net.sourceforge.argparse4j.inf.Subparsers;
+import se.tink.backend.aggregation.provider.configuration.config.ProviderServiceConfiguration;
 import se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration;
 import se.tink.backend.aggregation.provider.configuration.storage.ProviderConfigurationProvider;
 import se.tink.backend.aggregation.provider.configuration.storage.module.ProviderFileModule;
 import se.tink.backend.aggregation.provider.configuration.storage.repositories.ProviderStatusConfigurationRepository;
 import se.tink.backend.core.ProviderStatuses;
-import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.libraries.cli.printutils.CliPrintUtils;
 
 import java.io.IOException;
@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class ProviderStatusCommand extends ProviderConfigurationCommand<ServiceConfiguration> {
+public class ProviderStatusCommand extends ProviderConfigurationCommand<ProviderServiceConfiguration> {
 
     private static final String STATUS_FIELD = "providerStatus";
     private static final String NAME_FIELD = "providerName";
@@ -109,8 +109,8 @@ public class ProviderStatusCommand extends ProviderConfigurationCommand<ServiceC
     }
 
     @Override
-    protected void run(Bootstrap<ServiceConfiguration> bootstrap, Namespace namespace,
-            ServiceConfiguration configuration, Injector injector) throws Exception {
+    protected void run(Bootstrap<ProviderServiceConfiguration> bootstrap, Namespace namespace,
+            ProviderServiceConfiguration configuration, Injector injector) throws Exception {
 
         ProviderStatuses providerStatus = namespace.get(STATUS_FIELD);
         String providerName = namespace.getString(NAME_FIELD);
