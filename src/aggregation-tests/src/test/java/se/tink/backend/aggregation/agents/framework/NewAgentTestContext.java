@@ -414,6 +414,10 @@ public class NewAgentTestContext extends AgentContext {
 
         case INVESTMENT:
             Assert.assertNotNull(accountFeatures.getPortfolios());
+            for (Portfolio portfolio : accountFeatures.getPortfolios()) {
+                Assert.assertNotNull(portfolio.getInstruments());
+                Assert.assertFalse(portfolio.getInstruments().isEmpty());
+            }
             printPortfolioDetails(accountFeatures.getPortfolios());
             break;
 
@@ -442,7 +446,8 @@ public class NewAgentTestContext extends AgentContext {
     }
 
     private void printTransferDestinations(String bankId) {
-        List<Map<String, String>> table = transferDestinationPatternsByAccountBankId.getOrDefault(bankId, new ArrayList<>())
+        List<Map<String, String>> table = transferDestinationPatternsByAccountBankId
+                .getOrDefault(bankId, new ArrayList<>())
                 .stream()
                 .map(transferDestination -> {
                     Map<String, String> row = new LinkedHashMap<>();
