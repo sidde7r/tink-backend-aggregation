@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import se.tink.backend.aggregation.cli.AggregationMigrateMultiClientCommand;
 import se.tink.backend.aggregation.guice.configuration.AggregationModuleFactory;
 import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.backend.common.config.ServiceConfiguration;
@@ -21,6 +22,7 @@ public class AggregationServiceContainer extends Application<ServiceConfiguratio
     @Override
     public void initialize(Bootstrap<ServiceConfiguration> bootstrap) {
         DropwizardObjectMapperConfigurator.doNotFailOnUnknownProperties(bootstrap);
+        bootstrap.addCommand(new AggregationMigrateMultiClientCommand());
     }
 
     @Override
