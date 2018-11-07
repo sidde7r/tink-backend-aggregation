@@ -1,4 +1,4 @@
-package se.tink.backend.guice.configuration;
+package se.tink.backend.aggregation.guice.configuration;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Queues;
@@ -36,8 +36,8 @@ import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.metrics.PrometheusExportServer;
 
-public class CommonModule extends AbstractModule {
-    private static final LogUtils log = new LogUtils(CommonModule.class);
+public class AggregationCommonModule extends AbstractModule {
+    private static final LogUtils log = new LogUtils(AggregationCommonModule.class);
 
     @Override
     protected void configure() {

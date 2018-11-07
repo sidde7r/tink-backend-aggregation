@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.guice.configuration.AggregationMultiClientRep
 import se.tink.backend.aggregation.guice.configuration.AggregationSingleClientRepositoryModule;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.common.config.ServiceConfiguration;
-import se.tink.backend.guice.configuration.CommonModule;
+import se.tink.backend.aggregation.guice.configuration.AggregationCommonModule;
 import se.tink.backend.guice.configuration.ConfigurationModule;
 import se.tink.libraries.discovery.CoordinationModule;
 
@@ -29,7 +29,7 @@ public abstract class AggregationServiceContextCommand<T extends ServiceConfigur
     @Override
     protected void run(Bootstrap<T> bootstrap, Namespace namespace, T configuration) throws Exception {
         List<AbstractModule> modules = Lists.newArrayList(
-                new CommonModule(),
+                new AggregationCommonModule(),
                 new CoordinationModule(),
                 new ConfigurationModule(configuration),
                 new AggregationMultiClientRepositoryModule(configuration.getDatabase()));

@@ -406,8 +406,8 @@ java_library(
         "//third_party:org_xerial_snappy_snappy_java",
         "//third_party:com_amazonaws_aws_java_sdk_s3",
         "//third_party:org_hibernate_hibernate_annotations",
-
         "//third_party:net_sourceforge_cssparser_cssparser",
+        "//third_party:net_spy_spymemcached",
     ],
 )
 
