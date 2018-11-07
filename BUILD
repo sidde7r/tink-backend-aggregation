@@ -188,6 +188,7 @@ java_library(
         "//src/libraries/strings:strings",
         "//src/api-annotations",
         "//src/libraries/cryptography:cryptography",
+        "//src/libraries/repository:repository",
 
         "//src/api-headers",
 
@@ -373,6 +374,7 @@ java_library(
         "//src/libraries/cli_print_utils:cli_print_utils",
         "//src/libraries/creditsafe_consumer_monitoring:creditsafe_consumer_monitoring",
         "//src/libraries/draining:draining",
+        "//src/libraries/repository:repository",
 
         "//third_party:org_springframework_spring_expression",
         "//third_party:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",

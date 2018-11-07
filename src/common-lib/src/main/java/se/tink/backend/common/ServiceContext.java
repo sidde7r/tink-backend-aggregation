@@ -21,6 +21,7 @@ import se.tink.backend.common.repository.RepositoryFactory;
 import se.tink.backend.common.utils.ExecutorServiceUtils;
 import se.tink.backend.utils.LogUtils;
 import se.tink.libraries.draining.ApplicationDrainMode;
+import se.tink.libraries.repository.RepositorySource;
 
 /**
  * Do not use this class in new code anymore. This class is going to be removed.
@@ -80,18 +81,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
     }
 
     private AtomicReference<ManagedState> managedState = new AtomicReference<>(ManagedState.STOPPED);
-
-    public enum RepositorySource {
-        /**
-         * See #getRepository implementation.
-         */
-        DEFAULT,
-
-        /**
-         * MySQL.
-         */
-        CENTRALIZED,
-    }
 
     @Override
     public <R> R getRepository(Class<R> cls) {
