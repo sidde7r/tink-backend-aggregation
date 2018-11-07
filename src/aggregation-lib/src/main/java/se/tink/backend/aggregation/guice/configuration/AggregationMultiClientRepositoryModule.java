@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.configurations.repositories.ClientConfigurati
 import se.tink.backend.aggregation.configurations.repositories.ClusterConfigurationsRepository;
 import se.tink.backend.aggregation.configurations.repositories.CryptoConfigurationsRepository;
 import se.tink.backend.common.config.DatabaseConfiguration;
-import se.tink.backend.common.repository.mysql.aggregation.aggregationcredentials.AggregationCredentialsRepository;
 import se.tink.backend.common.repository.mysql.aggregation.clustercryptoconfiguration.ClusterCryptoConfigurationRepository;
 import se.tink.backend.common.repository.mysql.aggregation.clusterhostconfiguration.ClusterHostConfigurationRepository;
 import se.tink.backend.core.ClusterHostConfiguration;
@@ -32,7 +31,6 @@ public class AggregationMultiClientRepositoryModule extends RepositoryModule {
 
     @Override
     protected void bindRepositories() {
-        bindSpringBean(AggregationCredentialsRepository.class);
         bindSpringBean(ClusterHostConfigurationRepository.class);
         bindSpringBean(ClusterCryptoConfigurationRepository.class);
         bindSpringBean(CryptoConfigurationsRepository.class);
