@@ -141,6 +141,7 @@ public class SwedbankDefaultBankTransferExecutorNxgen implements BankTransferExe
                 .map(b -> Beneficiary.builder()
                         .withName(b.getName())
                         .withAccountIdentifier(b.generalGetAccountIdentifier())
+                        .withKeyValue(SwedbankBaseConstants.StorageKey.ID, b.getId())
                         .build())
                 .collect(Collectors.toList());
     }
