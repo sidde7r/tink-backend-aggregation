@@ -105,14 +105,16 @@ public class BankTransferControllerNxgen implements BankTransferExecutor {
         if (sourceAccount == null || !sourceAccount.isValid()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_SOURCE)
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_SOURCE).build();
+                    .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_SOURCE) // todo: should not be Swedbank
+                    .build();
         }
 
         AccountIdentifier destinationAccount = transfer.getDestination();
         if (destinationAccount == null || !destinationAccount.isValid()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_DESTINATION)
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_DESTINATION).build();
+                    .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_DESTINATION) // todo: should not be Swedbank
+                    .build();
         }
     }
 }
