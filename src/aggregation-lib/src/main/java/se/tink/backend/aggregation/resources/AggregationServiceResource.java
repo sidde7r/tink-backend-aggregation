@@ -61,15 +61,15 @@ public class AggregationServiceResource implements AggregationService {
     @Inject
     public AggregationServiceResource(ServiceContext context, MetricRegistry metricRegistry,
             AggregationControllerAggregationClient aggregationControllerAggregationClient,
-            AgentWorker agentWorker,
-            AgentDebugStorageHandler agentDebugStorageHandler) {
+            AgentWorker agentWorker, AgentDebugStorageHandler agentDebugStorageHandler,
+            QueueProducer producer) {
         this.serviceContext = context;
         this.agentWorker = agentWorker;
         this.agentWorkerCommandFactory = new AgentWorkerOperationFactory(serviceContext, metricRegistry,
                 aggregationControllerAggregationClient, agentDebugStorageHandler);
         this.supplementalInformationController = new SupplementalInformationController(serviceContext.getCacheClient(),
                 serviceContext.getCoordinationClient());
-        this.producer = this.serviceContext.getProducer();
+        this.producer = producer;
     }
 
 

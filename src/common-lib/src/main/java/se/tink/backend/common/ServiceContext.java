@@ -19,7 +19,6 @@ import se.tink.backend.common.config.repository.PersistenceUnit;
 import se.tink.backend.common.config.repository.SingletonRepositoryConfiguration;
 import se.tink.backend.common.repository.RepositoryFactory;
 import se.tink.backend.common.utils.ExecutorServiceUtils;
-import se.tink.backend.queue.QueueProducer;
 import se.tink.backend.utils.LogUtils;
 import se.tink.libraries.draining.ApplicationDrainMode;
 import se.tink.libraries.metrics.MetricRegistry;
@@ -39,7 +38,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
     private CuratorFramework zookeeperClient;
     private final MetricRegistry metricRegistry;
     private LoadingCache<Class<?>, Object> DAOs;
-    private QueueProducer producer;
     private ApplicationDrainMode applicationDrainMode;
 
     private ListenableThreadPoolExecutor<Runnable> trackingExecutorService;
@@ -55,19 +53,14 @@ public class ServiceContext implements Managed, RepositoryFactory {
             CacheClient cacheClient, CuratorFramework zookeeperClient,
             @Named("executor") ListenableThreadPoolExecutor<Runnable> executorService,
             @Named("trackingExecutor") ListenableThreadPoolExecutor<Runnable> trackingExecutorService,
-            QueueProducer producer, ApplicationDrainMode applicationDrainMode) {
+            ApplicationDrainMode applicationDrainMode) {
         this.cacheClient = cacheClient;
         this.zookeeperClient = zookeeperClient;
         this.configuration = configuration;
         this.metricRegistry = metricRegistry;
         this.executorService = executorService;
         this.trackingExecutorService = trackingExecutorService;
-        this.producer = producer;
         this.applicationDrainMode = applicationDrainMode;
-    }
-
-    public QueueProducer getProducer() {
-        return producer;
     }
 
     public CacheClient getCacheClient() {
