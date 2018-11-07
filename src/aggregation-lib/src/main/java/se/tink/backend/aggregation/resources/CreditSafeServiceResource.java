@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.api.CreditSafeService;
 import se.tink.backend.aggregation.cluster.annotations.ClusterContext;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
+import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.ConsumerMonitoringWrapper;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.AddMonitoredConsumerCreditSafeRequest;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.ChangedConsumerCreditSafeRequest;
@@ -15,7 +16,6 @@ import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PageableConsu
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PageableConsumerCreditSafeResponse;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PortfolioListResponse;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.RemoveMonitoredConsumerCreditSafeRequest;
-import se.tink.backend.common.ServiceContext;
 import se.tink.backend.common.i18n.SocialSecurityNumber;
 import se.tink.libraries.http.utils.HttpResponseHelper;
 
@@ -26,10 +26,9 @@ public class CreditSafeServiceResource implements CreditSafeService {
     private ConsumerMonitoringWrapper consumerMonitoringWrapper;
 
     @Inject
-    public CreditSafeServiceResource(ServiceContext serviceContext) {
-        this(serviceContext.getConfiguration().getCreditSafe().getUsername(),
-                serviceContext.getConfiguration().getCreditSafe().getPassword(),
-                serviceContext.getConfiguration().getCreditSafe().isLogConsumerMonitoringTraffic());
+    public CreditSafeServiceResource(ServiceConfiguration configuration) {
+        this(configuration.getCreditSafe().getUsername(), configuration.getCreditSafe().getPassword(),
+                configuration.getCreditSafe().isLogConsumerMonitoringTraffic());
     }
 
     CreditSafeServiceResource(String user, String pass, boolean logTraffic) {
