@@ -1,15 +1,12 @@
 package se.tink.backend.aggregation.agents;
 
-import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.google.common.io.Files;
 import io.dropwizard.configuration.ConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -21,10 +18,8 @@ import se.tink.backend.aggregation.log.ClientFilterFactory;
 import se.tink.backend.aggregation.log.HttpLoggingFilterFactory;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
@@ -33,12 +28,10 @@ import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.aggregation.rpc.UserProfile;
 import se.tink.backend.aggregation.utils.CookieContainer;
 import se.tink.backend.aggregation.utils.StringMasker;
-import se.tink.backend.common.config.AggregationWorkerConfiguration;
 import se.tink.backend.core.signableoperation.SignableOperation;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.utils.StringUtils;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigurationBase {
     protected Class<T> cls;
@@ -197,51 +190,6 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
     protected void keepAliveCommand_willClearSession(Credentials credentials, Class<? extends CookieContainer> sessionCls)
             throws Exception {
         keepAliveCommand_willClearSession(credentials, sessionCls, true);
-    }
-
-    protected void loginCommand_willClearInvalidSession(Credentials credentials, Class<? extends CookieContainer> sessionCls,
-                                                        boolean expected) throws Exception {
-        /** Login and save the Session on the Credentials
-         *  Then logout to remove the Session from the banks backend
-         */
-        AgentTestContext testContext = new AgentTestContext(credentials);
-        Agent agent = factory.create(cls, createRefreshInformationRequest(credentials), testContext);
-
-        Assert.assertTrue(agent instanceof PersistentLogin);
-        PersistentLogin persistentAgent = (PersistentLogin) agent;
-
-        Assert.assertTrue(agent.login());
-
-        // Save Session on the Credentials and/or in the agents local memory
-        persistentAgent.persistLoginSession();
-
-        // Logout - Should not clear the session
-        agent.logout();
-
-        // Create a new agent to simulate that we are creating the agent in another request
-        agent = factory.create(cls, createRefreshInformationRequest(credentials), testContext);
-        persistentAgent = (PersistentLogin) agent;
-
-        // Load the invalid Session to the agent
-        persistentAgent.loadLoginSession();
-
-        // Credentials has an existing Session
-        boolean sessionExists = credentials.getPersistentSession(sessionCls) != null;
-        Assert.assertTrue(sessionExists);
-
-        // Forced to fail
-        Assert.assertFalse(persistentAgent.isLoggedIn());
-        // Remove Session
-        persistentAgent.clearLoginSession();
-
-        // Credentials doesn't have an existing Session unless ( expected = false )
-        boolean sessionIsCleared = credentials.getPersistentSession(sessionCls) == null;
-        Assert.assertEquals(sessionIsCleared, expected);
-    }
-
-    protected void loginCommand_willClearInvalidSession(Credentials credentials, Class<? extends CookieContainer> sessionCls)
-            throws Exception {
-        loginCommand_willClearInvalidSession(credentials, sessionCls, true);
     }
 
     /**
@@ -568,11 +516,6 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
 
     }
 
-    protected void testTransferException(String username, String password, CredentialsTypes credentialsType,
-            Transfer transfer) throws Exception {
-        testTransferException(createCredentials(username, password, credentialsType), transfer);
-    }
-
     protected void testTransferException(Credentials credentials, Transfer transfer) throws Exception {
 
         // Create a regular agent.
@@ -666,55 +609,4 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
         return new HttpLoggingFilterFactory(log, "TRANSFER", ImmutableList.<StringMasker>of(), transferExecutor.getClass());
     }
 
-    public AgentTestContext getTestContext() {
-        return testContext;
-    }
-
-    private Agent instantiateAgent(CredentialsRequest request) throws Exception {
-        testContext = new AgentTestContext(request.getCredentials());
-
-        Agent agent = factory.create(cls, request, testContext);
-        agent.setConfiguration(configuration);
-
-        return agent;
-    }
-
-    private void login(Agent agent) throws Exception {
-        try {
-            if (!agent.login()) {
-                throw new AssertionError("Couldn't login due to the login method returned false");
-            }
-        } catch (Exception e) {
-            log.warn("Caught exception on login", e);
-            throw e;
-        }
-    }
-
-    public void writeToDebugFile(Credentials credentials) {
-        try {
-            File debugDirectory = new File(new AggregationWorkerConfiguration().getDebugLogDir());
-            String logContent = testContext.getLogOutputStream().toString("UTF-8");
-
-            if (credentials.getField(Field.Key.PASSWORD) != null) {
-                // TODO: Mask all fields that are set as masked in the provider.
-                logContent = logContent.replace(credentials.getField(Field.Key.PASSWORD), "******");
-            }
-
-            File logFile = new File(debugDirectory, String.format(
-                    "%s_%s_u%s_c%s.log",
-                    credentials.getProviderName(),
-                    ThreadSafeDateFormat.FORMATTER_FILENAME_SAFE.format(new Date()),
-                    credentials.getUserId(),
-                    credentials.getId()));
-
-            Files.write(logContent, logFile, Charsets.UTF_8);
-
-            log.info("Flushed debug log for further investigation: " + logFile.getAbsolutePath());
-
-        } catch (IOException e) {
-            log.error("Could not write logfile for: (provider:"
-                    + credentials.getProviderName() + ", credentialsId:" + credentials.getId() + ", status:"
-                    + credentials.getStatus() + ", userId:" + credentials.getUserId() + ")", e);
-        }
-    }
 }
