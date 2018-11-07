@@ -8,6 +8,7 @@ import io.dropwizard.cli.ConfiguredCommand;
 import io.dropwizard.setup.Bootstrap;
 import java.util.List;
 import net.sourceforge.argparse4j.inf.Namespace;
+import se.tink.backend.aggregation.guice.configuration.AggregationMultiClientRepositoryModule;
 import se.tink.backend.aggregation.guice.configuration.AggregationSingleClientRepositoryModule;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.common.config.ServiceConfiguration;
@@ -31,7 +32,7 @@ public abstract class AggregationServiceContextCommand<T extends ServiceConfigur
                 new CommonModule(),
                 new CoordinationModule(),
                 new ConfigurationModule(configuration),
-                new AggregationSingleClientRepositoryModule(configuration.getDatabase()));
+                new AggregationMultiClientRepositoryModule(configuration.getDatabase()));
 
         Injector injector = Guice.createInjector(modules);
 
