@@ -102,7 +102,7 @@ public class BankTransferControllerNxgen implements BankTransferExecutor {
         return Optional.empty();
     }
 
-    private void validateTransfer(Transfer transfer) {
+    private static void validateTransfer(Transfer transfer) {
         AccountIdentifier sourceAccount = transfer.getSource();
         if (sourceAccount == null || !sourceAccount.isValid()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
