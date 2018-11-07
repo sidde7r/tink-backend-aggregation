@@ -80,11 +80,12 @@ public class AgentWorkerOperationFactory {
     private final AgentDebugStorageHandler agentDebugStorageHandler;
 
     @Inject
-    public AgentWorkerOperationFactory(ServiceContext serviceContext, MetricRegistry metricRegistry,
+    public AgentWorkerOperationFactory(ServiceContext serviceContext, CacheClient cacheClient,
+            MetricRegistry metricRegistry,
             AggregationControllerAggregationClient aggregationControllerAggregationClient, AgentDebugStorageHandler agentDebugStorageHandler) {
         this.clusterCryptoConfigurationRepository =
                 serviceContext.getRepository(ClusterCryptoConfigurationRepository.class);
-        this.cacheClient = serviceContext.getCacheClient();
+        this.cacheClient = cacheClient;
         metricCacheLoader = new MetricCacheLoader(metricRegistry);
 
         // Initialize agent worker command states.
