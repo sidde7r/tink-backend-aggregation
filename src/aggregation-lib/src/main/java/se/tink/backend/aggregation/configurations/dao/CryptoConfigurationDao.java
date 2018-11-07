@@ -21,8 +21,8 @@ public class CryptoConfigurationDao {
     public static CryptoConfiguration convert(ClusterCryptoConfiguration clusterCrypto) {
         CryptoConfiguration configuration = new CryptoConfiguration();
         configuration.setBase64encodedkey(clusterCrypto.getBase64EncodedKey());
-        configuration.setCryptoConfigurationId(CryptoConfigurationId
-                .of(
+        configuration.setCryptoConfigurationId(
+                CryptoConfigurationId.of(
                         clusterCrypto.getCryptoId().getKeyId(),
                         clusterCrypto.getCryptoId().getClusterId()));
         return configuration;
