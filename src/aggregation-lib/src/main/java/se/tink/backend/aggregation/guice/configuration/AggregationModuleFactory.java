@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.inject.Module;
 import io.dropwizard.setup.Environment;
 import se.tink.backend.common.config.ServiceConfiguration;
-import se.tink.backend.guice.configuration.ConfigurationModule;
 import se.tink.libraries.discovery.CoordinationModule;
 
 public class AggregationModuleFactory {
@@ -22,7 +21,7 @@ public class AggregationModuleFactory {
         return new ImmutableList.Builder<Module>()
                 .add(new AggregationCommonModule())
                 .add(new CoordinationModule())
-                .add(new ConfigurationModule(configuration))
+                .add(new AggregationConfigurationModule(configuration))
                 .add(new AggregationModule(configuration, environment.jersey()))
                 .add(new QueueModule(configuration.getSqsQueueConfiguration(), environment.lifecycle()));
     }

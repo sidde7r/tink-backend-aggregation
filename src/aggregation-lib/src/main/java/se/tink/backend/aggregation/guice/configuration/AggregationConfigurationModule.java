@@ -1,4 +1,4 @@
-package se.tink.backend.guice.configuration;
+package se.tink.backend.aggregation.guice.configuration;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
@@ -11,11 +11,11 @@ import se.tink.backend.queue.sqs.configuration.SqsQueueConfiguration;
 import se.tink.libraries.discovery.CoordinationConfiguration;
 import se.tink.libraries.metrics.PrometheusConfiguration;
 
-public class ConfigurationModule extends AbstractModule {
+public class AggregationConfigurationModule extends AbstractModule {
 
     private final ServiceConfiguration configuration;
 
-    public ConfigurationModule(ServiceConfiguration configuration) {
+    public AggregationConfigurationModule(ServiceConfiguration configuration) {
         this.configuration = configuration;
     }
 

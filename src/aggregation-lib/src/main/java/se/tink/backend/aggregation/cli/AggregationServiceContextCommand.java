@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.guice.configuration.AggregationSingleClientRe
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.backend.aggregation.guice.configuration.AggregationCommonModule;
-import se.tink.backend.guice.configuration.ConfigurationModule;
+import se.tink.backend.aggregation.guice.configuration.AggregationConfigurationModule;
 import se.tink.libraries.discovery.CoordinationModule;
 
 public abstract class AggregationServiceContextCommand<T extends ServiceConfiguration> extends ConfiguredCommand<T> {
@@ -31,7 +31,7 @@ public abstract class AggregationServiceContextCommand<T extends ServiceConfigur
         List<AbstractModule> modules = Lists.newArrayList(
                 new AggregationCommonModule(),
                 new CoordinationModule(),
-                new ConfigurationModule(configuration),
+                new AggregationConfigurationModule(configuration),
                 new AggregationMultiClientRepositoryModule(configuration.getDatabase()));
 
         Injector injector = Guice.createInjector(modules);
