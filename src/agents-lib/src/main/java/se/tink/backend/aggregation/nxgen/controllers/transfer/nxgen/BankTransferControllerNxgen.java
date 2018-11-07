@@ -83,14 +83,14 @@ public class BankTransferControllerNxgen implements BankTransferExecutor {
         }
 
         // Build transfer and add it to the outbox
-        OutboxItem transferInput = OutboxItem.builder()
+        OutboxItem outboxItem = OutboxItem.builder()
                 .withSource(source.get())
                 .withDestination(transferDestination)
                 .withAmount(transfer.getAmount())
                 .build();
 
         try {
-            executor.addToOutbox(transferInput);
+            executor.addToOutbox(outboxItem);
             executor.signOutbox();
         } catch (Exception e) {
             // Something failed when we tried to add the or sign the transfer. Clean all existing payments from the
