@@ -6,9 +6,8 @@ import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model.Beneficiary;
-import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model.TransferDestination;
-import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model.TransferEntity;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model.OutboxItem;
+import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model.TransferEntity;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model.TransferSource;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
@@ -54,9 +53,7 @@ public class BankTransferControllerNxgen implements BankTransferExecutor {
         }
 
         // Validate destination for internal transfers
-        Collection<TransferDestination> accountIdentifiers = executor.getInternalTransferDestinations();
-
-        TransferEntity transferDestination = accountIdentifiers.stream()
+        TransferEntity transferDestination = executor.getInternalTransferDestinations().stream()
                 .filter(x -> x.getAccountIdentifier().equals(transfer.getDestination()))
                 .findFirst().orElse(null);
 
@@ -64,12 +61,12 @@ public class BankTransferControllerNxgen implements BankTransferExecutor {
             // Validate destination for external transfers
             Collection<Beneficiary> beneficiaries = executor.getBeneficiaries();
 
-            Beneficiary destinationBeneficiary = beneficiaries.stream()
+            transferDestination = beneficiaries.stream()
                     .filter(x -> x.getAccountIdentifier().equals(transfer.getDestination()))
                     .findFirst().orElse(null);
 
             // Add destination if it isn't found
-            if (destinationBeneficiary == null) {
+            if (transferDestination == null) {
                 Optional<String> name = transfer.getDestination().getName();
 
                 if (!name.isPresent()) {
