@@ -99,7 +99,8 @@ public class BankTransferControllerNxgen implements BankTransferExecutor {
             throw e; // todo, should we rethrow or catch different errors?
         }
 
-        return Optional.empty(); // todo, what should we return?
+        // Todo: this return an optional status message for a Belgian Bank. TBD on how that should work going forward. 
+        return Optional.empty();
     }
 
     private void validateTransfer(Transfer transfer) {
