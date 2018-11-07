@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.i18n.Catalog;
 
 /**
  * TODO adding metrics if necessary
@@ -40,6 +41,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
     private final AggregationControllerAggregationClient aggregationControllerAggregationClient;
     private final List<Account> accountsInRequest;
     private List<Account> accountsInContext;
+    private final Catalog catalog;
 
     public RequestUserOptInAccountsAgentWorkerCommand(AgentWorkerContext context,
             ConfigureWhitelistInformationRequest request,
@@ -51,6 +53,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
         this.supplementalInformationController = new SupplementalInformationController(context , request.getCredentials());
         this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
         this.accountsInRequest = request.getAccounts();
+        this.catalog = context.getCatalog();
     }
 
     // refresh account and send supplemental information to system
@@ -107,12 +110,12 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
         // Send supplemental request to notify the user about empty response from the bank.
         Map<String, String> supplementalInformation = supplementalInformationController.askSupplementalInformation(
                 Field.builder()
-                        .description("The bank returned an empty list of accounts. Is this correct?")
+                        .description(catalog.getString("The bank returned an empty list of accounts. Is this correct?"))
                         .masked(false)
                         .checkbox(true)
                         .pattern("true/false")
                         .name("isCorrect")
-                        .helpText("Please notice that if you reply true, all history of existing accounts will be deleted.")
+                        .helpText(catalog.getString("Please notice that if you reply true, all history of existing accounts will be deleted."))
                         .build());
 
         // Abort if the supplemental information is null or empty.
