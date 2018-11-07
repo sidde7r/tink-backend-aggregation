@@ -3,11 +3,14 @@ package se.tink.backend.aggregation.configurations.models;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import org.apache.commons.codec.binary.Base64;
 import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "crypto_configurations")
 public class CryptoConfiguration {
+    private static final Base64 BASE64 = new Base64();
+
     @EmbeddedId
     private CryptoConfigurationId cryptoConfigurationId;
     @Type(type = "text")
@@ -21,12 +24,13 @@ public class CryptoConfiguration {
         this.cryptoConfigurationId.setKeyId(keyId);
     }
 
-    public String getCryptoId() {
-        return cryptoConfigurationId.getClientName();
+    public CryptoConfigurationId getCryptoConfigurationId() {
+        return cryptoConfigurationId;
     }
 
-    public void setCryptoId(String cryptoId) {
-        this.cryptoConfigurationId.setClientName(cryptoId);
+    public void setCryptoConfigurationId(
+            CryptoConfigurationId cryptoConfigurationId) {
+        this.cryptoConfigurationId = cryptoConfigurationId;
     }
 
     public String getBase64encodedkey() {
@@ -36,4 +40,9 @@ public class CryptoConfiguration {
     public void setBase64encodedkey(String base64encodedkey) {
         this.base64encodedkey = base64encodedkey;
     }
+
+    public byte[] getDecodedKey() {
+        return BASE64.decode(base64encodedkey);
+    }
+
 }

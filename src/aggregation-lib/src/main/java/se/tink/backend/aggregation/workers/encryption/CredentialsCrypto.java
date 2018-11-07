@@ -2,85 +2,35 @@ package se.tink.backend.aggregation.workers.encryption;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
+import se.tink.backend.aggregation.configurations.dao.CryptoConfigurationDao;
+import se.tink.backend.aggregation.configurations.models.CryptoConfiguration;
 import se.tink.backend.aggregation.converter.HostConfigurationConverter;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
-import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.common.cache.CacheClient;
 import se.tink.backend.common.cache.CacheScope;
-import se.tink.backend.common.repository.mysql.aggregation.clustercryptoconfiguration.ClusterCryptoConfigurationRepository;
-import se.tink.backend.core.ClusterCryptoConfiguration;
-import se.tink.backend.core.CryptoId;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CredentialsCrypto {
     private static final AggregationLogger logger = new AggregationLogger(CredentialsCrypto.class);
 
+    private final CryptoConfigurationDao cryptoConfigurationDao;
     private final ClusterInfo clusterInfo;
     private final CacheClient cacheClient;
-    private final ClusterCryptoConfigurationRepository clusterCryptoConfigurationRepository;
     private final AggregationControllerAggregationClient aggregationControllerAggregationClient;
 
-    public CredentialsCrypto(ClusterInfo clusterInfo, CacheClient cacheClient,
-            ClusterCryptoConfigurationRepository clusterCryptoConfigurationRepository,
+    public CredentialsCrypto(CryptoConfigurationDao cryptoConfigurationDao,
+            ClusterInfo clusterInfo, CacheClient cacheClient,
             AggregationControllerAggregationClient aggregationControllerAggregationClient) {
+        this.cryptoConfigurationDao = cryptoConfigurationDao;
         this.clusterInfo = clusterInfo;
         this.cacheClient = cacheClient;
-        this.clusterCryptoConfigurationRepository = clusterCryptoConfigurationRepository;
         this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
-    }
-
-    private Optional<ClusterCryptoConfiguration> getClusterCryptoConfigurationFromClusterId(ClusterId clusterId) {
-        // Get the most recent (keyId, key) for clusterId.getId()
-        List<ClusterCryptoConfiguration> clusterCryptoConfigurations = clusterCryptoConfigurationRepository
-                .findByCryptoIdClusterId(clusterId.getId());
-
-        // Get the highest (most recent) keyId.
-        return clusterCryptoConfigurations.stream().max(Comparator.comparing(t -> t.getCryptoId().getKeyId()));
-    }
-
-    private Optional<byte[]> getClusterKeyFromKeyId(ClusterId clusterId, int keyId) {
-        CryptoId cryptoId = new CryptoId();
-        cryptoId.setClusterId(clusterId.getId());
-        cryptoId.setKeyId(keyId);
-        ClusterCryptoConfiguration clusterCryptoConfiguration = clusterCryptoConfigurationRepository
-                .findByCryptoId(cryptoId);
-
-        if (Objects.isNull(clusterCryptoConfiguration)) {
-            return Optional.empty();
-        }
-
-        return Optional.of(clusterCryptoConfiguration.getDecodedKey());
-    }
-
-    private String pickMostRecentSensitiveData(String a, String b) {
-        // Return the other one if one is null.
-        if (Strings.isNullOrEmpty(a)) {
-            return b;
-        } else if (Strings.isNullOrEmpty(b)) {
-            return a;
-        }
-
-        // Return the latest one if both are set.
-        EncryptedCredentials baseA = SerializationUtils.deserializeFromString(
-                a, EncryptedCredentials.class);
-
-        EncryptedCredentials baseB = SerializationUtils.deserializeFromString(
-                b, EncryptedCredentials.class);
-
-        if (baseA.getTimestamp().after(baseB.getTimestamp())) {
-            return a;
-        } else {
-            return b;
-        }
     }
 
     public boolean decrypt(CredentialsRequest request) {
@@ -106,7 +56,8 @@ public class CredentialsCrypto {
         EncryptedCredentials encryptedCredentials = Preconditions.checkNotNull(
                 SerializationUtils.deserializeFromString(sensitiveData, EncryptedCredentials.class));
 
-        Optional<byte[]> key = getClusterKeyFromKeyId(clusterInfo.getClusterId(), encryptedCredentials.getKeyId());
+        Optional<byte[]> key = cryptoConfigurationDao
+                .getClusterKeyFromKeyId(clusterInfo.getClusterId(), encryptedCredentials.getKeyId());
         if (!key.isPresent()) {
             logger.error(String.format("Could not find encryption key for %s:%d",
                     clusterInfo.getClusterId().getId(),
@@ -129,15 +80,15 @@ public class CredentialsCrypto {
     }
 
     public boolean encrypt(CredentialsRequest request, boolean doUpdateCredential) {
-        Optional<ClusterCryptoConfiguration> clusterCryptoConfiguration = getClusterCryptoConfigurationFromClusterId(
+        Optional<CryptoConfiguration> cryptoConfiguration = cryptoConfigurationDao.getClusterCryptoConfigurationFromClusterId(
                 clusterInfo.getClusterId());
-        if (!clusterCryptoConfiguration.isPresent()) {
+        if (!cryptoConfiguration.isPresent()) {
             logger.error(String.format("Could not find crypto configuration %s", clusterInfo.getClusterId().getId()));
             return false;
         }
 
-        int clusterKeyId = clusterCryptoConfiguration.get().getCryptoId().getKeyId();
-        byte[] clusterKey = clusterCryptoConfiguration.get().getDecodedKey();
+        int clusterKeyId = cryptoConfiguration.get().getCryptoConfigurationId().getKeyId();
+        byte[] clusterKey = cryptoConfiguration.get().getDecodedKey();
 
         Credentials originalCredentials = request.getCredentials();
         Credentials sensitiveInformationCredentials = originalCredentials.clone();
@@ -172,4 +123,27 @@ public class CredentialsCrypto {
 
         return true;
     }
+
+    private String pickMostRecentSensitiveData(String a, String b) {
+        // Return the other one if one is null.
+        if (Strings.isNullOrEmpty(a)) {
+            return b;
+        } else if (Strings.isNullOrEmpty(b)) {
+            return a;
+        }
+
+        // Return the latest one if both are set.
+        EncryptedCredentials baseA = SerializationUtils.deserializeFromString(
+                a, EncryptedCredentials.class);
+
+        EncryptedCredentials baseB = SerializationUtils.deserializeFromString(
+                b, EncryptedCredentials.class);
+
+        if (baseA.getTimestamp().after(baseB.getTimestamp())) {
+            return a;
+        } else {
+            return b;
+        }
+    }
+
 }
