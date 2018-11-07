@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.workers.commands.state;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Lists;
+import javax.inject.Inject;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.workers.AgentWorkerOperationMetricType;
 import se.tink.backend.aggregation.workers.commands.LoginAgentWorkerCommand;
@@ -29,6 +30,7 @@ public class LoginAgentWorkerCommandState {
     private LoadingCache<MetricId.MetricLabels, Timer> loginTimer;
     private LoadingCache<MetricId.MetricLabels, Timer> logoutTimer;
 
+    @Inject
     public LoginAgentWorkerCommandState(MetricRegistry metricRegistry) {
         CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.newBuilder();
 

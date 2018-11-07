@@ -21,6 +21,7 @@ public class AggregationModuleFactory {
         return new ImmutableList.Builder<Module>()
                 .add(new AggregationCommonModule())
                 .add(new CoordinationModule())
+                .add(new AgentWorkerCommandModule())
                 .add(new AggregationConfigurationModule(configuration))
                 .add(new AggregationModule(configuration, environment.jersey()))
                 .add(new QueueModule(configuration.getSqsQueueConfiguration(), environment.lifecycle()));

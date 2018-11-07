@@ -84,20 +84,24 @@ public class AgentWorkerOperationFactory {
     public AgentWorkerOperationFactory(ServiceContext serviceContext, CacheClient cacheClient,
             MetricRegistry metricRegistry,
             AggregationControllerAggregationClient aggregationControllerAggregationClient,
-            AgentDebugStorageHandler agentDebugStorageHandler, ServiceConfiguration configuration) {
+            AgentDebugStorageHandler agentDebugStorageHandler, AgentWorkerOperationState agentWorkerOperationState,
+            DebugAgentWorkerCommandState debugAgentWorkerCommandState,
+            CircuitBreakerAgentWorkerCommandState circuitBreakerAgentWorkerCommandState,
+            InstantiateAgentWorkerCommandState instantiateAgentWorkerCommandState,
+            LoginAgentWorkerCommandState loginAgentWorkerCommandState,
+            ReportProviderMetricsAgentWorkerCommandState reportProviderMetricsAgentWorkerCommandState) {
         this.clusterCryptoConfigurationRepository =
                 serviceContext.getRepository(ClusterCryptoConfigurationRepository.class);
         this.cacheClient = cacheClient;
         metricCacheLoader = new MetricCacheLoader(metricRegistry);
 
         // Initialize agent worker command states.
-        agentWorkerOperationState = new AgentWorkerOperationState(metricRegistry);
-        debugAgentWorkerCommandState = new DebugAgentWorkerCommandState(serviceContext);
-        circuitBreakAgentWorkerCommandState = new CircuitBreakerAgentWorkerCommandState(
-                configuration.getAggregationWorker().getCircuitBreaker(), metricRegistry);
-        instantiateAgentWorkerCommandState = new InstantiateAgentWorkerCommandState(serviceContext);
-        loginAgentWorkerCommandState = new LoginAgentWorkerCommandState(metricRegistry);
-        reportMetricsAgentWorkerCommandState = new ReportProviderMetricsAgentWorkerCommandState(metricRegistry);
+        this.agentWorkerOperationState = agentWorkerOperationState;
+        this.debugAgentWorkerCommandState = debugAgentWorkerCommandState;
+        circuitBreakAgentWorkerCommandState = circuitBreakerAgentWorkerCommandState;
+        this.instantiateAgentWorkerCommandState = instantiateAgentWorkerCommandState;
+        this.loginAgentWorkerCommandState = loginAgentWorkerCommandState;
+        this.reportMetricsAgentWorkerCommandState = reportProviderMetricsAgentWorkerCommandState;
 
         this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
         this.metricRegistry = metricRegistry;

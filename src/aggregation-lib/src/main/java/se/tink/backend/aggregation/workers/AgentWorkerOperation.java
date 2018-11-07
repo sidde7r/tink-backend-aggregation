@@ -5,6 +5,7 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import javax.inject.Inject;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
@@ -19,6 +20,7 @@ public class AgentWorkerOperation implements Runnable {
     public static class AgentWorkerOperationState {
         private LoadingCache<MetricId.MetricLabels, Timer> commandExecutionsTimers;
 
+        @Inject
         public AgentWorkerOperationState(MetricRegistry metricRegistry) {
             commandExecutionsTimers = CacheBuilder.newBuilder().build(new TimerCacheLoader(
                     metricRegistry, "command_executions_duration"));
