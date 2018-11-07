@@ -21,7 +21,6 @@ import se.tink.backend.common.repository.RepositoryFactory;
 import se.tink.backend.common.utils.ExecutorServiceUtils;
 import se.tink.backend.utils.LogUtils;
 import se.tink.libraries.draining.ApplicationDrainMode;
-import se.tink.libraries.metrics.MetricRegistry;
 
 /**
  * Do not use this class in new code anymore. This class is going to be removed.
@@ -36,7 +35,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
     private CacheClient cacheClient;
     private final ServiceConfiguration configuration;
     private CuratorFramework zookeeperClient;
-    private final MetricRegistry metricRegistry;
     private LoadingCache<Class<?>, Object> DAOs;
     private ApplicationDrainMode applicationDrainMode;
 
@@ -49,15 +47,15 @@ public class ServiceContext implements Managed, RepositoryFactory {
     private ListenableThreadPoolExecutor<Runnable> executorService;
 
     @Inject
-    public ServiceContext(final ServiceConfiguration configuration, MetricRegistry metricRegistry,
-            CacheClient cacheClient, CuratorFramework zookeeperClient,
+    public ServiceContext(final ServiceConfiguration configuration,
+            CacheClient cacheClient,
+            CuratorFramework zookeeperClient,
             @Named("executor") ListenableThreadPoolExecutor<Runnable> executorService,
             @Named("trackingExecutor") ListenableThreadPoolExecutor<Runnable> trackingExecutorService,
             ApplicationDrainMode applicationDrainMode) {
         this.cacheClient = cacheClient;
         this.zookeeperClient = zookeeperClient;
         this.configuration = configuration;
-        this.metricRegistry = metricRegistry;
         this.executorService = executorService;
         this.trackingExecutorService = trackingExecutorService;
         this.applicationDrainMode = applicationDrainMode;
