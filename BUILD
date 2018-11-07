@@ -372,6 +372,7 @@ java_library(
         "//src/api-annotations",
         "//src/libraries/cli_print_utils:cli_print_utils",
         "//src/libraries/creditsafe_consumer_monitoring:creditsafe_consumer_monitoring",
+        "//src/libraries/draining:draining",
 
         "//third_party:org_springframework_spring_expression",
         "//third_party:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",

@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.workers.AgentWorkerOperationMetricType;
 import se.tink.backend.aggregation.workers.commands.LoginAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.metrics.TimerCacheLoader;
-import se.tink.backend.common.ServiceContext;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.metrics.Timer;
@@ -30,8 +29,7 @@ public class LoginAgentWorkerCommandState {
     private LoadingCache<MetricId.MetricLabels, Timer> loginTimer;
     private LoadingCache<MetricId.MetricLabels, Timer> logoutTimer;
 
-    public LoginAgentWorkerCommandState(ServiceContext serviceContext,
-                                        MetricRegistry metricRegistry) {
+    public LoginAgentWorkerCommandState(MetricRegistry metricRegistry) {
         CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.newBuilder();
 
         loadPersistentSessionTimer = cacheBuilder

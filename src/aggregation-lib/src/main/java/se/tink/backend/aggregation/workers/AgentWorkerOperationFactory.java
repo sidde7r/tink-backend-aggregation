@@ -57,6 +57,7 @@ import se.tink.backend.aggregation.workers.refresh.ProcessableItem;
 import se.tink.backend.common.ServiceContext;
 import se.tink.backend.common.cache.CacheClient;
 import se.tink.backend.aggregation.configurations.repositories.ClusterCryptoConfigurationRepository;
+import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.libraries.metrics.MetricRegistry;
 
 public class AgentWorkerOperationFactory {
@@ -82,7 +83,8 @@ public class AgentWorkerOperationFactory {
     @Inject
     public AgentWorkerOperationFactory(ServiceContext serviceContext, CacheClient cacheClient,
             MetricRegistry metricRegistry,
-            AggregationControllerAggregationClient aggregationControllerAggregationClient, AgentDebugStorageHandler agentDebugStorageHandler) {
+            AggregationControllerAggregationClient aggregationControllerAggregationClient,
+            AgentDebugStorageHandler agentDebugStorageHandler, ServiceConfiguration configuration) {
         this.clusterCryptoConfigurationRepository =
                 serviceContext.getRepository(ClusterCryptoConfigurationRepository.class);
         this.cacheClient = cacheClient;
@@ -92,9 +94,9 @@ public class AgentWorkerOperationFactory {
         agentWorkerOperationState = new AgentWorkerOperationState(metricRegistry);
         debugAgentWorkerCommandState = new DebugAgentWorkerCommandState(serviceContext);
         circuitBreakAgentWorkerCommandState = new CircuitBreakerAgentWorkerCommandState(
-                serviceContext.getConfiguration().getAggregationWorker().getCircuitBreaker(), metricRegistry);
+                configuration.getAggregationWorker().getCircuitBreaker(), metricRegistry);
         instantiateAgentWorkerCommandState = new InstantiateAgentWorkerCommandState(serviceContext);
-        loginAgentWorkerCommandState = new LoginAgentWorkerCommandState(serviceContext, metricRegistry);
+        loginAgentWorkerCommandState = new LoginAgentWorkerCommandState(metricRegistry);
         reportMetricsAgentWorkerCommandState = new ReportProviderMetricsAgentWorkerCommandState(metricRegistry);
 
         this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
