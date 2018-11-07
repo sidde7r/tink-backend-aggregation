@@ -795,7 +795,7 @@
     "popular" : true,
     "refreshFrequency" : 1.0,
     "refreshFrequencyFactor" : 1.0,
-    "status" : "ENABLED",
+    "status" : "DISABLED",
     "transactional" : true,
     "type" : "BANK",
     "displayDescription" : "Password",
