@@ -9,8 +9,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 /**
  * Configures a JPAInstanceBuilderFactoryFactoryBuilder. *joke*
  * <p>
- * On a more serious note, this interface exists to make sure that {@link MainRepositoryConfiguration} and
- * {@link AggregationRepositoryConfiguration} implement the same bean factories.
+ * On a more serious note, this interface exists to make sure that {@link AggregationRepositoryConfiguration}
+ * implement the same bean factories.
  * </p>
  */
 interface RepositoryConfigurator {
