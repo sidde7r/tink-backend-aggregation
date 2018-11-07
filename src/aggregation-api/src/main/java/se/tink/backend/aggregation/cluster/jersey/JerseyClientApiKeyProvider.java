@@ -12,9 +12,8 @@ import java.lang.reflect.Type;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import se.tink.backend.aggregation.cluster.annotations.ClientContext;
-import se.tink.backend.aggregation.cluster.exception.ClientNotValid;
+import se.tink.backend.aggregation.cluster.exceptions.ClientNotValid;
 import se.tink.backend.aggregation.cluster.identification.ClientApiKey;
-import se.tink.backend.aggregation.cluster.provider.ClientApiKeyProvider;
 
 public class JerseyClientApiKeyProvider extends AbstractHttpContextInjectable<ClientApiKey>
         implements InjectableProvider<ClientContext, Type> {

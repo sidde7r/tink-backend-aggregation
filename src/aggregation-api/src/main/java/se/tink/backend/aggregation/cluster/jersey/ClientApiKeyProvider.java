@@ -1,6 +1,6 @@
-package se.tink.backend.aggregation.cluster.provider;
+package se.tink.backend.aggregation.cluster.jersey;
 
-import se.tink.backend.aggregation.cluster.exception.ClientNotValid;
+import se.tink.backend.aggregation.cluster.exceptions.ClientNotValid;
 import se.tink.backend.aggregation.cluster.identification.ClientApiKey;
 
 public class ClientApiKeyProvider {
