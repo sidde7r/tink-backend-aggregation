@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen;
 
+import com.google.common.base.Preconditions;
 import java.util.Collection;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
@@ -17,6 +18,7 @@ public class BankTransferControllerNxgen implements BankTransferExecutor {
     private final BankTransferExecutorNxgen executor;
 
     public BankTransferControllerNxgen(BankTransferExecutorNxgen executor) {
+        Preconditions.checkNotNull(executor, "Executor must not be null");
         this.executor = executor;
     }
 
