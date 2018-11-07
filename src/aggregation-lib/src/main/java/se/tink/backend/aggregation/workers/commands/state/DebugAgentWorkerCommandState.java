@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.workers.commands.state;
 
 import javax.inject.Inject;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.common.ServiceContext;
 
 import java.io.File;
 import se.tink.backend.common.config.ServiceConfiguration;

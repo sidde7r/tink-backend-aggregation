@@ -29,7 +29,6 @@ import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.rpc.SupplementInformationRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.rpc.UpdateCredentialsRequest;
-import se.tink.backend.aggregation.storage.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.backend.aggregation.workers.AgentWorkerOperation;
 import se.tink.backend.aggregation.workers.AgentWorkerRefreshOperationCreatorWrapper;
@@ -37,12 +36,10 @@ import se.tink.backend.aggregation.workers.AgentWorkerOperationFactory;
 import se.tink.backend.aggregation.workers.ratelimit.DefaultProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.ratelimit.OverridingProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.ratelimit.ProviderRateLimiterFactory;
-import se.tink.backend.common.ServiceContext;
 import se.tink.backend.common.cache.CacheClient;
 import se.tink.backend.queue.QueueProducer;
 import se.tink.libraries.draining.ApplicationDrainMode;
 import se.tink.libraries.http.utils.HttpResponseHelper;
-import se.tink.libraries.metrics.MetricRegistry;
 
 @Path("/aggregation")
 public class AggregationServiceResource implements AggregationService {
