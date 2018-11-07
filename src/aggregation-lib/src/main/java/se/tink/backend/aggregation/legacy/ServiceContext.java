@@ -1,4 +1,4 @@
-package se.tink.backend.common;
+package se.tink.backend.aggregation.legacy;
 
 import com.google.common.base.Preconditions;
 import com.google.common.cache.LoadingCache;

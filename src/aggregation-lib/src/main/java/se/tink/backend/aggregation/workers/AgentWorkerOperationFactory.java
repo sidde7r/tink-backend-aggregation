@@ -54,7 +54,7 @@ import se.tink.backend.aggregation.workers.commands.state.ReportProviderMetricsA
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
 import se.tink.backend.aggregation.workers.metrics.MetricCacheLoader;
 import se.tink.backend.aggregation.workers.refresh.ProcessableItem;
-import se.tink.backend.common.ServiceContext;
+import se.tink.backend.aggregation.legacy.ServiceContext;
 import se.tink.backend.common.cache.CacheClient;
 import se.tink.backend.aggregation.configurations.repositories.ClusterCryptoConfigurationRepository;
 import se.tink.libraries.metrics.MetricRegistry;

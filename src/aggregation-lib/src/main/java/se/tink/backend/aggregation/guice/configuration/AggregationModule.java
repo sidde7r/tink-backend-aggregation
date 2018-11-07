@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.storage.AgentDebugLocalStorage;
 import se.tink.backend.aggregation.storage.AgentDebugS3Storage;
 import se.tink.backend.aggregation.storage.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorker;
-import se.tink.backend.common.ServiceContext;
+import se.tink.backend.aggregation.legacy.ServiceContext;
 import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.libraries.http.client.RequestTracingFilter;
 import se.tink.libraries.jersey.guice.JerseyResourceRegistrar;
