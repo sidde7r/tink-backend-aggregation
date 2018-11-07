@@ -15,6 +15,7 @@ import net.sourceforge.argparse4j.inf.Namespace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.provider.configuration.cli.util.ProviderConfigurationComparator;
+import se.tink.backend.aggregation.provider.configuration.config.ProviderServiceConfiguration;
 import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
 import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ClusterProviderListModel;
 import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ProviderConfigModel;
@@ -37,7 +38,7 @@ import java.util.stream.Collectors;
     provider-override-AT.json ...
  */
 
-public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<ServiceConfiguration> {
+public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<ProviderServiceConfiguration> {
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final Logger log = LoggerFactory.getLogger(GenerateProviderOnClusterFilesCommand.class);
     private String RAW_PROVIDER_DATA_PATH;
@@ -290,7 +291,7 @@ public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<Ser
     }
 
     @Override
-    protected void run(Bootstrap<ServiceConfiguration> bootstrap, Namespace namespace, ServiceConfiguration ServiceConfiguration) throws Exception {
+    protected void run(Bootstrap<ProviderServiceConfiguration> bootstrap, Namespace namespace, ProviderServiceConfiguration providerServiceConfiguration) throws Exception {
         String clusterId = System.getProperty("clusterid");
         String projectPath = System.getProperty("path");
         setPaths(clusterId, projectPath);
