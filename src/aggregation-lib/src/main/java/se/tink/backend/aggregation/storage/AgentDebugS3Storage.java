@@ -4,16 +4,13 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.AmazonS3Exception;
-import com.amazonaws.services.s3.model.Bucket;
 import java.io.File;
 import java.io.IOException;
 import com.google.inject.Inject;
 import java.util.Objects;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.common.config.S3StorageConfiguration;
+import se.tink.backend.aggregation.configurations.S3StorageConfiguration;
 
 
 public class AgentDebugS3Storage implements AgentDebugStorageHandler {
