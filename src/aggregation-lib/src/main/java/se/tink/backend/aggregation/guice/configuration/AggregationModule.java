@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAg
 import se.tink.backend.aggregation.api.AggregationService;
 import se.tink.backend.aggregation.api.CreditSafeService;
 import se.tink.backend.aggregation.cluster.jersey.JerseyClusterInfoProvider;
+import se.tink.backend.aggregation.configurations.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.configurations.providers.ClusterInfoProvider;
 import se.tink.backend.aggregation.log.AggregationLoggerRequestFilter;
 import se.tink.backend.aggregation.resources.AggregationServiceResource;
@@ -17,7 +18,6 @@ import se.tink.backend.aggregation.storage.AgentDebugS3Storage;
 import se.tink.backend.aggregation.storage.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.backend.aggregation.legacy.ServiceContext;
-import se.tink.backend.aggregation.configurations.ServiceConfiguration;
 import se.tink.libraries.http.client.RequestTracingFilter;
 import se.tink.libraries.jersey.guice.JerseyResourceRegistrar;
 import se.tink.libraries.jersey.logging.AccessLoggingFilter;
@@ -25,9 +25,9 @@ import se.tink.libraries.jersey.logging.ResourceTimerFilterFactory;
 
 public class AggregationModule extends AbstractModule {
     private final JerseyEnvironment jersey;
-    private final ServiceConfiguration configuration;
+    private final AggregationServiceConfiguration configuration;
 
-    AggregationModule(ServiceConfiguration configuration, JerseyEnvironment jersey) {
+    AggregationModule(AggregationServiceConfiguration configuration, JerseyEnvironment jersey) {
         this.configuration = configuration;
         this.jersey = jersey;
     }

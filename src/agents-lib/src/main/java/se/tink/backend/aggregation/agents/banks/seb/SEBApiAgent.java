@@ -246,7 +246,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
     /**
      * Pass in configuration of the mortgage integration to the module, so that we can inject it into api configuration
      *
-     * @param configuration ServiceConfiguration guaranteed to contain integrations configuration for SEB Mortgage
+     * @param configuration AggregationServiceConfiguration guaranteed to contain integrations configuration for SEB Mortgage
      */
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {

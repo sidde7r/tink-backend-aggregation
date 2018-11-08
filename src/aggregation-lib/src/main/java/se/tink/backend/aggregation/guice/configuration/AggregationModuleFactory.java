@@ -3,12 +3,12 @@ package se.tink.backend.aggregation.guice.configuration;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Module;
 import io.dropwizard.setup.Environment;
-import se.tink.backend.aggregation.configurations.ServiceConfiguration;
+import se.tink.backend.aggregation.configurations.AggregationServiceConfiguration;
 import se.tink.libraries.discovery.CoordinationModule;
 
 public class AggregationModuleFactory {
 
-    public static ImmutableList<Module> build(ServiceConfiguration configuration, Environment environment) {
+    public static ImmutableList<Module> build(AggregationServiceConfiguration configuration, Environment environment) {
         if (configuration.isDevelopmentMode()) {
             return buildForDevelopment(configuration, environment).build();
         }
@@ -16,7 +16,7 @@ public class AggregationModuleFactory {
         return buildForProduction(configuration, environment).build();
     }
 
-    private static ImmutableList.Builder<Module> baseBuilder(ServiceConfiguration configuration,
+    private static ImmutableList.Builder<Module> baseBuilder(AggregationServiceConfiguration configuration,
                                                              Environment environment) {
         return new ImmutableList.Builder<Module>()
                 .add(new AggregationCommonModule())
@@ -27,7 +27,7 @@ public class AggregationModuleFactory {
                 .add(new QueueModule(configuration.getSqsQueueConfiguration(), environment.lifecycle()));
     }
 
-    private static ImmutableList.Builder<Module> buildForDevelopment(ServiceConfiguration configuration,
+    private static ImmutableList.Builder<Module> buildForDevelopment(AggregationServiceConfiguration configuration,
             Environment environment) {
 
         if (configuration.isMultiClientDevelopment()){
@@ -40,7 +40,7 @@ public class AggregationModuleFactory {
                         configuration.getDevelopmentConfiguration()));
     }
 
-    private static ImmutableList.Builder<Module> buildForProduction(ServiceConfiguration configuration,
+    private static ImmutableList.Builder<Module> buildForProduction(AggregationServiceConfiguration configuration,
             Environment environment) {
 
         if (configuration.isMultiClientDevelopment()) {

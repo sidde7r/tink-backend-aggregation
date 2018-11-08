@@ -5,18 +5,18 @@ import com.google.inject.name.Names;
 import com.google.inject.util.Providers;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configurations.AggregationDevelopmentConfiguration;
+import se.tink.backend.aggregation.configurations.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.configurations.CacheConfiguration;
 import se.tink.backend.aggregation.configurations.S3StorageConfiguration;
-import se.tink.backend.aggregation.configurations.ServiceConfiguration;
 import se.tink.backend.queue.sqs.configuration.SqsQueueConfiguration;
 import se.tink.libraries.discovery.CoordinationConfiguration;
 import se.tink.libraries.metrics.PrometheusConfiguration;
 
 public class AggregationConfigurationModule extends AbstractModule {
 
-    private final ServiceConfiguration configuration;
+    private final AggregationServiceConfiguration configuration;
 
-    public AggregationConfigurationModule(ServiceConfiguration configuration) {
+    public AggregationConfigurationModule(AggregationServiceConfiguration configuration) {
         this.configuration = configuration;
     }
 
@@ -34,7 +34,7 @@ public class AggregationConfigurationModule extends AbstractModule {
         // Tink monolith (common-lib and main-api) configurations
         bind(CacheConfiguration.class).toProvider(Providers.of(configuration.getCacheConfiguration()));
         bind(SqsQueueConfiguration.class).toProvider(Providers.of(configuration.getSqsQueueConfiguration()));
-        bind(ServiceConfiguration.class).toInstance(configuration);
+        bind(AggregationServiceConfiguration.class).toInstance(configuration);
         bind(AgentsServiceConfiguration.class).toInstance(configuration.getAgentsServiceConfiguration());
 
         if (configuration.isDevelopmentMode() &&

@@ -11,10 +11,10 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import org.apache.curator.framework.CuratorFramework;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import se.tink.backend.aggregation.configurations.AggregationServiceConfiguration;
 import se.tink.backend.common.cache.CacheClient;
 import se.tink.backend.common.concurrency.ListenableThreadPoolExecutor;
 import se.tink.backend.common.config.DatabaseConfiguration;
-import se.tink.backend.aggregation.configurations.ServiceConfiguration;
 import se.tink.backend.common.config.repository.PersistenceUnit;
 import se.tink.backend.common.config.repository.SingletonRepositoryConfiguration;
 import se.tink.backend.common.repository.RepositoryFactory;
@@ -34,7 +34,7 @@ public class ServiceContext implements Managed, RepositoryFactory {
 
     private AnnotationConfigApplicationContext applicationContext;
     private CacheClient cacheClient;
-    private final ServiceConfiguration configuration;
+    private final AggregationServiceConfiguration configuration;
     private CuratorFramework zookeeperClient;
     private LoadingCache<Class<?>, Object> DAOs;
     private ApplicationDrainMode applicationDrainMode;
@@ -48,7 +48,7 @@ public class ServiceContext implements Managed, RepositoryFactory {
     private ListenableThreadPoolExecutor<Runnable> executorService;
 
     @Inject
-    public ServiceContext(final ServiceConfiguration configuration,
+    public ServiceContext(final AggregationServiceConfiguration configuration,
             CacheClient cacheClient,
             CuratorFramework zookeeperClient,
             @Named("executor") ListenableThreadPoolExecutor<Runnable> executorService,
@@ -66,7 +66,7 @@ public class ServiceContext implements Managed, RepositoryFactory {
         return cacheClient;
     }
 
-    public ServiceConfiguration getConfiguration() {
+    public AggregationServiceConfiguration getConfiguration() {
         return configuration;
     }
 

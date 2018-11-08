@@ -8,7 +8,7 @@ import se.tink.backend.common.config.DatabaseConfiguration;
 import se.tink.backend.queue.sqs.configuration.SqsQueueConfiguration;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ServiceConfiguration extends Configuration {
+public class AggregationServiceConfiguration extends Configuration {
     @JsonProperty
     private AgentsServiceConfiguration agentsServiceConfiguration = new AgentsServiceConfiguration();
 

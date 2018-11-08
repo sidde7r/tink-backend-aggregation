@@ -11,12 +11,12 @@ import net.sourceforge.argparse4j.inf.Namespace;
 import se.tink.backend.aggregation.guice.configuration.AggregationMultiClientRepositoryModule;
 import se.tink.backend.aggregation.guice.configuration.AggregationSingleClientRepositoryModule;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.configurations.ServiceConfiguration;
+import se.tink.backend.aggregation.configurations.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.guice.configuration.AggregationCommonModule;
 import se.tink.backend.aggregation.guice.configuration.AggregationConfigurationModule;
 import se.tink.libraries.discovery.CoordinationModule;
 
-public abstract class AggregationServiceContextCommand<T extends ServiceConfiguration> extends ConfiguredCommand<T> {
+public abstract class AggregationServiceContextCommand<T extends AggregationServiceConfiguration> extends ConfiguredCommand<T> {
     private static final AggregationLogger log = new AggregationLogger(AggregationServiceContextCommand.class);
 
     protected AggregationServiceContextCommand(String name, String description) {
