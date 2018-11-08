@@ -115,7 +115,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
                         .checkbox(true)
                         .pattern("true/false")
                         .name("isCorrect")
-                        .helpText(catalog.getString("Please notice that if you reply true, all history of existing accounts will be deleted."))
+                        .helpText(catalog.getString("Please be aware of that checking this box will delete the history of your accounts"))
                         .build());
 
         // Abort if the supplemental information is null or empty.
