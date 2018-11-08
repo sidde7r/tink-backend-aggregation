@@ -21,7 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.framework.validation.ExtensiveAisValidator;
-import se.tink.backend.aggregation.cluster.identification.Aggregator;
+import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -69,7 +69,7 @@ public class NewAgentTestContext extends AgentContext {
         this.transactionsToPrint = transactionsToPrint;
 
         setTestContext(true);
-        setAggregator(Aggregator.getDefault());
+        setAggregator(AggregatorInfo.getAggregatorForTesting());
     }
 
     @Override

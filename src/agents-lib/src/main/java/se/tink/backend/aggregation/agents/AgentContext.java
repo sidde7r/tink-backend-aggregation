@@ -8,9 +8,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.apache.curator.framework.CuratorFramework;
 import se.tink.backend.aggregation.api.AggregatorInfo;
-import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
-import se.tink.backend.aggregation.converter.AggregatorConverter;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
@@ -32,7 +30,7 @@ public abstract class AgentContext {
     protected boolean isTestContext = false;
     private boolean isWaitingOnConnectorTransactions = false;
     private ClusterInfo clusterInfo;
-    private Aggregator aggregator;
+    private AggregatorInfo aggregatorInfo;
     public abstract Catalog getCatalog();
 
     public abstract CuratorFramework getCoordinationClient();
@@ -48,15 +46,15 @@ public abstract class AgentContext {
     }
 
     public AggregatorInfo getAggregatorInfo() {
-        return AggregatorConverter.convert(aggregator);
+        return aggregatorInfo;
     }
 
     public void setClusterInfo(ClusterInfo clusterInfo) {
         this.clusterInfo = clusterInfo;
     }
 
-    public void setAggregator(Aggregator aggregator) {
-        this.aggregator = aggregator;
+    public void setAggregator(AggregatorInfo aggregatorInfo) {
+        this.aggregatorInfo = aggregatorInfo;
     }
 
     private String formatCredentialsStatusPayloadSuffix(long numberOfAccounts, long numberOfTransactions,
