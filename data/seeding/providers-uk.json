@@ -59,7 +59,7 @@
       "credentialsType": "PASSWORD",
       "displayName": "Danske Bank",
       "fields": [],
-      "payload": "tink:danskebank",
+      "payload": "tink2:danskebank",
       "groupDisplayName": "",
       "multiFactor": false,
       "passwordhelptext": "Authentication is done on external page",
