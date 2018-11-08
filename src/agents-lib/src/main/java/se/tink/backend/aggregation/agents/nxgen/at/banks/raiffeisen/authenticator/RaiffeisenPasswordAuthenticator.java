@@ -11,8 +11,11 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.codec.binary.Hex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.RaiffeisenConstants;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.RaiffeisenSessionStorage;
@@ -21,9 +24,10 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.libraries.i18n.LocalizableKey;
 
 public class RaiffeisenPasswordAuthenticator implements PasswordAuthenticator {
-
+    private static final Logger logger = LoggerFactory.getLogger(RaiffeisenPasswordAuthenticator.class);
     private final RaiffeisenWebApiClient apiClient;
     private final RaiffeisenSessionStorage sessionStorage;
 
@@ -98,11 +102,33 @@ public class RaiffeisenPasswordAuthenticator implements PasswordAuthenticator {
         return Hex.encodeHexString(digest).toLowerCase(Locale.US);
     }
 
+    private void checkUsername(final String username) throws LoginException {
+        final int usernameLength = RaiffeisenConstants.IntValues.USERNAME_LENGTH;
+        if (username.length() != usernameLength) {
+            logger.warn("The signatory number has {} characters; expected {} characters", username.length(),
+                    usernameLength);
+            throw LoginError.INCORRECT_CREDENTIALS.exception(new LocalizableKey(
+                    String.format("The signatory number has %d characters; expected %d characters",
+                            username.length(),
+                            usernameLength)));
+        }
+    }
+
+    private void checkPassword(final String password) throws LoginException {
+        final int passwordLength = RaiffeisenConstants.IntValues.PASSWORD_LENGTH;
+        if (password.length() != passwordLength) {
+            logger.warn("The PIN has {} characters; expected {} digits", password.length(), passwordLength);
+            throw LoginError.INCORRECT_CREDENTIALS.exception(new LocalizableKey(
+                    String.format("The PIN has %d characters; expected %d digits", password.length(), passwordLength)));
+        }
+    }
+
     @Override
     public void authenticate(final String username, final String password)
             throws AuthenticationException, AuthorizationException {
+        checkUsername(username);
+        checkPassword(password);
         final String encryptedPassword = getEncryptedPassword(password);
-
         final HttpResponse homeResponse = apiClient.getHomePage();
         final HttpResponse refreshRegionResponse = apiClient.RefreshRegion(homeResponse);
         final HttpResponse usernameResponse = apiClient.sendUsername(refreshRegionResponse, username);

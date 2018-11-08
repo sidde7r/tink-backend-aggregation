@@ -35,9 +35,12 @@ public class RaiffeisenConstants {
     public static class RegExpPatterns {
         public static final String ACCESS_TOKEN = ".*access_token=([^&]+)";
         public static final String TOKEN_TYPE = ".*token_type=([^&]+)";
-
     }
 
+    public static class IntValues {
+        public static final int PASSWORD_LENGTH = 5;
+        public static final int USERNAME_LENGTH = 8;
+    }
 
     public enum Storage {
         WEB_LOGIN_RESPONSE

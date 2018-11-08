@@ -155,11 +155,16 @@
                 {
                     "name": "username",
                     "description": "Signatory number",
+                    "minLength": 8,
+                    "maxLength": 8,
                     "immutable": true
                 },
                 {
                     "name": "password",
                     "description": "PIN",
+                    "pattern": "[0-9]{5}",
+                    "minLength": 5,
+                    "maxLength": 5,
                     "masked": true,
                     "sensitive": true
                 }
@@ -180,11 +185,16 @@
                 {
                     "name": "username",
                     "description": "Signatory number",
+                    "minLength": 8,
+                    "maxLength": 8,
                     "immutable": true
                 },
                 {
                     "name": "password",
                     "description": "PIN",
+                    "pattern": "[0-9]{5}",
+                    "minLength": 5,
+                    "maxLength": 5,
                     "masked": true,
                     "sensitive": true
                 }
@@ -205,11 +215,16 @@
                 {
                     "name": "username",
                     "description": "Signatory number",
+                    "minLength": 8,
+                    "maxLength": 8,
                     "immutable": true
                 },
                 {
                     "name": "password",
                     "description": "PIN",
+                    "pattern": "[0-9]{5}",
+                    "minLength": 5,
+                    "maxLength": 5,
                     "masked": true,
                     "sensitive": true
                 }
@@ -230,11 +245,16 @@
                 {
                     "name": "username",
                     "description": "Signatory number",
+                    "minLength": 8,
+                    "maxLength": 8,
                     "immutable": true
                 },
                 {
                     "name": "password",
                     "description": "PIN",
+                    "pattern": "[0-9]{5}",
+                    "minLength": 5,
+                    "maxLength": 5,
                     "masked": true,
                     "sensitive": true
                 }
@@ -255,11 +275,16 @@
                 {
                     "name": "username",
                     "description": "Signatory number",
+                    "minLength": 8,
+                    "maxLength": 8,
                     "immutable": true
                 },
                 {
                     "name": "password",
                     "description": "PIN",
+                    "pattern": "[0-9]{5}",
+                    "minLength": 5,
+                    "maxLength": 5,
                     "masked": true,
                     "sensitive": true
                 }
@@ -280,11 +305,16 @@
                 {
                     "name": "username",
                     "description": "Signatory number",
+                    "minLength": 8,
+                    "maxLength": 8,
                     "immutable": true
                 },
                 {
                     "name": "password",
                     "description": "PIN",
+                    "pattern": "[0-9]{5}",
+                    "minLength": 5,
+                    "maxLength": 5,
                     "masked": true,
                     "sensitive": true
                 }
@@ -305,11 +335,16 @@
                 {
                     "name": "username",
                     "description": "Signatory number",
+                    "minLength": 8,
+                    "maxLength": 8,
                     "immutable": true
                 },
                 {
                     "name": "password",
                     "description": "PIN",
+                    "pattern": "[0-9]{5}",
+                    "minLength": 5,
+                    "maxLength": 5,
                     "masked": true,
                     "sensitive": true
                 }
@@ -330,11 +365,16 @@
                 {
                     "name": "username",
                     "description": "Signatory number",
+                    "minLength": 8,
+                    "maxLength": 8,
                     "immutable": true
                 },
                 {
                     "name": "password",
                     "description": "PIN",
+                    "pattern": "[0-9]{5}",
+                    "minLength": 5,
+                    "maxLength": 5,
                     "masked": true,
                     "sensitive": true
                 }
@@ -355,11 +395,16 @@
                 {
                     "name": "username",
                     "description": "Signatory number",
+                    "minLength": 8,
+                    "maxLength": 8,
                     "immutable": true
                 },
                 {
                     "name": "password",
                     "description": "PIN",
+                    "pattern": "[0-9]{5}",
+                    "minLength": 5,
+                    "maxLength": 5,
                     "masked": true,
                     "sensitive": true
                 }
@@ -380,11 +425,16 @@
                 {
                     "name": "username",
                     "description": "Signatory number",
+                    "minLength": 8,
+                    "maxLength": 8,
                     "immutable": true
                 },
                 {
                     "name": "password",
                     "description": "PIN",
+                    "pattern": "[0-9]{5}",
+                    "minLength": 5,
+                    "maxLength": 5,
                     "masked": true,
                     "sensitive": true
                 }
@@ -405,11 +455,16 @@
                 {
                     "name": "username",
                     "description": "Signatory number",
+                    "minLength": 8,
+                    "maxLength": 8,
                     "immutable": true
                 },
                 {
                     "name": "password",
                     "description": "PIN",
+                    "pattern": "[0-9]{5}",
+                    "minLength": 5,
+                    "maxLength": 5,
                     "masked": true,
                     "sensitive": true
                 }
@@ -430,11 +485,16 @@
                 {
                     "name": "username",
                     "description": "Signatory number",
+                    "minLength": 8,
+                    "maxLength": 8,
                     "immutable": true
                 },
                 {
                     "name": "password",
                     "description": "PIN",
+                    "pattern": "[0-9]{5}",
+                    "minLength": 5,
+                    "maxLength": 5,
                     "masked": true,
                     "sensitive": true
                 }
