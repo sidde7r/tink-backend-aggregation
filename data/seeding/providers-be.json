@@ -246,6 +246,29 @@
       "status": "ENABLED",
       "transactional": true,
       "type": "CREDIT_CARD"
+    },
+    {
+      "className": "nxgen.be.banks.argenta.ArgentaAgent",
+      "credentialsType": "PASSWORD",
+      "displayName": "Argenta",
+      "capabilities": [
+      ],
+      "fields": [
+        {
+          "description": "Number of your bank card",
+          "name": "username",
+          "numeric": true,
+          "minLength": 1,
+          "sensitive": true
+        }
+      ],
+      "multiFactor": true,
+      "name": "be-argenta-cardreader",
+      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app. You will also need your Argenta Digipass to finish the authentication.",
+      "popular": false,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "BANK"
     }
   ]
 }

@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.nxgen.http;
 
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
@@ -31,6 +33,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
 import org.apache.http.HttpHost;
+import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.params.ClientPNames;
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
@@ -91,6 +94,15 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     private final PersistentHeaderFilter persistentHeaderFilter = new PersistentHeaderFilter();
 
     private static final AggregationLogger logger = new AggregationLogger(TinkHttpClient.class);
+    private String cookieSpec;
+    private static final ImmutableList<String> cookieSpecifications = ImmutableList
+            .<String>builder()
+            .add(CookieSpecs.BROWSER_COMPATIBILITY)
+            .add(CookieSpecs.NETSCAPE)
+            .add(CookieSpecs.IGNORE_COOKIES)
+            .add(CookieSpecs.STANDARD)
+            .add(CookieSpecs.BEST_MATCH)
+            .build();
 
     private class DEFAULTS {
         private final static String DEFAULT_USER_AGENT = AbstractAgent.DEFAULT_USER_AGENT;
@@ -192,6 +204,10 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
             throw new IllegalStateException(e);
         }
 
+        if(!Strings.isNullOrEmpty(this.cookieSpec)) {
+            this.internalRequestConfigBuilder.setCookieSpec(this.cookieSpec);
+        }
+
         RequestConfig reguestConfig = this.internalRequestConfigBuilder.build();
 
         if (!this.followRedirects) {
@@ -255,6 +271,13 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         Preconditions.checkState(this.internalClient == null);
         this.userAgent = userAgent;
         this.internalHttpClientBuilder = this.internalHttpClientBuilder.setUserAgent(userAgent);
+    }
+
+    public void setCookieSpec(String cookieSpec) {
+        Preconditions.checkArgument(
+                cookieSpecifications.contains(cookieSpec),
+                "Not supported cookie specification:" + cookieSpec);
+        this.cookieSpec = cookieSpec;
     }
 
     public void disableSignatureRequestHeader() {
