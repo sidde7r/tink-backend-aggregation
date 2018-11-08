@@ -7,8 +7,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.apache.curator.framework.CuratorFramework;
+import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
+import se.tink.backend.aggregation.converter.AggregatorConverter;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
@@ -45,8 +47,8 @@ public abstract class AgentContext {
         return clusterInfo;
     }
 
-    public Aggregator getAggregator() {
-        return aggregator;
+    public AggregatorInfo getAggregatorInfo() {
+        return AggregatorConverter.convert(aggregator);
     }
 
     public void setClusterInfo(ClusterInfo clusterInfo) {

@@ -40,7 +40,7 @@ public abstract class AbstractAgent extends AgentParsingUtils implements Agent, 
     }
 
     public AggregatorInfo getAggregatorInfo(){
-        return AggregatorConverter.convert(context.getAggregator());
+        return context.getAggregatorInfo();
     }
 
     @Override
