@@ -120,6 +120,7 @@ public class ProductEntity {
 
     public boolean isValidCreditCardAccount() {
         try {
+            getTinkBalance();
             getAvailableCredit();
             return true;
         } catch (Exception e) {
