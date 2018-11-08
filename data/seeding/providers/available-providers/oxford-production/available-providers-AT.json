@@ -1,6 +1,7 @@
 {
   "clusterid" : "oxford-production",
   "providers" : [
+    "at-americanexpress-password",
     "at-volksbank-password",
     "at-bank-austria",
     "at-bankaustria-password",
