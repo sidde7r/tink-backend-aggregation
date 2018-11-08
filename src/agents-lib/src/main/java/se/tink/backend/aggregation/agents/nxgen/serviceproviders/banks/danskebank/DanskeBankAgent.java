@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.Field;
-import se.tink.backend.common.config.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBankApiClient> extends NextGenerationAgent {
     protected final MarketSpecificApiClient apiClient;

@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.fetcher.AmericanExpressCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.fetcher.AmericanExpressTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.session.AmericanExpressSessionHandler;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
@@ -20,8 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.Field;
-import se.tink.backend.common.config.ServiceConfiguration;
-import se.tink.backend.common.config.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.utils.StringUtils;
 
 public class AmericanExpressAgent extends NextGenerationAgent {
@@ -44,12 +44,12 @@ public class AmericanExpressAgent extends NextGenerationAgent {
     }
 
     @Override
-    public void setConfiguration(ServiceConfiguration configuration) {
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
         // Amex is throttling how many requests we can send per IP address.
         // Use this multiIp gateway to originate from different IP addresses.
-        setMultiIpGateway(configuration);
+        setMultiIpGateway(configuration.getIntegrations());
     }
 
     @Override

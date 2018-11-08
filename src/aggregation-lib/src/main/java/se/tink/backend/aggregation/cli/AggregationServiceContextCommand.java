@@ -11,12 +11,12 @@ import net.sourceforge.argparse4j.inf.Namespace;
 import se.tink.backend.aggregation.guice.configuration.AggregationMultiClientRepositoryModule;
 import se.tink.backend.aggregation.guice.configuration.AggregationSingleClientRepositoryModule;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.common.config.ServiceConfiguration;
-import se.tink.backend.guice.configuration.CommonModule;
-import se.tink.backend.guice.configuration.ConfigurationModule;
+import se.tink.backend.aggregation.configurations.AggregationServiceConfiguration;
+import se.tink.backend.aggregation.guice.configuration.AggregationCommonModule;
+import se.tink.backend.aggregation.guice.configuration.AggregationConfigurationModule;
 import se.tink.libraries.discovery.CoordinationModule;
 
-public abstract class AggregationServiceContextCommand<T extends ServiceConfiguration> extends ConfiguredCommand<T> {
+public abstract class AggregationServiceContextCommand<T extends AggregationServiceConfiguration> extends ConfiguredCommand<T> {
     private static final AggregationLogger log = new AggregationLogger(AggregationServiceContextCommand.class);
 
     protected AggregationServiceContextCommand(String name, String description) {
@@ -29,9 +29,9 @@ public abstract class AggregationServiceContextCommand<T extends ServiceConfigur
     @Override
     protected void run(Bootstrap<T> bootstrap, Namespace namespace, T configuration) throws Exception {
         List<AbstractModule> modules = Lists.newArrayList(
-                new CommonModule(),
+                new AggregationCommonModule(),
                 new CoordinationModule(),
-                new ConfigurationModule(configuration),
+                new AggregationConfigurationModule(configuration),
                 new AggregationMultiClientRepositoryModule(configuration.getDatabase()));
 
         Injector injector = Guice.createInjector(modules);

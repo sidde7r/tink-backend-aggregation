@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticationController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
-import se.tink.backend.common.config.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class DanskeBankFIAgent extends DanskeBankAgent {
     public DanskeBankFIAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {

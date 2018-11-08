@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.workers.commands.state;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
+import javax.inject.Inject;
 import se.tink.backend.aggregation.workers.metrics.MeterCacheLoader;
 import se.tink.backend.aggregation.workers.metrics.TimerCacheLoader;
 import se.tink.libraries.metrics.Counter;
@@ -17,6 +18,7 @@ public class ReportProviderMetricsAgentWorkerCommandState {
     private LoadingCache<MetricId.MetricLabels, Timer> executionsTimers;
     private LoadingCache<MetricId.MetricLabels, Timer> globalExecutionsTimers;
 
+    @Inject
     public ReportProviderMetricsAgentWorkerCommandState(MetricRegistry metricRegistry) {
         CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.newBuilder();
 

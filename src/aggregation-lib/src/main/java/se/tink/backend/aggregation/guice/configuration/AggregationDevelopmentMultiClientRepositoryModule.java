@@ -8,8 +8,8 @@ import se.tink.backend.aggregation.configurations.repositories.ClientConfigurati
 import se.tink.backend.aggregation.configurations.repositories.ClusterConfigurationsRepository;
 import se.tink.backend.aggregation.configurations.repositories.CryptoConfigurationsRepository;
 import se.tink.backend.common.config.DatabaseConfiguration;
-import se.tink.backend.common.repository.mysql.aggregation.clustercryptoconfiguration.ClusterCryptoConfigurationRepository;
-import se.tink.backend.common.repository.mysql.aggregation.clusterhostconfiguration.ClusterHostConfigurationRepository;
+import se.tink.backend.aggregation.configurations.repositories.ClusterCryptoConfigurationRepository;
+import se.tink.backend.aggregation.configurations.repositories.ClusterHostConfigurationRepository;
 import se.tink.backend.core.ClusterHostConfiguration;
 import se.tink.backend.guice.configuration.RepositoryModule;
 

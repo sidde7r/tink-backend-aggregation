@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agents.SetAccountsToAggregateContext;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.converter.HostConfigurationConverter;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -35,11 +36,10 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Provider;
-import se.tink.backend.common.ServiceContext;
+import se.tink.backend.common.cache.CacheClient;
 import se.tink.backend.common.coordination.BarrierName;
 import se.tink.backend.common.mapper.CoreAccountMapper;
 import se.tink.backend.common.mapper.CoreCredentialsMapper;
-import se.tink.backend.common.repository.mysql.aggregation.aggregationcredentials.AggregationCredentialsRepository;
 import se.tink.backend.common.utils.MetricsUtils;
 import se.tink.backend.common.utils.Pair;
 import se.tink.backend.core.DocumentContainer;
@@ -78,13 +78,11 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
     private Catalog catalog;
     private CuratorFramework coordinationClient;
     private CredentialsRequest request;
-    private ServiceContext serviceContext;
     private long timeLeavingQueue;
     private long timePutOnQueue;
     private Map<String, List<Transaction>> transactionsByAccountBankId = Maps.newHashMap();
     private Map<Account, List<TransferDestinationPattern>> transferDestinationPatternsByAccount = Maps.newHashMap();
     private List<Transfer> transfers = Lists.newArrayList();
-    private AggregationCredentialsRepository aggregationCredentialsRepository;
     private List<AgentEventListener> eventListeners = Lists.newArrayList();
     private SupplementalInformationController supplementalInformationController;
     private AggregationControllerAggregationClient aggregationControllerAggregationClient;
@@ -101,10 +99,12 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
     // True or false if system has been requested to process transactions.
     private boolean isSystemProcessingTransactions;
     private boolean isWhitelistRefresh;
+    private AgentsServiceConfiguration agentsServiceConfiguration;
 
-    public AgentWorkerContext(CredentialsRequest request, ServiceContext serviceContext, MetricRegistry metricRegistry,
+    public AgentWorkerContext(CredentialsRequest request, MetricRegistry metricRegistry,
             AggregationControllerAggregationClient aggregationControllerAggregationClient,
-            ClusterInfo clusterInfo) {
+            ClusterInfo clusterInfo, CuratorFramework coordinationClient, CacheClient cacheClient,
+            AgentsServiceConfiguration agentsServiceConfiguration) {
 
         final ClusterId clusterId = clusterInfo.getClusterId();
 
@@ -114,12 +114,10 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         this.uniqueIdOfUserSelectedAccounts = Lists.newArrayList();
 
         this.request = request;
-        this.serviceContext = serviceContext;
 
         // _Not_ instanciating a SystemService from the ServiceFactory here.
-        this.coordinationClient = serviceContext.getCoordinationClient();
+        this.coordinationClient = coordinationClient;
 
-        this.aggregationCredentialsRepository = serviceContext.getRepository(AggregationCredentialsRepository.class);
         setClusterInfo(clusterInfo);
         setAggregator(clusterInfo.getAggregator());
 
@@ -130,8 +128,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         this.metricRegistry = metricRegistry;
         this.timePutOnQueue = System.currentTimeMillis();
 
-        this.supplementalInformationController = new SupplementalInformationController(serviceContext.getCacheClient(),
-                serviceContext.getCoordinationClient());
+        this.supplementalInformationController = new SupplementalInformationController(cacheClient, coordinationClient);
         this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
 
         Provider provider = request.getProvider();
@@ -146,6 +143,8 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         refreshTotal = metricRegistry.meter(
                 MetricId.newId("accounts_refresh")
                         .label(defaultMetricLabels));
+
+        this.agentsServiceConfiguration = agentsServiceConfiguration;
     }
 
     public void addEventListener(AgentEventListener eventListener) {
@@ -195,10 +194,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
 
     public CredentialsRequest getRequest() {
         return request;
-    }
-
-    public ServiceContext getServiceContext() {
-        return serviceContext;
     }
 
     public long getTimeLeavingQueue() {
@@ -706,5 +701,9 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
 
     public void setWhitelistRefresh(boolean whitelistRefresh) {
         isWhitelistRefresh = whitelistRefresh;
+    }
+
+    public AgentsServiceConfiguration getAgentsServiceConfiguration() {
+        return agentsServiceConfiguration;
     }
 }

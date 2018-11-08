@@ -40,7 +40,7 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.common.bankid.signicat.SignicatBankIdAuthenticator;
-import se.tink.backend.common.config.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.core.FraudAddressContent;
 import se.tink.backend.core.FraudCompanyContent;
 import se.tink.backend.core.FraudCompanyDirector;

@@ -6,27 +6,27 @@ import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import se.tink.backend.aggregation.cli.AggregationMigrateMultiClientCommand;
+import se.tink.backend.aggregation.configurations.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.guice.configuration.AggregationModuleFactory;
 import se.tink.backend.aggregation.workers.AgentWorker;
-import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.libraries.draining.DrainModeTask;
 import se.tink.libraries.dropwizard.DropwizardLifecycleInjectorFactory;
 import se.tink.libraries.dropwizard.DropwizardObjectMapperConfigurator;
 
-public class AggregationServiceContainer extends Application<ServiceConfiguration> {
+public class AggregationServiceContainer extends Application<AggregationServiceConfiguration> {
 
     public static void main(String[] args) throws Exception {
         new AggregationServiceContainer().run(args);
     }
 
     @Override
-    public void initialize(Bootstrap<ServiceConfiguration> bootstrap) {
+    public void initialize(Bootstrap<AggregationServiceConfiguration> bootstrap) {
         DropwizardObjectMapperConfigurator.doNotFailOnUnknownProperties(bootstrap);
         bootstrap.addCommand(new AggregationMigrateMultiClientCommand());
     }
 
     @Override
-    public void run(ServiceConfiguration serviceConfiguration, Environment environment) throws Exception {
+    public void run(AggregationServiceConfiguration aggregationServiceConfiguration, Environment environment) throws Exception {
         // Add a dummy health check to avoid an annoying warning on startup.
         environment.healthChecks().register("cache", new HealthCheck() {
             @Override
@@ -36,7 +36,7 @@ public class AggregationServiceContainer extends Application<ServiceConfiguratio
         });
 
         Injector injector = DropwizardLifecycleInjectorFactory.build(
-                environment.lifecycle(), AggregationModuleFactory.build(serviceConfiguration, environment));
+                environment.lifecycle(), AggregationModuleFactory.build(aggregationServiceConfiguration, environment));
 
         environment.admin().addTask(injector.getInstance(DrainModeTask.class));
         environment.lifecycle().manage(injector.getInstance(AgentWorker.class));

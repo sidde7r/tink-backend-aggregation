@@ -109,6 +109,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.general.GeneralUtils;
 import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuilder;
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.log.ClientFilterFactory;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
@@ -120,8 +121,7 @@ import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
-import se.tink.backend.common.config.ServiceConfiguration;
-import se.tink.backend.common.config.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.common.i18n.SocialSecurityNumber;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.enums.TransferType;
@@ -246,10 +246,10 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
     /**
      * Pass in configuration of the mortgage integration to the module, so that we can inject it into api configuration
      *
-     * @param configuration ServiceConfiguration guaranteed to contain integrations configuration for SEB Mortgage
+     * @param configuration AggregationServiceConfiguration guaranteed to contain integrations configuration for SEB Mortgage
      */
     @Override
-    public void setConfiguration(ServiceConfiguration configuration) {
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
     }
 

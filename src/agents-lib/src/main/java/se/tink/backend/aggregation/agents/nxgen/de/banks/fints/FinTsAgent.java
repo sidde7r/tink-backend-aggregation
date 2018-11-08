@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.Field;
 
 import java.util.Optional;
-import se.tink.backend.common.config.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class FinTsAgent extends NextGenerationAgent {
 

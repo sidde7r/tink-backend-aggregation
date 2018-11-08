@@ -7,17 +7,17 @@ import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import se.tink.backend.common.ServiceContext;
 import se.tink.backend.guice.annotations.Centralized;
+import se.tink.libraries.repository.RepositorySource;
 
 public class SpringIntegrationProvider<T> implements Provider<T> {
     private final static Logger log = LoggerFactory.getLogger(SpringIntegrationProvider.class);
     private AnnotationConfigApplicationContext applicationContext;
     private AnnotationConfigApplicationContext distributedApplicationContext;
     private final Class<T> cls;
-    private final ServiceContext.RepositorySource source;
+    private final RepositorySource source;
 
-    private SpringIntegrationProvider(Class<T> cls, ServiceContext.RepositorySource source) {
+    private SpringIntegrationProvider(Class<T> cls, RepositorySource source) {
         this.cls = cls;
         this.source = source;
     }
@@ -34,10 +34,10 @@ public class SpringIntegrationProvider<T> implements Provider<T> {
     }
 
     public static <T> SpringIntegrationProvider<T> fromSpring(Class<T> tClass) {
-        return new SpringIntegrationProvider<>(tClass, ServiceContext.RepositorySource.DEFAULT);
+        return new SpringIntegrationProvider<>(tClass, RepositorySource.DEFAULT);
     }
 
-    private <R> R getRepository(Class<R> cls, ServiceContext.RepositorySource source) {
+    private <R> R getRepository(Class<R> cls, RepositorySource source) {
         Preconditions.checkNotNull(source);
 
         switch (source) {
@@ -49,7 +49,7 @@ public class SpringIntegrationProvider<T> implements Provider<T> {
                 return applicationContext.getBean(cls);
             default:
                 // Default to centralized
-                return getRepository(cls, ServiceContext.RepositorySource.CENTRALIZED);
+                return getRepository(cls, RepositorySource.CENTRALIZED);
         }
     }
 }

@@ -109,7 +109,7 @@ import se.tink.backend.aggregation.utils.TransactionOrdering;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
-import se.tink.backend.common.config.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.core.Amount;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.enums.TransferType;

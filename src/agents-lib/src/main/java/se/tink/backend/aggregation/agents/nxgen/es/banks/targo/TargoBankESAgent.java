@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.targo.session.TargoBank
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
-import se.tink.backend.common.config.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class TargoBankESAgent extends EuroInformationAgent {
     public TargoBankESAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {

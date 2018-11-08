@@ -4,8 +4,8 @@ import com.google.inject.Inject;
 import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.common.config.AggregationDevelopmentConfiguration;
-import se.tink.backend.common.repository.mysql.aggregation.clustercryptoconfiguration.ClusterCryptoConfigurationRepository;
+import se.tink.backend.aggregation.configurations.AggregationDevelopmentConfiguration;
+import se.tink.backend.aggregation.configurations.repositories.ClusterCryptoConfigurationRepository;
 import se.tink.backend.core.ClusterCryptoConfiguration;
 
 public class DevelopmentConfigurationSeeder {

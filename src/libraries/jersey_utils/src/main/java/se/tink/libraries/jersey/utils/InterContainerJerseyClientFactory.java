@@ -33,7 +33,7 @@ import se.tink.libraries.net.TinkApacheHttpClient4Handler;
 
 public class InterContainerJerseyClientFactory {
     // These should rarely change and the passphrase isn't sensitive. Therefore, not configurable from
-    // ServiceConfiguration.
+    // AggregationServiceConfiguration.
     private static final String DEFAULT_INTER_CONTAINER_TRUSTSTORE_PASSPHRACE = "changeme";
     private static final String DEFAULT_INTER_CONTAINER_TRUSTSTORE_PATH = "data/security/TinkCA.truststore";
 

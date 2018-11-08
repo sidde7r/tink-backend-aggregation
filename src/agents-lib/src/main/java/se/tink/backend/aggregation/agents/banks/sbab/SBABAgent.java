@@ -42,15 +42,15 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuilder;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.log.ClientFilterFactory;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
-import se.tink.backend.common.config.SbabIntegrationConfiguration;
-import se.tink.backend.common.config.ServiceConfiguration;
-import se.tink.backend.common.config.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.SbabIntegrationConfiguration;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.core.DocumentIdentifier;
 import se.tink.backend.core.account.TransferDestinationPattern;
@@ -107,7 +107,7 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
     }
 
     @Override
-    public void setConfiguration(ServiceConfiguration configuration) {
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
         SbabIntegrationConfiguration sbabConfiguration = configuration.getIntegrations().getSbab();

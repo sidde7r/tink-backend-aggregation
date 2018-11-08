@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
-import se.tink.backend.common.config.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class NordeaFiAgent extends NordeaV21Agent {
     private NordeaFiApiClient fiApiClient;

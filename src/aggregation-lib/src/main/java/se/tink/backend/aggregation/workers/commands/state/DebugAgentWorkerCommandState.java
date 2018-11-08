@@ -1,7 +1,8 @@
 package se.tink.backend.aggregation.workers.commands.state;
 
+import javax.inject.Inject;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.common.ServiceContext;
 
 import java.io.File;
 
@@ -9,9 +10,9 @@ public class DebugAgentWorkerCommandState {
     private File debugDirectory;
     private static final AggregationLogger log = new AggregationLogger(DebugAgentWorkerCommandState.class);
 
-    public DebugAgentWorkerCommandState(ServiceContext serviceContext) {
-        debugDirectory = new File(serviceContext.getConfiguration().getAggregationWorker()
-                .getDebugLogDir());
+    @Inject
+    public DebugAgentWorkerCommandState(AgentsServiceConfiguration configuration) {
+        debugDirectory = new File(configuration.getAggregationWorker().getDebugLogDir());
         try {
             if (debugDirectory.mkdirs()) {
                 log.info("Log directory was created: " + debugDirectory.getAbsolutePath());

@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 import se.tink.backend.common.concurrency.FakeTicker;
-import se.tink.backend.common.config.CircuitBreakerConfiguration;
+import se.tink.backend.aggregation.configuration.CircuitBreakerConfiguration;
 import se.tink.libraries.metrics.MetricRegistry;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;

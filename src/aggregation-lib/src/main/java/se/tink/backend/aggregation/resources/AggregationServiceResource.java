@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import org.apache.curator.framework.CuratorFramework;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
@@ -28,7 +29,6 @@ import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.rpc.SupplementInformationRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.rpc.UpdateCredentialsRequest;
-import se.tink.backend.aggregation.storage.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.backend.aggregation.workers.AgentWorkerOperation;
 import se.tink.backend.aggregation.workers.AgentWorkerRefreshOperationCreatorWrapper;
@@ -36,10 +36,10 @@ import se.tink.backend.aggregation.workers.AgentWorkerOperationFactory;
 import se.tink.backend.aggregation.workers.ratelimit.DefaultProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.ratelimit.OverridingProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.ratelimit.ProviderRateLimiterFactory;
-import se.tink.backend.common.ServiceContext;
+import se.tink.backend.common.cache.CacheClient;
 import se.tink.backend.queue.QueueProducer;
+import se.tink.libraries.draining.ApplicationDrainMode;
 import se.tink.libraries.http.utils.HttpResponseHelper;
-import se.tink.libraries.metrics.MetricRegistry;
 
 @Path("/aggregation")
 public class AggregationServiceResource implements AggregationService {
@@ -49,27 +49,19 @@ public class AggregationServiceResource implements AggregationService {
 
     private AgentWorker agentWorker;
     private AgentWorkerOperationFactory agentWorkerCommandFactory;
-    private ServiceContext serviceContext;
     private SupplementalInformationController supplementalInformationController;
+    private ApplicationDrainMode applicationDrainMode;
     public static Logger logger = LoggerFactory.getLogger(AggregationServiceResource.class);
 
-    /**
-     * Constructor.
-     *  @param context used between all instances of this service
-     * @param metricRegistry
-     */
     @Inject
-    public AggregationServiceResource(ServiceContext context, MetricRegistry metricRegistry,
-            AggregationControllerAggregationClient aggregationControllerAggregationClient,
-            AgentWorker agentWorker,
-            AgentDebugStorageHandler agentDebugStorageHandler) {
-        this.serviceContext = context;
+    public AggregationServiceResource(AgentWorker agentWorker, QueueProducer producer,
+            AgentWorkerOperationFactory agentWorkerOperationFactory, CacheClient cacheClient,
+            CuratorFramework coordinationClient, ApplicationDrainMode applicationDrainMode) {
         this.agentWorker = agentWorker;
-        this.agentWorkerCommandFactory = new AgentWorkerOperationFactory(serviceContext, metricRegistry,
-                aggregationControllerAggregationClient, agentDebugStorageHandler);
-        this.supplementalInformationController = new SupplementalInformationController(serviceContext.getCacheClient(),
-                serviceContext.getCoordinationClient());
-        this.producer = this.serviceContext.getProducer();
+        this.agentWorkerCommandFactory = agentWorkerOperationFactory;
+        this.supplementalInformationController = new SupplementalInformationController(cacheClient, coordinationClient);
+        this.producer = producer;
+        this.applicationDrainMode = applicationDrainMode;
     }
 
 
@@ -93,7 +85,7 @@ public class AggregationServiceResource implements AggregationService {
 
     @Override
     public String ping(){
-        if (this.serviceContext.getApplicationDrainMode().isEnabled()) {
+        if (applicationDrainMode.isEnabled()) {
             HttpResponseHelper.error(Response.Status.SERVICE_UNAVAILABLE);
         }
 

@@ -10,11 +10,9 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
 import se.tink.backend.aggregation.workers.commands.state.CircuitBreakerAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.concurrency.CircuitBreakerStatistics;
-import se.tink.backend.common.config.CircuitBreakerConfiguration;
-import se.tink.backend.common.config.CircuitBreakerMode;
+import se.tink.backend.aggregation.configuration.CircuitBreakerConfiguration;
+import se.tink.backend.aggregation.configuration.CircuitBreakerMode;
 import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.metrics.MetricId;
-import se.tink.backend.common.utils.MetricsUtils;
 import se.tink.backend.aggregation.rpc.Credentials;
 
 /**
@@ -48,7 +46,7 @@ public class CircuitBreakerAgentWorkerCommand extends AgentWorkerCommand {
         Provider provider = context.getRequest().getProvider();
         wasCircuitBreaked = false;
 
-        final CircuitBreakerConfiguration circuitBreakerConfiguration = context.getServiceContext().getConfiguration()
+        final CircuitBreakerConfiguration circuitBreakerConfiguration = context.getAgentsServiceConfiguration()
                 .getAggregationWorker().getCircuitBreaker();
 
         CircuitBreakerStatistics.CircuitBreakerStatus circuitBreakerStatus = state.getCircuitBreakerStatistics().get(

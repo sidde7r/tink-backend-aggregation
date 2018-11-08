@@ -4,6 +4,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.authenticator.MonzoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.fetcher.transactional.MonzoTransactionalAccountFetcher;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -20,9 +21,8 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
-import se.tink.backend.common.config.MonzoConfiguration;
-import se.tink.backend.common.config.ServiceConfiguration;
-import se.tink.backend.common.config.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.MonzoConfiguration;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class MonzoAgent extends NextGenerationAgent {
 
@@ -39,7 +39,7 @@ public class MonzoAgent extends NextGenerationAgent {
     }
 
     @Override
-    public void setConfiguration(ServiceConfiguration configuration) {
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
 
         super.setConfiguration(configuration);
 

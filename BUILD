@@ -188,6 +188,7 @@ java_library(
         "//src/libraries/strings:strings",
         "//src/api-annotations",
         "//src/libraries/cryptography:cryptography",
+        "//src/libraries/repository:repository",
 
         "//src/api-headers",
 
@@ -372,6 +373,8 @@ java_library(
         "//src/api-annotations",
         "//src/libraries/cli_print_utils:cli_print_utils",
         "//src/libraries/creditsafe_consumer_monitoring:creditsafe_consumer_monitoring",
+        "//src/libraries/draining:draining",
+        "//src/libraries/repository:repository",
 
         "//third_party:org_springframework_spring_expression",
         "//third_party:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
@@ -406,8 +409,8 @@ java_library(
         "//third_party:org_xerial_snappy_snappy_java",
         "//third_party:com_amazonaws_aws_java_sdk_s3",
         "//third_party:org_hibernate_hibernate_annotations",
-
         "//third_party:net_sourceforge_cssparser_cssparser",
+        "//third_party:net_spy_spymemcached",
     ],
 )
 
@@ -486,7 +489,6 @@ java_library(
         "//third_party:net_sourceforge_cssparser_cssparser",
         "//third_party:com_auth0_java_jwt",
         "//third_party:com_amazonaws_aws_java_sdk_s3",
-
 
     ],
 )

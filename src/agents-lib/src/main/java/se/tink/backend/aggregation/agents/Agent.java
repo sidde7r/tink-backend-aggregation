@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents;
 
-import se.tink.backend.common.config.ServiceConfiguration;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 
 public interface Agent {
 
-    void setConfiguration(ServiceConfiguration configuration);
+    void setConfiguration(AgentsServiceConfiguration configuration);
 
     Class<? extends Agent> getAgentClass();
     

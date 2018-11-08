@@ -15,7 +15,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import se.tink.backend.common.config.DatabaseConfiguration;
 
 /**
- * Does the heavy lifting for {@link AggregationRepositoryConfiguration} and {@link MainRepositoryConfiguration}.
+ * Does the heavy lifting for {@link AggregationRepositoryConfiguration}.
  */
 public class SingletonRepositoryConfiguration {
     private static DatabaseConfiguration configuration;

@@ -1,13 +1,15 @@
 package se.tink.backend.aggregation.workers.commands.state;
 
+import javax.inject.Inject;
 import se.tink.backend.aggregation.agents.AgentFactory;
-import se.tink.backend.common.ServiceContext;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 
 public class InstantiateAgentWorkerCommandState {
     private AgentFactory agentFactory;
 
-    public InstantiateAgentWorkerCommandState(ServiceContext serviceContext) {
-        agentFactory = new AgentFactory(serviceContext.getConfiguration());
+    @Inject
+    public InstantiateAgentWorkerCommandState(AgentsServiceConfiguration configuration) {
+        agentFactory = new AgentFactory(configuration);
     }
 
     public AgentFactory getAgentFactory() {

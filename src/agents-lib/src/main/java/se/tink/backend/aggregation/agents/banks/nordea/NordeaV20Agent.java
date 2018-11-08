@@ -117,7 +117,7 @@ import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
-import se.tink.backend.common.config.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.enums.TransferType;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
@@ -138,7 +138,6 @@ import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifier
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.uuid.UUIDUtils;
