@@ -53,7 +53,7 @@ public class HandelsbankenSEConstants {
     }
 
     public static final class Headers {
-        public static final String APP_VERSION = "3.1:8.2";
+        public static final String APP_VERSION = "3.3:8.8";
     }
 
     public static final class Fetcher {
