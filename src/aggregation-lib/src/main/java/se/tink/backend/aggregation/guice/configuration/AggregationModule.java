@@ -7,6 +7,7 @@ import java.util.Objects;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.api.AggregationService;
 import se.tink.backend.aggregation.api.CreditSafeService;
+import se.tink.backend.aggregation.cluster.jersey.JerseyClientApiKeyProvider;
 import se.tink.backend.aggregation.cluster.jersey.JerseyClusterInfoProvider;
 import se.tink.backend.aggregation.configurations.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.configurations.providers.ClusterInfoProvider;
@@ -66,7 +67,8 @@ public class AggregationModule extends AbstractModule {
                 .addResources(
                         JerseyClusterInfoProvider.class,
                         AggregationService.class,
-                        CreditSafeService.class
+                        CreditSafeService.class,
+                        JerseyClientApiKeyProvider.class
                 )
                 .bind();
 

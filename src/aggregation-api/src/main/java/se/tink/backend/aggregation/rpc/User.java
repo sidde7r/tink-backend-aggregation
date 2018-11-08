@@ -8,7 +8,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import se.tink.backend.core.UserConnectedService;
 import se.tink.backend.core.enums.FeatureFlags;
 import se.tink.backend.utils.StringUtils;
@@ -24,7 +23,6 @@ public class User {
     private static final TypeReference<List<String>> STRING_LIST_TYPE_REFERENCE = new TypeReference<List<String>>() {
     };
 
-    private String DEFAULT_CLIENT_ID = "Tink";
     @JsonIgnore
     private boolean blocked;
     @JsonIgnore
@@ -44,7 +42,6 @@ public class User {
     private String username;
     private Date debugUntil;
     private String nationalId;
-    private String clientId;
 
     public User() {
         id = StringUtils.generateUUID();
@@ -210,17 +207,5 @@ public class User {
     @JsonIgnore
     public boolean isTrackingEnabled() {
         return flags == null || !FeatureFlags.FeatureFlagGroup.TRACKING_DISABLED.isFlagInGroup(flags);
-    }
-
-    public String getClientId() {
-        if (Objects.isNull(clientId) || clientId.equals("")) {
-            return DEFAULT_CLIENT_ID;
-        }
-
-        return clientId;
-    }
-
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
     }
 }
