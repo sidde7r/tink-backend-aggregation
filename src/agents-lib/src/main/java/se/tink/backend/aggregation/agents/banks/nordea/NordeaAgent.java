@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.banks.nordea;
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
-import se.tink.backend.common.config.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class NordeaAgent extends NordeaV20Agent {
     public NordeaAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {

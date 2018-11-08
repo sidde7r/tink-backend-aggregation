@@ -13,7 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import se.tink.backend.common.config.SbabIntegrationConfiguration;
+import se.tink.backend.aggregation.configuration.SbabIntegrationConfiguration;
 import se.tink.backend.aggregation.rpc.Credentials;
 
 public class SBABClient {

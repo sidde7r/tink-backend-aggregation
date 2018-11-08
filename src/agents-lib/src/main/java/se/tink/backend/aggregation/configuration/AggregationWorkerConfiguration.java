@@ -1,7 +1,8 @@
-package se.tink.backend.common.config;
+package se.tink.backend.aggregation.configuration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
+import se.tink.backend.aggregation.configuration.CircuitBreakerConfiguration;
 
 public class AggregationWorkerConfiguration {
     /**

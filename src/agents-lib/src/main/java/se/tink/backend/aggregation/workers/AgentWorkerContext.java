@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agents.SetAccountsToAggregateContext;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.converter.HostConfigurationConverter;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -36,7 +37,6 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.common.cache.CacheClient;
-import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.backend.common.coordination.BarrierName;
 import se.tink.backend.common.mapper.CoreAccountMapper;
 import se.tink.backend.common.mapper.CoreCredentialsMapper;
@@ -99,12 +99,12 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
     // True or false if system has been requested to process transactions.
     private boolean isSystemProcessingTransactions;
     private boolean isWhitelistRefresh;
-    private ServiceConfiguration serviceConfiguration;
+    private AgentsServiceConfiguration agentsServiceConfiguration;
 
     public AgentWorkerContext(CredentialsRequest request, MetricRegistry metricRegistry,
             AggregationControllerAggregationClient aggregationControllerAggregationClient,
             ClusterInfo clusterInfo, CuratorFramework coordinationClient, CacheClient cacheClient,
-            ServiceConfiguration serviceConfiguration) {
+            AgentsServiceConfiguration agentsServiceConfiguration) {
 
         final ClusterId clusterId = clusterInfo.getClusterId();
 
@@ -144,7 +144,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
                 MetricId.newId("accounts_refresh")
                         .label(defaultMetricLabels));
 
-        this.serviceConfiguration = serviceConfiguration;
+        this.agentsServiceConfiguration = agentsServiceConfiguration;
     }
 
     public void addEventListener(AgentEventListener eventListener) {
@@ -703,7 +703,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         isWhitelistRefresh = whitelistRefresh;
     }
 
-    public ServiceConfiguration getServiceConfiguration() {
-        return serviceConfiguration;
+    public AgentsServiceConfiguration getAgentsServiceConfiguration() {
+        return agentsServiceConfiguration;
     }
 }

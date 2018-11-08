@@ -41,10 +41,6 @@ database:
   persistenceUnitName: tink-aggregation-api
   generateDdl: true
 
-creditsafe:
-  username: TINKTESTIN
-  password: cU7356rwx
-
 coordination:
   hosts: 192.168.99.100:31003
 
@@ -52,13 +48,21 @@ cache:
   hosts: 192.168.99.100:31005
   enabled: true
 
-aggregationWorker:
-  collectorSubscriptionKey: ASK_JOHANNES
-
-integrations:
-  sbab:
-    signBaseUrl: https://secure.sbab.se
-
+agentsServiceConfiguration:
+  integrations:
+    sbab:
+      signBaseUrl: https://secure.sbab.se
+  creditsafe:
+    username: TINKTESTIN
+    password: cU7356rwx
+  excludedDebugClusters:
+    excludedClusters:
+    - local-development
+  aggregationWorker:
+    collectorSubscriptionKey: ASK_JOHANNES
+  signatureKeyPair:
+    privateKeyPath: "data/test/cryptography/private_rsa_key.pem"
+    publicKeyPath: "data/test/cryptography/public_rsa_key.pub"
 
 sqsQueueConfiguration:
   enabled: false
@@ -73,10 +77,6 @@ s3StorageConfiguration:
   url: http://localhost:4572
   region: local
   agentDebugBucketName: local-agent-debug-bucket
-
-excludedDebugClusters:
-  excludedClusters:
-    - local-development
 
 logging:
   level: INFO
@@ -97,9 +97,5 @@ logging:
       archivedFileCount: 5
       timeZone: Europe/Stockholm
       logFormat: '%date{"yyyy-MM-dd HH:mm:ss,SSSXXX"} %level [%thread] R:%X{requestId} %logger %message%n%xException'
-
-signatureKeyPair:
-  privateKeyPath: "data/test/cryptography/private_rsa_key.pem"
-  publicKeyPath: "data/test/cryptography/public_rsa_key.pub"
 
 isMultiClientDevelopment: false

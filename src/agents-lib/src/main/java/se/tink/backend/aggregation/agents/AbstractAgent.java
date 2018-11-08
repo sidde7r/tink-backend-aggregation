@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.apache.http.client.CookieStore;
 import org.apache.http.cookie.Cookie;
 import se.tink.backend.aggregation.cluster.identification.Aggregator;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.agents.utils.jersey.JerseyClientFactory;
 import se.tink.backend.aggregation.rpc.Account;
@@ -13,7 +14,6 @@ import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.utils.CookieContainer;
-import se.tink.backend.common.config.ServiceConfiguration;
 import se.tink.backend.common.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.system.rpc.Transaction;
 import se.tink.libraries.date.DateUtils;
@@ -24,7 +24,7 @@ public abstract class AbstractAgent extends AgentParsingUtils implements Agent, 
     public static final String AGENT_LOCK_PATTERN = "/locks/refreshCredentials/credentials/%s/%s";
     public static final String DEFAULT_USER_AGENT = "Tink (+https://www.tink.se/; noc@tink.se)";
     
-    protected ServiceConfiguration configuration;
+    protected AgentsServiceConfiguration configuration;
     protected final JerseyClientFactory clientFactory;
     protected final AgentContext context;
     protected final CredentialsRequest request;
@@ -137,7 +137,7 @@ public abstract class AbstractAgent extends AgentParsingUtils implements Agent, 
     }
 
     @Override
-    public void setConfiguration(ServiceConfiguration configuration) {
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
         this.configuration = configuration;
     }
 

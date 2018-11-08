@@ -27,20 +27,25 @@ database:
   persistenceUnitName: tink-aggregation-api
   generateDdl: true
 
-creditsafe:
-  username: TINKTESTIN
-  password: cU7356rwx
-
 cache:
   hosts: 172.16.42.2:11211
   enabled: true
 
-aggregationWorker:
-  collectorSubscriptionKey: ASK_JOHANNES
-
-integrations:
-  sbab:
-    signBaseUrl: https://secure.sbab.se
+agentsServiceConfiguration:
+  integrations:
+    sbab:
+      signBaseUrl: https://secure.sbab.se
+  creditsafe:
+    username: TINKTESTIN
+    password: cU7356rwx
+  excludedDebugClusters:
+    excludedClusters:
+    - local-development
+  aggregationWorker:
+    collectorSubscriptionKey: ASK_JOHANNES
+  signatureKeyPair:
+    privateKeyPath: "data/test/cryptography/private_rsa_key.pem"
+    publicKeyPath: "data/test/cryptography/public_rsa_key.pub"
 
 sqsQueueConfiguration:
   enabled: false
@@ -49,10 +54,6 @@ sqsQueueConfiguration:
   awsAccessKeyId: foobar
   awsSecretKey: foobar
   queueName: queue
-
-excludedDebugClusters:
-  excludedClusters:
-    - local-development
 
 coordination:
   hosts: 172.16.42.2:2181
@@ -76,7 +77,3 @@ logging:
       archivedFileCount: 5
       timeZone: Europe/Stockholm
       logFormat: '%date{"yyyy-MM-dd HH:mm:ss,SSSXXX"} %level [%thread] R:%X{requestId} %logger %message%n%xException'
-
-signatureKeyPair:
-  privateKeyPath: "data/test/cryptography/private_rsa_key.pem"
-  publicKeyPath: "data/test/cryptography/public_rsa_key.pub"

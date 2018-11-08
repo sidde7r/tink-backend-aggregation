@@ -3,10 +3,11 @@ package se.tink.backend.aggregation.guice.configuration;
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 import com.google.inject.util.Providers;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.common.config.AggregationDevelopmentConfiguration;
 import se.tink.backend.common.config.CacheConfiguration;
 import se.tink.backend.common.config.S3StorageConfiguration;
-import se.tink.backend.common.config.ServiceConfiguration;
+import se.tink.backend.aggregation.configurations.ServiceConfiguration;
 import se.tink.backend.queue.sqs.configuration.SqsQueueConfiguration;
 import se.tink.libraries.discovery.CoordinationConfiguration;
 import se.tink.libraries.metrics.PrometheusConfiguration;
@@ -34,6 +35,7 @@ public class AggregationConfigurationModule extends AbstractModule {
         bind(CacheConfiguration.class).toProvider(Providers.of(configuration.getCacheConfiguration()));
         bind(SqsQueueConfiguration.class).toProvider(Providers.of(configuration.getSqsQueueConfiguration()));
         bind(ServiceConfiguration.class).toInstance(configuration);
+        bind(AgentsServiceConfiguration.class).toInstance(configuration.getAgentsServiceConfiguration());
 
         if (configuration.isDevelopmentMode() &&
                 configuration.getDevelopmentConfiguration().isValid()) {

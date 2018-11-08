@@ -63,7 +63,7 @@ import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustAllCertificates
 import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustRootCaStrategy;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
-import se.tink.backend.common.config.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 

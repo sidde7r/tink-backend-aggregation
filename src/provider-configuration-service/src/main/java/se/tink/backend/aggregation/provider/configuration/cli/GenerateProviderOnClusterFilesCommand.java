@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.provider.configuration.storage.models.Provide
 import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ClusterProviderListModel;
 import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ProviderConfigModel;
 import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ProviderSpecificationModel;
-import se.tink.backend.common.config.ServiceConfiguration;
 
 import java.io.File;
 import java.io.FileWriter;

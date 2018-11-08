@@ -1,4 +1,4 @@
-package se.tink.backend.common.config;
+package se.tink.backend.aggregation.configuration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

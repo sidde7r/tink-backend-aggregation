@@ -41,9 +41,8 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
-import se.tink.backend.common.config.IntegrationsConfiguration;
-import se.tink.backend.common.config.ServiceConfiguration;
-import se.tink.backend.common.config.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.i18n.Catalog;
 
@@ -92,8 +91,7 @@ public abstract class NextGenerationAgent extends AbstractAgent implements Refre
         configureHttpClient(client);
     }
 
-    protected void setMultiIpGateway(ServiceConfiguration configuration) {
-        IntegrationsConfiguration integrationsConfiguration = configuration.getIntegrations();
+    protected void setMultiIpGateway(IntegrationsConfiguration integrationsConfiguration) {
         if (Objects.isNull(integrationsConfiguration)) {
             log.warn("Proxy-setup: integrationsConfiguration is null.");
             return;

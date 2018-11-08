@@ -8,7 +8,7 @@ import io.dropwizard.setup.Environment;
 import se.tink.backend.aggregation.cli.AggregationMigrateMultiClientCommand;
 import se.tink.backend.aggregation.guice.configuration.AggregationModuleFactory;
 import se.tink.backend.aggregation.workers.AgentWorker;
-import se.tink.backend.common.config.ServiceConfiguration;
+import se.tink.backend.aggregation.configurations.ServiceConfiguration;
 import se.tink.libraries.draining.DrainModeTask;
 import se.tink.libraries.dropwizard.DropwizardLifecycleInjectorFactory;
 import se.tink.libraries.dropwizard.DropwizardObjectMapperConfigurator;

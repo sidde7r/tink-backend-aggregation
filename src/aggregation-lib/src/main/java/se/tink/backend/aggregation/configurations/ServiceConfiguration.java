@@ -1,36 +1,27 @@
-package se.tink.backend.common.config;
+package se.tink.backend.aggregation.configurations;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.common.config.AggregationDevelopmentConfiguration;
+import se.tink.backend.common.config.CacheConfiguration;
+import se.tink.backend.common.config.CoordinationConfiguration;
+import se.tink.backend.common.config.DatabaseConfiguration;
+import se.tink.backend.common.config.PrometheusConfiguration;
+import se.tink.backend.common.config.S3StorageConfiguration;
 import se.tink.backend.queue.sqs.configuration.SqsQueueConfiguration;
-import se.tink.libraries.abnamro.config.AbnAmroConfiguration;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ServiceConfiguration extends Configuration {
     @JsonProperty
-    private AbnAmroConfiguration abnAmroStaging = new AbnAmroConfiguration();
-
-    @JsonProperty
-    private AbnAmroConfiguration abnAmroProduction = new AbnAmroConfiguration();
-
-    @JsonProperty
-    private AbnAmroConfiguration abnAmro = new AbnAmroConfiguration();
-
-    @JsonProperty
-    private AggregationWorkerConfiguration aggregationWorker = new AggregationWorkerConfiguration();
-
-    @JsonProperty
-    private IntegrationsConfiguration integrations = new IntegrationsConfiguration();
+    private AgentsServiceConfiguration agentsServiceConfiguration = new AgentsServiceConfiguration();
 
     @JsonProperty
     private CacheConfiguration cache = new CacheConfiguration();
 
     @JsonProperty
     private CoordinationConfiguration coordination = new CoordinationConfiguration();
-
-    @JsonProperty("creditsafe")
-    private CreditSafeConfiguration creditSafe = new CreditSafeConfiguration();
 
     @JsonProperty
     private DatabaseConfiguration database = new DatabaseConfiguration();
@@ -42,16 +33,10 @@ public class ServiceConfiguration extends Configuration {
     private PrometheusConfiguration prometheus = new PrometheusConfiguration();
 
     @JsonProperty
-    private SignatureKeyPair signatureKeyPair = new SignatureKeyPair();
-
-    @JsonProperty
     private SqsQueueConfiguration sqsQueueConfiguration = new SqsQueueConfiguration();
 
     @JsonProperty
     private S3StorageConfiguration s3StorageConfiguration = new S3StorageConfiguration();
-
-    @JsonProperty
-    private ExcludedDebugClusters excludedDebugClusters = new ExcludedDebugClusters();
 
     @JsonProperty
     private AggregationDevelopmentConfiguration developmentConfiguration = new AggregationDevelopmentConfiguration();
@@ -59,24 +44,8 @@ public class ServiceConfiguration extends Configuration {
     @JsonProperty
     private boolean isMultiClientDevelopment = false;
 
-    public AbnAmroConfiguration getAbnAmroStaging() {
-        return abnAmroStaging;
-    }
-
-    public AbnAmroConfiguration getAbnAmroProduction() {
-        return abnAmroProduction;
-    }
-
-    public AbnAmroConfiguration getAbnAmro() {
-        return abnAmro;
-    }
-
-    public AggregationWorkerConfiguration getAggregationWorker() {
-        return aggregationWorker;
-    }
-
-    public IntegrationsConfiguration getIntegrations() {
-        return integrations;
+    public AgentsServiceConfiguration getAgentsServiceConfiguration() {
+        return agentsServiceConfiguration;
     }
 
     public CacheConfiguration getCache() {
@@ -99,16 +68,8 @@ public class ServiceConfiguration extends Configuration {
         return developmentMode;
     }
 
-    public CreditSafeConfiguration getCreditSafe() {
-        return creditSafe;
-    }
-
     public PrometheusConfiguration getPrometheus() {
         return prometheus;
-    }
-
-    public SignatureKeyPair getSignatureKeyPair() {
-        return signatureKeyPair;
     }
 
     public SqsQueueConfiguration getSqsQueueConfiguration() {
@@ -117,10 +78,6 @@ public class ServiceConfiguration extends Configuration {
 
     public S3StorageConfiguration getS3StorageConfiguration() {
         return s3StorageConfiguration;
-    }
-
-    public ExcludedDebugClusters getExcludedDebugClusters() {
-        return excludedDebugClusters;
     }
 
     public void setSqsQueueConfiguration(SqsQueueConfiguration sqsQueueConfiguration) {

@@ -8,7 +8,8 @@ import se.tink.backend.aggregation.api.CreditSafeService;
 import se.tink.backend.aggregation.cluster.annotations.ClusterContext;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
-import se.tink.backend.common.config.ServiceConfiguration;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configurations.ServiceConfiguration;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.ConsumerMonitoringWrapper;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.AddMonitoredConsumerCreditSafeRequest;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.ChangedConsumerCreditSafeRequest;
@@ -26,7 +27,7 @@ public class CreditSafeServiceResource implements CreditSafeService {
     private ConsumerMonitoringWrapper consumerMonitoringWrapper;
 
     @Inject
-    public CreditSafeServiceResource(ServiceConfiguration configuration) {
+    public CreditSafeServiceResource(AgentsServiceConfiguration configuration) {
         this(configuration.getCreditSafe().getUsername(), configuration.getCreditSafe().getPassword(),
                 configuration.getCreditSafe().isLogConsumerMonitoringTraffic());
     }

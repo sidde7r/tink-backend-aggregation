@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.abnamro.ics.mappers.TransactionMapper;
 import se.tink.backend.aggregation.agents.abnamro.utils.AbnAmroAgentUtils;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
@@ -28,8 +29,7 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.rpc.User;
-import se.tink.backend.common.config.ServiceConfiguration;
-import se.tink.backend.common.config.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.system.rpc.Transaction;
 import se.tink.libraries.abnamro.client.EnrollmentClient;
 import se.tink.libraries.abnamro.client.IBSubscriptionClient;
@@ -72,7 +72,7 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
     }
 
     @Override
-    public void setConfiguration(ServiceConfiguration configuration) {
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
         this.abnAmroConfiguration = getValidAbnAmroConfiguration(configuration);
 
         this.subscriptionClient = new IBSubscriptionClient(abnAmroConfiguration, context.getMetricRegistry());
@@ -83,7 +83,7 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
                 context.getMetricRegistry());
     }
 
-    private AbnAmroConfiguration getValidAbnAmroConfiguration(ServiceConfiguration configuration) {
+    private AbnAmroConfiguration getValidAbnAmroConfiguration(AgentsServiceConfiguration configuration) {
         if (Objects.nonNull(configuration.getAbnAmro())) {
             return configuration.getAbnAmro();
         }

@@ -5,12 +5,12 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.util.concurrent.RateLimiter;
 import javax.inject.Inject;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.workers.concurrency.CircuitBreakerStatistics;
 import se.tink.backend.aggregation.workers.ratelimit.CachingProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.ratelimit.DefaultProviderRateLimiterFactory;
-import se.tink.backend.common.config.CircuitBreakerConfiguration;
-import se.tink.backend.common.config.ServiceConfiguration;
+import se.tink.backend.aggregation.configuration.CircuitBreakerConfiguration;
 import se.tink.libraries.metrics.MetricRegistry;
 
 public class CircuitBreakerAgentWorkerCommandState {
@@ -20,9 +20,9 @@ public class CircuitBreakerAgentWorkerCommandState {
     private LoadingCache<Provider, CircuitBreakerStatistics> statisticsByProvider;
 
     @Inject
-    public CircuitBreakerAgentWorkerCommandState(ServiceConfiguration serviceConfiguration,
+    public CircuitBreakerAgentWorkerCommandState(AgentsServiceConfiguration agentsServiceConfiguration,
                                                  MetricRegistry metricRegistry) {
-        CircuitBreakerConfiguration configuration = serviceConfiguration.getAggregationWorker().getCircuitBreaker();
+        CircuitBreakerConfiguration configuration = agentsServiceConfiguration.getAggregationWorker().getCircuitBreaker();
         this.originalRate = configuration.getRateLimitRate();
         this.metricRegistry = metricRegistry;
         this.cachingProviderRateLimiterFactory = new CachingProviderRateLimiterFactory(
