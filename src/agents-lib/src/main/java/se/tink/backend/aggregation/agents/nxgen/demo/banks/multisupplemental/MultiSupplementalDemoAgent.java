@@ -21,9 +21,9 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
-public class MultiSupplementalAgent extends NextGenerationAgent {
+public class MultiSupplementalDemoAgent extends NextGenerationAgent {
 
-    public MultiSupplementalAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public MultiSupplementalDemoAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }
 
