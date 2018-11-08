@@ -6,6 +6,7 @@ import se.tink.backend.common.VersionInformation;
 import se.tink.libraries.metrics.HeapDumpGauge;
 import se.tink.libraries.metrics.MetricCollector;
 import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.PrometheusConfiguration;
 import se.tink.libraries.metrics.PrometheusExportServer;
 
 public class ProviderServiceConfigurationModule extends AbstractModule {
