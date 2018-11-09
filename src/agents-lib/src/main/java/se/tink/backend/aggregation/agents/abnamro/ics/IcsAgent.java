@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.abnamro.ics.mappers.AccountMapper;
 import se.tink.backend.aggregation.agents.abnamro.ics.mappers.TransactionMapper;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.api.CallbackHostConfiguration;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -102,9 +103,8 @@ public class IcsAgent extends AbstractAgent implements RefreshableItemExecutor {
             return configuration.getAbnAmro();
         }
 
-        String clusterIdentifier = Optional.ofNullable(context.getClusterInfo())
-                .map(ClusterInfo::getClusterId)
-                .map(ClusterId::getId)
+        String clusterIdentifier = Optional.ofNullable(context.getCallbackHostConfiguration())
+                .map(CallbackHostConfiguration::getClusterId)
                 .orElseThrow(() -> new IllegalStateException("Failed to fetch cluster identifier."));
 
         switch (clusterIdentifier.toLowerCase()) {
