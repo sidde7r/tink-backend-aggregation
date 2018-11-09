@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
-import se.tink.backend.aggregation.workers.AgentWorkerContext;
+import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerOperationMetricType;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
 import se.tink.backend.aggregation.workers.metrics.MetricAction;
@@ -24,11 +24,11 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
     private static final String METRIC_ACTION = "refresh";
 
 
-    private final AgentWorkerContext context;
+    private final AgentWorkerCommandContext context;
     private final RefreshableItem item;
     private final AgentWorkerCommandMetricState metrics;
 
-    public RefreshItemAgentWorkerCommand(AgentWorkerContext context, RefreshableItem item,
+    public RefreshItemAgentWorkerCommand(AgentWorkerCommandContext context, RefreshableItem item,
             AgentWorkerCommandMetricState metrics) {
         this.context = context;
         this.item = item;

@@ -7,17 +7,17 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
-import se.tink.backend.aggregation.workers.AgentWorkerContext;
+import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 
 public class LockAgentWorkerCommand extends AgentWorkerCommand {
     private static final AggregationLogger log = new AggregationLogger(LockAgentWorkerCommand.class);
     private static final String LOCK_FORMAT = "/locks/aggregation/LockAgentWorkerCommand/%s/%s"; // % (userId, className)
 
     private InterProcessLock lock;
-    private AgentWorkerContext context;
+    private AgentWorkerCommandContext context;
     private boolean hasAcquiredLock;
 
-    public LockAgentWorkerCommand(AgentWorkerContext context) {
+    public LockAgentWorkerCommand(AgentWorkerCommandContext context) {
         this.context = context;
     }
 

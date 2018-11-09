@@ -28,7 +28,7 @@ public class SelectAccountsToAggregateCommand extends AgentWorkerCommand {
     }
 
     // select from all accounts that is under this credential and store in `accountsToAggregate` list in
-    // AgentWorkerContext:
+    // AgentWorkerCommandContext:
     //      if it is regular refresh (refresh all but excluded account:
     //          we store all besides the excluded accounts
     //      if it is a white listed refresh (refresh without asking user to select)

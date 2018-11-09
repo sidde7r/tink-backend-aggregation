@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
-import se.tink.backend.aggregation.workers.AgentWorkerContext;
+import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerOperationMetricType;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
 import se.tink.backend.aggregation.workers.metrics.MetricAction;
@@ -18,10 +18,10 @@ public class SendAccountsToUpdateServiceAgentWorkerCommand extends AgentWorkerCo
     private static final String METRIC_NAME = "agent_refresh";
     private static final String METRIC_ACTION = "send_accounts";
 
-    private final AgentWorkerContext context;
+    private final AgentWorkerCommandContext context;
     private final AgentWorkerCommandMetricState metrics;
 
-    public SendAccountsToUpdateServiceAgentWorkerCommand(AgentWorkerContext context,
+    public SendAccountsToUpdateServiceAgentWorkerCommand(AgentWorkerCommandContext context,
             AgentWorkerCommandMetricState metrics) {
         this.context = context;
         this.metrics = metrics.init(this);

@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
-import se.tink.backend.aggregation.workers.AgentWorkerContext;
+import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.commands.state.CircuitBreakerAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.concurrency.CircuitBreakerStatistics;
 import se.tink.backend.aggregation.configuration.CircuitBreakerConfiguration;
@@ -32,10 +32,10 @@ public class CircuitBreakerAgentWorkerCommand extends AgentWorkerCommand {
     private static final AggregationLogger log = new AggregationLogger(CircuitBreakerAgentWorkerCommand.class);
 
     private CircuitBreakerAgentWorkerCommandState state;
-    private AgentWorkerContext context;
+    private AgentWorkerCommandContext context;
     private boolean wasCircuitBreaked;
 
-    public CircuitBreakerAgentWorkerCommand(AgentWorkerContext context, CircuitBreakerAgentWorkerCommandState state) {
+    public CircuitBreakerAgentWorkerCommand(AgentWorkerCommandContext context, CircuitBreakerAgentWorkerCommandState state) {
         this.context = context;
         this.state = state;
     }

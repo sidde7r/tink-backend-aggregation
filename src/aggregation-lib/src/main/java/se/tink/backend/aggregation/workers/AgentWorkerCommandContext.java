@@ -14,6 +14,8 @@ import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentEventListener;
 import se.tink.backend.aggregation.agents.SetAccountsToAggregateContext;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
+import se.tink.backend.aggregation.api.AggregatorInfo;
+import se.tink.backend.aggregation.api.CallbackHostConfiguration;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -61,23 +63,23 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
     public AgentWorkerCommandContext(CredentialsRequest request,
             MetricRegistry metricRegistry,
             AggregationControllerAggregationClient aggregationControllerAggregationClient,
-            ClusterInfo clusterInfo,
             CuratorFramework coordinationClient,
             CacheClient cacheClient,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
-        super(request, metricRegistry, aggregationControllerAggregationClient, clusterInfo, coordinationClient,
+            AgentsServiceConfiguration agentsServiceConfiguration,
+            AggregatorInfo aggregatorInfo,
+            CallbackHostConfiguration callbackHostConfiguration) {
+        super(request, metricRegistry, aggregationControllerAggregationClient, coordinationClient,
                 cacheClient,
-                agentsServiceConfiguration);
+                agentsServiceConfiguration, aggregatorInfo, callbackHostConfiguration);
         this.coordinationClient = coordinationClient;
         this.timePutOnQueue = System.currentTimeMillis();
-        final ClusterId clusterId = clusterInfo.getClusterId();
         this.uniqueIdOfUserSelectedAccounts = Lists.newArrayList();
 
 
         Provider provider = request.getProvider();
 
         defaultMetricLabels = new MetricId.MetricLabels()
-                .addAll(clusterId.metricLabels())
+                .addAll(callbackHostConfiguration.metricLabels())
                 .add("provider", MetricsUtils.cleanMetricName(provider.getName()))
                 .add("market", provider.getMarket())
                 .add("agent", Optional.ofNullable(provider.getClassName()).orElse(EMPTY_CLASS_NAME))
@@ -122,7 +124,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
         processAccountsRequest.setCredentialsId(credentials.getId());
         processAccountsRequest.setUserId(request.getUser().getId());
 
-        aggregationControllerAggregationClient.processAccounts(HostConfigurationConverter.convert(getClusterInfo()),
+        aggregationControllerAggregationClient.processAccounts(HostConfigurationConverter.convert(getCallbackHostConfiguration()),
                 processAccountsRequest);
     }
 
@@ -211,7 +213,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
 
 
     public void updateSignableOperation(SignableOperation signableOperation) {
-        aggregationControllerAggregationClient.updateSignableOperation(HostConfigurationConverter.convert(getClusterInfo()),
+        aggregationControllerAggregationClient.updateSignableOperation(HostConfigurationConverter.convert(getCallbackHostConfiguration()),
                 signableOperation);
     }
 
@@ -240,7 +242,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
         request.setUserId(this.request.getUser().getId());
 
         if (!transferDestinationPatternsByAccount.isEmpty()) {
-            aggregationControllerAggregationClient.updateTransferDestinationPatterns(HostConfigurationConverter.convert(getClusterInfo()),
+            aggregationControllerAggregationClient.updateTransferDestinationPatterns(HostConfigurationConverter.convert(getCallbackHostConfiguration()),
                     request);
         }
     }
@@ -260,7 +262,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
         updateTransfersRequest.setCredentialsId(request.getCredentials().getId());
         updateTransfersRequest.setTransfers(transfers);
 
-        aggregationControllerAggregationClient.processEinvoices(HostConfigurationConverter.convert(getClusterInfo()),
+        aggregationControllerAggregationClient.processEinvoices(HostConfigurationConverter.convert(getCallbackHostConfiguration()),
                 updateTransfersRequest);
     }
 

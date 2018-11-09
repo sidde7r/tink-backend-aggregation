@@ -6,21 +6,21 @@ import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
-import se.tink.backend.aggregation.workers.AgentWorkerContext;
+import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.encryption.CredentialsCrypto;
 import se.tink.backend.common.cache.CacheClient;
 import se.tink.backend.aggregation.storage.database.repositories.ClusterCryptoConfigurationRepository;
 
 public class EncryptCredentialsWorkerCommand extends AgentWorkerCommand {
 
-    private final AgentWorkerContext context;
+    private final AgentWorkerCommandContext context;
     private final CredentialsCrypto credentialsCrypto;
     private final boolean doUpdateCredential;
 
     public EncryptCredentialsWorkerCommand(ClusterInfo clusterInfo, CacheClient cacheClient,
             ClusterCryptoConfigurationRepository clusterCryptoConfigurationRepository,
             AggregationControllerAggregationClient aggregationControllerAggregationClient,
-            AgentWorkerContext context) {
+            AgentWorkerCommandContext context) {
         this(clusterInfo, cacheClient, clusterCryptoConfigurationRepository, aggregationControllerAggregationClient,
                 context, true);
     }
@@ -28,7 +28,7 @@ public class EncryptCredentialsWorkerCommand extends AgentWorkerCommand {
     public EncryptCredentialsWorkerCommand(ClusterInfo clusterInfo, CacheClient cacheClient,
             ClusterCryptoConfigurationRepository clusterCryptoConfigurationRepository,
             AggregationControllerAggregationClient aggregationControllerAggregationClient,
-            AgentWorkerContext context, boolean doUpdateCredential) {
+            AgentWorkerCommandContext context, boolean doUpdateCredential) {
         this.context = context;
         this.doUpdateCredential = doUpdateCredential;
         credentialsCrypto = new CredentialsCrypto(

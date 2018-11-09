@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
-import se.tink.backend.aggregation.workers.AgentWorkerContext;
+import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.commands.state.DebugAgentWorkerCommandState;
 import se.tink.libraries.uuid.UUIDUtils;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -27,10 +27,10 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
     private static final AggregationLogger log = new AggregationLogger(DebugAgentWorkerCommand.class);
 
     private DebugAgentWorkerCommandState state;
-    private AgentWorkerContext context;
+    private AgentWorkerCommandContext context;
     private AgentDebugStorageHandler agentDebugStorage;
 
-    public DebugAgentWorkerCommand(AgentWorkerContext context,
+    public DebugAgentWorkerCommand(AgentWorkerCommandContext context,
             DebugAgentWorkerCommandState state,
             AgentDebugStorageHandler agentDebugStorage) {
         this.context = context;
