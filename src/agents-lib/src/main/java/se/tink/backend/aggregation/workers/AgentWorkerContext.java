@@ -24,7 +24,6 @@ import se.tink.backend.aggregation.agents.AgentEventListener;
 import se.tink.backend.aggregation.agents.SetAccountsToAggregateContext;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.api.CallbackHostConfiguration;
-import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.converter.AggregatorConverter;
@@ -121,7 +120,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         this.coordinationClient = coordinationClient;
 
         setCallbackHostConfiguration(callbackHostConfiguration);
-        setAggregator(
+        setAggregatorInfo(
                 AggregatorConverter.convert(clusterInfo.getAggregator()));
 
         if (request.getUser() != null) {

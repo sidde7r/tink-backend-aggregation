@@ -53,7 +53,7 @@ public abstract class AgentContext {
         return aggregatorInfo;
     }
 
-    public void setAggregator(AggregatorInfo aggregatorInfo) {
+    public void setAggregatorInfo(AggregatorInfo aggregatorInfo) {
         this.aggregatorInfo = aggregatorInfo;
     }
 

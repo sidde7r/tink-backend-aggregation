@@ -69,7 +69,7 @@ public class NewAgentTestContext extends AgentContext {
         this.transactionsToPrint = transactionsToPrint;
 
         setTestContext(true);
-        setAggregator(AggregatorInfo.getAggregatorForTesting());
+        setAggregatorInfo(AggregatorInfo.getAggregatorForTesting());
     }
 
     @Override

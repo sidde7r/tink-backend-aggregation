@@ -54,7 +54,7 @@ public class AgentTestContext extends AgentContext {
         this.credentials = credentials;
         setCallbackHostConfiguration(
                 CallbackHostConfiguration.createForTesting("test-local-development"));
-        setAggregator(AggregatorInfo.getAggregatorForTesting());
+        setAggregatorInfo(AggregatorInfo.getAggregatorForTesting());
     }
 
     @Override
