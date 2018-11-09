@@ -62,7 +62,10 @@ public class OAuth2AuthenticationController implements AutoAuthenticator, ThirdP
                 OAuth2Token.class)
                 .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
-        if (accessToken.hasExpired()) {
+        if (accessToken.hasAccessExpired()) {
+            if (!accessToken.canRefresh()) {
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
 
             persistentStorage.remove(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN);
 

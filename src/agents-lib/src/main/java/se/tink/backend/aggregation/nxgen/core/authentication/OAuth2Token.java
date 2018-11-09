@@ -15,28 +15,45 @@ public class OAuth2Token {
     @JsonProperty
     private String refreshToken;
     private long expiresInSeconds;
+    private long refreshExpiresInSeconds;
     private long issuedAt;
 
     private OAuth2Token(@JsonProperty("tokenType") String tokenType,
             @JsonProperty("accessToken") String accessToken,
             @JsonProperty("refreshToken") String refreshToken,
             @JsonProperty("expiresInSeconds") long expiresInSeconds,
+            @JsonProperty("refreshExpiresInSeconds") long refreshExpiresInSeconds,
             @JsonProperty("issuedAt") long issuedAt) {
         this.tokenType = tokenType;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.expiresInSeconds = expiresInSeconds;
+        this.refreshExpiresInSeconds = refreshExpiresInSeconds;
         this.issuedAt = issuedAt;
     }
 
     @JsonIgnore
     public static OAuth2Token create(String tokenType, String accessToken, String refreshToken,
-            long expiresInSeconds) {
+            long accessExpiresInSeconds) {
         return new OAuth2Token(
                 tokenType,
                 accessToken,
                 refreshToken,
-                expiresInSeconds,
+                accessExpiresInSeconds,
+                0,
+                getCurrentEpoch()
+        );
+    }
+
+    @JsonIgnore
+    public static OAuth2Token create(String tokenType, String accessToken, String refreshToken,
+            long accessExpiresInSeconds, long refreshExpiresInSeconds) {
+        return new OAuth2Token(
+                tokenType,
+                accessToken,
+                refreshToken,
+                accessExpiresInSeconds,
+                refreshExpiresInSeconds,
                 getCurrentEpoch()
         );
     }
@@ -60,14 +77,28 @@ public class OAuth2Token {
     }
 
     @JsonIgnore
-    public boolean hasExpired() {
+    public boolean hasAccessExpired() {
         long currentTime = getCurrentEpoch();
         return currentTime >= (issuedAt + expiresInSeconds);
     }
 
     @JsonIgnore
+    private boolean hasRefreshExpired() {
+        if (refreshExpiresInSeconds == 0) {  // 0 is considered "not specified"
+            return false;
+        }
+        long currentTime = getCurrentEpoch();
+        return currentTime >= (issuedAt + refreshExpiresInSeconds);
+    }
+
+    @JsonIgnore
     public boolean isValid() {
-        return !hasExpired() && !Strings.isNullOrEmpty(accessToken);
+        return !hasAccessExpired() && !Strings.isNullOrEmpty(accessToken);
+    }
+
+    @JsonIgnore
+    public boolean canRefresh() {
+        return !hasRefreshExpired() && !Strings.isNullOrEmpty(refreshToken);
     }
 
     @JsonIgnore
