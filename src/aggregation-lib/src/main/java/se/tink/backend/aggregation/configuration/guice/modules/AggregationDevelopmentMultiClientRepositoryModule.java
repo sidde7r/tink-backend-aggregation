@@ -1,0 +1,46 @@
+package se.tink.backend.aggregation.configuration.guice.modules;
+
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
+import com.google.inject.name.Named;
+import se.tink.backend.aggregation.storage.database.repositories.AggregatorConfigurationsRepository;
+import se.tink.backend.aggregation.storage.database.repositories.ClientConfigurationsRepository;
+import se.tink.backend.aggregation.storage.database.repositories.ClusterConfigurationsRepository;
+import se.tink.backend.aggregation.storage.database.repositories.CryptoConfigurationsRepository;
+import se.tink.backend.common.config.DatabaseConfiguration;
+import se.tink.backend.aggregation.storage.database.repositories.ClusterCryptoConfigurationRepository;
+import se.tink.backend.aggregation.storage.database.repositories.ClusterHostConfigurationRepository;
+import se.tink.backend.core.ClusterHostConfiguration;
+import se.tink.backend.guice.configuration.RepositoryModule;
+
+import java.util.Map;
+import java.util.stream.Collectors;
+
+/*
+    database configuration for running aggregation locally.
+    intended for cluster hosting multiple clients structure
+ */
+public class AggregationDevelopmentMultiClientRepositoryModule extends RepositoryModule {
+    public AggregationDevelopmentMultiClientRepositoryModule(DatabaseConfiguration databaseConfiguration) {
+        super(databaseConfiguration);
+    }
+
+    @Override
+    protected void bindRepositories() {
+        bindSpringBean(ClusterHostConfigurationRepository.class);
+        bindSpringBean(ClusterCryptoConfigurationRepository.class);
+        bindSpringBean(CryptoConfigurationsRepository.class);
+        bindSpringBean(ClientConfigurationsRepository.class);
+        bindSpringBean(AggregatorConfigurationsRepository.class);
+        bindSpringBean(ClusterConfigurationsRepository.class);
+    }
+    
+    @Provides
+    @Singleton
+    @Named("clusterHostConfigurations")
+    public Map<String, ClusterHostConfiguration> provideClusterHostConfigurations(ClusterHostConfigurationRepository repository) {
+        return repository.findAll().stream().collect(
+                Collectors.toMap(ClusterHostConfiguration::getClusterId, x -> x)
+        );
+    }
+}

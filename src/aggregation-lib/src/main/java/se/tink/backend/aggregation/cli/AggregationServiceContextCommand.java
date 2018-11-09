@@ -8,11 +8,11 @@ import io.dropwizard.cli.ConfiguredCommand;
 import io.dropwizard.setup.Bootstrap;
 import java.util.List;
 import net.sourceforge.argparse4j.inf.Namespace;
-import se.tink.backend.aggregation.guice.configuration.AggregationMultiClientRepositoryModule;
+import se.tink.backend.aggregation.configuration.guice.modules.AggregationMultiClientRepositoryModule;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.configuration.AggregationServiceConfiguration;
-import se.tink.backend.aggregation.guice.configuration.AggregationCommonModule;
-import se.tink.backend.aggregation.guice.configuration.AggregationConfigurationModule;
+import se.tink.backend.aggregation.configuration.guice.modules.AggregationCommonModule;
+import se.tink.backend.aggregation.configuration.guice.modules.AggregationConfigurationModule;
 import se.tink.libraries.discovery.CoordinationModule;
 
 public abstract class AggregationServiceContextCommand<T extends AggregationServiceConfiguration> extends ConfiguredCommand<T> {

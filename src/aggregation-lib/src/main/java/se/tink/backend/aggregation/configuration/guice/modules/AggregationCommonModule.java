@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.guice.configuration;
+package se.tink.backend.aggregation.configuration.guice.modules;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Queues;

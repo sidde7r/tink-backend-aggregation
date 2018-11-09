@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.guice.configuration;
+package se.tink.backend.aggregation.configuration.guice.modules;
 
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
@@ -17,11 +17,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /*
-    database configuration for running aggregation locally.
+    database configuration for running aggregation in production environment.
     intended for cluster hosting multiple clients structure
  */
-public class AggregationDevelopmentMultiClientRepositoryModule extends RepositoryModule {
-    public AggregationDevelopmentMultiClientRepositoryModule(DatabaseConfiguration databaseConfiguration) {
+public class AggregationMultiClientRepositoryModule extends RepositoryModule {
+    public AggregationMultiClientRepositoryModule(DatabaseConfiguration databaseConfiguration) {
         super(databaseConfiguration);
     }
 
@@ -34,7 +34,7 @@ public class AggregationDevelopmentMultiClientRepositoryModule extends Repositor
         bindSpringBean(AggregatorConfigurationsRepository.class);
         bindSpringBean(ClusterConfigurationsRepository.class);
     }
-    
+
     @Provides
     @Singleton
     @Named("clusterHostConfigurations")
