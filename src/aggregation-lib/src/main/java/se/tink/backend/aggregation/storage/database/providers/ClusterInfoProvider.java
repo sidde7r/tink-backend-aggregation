@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.configurations.providers;
+package se.tink.backend.aggregation.storage.database.providers;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;

@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.api.CreditSafeService;
 import se.tink.backend.aggregation.cluster.jersey.JerseyClientApiKeyProvider;
 import se.tink.backend.aggregation.cluster.jersey.JerseyClusterInfoProvider;
 import se.tink.backend.aggregation.configurations.AggregationServiceConfiguration;
-import se.tink.backend.aggregation.configurations.providers.ClusterInfoProvider;
+import se.tink.backend.aggregation.storage.database.providers.ClusterInfoProvider;
 import se.tink.backend.aggregation.log.AggregationLoggerRequestFilter;
 import se.tink.backend.aggregation.resources.AggregationServiceResource;
 import se.tink.backend.aggregation.resources.CreditSafeServiceResource;
