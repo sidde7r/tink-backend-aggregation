@@ -241,8 +241,8 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         processAccountsRequest.setCredentialsId(credentials.getId());
         processAccountsRequest.setUserId(request.getUser().getId());
 
-        aggregationControllerAggregationClient.processAccounts(HostConfigurationConverter.convert(getClusterInfo()),
-                processAccountsRequest);
+        aggregationControllerAggregationClient.processAccounts(HostConfigurationConverter.convert(
+                getCallbackHostConfiguration()), processAccountsRequest);
     }
 
     @Override
@@ -307,7 +307,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
             generateStatisticsReq.setMode(StatisticMode.FULL); // To trigger refresh of residences.
 
             aggregationControllerAggregationClient.generateStatisticsAndActivityAsynchronously(
-                    HostConfigurationConverter.convert(getClusterInfo()), generateStatisticsReq);
+                    HostConfigurationConverter.convert(getCallbackHostConfiguration()), generateStatisticsReq);
             return;
         }
 
@@ -325,8 +325,8 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         updateTransactionsRequest.setCredentials(credentials.getId());
         updateTransactionsRequest.setUserTriggered(request.isManual());
 
-        aggregationControllerAggregationClient.updateTransactionsAsynchronously(HostConfigurationConverter.convert(getClusterInfo()),
-                updateTransactionsRequest);
+        aggregationControllerAggregationClient.updateTransactionsAsynchronously(
+                HostConfigurationConverter.convert(getCallbackHostConfiguration()), updateTransactionsRequest);
 
         isSystemProcessingTransactions = true;
 
@@ -459,8 +459,8 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
 
         Account updatedAccount;
         try {
-            updatedAccount = aggregationControllerAggregationClient.updateAccount(HostConfigurationConverter.convert(getClusterInfo()),
-                    updateAccountRequest);
+            updatedAccount = aggregationControllerAggregationClient.updateAccount(
+                    HostConfigurationConverter.convert(getCallbackHostConfiguration()), updateAccountRequest);
 
         } catch (UniformInterfaceException e) {
             log.error("Account update request failed, response: " +
@@ -498,8 +498,8 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         updateCredentialsStatusRequest.setUpdateContextTimestamp(doStatusUpdate);
         updateCredentialsStatusRequest.setUserDeviceId(request.getUserDeviceId());
 
-        aggregationControllerAggregationClient.updateCredentials(HostConfigurationConverter.convert(getClusterInfo()),
-                updateCredentialsStatusRequest);
+        aggregationControllerAggregationClient.updateCredentials(
+                HostConfigurationConverter.convert(getCallbackHostConfiguration()), updateCredentialsStatusRequest);
     }
 
     @Override
@@ -508,8 +508,8 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         updateFraudRequest.setUserId(request.getUser().getId());
         updateFraudRequest.setDetailsContents(detailsContents);
 
-        aggregationControllerAggregationClient.updateFraudDetails(HostConfigurationConverter.convert(getClusterInfo()),
-                updateFraudRequest);
+        aggregationControllerAggregationClient.updateFraudDetails(
+                HostConfigurationConverter.convert(getCallbackHostConfiguration()), updateFraudRequest);
     }
 
     @Override
@@ -589,8 +589,8 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         request.setUserId(this.request.getUser().getId());
 
         if (!transferDestinationPatternsByAccount.isEmpty()) {
-            aggregationControllerAggregationClient.updateTransferDestinationPatterns(HostConfigurationConverter.convert(getClusterInfo()),
-                    request);
+            aggregationControllerAggregationClient.updateTransferDestinationPatterns(
+                    HostConfigurationConverter.convert(getCallbackHostConfiguration()), request);
         }
     }
 
@@ -603,8 +603,8 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
 
     @Override
     public void updateSignableOperation(SignableOperation signableOperation) {
-        aggregationControllerAggregationClient.updateSignableOperation(HostConfigurationConverter.convert(getClusterInfo()),
-                signableOperation);
+        aggregationControllerAggregationClient.updateSignableOperation(
+                HostConfigurationConverter.convert(getCallbackHostConfiguration()), signableOperation);
     }
 
     @Override
@@ -615,8 +615,8 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         updateDocumentRequest.setDocumentContainer(container);
 
         se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateDocumentResponse updateDocumentResponse;
-        updateDocumentResponse = aggregationControllerAggregationClient.updateDocument(HostConfigurationConverter.convert(getClusterInfo()),
-                updateDocumentRequest);
+        updateDocumentResponse = aggregationControllerAggregationClient.updateDocument(
+                HostConfigurationConverter.convert(getCallbackHostConfiguration()), updateDocumentRequest);
 
         if (updateDocumentResponse.isSuccessfullyStored()) {
             return UpdateDocumentResponse.createSuccessful(
@@ -677,8 +677,8 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         updateTransfersRequest.setCredentialsId(request.getCredentials().getId());
         updateTransfersRequest.setTransfers(transfers);
 
-        aggregationControllerAggregationClient.processEinvoices(HostConfigurationConverter.convert(getClusterInfo()),
-                updateTransfersRequest);
+        aggregationControllerAggregationClient.processEinvoices(
+                HostConfigurationConverter.convert(getCallbackHostConfiguration()), updateTransfersRequest);
     }
 
     @Override
