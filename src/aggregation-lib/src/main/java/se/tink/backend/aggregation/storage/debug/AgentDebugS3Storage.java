@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.storage;
+package se.tink.backend.aggregation.storage.debug;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.client.builder.AwsClientBuilder;

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.storage;
+package se.tink.backend.aggregation.storage.debug;
 
 import java.io.File;
 import java.io.IOException;
