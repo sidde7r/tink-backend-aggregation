@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.converter.AggregatorConverter;
+import se.tink.backend.aggregation.converter.CallbackHostConfigurationConverter;
 import se.tink.backend.aggregation.converter.HostConfigurationConverter;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -119,7 +120,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         // _Not_ instanciating a SystemService from the ServiceFactory here.
         this.coordinationClient = coordinationClient;
 
-        setClusterInfo(clusterInfo);
+        setCallbackHostConfiguration(CallbackHostConfigurationConverter.convert(clusterInfo));
         setAggregator(
                 AggregatorConverter.convert(clusterInfo.getAggregator()));
 

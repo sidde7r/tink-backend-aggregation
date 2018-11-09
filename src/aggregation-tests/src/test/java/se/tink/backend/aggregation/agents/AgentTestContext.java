@@ -16,6 +16,7 @@ import org.apache.curator.framework.CuratorFramework;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
+import se.tink.backend.aggregation.converter.CallbackHostConfigurationConverter;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.Account;
@@ -53,7 +54,8 @@ public class AgentTestContext extends AgentContext {
 
     public AgentTestContext(Credentials credentials) {
         this.credentials = credentials;
-        setClusterInfo(ClusterInfo.createForTesting(ClusterId.of("test", "local-development")));
+        setCallbackHostConfiguration(CallbackHostConfigurationConverter.convert(
+                ClusterInfo.createForTesting(ClusterId.of("test", "local-development"))));
         setAggregator(AggregatorInfo.getAggregatorForTesting());
     }
 
