@@ -214,7 +214,7 @@ public class AgentWorkerOperationFactory {
 
 
         AgentWorkerContext context = new AgentWorkerContext(request, metricRegistry,
-                aggregationControllerAggregationClient, clusterInfo, serviceContext.getCoordinationClient(),
+                aggregationControllerAggregationClient, serviceContext.getCoordinationClient(),
                 serviceContext.getCacheClient(), serviceContext.getConfiguration().getAgentsServiceConfiguration(),
                 AggregatorConverter.convert(clusterInfo.getAggregator()),
                 CallbackHostConfigurationConverter.convert(clusterInfo));
@@ -246,7 +246,7 @@ public class AgentWorkerOperationFactory {
 
     public AgentWorkerOperation createExecuteTransferOperation(ClusterInfo clusterInfo, TransferRequest request) {
         AgentWorkerContext context = new AgentWorkerContext(request, metricRegistry,
-                aggregationControllerAggregationClient, clusterInfo, serviceContext.getCoordinationClient(),
+                aggregationControllerAggregationClient, serviceContext.getCoordinationClient(),
                 serviceContext.getCacheClient(), serviceContext.getConfiguration().getAgentsServiceConfiguration(),
                 AggregatorConverter.convert(clusterInfo.getAggregator()),
                 CallbackHostConfigurationConverter.convert(clusterInfo));
@@ -267,7 +267,7 @@ public class AgentWorkerOperationFactory {
             WhitelistedTransferRequest request) {
 
         AgentWorkerContext context = new AgentWorkerContext(request, metricRegistry,
-                aggregationControllerAggregationClient, clusterInfo, serviceContext.getCoordinationClient(),
+                aggregationControllerAggregationClient, serviceContext.getCoordinationClient(),
                 serviceContext.getCacheClient(), serviceContext.getConfiguration().getAgentsServiceConfiguration(),
                 AggregatorConverter.convert(clusterInfo.getAggregator()),
                 CallbackHostConfigurationConverter.convert(clusterInfo));
@@ -305,7 +305,7 @@ public class AgentWorkerOperationFactory {
 
     public AgentWorkerOperation createCreateCredentialsOperation(ClusterInfo clusterInfo, CredentialsRequest request) {
         AgentWorkerContext context = new AgentWorkerContext(request, metricRegistry,
-                aggregationControllerAggregationClient, clusterInfo, serviceContext.getCoordinationClient(),
+                aggregationControllerAggregationClient, serviceContext.getCoordinationClient(),
                 serviceContext.getCacheClient(), serviceContext.getConfiguration().getAgentsServiceConfiguration(),
                 AggregatorConverter.convert(clusterInfo.getAggregator()),
                 CallbackHostConfigurationConverter.convert(clusterInfo));
@@ -325,7 +325,7 @@ public class AgentWorkerOperationFactory {
 
     public AgentWorkerOperation createUpdateOperation(ClusterInfo clusterInfo, CredentialsRequest request) {
         AgentWorkerContext context = new AgentWorkerContext(request, metricRegistry,
-                aggregationControllerAggregationClient, clusterInfo, serviceContext.getCoordinationClient(),
+                aggregationControllerAggregationClient, serviceContext.getCoordinationClient(),
                 serviceContext.getCacheClient(), serviceContext.getConfiguration().getAgentsServiceConfiguration(),
                 AggregatorConverter.convert(clusterInfo.getAggregator()),
                 CallbackHostConfigurationConverter.convert(clusterInfo));
@@ -345,7 +345,7 @@ public class AgentWorkerOperationFactory {
 
     public AgentWorkerOperation createKeepAliveOperation(ClusterInfo clusterInfo, KeepAliveRequest request) {
         AgentWorkerContext context = new AgentWorkerContext(request, metricRegistry,
-                aggregationControllerAggregationClient, clusterInfo, serviceContext.getCoordinationClient(),
+                aggregationControllerAggregationClient, serviceContext.getCoordinationClient(),
                 serviceContext.getCacheClient(), serviceContext.getConfiguration().getAgentsServiceConfiguration(),
                 AggregatorConverter.convert(clusterInfo.getAggregator()),
                 CallbackHostConfigurationConverter.convert(clusterInfo));
@@ -369,7 +369,7 @@ public class AgentWorkerOperationFactory {
     public AgentWorkerOperation createReEncryptCredentialsOperation(ClusterInfo clusterInfo,
             ReEncryptCredentialsRequest request) {
         AgentWorkerContext context = new AgentWorkerContext(request, metricRegistry,
-                aggregationControllerAggregationClient, clusterInfo, serviceContext.getCoordinationClient(),
+                aggregationControllerAggregationClient, serviceContext.getCoordinationClient(),
                 serviceContext.getCacheClient(), serviceContext.getConfiguration().getAgentsServiceConfiguration(),
                 AggregatorConverter.convert(clusterInfo.getAggregator()),
                 CallbackHostConfigurationConverter.convert(clusterInfo));
@@ -421,7 +421,7 @@ public class AgentWorkerOperationFactory {
 
 
         AgentWorkerContext context = new AgentWorkerContext(request, metricRegistry,
-                aggregationControllerAggregationClient, clusterInfo, serviceContext.getCoordinationClient(),
+                aggregationControllerAggregationClient, serviceContext.getCoordinationClient(),
                 serviceContext.getCacheClient(), serviceContext.getConfiguration().getAgentsServiceConfiguration(),
                 AggregatorConverter.convert(clusterInfo.getAggregator()),
                 CallbackHostConfigurationConverter.convert(clusterInfo));
@@ -467,7 +467,7 @@ public class AgentWorkerOperationFactory {
         }
 
         AgentWorkerContext context = new AgentWorkerContext(request, metricRegistry,
-                aggregationControllerAggregationClient, clusterInfo, serviceContext.getCoordinationClient(),
+                aggregationControllerAggregationClient, serviceContext.getCoordinationClient(),
                 serviceContext.getCacheClient(), serviceContext.getConfiguration().getAgentsServiceConfiguration(),
                 AggregatorConverter.convert(clusterInfo.getAggregator()),
                 CallbackHostConfigurationConverter.convert(clusterInfo));

@@ -25,9 +25,7 @@ import se.tink.backend.aggregation.agents.SetAccountsToAggregateContext;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.api.CallbackHostConfiguration;
-import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.converter.CallbackHostConfigurationConverter;
 import se.tink.backend.aggregation.converter.HostConfigurationConverter;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -105,7 +103,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
 
     public AgentWorkerContext(CredentialsRequest request, MetricRegistry metricRegistry,
             AggregationControllerAggregationClient aggregationControllerAggregationClient,
-            ClusterInfo clusterInfo, CuratorFramework coordinationClient, CacheClient cacheClient,
+            CuratorFramework coordinationClient, CacheClient cacheClient,
             AgentsServiceConfiguration agentsServiceConfiguration, AggregatorInfo aggregatorInfo,
             CallbackHostConfiguration callbackHostConfiguration) {
 
