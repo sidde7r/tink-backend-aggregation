@@ -46,4 +46,12 @@ public class CallbackHostConfiguration {
     public void setDisablerequestcompression(boolean disablerequestcompression) {
         this.disablerequestcompression = disablerequestcompression;
     }
+
+    public static CallbackHostConfiguration createForTesting(String clusterId) {
+        CallbackHostConfiguration callbackHostConfiguration = new CallbackHostConfiguration();
+
+        callbackHostConfiguration.setClusterId(clusterId);
+
+        return callbackHostConfiguration;
+    }
 }
