@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.configurations.repositories;
+package se.tink.backend.aggregation.storage.database.repositories;
 
 import java.util.List;
 import javax.persistence.EntityManager;

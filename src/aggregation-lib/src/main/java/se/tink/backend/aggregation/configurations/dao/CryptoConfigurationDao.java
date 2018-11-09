@@ -7,7 +7,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.configurations.models.CryptoConfiguration;
 import se.tink.backend.aggregation.configurations.models.CryptoConfigurationId;
-import se.tink.backend.aggregation.configurations.repositories.ClusterCryptoConfigurationRepository;
+import se.tink.backend.aggregation.storage.database.repositories.ClusterCryptoConfigurationRepository;
 import se.tink.backend.core.ClusterCryptoConfiguration;
 import se.tink.backend.core.CryptoId;
 

@@ -14,12 +14,12 @@ import se.tink.backend.aggregation.configurations.models.ClientConfiguration;
 import se.tink.backend.aggregation.configurations.models.ClusterConfiguration;
 import se.tink.backend.aggregation.configurations.models.CryptoConfiguration;
 import se.tink.backend.aggregation.configurations.models.CryptoConfigurationId;
-import se.tink.backend.aggregation.configurations.repositories.AggregatorConfigurationsRepository;
-import se.tink.backend.aggregation.configurations.repositories.ClientConfigurationsRepository;
-import se.tink.backend.aggregation.configurations.repositories.ClusterConfigurationsRepository;
-import se.tink.backend.aggregation.configurations.repositories.ClusterCryptoConfigurationRepository;
-import se.tink.backend.aggregation.configurations.repositories.ClusterHostConfigurationRepository;
-import se.tink.backend.aggregation.configurations.repositories.CryptoConfigurationsRepository;
+import se.tink.backend.aggregation.storage.database.repositories.AggregatorConfigurationsRepository;
+import se.tink.backend.aggregation.storage.database.repositories.ClientConfigurationsRepository;
+import se.tink.backend.aggregation.storage.database.repositories.ClusterConfigurationsRepository;
+import se.tink.backend.aggregation.storage.database.repositories.ClusterCryptoConfigurationRepository;
+import se.tink.backend.aggregation.storage.database.repositories.ClusterHostConfigurationRepository;
+import se.tink.backend.aggregation.storage.database.repositories.CryptoConfigurationsRepository;
 import se.tink.backend.core.ClusterCryptoConfiguration;
 import se.tink.backend.core.ClusterHostConfiguration;
 
