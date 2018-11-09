@@ -9,12 +9,12 @@ public class HostConfigurationConverter {
     private static final Base64.Encoder BASE64_ENCODER = Base64.getEncoder();
 
     public static HostConfiguration convert(ClusterInfo clusterInfo){
-        return HostConfiguration.create(
-                clusterInfo.getClusterId().getId(),
-                clusterInfo.getAggregationControllerHost(),
-                clusterInfo.getApiToken(),
-                BASE64_ENCODER.encodeToString(clusterInfo.getClientCertificate()),
-                clusterInfo.isDisableRequestCompression()
-                );
+        HostConfiguration hostConfiguration = new HostConfiguration();
+        hostConfiguration.setClusterId(clusterInfo.getClusterId().getId());
+        hostConfiguration.setHost(clusterInfo.getAggregationControllerHost());
+        hostConfiguration.setApiToken(clusterInfo.getApiToken());
+        hostConfiguration.setBase64encodedclientcert(BASE64_ENCODER.encodeToString(clusterInfo.getClientCertificate()));
+        hostConfiguration.setDisablerequestcompression(clusterInfo.isDisableRequestCompression());
+        return hostConfiguration;
     }
 }

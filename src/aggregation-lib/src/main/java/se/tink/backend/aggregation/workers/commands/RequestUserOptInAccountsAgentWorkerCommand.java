@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
-import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.converter.HostConfigurationConverter;
@@ -35,7 +34,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
 
     private final AgentWorkerContext context;
     private final ConfigureWhitelistInformationRequest request;
-    private final HostConfiguration hostConfiguration;
+    private final ClusterInfo clusterInfo;
     private final Credentials credentials;
     private final SupplementalInformationController supplementalInformationController;
     private final AggregationControllerAggregationClient aggregationControllerAggregationClient;
@@ -43,11 +42,11 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
     private List<Account> accountsInContext;
 
     public RequestUserOptInAccountsAgentWorkerCommand(AgentWorkerContext context,
-                                                      ConfigureWhitelistInformationRequest request,
-                                                      AggregationControllerAggregationClient aggregationControllerAggregationClient) {
+            ConfigureWhitelistInformationRequest request,
+            ClusterInfo clusterInfo, AggregationControllerAggregationClient aggregationControllerAggregationClient) {
         this.context = context;
         this.request = request;
-        this.hostConfiguration = context.getHostConfiguration();
+        this.clusterInfo = clusterInfo;
         this.credentials = request.getCredentials();
         this.supplementalInformationController = new SupplementalInformationController(context , request.getCredentials());
         this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
@@ -198,7 +197,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
     private void optOutAccounts(List<String> optOutAccountIds) {
         Credentials credentials = request.getCredentials();
 
-        aggregationControllerAggregationClient.optOutAccounts(hostConfiguration,
+        aggregationControllerAggregationClient.optOutAccounts(HostConfigurationConverter.convert(clusterInfo),
                 OptOutAccountsRequest.of(credentials.getUserId(), credentials.getId(), optOutAccountIds));
     }
 
