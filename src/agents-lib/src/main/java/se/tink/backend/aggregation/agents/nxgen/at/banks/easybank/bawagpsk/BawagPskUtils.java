@@ -7,6 +7,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.AccountTypePredicateMapper;
 
 public class BawagPskUtils {
     private BawagPskUtils() {
@@ -15,12 +16,8 @@ public class BawagPskUtils {
 
     private final static BawagPskAccountTypeMappers accountTypeMappers = new BawagPskAccountTypeMappers();
 
-    public static AccountTypeMapper getProductCodeMapper() {
-        return accountTypeMappers.getProductCodeMapper();
-    }
-
-    public static AccountTypeMapper getProductTypeMapper() {
-        return accountTypeMappers.getProductTypeMapper();
+    public static AccountTypePredicateMapper<BawagPskAccountTypeMappers.Product> getFallbackMapper() {
+        return accountTypeMappers.getFallbackMapper();
     }
 
     public static <T> String entityToXml(final T entity) {

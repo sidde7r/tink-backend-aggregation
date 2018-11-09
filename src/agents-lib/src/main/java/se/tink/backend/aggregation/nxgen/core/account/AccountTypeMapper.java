@@ -3,12 +3,8 @@ package se.tink.backend.aggregation.nxgen.core.account;
 import com.google.common.collect.ImmutableMap;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.rpc.AccountTypes;
@@ -18,40 +14,32 @@ public class AccountTypeMapper {
     private static final Logger logger = LoggerFactory.getLogger(AccountTypeMapper.class);
 
     private final Map<String, AccountTypes> translator;
-    private final Map<Pattern, AccountTypes> regexTranslator;
 
     public static class Builder {
 
         private final Map<AccountTypes, Object[]> reversed = new HashMap<>();
-        private final Map<Pattern, AccountTypes> regexes = new HashMap<>();
 
         public AccountTypeMapper build() {
             return new AccountTypeMapper(this);
         }
 
-        /** Known keys, and the account type they should be mapped to. */
+        /**
+         * Known keys, and the account type they should be mapped to.
+         */
         public AccountTypeMapper.Builder put(AccountTypes value, Object... keys) {
             reversed.put(value, keys);
             return this;
         }
 
-        /** Known keys that should not be mapped to any specific account type. */
+        /**
+         * Known keys that should not be mapped to any specific account type.
+         */
         public AccountTypeMapper.Builder ignoreKeys(Object... keys) {
             return this.put(AccountTypes.DUMMY, keys);
         }
 
         private Map<AccountTypes, Object[]> getReversed() {
             return reversed;
-        }
-
-        /**
-         * A known key pattern, and the account type that a key matching it should be mapped to. The
-         * mapping behavior is undefined if you specify two patterns with different associated
-         * account types such that there exists a string that matches both.
-         */
-        public Builder putRegex(AccountTypes value, Pattern keyPattern) {
-            regexes.put(keyPattern, value);
-            return this;
         }
     }
 
@@ -66,8 +54,6 @@ public class AccountTypeMapper {
             }
         }
         translator = tmpTranslator.build();
-
-        regexTranslator = builder.regexes;
     }
 
     public static AccountTypeMapper.Builder builder() {
@@ -84,59 +70,18 @@ public class AccountTypeMapper {
         return translated.isPresent() && values.contains(translated.get());
     }
 
-    /**
-     * @return The account type associated with the account type key, if such an explicit
-     *     association was specified. Returns `Optional.empty` if the key was specified to be
-     *     ignored. Otherwise, returns the account type associated with the regex pattern that this
-     *     key matches, if any. If none of these conditions are met, returns `Optional.empty`.
-     */
     public Optional<AccountTypes> translate(Object accountTypeKey) {
 
         AccountTypes type = translator.get(toKeyString(accountTypeKey));
 
         if (type == null) {
-            return translateByRegex(String.valueOf(accountTypeKey));
+            logger.warn("Unknown account type for key: {}", accountTypeKey);
+            return Optional.empty();
         } else if (type == AccountTypes.DUMMY) {
             return Optional.empty();
         } else {
             return Optional.of(type);
         }
-    }
-
-    private Optional<AccountTypes> translateByRegex(String accountTypeString) {
-        Map<Pattern, AccountTypes> matchingRestriction =
-                regexTranslator
-                        .entrySet()
-                        .stream()
-                        .filter(entry -> entry.getKey().matcher(accountTypeString).matches())
-                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-
-        // Eliminate duplicates
-        Set<AccountTypes> accountTypeSet = new HashSet<>(matchingRestriction.values());
-
-        if (accountTypeSet.size() >= 2) {
-            AccountTypes anyAccountType = accountTypeSet.iterator().next(); // Pop any element
-            logger.error(
-                    "Account type string: \"{}\" matched multiple regexes with different associated account types: {} -- using {}",
-                    accountTypeString,
-                    matchingRestriction.keySet(),
-                    anyAccountType);
-            return Optional.of(anyAccountType);
-        } else if (accountTypeSet.size() == 1) {
-            Map.Entry<Pattern, AccountTypes> entry =
-                    matchingRestriction.entrySet().iterator().next();
-            Pattern matchingPattern = entry.getKey();
-            AccountTypes associatedAccountType = entry.getValue();
-            logger.warn(
-                    "Unspecified account type for key: \"{}\" -- using {} because it matches pattern {}",
-                    accountTypeString,
-                    associatedAccountType,
-                    matchingPattern);
-            return Optional.of(associatedAccountType);
-        }
-
-        logger.warn("Unknown account type for key: {}", accountTypeString);
-        return Optional.empty();
     }
 
     private static String toKeyString(Object accountTypeKey) {

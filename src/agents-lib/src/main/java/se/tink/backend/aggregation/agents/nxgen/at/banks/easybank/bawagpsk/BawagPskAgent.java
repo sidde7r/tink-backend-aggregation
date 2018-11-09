@@ -39,7 +39,9 @@ public class BawagPskAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {}
+    protected void configureHttpClient(TinkHttpClient client) {
+        client.setDebugOutput(true);
+    }
 
     @Override
     protected Authenticator constructAuthenticator() {
