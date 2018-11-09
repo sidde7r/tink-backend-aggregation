@@ -69,4 +69,9 @@ public class HostConfiguration {
         return new HostConfiguration(clusterId, null, null,
                 null, false);
     }
+
+    public static HostConfiguration create(String clusterId, String host, String apiToken,
+                                           String base64encodedclientcert, boolean disablerequestcompression) {
+        return new HostConfiguration(clusterId, host, apiToken, base64encodedclientcert, disablerequestcompression);
+    }
 }
