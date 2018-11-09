@@ -8,7 +8,9 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.apache.curator.framework.CuratorFramework;
 import se.tink.backend.aggregation.api.AggregatorInfo;
+import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
+import se.tink.backend.aggregation.converter.HostConfigurationConverter;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
@@ -40,6 +42,10 @@ public abstract class AgentContext {
     }
 
     public abstract MetricRegistry getMetricRegistry();
+
+    public HostConfiguration getHostConfiguration(){
+        return HostConfigurationConverter.convert(clusterInfo);
+    }
 
     public ClusterInfo getClusterInfo() {
         return clusterInfo;
