@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid;
 
 import com.google.common.base.Preconditions;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
@@ -9,7 +10,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.ClientRegistration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.JsonWebKeySet;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.RegistrationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.TokenRequestForm;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.TokenResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
@@ -75,20 +75,23 @@ public class OpenIdApiClient {
     private TokenRequestForm createTokenRequestForm(String grantType) {
         WellKnownResponse wellknownConfiguration = getWellKnownConfiguration();
 
-        ClientInfo clientInfo = providerConfiguration.getClientInfo();
-
-        String scopes = wellknownConfiguration.verifyAndGetScopes(OpenIdConstants.Scopes.getAllSupported())
-                .orElseThrow(() -> new IllegalStateException("Provider does not support the mandatory scopes."));
+        // Token request does not use OpenId scope
+        String scopes = wellknownConfiguration
+                .verifyAndGetScopes(Collections.singletonList(OpenIdConstants.Scopes.ACCOUNTS))
+                .orElseThrow(() -> new IllegalStateException(
+                        "Provider does not support the mandatory scopes.")
+                );
 
         TokenRequestForm requestForm = new TokenRequestForm()
                 .withGrantType(grantType)
-                .withScope(OpenIdConstants.Scopes.ACCOUNTS)
+                .withScope(scopes)
                 .withRedirectUri(softwareStatement.getRedirectUri());
 
         OpenIdConstants.TOKEN_ENDPOINT_AUTH_METHOD authMethod = wellknownConfiguration
                 .getPreferredTokenEndpointAuthMethod(OpenIdConstants.PREFERRED_TOKEN_ENDPOINT_AUTH_METHODS)
                 .orElseThrow(() -> new IllegalStateException("Preferred token endpoint auth method not found."));
 
+        ClientInfo clientInfo = providerConfiguration.getClientInfo();
         switch (authMethod) {
         case client_secret_post:
             requestForm.withClientSecretPost(clientInfo.getClientId(), clientInfo.getClientSecret());
@@ -227,7 +230,8 @@ public class OpenIdApiClient {
         }
     }
 
-    public static String registerClient(SoftwareStatement softwareStatement, URL wellKnownURL, TinkHttpClient httpClient) {
+    public static String registerClient(SoftwareStatement softwareStatement, URL wellKnownURL,
+            TinkHttpClient httpClient) {
 
         WellKnownResponse wellKnownResponse = httpClient.request(wellKnownURL).get(WellKnownResponse.class);
         URL registrationEndpoint = wellKnownResponse.getRegistrationEndpoint();
