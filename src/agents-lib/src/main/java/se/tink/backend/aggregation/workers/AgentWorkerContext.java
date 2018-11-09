@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.AgentEventListener;
 import se.tink.backend.aggregation.agents.SetAccountsToAggregateContext;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
+import se.tink.backend.aggregation.api.CallbackHostConfiguration;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -107,8 +108,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
             AggregationControllerAggregationClient aggregationControllerAggregationClient,
             ClusterInfo clusterInfo, CuratorFramework coordinationClient, CacheClient cacheClient,
             AgentsServiceConfiguration agentsServiceConfiguration) {
-
-        final ClusterId clusterId = clusterInfo.getClusterId();
+        CallbackHostConfiguration callbackHostConfiguration = CallbackHostConfigurationConverter.convert(clusterInfo);
 
         this.allAvailableAccountsByUniqueId = Maps.newHashMap();
         this.updatedAccountsByTinkId = Maps.newHashMap();
@@ -120,7 +120,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         // _Not_ instanciating a SystemService from the ServiceFactory here.
         this.coordinationClient = coordinationClient;
 
-        setCallbackHostConfiguration(CallbackHostConfigurationConverter.convert(clusterInfo));
+        setCallbackHostConfiguration(callbackHostConfiguration);
         setAggregator(
                 AggregatorConverter.convert(clusterInfo.getAggregator()));
 
@@ -137,7 +137,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         Provider provider = request.getProvider();
 
         defaultMetricLabels = new MetricId.MetricLabels()
-                .addAll(clusterId.metricLabels())
+                .addAll(callbackHostConfiguration.metricLabels())
                 .add("provider", MetricsUtils.cleanMetricName(provider.getName()))
                 .add("market", provider.getMarket())
                 .add("agent", Optional.ofNullable(provider.getClassName()).orElse(EMPTY_CLASS_NAME))
