@@ -44,7 +44,7 @@ public class NextGenerationDemoFetcher implements AccountFetcher<TransactionalAc
         this.credentials = credentials;
         String userName = credentials.getField(Field.Key.USERNAME);
         this.demoCredentials = DemoCredentials.byUsername(userName);
-        userPath = BASE_PATH + File.separator + userName;
+        userPath = BASE_PATH /*+ File.separator + userName*/;
     }
 
     @Override
@@ -76,7 +76,16 @@ public class NextGenerationDemoFetcher implements AccountFetcher<TransactionalAc
             return PaginatorResponseImpl.createEmpty();
         }
 
-        Collection<Transaction> transactions;
+        try {
+            NextGenerationTransactionGenerator transactionGenerator = new NextGenerationTransactionGenerator(BASE_PATH);
+            Collection<Transaction> transactions = transactionGenerator.generateTransactions();
+            return PaginatorResponseImpl.create(transactions);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+
+
+        /*
         try {
             File transactionsFile = new File(userPath + File.separator + account.getBankIdentifier() + ".txt");
             finishedAccountNumbers.add(account.getAccountNumber());
@@ -93,5 +102,6 @@ public class NextGenerationDemoFetcher implements AccountFetcher<TransactionalAc
         }
 
         return PaginatorResponseImpl.create(transactions);
+    */
     }
 }

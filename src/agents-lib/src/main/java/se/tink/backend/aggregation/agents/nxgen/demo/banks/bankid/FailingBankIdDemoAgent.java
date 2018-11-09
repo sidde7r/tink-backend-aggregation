@@ -10,15 +10,15 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.password.Pas
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 
-public class BankIdDemoAgent extends NextGenerationDemoAgent {
+public class FailingBankIdDemoAgent extends NextGenerationDemoAgent {
 
     private DemoBankIdAuthenticator authenticator;
 
-    public BankIdDemoAgent(CredentialsRequest request,
+    public FailingBankIdDemoAgent(CredentialsRequest request,
             AgentContext context,
             SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        this.authenticator = new DemoBankIdAuthenticator(credentials, true);
+        this.authenticator = new DemoBankIdAuthenticator(credentials, false);
     }
 
     @Override

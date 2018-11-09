@@ -9,6 +9,7 @@ import io.dropwizard.setup.Environment;
 import se.tink.backend.aggregation.provider.configuration.cli.DebugProviderCommand;
 import se.tink.backend.aggregation.provider.configuration.cli.GenerateProviderOnClusterFilesCommand;
 import se.tink.backend.aggregation.provider.configuration.cli.ProviderStatusCommand;
+import se.tink.backend.aggregation.provider.configuration.cli.RemoveThisCommand;
 import se.tink.backend.aggregation.provider.configuration.config.ProviderModuleFactory;
 import se.tink.backend.aggregation.provider.configuration.config.ProviderServiceConfiguration;
 import se.tink.libraries.dropwizard.DropwizardLifecycleInjectorFactory;
@@ -19,7 +20,8 @@ public class ProviderConfigurationServiceContainer extends Application<ProviderS
     private static final ImmutableList<Command> COMMANDS = ImmutableList.of(
             new DebugProviderCommand(),
             new ProviderStatusCommand(),
-            new GenerateProviderOnClusterFilesCommand()
+            new GenerateProviderOnClusterFilesCommand(),
+            new RemoveThisCommand()
     );
 
     public static void main(String[] args) throws Exception {
