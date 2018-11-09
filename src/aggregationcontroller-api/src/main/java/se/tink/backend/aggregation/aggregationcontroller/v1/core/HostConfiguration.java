@@ -11,6 +11,15 @@ public class HostConfiguration {
 
     private static final Base64.Decoder BASE64_DECODER = Base64.getDecoder();
 
+    private HostConfiguration(String clusterId, String host, String apiToken, String base64encodedclientcert,
+                              boolean disablerequestcompression) {
+        this.clusterId = clusterId;
+        this.host = host;
+        this.apiToken = apiToken;
+        this.base64encodedclientcert = base64encodedclientcert;
+        this.disablerequestcompression = disablerequestcompression;
+    }
+
     public String getClusterId() {
         return clusterId;
     }
@@ -53,5 +62,16 @@ public class HostConfiguration {
 
     public byte[] getClientCert() {
         return BASE64_DECODER.decode(base64encodedclientcert);
+    }
+
+
+    public static HostConfiguration createForTesting(String clusterId) {
+        return new HostConfiguration(clusterId, null, null,
+                null, false);
+    }
+
+    public static HostConfiguration create(String clusterId, String host, String apiToken,
+                                           String base64encodedclientcert, boolean disablerequestcompression) {
+        return new HostConfiguration(clusterId, host, apiToken, base64encodedclientcert, disablerequestcompression);
     }
 }

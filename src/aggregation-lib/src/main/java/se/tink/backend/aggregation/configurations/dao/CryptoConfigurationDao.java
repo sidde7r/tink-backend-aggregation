@@ -28,10 +28,10 @@ public class CryptoConfigurationDao {
         return configuration;
     }
 
-    public Optional<CryptoConfiguration> getClusterCryptoConfigurationFromClusterId(ClusterId clusterId) {
+    public Optional<CryptoConfiguration> getClusterCryptoConfigurationFromClusterId(String clusterId) {
         // Get the most recent (keyId, key) for clusterId.getId()
         List<ClusterCryptoConfiguration> clusterCryptoConfigurations = clusterCryptoConfigurationRepository
-                .findByCryptoIdClusterId(clusterId.getId());
+                .findByCryptoIdClusterId(clusterId);
 
         // Get the highest (most recent) keyId.
         Optional<ClusterCryptoConfiguration> optionalClusterCryptoConfiguration = clusterCryptoConfigurations.stream().max(
@@ -39,9 +39,9 @@ public class CryptoConfigurationDao {
         return optionalClusterCryptoConfiguration.map(CryptoConfigurationDao::convert);
     }
 
-    public Optional<byte[]> getClusterKeyFromKeyId(ClusterId clusterId, int keyId) {
+    public Optional<byte[]> getClusterKeyFromKeyId(String clusterId, int keyId) {
         CryptoId cryptoId = new CryptoId();
-        cryptoId.setClusterId(clusterId.getId());
+        cryptoId.setClusterId(clusterId);
         cryptoId.setKeyId(keyId);
         ClusterCryptoConfiguration clusterCryptoConfiguration = clusterCryptoConfigurationRepository
                 .findByCryptoId(cryptoId);

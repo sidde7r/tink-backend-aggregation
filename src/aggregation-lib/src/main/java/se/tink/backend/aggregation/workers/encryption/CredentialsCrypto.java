@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.util.Optional;
 
+import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
 import se.tink.backend.aggregation.configurations.dao.CryptoConfigurationDao;
 import se.tink.backend.aggregation.configurations.models.CryptoConfiguration;
 import se.tink.backend.aggregation.converter.HostConfigurationConverter;
@@ -20,15 +21,15 @@ public class CredentialsCrypto {
     private static final AggregationLogger logger = new AggregationLogger(CredentialsCrypto.class);
 
     private final CryptoConfigurationDao cryptoConfigurationDao;
-    private final ClusterInfo clusterInfo;
+    private final HostConfiguration hostConfiguration;
     private final CacheClient cacheClient;
     private final AggregationControllerAggregationClient aggregationControllerAggregationClient;
 
     public CredentialsCrypto(CryptoConfigurationDao cryptoConfigurationDao,
-            ClusterInfo clusterInfo, CacheClient cacheClient,
-            AggregationControllerAggregationClient aggregationControllerAggregationClient) {
+                             HostConfiguration hostConfiguration, CacheClient cacheClient,
+                             AggregationControllerAggregationClient aggregationControllerAggregationClient) {
         this.cryptoConfigurationDao = cryptoConfigurationDao;
-        this.clusterInfo = clusterInfo;
+        this.hostConfiguration = hostConfiguration;
         this.cacheClient = cacheClient;
         this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
     }
@@ -57,10 +58,10 @@ public class CredentialsCrypto {
                 SerializationUtils.deserializeFromString(sensitiveData, EncryptedCredentials.class));
 
         Optional<byte[]> key = cryptoConfigurationDao
-                .getClusterKeyFromKeyId(clusterInfo.getClusterId(), encryptedCredentials.getKeyId());
+                .getClusterKeyFromKeyId(hostConfiguration.getClusterId(), encryptedCredentials.getKeyId());
         if (!key.isPresent()) {
             logger.error(String.format("Could not find encryption key for %s:%d",
-                    clusterInfo.getClusterId().getId(),
+                    hostConfiguration.getClusterId(),
                     encryptedCredentials.getKeyId()));
             return false;
         }
@@ -81,9 +82,9 @@ public class CredentialsCrypto {
 
     public boolean encrypt(CredentialsRequest request, boolean doUpdateCredential) {
         Optional<CryptoConfiguration> cryptoConfiguration = cryptoConfigurationDao.getClusterCryptoConfigurationFromClusterId(
-                clusterInfo.getClusterId());
+                hostConfiguration.getClusterId());
         if (!cryptoConfiguration.isPresent()) {
-            logger.error(String.format("Could not find crypto configuration %s", clusterInfo.getClusterId().getId()));
+            logger.error(String.format("Could not find crypto configuration %s", hostConfiguration.getClusterId()));
             return false;
         }
 
@@ -116,7 +117,7 @@ public class CredentialsCrypto {
         if (doUpdateCredential) {
             logger.info("Updating sensitive data");
             aggregationControllerAggregationClient.updateCredentialSensitive(
-                    HostConfigurationConverter.convert(clusterInfo),
+                    hostConfiguration,
                     request.getCredentials(),
                     serializedEncryptedCredentials);
         }

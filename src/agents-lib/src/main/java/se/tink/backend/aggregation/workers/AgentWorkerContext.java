@@ -27,8 +27,8 @@ import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.converter.AggregatorConverter;
-import se.tink.backend.aggregation.converter.HostConfigurationConverter;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
+import se.tink.backend.aggregation.converter.HostConfigurationConverter;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
@@ -87,7 +87,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
     private List<AgentEventListener> eventListeners = Lists.newArrayList();
     private SupplementalInformationController supplementalInformationController;
     private AggregationControllerAggregationClient aggregationControllerAggregationClient;
-    //private final ClusterInfo clusterInfo;
     //Cached accounts have not been sent to system side yet.
     private Map<String, Pair<Account, AccountFeatures>> allAvailableAccountsByUniqueId;
     //Updated accounts have been sent to System side and has been updated with their stored Tink Id
@@ -119,9 +118,9 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         // _Not_ instanciating a SystemService from the ServiceFactory here.
         this.coordinationClient = coordinationClient;
 
-        setClusterInfo(clusterInfo);
         setAggregator(
                 AggregatorConverter.convert(clusterInfo.getAggregator()));
+        setHostConfiguration(HostConfigurationConverter.convert(clusterInfo));
 
         if (request.getUser() != null) {
             this.catalog = Catalog.getCatalog(request.getUser().getProfile().getLocale());
@@ -241,7 +240,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         processAccountsRequest.setCredentialsId(credentials.getId());
         processAccountsRequest.setUserId(request.getUser().getId());
 
-        aggregationControllerAggregationClient.processAccounts(HostConfigurationConverter.convert(getClusterInfo()),
+        aggregationControllerAggregationClient.processAccounts(getHostConfiguration(),
                 processAccountsRequest);
     }
 
@@ -307,7 +306,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
             generateStatisticsReq.setMode(StatisticMode.FULL); // To trigger refresh of residences.
 
             aggregationControllerAggregationClient.generateStatisticsAndActivityAsynchronously(
-                    HostConfigurationConverter.convert(getClusterInfo()), generateStatisticsReq);
+                    getHostConfiguration(), generateStatisticsReq);
             return;
         }
 
@@ -325,7 +324,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         updateTransactionsRequest.setCredentials(credentials.getId());
         updateTransactionsRequest.setUserTriggered(request.isManual());
 
-        aggregationControllerAggregationClient.updateTransactionsAsynchronously(HostConfigurationConverter.convert(getClusterInfo()),
+        aggregationControllerAggregationClient.updateTransactionsAsynchronously(getHostConfiguration(),
                 updateTransactionsRequest);
 
         isSystemProcessingTransactions = true;
@@ -459,7 +458,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
 
         Account updatedAccount;
         try {
-            updatedAccount = aggregationControllerAggregationClient.updateAccount(HostConfigurationConverter.convert(getClusterInfo()),
+            updatedAccount = aggregationControllerAggregationClient.updateAccount(getHostConfiguration(),
                     updateAccountRequest);
 
         } catch (UniformInterfaceException e) {
@@ -498,7 +497,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         updateCredentialsStatusRequest.setUpdateContextTimestamp(doStatusUpdate);
         updateCredentialsStatusRequest.setUserDeviceId(request.getUserDeviceId());
 
-        aggregationControllerAggregationClient.updateCredentials(HostConfigurationConverter.convert(getClusterInfo()),
+        aggregationControllerAggregationClient.updateCredentials(getHostConfiguration(),
                 updateCredentialsStatusRequest);
     }
 
@@ -508,7 +507,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         updateFraudRequest.setUserId(request.getUser().getId());
         updateFraudRequest.setDetailsContents(detailsContents);
 
-        aggregationControllerAggregationClient.updateFraudDetails(HostConfigurationConverter.convert(getClusterInfo()),
+        aggregationControllerAggregationClient.updateFraudDetails(getHostConfiguration(),
                 updateFraudRequest);
     }
 
@@ -589,7 +588,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         request.setUserId(this.request.getUser().getId());
 
         if (!transferDestinationPatternsByAccount.isEmpty()) {
-            aggregationControllerAggregationClient.updateTransferDestinationPatterns(HostConfigurationConverter.convert(getClusterInfo()),
+            aggregationControllerAggregationClient.updateTransferDestinationPatterns(getHostConfiguration(),
                     request);
         }
     }
@@ -603,7 +602,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
 
     @Override
     public void updateSignableOperation(SignableOperation signableOperation) {
-        aggregationControllerAggregationClient.updateSignableOperation(HostConfigurationConverter.convert(getClusterInfo()),
+        aggregationControllerAggregationClient.updateSignableOperation(getHostConfiguration(),
                 signableOperation);
     }
 
@@ -615,7 +614,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         updateDocumentRequest.setDocumentContainer(container);
 
         se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateDocumentResponse updateDocumentResponse;
-        updateDocumentResponse = aggregationControllerAggregationClient.updateDocument(HostConfigurationConverter.convert(getClusterInfo()),
+        updateDocumentResponse = aggregationControllerAggregationClient.updateDocument(getHostConfiguration(),
                 updateDocumentRequest);
 
         if (updateDocumentResponse.isSuccessfullyStored()) {
@@ -677,7 +676,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         updateTransfersRequest.setCredentialsId(request.getCredentials().getId());
         updateTransfersRequest.setTransfers(transfers);
 
-        aggregationControllerAggregationClient.processEinvoices(HostConfigurationConverter.convert(getClusterInfo()),
+        aggregationControllerAggregationClient.processEinvoices(getHostConfiguration(),
                 updateTransfersRequest);
     }
 
