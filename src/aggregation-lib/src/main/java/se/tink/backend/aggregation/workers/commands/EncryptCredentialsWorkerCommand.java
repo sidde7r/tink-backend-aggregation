@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.workers.commands;
 
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
-import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.configurations.dao.CryptoConfigurationDao;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
@@ -17,22 +16,22 @@ public class EncryptCredentialsWorkerCommand extends AgentWorkerCommand {
     private final CredentialsCrypto credentialsCrypto;
     private final boolean doUpdateCredential;
 
-    public EncryptCredentialsWorkerCommand(ClusterInfo clusterInfo, CacheClient cacheClient,
-            ClusterCryptoConfigurationRepository clusterCryptoConfigurationRepository,
-            AggregationControllerAggregationClient aggregationControllerAggregationClient,
-            AgentWorkerContext context) {
-        this(clusterInfo, cacheClient, clusterCryptoConfigurationRepository, aggregationControllerAggregationClient,
+    public EncryptCredentialsWorkerCommand(CacheClient cacheClient,
+                                           ClusterCryptoConfigurationRepository clusterCryptoConfigurationRepository,
+                                           AggregationControllerAggregationClient aggregationControllerAggregationClient,
+                                           AgentWorkerContext context) {
+        this(cacheClient, clusterCryptoConfigurationRepository, aggregationControllerAggregationClient,
                 context, true);
     }
 
-    public EncryptCredentialsWorkerCommand(ClusterInfo clusterInfo, CacheClient cacheClient,
+    public EncryptCredentialsWorkerCommand(CacheClient cacheClient,
             ClusterCryptoConfigurationRepository clusterCryptoConfigurationRepository,
             AggregationControllerAggregationClient aggregationControllerAggregationClient,
             AgentWorkerContext context, boolean doUpdateCredential) {
         this.context = context;
         this.doUpdateCredential = doUpdateCredential;
         credentialsCrypto = new CredentialsCrypto(
-                new CryptoConfigurationDao(clusterCryptoConfigurationRepository), clusterInfo, cacheClient,
+                new CryptoConfigurationDao(clusterCryptoConfigurationRepository), context.getClusterInfo(), cacheClient,
                 aggregationControllerAggregationClient);
     }
 

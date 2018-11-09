@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.workers.commands;
 
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
-import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.configurations.dao.CryptoConfigurationDao;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
@@ -17,13 +16,13 @@ public class DecryptCredentialsWorkerCommand extends AgentWorkerCommand {
 
     private boolean didDecryptCredential = false;
 
-    public DecryptCredentialsWorkerCommand(ClusterInfo clusterInfo, CacheClient cacheClient,
-            ClusterCryptoConfigurationRepository clusterCryptoConfigurationRepository,
-            AggregationControllerAggregationClient aggregationControllerAggregationClient,
-            AgentWorkerContext context) {
+    public DecryptCredentialsWorkerCommand(CacheClient cacheClient,
+                                           ClusterCryptoConfigurationRepository clusterCryptoConfigurationRepository,
+                                           AggregationControllerAggregationClient aggregationControllerAggregationClient,
+                                           AgentWorkerContext context) {
         this.context = context;
         this.credentialsCrypto = new CredentialsCrypto(
-                new CryptoConfigurationDao(clusterCryptoConfigurationRepository), clusterInfo, cacheClient,
+                new CryptoConfigurationDao(clusterCryptoConfigurationRepository), context.getClusterInfo(), cacheClient,
                 aggregationControllerAggregationClient);
     }
 

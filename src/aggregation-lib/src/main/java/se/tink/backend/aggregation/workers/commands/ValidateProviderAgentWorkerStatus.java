@@ -19,11 +19,10 @@ public class ValidateProviderAgentWorkerStatus extends AgentWorkerCommand {
     private ClusterInfo clusterInfo;
 
     public ValidateProviderAgentWorkerStatus(AgentWorkerContext context,
-            AggregationControllerAggregationClient aggregationControllerAggregationClient,
-            ClusterInfo clusterInfo) {
+                                             AggregationControllerAggregationClient aggregationControllerAggregationClient) {
         this.context = context;
         this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
-        this.clusterInfo = clusterInfo;
+        this.clusterInfo = context.getClusterInfo();
     }
 
     @Override
