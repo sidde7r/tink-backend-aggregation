@@ -39,7 +39,7 @@ public abstract class AbstractAgent extends AgentParsingUtils implements Agent, 
         this.log = new AggregationLogger(getAgentClass());
     }
 
-    public AggregatorInfo getAggregatorInfo(){
+    public AggregatorInfo getAggregatorInfo() {
         return context.getAggregatorInfo();
     }
 
