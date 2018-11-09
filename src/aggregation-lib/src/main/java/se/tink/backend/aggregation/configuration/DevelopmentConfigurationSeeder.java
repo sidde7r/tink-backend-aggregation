@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.guice.configuration;
+package se.tink.backend.aggregation.configuration;
 
 import com.google.inject.Inject;
 import java.util.Objects;
