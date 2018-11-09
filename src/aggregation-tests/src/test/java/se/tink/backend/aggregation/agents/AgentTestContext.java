@@ -13,7 +13,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
 import org.apache.curator.framework.CuratorFramework;
-import se.tink.backend.aggregation.cluster.identification.Aggregator;
+import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
@@ -54,7 +54,7 @@ public class AgentTestContext extends AgentContext {
     public AgentTestContext(Credentials credentials) {
         this.credentials = credentials;
         setClusterInfo(ClusterInfo.createForTesting(ClusterId.of("test", "local-development")));
-        setAggregator(Aggregator.getDefault());
+        setAggregator(AggregatorInfo.getAggregatorForTesting());
     }
 
     @Override

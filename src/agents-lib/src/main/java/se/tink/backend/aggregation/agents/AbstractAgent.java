@@ -5,8 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import org.apache.http.client.CookieStore;
 import org.apache.http.cookie.Cookie;
-import se.tink.backend.aggregation.cluster.identification.Aggregator;
+import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.converter.AggregatorConverter;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.agents.utils.jersey.JerseyClientFactory;
 import se.tink.backend.aggregation.rpc.Account;
@@ -38,8 +39,8 @@ public abstract class AbstractAgent extends AgentParsingUtils implements Agent, 
         this.log = new AggregationLogger(getAgentClass());
     }
 
-    public Aggregator getAggregator(){
-        return context.getAggregator();
+    public AggregatorInfo getAggregatorInfo() {
+        return context.getAggregatorInfo();
     }
 
     @Override

@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator.rpc.
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.fetchers.transactional.rpc.AccountsResponseWrapper;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.fetchers.transactional.rpc.TransactionsResponseWrapper;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
-import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
@@ -49,10 +48,10 @@ public class BunqApiClient {
                 .orElseThrow(() -> new IllegalStateException("Could not deserialize InstallResponse"));
     }
 
-    public RegisterDeviceResponse registerDevice(String apiKey, Aggregator aggregator) {
-        String aggregatorName = Strings.isNullOrEmpty(aggregator.getAggregatorIdentifier()) ?
+    public RegisterDeviceResponse registerDevice(String apiKey, String aggregatorIdentifier) {
+        String aggregatorName = Strings.isNullOrEmpty(aggregatorIdentifier) ?
                 BunqConstants.DEVICE_NAME :
-                aggregator.getAggregatorIdentifier();
+                aggregatorIdentifier;
 
         RegisterDeviceResponseWrapper response = client.request(getUrl(BunqConstants.Url.REGISTER_DEVICE))
                 .post(RegisterDeviceResponseWrapper.class, RegisterDeviceRequest.createFromApiKey(aggregatorName, apiKey));
