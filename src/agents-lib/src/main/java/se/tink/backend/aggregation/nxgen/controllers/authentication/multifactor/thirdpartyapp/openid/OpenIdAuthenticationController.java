@@ -68,7 +68,11 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
                 OAuth2Token.class)
                 .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
-        if (accessToken.hasExpired()) {
+        if (accessToken.hasAccessExpired()) {
+            if (!accessToken.canRefresh()) {
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
+
             // Refresh token is not always present, if it's absent we fall back to the manual authentication again.
             String refreshToken = accessToken.getRefreshToken().orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
