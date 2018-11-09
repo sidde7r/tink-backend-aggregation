@@ -33,6 +33,7 @@ public abstract class AgentContext {
     private boolean isWaitingOnConnectorTransactions = false;
     private ClusterInfo clusterInfo;
     private AggregatorInfo aggregatorInfo;
+    private HostConfiguration hostConfiguration;
     public abstract Catalog getCatalog();
 
     public abstract CuratorFramework getCoordinationClient();
@@ -44,11 +45,7 @@ public abstract class AgentContext {
     public abstract MetricRegistry getMetricRegistry();
 
     public HostConfiguration getHostConfiguration(){
-        return HostConfigurationConverter.convert(clusterInfo);
-    }
-
-    public ClusterInfo getClusterInfo() {
-        return clusterInfo;
+        return hostConfiguration;
     }
 
     public AggregatorInfo getAggregatorInfo() {
@@ -56,7 +53,7 @@ public abstract class AgentContext {
     }
 
     public void setClusterInfo(ClusterInfo clusterInfo) {
-        this.clusterInfo = clusterInfo;
+        this.hostConfiguration = HostConfigurationConverter.convert(clusterInfo);
     }
 
     public void setAggregator(AggregatorInfo aggregatorInfo) {
