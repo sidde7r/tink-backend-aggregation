@@ -42,11 +42,11 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
     private List<Account> accountsInContext;
 
     public RequestUserOptInAccountsAgentWorkerCommand(AgentWorkerContext context,
-            ConfigureWhitelistInformationRequest request,
-            ClusterInfo clusterInfo, AggregationControllerAggregationClient aggregationControllerAggregationClient) {
+                                                      ConfigureWhitelistInformationRequest request,
+                                                      AggregationControllerAggregationClient aggregationControllerAggregationClient) {
         this.context = context;
         this.request = request;
-        this.clusterInfo = clusterInfo;
+        this.clusterInfo = context.getClusterInfo();
         this.credentials = request.getCredentials();
         this.supplementalInformationController = new SupplementalInformationController(context , request.getCredentials());
         this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
