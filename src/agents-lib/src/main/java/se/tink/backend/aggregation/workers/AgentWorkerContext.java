@@ -90,7 +90,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             AggregationControllerAggregationClient aggregationControllerAggregationClient,
             CuratorFramework coordinationClient, CacheClient cacheClient,
             AgentsServiceConfiguration agentsServiceConfiguration, AggregatorInfo aggregatorInfo,
-            CallbackHostConfiguration callbackHostConfiguration) {
+            CallbackHostConfiguration callbackHostConfiguration,
+            SupplementalInformationController supplementalInformationController) {
 
         this.allAvailableAccountsByUniqueId = Maps.newHashMap();
         this.updatedAccountsByTinkId = Maps.newHashMap();
@@ -110,7 +111,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         this.metricRegistry = metricRegistry;
 
-        this.supplementalInformationController = new SupplementalInformationController(cacheClient, coordinationClient);
+        this.supplementalInformationController = supplementalInformationController;
         this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
 
     }

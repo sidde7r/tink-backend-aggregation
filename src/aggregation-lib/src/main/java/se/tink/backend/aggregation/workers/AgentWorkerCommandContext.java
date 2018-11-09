@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.api.CallbackHostConfiguration;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.converter.HostConfigurationConverter;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.Account;
@@ -67,10 +68,11 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
             CacheClient cacheClient,
             AgentsServiceConfiguration agentsServiceConfiguration,
             AggregatorInfo aggregatorInfo,
-            CallbackHostConfiguration callbackHostConfiguration) {
-        super(request, metricRegistry, aggregationControllerAggregationClient, coordinationClient,
-                cacheClient,
-                agentsServiceConfiguration, aggregatorInfo, callbackHostConfiguration);
+            CallbackHostConfiguration callbackHostConfiguration,
+            SupplementalInformationController supplementalInformationController) {
+        super(request, metricRegistry, aggregationControllerAggregationClient, coordinationClient, cacheClient,
+                agentsServiceConfiguration, aggregatorInfo, callbackHostConfiguration,
+                supplementalInformationController);
         this.coordinationClient = coordinationClient;
         this.timePutOnQueue = System.currentTimeMillis();
         this.uniqueIdOfUserSelectedAccounts = Lists.newArrayList();
