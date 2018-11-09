@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.models;
+package se.tink.backend.aggregation.queue.models;
 
 import java.util.Map;
 import org.slf4j.MDC;

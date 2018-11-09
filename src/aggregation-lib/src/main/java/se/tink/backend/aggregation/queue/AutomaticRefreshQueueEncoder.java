@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.queue;
 
 import org.xerial.snappy.Snappy;
-import se.tink.backend.aggregation.models.RefreshInformation;
+import se.tink.backend.aggregation.queue.models.RefreshInformation;
 import se.tink.backend.queue.sqs.EncodingHandler;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
