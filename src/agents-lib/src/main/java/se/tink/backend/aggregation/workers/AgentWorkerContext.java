@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.AgentEventListener;
 import se.tink.backend.aggregation.agents.SetAccountsToAggregateContext;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
+import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.api.CallbackHostConfiguration;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -106,7 +107,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
     public AgentWorkerContext(CredentialsRequest request, MetricRegistry metricRegistry,
             AggregationControllerAggregationClient aggregationControllerAggregationClient,
             ClusterInfo clusterInfo, CuratorFramework coordinationClient, CacheClient cacheClient,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
+            AgentsServiceConfiguration agentsServiceConfiguration, AggregatorInfo aggregatorInfo) {
         CallbackHostConfiguration callbackHostConfiguration = CallbackHostConfigurationConverter.convert(clusterInfo);
 
         this.allAvailableAccountsByUniqueId = Maps.newHashMap();
@@ -120,8 +121,7 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
         this.coordinationClient = coordinationClient;
 
         setCallbackHostConfiguration(callbackHostConfiguration);
-        setAggregatorInfo(
-                AggregatorConverter.convert(clusterInfo.getAggregator()));
+        setAggregatorInfo(aggregatorInfo);
 
         if (request.getUser() != null) {
             this.catalog = Catalog.getCatalog(request.getUser().getProfile().getLocale());
