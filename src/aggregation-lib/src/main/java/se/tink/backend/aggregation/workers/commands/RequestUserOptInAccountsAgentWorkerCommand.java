@@ -220,6 +220,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
         JsonObject additionalInfo = new JsonObject();
 
         additionalInfo.addProperty("accountName", account.getName());
+        additionalInfo.addProperty("accountNumber", account.getAccountNumber());
         additionalInfo.addProperty("accountType", account.getType().name());
         additionalInfo.addProperty("balance", account.getBalance());
         additionalInfo.addProperty("holderName", account.getHolderName());
