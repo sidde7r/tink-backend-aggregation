@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.workers.commands;
 
 import java.util.Objects;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
+import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.converter.HostConfigurationConverter;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -14,15 +15,15 @@ import se.tink.backend.aggregation.workers.AgentWorkerContext;
 import se.tink.backend.common.mapper.CoreCredentialsMapper;
 
 public class ValidateProviderAgentWorkerStatus extends AgentWorkerCommand {
-    private AgentWorkerContext context;
-    private AggregationControllerAggregationClient aggregationControllerAggregationClient;
-    private ClusterInfo clusterInfo;
+    private final AgentWorkerContext context;
+    private final AggregationControllerAggregationClient aggregationControllerAggregationClient;
+    private final HostConfiguration hostConfiguration;
 
     public ValidateProviderAgentWorkerStatus(AgentWorkerContext context,
                                              AggregationControllerAggregationClient aggregationControllerAggregationClient) {
         this.context = context;
         this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
-        this.clusterInfo = context.getClusterInfo();
+        this.hostConfiguration = context.getHostConfiguration();
     }
 
     @Override
@@ -48,7 +49,7 @@ public class ValidateProviderAgentWorkerStatus extends AgentWorkerCommand {
         updateCredentialsStatusRequest.setCredentials(coreCredentials);
         updateCredentialsStatusRequest.setUserId(credentials.getUserId());
 
-        aggregationControllerAggregationClient.updateCredentials(HostConfigurationConverter.convert(clusterInfo), updateCredentialsStatusRequest);
+        aggregationControllerAggregationClient.updateCredentials(hostConfiguration, updateCredentialsStatusRequest);
 
         return AgentWorkerCommandResult.ABORT;
     }
