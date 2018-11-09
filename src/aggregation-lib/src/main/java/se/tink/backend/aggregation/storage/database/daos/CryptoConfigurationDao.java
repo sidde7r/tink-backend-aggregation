@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.configurations.dao;
+package se.tink.backend.aggregation.storage.database.daos;
 
 import java.util.Comparator;
 import java.util.List;
