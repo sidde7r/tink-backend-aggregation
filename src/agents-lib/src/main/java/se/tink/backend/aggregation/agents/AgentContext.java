@@ -9,7 +9,6 @@ import java.util.concurrent.TimeUnit;
 import org.apache.curator.framework.CuratorFramework;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
-import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
@@ -30,7 +29,6 @@ public abstract class AgentContext {
     protected ByteArrayOutputStream logOutputStream = new ByteArrayOutputStream();
     protected boolean isTestContext = false;
     private boolean isWaitingOnConnectorTransactions = false;
-    private ClusterInfo clusterInfo;
     private AggregatorInfo aggregatorInfo;
     private HostConfiguration hostConfiguration;
     public abstract Catalog getCatalog();
