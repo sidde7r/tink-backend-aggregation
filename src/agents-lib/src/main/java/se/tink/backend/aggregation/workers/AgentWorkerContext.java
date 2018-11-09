@@ -27,7 +27,6 @@ import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.api.CallbackHostConfiguration;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.converter.AggregatorConverter;
 import se.tink.backend.aggregation.converter.CallbackHostConfigurationConverter;
 import se.tink.backend.aggregation.converter.HostConfigurationConverter;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
@@ -107,8 +106,8 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
     public AgentWorkerContext(CredentialsRequest request, MetricRegistry metricRegistry,
             AggregationControllerAggregationClient aggregationControllerAggregationClient,
             ClusterInfo clusterInfo, CuratorFramework coordinationClient, CacheClient cacheClient,
-            AgentsServiceConfiguration agentsServiceConfiguration, AggregatorInfo aggregatorInfo) {
-        CallbackHostConfiguration callbackHostConfiguration = CallbackHostConfigurationConverter.convert(clusterInfo);
+            AgentsServiceConfiguration agentsServiceConfiguration, AggregatorInfo aggregatorInfo,
+            CallbackHostConfiguration callbackHostConfiguration) {
 
         this.allAvailableAccountsByUniqueId = Maps.newHashMap();
         this.updatedAccountsByTinkId = Maps.newHashMap();
