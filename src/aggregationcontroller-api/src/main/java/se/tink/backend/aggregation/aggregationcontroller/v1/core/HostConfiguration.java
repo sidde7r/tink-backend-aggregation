@@ -65,7 +65,7 @@ public class HostConfiguration {
     }
 
 
-    public static HostConfiguration createForTesting( String clusterId) {
+    public static HostConfiguration createForTesting(String clusterId) {
         return new HostConfiguration(clusterId, null, null,
                 null, false);
     }
