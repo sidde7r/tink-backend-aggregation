@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.configurations.models;
+package se.tink.backend.aggregation.storage.database.models;
 
 import java.io.Serializable;
 import java.util.Objects;

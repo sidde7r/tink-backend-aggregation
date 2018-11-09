@@ -39,10 +39,10 @@
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<class>se.tink.backend.core.ClusterHostConfiguration</class>
 		<class>se.tink.backend.core.ClusterCryptoConfiguration</class>
-		<class>se.tink.backend.aggregation.configurations.models.CryptoConfiguration</class>
-		<class>se.tink.backend.aggregation.configurations.models.ClientConfiguration</class>
-		<class>se.tink.backend.aggregation.configurations.models.AggregatorConfiguration</class>
-		<class>se.tink.backend.aggregation.configurations.models.ClusterConfiguration</class>
+		<class>se.tink.backend.aggregation.storage.database.models.CryptoConfiguration</class>
+		<class>se.tink.backend.aggregation.storage.database.models.ClientConfiguration</class>
+		<class>se.tink.backend.aggregation.storage.database.models.AggregatorConfiguration</class>
+		<class>se.tink.backend.aggregation.storage.database.models.ClusterConfiguration</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<property name="hibernate.hbm2ddl.auto" value="validate" />
