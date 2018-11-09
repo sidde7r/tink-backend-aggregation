@@ -11,7 +11,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import org.apache.curator.framework.CuratorFramework;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import se.tink.backend.aggregation.configurations.AggregationServiceConfiguration;
+import se.tink.backend.aggregation.configuration.AggregationServiceConfiguration;
 import se.tink.backend.common.cache.CacheClient;
 import se.tink.backend.common.concurrency.ListenableThreadPoolExecutor;
 import se.tink.backend.common.config.DatabaseConfiguration;

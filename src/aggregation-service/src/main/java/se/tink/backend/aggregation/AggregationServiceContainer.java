@@ -6,7 +6,7 @@ import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import se.tink.backend.aggregation.cli.AggregationMigrateMultiClientCommand;
-import se.tink.backend.aggregation.configurations.AggregationServiceConfiguration;
+import se.tink.backend.aggregation.configuration.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.guice.configuration.AggregationModuleFactory;
 import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.libraries.draining.DrainModeTask;

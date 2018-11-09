@@ -10,7 +10,7 @@ import com.google.inject.Inject;
 import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.configurations.S3StorageConfiguration;
+import se.tink.backend.aggregation.configuration.S3StorageConfiguration;
 
 
 public class AgentDebugS3Storage implements AgentDebugStorageHandler {

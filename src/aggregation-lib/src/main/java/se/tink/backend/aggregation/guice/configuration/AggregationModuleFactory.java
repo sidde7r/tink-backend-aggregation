@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.guice.configuration;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Module;
 import io.dropwizard.setup.Environment;
-import se.tink.backend.aggregation.configurations.AggregationServiceConfiguration;
+import se.tink.backend.aggregation.configuration.AggregationServiceConfiguration;
 import se.tink.libraries.discovery.CoordinationModule;
 
 public class AggregationModuleFactory {

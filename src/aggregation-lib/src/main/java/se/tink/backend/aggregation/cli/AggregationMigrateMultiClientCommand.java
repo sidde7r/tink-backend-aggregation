@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import net.sourceforge.argparse4j.inf.Namespace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.configurations.AggregationServiceConfiguration;
+import se.tink.backend.aggregation.configuration.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.storage.database.models.AggregatorConfiguration;
 import se.tink.backend.aggregation.storage.database.models.ClientConfiguration;
 import se.tink.backend.aggregation.storage.database.models.ClusterConfiguration;
