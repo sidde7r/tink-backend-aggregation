@@ -31,7 +31,7 @@ public class EncryptCredentialsWorkerCommand extends AgentWorkerCommand {
         this.context = context;
         this.doUpdateCredential = doUpdateCredential;
         credentialsCrypto = new CredentialsCrypto(
-                new CryptoConfigurationDao(clusterCryptoConfigurationRepository), context.getClusterInfo(), cacheClient,
+                new CryptoConfigurationDao(clusterCryptoConfigurationRepository), context.getHostConfiguration(), cacheClient,
                 aggregationControllerAggregationClient);
     }
 

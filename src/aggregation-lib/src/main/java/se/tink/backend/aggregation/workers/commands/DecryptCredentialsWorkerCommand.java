@@ -22,7 +22,7 @@ public class DecryptCredentialsWorkerCommand extends AgentWorkerCommand {
                                            AgentWorkerContext context) {
         this.context = context;
         this.credentialsCrypto = new CredentialsCrypto(
-                new CryptoConfigurationDao(clusterCryptoConfigurationRepository), context.getClusterInfo(), cacheClient,
+                new CryptoConfigurationDao(clusterCryptoConfigurationRepository), context.getHostConfiguration(), cacheClient,
                 aggregationControllerAggregationClient);
     }
 
