@@ -524,15 +524,18 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
 
         if (!statusFromProvider) {
             updateCredentialsExcludingSensitiveInformation(credentials, true);
+            return;
         }
 
         if (statusPayload == null) {
             updateCredentialsExcludingSensitiveInformation(credentials, true);
+            return;
         }
 
         if ((status != CredentialsStatus.AUTHENTICATION_ERROR
                 && status != CredentialsStatus.TEMPORARY_ERROR)) {
             updateCredentialsExcludingSensitiveInformation(credentials, true);
+            return;
         }
 
         String payload = catalog.getString("Error from")
