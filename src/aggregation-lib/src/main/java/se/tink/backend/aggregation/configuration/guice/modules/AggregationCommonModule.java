@@ -27,7 +27,7 @@ import se.tink.backend.common.concurrency.ListenableThreadPoolExecutor;
 import se.tink.backend.common.concurrency.LockFactory;
 import se.tink.backend.common.concurrency.TypedThreadPoolBuilder;
 import se.tink.backend.common.concurrency.WrappedRunnableListenableFutureTask;
-import se.tink.backend.aggregation.configuration.CacheConfiguration;
+import se.tink.backend.aggregation.configuration.models.CacheConfiguration;
 import se.tink.backend.utils.LogUtils;
 import se.tink.libraries.metrics.HeapDumpGauge;
 import se.tink.libraries.metrics.MeterFactory;

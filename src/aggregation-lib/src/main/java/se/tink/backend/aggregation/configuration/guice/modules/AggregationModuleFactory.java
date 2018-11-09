@@ -1,18 +1,9 @@
-package se.tink.backend.aggregation.guice.configuration;
+package se.tink.backend.aggregation.configuration.guice.modules;
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Module;
 import io.dropwizard.setup.Environment;
-import se.tink.backend.aggregation.configuration.AggregationServiceConfiguration;
-import se.tink.backend.aggregation.configuration.guice.modules.AgentWorkerCommandModule;
-import se.tink.backend.aggregation.configuration.guice.modules.AggregationCommonModule;
-import se.tink.backend.aggregation.configuration.guice.modules.AggregationConfigurationModule;
-import se.tink.backend.aggregation.configuration.guice.modules.AggregationDevelopmentMultiClientRepositoryModule;
-import se.tink.backend.aggregation.configuration.guice.modules.AggregationDevelopmentSingleClientRepositoryModule;
-import se.tink.backend.aggregation.configuration.guice.modules.AggregationModule;
-import se.tink.backend.aggregation.configuration.guice.modules.AggregationMultiClientRepositoryModule;
-import se.tink.backend.aggregation.configuration.guice.modules.AggregationSingleClientRepositoryModule;
-import se.tink.backend.aggregation.configuration.guice.modules.QueueModule;
+import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.libraries.discovery.CoordinationModule;
 
 public class AggregationModuleFactory {

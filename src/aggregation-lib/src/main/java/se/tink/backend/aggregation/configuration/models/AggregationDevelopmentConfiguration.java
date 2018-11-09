@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.configuration;
+package se.tink.backend.aggregation.configuration.models;
 
 import se.tink.backend.core.ClusterCryptoConfiguration;
 import se.tink.backend.core.ClusterHostConfiguration;

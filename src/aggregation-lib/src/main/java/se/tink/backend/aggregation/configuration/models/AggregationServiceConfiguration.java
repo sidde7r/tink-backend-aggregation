@@ -1,8 +1,9 @@
-package se.tink.backend.aggregation.configuration;
+package se.tink.backend.aggregation.configuration.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.common.config.DatabaseConfiguration;
 import se.tink.backend.queue.sqs.configuration.SqsQueueConfiguration;
 
