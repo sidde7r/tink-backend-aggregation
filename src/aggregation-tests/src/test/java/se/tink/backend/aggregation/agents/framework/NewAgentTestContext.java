@@ -181,7 +181,6 @@ public class NewAgentTestContext extends AgentContext {
         }
     }
 
-    @Override
     public void processAccounts() {
         validator.validate(
                 accountsByBankId.values(),
@@ -258,7 +257,6 @@ public class NewAgentTestContext extends AgentContext {
         transactionsByAccountBankId.put(accountUniqueId, transactions);
     }
 
-    @Override
     public void updateSignableOperation(SignableOperation operation) {
         log.info("Updating transfer status: "
                 + operation.getStatus()
@@ -282,7 +280,6 @@ public class NewAgentTestContext extends AgentContext {
         // noop
     }
 
-    @Override
     public CuratorFramework getCoordinationClient() {
         return null;
     }
@@ -303,12 +300,10 @@ public class NewAgentTestContext extends AgentContext {
         return UpdateDocumentResponse.createSuccessful(contianer.getIdentifier(), UUID.randomUUID(), "url");
     }
 
-    @Override
     public void processEinvoices() {
         // noop
     }
 
-    @Override
     public void processTransferDestinationPatterns() {
         // noop
     }

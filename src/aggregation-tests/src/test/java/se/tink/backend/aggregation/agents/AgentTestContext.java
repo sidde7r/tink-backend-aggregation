@@ -149,7 +149,6 @@ public class AgentTestContext extends AgentContext {
         }
     }
 
-    @Override
     public void processAccounts() {
         log.info("Processing accounts");
     }
@@ -239,7 +238,6 @@ public class AgentTestContext extends AgentContext {
         transactionsByAccountBankId.put(accountUniqueId, transactions);
     }
 
-    @Override
     public void updateSignableOperation(SignableOperation operation) {
         log.info("Updating transfer status: "
                 + operation.getStatus()
@@ -263,7 +261,6 @@ public class AgentTestContext extends AgentContext {
         // nothing
     }
 
-    @Override
     public CuratorFramework getCoordinationClient() {
         return null;
     }
@@ -300,7 +297,6 @@ public class AgentTestContext extends AgentContext {
         return UpdateDocumentResponse.createSuccessful(contianer.getIdentifier(), UUID.randomUUID(), "url");
     }
 
-    @Override
     public void processEinvoices() {
         try {
             log.info(
@@ -313,7 +309,6 @@ public class AgentTestContext extends AgentContext {
         }
     }
 
-    @Override
     public void processTransferDestinationPatterns() {
         try {
             log.info(
