@@ -595,9 +595,7 @@ public class AgentWorkerOperationFactory {
             // accounts they want to whitelist.
             if (request instanceof ConfigureWhitelistInformationRequest) {
                 commands.add(new RequestUserOptInAccountsAgentWorkerCommand(context,
-                        (ConfigureWhitelistInformationRequest) request, clusterInfo,
-                        aggregationControllerAggregationClient,
-                        ControllerWrapper.of(
+                        (ConfigureWhitelistInformationRequest) request, ControllerWrapper.of(
                                 aggregationControllerAggregationClient,
                                 HostConfigurationConverter.convert(clusterInfo))));
             }

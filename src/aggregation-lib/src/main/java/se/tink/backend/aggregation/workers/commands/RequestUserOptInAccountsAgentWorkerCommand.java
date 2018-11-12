@@ -9,11 +9,8 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
-import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
-import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
-import se.tink.backend.aggregation.converter.HostConfigurationConverter;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
@@ -36,10 +33,8 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
 
     private final AgentWorkerCommandContext context;
     private final ConfigureWhitelistInformationRequest request;
-    private final ClusterInfo clusterInfo;
     private final Credentials credentials;
     private final SupplementalInformationController supplementalInformationController;
-    private final AggregationControllerAggregationClient aggregationControllerAggregationClient;
     private final List<Account> accountsInRequest;
     private List<Account> accountsInContext;
     private final Catalog catalog;
@@ -47,14 +42,11 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
 
     public RequestUserOptInAccountsAgentWorkerCommand(AgentWorkerCommandContext context,
             ConfigureWhitelistInformationRequest request,
-            ClusterInfo clusterInfo, AggregationControllerAggregationClient aggregationControllerAggregationClient,
             ControllerWrapper controllerWrapper) {
         this.context = context;
         this.request = request;
-        this.clusterInfo = clusterInfo;
         this.credentials = request.getCredentials();
         this.supplementalInformationController = new SupplementalInformationController(context , request.getCredentials());
-        this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
         this.accountsInRequest = request.getAccounts();
         this.catalog = context.getCatalog();
         this.controllerWrapper = controllerWrapper;
