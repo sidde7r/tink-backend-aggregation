@@ -35,7 +35,7 @@ public class EncryptCredentialsWorkerCommand extends AgentWorkerCommand {
         CryptoConfigurationDao cryptoConfigurationDao = new CryptoConfigurationDao(
                 clusterCryptoConfigurationRepository);
 
-        credentialsCrypto = new CredentialsCrypto(cryptoConfigurationDao, clusterInfo, cacheClient, controllerWrapper,
+        credentialsCrypto = new CredentialsCrypto(clusterInfo, cacheClient, controllerWrapper,
                 cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId()));
     }
 

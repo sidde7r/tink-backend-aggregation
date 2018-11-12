@@ -5,7 +5,6 @@ import com.google.common.base.Strings;
 import java.util.Optional;
 
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
-import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
@@ -19,15 +18,13 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class CredentialsCrypto {
     private static final AggregationLogger logger = new AggregationLogger(CredentialsCrypto.class);
 
-    private final CryptoConfigurationDao cryptoConfigurationDao;
     private final ClusterInfo clusterInfo;
     private final CacheClient cacheClient;
     private final ControllerWrapper controllerWrapper;
     private final CryptoWrapper cryptoWrapper;
 
-    public CredentialsCrypto(CryptoConfigurationDao cryptoConfigurationDao, ClusterInfo clusterInfo,
-            CacheClient cacheClient, ControllerWrapper controllerWrapper, CryptoWrapper cryptoWrapper) {
-        this.cryptoConfigurationDao = cryptoConfigurationDao;
+    public CredentialsCrypto(ClusterInfo clusterInfo, CacheClient cacheClient, ControllerWrapper controllerWrapper,
+            CryptoWrapper cryptoWrapper) {
         this.clusterInfo = clusterInfo;
         this.cacheClient = cacheClient;
         this.controllerWrapper = controllerWrapper;
