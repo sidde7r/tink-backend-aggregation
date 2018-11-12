@@ -248,9 +248,8 @@ public class AgentWorkerOperationFactory {
 
         CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
 
-        commands.add(new DecryptCredentialsWorkerCommand(cacheClient,
-                context, controllerWrapper,
-                cryptoWrapper,
+        commands.add(new DecryptCredentialsWorkerCommand(
+                context,
                 new CredentialsCrypto(cacheClient, controllerWrapper,
                         cryptoWrapper)));
         commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState, agentDebugStorageHandler));
@@ -332,9 +331,8 @@ public class AgentWorkerOperationFactory {
                         reportMetricsAgentWorkerCommandState),
                 new ReportProviderTransferMetricsAgentWorkerCommand(context,  operationName),
                 new LockAgentWorkerCommand(context),
-                new DecryptCredentialsWorkerCommand(cacheClient,
-                        context, controllerWrapper,
-                        cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId()),
+                new DecryptCredentialsWorkerCommand(
+                        context,
                         new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)),
                 new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState, agentDebugStorageHandler),
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState),
@@ -418,9 +416,8 @@ public class AgentWorkerOperationFactory {
 
         CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
 
-        commands.add(new DecryptCredentialsWorkerCommand(cacheClient,
+        commands.add(new DecryptCredentialsWorkerCommand(
                 context,
-                controllerWrapper, cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId()),
                 new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)));
         commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
@@ -450,9 +447,8 @@ public class AgentWorkerOperationFactory {
 
         ImmutableList<AgentWorkerCommand> commands = ImmutableList.of(
                 new LockAgentWorkerCommand(context),
-                new DecryptCredentialsWorkerCommand(cacheClient,
+                new DecryptCredentialsWorkerCommand(
                         context,
-                        controllerWrapper, cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId()),
                         new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)),
                 new EncryptCredentialsWorkerCommand(clusterInfo, cacheClient, clusterCryptoConfigurationRepository,
                         context,
@@ -525,9 +521,8 @@ public class AgentWorkerOperationFactory {
 
         CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
 
-        commands.add(new DecryptCredentialsWorkerCommand(cacheClient,
+        commands.add(new DecryptCredentialsWorkerCommand(
                 context,
-                controllerWrapper, cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId()),
                 new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)));
         commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
@@ -581,9 +576,8 @@ public class AgentWorkerOperationFactory {
 
         CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
 
-        commands.add(new DecryptCredentialsWorkerCommand(cacheClient,
+        commands.add(new DecryptCredentialsWorkerCommand(
                 context,
-                controllerWrapper, cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId()),
                 new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)));
 
         commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState, agentDebugStorageHandler));
