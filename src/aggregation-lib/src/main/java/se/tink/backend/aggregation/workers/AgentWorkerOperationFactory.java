@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.rpc.TransferRequest;
+import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorkerOperation.AgentWorkerOperationState;
 import se.tink.backend.aggregation.workers.commands.CircuitBreakerAgentWorkerCommand;
@@ -239,9 +240,13 @@ public class AgentWorkerOperationFactory {
         commands.add(new ReportProviderMetricsAgentWorkerCommand(context, metricsName,
                 reportMetricsAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
+
+        CryptoConfigurationDao cryptoConfigurationDao = new CryptoConfigurationDao(
+                clusterCryptoConfigurationRepository);
+
         commands.add(new DecryptCredentialsWorkerCommand(clusterInfo, cacheClient,
-                clusterCryptoConfigurationRepository, context,
-                controllerWrapper));
+                clusterCryptoConfigurationRepository, context, controllerWrapper,
+                cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId())));
         commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)));
@@ -309,6 +314,9 @@ public class AgentWorkerOperationFactory {
     private List<AgentWorkerCommand> createTransferBaseCommands(ClusterInfo clusterInfo, TransferRequest request,
             AgentWorkerCommandContext context, String operationName, ControllerWrapper controllerWrapper) {
 
+        CryptoConfigurationDao cryptoConfigurationDao = new CryptoConfigurationDao(
+                clusterCryptoConfigurationRepository);
+
         return Lists.newArrayList(
                 new ValidateProviderAgentWorkerStatus(context, controllerWrapper),
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState),
@@ -317,7 +325,8 @@ public class AgentWorkerOperationFactory {
                 new ReportProviderTransferMetricsAgentWorkerCommand(context,  operationName),
                 new LockAgentWorkerCommand(context),
                 new DecryptCredentialsWorkerCommand(clusterInfo, cacheClient,
-                        clusterCryptoConfigurationRepository, context, controllerWrapper),
+                        clusterCryptoConfigurationRepository, context, controllerWrapper,
+                        cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId())),
                 new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState, agentDebugStorageHandler),
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState),
                 new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)),
@@ -394,9 +403,13 @@ public class AgentWorkerOperationFactory {
         commands.add(new ReportProviderMetricsAgentWorkerCommand(context, "keep-alive",
                 reportMetricsAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
+
+        CryptoConfigurationDao cryptoConfigurationDao = new CryptoConfigurationDao(
+                clusterCryptoConfigurationRepository);
+
         commands.add(new DecryptCredentialsWorkerCommand(clusterInfo, cacheClient,
                 clusterCryptoConfigurationRepository, context,
-                controllerWrapper));
+                controllerWrapper, cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId())));
         commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(new KeepAliveAgentWorkerCommand(context));
@@ -418,11 +431,14 @@ public class AgentWorkerOperationFactory {
                 CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
                 controllerWrapper);
 
+        CryptoConfigurationDao cryptoConfigurationDao = new CryptoConfigurationDao(
+                clusterCryptoConfigurationRepository);
+
         ImmutableList<AgentWorkerCommand> commands = ImmutableList.of(
                 new LockAgentWorkerCommand(context),
                 new DecryptCredentialsWorkerCommand(clusterInfo, cacheClient, clusterCryptoConfigurationRepository,
                         context,
-                        controllerWrapper),
+                        controllerWrapper, cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId())),
                 new EncryptCredentialsWorkerCommand(clusterInfo, cacheClient, clusterCryptoConfigurationRepository,
                         context,
                         controllerWrapper)
@@ -488,9 +504,13 @@ public class AgentWorkerOperationFactory {
         commands.add(new ReportProviderMetricsAgentWorkerCommand(context, metricsName,
                 reportMetricsAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
+
+        CryptoConfigurationDao cryptoConfigurationDao = new CryptoConfigurationDao(
+                clusterCryptoConfigurationRepository);
+
         commands.add(new DecryptCredentialsWorkerCommand(clusterInfo, cacheClient,
                 clusterCryptoConfigurationRepository, context,
-                controllerWrapper));
+                controllerWrapper, cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId())));
         commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)));
@@ -537,9 +557,13 @@ public class AgentWorkerOperationFactory {
         commands.add(new ReportProviderMetricsAgentWorkerCommand(context, operationMetricName,
                 reportMetricsAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
+
+        CryptoConfigurationDao cryptoConfigurationDao = new CryptoConfigurationDao(
+                clusterCryptoConfigurationRepository);
+
         commands.add(new DecryptCredentialsWorkerCommand(clusterInfo, cacheClient,
                     clusterCryptoConfigurationRepository, context,
-                controllerWrapper));
+                controllerWrapper, cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId())));
 
         commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
