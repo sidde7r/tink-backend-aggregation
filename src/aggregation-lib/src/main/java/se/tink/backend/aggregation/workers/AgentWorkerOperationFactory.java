@@ -77,6 +77,7 @@ public class AgentWorkerOperationFactory {
     private final MetricCacheLoader metricCacheLoader;
     private final CryptoConfigurationDao cryptoConfigurationDao;
     private final Map<String, ClusterConfiguration> clusterConfigurations;
+    private final boolean isMultiClientDevelopment;
 
     // States
     private AgentWorkerOperationState agentWorkerOperationState;
@@ -104,9 +105,11 @@ public class AgentWorkerOperationFactory {
             ReportProviderMetricsAgentWorkerCommandState reportProviderMetricsAgentWorkerCommandState,
             SupplementalInformationController supplementalInformationController,
             CryptoConfigurationDao cryptoConfigurationDao,
-            @Named("clusterConfigurations") Map<String, ClusterConfiguration> clusterConfigurations) {
+            @Named("clusterConfigurations") Map<String, ClusterConfiguration> clusterConfigurations,
+            @Named("isMultiClientDevelopment") boolean isMultiClientDevelopment) {
         this.cacheClient = cacheClient;
         this.clusterConfigurations = clusterConfigurations;
+        this.isMultiClientDevelopment = isMultiClientDevelopment;
         metricCacheLoader = new MetricCacheLoader(metricRegistry);
         this.cryptoConfigurationDao = cryptoConfigurationDao;
 
@@ -126,9 +129,14 @@ public class AgentWorkerOperationFactory {
     }
 
     private ControllerWrapper createControllerWrapperFromClusterConfiguration(ClusterInfo clusterInfo){
-        String clusterId = clusterInfo.getClusterId().getId();
-        return ControllerWrapper.of(aggregationControllerAggregationClient,
-                HostConfigurationConverter.convert(clusterConfigurations.get(clusterId)));
+
+        if(isMultiClientDevelopment) {
+            String clusterId = clusterInfo.getClusterId().getId();
+            return ControllerWrapper.of(aggregationControllerAggregationClient,
+                    HostConfigurationConverter.convert(clusterConfigurations.get(clusterId)));
+        }
+
+        return ControllerWrapper.of(aggregationControllerAggregationClient, se.tink.backend.aggregation.converter.HostConfigurationConverter.convert(clusterInfo));
     }
 
     private AgentWorkerCommandMetricState createMetricState(CredentialsRequest request) {
