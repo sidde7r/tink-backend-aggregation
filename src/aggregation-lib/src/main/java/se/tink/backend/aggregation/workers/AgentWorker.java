@@ -20,8 +20,6 @@ import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 
 public class AgentWorker implements Managed {
-    public static final String DEFAULT_AGENT_PACKAGE_CLASS_PREFIX =
-            "se.tink.backend.aggregation.agents";
 
     private static final AggregationLogger log = new AggregationLogger(AgentWorker.class);
     private static final int NUMBER_OF_THREADS = 1000;

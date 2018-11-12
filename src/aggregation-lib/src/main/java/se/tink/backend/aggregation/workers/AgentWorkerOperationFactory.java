@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.Agent;
-import se.tink.backend.aggregation.agents.AgentFactory;
+import se.tink.backend.aggregation.agents.AgentClassFactory;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
@@ -668,7 +668,7 @@ public class AgentWorkerOperationFactory {
         }
 
         try {
-            Class<? extends Agent> agentClass = AgentFactory.getAgentClass(provider);
+            Class<? extends Agent> agentClass = AgentClassFactory.getAgentClass(provider);
             return NextGenerationAgent.class.isAssignableFrom(agentClass);
         } catch (Exception e) {
             return false;

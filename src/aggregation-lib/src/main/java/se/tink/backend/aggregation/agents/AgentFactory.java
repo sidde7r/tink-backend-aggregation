@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Provider;
-import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
@@ -16,12 +15,6 @@ public class AgentFactory {
 
     public AgentFactory(AgentsServiceConfiguration configuration) {
         this.configuration = configuration;
-    }
-
-    @SuppressWarnings("unchecked")
-    public static Class<? extends Agent> getAgentClass(Provider provider) throws ClassNotFoundException {
-        return (Class<? extends Agent>) Class.forName(AgentWorker.DEFAULT_AGENT_PACKAGE_CLASS_PREFIX + "."
-                + provider.getClassName());
     }
 
     @SuppressWarnings("unchecked")
@@ -34,7 +27,7 @@ public class AgentFactory {
             agentClass = DemoAgent.class;
             credentials.setPassword("demo");
         } else {
-            agentClass = getAgentClass(provider);
+            agentClass = AgentClassFactory.getAgentClass(provider);
         }
 
         return agentClass;

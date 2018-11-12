@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.AbstractConfigurationBase;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.Agent;
+import se.tink.backend.aggregation.agents.AgentClassFactory;
 import se.tink.backend.aggregation.agents.AgentFactory;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.PersistentLogin;
@@ -110,7 +111,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             configuration = aggregationServiceConfiguration.getAgentsServiceConfiguration();
             AgentFactory factory = new AgentFactory(configuration);
 
-            Class<? extends Agent> cls = AgentFactory.getAgentClass(provider);
+            Class<? extends Agent> cls = AgentClassFactory.getAgentClass(provider);
             return factory.create(cls, credentialsRequest, context);
         } catch (Exception e) {
             throw new IllegalStateException(e);
