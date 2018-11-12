@@ -16,16 +16,17 @@ public class EncryptCredentialsWorkerCommand extends AgentWorkerCommand {
     private final boolean doUpdateCredential;
 
     public EncryptCredentialsWorkerCommand(CacheClient cacheClient, AgentWorkerCommandContext context,
-            ControllerWrapper controllerWrapper, CryptoWrapper cryptoWrapper) {
-        this(cacheClient,
-                context, true, controllerWrapper, cryptoWrapper);
+            ControllerWrapper controllerWrapper, CryptoWrapper cryptoWrapper,
+            CredentialsCrypto credentialsCrypto) {
+        this(cacheClient, context, true, controllerWrapper, cryptoWrapper, credentialsCrypto);
     }
 
     public EncryptCredentialsWorkerCommand(CacheClient cacheClient, AgentWorkerCommandContext context,
-            boolean doUpdateCredential, ControllerWrapper controllerWrapper, CryptoWrapper cryptoWrapper) {
+            boolean doUpdateCredential, ControllerWrapper controllerWrapper, CryptoWrapper cryptoWrapper,
+            CredentialsCrypto credentialsCrypto) {
         this.context = context;
         this.doUpdateCredential = doUpdateCredential;
-        this.credentialsCrypto = new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper);
+        this.credentialsCrypto = credentialsCrypto;
     }
 
     @Override

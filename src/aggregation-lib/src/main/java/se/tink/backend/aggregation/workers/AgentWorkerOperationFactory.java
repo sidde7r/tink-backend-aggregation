@@ -362,9 +362,12 @@ public class AgentWorkerOperationFactory {
         CryptoConfigurationDao cryptoConfigurationDao = new CryptoConfigurationDao(
                 clusterCryptoConfigurationRepository);
 
+        CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
+
         commands.add(new EncryptCredentialsWorkerCommand(cacheClient,
                 context, false, controllerWrapper,
-                cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId())));
+                cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId()),
+                new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)));
 
         return new AgentWorkerOperation(agentWorkerOperationState, "create-credentials", request, commands,
                 context);
@@ -392,9 +395,12 @@ public class AgentWorkerOperationFactory {
         CryptoConfigurationDao cryptoConfigurationDao = new CryptoConfigurationDao(
                 clusterCryptoConfigurationRepository);
 
+        CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
+
         commands.add(new EncryptCredentialsWorkerCommand(cacheClient,
                 context, false,
-                controllerWrapper, cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId())));
+                controllerWrapper, cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId()),
+                new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)));
 
         return new AgentWorkerOperation(agentWorkerOperationState, "update-credentials", request, commands,
                 context);
@@ -461,7 +467,8 @@ public class AgentWorkerOperationFactory {
                         new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)),
                 new EncryptCredentialsWorkerCommand(cacheClient,
                         context,
-                        controllerWrapper, cryptoWrapper)
+                        controllerWrapper, cryptoWrapper,
+                        new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper))
         );
 
         return new AgentWorkerOperation(agentWorkerOperationState, "reencrypt-credentials", request,
