@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
+import se.tink.backend.aggregation.capability.CapabilityTester;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
@@ -460,6 +461,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
             Preconditions.checkNotNull(provider, "Provider was not set.");
             Preconditions.checkNotNull(credential, "Credential was not set.");
+            CapabilityTester.checkCapabilities(provider.getClassName());
             credential.setProviderName(provider.getName());
             credential.setType(provider.getCredentialsType());
 

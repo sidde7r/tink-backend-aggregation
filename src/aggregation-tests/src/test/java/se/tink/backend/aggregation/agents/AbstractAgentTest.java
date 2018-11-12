@@ -14,6 +14,7 @@ import org.junit.Assert;
 import se.tink.backend.aggregation.AbstractConfigurationBase;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
+import se.tink.backend.aggregation.capability.CapabilityTester;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.log.ClientFilterFactory;
 import se.tink.backend.aggregation.log.HttpLoggingFilterFactory;
@@ -54,6 +55,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
         }
 
         factory = new AgentFactory(configuration);
+        CapabilityTester.checkCapabilities(cls.getSimpleName());
     }
 
     protected Provider constructProvider() {
