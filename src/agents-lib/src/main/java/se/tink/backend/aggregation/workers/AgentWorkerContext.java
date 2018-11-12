@@ -16,11 +16,9 @@ import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.barriers.DistributedBarrier;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.AgentEventListener;
-import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.api.CallbackHostConfiguration;
-import se.tink.backend.aggregation.converter.HostConfigurationConverter;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.Account;
@@ -60,7 +58,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     protected List<Transfer> transfers = Lists.newArrayList();
     protected List<AgentEventListener> eventListeners = Lists.newArrayList();
     private SupplementalInformationController supplementalInformationController;
-    protected AggregationControllerAggregationClient aggregationControllerAggregationClient;
     //Cached accounts have not been sent to system side yet.
     protected Map<String, Pair<Account, AccountFeatures>> allAvailableAccountsByUniqueId;
     //Updated accounts have been sent to System side and has been updated with their stored Tink Id
@@ -75,7 +72,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     protected ControllerWrapper controllerWrapper;
 
     public AgentWorkerContext(CredentialsRequest request, MetricRegistry metricRegistry,
-            AggregationControllerAggregationClient aggregationControllerAggregationClient,
             CuratorFramework coordinationClient, AggregatorInfo aggregatorInfo,
             CallbackHostConfiguration callbackHostConfiguration,
             SupplementalInformationController supplementalInformationController,
@@ -100,7 +96,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         this.metricRegistry = metricRegistry;
 
         this.supplementalInformationController = supplementalInformationController;
-        this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
         this.controllerWrapper = controllerWrapper;
 
     }

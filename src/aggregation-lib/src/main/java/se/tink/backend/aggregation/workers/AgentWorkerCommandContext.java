@@ -13,13 +13,11 @@ import org.apache.curator.framework.CuratorFramework;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentEventListener;
 import se.tink.backend.aggregation.agents.SetAccountsToAggregateContext;
-import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.api.CallbackHostConfiguration;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
-import se.tink.backend.aggregation.converter.HostConfigurationConverter;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
@@ -61,14 +59,13 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
 
     public AgentWorkerCommandContext(CredentialsRequest request,
             MetricRegistry metricRegistry,
-            AggregationControllerAggregationClient aggregationControllerAggregationClient,
             CuratorFramework coordinationClient,
             AgentsServiceConfiguration agentsServiceConfiguration,
             AggregatorInfo aggregatorInfo,
             CallbackHostConfiguration callbackHostConfiguration,
             SupplementalInformationController supplementalInformationController,
             ControllerWrapper controllerWrapper) {
-        super(request, metricRegistry, aggregationControllerAggregationClient, coordinationClient, aggregatorInfo,
+        super(request, metricRegistry, coordinationClient, aggregatorInfo,
                 callbackHostConfiguration, supplementalInformationController, controllerWrapper);
         this.coordinationClient = coordinationClient;
         this.timePutOnQueue = System.currentTimeMillis();
