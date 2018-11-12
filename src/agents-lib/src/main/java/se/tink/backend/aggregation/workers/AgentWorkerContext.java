@@ -182,8 +182,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             generateStatisticsReq.setUserTriggered(request.isCreate());
             generateStatisticsReq.setMode(StatisticMode.FULL); // To trigger refresh of residences.
 
-            aggregationControllerAggregationClient.generateStatisticsAndActivityAsynchronously(
-                    HostConfigurationConverter.convert(getCallbackHostConfiguration()), generateStatisticsReq);
+            controllerWrapper.generateStatisticsAndActivityAsynchronously(generateStatisticsReq);
             return;
         }
 
@@ -201,8 +200,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateTransactionsRequest.setCredentials(credentials.getId());
         updateTransactionsRequest.setUserTriggered(request.isManual());
 
-        aggregationControllerAggregationClient.updateTransactionsAsynchronously(
-                HostConfigurationConverter.convert(getCallbackHostConfiguration()), updateTransactionsRequest);
+        controllerWrapper.updateTransactionsAsynchronously(updateTransactionsRequest);
 
         isSystemProcessingTransactions = true;
 
@@ -333,8 +331,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         Account updatedAccount;
         try {
-            updatedAccount = aggregationControllerAggregationClient.updateAccount(
-                    HostConfigurationConverter.convert(getCallbackHostConfiguration()), updateAccountRequest);
+            updatedAccount = controllerWrapper.updateAccount(updateAccountRequest);
 
         } catch (UniformInterfaceException e) {
             log.error("Account update request failed, response: " +
@@ -372,8 +369,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateCredentialsStatusRequest.setUpdateContextTimestamp(doStatusUpdate);
         updateCredentialsStatusRequest.setUserDeviceId(request.getUserDeviceId());
 
-        aggregationControllerAggregationClient.updateCredentials(
-                HostConfigurationConverter.convert(getCallbackHostConfiguration()), updateCredentialsStatusRequest);
+        controllerWrapper.updateCredentials(updateCredentialsStatusRequest);
     }
 
     @Override
@@ -382,8 +378,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateFraudRequest.setUserId(request.getUser().getId());
         updateFraudRequest.setDetailsContents(detailsContents);
 
-        aggregationControllerAggregationClient.updateFraudDetails(
-                HostConfigurationConverter.convert(getCallbackHostConfiguration()), updateFraudRequest);
+        controllerWrapper.updateFraudDetails(updateFraudRequest);
     }
 
     @Override
@@ -462,8 +457,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateDocumentRequest.setDocumentContainer(container);
 
         se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateDocumentResponse updateDocumentResponse;
-        updateDocumentResponse = aggregationControllerAggregationClient.updateDocument(
-                HostConfigurationConverter.convert(getCallbackHostConfiguration()), updateDocumentRequest);
+        updateDocumentResponse = controllerWrapper.updateDocument(updateDocumentRequest);
 
         if (updateDocumentResponse.isSuccessfullyStored()) {
             return UpdateDocumentResponse.createSuccessful(

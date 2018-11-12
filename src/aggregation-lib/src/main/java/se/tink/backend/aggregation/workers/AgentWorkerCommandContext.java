@@ -120,8 +120,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
         processAccountsRequest.setCredentialsId(credentials.getId());
         processAccountsRequest.setUserId(request.getUser().getId());
 
-        aggregationControllerAggregationClient.processAccounts(HostConfigurationConverter.convert(getCallbackHostConfiguration()),
-                processAccountsRequest);
+        controllerWrapper.processAccounts(processAccountsRequest);
     }
 
     public CuratorFramework getCoordinationClient() {
@@ -205,8 +204,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
 
 
     public void updateSignableOperation(SignableOperation signableOperation) {
-        aggregationControllerAggregationClient.updateSignableOperation(HostConfigurationConverter.convert(getCallbackHostConfiguration()),
-                signableOperation);
+        controllerWrapper.updateSignableOperation(signableOperation);
     }
 
     public void updateSignableOperationStatus(SignableOperation signableOperation, SignableOperationStatuses status) {
@@ -232,8 +230,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
         request.setUserId(this.request.getUser().getId());
 
         if (!transferDestinationPatternsByAccount.isEmpty()) {
-            aggregationControllerAggregationClient.updateTransferDestinationPatterns(HostConfigurationConverter.convert(getCallbackHostConfiguration()),
-                    request);
+            controllerWrapper.updateTransferDestinationPatterns(request);
         }
     }
 
@@ -252,8 +249,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
         updateTransfersRequest.setCredentialsId(request.getCredentials().getId());
         updateTransfersRequest.setTransfers(transfers);
 
-        aggregationControllerAggregationClient.processEinvoices(HostConfigurationConverter.convert(getCallbackHostConfiguration()),
-                updateTransfersRequest);
+        controllerWrapper.processEinvoices(updateTransfersRequest);
     }
 
 
