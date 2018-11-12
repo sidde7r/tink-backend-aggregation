@@ -20,8 +20,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 @Configuration
 @EnableJpaRepositories(basePackages = {
-        "se.tink.backend.common.repository.mysql.aggregation",
-        "se.tink.backend.aggregation.configurations.repositories"
+        "se.tink.backend.aggregation.storage.database.repositories"
 })
 @EnableTransactionManagement
 class AggregationRepositoryConfiguration implements RepositoryConfigurator {

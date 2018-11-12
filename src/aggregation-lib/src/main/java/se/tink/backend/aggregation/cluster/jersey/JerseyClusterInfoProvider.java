@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.cluster.annotations.ClusterContext;
 import se.tink.backend.aggregation.cluster.exceptions.ClusterNotValid;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
-import se.tink.backend.aggregation.configurations.providers.ClusterInfoProvider;
+import se.tink.backend.aggregation.storage.database.providers.ClusterInfoProvider;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
