@@ -33,31 +33,6 @@ public class CryptoConfigurationDao {
         return configuration;
     }
 
-    public Optional<CryptoConfiguration> getClusterCryptoConfigurationFromClusterId(ClusterId clusterId) {
-        // Get the most recent (keyId, key) for clusterId.getId()
-        List<ClusterCryptoConfiguration> clusterCryptoConfigurations = clusterCryptoConfigurationRepository
-                .findByCryptoIdClusterId(clusterId.getId());
-
-        // Get the highest (most recent) keyId.
-        Optional<ClusterCryptoConfiguration> optionalClusterCryptoConfiguration = clusterCryptoConfigurations.stream().max(
-                Comparator.comparing(t -> t.getCryptoId().getKeyId()));
-        return optionalClusterCryptoConfiguration.map(CryptoConfigurationDao::convert);
-    }
-
-    public Optional<byte[]> getClusterKeyFromKeyId(ClusterId clusterId, int keyId) {
-        CryptoId cryptoId = new CryptoId();
-        cryptoId.setClusterId(clusterId.getId());
-        cryptoId.setKeyId(keyId);
-        ClusterCryptoConfiguration clusterCryptoConfiguration = clusterCryptoConfigurationRepository
-                .findByCryptoId(cryptoId);
-
-        if (Objects.isNull(clusterCryptoConfiguration)) {
-            return Optional.empty();
-        }
-
-        return Optional.of(clusterCryptoConfiguration.getDecodedKey());
-    }
-
     public CryptoWrapper getCryptoWrapper(String clusterId) {
         List<ClusterCryptoConfiguration> clusterCryptoConfigurations = clusterCryptoConfigurationRepository
                 .findByCryptoIdClusterId(clusterId);
