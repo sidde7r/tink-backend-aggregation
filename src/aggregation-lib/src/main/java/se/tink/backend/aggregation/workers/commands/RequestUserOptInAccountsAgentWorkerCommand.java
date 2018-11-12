@@ -204,7 +204,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
     private void optOutAccounts(List<String> optOutAccountIds) {
         Credentials credentials = request.getCredentials();
 
-        aggregationControllerAggregationClient.optOutAccounts(HostConfigurationConverter.convert(clusterInfo),
+        controllerWrapper.optOutAccounts(
                 OptOutAccountsRequest.of(credentials.getUserId(), credentials.getId(), optOutAccountIds));
     }
 
