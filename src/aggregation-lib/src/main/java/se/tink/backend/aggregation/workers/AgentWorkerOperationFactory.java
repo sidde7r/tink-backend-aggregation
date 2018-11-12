@@ -358,8 +358,13 @@ public class AgentWorkerOperationFactory {
 
         // acquire lock to avoid encryption/decryption race conditions
         commands.add(new LockAgentWorkerCommand(context));
+
+        CryptoConfigurationDao cryptoConfigurationDao = new CryptoConfigurationDao(
+                clusterCryptoConfigurationRepository);
+
         commands.add(new EncryptCredentialsWorkerCommand(clusterInfo, cacheClient,
-                clusterCryptoConfigurationRepository, context, false, controllerWrapper));
+                clusterCryptoConfigurationRepository, context, false, controllerWrapper,
+                cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId())));
 
         return new AgentWorkerOperation(agentWorkerOperationState, "create-credentials", request, commands,
                 context);
@@ -383,9 +388,13 @@ public class AgentWorkerOperationFactory {
 
         // acquire lock to avoid encryption/decryption race conditions
         commands.add(new LockAgentWorkerCommand(context));
+
+        CryptoConfigurationDao cryptoConfigurationDao = new CryptoConfigurationDao(
+                clusterCryptoConfigurationRepository);
+
         commands.add(new EncryptCredentialsWorkerCommand(clusterInfo, cacheClient,
                 clusterCryptoConfigurationRepository, context, false,
-                controllerWrapper));
+                controllerWrapper, cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId())));
 
         return new AgentWorkerOperation(agentWorkerOperationState, "update-credentials", request, commands,
                 context);
@@ -452,7 +461,7 @@ public class AgentWorkerOperationFactory {
                         new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)),
                 new EncryptCredentialsWorkerCommand(clusterInfo, cacheClient, clusterCryptoConfigurationRepository,
                         context,
-                        controllerWrapper)
+                        controllerWrapper, cryptoWrapper)
         );
 
         return new AgentWorkerOperation(agentWorkerOperationState, "reencrypt-credentials", request,

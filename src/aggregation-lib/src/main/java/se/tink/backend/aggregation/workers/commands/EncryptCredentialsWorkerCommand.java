@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.encryption.CredentialsCrypto;
+import se.tink.backend.aggregation.wrappers.CryptoWrapper;
 import se.tink.backend.common.cache.CacheClient;
 import se.tink.backend.aggregation.storage.database.repositories.ClusterCryptoConfigurationRepository;
 
@@ -19,24 +20,18 @@ public class EncryptCredentialsWorkerCommand extends AgentWorkerCommand {
 
     public EncryptCredentialsWorkerCommand(ClusterInfo clusterInfo, CacheClient cacheClient,
             ClusterCryptoConfigurationRepository clusterCryptoConfigurationRepository,
-            AgentWorkerCommandContext context,
-            ControllerWrapper controllerWrapper) {
+            AgentWorkerCommandContext context, ControllerWrapper controllerWrapper, CryptoWrapper cryptoWrapper) {
         this(clusterInfo, cacheClient, clusterCryptoConfigurationRepository,
-                context, true, controllerWrapper);
+                context, true, controllerWrapper, cryptoWrapper);
     }
 
     public EncryptCredentialsWorkerCommand(ClusterInfo clusterInfo, CacheClient cacheClient,
             ClusterCryptoConfigurationRepository clusterCryptoConfigurationRepository,
             AgentWorkerCommandContext context, boolean doUpdateCredential,
-            ControllerWrapper controllerWrapper) {
+            ControllerWrapper controllerWrapper, CryptoWrapper cryptoWrapper) {
         this.context = context;
         this.doUpdateCredential = doUpdateCredential;
-
-        CryptoConfigurationDao cryptoConfigurationDao = new CryptoConfigurationDao(
-                clusterCryptoConfigurationRepository);
-
-        credentialsCrypto = new CredentialsCrypto(cacheClient, controllerWrapper,
-                cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId()));
+        this.credentialsCrypto = new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper);
     }
 
     @Override
