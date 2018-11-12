@@ -5,8 +5,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import com.google.inject.name.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.Agent;
@@ -31,6 +34,7 @@ import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
+import se.tink.backend.aggregation.storage.database.models.ClusterConfiguration;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorkerOperation.AgentWorkerOperationState;
 import se.tink.backend.aggregation.workers.commands.CircuitBreakerAgentWorkerCommand;
@@ -72,6 +76,7 @@ public class AgentWorkerOperationFactory {
     private final CacheClient cacheClient;
     private final MetricCacheLoader metricCacheLoader;
     private final CryptoConfigurationDao cryptoConfigurationDao;
+    private final Map<String, ClusterConfiguration> clusterConfigurations;
 
     // States
     private AgentWorkerOperationState agentWorkerOperationState;
@@ -98,8 +103,10 @@ public class AgentWorkerOperationFactory {
             LoginAgentWorkerCommandState loginAgentWorkerCommandState,
             ReportProviderMetricsAgentWorkerCommandState reportProviderMetricsAgentWorkerCommandState,
             SupplementalInformationController supplementalInformationController,
-            CryptoConfigurationDao cryptoConfigurationDao) {
+            CryptoConfigurationDao cryptoConfigurationDao,
+            @Named("clusterConfigurations") Map<String, ClusterConfiguration> clusterConfigurations) {
         this.cacheClient = cacheClient;
+        this.clusterConfigurations = clusterConfigurations;
         metricCacheLoader = new MetricCacheLoader(metricRegistry);
         this.cryptoConfigurationDao = cryptoConfigurationDao;
 
@@ -116,6 +123,11 @@ public class AgentWorkerOperationFactory {
         this.serviceContext = serviceContext;
         this.agentDebugStorageHandler = agentDebugStorageHandler;
         this.supplementalInformationController = supplementalInformationController;
+    }
+
+    private ControllerWrapper createControllerWrapperFromClusterConfiguration(ClusterInfo clusterInfo){
+        String clusterId = clusterInfo.getClusterId().getId();
+        return ControllerWrapper.of(aggregationControllerAggregationClient, se.tink.backend.aggregation.storage.database.converter.HostConfigurationConverter.convert(clusterConfigurations.get(clusterId)));
     }
 
     private AgentWorkerCommandMetricState createMetricState(CredentialsRequest request) {
