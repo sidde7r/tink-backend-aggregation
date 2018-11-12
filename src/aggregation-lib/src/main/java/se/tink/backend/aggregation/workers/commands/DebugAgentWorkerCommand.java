@@ -45,7 +45,7 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
     @Override
     public void postProcess() {
-        String clusterId = context.getClusterInfo().getClusterId().getId();
+        String clusterId = context.getCallbackHostConfiguration().getClusterId();
         List<String> excludedDebugClusters = context.getAgentsServiceConfiguration()
                 .getExcludedDebugClusters().getExcludedClusters();
 
