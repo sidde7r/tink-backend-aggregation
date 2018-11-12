@@ -346,7 +346,10 @@ public class AgentWorkerOperationFactory {
         // acquire lock to avoid encryption/decryption race conditions
         commands.add(new LockAgentWorkerCommand(context));
         commands.add(new EncryptCredentialsWorkerCommand(clusterInfo, cacheClient,
-                clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context, false));
+                clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context, false,
+                ControllerWrapper.of(
+                        aggregationControllerAggregationClient,
+                        HostConfigurationConverter.convert(clusterInfo))));
 
         return new AgentWorkerOperation(agentWorkerOperationState, "create-credentials", request, commands,
                 context);
@@ -370,7 +373,10 @@ public class AgentWorkerOperationFactory {
         // acquire lock to avoid encryption/decryption race conditions
         commands.add(new LockAgentWorkerCommand(context));
         commands.add(new EncryptCredentialsWorkerCommand(clusterInfo, cacheClient,
-                clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context, false));
+                clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context, false,
+                ControllerWrapper.of(
+                        aggregationControllerAggregationClient,
+                        HostConfigurationConverter.convert(clusterInfo))));
 
         return new AgentWorkerOperation(agentWorkerOperationState, "update-credentials", request, commands,
                 context);
@@ -426,7 +432,10 @@ public class AgentWorkerOperationFactory {
                                 aggregationControllerAggregationClient,
                                 HostConfigurationConverter.convert(clusterInfo))),
                 new EncryptCredentialsWorkerCommand(clusterInfo, cacheClient, clusterCryptoConfigurationRepository,
-                        aggregationControllerAggregationClient, context)
+                        aggregationControllerAggregationClient, context,
+                        ControllerWrapper.of(
+                                aggregationControllerAggregationClient,
+                                HostConfigurationConverter.convert(clusterInfo)))
         );
 
         return new AgentWorkerOperation(agentWorkerOperationState, "reencrypt-credentials", request,

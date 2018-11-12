@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.workers.commands;
 
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
+import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
+import se.tink.backend.aggregation.converter.HostConfigurationConverter;
 import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
@@ -20,15 +22,17 @@ public class EncryptCredentialsWorkerCommand extends AgentWorkerCommand {
     public EncryptCredentialsWorkerCommand(ClusterInfo clusterInfo, CacheClient cacheClient,
             ClusterCryptoConfigurationRepository clusterCryptoConfigurationRepository,
             AggregationControllerAggregationClient aggregationControllerAggregationClient,
-            AgentWorkerCommandContext context) {
+            AgentWorkerCommandContext context,
+            ControllerWrapper controllerWrapper) {
         this(clusterInfo, cacheClient, clusterCryptoConfigurationRepository, aggregationControllerAggregationClient,
-                context, true);
+                context, true, controllerWrapper);
     }
 
     public EncryptCredentialsWorkerCommand(ClusterInfo clusterInfo, CacheClient cacheClient,
             ClusterCryptoConfigurationRepository clusterCryptoConfigurationRepository,
             AggregationControllerAggregationClient aggregationControllerAggregationClient,
-            AgentWorkerCommandContext context, boolean doUpdateCredential) {
+            AgentWorkerCommandContext context, boolean doUpdateCredential,
+            ControllerWrapper controllerWrapper) {
         this.context = context;
         this.doUpdateCredential = doUpdateCredential;
         credentialsCrypto = new CredentialsCrypto(
