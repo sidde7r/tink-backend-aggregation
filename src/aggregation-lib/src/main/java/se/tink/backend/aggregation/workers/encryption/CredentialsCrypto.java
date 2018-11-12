@@ -7,7 +7,6 @@ import java.util.Optional;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
@@ -18,14 +17,12 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class CredentialsCrypto {
     private static final AggregationLogger logger = new AggregationLogger(CredentialsCrypto.class);
 
-    private final ClusterInfo clusterInfo;
     private final CacheClient cacheClient;
     private final ControllerWrapper controllerWrapper;
     private final CryptoWrapper cryptoWrapper;
 
-    public CredentialsCrypto(ClusterInfo clusterInfo, CacheClient cacheClient, ControllerWrapper controllerWrapper,
+    public CredentialsCrypto(CacheClient cacheClient, ControllerWrapper controllerWrapper,
             CryptoWrapper cryptoWrapper) {
-        this.clusterInfo = clusterInfo;
         this.cacheClient = cacheClient;
         this.controllerWrapper = controllerWrapper;
         this.cryptoWrapper = cryptoWrapper;
