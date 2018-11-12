@@ -248,10 +248,8 @@ public class AgentWorkerOperationFactory {
 
         CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
 
-        commands.add(new DecryptCredentialsWorkerCommand(
-                context,
-                new CredentialsCrypto(cacheClient, controllerWrapper,
-                        cryptoWrapper)));
+        commands.add(new DecryptCredentialsWorkerCommand(context,
+                new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)));
         commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(new LoginAgentWorkerCommand(context, loginAgentWorkerCommandState, createMetricState(request)));
@@ -331,8 +329,7 @@ public class AgentWorkerOperationFactory {
                         reportMetricsAgentWorkerCommandState),
                 new ReportProviderTransferMetricsAgentWorkerCommand(context,  operationName),
                 new LockAgentWorkerCommand(context),
-                new DecryptCredentialsWorkerCommand(
-                        context,
+                new DecryptCredentialsWorkerCommand(context,
                         new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)),
                 new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState, agentDebugStorageHandler),
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState),
@@ -429,8 +426,7 @@ public class AgentWorkerOperationFactory {
 
         CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
 
-        commands.add(new DecryptCredentialsWorkerCommand(
-                context,
+        commands.add(new DecryptCredentialsWorkerCommand(context,
                 new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)));
         commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
@@ -460,11 +456,9 @@ public class AgentWorkerOperationFactory {
 
         ImmutableList<AgentWorkerCommand> commands = ImmutableList.of(
                 new LockAgentWorkerCommand(context),
-                new DecryptCredentialsWorkerCommand(
-                        context,
+                new DecryptCredentialsWorkerCommand(context,
                         new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)),
-                new EncryptCredentialsWorkerCommand(
-                        context,
+                new EncryptCredentialsWorkerCommand(context,
                         new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper))
         );
 
@@ -534,8 +528,7 @@ public class AgentWorkerOperationFactory {
 
         CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
 
-        commands.add(new DecryptCredentialsWorkerCommand(
-                context,
+        commands.add(new DecryptCredentialsWorkerCommand(context,
                 new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)));
         commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
@@ -589,8 +582,7 @@ public class AgentWorkerOperationFactory {
 
         CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
 
-        commands.add(new DecryptCredentialsWorkerCommand(
-                context,
+        commands.add(new DecryptCredentialsWorkerCommand(context,
                 new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)));
 
         commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState, agentDebugStorageHandler));
