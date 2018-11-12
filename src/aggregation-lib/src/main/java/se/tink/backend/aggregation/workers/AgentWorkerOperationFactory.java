@@ -246,9 +246,6 @@ public class AgentWorkerOperationFactory {
                 reportMetricsAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
 
-        CryptoConfigurationDao cryptoConfigurationDao = new CryptoConfigurationDao(
-                clusterCryptoConfigurationRepository);
-
         CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
 
         commands.add(new DecryptCredentialsWorkerCommand(context,
@@ -320,9 +317,6 @@ public class AgentWorkerOperationFactory {
     private List<AgentWorkerCommand> createTransferBaseCommands(ClusterInfo clusterInfo, TransferRequest request,
             AgentWorkerCommandContext context, String operationName, ControllerWrapper controllerWrapper) {
 
-        CryptoConfigurationDao cryptoConfigurationDao = new CryptoConfigurationDao(
-                clusterCryptoConfigurationRepository);
-
         CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
 
         return Lists.newArrayList(
@@ -359,9 +353,6 @@ public class AgentWorkerOperationFactory {
         // acquire lock to avoid encryption/decryption race conditions
         commands.add(new LockAgentWorkerCommand(context));
 
-        CryptoConfigurationDao cryptoConfigurationDao = new CryptoConfigurationDao(
-                clusterCryptoConfigurationRepository);
-
         CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
 
         commands.add(new EncryptCredentialsWorkerCommand(
@@ -390,9 +381,6 @@ public class AgentWorkerOperationFactory {
 
         // acquire lock to avoid encryption/decryption race conditions
         commands.add(new LockAgentWorkerCommand(context));
-
-        CryptoConfigurationDao cryptoConfigurationDao = new CryptoConfigurationDao(
-                clusterCryptoConfigurationRepository);
 
         CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
 
@@ -424,9 +412,6 @@ public class AgentWorkerOperationFactory {
                 reportMetricsAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
 
-        CryptoConfigurationDao cryptoConfigurationDao = new CryptoConfigurationDao(
-                clusterCryptoConfigurationRepository);
-
         CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
 
         commands.add(new DecryptCredentialsWorkerCommand(context,
@@ -451,9 +436,6 @@ public class AgentWorkerOperationFactory {
                 AggregatorConverter.convert(clusterInfo.getAggregator()),
                 CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
                 controllerWrapper);
-
-        CryptoConfigurationDao cryptoConfigurationDao = new CryptoConfigurationDao(
-                clusterCryptoConfigurationRepository);
 
         CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
 
@@ -526,9 +508,6 @@ public class AgentWorkerOperationFactory {
                 reportMetricsAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
 
-        CryptoConfigurationDao cryptoConfigurationDao = new CryptoConfigurationDao(
-                clusterCryptoConfigurationRepository);
-
         CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
 
         commands.add(new DecryptCredentialsWorkerCommand(context,
@@ -579,9 +558,6 @@ public class AgentWorkerOperationFactory {
         commands.add(new ReportProviderMetricsAgentWorkerCommand(context, operationMetricName,
                 reportMetricsAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
-
-        CryptoConfigurationDao cryptoConfigurationDao = new CryptoConfigurationDao(
-                clusterCryptoConfigurationRepository);
 
         CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
 
