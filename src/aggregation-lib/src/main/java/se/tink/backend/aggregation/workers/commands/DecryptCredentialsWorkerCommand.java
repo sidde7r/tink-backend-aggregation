@@ -16,9 +16,10 @@ public class DecryptCredentialsWorkerCommand extends AgentWorkerCommand {
     private boolean didDecryptCredential = false;
 
     public DecryptCredentialsWorkerCommand(CacheClient cacheClient, AgentWorkerCommandContext context,
-            ControllerWrapper controllerWrapper, CryptoWrapper cryptoWrapper) {
+            ControllerWrapper controllerWrapper, CryptoWrapper cryptoWrapper,
+            CredentialsCrypto credentialsCrypto) {
         this.context = context;
-        this.credentialsCrypto = new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper);
+        this.credentialsCrypto = credentialsCrypto;
     }
 
     @Override
