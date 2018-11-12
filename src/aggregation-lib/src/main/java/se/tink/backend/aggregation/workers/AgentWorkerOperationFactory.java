@@ -136,7 +136,7 @@ public class AgentWorkerOperationFactory {
                     HostConfigurationConverter.convert(clusterConfigurations.get(clusterId)));
         }
 
-        return ControllerWrapper.of(aggregationControllerAggregationClient, se.tink.backend.aggregation.converter.HostConfigurationConverter.convert(clusterInfo));
+        return ControllerWrapper.of(aggregationControllerAggregationClient, HostConfigurationConverter.convert(clusterInfo));
     }
 
     private AgentWorkerCommandMetricState createMetricState(CredentialsRequest request) {
