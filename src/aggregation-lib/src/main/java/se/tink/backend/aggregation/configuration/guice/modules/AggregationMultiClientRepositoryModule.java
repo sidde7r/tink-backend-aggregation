@@ -3,6 +3,9 @@ package se.tink.backend.aggregation.configuration.guice.modules;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
+import se.tink.backend.aggregation.storage.database.converter.HostConfigurationConverter;
+import se.tink.backend.aggregation.storage.database.models.ClusterConfiguration;
 import se.tink.backend.aggregation.storage.database.repositories.AggregatorConfigurationsRepository;
 import se.tink.backend.aggregation.storage.database.repositories.ClientConfigurationsRepository;
 import se.tink.backend.aggregation.storage.database.repositories.ClusterConfigurationsRepository;
@@ -41,6 +44,15 @@ public class AggregationMultiClientRepositoryModule extends RepositoryModule {
     public Map<String, ClusterHostConfiguration> provideClusterHostConfigurations(ClusterHostConfigurationRepository repository) {
         return repository.findAll().stream().collect(
                 Collectors.toMap(ClusterHostConfiguration::getClusterId, x -> x)
+        );
+    }
+
+    @Provides
+    @Singleton
+    @Named("clusterConfigurations")
+    public Map<String, ClusterConfiguration> provideClusterConfigurations(ClusterConfigurationsRepository repository) {
+        return repository.findAll().stream().collect(
+                Collectors.toMap(ClusterConfiguration::getClusterId, x -> x)
         );
     }
 }
