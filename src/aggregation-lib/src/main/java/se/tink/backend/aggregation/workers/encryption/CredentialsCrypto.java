@@ -58,7 +58,7 @@ public class CredentialsCrypto {
 
         if (!key.isPresent()) {
             logger.error(String.format("Could not find encryption key for %s:%d",
-                    clusterInfo.getClusterId().getId(),
+                    cryptoWrapper.getClientName(),
                     encryptedCredentials.getKeyId()));
             return false;
         }
@@ -80,7 +80,7 @@ public class CredentialsCrypto {
     public boolean encrypt(CredentialsRequest request, boolean doUpdateCredential) {
         Optional<CryptoConfiguration> cryptoConfiguration = cryptoWrapper.getLatestCryptoConfiguration();
         if (!cryptoConfiguration.isPresent()) {
-            logger.error(String.format("Could not find crypto configuration %s", clusterInfo.getClusterId().getId()));
+            logger.error(String.format("Could not find crypto configuration %s", cryptoWrapper.getClientName()));
             return false;
         }
 

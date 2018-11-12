@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
+import se.tink.backend.aggregation.storage.database.models.CryptoConfigurationId;
 
 public class CryptoWrapper {
     private final ImmutableList<CryptoConfiguration> cryptoConfigurations;
@@ -26,6 +27,13 @@ public class CryptoWrapper {
         return cryptoConfigurations.stream()
                 .filter(t -> Objects.equals(t.getKeyId(), keyId))
                 .map(CryptoConfiguration::getDecodedKey)
+                .findFirst();
+    }
+
+    public Optional<String> getClientName() {
+        return cryptoConfigurations.stream()
+                .map(CryptoConfiguration::getCryptoConfigurationId)
+                .map(CryptoConfigurationId::getClientName)
                 .findFirst();
     }
 }
