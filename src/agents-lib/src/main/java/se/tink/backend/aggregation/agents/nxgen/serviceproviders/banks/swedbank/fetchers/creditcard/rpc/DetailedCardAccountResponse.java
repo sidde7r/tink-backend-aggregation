@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.BankProfile;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.ReservedTransactionEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
@@ -24,7 +23,7 @@ import se.tink.backend.utils.StringUtils;
 public class DetailedCardAccountResponse {
     private List<CardTransactionEntity> transactions;
     private DetailedCardAccountEntity cardAccount;
-    private List<ReservedTransactionEntity> reservedTransactions;
+    private List<CardReservedTransactionEntity> reservedTransactions;
     private boolean moreTransactionsAvailable;
     protected int numberOfReservedTransactions;
     protected int numberOfTransactions;
@@ -38,7 +37,7 @@ public class DetailedCardAccountResponse {
         return cardAccount;
     }
 
-    public List<ReservedTransactionEntity> getReservedTransactions() {
+    public List<CardReservedTransactionEntity> getReservedTransactions() {
         return reservedTransactions;
     }
 
