@@ -119,10 +119,7 @@ public class CredentialsCrypto {
 
         if (doUpdateCredential) {
             logger.info("Updating sensitive data");
-            aggregationControllerAggregationClient.updateCredentialSensitive(
-                    HostConfigurationConverter.convert(clusterInfo),
-                    request.getCredentials(),
-                    serializedEncryptedCredentials);
+            controllerWrapper.updateCredentialSensitive(request.getCredentials(), serializedEncryptedCredentials);
         }
 
         return true;
