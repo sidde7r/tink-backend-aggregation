@@ -86,7 +86,6 @@ public class AgentWorkerContext extends AgentContext implements Managed, SetAcco
     private List<AgentEventListener> eventListeners = Lists.newArrayList();
     private SupplementalInformationController supplementalInformationController;
     private AggregationControllerAggregationClient aggregationControllerAggregationClient;
-    //private final ClusterInfo clusterInfo;
     //Cached accounts have not been sent to system side yet.
     private Map<String, Pair<Account, AccountFeatures>> allAvailableAccountsByUniqueId;
     //Updated accounts have been sent to System side and has been updated with their stored Tink Id
