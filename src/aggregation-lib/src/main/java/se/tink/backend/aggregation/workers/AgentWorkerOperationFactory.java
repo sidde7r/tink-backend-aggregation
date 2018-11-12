@@ -346,7 +346,7 @@ public class AgentWorkerOperationFactory {
         // acquire lock to avoid encryption/decryption race conditions
         commands.add(new LockAgentWorkerCommand(context));
         commands.add(new EncryptCredentialsWorkerCommand(clusterInfo, cacheClient,
-                clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context, false,
+                clusterCryptoConfigurationRepository, context, false,
                 ControllerWrapper.of(
                         aggregationControllerAggregationClient,
                         HostConfigurationConverter.convert(clusterInfo))));
@@ -373,7 +373,7 @@ public class AgentWorkerOperationFactory {
         // acquire lock to avoid encryption/decryption race conditions
         commands.add(new LockAgentWorkerCommand(context));
         commands.add(new EncryptCredentialsWorkerCommand(clusterInfo, cacheClient,
-                clusterCryptoConfigurationRepository, aggregationControllerAggregationClient, context, false,
+                clusterCryptoConfigurationRepository, context, false,
                 ControllerWrapper.of(
                         aggregationControllerAggregationClient,
                         HostConfigurationConverter.convert(clusterInfo))));
@@ -432,7 +432,7 @@ public class AgentWorkerOperationFactory {
                                 aggregationControllerAggregationClient,
                                 HostConfigurationConverter.convert(clusterInfo))),
                 new EncryptCredentialsWorkerCommand(clusterInfo, cacheClient, clusterCryptoConfigurationRepository,
-                        aggregationControllerAggregationClient, context,
+                        context,
                         ControllerWrapper.of(
                                 aggregationControllerAggregationClient,
                                 HostConfigurationConverter.convert(clusterInfo)))
