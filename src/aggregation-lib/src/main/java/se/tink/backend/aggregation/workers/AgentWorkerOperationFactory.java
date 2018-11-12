@@ -362,8 +362,8 @@ public class AgentWorkerOperationFactory {
         CryptoConfigurationDao cryptoConfigurationDao = new CryptoConfigurationDao(
                 clusterCryptoConfigurationRepository);
 
-        commands.add(new EncryptCredentialsWorkerCommand(clusterInfo, cacheClient,
-                clusterCryptoConfigurationRepository, context, false, controllerWrapper,
+        commands.add(new EncryptCredentialsWorkerCommand(cacheClient,
+                context, false, controllerWrapper,
                 cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId())));
 
         return new AgentWorkerOperation(agentWorkerOperationState, "create-credentials", request, commands,
@@ -392,8 +392,8 @@ public class AgentWorkerOperationFactory {
         CryptoConfigurationDao cryptoConfigurationDao = new CryptoConfigurationDao(
                 clusterCryptoConfigurationRepository);
 
-        commands.add(new EncryptCredentialsWorkerCommand(clusterInfo, cacheClient,
-                clusterCryptoConfigurationRepository, context, false,
+        commands.add(new EncryptCredentialsWorkerCommand(cacheClient,
+                context, false,
                 controllerWrapper, cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId())));
 
         return new AgentWorkerOperation(agentWorkerOperationState, "update-credentials", request, commands,
@@ -459,7 +459,7 @@ public class AgentWorkerOperationFactory {
                 new DecryptCredentialsWorkerCommand(
                         context,
                         new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)),
-                new EncryptCredentialsWorkerCommand(clusterInfo, cacheClient, clusterCryptoConfigurationRepository,
+                new EncryptCredentialsWorkerCommand(cacheClient,
                         context,
                         controllerWrapper, cryptoWrapper)
         );
