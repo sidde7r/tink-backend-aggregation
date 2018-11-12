@@ -23,13 +23,15 @@ public class CredentialsCrypto {
     private final ClusterInfo clusterInfo;
     private final CacheClient cacheClient;
     private final ControllerWrapper controllerWrapper;
+    private final CryptoWrapper cryptoWrapper;
 
     public CredentialsCrypto(CryptoConfigurationDao cryptoConfigurationDao, ClusterInfo clusterInfo,
-            CacheClient cacheClient, ControllerWrapper controllerWrapper) {
+            CacheClient cacheClient, ControllerWrapper controllerWrapper, CryptoWrapper cryptoWrapper) {
         this.cryptoConfigurationDao = cryptoConfigurationDao;
         this.clusterInfo = clusterInfo;
         this.cacheClient = cacheClient;
         this.controllerWrapper = controllerWrapper;
+        this.cryptoWrapper = cryptoWrapper;
     }
 
     public boolean decrypt(CredentialsRequest request) {
@@ -55,8 +57,6 @@ public class CredentialsCrypto {
         EncryptedCredentials encryptedCredentials = Preconditions.checkNotNull(
                 SerializationUtils.deserializeFromString(sensitiveData, EncryptedCredentials.class));
 
-        CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
-
         Optional<byte[]> key = cryptoWrapper.getCryptoKeyByKeyId(encryptedCredentials.getKeyId());
 
         if (!key.isPresent()) {
@@ -81,8 +81,6 @@ public class CredentialsCrypto {
     }
 
     public boolean encrypt(CredentialsRequest request, boolean doUpdateCredential) {
-        CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
-
         Optional<CryptoConfiguration> cryptoConfiguration = cryptoWrapper.getLatestCryptoConfiguration();
         if (!cryptoConfiguration.isPresent()) {
             logger.error(String.format("Could not find crypto configuration %s", clusterInfo.getClusterId().getId()));
