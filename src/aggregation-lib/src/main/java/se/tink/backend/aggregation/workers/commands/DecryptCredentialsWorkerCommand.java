@@ -26,7 +26,7 @@ public class DecryptCredentialsWorkerCommand extends AgentWorkerCommand {
         this.context = context;
         this.credentialsCrypto = new CredentialsCrypto(
                 new CryptoConfigurationDao(clusterCryptoConfigurationRepository), clusterInfo, cacheClient,
-                aggregationControllerAggregationClient, controllerWrapper);
+                controllerWrapper);
     }
 
     @Override
