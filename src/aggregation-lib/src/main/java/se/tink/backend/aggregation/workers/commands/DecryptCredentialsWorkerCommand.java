@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.workers.commands;
 
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
-import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
@@ -9,7 +8,6 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.encryption.CredentialsCrypto;
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
 import se.tink.backend.common.cache.CacheClient;
-import se.tink.backend.aggregation.storage.database.repositories.ClusterCryptoConfigurationRepository;
 
 public class DecryptCredentialsWorkerCommand extends AgentWorkerCommand {
     private final AgentWorkerCommandContext context;
@@ -17,9 +15,8 @@ public class DecryptCredentialsWorkerCommand extends AgentWorkerCommand {
 
     private boolean didDecryptCredential = false;
 
-    public DecryptCredentialsWorkerCommand(ClusterInfo clusterInfo, CacheClient cacheClient,
-            ClusterCryptoConfigurationRepository clusterCryptoConfigurationRepository,
-            AgentWorkerCommandContext context, ControllerWrapper controllerWrapper, CryptoWrapper cryptoWrapper) {
+    public DecryptCredentialsWorkerCommand(CacheClient cacheClient, AgentWorkerCommandContext context,
+            ControllerWrapper controllerWrapper, CryptoWrapper cryptoWrapper) {
         this.context = context;
         this.credentialsCrypto = new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper);
     }
