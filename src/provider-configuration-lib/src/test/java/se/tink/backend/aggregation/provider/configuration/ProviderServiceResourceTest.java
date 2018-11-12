@@ -43,8 +43,7 @@ public class ProviderServiceResourceTest extends ProviderConfigurationServiceTes
 
     @Test
     public void whenClusterDoNotHaveAvailableProviders_returnEmptyList() {
-        List<ProviderConfigurationDTO> emptyList = resource.list(
-                "en", ClusterInfo.of(CLUSTERS.get("no-available-providers")));
+        List<ProviderConfigurationDTO> emptyList = resource.list(ClusterInfo.of(CLUSTERS.get("no-available-providers")));
 
         assertThat(emptyList).isEmpty();
     }
