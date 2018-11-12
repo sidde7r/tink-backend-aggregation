@@ -64,13 +64,11 @@ import se.tink.backend.aggregation.workers.refresh.ProcessableItem;
 import se.tink.backend.aggregation.legacy.ServiceContext;
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
 import se.tink.backend.common.cache.CacheClient;
-import se.tink.backend.aggregation.storage.database.repositories.ClusterCryptoConfigurationRepository;
 import se.tink.libraries.metrics.MetricRegistry;
 
 public class AgentWorkerOperationFactory {
     private static final Logger log = LoggerFactory.getLogger(AgentWorkerOperationFactory.class);
 
-    private final ClusterCryptoConfigurationRepository clusterCryptoConfigurationRepository;
     private final CacheClient cacheClient;
     private final MetricCacheLoader metricCacheLoader;
     private final CryptoConfigurationDao cryptoConfigurationDao;
@@ -101,8 +99,6 @@ public class AgentWorkerOperationFactory {
             ReportProviderMetricsAgentWorkerCommandState reportProviderMetricsAgentWorkerCommandState,
             SupplementalInformationController supplementalInformationController,
             CryptoConfigurationDao cryptoConfigurationDao) {
-        this.clusterCryptoConfigurationRepository =
-                serviceContext.getRepository(ClusterCryptoConfigurationRepository.class);
         this.cacheClient = cacheClient;
         metricCacheLoader = new MetricCacheLoader(metricRegistry);
         this.cryptoConfigurationDao = cryptoConfigurationDao;
