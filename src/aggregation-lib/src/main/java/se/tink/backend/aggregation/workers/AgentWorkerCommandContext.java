@@ -88,8 +88,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
                         .label(defaultMetricLabels));
 
         this.agentsServiceConfiguration = agentsServiceConfiguration;
-
-
     }
 
     public void processAccounts() {
@@ -126,12 +124,9 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
                 processAccountsRequest);
     }
 
-
-
     public CuratorFramework getCoordinationClient() {
         return coordinationClient;
     }
-
 
     public long getTimeLeavingQueue() {
         return timeLeavingQueue;
@@ -177,7 +172,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
         }
     }
 
-
     @Override
     public void setAccountsToAggregate(List<Account> accounts) {
         accountsToAggregate = accounts;
@@ -214,8 +208,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
         aggregationControllerAggregationClient.updateSignableOperation(HostConfigurationConverter.convert(getCallbackHostConfiguration()),
                 signableOperation);
     }
-
-
 
     public void updateSignableOperationStatus(SignableOperation signableOperation, SignableOperationStatuses status) {
         signableOperation.setStatus(status);
