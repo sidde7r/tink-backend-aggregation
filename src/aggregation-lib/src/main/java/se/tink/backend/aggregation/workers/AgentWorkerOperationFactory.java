@@ -596,7 +596,10 @@ public class AgentWorkerOperationFactory {
             if (request instanceof ConfigureWhitelistInformationRequest) {
                 commands.add(new RequestUserOptInAccountsAgentWorkerCommand(context,
                         (ConfigureWhitelistInformationRequest) request, clusterInfo,
-                        aggregationControllerAggregationClient));
+                        aggregationControllerAggregationClient,
+                        ControllerWrapper.of(
+                                aggregationControllerAggregationClient,
+                                HostConfigurationConverter.convert(clusterInfo))));
             }
 
             // Update the accounts on system side
