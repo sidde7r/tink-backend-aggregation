@@ -73,6 +73,7 @@ public class AgentWorkerOperationFactory {
     private final ClusterCryptoConfigurationRepository clusterCryptoConfigurationRepository;
     private final CacheClient cacheClient;
     private final MetricCacheLoader metricCacheLoader;
+    private final CryptoConfigurationDao cryptoConfigurationDao;
 
     // States
     private AgentWorkerOperationState agentWorkerOperationState;
@@ -98,11 +99,13 @@ public class AgentWorkerOperationFactory {
             InstantiateAgentWorkerCommandState instantiateAgentWorkerCommandState,
             LoginAgentWorkerCommandState loginAgentWorkerCommandState,
             ReportProviderMetricsAgentWorkerCommandState reportProviderMetricsAgentWorkerCommandState,
-            SupplementalInformationController supplementalInformationController) {
+            SupplementalInformationController supplementalInformationController,
+            CryptoConfigurationDao cryptoConfigurationDao) {
         this.clusterCryptoConfigurationRepository =
                 serviceContext.getRepository(ClusterCryptoConfigurationRepository.class);
         this.cacheClient = cacheClient;
         metricCacheLoader = new MetricCacheLoader(metricRegistry);
+        this.cryptoConfigurationDao = cryptoConfigurationDao;
 
         // Initialize agent worker command states.
         this.agentWorkerOperationState = agentWorkerOperationState;
