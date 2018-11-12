@@ -54,11 +54,11 @@ public class AggregationServiceResource implements AggregationService {
 
     @Inject
     public AggregationServiceResource(AgentWorker agentWorker, QueueProducer producer,
-            AgentWorkerOperationFactory agentWorkerOperationFactory, CacheClient cacheClient,
-            CuratorFramework coordinationClient, ApplicationDrainMode applicationDrainMode) {
+            AgentWorkerOperationFactory agentWorkerOperationFactory, SupplementalInformationController supplementalInformationController,
+            ApplicationDrainMode applicationDrainMode) {
         this.agentWorker = agentWorker;
         this.agentWorkerCommandFactory = agentWorkerOperationFactory;
-        this.supplementalInformationController = new SupplementalInformationController(cacheClient, coordinationClient);
+        this.supplementalInformationController = supplementalInformationController;
         this.producer = producer;
         this.applicationDrainMode = applicationDrainMode;
     }

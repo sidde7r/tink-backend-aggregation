@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.utils.CredentialsStringMasker;
 import se.tink.backend.aggregation.utils.StringMasker;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
-import se.tink.backend.aggregation.workers.AgentWorkerContext;
+import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
 import se.tink.backend.aggregation.workers.metrics.MetricAction;
 import se.tink.backend.core.signableoperation.SignableOperation;
@@ -34,7 +34,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
     private final TransferRequest transferRequest;
     private final AgentWorkerCommandMetricState metrics;
 
-    public TransferAgentWorkerCommand(AgentWorkerContext context, TransferRequest transferRequest,
+    public TransferAgentWorkerCommand(AgentWorkerCommandContext context, TransferRequest transferRequest,
             AgentWorkerCommandMetricState metrics) {
         super(context, transferRequest.getCredentials(), transferRequest.getSignableOperation());
         this.transferRequest = transferRequest;

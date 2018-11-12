@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
-import se.tink.backend.aggregation.workers.AgentWorkerContext;
+import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerOperationMetricType;
 import se.tink.backend.aggregation.workers.commands.state.LoginAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
@@ -50,14 +50,14 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
 
     private final AgentWorkerCommandMetricState metrics;
     private final LoginAgentWorkerCommandState state;
-    private final AgentWorkerContext context;
+    private final AgentWorkerCommandContext context;
     private final Credentials credentials;
     private final User user;
     private Agent agent;
 
     private InterProcessSemaphoreMutex lock;
 
-    public LoginAgentWorkerCommand(AgentWorkerContext context, LoginAgentWorkerCommandState state,
+    public LoginAgentWorkerCommand(AgentWorkerCommandContext context, LoginAgentWorkerCommandState state,
             AgentWorkerCommandMetricState metrics) {
         final CredentialsRequest request = context.getRequest();
         this.context = context;

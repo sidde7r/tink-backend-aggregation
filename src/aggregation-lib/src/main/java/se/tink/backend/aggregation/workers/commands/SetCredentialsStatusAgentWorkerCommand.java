@@ -4,15 +4,15 @@ import java.util.function.Predicate;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
-import se.tink.backend.aggregation.workers.AgentWorkerContext;
+import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 
 public class SetCredentialsStatusAgentWorkerCommand extends AgentWorkerCommand {
 
-    private final Predicate<AgentWorkerContext> predicate;
-    private AgentWorkerContext context;
+    private final Predicate<AgentWorkerCommandContext> predicate;
+    private AgentWorkerCommandContext context;
     private CredentialsStatus status;
 
-    public SetCredentialsStatusAgentWorkerCommand(AgentWorkerContext context, CredentialsStatus status) {
+    public SetCredentialsStatusAgentWorkerCommand(AgentWorkerCommandContext context, CredentialsStatus status) {
         this.context = context;
         this.status = status;
         this.predicate = x -> true;
@@ -21,8 +21,8 @@ public class SetCredentialsStatusAgentWorkerCommand extends AgentWorkerCommand {
     /**
      * Include an additional predicate that needs to be fulfilled for the status to be updated.
      */
-    public SetCredentialsStatusAgentWorkerCommand(AgentWorkerContext context, CredentialsStatus status,
-            Predicate<AgentWorkerContext> predicate) {
+    public SetCredentialsStatusAgentWorkerCommand(AgentWorkerCommandContext context, CredentialsStatus status,
+            Predicate<AgentWorkerCommandContext> predicate) {
         this.context = context;
         this.status = status;
         this.predicate = predicate;

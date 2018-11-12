@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.controllers;
 
+import com.google.inject.Inject;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.barriers.DistributedBarrier;
 import se.tink.backend.common.cache.CacheClient;
@@ -12,7 +13,8 @@ public class SupplementalInformationController {
     private final CacheClient cacheClient;
     private final CuratorFramework coordinationClient;
 
-    public SupplementalInformationController(CacheClient cacheClient, CuratorFramework coordinationClient) {
+    @Inject
+    SupplementalInformationController(CacheClient cacheClient, CuratorFramework coordinationClient) {
         this.cacheClient = cacheClient;
         this.coordinationClient = coordinationClient;
     }

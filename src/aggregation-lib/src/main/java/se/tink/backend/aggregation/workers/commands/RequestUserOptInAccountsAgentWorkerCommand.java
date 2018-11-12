@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
-import se.tink.backend.aggregation.workers.AgentWorkerContext;
+import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;
 
@@ -33,7 +33,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
     private static final String IS_CORRECT = "isCorrect";
     private static final String TRUE = "true";
 
-    private final AgentWorkerContext context;
+    private final AgentWorkerCommandContext context;
     private final ConfigureWhitelistInformationRequest request;
     private final ClusterInfo clusterInfo;
     private final Credentials credentials;
@@ -43,7 +43,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
     private List<Account> accountsInContext;
     private final Catalog catalog;
 
-    public RequestUserOptInAccountsAgentWorkerCommand(AgentWorkerContext context,
+    public RequestUserOptInAccountsAgentWorkerCommand(AgentWorkerCommandContext context,
             ConfigureWhitelistInformationRequest request,
             ClusterInfo clusterInfo, AggregationControllerAggregationClient aggregationControllerAggregationClient) {
         this.context = context;

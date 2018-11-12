@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
-import se.tink.backend.aggregation.workers.AgentWorkerContext;
+import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.commands.state.ReportProviderMetricsAgentWorkerCommandState;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.backend.common.utils.MetricsUtils;
@@ -17,9 +17,9 @@ public class ReportProviderMetricsAgentWorkerCommand extends AgentWorkerCommand 
 
     private String operationName;
     private ReportProviderMetricsAgentWorkerCommandState state;
-    private AgentWorkerContext context;
+    private AgentWorkerCommandContext context;
 
-    public ReportProviderMetricsAgentWorkerCommand(AgentWorkerContext context,
+    public ReportProviderMetricsAgentWorkerCommand(AgentWorkerCommandContext context,
             String operationName, ReportProviderMetricsAgentWorkerCommandState state) {
         this.context = context;
         this.operationName = operationName;

@@ -33,13 +33,11 @@ public abstract class AgentContext {
     private AggregatorInfo aggregatorInfo;
     public abstract Catalog getCatalog();
 
-    public abstract CuratorFramework getCoordinationClient();
+    public abstract MetricRegistry getMetricRegistry();
 
     public ByteArrayOutputStream getLogOutputStream() {
         return logOutputStream;
     }
-
-    public abstract MetricRegistry getMetricRegistry();
 
     public CallbackHostConfiguration getCallbackHostConfiguration() {
         return callbackHostConfiguration;
@@ -92,13 +90,7 @@ public abstract class AgentContext {
                         numberOfAccounts, numberOfTransactions, catalog));
     }
 
-    public abstract void processAccounts();
-
     public abstract void processTransactions();
-
-    public abstract void processTransferDestinationPatterns();
-
-    public abstract void processEinvoices();
 
     public abstract Optional<String> waitForSupplementalInformation(String key, long waitFor, TimeUnit unit);
 
@@ -185,23 +177,6 @@ public abstract class AgentContext {
     public void setTestContext(boolean isTestContext) {
         this.isTestContext = isTestContext;
     }
-
-    public void updateSignableOperationStatus(SignableOperation signableOperation, SignableOperationStatuses status) {
-        signableOperation.setStatus(status);
-        signableOperation.setStatusMessage(null);
-
-        updateSignableOperation(signableOperation);
-    }
-
-    public void updateSignableOperationStatus(SignableOperation signableOperation, SignableOperationStatuses status,
-            String statusMessage) {
-        signableOperation.setStatus(status);
-        signableOperation.setStatusMessage(statusMessage);
-
-        updateSignableOperation(signableOperation);
-    }
-
-    public abstract void updateSignableOperation(SignableOperation signableOperation);
 
     public abstract UpdateDocumentResponse updateDocument(DocumentContainer container);
 

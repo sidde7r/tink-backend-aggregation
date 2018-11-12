@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.rpc.CredentialsRequestType;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
-import se.tink.backend.aggregation.workers.AgentWorkerContext;
+import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.backend.common.utils.MetricsUtils;
@@ -20,10 +20,10 @@ import se.tink.backend.core.transfer.Transfer;
 public class ReportProviderTransferMetricsAgentWorkerCommand extends AgentWorkerCommand {
 
     private String operationName;
-    private AgentWorkerContext context;
+    private AgentWorkerCommandContext context;
     private MetricRegistry metricRegistry;
 
-    public ReportProviderTransferMetricsAgentWorkerCommand(AgentWorkerContext context,
+    public ReportProviderTransferMetricsAgentWorkerCommand(AgentWorkerCommandContext context,
             String operationName) {
         this.context = context;
         this.metricRegistry = context.getMetricRegistry();
