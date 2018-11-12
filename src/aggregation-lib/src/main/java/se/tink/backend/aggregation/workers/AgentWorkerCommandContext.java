@@ -64,18 +64,15 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
             MetricRegistry metricRegistry,
             AggregationControllerAggregationClient aggregationControllerAggregationClient,
             CuratorFramework coordinationClient,
-            CacheClient cacheClient,
             AgentsServiceConfiguration agentsServiceConfiguration,
             AggregatorInfo aggregatorInfo,
             CallbackHostConfiguration callbackHostConfiguration,
             SupplementalInformationController supplementalInformationController) {
-        super(request, metricRegistry, aggregationControllerAggregationClient, coordinationClient, cacheClient,
-                agentsServiceConfiguration, aggregatorInfo, callbackHostConfiguration,
-                supplementalInformationController);
+        super(request, metricRegistry, aggregationControllerAggregationClient, coordinationClient, aggregatorInfo,
+                callbackHostConfiguration, supplementalInformationController);
         this.coordinationClient = coordinationClient;
         this.timePutOnQueue = System.currentTimeMillis();
         this.uniqueIdOfUserSelectedAccounts = Lists.newArrayList();
-
 
         Provider provider = request.getProvider();
 

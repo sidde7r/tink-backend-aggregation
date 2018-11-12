@@ -76,8 +76,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
     public AgentWorkerContext(CredentialsRequest request, MetricRegistry metricRegistry,
             AggregationControllerAggregationClient aggregationControllerAggregationClient,
-            CuratorFramework coordinationClient, CacheClient cacheClient,
-            AgentsServiceConfiguration agentsServiceConfiguration, AggregatorInfo aggregatorInfo,
+            CuratorFramework coordinationClient, AggregatorInfo aggregatorInfo,
             CallbackHostConfiguration callbackHostConfiguration,
             SupplementalInformationController supplementalInformationController) {
 
