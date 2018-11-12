@@ -12,11 +12,13 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentFactory;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
+import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.converter.AggregatorConverter;
 import se.tink.backend.aggregation.converter.CallbackHostConfigurationConverter;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
+import se.tink.backend.aggregation.converter.HostConfigurationConverter;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
@@ -221,7 +223,10 @@ public class AgentWorkerOperationFactory {
                 aggregationControllerAggregationClient, serviceContext.getCoordinationClient(),
                 serviceContext.getConfiguration().getAgentsServiceConfiguration(),
                 AggregatorConverter.convert(clusterInfo.getAggregator()),
-                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController);
+                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
+                ControllerWrapper.of(
+                        aggregationControllerAggregationClient,
+                        HostConfigurationConverter.convert(clusterInfo)));
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
@@ -254,7 +259,10 @@ public class AgentWorkerOperationFactory {
                 aggregationControllerAggregationClient, serviceContext.getCoordinationClient(),
                 serviceContext.getConfiguration().getAgentsServiceConfiguration(),
                 AggregatorConverter.convert(clusterInfo.getAggregator()),
-                        CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController);
+                        CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
+                ControllerWrapper.of(
+                        aggregationControllerAggregationClient,
+                        HostConfigurationConverter.convert(clusterInfo)));
 
         String operationName = "execute-transfer";
 
@@ -276,7 +284,10 @@ public class AgentWorkerOperationFactory {
                 aggregationControllerAggregationClient, serviceContext.getCoordinationClient(),
                 serviceContext.getConfiguration().getAgentsServiceConfiguration(),
                 AggregatorConverter.convert(clusterInfo.getAggregator()),
-                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController);
+                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
+                ControllerWrapper.of(
+                        aggregationControllerAggregationClient,
+                        HostConfigurationConverter.convert(clusterInfo)));
         context.setWhitelistRefresh(true);
 
         String operationName = "execute-whitelisted-transfer";
@@ -314,7 +325,10 @@ public class AgentWorkerOperationFactory {
                 aggregationControllerAggregationClient, serviceContext.getCoordinationClient(),
                 serviceContext.getConfiguration().getAgentsServiceConfiguration(),
                 AggregatorConverter.convert(clusterInfo.getAggregator()),
-                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController);
+                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
+                ControllerWrapper.of(
+                        aggregationControllerAggregationClient,
+                        HostConfigurationConverter.convert(clusterInfo)));
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
         commands.add(new ClearSensitiveInformationCommand(context));
@@ -334,7 +348,10 @@ public class AgentWorkerOperationFactory {
                 aggregationControllerAggregationClient, serviceContext.getCoordinationClient(),
                 serviceContext.getConfiguration().getAgentsServiceConfiguration(),
                 AggregatorConverter.convert(clusterInfo.getAggregator()),
-                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController);
+                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
+                ControllerWrapper.of(
+                        aggregationControllerAggregationClient,
+                        HostConfigurationConverter.convert(clusterInfo)));
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
@@ -355,7 +372,10 @@ public class AgentWorkerOperationFactory {
                 aggregationControllerAggregationClient, serviceContext.getCoordinationClient(),
                 serviceContext.getConfiguration().getAgentsServiceConfiguration(),
                 AggregatorConverter.convert(clusterInfo.getAggregator()),
-                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController);
+                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
+                ControllerWrapper.of(
+                        aggregationControllerAggregationClient,
+                        HostConfigurationConverter.convert(clusterInfo)));
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
@@ -380,7 +400,10 @@ public class AgentWorkerOperationFactory {
                 aggregationControllerAggregationClient, serviceContext.getCoordinationClient(),
                 serviceContext.getConfiguration().getAgentsServiceConfiguration(),
                 AggregatorConverter.convert(clusterInfo.getAggregator()),
-                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController);
+                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
+                ControllerWrapper.of(
+                        aggregationControllerAggregationClient,
+                        HostConfigurationConverter.convert(clusterInfo)));
 
         ImmutableList<AgentWorkerCommand> commands = ImmutableList.of(
                 new LockAgentWorkerCommand(context),
@@ -433,7 +456,10 @@ public class AgentWorkerOperationFactory {
                 aggregationControllerAggregationClient, serviceContext.getCoordinationClient(),
                 serviceContext.getConfiguration().getAgentsServiceConfiguration(),
                 AggregatorConverter.convert(clusterInfo.getAggregator()),
-                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController);
+                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
+                ControllerWrapper.of(
+                        aggregationControllerAggregationClient,
+                        HostConfigurationConverter.convert(clusterInfo)));
 
         context.setWhitelistRefresh(true);
 
@@ -479,7 +505,10 @@ public class AgentWorkerOperationFactory {
                 aggregationControllerAggregationClient, serviceContext.getCoordinationClient(),
                 serviceContext.getConfiguration().getAgentsServiceConfiguration(),
                 AggregatorConverter.convert(clusterInfo.getAggregator()),
-                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController);
+                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
+                ControllerWrapper.of(
+                        aggregationControllerAggregationClient,
+                        HostConfigurationConverter.convert(clusterInfo)));
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 

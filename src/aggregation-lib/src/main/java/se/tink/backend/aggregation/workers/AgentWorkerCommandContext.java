@@ -14,10 +14,9 @@ import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentEventListener;
 import se.tink.backend.aggregation.agents.SetAccountsToAggregateContext;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
+import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.api.CallbackHostConfiguration;
-import se.tink.backend.aggregation.cluster.identification.ClusterId;
-import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.converter.HostConfigurationConverter;
@@ -67,9 +66,10 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
             AgentsServiceConfiguration agentsServiceConfiguration,
             AggregatorInfo aggregatorInfo,
             CallbackHostConfiguration callbackHostConfiguration,
-            SupplementalInformationController supplementalInformationController) {
+            SupplementalInformationController supplementalInformationController,
+            ControllerWrapper controllerWrapper) {
         super(request, metricRegistry, aggregationControllerAggregationClient, coordinationClient, aggregatorInfo,
-                callbackHostConfiguration, supplementalInformationController);
+                callbackHostConfiguration, supplementalInformationController, controllerWrapper);
         this.coordinationClient = coordinationClient;
         this.timePutOnQueue = System.currentTimeMillis();
         this.uniqueIdOfUserSelectedAccounts = Lists.newArrayList();

@@ -17,6 +17,7 @@ import org.apache.curator.framework.recipes.barriers.DistributedBarrier;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.AgentEventListener;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
+import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.api.CallbackHostConfiguration;
 import se.tink.backend.aggregation.converter.HostConfigurationConverter;
@@ -71,12 +72,14 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     // True or false if system has been requested to process transactions.
     protected boolean isSystemProcessingTransactions;
     protected boolean isWhitelistRefresh;
+    protected ControllerWrapper controllerWrapper;
 
     public AgentWorkerContext(CredentialsRequest request, MetricRegistry metricRegistry,
             AggregationControllerAggregationClient aggregationControllerAggregationClient,
             CuratorFramework coordinationClient, AggregatorInfo aggregatorInfo,
             CallbackHostConfiguration callbackHostConfiguration,
-            SupplementalInformationController supplementalInformationController) {
+            SupplementalInformationController supplementalInformationController,
+            ControllerWrapper controllerWrapper) {
 
         this.allAvailableAccountsByUniqueId = Maps.newHashMap();
         this.updatedAccountsByTinkId = Maps.newHashMap();
@@ -98,6 +101,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         this.supplementalInformationController = supplementalInformationController;
         this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
+        this.controllerWrapper = controllerWrapper;
 
     }
 
