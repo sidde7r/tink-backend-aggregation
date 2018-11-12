@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.inject.Inject;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfigurationId;
@@ -17,6 +18,7 @@ import se.tink.backend.core.CryptoId;
 public class CryptoConfigurationDao {
     private ClusterCryptoConfigurationRepository clusterCryptoConfigurationRepository;
 
+    @Inject
     public CryptoConfigurationDao(ClusterCryptoConfigurationRepository clusterCryptoConfigurationRepository) {
         this.clusterCryptoConfigurationRepository = clusterCryptoConfigurationRepository;
     }
