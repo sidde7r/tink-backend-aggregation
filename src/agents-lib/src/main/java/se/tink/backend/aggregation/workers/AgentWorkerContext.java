@@ -16,10 +16,9 @@ import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.barriers.DistributedBarrier;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.AgentEventListener;
-import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
+import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.api.CallbackHostConfiguration;
-import se.tink.backend.aggregation.converter.HostConfigurationConverter;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.Account;
@@ -59,7 +58,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     protected List<Transfer> transfers = Lists.newArrayList();
     protected List<AgentEventListener> eventListeners = Lists.newArrayList();
     private SupplementalInformationController supplementalInformationController;
-    protected AggregationControllerAggregationClient aggregationControllerAggregationClient;
     //Cached accounts have not been sent to system side yet.
     protected Map<String, Pair<Account, AccountFeatures>> allAvailableAccountsByUniqueId;
     //Updated accounts have been sent to System side and has been updated with their stored Tink Id
@@ -71,12 +69,13 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     // True or false if system has been requested to process transactions.
     protected boolean isSystemProcessingTransactions;
     protected boolean isWhitelistRefresh;
+    protected ControllerWrapper controllerWrapper;
 
     public AgentWorkerContext(CredentialsRequest request, MetricRegistry metricRegistry,
-            AggregationControllerAggregationClient aggregationControllerAggregationClient,
             CuratorFramework coordinationClient, AggregatorInfo aggregatorInfo,
             CallbackHostConfiguration callbackHostConfiguration,
-            SupplementalInformationController supplementalInformationController) {
+            SupplementalInformationController supplementalInformationController,
+            ControllerWrapper controllerWrapper) {
 
         this.allAvailableAccountsByUniqueId = Maps.newHashMap();
         this.updatedAccountsByTinkId = Maps.newHashMap();
@@ -97,7 +96,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         this.metricRegistry = metricRegistry;
 
         this.supplementalInformationController = supplementalInformationController;
-        this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
+        this.controllerWrapper = controllerWrapper;
 
     }
 
@@ -178,8 +177,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             generateStatisticsReq.setUserTriggered(request.isCreate());
             generateStatisticsReq.setMode(StatisticMode.FULL); // To trigger refresh of residences.
 
-            aggregationControllerAggregationClient.generateStatisticsAndActivityAsynchronously(
-                    HostConfigurationConverter.convert(getCallbackHostConfiguration()), generateStatisticsReq);
+            controllerWrapper.generateStatisticsAndActivityAsynchronously(generateStatisticsReq);
             return;
         }
 
@@ -197,8 +195,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateTransactionsRequest.setCredentials(credentials.getId());
         updateTransactionsRequest.setUserTriggered(request.isManual());
 
-        aggregationControllerAggregationClient.updateTransactionsAsynchronously(
-                HostConfigurationConverter.convert(getCallbackHostConfiguration()), updateTransactionsRequest);
+        controllerWrapper.updateTransactionsAsynchronously(updateTransactionsRequest);
 
         isSystemProcessingTransactions = true;
 
@@ -329,8 +326,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         Account updatedAccount;
         try {
-            updatedAccount = aggregationControllerAggregationClient.updateAccount(
-                    HostConfigurationConverter.convert(getCallbackHostConfiguration()), updateAccountRequest);
+            updatedAccount = controllerWrapper.updateAccount(updateAccountRequest);
 
         } catch (UniformInterfaceException e) {
             log.error("Account update request failed, response: " +
@@ -368,8 +364,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateCredentialsStatusRequest.setUpdateContextTimestamp(doStatusUpdate);
         updateCredentialsStatusRequest.setUserDeviceId(request.getUserDeviceId());
 
-        aggregationControllerAggregationClient.updateCredentials(
-                HostConfigurationConverter.convert(getCallbackHostConfiguration()), updateCredentialsStatusRequest);
+        controllerWrapper.updateCredentials(updateCredentialsStatusRequest);
     }
 
     @Override
@@ -378,8 +373,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateFraudRequest.setUserId(request.getUser().getId());
         updateFraudRequest.setDetailsContents(detailsContents);
 
-        aggregationControllerAggregationClient.updateFraudDetails(
-                HostConfigurationConverter.convert(getCallbackHostConfiguration()), updateFraudRequest);
+        controllerWrapper.updateFraudDetails(updateFraudRequest);
     }
 
     @Override
@@ -458,8 +452,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateDocumentRequest.setDocumentContainer(container);
 
         se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateDocumentResponse updateDocumentResponse;
-        updateDocumentResponse = aggregationControllerAggregationClient.updateDocument(
-                HostConfigurationConverter.convert(getCallbackHostConfiguration()), updateDocumentRequest);
+        updateDocumentResponse = controllerWrapper.updateDocument(updateDocumentRequest);
 
         if (updateDocumentResponse.isSuccessfullyStored()) {
             return UpdateDocumentResponse.createSuccessful(

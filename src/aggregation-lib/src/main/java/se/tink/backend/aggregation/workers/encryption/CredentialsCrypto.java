@@ -4,11 +4,10 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.util.Optional;
 
+import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
-import se.tink.backend.aggregation.converter.HostConfigurationConverter;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
@@ -22,15 +21,14 @@ public class CredentialsCrypto {
     private final CryptoConfigurationDao cryptoConfigurationDao;
     private final ClusterInfo clusterInfo;
     private final CacheClient cacheClient;
-    private final AggregationControllerAggregationClient aggregationControllerAggregationClient;
+    private final ControllerWrapper controllerWrapper;
 
-    public CredentialsCrypto(CryptoConfigurationDao cryptoConfigurationDao,
-            ClusterInfo clusterInfo, CacheClient cacheClient,
-            AggregationControllerAggregationClient aggregationControllerAggregationClient) {
+    public CredentialsCrypto(CryptoConfigurationDao cryptoConfigurationDao, ClusterInfo clusterInfo,
+            CacheClient cacheClient, ControllerWrapper controllerWrapper) {
         this.cryptoConfigurationDao = cryptoConfigurationDao;
         this.clusterInfo = clusterInfo;
         this.cacheClient = cacheClient;
-        this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
+        this.controllerWrapper = controllerWrapper;
     }
 
     public boolean decrypt(CredentialsRequest request) {
@@ -115,10 +113,7 @@ public class CredentialsCrypto {
 
         if (doUpdateCredential) {
             logger.info("Updating sensitive data");
-            aggregationControllerAggregationClient.updateCredentialSensitive(
-                    HostConfigurationConverter.convert(clusterInfo),
-                    request.getCredentials(),
-                    serializedEncryptedCredentials);
+            controllerWrapper.updateCredentialSensitive(request.getCredentials(), serializedEncryptedCredentials);
         }
 
         return true;
