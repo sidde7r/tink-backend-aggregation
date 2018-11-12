@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.workers.commands;
 
 import java.util.Objects;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
+import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.converter.HostConfigurationConverter;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -17,13 +18,16 @@ public class ValidateProviderAgentWorkerStatus extends AgentWorkerCommand {
     private AgentWorkerCommandContext context;
     private AggregationControllerAggregationClient aggregationControllerAggregationClient;
     private ClusterInfo clusterInfo;
+    private final ControllerWrapper controllerWrapper;
 
     public ValidateProviderAgentWorkerStatus(AgentWorkerCommandContext context,
             AggregationControllerAggregationClient aggregationControllerAggregationClient,
-            ClusterInfo clusterInfo) {
+            ClusterInfo clusterInfo,
+            ControllerWrapper controllerWrapper) {
         this.context = context;
         this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
         this.clusterInfo = clusterInfo;
+        this.controllerWrapper = controllerWrapper;
     }
 
     @Override
@@ -49,7 +53,7 @@ public class ValidateProviderAgentWorkerStatus extends AgentWorkerCommand {
         updateCredentialsStatusRequest.setCredentials(coreCredentials);
         updateCredentialsStatusRequest.setUserId(credentials.getUserId());
 
-        aggregationControllerAggregationClient.updateCredentials(HostConfigurationConverter.convert(clusterInfo), updateCredentialsStatusRequest);
+        controllerWrapper.updateCredentials(updateCredentialsStatusRequest);
 
         return AgentWorkerCommandResult.ABORT;
     }

@@ -233,7 +233,8 @@ public class AgentWorkerOperationFactory {
         String metricsName = (request.isManual() ? "refresh-manual" : "refresh-auto");
 
         commands.add(new ValidateProviderAgentWorkerStatus(context,
-                aggregationControllerAggregationClient, clusterInfo));
+                aggregationControllerAggregationClient, clusterInfo, ControllerWrapper.of(
+                        aggregationControllerAggregationClient, HostConfigurationConverter.convert(clusterInfo))));
         commands.add(new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(new ReportProviderMetricsAgentWorkerCommand(context, metricsName,
                 reportMetricsAgentWorkerCommandState));
@@ -305,7 +306,10 @@ public class AgentWorkerOperationFactory {
             AgentWorkerCommandContext context, String operationName) {
 
         return Lists.newArrayList(
-                new ValidateProviderAgentWorkerStatus(context, aggregationControllerAggregationClient, clusterInfo),
+                new ValidateProviderAgentWorkerStatus(context, aggregationControllerAggregationClient, clusterInfo,
+                        ControllerWrapper.of(
+                                aggregationControllerAggregationClient,
+                                HostConfigurationConverter.convert(clusterInfo))),
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState),
                 new ReportProviderMetricsAgentWorkerCommand(context, operationName,
                         reportMetricsAgentWorkerCommandState),
@@ -380,7 +384,8 @@ public class AgentWorkerOperationFactory {
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
         commands.add(new ValidateProviderAgentWorkerStatus(context,
-                aggregationControllerAggregationClient, clusterInfo));
+                aggregationControllerAggregationClient, clusterInfo, ControllerWrapper.of(
+                        aggregationControllerAggregationClient, HostConfigurationConverter.convert(clusterInfo))));
         commands.add(new ReportProviderMetricsAgentWorkerCommand(context, "keep-alive",
                 reportMetricsAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
@@ -468,7 +473,8 @@ public class AgentWorkerOperationFactory {
         String metricsName = (request.isManual() ? "refresh-manual" : "refresh-auto");
 
         commands.add(new ValidateProviderAgentWorkerStatus(context,
-                aggregationControllerAggregationClient, clusterInfo));
+                aggregationControllerAggregationClient, clusterInfo, ControllerWrapper.of(
+                        aggregationControllerAggregationClient, HostConfigurationConverter.convert(clusterInfo))));
         commands.add(new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(new ReportProviderMetricsAgentWorkerCommand(context, metricsName,
                 reportMetricsAgentWorkerCommandState));
@@ -513,7 +519,8 @@ public class AgentWorkerOperationFactory {
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
         commands.add(new ValidateProviderAgentWorkerStatus(context,
-                aggregationControllerAggregationClient, clusterInfo));
+                aggregationControllerAggregationClient, clusterInfo, ControllerWrapper.of(
+                        aggregationControllerAggregationClient, HostConfigurationConverter.convert(clusterInfo))));
         commands.add(new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(new ReportProviderMetricsAgentWorkerCommand(context, operationMetricName,
                 reportMetricsAgentWorkerCommandState));
