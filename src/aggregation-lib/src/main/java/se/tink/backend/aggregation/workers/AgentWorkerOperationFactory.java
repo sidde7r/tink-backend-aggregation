@@ -219,7 +219,7 @@ public class AgentWorkerOperationFactory {
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 aggregationControllerAggregationClient, serviceContext.getCoordinationClient(),
-                serviceContext.getCacheClient(), serviceContext.getConfiguration().getAgentsServiceConfiguration(),
+                serviceContext.getConfiguration().getAgentsServiceConfiguration(),
                 AggregatorConverter.convert(clusterInfo.getAggregator()),
                 CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController);
 
@@ -252,7 +252,7 @@ public class AgentWorkerOperationFactory {
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 aggregationControllerAggregationClient, serviceContext.getCoordinationClient(),
-                serviceContext.getCacheClient(), serviceContext.getConfiguration().getAgentsServiceConfiguration(),
+                serviceContext.getConfiguration().getAgentsServiceConfiguration(),
                 AggregatorConverter.convert(clusterInfo.getAggregator()),
                         CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController);
 
@@ -274,7 +274,7 @@ public class AgentWorkerOperationFactory {
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
 
                 aggregationControllerAggregationClient, serviceContext.getCoordinationClient(),
-                serviceContext.getCacheClient(), serviceContext.getConfiguration().getAgentsServiceConfiguration(),
+                serviceContext.getConfiguration().getAgentsServiceConfiguration(),
                 AggregatorConverter.convert(clusterInfo.getAggregator()),
                 CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController);
         context.setWhitelistRefresh(true);
@@ -312,7 +312,7 @@ public class AgentWorkerOperationFactory {
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 aggregationControllerAggregationClient, serviceContext.getCoordinationClient(),
-                serviceContext.getCacheClient(), serviceContext.getConfiguration().getAgentsServiceConfiguration(),
+                serviceContext.getConfiguration().getAgentsServiceConfiguration(),
                 AggregatorConverter.convert(clusterInfo.getAggregator()),
                 CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController);
         List<AgentWorkerCommand> commands = Lists.newArrayList();
@@ -332,7 +332,7 @@ public class AgentWorkerOperationFactory {
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 aggregationControllerAggregationClient, serviceContext.getCoordinationClient(),
-                serviceContext.getCacheClient(), serviceContext.getConfiguration().getAgentsServiceConfiguration(),
+                serviceContext.getConfiguration().getAgentsServiceConfiguration(),
                 AggregatorConverter.convert(clusterInfo.getAggregator()),
                 CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController);
 
@@ -353,7 +353,7 @@ public class AgentWorkerOperationFactory {
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 aggregationControllerAggregationClient, serviceContext.getCoordinationClient(),
-                serviceContext.getCacheClient(), serviceContext.getConfiguration().getAgentsServiceConfiguration(),
+                serviceContext.getConfiguration().getAgentsServiceConfiguration(),
                 AggregatorConverter.convert(clusterInfo.getAggregator()),
                 CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController);
 
@@ -378,7 +378,7 @@ public class AgentWorkerOperationFactory {
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 aggregationControllerAggregationClient, serviceContext.getCoordinationClient(),
-                serviceContext.getCacheClient(), serviceContext.getConfiguration().getAgentsServiceConfiguration(),
+                serviceContext.getConfiguration().getAgentsServiceConfiguration(),
                 AggregatorConverter.convert(clusterInfo.getAggregator()),
                 CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController);
 
@@ -431,7 +431,7 @@ public class AgentWorkerOperationFactory {
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 aggregationControllerAggregationClient, serviceContext.getCoordinationClient(),
-                serviceContext.getCacheClient(), serviceContext.getConfiguration().getAgentsServiceConfiguration(),
+                serviceContext.getConfiguration().getAgentsServiceConfiguration(),
                 AggregatorConverter.convert(clusterInfo.getAggregator()),
                 CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController);
 
@@ -475,10 +475,9 @@ public class AgentWorkerOperationFactory {
             request.setItemsToRefresh(RefreshableItem.REFRESHABLE_ITEMS_ALL);
         }
 
-
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 aggregationControllerAggregationClient, serviceContext.getCoordinationClient(),
-                serviceContext.getCacheClient(), serviceContext.getConfiguration().getAgentsServiceConfiguration(),
+                serviceContext.getConfiguration().getAgentsServiceConfiguration(),
                 AggregatorConverter.convert(clusterInfo.getAggregator()),
                 CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController);
 
