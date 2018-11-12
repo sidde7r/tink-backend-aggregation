@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.aggregation.wrappers.CryptoWrapper;
 import se.tink.backend.common.cache.CacheClient;
 import se.tink.backend.common.cache.CacheScope;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -54,8 +55,10 @@ public class CredentialsCrypto {
         EncryptedCredentials encryptedCredentials = Preconditions.checkNotNull(
                 SerializationUtils.deserializeFromString(sensitiveData, EncryptedCredentials.class));
 
-        Optional<byte[]> key = cryptoConfigurationDao
-                .getClusterKeyFromKeyId(clusterInfo.getClusterId(), encryptedCredentials.getKeyId());
+        CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
+
+        Optional<byte[]> key = cryptoWrapper.getCryptoKeyByKeyId(encryptedCredentials.getKeyId());
+
         if (!key.isPresent()) {
             logger.error(String.format("Could not find encryption key for %s:%d",
                     clusterInfo.getClusterId().getId(),
@@ -78,8 +81,9 @@ public class CredentialsCrypto {
     }
 
     public boolean encrypt(CredentialsRequest request, boolean doUpdateCredential) {
-        Optional<CryptoConfiguration> cryptoConfiguration = cryptoConfigurationDao.getClusterCryptoConfigurationFromClusterId(
-                clusterInfo.getClusterId());
+        CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
+
+        Optional<CryptoConfiguration> cryptoConfiguration = cryptoWrapper.getLatestCryptoConfiguration();
         if (!cryptoConfiguration.isPresent()) {
             logger.error(String.format("Could not find crypto configuration %s", clusterInfo.getClusterId().getId()));
             return false;
