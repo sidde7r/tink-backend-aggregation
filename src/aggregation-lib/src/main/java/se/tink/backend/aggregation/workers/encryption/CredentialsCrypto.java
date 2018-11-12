@@ -5,12 +5,11 @@ import com.google.common.base.Strings;
 import java.util.Optional;
 
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
-import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.aggregation.wrappers.CryptoWrapper;
 import se.tink.backend.common.cache.CacheClient;
 import se.tink.backend.common.cache.CacheScope;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -18,17 +17,15 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class CredentialsCrypto {
     private static final AggregationLogger logger = new AggregationLogger(CredentialsCrypto.class);
 
-    private final CryptoConfigurationDao cryptoConfigurationDao;
-    private final ClusterInfo clusterInfo;
     private final CacheClient cacheClient;
     private final ControllerWrapper controllerWrapper;
+    private final CryptoWrapper cryptoWrapper;
 
-    public CredentialsCrypto(CryptoConfigurationDao cryptoConfigurationDao, ClusterInfo clusterInfo,
-            CacheClient cacheClient, ControllerWrapper controllerWrapper) {
-        this.cryptoConfigurationDao = cryptoConfigurationDao;
-        this.clusterInfo = clusterInfo;
+    public CredentialsCrypto(CacheClient cacheClient, ControllerWrapper controllerWrapper,
+            CryptoWrapper cryptoWrapper) {
         this.cacheClient = cacheClient;
         this.controllerWrapper = controllerWrapper;
+        this.cryptoWrapper = cryptoWrapper;
     }
 
     public boolean decrypt(CredentialsRequest request) {
@@ -54,11 +51,11 @@ public class CredentialsCrypto {
         EncryptedCredentials encryptedCredentials = Preconditions.checkNotNull(
                 SerializationUtils.deserializeFromString(sensitiveData, EncryptedCredentials.class));
 
-        Optional<byte[]> key = cryptoConfigurationDao
-                .getClusterKeyFromKeyId(clusterInfo.getClusterId(), encryptedCredentials.getKeyId());
+        Optional<byte[]> key = cryptoWrapper.getCryptoKeyByKeyId(encryptedCredentials.getKeyId());
+
         if (!key.isPresent()) {
             logger.error(String.format("Could not find encryption key for %s:%d",
-                    clusterInfo.getClusterId().getId(),
+                    cryptoWrapper.getClientName(),
                     encryptedCredentials.getKeyId()));
             return false;
         }
@@ -78,10 +75,9 @@ public class CredentialsCrypto {
     }
 
     public boolean encrypt(CredentialsRequest request, boolean doUpdateCredential) {
-        Optional<CryptoConfiguration> cryptoConfiguration = cryptoConfigurationDao.getClusterCryptoConfigurationFromClusterId(
-                clusterInfo.getClusterId());
+        Optional<CryptoConfiguration> cryptoConfiguration = cryptoWrapper.getLatestCryptoConfiguration();
         if (!cryptoConfiguration.isPresent()) {
-            logger.error(String.format("Could not find crypto configuration %s", clusterInfo.getClusterId().getId()));
+            logger.error(String.format("Could not find crypto configuration %s", cryptoWrapper.getClientName()));
             return false;
         }
 
