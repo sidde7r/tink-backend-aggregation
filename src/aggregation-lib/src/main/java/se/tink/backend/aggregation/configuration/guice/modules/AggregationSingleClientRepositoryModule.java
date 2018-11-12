@@ -5,7 +5,12 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import se.tink.backend.aggregation.storage.database.repositories.AggregatorConfigurationsRepository;
+import se.tink.backend.aggregation.storage.database.repositories.ClientConfigurationsRepository;
+import se.tink.backend.aggregation.storage.database.repositories.ClusterConfigurationsRepository;
 import se.tink.backend.aggregation.storage.database.repositories.ClusterCryptoConfigurationRepository;
+import se.tink.backend.aggregation.storage.database.repositories.CryptoConfigurationsRepository;
 import se.tink.backend.common.config.DatabaseConfiguration;
 import se.tink.backend.aggregation.storage.database.repositories.ClusterHostConfigurationRepository;
 import se.tink.backend.core.ClusterHostConfiguration;
@@ -24,6 +29,10 @@ public class AggregationSingleClientRepositoryModule extends RepositoryModule {
     protected void bindRepositories() {
         bindSpringBean(ClusterHostConfigurationRepository.class);
         bindSpringBean(ClusterCryptoConfigurationRepository.class);
+        bindSpringBean(CryptoConfigurationsRepository.class);
+        bindSpringBean(ClientConfigurationsRepository.class);
+        bindSpringBean(AggregatorConfigurationsRepository.class);
+        bindSpringBean(ClusterConfigurationsRepository.class);
     }
 
     @Provides
