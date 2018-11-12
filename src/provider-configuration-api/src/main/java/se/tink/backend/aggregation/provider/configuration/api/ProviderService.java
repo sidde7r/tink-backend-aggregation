@@ -2,12 +2,10 @@ package se.tink.backend.aggregation.provider.configuration.api;
 
 import java.util.List;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import se.tink.api.annotations.Team;
 import se.tink.api.annotations.TeamOwnership;
@@ -22,20 +20,17 @@ public interface ProviderService {
     @Path("/list")
     @GET
     @TeamOwnership(Team.INTEGRATION)
-    List<ProviderConfigurationDTO> list(@DefaultValue("en") @QueryParam("lang") String lang,
-                                        @ClusterContext ClusterInfo clusterInfo);
+    List<ProviderConfigurationDTO> list(@ClusterContext ClusterInfo clusterInfo);
 
     @Path("/{market}/list")
     @GET
     @TeamOwnership(Team.INTEGRATION)
-    List<ProviderConfigurationDTO> listByMarket(@DefaultValue("en") @QueryParam("lang") String lang,
-            @PathParam("market") String market,
+    List<ProviderConfigurationDTO> listByMarket(@PathParam("market") String market,
             @ClusterContext ClusterInfo clusterInfo);
 
     @Path("/{providerName}")
     @GET
     @TeamOwnership(Team.INTEGRATION)
-    ProviderConfigurationDTO getProviderByName(@DefaultValue("en") @QueryParam("lang") String lang,
-            @PathParam("providerName") String providerName,
+    ProviderConfigurationDTO getProviderByName(@PathParam("providerName") String providerName,
             @ClusterContext ClusterInfo clusterInfo);
 }
