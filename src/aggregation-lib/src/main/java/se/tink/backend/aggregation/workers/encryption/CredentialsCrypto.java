@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.util.Optional;
 
+import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
 import se.tink.backend.aggregation.converter.HostConfigurationConverter;
@@ -23,14 +24,17 @@ public class CredentialsCrypto {
     private final ClusterInfo clusterInfo;
     private final CacheClient cacheClient;
     private final AggregationControllerAggregationClient aggregationControllerAggregationClient;
+    private final ControllerWrapper controllerWrapper;
 
     public CredentialsCrypto(CryptoConfigurationDao cryptoConfigurationDao,
             ClusterInfo clusterInfo, CacheClient cacheClient,
-            AggregationControllerAggregationClient aggregationControllerAggregationClient) {
+            AggregationControllerAggregationClient aggregationControllerAggregationClient,
+            ControllerWrapper controllerWrapper) {
         this.cryptoConfigurationDao = cryptoConfigurationDao;
         this.clusterInfo = clusterInfo;
         this.cacheClient = cacheClient;
         this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
+        this.controllerWrapper = controllerWrapper;
     }
 
     public boolean decrypt(CredentialsRequest request) {

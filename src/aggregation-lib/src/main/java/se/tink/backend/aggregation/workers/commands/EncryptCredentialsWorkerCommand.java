@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.workers.commands;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
-import se.tink.backend.aggregation.converter.HostConfigurationConverter;
 import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
@@ -37,7 +36,7 @@ public class EncryptCredentialsWorkerCommand extends AgentWorkerCommand {
         this.doUpdateCredential = doUpdateCredential;
         credentialsCrypto = new CredentialsCrypto(
                 new CryptoConfigurationDao(clusterCryptoConfigurationRepository), clusterInfo, cacheClient,
-                aggregationControllerAggregationClient);
+                aggregationControllerAggregationClient, controllerWrapper);
     }
 
     @Override
