@@ -15,6 +15,7 @@ public enum MarketCode {
     ES,
     FI,
     FR,
+    GB,
     GR,
     HR,
     HU,
