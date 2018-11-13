@@ -32,7 +32,7 @@
       "popular": true,
       "refreshFrequency": 1,
       "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
+      "status": "DISABLED",
       "transactional": true,
       "type": "BANK"
     },
@@ -311,7 +311,7 @@
         }
       ],
       "passwordhelptext": "Enter your full phone number in international format starting with '+', and the four digit passcode you set up in your Revolut app.",
-      "status": "ENABLED",
+      "status": "DISABLED",
       "transactional": true,
       "type": "BANK"
     },
