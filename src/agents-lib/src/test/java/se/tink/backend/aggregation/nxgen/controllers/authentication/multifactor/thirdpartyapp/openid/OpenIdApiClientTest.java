@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid;
 
 import com.google.common.base.Strings;
+import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -8,7 +9,6 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.configuration.UkOpenBankingConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.RegistrationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -38,7 +38,8 @@ public class OpenIdApiClientTest {
         ProviderConfiguration providerConfiguration = softwareStatement.getProviderConfiguration("modelo")
                 .orElseThrow(AssertionError::new);
 
-        apiClient = new OpenIdApiClient(httpClient, softwareStatement, providerConfiguration);
+        apiClient = new OpenIdApiClient(httpClient, softwareStatement, providerConfiguration,
+                OpenIdConstants.ClientMode.ACCOUNTS);
     }
 
     @Test
@@ -47,7 +48,7 @@ public class OpenIdApiClientTest {
 
         Assert.assertNotNull(conf);
         Assert.assertTrue(conf.verifyAndGetScopes(
-                OpenIdConstants.Scopes.getAllSupported())
+                Arrays.asList(OpenIdConstants.Scopes.OPEN_ID, OpenIdConstants.Scopes.ACCOUNTS))
                 .isPresent());
     }
 

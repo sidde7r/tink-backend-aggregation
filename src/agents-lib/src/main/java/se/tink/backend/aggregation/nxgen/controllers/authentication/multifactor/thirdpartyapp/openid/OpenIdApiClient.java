@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid;
 
 import com.google.common.base.Preconditions;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -23,6 +24,7 @@ public class OpenIdApiClient {
     protected final TinkHttpClient httpClient;
     protected final SoftwareStatement softwareStatement;
     protected final ProviderConfiguration providerConfiguration;
+    private final OpenIdConstants.ClientMode clientMode;
 
     // Internal caching. Do not use these fields directly, always use the getters!
     private WellKnownResponse cachedWellKnownResponse;
@@ -30,10 +32,11 @@ public class OpenIdApiClient {
     private OpenIdAuthenticatedHttpFilter authFilter;
 
     public OpenIdApiClient(TinkHttpClient httpClient, SoftwareStatement softwareStatement,
-            ProviderConfiguration providerConfiguration) {
+            ProviderConfiguration providerConfiguration, OpenIdConstants.ClientMode clientMode) {
         this.httpClient = httpClient;
         this.softwareStatement = softwareStatement;
         this.providerConfiguration = providerConfiguration;
+        this.clientMode = clientMode;
 
         // Softw. Transp. key
         httpClient.setSslClientCertificate(
@@ -76,15 +79,15 @@ public class OpenIdApiClient {
         WellKnownResponse wellknownConfiguration = getWellKnownConfiguration();
 
         // Token request does not use OpenId scope
-        String scopes = wellknownConfiguration
-                .verifyAndGetScopes(Collections.singletonList(OpenIdConstants.Scopes.ACCOUNTS))
+        String scope = wellknownConfiguration
+                .verifyAndGetScopes(Collections.singletonList(clientMode.getValue()))
                 .orElseThrow(() -> new IllegalStateException(
                         "Provider does not support the mandatory scopes.")
                 );
 
         TokenRequestForm requestForm = new TokenRequestForm()
                 .withGrantType(grantType)
-                .withScope(scopes)
+                .withScope(scope)
                 .withRedirectUri(softwareStatement.getRedirectUri());
 
         OpenIdConstants.TOKEN_ENDPOINT_AUTH_METHOD authMethod = wellknownConfiguration
@@ -192,7 +195,8 @@ public class OpenIdApiClient {
         String responseType = OpenIdConstants.MANDATORY_RESPONSE_TYPES.stream()
                 .collect(Collectors.joining(" "));
 
-        String scope = wellknownConfiguration.verifyAndGetScopes(OpenIdConstants.Scopes.getAllSupported())
+        String scope = wellknownConfiguration.verifyAndGetScopes(
+                Arrays.asList(OpenIdConstants.Scopes.OPEN_ID, clientMode.getValue()))
                 .orElseThrow(() -> new IllegalStateException(
                         "Provider does not support the mandatory scopes.")
                 );

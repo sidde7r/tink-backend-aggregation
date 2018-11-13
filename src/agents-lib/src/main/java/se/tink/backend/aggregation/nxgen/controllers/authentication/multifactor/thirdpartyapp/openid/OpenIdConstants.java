@@ -8,13 +8,20 @@ public class OpenIdConstants {
         public static final String OPEN_ID = "openid";
         public static final String ACCOUNTS = "accounts";
         public static final String PAYMENTS = "payments";
+    }
 
-        private static final ImmutableList<String> allSupported = ImmutableList.<String>builder()
-                .add(OPEN_ID, ACCOUNTS)
-                .build();
+    public enum ClientMode {
+        ACCOUNTS(Scopes.ACCOUNTS),
+        PAYMENTS(Scopes.PAYMENTS);
 
-        public static ImmutableList<String> getAllSupported() {
-            return allSupported;
+        private String value;
+
+        public String getValue() {
+            return value;
+        }
+
+        ClientMode(String value) {
+            this.value = value;
         }
     }
 

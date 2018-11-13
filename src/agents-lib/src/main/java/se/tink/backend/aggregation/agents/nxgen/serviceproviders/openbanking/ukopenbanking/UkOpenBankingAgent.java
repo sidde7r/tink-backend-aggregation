@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticationFlow;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
@@ -76,7 +77,8 @@ public abstract class UkOpenBankingAgent extends NextGenerationAgent {
         client.trustRootCaCertificate(ukOpenBankingConfiguration.getRootCAData(),
                 ukOpenBankingConfiguration.getRootCAPassword());
 
-        apiClient = new UkOpenBankingApiClient(client, softwareStatement, providerConfiguration);
+        apiClient = new UkOpenBankingApiClient(client, softwareStatement, providerConfiguration,
+                OpenIdConstants.ClientMode.ACCOUNTS);
     }
 
     @Override
