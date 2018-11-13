@@ -48,4 +48,12 @@ public final class ValidatorTest {
 
         validator.validate(aisData);
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void ensureRuleAccount_whenSameRuleInsertedTwice_throw() {
+        AisValidator.builder()
+                .ruleAccount("Validate thing", acc -> acc.getAccountNumber() != null)
+                .ruleAccount("Validate thing", acc -> acc.getBalance() <= 10000000.0)
+                .build();
+    }
 }
