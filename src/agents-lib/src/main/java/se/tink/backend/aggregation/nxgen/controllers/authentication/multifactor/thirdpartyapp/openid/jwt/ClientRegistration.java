@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import java.util.Date;
 import java.util.List;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
@@ -16,6 +17,18 @@ public class ClientRegistration {
     public static class Builder {
         private WellKnownResponse wellknownConfiguration;
         private SoftwareStatement softwareStatement;
+        private ImmutableList.Builder<String> scopes = ImmutableList.<String>builder()
+                .add(OpenIdConstants.Scopes.OPEN_ID);
+
+        public Builder withAccountsScope() {
+            this.scopes.add(OpenIdConstants.Scopes.ACCOUNTS);
+            return this;
+        }
+
+        public Builder withPaymentsScope() {
+            this.scopes.add(OpenIdConstants.Scopes.PAYMENTS);
+            return this;
+        }
 
         public Builder withSoftwareStatement(SoftwareStatement softwareStatement) {
             this.softwareStatement = softwareStatement;
@@ -66,7 +79,7 @@ public class ClientRegistration {
 
             String issuer = wellknownConfiguration.getIssuer();
 
-            String scopes = wellknownConfiguration.verifyAndGetScopes(OpenIdConstants.Scopes.getAllSupported())
+            String scope = wellknownConfiguration.verifyAndGetScopes(scopes.build())
                     .orElseThrow(() -> new IllegalStateException("Provider does not support the mandatory scopes."));
 
             String keyId = softwareStatement.getSigningKeyId();
@@ -91,7 +104,7 @@ public class ClientRegistration {
                     .withAudience(issuer)
                     .withClaim(OpenIdConstants.Params.SOFTWARE_ID, softwareId)
                     .withClaim(OpenIdConstants.Params.SOFTWARE_STATEMENT, softwareStatementAssertion)
-                    .withClaim(OpenIdConstants.Params.SCOPE, scopes)
+                    .withClaim(OpenIdConstants.Params.SCOPE, scope)
                     .withClaim(OpenIdConstants.Params.TOKEN_ENDPOINT_AUTH_METHOD, tokenEndpointAuthMethod)
                     .withClaim(OpenIdConstants.Params.ID_TOKEN_SIGNED_RESPONSE_ALG, idTokenSigningAlg)
                     .withClaim(OpenIdConstants.Params.TOKEN_ENDPOINT_AUTH_SIGNING_ALG, tokenEndpointSigningAlg)

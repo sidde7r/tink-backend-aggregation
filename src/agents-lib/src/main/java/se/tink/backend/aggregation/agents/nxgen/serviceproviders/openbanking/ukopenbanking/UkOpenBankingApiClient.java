@@ -4,6 +4,7 @@ import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.authenticator.rpc.AccountPermissionRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdApiClient;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -15,8 +16,8 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     private final URL apiBaseUrl;
 
     public UkOpenBankingApiClient(TinkHttpClient httpClient, SoftwareStatement softwareStatement,
-            ProviderConfiguration providerConfiguration) {
-        super(httpClient, softwareStatement, providerConfiguration);
+            ProviderConfiguration providerConfiguration, OpenIdConstants.ClientMode clientMode) {
+        super(httpClient, softwareStatement, providerConfiguration, clientMode);
         apiBaseUrl = providerConfiguration.getApiBaseURL();
     }
 
