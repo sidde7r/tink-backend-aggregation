@@ -30,7 +30,7 @@ import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.rpc.TransferRequest;
-import se.tink.backend.aggregation.storage.database.daos.ClusterConfigurationDao;
+import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperProvider;
 import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorkerOperation.AgentWorkerOperationState;
@@ -73,7 +73,7 @@ public class AgentWorkerOperationFactory {
     private final CacheClient cacheClient;
     private final MetricCacheLoader metricCacheLoader;
     private final CryptoConfigurationDao cryptoConfigurationDao;
-    private final ClusterConfigurationDao clusterConfigurationDao;
+    private final ControllerWrapperProvider controllerWrapperProvider;
 
     // States
     private AgentWorkerOperationState agentWorkerOperationState;
@@ -101,12 +101,12 @@ public class AgentWorkerOperationFactory {
             ReportProviderMetricsAgentWorkerCommandState reportProviderMetricsAgentWorkerCommandState,
             SupplementalInformationController supplementalInformationController,
             CryptoConfigurationDao cryptoConfigurationDao,
-            ClusterConfigurationDao clusterConfigurationDao) {
+            ControllerWrapperProvider controllerWrapperProvider) {
         this.cacheClient = cacheClient;
 
         metricCacheLoader = new MetricCacheLoader(metricRegistry);
         this.cryptoConfigurationDao = cryptoConfigurationDao;
-        this.clusterConfigurationDao = clusterConfigurationDao;
+        this.controllerWrapperProvider = controllerWrapperProvider;
 
         // Initialize agent worker command states.
         this.agentWorkerOperationState = agentWorkerOperationState;
@@ -225,7 +225,7 @@ public class AgentWorkerOperationFactory {
 
         log.debug("Creating refresh operation chain for credential");
 
-        ControllerWrapper controllerWrapper = clusterConfigurationDao.createControllerWrapper(clusterInfo
+        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo
         );
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
@@ -264,7 +264,7 @@ public class AgentWorkerOperationFactory {
     }
 
     public AgentWorkerOperation createExecuteTransferOperation(ClusterInfo clusterInfo, TransferRequest request) {
-        ControllerWrapper controllerWrapper = clusterConfigurationDao.createControllerWrapper(clusterInfo
+        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo
         );
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
@@ -289,7 +289,7 @@ public class AgentWorkerOperationFactory {
 
     public AgentWorkerOperation createExecuteWhitelistedTransferOperation(ClusterInfo clusterInfo,
             WhitelistedTransferRequest request) {
-        ControllerWrapper controllerWrapper = clusterConfigurationDao.createControllerWrapper(clusterInfo
+        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo
         );
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
@@ -333,7 +333,7 @@ public class AgentWorkerOperationFactory {
     }
 
     public AgentWorkerOperation createCreateCredentialsOperation(ClusterInfo clusterInfo, CredentialsRequest request) {
-        ControllerWrapper controllerWrapper = clusterConfigurationDao.createControllerWrapper(clusterInfo
+        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo
         );
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
@@ -361,7 +361,7 @@ public class AgentWorkerOperationFactory {
     }
 
     public AgentWorkerOperation createUpdateOperation(ClusterInfo clusterInfo, CredentialsRequest request) {
-        ControllerWrapper controllerWrapper = clusterConfigurationDao.createControllerWrapper(clusterInfo
+        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo
         );
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
@@ -389,7 +389,7 @@ public class AgentWorkerOperationFactory {
     }
 
     public AgentWorkerOperation createKeepAliveOperation(ClusterInfo clusterInfo, KeepAliveRequest request) {
-        ControllerWrapper controllerWrapper = clusterConfigurationDao.createControllerWrapper(clusterInfo
+        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo
         );
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
@@ -421,7 +421,7 @@ public class AgentWorkerOperationFactory {
     public AgentWorkerOperation createReEncryptCredentialsOperation(ClusterInfo clusterInfo,
             ReEncryptCredentialsRequest request) {
 
-        ControllerWrapper controllerWrapper = clusterConfigurationDao.createControllerWrapper(clusterInfo
+        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo
         );
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
@@ -478,7 +478,7 @@ public class AgentWorkerOperationFactory {
 
         log.debug("Creating whitelist refresh operation chain for credential");
 
-        ControllerWrapper controllerWrapper = clusterConfigurationDao.createControllerWrapper(clusterInfo
+        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo
         );
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
@@ -532,7 +532,7 @@ public class AgentWorkerOperationFactory {
             request.setItemsToRefresh(RefreshableItem.REFRESHABLE_ITEMS_ALL);
         }
 
-        ControllerWrapper controllerWrapper = clusterConfigurationDao.createControllerWrapper(clusterInfo
+        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo
         );
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,

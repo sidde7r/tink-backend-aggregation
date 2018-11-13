@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.storage.database.daos;
+package se.tink.backend.aggregation.storage.database.providers;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.storage.database.models.ClusterConfiguration;
 
 import java.util.Map;
 
-public class ClusterConfigurationDao {
+public class ControllerWrapperProvider {
 
     private final Map<String, ClusterConfiguration> clusterConfigurations;
     private final boolean isMultiClientDevelopment;
@@ -21,7 +21,7 @@ public class ClusterConfigurationDao {
         this configuration should not change during the service lifecycle
      */
     @Inject
-    public ClusterConfigurationDao(
+    public ControllerWrapperProvider(
             @Named("clusterConfigurations") Map<String, ClusterConfiguration> clusterConfigurations,
             @Named("isMultiClientDevelopment") boolean isMultiClientDevelopment,
             AggregationControllerAggregationClient aggregationControllerAggregationClient) {
