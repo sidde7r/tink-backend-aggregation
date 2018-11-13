@@ -60,16 +60,7 @@ public class DebugProviderCommand extends ProviderConfigurationCommand<ProviderS
         final String clusterId = System.getProperty("clusterId");
         Preconditions.checkNotNull(clusterId, "clusterId must not be null.");
 
-        ProviderFileModule fileModule = injector.getInstance(ProviderFileModule.class);
-        ProviderStatusConfigurationRepository statusRepository =
-                injector.getInstance(ProviderStatusConfigurationRepository.class);
-
-        ProviderConfigurationProvider providers = new ProviderConfigurationProvider(
-                fileModule.providerConfigurationByProviderName(),
-                fileModule.provideEnabledProvidersForCluster(),
-                fileModule.provideClusterSpecificProviderConfiguration(),
-                statusRepository
-        );
+        ProviderConfigurationProvider providers = injector.getInstance(ProviderConfigurationProvider.class);
         ProviderConfiguration provider = providers.findByClusterIdAndProviderName(clusterId, providerName);
 
         if (provider == null) {

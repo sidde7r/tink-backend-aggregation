@@ -40,24 +40,6 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
         this.providerStatusConfigurationRepository = providerStatusConfigurationRepository;
     }
 
-    public List<se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration> findAll() {
-        if (Objects.isNull(providerConfigurationByName)) {
-            log.error("Provider Configuration by name map should not be null.");
-            return Collections.emptyList();
-        }
-
-        if (providerConfigurationByName.values().isEmpty()) {
-            log.error("Provider Configuration by name map should not be empty.");
-        }
-
-        Map<String, ProviderStatusConfiguration> allProviderStatuses = getAllProviderStatuses();
-
-        return providerConfigurationByName.values().stream()
-                .map(provider -> StorageProviderConfigurationConverter.convert(provider,
-                        Optional.ofNullable(allProviderStatuses.get(provider.getName()))))
-                .collect(Collectors.toList());
-    }
-
     public List<se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration> findAllByClusterId(
             String clusterId) {
         Set<String> providerNamesForCluster = enabledProvidersOnCluster.get(clusterId);
@@ -87,16 +69,6 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
                 .collect(Collectors.toList());
     }
 
-    public List<se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration> findAllByMarket(
-            String market) {
-
-        Map<String, ProviderStatusConfiguration> allProviderStatuses = getAllProviderStatuses();
-
-        return providerConfigurationByName.values().stream()
-                .filter(providerConfiguration -> market.equalsIgnoreCase(providerConfiguration.getMarket()))
-                .map(provider -> StorageProviderConfigurationConverter.convert(provider,
-                        Optional.ofNullable(allProviderStatuses.get(provider.getName()))))
-                .collect(Collectors.toList());
     }
 
     public se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration findByClusterIdAndProviderName(
@@ -111,15 +83,6 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
                 .convert(providerConfiguration, getProviderStatus(providerConfiguration));
     }
 
-    public se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration findByName(
-            String providerName) {
-        ProviderConfiguration providerConfiguration = providerConfigurationByName.get(providerName);
-        if (Objects.isNull(providerConfiguration)) {
-            log.warn("Could not find provider by name: " + providerName);
-            return null;
-        }
-        return StorageProviderConfigurationConverter
-                .convert(providerConfiguration, getProviderStatus(providerConfiguration));
     }
 
     public List<se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration> findAllByClusterIdAndMarket(
