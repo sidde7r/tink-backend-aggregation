@@ -10,7 +10,7 @@ public final class WarnAction implements Action {
     @Override
     public void onPass(final AisData aisData, final String ruleIdentifier) {
         logger.info(
-                "Validator result:\n[PASS] {} for AIS data instance: {}", ruleIdentifier, aisData);
+                "Validator result:\n[PASS] {} for AIS data instance: {}", ruleIdentifier);
     }
 
     @Override
@@ -24,7 +24,7 @@ public final class WarnAction implements Action {
 
     @Override
     public void onPass(final Account account, final String ruleIdentifier) {
-        logger.info("Validator result:\n[PASS] {} for account: {}", ruleIdentifier, account);
+        logger.info("Validator result:\n[PASS] {}", ruleIdentifier);
     }
 
     @Override
