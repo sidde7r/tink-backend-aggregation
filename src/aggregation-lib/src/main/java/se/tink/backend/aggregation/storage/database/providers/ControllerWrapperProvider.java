@@ -13,7 +13,6 @@ import java.util.Map;
 public class ControllerWrapperProvider {
 
     private final Map<String, ClusterConfiguration> clusterConfigurations;
-    private final boolean isMultiClientDevelopment;
     private AggregationControllerAggregationClient aggregationControllerAggregationClient;
 
     /*
@@ -23,22 +22,15 @@ public class ControllerWrapperProvider {
     @Inject
     public ControllerWrapperProvider(
             @Named("clusterConfigurations") Map<String, ClusterConfiguration> clusterConfigurations,
-            @Named("isMultiClientDevelopment") boolean isMultiClientDevelopment,
             AggregationControllerAggregationClient aggregationControllerAggregationClient) {
         this.clusterConfigurations = clusterConfigurations;
-        this.isMultiClientDevelopment = isMultiClientDevelopment;
         this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
     }
 
     public ControllerWrapper createControllerWrapper(ClusterInfo clusterInfo){
 
-        if(isMultiClientDevelopment) {
-            String clusterId = clusterInfo.getClusterId().getId();
-            return ControllerWrapper.of(aggregationControllerAggregationClient,
-                    HostConfigurationConverter.convert(clusterConfigurations.get(clusterId)));
-        }
-
+        String clusterId = clusterInfo.getClusterId().getId();
         return ControllerWrapper.of(aggregationControllerAggregationClient,
-                HostConfigurationConverter.convert(clusterInfo));
+                HostConfigurationConverter.convert(clusterConfigurations.get(clusterId)));
     }
 }
