@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.framework.validation;
 
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.rpc.Account;
+import java.util.Collection;
+import se.tink.backend.system.rpc.Transaction;
 
 public final class ValidatorFactory {
     private ValidatorFactory() {
@@ -10,6 +12,10 @@ public final class ValidatorFactory {
 
     public static AisValidator getExtensiveValidator() {
         return AisValidator.builder()
+                .ruleAccount(
+                        "Account number is non-null",
+                        acc -> acc.getAccountNumber() != null,
+                        acc -> String.format("Account %s is null", acc))
                 .rule(
                         "Account balance threshold",
                         aisdata ->
