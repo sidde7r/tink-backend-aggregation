@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.provider.configuration.storage.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -281,7 +282,23 @@ public class ProviderConfiguration {
      * main to know if an agent implements an interface e.g. TransferExecutor.
      */
     public enum Capability {
-        TRANSFERS, MORTGAGE_AGGREGATION
+        UNKNOWN,
+        CHECKING_ACCOUNT,
+        SAVINGS_ACCOUNT,
+        CREDIT_CARD,
+        INVESTMENTS,
+        LOANS,
+        PAYMENTS;
+
+        // Need this JsonCreator in order to parse the "old" capability values from the json files successfully
+        @JsonCreator
+        public static Capability safeValueOf(String string) {
+            try {
+                return Capability.valueOf(string);
+            } catch (IllegalArgumentException e) {
+                return Capability.UNKNOWN;
+            }
+        }
     }
 
     @JsonProperty("refreshschedule")
