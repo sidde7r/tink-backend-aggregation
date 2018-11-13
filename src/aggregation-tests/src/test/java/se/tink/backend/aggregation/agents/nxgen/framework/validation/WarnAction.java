@@ -29,7 +29,7 @@ public final class WarnAction implements Action {
 
     @Override
     public void onFail(final Account account, final String ruleIdentifier, final String message) {
-        logger.info(
+        logger.warn(
                 "Validator result:\n[FAIL] {}: {} for account: {}",
                 ruleIdentifier,
                 message,
