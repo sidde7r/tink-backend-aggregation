@@ -18,6 +18,18 @@ public final class ValidatorTest {
 
         AisValidator validator =
                 AisValidator.builder()
+                        .setAction(action)
+                        .ruleAccount(
+                                "Account number is non-null",
+                                acc -> acc.getAccountNumber() != null,
+                                acc -> String.format("Account %s is null", acc))
+                        .ruleAccount(
+                                "Balance does not exceed threshold",
+                                acc -> acc.getBalance() <= 10000000.0,
+                                acc ->
+                                        String.format(
+                                                "Balance %f exceeds threshold %f for account %s",
+                                                acc.getBalance(), 10000000.0, acc))
                         .rule(
                                 "Account balance threshold",
                                 data ->
