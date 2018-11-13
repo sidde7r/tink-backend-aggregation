@@ -14,6 +14,7 @@ public class ClusterConfigurationDao {
 
     private final Map<String, ClusterConfiguration> clusterConfigurations;
     private final boolean isMultiClientDevelopment;
+    private AggregationControllerAggregationClient aggregationControllerAggregationClient;
 
     /*
         we want to use providers to ensure we only load it once when we start the service
@@ -22,14 +23,14 @@ public class ClusterConfigurationDao {
     @Inject
     public ClusterConfigurationDao(
             @Named("clusterConfigurations") Map<String, ClusterConfiguration> clusterConfigurations,
-            @Named("isMultiClientDevelopment") boolean isMultiClientDevelopment) {
+            @Named("isMultiClientDevelopment") boolean isMultiClientDevelopment,
+            AggregationControllerAggregationClient aggregationControllerAggregationClient) {
         this.clusterConfigurations = clusterConfigurations;
         this.isMultiClientDevelopment = isMultiClientDevelopment;
+        this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
     }
 
-    public ControllerWrapper createControllerWrapper(
-            ClusterInfo clusterInfo,
-            AggregationControllerAggregationClient aggregationControllerAggregationClient){
+    public ControllerWrapper createControllerWrapper(ClusterInfo clusterInfo){
 
         if(isMultiClientDevelopment) {
             String clusterId = clusterInfo.getClusterId().getId();
@@ -37,6 +38,7 @@ public class ClusterConfigurationDao {
                     HostConfigurationConverter.convert(clusterConfigurations.get(clusterId)));
         }
 
-        return ControllerWrapper.of(aggregationControllerAggregationClient, HostConfigurationConverter.convert(clusterInfo));
+        return ControllerWrapper.of(aggregationControllerAggregationClient,
+                HostConfigurationConverter.convert(clusterInfo));
     }
 }
