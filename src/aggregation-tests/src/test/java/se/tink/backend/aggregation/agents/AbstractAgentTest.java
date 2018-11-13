@@ -13,6 +13,7 @@ import java.util.UUID;
 import org.junit.Assert;
 import se.tink.backend.aggregation.AbstractConfigurationBase;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.log.ClientFilterFactory;
 import se.tink.backend.aggregation.log.HttpLoggingFilterFactory;
@@ -44,7 +45,9 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
 
         if (configuration == null) {
             try {
-                configuration = CONFIGURATION_FACTORY.build(new File("etc/development.yml"));
+                AggregationServiceConfiguration aggregationServiceConfiguration = CONFIGURATION_FACTORY.build(
+                        new File("etc/development.yml"));
+                configuration = aggregationServiceConfiguration.getAgentsServiceConfiguration();
             } catch (IOException | ConfigurationException e){
                 log.warn("Couldn't set development configuration", e);
             }

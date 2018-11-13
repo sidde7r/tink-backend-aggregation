@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.AgentFactory;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
+import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
@@ -104,7 +105,9 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
     private Agent createAgent(CredentialsRequest credentialsRequest) {
         try {
-            configuration = CONFIGURATION_FACTORY.build(new File("etc/development.yml"));
+            AggregationServiceConfiguration aggregationServiceConfiguration = CONFIGURATION_FACTORY.build(
+                    new File("etc/development.yml"));
+            configuration = aggregationServiceConfiguration.getAgentsServiceConfiguration();
             AgentFactory factory = new AgentFactory(configuration);
 
             Class<? extends Agent> cls = AgentFactory.getAgentClass(provider);
