@@ -66,4 +66,26 @@ public final class ValidatorTest {
                 .ruleAccount("Validate thing", acc -> acc.getBalance() <= 10000000.0)
                 .build();
     }
+
+    @Test
+    public void testExtensiveValidator() {
+        Collection<Account> accounts = Collections.emptySet();
+
+        List<Transaction> transactions =
+                ImmutableList.<Transaction>builder()
+                        .add(new Transaction())
+                        .add(new Transaction())
+                        .build();
+
+        for (Transaction t : transactions) {
+            t.setAccountId("1234");
+            t.setAmount(7.0);
+            t.setDate(new Date(1234567890));
+            t.setDescription("my description");
+        }
+
+        AisValidator validator = ValidatorFactory.getExtensiveValidator();
+
+        validator.validate(accounts, transactions);
+    }
 }
