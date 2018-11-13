@@ -6,7 +6,7 @@ import java.util.function.Predicate;
 import se.tink.backend.aggregation.rpc.Account;
 
 /**
- * A rule is uniquely identified and recognized by its string identifer.
+ * A rule is uniquely identified and recognized by its string identifier.
  */
 public final class ValidationRule {
     private String ruleIdentifier;
