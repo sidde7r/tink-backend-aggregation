@@ -8,11 +8,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.UkOpenBankingUpcomingTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.session.UkOpenBankingSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticationFlow;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
@@ -30,7 +29,6 @@ import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.Provider;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public abstract class UkOpenBankingAgent extends NextGenerationAgent {
@@ -84,22 +82,13 @@ public abstract class UkOpenBankingAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         UkOpenBankingAuthenticator authenticator = new UkOpenBankingAuthenticator(apiClient);
-
-        OpenIdAuthenticationController openIdAuthenticationController = new OpenIdAuthenticationController(
-                persistentStorage,
-                supplementalInformationController,
-                apiClient,
-                authenticator
-        );
-
-        return new AutoAuthenticationController(
+        return OpenIdAuthenticationFlow.create(
                 request,
                 context,
-                new ThirdPartyAppAuthenticationController<>(
-                        openIdAuthenticationController,
-                        supplementalInformationController
-                ),
-                openIdAuthenticationController
+                persistentStorage,
+                supplementalInformationController,
+                authenticator,
+                apiClient
         );
     }
 
