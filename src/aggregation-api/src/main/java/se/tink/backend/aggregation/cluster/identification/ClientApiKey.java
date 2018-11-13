@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.cluster.identification;
 
 public class ClientApiKey {
-    public static final String CLIENT_API_KEY_HEADER = "x-tink-client-api-key";
+    public static final String CLIENT_API_KEY_HEADER = "X-Tink-Client-Api-Key";
     private final String clientApiKey;
 
     private ClientApiKey(String clientApiKey) {
