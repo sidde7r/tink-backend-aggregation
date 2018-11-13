@@ -23,6 +23,10 @@ public final class ValidatorFactory {
                                 String.format(
                                         "Balance %f exceeds threshold %f for account %s",
                                         acc.getBalance(), 10000000.0, acc))
+                .ruleAccount(
+                        "Holder name is present",
+                        acc -> acc.getHolderName() != null,
+                        acc -> String.format("Account lacks a holder name: %s", acc))
                 .rule(
                         "Account balance threshold",
                         aisdata ->
