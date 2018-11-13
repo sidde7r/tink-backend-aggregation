@@ -1,13 +1,30 @@
 package se.tink.backend.aggregation.agents.nxgen.framework.validation;
 
-import java.util.stream.Collectors;
-import se.tink.backend.aggregation.rpc.Account;
 import java.util.Collection;
 import se.tink.backend.system.rpc.Transaction;
 
 public final class ValidatorFactory {
     private ValidatorFactory() {
         throw new AssertionError();
+    }
+
+    private static boolean containsDuplicates(final Collection<Transaction> transactions) {
+        for (final Transaction transaction : transactions) {
+            final long numberOfIdenticalElements =
+                    transactions
+                            .stream()
+                            .filter(t -> t.getDate().equals(transaction.getDate()))
+                            .filter(t -> t.getDescription().equals(transaction.getDescription()))
+                            .filter(t -> t.getAmount() == transaction.getAmount())
+                            .filter(t -> t.getAccountId().equals(transaction.getAccountId()))
+                            .count();
+            if (numberOfIdenticalElements > 1) {
+                return false;
+            } else if (numberOfIdenticalElements < 1) {
+                throw new AssertionError("Unexpected number of elements");
+            }
+        }
+        return true;
     }
 
     public static AisValidator getExtensiveValidator() {
@@ -28,19 +45,12 @@ public final class ValidatorFactory {
                         acc -> acc.getHolderName() != null,
                         acc -> String.format("Account lacks a holder name: %s", acc))
                 .rule(
-                        "Account balance threshold",
-                        aisdata ->
-                                aisdata.getAccounts()
-                                        .stream()
-                                        .map(Account::getBalance)
-                                        .allMatch(b -> b <= 10000000.0),
+                        "No duplicate transactions",
+                        aisdata -> containsDuplicates(aisdata.getTransactions()),
                         data ->
                                 String.format(
-                                        "One of the balances in %s exceed 10000000.0",
-                                        data.getAccounts()
-                                                .stream()
-                                                .map(Account::getBalance)
-                                                .collect(Collectors.toList())))
+                                        "Found at least two transactions with the same date, description, amount and account ID: %s",
+                                        data.getTransactions()))
                 .build();
     }
 }
