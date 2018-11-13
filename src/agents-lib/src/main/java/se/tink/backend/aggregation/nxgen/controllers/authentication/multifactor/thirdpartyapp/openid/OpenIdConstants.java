@@ -1,15 +1,13 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid;
 
 import com.google.common.collect.ImmutableList;
-import java.util.Arrays;
-import java.util.List;
 
 public class OpenIdConstants {
 
     public static class Scopes {
         public static final String OPEN_ID = "openid";
         public static final String ACCOUNTS = "accounts";
-        public static final String TRANSACTIONS = "transactions"; // Not yet supported
+        public static final String PAYMENTS = "payments";
 
         private static final ImmutableList<String> allSupported = ImmutableList.<String>builder()
                 .add(OPEN_ID, ACCOUNTS)
