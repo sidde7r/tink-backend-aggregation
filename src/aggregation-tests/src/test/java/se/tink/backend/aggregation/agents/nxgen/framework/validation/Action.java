@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.framework.validation;
 
+import se.tink.backend.aggregation.rpc.Account;
+
 /** Action to take if validation fails. */
 public interface Action {
     /**
@@ -20,4 +22,8 @@ public interface Action {
      *     AIS data
      */
     void onFail(AisData aisData, String ruleIdentifier, String message);
+
+    void onPass(Account account, String ruleIdentifier);
+
+    void onFail(Account account, String ruleIdentifier, String message);
 }
