@@ -4,10 +4,12 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.Random;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.core.Amount;
+import se.tink.libraries.date.DateUtils;
 
 public class NextGenerationTransactionGenerator {
     private static final ObjectMapper mapper = new ObjectMapper();
@@ -23,15 +26,12 @@ public class NextGenerationTransactionGenerator {
     private static String generationBaseFile = "generationbase.json";
     private LocalDate date;
 
-    int numOfTransactions = 1000;
-
     public NextGenerationTransactionGenerator(String basePath) throws IOException {
         generationBase = loadGenerationBase(basePath + "/" + generationBaseFile);
         this.randomGenerator = new Random();
         setTodaysDate();
     }
 
-    //Generate todays date for iteration
     private void setTodaysDate() {
         Date input = new Date();
         Instant instant = input.toInstant();
@@ -50,41 +50,51 @@ public class NextGenerationTransactionGenerator {
         return generationBases;
     }
 
-    //Randomises a purchase up to between 1-5 items
+    //Randomises a purchase up to between 1-3 items
     private double randomisePurchase(GenerationBase base) {
         double finalPrice = 0;
         for (Double price : base.getItemPrices()) {
-            finalPrice += (randomGenerator.nextInt(4) + 1) * price;
+            finalPrice += (randomGenerator.nextInt(2) + 1) * price;
         }
 
         finalPrice *= base.getCurrencyMultiplier();
         return finalPrice;
     }
 
-    //Average out to ~5 transactions per day
-    private void randomDateDecrement() {
-        if(randomGenerator.nextInt(5) < 1) {
-            date = date.minusDays(1);
-        }
-    }
-
-    private Transaction generateTransaction(GenerationBase base) {
+    private Transaction generateTransaction(GenerationBase base, LocalDate dateCursor) {
         double finalPrice = randomisePurchase(base);
-        randomDateDecrement();
 
         return Transaction.builder()
                 .setPending(false)
                 .setDescription(base.getCompany())
                 .setAmount(new Amount(base.getCurrency(), finalPrice))
-                .setDate(date)
+                .setDate(dateCursor)
                 .build();
     }
 
-    public Collection<Transaction> generateTransactions() {
-        Collection<Transaction> transactions = Collections.EMPTY_LIST;
-        for (int i = 0; 0 < numOfTransactions; i++) {
+    private Collection<Transaction> generateOneDayOfTransactions(LocalDate dateCursor) {
+        ArrayList<Transaction> transactions = new ArrayList();
+        //Between one and 4 purchases per day.
+        for (int i = 0; i < randomGenerator.nextInt(3) + 1; i++) {
             GenerationBase base = generationBase.get(randomGenerator.nextInt(generationBase.size()));
-            transactions.add(generateTransaction(base));
+            transactions.add(generateTransaction(base, dateCursor));
+        }
+
+        return transactions;
+    }
+
+    public Collection<Transaction> generateTransactions(Date from, Date to) {
+        LocalDate start = from.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate end = to.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+
+        if (Duration.between(end.atStartOfDay(), date.atStartOfDay()).toDays() > 360) {
+            return Collections.EMPTY_LIST;
+        }
+
+        ArrayList<Transaction> transactions = new ArrayList();
+        for (LocalDate dateCursor = start; dateCursor.isBefore(end); dateCursor = dateCursor.plusDays(1)) {
+            transactions.addAll(generateOneDayOfTransactions(dateCursor));
         }
 
         return transactions;
@@ -111,6 +121,25 @@ public class NextGenerationTransactionGenerator {
 
         public double getCurrencyMultiplier() {
             return currencyMultiplier;
+        }
+
+        public void setCompany(String company) {
+            this.company = company;
+        }
+
+        public void setItemPrices(List<Double> itemPrices) {
+            this.itemPrices = itemPrices;
+        }
+
+        public void setCurrency(String currency) {
+            this.currency = currency;
+        }
+
+        public void setCurrencyMultiplier(double currencyMultiplier) {
+            this.currencyMultiplier = currencyMultiplier;
+        }
+
+        public GenerationBase() {
         }
 
         public GenerationBase(String company, List<Double> itemPrices, String currency, double currencyMultiplier) {

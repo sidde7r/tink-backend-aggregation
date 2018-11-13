@@ -25,8 +25,6 @@ import se.tink.credentials.demo.DemoCredentials;
 
 public class NextGenerationDemoFetcher implements AccountFetcher<TransactionalAccount>, TransactionDatePaginator<TransactionalAccount> {
     private static final String BASE_PATH = "data/demo";
-    private static final Integer NUMBER_OF_TRANSACTIONS_TO_RANDOMIZE = 3;
-
     private static final List<AccountTypes> TRANSACTIONAL_ACCOUNT_TYPES = ImmutableList.<AccountTypes>builder()
             .add(AccountTypes.CHECKING)
             .add(AccountTypes.SAVINGS)
@@ -34,17 +32,12 @@ public class NextGenerationDemoFetcher implements AccountFetcher<TransactionalAc
             .build();
 
     private final String userPath;
-
     private final Set<String> finishedAccountNumbers = Sets.newHashSet();
-
-    private final DemoCredentials demoCredentials;
     private final Credentials credentials;
 
     public NextGenerationDemoFetcher(Credentials credentials) {
         this.credentials = credentials;
-        String userName = credentials.getField(Field.Key.USERNAME);
-        this.demoCredentials = DemoCredentials.byUsername(userName);
-        userPath = BASE_PATH /*+ File.separator + userName*/;
+        userPath = BASE_PATH;
     }
 
     @Override
@@ -78,30 +71,10 @@ public class NextGenerationDemoFetcher implements AccountFetcher<TransactionalAc
 
         try {
             NextGenerationTransactionGenerator transactionGenerator = new NextGenerationTransactionGenerator(BASE_PATH);
-            Collection<Transaction> transactions = transactionGenerator.generateTransactions();
+            Collection<Transaction> transactions = transactionGenerator.generateTransactions(fromDate, toDate);
             return PaginatorResponseImpl.create(transactions);
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
-
-
-        /*
-        try {
-            File transactionsFile = new File(userPath + File.separator + account.getBankIdentifier() + ".txt");
-            finishedAccountNumbers.add(account.getAccountNumber());
-
-            if (demoCredentials != null && demoCredentials
-                    .hasFeature(DemoCredentials.DemoUserFeature.RANDOMIZE_TRANSACTIONS)) {
-                transactions = DemoData.readTransactionsWithRandomization(demoCredentials, transactionsFile,
-                        account.toSystemAccount(), NUMBER_OF_TRANSACTIONS_TO_RANDOMIZE);
-            } else {
-                transactions = DemoData.readTransactions(demoCredentials, transactionsFile, account.toSystemAccount());
-            }
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
-
-        return PaginatorResponseImpl.create(transactions);
-    */
     }
 }
