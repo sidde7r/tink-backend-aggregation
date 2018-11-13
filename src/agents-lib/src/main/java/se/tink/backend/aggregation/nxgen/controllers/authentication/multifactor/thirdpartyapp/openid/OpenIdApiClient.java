@@ -238,6 +238,8 @@ public class OpenIdApiClient {
         String postData = ClientRegistration.create()
                 .withSoftwareStatement(softwareStatement)
                 .withWellknownConfiguration(wellKnownResponse)
+                .withAccountsScope()
+                .withPaymentsScope()
                 .build();
 
         return httpClient.request(registrationEndpoint)
