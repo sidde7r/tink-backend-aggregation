@@ -5,9 +5,11 @@ import com.google.inject.Scopes;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.configuration.models.AggregationDevelopmentConfiguration;
 import se.tink.backend.aggregation.configuration.DevelopmentConfigurationSeeder;
+import se.tink.backend.aggregation.storage.database.models.ClusterConfiguration;
 import se.tink.backend.aggregation.storage.database.repositories.AggregatorConfigurationsRepository;
 import se.tink.backend.aggregation.storage.database.repositories.ClientConfigurationsRepository;
 import se.tink.backend.aggregation.storage.database.repositories.ClusterConfigurationsRepository;
@@ -60,5 +62,14 @@ public class AggregationDevelopmentRepositoryModule extends RepositoryModule {
         clusterHostConfigurations.put(clusterHostConfiguration.getClusterId(), clusterHostConfiguration);
 
         return clusterHostConfigurations;
+    }
+
+    @Provides
+    @Singleton
+    @Named("clusterConfigurations")
+    public Map<String, ClusterConfiguration> provideClusterConfigurations(ClusterConfigurationsRepository repository) {
+        return repository.findAll().stream().collect(
+                Collectors.toMap(ClusterConfiguration::getClusterId, Function.identity())
+        );
     }
 }
