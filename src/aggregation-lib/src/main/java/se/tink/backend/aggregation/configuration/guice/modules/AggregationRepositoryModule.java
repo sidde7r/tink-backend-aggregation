@@ -4,6 +4,7 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import se.tink.backend.aggregation.storage.database.models.ClusterConfiguration;
@@ -37,7 +38,7 @@ public class AggregationRepositoryModule extends RepositoryModule {
     @Named("clusterHostConfigurations")
     public Map<String, ClusterHostConfiguration> provideClusterHostConfigurations(ClusterHostConfigurationRepository repository) {
         return repository.findAll().stream().collect(
-                Collectors.toMap(ClusterHostConfiguration::getClusterId, x -> x)
+                Collectors.toMap(ClusterHostConfiguration::getClusterId, Function.identity())
         );
     }
 
@@ -46,7 +47,7 @@ public class AggregationRepositoryModule extends RepositoryModule {
     @Named("clusterConfigurations")
     public Map<String, ClusterConfiguration> provideClusterConfigurations(ClusterConfigurationsRepository repository) {
         return repository.findAll().stream().collect(
-                Collectors.toMap(ClusterConfiguration::getClusterId, x -> x)
+                Collectors.toMap(ClusterConfiguration::getClusterId, Function.identity())
         );
     }
 }

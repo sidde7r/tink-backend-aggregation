@@ -52,7 +52,7 @@ public class AggregationDevelopmentRepositoryModule extends RepositoryModule {
             ClusterHostConfigurationRepository repository) {
 
         Map<String, ClusterHostConfiguration> clusterHostConfigurations = repository.findAll().stream()
-                .collect(Collectors.toMap(ClusterHostConfiguration::getClusterId, x -> x));
+                .collect(Collectors.toMap(ClusterHostConfiguration::getClusterId, Function.identity()));
 
         if (developmentConfiguration == null || !developmentConfiguration.isValid()) {
             return clusterHostConfigurations;
