@@ -29,26 +29,14 @@ public class AggregationModuleFactory {
 
     private static ImmutableList.Builder<Module> buildForDevelopment(AggregationServiceConfiguration configuration,
             Environment environment) {
-
-        if (configuration.isMultiClientDevelopment()){
-            return baseBuilder(configuration, environment).add(
-                    new AggregationDevelopmentMultiClientRepositoryModule(configuration.getDatabase()));
-        }
-
         return baseBuilder(configuration, environment).add(
-                new AggregationDevelopmentSingleClientRepositoryModule(configuration.getDatabase(),
+                new AggregationDevelopmentRepositoryModule(configuration.getDatabase(),
                         configuration.getDevelopmentConfiguration()));
     }
 
     private static ImmutableList.Builder<Module> buildForProduction(AggregationServiceConfiguration configuration,
             Environment environment) {
-
-        if (configuration.isMultiClientDevelopment()) {
-            return baseBuilder(configuration, environment).add(
-                    new AggregationMultiClientRepositoryModule(configuration.getDatabase()));
-        }
-        
         return baseBuilder(configuration, environment).add(
-                new AggregationSingleClientRepositoryModule(configuration.getDatabase()));
+                new AggregationRepositoryModule(configuration.getDatabase()));
     }
 }
