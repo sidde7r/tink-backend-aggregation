@@ -17,11 +17,13 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.AbstractConfigurationBase;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.Agent;
+import se.tink.backend.aggregation.agents.AgentClassFactory;
 import se.tink.backend.aggregation.agents.AgentFactory;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
+import se.tink.backend.aggregation.capability.CapabilityTester;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
@@ -110,7 +112,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             configuration = aggregationServiceConfiguration.getAgentsServiceConfiguration();
             AgentFactory factory = new AgentFactory(configuration);
 
-            Class<? extends Agent> cls = AgentFactory.getAgentClass(provider);
+            Class<? extends Agent> cls = AgentClassFactory.getAgentClass(provider);
             return factory.create(cls, credentialsRequest, context);
         } catch (Exception e) {
             throw new IllegalStateException(e);
@@ -459,6 +461,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
             Preconditions.checkNotNull(provider, "Provider was not set.");
             Preconditions.checkNotNull(credential, "Credential was not set.");
+            CapabilityTester.checkCapabilities(provider.getClassName());
             credential.setProviderName(provider.getName());
             credential.setType(provider.getCredentialsType());
 
