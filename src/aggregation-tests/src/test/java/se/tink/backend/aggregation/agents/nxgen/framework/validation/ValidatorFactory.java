@@ -13,9 +13,9 @@ public final class ValidatorFactory {
     public static AisValidator getExtensiveValidator() {
         return AisValidator.builder()
                 .ruleAccount(
-                        "Account number is non-null",
+                        "Account number is present",
                         acc -> acc.getAccountNumber() != null,
-                        acc -> String.format("Account %s is null", acc))
+                        acc -> String.format("Account lacks an account number: %s", acc))
                 .ruleAccount(
                         "Balance does not exceed threshold",
                         acc -> acc.getBalance() <= 10000000.0,
