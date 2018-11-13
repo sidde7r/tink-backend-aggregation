@@ -8,21 +8,21 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.configuration.models.AggregationDevelopmentConfiguration;
 import se.tink.backend.aggregation.configuration.DevelopmentConfigurationSeeder;
+import se.tink.backend.aggregation.storage.database.repositories.AggregatorConfigurationsRepository;
+import se.tink.backend.aggregation.storage.database.repositories.ClientConfigurationsRepository;
+import se.tink.backend.aggregation.storage.database.repositories.ClusterConfigurationsRepository;
+import se.tink.backend.aggregation.storage.database.repositories.CryptoConfigurationsRepository;
 import se.tink.backend.common.config.DatabaseConfiguration;
 import se.tink.backend.aggregation.storage.database.repositories.ClusterCryptoConfigurationRepository;
 import se.tink.backend.aggregation.storage.database.repositories.ClusterHostConfigurationRepository;
 import se.tink.backend.core.ClusterHostConfiguration;
 import se.tink.backend.guice.configuration.RepositoryModule;
 
-/*
-    database configuration for running aggregation locally.
-    intended for cluster hosting only 1 client structure
- */
-public class AggregationDevelopmentSingleClientRepositoryModule extends RepositoryModule {
+public class AggregationDevelopmentRepositoryModule extends RepositoryModule {
     private AggregationDevelopmentConfiguration developmentConfiguration;
 
-    AggregationDevelopmentSingleClientRepositoryModule(DatabaseConfiguration databaseConfiguration,
-                                                       AggregationDevelopmentConfiguration developmentConfiguration) {
+    AggregationDevelopmentRepositoryModule(DatabaseConfiguration databaseConfiguration,
+                                           AggregationDevelopmentConfiguration developmentConfiguration) {
         super(databaseConfiguration);
         this.developmentConfiguration = developmentConfiguration;
     }
@@ -37,6 +37,10 @@ public class AggregationDevelopmentSingleClientRepositoryModule extends Reposito
     protected void bindRepositories() {
         bindSpringBean(ClusterHostConfigurationRepository.class);
         bindSpringBean(ClusterCryptoConfigurationRepository.class);
+        bindSpringBean(CryptoConfigurationsRepository.class);
+        bindSpringBean(ClientConfigurationsRepository.class);
+        bindSpringBean(AggregatorConfigurationsRepository.class);
+        bindSpringBean(ClusterConfigurationsRepository.class);
     }
 
     @Provides

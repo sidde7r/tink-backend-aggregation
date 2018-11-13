@@ -3,28 +3,22 @@ package se.tink.backend.aggregation.configuration.guice.modules;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
-import se.tink.backend.aggregation.storage.database.converter.HostConfigurationConverter;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import se.tink.backend.aggregation.storage.database.models.ClusterConfiguration;
 import se.tink.backend.aggregation.storage.database.repositories.AggregatorConfigurationsRepository;
 import se.tink.backend.aggregation.storage.database.repositories.ClientConfigurationsRepository;
 import se.tink.backend.aggregation.storage.database.repositories.ClusterConfigurationsRepository;
+import se.tink.backend.aggregation.storage.database.repositories.ClusterCryptoConfigurationRepository;
 import se.tink.backend.aggregation.storage.database.repositories.CryptoConfigurationsRepository;
 import se.tink.backend.common.config.DatabaseConfiguration;
-import se.tink.backend.aggregation.storage.database.repositories.ClusterCryptoConfigurationRepository;
 import se.tink.backend.aggregation.storage.database.repositories.ClusterHostConfigurationRepository;
 import se.tink.backend.core.ClusterHostConfiguration;
 import se.tink.backend.guice.configuration.RepositoryModule;
 
-import java.util.Map;
-import java.util.stream.Collectors;
-
-/*
-    database configuration for running aggregation in production environment.
-    intended for cluster hosting multiple clients structure
- */
-public class AggregationMultiClientRepositoryModule extends RepositoryModule {
-    public AggregationMultiClientRepositoryModule(DatabaseConfiguration databaseConfiguration) {
+public class AggregationRepositoryModule extends RepositoryModule {
+    public AggregationRepositoryModule(DatabaseConfiguration databaseConfiguration) {
         super(databaseConfiguration);
     }
 
