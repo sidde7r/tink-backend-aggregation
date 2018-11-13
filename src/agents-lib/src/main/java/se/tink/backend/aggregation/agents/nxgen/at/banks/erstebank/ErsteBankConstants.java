@@ -50,7 +50,7 @@ public class ErsteBankConstants {
         public static final String REDIRECT_URI_AUTHENTICATION = "transactionapp://authentication";
         public static final String SPARKASSE_ACCEPT = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
         public static final String FEATURES = "features";
-        public static final String FEATURES_ORDERS = "qr,orders";
+        public static final String FEATURES_ALL = "qr,orders,atinsurances,skmobiletopup,roccrepayment,cardpermanentlock";
         public static final String PAGE = "page";
     }
 
@@ -79,7 +79,9 @@ public class ErsteBankConstants {
     public static class BODY {
         public static final String USERNAME = "j_username=";
         public static final String JAVASCRIPT_ENABLED = "javaScript=jsOK";
-        public static final String RSA_ENCRYPTED = "rsaEncrypted=";
+        public static final String RSA_ENCRYPTED = "rsaEncrypted";
+        public static final String AUTHENTICATION_METHOD = "authenticationMethod";
+        public static final String AUTHENTICATION_METHOD_PASSWORD = "PASSWORD";
     }
 
     public static class LOGTAG {

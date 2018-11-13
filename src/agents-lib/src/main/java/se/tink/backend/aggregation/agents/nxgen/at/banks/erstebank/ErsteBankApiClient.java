@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.authenticator
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.authenticator.entity.TokenEntity;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.transactional.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.transactional.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -80,13 +81,17 @@ public class ErsteBankApiClient {
     }
 
     public HttpResponse sendPassword(String rsa) {
-        String body = ErsteBankConstants.BODY.RSA_ENCRYPTED + rsa;
+
+        Form form = new Form.Builder()
+                .put(ErsteBankConstants.BODY.RSA_ENCRYPTED, rsa)
+                .put(ErsteBankConstants.BODY.AUTHENTICATION_METHOD, ErsteBankConstants.BODY.AUTHENTICATION_METHOD_PASSWORD)
+                .build();
 
         return getRequest(ErsteBankConstants.URLS.LOGIN_BASE, ErsteBankConstants.URLS.OAUTH,
                 ErsteBankConstants.QUERYPARAMS.SPARKASSE_ACCEPT,
                 ErsteBankConstants.QUERYPARAMS.REDIRECT_URI_AUTHENTICATION)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-                .post(HttpResponse.class, body);
+                .post(HttpResponse.class, form.serialize());
     }
 
     private TokenEntity getTokenFromStorage() {
@@ -104,7 +109,7 @@ public class ErsteBankApiClient {
 
         return getRequestWithHeaders(ErsteBankConstants.URLS.GEORGE_GO_BASE,
                 ErsteBankConstants.URLS.ACCOUNT, ErsteBankConstants.HEADERS.ACCEPT, bearer)
-                .queryParam(ErsteBankConstants.QUERYPARAMS.FEATURES, ErsteBankConstants.QUERYPARAMS.FEATURES_ORDERS)
+                .queryParam(ErsteBankConstants.QUERYPARAMS.FEATURES, ErsteBankConstants.QUERYPARAMS.FEATURES_ALL)
                 .get(AccountResponse.class);
     }
 
@@ -120,7 +125,7 @@ public class ErsteBankApiClient {
         return getRequestWithHeaders(ErsteBankConstants.URLS.GEORGE_GO_BASE, resource,
                 ErsteBankConstants.HEADERS.ACCEPT, bearer)
                 .queryParam(ErsteBankConstants.QUERYPARAMS.PAGE, Integer.toString(page))
-                .queryParam(ErsteBankConstants.QUERYPARAMS.FEATURES, ErsteBankConstants.QUERYPARAMS.FEATURES_ORDERS)
+                .queryParam(ErsteBankConstants.QUERYPARAMS.FEATURES, ErsteBankConstants.QUERYPARAMS.FEATURES_ALL)
                 .get(TransactionsResponse.class);
     }
 
