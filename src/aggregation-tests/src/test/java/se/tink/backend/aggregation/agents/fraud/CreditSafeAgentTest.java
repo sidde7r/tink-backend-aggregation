@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.AgentTestContext;
+import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
@@ -38,7 +39,8 @@ public class CreditSafeAgentTest extends AbstractAgentTest<CreditSafeAgent> {
 
     @Before
     public void setUp() throws Exception {
-        configuration = CONFIGURATION_FACTORY.build(CONFIG_FILE);
+        AggregationServiceConfiguration aggregationServiceConfiguration = CONFIGURATION_FACTORY.build(CONFIG_FILE);
+        configuration = aggregationServiceConfiguration.getAgentsServiceConfiguration();;
     }
     
     @Test

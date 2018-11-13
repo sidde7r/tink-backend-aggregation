@@ -8,6 +8,7 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.AbstractConfigurationBase;
+import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.ConsumerMonitoringWrapper;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.AddMonitoredConsumerCreditSafeRequest;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.ChangedConsumerCreditSafeRequest;
@@ -28,7 +29,8 @@ public class ConsumerMonitoringTest extends AbstractConfigurationBase {
 
     @Before
     public void setUp() throws IOException, ConfigurationException {
-        configuration = CONFIGURATION_FACTORY.build(CONFIG_FILE);
+        AggregationServiceConfiguration aggregationServiceConfiguration = CONFIGURATION_FACTORY.build(CONFIG_FILE);
+        configuration = aggregationServiceConfiguration.getAgentsServiceConfiguration();
 
         String user = configuration.getCreditSafe().getUsername();
         String pass = configuration.getCreditSafe().getPassword();
