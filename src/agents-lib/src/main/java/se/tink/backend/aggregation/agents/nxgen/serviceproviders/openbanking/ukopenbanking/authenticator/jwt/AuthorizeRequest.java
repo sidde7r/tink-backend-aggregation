@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import com.auth0.jwt.algorithms.Algorithm;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.authenticator.UkOpenBankingAuthenticatorConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.authenticator.jwt.entities.AuthorizeRequestClaims;
@@ -22,6 +23,18 @@ public class AuthorizeRequest {
         private String intentId;
         private String state;
         private String nonce;
+        private ImmutableList.Builder<String> scopes = ImmutableList.<String>builder()
+                .add(OpenIdConstants.Scopes.OPEN_ID);
+
+        public Builder withAccountsScope() {
+            this.scopes.add(OpenIdConstants.Scopes.ACCOUNTS);
+            return this;
+        }
+
+        public Builder withPaymentsScope() {
+            this.scopes.add(OpenIdConstants.Scopes.PAYMENTS);
+            return this;
+        }
 
         public Builder withSoftwareStatement(SoftwareStatement softwareStatement) {
             this.softwareStatement = softwareStatement;
@@ -78,7 +91,8 @@ public class AuthorizeRequest {
             String issuer = wellknownConfiguration.getIssuer();
             String clientId = clientInfo.getClientId();
             String redirectUri = softwareStatement.getRedirectUri();
-            String scopes = OpenIdConstants.Scopes.getAllSupported().stream().collect(Collectors.joining(" "));
+            String scope = scopes.build().stream().collect(Collectors.joining(" "));
+
             String responseTypes = OpenIdConstants.MANDATORY_RESPONSE_TYPES.stream()
                     .collect(Collectors.joining(" "));
 
@@ -92,7 +106,7 @@ public class AuthorizeRequest {
                     .withClaim(OpenIdConstants.Params.RESPONSE_TYPE, responseTypes)
                     .withClaim(OpenIdConstants.Params.CLIENT_ID, clientId)
                     .withClaim(OpenIdConstants.Params.REDIRECT_URI, redirectUri)
-                    .withClaim(OpenIdConstants.Params.SCOPE, scopes)
+                    .withClaim(OpenIdConstants.Params.SCOPE, scope)
                     .withClaim(OpenIdConstants.Params.STATE, state)
                     .withClaim(OpenIdConstants.Params.NONCE, nonce)
                     .withClaim(UkOpenBankingAuthenticatorConstants.Params.MAX_AGE,

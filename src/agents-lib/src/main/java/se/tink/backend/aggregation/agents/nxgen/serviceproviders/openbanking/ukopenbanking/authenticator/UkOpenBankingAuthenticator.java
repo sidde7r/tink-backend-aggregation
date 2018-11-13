@@ -30,6 +30,7 @@ public class UkOpenBankingAuthenticator implements OpenIdAuthenticator {
 
         return authorizeUrl.queryParam(UkOpenBankingAuthenticatorConstants.Params.REQUEST,
                 AuthorizeRequest.create()
+                        .withAccountsScope()
                         .withClientInfo(providerConfiguration.getClientInfo())
                         .withSoftwareStatement(softwareStatement)
                         .withState(state)
