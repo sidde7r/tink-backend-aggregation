@@ -28,6 +28,9 @@ public abstract class ProviderConfigurationCommand<T extends ProviderServiceConf
 
     @Override
     protected void run(Bootstrap<T> bootstrap, Namespace namespace, T configuration) throws Exception {
+        // With these bindings the command will not run.
+        // It is not able to run today anyway
+        // TODO: fix proper bindings for the controller to be accessible through a command (without the jersey services)
         List<AbstractModule> modules = Lists.newArrayList(
                 new ProviderServiceConfigurationModule(configuration),
                 new ProviderFileModule(),
