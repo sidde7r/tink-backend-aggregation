@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
@@ -24,8 +25,10 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.common.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
+    private static final AggregationLogger log = new AggregationLogger(OpenIdAuthenticationController.class);
 
     // This wait time is for the whole user authentication. Different banks have different cumbersome
     // authentication flows.
@@ -144,8 +147,8 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
 
         // todo: verify idToken{s_hash, c_hash}
         // TODO: Right now many banks don't give us idToken to verify, enable when this standard is mandatory.
-//        String idToken = getCallbackElement(callbackData, OpenIdConstants.CallbackParams.ID_TOKEN)
-//                .orElseThrow(() -> new IllegalStateException("callbackData did not contain id_token."));
+        //        String idToken = getCallbackElement(callbackData, OpenIdConstants.CallbackParams.ID_TOKEN)
+        //                .orElseThrow(() -> new IllegalStateException("callbackData did not contain id_token."));
 
         OAuth2Token accessToken = apiClient.exchangeAccessCode(code);
 
@@ -185,11 +188,14 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
                 OpenIdConstants.CallbackParams.ERROR_DESCRIPTION);
 
         if (!error.isPresent()) {
+            log.info("OpenId callback success.");
             return;
         }
 
         String errorType = error.get();
         if (OpenIdConstants.Errors.ACCESS_DENIED.equalsIgnoreCase(errorType)) {
+            log.info(String.format("OpenId ACCESS_DENIED callback: %s",
+                    SerializationUtils.serializeToString(callbackData)));
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
