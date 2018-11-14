@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.converter;
+package se.tink.backend.aggregation.storage.database.converter;
 
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.cluster.identification.Aggregator;
