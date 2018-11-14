@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Configuration;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -17,37 +18,34 @@ public class CardEntity {
     private FinancialTab financialTab;
     private Message message;
 
+    @JsonIgnore
     public CreditCardAccount toCreditCardAccount(AmericanExpressV62Configuration config) {
 
         // TODO confirm there is no credit for this account or find credit for this account
         // currently the credit is set to 0
-        CreditCardAccount.Builder<?, ?> builder = CreditCardAccount.builder(
-                cardNumberDisplay,
-                config.toAmount(getBalanceValue()),
-                config.toAmount(ZERO))
-                .setAccountNumber(cardNumberDisplay)
-                .setName(
-                        cardProductName
-                                + " - "
-                                + cardNumberDisplay.substring(cardNumberDisplay.length() - 5))
-                // card number display in format "xxxxxx - {last 5 digits in number}"
-                .setBankIdentifier(String.valueOf(sortedIndex));
+        CreditCardAccount.Builder<?, ?> builder =
+                CreditCardAccount.builder(
+                                cardNumberDisplay,
+                                config.toAmount(getBalanceValue()),
+                                config.toAmount(ZERO))
+                        .setAccountNumber(cardNumberDisplay)
+                        .setName(
+                                cardProductName
+                                        + " - "
+                                        + cardNumberDisplay.substring(
+                                                cardNumberDisplay.length() - 5))
+                        // card number display in format "xxxxxx - {last 5 digits in number}"
+                        .setBankIdentifier(String.valueOf(sortedIndex));
         return builder.build();
     }
 
+    @JsonIgnore
     public double getBalanceValue() {
         return Optional.ofNullable(financialTab)
                 .map(ft -> ft.getTotalBalance())
                 .map(b -> b.getValue())
                 .filter(value -> !value.equalsIgnoreCase(NOT_APPLICABLE))
-                .map(value -> -StringUtils.parseAmount(value.replaceAll(NUMBER_REGEX, "")))
-                .orElse(ZERO);
-    }
-
-    public double parseValueFromStringToDouble(String value) {
-        return Optional.ofNullable(value)
-                .filter(v -> !v.equalsIgnoreCase(NOT_APPLICABLE))
-                .map(v -> -StringUtils.parseAmount(v.replaceAll(NUMBER_REGEX, "")))
+                .map(value -> StringUtils.parseAmount(value.replaceAll(NUMBER_REGEX, "")))
                 .orElse(ZERO);
     }
 

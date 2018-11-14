@@ -28,7 +28,7 @@ public class TransactionEntity {
 
     public Transaction toTransaction(AmericanExpressV62Configuration config, boolean isPending) {
         return Transaction.builder()
-                .setAmount(config.toAmount(-amount.getRawValue()))
+                .setAmount(config.toAmount(amount.getRawValue()))
                 .setDate(getDate())
                 .setPending(isPending)
                 .setDescription(description.get(0))

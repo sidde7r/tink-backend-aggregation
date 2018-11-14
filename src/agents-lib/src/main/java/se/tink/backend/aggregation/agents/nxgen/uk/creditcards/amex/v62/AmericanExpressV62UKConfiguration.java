@@ -20,7 +20,12 @@ public class AmericanExpressV62UKConfiguration implements AmericanExpressV62Conf
 
     @Override
     public Amount toAmount(Double amount) {
-        return new Amount(AmericanExpressV62UKConstants.GBP, amount);
+        // When the amount is 0.0 and we try to switch sign we end up with -0.0 what we would like to avoid
+        if (amount == 0.0d) {
+            return Amount.inSEK(amount);
+        }
+        // We are switching sign as Amex app shows values inversely to our standard
+        return Amount.inSEK(amount * -1d);
     }
 
     @Override
