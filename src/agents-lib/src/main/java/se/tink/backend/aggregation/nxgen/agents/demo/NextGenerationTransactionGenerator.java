@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -17,19 +18,22 @@ import java.util.List;
 import java.util.Random;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.core.Amount;
-import se.tink.libraries.date.DateUtils;
 
 public class NextGenerationTransactionGenerator {
     private static final ObjectMapper mapper = new ObjectMapper();
     private final List<GenerationBase> generationBase;
     private final Random randomGenerator;
-    private static String generationBaseFile = "generationbase.json";
+    private static String generationBaseFile = NextGenDemoConstants.GENERATION_BASE_FILE;
     private LocalDate date;
+    private final String currency;
+    private final double currencyConvertionFactor;
 
-    public NextGenerationTransactionGenerator(String basePath) throws IOException {
-        generationBase = loadGenerationBase(basePath + "/" + generationBaseFile);
+    public NextGenerationTransactionGenerator(String basePath, String currency) throws IOException {
+        generationBase = loadGenerationBase(basePath + File.separator + generationBaseFile);
         this.randomGenerator = new Random();
         setTodaysDate();
+        this.currency = currency;
+        this.currencyConvertionFactor = NextGenDemoConstants.getSekToCurrencyConverter(currency);
     }
 
     private void setTodaysDate() {
@@ -57,17 +61,16 @@ public class NextGenerationTransactionGenerator {
             finalPrice += (randomGenerator.nextInt(2) + 1) * price;
         }
 
-        finalPrice *= base.getCurrencyMultiplier();
-        return finalPrice;
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+        return Double.parseDouble(decimalFormat.format(finalPrice / currencyConvertionFactor));
     }
 
     private Transaction generateTransaction(GenerationBase base, LocalDate dateCursor) {
         double finalPrice = randomisePurchase(base);
-
         return Transaction.builder()
                 .setPending(false)
                 .setDescription(base.getCompany())
-                .setAmount(new Amount(base.getCurrency(), finalPrice))
+                .setAmount(new Amount(currency, finalPrice))
                 .setDate(dateCursor)
                 .build();
     }
@@ -87,7 +90,6 @@ public class NextGenerationTransactionGenerator {
         LocalDate start = from.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate end = to.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-
         if (Duration.between(end.atStartOfDay(), date.atStartOfDay()).toDays() > 360) {
             return Collections.EMPTY_LIST;
         }
@@ -104,8 +106,6 @@ public class NextGenerationTransactionGenerator {
     private static class GenerationBase {
         private String company;
         private List<Double> itemPrices;
-        private String currency;
-        private double currencyMultiplier;
 
         public String getCompany() {
             return company;
@@ -113,14 +113,6 @@ public class NextGenerationTransactionGenerator {
 
         public List<Double> getItemPrices() {
             return itemPrices;
-        }
-
-        public String getCurrency() {
-            return currency;
-        }
-
-        public double getCurrencyMultiplier() {
-            return currencyMultiplier;
         }
 
         public void setCompany(String company) {
@@ -131,22 +123,8 @@ public class NextGenerationTransactionGenerator {
             this.itemPrices = itemPrices;
         }
 
-        public void setCurrency(String currency) {
-            this.currency = currency;
-        }
-
-        public void setCurrencyMultiplier(double currencyMultiplier) {
-            this.currencyMultiplier = currencyMultiplier;
-        }
-
         public GenerationBase() {
         }
 
-        public GenerationBase(String company, List<Double> itemPrices, String currency, double currencyMultiplier) {
-            this.company = company;
-            this.itemPrices = itemPrices;
-            this.currency = currency;
-            this.currencyMultiplier = currencyMultiplier;
-        }
     }
 }

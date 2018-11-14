@@ -24,36 +24,32 @@ import se.tink.backend.core.Amount;
 import se.tink.credentials.demo.DemoCredentials;
 
 public class NextGenerationDemoFetcher implements AccountFetcher<TransactionalAccount>, TransactionDatePaginator<TransactionalAccount> {
-    private static final String BASE_PATH = "data/demo";
-    private static final List<AccountTypes> TRANSACTIONAL_ACCOUNT_TYPES = ImmutableList.<AccountTypes>builder()
-            .add(AccountTypes.CHECKING)
-            .add(AccountTypes.SAVINGS)
-            .add(AccountTypes.SAVINGS)
-            .build();
-
-    private final String userPath;
+    private static final String BASE_PATH = NextGenDemoConstants.BASE_PATH;
+    private static final List<AccountTypes> TRANSACTIONAL_ACCOUNT_TYPES = ImmutableList.of(
+            AccountTypes.CHECKING,
+            AccountTypes.SAVINGS,
+            AccountTypes.SAVINGS);
     private final Set<String> finishedAccountNumbers = Sets.newHashSet();
     private final Credentials credentials;
 
     public NextGenerationDemoFetcher(Credentials credentials) {
         this.credentials = credentials;
-        userPath = BASE_PATH;
     }
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         try {
-            File accountsFile = new File(userPath + File.separator + "accounts.txt");
+            File accountsFile = new File(BASE_PATH + File.separator + NextGenDemoConstants.ACCOUNT_FILE);
 
             return DemoDataUtils.readAggregationAccounts(accountsFile, credentials).stream()
                     .filter(a -> TRANSACTIONAL_ACCOUNT_TYPES.contains(a.getType()))
                     .map(a -> {
                         TransactionalAccount.Builder builder = TransactionalAccount.builder(a.getType(),
-                                a.getBankId(), Amount.inSEK(a.getBalance()))
+                                a.getBankId(), new Amount(DemoDataUtils.getCurrencyForDemoAccount(accountsFile,
+                                        a.getAccountNumber()) , a.getBalance()))
                                 .setAccountNumber(a.getAccountNumber())
                                 .setName(a.getName())
                                 .setBankIdentifier(a.getBankId());
-
                         a.getIdentifiers().forEach(builder::addIdentifier);
 
                         return builder.build();
@@ -69,12 +65,24 @@ public class NextGenerationDemoFetcher implements AccountFetcher<TransactionalAc
             return PaginatorResponseImpl.createEmpty();
         }
 
-        try {
-            NextGenerationTransactionGenerator transactionGenerator = new NextGenerationTransactionGenerator(BASE_PATH);
-            Collection<Transaction> transactions = transactionGenerator.generateTransactions(fromDate, toDate);
-            return PaginatorResponseImpl.create(transactions);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
+        if (account.getType() == AccountTypes.CREDIT_CARD || account.getType() == AccountTypes.CHECKING) {
+            try {
+                account.getBalance().getCurrency();
+                NextGenerationTransactionGenerator transactionGenerator =
+                        new NextGenerationTransactionGenerator(BASE_PATH, account.getBalance().getCurrency());
+                Collection<Transaction> transactions = transactionGenerator.generateTransactions(fromDate, toDate);
+                return PaginatorResponseImpl.create(transactions);
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
+            }
         }
+
+        if (account.getType() == AccountTypes.SAVINGS) {
+            //Add 3 years of savings, 36 months
+            Double savedAmount = account.getBalance().getValue();
+            savedAmount = savedAmount / 36;
+
+        }
+        return PaginatorResponseImpl.createEmpty();
     }
 }
