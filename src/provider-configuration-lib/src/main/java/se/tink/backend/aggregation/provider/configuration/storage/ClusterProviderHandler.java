@@ -16,6 +16,7 @@ public class ClusterProviderHandler {
     private final Map<String, ProviderConfigurationByCluster> providerConfigurationByClusterMap;
 
     // Iterate over the clusters and create an object that holds the "final" provider configuration.
+    // TODO: instead of injecting in-memory objects, change to a object that holds nothing in memory, but makes the data available
     @Inject
     ClusterProviderHandler(
             @Named("providerConfiguration") Map<String, ProviderConfiguration> providerConfigurationByName,
