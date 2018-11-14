@@ -225,8 +225,7 @@ public class AgentWorkerOperationFactory {
 
         log.debug("Creating refresh operation chain for credential");
 
-        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo
-        );
+        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 serviceContext.getCoordinationClient(),
@@ -264,8 +263,7 @@ public class AgentWorkerOperationFactory {
     }
 
     public AgentWorkerOperation createExecuteTransferOperation(ClusterInfo clusterInfo, TransferRequest request) {
-        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo
-        );
+        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 serviceContext.getCoordinationClient(),
@@ -289,8 +287,7 @@ public class AgentWorkerOperationFactory {
 
     public AgentWorkerOperation createExecuteWhitelistedTransferOperation(ClusterInfo clusterInfo,
             WhitelistedTransferRequest request) {
-        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo
-        );
+        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 serviceContext.getCoordinationClient(),
@@ -333,8 +330,7 @@ public class AgentWorkerOperationFactory {
     }
 
     public AgentWorkerOperation createCreateCredentialsOperation(ClusterInfo clusterInfo, CredentialsRequest request) {
-        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo
-        );
+        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 serviceContext.getCoordinationClient(),
@@ -361,8 +357,7 @@ public class AgentWorkerOperationFactory {
     }
 
     public AgentWorkerOperation createUpdateOperation(ClusterInfo clusterInfo, CredentialsRequest request) {
-        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo
-        );
+        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 serviceContext.getCoordinationClient(),
@@ -389,8 +384,7 @@ public class AgentWorkerOperationFactory {
     }
 
     public AgentWorkerOperation createKeepAliveOperation(ClusterInfo clusterInfo, KeepAliveRequest request) {
-        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo
-        );
+        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 serviceContext.getCoordinationClient(),
@@ -421,8 +415,7 @@ public class AgentWorkerOperationFactory {
     public AgentWorkerOperation createReEncryptCredentialsOperation(ClusterInfo clusterInfo,
             ReEncryptCredentialsRequest request) {
 
-        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo
-        );
+        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 serviceContext.getCoordinationClient(),
@@ -478,8 +471,7 @@ public class AgentWorkerOperationFactory {
 
         log.debug("Creating whitelist refresh operation chain for credential");
 
-        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo
-        );
+        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 serviceContext.getCoordinationClient(),
@@ -532,8 +524,7 @@ public class AgentWorkerOperationFactory {
             request.setItemsToRefresh(RefreshableItem.REFRESHABLE_ITEMS_ALL);
         }
 
-        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo
-        );
+        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 serviceContext.getCoordinationClient(),
