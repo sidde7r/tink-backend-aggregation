@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2018-10-04 06:49+0000\n"
-"PO-Revision-Date: 2018-10-04 06:49+0000\n"
+"POT-Creation-Date: 2018-11-14 08:06+0000\n"
+"PO-Revision-Date: 2018-11-14 08:06+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: sv\n"
@@ -585,16 +585,34 @@ msgstr "Mobilt BankID är upptaget, vänta någon minut och testa igen."
 msgid "BankID authentication failed. Please verify your Mobil BankID is OK."
 msgstr "BankID autentisering misslyckades. Verifiera att din BankID är OK."
 
-#, java-format
+msgid "The bank returned an empty list of accounts. Is this correct?"
+msgstr "Banken returnerade en tom lista med konton. Är detta korrekt?"
+
 msgid ""
-"Use the same username and password as you would in the bank's mobile app."
-msgstr "Använd samma användarnamn och lösenord som i bankens mobilapp."
+"Please be aware of that checking this box will delete the history of your "
+"accounts"
+msgstr ""
+"Observera att om du kryssar för den här rutan kommer historiken för dina "
+"konton att raderas"
+
+msgid "PIN"
+msgstr "PIN-kod"
+
+msgid "Password"
+msgstr "Lösenord"
 
 msgid "Username"
 msgstr "Användarnamn"
 
-msgid "Password"
-msgstr "Lösenord"
+msgid "Phone number"
+msgstr "Telefonnummer"
+
+msgid ""
+"Use the same username and password as you would in the bank's mobile app."
+msgstr "Använd samma användarnamn och lösenord som i bankens mobilapp."
+
+msgid "Mobile BankID"
+msgstr "Mobilt BankID"
 
 msgid ""
 "Use the same username and password as you would in the card issuer's mobile "
@@ -606,9 +624,6 @@ msgid ""
 msgstr ""
 "För att ansluta din mäklare måste du identifiera dig med hjälp av Mobilt "
 "BankID."
-
-msgid "Mobile BankID"
-msgstr "Mobilt BankID"
 
 msgid "YYYYMMDDNNNN"
 msgstr "ÅÅÅÅMMDDNNNN"
@@ -637,9 +652,6 @@ msgid ""
 msgstr ""
 "Du använder samma fyrsiffriga PIN som när du loggar in på "
 "tjänsteleverantörens webbplats."
-
-msgid "PIN"
-msgstr "PIN-kod"
 
 msgid "Please enter 4 digits"
 msgstr "Ange 4 siffror"
