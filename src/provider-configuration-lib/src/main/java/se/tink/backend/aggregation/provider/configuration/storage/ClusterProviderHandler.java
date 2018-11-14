@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.provider.configuration.storage.models.Provide
 
 public class ClusterProviderHandler {
 
-    // clusterId, all providerConfiguration for that clusterId
     private final Map<String, ProviderConfigurationByCluster> providerConfigurationByClusterMap;
 
     // Iterate over the clusters and create an object that holds the "final" provider configuration.
