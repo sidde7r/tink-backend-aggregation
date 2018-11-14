@@ -23,7 +23,22 @@ public interface Action {
      */
     void onFail(AisData aisData, String ruleIdentifier, String message);
 
+    /**
+     * Executes an action when an account satisfies a rule.
+     *
+     * @param account The piece of AIS data which satisfied a rule
+     * @param ruleIdentifier A human-readable identifier for the rule that the account satisfied
+     */
     void onPass(Account account, String ruleIdentifier);
 
+    /**
+     * Executes an action when an account does not satisfy a rule.
+     *
+     * @param account The account which did not satisfy a rule
+     * @param ruleIdentifier A human-readable identifier for the rule that the account did not
+     *     satisfy
+     * @param message A human-readable message explaining why the rule failed in the context of this
+     *     account
+     */
     void onFail(Account account, String ruleIdentifier, String message);
 }
