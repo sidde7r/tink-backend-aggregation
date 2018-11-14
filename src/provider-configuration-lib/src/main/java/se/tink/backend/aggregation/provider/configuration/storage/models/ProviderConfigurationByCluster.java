@@ -1,13 +1,19 @@
 package se.tink.backend.aggregation.provider.configuration.storage.models;
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+// Holds the final Provider Configuration data for the specific clusterId.
+// Upon instantiation the object determines which configuration to choose from
+// the enabled/global/override data and stores them in memory
 public class ProviderConfigurationByCluster {
 
     private Logger logger = LoggerFactory.getLogger(ProviderConfigurationByCluster.class);
@@ -26,7 +32,7 @@ public class ProviderConfigurationByCluster {
             Map<String, ProviderConfiguration> providerConfigurationOverrides,
             Map<String, ProviderConfiguration> allProviderConfiguration) {
         this.providerConfigurations = Maps.newHashMap();
-        this.enabledMarkets = new HashSet<String>();
+        this.enabledMarkets = Sets.newHashSet();
         this.clusterId = clusterId;
         enabledProviders.forEach(
                 providerName -> {
@@ -46,12 +52,13 @@ public class ProviderConfigurationByCluster {
         );
     }
 
-    public Map<String, ProviderConfiguration> getProviderConfigurations() {
-        return this.providerConfigurations;
-    }
-
     public boolean marketEnabled(String market) {
         return this.enabledMarkets.contains(market);
+    }
+
+    // return a new map, so the original remains unaltered, in case of any alterations.
+    public Map<String, ProviderConfiguration> getProviderConfigurations() {
+        return Maps.newHashMap(this.providerConfigurations);
     }
 
     public ProviderConfiguration getProviderConfiguration(String providerName) {
