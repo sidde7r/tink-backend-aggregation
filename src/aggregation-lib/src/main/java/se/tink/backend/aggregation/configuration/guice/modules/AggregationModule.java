@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.api.CreditSafeService;
 import se.tink.backend.aggregation.cluster.jersey.JerseyClientApiKeyProvider;
 import se.tink.backend.aggregation.cluster.jersey.JerseyClusterInfoProvider;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
+import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperProvider;
 import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.storage.database.providers.ClusterInfoProvider;
 import se.tink.backend.aggregation.log.AggregationLoggerRequestFilter;
@@ -47,11 +48,8 @@ public class AggregationModule extends AbstractModule {
             bind(AgentDebugStorageHandler.class).to(AgentDebugLocalStorage.class).in(Scopes.SINGLETON);
         }
 
-        if (configuration.isMultiClientDevelopment()) {
-
-        }
-
         bind(CryptoConfigurationDao.class).in(Scopes.SINGLETON);
+        bind(ControllerWrapperProvider.class).in(Scopes.SINGLETON);
 
         // TODO Remove these lines after getting rid of dependencies on ServiceContext
         bind(ServiceContext.class).in(Scopes.SINGLETON);
