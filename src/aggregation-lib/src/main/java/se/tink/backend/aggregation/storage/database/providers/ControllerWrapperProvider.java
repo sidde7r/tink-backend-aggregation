@@ -20,7 +20,7 @@ public class ControllerWrapperProvider {
         this configuration should not change during the service lifecycle
      */
     @Inject
-    public ControllerWrapperProvider(
+    private ControllerWrapperProvider(
             @Named("clusterConfigurations") Map<String, ClusterConfiguration> clusterConfigurations,
             AggregationControllerAggregationClient aggregationControllerAggregationClient) {
         this.clusterConfigurations = clusterConfigurations;
