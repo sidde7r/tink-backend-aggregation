@@ -16,7 +16,7 @@ public interface Action {
      * Executes an action when a piece of AIS data does not satisfy a rule.
      *
      * @param aisData The piece of AIS data which did not satisfy a rule
-     * @param ruleIdentifier An human-readable identifier for the rule that the AIS data did not
+     * @param ruleIdentifier A human-readable identifier for the rule that the AIS data did not
      *     satisfy
      * @param message A human-readable message explaining why the rule failed in the context of this
      *     AIS data
