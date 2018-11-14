@@ -52,7 +52,7 @@ public class AccountEntity implements IdentifiableAccount {
     public static TransactionalAccount toTransactionalAccount(AccountEntity account, AccountBalanceEntity balance) {
 
         return TransactionalAccount
-                .builder(AccountTypes.CHECKING,
+                .builder(account.getAccountType(),
                         account.getUniqueIdentifier(),
                         balance.getBalance())
                 .setAccountNumber(account.getUniqueIdentifier())

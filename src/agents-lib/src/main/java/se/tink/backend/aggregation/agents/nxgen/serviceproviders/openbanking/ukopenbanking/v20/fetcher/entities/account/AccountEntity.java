@@ -2,12 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.google.common.base.Strings;
 import java.util.Map;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.IdentifiableAccount;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v20.fetcher.entities.deserializer.AccountIdentifierDeserializer;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Constants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v20.fetcher.entities.deserializer.AccountIdentifierDeserializer;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
@@ -67,7 +65,7 @@ public class AccountEntity implements IdentifiableAccount {
     public static TransactionalAccount toTransactionalAccount(AccountEntity account, AccountBalanceEntity balance) {
 
         return TransactionalAccount
-                .builder(AccountTypes.CHECKING,
+                .builder(account.getAccountType(),
                         account.getUniqueIdentifier(),
                         balance.getBalance())
                 .setAccountNumber(account.getUniqueIdentifier())
