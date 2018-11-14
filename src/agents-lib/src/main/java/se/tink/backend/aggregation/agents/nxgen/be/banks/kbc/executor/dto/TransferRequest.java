@@ -8,7 +8,9 @@ import java.util.Date;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeEncValueTuple;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeValuePair;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.AgreementDto;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.core.Amount;
 import se.tink.backend.core.enums.MessageType;
@@ -22,27 +24,29 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 public class TransferRequest {
     private static final ThreadSafeDateFormat FORMATTER_DUE_DATE = new ThreadSafeDateFormat("ddMMyyyy");
 
-    private TypeValuePair principalAccountNo;
-    private TypeValuePair principalName;
+    private TypeEncValueTuple principalAccountNo;
+    private TypeEncValueTuple principalName;
     private TypeValuePair amount;
     private TypeValuePair executionDate;
     private TypeValuePair referenceStructured;
     private TypeValuePair beneficiaryAccountNo;
-    private TypeValuePair currency;
-    private TypeValuePair principalCurrencyCode;
+    private TypeEncValueTuple currency;
+    private TypeEncValueTuple principalCurrencyCode;
     private TypeValuePair transferTypeCode;
     private TypeValuePair scashVersionNumber;
     private TypeValuePair functionName;
     private TypeValuePair beneficiaryName;
     private TypeValuePair referenceFreeText;
 
-    public TransferRequest(TypeValuePair principalAccountNo,
-            TypeValuePair principalName, TypeValuePair amount,
+    public TransferRequest(
+            TypeEncValueTuple principalAccountNo,
+            TypeEncValueTuple principalName,
+            TypeValuePair amount,
             TypeValuePair executionDate,
             TypeValuePair referenceStructured,
             TypeValuePair beneficiaryAccountNo,
-            TypeValuePair currency,
-            TypeValuePair principalCurrencyCode,
+            TypeEncValueTuple currency,
+            TypeEncValueTuple principalCurrencyCode,
             TypeValuePair transferTypeCode,
             TypeValuePair scashVersionNumber,
             TypeValuePair functionName,
@@ -133,8 +137,7 @@ public class TransferRequest {
         return beneficiaryName.get();
     }
 
-    public static TransferRequest create(Transfer transfer, boolean isTransferToOwnAccount) {
-        String principalAccountNo = ((SepaEurIdentifier)transfer.getSource()).getIban();
+    public static TransferRequest create(Transfer transfer, AgreementDto sourceAccount, boolean isTransferToOwnAccount) {
         String beneficiaryAccountNo = ((SepaEurIdentifier)transfer.getDestination()).getIban();
 
         MessageType messageType = transfer.getMessageType();
@@ -145,19 +148,17 @@ public class TransferRequest {
                 && isValidReferenceFreeText(destinationMessage)) ? destinationMessage : "";
 
         validateAmount(transfer.getAmount());
-        String principalName = getValidatedPrincipalName(transfer);
         String beneficiaryName = getValidatedBeneficiaryName(transfer);
         Date dueDate = getValidatedDueDate(transfer);
-
         return TransferRequest.builder()
-                .setPrincipalAccountNo(principalAccountNo)
-                .setPrincipalName(principalName)
+                .setPrincipalAccountNo(sourceAccount.getAgreementNo())
+                .setPrincipalName(sourceAccount.getAgreementName())
                 .setAmount(formatAmount(transfer.getAmount()))
                 .setExecutionDate(formatDueDate(dueDate))
                 .setReferenceStructured(referenceStructured)
                 .setBeneficiaryAccountNo(beneficiaryAccountNo)
-                .setCurrency(transfer.getAmount().getCurrency())
-                .setPrincipalCurrencyCode(transfer.getAmount().getCurrency())
+                .setCurrency(sourceAccount.getCurrency())
+                .setPrincipalCurrencyCode(sourceAccount.getCurrency())
                 .setTransferTypeCode(KbcConstants.Transfers.TRANSFER_TYPE_CODE)
                 .setScashVersionNumber(KbcConstants.Transfers.SCASH_VERSION_NUMBER)
                 .setFunctionName(isTransferToOwnAccount ? KbcConstants.Transfers.TRANSFER_TO_OWN_ACCOUNT :
@@ -179,27 +180,27 @@ public class TransferRequest {
     }
 
     public static class Builder {
-        private TypeValuePair principalAccountNo;
-        private TypeValuePair principalName;
+        private TypeEncValueTuple principalAccountNo;
+        private TypeEncValueTuple principalName;
         private TypeValuePair amount;
         private TypeValuePair executionDate;
         private TypeValuePair referenceStructured;
         private TypeValuePair beneficiaryAccountNo;
-        private TypeValuePair currency;
-        private TypeValuePair principalCurrencyCode;
+        private TypeEncValueTuple currency;
+        private TypeEncValueTuple principalCurrencyCode;
         private TypeValuePair transferTypeCode;
         private TypeValuePair scashVersionNumber;
         private TypeValuePair functionName;
         private TypeValuePair beneficiaryName;
         private TypeValuePair referenceFreeText;
 
-        public Builder setPrincipalAccountNo(String principalAccountNo) {
-            this.principalAccountNo = TypeValuePair.create(KbcConstants.PairTypeTypes.IBAN, principalAccountNo);
+        public Builder setPrincipalAccountNo(TypeEncValueTuple principalAccountNo) {
+            this.principalAccountNo = principalAccountNo;
             return this;
         }
 
-        public Builder setPrincipalName(String principalName) {
-            this.principalName = TypeValuePair.createText(principalName);
+        public Builder setPrincipalName(TypeEncValueTuple principalName) {
+            this.principalName = principalName;
             return this;
         }
 
@@ -224,13 +225,13 @@ public class TransferRequest {
             return this;
         }
 
-        public Builder setCurrency(String currency) {
-            this.currency = TypeValuePair.createText(currency);
+        public Builder setCurrency(TypeEncValueTuple currency) {
+            this.currency = currency;
             return this;
         }
 
-        public Builder setPrincipalCurrencyCode(String principalCurrencyCode) {
-            this.principalCurrencyCode = TypeValuePair.createText(principalCurrencyCode);
+        public Builder setPrincipalCurrencyCode(TypeEncValueTuple principalCurrencyCode) {
+            this.principalCurrencyCode = principalCurrencyCode;
             return this;
         }
 

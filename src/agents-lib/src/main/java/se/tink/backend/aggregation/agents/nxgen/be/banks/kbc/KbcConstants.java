@@ -39,6 +39,8 @@ public class KbcConstants {
         TRANSFER_VALIDATE(createUrlWithHost("/MOB/A031/transfer/validate/1")),
         TRANSFER_TO_OTHER(createUrlWithHost("/MOB/A031/transfer/other/1")),
         TRANSFER_TO_OWN(createUrlWithHost("/MOB/A031/transfer/own/1")),
+        TRANSFER_TO_OWN_INSTANT(createUrlWithHost("/MOB/A031/instant-transfer/own/1")),
+        TRANSFER_TO_OTHER_INSTANT(createUrlWithHost("/MOB/A031/instant-transfer/other/1")),
         MOB_A031_SIGNING_TYPES(createUrlWithHost("/MOB/A031/signing/types/1")),
         MOB_A031_SIGNING_CHALLENGE_SOTP(createUrlWithHost("/MOB/A031/signing/challenge/sotp/1")),
         MOB_A031_SIGNING_VALIDATION_SOTP(createUrlWithHost("/MOB/A031/signing/validation/sotp/1")),
