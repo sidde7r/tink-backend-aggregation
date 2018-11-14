@@ -131,7 +131,7 @@ icon:fi-alandsbanken-codecard	https://cdn.tink.se/provider-images/fi/fi-alandsba
 icon:fi-americanexpress-password	https://cdn.tink.se/provider-images/fi/fi-americanexpress.png
 icon:fi-danskebank-codecard	https://cdn.tink.se/provider-images/fi/fi-danskebank.png
 icon:fi-handelsbanken-codecard	https://cdn.tink.se/provider-images/fi/fi-handelsbanken.png
-icon:fi-nordea-lightlogin	https://cdn.tink.se/provider-images/fi/fi-nordea.png
+icon:fi-nordea-thirdpartyapp	https://cdn.tink.se/provider-images/fi/fi-nordea.png
 icon:fi-omasp-codecard	https://cdn.tink.se/provider-images/fi/fi-oma-saastopankki.png
 icon:fi-op-codecard	https://cdn.tink.se/provider-images/fi/fi-op.png
 icon:fi-poppankki-codecard	https://cdn.tink.se/provider-images/fi/fi-pop-pankki.png
