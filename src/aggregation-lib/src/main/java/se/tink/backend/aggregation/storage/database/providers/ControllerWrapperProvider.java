@@ -13,7 +13,7 @@ import java.util.Map;
 public class ControllerWrapperProvider {
 
     private final Map<String, ClusterConfiguration> clusterConfigurations;
-    private AggregationControllerAggregationClient aggregationControllerAggregationClient;
+    private final AggregationControllerAggregationClient aggregationControllerAggregationClient;
 
     /*
         we want to use providers to ensure we only load it once when we start the service
