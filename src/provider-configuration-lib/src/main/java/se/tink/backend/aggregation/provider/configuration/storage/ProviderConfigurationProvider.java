@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
     private final Map<String, ProviderConfiguration> providerConfigurationByName;
     private final ProviderStatusConfigurationRepository providerStatusConfigurationRepository;
-    private ClusterProviderHandler clusterProviderHandler;
+    private final ClusterProviderHandler clusterProviderHandler;
 
     private final static Logger log = LoggerFactory.getLogger(ProviderConfigurationProvider.class);
 

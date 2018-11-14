@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.provider.configuration.core.ProviderConfigura
 import se.tink.backend.aggregation.provider.configuration.http.resources.MonitoringServiceResource;
 import se.tink.backend.aggregation.provider.configuration.http.resources.ProviderServiceResource;
 import se.tink.backend.aggregation.provider.configuration.logging.ProviderLoggerRequestFilter;
+import se.tink.backend.aggregation.provider.configuration.storage.ClusterProviderHandler;
 import se.tink.backend.aggregation.provider.configuration.storage.ProviderConfigurationProvider;
 import se.tink.libraries.http.client.RequestTracingFilter;
 import se.tink.libraries.jersey.guice.JerseyResourceRegistrar;
@@ -31,6 +32,7 @@ public class ProviderServiceModule extends AbstractModule {
         bind(MonitoringService.class).to(MonitoringServiceResource.class).in(Scopes.SINGLETON);
         bind(ClusterIdProvider.class).in(Scopes.SINGLETON);
         bind(ProviderServiceController.class).in(Scopes.SINGLETON);
+        bind(ClusterProviderHandler.class).in(Scopes.SINGLETON);
         bind(ProviderConfigurationDAO.class).to(ProviderConfigurationProvider.class).in(Scopes.SINGLETON);
 
         JerseyResourceRegistrar.build()
