@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 
 public class LockAgentWorkerCommand extends AgentWorkerCommand {
     private static final AggregationLogger log = new AggregationLogger(LockAgentWorkerCommand.class);
-    private static final String LOCK_FORMAT = "/locks/aggregation/LockAgentWorkerCommand/%s/%s"; // % (userId, className)
+    private static final String LOCK_FORMAT = "/locks/aggregation/LockAgentWorkerCommand/%s/%s"; // % (userId, credentialsId)
 
     private InterProcessLock lock;
     private AgentWorkerCommandContext context;
@@ -25,12 +25,9 @@ public class LockAgentWorkerCommand extends AgentWorkerCommand {
     public AgentWorkerCommandResult execute() throws Exception {
         CredentialsRequest request = context.getRequest();
 
-        // Acquire a lock on userId & provider className.
-        // This lock will cover a whole "provider family", e.g. Swedbank/Savingsbank or SEBKortAgent.
-        // Note: This is a requisite for the Swedbank/Savingbanks.
         lock = new InterProcessSemaphoreMutex(
                 context.getCoordinationClient(),
-                String.format(LOCK_FORMAT, request.getUser().getId(), request.getProvider().getClassName())
+                String.format(LOCK_FORMAT, request.getUser().getId(), request.getCredentials().getId())
         );
 
         hasAcquiredLock = lock.acquire(4, TimeUnit.MINUTES);
