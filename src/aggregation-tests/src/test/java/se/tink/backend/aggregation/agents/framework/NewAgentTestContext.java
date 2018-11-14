@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -394,6 +395,20 @@ public class NewAgentTestContext extends AgentContext {
         });
     }
 
+    private void printAccountIdentifiers(Account account) {
+        List<Map<String, String>> identifierList = new LinkedList<>();
+        account.getIdentifiers().forEach(
+                identifier -> {
+                    Map<String, String> row = new LinkedHashMap<>();
+                    row.put("name", identifier.getName().orElse(null));
+                    row.put("type", identifier.getType().toString());
+                    row.put("identifier", identifier.getIdentifier());
+                    identifierList.add(row);
+                }
+        );
+        CliPrintUtils.printTable(4, "identifiers", identifierList);
+    }
+
     private void printAccountInformation(Account account) {
         Map<String, String> row = new LinkedHashMap<>();
 
@@ -403,6 +418,8 @@ public class NewAgentTestContext extends AgentContext {
         row.put("name", account.getName());
         row.put("balance", String.valueOf(account.getBalance()));
         CliPrintUtils.printTable(0, "account", Lists.newArrayList(row));
+
+        printAccountIdentifiers(account);
 
         AccountFeatures accountFeatures = accountFeaturesByBankId.get(account.getBankId());
 
