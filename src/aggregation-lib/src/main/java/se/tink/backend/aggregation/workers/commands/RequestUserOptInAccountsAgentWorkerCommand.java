@@ -70,6 +70,13 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
             return handleNonEmptyRequestAccountsCase();
         }
 
+        // if the accounts in context is emptu and the account in the request is empty user most likely does not have
+        // account under credential, we continue with the rest of the operation without requesting supplemental
+        // information
+        if (accountsInContext.isEmpty() && accountsInRequest.isEmpty()) {
+            return AgentWorkerCommandResult.CONTINUE;
+        }
+
         // If we got here there are not accounts in the request but there are accounts in the context.
         Field[] accountsSendToUser = accountsInContext.stream()
                 .map(account -> createSupplementalInformationField(account, accountsInRequest))
