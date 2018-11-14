@@ -242,12 +242,14 @@ public class ProviderConfigurationDTO {
      * main to know if an agent implements an interface e.g. TransferExecutor.
      */
     public enum Capability {
+        TRANSFERS,
+        MORTGAGE_AGGREGATION,
         CHECKING_ACCOUNT,
         SAVINGS_ACCOUNT,
-        CREDIT_CARD,
-        INVESTMENTS,
-        LOANS,
-        PAYMENTS
+        CREDIT_CARD_ACCOUNT,
+        INVESTMENT_ACCOUNT,
+        LOAN_ACCOUNT,
+        MORTGAGE_LOAN
     }
 
     @JsonProperty("refreshschedule")
