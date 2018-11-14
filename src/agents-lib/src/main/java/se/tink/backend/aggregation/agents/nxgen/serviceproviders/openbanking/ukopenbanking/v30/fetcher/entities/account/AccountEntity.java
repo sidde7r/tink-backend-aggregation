@@ -1,12 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v30.fetcher.entities.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.IdentifiableAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v30.UkOpenBankingV30Constants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.libraries.account.AccountIdentifier;
 
 @JsonObject
 public class AccountEntity implements IdentifiableAccount {
@@ -49,17 +51,24 @@ public class AccountEntity implements IdentifiableAccount {
         return rawAccountSubType;
     }
 
+    private Optional<AccountIdentifier> toAccountIdentifier() {
+        return identifierEntity.toAccountIdentifier();
+    }
+
     public static TransactionalAccount toTransactionalAccount(AccountEntity account, AccountBalanceEntity balance) {
+        String accountNumber = account.getUniqueIdentifier();
 
-        return TransactionalAccount
+        TransactionalAccount.Builder accountBuilder = TransactionalAccount
                 .builder(account.getAccountType(),
-                        account.getUniqueIdentifier(),
+                        accountNumber,
                         balance.getBalance())
-                .setAccountNumber(account.getUniqueIdentifier())
-                .setBankIdentifier(account.getAccountId())
+                .setAccountNumber(accountNumber)
                 .setName(account.getDisplayName())
-                .build();
+                .setBankIdentifier(account.getAccountId());
 
+        account.toAccountIdentifier().ifPresent(accountBuilder::addIdentifier);
+
+        return accountBuilder.build();
     }
 
     public static CreditCardAccount toCreditCardAccount(AccountEntity account, AccountBalanceEntity balance) {
