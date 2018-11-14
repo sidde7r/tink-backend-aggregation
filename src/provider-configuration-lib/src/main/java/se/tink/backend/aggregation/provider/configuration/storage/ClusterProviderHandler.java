@@ -15,30 +15,21 @@ public class ClusterProviderHandler {
     // clusterId, all providerConfiguration for that clusterId
     private final Map<String, ProviderConfigurationByCluster> providerConfigurationByClusterMap;
 
+    // Iterate over the clusters and create an object that holds the "final" provider configuration.
     @Inject
     ClusterProviderHandler(
             @Named("providerConfiguration") Map<String, ProviderConfiguration> providerConfigurationByName,
             @Named("enabledProvidersOnCluster") Map<String, Set<String>> enabledProvidersOnCluster,
             @Named("providerOverrideOnCluster") Map<String, Map<String, ProviderConfiguration>> providerOverrideOnCluster) {
-        this.providerConfigurationByClusterMap = createProviderConfigurationByClusterMap(providerConfigurationByName,
-                enabledProvidersOnCluster, providerOverrideOnCluster);
-    }
-
-    // iterate over the clusters and create an object that holds the "final" provider configuration.
-    private Map createProviderConfigurationByClusterMap(
-            Map<String, ProviderConfiguration> providerConfigurationByName,
-            Map<String, Set<String>> enabledProvidersOnCluster,
-            Map<String, Map<String, ProviderConfiguration>> providerOverrideOnCluster) {
-        Map<String, ProviderConfigurationByCluster> providerConfigurationByCluster = Maps.newHashMap();
+        this.providerConfigurationByClusterMap = Maps.newHashMap();
         for (String clusterId : enabledProvidersOnCluster.keySet()) {
-            providerConfigurationByCluster.put(clusterId,
+            providerConfigurationByClusterMap.put(clusterId,
                     new ProviderConfigurationByCluster(
                             clusterId,
                             enabledProvidersOnCluster.get(clusterId),
                             providerOverrideOnCluster.getOrDefault(clusterId, Collections.emptyMap()),
                             providerConfigurationByName));
         }
-        return providerConfigurationByCluster;
     }
 
     public boolean validate(String clusterId) {
