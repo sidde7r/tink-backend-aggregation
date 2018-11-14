@@ -135,8 +135,9 @@ public class KbcApiClient {
     }
 
     private boolean matchesErrorMessage(TypeValuePair e, String errorMessage) {
-        return e.getValue() != null &&
-                e.getValue().toLowerCase().contains(errorMessage);
+        return e != null
+                && e.getValue() != null
+                && e.getValue().toLowerCase().contains(errorMessage);
     }
 
     private void throwInvalidResultCodeError(HeaderDto header, String resultCode) {
@@ -560,8 +561,8 @@ public class KbcApiClient {
         return response;
     }
 
-    public ValidateTransferResponse validateTransfer(Transfer transfer, boolean isTransferToOwnAccount) {
-        TransferRequest request = TransferRequest.create(transfer, isTransferToOwnAccount);
+    public ValidateTransferResponse validateTransfer(Transfer transfer, AgreementDto sourceAccount, boolean isTransferToOwnAccount) {
+        TransferRequest request = TransferRequest.create(transfer, sourceAccount, isTransferToOwnAccount);
 
         ValidateTransferResponse response =
                 post(KbcConstants.Url.TRANSFER_VALIDATE, request, ValidateTransferResponse.class);
@@ -570,11 +571,8 @@ public class KbcApiClient {
         return response;
     }
 
-    public String prepareTransfer(Transfer transfer, boolean isTransferToOwnAccount) {
-        KbcConstants.Url url = isTransferToOwnAccount
-                ? KbcConstants.Url.TRANSFER_TO_OWN
-                : KbcConstants.Url.TRANSFER_TO_OTHER;
-        TransferRequest request = TransferRequest.create(transfer, isTransferToOwnAccount);
+    public String prepareTransfer(Transfer transfer, boolean isTransferToOwnAccount, KbcConstants.Url url, AgreementDto sourceAccount) {
+        TransferRequest request = TransferRequest.create(transfer, sourceAccount, isTransferToOwnAccount);
 
         SignValidationResponse response = post(url, request, SignValidationResponse.class);
         verifyResponseCode(response.getHeader(), KbcConstants.ResultCode.ZERO_NINE);
@@ -630,11 +628,7 @@ public class KbcApiClient {
         verifyDoubleZeroResponseCode(signValidationResponse.getHeader());
     }
 
-    public TransferResponse signTransfer(String signingId, boolean isTransferToOwnAccount) {
-        KbcConstants.Url url = isTransferToOwnAccount
-                ? KbcConstants.Url.TRANSFER_TO_OWN
-                : KbcConstants.Url.TRANSFER_TO_OTHER;
-
+    public TransferResponse signTransfer(String signingId, KbcConstants.Url url) {
         SignRequest request = SignRequest.createWithSigningId(signingId);
 
         TransferResponse response = post(url, request, TransferResponse.class);

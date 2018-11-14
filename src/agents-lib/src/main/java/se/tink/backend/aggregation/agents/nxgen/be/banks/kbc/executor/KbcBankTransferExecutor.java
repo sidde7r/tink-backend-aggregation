@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.Field;
+import se.tink.backend.common.utils.Pair;
 import se.tink.backend.core.Amount;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
@@ -49,18 +50,23 @@ public class KbcBankTransferExecutor implements BankTransferExecutor {
     public Optional<String> executeTransfer(Transfer transfer) throws TransferExecutionException {
         List<GeneralAccountEntity> ownAccounts = fetchOwnAccounts();
 
-        TransactionalAccount sourceAccount = getSourceAccount(transfer.getSource(), ownAccounts);
-        // For immediate transfer it is not allowed to do transfers that are not covered by the balance. Blocked in app.
-        if (immediateTransfer(transfer)) {
-            validateAmountCoveredByBalance(sourceAccount, transfer.getAmount());
+        Pair<TransactionalAccount, AgreementDto> sourceAccountAgreement =
+                getSourceAccountAndAgreement(transfer.getSource(), ownAccounts);
+
+        // For instant transfers it is not allowed to exceed current balance. Blocked in app.
+        boolean instantTransfer = instantTransfer(transfer);
+        if (instantTransfer) {
+            validateAmountCoveredByBalance(sourceAccountAgreement.first, transfer.getAmount());
         }
 
         boolean isTransferToOwnAccount = GeneralUtils.isAccountExisting(transfer.getDestination(), ownAccounts);
 
-        String signType = validateTransfer(transfer, isTransferToOwnAccount);
+        String signType = validateTransfer(transfer, sourceAccountAgreement.second, isTransferToOwnAccount);
+
+        KbcConstants.Url url = getTransferUrl(isTransferToOwnAccount, instantTransfer);
 
         try {
-            return transfer(transfer, signType, isTransferToOwnAccount);
+            return transfer(transfer, signType, isTransferToOwnAccount, url, sourceAccountAgreement.second);
         } catch (AuthenticationException e) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setEndUserMessage(
@@ -69,7 +75,18 @@ public class KbcBankTransferExecutor implements BankTransferExecutor {
         }
     }
 
-    private boolean immediateTransfer(Transfer transfer) {
+    private KbcConstants.Url getTransferUrl(boolean isTransferToOwnAccount, boolean instantTransfer) {
+        if (instantTransfer) {
+            return isTransferToOwnAccount
+                    ? KbcConstants.Url.TRANSFER_TO_OWN_INSTANT
+                    : KbcConstants.Url.TRANSFER_TO_OTHER_INSTANT;
+        } else if (isTransferToOwnAccount) {
+            return KbcConstants.Url.TRANSFER_TO_OWN;
+        }
+        return KbcConstants.Url.TRANSFER_TO_OTHER;
+    }
+
+    private boolean instantTransfer(Transfer transfer) {
         return transfer.getDueDate() == null;
     }
 
@@ -90,9 +107,10 @@ public class KbcBankTransferExecutor implements BankTransferExecutor {
         return GeneralUtils.concat(accountsForTransferToOwn, accountsForTransferToOther);
     }
 
-    private TransactionalAccount getSourceAccount(final AccountIdentifier accountIdentifier,
-            List<GeneralAccountEntity> sourceAccounts) {
-
+    private Pair<TransactionalAccount, AgreementDto> getSourceAccountAndAgreement(
+            final AccountIdentifier accountIdentifier,
+            List<GeneralAccountEntity> sourceAccounts)
+    {
         Optional<GeneralAccountEntity> sourceAccount = GeneralUtils.find(accountIdentifier, sourceAccounts);
 
         if (!sourceAccount.isPresent()) {
@@ -101,17 +119,21 @@ public class KbcBankTransferExecutor implements BankTransferExecutor {
                     .setEndUserMessage(catalog.getString(TransferExecutionException.EndUserMessage.INVALID_SOURCE))
                     .build();
         }
-        return ((AgreementDto) sourceAccount.get()).toTransactionalAccount();
+        return new Pair<>(((AgreementDto) sourceAccount.get()).toTransactionalAccount(), (AgreementDto) sourceAccount.get());
     }
 
-    private String validateTransfer(Transfer transfer, boolean isTransferToOwnAccount) {
-        ValidateTransferResponse response = apiClient.validateTransfer(transfer, isTransferToOwnAccount);
+    private String validateTransfer(Transfer transfer, AgreementDto sourceAccount, boolean isTransferToOwnAccount) {
+        ValidateTransferResponse response = apiClient.validateTransfer(transfer, sourceAccount, isTransferToOwnAccount);
         return response.getSignType();
     }
 
-    private Optional<String> transfer(Transfer transfer, String signType, boolean isTransferToOwnAccount)
+    private Optional<String> transfer(Transfer transfer,
+                                      String signType,
+                                      boolean isTransferToOwnAccount,
+                                      KbcConstants.Url url,
+                                      AgreementDto sourceAccount)
             throws AuthenticationException {
-        String signingId = apiClient.prepareTransfer(transfer, isTransferToOwnAccount);
+        String signingId = apiClient.prepareTransfer(transfer, isTransferToOwnAccount, url, sourceAccount);
 
         SignTypesResponse signTypesResponse = apiClient.signingTypes(signingId);
         String signTypeId = signTypesResponse.getSignTypeId(signType);
@@ -119,7 +141,7 @@ public class KbcBankTransferExecutor implements BankTransferExecutor {
 
         String finalSigningId = signingChallengeAndValidation(signType, signTypeId, signTypeSigningId);
 
-        apiClient.signTransfer(finalSigningId, isTransferToOwnAccount);
+        apiClient.signTransfer(finalSigningId, url);
         return Optional.empty();
     }
 
