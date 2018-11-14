@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentClassFactory;
-import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
@@ -83,7 +82,6 @@ public class AgentWorkerOperationFactory {
     private LoginAgentWorkerCommandState loginAgentWorkerCommandState;
     private ReportProviderMetricsAgentWorkerCommandState reportMetricsAgentWorkerCommandState;
 
-    private AggregationControllerAggregationClient aggregationControllerAggregationClient;
     private MetricRegistry metricRegistry;
     private ServiceContext serviceContext;
     private final AgentDebugStorageHandler agentDebugStorageHandler;
@@ -92,7 +90,6 @@ public class AgentWorkerOperationFactory {
     @Inject
     public AgentWorkerOperationFactory(ServiceContext serviceContext, CacheClient cacheClient,
             MetricRegistry metricRegistry,
-            AggregationControllerAggregationClient aggregationControllerAggregationClient,
             AgentDebugStorageHandler agentDebugStorageHandler, AgentWorkerOperationState agentWorkerOperationState,
             DebugAgentWorkerCommandState debugAgentWorkerCommandState,
             CircuitBreakerAgentWorkerCommandState circuitBreakerAgentWorkerCommandState,
@@ -116,7 +113,6 @@ public class AgentWorkerOperationFactory {
         this.loginAgentWorkerCommandState = loginAgentWorkerCommandState;
         this.reportMetricsAgentWorkerCommandState = reportProviderMetricsAgentWorkerCommandState;
 
-        this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
         this.metricRegistry = metricRegistry;
         this.serviceContext = serviceContext;
         this.agentDebugStorageHandler = agentDebugStorageHandler;
