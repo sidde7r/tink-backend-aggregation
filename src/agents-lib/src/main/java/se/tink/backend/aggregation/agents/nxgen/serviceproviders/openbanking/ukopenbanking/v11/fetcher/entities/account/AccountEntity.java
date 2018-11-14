@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.libraries.account.AccountIdentifier;
 
 @JsonObject
 public class AccountEntity implements IdentifiableAccount {
@@ -39,6 +40,10 @@ public class AccountEntity implements IdentifiableAccount {
         return nickname != null ? nickname : identifierEntity.getName();
     }
 
+    private AccountIdentifier toAccountIdentifier() {
+        return identifierEntity.toAccountIdentifier();
+    }
+
     @Override
     public String getBankIdentifier() {
         return accountId;
@@ -46,13 +51,15 @@ public class AccountEntity implements IdentifiableAccount {
 
 
     public static TransactionalAccount toTransactionalAccount(AccountEntity account, AccountBalanceEntity balance) {
+        String accountNumber = account.getUniqueIdentifier();
 
         return TransactionalAccount
                 .builder(account.getAccountType(),
-                        account.getUniqueIdentifier(),
+                        accountNumber,
                         balance.getBalance())
-                .setAccountNumber(account.getUniqueIdentifier())
+                .setAccountNumber(accountNumber)
                 .setName(account.getDisplayName())
+                .addIdentifier(account.toAccountIdentifier())
                 .setBankIdentifier(account.getAccountId())
                 .build();
     }

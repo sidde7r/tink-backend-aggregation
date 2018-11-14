@@ -35,6 +35,31 @@ public abstract class UkOpenBankingConstants {
         }
     }
 
+    public enum ExternalAccountIdentification2Code {
+        IBAN,
+        SORT_CODE_ACCOUNT_NUMBER;
+
+        @JsonCreator
+        private static ExternalAccountIdentification2Code fromString(String key) {
+            return (key != null) ?
+                    ExternalAccountIdentification2Code.valueOf(
+                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key)) : null;
+        }
+    }
+
+    public enum ExternalAccountIdentification3Code {
+        IBAN,
+        SORT_CODE_ACCOUNT_NUMBER,
+        PAN;
+
+        @JsonCreator
+        private static ExternalAccountIdentification3Code fromString(String key) {
+            return (key != null) ?
+                    ExternalAccountIdentification3Code.valueOf(
+                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key)) : null;
+        }
+    }
+
     public enum CreditDebitIndicator {
 
         DEBIT,

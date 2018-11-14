@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Map;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.IdentifiableAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v20.fetcher.entities.deserializer.AccountIdentifierDeserializer;
@@ -10,6 +11,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.libraries.account.AccountIdentifier;
 
 @JsonObject
 public class AccountEntity implements IdentifiableAccount {
@@ -58,21 +60,28 @@ public class AccountEntity implements IdentifiableAccount {
                 );
     }
 
+    private Optional<AccountIdentifier> toAccountIdentifier() {
+        return getIdentifierEntity().toAccountIdentifier();
+    }
+
     public String getRawAccountSubType() {
         return rawAccountSubType;
     }
 
     public static TransactionalAccount toTransactionalAccount(AccountEntity account, AccountBalanceEntity balance) {
+        String accountNumber = account.getUniqueIdentifier();
 
-        return TransactionalAccount
+        TransactionalAccount.Builder accountBuilder = TransactionalAccount
                 .builder(account.getAccountType(),
-                        account.getUniqueIdentifier(),
+                        accountNumber,
                         balance.getBalance())
-                .setAccountNumber(account.getUniqueIdentifier())
-                .setBankIdentifier(account.getAccountId())
+                .setAccountNumber(accountNumber)
                 .setName(account.getDisplayName())
-                .build();
+                .setBankIdentifier(account.getAccountId());
 
+        account.toAccountIdentifier().ifPresent(accountBuilder::addIdentifier);
+
+        return accountBuilder.build();
     }
 
     public static CreditCardAccount toCreditCardAccount(AccountEntity account, AccountBalanceEntity balance) {
