@@ -17,6 +17,7 @@ import se.tink.libraries.account.identifiers.FinnishIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
+import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.SwedishSHBInternalIdentifier;
 import se.tink.libraries.account.identifiers.TinkIdentifier;
@@ -30,7 +31,16 @@ public abstract class AccountIdentifier {
     private String name;
 
     public enum Type {
-        BE("be"), SE("se"), SE_SHB_INTERNAL("se-internal"), FI("fi"), IBAN("iban"), TINK("tink"), SE_BG("se-bg"), SE_PG("se-pg"), SEPA_EUR("sepa-eur");
+        BE("be"),
+        SE("se"),
+        SE_SHB_INTERNAL("se-internal"),
+        FI("fi"),
+        IBAN("iban"),
+        TINK("tink"),
+        SE_BG("se-bg"),
+        SE_PG("se-pg"),
+        SEPA_EUR("sepa-eur"),
+        SORT_CODE("sort-code");
 
         private String scheme;
         Type(String scheme) {
@@ -232,6 +242,8 @@ public abstract class AccountIdentifier {
             return new PlusGiroIdentifier(id);
         case SEPA_EUR:
             return new SepaEurIdentifier(id);
+        case SORT_CODE:
+            return new SortCodeIdentifier(id);
         }
         return null;
     }
