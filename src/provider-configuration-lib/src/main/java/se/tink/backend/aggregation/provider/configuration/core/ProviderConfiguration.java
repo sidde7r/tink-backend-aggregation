@@ -275,12 +275,7 @@ public class ProviderConfiguration {
      * main to know if an agent implements an interface e.g. TransferExecutor.
      */
     public enum Capability {
-        CHECKING_ACCOUNT,
-        SAVINGS_ACCOUNT,
-        CREDIT_CARD,
-        INVESTMENTS,
-        LOANS,
-        PAYMENTS
+        TRANSFERS, MORTGAGE_AGGREGATION
     }
 
     @JsonProperty("refreshschedule")
