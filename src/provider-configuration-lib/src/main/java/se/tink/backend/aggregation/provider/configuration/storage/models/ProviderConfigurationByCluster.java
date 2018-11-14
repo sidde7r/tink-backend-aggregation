@@ -30,19 +30,18 @@ public class ProviderConfigurationByCluster {
         this.clusterId = clusterId;
         enabledProviders.forEach(
                 providerName -> {
-                        ProviderConfiguration providerConfiguration;
-                        if (providerConfigurationOverrides
-                                .containsKey(providerName)) {
-                            providerConfiguration = providerConfigurationOverrides.get(providerName);
-                        } else if (allProviderConfiguration
-                                .containsKey(providerName)) {
-                            providerConfiguration = allProviderConfiguration.get(providerName);
-                        } else {
-                            logger.error("Could not find configuration for enabled provider {} and cluster {}", providerName, clusterId);
-                            return;
-                        }
-                        providerConfigurations.put(providerName, providerConfiguration);
-                        enabledMarkets.add(providerConfiguration.getMarket());
+                    ProviderConfiguration providerConfiguration;
+                    if (providerConfigurationOverrides.containsKey(providerName)) {
+                        providerConfiguration = providerConfigurationOverrides.get(providerName);
+                    } else if (allProviderConfiguration.containsKey(providerName)) {
+                        providerConfiguration = allProviderConfiguration.get(providerName);
+                    } else {
+                        logger.error("Could not find configuration for enabled provider {} and cluster {}",
+                                providerName, clusterId);
+                        return;
+                    }
+                    providerConfigurations.put(providerName, providerConfiguration);
+                    enabledMarkets.add(providerConfiguration.getMarket());
                 }
         );
     }
