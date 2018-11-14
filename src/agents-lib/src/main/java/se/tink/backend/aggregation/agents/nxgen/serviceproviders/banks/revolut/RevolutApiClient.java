@@ -72,7 +72,7 @@ public class RevolutApiClient {
         return getUserAuthorizedRequest(RevolutConstants.Urls.TOPUP_ACCOUNTS)
                 .get(AccountsResponse.class);
 
-}
+    }
 
     public TransactionsResponse fetchTransactions(int count, String toDateMillis) {
         return getUserAuthorizedRequest(RevolutConstants.Urls.TRANSACTIONS)
@@ -86,7 +86,8 @@ public class RevolutApiClient {
                 RevolutConstants.AppAuthenticationValues.APP_AUTHORIZATION.getKey(),
                 RevolutConstants.AppAuthenticationValues.APP_AUTHORIZATION.getValue());
 
-        persistentStorage.put(RevolutConstants.Headers.AUTHORIZATION_HEADER, RevolutConstants.Headers.BASIC + authStringB64);
+        persistentStorage
+                .put(RevolutConstants.Headers.AUTHORIZATION_HEADER, RevolutConstants.Headers.BASIC + authStringB64);
         return client.request(url)
                 .header(RevolutConstants.Headers.AUTHORIZATION_HEADER,
                         RevolutConstants.Headers.BASIC + authStringB64)
