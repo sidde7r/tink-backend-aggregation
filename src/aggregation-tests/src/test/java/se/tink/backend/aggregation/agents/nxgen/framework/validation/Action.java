@@ -26,7 +26,7 @@ public interface Action {
     /**
      * Executes an action when an account satisfies a rule.
      *
-     * @param account The piece of AIS data which satisfied a rule
+     * @param account The account which satisfied a rule
      * @param ruleIdentifier A human-readable identifier for the rule that the account satisfied
      */
     void onPass(Account account, String ruleIdentifier);
