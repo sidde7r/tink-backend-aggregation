@@ -143,9 +143,19 @@ public final class BawagPskAccountTypeMappers {
         if (productCodeMapper == null) {
             productCodeMapper =
                     AccountTypeMapper.builder()
-                            .put(AccountTypes.CHECKING, "B121", "B131", "B400")
-                            .put(AccountTypes.SAVINGS, "D264", "D272")
-                            .put(AccountTypes.CREDIT_CARD, "00EC", "00ET", "00PD")
+                            .put(
+                                    AccountTypes.CHECKING,
+                                    "B111",
+                                    "B121",
+                                    "B131",
+                                    "B133",
+                                    "B300",
+                                    "B400",
+                                    "B410",
+                                    "B512",
+                                    "B600")
+                            .put(AccountTypes.SAVINGS, "D256", "D263", "D264", "D267", "D272")
+                            .put(AccountTypes.CREDIT_CARD, "00BD", "00EC", "00EQ", "00ET", "00PD")
                             .put(AccountTypes.LOAN, "S132")
                             .build();
         }
