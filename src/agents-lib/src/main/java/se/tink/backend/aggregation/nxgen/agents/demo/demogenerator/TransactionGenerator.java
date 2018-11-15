@@ -1,8 +1,5 @@
-package se.tink.backend.aggregation.nxgen.agents.demo;
+package se.tink.backend.aggregation.nxgen.agents.demo.demogenerator;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.time.Duration;
@@ -16,20 +13,23 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import se.tink.backend.aggregation.nxgen.agents.demo.NextGenDemoConstants;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.core.Amount;
 
-public class NextGenerationTransactionGenerator {
-    private static final ObjectMapper mapper = new ObjectMapper();
+public class TransactionGenerator {
+
     private final List<GenerationBase> generationBase;
     private final Random randomGenerator;
-    private static String generationBaseFile = NextGenDemoConstants.GENERATION_BASE_FILE;
+    private final DemoFileHandler demoFileHandler;
     private LocalDate date;
     private final String currency;
     private final double currencyConvertionFactor;
 
-    public NextGenerationTransactionGenerator(String basePath, String currency) throws IOException {
-        generationBase = loadGenerationBase(basePath + File.separator + generationBaseFile);
+    //TODO: Should be persisted between refreshes. Store on disk is not an alternative
+    public TransactionGenerator(String basePath, String currency) throws IOException {
+        this.demoFileHandler = new DemoFileHandler(basePath);
+        generationBase = this.demoFileHandler.getGenerationBase();
         this.randomGenerator = new Random();
         setTodaysDate();
         this.currency = currency;
@@ -43,18 +43,6 @@ public class NextGenerationTransactionGenerator {
         this.date = zdt.toLocalDate();
     }
 
-    private List<GenerationBase> loadGenerationBase(String path) throws IOException {
-        File generationConfig = new File(path);
-        if (generationConfig == null) {
-            throw new IOException("no provider file found");
-        }
-
-        List<GenerationBase> generationBases =
-                mapper.readValue(generationConfig, new TypeReference<List<GenerationBase>>(){});
-        return generationBases;
-    }
-
-    //Randomises a purchase up to between 1-3 items
     private double randomisePurchase(GenerationBase base) {
         double finalPrice = 0;
         for (Double price : base.getItemPrices()) {
@@ -100,31 +88,5 @@ public class NextGenerationTransactionGenerator {
         }
 
         return transactions;
-    }
-
-
-    private static class GenerationBase {
-        private String company;
-        private List<Double> itemPrices;
-
-        public String getCompany() {
-            return company;
-        }
-
-        public List<Double> getItemPrices() {
-            return itemPrices;
-        }
-
-        public void setCompany(String company) {
-            this.company = company;
-        }
-
-        public void setItemPrices(List<Double> itemPrices) {
-            this.itemPrices = itemPrices;
-        }
-
-        public GenerationBase() {
-        }
-
     }
 }
