@@ -1,3 +1,4 @@
+from __future__ import print_function
 from time import sleep
 import time
 import sys
@@ -140,7 +141,7 @@ def whitelist_refresh(cid=None):
             pass
 
         if statusBeforeUpdate['timestamp'] == currentStatus['timestamp']:
-            print output
+            print(output)
             sleep(1)
             continue
 
@@ -216,7 +217,7 @@ def supplemental_information(cid=None):
     if not credentials['supplementalInformation']:
         return "\nCredentials is awaiting supplemental information, but no information provided from aggregation."
 
-    print prettify(json.loads(credentials['supplementalInformation']))
+    print(prettify(json.loads(credentials['supplementalInformation'])))
 
     supplemental = raw_input('Aggregation is requesting supplemental information: ')
     supplementalRequest = {
@@ -249,7 +250,7 @@ def showHelp(f, argv):
     h = "%s [-h] [-a aggregationHost]\n" % argv[0]
     h += "  -h/--help     	  This menu\n"
     h += "  -s/--server-host=  Server host (including port)\n"
-    print >>f, h
+    print(h, file=f)
 
 def get_time_in_millis():
 	return int(round(time.time() * 1000))
@@ -267,7 +268,7 @@ def clean_providers(listOfProviders):
 
 def credentials():
     while True:
-        print '''
+        print('''
  -- Credentials operations -----------
 |                                     |
 | Create: create / c                  |
@@ -282,52 +283,52 @@ def credentials():
 | Exit: exit / e                      |
 |                                     |
  -------------------------------------
-'''
+''')
 
         userInput = raw_input('Operation: ')
             
         if userInput in EXIT_OPERATION:
             break
         elif userInput in CREATE_OPERATION:
-            print 'Response: \n' + create_credential()
+            print('Response: \n' + create_credential())
         elif userInput in REFRESH_OPERATION:
             refresh()
         elif userInput in SUPPLEMENTAL_OPERATION:
-            print supplemental_information()
+            print(supplemental_information())
         elif userInput in GET_OPERATION:
-            print credentials_status()
+            print(credentials_status())
         elif userInput in LIST_OPERATION:
-            print list_credentials()
+            print(list_credentials())
         elif userInput in ACCOUNT_OPERATION:
-            print list_accounts()
+            print(list_accounts())
         elif userInput in REENCRYPT_OPERATION:
-            print reencrypt_credentials()
+            print(reencrypt_credentials())
         elif userInput in WHITELIST_OPERATION:
-            print whitelist_accounts()
+            print(whitelist_accounts())
 
 def refresh():
     while True:
-        print '''
+        print('''
  -- Refresh operations ------------
 |                                  |
 | Normal refresh: refresh / r      |
 | Whitelist refresh: whitelist / w |
 |                                  |
  ----------------------------------
-'''
+''')
 
         userInput = raw_input('Operation: ')
 
         if userInput in EXIT_OPERATION:
             break
         elif userInput in REFRESH_OPERATION:
-            print refresh_credential()
+            print(refresh_credential())
         elif userInput in WHITELIST_OPERATION:
-            print whitelist_refresh()
+            print(whitelist_refresh())
 
 def providers():
     while True:
-        print '''
+        print('''
  -- Providers operations ------
 |                              |
 | List all: list / l           |
@@ -337,18 +338,18 @@ def providers():
 | Exit: exit / e               |
 |                              |
  ------------------------------
-'''
+''')
 
         userInput = raw_input('Operation: ')
 
         if userInput in EXIT_OPERATION:
             break
         elif userInput in MARKET_OPERATION:
-            print list_providers_by_market()
+            print(list_providers_by_market())
         elif userInput in GET_OPERATION:
-            print get_provider()
+            print(get_provider())
         elif userInput in LIST_OPERATION:
-            print list_providers()
+            print(list_providers())
 
 ### END HELPER METHODS ###
 
@@ -374,11 +375,11 @@ def main(argv):
     try:
         response = requests.get(PING)
     except:
-        print str.format("\n ERROR: Could not find a running webServer on {} \n", SERVER_HOST) 
+        print(str.format("\n ERROR: Could not find a running webServer on {} \n", SERVER_HOST)) 
         return 1
     
     while True:
-        print '''
+        print('''
  -- Operations ----------------
 |                              |
 | Credentials: credentials / c |
@@ -387,7 +388,7 @@ def main(argv):
 | Exit application: exit / e   |
 |                              |
  ------------------------------
-'''
+''')
 
         userInput = raw_input('Operation: ')
         
@@ -398,13 +399,13 @@ def main(argv):
         elif userInput in PROVIDERS_OPERATION:
             providers()
     
-    print '''
+    print('''
  -------------------------------------------------------------------------------------
 |                                                                                     |
 | Leaving application. Your don\'t forget to shut down the webServer if you are done.  |
 |                                                                                     |
  -------------------------------------------------------------------------------------
-'''
+''')
     return 0
 
 if __name__ == "__main__":
