@@ -211,7 +211,6 @@
       "fields": [
         {
           "name": "info",
-          "value": "You will now be redirected to your bank where you can log in using bank details. After you've successfully logged in you will be taken back to the Tink app!",
           "helpText": "You will now be redirected to your bank where you can log in using bank details. After you've successfully logged in you will be taken back to the Tink app!",
           "immutable": true
         }
