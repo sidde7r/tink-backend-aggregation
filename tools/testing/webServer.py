@@ -435,7 +435,7 @@ def create_credentials_request(credentialsId=None):
 
 
 def create_credential(userId):
-    return {
+    credentials = {
         "id": random_uuid_string(),
         "username": request.json["username"],
         "providerName": request.json["providerName"],
@@ -443,6 +443,9 @@ def create_credential(userId):
         "type": request.json["credentialsType"],
         "status": "CREATED",
     }
+    if request.json["password"]:
+        credentials["password"] = request.json["password"]
+    return credentials
 
 
 def to_aggregation_account(coreAccount):
@@ -542,4 +545,5 @@ def main(argv):
 
 
 if __name__ == "__main__":
-    app.run(main(sys.argv))
+    main(sys.argv)
+    app.run(host="0.0.0.0", port=5000)
