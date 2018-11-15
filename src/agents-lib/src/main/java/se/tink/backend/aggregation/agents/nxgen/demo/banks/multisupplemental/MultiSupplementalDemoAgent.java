@@ -37,7 +37,7 @@ public class MultiSupplementalDemoAgent extends NextGenerationAgent {
         return new AutoAuthenticationController(
                 request,
                 context,
-                new MultiSupplementalManualAuthenticator(supplementalInformationController),
+                new MultiSupplementalManualAuthenticator(supplementalInformationController, catalog),
                 new MultiSupplementalAutoAuthenticator()
         );
     }
