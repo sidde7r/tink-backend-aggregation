@@ -7,140 +7,155 @@ import getopt
 import json
 import requests
 
-SERVER_HOST = 'http://127.0.0.1:5000'
+SERVER_HOST = "http://127.0.0.1:5000"
 
 ### START ENDPOINTS ###
-CREATE_CREDENTIAL = SERVER_HOST + '/credentials/create'
-REFRESH_CREDENTIAL = SERVER_HOST + '/credentials/refresh/{}'
-WHITELIST_REFRESH_CREDENTIAL = SERVER_HOST + '/credentials/whitelist/refresh/{}'
-STATUS_CREDENTIAL = SERVER_HOST + '/credentials/status/{}'
-WHITELIST_CREDENTIAL = SERVER_HOST + '/credentials/whitelist/{}'
-REENCRYPT_CREDENTIAL = SERVER_HOST + '/credentials/reencrypt/{}'
-LIST_CREDENTIALS = SERVER_HOST + '/credentials/list'
-SUPPLEMENTAL = SERVER_HOST + '/credentials/supplemental'
-GET_PROVIDER = SERVER_HOST + '/providers/{}'
-LIST_PROVIDERS = SERVER_HOST + '/providers/list'
-LIST_PROVIDERS_BY_MARKET = LIST_PROVIDERS + '/{}'
-PING = SERVER_HOST + '/ping'
+CREATE_CREDENTIAL = SERVER_HOST + "/credentials/create"
+REFRESH_CREDENTIAL = SERVER_HOST + "/credentials/refresh/{}"
+WHITELIST_REFRESH_CREDENTIAL = SERVER_HOST + "/credentials/whitelist/refresh/{}"
+STATUS_CREDENTIAL = SERVER_HOST + "/credentials/status/{}"
+WHITELIST_CREDENTIAL = SERVER_HOST + "/credentials/whitelist/{}"
+REENCRYPT_CREDENTIAL = SERVER_HOST + "/credentials/reencrypt/{}"
+LIST_CREDENTIALS = SERVER_HOST + "/credentials/list"
+SUPPLEMENTAL = SERVER_HOST + "/credentials/supplemental"
+GET_PROVIDER = SERVER_HOST + "/providers/{}"
+LIST_PROVIDERS = SERVER_HOST + "/providers/list"
+LIST_PROVIDERS_BY_MARKET = LIST_PROVIDERS + "/{}"
+PING = SERVER_HOST + "/ping"
 
-ERROR_STATUSES = ['AUTHENTICATION_ERROR', 'TEMPORARY_ERROR', 'PERMANENT_ERROR', 'NOT_IMPLEMENTED_ERROR', 'UNCHANGED']
+ERROR_STATUSES = [
+    "AUTHENTICATION_ERROR",
+    "TEMPORARY_ERROR",
+    "PERMANENT_ERROR",
+    "NOT_IMPLEMENTED_ERROR",
+    "UNCHANGED",
+]
 
-EXIT_OPERATION = ['exit', 'e']
-GET_OPERATION = ['get', 'g']
-LIST_OPERATION = ['list', 'l']
-REFRESH_OPERATION = ['refresh', 'r']
-REENCRYPT_OPERATION = ['reencrypt', 'y']
-WHITELIST_OPERATION = ['whitelist', 'w']
-CREATE_OPERATION = ['create', 'c']
-ACCOUNT_OPERATION = ['account', 'a']
-CREDENTIALS_OPERATION = ['credentials', 'c']
-PROVIDERS_OPERATION = ['providers', 'p']
-SUPPLEMENTAL_OPERATION = ['supp', 's']
-MARKET_OPERATION = ['market', 'm']
+EXIT_OPERATION = ["exit", "e"]
+GET_OPERATION = ["get", "g"]
+LIST_OPERATION = ["list", "l"]
+REFRESH_OPERATION = ["refresh", "r"]
+REENCRYPT_OPERATION = ["reencrypt", "y"]
+WHITELIST_OPERATION = ["whitelist", "w"]
+CREATE_OPERATION = ["create", "c"]
+ACCOUNT_OPERATION = ["account", "a"]
+CREDENTIALS_OPERATION = ["credentials", "c"]
+PROVIDERS_OPERATION = ["providers", "p"]
+SUPPLEMENTAL_OPERATION = ["supp", "s"]
+MARKET_OPERATION = ["market", "m"]
 
-REFRESH_TIME_OUT_LIMIT = 120 # 2 minutes * 60 seconds
+REFRESH_TIME_OUT_LIMIT = 120  # 2 minutes * 60 seconds
 
 ### END ENDPOINTS ###
 
 ### START CLIENT METHODS ###
 
+
 def create_credential():
-    username = raw_input('Username: ')
-    providerName = raw_input('Provider name: ')
-    credentialsType = raw_input('Credentials type (MOBILE_BANKID, PASSWORD): ')
+    username = raw_input("Username: ")
+    providerName = raw_input("Provider name: ")
+    credentialsType = raw_input("Credentials type (MOBILE_BANKID, PASSWORD): ")
 
     createCredentialsRequest = {
-        'username': username,
-        'providerName': providerName,
-        'credentialsType': credentialsType
+        "username": username,
+        "providerName": providerName,
+        "credentialsType": credentialsType,
     }
+    if credentialsType == "PASSWORD":
+        createCredentialsRequest["password"] = raw_input("Password: ")
 
-    responseObject = requests.post(CREATE_CREDENTIAL, json.dumps(createCredentialsRequest), headers={'Content-Type': 'application/json'})
+    responseObject = requests.post(
+        CREATE_CREDENTIAL,
+        json.dumps(createCredentialsRequest),
+        headers={"Content-Type": "application/json"},
+    )
     return responseObject.text
 
+
 def refresh_credential():
-    credentialsId = raw_input('Credentials id: ')
+    credentialsId = raw_input("Credentials id: ")
     statusBeforeUpdate = json.loads(credentials_status(credentialsId))
 
     startTime = get_time_in_millis()
     responseObject = requests.post(str.format(REFRESH_CREDENTIAL, credentialsId))
 
-    output = {
-        'message': str.format('Refreshing credential with id {}', credentialsId)
-    }
+    output = {"message": str.format("Refreshing credential with id {}", credentialsId)}
 
     while True:
         if (get_time_in_millis() - startTime) / 1000.0 >= REFRESH_TIME_OUT_LIMIT:
-            return '\nRefresh timed out.'
+            return "\nRefresh timed out."
 
         currentStatus = json.loads(credentials_status(credentialsId))
         if not currentStatus:
-            return '\nRefresh failed.'
-        
+            return "\nRefresh failed."
+
         try:
-            if currentStatus['message']:
-                return str.format('\nRefresh failed with message: {}', currentStatus['message'])
+            if currentStatus["message"]:
+                return str.format(
+                    "\nRefresh failed with message: {}", currentStatus["message"]
+                )
         except KeyError:
             pass
 
         sleep(1)
-        
+
         # Update the status
         statusBeforeUpdate = currentStatus
-        
-        status = currentStatus['status']
-        if status == 'UPDATING':
-            output['message'] = 'Fetching accounts and transactions.'
+
+        status = currentStatus["status"]
+        if status == "UPDATING":
+            output["message"] = "Fetching accounts and transactions."
             continue
 
-        if status == 'AWAITING_SUMMPLEMENTAL_INFORMATION':
+        if status == "AWAITING_SUMMPLEMENTAL_INFORMATION":
             suppResponse = supplemental_information(credentialsId)
             if not suppResponse:
-                return '\nSupplemental information request failed.'
+                return "\nSupplemental information request failed."
             elif not suppResponse == 204:
-                return '\nSupplemental information request failed.'
-        
-        if status == 'AWAITING_MOBILE_BANKID_AUTHENTICATION':
-            output['message'] = 'Awaiting mobile bankid authentication'
+                return "\nSupplemental information request failed."
+
+        if status == "AWAITING_MOBILE_BANKID_AUTHENTICATION":
+            output["message"] = "Awaiting mobile bankid authentication"
             continue
 
-        if status == 'AWAITING_THIRD_PARTY_APP_AUTHENTICATION':
-            output['message'] = 'Awaiting third party app authentication'
+        if status == "AWAITING_THIRD_PARTY_APP_AUTHENTICATION":
+            output["message"] = "Awaiting third party app authentication"
             continue
 
         if status in ERROR_STATUSES:
-            return str.format('Refresh failed with status: {}', status)
+            return str.format("Refresh failed with status: {}", status)
 
-        if currentStatus['status'] == 'UPDATED':
-            return '\nRefresh completed.'
+        if currentStatus["status"] == "UPDATED":
+            return "\nRefresh completed."
+
 
 def whitelist_refresh(cid=None):
     if not cid:
-        cid = raw_input('Credentials id: ')
+        cid = raw_input("Credentials id: ")
     statusBeforeUpdate = json.loads(credentials_status(cid))
 
     startTime = get_time_in_millis()
     responseObject = requests.post(str.format(WHITELIST_REFRESH_CREDENTIAL, cid))
 
-    output = {
-        'message': str.format('Refreshing credential with id {}', cid)
-    }
+    output = {"message": str.format("Refreshing credential with id {}", cid)}
 
     while True:
         if (get_time_in_millis() - startTime) / 1000.0 >= REFRESH_TIME_OUT_LIMIT:
-            return '\nRefresh timed out.'
+            return "\nRefresh timed out."
 
         currentStatus = json.loads(credentials_status(cid))
         if not currentStatus:
-            return '\nRefresh failed.'
+            return "\nRefresh failed."
 
         try:
-            if currentStatus['message']:
-                return str.format('\nRefresh failed with message: {}', currentStatus['message'])
+            if currentStatus["message"]:
+                return str.format(
+                    "\nRefresh failed with message: {}", currentStatus["message"]
+                )
         except KeyError:
             pass
 
-        if statusBeforeUpdate['timestamp'] == currentStatus['timestamp']:
+        if statusBeforeUpdate["timestamp"] == currentStatus["timestamp"]:
             print(output)
             sleep(1)
             continue
@@ -148,103 +163,118 @@ def whitelist_refresh(cid=None):
         # Update the status
         statusBeforeUpdate = currentStatus
 
-        status = currentStatus['status']
-        if status == 'UPDATING':
-            output['message'] = 'Fetching accounts and transactions.'
+        status = currentStatus["status"]
+        if status == "UPDATING":
+            output["message"] = "Fetching accounts and transactions."
             continue
 
-        if status == 'AWAITING_SUMMPLEMENTAL_INFORMATION':
+        if status == "AWAITING_SUMMPLEMENTAL_INFORMATION":
             suppResponse = supplemental_information(cid)
             if not suppResponse:
-                return '\nSupplemental information request failed.'
+                return "\nSupplemental information request failed."
             elif not suppResponse == 204:
-                return '\nSupplemental information request failed.'
+                return "\nSupplemental information request failed."
 
-        if status == 'AWAITING_MOBILE_BANKID_AUTHENTICATION':
-            output['message'] = 'Awaiting mobile bankid authentication'
+        if status == "AWAITING_MOBILE_BANKID_AUTHENTICATION":
+            output["message"] = "Awaiting mobile bankid authentication"
             continue
 
-        if status == 'AWAITING_THIRD_PARTY_APP_AUTHENTICATION':
-            output['message'] = 'Awaiting third party app authentication'
+        if status == "AWAITING_THIRD_PARTY_APP_AUTHENTICATION":
+            output["message"] = "Awaiting third party app authentication"
             continue
 
         if status in ERROR_STATUSES:
-            return str.format('Refresh failed with status: {}', status)
+            return str.format("Refresh failed with status: {}", status)
 
-        if currentStatus['status'] == 'UPDATED':
-            return '\nRefresh completed.'
+        if currentStatus["status"] == "UPDATED":
+            return "\nRefresh completed."
+
 
 def whitelist_accounts():
-    credentialsId = raw_input('Credentials id: ')
+    credentialsId = raw_input("Credentials id: ")
     responseObject = requests.post(str.format(WHITELIST_CREDENTIAL, credentialsId))
 
     if responseObject.status_code is not 204:
-        return json.loads(responseObject.text)['message']
+        return json.loads(responseObject.text)["message"]
 
-    return '\nWhitelisting complete'
+    return "\nWhitelisting complete"
+
 
 def reencrypt_credentials():
-    credentialsId = raw_input('Credentials id: ')
+    credentialsId = raw_input("Credentials id: ")
     responseObject = requests.post(str.format(REENCRYPT_CREDENTIAL, credentialsId))
 
     if responseObject.status_code is not 204:
-        return json.loads(responseObject.text)['message']
+        return json.loads(responseObject.text)["message"]
 
-    return '\nReencryption complete'
+    return "\nReencryption complete"
+
 
 def list_credentials():
     return requests.get(LIST_CREDENTIALS).text
 
+
 def list_accounts():
-    cid = raw_input('Credentials id: ')
-    return requests.get(SERVER_HOST + str.format('/credentials/{}/accounts', cid)).text
+    cid = raw_input("Credentials id: ")
+    return requests.get(SERVER_HOST + str.format("/credentials/{}/accounts", cid)).text
+
 
 def credentials_status(cid=None):
     if not cid:
-        cid = raw_input('Credentials id: ')
-    
+        cid = raw_input("Credentials id: ")
+
     return requests.get(str.format(STATUS_CREDENTIAL, cid)).text
+
 
 def supplemental_information(cid=None):
     if not cid:
-        cid = raw_input('Credentials id: ')
-    
+        cid = raw_input("Credentials id: ")
+
     credentials = json.loads(credentials_status(cid))
 
-    if credentials['status'] != "AWAITING_SUPPLEMENTAL_INFORMATION":
+    if credentials["status"] != "AWAITING_SUPPLEMENTAL_INFORMATION":
         return "\nCredentials is not awaiting supplemental information."
 
-    if not credentials['supplementalInformation']:
+    if not credentials["supplementalInformation"]:
         return "\nCredentials is awaiting supplemental information, but no information provided from aggregation."
 
-    print(prettify(json.loads(credentials['supplementalInformation'])))
+    print(prettify(json.loads(credentials["supplementalInformation"])))
 
-    supplemental = raw_input('Aggregation is requesting supplemental information: ')
+    supplemental = raw_input("Aggregation is requesting supplemental information: ")
     supplementalRequest = {
-        'credentialsId': cid,
-        'supplementalInformation': supplemental
+        "credentialsId": cid,
+        "supplementalInformation": supplemental,
     }
 
-    responseObject = requests.post(SUPPLEMENTAL, json.dumps(supplementalRequest), headers={'Content-Type': 'application/json'})
+    responseObject = requests.post(
+        SUPPLEMENTAL,
+        json.dumps(supplementalRequest),
+        headers={"Content-Type": "application/json"},
+    )
     return responseObject
+
 
 def list_providers():
     responseObject = requests.get(LIST_PROVIDERS).text
     return clean_providers(json.loads(responseObject))
 
+
 def list_providers_by_market():
-    market = raw_input('Market: ')
+    market = raw_input("Market: ")
     responseObject = requests.get(str.format(LIST_PROVIDERS_BY_MARKET, market)).text
     return clean_providers(json.loads(responseObject))
 
+
 def get_provider():
-    providerName = raw_input('Provider name: ')
+    providerName = raw_input("Provider name: ")
     responseObject = requests.get(str.format(GET_PROVIDER, providerName)).text
     return clean_providers([json.loads(responseObject)])
+
 
 ### END CLIENT METHODS ###
 
 ### START HELPER METHODS ###
+
 
 def showHelp(f, argv):
     h = "%s [-h] [-a aggregationHost]\n" % argv[0]
@@ -252,23 +282,38 @@ def showHelp(f, argv):
     h += "  -s/--server-host=  Server host (including port)\n"
     print(h, file=f)
 
+
 def get_time_in_millis():
-	return int(round(time.time() * 1000))
+    return int(round(time.time() * 1000))
+
 
 def prettify(toPrettify):
-	return json.dumps(toPrettify, sort_keys=True, indent=4, separators=(',', ': '))
+    return json.dumps(toPrettify, sort_keys=True, indent=4, separators=(",", ": "))
+
 
 def clean_providers(listOfProviders):
     if not listOfProviders:
         return prettify([])
 
-    clean_provider = lambda provider: {'status': provider['status'], 'displayName': provider['displayName'], 'name': provider['name'], 'capabilities': provider['capabilities'], 'passwordHelpText': provider['passwordHelpText'], 'currency': provider['currency'], 'fields': provider['fields'], 'type': provider['type'], 'market': provider['market']}
+    clean_provider = lambda provider: {
+        "status": provider["status"],
+        "displayName": provider["displayName"],
+        "name": provider["name"],
+        "capabilities": provider["capabilities"],
+        "passwordHelpText": provider["passwordHelpText"],
+        "currency": provider["currency"],
+        "fields": provider["fields"],
+        "type": provider["type"],
+        "market": provider["market"],
+    }
 
     return prettify(map(clean_provider, listOfProviders))
 
+
 def credentials():
     while True:
-        print('''
+        print(
+            """
  -- Credentials operations -----------
 |                                     |
 | Create: create / c                  |
@@ -283,14 +328,15 @@ def credentials():
 | Exit: exit / e                      |
 |                                     |
  -------------------------------------
-''')
+"""
+        )
 
-        userInput = raw_input('Operation: ')
-            
+        userInput = raw_input("Operation: ")
+
         if userInput in EXIT_OPERATION:
             break
         elif userInput in CREATE_OPERATION:
-            print('Response: \n' + create_credential())
+            print("Response: \n" + create_credential())
         elif userInput in REFRESH_OPERATION:
             refresh()
         elif userInput in SUPPLEMENTAL_OPERATION:
@@ -306,18 +352,21 @@ def credentials():
         elif userInput in WHITELIST_OPERATION:
             print(whitelist_accounts())
 
+
 def refresh():
     while True:
-        print('''
+        print(
+            """
  -- Refresh operations ------------
 |                                  |
 | Normal refresh: refresh / r      |
 | Whitelist refresh: whitelist / w |
 |                                  |
  ----------------------------------
-''')
+"""
+        )
 
-        userInput = raw_input('Operation: ')
+        userInput = raw_input("Operation: ")
 
         if userInput in EXIT_OPERATION:
             break
@@ -326,9 +375,11 @@ def refresh():
         elif userInput in WHITELIST_OPERATION:
             print(whitelist_refresh())
 
+
 def providers():
     while True:
-        print('''
+        print(
+            """
  -- Providers operations ------
 |                              |
 | List all: list / l           |
@@ -338,9 +389,10 @@ def providers():
 | Exit: exit / e               |
 |                              |
  ------------------------------
-''')
+"""
+        )
 
-        userInput = raw_input('Operation: ')
+        userInput = raw_input("Operation: ")
 
         if userInput in EXIT_OPERATION:
             break
@@ -351,19 +403,17 @@ def providers():
         elif userInput in LIST_OPERATION:
             print(list_providers())
 
+
 ### END HELPER METHODS ###
+
 
 def main(argv):
     try:
-        opts, args = getopt.getopt(
-                                argv[1:],
-                                "hs:",
-                                ["help", "server-host="]
-                            )
+        opts, args = getopt.getopt(argv[1:], "hs:", ["help", "server-host="])
     except getopt.GetoptError:
         showHelp(sys.stderr, argv)
         return 1
-    
+
     global SERVER_HOST
     for opt, arg in opts:
         if opt in ("-s", "--server-host"):
@@ -371,15 +421,20 @@ def main(argv):
         elif opt in ("-h", "--help"):
             showHelp(sys.stdout, argv)
             return 0
-    
+
     try:
         response = requests.get(PING)
     except:
-        print(str.format("\n ERROR: Could not find a running webServer on {} \n", SERVER_HOST)) 
+        print(
+            str.format(
+                "\n ERROR: Could not find a running webServer on {} \n", SERVER_HOST
+            )
+        )
         return 1
-    
+
     while True:
-        print('''
+        print(
+            """
  -- Operations ----------------
 |                              |
 | Credentials: credentials / c |
@@ -388,25 +443,29 @@ def main(argv):
 | Exit application: exit / e   |
 |                              |
  ------------------------------
-''')
+"""
+        )
 
-        userInput = raw_input('Operation: ')
-        
+        userInput = raw_input("Operation: ")
+
         if userInput in EXIT_OPERATION:
             break
         elif userInput in CREDENTIALS_OPERATION:
             credentials()
         elif userInput in PROVIDERS_OPERATION:
             providers()
-    
-    print('''
+
+    print(
+        """
  -------------------------------------------------------------------------------------
 |                                                                                     |
 | Leaving application. Your don\'t forget to shut down the webServer if you are done.  |
 |                                                                                     |
  -------------------------------------------------------------------------------------
-''')
+"""
+    )
     return 0
+
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv))
