@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.authenticator.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.Duration;
 import java.time.ZoneOffset;
@@ -15,6 +16,7 @@ public class AccountPermissionDataEntity {
     @JsonProperty("Permissions")
     private List<String> permissions;
     @JsonProperty("ExpirationDateTime")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String expirationDateTime;
 
     protected AccountPermissionDataEntity() {
@@ -27,10 +29,17 @@ public class AccountPermissionDataEntity {
     }
 
     public static AccountPermissionDataEntity create() {
-
-        ZonedDateTime expireAt = ZonedDateTime.now(ZoneOffset.UTC).plus(Duration.ofHours(24));
         return new AccountPermissionDataEntity(
                 UkOpenBankingAuthenticatorConstants.ACCOUNT_PERMISSIONS,
-                expireAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+                null
+        );
+    }
+
+    public static AccountPermissionDataEntity create(long expiresInDays) {
+        ZonedDateTime expireAt = ZonedDateTime.now(ZoneOffset.UTC).plus(Duration.ofDays(expiresInDays));
+        return new AccountPermissionDataEntity(
+                UkOpenBankingAuthenticatorConstants.ACCOUNT_PERMISSIONS,
+                expireAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+        );
     }
 }
