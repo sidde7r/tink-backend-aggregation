@@ -72,7 +72,7 @@ public class UpdateController {
             return false;
         }
         baseContext.updateTransactions(account.toSystemAccount(user), transactions.stream()
-                .map(AggregationTransaction::toSystemTransaction)
+                .map(t -> t.toSystemTransaction(user))
                 .collect(Collectors.toList()));
 
         return true;
@@ -84,7 +84,7 @@ public class UpdateController {
         }
 
         baseContext.cacheTransactions(account.getBankIdentifier(), transactions.stream()
-                .map(AggregationTransaction::toSystemTransaction)
+                .map(t-> t.toSystemTransaction(user))
                 .collect(Collectors.toList()));
 
         return true;

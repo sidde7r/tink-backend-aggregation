@@ -172,21 +172,11 @@ public class PendingEntity {
         return "<Missing Description>";
     }
 
-    private HashMap<String, String> getPayload() {
-        HashMap<String, String> result = new HashMap<>();
-
-        result.put("currency", transactionAmount.getCurrency());
-        result.put("provider", "ro-raiffeisen-psd2");
-
-        return result;
-    }
-
     public Transaction toTinkTransaction() {
         return Transaction.builder()
                 .setDescription(getDescription())
                 .setDate(toTinkDate())
                 .setAmount(toTinkAmount())
-                .setRawDetails(getPayload())
                 .setPending(true)
                 .build();
     }
