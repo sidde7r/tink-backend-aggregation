@@ -1,0 +1,10 @@
+package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.rpc;
+
+import se.tink.backend.aggregation.annotations.JsonObject;
+
+@JsonObject
+public class EBankingUsersRequest {
+    private String authenticationFactorId;
+    private String distributorId;
+    private String smid;
+}
