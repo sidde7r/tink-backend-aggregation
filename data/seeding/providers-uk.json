@@ -24,7 +24,14 @@
       "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11Agent",
       "credentialsType": "PASSWORD",
       "displayName": "AIB",
-      "fields": [],
+      "fields": [
+        {
+          "name": "info",
+          "value": "Connecting your bank",
+          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+          "immutable": true
+        }
+      ],
       "payload": "tink2:aib",
       "groupDisplayName": "",
       "multiFactor": false,
@@ -41,7 +48,14 @@
       "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11Agent",
       "credentialsType": "PASSWORD",
       "displayName": "Barclays",
-      "fields": [],
+      "fields": [
+        {
+          "name": "info",
+          "value": "Connecting your bank",
+          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+          "immutable": true
+        }
+      ],
       "payload": "tink:barclays",
       "groupDisplayName": "",
       "multiFactor": false,
@@ -58,7 +72,14 @@
       "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11Agent",
       "credentialsType": "PASSWORD",
       "displayName": "Danske Bank",
-      "fields": [],
+      "fields": [
+        {
+          "name": "info",
+          "value": "Connecting your bank",
+          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+          "immutable": true
+        }
+      ],
       "payload": "tink2:danskebank",
       "groupDisplayName": "",
       "multiFactor": false,
@@ -82,14 +103,28 @@
       "className": "nxgen.uk.banks.monzo.MonzoAgent",
       "passwordHelpText": "",
       "transactional": true,
-      "fields": []
+      "fields": [
+        {
+          "name": "info",
+          "value": "Connecting your bank",
+          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+          "immutable": true
+        }
+      ]
     },
     {
       "name": "uk-halifax-oauth2",
       "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
       "credentialsType": "PASSWORD",
       "displayName": "Halifax",
-      "fields": [],
+      "fields": [
+        {
+          "name": "info",
+          "value": "Connecting your bank",
+          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+          "immutable": true
+        }
+      ],
       "payload": "tink:halifax",
       "groupDisplayName": "",
       "multiFactor": false,
@@ -106,7 +141,14 @@
       "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11Agent",
       "credentialsType": "PASSWORD",
       "displayName": "HSBC",
-      "fields": [],
+      "fields": [
+        {
+          "name": "info",
+          "value": "Connecting your bank",
+          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+          "immutable": true
+        }
+      ],
       "payload": "tink:hsbc",
       "groupDisplayName": "",
       "multiFactor": false,
@@ -123,7 +165,14 @@
       "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
       "credentialsType": "PASSWORD",
       "displayName": "Ulster Bank",
-      "fields": [],
+      "fields": [
+        {
+          "name": "info",
+          "value": "Connecting your bank",
+          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+          "immutable": true
+        }
+      ],
       "payload": "tink2:ulster",
       "groupDisplayName": "",
       "multiFactor": false,
@@ -140,7 +189,14 @@
       "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
       "credentialsType": "PASSWORD",
       "displayName": "NatWest",
-      "fields": [],
+      "fields": [
+        {
+          "name": "info",
+          "value": "Connecting your bank",
+          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+          "immutable": true
+        }
+      ],
       "payload": "tink2:natwest",
       "groupDisplayName": "",
       "multiFactor": false,
@@ -157,7 +213,14 @@
       "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11Agent",
       "credentialsType": "PASSWORD",
       "displayName": "M&S Bank",
-      "fields": [],
+      "fields": [
+        {
+          "name": "info",
+          "value": "Connecting your bank",
+          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+          "immutable": true
+        }
+      ],
       "payload": "tink:markandspencer",
       "groupDisplayName": "",
       "multiFactor": false,
@@ -174,7 +237,14 @@
       "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11Agent",
       "credentialsType": "PASSWORD",
       "displayName": "First Direct",
-      "fields": [],
+      "fields": [
+        {
+          "name": "info",
+          "value": "Connecting your bank",
+          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+          "immutable": true
+        }
+      ],
       "payload": "tink:firstdirect",
       "groupDisplayName": "",
       "multiFactor": false,
@@ -188,23 +258,6 @@
     },
     {
       "name": "uk-lloyds-oauth2",
-      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Lloyds",
-      "fields": [],
-      "payload": "tink:lloyds",
-      "groupDisplayName": "",
-      "multiFactor": false,
-      "passwordhelptext": "Authentication is done on external page",
-      "popular": true,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "uk-lloyds-info-oauth2",
       "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
       "credentialsType": "PASSWORD",
       "displayName": "Lloyds",
@@ -232,7 +285,14 @@
       "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
       "credentialsType": "PASSWORD",
       "displayName": "Royal Bank of Scotland",
-      "fields": [],
+      "fields": [
+        {
+          "name": "info",
+          "value": "Connecting your bank",
+          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+          "immutable": true
+        }
+      ],
       "payload": "tink2:rbs",
       "groupDisplayName": "",
       "multiFactor": false,
@@ -249,7 +309,14 @@
       "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
       "credentialsType": "PASSWORD",
       "displayName": "Bank of Scotland",
-      "fields": [],
+      "fields": [
+        {
+          "name": "info",
+          "value": "Connecting your bank",
+          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+          "immutable": true
+        }
+      ],
       "payload": "tink:bankofscotland",
       "groupDisplayName": "",
       "multiFactor": false,
@@ -266,7 +333,14 @@
       "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11Agent",
       "credentialsType": "PASSWORD",
       "displayName": "Santander",
-      "fields": [],
+      "fields": [
+        {
+          "name": "info",
+          "value": "Connecting your bank",
+          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+          "immutable": true
+        }
+      ],
       "payload": "tink:santander",
       "groupDisplayName": "",
       "multiFactor": false,
