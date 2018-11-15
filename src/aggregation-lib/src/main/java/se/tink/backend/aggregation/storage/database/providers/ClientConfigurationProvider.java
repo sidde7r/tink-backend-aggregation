@@ -32,6 +32,10 @@ public class ClientConfigurationProvider {
         return clientConfigurationsByClientKey.containsKey(apiClientKey);
     }
 
+    public boolean isValid(String identifier) {
+        return isValidName(identifier) || isValidClientKey(identifier);
+    }
+
     public ClientConfiguration getClientConfiguration(String identifier) {
 
         // handles the multi client solution where we have client id in header
