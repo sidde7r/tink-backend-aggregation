@@ -8,6 +8,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import se.tink.backend.aggregation.storage.database.models.AggregatorConfiguration;
+import se.tink.backend.aggregation.storage.database.models.ClientConfiguration;
 import se.tink.backend.aggregation.storage.database.models.ClusterConfiguration;
 import se.tink.backend.aggregation.storage.database.repositories.AggregatorConfigurationsRepository;
 import se.tink.backend.aggregation.storage.database.repositories.ClientConfigurationsRepository;
@@ -59,6 +60,15 @@ public class AggregationRepositoryModule extends RepositoryModule {
             AggregatorConfigurationsRepository repository) {
         return repository.findAll().stream().collect(
                 Collectors.toMap(AggregatorConfiguration::getAggregatorId, Function.identity())
+        );
+    }
+
+    @Provides
+    @Singleton
+    @Named("clientConfiguration")
+    public Map<String, ClientConfiguration> providerClientConfiguration(ClientConfigurationsRepository repository) {
+        return repository.findAll().stream().collect(
+                Collectors.toMap(ClientConfiguration::getApiClientKey, Function.identity())
         );
     }
 }
