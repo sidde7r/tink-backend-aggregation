@@ -13,6 +13,7 @@ import uuid
 import time
 
 from logging.config import dictConfig
+from __future__ import print_function
 
 dictConfig({
     'version': 1,
@@ -382,7 +383,7 @@ def showHelp(f, argv):
     h = "%s [-h] [-a aggregationHost]\n" % argv[0]
     h += "  -h/--help           This menu\n"
     h += "  -a/--aggregation-host=  Aggregation host (including port)\n"
-    print >>f, h
+    print(h, file=f)
 
 def get_time_in_millis():
     return int(round(time.time() * 1000))
@@ -397,7 +398,7 @@ def main(argv):
                                 ["help", "aggregation-host="]
                             )
     except getopt.GetoptError:
-        print "HERE"
+        print("HERE")
         showHelp(sys.stderr, argv)
         return sys.exit(1)
 
@@ -418,7 +419,7 @@ def main(argv):
         ACCOUNTS_TABLE = DATA_BASE.table('accounts')
     LOG = app.logger
 
-    print str.format("\n Starting testing service with aggregation host: {} \n", AGGREGATION_HOST)
+    print(str.format("\n Starting testing service with aggregation host: {} \n", AGGREGATION_HOST))
 
 if __name__ == "__main__":
     app.run(main(sys.argv))
