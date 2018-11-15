@@ -97,11 +97,20 @@ public class AggregationDevelopmentRepositoryModule extends RepositoryModule {
 
     @Provides
     @Singleton
-    @Named("clientConfiguration")
+    @Named("clientConfigurationByClientKey")
     // TODO change this later for local development getting from service yml
     public Map<String, ClientConfiguration> providerClientConfiguration(ClientConfigurationsRepository repository) {
         return repository.findAll().stream().collect(
                 Collectors.toMap(ClientConfiguration::getApiClientKey, Function.identity())
+        );
+    }
+
+    @Provides
+    @Singleton
+    @Named("clientConfigurationByName")
+    public Map<String, ClientConfiguration> providerClientConfigurationByName(ClientConfigurationsRepository repository) {
+        return repository.findAll().stream().collect(
+                Collectors.toMap(ClientConfiguration::getClientName, Function.identity())
         );
     }
 }
