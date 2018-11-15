@@ -75,4 +75,9 @@ public class AccountEntity {
     public String getRequiredReference() {
         return requiredReference;
     }
+
+    public String getIdentifier() {
+        // iban or accountNumber is set depending on if the account is UK local or not.
+        return iban != null ? iban : accountNumber;
+    }
 }
