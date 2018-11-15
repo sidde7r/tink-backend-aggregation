@@ -7,8 +7,8 @@ import se.tink.backend.aggregation.rpc.Field;
 //@Ignore
 public class RevolutAgentTest {
 
-    private final String USERNAME = "+46724026264"; // phone number +{country code}{phone number}, eg. +46701234567
-    private final String PASSWORD = "1234"; // four digits, eg. 1234
+    private final String USERNAME = ""; // phone number +{country code}{phone number}, eg. +46701234567
+    private final String PASSWORD = ""; // four digits, eg. 1234
 
     @Test
     public void testLoginRefresh() throws Exception {
