@@ -204,6 +204,31 @@
       "type": "BANK"
     },
     {
+      "name": "uk-lloyds-info-oauth2",
+      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
+      "credentialsType": "PASSWORD",
+      "displayName": "Lloyds",
+      "fields": [
+        {
+          "description": "To log in",
+          "name": "info",
+          "value": "TEST TEXT",
+          "helpText": "HELP TEXT",
+          "immutable": true
+        }
+      ],
+      "payload": "tink:lloyds",
+      "groupDisplayName": "",
+      "multiFactor": false,
+      "passwordhelptext": "Authentication is done on external page",
+      "popular": true,
+      "refreshFrequency": 1,
+      "refreshFrequencyFactor": 1,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
       "name": "uk-rbs-oauth2",
       "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
       "credentialsType": "PASSWORD",
