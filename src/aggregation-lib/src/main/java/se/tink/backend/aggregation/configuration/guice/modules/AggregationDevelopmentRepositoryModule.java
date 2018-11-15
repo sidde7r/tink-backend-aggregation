@@ -9,6 +9,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.configuration.models.AggregationDevelopmentConfiguration;
 import se.tink.backend.aggregation.configuration.DevelopmentConfigurationSeeder;
+import se.tink.backend.aggregation.storage.database.models.AggregatorConfiguration;
 import se.tink.backend.aggregation.storage.database.models.ClusterConfiguration;
 import se.tink.backend.aggregation.storage.database.repositories.AggregatorConfigurationsRepository;
 import se.tink.backend.aggregation.storage.database.repositories.ClientConfigurationsRepository;
@@ -71,6 +72,17 @@ public class AggregationDevelopmentRepositoryModule extends RepositoryModule {
     public Map<String, ClusterConfiguration> provideClusterConfigurations(ClusterConfigurationsRepository repository) {
         return repository.findAll().stream().collect(
                 Collectors.toMap(ClusterConfiguration::getClusterId, Function.identity())
+        );
+    }
+
+    @Provides
+    @Singleton
+    @Named("aggregatorConfiguration")
+    // TODO change this later to get from service yml instead of database 
+    public Map<String, AggregatorConfiguration> providerAggregatorConfiguration(
+            AggregatorConfigurationsRepository repository) {
+        return repository.findAll().stream().collect(
+                Collectors.toMap(AggregatorConfiguration::getAggregatorId, Function.identity())
         );
     }
 }

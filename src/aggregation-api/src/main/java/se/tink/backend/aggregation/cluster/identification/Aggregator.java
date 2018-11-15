@@ -5,9 +5,6 @@ public class Aggregator {
     private String aggregatorIdentifier;
     public final static String DEFAULT = "Tink";
 
-    public Aggregator() {
-    }
-
     private Aggregator(String aggregatorIdentifier){
         this.aggregatorIdentifier = aggregatorIdentifier;
     }
