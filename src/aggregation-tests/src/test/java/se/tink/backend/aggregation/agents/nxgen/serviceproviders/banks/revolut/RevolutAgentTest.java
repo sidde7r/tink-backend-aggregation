@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.rpc.Field;
 
-//@Ignore
+@Ignore
 public class RevolutAgentTest {
 
     private final String USERNAME = ""; // phone number +{country code}{phone number}, eg. +46701234567
