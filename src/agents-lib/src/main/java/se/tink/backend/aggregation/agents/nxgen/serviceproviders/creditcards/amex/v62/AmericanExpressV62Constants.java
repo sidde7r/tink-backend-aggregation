@@ -71,7 +71,9 @@ public class AmericanExpressV62Constants {
     }
 
     public static final class ReportingCode {
-        public static String LOGON_FAIL = "LOGON1001";
+        public static final String LOGON_FAIL_FIRST_ATTEMPT = "LOGON1001";
+        public static final String LOGON_FAIL_SECOND_ATTEMPT = "LOGON1002";
+        public static final String LOGON_FAIL_ACCOUNT_BLOCKED = "LOGON1003";
     }
 
     public static class Fetcher {

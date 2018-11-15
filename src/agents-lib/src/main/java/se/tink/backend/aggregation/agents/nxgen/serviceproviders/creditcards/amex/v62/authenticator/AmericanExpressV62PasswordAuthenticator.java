@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.AmericanExpressConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62ApiClient;
@@ -19,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.password.Pas
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.utils.StringUtils;
+import se.tink.libraries.i18n.LocalizableKey;
 
 public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenticator {
 
@@ -53,14 +55,18 @@ public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenti
         LogonResponse logonResponse = apiClient.logon(logonRequest);
 
         if (!logonResponse.isSuccess()) {
-            if (AmericanExpressV62Constants.ReportingCode.LOGON_FAIL.equalsIgnoreCase(
-                    logonResponse.getStatus().getReportingCode())) {
+            String reportingCode = logonResponse.getStatus().getReportingCode().toUpperCase();
+
+            switch(reportingCode) {
+            case AmericanExpressV62Constants.ReportingCode.LOGON_FAIL_FIRST_ATTEMPT:
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
-            } else {
-                LOGGER.error(
-                        logonResponse.getStatus().getReportingCode()
-                                + " "
-                                + logonResponse.getStatus().getMessage());
+            case AmericanExpressV62Constants.ReportingCode.LOGON_FAIL_SECOND_ATTEMPT:
+                throw LoginError.INCORRECT_CREDENTIALS.exception(new LocalizableKey(
+                        "Incorrect login credentials. You have one more attempt before your account will be locked."));
+            case AmericanExpressV62Constants.ReportingCode.LOGON_FAIL_ACCOUNT_BLOCKED:
+                throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+            default:
+                LOGGER.error(String.format("%s: %s", reportingCode, logonResponse.getStatus().getMessage()));
                 throw new IllegalStateException("Logon failure");
             }
         }
