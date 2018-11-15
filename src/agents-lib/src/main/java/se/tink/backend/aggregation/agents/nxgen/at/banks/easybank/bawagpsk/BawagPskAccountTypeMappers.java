@@ -39,7 +39,7 @@ public final class BawagPskAccountTypeMappers {
             return accountTypeFromCode;
         }
 
-        final Optional<AccountTypes> accountTypeFromCodeFallback = BawagPskUtils.getFallbackMapper()
+        final Optional<AccountTypes> accountTypeFromCodeFallback = getFallbackMapper()
                 .translate(new BawagPskAccountTypeMappers.Product(productCode, productType));
 
         if (accountTypeFromCodeFallback.isPresent()) {

@@ -14,12 +14,6 @@ public class BawagPskUtils {
         throw new AssertionError();
     }
 
-    private final static BawagPskAccountTypeMappers accountTypeMappers = new BawagPskAccountTypeMappers();
-
-    public static AccountTypePredicateMapper<BawagPskAccountTypeMappers.Product> getFallbackMapper() {
-        return accountTypeMappers.getFallbackMapper();
-    }
-
     public static <T> String entityToXml(final T entity) {
         final StringWriter stringWriter;
 
