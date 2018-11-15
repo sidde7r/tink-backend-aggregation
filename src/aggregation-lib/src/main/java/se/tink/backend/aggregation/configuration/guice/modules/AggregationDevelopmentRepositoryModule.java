@@ -67,10 +67,18 @@ public class AggregationDevelopmentRepositoryModule extends RepositoryModule {
     @Provides
     @Singleton
     @Named("clusterConfigurations")
-    // TODO change this later to get from service yml instead of database 
     public Map<String, ClusterConfiguration> provideClusterConfigurations(ClusterConfigurationsRepository repository) {
-        return repository.findAll().stream().collect(
+        Map<String, ClusterConfiguration> clusterConfigurations =  repository.findAll().stream().collect(
                 Collectors.toMap(ClusterConfiguration::getClusterId, Function.identity())
         );
+
+        if (developmentConfiguration == null || !developmentConfiguration.isValid()) {
+            return clusterConfigurations;
+        }
+
+        ClusterConfiguration clusterConfiguration = developmentConfiguration.getClusterConfiguration();
+        clusterConfigurations.put(clusterConfiguration.getClusterId(), clusterConfiguration);
+
+        return clusterConfigurations;
     }
 }

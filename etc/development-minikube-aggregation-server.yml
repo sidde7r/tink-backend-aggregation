@@ -32,6 +32,13 @@ developmentConfiguration:
       keyId: 1
     base64EncodedKey: "QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUE="
 
+  clusterConfiguration:
+    clusterId: local-development
+    host: http://localhost:9098
+    apiToken: devtoken
+    base64encodedclientcert: ""
+    disablerequestcompression: false
+
 database:
   driverClass: com.mysql.jdbc.Driver
   username: tink
