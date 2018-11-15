@@ -4,7 +4,7 @@
   "providers": [
     {
       "name": "uk-modelo-oauth2",
-      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
+      "className": "nxgen.uk.openbanking.modelo.ModeloAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Modelo test",
       "fields": [],
@@ -21,7 +21,7 @@
     },
     {
       "name": "uk-aib-oauth2",
-      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11Agent",
+      "className": "nxgen.uk.openbanking.aib.AibAgent",
       "credentialsType": "PASSWORD",
       "displayName": "AIB",
       "fields": [
@@ -45,7 +45,7 @@
     },
     {
       "name": "uk-barclays-oauth2",
-      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11Agent",
+      "className": "nxgen.uk.openbanking.barclays.BarclaysAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Barclays",
       "fields": [
@@ -69,7 +69,7 @@
     },
     {
       "name": "uk-danskebank-oauth2",
-      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11Agent",
+      "className": "nxgen.uk.openbanking.danskebank.DanskeBankAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Danske Bank",
       "fields": [
@@ -114,7 +114,7 @@
     },
     {
       "name": "uk-halifax-oauth2",
-      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
+      "className": "nxgen.uk.openbanking.halifax.HalifaxAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Halifax",
       "fields": [
@@ -138,7 +138,7 @@
     },
     {
       "name": "uk-hsbc-oauth2",
-      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11Agent",
+      "className": "nxgen.uk.openbanking.hsbc.HsbcAgent",
       "credentialsType": "PASSWORD",
       "displayName": "HSBC",
       "fields": [
@@ -162,7 +162,7 @@
     },
     {
       "name": "uk-ulster-oauth2",
-      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
+      "className": "nxgen.uk.openbanking.ulster.UlsterAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Ulster Bank",
       "fields": [
@@ -186,7 +186,7 @@
     },
     {
       "name": "uk-natwest-oauth2",
-      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
+      "className": "nxgen.uk.openbanking.natwest.NatWestAgent",
       "credentialsType": "PASSWORD",
       "displayName": "NatWest",
       "fields": [
@@ -210,7 +210,7 @@
     },
     {
       "name": "uk-markandspencer-oauth2",
-      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11Agent",
+      "className": "nxgen.uk.openbanking.markandspencer.MarkAndSpencerAgent",
       "credentialsType": "PASSWORD",
       "displayName": "M&S Bank",
       "fields": [
@@ -234,7 +234,7 @@
     },
     {
       "name": "uk-firstdirect-oauth2",
-      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11Agent",
+      "className": "nxgen.uk.openbanking.firstdirect.FirstDirectAgent",
       "credentialsType": "PASSWORD",
       "displayName": "First Direct",
       "fields": [
@@ -258,7 +258,7 @@
     },
     {
       "name": "uk-lloyds-oauth2",
-      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
+      "className": "nxgen.uk.openbanking.lloyds.LloydsAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Lloyds",
       "fields": [
@@ -282,7 +282,7 @@
     },
     {
       "name": "uk-rbs-oauth2",
-      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
+      "className": "nxgen.uk.openbanking.rbs.RbsAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Royal Bank of Scotland",
       "fields": [
@@ -306,7 +306,7 @@
     },
     {
       "name": "uk-bankofscotland-oauth2",
-      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
+      "className": "nxgen.uk.openbanking.bankofscotland.BankOfScotlandAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Bank of Scotland",
       "fields": [
@@ -330,7 +330,7 @@
     },
     {
       "name": "uk-santander-oauth2",
-      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11Agent",
+      "className": "nxgen.uk.openbanking.santander.SantanderAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Santander",
       "fields": [
