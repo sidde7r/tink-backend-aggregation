@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities.OpBankAccountEntity;
 import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.aggregation.rpc.User;
 import static junit.framework.TestCase.assertEquals;
 
 public class OpBankAccountEntityTest {
@@ -30,7 +31,7 @@ public class OpBankAccountEntityTest {
     public void getNormalizedBankIdIllegalCharsRemoved() {
         account.setAccountNumber("-FI 12'34 567?890123456_");
 
-        assertEquals(EXPECTED_ACCOUNT_NUMBER, account.toTransactionalAccount().toSystemAccount().getBankId());
+        assertEquals(EXPECTED_ACCOUNT_NUMBER, account.toTransactionalAccount().toSystemAccount(new User()).getBankId());
     }
 
     @Test

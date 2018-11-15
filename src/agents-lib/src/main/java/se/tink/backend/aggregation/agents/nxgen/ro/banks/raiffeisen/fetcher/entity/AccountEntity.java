@@ -41,19 +41,10 @@ public class AccountEntity {
         return resourceId;
     }
 
-    private HashMap<String, String> getPayload() {
-        HashMap<String, String> result = new HashMap<>();
-
-        result.put("currency", currency);
-
-        return result;
-    }
-
     public TransactionalAccount toTransactionalAccount() {
         return TransactionalAccount.builder(AccountTypes.CHECKING, iban, toTinkAmount())
                 .setName(accountName)
                 .setAccountNumber(getAccountNumber())
-                .setPayload(getPayload())
                 .putInTemporaryStorage(RaiffeisenConstants.STORAGE.TRANSACTIONS_URL, links.getTransactionUrl())
                 .putInTemporaryStorage(RaiffeisenConstants.STORAGE.BALANCE_URL, links.getBalanceUrl())
                 .putInTemporaryStorage(RaiffeisenConstants.STORAGE.ACCOUNT_ID, resourceId)

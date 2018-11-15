@@ -61,7 +61,7 @@ public class UpdateController {
             log.warn("Updating an already updated account");
         }
 
-        baseContext.cacheAccount(account.toSystemAccount(), accountFeatures);
+        baseContext.cacheAccount(account.toSystemAccount(user), accountFeatures);
 
         accounts.add(account);
         return true;
@@ -71,8 +71,7 @@ public class UpdateController {
         if (!updateAccount(account)) {
             return false;
         }
-
-        baseContext.updateTransactions(account.toSystemAccount(), transactions.stream()
+        baseContext.updateTransactions(account.toSystemAccount(user), transactions.stream()
                 .map(AggregationTransaction::toSystemTransaction)
                 .collect(Collectors.toList()));
 
