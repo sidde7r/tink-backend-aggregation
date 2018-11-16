@@ -71,6 +71,7 @@ public class AggregationModule extends AbstractModule {
                 //This is not a resource, but a provider
                 .addResources(
                         JerseyClusterInfoProvider.class,
+                        JerseyClientApiKeyProvider.class,
                         AggregationService.class,
                         CreditSafeService.class,
                         JerseyClientApiKeyProvider.class
