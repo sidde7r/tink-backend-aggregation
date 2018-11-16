@@ -7,11 +7,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import org.apache.curator.framework.CuratorFramework;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.api.AggregationService;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
+import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.queue.models.RefreshInformation;
@@ -35,7 +35,6 @@ import se.tink.backend.aggregation.workers.AgentWorkerOperationFactory;
 import se.tink.backend.aggregation.workers.ratelimit.DefaultProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.ratelimit.OverridingProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.ratelimit.ProviderRateLimiterFactory;
-import se.tink.backend.common.cache.CacheClient;
 import se.tink.backend.queue.QueueProducer;
 import se.tink.libraries.draining.ApplicationDrainMode;
 import se.tink.libraries.http.utils.HttpResponseHelper;
@@ -65,7 +64,8 @@ public class AggregationServiceResource implements AggregationService {
 
 
     @Override
-    public Credentials createCredentials(CreateCredentialsRequest request, ClusterInfo clusterInfo) {
+    public Credentials createCredentials(CreateCredentialsRequest request, ClusterInfo clusterInfo, ClientInfo clientInfo) {
+        if ()
         AgentWorkerOperation createCredentialsOperation = agentWorkerCommandFactory
                 .createCreateCredentialsOperation(clusterInfo, request);
 
@@ -78,7 +78,7 @@ public class AggregationServiceResource implements AggregationService {
 
     // TODO: Remove this endpoint when it's not available through the aggregation controller anymore.
     @Override
-    public void deleteCredentials(DeleteCredentialsRequest request, ClusterInfo clusterInfo) {
+    public void deleteCredentials(DeleteCredentialsRequest request, ClusterInfo clusterInfo, ClientInfo clientInfo) {
         HttpResponseHelper.ok();
     }
 
@@ -93,7 +93,7 @@ public class AggregationServiceResource implements AggregationService {
 
     @Override
     public void configureWhitelistInformation(final ConfigureWhitelistInformationRequest request,
-            ClusterInfo clusterInfo) throws Exception {
+            ClusterInfo clusterInfo, ClientInfo clientInfo) throws Exception {
         Set<RefreshableItem> itemsToRefresh = request.getItemsToRefresh();
 
         // If the caller don't set any refreshable items, we won't do a refresh
@@ -115,7 +115,7 @@ public class AggregationServiceResource implements AggregationService {
     }
 
     @Override
-    public void refreshWhitelistInformation(final RefreshWhitelistInformationRequest request, ClusterInfo clusterInfo)
+    public void refreshWhitelistInformation(final RefreshWhitelistInformationRequest request, ClusterInfo clusterInfo, ClientInfo clientInfo)
             throws Exception {
         // If the caller don't set any accounts to refresh, we won't do a refresh.
         if (Objects.isNull(request.getAccounts()) || request.getAccounts().isEmpty()) {
@@ -143,7 +143,7 @@ public class AggregationServiceResource implements AggregationService {
     }
 
     @Override
-    public void refreshInformation(final RefreshInformationRequest request, ClusterInfo clusterInfo) throws Exception {
+    public void refreshInformation(final RefreshInformationRequest request, ClusterInfo clusterInfo, ClientInfo clientInfo) throws Exception {
         if (request.isManual()) {
             agentWorker.execute(agentWorkerCommandFactory.createRefreshOperation(clusterInfo, request));
         } else {
@@ -156,22 +156,22 @@ public class AggregationServiceResource implements AggregationService {
     }
 
     @Override
-    public void transfer(final TransferRequest request, ClusterInfo clusterInfo) throws Exception {
+    public void transfer(final TransferRequest request, ClusterInfo clusterInfo, ClientInfo clientInfo) throws Exception {
         agentWorker.execute(agentWorkerCommandFactory.createExecuteTransferOperation(clusterInfo, request));
     }
 
     @Override
-    public void whitelistedTransfer(final WhitelistedTransferRequest request, ClusterInfo clusterInfo) throws Exception {
+    public void whitelistedTransfer(final WhitelistedTransferRequest request, ClusterInfo clusterInfo, ClientInfo clientInfo) throws Exception {
         agentWorker.execute(agentWorkerCommandFactory.createExecuteWhitelistedTransferOperation(clusterInfo, request));
     }
 
     @Override
-    public void keepAlive(KeepAliveRequest request, ClusterInfo clusterInfo) throws Exception {
+    public void keepAlive(KeepAliveRequest request, ClusterInfo clusterInfo, ClientInfo clientInfo) throws Exception {
         agentWorker.execute(agentWorkerCommandFactory.createKeepAliveOperation(clusterInfo, request));
     }
 
     @Override
-    public Credentials updateCredentials(UpdateCredentialsRequest request, ClusterInfo clusterInfo) {
+    public Credentials updateCredentials(UpdateCredentialsRequest request, ClusterInfo clusterInfo, ClientInfo clientInfo) {
         AgentWorkerOperation updateCredentialsOperation = agentWorkerCommandFactory
                 .createUpdateOperation(clusterInfo, request);
 
@@ -202,7 +202,7 @@ public class AggregationServiceResource implements AggregationService {
 
     @Override
     public Response reEncryptCredentials(ReEncryptCredentialsRequest reencryptCredentialsRequest,
-            ClusterInfo clusterInfo) {
+            ClusterInfo clusterInfo,  ClientInfo clientInfo) {
         try {
             agentWorker.execute(agentWorkerCommandFactory
                     .createReEncryptCredentialsOperation(clusterInfo, reencryptCredentialsRequest));

@@ -5,7 +5,9 @@ import com.google.inject.Inject;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import se.tink.backend.aggregation.api.CreditSafeService;
+import se.tink.backend.aggregation.cluster.annotations.ClientContext;
 import se.tink.backend.aggregation.cluster.annotations.ClusterContext;
+import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -37,7 +39,7 @@ public class CreditSafeServiceResource implements CreditSafeService {
 
     @Override
     public void removeConsumerMonitoring(RemoveMonitoredConsumerCreditSafeRequest request,
-            @ClusterContext ClusterInfo clusterInfo) {
+            @ClusterContext ClusterInfo clusterInfo, @ClientContext ClientInfo clientInfo) {
         validateCluster(clusterInfo);
 
         SocialSecurityNumber.Sweden socialSecurityNumber = new SocialSecurityNumber.Sweden(request.getPnr());
@@ -50,7 +52,7 @@ public class CreditSafeServiceResource implements CreditSafeService {
 
     @Override
     public Response addConsumerMonitoring(AddMonitoredConsumerCreditSafeRequest request,
-            @ClusterContext ClusterInfo clusterInfo) {
+            @ClusterContext ClusterInfo clusterInfo, @ClientContext ClientInfo clientInfo) {
         validateCluster(clusterInfo);
 
         SocialSecurityNumber.Sweden socialSecurityNumber = new SocialSecurityNumber.Sweden(request.getPnr());
@@ -63,7 +65,7 @@ public class CreditSafeServiceResource implements CreditSafeService {
     }
 
     @Override
-    public PortfolioListResponse listPortfolios(@ClusterContext ClusterInfo clusterInfo) {
+    public PortfolioListResponse listPortfolios(@ClusterContext ClusterInfo clusterInfo, @ClientContext ClientInfo clientInfo) {
         validateCluster(clusterInfo);
 
         return consumerMonitoringWrapper.listPortfolios();
@@ -71,7 +73,7 @@ public class CreditSafeServiceResource implements CreditSafeService {
 
     @Override
     public PageableConsumerCreditSafeResponse listChangedConsumers(ChangedConsumerCreditSafeRequest request,
-            @ClusterContext ClusterInfo clusterInfo) {
+            @ClusterContext ClusterInfo clusterInfo, @ClientContext ClientInfo clientInfo) {
         validateCluster(clusterInfo);
 
         return consumerMonitoringWrapper.listChangedConsumers(request);
@@ -79,7 +81,7 @@ public class CreditSafeServiceResource implements CreditSafeService {
 
     @Override
     public PageableConsumerCreditSafeResponse listMonitoredConsumers(PageableConsumerCreditSafeRequest request,
-            @ClusterContext ClusterInfo clusterInfo) {
+            @ClusterContext ClusterInfo clusterInfo, @ClientContext ClientInfo clientInfo) {
         validateCluster(clusterInfo);
 
         return consumerMonitoringWrapper.listMonitoredConsumers(request);

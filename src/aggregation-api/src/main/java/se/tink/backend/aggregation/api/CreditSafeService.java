@@ -10,7 +10,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import se.tink.api.annotations.Team;
 import se.tink.api.annotations.TeamOwnership;
+import se.tink.backend.aggregation.cluster.annotations.ClientContext;
 import se.tink.backend.aggregation.cluster.annotations.ClusterContext;
+import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.AddMonitoredConsumerCreditSafeRequest;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.ChangedConsumerCreditSafeRequest;
@@ -28,28 +30,28 @@ public interface CreditSafeService {
     @Path("consumermonitoring")
     @TeamOwnership(Team.INTEGRATION)
     void removeConsumerMonitoring(RemoveMonitoredConsumerCreditSafeRequest request,
-            @ClusterContext ClusterInfo clusterInfo);
+            @ClusterContext ClusterInfo clusterInfo, @ClientContext ClientInfo clientInfo);
 
     @POST
     @Path("consumermonitoring")
     @TeamOwnership(Team.INTEGRATION)
     Response addConsumerMonitoring(AddMonitoredConsumerCreditSafeRequest request,
-            @ClusterContext ClusterInfo clusterInfo);
+            @ClusterContext ClusterInfo clusterInfo, @ClientContext ClientInfo clientInfo);
 
     @GET
     @Path("consumermonitoring/portfolios")
     @TeamOwnership(Team.INTEGRATION)
-    PortfolioListResponse listPortfolios(@ClusterContext ClusterInfo clusterInfo);
+    PortfolioListResponse listPortfolios(@ClusterContext ClusterInfo clusterInfo, @ClientContext ClientInfo clientInfo);
 
     @POST
     @Path("consumermonitoring/all")
     @TeamOwnership(Team.INTEGRATION)
     PageableConsumerCreditSafeResponse listMonitoredConsumers(PageableConsumerCreditSafeRequest request,
-            @ClusterContext ClusterInfo clusterInfo);
+            @ClusterContext ClusterInfo clusterInfo, @ClientContext ClientInfo clientInfo);
 
     @POST
     @Path("consumermonitoring/changed")
     @TeamOwnership(Team.INTEGRATION)
     PageableConsumerCreditSafeResponse listChangedConsumers(ChangedConsumerCreditSafeRequest request,
-            @ClusterContext ClusterInfo clusterInfo);
+            @ClusterContext ClusterInfo clusterInfo, @ClientContext ClientInfo clientInfo);
 }
