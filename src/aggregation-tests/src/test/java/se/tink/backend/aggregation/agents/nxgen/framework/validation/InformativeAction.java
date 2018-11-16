@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.system.rpc.Transaction;
 
+/** Logs a warning if validation fails and an info message if validation passes. */
 public final class InformativeAction implements Action {
     private static final Logger logger = LoggerFactory.getLogger(InformativeAction.class);
 
