@@ -29,6 +29,10 @@ public class ControllerWrapperProvider {
 
     public ControllerWrapper createControllerWrapper(ClusterInfo clusterInfo) {
         String clusterId = clusterInfo.getClusterId().getId();
+        return createControllerWrapper(clusterId);
+    }
+
+    public ControllerWrapper createControllerWrapper(String clusterId) {
         return ControllerWrapper.of(aggregationControllerAggregationClient,
                 HostConfigurationConverter.convert(clusterConfigurations.get(clusterId)));
     }
