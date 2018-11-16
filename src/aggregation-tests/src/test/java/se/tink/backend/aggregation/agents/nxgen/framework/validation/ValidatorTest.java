@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.system.rpc.Transaction;
@@ -28,7 +29,11 @@ public final class ValidatorTest {
                         .ruleAccount(
                                 "Account number is non-null",
                                 acc -> acc.getAccountNumber() != null,
-                                acc -> String.format("Account %s is null", acc))
+                                acc -> String.format("Account number of %s is null", acc))
+                        .ruleTransaction(
+                                "Transaction description is present",
+                                trx -> trx.getDescription() != null,
+                                trx -> String.format("Transaction description is null: %s", trx))
                         .rule(
                                 "Account balance threshold",
                                 data ->
