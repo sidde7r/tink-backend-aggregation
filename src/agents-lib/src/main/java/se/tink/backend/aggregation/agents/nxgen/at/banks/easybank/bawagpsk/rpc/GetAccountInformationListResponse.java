@@ -9,7 +9,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskAccountTypeMappers;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskConstants;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskUtils;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.AccountInfo;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.AccountInformationListItem;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Body;
@@ -28,6 +30,8 @@ import se.tink.libraries.account.identifiers.IbanIdentifier;
 public final class GetAccountInformationListResponse {
     private static final Logger logger =
             LoggerFactory.getLogger(GetAccountInformationListResponse.class);
+
+    private static final BawagPskAccountTypeMappers mappers = new BawagPskAccountTypeMappers();
 
     private Envelope envelope;
 
@@ -118,7 +122,7 @@ public final class GetAccountInformationListResponse {
 
     private static Optional<TransactionalAccount> toTransactionalAccount(
             final AccountInfo accountInfo, final String productCode) {
-        return inferAccountType(productCode, accountInfo.getProductID().getProductType())
+        return mappers.inferAccountType(productCode, accountInfo.getProductID().getProductType())
                 .filter(type -> type == AccountTypes.CHECKING || type == AccountTypes.SAVINGS)
                 .map(
                         type ->
@@ -146,7 +150,7 @@ public final class GetAccountInformationListResponse {
     private static Optional<CreditCardAccount> toCreditCardAccount(
             final AccountInfo accountInfo, final String productCode) {
 
-        return inferAccountType(productCode, accountInfo.getProductID().getProductType())
+        return mappers.inferAccountType(productCode, accountInfo.getProductID().getProductType())
                 .filter(type -> type == AccountTypes.CREDIT_CARD)
                 .map(
                         type ->
@@ -180,7 +184,7 @@ public final class GetAccountInformationListResponse {
     private static Optional<LoanAccount> toLoanAccount(
             final AccountInfo accountInfo, final String productCode) {
 
-        return inferAccountType(productCode, accountInfo.getProductID().getProductType())
+        return mappers.inferAccountType(productCode, accountInfo.getProductID().getProductType())
                 .filter(type -> type == AccountTypes.LOAN)
                 .map(
                         type ->
@@ -202,44 +206,5 @@ public final class GetAccountInformationListResponse {
                                                                 .getAccountOwner()
                                                                 .trim()))
                                         .build());
-    }
-
-    /**
-     * It is assumed -- but not verified -- that the app infers the account type from the first
-     * character of the account's product code. We cannot use <ProductType> to infer the account
-     * type because it has been shown that the server incorrectly sets it to "CHECKING" even in
-     * cases where it should be "SAVINGS".
-     *
-     * @return Optional.empty() if the product is not a transactional account (e.g. credit card,
-     *     loan)
-     */
-    private static Optional<AccountTypes> inferAccountType(
-            final String productCode, final String productType) {
-        // TODO refactor with isPresentOrElse when we are past Java 8
-
-        final Optional<AccountTypes> accountTypeFromCode =
-                BawagPskConstants.PRODUCT_CODE_MAPPER.translate(productCode);
-
-        if (accountTypeFromCode.isPresent()) {
-            return accountTypeFromCode;
-        } else {
-            logger.warn(
-                    "{} Could not infer account type from product code \"{}\"; falling back to inferring from product type \"{}\"",
-                    BawagPskConstants.LogTags.TRANSACTION_UNKNOWN_PRODUCT_CODE.toTag(),
-                    productCode,
-                    productType);
-        }
-
-        final Optional<AccountTypes> accountTypeFromType =
-                BawagPskConstants.PRODUCT_TYPE_MAPPER.translate(productType);
-
-        if (!accountTypeFromType.isPresent()) {
-            logger.warn(
-                    "{} Could not infer account type from product type \"{}\"; ignoring the account",
-                    BawagPskConstants.LogTags.TRANSACTION_UNKNOWN_PRODUCT_TYPE.toTag(),
-                    productType);
-        }
-
-        return accountTypeFromType;
     }
 }
