@@ -127,8 +127,17 @@ public class AggregationDevelopmentRepositoryModule extends RepositoryModule {
     @Singleton
     @Named("clientConfigurationByName")
     public Map<String, ClientConfiguration> providerClientConfigurationByName(ClientConfigurationsRepository repository) {
-        return repository.findAll().stream().collect(
+        Map<String, ClientConfiguration> clientConfigurations = repository.findAll().stream().collect(
                 Collectors.toMap(ClientConfiguration::getClientName, Function.identity())
         );
+
+        if (developmentConfiguration == null || !developmentConfiguration.isValid()) {
+            return clientConfigurations;
+        }
+
+        ClientConfiguration clientConfiguration = developmentConfiguration.getClientConfiguration();
+        clientConfigurations.put(clientConfiguration.getClientName(), clientConfiguration);
+
+        return clientConfigurations;
     }
 }
