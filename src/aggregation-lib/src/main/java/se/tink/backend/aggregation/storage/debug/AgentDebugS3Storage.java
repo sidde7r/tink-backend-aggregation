@@ -47,7 +47,7 @@ public class AgentDebugS3Storage implements AgentDebugStorageHandler {
         }
     }
 
-    public static boolean isValidConfiguration(S3StorageConfiguration configuration) {
+    private static boolean isValidConfiguration(S3StorageConfiguration configuration) {
         return Objects.nonNull(configuration) &&
                 configuration.isEnabled() &&
                 Objects.nonNull(configuration.getUrl()) &&
@@ -55,7 +55,7 @@ public class AgentDebugS3Storage implements AgentDebugStorageHandler {
                 Objects.nonNull(configuration.getRegion());
     }
 
-    public String putObject(String content, String file) throws AmazonServiceException {
+    private String putObject(String content, String file) throws AmazonServiceException {
             awsStorageClient.putObject(bucketName, file, content);
             return String.format("AWS CLI: s3://%s/%s \n "
                             + "AWS HTTP: %s",
