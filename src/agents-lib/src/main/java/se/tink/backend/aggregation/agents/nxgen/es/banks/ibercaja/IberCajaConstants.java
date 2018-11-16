@@ -82,5 +82,6 @@ public class IberCajaConstants {
 
     public static AccountTypeMapper CARD_TYPE_MAPPER = AccountTypeMapper.builder()
             .put(AccountTypes.CREDIT_CARD, 2)
+            .ignoreKeys(1)  //1 is debit card
             .build();
 }
