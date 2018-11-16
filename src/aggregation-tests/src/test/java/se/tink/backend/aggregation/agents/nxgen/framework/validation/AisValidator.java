@@ -190,5 +190,12 @@ public final class AisValidator {
             this.action = action;
             return this;
         }
+
+        public Builder disableRule(final String ruleIdentifier) {
+            aisDataRules.removeIf(rule -> Objects.equals(rule.getRuleIdentifier(), ruleIdentifier));
+            accountRules.removeIf(rule -> Objects.equals(rule.getRuleIdentifier(), ruleIdentifier));
+            transactionRules.removeIf(rule -> Objects.equals(rule.getRuleIdentifier(), ruleIdentifier));
+            return this;
+        }
     }
 }
