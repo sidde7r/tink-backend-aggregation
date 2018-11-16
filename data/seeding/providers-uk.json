@@ -409,7 +409,7 @@
         }
       ],
       "passwordhelptext": "Enter your full phone number in international format starting with '+', and the four digit passcode you set up in your Revolut app.",
-      "status": "DISABLED",
+      "status": "ENABLED",
       "transactional": true,
       "type": "BANK"
     },
