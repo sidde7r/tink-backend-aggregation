@@ -65,7 +65,6 @@ public class AggregationServiceResource implements AggregationService {
 
     @Override
     public Credentials createCredentials(CreateCredentialsRequest request, ClusterInfo clusterInfo, ClientInfo clientInfo) {
-        if ()
         AgentWorkerOperation createCredentialsOperation = agentWorkerCommandFactory
                 .createCreateCredentialsOperation(clusterInfo, request);
 
