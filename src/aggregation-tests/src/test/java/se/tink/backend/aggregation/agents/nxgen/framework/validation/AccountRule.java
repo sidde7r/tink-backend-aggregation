@@ -3,20 +3,17 @@ package se.tink.backend.aggregation.agents.nxgen.framework.validation;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import se.tink.backend.aggregation.rpc.Account;
 
-/**
- * A rule is uniquely identified and recognized by its string identifier.
- */
-public final class ValidationRule implements IValidationRule<AisData> {
-    private String ruleIdentifier;
+public final class AccountRule implements IValidationRule<Account> {
+    private final String ruleIdentifier;
+    private final Predicate<Account> criterion;
+    private final Function<Account, String> failMessage;
 
-    private Predicate<AisData> criterion;
-    private Function<AisData, String> failMessage;
-
-    public ValidationRule(
+    public AccountRule(
             final String ruleIdentifier,
-            final Predicate<AisData> criterion,
-            final Function<AisData, String> failMessage) {
+            final Predicate<Account> criterion,
+            final Function<Account, String> failMessage) {
         this.ruleIdentifier = ruleIdentifier;
         this.criterion = criterion;
         this.failMessage = failMessage;
@@ -28,13 +25,18 @@ public final class ValidationRule implements IValidationRule<AisData> {
     }
 
     @Override
-    public Predicate<AisData> getCriterion() {
+    public Predicate<Account> getCriterion() {
         return criterion;
     }
 
     @Override
-    public String getMessage(final AisData aisData) {
-        return failMessage.apply(aisData);
+    public String getMessage(final Account account) {
+        return failMessage.apply(account);
+    }
+
+    @Override
+    public int compareTo(final IValidationRule<Account> accountIValidationRule) {
+        return getRuleIdentifier().compareTo(accountIValidationRule.getRuleIdentifier());
     }
 
     @Override
@@ -43,20 +45,15 @@ public final class ValidationRule implements IValidationRule<AisData> {
             return true;
         } else if (o == null) {
             return false;
-        } else if (!(o instanceof ValidationRule)) {
+        } else if (!(o instanceof AccountRule)) {
             return false;
         }
-        final ValidationRule other = (ValidationRule) o;
+        final AccountRule other = (AccountRule) o;
         return Objects.equals(ruleIdentifier, other.getRuleIdentifier());
     }
 
     @Override
     public int hashCode() {
         return ruleIdentifier.hashCode();
-    }
-
-    @Override
-    public int compareTo(final IValidationRule<AisData> aisDataIValidationRule) {
-        return 0;
     }
 }
