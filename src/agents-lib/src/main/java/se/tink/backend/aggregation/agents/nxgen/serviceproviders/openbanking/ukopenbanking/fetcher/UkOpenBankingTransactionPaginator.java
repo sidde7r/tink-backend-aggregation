@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher;
 
-import java.util.Collections;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingConstants;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -20,6 +19,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
         implements TransactionKeyPaginator<AccountType, String> {
     private AggregationLogger logger = new AggregationLogger(UkOpenBankingTransactionPaginator.class);
 
+    private static final int PAGINATION_LIMIT = 50; // Limits number of pages fetched in order to reduce loading.
     private static final int PAGINATION_GRACE_LIMIT = 5;
 
     private final UkOpenBankingApiClient apiClient;
@@ -49,12 +49,17 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
 
         updateAccountPaginationCount(account.getBankIdentifier());
 
+        if (paginationCount > PAGINATION_LIMIT) {
+            return TransactionKeyPaginatorResponseImpl.createEmpty();
+        }
+
         if (key == null) {
             key = UkOpenBankingConstants.ApiServices.getInitialTransactionsPaginationKey(account.getBankIdentifier());
         }
 
         try {
-            return transactionConverter.toPaginatorResponse(apiClient.fetchAccountTransactions(key, responseType), account);
+            return transactionConverter
+                    .toPaginatorResponse(apiClient.fetchAccountTransactions(key, responseType), account);
         } catch (HttpResponseException e) {
 
             // NatWest seems to have an bug where they will send us next links even though it goes out of range for how
@@ -62,7 +67,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
             // This code ignores http 500 error if we have already fetched several pages from the given account.
             if (paginationCount > PAGINATION_GRACE_LIMIT && e.getResponse().getStatus() == 500) {
                 logger.warn("Ignoring http 500 (Internal server error) in pagination.", e);
-                return new TransactionKeyPaginatorResponseImpl<>(Collections.emptyList(), null);
+                return TransactionKeyPaginatorResponseImpl.createEmpty();
             }
 
             throw e;
