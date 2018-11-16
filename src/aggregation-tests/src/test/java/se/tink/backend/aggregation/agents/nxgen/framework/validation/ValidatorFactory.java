@@ -29,6 +29,10 @@ public final class ValidatorFactory {
         return true;
     }
 
+    public static AisValidator getEmptyValidator() {
+        return AisValidator.builder().build();
+    }
+
     public static AisValidator getExtensiveValidator() {
         return AisValidator.builder()
                 .ruleAccount(
