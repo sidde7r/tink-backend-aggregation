@@ -113,6 +113,7 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
             }
 
             if (Objects.isNull(logFile)) {
+                log.warn("Created debug log but local storage cannot be used & no S3 storage configuration available.");
                 return;
             }
 
