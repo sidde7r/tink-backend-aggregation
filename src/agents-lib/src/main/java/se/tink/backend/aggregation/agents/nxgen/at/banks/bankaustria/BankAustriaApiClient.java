@@ -7,6 +7,8 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguration;
+import se.tink.backend.aggregation.utils.deviceprofile.entity.UserAgentEntity;
 import se.tink.libraries.strings.StringUtils;
 
 import javax.ws.rs.core.MediaType;
@@ -104,12 +106,35 @@ public class BankAustriaApiClient {
         return url;
     }
 
+    private String getResolution() {
+        return new StringBuilder()
+                .append("{")
+                .append(DeviceProfileConfiguration.IOS_STABLE.getScreenWidth())
+                .append(", ")
+                .append(DeviceProfileConfiguration.IOS_STABLE.getScreenHeight())
+                .append("}")
+                .toString();
+    }
+    private String getDeviceId() {
+        return new StringBuilder()
+                .append(DeviceProfileConfiguration.IOS_STABLE.getMake()).append("_")
+                .append(DeviceProfileConfiguration.IOS_STABLE.getModelNumber()).append("_")
+                .append(DeviceProfileConfiguration.IOS_STABLE.getOs()).append("_")
+                .append(DeviceProfileConfiguration.IOS_STABLE.getOsVersion())
+                .toString();
+    }
+    private String getUserAgent() {
+        UserAgentEntity useragent = DeviceProfileConfiguration.IOS_STABLE.getUserAgentEntity();
+        useragent.setExtensions(BankAustriaConstants.Device.USERAGENT_EXTENSION);
+        return useragent.toString();
+    }
+
     private RequestBuilder getRequestWithHeaders(URL url) {
         return client.request(url)
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                .header(BankAustriaConstants.Header.X_OTML_CLUSTER, BankAustriaConstants.Device.IPHONE7_RESOLUTION)
-                .header(BankAustriaConstants.Header.X_DEVICE, BankAustriaConstants.Device.IPHONE7_DEVICEID)
-                .header(BankAustriaConstants.Header.USER_AGENT, BankAustriaConstants.Device.IPHONE7_USERAGENT)
+                .header(BankAustriaConstants.Header.X_OTML_CLUSTER, getResolution())
+                .header(BankAustriaConstants.Header.X_DEVICE, getDeviceId())
+                .header(BankAustriaConstants.Header.USER_AGENT, getUserAgent())
                 .header(BankAustriaConstants.Header.X_OTML_MANIFEST, sessionStorage.getXOtmlManifest())
                 .header(BankAustriaConstants.Header.X_OTML_PLATFORM, BankAustriaConstants.Application.PLATFORM)
                 .header(BankAustriaConstants.Header.X_OTMLID, BankAustriaConstants.Application.OTMLID)
