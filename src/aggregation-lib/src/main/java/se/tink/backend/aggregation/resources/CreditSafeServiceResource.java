@@ -40,7 +40,7 @@ public class CreditSafeServiceResource implements CreditSafeService {
     @Override
     public void removeConsumerMonitoring(RemoveMonitoredConsumerCreditSafeRequest request,
             @ClusterContext ClusterInfo clusterInfo, @ClientContext ClientInfo clientInfo) {
-        validateCluster(clusterInfo);
+        validateCluster(clusterInfo, clientInfo);
 
         SocialSecurityNumber.Sweden socialSecurityNumber = new SocialSecurityNumber.Sweden(request.getPnr());
         if (!socialSecurityNumber.isValid()) {
@@ -53,7 +53,7 @@ public class CreditSafeServiceResource implements CreditSafeService {
     @Override
     public Response addConsumerMonitoring(AddMonitoredConsumerCreditSafeRequest request,
             @ClusterContext ClusterInfo clusterInfo, @ClientContext ClientInfo clientInfo) {
-        validateCluster(clusterInfo);
+        validateCluster(clusterInfo, clientInfo);
 
         SocialSecurityNumber.Sweden socialSecurityNumber = new SocialSecurityNumber.Sweden(request.getPnr());
         if (!socialSecurityNumber.isValid()) {
@@ -66,7 +66,7 @@ public class CreditSafeServiceResource implements CreditSafeService {
 
     @Override
     public PortfolioListResponse listPortfolios(@ClusterContext ClusterInfo clusterInfo, @ClientContext ClientInfo clientInfo) {
-        validateCluster(clusterInfo);
+        validateCluster(clusterInfo, clientInfo);
 
         return consumerMonitoringWrapper.listPortfolios();
     }
@@ -74,7 +74,7 @@ public class CreditSafeServiceResource implements CreditSafeService {
     @Override
     public PageableConsumerCreditSafeResponse listChangedConsumers(ChangedConsumerCreditSafeRequest request,
             @ClusterContext ClusterInfo clusterInfo, @ClientContext ClientInfo clientInfo) {
-        validateCluster(clusterInfo);
+        validateCluster(clusterInfo, clientInfo);
 
         return consumerMonitoringWrapper.listChangedConsumers(request);
     }
@@ -82,12 +82,15 @@ public class CreditSafeServiceResource implements CreditSafeService {
     @Override
     public PageableConsumerCreditSafeResponse listMonitoredConsumers(PageableConsumerCreditSafeRequest request,
             @ClusterContext ClusterInfo clusterInfo, @ClientContext ClientInfo clientInfo) {
-        validateCluster(clusterInfo);
+        validateCluster(clusterInfo, clientInfo);
 
         return consumerMonitoringWrapper.listMonitoredConsumers(request);
     }
 
-    private static void validateCluster(ClusterInfo clusterInfo) {
+    private static void validateCluster(ClusterInfo clusterInfo,
+            ClientInfo clientInfo) {
+        // TODO: add clientInfo validation
+        // TODO: remove clusterInfo
         ClusterId clusterId = clusterInfo.getClusterId();
 
         if (!clusterId.isValidId()) {
