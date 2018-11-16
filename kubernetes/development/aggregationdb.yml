@@ -1,0 +1,61 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: aggregationdb
+  labels:
+    app: aggregationdb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aggregationdb
+  template:
+    metadata:
+      labels:
+        app: aggregationdb
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:5.7
+        ports:
+        - containerPort: 3306
+          name: mysql
+        env:
+        - name: MYSQL_ALLOW_EMPTY_PASSWORD
+          value: "yes"
+        - name: MYSQL_DATABASE
+          value: "tink"
+        - name: MYSQL_USER
+          value: "tink"
+        - name: MYSQL_PASSWORD
+          value: "tink"
+
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: mysql
+      volumes:
+      - name: mysql
+        hostPath:
+          path: /data/pv-aggregationdb
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: aggregationdb
+spec:
+  selector:
+    app: aggregationdb
+  ports:
+  - protocol: TCP
+    port: 3306
+    targetPort: mysql
+    nodePort: 31001
+  type: NodePort
