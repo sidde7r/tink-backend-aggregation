@@ -35,7 +35,7 @@ public final class ValidatorFactory {
                         acc -> acc.getAccountNumber() != null,
                         acc -> String.format("Account lacks an account number: %s", acc))
                 .ruleAccount(
-                        "Balance does not exceed threshold",
+                        "Account balance does not exceed threshold",
                         acc -> acc.getBalance() <= 10000000.0,
                         acc ->
                                 String.format(
