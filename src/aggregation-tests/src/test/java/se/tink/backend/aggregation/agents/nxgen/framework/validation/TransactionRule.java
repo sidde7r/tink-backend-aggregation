@@ -35,11 +35,6 @@ public final class TransactionRule implements IValidationRule<Transaction> {
     }
 
     @Override
-    public int compareTo(final IValidationRule<Transaction> transactionRule) {
-        return 0;
-    }
-
-    @Override
     public boolean equals(final Object o) {
         if (o == this) {
             return true;

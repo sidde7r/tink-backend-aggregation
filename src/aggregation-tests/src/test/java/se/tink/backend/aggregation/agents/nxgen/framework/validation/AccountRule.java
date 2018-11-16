@@ -35,11 +35,6 @@ public final class AccountRule implements IValidationRule<Account> {
     }
 
     @Override
-    public int compareTo(final IValidationRule<Account> accountIValidationRule) {
-        return getRuleIdentifier().compareTo(accountIValidationRule.getRuleIdentifier());
-    }
-
-    @Override
     public boolean equals(final Object o) {
         if (o == this) {
             return true;

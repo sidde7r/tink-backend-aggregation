@@ -54,9 +54,4 @@ public final class AisDataRule implements IValidationRule<AisData> {
     public int hashCode() {
         return ruleIdentifier.hashCode();
     }
-
-    @Override
-    public int compareTo(final IValidationRule<AisData> aisDataIValidationRule) {
-        return 0;
-    }
 }
