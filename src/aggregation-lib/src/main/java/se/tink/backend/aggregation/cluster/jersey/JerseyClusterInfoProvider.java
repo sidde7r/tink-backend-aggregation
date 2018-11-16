@@ -21,8 +21,8 @@ import java.lang.reflect.Type;
 public class JerseyClusterInfoProvider extends AbstractHttpContextInjectable<ClusterInfo>
         implements InjectableProvider<ClusterContext, Type> {
 
-    private static final String CLUSTER_NAME_HEADER = ClusterId.CLUSTER_NAME_HEADER;
-    private static final String CLUSTER_ENVIRONMENT_HEADER = ClusterId.CLUSTER_ENVIRONMENT_HEADER;
+    protected static final String CLUSTER_NAME_HEADER = ClusterId.CLUSTER_NAME_HEADER;
+    protected static final String CLUSTER_ENVIRONMENT_HEADER = ClusterId.CLUSTER_ENVIRONMENT_HEADER;
     private ClusterInfoProvider clusterInfoProvider;
 
     @Inject
