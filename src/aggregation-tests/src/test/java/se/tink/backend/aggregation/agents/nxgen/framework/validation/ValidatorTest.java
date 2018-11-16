@@ -63,6 +63,7 @@ public final class ValidatorTest {
 
     @Test
     public void testExtensiveValidator() {
+        // Arrange data to be validated
         Collection<Account> accounts = Collections.emptySet();
 
         List<Transaction> transactions =
@@ -78,8 +79,17 @@ public final class ValidatorTest {
             t.setDescription("my description");
         }
 
-        AisValidator validator = ValidatorFactory.getExtensiveValidator();
+        // Arrange validator
+        SilentAction action = new SilentAction();
+        AisValidator validator =
+                ValidatorFactory.getExtensiveValidator().rebuilder().setAction(action).build();
 
+        // Act
         validator.validate(accounts, transactions);
+
+        // Assert
+        Assert.assertEquals(action.getOnFailAisData().size(), 1);
+        Assert.assertEquals("No duplicate transactions",
+        action.getOnFailAisData().get(0).second);
     }
 }
