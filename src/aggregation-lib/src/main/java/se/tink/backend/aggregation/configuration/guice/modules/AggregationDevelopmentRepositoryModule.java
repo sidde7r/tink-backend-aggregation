@@ -109,9 +109,18 @@ public class AggregationDevelopmentRepositoryModule extends RepositoryModule {
     @Named("clientConfigurationByClientKey")
     // TODO change this later for local development getting from service yml
     public Map<String, ClientConfiguration> providerClientConfiguration(ClientConfigurationsRepository repository) {
-        return repository.findAll().stream().collect(
+        Map<String, ClientConfiguration> clientConfigurations = repository.findAll().stream().collect(
                 Collectors.toMap(ClientConfiguration::getApiClientKey, Function.identity())
         );
+
+        if (developmentConfiguration == null || !developmentConfiguration.isValid()) {
+            return clientConfigurations;
+        }
+
+        ClientConfiguration clientConfiguration = developmentConfiguration.getClientConfiguration();
+        clientConfigurations.put(clientConfiguration.getApiClientKey(), clientConfiguration);
+
+        return clientConfigurations;
     }
 
     @Provides
