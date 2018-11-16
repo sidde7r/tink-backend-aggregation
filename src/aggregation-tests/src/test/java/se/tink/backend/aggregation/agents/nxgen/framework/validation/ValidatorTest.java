@@ -61,6 +61,14 @@ public final class ValidatorTest {
                 .build();
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void ensureRuleTransaction_whenSameRuleInsertedTwice_throw() {
+        AisValidator.builder()
+                .ruleTransaction("Validate thing", trx -> trx.getDescription() != null)
+                .ruleTransaction("Validate thing", trx -> trx.getAmount() <= 10000000.0)
+                .build();
+    }
+
     @Test
     public void testExtensiveValidator() {
         // Arrange data to be validated
