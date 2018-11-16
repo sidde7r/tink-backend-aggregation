@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.framework.validation;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
+import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.system.rpc.Transaction;
 
 public final class ValidatorFactory {
@@ -50,6 +51,12 @@ public final class ValidatorFactory {
                         "Holder name is present",
                         acc -> acc.getHolderName() != null,
                         acc -> String.format("Account lacks a holder name: %s", acc))
+                .ruleAccount(
+                        "Checking account balance is >= 0",
+                        acc -> acc.getType() != AccountTypes.CHECKING || acc.getBalance() >= 0)
+                .ruleAccount(
+                        "Savings account balance is >= 0",
+                        acc -> acc.getType() != AccountTypes.SAVINGS || acc.getBalance() >= 0)
                 .ruleAccount(
                         "Account name is present",
                         acc -> acc.getName() != null,
