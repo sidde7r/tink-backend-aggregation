@@ -107,15 +107,21 @@ def custom400(error):
 ### START - USABLE ENDPOINTS ###
 
 
+def aggregation_post(url, data=None):
+    return requests.post(
+        AGGREGATION_HOST + url, data=data, headers=POST_HEADERS, verify=False
+    )
+
+
+def provider_get(url):
+    return requests.get(PROVIDER_HOST + url, headers=GET_HEADERS, verify=False)
+
+
 @app.route("/credentials/create", methods=["POST"])
 @validate_request("username", "providerName", "credentialsType")
 def create_credentials():
     credentialsRequest = create_credentials_request()
-    r = requests.post(
-        AGGREGATION_HOST + "/aggregation/create",
-        data=json.dumps(credentialsRequest),
-        headers=POST_HEADERS,
-    )
+    r = aggregation_post("/aggregation/create", data=json.dumps(credentialsRequest))
     credential = json.loads(r.text)
     credential["timestamp"] = get_time_in_millis()
     credential["supplementalInformation"] = ""
@@ -136,11 +142,7 @@ def refresh_credentials(cid):
     credentialsRequest = create_credentials_request(cid)
     credentialsRequest["manual"] = True
     # del credentialsRequest['credentials']['timestamp']
-    r = requests.post(
-        AGGREGATION_HOST + "/aggregation/refresh",
-        data=json.dumps(credentialsRequest),
-        headers=POST_HEADERS,
-    )
+    r = aggregation_post("/aggregation/refresh", data=json.dumps(credentialsRequest))
     return ("", 204)
 
 
@@ -157,10 +159,8 @@ def whitelist_refresh(cid):
     credentialsRequest = create_credentials_request(cid)
     credentialsRequest["manual"] = True
     # del credentialsRequest['credentials']['timestamp']
-    r = requests.post(
-        AGGREGATION_HOST + "/aggregation/refresh/whitelist",
-        data=json.dumps(credentialsRequest),
-        headers=POST_HEADERS,
+    r = aggregation_post(
+        "/aggregation/refresh/whitelist", data=json.dumps(credentialsRequest)
     )
     return ("", 204)
 
@@ -173,10 +173,8 @@ def whitelist_credentials(cid):
 
     credentialsRequest = create_credentials_request(cid)
     credentialsRequest["manual"] = True
-    r = requests.post(
-        AGGREGATION_HOST + "/aggregation/configure/whitelist",
-        data=json.dumps(credentialsRequest),
-        headers=POST_HEADERS,
+    r = aggregation_post(
+        "/aggregation/configure/whitelist", data=json.dumps(credentialsRequest)
     )
     return ("", 204)
 
@@ -195,10 +193,8 @@ def credentials_supplemental():
     if not credential["status"] == "AWAITING_SUPPLEMENTAL_INFORMATION":
         abort(400, "This credentials is not awaiting supplemental information.")
 
-    r = requests.post(
-        AGGREGATION_HOST + "/aggregation/supplemental",
-        data=json.dumps(supplementalRequest),
-        headers=POST_HEADERS,
+    r = aggregation_post(
+        "/aggregation/supplemental", data=json.dumps(supplementalRequest)
     )
     CREDENTIALS_TABLE.update(
         {"status": "UPDATING", "timestamp": get_time_in_millis()},
@@ -229,19 +225,15 @@ def reencrypt_credentials(cid):
 
     credentialsRequest = create_credentials_request(cid)
     credentialsRequest["manual"] = True
-    r = requests.post(
-        AGGREGATION_HOST + "/aggregation/reencrypt/credentials",
-        data=json.dumps(credentialsRequest),
-        headers=POST_HEADERS,
+    r = aggregation_post(
+        "/aggregation/reencrypt/credentials", data=json.dumps(credentialsRequest)
     )
     return ("", 204)
 
 
 @app.route("/providers/list/<market>", methods=["GET"])
 def list_provider_by_market(market):
-    return requests.get(
-        PROVIDER_HOST + "/providers/" + market + "/list", headers=GET_HEADERS
-    ).text
+    return provider_get("/providers/" + market + "/list").text
 
 
 @app.route("/providers/<providername>", methods=["GET"])
@@ -263,7 +255,7 @@ def list_accounts(credentialsid):
 
 @app.route("/providers/list", methods=["GET"])
 def list_providers(*args):
-    return requests.get(PROVIDER_HOST + "/providers/list", headers=GET_HEADERS).text
+    return provider_get("/providers/list").text
 
 
 @app.route("/credentials/status/<id>", methods=["GET"])
@@ -397,7 +389,7 @@ def credentials_sensitive():
 def get_provider(providerName):
     if not providerName:
         abort(400, "Provider name is missing.")
-    r = requests.get(PROVIDER_HOST + "/providers/" + providerName, headers=GET_HEADERS)
+    r = provider_get("/providers/" + providerName)
     if not r.text:
         abort(400, "Invalid provider name")
     return json.loads(r.text)
