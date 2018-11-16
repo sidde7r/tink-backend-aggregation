@@ -21,7 +21,7 @@ import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.framework.validation.ValidatorFactory;
+import se.tink.backend.aggregation.agents.nxgen.framework.validation.AisValidator;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.rpc.Account;
@@ -181,13 +181,7 @@ public class NewAgentTestContext extends AgentContext {
     }
 
     public void processAccounts() {
-        ValidatorFactory.getExtensiveValidator()
-                .validate(
-                        accountsByBankId.values(),
-                        transactionsByAccountBankId
-                                .values()
-                                .stream()
-                                .collect(ArrayList::new, List::addAll, List::addAll));
+        //noop
     }
 
     @Override
@@ -306,6 +300,15 @@ public class NewAgentTestContext extends AgentContext {
 
     public void processTransferDestinationPatterns() {
         // noop
+    }
+
+    public void validateFetchedData(AisValidator validator) {
+        validator.validate(
+                accountsByBankId.values(),
+                transactionsByAccountBankId
+                        .values()
+                        .stream()
+                        .collect(ArrayList::new, List::addAll, List::addAll));
     }
 
     private void printLoanDetails(List<Loan> loans) {

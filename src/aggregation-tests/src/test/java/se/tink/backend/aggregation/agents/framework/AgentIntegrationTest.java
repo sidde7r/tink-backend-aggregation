@@ -24,6 +24,8 @@ import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
+import se.tink.backend.aggregation.agents.nxgen.framework.validation.AisValidator;
+import se.tink.backend.aggregation.agents.nxgen.framework.validation.ValidatorFactory;
 import se.tink.backend.aggregation.capability.CapabilityTester;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -58,6 +60,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
     private final Set<RefreshableItem> refreshableItems;
 
+    private final AisValidator validator;
+
     private final NewAgentTestContext context;
 
 
@@ -73,6 +77,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         this.doLogout = builder.isDoLogout();
         this.expectLoggedIn = builder.isExpectLoggedIn();
         this.refreshableItems = builder.getRefreshableItems();
+        this.validator = builder.validator;
 
         this.context = new NewAgentTestContext(user, credential, builder.getTransactionsToPrint());
     }
@@ -277,6 +282,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             saveCredentials(agent);
         }
 
+        context.validateFetchedData(validator);
+
         context.printCollectedData();
     }
 
@@ -322,6 +329,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         private boolean expectLoggedIn = true;
 
         private Set<RefreshableItem> refreshableItems = new HashSet<>();
+
+        private AisValidator validator;
 
         public Builder(String market, String providerName) {
             ProviderConfigModel marketProviders = readProvidersConfiguration(market);
@@ -494,6 +503,12 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             return addCredentialField(key.getFieldKey(), value);
         }
 
+        /** Inject a custom validator of AIS data. */
+        public Builder setValidator(final AisValidator validator) {
+            this.validator = validator;
+            return this;
+        }
+
         public AgentIntegrationTest build() {
             if (refreshableItems.isEmpty()) {
                 refreshableItems.addAll(Arrays.asList(RefreshableItem.values()));
@@ -504,6 +519,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             CapabilityTester.checkCapabilities(provider.getClassName());
             credential.setProviderName(provider.getName());
             credential.setType(provider.getCredentialsType());
+
+            if (validator == null) {
+                validator = ValidatorFactory.getExtensiveValidator();
+            }
 
             return new AgentIntegrationTest(this);
         }
