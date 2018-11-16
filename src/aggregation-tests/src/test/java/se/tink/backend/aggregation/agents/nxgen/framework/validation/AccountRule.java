@@ -5,7 +5,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import se.tink.backend.aggregation.rpc.Account;
 
-public final class AccountRule implements IValidationRule<Account> {
+public final class AccountRule implements ValidationRule<Account> {
     private final String ruleIdentifier;
     private final Predicate<Account> criterion;
     private final Function<Account, String> failMessage;

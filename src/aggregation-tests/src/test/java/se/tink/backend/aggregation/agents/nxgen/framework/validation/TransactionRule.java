@@ -5,7 +5,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import se.tink.backend.system.rpc.Transaction;
 
-public final class TransactionRule implements IValidationRule<Transaction> {
+public final class TransactionRule implements ValidationRule<Transaction> {
     private final String ruleIdentifier;
     private final Predicate<Transaction> criterion;
     private final Function<Transaction, String> failMessage;

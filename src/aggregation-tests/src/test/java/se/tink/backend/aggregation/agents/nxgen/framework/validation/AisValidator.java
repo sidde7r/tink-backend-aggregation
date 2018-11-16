@@ -109,7 +109,7 @@ public final class AisValidator {
             return new AisValidator(this);
         }
 
-        private <V> void checkForDuplicates(final IValidationRule<V> rule) {
+        private <V> void checkForDuplicates(final ValidationRule<V> rule) {
             // TODO checked exception alternative
             final boolean accountDupes =
                     accountRules
