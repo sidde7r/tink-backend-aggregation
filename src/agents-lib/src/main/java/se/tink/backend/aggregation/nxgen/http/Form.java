@@ -20,6 +20,10 @@ public final class Form {
                 .collect(Collectors.joining(JOINING_DELIMITER));
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     private String getValuePair(Map.Entry<String, String> parameter) {
         try {
             final String key = URLEncoder.encode(parameter.getKey(), StandardCharsets.UTF_8.toString());
@@ -33,10 +37,16 @@ public final class Form {
         }
     }
 
+    @Override
+    public String toString() {
+        return serialize();
+    }
+
     public static class Builder {
 
         private final LinkedHashMap<String, String> parameters = new LinkedHashMap<>();
 
+        @Deprecated
         public Builder() {
         }
 
