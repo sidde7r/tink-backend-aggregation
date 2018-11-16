@@ -104,7 +104,7 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
         try {
             String storagePath = null;
 
-            if (agentDebugStorage instanceof AgentDebugLocalStorage) {
+            if (agentDebugStorage instanceof AgentDebugLocalStorage && state.isSaveLocally()) {
                 storagePath = handleLocalStorage(credentials);
             }
 
