@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.framework.validation;
 
 import java.util.Collection;
+import java.util.Objects;
 import se.tink.backend.system.rpc.Transaction;
 
 public final class ValidatorFactory {
@@ -13,10 +14,10 @@ public final class ValidatorFactory {
             final long numberOfIdenticalElements =
                     transactions
                             .stream()
-                            .filter(t -> t.getDate().equals(transaction.getDate()))
-                            .filter(t -> t.getDescription().equals(transaction.getDescription()))
+                            .filter(t -> Objects.equals(t.getDate(), transaction.getDate()))
+                            .filter(t -> Objects.equals(t.getDescription(), transaction.getDescription()))
                             .filter(t -> t.getAmount() == transaction.getAmount())
-                            .filter(t -> t.getAccountId().equals(transaction.getAccountId()))
+                            .filter(t -> Objects.equals(t.getAccountId(), transaction.getAccountId()))
                             .count();
             if (numberOfIdenticalElements > 1) {
                 return false;
