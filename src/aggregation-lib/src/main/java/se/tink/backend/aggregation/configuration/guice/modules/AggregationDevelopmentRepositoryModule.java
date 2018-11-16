@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.configuration.models.AggregationDevelopmentConfiguration;
 import se.tink.backend.aggregation.configuration.DevelopmentConfigurationSeeder;
 import se.tink.backend.aggregation.storage.database.models.AggregatorConfiguration;
+import se.tink.backend.aggregation.storage.database.models.ClientConfiguration;
 import se.tink.backend.aggregation.storage.database.models.ClusterConfiguration;
 import se.tink.backend.aggregation.storage.database.repositories.AggregatorConfigurationsRepository;
 import se.tink.backend.aggregation.storage.database.repositories.ClientConfigurationsRepository;
@@ -91,6 +92,25 @@ public class AggregationDevelopmentRepositoryModule extends RepositoryModule {
             AggregatorConfigurationsRepository repository) {
         return repository.findAll().stream().collect(
                 Collectors.toMap(AggregatorConfiguration::getAggregatorId, Function.identity())
+        );
+    }
+
+    @Provides
+    @Singleton
+    @Named("clientConfigurationByClientKey")
+    // TODO change this later for local development getting from service yml
+    public Map<String, ClientConfiguration> providerClientConfiguration(ClientConfigurationsRepository repository) {
+        return repository.findAll().stream().collect(
+                Collectors.toMap(ClientConfiguration::getApiClientKey, Function.identity())
+        );
+    }
+
+    @Provides
+    @Singleton
+    @Named("clientConfigurationByName")
+    public Map<String, ClientConfiguration> providerClientConfigurationByName(ClientConfigurationsRepository repository) {
+        return repository.findAll().stream().collect(
+                Collectors.toMap(ClientConfiguration::getClientName, Function.identity())
         );
     }
 }
