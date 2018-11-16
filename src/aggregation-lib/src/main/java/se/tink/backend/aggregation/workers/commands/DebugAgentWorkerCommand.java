@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.workers.commands;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Objects;
 import java.util.List;
@@ -19,6 +20,7 @@ import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
+import se.tink.backend.aggregation.workers.commands.exception.EmptyDebugLogException;
 import se.tink.backend.aggregation.workers.commands.state.DebugAgentWorkerCommandState;
 import se.tink.libraries.uuid.UUIDUtils;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -123,6 +125,10 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
                 log.info("Flushed debug log for further investigation: " + storagePath);
             }
 
+        } catch (EmptyDebugLogException e) {
+            log.info("Not writing logfile for: (provider:"
+                    + credentials.getProviderName() + ", credentialsId:" + credentials.getId() + ", status:"
+                    + credentials.getStatus() + ", userId:" + credentials.getUserId() + ") " + e.getMessage());
         } catch (IOException e) {
             log.error("Could not write logfile for: (provider:"
                     + credentials.getProviderName() + ", credentialsId:" + credentials.getId() + ", status:"
@@ -130,7 +136,7 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
         }
     }
 
-    private String handleLocalStorage(Credentials credentials) throws IOException {
+    private String handleLocalStorage(Credentials credentials) throws IOException, EmptyDebugLogException {
         File debugDirectory = state.getDebugDirectory();
         String logContent = getCleanLogContent(credentials);
 
@@ -139,15 +145,22 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
         return agentDebugStorage.store(logContent, logFile);
     }
 
-    private String handleS3Storage(Credentials credentials) throws IOException {
+    private String handleS3Storage(Credentials credentials) throws IOException, EmptyDebugLogException {
         String logContent = getCleanLogContent(credentials);
         File logFile = new File(getFormattedFileName(logContent, credentials));
 
         return agentDebugStorage.store(logContent, logFile);
     }
 
-    private String getCleanLogContent(Credentials credentials) throws UnsupportedEncodingException {
+    private String getCleanLogContent(Credentials credentials)
+            throws UnsupportedEncodingException, EmptyDebugLogException {
         String logContent = context.getLogOutputStream().toString("UTF-8");
+
+        // Don't save logs without content
+        if (logContent.getBytes(StandardCharsets.UTF_8).length == 0) {
+            throw new EmptyDebugLogException();
+        }
+
         return maskSensitiveOutputLog(logContent, credentials);
     }
 
