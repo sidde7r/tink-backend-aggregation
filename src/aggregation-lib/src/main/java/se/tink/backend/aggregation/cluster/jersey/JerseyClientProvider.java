@@ -12,16 +12,15 @@ import org.assertj.core.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.cluster.annotations.ClientContext;
-import se.tink.backend.aggregation.cluster.identification.ClientApiKey;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import static se.tink.backend.aggregation.cluster.jersey.JerseyClusterInfoProvider.CLUSTER_ENVIRONMENT_HEADER;
 import static se.tink.backend.aggregation.cluster.jersey.JerseyClusterInfoProvider.CLUSTER_NAME_HEADER;
 
-public class JerseyClientApiKeyProvider extends AbstractHttpContextInjectable<ClientInfo>
+public class JerseyClientProvider extends AbstractHttpContextInjectable<ClientInfo>
         implements InjectableProvider<ClientContext, Type> {
+    private static final String CLIENT_API_KEY_HEADER = "X-Tink-Client-Api-Key";
 
-    private static final String CLIENT_API_KEY_HEADER = ClientApiKey.CLIENT_API_KEY_HEADER;
-    private final Logger logger = LoggerFactory.getLogger(JerseyClientApiKeyProvider.class);
+    private final Logger logger = LoggerFactory.getLogger(JerseyClientProvider.class);
 
     @Override
     public Injectable<ClientInfo> getInjectable(ComponentContext ic, ClientContext a, Type c) {
