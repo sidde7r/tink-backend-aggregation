@@ -31,6 +31,7 @@ public class AgentDebugS3Storage implements AgentDebugStorageHandler {
                                     configuration.getRegion())
                     ).build();
         } else {
+            log.error("S3 debug storage enabled, but configuration is not valid");
             this.configuration = null;
             this.awsStorageClient = null;
             this.bucketName = "";
