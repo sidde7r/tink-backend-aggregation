@@ -17,9 +17,16 @@ public final class ValidatorFactory {
                     transactions
                             .stream()
                             .filter(t -> Objects.equals(t.getDate(), transaction.getDate()))
-                            .filter(t -> Objects.equals(t.getDescription(), transaction.getDescription()))
+                            .filter(
+                                    t ->
+                                            Objects.equals(
+                                                    t.getDescription(),
+                                                    transaction.getDescription()))
                             .filter(t -> t.getAmount() == transaction.getAmount())
-                            .filter(t -> Objects.equals(t.getAccountId(), transaction.getAccountId()))
+                            .filter(
+                                    t ->
+                                            Objects.equals(
+                                                    t.getAccountId(), transaction.getAccountId()))
                             .count();
             if (numberOfIdenticalElements > 1) {
                 return false;
@@ -67,7 +74,11 @@ public final class ValidatorFactory {
                         trx -> String.format("Transaction description is null: %s", trx))
                 .ruleTransaction(
                         "Transaction description length is reasonable",
-                        trx -> Optional.ofNullable(trx.getDescription()).map(String::length).orElse(0) <= 1000,
+                        trx ->
+                                Optional.ofNullable(trx.getDescription())
+                                                .map(String::length)
+                                                .orElse(0)
+                                        <= 1000,
                         trx -> String.format("Transaction description is too long: %s", trx))
                 .rule(
                         "No duplicate transactions",
