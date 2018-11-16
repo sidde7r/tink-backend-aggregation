@@ -1,0 +1,54 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: coordination
+  labels:
+    app: coordination
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: coordination
+  template:
+    metadata:
+      labels:
+        app: coordination
+    spec:
+      containers:
+      - name: zookeeper
+        image: zookeeper:3.5
+        ports:
+        - containerPort: 2181
+          name: zookeeper
+        volumeMounts:
+        - mountPath: /tmp/zookeeper
+          name: zookeeper
+
+        resources:
+          requests:
+            memory: "200Mi"
+            cpu: "200m"
+          limits:
+            memory: "200Mi"
+            cpu: "200m"
+
+      imagePullSecrets:
+      - name: tink-containers
+      volumes:
+      - name: zookeeper
+        hostPath:
+          path: /data/pv-coordination
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: coordination
+spec:
+  selector:
+    app: coordination
+  ports:
+  - protocol: TCP
+    port: 2181
+    targetPort: zookeeper
+    nodePort: 31003
+  type: NodePort

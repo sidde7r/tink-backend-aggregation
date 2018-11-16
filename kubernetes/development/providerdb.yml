@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: providerdb
+  labels:
+    app: providerdb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: providerdb
+  template:
+    metadata:
+      labels:
+        app: providerdb
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:5.7
+        ports:
+        - containerPort: 3306
+          name: mysql
+        env:
+        - name: MYSQL_ALLOW_EMPTY_PASSWORD
+          value: "yes"
+        - name: MYSQL_DATABASE
+          value: "provider"
+        - name: MYSQL_USER
+          value: "tink"
+        - name: MYSQL_PASSWORD
+          value: "tink"
+
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: mysql
+      volumes:
+      - name: mysql
+        hostPath:
+          path: /data/pv-providerdb
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: providerdb
+spec:
+  selector:
+    app: providerdb
+  ports:
+  - protocol: TCP
+    port: 3306
+    targetPort: mysql
+    nodePort: 31006
+  type: NodePort

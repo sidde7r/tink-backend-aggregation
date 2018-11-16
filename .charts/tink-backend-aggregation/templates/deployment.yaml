@@ -1,0 +1,149 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aggregation
+  namespace: aggregation
+  labels:
+    app: aggregation-service
+spec:
+  replicas: {{ default "2" .Values.replicas }}
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: aggregation-service
+  template:
+    metadata:
+      labels:
+        app: aggregation-service
+      annotations:
+        # Force rollout of new pods if the config has changed
+        checksum/aggregation-config: {{ include (print $.Template.BasePath "/aggregation-config.yaml") . | sha256sum }}
+        checksum/agents-config: {{ include (print $.Template.BasePath "/agents-config.yaml") . | sha256sum }}
+        prometheus.io/port: '9130'
+        prometheus.io/scrape: 'true'
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65535
+        runAsGroup: 65535
+        fsGroup: 65535
+
+      initContainers:
+      # Script to replace placeholder passwords with the real passwords
+      - name: add-secrets-to-config
+        command:
+          - "bash"
+          - "-c"
+          - "cp /mnt/aggregation-config/* /mnt/altered-config-volume && \
+             echo -e '\n' >> /mnt/altered-config-volume/config.yml && \
+             cat /mnt/agents-config/config.yml >> /mnt/altered-config-volume/config.yml && \
+             sed -i \"s/UKOPENBANKINGJSON/$UKOPENBANKINGJSON/g\" /mnt/altered-config-volume/config.yml && \
+             sed -i \"s/CREDITSAFE_USERNAME/$CREDITSAFE_USERNAME/g\" /mnt/altered-config-volume/config.yml && \
+             sed -i \"s/CREDITSAFE_PASSWORD/$CREDITSAFE_PASSWORD/g\" /mnt/altered-config-volume/config.yml && \
+             sed -i \"s/KEYSTORE_PASSWORD/$KEYSTORE_PASSWORD/g\" /mnt/altered-config-volume/config.yml && \
+             sed -i \"s/MYSQL_PASSWORD/$MYSQL_PASSWORD/g\" /mnt/altered-config-volume/config.yml"
+        image: gcr.io/tink-containers/debian:stretch
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          readOnlyRootFilesystem: true
+        volumeMounts:
+        - name: aggregation-config
+          mountPath: /mnt/aggregation-config
+        - name: agents-config
+          mountPath: /mnt/agents-config
+        - name: altered-config-volume
+          mountPath: /mnt/altered-config-volume
+        env:
+        - name: KEYSTORE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: keystore-password
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: aggregationdb-password
+        - name: UKOPENBANKINGJSON
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: uk-open-banking-json
+        - name: CREDITSAFE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: creditsafe-username
+        - name: CREDITSAFE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: creditsafe-password
+
+      containers:
+      - name: tink-backend-aggregation
+        resources:
+          requests:
+            memory: {{ default "700Mi" .Values.podMemoryRequest }}
+            cpu: {{ default "500m" .Values.podCpuRequest }}
+          limits:
+            memory: {{ default "1Gi" .Values.podMemoryLimit }}
+            cpu: {{ default "1000m" .Values.podCpuLimit }}
+
+        image: gcr.io/tink-containers/tink-backend-aggregation:latest
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          readOnlyRootFilesystem: true
+
+        command:
+        - "java"
+        - "-jar"
+        - "-Xmx{{ default "256m" .Values.heapSize }}"
+        - "-XX:-OmitStackTraceInFastThrow"
+        - "-Dnetworkaddress.cache.ttl=60"
+        - "-XX:+ExitOnOutOfMemoryError"
+        - "/usr/share/tink-backend-aggregation/aggregation-service.jar"
+        - "server"
+        - "/etc/tink/config.yml"
+
+        ports:
+        - name: https-api
+          containerPort: 8443
+        - name: metrics
+          containerPort: 9130
+
+        livenessProbe:
+          httpGet:
+            path: /aggregation/ping
+            port: 8443
+            scheme: HTTPS
+          periodSeconds: 10
+          failureThreshold: 10
+          timeoutSeconds: 1
+          initialDelaySeconds: 300
+        # The pod will only receive traffic if the readinessProbe is succeeding,
+        # it's also used when rolling out a new version, to know if the new version
+        # is working or not
+        readinessProbe:
+          httpGet:
+            path: /aggregation/ping
+            port: 8443
+            scheme: HTTPS
+          periodSeconds: 3
+          failureThreshold: 3
+          timeoutSeconds: 1
+          initialDelaySeconds: 60
+
+        volumeMounts:
+        - name: altered-config-volume
+          mountPath: /etc/tink
+
+      volumes:
+      - name: aggregation-config
+        configMap:
+          name: aggregation-config
+      - name: agents-config
+        configMap:
+          name: agents-config
+      - name: altered-config-volume
+        emptyDir: {}

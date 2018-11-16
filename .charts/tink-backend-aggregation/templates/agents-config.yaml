@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: agents-config
+  namespace: aggregation
+data:
+  config.yml: |
+    agentServiceConfiguration:
+      excludedDebugClusters:
+        excludedClusters:
+          - local-development
+
+      signatureKeyPair:
+        privateKeyPath: "data/test/cryptography/private_rsa_key.pem"
+        publicKeyPath: "data/test/cryptography/public_rsa_key.pub"
+
+      creditsafe:
+        username: CREDITSAFE_USERNAME
+        password: CREDITSAFE_PASSWORD
+        logConsumerMonitoringTraffic: true
+
+      aggregationWorker:
+        collectorSubscriptionKey: ASK_JOHANNES
+
+      integrations:
+        sbab:
+          signBaseUrl: https://secure.sbab.se
+        ukOpenBankingJson: UKOPENBANKINGJSON

@@ -1,0 +1,97 @@
+{{ $aggregationdb := .Values.aggregationdb | default dict }}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aggregation-config
+  namespace: aggregation
+data:
+  config.yml: |
+    server:
+      shutdownGracePeriod: 130s
+      applicationConnectors:
+        - type: https
+          port: 8443
+          {{- if eq "local" .Values.Cluster }}
+          keyStorePath: data/security/developer.keystore
+          certAlias: developer.internal.tink.se
+          {{- else }}
+          keyStorePath: data/security/production.keystore
+          certAlias: container.internal.tink.se
+          {{- end }}
+          keyStorePassword: KEYSTORE_PASSWORD # replaced from secrets
+          trustStorePath: data/security/TinkCA.truststore
+          trustStorePassword: changeme
+          # Validation disabled since Dropwizard/Jetty tries to check revocation of our homebrewed certs, which fails.
+          validateCerts: false
+      adminConnectors:
+        - type: http
+          port: 8095
+      requestLog:
+        appenders: []
+
+    logging:
+      level: INFO
+      loggers:
+        se.tink: TRACE
+        se.tink.org.eclipse: INFO
+        org.hibernate: WARN
+      appenders:
+        - type: console
+          threshold: ALL
+          timeZone: Europe/Stockholm
+          logFormat: '%magenta(%date{"yyyy-MM-dd HH:mm:ss,SSSXXX"}) %highlight(%level) [%thread] R:%X{requestId} C:%X{clusterId} UID:%X{userId} CID:%X{credentialsId} P:%X{providerName} A:%X{agentName} %blue(%logger) %message%n%xException'
+
+    prometheus:
+      port: 9130
+
+    database:
+      driverClass: com.mysql.jdbc.Driver
+      username: {{ default "tink-aggregation" $aggregationdb.username }}
+      password: MYSQL_PASSWORD # Is added via Kubernetes Secrets
+      url: jdbc:mysql://{{ default "aggregationdb" $aggregationdb.host }}:3306/tink?useLocalSessionState=true&rewriteBatchedStatements=true&useSSL=true&verifyServerCertificate=false
+      showSql: false
+      persistenceUnitName: tink-aggregation-api
+      maxPoolSize: 30
+
+    cache:
+      hosts: {{ default "cache:11211" .Values.cacheHosts }}
+      enabled: true
+
+    coordination:
+      hosts: {{ default "coordination:2181" .Values.coordinationHosts }}
+
+    sqsQueueConfiguration:
+{{ toYaml .Values.sqsQueueConfiguration | indent 6 }}
+
+    s3StorageConfiguration:
+{{ toYaml .Values.s3StorageConfiguration | indent 6 }}
+
+    isMultiClientDevelopment: false
+
+{{- if eq "local" .Values.Cluster }}
+
+    developmentMode: true
+
+    developmentConfiguration:
+      clusterHostConfiguration:
+        clusterId: local-development
+        host: http://192.168.99.1:5000  # This should be the the host of the aggregation controller
+        apiToken: devtoken
+        base64EncodedClientCertificate: ""
+        disableRequestCompression: false
+        aggregatorIdentifier: "Tink (+https://www.tink.se/; noc@tink.se)"
+
+      clusterConfiguration:
+        clusterId: local-development
+        host: http://192.168.99.1:5000
+        apiToken: devtoken
+        base64encodedclientcert: ""
+        disablerequestcompression: false
+
+      clusterCryptoConfiguration:
+        cryptoId:
+          clusterId: local-development
+          keyId: 1
+        base64EncodedKey: "QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUE="
+{{- end }}

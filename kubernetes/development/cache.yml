@@ -1,0 +1,46 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: cache
+  labels:
+    app: cache
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cache
+  template:
+    metadata:
+      labels:
+        app: cache
+    spec:
+      containers:
+      - name: memcached
+        image: memcached:1.4
+        ports:
+        - containerPort: 11211
+          name: memcached
+        command: ["memcached"]
+        args: ["-m", "64"]
+
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: cache
+spec:
+  selector:
+    app: cache
+  ports:
+  - protocol: TCP
+    port: 11211
+    targetPort: memcached
+    nodePort: 31005
+  type: NodePort
