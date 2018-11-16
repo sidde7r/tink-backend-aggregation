@@ -55,11 +55,11 @@ public class AgentDebugS3Storage implements AgentDebugStorageHandler {
                 Objects.nonNull(configuration.getRegion());
     }
 
-    private String putObject(String content, String file) throws AmazonServiceException {
-            awsStorageClient.putObject(bucketName, file, content);
+    private String putObject(String content, String fileName) throws AmazonServiceException {
+            awsStorageClient.putObject(bucketName, fileName, content);
             return String.format("AWS CLI: s3://%s/%s \n "
                             + "AWS HTTP: %s",
-                    configuration.getAgentDebugBucketName(), file,
-                    awsStorageClient.getUrl(bucketName, file).toExternalForm());
+                    configuration.getAgentDebugBucketName(), fileName,
+                    awsStorageClient.getUrl(bucketName, fileName).toExternalForm());
     }
 }
