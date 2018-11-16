@@ -98,9 +98,9 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
         return logContent;
     }
 
-    private static String getFormattedSize(String str) throws UnsupportedEncodingException {
+    private static String getFormattedSize(String str) {
         int lines = str.split("\n").length;
-        int bytesUtf8 = str.getBytes("UTF-8").length;
+        int bytesUtf8 = str.getBytes(StandardCharsets.UTF_8).length;
         return String.format("%dB_%d", bytesUtf8, lines);
     }
 
@@ -152,7 +152,7 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
     private String getCleanLogContent(Credentials credentials)
             throws UnsupportedEncodingException, EmptyDebugLogException {
-        String logContent = context.getLogOutputStream().toString("UTF-8");
+        String logContent = context.getLogOutputStream().toString(StandardCharsets.UTF_8.name());
 
         // Don't save logs without content
         if (logContent.getBytes(StandardCharsets.UTF_8).length == 0) {
@@ -162,7 +162,7 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
         return maskSensitiveOutputLog(logContent, credentials);
     }
 
-    private String getFormattedFileName(String logContent, Credentials credentials) throws UnsupportedEncodingException {
+    private String getFormattedFileName(String logContent, Credentials credentials) {
         return String.format(
                 "%s_%s_u%s_c%s_%s.log",
                 credentials.getProviderName(),
