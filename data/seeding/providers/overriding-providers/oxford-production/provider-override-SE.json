@@ -1578,7 +1578,7 @@
     } ],
     "capabilities" : [ "MORTGAGE_AGGREGATION", "TRANSFERS" ]
   }, {
-    "capabilitiesSerialized" : "[\"MORTGAGE_AGGREGATION\",\"TRANSFERS\"]",
+    "capabilitiesSerialized" : "[\"MORTGAGE_AGGREGATION\"]",
     "className" : "banks.sbab.SBABAgent",
     "credentialsType" : "MOBILE_BANKID",
     "currency" : "SEK",
@@ -1619,7 +1619,7 @@
       "checkbox" : false,
       "additionalInfo" : null
     } ],
-    "capabilities" : [ "MORTGAGE_AGGREGATION", "TRANSFERS" ]
+    "capabilities" : [ "MORTGAGE_AGGREGATION" ]
   }, {
     "capabilitiesSerialized" : "[]",
     "className" : "nxgen.se.banks.volvofinans.VolvoFinansAgent",
