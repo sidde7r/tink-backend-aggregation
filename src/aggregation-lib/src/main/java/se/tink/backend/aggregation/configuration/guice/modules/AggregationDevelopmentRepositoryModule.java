@@ -90,9 +90,18 @@ public class AggregationDevelopmentRepositoryModule extends RepositoryModule {
     // TODO change this later to get from service yml instead of database 
     public Map<String, AggregatorConfiguration> providerAggregatorConfiguration(
             AggregatorConfigurationsRepository repository) {
-        return repository.findAll().stream().collect(
+        Map<String, AggregatorConfiguration> aggregatorConfigurations = repository.findAll().stream().collect(
                 Collectors.toMap(AggregatorConfiguration::getAggregatorId, Function.identity())
         );
+
+        if (developmentConfiguration == null || !developmentConfiguration.isValid()) {
+            return aggregatorConfigurations;
+        }
+
+        AggregatorConfiguration aggregatorConfiguration = developmentConfiguration.getAggregatorConfiguration();
+        aggregatorConfigurations.put(aggregatorConfiguration.getAggregatorId(), aggregatorConfiguration);
+
+        return aggregatorConfigurations;
     }
 
     @Provides
