@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.framework.validation;
 
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 import se.tink.backend.system.rpc.Transaction;
 
 public final class ValidatorFactory {
@@ -53,6 +54,10 @@ public final class ValidatorFactory {
                         "Transaction description is present",
                         trx -> trx.getDescription() != null,
                         trx -> String.format("Transaction description is null: %s", trx))
+                .ruleTransaction(
+                        "Transaction description length is reasonable",
+                        trx -> Optional.ofNullable(trx.getDescription()).map(String::length).orElse(0) <= 1000,
+                        trx -> String.format("Transaction description is too long: %s", trx))
                 .rule(
                         "No duplicate transactions",
                         aisdata -> containsDuplicates(aisdata.getTransactions()),
