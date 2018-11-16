@@ -1,13 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.creditcard.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Date;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.CategoryEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.EarningCategoryEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
-import se.tink.libraries.date.DateUtils;
 
 @JsonObject
 public class CardTransactionEntity {
@@ -36,7 +37,8 @@ public class CardTransactionEntity {
     private AmountEntity redondeo;
 
     @JsonProperty("fechaLiquidacion")
-    private String fechaLiquidacion;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date fechaLiquidacion;
 
     @JsonProperty("codOperacionBancaria")
     private String codOperacionBancaria;
@@ -48,7 +50,8 @@ public class CardTransactionEntity {
     private String descTipoSaldo;
 
     @JsonProperty("fechaOperacion")
-    private String fechaOperacion;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date fechaOperacion;
 
     @JsonProperty("impMovimiento")
     private AmountEntity transactionAmount;
@@ -72,13 +75,15 @@ public class CardTransactionEntity {
     private EarningCategoryEntity categoriaGanadora;
 
     @JsonProperty("fechaMovimiento")
-    private String transactionDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date transactionDate;
 
     @JsonProperty("modalidad")
     private ModeEntity modality;
 
     @JsonProperty("fechaAnotacionMovimiento")
-    private String fechaAnotacionMovimiento;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date fechaAnotacionMovimiento;
 
     @JsonProperty("txtComercio")
     private String txtComercio;
@@ -121,7 +126,7 @@ public class CardTransactionEntity {
         return redondeo;
     }
 
-    public String getFechaLiquidacion() {
+    public Date getFechaLiquidacion() {
         return fechaLiquidacion;
     }
 
@@ -137,7 +142,7 @@ public class CardTransactionEntity {
         return descTipoSaldo;
     }
 
-    public String getFechaOperacion() {
+    public Date getFechaOperacion() {
         return fechaOperacion;
     }
 
@@ -169,7 +174,7 @@ public class CardTransactionEntity {
         return categoriaGanadora;
     }
 
-    public String getTransactionDate() {
+    public Date getTransactionDate() {
         return transactionDate;
     }
 
@@ -177,7 +182,7 @@ public class CardTransactionEntity {
         return modality;
     }
 
-    public String getFechaAnotacionMovimiento() {
+    public Date getFechaAnotacionMovimiento() {
         return fechaAnotacionMovimiento;
     }
 
@@ -197,7 +202,7 @@ public class CardTransactionEntity {
         return CreditCardTransaction.builder()
                 .setAmount(transactionAmount.toTinkAmount())
                 .setDescription(description)
-                .setDate(DateUtils.parseDate(transactionDate))
+                .setDate(transactionDate)
                 .build();
     }
 }

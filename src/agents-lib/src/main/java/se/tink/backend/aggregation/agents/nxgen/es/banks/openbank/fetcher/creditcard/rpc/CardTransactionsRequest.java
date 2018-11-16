@@ -1,15 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.creditcard.rpc;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class CardTransactionsRequest {
     @JsonProperty("fechaHasta")
-    private String fromDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date toDate;
 
     @JsonProperty("fechaDesde")
-    private String toDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date fromDate;
 
     @JsonProperty("numeroContrato")
     private String contractNumber;
@@ -20,11 +24,11 @@ public class CardTransactionsRequest {
     @JsonProperty("pan")
     private String cardNumber;
 
-    public String getFromDate() {
+    public Date getFromDate() {
         return fromDate;
     }
 
-    public void setFromDate(String fromDate) {
+    public void setFromDate(Date fromDate) {
         this.fromDate = fromDate;
     }
 
@@ -36,11 +40,11 @@ public class CardTransactionsRequest {
         this.contractNumber = contractNumber;
     }
 
-    public String getToDate() {
+    public Date getToDate() {
         return toDate;
     }
 
-    public void setToDate(String toDate) {
+    public void setToDate(Date toDate) {
         this.toDate = toDate;
     }
 

@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.creditcard.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -9,13 +11,15 @@ public class RepoEntity {
     private String indPosCursorRepo;
 
     @JsonProperty("fechaOperacionRepo")
-    private String operationDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date operationDate;
 
     @JsonProperty("diaRepo")
     private int diaRepo;
 
     @JsonProperty("fechaAnotacionMovRepo")
-    private String transactionDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date transactionDate;
 
     @JsonProperty("tipoSaldoRepo")
     private String balanceType;
@@ -27,7 +31,7 @@ public class RepoEntity {
         return indPosCursorRepo;
     }
 
-    public String getOperationDate() {
+    public Date getOperationDate() {
         return operationDate;
     }
 
@@ -35,7 +39,7 @@ public class RepoEntity {
         return diaRepo;
     }
 
-    public String getTransactionDate() {
+    public Date getTransactionDate() {
         return transactionDate;
     }
 
