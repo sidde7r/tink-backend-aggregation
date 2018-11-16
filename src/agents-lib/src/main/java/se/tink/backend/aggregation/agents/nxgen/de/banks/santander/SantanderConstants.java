@@ -9,21 +9,16 @@ public class SantanderConstants {
 
     public static class URL {
         public static final String BASEURL = "https://w4m.santander.de";
-        public static final String BASEURL_LOGIN = "https://w4m.santanderbank.de";
-        public static final String LOGIN = "/LGMBSE_ENS/ws/LGMBSE_Def_Listener";
+        public static final String LOGIN = "/LGMBSE_SCB_ENS/ws/LGMBSE_Def_Listener";
         public static final String ACCOUNT = "/MBANDE_ACC_SCB_ENS/json/F_MBANDE_GlobalPosition/1.0";
         public static final String TRANSACTIONS = "/MBANDE_ACC_SCB_ENS/json/F_MBANDE_BookedTransactions/1.0";
     }
 
     public static class SOAP {
-        public static final String LOGIN_REQUEST = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:v1=\"http://www.isban.es/webservices/LOGONMOBILESEB/Service_la/F_lgmbse_service_la/internet/validateUserLA/v1\""
-                + "><soapenv:Header/><soapenv:Body><v1:validateUserLA facade=\"validateUserLA\"><cbValidateUserLAE><userId>%s</userId><pin><![CDATA[%s]]>"
-                + "</pin><language><IDIOMA_ISO>de</IDIOMA_ISO><DIALECTO_ISO>DE</DIALECTO_ISO></language><entity></entity><channel>INT</channel></cbValidateUserLAE></v1:validateUserLA></soapenv:Body></soapenv:Envelope>";
-    }
-
-    public static class JSON {
-        public static final String TRANSACTION_SEARCH = "{\"getMoreBookedTransactionList_LA\": {\"filter\": {\"iniDateRange\": \"%s\",\"endDateRange\": \"%s\"},"
-                + "\"profile\": {\"company\": \"%s\"},\"initialList\": {\"contrato_local\": {\"TIPO_CONTRATO_LOCAL\": \"%s\",\"DETALLE_CONTRATO_LOCAL\": \"%s\"}}}}";
+        public static final String LOGIN_REQUEST =
+                "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:v1=\"http://www.isban.es/webservices/LOGONMOBILESEB/Service_la/F_lgmbse_service_la/internet/validateUserLA/v1\""
+                        + "><soapenv:Header/><soapenv:Body><v1:validateUserLA facade=\"validateUserLA\"><cbValidateUserLAE><userId>%s</userId><pin><![CDATA[%s]]>"
+                        + "</pin><language><IDIOMA_ISO>de</IDIOMA_ISO><DIALECTO_ISO>DE</DIALECTO_ISO></language><entity></entity><channel>INT</channel></cbValidateUserLAE></v1:validateUserLA></soapenv:Body></soapenv:Envelope>";
     }
 
     public static class ERROR {
@@ -63,9 +58,8 @@ public class SantanderConstants {
         public static final LogTag SANTANDER_TRANSACTION_LOGGING = LogTag.from("SANTANDER_TRANSACTION_LOGGING");
     }
 
-    public static class ACCOUNT_TYPE{
+    public static class ACCOUNT_TYPE {
         public static final String CHECKING_ACCOUNT = "GIROKONTO";
     }
-
 
 }
