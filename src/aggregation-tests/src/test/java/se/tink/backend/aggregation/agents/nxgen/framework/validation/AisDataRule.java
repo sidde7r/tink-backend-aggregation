@@ -7,13 +7,13 @@ import java.util.function.Predicate;
 /**
  * A rule is uniquely identified and recognized by its string identifier.
  */
-public final class ValidationRule implements IValidationRule<AisData> {
+public final class AisDataRule implements IValidationRule<AisData> {
     private String ruleIdentifier;
 
     private Predicate<AisData> criterion;
     private Function<AisData, String> failMessage;
 
-    public ValidationRule(
+    public AisDataRule(
             final String ruleIdentifier,
             final Predicate<AisData> criterion,
             final Function<AisData, String> failMessage) {
@@ -43,10 +43,10 @@ public final class ValidationRule implements IValidationRule<AisData> {
             return true;
         } else if (o == null) {
             return false;
-        } else if (!(o instanceof ValidationRule)) {
+        } else if (!(o instanceof AisDataRule)) {
             return false;
         }
-        final ValidationRule other = (ValidationRule) o;
+        final AisDataRule other = (AisDataRule) o;
         return Objects.equals(ruleIdentifier, other.getRuleIdentifier());
     }
 

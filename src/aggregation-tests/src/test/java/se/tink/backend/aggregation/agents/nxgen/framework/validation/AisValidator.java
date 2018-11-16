@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.system.rpc.Transaction;
 
 public final class AisValidator {
-    private final Set<ValidationRule> aisDataRules;
+    private final Set<AisDataRule> aisDataRules;
     private final Set<AccountRule> accountRules;
     private final Set<TransactionRule> transactionRules;
     private final Action action;
@@ -52,7 +52,7 @@ public final class AisValidator {
     }
 
     public void validate(final AisData aisData) {
-        for (final ValidationRule rule : aisDataRules) {
+        for (final AisDataRule rule : aisDataRules) {
             validateWithRule(aisData, rule, action);
         }
         for (final AccountRule rule : accountRules) {
@@ -68,7 +68,7 @@ public final class AisValidator {
     }
 
     private static void validateWithRule(
-            final AisData aisData, final ValidationRule rule, final Action action) {
+            final AisData aisData, final AisDataRule rule, final Action action) {
         if (rule.getCriterion().test(aisData)) {
             action.onPass(aisData, rule.getRuleIdentifier());
         } else {
@@ -95,7 +95,7 @@ public final class AisValidator {
     }
 
     public static final class Builder {
-        private Set<ValidationRule> aisDataRules = new HashSet<>();
+        private Set<AisDataRule> aisDataRules = new HashSet<>();
         private Set<AccountRule> accountRules = new HashSet<>();
         private Set<TransactionRule> transactionRules = new HashSet<>();
         private Action action = null;
@@ -124,7 +124,7 @@ public final class AisValidator {
             final boolean aisDataDupes =
                     aisDataRules
                             .stream()
-                            .map(ValidationRule::getRuleIdentifier)
+                            .map(AisDataRule::getRuleIdentifier)
                             .anyMatch(id -> Objects.equals(id, rule.getRuleIdentifier()));
             if (aisDataDupes || accountDupes || transactionDupes) {
                 throw new IllegalArgumentException(
@@ -148,9 +148,9 @@ public final class AisValidator {
                 final String ruleName,
                 final Predicate<AisData> criterion,
                 final Function<AisData, String> failMessage) {
-            final ValidationRule rule = new ValidationRule(ruleName, criterion, failMessage);
+            final AisDataRule rule = new AisDataRule(ruleName, criterion, failMessage);
             checkForDuplicates(rule);
-            aisDataRules.add(new ValidationRule(ruleName, criterion, failMessage));
+            aisDataRules.add(new AisDataRule(ruleName, criterion, failMessage));
             return this;
         }
 
