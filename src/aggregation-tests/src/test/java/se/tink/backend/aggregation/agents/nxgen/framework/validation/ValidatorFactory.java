@@ -45,6 +45,10 @@ public final class ValidatorFactory {
                         "Holder name is present",
                         acc -> acc.getHolderName() != null,
                         acc -> String.format("Account lacks a holder name: %s", acc))
+                .ruleTransaction(
+                        "Transaction description is present",
+                        trx -> trx.getDescription() != null,
+                        trx -> String.format("Transaction description is null: %s", trx))
                 .rule(
                         "No duplicate transactions",
                         aisdata -> containsDuplicates(aisdata.getTransactions()),
