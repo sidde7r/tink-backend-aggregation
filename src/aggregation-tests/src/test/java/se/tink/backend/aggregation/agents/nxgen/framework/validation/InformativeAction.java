@@ -11,8 +11,7 @@ public final class InformativeAction implements Action {
 
     @Override
     public void onPass(final AisData aisData, final String ruleIdentifier) {
-        logger.info(
-                "Validator result:\n[PASS] {}", ruleIdentifier);
+        logger.info("Validator result:\n[PASS] {}", ruleIdentifier);
     }
 
     @Override
@@ -44,7 +43,8 @@ public final class InformativeAction implements Action {
     }
 
     @Override
-    public void onFail(final Transaction transaction, final String ruleIdentifier, final String message) {
+    public void onFail(
+            final Transaction transaction, final String ruleIdentifier, final String message) {
         logger.warn(
                 "Validator result:\n[FAIL] {}: {} for transaction: {}",
                 ruleIdentifier,
