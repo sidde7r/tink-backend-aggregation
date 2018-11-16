@@ -134,6 +134,7 @@ public final class OpenbankApiClient {
 
     public CardTransactionsResponse getCardTransactions(CardTransactionsRequest request) {
         return createRequestInSession(OpenbankConstants.Urls.CARD_TRANSACTIONS)
+                .body(request)
                 .post(CardTransactionsResponse.class);
     }
 }

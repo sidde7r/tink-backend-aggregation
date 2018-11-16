@@ -149,10 +149,19 @@ public class CardEntity {
     }
 
     public CreditCardAccount toTinkAccount() {
+        String accountNumber = contract.getProductCode() + contract.getContractNumber();
+
         return CreditCardAccount.builderFromFullNumber(cardNumber, description)
+                .setAccountNumber(accountNumber)
+                .setName(description)
                 .setBalance(getBalanceUsed().toTinkAmount())
                 .setAvailableCredit(getBalanceAvailable().toTinkAmount())
                 .setBankIdentifier(cardNumber)
+                .putInTemporaryStorage(
+                        OpenbankConstants.Storage.PRODUCT_CODE_NEW, contract.getProductCode())
+                .putInTemporaryStorage(
+                        OpenbankConstants.Storage.CONTRACT_NUMBER_NEW, contract.getContractNumber())
+                .putInTemporaryStorage(OpenbankConstants.Storage.CARD_NUMBER, cardNumber)
                 .build();
     }
 }

@@ -32,6 +32,7 @@ public abstract class OpenbankConstants {
         public static final String CONTRACT_NUMBER_OLD = "contract-number-old";
         public static final String PRODUCT_CODE_NEW = "product-code-new";
         public static final String CONTRACT_NUMBER_NEW = "contract-number-new";
+        public static final String CARD_NUMBER = "card-number";
     }
 
     public static class ApiService {
