@@ -82,7 +82,7 @@ public class ErsteBankApiClient {
 
     public HttpResponse sendPassword(String rsa) {
 
-        Form form = new Form.Builder()
+        Form form = Form.builder()
                 .put(ErsteBankConstants.BODY.RSA_ENCRYPTED, rsa)
                 .put(ErsteBankConstants.BODY.AUTHENTICATION_METHOD, ErsteBankConstants.BODY.AUTHENTICATION_METHOD_PASSWORD)
                 .build();
