@@ -6,12 +6,15 @@ import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Objects;
 import java.util.List;
+import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.CredentialsRequestType;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.rpc.User;
+import se.tink.backend.aggregation.storage.debug.AgentDebugLocalStorage;
+import se.tink.backend.aggregation.storage.debug.AgentDebugS3Storage;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
@@ -99,20 +102,19 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
     private void writeToDebugFile(Credentials credentials, TransferRequest transferRequest) {
         try {
-            File debugDirectory = state.getDebugDirectory();
-            String logContent = context.getLogOutputStream().toString("UTF-8");
-            logContent = maskSensitiveOutputLog(logContent, credentials);
+            String storagePath = null;
 
-            File logFile = new File(debugDirectory, String.format(
-                    "%s_%s_u%s_c%s_%s.log",
-                    credentials.getProviderName(),
-                    ThreadSafeDateFormat.FORMATTER_FILENAME_SAFE.format(new Date()),
-                    credentials.getUserId(),
-                    credentials.getId(),
-                    getFormattedSize(logContent))
-                    .replace(":", "."));
+            if (agentDebugStorage instanceof AgentDebugLocalStorage) {
+                storagePath = handleLocalStorage(credentials);
+            }
 
-            String storagePath = agentDebugStorage.store(logContent, logFile);
+            if (agentDebugStorage instanceof AgentDebugS3Storage) {
+                storagePath = handleS3Storage(credentials);
+            }
+
+            if (Strings.isNullOrEmpty(storagePath)) {
+                return;
+            }
 
             if (transferRequest != null) {
                 String id = UUIDUtils.toTinkUUID(transferRequest.getTransfer().getId());
@@ -126,5 +128,37 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
                     + credentials.getProviderName() + ", credentialsId:" + credentials.getId() + ", status:"
                     + credentials.getStatus() + ", userId:" + credentials.getUserId() + ")", e);
         }
+    }
+
+    private String handleLocalStorage(Credentials credentials) throws IOException {
+        File debugDirectory = state.getDebugDirectory();
+        String logContent = getCleanLogContent(credentials);
+
+        File logFile = new File(debugDirectory, getFormattedFileName(logContent, credentials));
+
+        return agentDebugStorage.store(logContent, logFile);
+    }
+
+    private String handleS3Storage(Credentials credentials) throws IOException {
+        String logContent = getCleanLogContent(credentials);
+        File logFile = new File(getFormattedFileName(logContent, credentials));
+
+        return agentDebugStorage.store(logContent, logFile);
+    }
+
+    private String getCleanLogContent(Credentials credentials) throws UnsupportedEncodingException {
+        String logContent = context.getLogOutputStream().toString("UTF-8");
+        return maskSensitiveOutputLog(logContent, credentials);
+    }
+
+    private String getFormattedFileName(String logContent, Credentials credentials) throws UnsupportedEncodingException {
+        return String.format(
+                "%s_%s_u%s_c%s_%s.log",
+                credentials.getProviderName(),
+                ThreadSafeDateFormat.FORMATTER_FILENAME_SAFE.format(new Date()),
+                credentials.getUserId(),
+                credentials.getId(),
+                getFormattedSize(logContent))
+                .replace(":", ".");
     }
 }
