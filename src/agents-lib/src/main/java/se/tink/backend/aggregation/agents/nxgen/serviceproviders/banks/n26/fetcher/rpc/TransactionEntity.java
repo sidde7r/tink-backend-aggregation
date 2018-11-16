@@ -175,7 +175,7 @@ public class TransactionEntity {
 
         return Transaction.builder()
                 .setAmount(new Amount(getCurrencyCode(), getAmount()))
-                .setDate(new Date(getCreatedTS()))
+                .setDate(new Date(visibleTS))
                 .setDescription(getDescription())
                 .setPending(isPending())
                 .setRawDetails(getRawDetails())
