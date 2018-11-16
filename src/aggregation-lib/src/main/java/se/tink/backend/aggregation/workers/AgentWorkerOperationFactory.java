@@ -14,8 +14,8 @@ import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentClassFactory;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
+import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
-import se.tink.backend.aggregation.storage.database.converter.AggregatorConverter;
 import se.tink.backend.aggregation.converter.CallbackHostConfigurationConverter;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -215,7 +215,8 @@ public class AgentWorkerOperationFactory {
         return commands;
     }
 
-    public AgentWorkerOperation createRefreshOperation(ClusterInfo clusterInfo, RefreshInformationRequest request) {
+    public AgentWorkerOperation createRefreshOperation(ClusterInfo clusterInfo, RefreshInformationRequest request,
+            ClientInfo clientInfo) {
         if (request.getItemsToRefresh() == null || request.getItemsToRefresh().isEmpty()) {
             // Add all available items if none were submitted.
             // Todo: Remove this once it has been verified that no consumer sends in an empty/null list.
@@ -262,7 +263,8 @@ public class AgentWorkerOperationFactory {
         return new AgentWorkerOperation(agentWorkerOperationState, metricsName, request, commands, context);
     }
 
-    public AgentWorkerOperation createExecuteTransferOperation(ClusterInfo clusterInfo, TransferRequest request) {
+    public AgentWorkerOperation createExecuteTransferOperation(ClusterInfo clusterInfo, TransferRequest request,
+            ClientInfo clientInfo) {
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
@@ -286,7 +288,8 @@ public class AgentWorkerOperationFactory {
     }
 
     public AgentWorkerOperation createExecuteWhitelistedTransferOperation(ClusterInfo clusterInfo,
-            WhitelistedTransferRequest request) {
+            WhitelistedTransferRequest request,
+            ClientInfo clientInfo) {
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
@@ -329,7 +332,8 @@ public class AgentWorkerOperationFactory {
                 new TransferAgentWorkerCommand(context, request, createMetricState(request)));
     }
 
-    public AgentWorkerOperation createCreateCredentialsOperation(ClusterInfo clusterInfo, CredentialsRequest request) {
+    public AgentWorkerOperation createCreateCredentialsOperation(ClusterInfo clusterInfo, CredentialsRequest request,
+            ClientInfo clientInfo) {
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
@@ -356,7 +360,8 @@ public class AgentWorkerOperationFactory {
                 context);
     }
 
-    public AgentWorkerOperation createUpdateOperation(ClusterInfo clusterInfo, CredentialsRequest request) {
+    public AgentWorkerOperation createUpdateOperation(ClusterInfo clusterInfo, CredentialsRequest request,
+            ClientInfo clientInfo) {
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
@@ -383,7 +388,8 @@ public class AgentWorkerOperationFactory {
                 context);
     }
 
-    public AgentWorkerOperation createKeepAliveOperation(ClusterInfo clusterInfo, KeepAliveRequest request) {
+    public AgentWorkerOperation createKeepAliveOperation(ClusterInfo clusterInfo, KeepAliveRequest request,
+            ClientInfo clientInfo) {
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
@@ -413,7 +419,8 @@ public class AgentWorkerOperationFactory {
     }
 
     public AgentWorkerOperation createReEncryptCredentialsOperation(ClusterInfo clusterInfo,
-            ReEncryptCredentialsRequest request) {
+            ReEncryptCredentialsRequest request,
+            ClientInfo clientInfo) {
 
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
@@ -461,7 +468,8 @@ public class AgentWorkerOperationFactory {
      *
      **/
     public AgentWorkerOperation createWhitelistRefreshOperation(ClusterInfo clusterInfo,
-            RefreshWhitelistInformationRequest request) {
+            RefreshWhitelistInformationRequest request,
+            ClientInfo clientInfo) {
         if (request.getItemsToRefresh() == null || request.getItemsToRefresh().isEmpty()) {
             // Add all available items if none were submitted.
             // Todo: Remove this once it has been verified that no consumer sends in an empty/null list.
@@ -514,7 +522,8 @@ public class AgentWorkerOperationFactory {
      *
      */
     public AgentWorkerOperation createConfigureWhitelistOperation(ClusterInfo clusterInfo,
-            ConfigureWhitelistInformationRequest request) {
+            ConfigureWhitelistInformationRequest request,
+            ClientInfo clientInfo) {
         String operationMetricName = "configure-whitelist";
 
         if (request.getItemsToRefresh() == null || request.getItemsToRefresh().isEmpty()) {

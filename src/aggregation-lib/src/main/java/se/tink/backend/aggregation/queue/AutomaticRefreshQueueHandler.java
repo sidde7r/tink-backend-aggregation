@@ -52,7 +52,10 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
                             refreshInformation.getApiToken(),
                             refreshInformation.getClientCertificate(),
                             refreshInformation.isDisableRequestCompression(),
-                            refreshInformation.getAggregator()));
+                            refreshInformation.getAggregator()),
+                    null);
+
+            // FIXME: do not pass null clientInfo
 
             MDC.setContextMap(refreshInformation.getMDCContext());
             agentWorker.executeAutomaticRefresh(agentWorkerRefreshOperationCreatorWrapper);

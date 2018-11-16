@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.queue.models;
 import java.util.Map;
 import org.slf4j.MDC;
 import se.tink.backend.aggregation.cluster.identification.Aggregator;
+import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 
@@ -23,7 +24,7 @@ public class RefreshInformation {
     public RefreshInformation() {
     }
 
-    public RefreshInformation(RefreshInformationRequest request, ClusterInfo clusterInfo) {
+    public RefreshInformation(RefreshInformationRequest request, ClusterInfo clusterInfo, ClientInfo clientInfo) {
         this.request = request;
         this.aggregationControllerHost = clusterInfo.getAggregationControllerHost();
         this.apiToken = clusterInfo.getApiToken();
@@ -33,6 +34,7 @@ public class RefreshInformation {
         this.environment = clusterInfo.getClusterId().getEnvironment();
         this.aggregator = clusterInfo.getAggregator();
         this.context = MDC.getCopyOfContextMap();
+        // todo: use clientInfo
     }
 
     public RefreshInformationRequest getRequest() {
