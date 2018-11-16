@@ -33,6 +33,7 @@ public final class AisValidator {
     public Builder rebuilder() {
         final Builder builder = new Builder();
         builder.aisDataRules = new HashSet<>(aisDataRules);
+        builder.accountRules = new HashSet<>(accountRules);
         builder.transactionRules = new HashSet<>(transactionRules);
         builder.action = action;
         return builder;
