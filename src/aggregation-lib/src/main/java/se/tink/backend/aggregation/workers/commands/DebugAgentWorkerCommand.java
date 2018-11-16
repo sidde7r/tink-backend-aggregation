@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.workers.commands;
 
-import com.google.common.base.Strings;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -15,8 +14,6 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.rpc.User;
-import se.tink.backend.aggregation.storage.debug.AgentDebugLocalStorage;
-import se.tink.backend.aggregation.storage.debug.AgentDebugS3Storage;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
@@ -105,19 +102,21 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
     private void writeToDebugFile(Credentials credentials, TransferRequest transferRequest) {
         try {
-            String storagePath = null;
-
-            if (agentDebugStorage instanceof AgentDebugLocalStorage && state.isSaveLocally()) {
-                storagePath = handleLocalStorage(credentials);
+            File logFile = null;
+            String logContent = getCleanLogContent(credentials);
+            if (agentDebugStorage.isLocalStorage() && state.isSaveLocally()) {
+                logFile = new File(state.getDebugDirectory(), getFormattedFileName(logContent, credentials));
             }
 
-            if (agentDebugStorage instanceof AgentDebugS3Storage) {
-                storagePath = handleS3Storage(credentials);
+            if (!agentDebugStorage.isLocalStorage()) {
+                logFile = new File(getFormattedFileName(logContent, credentials));
             }
 
-            if (Strings.isNullOrEmpty(storagePath)) {
+            if (Objects.isNull(logFile)) {
                 return;
             }
+
+            String storagePath = agentDebugStorage.store(logContent, logFile);
 
             if (transferRequest != null) {
                 String id = UUIDUtils.toTinkUUID(transferRequest.getTransfer().getId());
@@ -131,22 +130,6 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
         } catch (IOException e) {
             log.error("Could not write debug logFile.", e);
         }
-    }
-
-    private String handleLocalStorage(Credentials credentials) throws IOException, EmptyDebugLogException {
-        File debugDirectory = state.getDebugDirectory();
-        String logContent = getCleanLogContent(credentials);
-
-        File logFile = new File(debugDirectory, getFormattedFileName(logContent, credentials));
-
-        return agentDebugStorage.store(logContent, logFile);
-    }
-
-    private String handleS3Storage(Credentials credentials) throws IOException, EmptyDebugLogException {
-        String logContent = getCleanLogContent(credentials);
-        File logFile = new File(getFormattedFileName(logContent, credentials));
-
-        return agentDebugStorage.store(logContent, logFile);
     }
 
     private String getCleanLogContent(Credentials credentials)

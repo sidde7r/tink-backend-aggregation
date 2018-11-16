@@ -48,6 +48,11 @@ public class AgentDebugS3Storage implements AgentDebugStorageHandler {
         }
     }
 
+    @Override
+    public boolean isLocalStorage() {
+        return false;
+    }
+
     private static boolean isValidConfiguration(S3StorageConfiguration configuration) {
         return Objects.nonNull(configuration) &&
                 configuration.isEnabled() &&

@@ -12,4 +12,9 @@ public class AgentDebugLocalStorage implements AgentDebugStorageHandler{
         Files.write(content, file, Charsets.UTF_8);
         return file.getAbsolutePath();
     }
+
+    @Override
+    public boolean isLocalStorage() {
+        return true;
+    }
 }
