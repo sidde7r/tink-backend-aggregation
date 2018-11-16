@@ -22,7 +22,7 @@ public final class ValidatorFactory {
             if (numberOfIdenticalElements > 1) {
                 return false;
             } else if (numberOfIdenticalElements < 1) {
-                throw new AssertionError("Unexpected number of elements");
+                throw new AssertionError("Unexpected number of elements"); // Should never happen
             }
         }
         return true;
