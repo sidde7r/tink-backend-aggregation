@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.framework.validation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.rpc.Account;
+import se.tink.backend.system.rpc.Transaction;
 
 public final class WarnAction implements Action {
     private static final Logger logger = LoggerFactory.getLogger(WarnAction.class);
@@ -34,5 +35,19 @@ public final class WarnAction implements Action {
                 ruleIdentifier,
                 message,
                 account);
+    }
+
+    @Override
+    public void onPass(final Transaction transaction, final String ruleIdentifier) {
+        logger.info("Validator result:\n[PASS] {}", ruleIdentifier);
+    }
+
+    @Override
+    public void onFail(final Transaction transaction, final String ruleIdentifier, final String message) {
+        logger.warn(
+                "Validator result:\n[FAIL] {}: {} for transaction: {}",
+                ruleIdentifier,
+                message,
+                transaction);
     }
 }

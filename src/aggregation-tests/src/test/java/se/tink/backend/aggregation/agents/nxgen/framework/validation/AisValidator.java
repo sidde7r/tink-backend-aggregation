@@ -10,10 +10,12 @@ import se.tink.backend.system.rpc.Transaction;
 
 public final class AisValidator {
     private final Set<ValidationRule> rules;
+    private final Set<TransactionRule> transactionRules;
     private final Action action;
 
     private AisValidator(final AisValidator.Builder builder) {
         rules = builder.rules;
+        transactionRules = builder.transactionRules;
         action = builder.action;
     }
 
@@ -37,6 +39,11 @@ public final class AisValidator {
         for (final ValidationRule rule : rules) {
             validateWithRule(aisData, rule, action);
         }
+        for (final TransactionRule rule : transactionRules) {
+            for (final Transaction transaction : aisData.getTransactions()) {
+                validateWithTransactionRule(transaction, rule, action);
+            }
+        }
     }
 
     private static void validateWithRule(
@@ -59,8 +66,18 @@ public final class AisValidator {
         }
     }
 
+    private static void validateWithTransactionRule(
+            final Transaction transaction, final TransactionRule rule, final Action action) {
+        if (rule.getCriterion().test(transaction)) {
+            action.onPass(transaction, rule.getRuleIdentifier());
+        } else {
+            action.onFail(transaction, rule.getRuleIdentifier(), rule.getMessage(transaction));
+        }
+    }
+
     public static final class Builder {
         private Set<ValidationRule> rules = new HashSet<>();
+        private Set<TransactionRule> transactionRules = new HashSet<>();
         private Action action = null;
 
         private Builder() {}
@@ -105,6 +122,21 @@ public final class AisValidator {
                                 rule.getRuleIdentifier()));
             }
             rules.add(rule);
+            return this;
+        }
+
+        public Builder ruleTransaction(
+                final String ruleName,
+                final Predicate<Transaction> criterion,
+                final Function<Transaction, String> failMessage) {
+            final TransactionRule rule = new TransactionRule(ruleName, criterion, failMessage);
+            if (transactionRules.contains(rule)) {
+                throw new IllegalArgumentException(
+                        String.format(
+                                "A validation rule with identifier \"%s\" was already specified",
+                                rule.getRuleIdentifier()));
+            }
+            transactionRules.add(rule);
             return this;
         }
 

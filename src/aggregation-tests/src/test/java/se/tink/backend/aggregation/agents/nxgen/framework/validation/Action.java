@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.framework.validation;
 
 import se.tink.backend.aggregation.rpc.Account;
+import se.tink.backend.system.rpc.Transaction;
 
 /** Action to take if validation fails. */
 public interface Action {
@@ -41,4 +42,23 @@ public interface Action {
      *     account
      */
     void onFail(Account account, String ruleIdentifier, String message);
+
+    /**
+     * Executes an action when a transaction satisfies a rule.
+     *
+     * @param transaction The transaction which satisfied a rule
+     * @param ruleIdentifier A human-readable identifier for the rule that the transaction satisfied
+     */
+    void onPass(Transaction transaction, String ruleIdentifier);
+
+    /**
+     * Executes an action when an account does not satisfy a rule.
+     *
+     * @param transaction The transaction which did not satisfy a rule
+     * @param ruleIdentifier A human-readable identifier for the rule that the transaction did not
+     *     satisfy
+     * @param message A human-readable message explaining why the rule failed in the context of this
+     *     transaction
+     */
+    void onFail(Transaction transaction, String ruleIdentifier, String message);
 }
