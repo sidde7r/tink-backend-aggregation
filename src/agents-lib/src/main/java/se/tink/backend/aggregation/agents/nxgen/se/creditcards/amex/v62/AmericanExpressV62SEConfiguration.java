@@ -22,8 +22,15 @@ public class AmericanExpressV62SEConfiguration implements AmericanExpressV62Conf
     }
 
     @Override
-    public Amount toAmount(Double amount) {
-        return Amount.inSEK(amount);
+    public Amount toAmount(Double value) {
+        // When the amount is 0.0 and we try to switch sign we end up with -0.0 what we would like
+        // to avoid
+        Amount amount = Amount.inSEK(value);
+        if (amount.isZero()) {
+            return amount;
+        }
+        // We are switching sign as Amex app shows values inversely to our standard
+        return amount.negate();
     }
 
     @Override
@@ -38,7 +45,6 @@ public class AmericanExpressV62SEConfiguration implements AmericanExpressV62Conf
         request.setTimestamp(Long.toString(System.currentTimeMillis()));
         return request;
     }
-
 
     @Override
     public String getAppId() {
