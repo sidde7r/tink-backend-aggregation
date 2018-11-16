@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
@@ -38,5 +39,9 @@ public class TransactionKeyPaginatorResponseImpl<T> implements TransactionKeyPag
     @Override
     public Optional<Boolean> canFetchMore() {
         return Optional.of(next != null);
+    }
+
+    public static <T> TransactionKeyPaginatorResponseImpl<T> createEmpty() {
+        return new TransactionKeyPaginatorResponseImpl<>(Collections.emptyList(), null);
     }
 }
