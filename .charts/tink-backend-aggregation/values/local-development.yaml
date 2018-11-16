@@ -1,0 +1,14 @@
+replicas: 1
+
+aggregationdb:
+  username: tink
+  host: aggregationdb.default
+
+coordinationHosts: coordination.default:2181
+cacheHosts: cache.default:2181
+
+sqsQueueConfiguration:
+  enabled: false
+
+s3StorageConfiguration:
+  enabled: false

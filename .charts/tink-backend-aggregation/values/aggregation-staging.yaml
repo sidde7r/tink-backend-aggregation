@@ -1,0 +1,18 @@
+aggregationdb:
+  host: aggregation-20180615075316658100000003.chuxbkxjm8ld.eu-west-1.rds.amazonaws.com
+
+coordinationHosts: 10.89.60.29:2181
+
+cacheHosts: main.wazhro.0001.euw1.cache.amazonaws.com:11211
+
+sqsQueueConfiguration:
+  enabled: True
+  url: "https://sqs.eu-west-1.amazonaws.com/790041524432/aggregation-refresh-queue-aggregation-staging"
+  region: "eu-west-1"
+  name: "aggregation-refresh-queue-aggregation-staging"
+
+s3StorageConfiguration:
+  enabled: True
+  url: "https://s3.eu-west-1.amazonaws.com"
+  region: "eu-west-1"
+  agentDebugBucketName: "aggregation-staging-agent-debug-20180917063035423800000001"
