@@ -3,7 +3,7 @@ createDevelopmentSecrets: True
 doNotCreateLoadBalancerService: True
 replicas: 1
 
-aggregationdb:
+providerdb:
   username: tink
   host: providerdb.default.svc.cluster.local
   password: tink
