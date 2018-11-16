@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.List;
 import org.assertj.core.util.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.CredentialsRequestType;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
@@ -29,7 +31,7 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
-    private static final AggregationLogger log = new AggregationLogger(DebugAgentWorkerCommand.class);
+    private static final Logger log = LoggerFactory.getLogger(DebugAgentWorkerCommand.class);
 
     private DebugAgentWorkerCommandState state;
     private AgentWorkerCommandContext context;
@@ -126,13 +128,9 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
             }
 
         } catch (EmptyDebugLogException e) {
-            log.info("Not writing logfile for: (provider:"
-                    + credentials.getProviderName() + ", credentialsId:" + credentials.getId() + ", status:"
-                    + credentials.getStatus() + ", userId:" + credentials.getUserId() + ") " + e.getMessage());
+            log.info(e.getMessage());
         } catch (IOException e) {
-            log.error("Could not write logfile for: (provider:"
-                    + credentials.getProviderName() + ", credentialsId:" + credentials.getId() + ", status:"
-                    + credentials.getStatus() + ", userId:" + credentials.getUserId() + ")", e);
+            log.error("Could not write debug logFile.", e);
         }
     }
 
