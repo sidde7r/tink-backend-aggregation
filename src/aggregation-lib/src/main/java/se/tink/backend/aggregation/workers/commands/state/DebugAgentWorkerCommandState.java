@@ -1,14 +1,15 @@
 package se.tink.backend.aggregation.workers.commands.state;
 
 import javax.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.log.AggregationLogger;
 
 import java.io.File;
 
 public class DebugAgentWorkerCommandState {
+    private static final Logger log = LoggerFactory.getLogger(DebugAgentWorkerCommandState.class);
     private File debugDirectory;
-    private static final AggregationLogger log = new AggregationLogger(DebugAgentWorkerCommandState.class);
 
     @Inject
     public DebugAgentWorkerCommandState(AgentsServiceConfiguration configuration) {
