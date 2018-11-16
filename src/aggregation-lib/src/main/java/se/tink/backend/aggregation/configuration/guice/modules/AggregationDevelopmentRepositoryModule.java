@@ -90,9 +90,18 @@ public class AggregationDevelopmentRepositoryModule extends RepositoryModule {
     // TODO change this later to get from service yml instead of database 
     public Map<String, AggregatorConfiguration> providerAggregatorConfiguration(
             AggregatorConfigurationsRepository repository) {
-        return repository.findAll().stream().collect(
+        Map<String, AggregatorConfiguration> aggregatorConfigurations = repository.findAll().stream().collect(
                 Collectors.toMap(AggregatorConfiguration::getAggregatorId, Function.identity())
         );
+
+        if (developmentConfiguration == null || !developmentConfiguration.isValid()) {
+            return aggregatorConfigurations;
+        }
+
+        AggregatorConfiguration aggregatorConfiguration = developmentConfiguration.getAggregatorConfiguration();
+        aggregatorConfigurations.put(aggregatorConfiguration.getAggregatorId(), aggregatorConfiguration);
+
+        return aggregatorConfigurations;
     }
 
     @Provides
@@ -100,17 +109,35 @@ public class AggregationDevelopmentRepositoryModule extends RepositoryModule {
     @Named("clientConfigurationByClientKey")
     // TODO change this later for local development getting from service yml
     public Map<String, ClientConfiguration> providerClientConfiguration(ClientConfigurationsRepository repository) {
-        return repository.findAll().stream().collect(
+        Map<String, ClientConfiguration> clientConfigurations = repository.findAll().stream().collect(
                 Collectors.toMap(ClientConfiguration::getApiClientKey, Function.identity())
         );
+
+        if (developmentConfiguration == null || !developmentConfiguration.isValid()) {
+            return clientConfigurations;
+        }
+
+        ClientConfiguration clientConfiguration = developmentConfiguration.getClientConfiguration();
+        clientConfigurations.put(clientConfiguration.getApiClientKey(), clientConfiguration);
+
+        return clientConfigurations;
     }
 
     @Provides
     @Singleton
     @Named("clientConfigurationByName")
     public Map<String, ClientConfiguration> providerClientConfigurationByName(ClientConfigurationsRepository repository) {
-        return repository.findAll().stream().collect(
+        Map<String, ClientConfiguration> clientConfigurations = repository.findAll().stream().collect(
                 Collectors.toMap(ClientConfiguration::getClientName, Function.identity())
         );
+
+        if (developmentConfiguration == null || !developmentConfiguration.isValid()) {
+            return clientConfigurations;
+        }
+
+        ClientConfiguration clientConfiguration = developmentConfiguration.getClientConfiguration();
+        clientConfigurations.put(clientConfiguration.getClientName(), clientConfiguration);
+
+        return clientConfigurations;
     }
 }
