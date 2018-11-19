@@ -61,7 +61,9 @@ public class JerseyClientProvider extends AbstractHttpContextInjectable<ClientIn
             return null;
         }
 
-        return convertFromClientConfiguration(clientConfigurationProvider.getClientConfiguration(apiKey));
+        ClientInfo clientInfo = convertFromClientConfiguration(clientConfigurationProvider.getClientConfiguration(apiKey));
+        logger.info("Client info retrived for {}", clientInfo.getClientName());
+        return clientInfo;
     }
 
     private ClientInfo convertFromClientConfiguration(ClientConfiguration clientConfiguration) {
