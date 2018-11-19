@@ -22,8 +22,10 @@ import se.tink.backend.aggregation.agents.AgentFactory;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
-import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
+import se.tink.backend.aggregation.agents.TransferExecutor;
+import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.capability.CapabilityTester;
+import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
@@ -33,6 +35,7 @@ import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.aggregation.rpc.UserProfile;
+import se.tink.backend.core.transfer.Transfer;
 
 public class AgentIntegrationTest extends AbstractConfigurationBase {
     private static final Logger log = LoggerFactory.getLogger(AbstractAgentTest.class);
@@ -219,8 +222,23 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         log.info("Done with refresh.");
     }
 
-    public void testRefresh() throws Exception {
+    private void doBankTransfer(Agent agent, Transfer transfer) throws Exception {
+        log.info("Executing bank transfer.");
 
+        if (agent instanceof TransferExecutorNxgen) {
+            ((TransferExecutorNxgen)agent).execute(transfer);
+        } else if (agent instanceof TransferExecutor) {
+            ((TransferExecutor)agent).execute(transfer);
+
+        } else {
+            throw new AssertionError(String.format("%s does not implement a transfer executor interface.",
+                    agent.getClass().getSimpleName()));
+        }
+
+        log.info("Done with bank transfer.");
+    }
+
+    private void initiateCredentials() {
         if (loadCredentials()) {
             // If the credential loaded successful AND the flags were not overridden
             // == non-create/update refresh
@@ -242,11 +260,33 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 requestFlagUpdate = false;
             }
         }
+    }
 
+    public void testRefresh() throws Exception {
+        initiateCredentials();
         Agent agent = createAgent(createRefreshInformationRequest());
         try {
             login(agent);
             refresh(agent);
+            Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
+
+            if (doLogout) {
+                logout(agent);
+            }
+        } finally {
+            saveCredentials(agent);
+        }
+
+        context.printCollectedData();
+    }
+
+    public void testBankTransfer(Transfer transfer) throws Exception {
+        initiateCredentials();
+        Agent agent = createAgent(createRefreshInformationRequest());
+        try {
+            login(agent);
+
+            doBankTransfer(agent, transfer);
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
             if (doLogout) {
