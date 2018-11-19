@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.legacy;
 
-import com.google.common.base.Preconditions;
 import com.google.common.cache.LoadingCache;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -9,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import org.apache.curator.framework.CuratorFramework;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.common.cache.CacheClient;
@@ -17,11 +15,8 @@ import se.tink.backend.common.concurrency.ListenableThreadPoolExecutor;
 import se.tink.backend.common.config.DatabaseConfiguration;
 import se.tink.backend.common.config.repository.PersistenceUnit;
 import se.tink.backend.common.config.repository.SingletonRepositoryConfiguration;
-import se.tink.backend.common.repository.RepositoryFactory;
 import se.tink.backend.common.utils.ExecutorServiceUtils;
 import se.tink.backend.utils.LogUtils;
-import se.tink.libraries.draining.ApplicationDrainMode;
-import se.tink.libraries.repository.RepositorySource;
 
 /**
  * Do not use this class in new code anymore. This class is going to be removed.
@@ -29,15 +24,13 @@ import se.tink.libraries.repository.RepositorySource;
  * Instead of it, create constructor with needed objects and use dependency injection to create an instance
  */
 @Deprecated
-public class ServiceContext implements Managed, RepositoryFactory {
+public class ServiceContext implements Managed {
     private static final LogUtils log = new LogUtils(ServiceContext.class);
 
     private AnnotationConfigApplicationContext applicationContext;
     private CacheClient cacheClient;
     private final AggregationServiceConfiguration configuration;
-    private CuratorFramework zookeeperClient;
     private LoadingCache<Class<?>, Object> DAOs;
-    private ApplicationDrainMode applicationDrainMode;
 
     private ListenableThreadPoolExecutor<Runnable> trackingExecutorService;
 
@@ -50,28 +43,12 @@ public class ServiceContext implements Managed, RepositoryFactory {
     @Inject
     public ServiceContext(final AggregationServiceConfiguration configuration,
             CacheClient cacheClient,
-            CuratorFramework zookeeperClient,
             @Named("executor") ListenableThreadPoolExecutor<Runnable> executorService,
-            @Named("trackingExecutor") ListenableThreadPoolExecutor<Runnable> trackingExecutorService,
-            ApplicationDrainMode applicationDrainMode) {
+            @Named("trackingExecutor") ListenableThreadPoolExecutor<Runnable> trackingExecutorService) {
         this.cacheClient = cacheClient;
-        this.zookeeperClient = zookeeperClient;
         this.configuration = configuration;
         this.executorService = executorService;
         this.trackingExecutorService = trackingExecutorService;
-        this.applicationDrainMode = applicationDrainMode;
-    }
-
-    public CacheClient getCacheClient() {
-        return cacheClient;
-    }
-
-    public AggregationServiceConfiguration getConfiguration() {
-        return configuration;
-    }
-
-    public CuratorFramework getCoordinationClient() {
-        return zookeeperClient;
     }
 
     private enum ManagedState {
@@ -81,30 +58,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
     }
 
     private AtomicReference<ManagedState> managedState = new AtomicReference<>(ManagedState.STOPPED);
-
-    @Override
-    public <R> R getRepository(Class<R> cls) {
-        return getRepository(cls, RepositorySource.DEFAULT);
-    }
-
-    @SuppressWarnings("unchecked")
-    private <R> R getRepository(Class<R> cls, RepositorySource source) {
-        Preconditions.checkNotNull(source);
-
-        switch (source) {
-        case CENTRALIZED:
-            Preconditions.checkState(applicationContext != null,
-                    "ServiceContext is not initialized/managed. Call start().");
-            return applicationContext.getBean(cls);
-        default:
-            // Default to centralized
-            return getRepository(cls, RepositorySource.CENTRALIZED);
-        }
-    }
-
-    public ListenableThreadPoolExecutor<Runnable> getExecutorService() {
-        return executorService;
-    }
 
     public void execute(final Runnable runnable) {
         executorService.execute(runnable);
@@ -134,10 +87,6 @@ public class ServiceContext implements Managed, RepositoryFactory {
         }
 
         log.info("Started.");
-    }
-
-    public ListenableThreadPoolExecutor<Runnable> getTrackingExecutorService() {
-        return trackingExecutorService;
     }
 
     /**
@@ -192,11 +141,4 @@ public class ServiceContext implements Managed, RepositoryFactory {
 
     }
 
-    public <T> T getDao(Class<T> key) {
-        return key.cast(DAOs.getUnchecked(key));
-    }
-
-    public ApplicationDrainMode getApplicationDrainMode() {
-        return applicationDrainMode;
-    }
 }
