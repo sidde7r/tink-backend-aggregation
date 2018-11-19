@@ -1,6 +1,7 @@
 {
   "clusterid" : "oxford-production",
   "providers" : [
+    "be-argenta-cardreader",
     "be-belfius-cardreader",
     "be-crelan",
     "be-demo",
