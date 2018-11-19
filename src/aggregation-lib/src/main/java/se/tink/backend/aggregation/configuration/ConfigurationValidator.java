@@ -28,9 +28,9 @@ public final class ConfigurationValidator {
                             clientConfiguration.getAggregatorId()),
                     "Client Api Key [%s] is missing aggregator configuration", clientApiKey);
 
-            Preconditions.checkNotNull(
-                    cryptoConfigurationDao.getCryptoWrapper(
-                            clientConfiguration.getClusterId()),
+            Preconditions.checkState(
+                    cryptoConfigurationDao.getCryptoWrapperOfClientName(
+                            clientConfiguration.getClientName()).getClientName().isPresent(),
                     "Client Api Key [%s] is missing crypto configuration", clientApiKey);
         });
     }
