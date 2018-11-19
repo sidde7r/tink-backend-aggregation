@@ -6,4 +6,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class RootModel {
     private ValueEntity value;
     private BusinessMessageBulkEntity businessMessageBulk;
+
+    public ValueEntity getValue() {
+        return value;
+    }
 }

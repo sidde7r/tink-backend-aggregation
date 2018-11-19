@@ -5,4 +5,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class EBankingUserEntity {
     private EBankingUserIdEntity eBankingUserId;
+
+    public EBankingUserIdEntity geteBankingUserId() {
+        return eBankingUserId;
+    }
 }

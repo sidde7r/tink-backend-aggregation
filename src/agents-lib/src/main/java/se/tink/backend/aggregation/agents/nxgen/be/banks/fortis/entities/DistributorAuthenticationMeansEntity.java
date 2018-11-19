@@ -8,4 +8,8 @@ public class DistributorAuthenticationMeansEntity {
     private List<DistributionChannelIdsEntity> distributionChannelIds;
     private String dacLevel;
     private String authenticationMeanId;
+
+    public String getAuthenticationMeanId() {
+        return authenticationMeanId;
+    }
 }

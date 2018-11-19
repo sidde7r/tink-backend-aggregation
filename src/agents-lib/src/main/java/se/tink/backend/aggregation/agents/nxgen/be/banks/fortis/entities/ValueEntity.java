@@ -16,8 +16,10 @@ public class ValueEntity {
     private List<EBankingUserEligibilitiesEntity> eBankingUserEligibilities;
     @JsonProperty("authenticationProcessId")
     private String authenticationProcessId;
+    @JsonProperty("challenge")
+    private ChallengeEntity challenge;
     @JsonProperty("challenges")
-    private List<ChallengesEntity> challenges;
+    private List<String> challenges;
     @JsonProperty("customerData")
     private CustomerDataEntity customerData;
     @JsonProperty("userData")
@@ -32,9 +34,72 @@ public class ValueEntity {
     private List<ParametersEntity> parameters;
     @JsonProperty("viewList")
     private List<ViewListEntity> viewList;
-    @JsonProperty("parameters")
+    @JsonProperty("newDocumentsToPayCounter")
     private int newDocumentsToPayCounter;
-    @JsonProperty("parameters")
+    @JsonProperty("newDocumentsToReadCounter")
     private int newDocumentsToReadCounter;
 
+    public List<DistributorAuthenticationMeansEntity> getDistributorAuthenticationMeans() {
+        return distributorAuthenticationMeans;
+    }
+
+    public List<AuthenticationMeanEligibilitiesEntity> getAuthenticationMeanEligibilities() {
+        return authenticationMeanEligibilities;
+    }
+
+    public List<EBankingUsersEntity> geteBankingUsers() {
+        return eBankingUsers;
+    }
+
+    public List<EBankingUserEligibilitiesEntity> geteBankingUserEligibilities() {
+        return eBankingUserEligibilities;
+    }
+
+    public String getAuthenticationProcessId() {
+        return authenticationProcessId;
+    }
+
+    public ChallengeEntity getChallenge() {
+        return challenge;
+    }
+
+    public List<String> getChallenges() {
+        return challenges;
+    }
+
+    public CustomerDataEntity getCustomerData() {
+        return customerData;
+    }
+
+    public UserDataEntity getUserData() {
+        return userData;
+    }
+
+    public BranchDataEntity getBranchData() {
+        return branchData;
+    }
+
+    public List<IllegalPasswordsEntity> getIllegalPasswords() {
+        return illegalPasswords;
+    }
+
+    public String getMinor() {
+        return minor;
+    }
+
+    public List<ParametersEntity> getParameters() {
+        return parameters;
+    }
+
+    public List<ViewListEntity> getViewList() {
+        return viewList;
+    }
+
+    public int getNewDocumentsToPayCounter() {
+        return newDocumentsToPayCounter;
+    }
+
+    public int getNewDocumentsToReadCounter() {
+        return newDocumentsToReadCounter;
+    }
 }

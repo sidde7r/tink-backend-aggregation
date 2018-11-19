@@ -24,30 +24,41 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 public class FortisAgent extends NextGenerationAgent {
     private final FortisApiClient apiClient;
 
-    public FortisAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public FortisAgent(CredentialsRequest request, AgentContext context,
+            SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        this.apiClient = FortisApiClient.create(sessionStorage, client);
+        this.apiClient = new FortisApiClient(sessionStorage, client);
     }
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
-        client.setUserAgent(FortisConstants.Headers.USER_AGENT_VALUE);
+        client.setDebugOutput(true);
+        client.setDebugProxy("http://127.0.0.1:8888");
+        client.setUserAgent("Mozilla/5.0 (iPhone7,1; U;iOS 10.3.1; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Mobile/7D11 FAT/ APPTYPE=001/ APPVERSION=18.0.15/OS=ios-phone");
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-        FortisAuthenticator authenticator = new FortisAuthenticator(catalog, persistentStorage, apiClient,
-                supplementalInformationController);
+        FortisAuthenticator authenticator =
+                new FortisAuthenticator(
+                        catalog, persistentStorage, apiClient, supplementalInformationController, sessionStorage);
         return new AutoAuthenticationController(request, context, authenticator, authenticator);
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        FortisTransactionalAccountFetcher accountFetcher = new FortisTransactionalAccountFetcher(apiClient);
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
+        FortisTransactionalAccountFetcher accountFetcher =
+                new FortisTransactionalAccountFetcher(apiClient);
         return Optional.of(
-                new TransactionalAccountRefreshController(metricRefreshController, updateController, accountFetcher,
-                        new TransactionFetcherController<>(transactionPaginationHelper,
-                                new TransactionKeyPaginationController<>(accountFetcher), accountFetcher)));
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        accountFetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionKeyPaginationController<>(accountFetcher),
+                                accountFetcher)));
     }
 
     @Override
@@ -71,13 +82,14 @@ public class FortisAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return null;
+        return new FortisSessionHandler(apiClient);
     }
 
     @Override

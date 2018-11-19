@@ -7,4 +7,10 @@ public class EBankingUsersRequest {
     private String authenticationFactorId;
     private String distributorId;
     private String smid;
+
+    public EBankingUsersRequest(String authenticationFactorId, String distributorId, String smid) {
+        this.authenticationFactorId = authenticationFactorId;
+        this.distributorId = distributorId;
+        this.smid = smid;
+    }
 }

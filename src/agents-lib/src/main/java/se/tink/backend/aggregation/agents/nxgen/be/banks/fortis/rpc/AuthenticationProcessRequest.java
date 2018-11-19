@@ -8,4 +8,14 @@ public class AuthenticationProcessRequest {
     private EBankingUserIdEntity ebankingUserId;
     private String distributorId;
     private String authenticationMeanId;
+
+    public AuthenticationProcessRequest(EBankingUserIdEntity ebankingUserId, String distributorId, String authenticationMeanId) {
+        this.ebankingUserId = ebankingUserId;
+        this.distributorId = distributorId;
+        this.authenticationMeanId = authenticationMeanId;
+    }
+
+    public EBankingUserIdEntity getEbankingUserId() {
+        return ebankingUserId;
+    }
 }
