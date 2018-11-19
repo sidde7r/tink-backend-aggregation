@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -14,7 +15,9 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentClassFactory;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
+import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
+import se.tink.backend.aggregation.cluster.exceptions.ClientNotValid;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -675,4 +678,45 @@ public class AgentWorkerOperationFactory {
             return false;
         }
     }
+
+    /**
+     *
+     * Helper method ensure migration of multiclient will provider the same data as the singleclient flow
+     *
+     */
+    private void validateMigration(ClusterInfo clusterInfo, ClientInfo clientInfo) {
+
+        // Crypto Wrapper & Aggregation Controller Client Wrapper:
+        // generating CryptoWrapper using clusterId, therefore we ensure cluster id is the same
+        if (Strings.isNullOrEmpty(clientInfo.getClusterId())) {
+            log.error("can not get clusterid from client info for client {}", clientInfo.getClientName());
+        } else if (!Objects.equals(clusterInfo.getClusterId().getId(), clientInfo.getClusterId())) {
+            log.error("cluster id for client {} does not match. cluster info: {}, client info: {}",
+                    clientInfo.getClientName(), clusterInfo.getClusterId().getId(), clientInfo.getClusterId());
+        }
+
+        // Aggregator:
+        // we check for
+        //      null aggregator id,
+        //      aggregator id not exist in db
+        //      aggregator info from client info and cluster info different
+        String aggregatorId = clientInfo.getAggregatorId();
+        if (Strings.isNullOrEmpty(aggregatorId)) {
+            log.error("can not get aggregatorId from client info for client {}", clientInfo.getClientName());
+        }
+        AggregatorInfo aggregatorInfoFromClusterInfo = aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo);
+        try {
+            AggregatorInfo aggregatorInfoFromClientInfo = aggregatorInfoProvider.createAggregatorInfoFor(aggregatorId);
+            if (!Objects.equals(aggregatorInfoFromClusterInfo.getAggregatorIdentifier(),
+                    aggregatorInfoFromClientInfo.getAggregatorIdentifier())) {
+                log.error("aggregator info for client {} does not match. cluster info: {}, client info: {}",
+                        clientInfo.getClientName(),
+                        aggregatorInfoFromClusterInfo.getAggregatorIdentifier(),
+                        aggregatorInfoFromClusterInfo.getAggregatorIdentifier());
+            }
+        } catch (ClientNotValid e) {
+            log.error("no db entry found for aggregatorId {}", aggregatorId);
+        }
+    }
+
 }
