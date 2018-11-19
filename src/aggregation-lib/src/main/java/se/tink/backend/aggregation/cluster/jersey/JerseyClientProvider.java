@@ -57,7 +57,7 @@ public class JerseyClientProvider extends AbstractHttpContextInjectable<ClientIn
 
         // check if apikey is in storage
         if (!clientConfigurationProvider.isValidClientKey(apiKey)) {
-            logger.error("can not find api key {} in database.", apiKey);
+            logger.error("Can not find api key {} in database.", apiKey);
             return null;
         }
 
