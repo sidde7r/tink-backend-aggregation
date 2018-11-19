@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.multisupplemental.authenticator.MultiSupplementalAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.multisupplemental.authenticator.MultiSupplementalManualAuthenticator;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.demo.NextGenerationDemoAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
@@ -21,9 +22,9 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
-public class MultiSupplementalAgent extends NextGenerationAgent {
+public class MultiSupplementalDemoAgent extends NextGenerationDemoAgent {
 
-    public MultiSupplementalAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public MultiSupplementalDemoAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }
 
@@ -37,39 +38,9 @@ public class MultiSupplementalAgent extends NextGenerationAgent {
         return new AutoAuthenticationController(
                 request,
                 context,
-                new MultiSupplementalManualAuthenticator(supplementalInformationController),
+                new MultiSupplementalManualAuthenticator(supplementalInformationController, catalog),
                 new MultiSupplementalAutoAuthenticator()
         );
-    }
-
-    @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        return Optional.empty();
-    }
-
-    @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.empty();
-    }
-
-    @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.empty();
-    }
-
-    @Override
-    protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.empty();
-    }
-
-    @Override
-    protected Optional<EInvoiceRefreshController> constructEInvoiceRefreshController() {
-        return Optional.empty();
-    }
-
-    @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
-        return Optional.empty();
     }
 
     @Override
