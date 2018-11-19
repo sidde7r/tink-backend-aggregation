@@ -2,9 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.authenticator.UkOpenBankingAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.configuration.UkOpenBankingConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.UkOpenBankingAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingBankTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.session.UkOpenBankingSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -23,6 +26,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.Provider;
@@ -33,19 +37,28 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
     private final Provider tinkProvider;
     private UkOpenBankingApiClient apiClient;
 
+    protected SoftwareStatement softwareStatement;
+    protected ProviderConfiguration providerConfiguration;
+
+    // Separate httpClient used for payments since PIS and AIS are two different
+    // authenticated flows.
+    private final TinkHttpClient paymentsHttpClient;
+
     // Lazy loaded
     private UkOpenBankingAis aisSupport;
+    private UkOpenBankingAccountFetcher<?, ?, TransactionalAccount> transactionalAccountFetcher;
 
-    public UkOpenBankingBaseAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public UkOpenBankingBaseAgent(CredentialsRequest request, AgentContext context,
+            SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
+        this.paymentsHttpClient = new TinkHttpClient(context, credentials, signatureKeyPair);
         tinkProvider = request.getProvider();
     }
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.disableSignatureRequestHeader();
-        configureAisHttpClient(client);
     }
 
     private String getSoftwareStatementName() {
@@ -66,19 +79,33 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
         String softwareStatementName = getSoftwareStatementName();
         String providerName = getProviderName();
 
-        SoftwareStatement softwareStatement = ukOpenBankingConfiguration.getSoftwareStatement(softwareStatementName)
+        softwareStatement = ukOpenBankingConfiguration.getSoftwareStatement(softwareStatementName)
                 .orElseThrow(() -> new IllegalStateException(
                         String.format("Could not find softwareStatement: %s", softwareStatementName)));
 
-        ProviderConfiguration providerConfiguration = softwareStatement.getProviderConfiguration(providerName)
+        providerConfiguration = softwareStatement.getProviderConfiguration(providerName)
                 .orElseThrow(() -> new IllegalStateException(
                         String.format("Could not find provider conf: %s", providerName)));
 
         client.trustRootCaCertificate(ukOpenBankingConfiguration.getRootCAData(),
                 ukOpenBankingConfiguration.getRootCAPassword());
 
+        paymentsHttpClient.trustRootCaCertificate(ukOpenBankingConfiguration.getRootCAData(),
+                ukOpenBankingConfiguration.getRootCAPassword());
+
         apiClient = new UkOpenBankingApiClient(client, softwareStatement, providerConfiguration,
                 OpenIdConstants.ClientMode.ACCOUNTS);
+
+
+        // -    We cannot configure the paymentsHttpClient from `configureHttpClient()` because it will be null
+        //      at that stage.
+        // -    Some banks are extremely slow at PIS operations (esp. the payment submission step), increase the the
+        //      timeout on that http client.
+        int timeoutInMilliseconds = (int) TimeUnit.SECONDS.toMillis(120);
+        paymentsHttpClient.setTimeout(timeoutInMilliseconds);
+
+        configureAisHttpClient(client);
+        configurePisHttpClient(paymentsHttpClient);
     }
 
     @Override
@@ -101,7 +128,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
         return Optional.of(new TransactionalAccountRefreshController(
                         metricRefreshController,
                         updateController,
-                        ais.makeTransactionalAccountFetcher(apiClient),
+                        getTransactionalAccountFetcher(),
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
                                 ais.makeAccountTransactionPaginatorController(apiClient),
@@ -151,7 +178,39 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransferController> constructTransferController() {
-        return Optional.empty();
+        Optional<UkOpenBankingPis> optionalPis = makePis();
+        if (!optionalPis.isPresent()) {
+            return Optional.empty();
+        }
+
+        UkOpenBankingPis pis = optionalPis.get();
+
+        return Optional.of(
+                new TransferController(
+                        null,
+                        new UkOpenBankingBankTransferExecutor(
+                                catalog,
+                                credentials,
+                                supplementalInformationController,
+                                softwareStatement,
+                                providerConfiguration,
+                                paymentsHttpClient,
+                                getTransactionalAccountFetcher(),
+                                pis
+                        ),
+                        null,
+                        null
+                )
+        );
+    }
+
+    private UkOpenBankingAccountFetcher<?, ?, TransactionalAccount> getTransactionalAccountFetcher() {
+        if (Objects.nonNull(transactionalAccountFetcher)) {
+            return transactionalAccountFetcher;
+        }
+
+        transactionalAccountFetcher = getAisSupport().makeTransactionalAccountFetcher(apiClient);
+        return transactionalAccountFetcher;
     }
 
     private UkOpenBankingAis getAisSupport() {
@@ -163,5 +222,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
     }
 
     protected abstract UkOpenBankingAis makeAis();
+    protected abstract Optional<UkOpenBankingPis> makePis();
     protected abstract void configureAisHttpClient(TinkHttpClient httpClient);
+    protected abstract void configurePisHttpClient(TinkHttpClient httpClient);
 }
