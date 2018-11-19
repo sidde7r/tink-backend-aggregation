@@ -69,7 +69,7 @@ public class OpenIdConstants {
     public static class ApiServices {
         public static final String ACCOUNT_REQUESTS = "/account-requests";
         public static final String PAYMENTS = "/payments";
-        public static final String PAYMENT_SUBMISSIONS = "/payment-submissions/";
+        public static final String PAYMENT_SUBMISSIONS = "/payment-submissions";
     }
 
     public static class Params {
