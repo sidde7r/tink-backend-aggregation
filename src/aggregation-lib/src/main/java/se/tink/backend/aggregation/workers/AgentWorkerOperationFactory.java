@@ -225,6 +225,7 @@ public class AgentWorkerOperationFactory {
 
     public AgentWorkerOperation createRefreshOperation(ClusterInfo clusterInfo, RefreshInformationRequest request,
             ClientInfo clientInfo) {
+        validateMigration(clusterInfo, clientInfo);
         if (request.getItemsToRefresh() == null || request.getItemsToRefresh().isEmpty()) {
             // Add all available items if none were submitted.
             // Todo: Remove this once it has been verified that no consumer sends in an empty/null list.
@@ -273,6 +274,7 @@ public class AgentWorkerOperationFactory {
 
     public AgentWorkerOperation createExecuteTransferOperation(ClusterInfo clusterInfo, TransferRequest request,
             ClientInfo clientInfo) {
+        validateMigration(clusterInfo, clientInfo);
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
@@ -298,6 +300,7 @@ public class AgentWorkerOperationFactory {
     public AgentWorkerOperation createExecuteWhitelistedTransferOperation(ClusterInfo clusterInfo,
             WhitelistedTransferRequest request,
             ClientInfo clientInfo) {
+        validateMigration(clusterInfo, clientInfo);
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
@@ -342,6 +345,7 @@ public class AgentWorkerOperationFactory {
 
     public AgentWorkerOperation createCreateCredentialsOperation(ClusterInfo clusterInfo, CredentialsRequest request,
             ClientInfo clientInfo) {
+        validateMigration(clusterInfo, clientInfo);
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
@@ -370,6 +374,7 @@ public class AgentWorkerOperationFactory {
 
     public AgentWorkerOperation createUpdateOperation(ClusterInfo clusterInfo, CredentialsRequest request,
             ClientInfo clientInfo) {
+        validateMigration(clusterInfo, clientInfo);
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
@@ -398,6 +403,7 @@ public class AgentWorkerOperationFactory {
 
     public AgentWorkerOperation createKeepAliveOperation(ClusterInfo clusterInfo, KeepAliveRequest request,
             ClientInfo clientInfo) {
+        validateMigration(clusterInfo, clientInfo);
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
@@ -429,7 +435,7 @@ public class AgentWorkerOperationFactory {
     public AgentWorkerOperation createReEncryptCredentialsOperation(ClusterInfo clusterInfo,
             ReEncryptCredentialsRequest request,
             ClientInfo clientInfo) {
-
+        validateMigration(clusterInfo, clientInfo);
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
@@ -478,6 +484,7 @@ public class AgentWorkerOperationFactory {
     public AgentWorkerOperation createWhitelistRefreshOperation(ClusterInfo clusterInfo,
             RefreshWhitelistInformationRequest request,
             ClientInfo clientInfo) {
+        validateMigration(clusterInfo, clientInfo);
         if (request.getItemsToRefresh() == null || request.getItemsToRefresh().isEmpty()) {
             // Add all available items if none were submitted.
             // Todo: Remove this once it has been verified that no consumer sends in an empty/null list.
@@ -532,6 +539,7 @@ public class AgentWorkerOperationFactory {
     public AgentWorkerOperation createConfigureWhitelistOperation(ClusterInfo clusterInfo,
             ConfigureWhitelistInformationRequest request,
             ClientInfo clientInfo) {
+        validateMigration(clusterInfo, clientInfo);
         String operationMetricName = "configure-whitelist";
 
         if (request.getItemsToRefresh() == null || request.getItemsToRefresh().isEmpty()) {
