@@ -14,15 +14,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.cluster.annotations.ClientContext;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
+import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.storage.database.models.ClientConfiguration;
 import se.tink.backend.aggregation.storage.database.providers.ClientConfigurationProvider;
-
-import static se.tink.backend.aggregation.cluster.jersey.JerseyClusterInfoProvider.CLUSTER_ENVIRONMENT_HEADER;
-import static se.tink.backend.aggregation.cluster.jersey.JerseyClusterInfoProvider.CLUSTER_NAME_HEADER;
-
 public class JerseyClientProvider extends AbstractHttpContextInjectable<ClientInfo>
         implements InjectableProvider<ClientContext, Type> {
+
     private static final String CLIENT_API_KEY_HEADER = "X-Tink-Client-Api-Key";
+
+    protected static final String CLUSTER_NAME_HEADER = ClusterId.CLUSTER_NAME_HEADER;
+    protected static final String CLUSTER_ENVIRONMENT_HEADER = ClusterId.CLUSTER_ENVIRONMENT_HEADER;
 
     private final Logger logger = LoggerFactory.getLogger(JerseyClientProvider.class);
     private final ClientConfigurationProvider clientConfigurationProvider;
@@ -51,8 +52,7 @@ public class JerseyClientProvider extends AbstractHttpContextInjectable<ClientIn
         if (Strings.isNullOrEmpty(apiKey)) {
             String name = request.getHeaderValue(CLUSTER_NAME_HEADER);
             String environment = request.getHeaderValue(CLUSTER_ENVIRONMENT_HEADER);
-            logger.error("Received a missing api key for {} {} .", name, environment);
-            return null;
+            return getClientInfoUsingClusterInfo(name, environment);
         }
 
         // check if apikey is in storage
@@ -64,6 +64,20 @@ public class JerseyClientProvider extends AbstractHttpContextInjectable<ClientIn
         ClientInfo clientInfo = convertFromClientConfiguration(clientConfigurationProvider.getClientConfiguration(apiKey));
         logger.info("Client info retrived for {}", clientInfo.getClientName());
         return clientInfo;
+    }
+
+    private ClientInfo getClientInfoUsingClusterInfo(String name, String environment) {
+
+        String clusterId = String.format("%s-%s", name, environment);
+
+        logger.warn("Received a missing api key for {} {}. generating using clusterid {}. ", name, environment,
+                clusterId);
+        if (!clientConfigurationProvider.isValidName(clusterId)) {
+            logger.error("Can not find cluster id {} in database.", clusterId);
+            return null;
+        }
+
+        return convertFromClientConfiguration(clientConfigurationProvider.getClientConfiguration(clusterId));
     }
 
     private ClientInfo convertFromClientConfiguration(ClientConfiguration clientConfiguration) {
