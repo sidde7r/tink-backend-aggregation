@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 import com.google.common.base.Strings;
 import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
@@ -75,6 +76,10 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
             if (!accessToken.canRefresh()) {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
+
+            log.info(String.format("Trying to refresh access token. Issued: [%s] Refresh Expires: [%s]",
+                    new Date(accessToken.getIssuedAt() * 1000),
+                    accessToken.hasRefreshExpire() ? new Date(accessToken.getRefreshExpireEpoch() * 1000) : "N/A"));
 
             // Refresh token is not always present, if it's absent we fall back to the manual authentication again.
             String refreshToken = accessToken.getRefreshToken().orElseThrow(SessionError.SESSION_EXPIRED::exception);
