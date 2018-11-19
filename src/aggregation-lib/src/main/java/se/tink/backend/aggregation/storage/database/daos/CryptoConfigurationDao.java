@@ -21,7 +21,7 @@ public class CryptoConfigurationDao {
     private CryptoConfigurationsRepository cryptoConfigurationsRepository;
 
     @Inject
-    public CryptoConfigurationDao(ClusterCryptoConfigurationRepository clusterCryptoConfigurationRepository,
+    CryptoConfigurationDao(ClusterCryptoConfigurationRepository clusterCryptoConfigurationRepository,
             CryptoConfigurationsRepository cryptoConfigurationsRepository) {
         this.clusterCryptoConfigurationRepository = clusterCryptoConfigurationRepository;
         this.cryptoConfigurationsRepository = cryptoConfigurationsRepository;
