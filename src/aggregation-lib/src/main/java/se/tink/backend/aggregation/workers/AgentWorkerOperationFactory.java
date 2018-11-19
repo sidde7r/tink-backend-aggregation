@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.curator.framework.CuratorFramework;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.Agent;
@@ -16,6 +17,7 @@ import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.converter.CallbackHostConfigurationConverter;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -62,7 +64,6 @@ import se.tink.backend.aggregation.workers.encryption.CredentialsCrypto;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
 import se.tink.backend.aggregation.workers.metrics.MetricCacheLoader;
 import se.tink.backend.aggregation.workers.refresh.ProcessableItem;
-import se.tink.backend.aggregation.legacy.ServiceContext;
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
 import se.tink.backend.common.cache.CacheClient;
 import se.tink.libraries.metrics.MetricRegistry;
@@ -75,6 +76,8 @@ public class AgentWorkerOperationFactory {
     private final CryptoConfigurationDao cryptoConfigurationDao;
     private final ControllerWrapperProvider controllerWrapperProvider;
     private final AggregatorInfoProvider aggregatorInfoProvider;
+    private final CuratorFramework coordinationClient;
+    private final AgentsServiceConfiguration agentsServiceConfiguration;
 
     // States
     private AgentWorkerOperationState agentWorkerOperationState;
@@ -85,12 +88,11 @@ public class AgentWorkerOperationFactory {
     private ReportProviderMetricsAgentWorkerCommandState reportMetricsAgentWorkerCommandState;
 
     private MetricRegistry metricRegistry;
-    private ServiceContext serviceContext;
     private final AgentDebugStorageHandler agentDebugStorageHandler;
     private SupplementalInformationController supplementalInformationController;
 
     @Inject
-    public AgentWorkerOperationFactory(ServiceContext serviceContext, CacheClient cacheClient,
+    public AgentWorkerOperationFactory(CacheClient cacheClient,
             MetricRegistry metricRegistry,
             AgentDebugStorageHandler agentDebugStorageHandler, AgentWorkerOperationState agentWorkerOperationState,
             DebugAgentWorkerCommandState debugAgentWorkerCommandState,
@@ -101,7 +103,9 @@ public class AgentWorkerOperationFactory {
             SupplementalInformationController supplementalInformationController,
             CryptoConfigurationDao cryptoConfigurationDao,
             ControllerWrapperProvider controllerWrapperProvider,
-            AggregatorInfoProvider aggregatorInfoProvider) {
+            AggregatorInfoProvider aggregatorInfoProvider,
+            CuratorFramework coordinationClient,
+            AgentsServiceConfiguration agentsServiceConfiguration) {
         this.cacheClient = cacheClient;
 
         metricCacheLoader = new MetricCacheLoader(metricRegistry);
@@ -118,9 +122,10 @@ public class AgentWorkerOperationFactory {
         this.reportMetricsAgentWorkerCommandState = reportProviderMetricsAgentWorkerCommandState;
 
         this.metricRegistry = metricRegistry;
-        this.serviceContext = serviceContext;
         this.agentDebugStorageHandler = agentDebugStorageHandler;
         this.supplementalInformationController = supplementalInformationController;
+        this.coordinationClient = coordinationClient;
+        this.agentsServiceConfiguration = agentsServiceConfiguration;
     }
 
     private AgentWorkerCommandMetricState createMetricState(CredentialsRequest request) {
@@ -229,8 +234,8 @@ public class AgentWorkerOperationFactory {
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
-                serviceContext.getCoordinationClient(),
-                serviceContext.getConfiguration().getAgentsServiceConfiguration(),
+                coordinationClient,
+                agentsServiceConfiguration,
                 aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo),
                 CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
                 controllerWrapper);
@@ -268,8 +273,8 @@ public class AgentWorkerOperationFactory {
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
-                serviceContext.getCoordinationClient(),
-                serviceContext.getConfiguration().getAgentsServiceConfiguration(),
+                coordinationClient,
+                agentsServiceConfiguration,
                 aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo),
                         CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
                 controllerWrapper);
@@ -293,8 +298,8 @@ public class AgentWorkerOperationFactory {
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
-                serviceContext.getCoordinationClient(),
-                serviceContext.getConfiguration().getAgentsServiceConfiguration(),
+                coordinationClient,
+                agentsServiceConfiguration,
                 aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo),
                 CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
                 controllerWrapper);
@@ -337,8 +342,8 @@ public class AgentWorkerOperationFactory {
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
-                serviceContext.getCoordinationClient(),
-                serviceContext.getConfiguration().getAgentsServiceConfiguration(),
+                coordinationClient,
+                agentsServiceConfiguration,
                 aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo),
                 CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
                 controllerWrapper);
@@ -365,8 +370,8 @@ public class AgentWorkerOperationFactory {
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
-                serviceContext.getCoordinationClient(),
-                serviceContext.getConfiguration().getAgentsServiceConfiguration(),
+                coordinationClient,
+                agentsServiceConfiguration,
                 aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo),
                 CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
                 controllerWrapper);
@@ -393,8 +398,8 @@ public class AgentWorkerOperationFactory {
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
-                serviceContext.getCoordinationClient(),
-                serviceContext.getConfiguration().getAgentsServiceConfiguration(),
+                coordinationClient,
+                agentsServiceConfiguration,
                 aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo),
                 CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
                 controllerWrapper);
@@ -425,8 +430,8 @@ public class AgentWorkerOperationFactory {
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
-                serviceContext.getCoordinationClient(),
-                serviceContext.getConfiguration().getAgentsServiceConfiguration(),
+                coordinationClient,
+                agentsServiceConfiguration,
                 aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo),
                 CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
                 controllerWrapper);
@@ -482,8 +487,8 @@ public class AgentWorkerOperationFactory {
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
-                serviceContext.getCoordinationClient(),
-                serviceContext.getConfiguration().getAgentsServiceConfiguration(),
+                coordinationClient,
+                agentsServiceConfiguration,
                 aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo),
                 CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
                 controllerWrapper);
@@ -536,8 +541,8 @@ public class AgentWorkerOperationFactory {
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
-                serviceContext.getCoordinationClient(),
-                serviceContext.getConfiguration().getAgentsServiceConfiguration(),
+                coordinationClient,
+                agentsServiceConfiguration,
                 aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo),
                 CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
                 controllerWrapper);
