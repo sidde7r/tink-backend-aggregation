@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -10,6 +11,10 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.strings.StringUtils;
 
 public abstract class UkOpenBankingConstants {
+
+    public static class HttpHeaders {
+        public static final String X_IDEMPOTENCY_KEY = "x-idempotency-key";
+    }
 
     public static class ApiServices {
 
@@ -40,10 +45,15 @@ public abstract class UkOpenBankingConstants {
         SORT_CODE_ACCOUNT_NUMBER;
 
         @JsonCreator
-        private static ExternalAccountIdentification2Code fromString(String key) {
+        public static ExternalAccountIdentification2Code fromString(String key) {
             return (key != null) ?
                     ExternalAccountIdentification2Code.valueOf(
                             CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key)) : null;
+        }
+
+        @JsonValue
+        public String toValue() {
+            return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, this.toString());
         }
     }
 
@@ -57,6 +67,52 @@ public abstract class UkOpenBankingConstants {
             return (key != null) ?
                     ExternalAccountIdentification3Code.valueOf(
                             CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key)) : null;
+        }
+
+        @JsonValue
+        public String toValue() {
+            return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, this.toString());
+        }
+    }
+
+    public enum ExternalPaymentContext1Code {
+        BILL_PAYMENT,
+        ECOMMERCE_GOODS,
+        ECOMMERCE_SERVICES,
+        PERSON_TO_PERSON,
+        OTHER;
+
+        @JsonCreator
+        private static ExternalPaymentContext1Code fromString(String key) {
+            return (key != null) ?
+                    ExternalPaymentContext1Code.valueOf(
+                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key)) : null;
+        }
+
+        @JsonValue
+        public String toValue() {
+            return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, this.toString());
+        }
+    }
+
+    public enum TransactionIndividualStatus1Code {
+        ACCEPTED_CUSTOMER_PROFILE,
+        ACCEPTED_SETTLEMENT_COMPLETED,
+        ACCEPTED_SETTLEMENT_IN_PROCESS,
+        ACCEPTED_TECHNICAL_VALIDATION,
+        PENDING,
+        REJECTED;
+
+        @JsonCreator
+        private static TransactionIndividualStatus1Code fromString(String key) {
+            return (key != null) ?
+                    TransactionIndividualStatus1Code.valueOf(
+                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key)) : null;
+        }
+
+        @JsonValue
+        public String toValue() {
+            return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, this.toString());
         }
     }
 
