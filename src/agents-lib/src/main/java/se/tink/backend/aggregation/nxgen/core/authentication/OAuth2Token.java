@@ -127,7 +127,17 @@ public class OAuth2Token {
     }
 
     // TODO: Remove when logging is not needed
+    public long getAccessExpireEpoch() {
+        return issuedAt + expiresInSeconds;
+    }
+
+    // TODO: Remove when logging is not needed
     public long getRefreshExpireEpoch() {
         return issuedAt + refreshExpiresInSeconds;
+    }
+
+    // TODO: Remove when logging is not needed
+    public boolean isRefreshNullOrEmpty() {
+        return Strings.isNullOrEmpty(refreshToken);
     }
 }
