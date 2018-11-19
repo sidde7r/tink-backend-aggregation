@@ -28,7 +28,7 @@ public class JerseyClientProvider extends AbstractHttpContextInjectable<ClientIn
     private final ClientConfigurationProvider clientConfigurationProvider;
 
     @Inject
-    public JerseyClientProvider(ClientConfigurationProvider clientConfigurationProvider) {
+    JerseyClientProvider(ClientConfigurationProvider clientConfigurationProvider) {
         this.clientConfigurationProvider = clientConfigurationProvider;
     }
 
@@ -52,11 +52,13 @@ public class JerseyClientProvider extends AbstractHttpContextInjectable<ClientIn
             String name = request.getHeaderValue(CLUSTER_NAME_HEADER);
             String environment = request.getHeaderValue(CLUSTER_ENVIRONMENT_HEADER);
             logger.error("Received a missing api key for {} {} .", name, environment);
+            return null;
         }
 
         // check if apikey is in storage
         if (!clientConfigurationProvider.isValidClientKey(apiKey)) {
             logger.error("can not find api key {} in database.", apiKey);
+            return null;
         }
 
         return convertFromClientConfiguration(clientConfigurationProvider.getClientConfiguration(apiKey));
