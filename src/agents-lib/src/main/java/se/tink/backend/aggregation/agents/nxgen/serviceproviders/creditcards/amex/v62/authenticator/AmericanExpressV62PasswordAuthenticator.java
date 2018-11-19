@@ -68,6 +68,11 @@ public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenti
                 throw AuthorizationError.ACCOUNT_BLOCKED.exception();
             case AmericanExpressV62Constants.ReportingCode.BANKSIDE_TEMPORARY_ERROR:
                 throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            case AmericanExpressV62Constants.ReportingCode.UNSUPPORTED_MARKET:
+                // Using the message sent from Amex as user message as it will be in the local language and with
+                // reference to the relevant market.
+                throw LoginError.NOT_CUSTOMER.exception(new LocalizableKey(logonResponse.getStatus().getMessage()));
+
             default:
                 LOGGER.error(String.format("%s: %s", reportingCode, logonResponse.getStatus().getMessage()));
                 throw new IllegalStateException("Logon failure");
