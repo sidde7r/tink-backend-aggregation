@@ -69,6 +69,12 @@ public abstract class GiroIdentifier extends AccountIdentifier {
     }
 
     @Override
+    public final boolean isGiroIdentifier() {
+
+        return true;
+    }
+
+    @Override
     public boolean isValid() {
         // Ensure correct giro number format
         if (Strings.isNullOrEmpty(giroNumber) || !getGiroNumberPattern().matcher(giroNumber).matches()) {

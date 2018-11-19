@@ -32,7 +32,9 @@ public class AccountIdentifierEntity {
         case IBAN:
             return new IbanIdentifier(null, identification);
         case SORT_CODE_ACCOUNT_NUMBER:
-            return new SortCodeIdentifier(name, identification);
+            SortCodeIdentifier sortCodeIdentifier = new SortCodeIdentifier(identification);
+            sortCodeIdentifier.setName(name);
+            return sortCodeIdentifier;
         default:
             throw new IllegalStateException(
                     String.format("Unknown identifier type: %s", identifierType)

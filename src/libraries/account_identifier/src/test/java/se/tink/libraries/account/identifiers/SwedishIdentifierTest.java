@@ -79,4 +79,11 @@ public class SwedishIdentifierTest {
         assertEquals("7321-5264235", id2.getIdentifier(new DisplayAccountIdentifierFormatter()));
     }
 
+    @Test
+    public void testIsGiroIdentifierShouldBeFalse() {
+
+        SwedishIdentifier identifier = new SwedishIdentifier("7321-52-64235");
+        assertFalse("SwedishIdentifier is not a GiroIdentifier", identifier.isGiroIdentifier());
+    }
+
 }

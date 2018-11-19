@@ -156,4 +156,14 @@ public class GiroIdentifierTest {
 
         assertThat(identifier.toURI().toString()).isEqualTo("se-pg://1111222");
     }
+
+    @Test
+    public void isGiroIdentifierShouldReturnTrueForAllImplementations() {
+
+        AccountIdentifier plusGiroIdentifier = new PlusGiroIdentifier("1111222");
+        AccountIdentifier bankGiroIdentifier = new BankGiroIdentifier("1111222");
+
+        assertTrue(plusGiroIdentifier.isGiroIdentifier());
+        assertTrue(bankGiroIdentifier.isGiroIdentifier());
+    }
 }

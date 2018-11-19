@@ -6,6 +6,7 @@ import org.junit.Test;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
 
 public class IbanIdentifierTest {
 
@@ -87,5 +88,12 @@ public class IbanIdentifierTest {
         String displayName = identifier.getIdentifier(new DisplayAccountIdentifierFormatter());
 
         assertThat(displayName).isEqualTo("FI21 1234 5600 0007 85");
+    }
+
+    @Test
+    public void testIsGiroIdentifierShouldBeFalse() {
+
+        IbanIdentifier identifier = new IbanIdentifier("DEUTDEFF500/AT611904300234573201");
+        assertFalse("IbanIdentifier is not a GiroIdentifier", identifier.isGiroIdentifier());
     }
 }
