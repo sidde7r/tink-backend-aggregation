@@ -4,11 +4,13 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import org.junit.Assert;
 import org.junit.Test;
 import se.tink.libraries.account.AccountIdentifier;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AccountIdentifierTest {
+
     @Test
     public void testWithNameFromUrl() throws URISyntaxException, UnsupportedEncodingException {
         String encodedName = URLEncoder.encode("ÅlandName", "UTF8");
@@ -100,5 +102,42 @@ public class AccountIdentifierTest {
         assertThat(toUri.getHost()).isEqualTo("DEUTDEFF500");
         assertThat(toUri.getPath()).isEqualTo("/AT611904300234573201");
         assertThat(toUri.getQuery()).isEqualTo("name=Åland+Name");
+    }
+
+    @Test
+    public void validSortCodeIdentifierShouldBeParsable() throws URISyntaxException {
+        AccountIdentifier accountIdentifier = AccountIdentifier.create(new URI("sort-code://12345612345678"));
+
+        assertThat(accountIdentifier).isNotNull();
+        assertThat(accountIdentifier.isValid()).isTrue();
+        assertThat(accountIdentifier.toUriAsString()).isEqualTo("sort-code://12345612345678");
+    }
+
+    @Test
+    public void isGiroIdentifierShouldBeFalseForAnyImplementationOfAccountIdentifier() {
+
+        AccountIdentifier identifier = new TestAccountIdentifierImplementation();
+
+        Assert.assertFalse("An implementation of AccountIdentifier should not be considered a GiroIdentifier",
+                           identifier.isGiroIdentifier());
+
+    }
+
+    private static class TestAccountIdentifierImplementation extends AccountIdentifier {
+
+        @Override
+        public String getIdentifier() {
+            return "test implementation of accountIdentifier";
+        }
+
+        @Override
+        public boolean isValid() {
+            return true;
+        }
+
+        @Override
+        public Type getType() {
+            return null;
+        }
     }
 }
