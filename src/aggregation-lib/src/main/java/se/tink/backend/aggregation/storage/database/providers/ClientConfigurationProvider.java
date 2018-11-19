@@ -24,7 +24,7 @@ public class ClientConfigurationProvider {
         this.clientConfigurationsByName = clientConfigurationsByName;
     }
 
-    private boolean isValidName(String clusterId) {
+    public boolean isValidName(String clusterId) {
         return clientConfigurationsByName.containsKey(clusterId);
     }
 
