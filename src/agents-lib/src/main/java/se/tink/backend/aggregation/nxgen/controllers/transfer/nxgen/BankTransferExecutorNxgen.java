@@ -16,7 +16,7 @@ public interface BankTransferExecutorNxgen {
     void initialize();
 
     /**
-     * Return true if the outbox is empty or if it contains payments that haven't been signed.
+     * Return true if the outbox is empty or false if it contains payments that haven't been signed.
      *
      * @return true if the outbox is empty.
      */
