@@ -28,7 +28,7 @@ public class ClientConfigurationProvider {
         return clientConfigurationsByName.containsKey(clusterId);
     }
 
-    private boolean isValidClientKey(String apiClientKey) {
+    public boolean isValidClientKey(String apiClientKey) {
         return clientConfigurationsByClientKey.containsKey(apiClientKey);
     }
 
