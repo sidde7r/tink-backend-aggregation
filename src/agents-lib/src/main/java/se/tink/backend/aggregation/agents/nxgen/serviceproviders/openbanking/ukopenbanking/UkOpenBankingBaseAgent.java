@@ -45,6 +45,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.disableSignatureRequestHeader();
+        configureAisHttpClient(client);
     }
 
     private String getSoftwareStatementName() {
@@ -162,4 +163,5 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
     }
 
     protected abstract UkOpenBankingAis makeAis();
+    protected abstract void configureAisHttpClient(TinkHttpClient httpClient);
 }
