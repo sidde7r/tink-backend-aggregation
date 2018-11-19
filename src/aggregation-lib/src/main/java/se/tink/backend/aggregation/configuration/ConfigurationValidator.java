@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.storage.database.models.ClusterConfiguration;
 
 public final class ConfigurationValidator {
     @Inject
-    private ConfigurationValidator(
+    ConfigurationValidator(
             @Named("clientConfigurationByClientKey") Map<String, ClientConfiguration> clientConfigurations,
             @Named("clusterConfigurations") Map<String, ClusterConfiguration> clusterConfigurations,
             @Named("aggregatorConfiguration") Map<String, AggregatorConfiguration> aggregatorConfigurations,
