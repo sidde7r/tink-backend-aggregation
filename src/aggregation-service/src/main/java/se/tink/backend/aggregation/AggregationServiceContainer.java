@@ -6,6 +6,7 @@ import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import se.tink.backend.aggregation.cli.AggregationMigrateMultiClientCommand;
+import se.tink.backend.aggregation.configuration.ConfigurationValidator;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.configuration.guice.modules.AggregationModuleFactory;
 import se.tink.backend.aggregation.workers.AgentWorker;
@@ -37,6 +38,9 @@ public class AggregationServiceContainer extends Application<AggregationServiceC
 
         Injector injector = DropwizardLifecycleInjectorFactory.build(
                 environment.lifecycle(), AggregationModuleFactory.build(aggregationServiceConfiguration, environment));
+
+        // Validate the configurations on start up
+        injector.getInstance(ConfigurationValidator.class);
 
         environment.admin().addTask(injector.getInstance(DrainModeTask.class));
         environment.lifecycle().manage(injector.getInstance(AgentWorker.class));
