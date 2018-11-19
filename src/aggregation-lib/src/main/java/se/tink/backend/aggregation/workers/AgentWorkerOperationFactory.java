@@ -64,7 +64,6 @@ import se.tink.backend.aggregation.workers.encryption.CredentialsCrypto;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
 import se.tink.backend.aggregation.workers.metrics.MetricCacheLoader;
 import se.tink.backend.aggregation.workers.refresh.ProcessableItem;
-import se.tink.backend.aggregation.legacy.ServiceContext;
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
 import se.tink.backend.common.cache.CacheClient;
 import se.tink.libraries.metrics.MetricRegistry;
@@ -89,12 +88,11 @@ public class AgentWorkerOperationFactory {
     private ReportProviderMetricsAgentWorkerCommandState reportMetricsAgentWorkerCommandState;
 
     private MetricRegistry metricRegistry;
-    private ServiceContext serviceContext;
     private final AgentDebugStorageHandler agentDebugStorageHandler;
     private SupplementalInformationController supplementalInformationController;
 
     @Inject
-    public AgentWorkerOperationFactory(ServiceContext serviceContext, CacheClient cacheClient,
+    public AgentWorkerOperationFactory(CacheClient cacheClient,
             MetricRegistry metricRegistry,
             AgentDebugStorageHandler agentDebugStorageHandler, AgentWorkerOperationState agentWorkerOperationState,
             DebugAgentWorkerCommandState debugAgentWorkerCommandState,
@@ -124,7 +122,6 @@ public class AgentWorkerOperationFactory {
         this.reportMetricsAgentWorkerCommandState = reportProviderMetricsAgentWorkerCommandState;
 
         this.metricRegistry = metricRegistry;
-        this.serviceContext = serviceContext;
         this.agentDebugStorageHandler = agentDebugStorageHandler;
         this.supplementalInformationController = supplementalInformationController;
         this.coordinationClient = coordinationClient;
