@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.common.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.libraries.i18n.LocalizableKey;
@@ -77,18 +78,30 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
-            log.info(String.format("Trying to refresh access token. Issued: [%s] Refresh Expires: [%s]",
+            log.info(String.format("Trying to refresh access token. Issued: [%s] Access Expires: [%s] RefreshNull: [%b] Refresh Expires: [%s]",
                     new Date(accessToken.getIssuedAt() * 1000),
+                    new Date(accessToken.getAccessExpireEpoch() * 1000),
+                    accessToken.isRefreshNullOrEmpty(),
                     accessToken.hasRefreshExpire() ? new Date(accessToken.getRefreshExpireEpoch() * 1000) : "N/A"));
 
             // Refresh token is not always present, if it's absent we fall back to the manual authentication again.
             String refreshToken = accessToken.getRefreshToken().orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
-            accessToken = apiClient.refreshAccessToken(refreshToken);
+            try {
+
+                accessToken = apiClient.refreshAccessToken(refreshToken);
+            } catch (HttpResponseException e) {
+
+                log.info(String.format("Refresh failed: %s", e.getResponse().getBody(String.class)));
+                // This will "fix" the invalid_grant error temporarily while waiting for more log data. It might also filter some other errors.
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
+
             if (!accessToken.isValid()) {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
+            log.info("Refresh success.");
             // Store the new accessToken on the persistent storage again.
             persistentStorage.put(OpenIdConstants.PersistentStorageKeys.ACCESS_TOKEN, accessToken);
 
