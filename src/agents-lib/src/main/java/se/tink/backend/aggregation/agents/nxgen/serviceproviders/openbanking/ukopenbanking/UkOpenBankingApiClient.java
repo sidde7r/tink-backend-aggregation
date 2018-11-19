@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking;
 
+import java.security.SecureRandom;
+import java.util.Random;
 import javax.ws.rs.core.MediaType;
+import org.apache.commons.codec.binary.Hex;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.authenticator.rpc.AccountPermissionRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdApiClient;
@@ -12,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class UkOpenBankingApiClient extends OpenIdApiClient {
+    private static final Random random = new SecureRandom();
 
     private final URL apiBaseUrl;
 
@@ -19,6 +23,28 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
             ProviderConfiguration providerConfiguration, OpenIdConstants.ClientMode clientMode) {
         super(httpClient, softwareStatement, providerConfiguration, clientMode);
         apiBaseUrl = providerConfiguration.getApiBaseURL();
+    }
+
+    private static String generateRandomId() {
+        byte[] randomData = new byte[8];
+        random.nextBytes(randomData);
+        return Hex.encodeHexString(randomData);
+    }
+
+    public <T> T createPaymentIntentId(Object request, Class<T> responseType) {
+        return createRequest(providerConfiguration.getPaymentsURL())
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .header(UkOpenBankingConstants.HttpHeaders.X_IDEMPOTENCY_KEY, generateRandomId())
+                .body(request)
+                .post(responseType);
+    }
+
+    public <T> T submitPayment(Object request, Class<T> responseType) {
+        return createRequest(providerConfiguration.getPaymentSubmissionsURL())
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .header(UkOpenBankingConstants.HttpHeaders.X_IDEMPOTENCY_KEY, generateRandomId())
+                .body(request)
+                .post(responseType);
     }
 
     public AccountPermissionResponse createAccountIntentId() {
