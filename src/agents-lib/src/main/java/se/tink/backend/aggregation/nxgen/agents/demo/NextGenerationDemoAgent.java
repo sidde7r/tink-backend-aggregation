@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRe
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
@@ -21,15 +20,12 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
-public class NextGenerationDemoAgent extends NextGenerationAgent {
+public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
     private final NextGenerationDemoAuthenticator authenticator;
-    private final NextGenerationDemoFetcher fetcher;
 
     public NextGenerationDemoAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-
         this.authenticator = new NextGenerationDemoAuthenticator(credentials);
-        this.fetcher = new NextGenerationDemoFetcher(credentials);
     }
 
     @Override
@@ -46,9 +42,10 @@ public class NextGenerationDemoAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        return Optional.of(new TransactionalAccountRefreshController(metricRefreshController, updateController, fetcher,
+        return Optional.of(new TransactionalAccountRefreshController(metricRefreshController, updateController,
+                new NextGenerationDemoFetcher(credentials,  request.getAccounts()),
                 new TransactionFetcherController<>(transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(fetcher))));
+                        new NextGenerationDemoFetcher(credentials,  request.getAccounts()))));
     }
 
     @Override

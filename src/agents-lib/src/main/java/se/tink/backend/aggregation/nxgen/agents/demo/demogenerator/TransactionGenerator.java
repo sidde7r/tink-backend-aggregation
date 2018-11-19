@@ -22,7 +22,6 @@ public class TransactionGenerator {
     private final List<GenerationBase> generationBase;
     private final Random randomGenerator;
     private final DemoFileHandler demoFileHandler;
-    private LocalDate date;
     private final String currency;
     private final double currencyConvertionFactor;
 
@@ -31,16 +30,8 @@ public class TransactionGenerator {
         this.demoFileHandler = new DemoFileHandler(basePath);
         generationBase = this.demoFileHandler.getGenerationBase();
         this.randomGenerator = new Random();
-        setTodaysDate();
         this.currency = currency;
         this.currencyConvertionFactor = NextGenDemoConstants.getSekToCurrencyConverter(currency);
-    }
-
-    private void setTodaysDate() {
-        Date input = new Date();
-        Instant instant = input.toInstant();
-        ZonedDateTime zdt = instant.atZone(ZoneId.systemDefault());
-        this.date = zdt.toLocalDate();
     }
 
     private double randomisePurchase(GenerationBase base) {
@@ -78,7 +69,8 @@ public class TransactionGenerator {
         LocalDate start = from.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate end = to.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-        if (Duration.between(end.atStartOfDay(), date.atStartOfDay()).toDays() > 360) {
+        if (Duration.between(end.atStartOfDay(), start.atStartOfDay()).toDays() == 0) {
+            //TODO Generate two extra transactions for this date here
             return Collections.EMPTY_LIST;
         }
 
