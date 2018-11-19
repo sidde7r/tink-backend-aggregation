@@ -37,7 +37,9 @@ public class AccountIdentifierEntity {
         case IBAN:
             return Optional.of(new IbanIdentifier(null, identification));
         case SORT_CODE_ACCOUNT_NUMBER:
-            return Optional.of(new SortCodeIdentifier(name, identification));
+            SortCodeIdentifier sortCodeIdentifier = new SortCodeIdentifier(identification);
+            sortCodeIdentifier.setName(name);
+            return Optional.of(sortCodeIdentifier);
         case PAN:
             return Optional.empty();
         default:
