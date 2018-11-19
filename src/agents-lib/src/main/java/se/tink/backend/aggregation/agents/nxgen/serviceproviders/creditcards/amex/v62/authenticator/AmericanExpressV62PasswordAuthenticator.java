@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.AmericanExpressConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62ApiClient;
@@ -65,6 +66,8 @@ public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenti
                         "Incorrect login credentials. You have one more attempt before your account will be locked."));
             case AmericanExpressV62Constants.ReportingCode.LOGON_FAIL_ACCOUNT_BLOCKED:
                 throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+            case AmericanExpressV62Constants.ReportingCode.BANKSIDE_TEMPORARY_ERROR:
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
             default:
                 LOGGER.error(String.format("%s: %s", reportingCode, logonResponse.getStatus().getMessage()));
                 throw new IllegalStateException("Logon failure");

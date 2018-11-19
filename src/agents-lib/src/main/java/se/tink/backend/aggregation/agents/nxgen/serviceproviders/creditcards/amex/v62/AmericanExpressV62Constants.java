@@ -74,6 +74,7 @@ public class AmericanExpressV62Constants {
         public static final String LOGON_FAIL_FIRST_ATTEMPT = "LOGON1001";
         public static final String LOGON_FAIL_SECOND_ATTEMPT = "LOGON1002";
         public static final String LOGON_FAIL_ACCOUNT_BLOCKED = "LOGON1003";
+        public static final String BANKSIDE_TEMPORARY_ERROR = "CDSVC1000";
     }
 
     public static class Fetcher {
