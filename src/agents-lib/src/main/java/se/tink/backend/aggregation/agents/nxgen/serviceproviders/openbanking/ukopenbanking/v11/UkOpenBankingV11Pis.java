@@ -5,7 +5,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import javax.annotation.Nullable;
-import org.apache.commons.codec.binary.Hex;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingConstants;
@@ -15,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v11.pis.rpc.PaymentSetupV11Response;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v11.pis.rpc.PaymentSubmissionV11Request;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v11.pis.rpc.PaymentSubmissionV11Response;
+import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.core.Amount;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.libraries.account.AccountIdentifier;
@@ -35,14 +35,8 @@ public class UkOpenBankingV11Pis implements UkOpenBankingPis {
     public UkOpenBankingV11Pis(boolean canHaveSourceAccountSpecified) {
         this.canHaveSourceAccountSpecified = canHaveSourceAccountSpecified;
 
-        this.internalTransferId = generateRandomId();
-        this.externalTransferId = generateRandomId();
-    }
-
-    private static String generateRandomId() {
-        byte[] randomData = new byte[8];
-        random.nextBytes(randomData);
-        return Hex.encodeHexString(randomData);
+        this.internalTransferId = RandomUtils.generateRandomHexEncoded(8);
+        this.externalTransferId = RandomUtils.generateRandomHexEncoded(8);
     }
 
     private Optional<DebtorCreditorAccountEntity> convertAccountIdentifierToUkOpenBanking(

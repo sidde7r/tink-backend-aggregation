@@ -3,9 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import java.security.SecureRandom;
 import java.util.Random;
 import javax.ws.rs.core.MediaType;
-import org.apache.commons.codec.binary.Hex;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.authenticator.rpc.AccountPermissionRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.authenticator.rpc.AccountPermissionResponse;
+import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
@@ -25,16 +25,11 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         apiBaseUrl = providerConfiguration.getApiBaseURL();
     }
 
-    private static String generateRandomId() {
-        byte[] randomData = new byte[8];
-        random.nextBytes(randomData);
-        return Hex.encodeHexString(randomData);
-    }
-
     public <T> T createPaymentIntentId(Object request, Class<T> responseType) {
         return createRequest(providerConfiguration.getPaymentsURL())
                 .type(MediaType.APPLICATION_JSON_TYPE)
-                .header(UkOpenBankingConstants.HttpHeaders.X_IDEMPOTENCY_KEY, generateRandomId())
+                .header(UkOpenBankingConstants.HttpHeaders.X_IDEMPOTENCY_KEY,
+                        RandomUtils.generateRandomHexEncoded(8))
                 .body(request)
                 .post(responseType);
     }
@@ -42,7 +37,8 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     public <T> T submitPayment(Object request, Class<T> responseType) {
         return createRequest(providerConfiguration.getPaymentSubmissionsURL())
                 .type(MediaType.APPLICATION_JSON_TYPE)
-                .header(UkOpenBankingConstants.HttpHeaders.X_IDEMPOTENCY_KEY, generateRandomId())
+                .header(UkOpenBankingConstants.HttpHeaders.X_IDEMPOTENCY_KEY,
+                        RandomUtils.generateRandomHexEncoded(8))
                 .body(request)
                 .post(responseType);
     }
