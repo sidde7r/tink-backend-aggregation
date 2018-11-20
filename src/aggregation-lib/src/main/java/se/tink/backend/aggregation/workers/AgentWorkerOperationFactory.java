@@ -694,13 +694,19 @@ public class AgentWorkerOperationFactory {
      */
     private void validateMigration(ClusterInfo clusterInfo, ClientInfo clientInfo) {
 
+        String clusterId = clusterInfo.getClusterId().getId();
+        // catch null client info
+        if (Objects.isNull(clientInfo)) {
+            log.error("can not find client info for cluster {}", clusterId);
+        }
+
         // Crypto Wrapper & Aggregation Controller Client Wrapper:
         // generating CryptoWrapper using clusterId, therefore we ensure cluster id is the same
         if (Strings.isNullOrEmpty(clientInfo.getClusterId())) {
-            log.error("can not get clusterid from client info for client {}", clientInfo.getClientName());
-        } else if (!Objects.equals(clusterInfo.getClusterId().getId(), clientInfo.getClusterId())) {
+            log.error("can not get clusterid from client info for client {}", clusterId);
+        } else if (!Objects.equals(clusterId, clientInfo.getClusterId())) {
             log.error("cluster id for client {} does not match. cluster info: {}, client info: {}",
-                    clientInfo.getClientName(), clusterInfo.getClusterId().getId(), clientInfo.getClusterId());
+                    clusterId, clusterId, clientInfo.getClusterId());
         }
 
         // Aggregator:
@@ -726,5 +732,4 @@ public class AgentWorkerOperationFactory {
             log.error("no db entry found for aggregatorId {}", aggregatorId);
         }
     }
-
 }
