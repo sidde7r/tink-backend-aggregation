@@ -20,11 +20,6 @@ public class AggregatorInfoProvider {
         this.aggregatorConfigurations = aggregatorConfigurations;
     }
 
-    // using clusterInfo to get aggregator in current single client environment
-    public AggregatorInfo createAggregatorInfoFor(ClusterInfo clusterInfo) {
-        return AggregatorConverter.convert(clusterInfo.getAggregator());
-    }
-
     // using aggregatorId (UUID) to get aggregator in multi client environment
     public AggregatorInfo createAggregatorInfoFor(String aggregatorId) {
         return AggregatorConverter.convert(aggregatorConfigurations.get(aggregatorId));

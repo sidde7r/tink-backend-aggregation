@@ -237,7 +237,8 @@ public class AgentWorkerOperationFactory {
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 coordinationClient,
                 agentsServiceConfiguration,
-                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo), supplementalInformationController,
+                aggregatorInfoProvider.createAggregatorInfoFor(clientInfo.getAggregatorId()),
+                supplementalInformationController,
                 controllerWrapper, clientInfo.getClusterId());
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
@@ -276,8 +277,9 @@ public class AgentWorkerOperationFactory {
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 coordinationClient,
                 agentsServiceConfiguration,
-                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo), supplementalInformationController,
-                controllerWrapper, clientInfo.getClusterId() );
+                aggregatorInfoProvider.createAggregatorInfoFor(clientInfo.getAggregatorId()),
+                supplementalInformationController,
+                controllerWrapper, clientInfo.getClusterId());
 
         String operationName = "execute-transfer";
 
@@ -301,7 +303,8 @@ public class AgentWorkerOperationFactory {
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 coordinationClient,
                 agentsServiceConfiguration,
-                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo), supplementalInformationController,
+                aggregatorInfoProvider.createAggregatorInfoFor(clientInfo.getAggregatorId()),
+                supplementalInformationController,
                 controllerWrapper, clientInfo.getClusterId());
         context.setWhitelistRefresh(true);
 
@@ -345,7 +348,8 @@ public class AgentWorkerOperationFactory {
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 coordinationClient,
                 agentsServiceConfiguration,
-                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo), supplementalInformationController,
+                aggregatorInfoProvider.createAggregatorInfoFor(clientInfo.getAggregatorId()),
+                supplementalInformationController,
                 controllerWrapper, clientInfo.getClusterId());
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
@@ -373,9 +377,9 @@ public class AgentWorkerOperationFactory {
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 coordinationClient,
                 agentsServiceConfiguration,
-                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo), supplementalInformationController,
+                aggregatorInfoProvider.createAggregatorInfoFor(clientInfo.getAggregatorId()),
+                supplementalInformationController,
                 controllerWrapper, clientInfo.getClusterId());
-
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
         commands.add(new ClearSensitiveInformationCommand(context));
@@ -401,7 +405,8 @@ public class AgentWorkerOperationFactory {
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 coordinationClient,
                 agentsServiceConfiguration,
-                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo), supplementalInformationController,
+                aggregatorInfoProvider.createAggregatorInfoFor(clientInfo.getAggregatorId()),
+                        supplementalInformationController,
                 controllerWrapper, clientInfo.getClusterId());
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
@@ -432,7 +437,8 @@ public class AgentWorkerOperationFactory {
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 coordinationClient,
                 agentsServiceConfiguration,
-                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo),supplementalInformationController,
+                aggregatorInfoProvider.createAggregatorInfoFor(clientInfo.getAggregatorId()),
+                        supplementalInformationController,
                 controllerWrapper, clientInfo.getClusterId());
 
         CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
@@ -489,7 +495,8 @@ public class AgentWorkerOperationFactory {
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 coordinationClient,
                 agentsServiceConfiguration,
-                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo), supplementalInformationController,
+                aggregatorInfoProvider.createAggregatorInfoFor(clientInfo.getAggregatorId()),
+                supplementalInformationController,
                 controllerWrapper, clientInfo.getClusterId());
 
         context.setWhitelistRefresh(true);
@@ -543,7 +550,8 @@ public class AgentWorkerOperationFactory {
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 coordinationClient,
                 agentsServiceConfiguration,
-                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo), supplementalInformationController,
+                aggregatorInfoProvider.createAggregatorInfoFor(clientInfo.getAggregatorId()),
+                supplementalInformationController,
                 controllerWrapper, clientInfo.getClusterId());
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
@@ -720,7 +728,7 @@ public class AgentWorkerOperationFactory {
             return;
         }
 
-        String aggregatorFromClusterInfo = aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo)
+        String aggregatorFromClusterInfo = aggregatorInfoProvider.createAggregatorInfoFor(clientInfo.getAggregatorId())
                 .getAggregatorIdentifier();
 
 
