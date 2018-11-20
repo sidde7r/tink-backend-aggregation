@@ -23,10 +23,13 @@ import se.tink.backend.system.rpc.AccountFeatures;
 
 public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
     private final NextGenerationDemoAuthenticator authenticator;
+    //TODO Requires changes when multi-currency is implemented. Will do for now
+    private final String currency;
 
     public NextGenerationDemoAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.authenticator = new NextGenerationDemoAuthenticator(credentials);
+        this.currency = request.getProvider().getCurrency();
     }
 
     @Override
@@ -44,9 +47,9 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
         return Optional.of(new TransactionalAccountRefreshController(metricRefreshController, updateController,
-                new NextGenerationDemoFetcher(credentials,  request.getAccounts()),
+                new NextGenerationDemoFetcher(credentials,  request.getAccounts(), currency),
                 new TransactionFetcherController<>(transactionPaginationHelper,
-                        new NextGenerationDemoFetcher(credentials,  request.getAccounts()))));
+                        new NextGenerationDemoFetcher(credentials,  request.getAccounts(), currency))));
     }
 
     @Override
@@ -58,14 +61,14 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
         return Optional.of(new InvestmentRefreshController(metricRefreshController,
                 updateController,
-                new NextGenerationDemoInvestmentFetcher(request.getProvider().getCurrency())));
+                new NextGenerationDemoInvestmentFetcher(currency)));
     }
 
     @Override
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
         return Optional.of(new LoanRefreshController(metricRefreshController,
                 updateController,
-                new NextGenerationDemoLoanFetcher(request.getProvider().getCurrency(), catalog)));
+                new NextGenerationDemoLoanFetcher(currency, catalog)));
     }
 
     @Override

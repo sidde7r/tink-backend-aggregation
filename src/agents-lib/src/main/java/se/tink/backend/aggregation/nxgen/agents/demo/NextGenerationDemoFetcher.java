@@ -41,11 +41,13 @@ public class NextGenerationDemoFetcher
     private static final int YEARS_BACK_TO_FETCH = -3;
     private static final int CERTAIN_DATE_OFFSET_DAYS = 29;
     private final TransactionGenerator transactionGenerator;
+    private final String currency;
 
-    public NextGenerationDemoFetcher(Credentials credentials, List<Account> accounts) {
+    public NextGenerationDemoFetcher(Credentials credentials, List<Account> accounts, String currency) {
         this.credentials = credentials;
         this.accounts = accounts;
         this.transactionGenerator = new TransactionGenerator(BASE_PATH);
+        this.currency = currency;
     }
 
     @Override
@@ -58,8 +60,7 @@ public class NextGenerationDemoFetcher
                     .filter(a -> TRANSACTIONAL_ACCOUNT_TYPES.contains(a.getType()))
                     .map(a -> {
                         TransactionalAccount.Builder builder = TransactionalAccount.builder(a.getType(),
-                                a.getBankId(), new Amount(DemoDataUtils.getCurrencyForDemoAccount(accountsFile,
-                                        a.getAccountNumber()), a.getBalance()))
+                                a.getBankId(), new Amount(currency, a.getBalance()))
                                 .setAccountNumber(a.getAccountNumber())
                                 .setName(a.getName())
                                 .setBankIdentifier(a.getBankId());
