@@ -83,6 +83,10 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
     }
 
     private String sanitizeReferenceText(String referenceText) {
+        if (Objects.isNull(referenceText)) {
+            return "";
+        }
+
         // Only allow [a-z0-9\\s]
         referenceText = referenceText.replaceAll("[^a-zA-Z0-9\\s]", "");
 
