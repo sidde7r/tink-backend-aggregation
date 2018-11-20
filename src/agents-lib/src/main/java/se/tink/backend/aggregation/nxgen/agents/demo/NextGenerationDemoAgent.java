@@ -63,7 +63,9 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.empty();
+        return Optional.of(new LoanRefreshController(metricRefreshController,
+                updateController,
+                new NextGenerationDemoLoanFetcher(request.getProvider().getCurrency(), catalog)));
     }
 
     @Override
