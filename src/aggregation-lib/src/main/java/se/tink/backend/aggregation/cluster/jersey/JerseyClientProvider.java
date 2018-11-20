@@ -19,9 +19,6 @@ import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.storage.database.models.ClientConfiguration;
 import se.tink.backend.aggregation.storage.database.providers.ClientConfigurationProvider;
 
-import static se.tink.backend.aggregation.cluster.jersey.JerseyClusterInfoProvider.CLUSTER_ENVIRONMENT_HEADER;
-import static se.tink.backend.aggregation.cluster.jersey.JerseyClusterInfoProvider.CLUSTER_NAME_HEADER;
-
 public class JerseyClientProvider extends AbstractHttpContextInjectable<ClientInfo>
         implements InjectableProvider<ClientContext, Type> {
     private static final String CLIENT_API_KEY_HEADER = "X-Tink-Client-Api-Key";
@@ -53,8 +50,8 @@ public class JerseyClientProvider extends AbstractHttpContextInjectable<ClientIn
             return getClientInfoUsingApiKey(apiKey);
         }
 
-        String name = request.getHeaderValue(CLUSTER_NAME_HEADER);
-        String environment = request.getHeaderValue(CLUSTER_ENVIRONMENT_HEADER);
+        String name = request.getHeaderValue(JerseyClusterInfoProvider.CLUSTER_NAME_HEADER);
+        String environment = request.getHeaderValue(JerseyClusterInfoProvider.CLUSTER_ENVIRONMENT_HEADER);
         logger.error("Received a missing api key for {} {}.", name, environment);
         return getClientInfoUsingClusterInfo(name, environment);
     }
