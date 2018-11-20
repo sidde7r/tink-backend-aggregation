@@ -68,36 +68,4 @@ public final class ValidatorTest {
                 .ruleTransaction("Validate thing", trx -> trx.getAmount() <= 10000000.0)
                 .build();
     }
-
-    @Test
-    public void testExtensiveValidator() {
-        // Arrange data to be validated
-        Collection<Account> accounts = Collections.emptySet();
-
-        List<Transaction> transactions =
-                ImmutableList.<Transaction>builder()
-                        .add(new Transaction())
-                        .add(new Transaction())
-                        .build();
-
-        for (Transaction t : transactions) {
-            t.setAccountId("1234");
-            t.setAmount(7.0);
-            t.setDate(new Date(1234567890));
-            t.setDescription("my description");
-        }
-
-        // Arrange validator
-        SilentAction action = new SilentAction();
-        AisValidator validator =
-                ValidatorFactory.getExtensiveValidator().rebuilder().setAction(action).build();
-
-        // Act
-        validator.validate(accounts, transactions);
-
-        // Assert
-        Assert.assertEquals(action.getOnFailAisData().size(), 1);
-        Assert.assertEquals("No duplicate transactions",
-        action.getOnFailAisData().get(0).second);
-    }
 }
