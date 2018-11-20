@@ -57,6 +57,11 @@ public class FeatureFlags {
 
     // Dynamic flag if the residence tab should be shown in the apps
     public static final String RESIDENCE_TAB = "RESIDENCE_TAB";
+    // This flag enables Multi Currency phase 1 for a user. This means that this user will recieve accounts and
+    // transactions in multiple currencies, but statistics calculations will not be done for foreign currencies.
+    // The currency is currently stored in a rather hackish way, this is why we don't want to enable it
+    // across the board. // jelgh 2018-11-15
+    public static final String MULTI_CURRENCY_PHASE_1 = "MULTI_CURRENCY_PHASE_1";
 
     /**
      * A feature groups hold information what flags are included
@@ -75,7 +80,8 @@ public class FeatureFlags {
         RESIDENCE_VALUATION_FEATURE(ImmutableSet.of(TINK_EMPLOYEE, IOS_BETA, RESIDENCE_VALUATION), "2.5.14",
                 "999.9.9"), // Disabled for Android.
         SPLIT_TRANSACTIONS_FEATURE(ImmutableSet.of(SPLIT_TRANSACTIONS), "999.9.9",
-                "999.9.9"); // TODO: Set the client versions to align with their compatibility with split transactions.
+                "999.9.9"), // TODO: Set the client versions to align with their compatibility with split transactions.
+        MULTI_CURRENCY_FOR_POCS(ImmutableSet.of(TINK_EMPLOYEE, MULTI_CURRENCY_PHASE_1));
 
         private ImmutableSet<String> flags;
         private String minIosVersion;

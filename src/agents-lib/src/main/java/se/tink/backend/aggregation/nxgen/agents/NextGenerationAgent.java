@@ -81,7 +81,7 @@ public abstract class NextGenerationAgent extends AbstractAgent implements Refre
         this.updateController = new UpdateController(context,
                 // TODO: Remove when provider uses MarketCode
                 MarketCode.valueOf(request.getProvider().getMarket()),
-                request.getProvider().getCurrency(), credentials);
+                request.getProvider().getCurrency(), request.getUser());
         this.client = new TinkHttpClient(context, credentials, signatureKeyPair);
         this.transactionPaginationHelper = new TransactionPaginationHelper(request);
         this.supplementalInformationController = new SupplementalInformationController(context, credentials);

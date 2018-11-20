@@ -1,20 +1,24 @@
 package se.tink.backend.aggregation.nxgen.core.account;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.google.api.client.repackaged.com.google.common.base.Preconditions;
-import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.common.base.Objects;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.core.AccountFlag;
 import se.tink.backend.core.Amount;
+import se.tink.backend.core.enums.FeatureFlags;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -29,7 +33,6 @@ public abstract class Account {
     private HolderName holderName;
     private TemporaryStorage temporaryStorage;
     private List<AccountFlag> accountFlags;
-    private String payload;
 
     protected Account(Builder<? extends Account, ? extends Account.Builder> builder) {
         this.name = builder.getName();
@@ -41,7 +44,6 @@ public abstract class Account {
         this.holderName = builder.getHolderName();
         this.temporaryStorage = builder.getTransientStorage();
         this.accountFlags = ImmutableList.copyOf(builder.getAccountFlags());
-        this.payload = builder.getPayload();
         // Safe-guard against uniqueIdentifiers containing only formatting characters (e.g. '*' or '-').
         Preconditions.checkState(!Strings.isNullOrEmpty(uniqueIdentifier),
                 "Unique identifier was empty after sanitation.");
@@ -119,7 +121,7 @@ public abstract class Account {
         return Objects.hashCode(getUniqueIdentifier());
     }
 
-    public se.tink.backend.aggregation.rpc.Account toSystemAccount() {
+    public se.tink.backend.aggregation.rpc.Account toSystemAccount(User user) {
         se.tink.backend.aggregation.rpc.Account account = new se.tink.backend.aggregation.rpc.Account();
 
         account.setType(getType());
@@ -130,7 +132,7 @@ public abstract class Account {
         account.setBankId(this.uniqueIdentifier);
         account.setHolderName(HolderName.toString(this.holderName));
         account.setFlags(this.accountFlags);
-        account.setPayload(payload);
+        account.setPayload(createPayload(user));
 
         return account;
     }
@@ -151,6 +153,16 @@ public abstract class Account {
         return temporaryStorage.get(key, valueType);
     }
 
+    private String createPayload(User user) {
+        if (!FeatureFlags.FeatureFlagGroup.MULTI_CURRENCY_FOR_POCS.isFlagInGroup(user.getFlags())) {
+            return null;
+        }
+
+        HashMap<String, String> map = Maps.newHashMap();
+        map.put("currency", balance.getCurrency());
+        return SerializationUtils.serializeToString(map);
+    }
+
     public abstract static class Builder<A extends Account, T extends Builder<A, T>> {
         protected final List<AccountIdentifier> identifiers = Lists.newArrayList();
         protected final List<AccountFlag> accountFlags = Lists.newArrayList();
@@ -161,7 +173,6 @@ public abstract class Account {
         protected String uniqueIdentifier;
         protected HolderName holderName;
         private T thisObj;
-        private String payload;
 
         protected Builder(String uniqueIdentifier) {
             this.thisObj = self();
@@ -249,21 +260,6 @@ public abstract class Account {
 
         public <K> T putInTemporaryStorage(String key, K value) {
             temporaryStorage.put(key, value);
-            return self();
-        }
-
-        public String getPayload() {
-            return payload;
-        }
-
-        public T setPayload(Object payload) {
-            if (payload != null) {
-                if (payload instanceof String) {
-                    this.payload = (String)payload;
-                } else {
-                    this.payload = SerializationUtils.serializeToString(payload);
-                }
-            }
             return self();
         }
 

@@ -5,6 +5,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Optional;
+import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.core.Amount;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.system.rpc.TransactionPayloadTypes;
@@ -28,8 +29,8 @@ public final class UpcomingTransaction extends AggregationTransaction {
     }
 
     @Override
-    public se.tink.backend.system.rpc.Transaction toSystemTransaction() {
-        se.tink.backend.system.rpc.Transaction transaction = super.toSystemTransaction();
+    public se.tink.backend.system.rpc.Transaction toSystemTransaction(User user) {
+        se.tink.backend.system.rpc.Transaction transaction = super.toSystemTransaction(user);
 
         transaction.setPending(true);
 

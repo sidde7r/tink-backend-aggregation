@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.transfer.Transfer;
 
@@ -26,7 +26,7 @@ public class UpdateControllerTestImpl extends UpdateController {
     private Set<Account> accounts = Sets.newHashSet();
 
     public UpdateControllerTestImpl(MarketCode market, String currency) {
-        super(Mockito.mock(AgentContext.class), market, currency, Mockito.mock(Credentials.class));
+        super(Mockito.mock(AgentContext.class), market, currency, new User());
     }
 
     @Override
@@ -86,7 +86,7 @@ public class UpdateControllerTestImpl extends UpdateController {
     @VisibleForTesting
     public Collection<se.tink.backend.aggregation.rpc.Account> getAccounts() {
         // Must be rpc.Accounts, because those are 'properly' updated with userId and the like.
-        return accounts.stream().map(Account::toSystemAccount).collect(Collectors.toList());
+        return accounts.stream().map(a-> a.toSystemAccount(user)).collect(Collectors.toList());
     }
 
     private static String toString(AggregationTransaction transaction) {

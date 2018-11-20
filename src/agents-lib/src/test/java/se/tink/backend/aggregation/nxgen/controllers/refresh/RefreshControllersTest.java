@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TestAccountBuilder;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
+import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.metrics.MetricId;
 
@@ -74,6 +75,7 @@ public class RefreshControllersTest {
     private final List<AggregationTransaction> transactions = Collections.emptyList();
     private final TransferDestinationsResponse transferDestinations = new TransferDestinationsResponse();
     private final List<Transfer> eInvoices = Collections.emptyList();
+    private final User user = new User();
 
     private InOrder executionOrder;
 
@@ -88,7 +90,7 @@ public class RefreshControllersTest {
         Mockito.when(transactionFetcher.fetchTransactionsFor(accounts.get(0))).thenReturn(transactions);
         Mockito.when(creditCardTransactionFetcher.fetchTransactionsFor(creditCards.get(0))).thenReturn(transactions);
         Mockito.when(transferDestinationFetcher.fetchTransferDestinationsFor(
-                accounts.stream().map(Account::toSystemAccount).collect(Collectors.toList())))
+                accounts.stream().map(a->a.toSystemAccount(user)).collect(Collectors.toList())))
                 .thenReturn(transferDestinations);
         Mockito.when(eInvoiceFetcher.fetchEInvoices()).thenReturn(eInvoices);
 

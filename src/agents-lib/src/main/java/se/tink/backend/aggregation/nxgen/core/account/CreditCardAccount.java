@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.core.account;
 
 import java.util.Objects;
 import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.core.Amount;
 import com.google.common.base.Preconditions;
 
@@ -73,8 +74,8 @@ public class CreditCardAccount extends Account {
     }
 
     @Override
-    public se.tink.backend.aggregation.rpc.Account toSystemAccount() {
-        se.tink.backend.aggregation.rpc.Account account = super.toSystemAccount();
+    public se.tink.backend.aggregation.rpc.Account toSystemAccount(User user) {
+        se.tink.backend.aggregation.rpc.Account account = super.toSystemAccount(user);
 
         account.setAvailableCredit(this.availableCredit.getValue());
 

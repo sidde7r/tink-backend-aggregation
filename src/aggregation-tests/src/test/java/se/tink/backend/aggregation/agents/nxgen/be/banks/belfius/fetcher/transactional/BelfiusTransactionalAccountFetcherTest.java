@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transac
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
+import se.tink.backend.aggregation.rpc.User;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 import java.util.Collection;
@@ -70,14 +71,14 @@ public class BelfiusTransactionalAccountFetcherTest extends BelfiusTest {
                 .collect(Collectors.toList());
 
         assertTrue(collect.size() == 8);
-        assertTrue(collect.get(0).toSystemTransaction().getAmount() == -5510.08);
-        assertTrue(collect.get(1).toSystemTransaction().getAmount() == -5123510.08);
-        assertTrue(collect.get(2).toSystemTransaction().getAmount() == 5510.08);
-        assertTrue(collect.get(3).toSystemTransaction().getAmount() == 5123510.08);
-        assertTrue(collect.get(4).toSystemTransaction().getAmount() == -103.6);
-        assertTrue(collect.get(5).toSystemTransaction().getAmount() == 103.6);
-        assertTrue(collect.get(6).toSystemTransaction().getAmount() == 103.6012);
-        assertTrue(collect.get(7).toSystemTransaction().getAmount() == -0.35);
+        assertTrue(collect.get(0).toSystemTransaction(new User()).getAmount() == -5510.08);
+        assertTrue(collect.get(1).toSystemTransaction(new User()).getAmount() == -5123510.08);
+        assertTrue(collect.get(2).toSystemTransaction(new User()).getAmount() == 5510.08);
+        assertTrue(collect.get(3).toSystemTransaction(new User()).getAmount() == 5123510.08);
+        assertTrue(collect.get(4).toSystemTransaction(new User()).getAmount() == -103.6);
+        assertTrue(collect.get(5).toSystemTransaction(new User()).getAmount() == 103.6);
+        assertTrue(collect.get(6).toSystemTransaction(new User()).getAmount() == 103.6012);
+        assertTrue(collect.get(7).toSystemTransaction(new User()).getAmount() == -0.35);
     }
 
     @Test
@@ -91,8 +92,8 @@ public class BelfiusTransactionalAccountFetcherTest extends BelfiusTest {
                 .collect(Collectors.toList());
 
         assertEquals(1, collect.size());
-        assertEquals(collect.get(0).toSystemTransaction().getAmount(), -0.10, 0.0);
-        assertEquals(ProductList.RandomTestData.BENEFICIARY_NAME, collect.get(0).toSystemTransaction().getDescription());
+        assertEquals(collect.get(0).toSystemTransaction(new User()).getAmount(), -0.10, 0.0);
+        assertEquals(ProductList.RandomTestData.BENEFICIARY_NAME, collect.get(0).toSystemTransaction(new User()).getDescription());
     }
 
 }
