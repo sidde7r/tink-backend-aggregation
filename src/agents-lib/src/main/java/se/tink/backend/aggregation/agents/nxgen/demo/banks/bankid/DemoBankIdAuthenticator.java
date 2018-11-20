@@ -16,12 +16,12 @@ import se.tink.backend.aggregation.rpc.Credentials;
 public class DemoBankIdAuthenticator implements BankIdAuthenticator<String>, PasswordAuthenticator {
     private static final AggregationLogger log = new AggregationLogger(NextGenerationDemoAuthenticator.class);
     private final Credentials credentials;
-    private final boolean successful;
+    private final boolean successfulAuthentication;
     private int attempt = 0;
 
-    public DemoBankIdAuthenticator(Credentials credentials, boolean successful) {
+    public DemoBankIdAuthenticator(Credentials credentials, boolean successfulAuthentication) {
         this.credentials = credentials;
-        this.successful = successful;
+        this.successfulAuthentication = successfulAuthentication;
     }
 
     @Override
@@ -35,7 +35,7 @@ public class DemoBankIdAuthenticator implements BankIdAuthenticator<String>, Pas
         BankIdStatus status;
         if (attempt > 3) {
             status = BankIdStatus.DONE;
-        } else if (successful){
+        } else if (successfulAuthentication) {
             status = BankIdStatus.WAITING;
         } else {
             status = BankIdStatus.FAILED_UNKNOWN;

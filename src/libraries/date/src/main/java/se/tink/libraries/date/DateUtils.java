@@ -1247,6 +1247,12 @@ public class DateUtils {
         return calendar.getTime();
     }
 
+    public static Date addYears(Date date, int years) {
+        Calendar calendar = getCalendar(date);
+        calendar.add(Calendar.YEAR, years);
+        return calendar.getTime();
+    }
+
     public static Date getDateForDayOfWeekAfterDate(Date date, int dayOfWeek) {
         Calendar calendar = DateUtils.getCalendar(date);
         calendar.add(Calendar.DAY_OF_YEAR, (dayOfWeek - calendar.get(Calendar.DAY_OF_WEEK) + 7) % 7);

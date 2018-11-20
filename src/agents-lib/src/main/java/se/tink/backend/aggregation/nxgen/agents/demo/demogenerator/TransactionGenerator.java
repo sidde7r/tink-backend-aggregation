@@ -12,49 +12,45 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Random;
+import java.util.stream.IntStream;
 import se.tink.backend.aggregation.nxgen.agents.demo.NextGenDemoConstants;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.core.Amount;
+import se.tink.libraries.date.DateUtils;
+import static java.util.stream.Collectors.toList;
 
 public class TransactionGenerator {
 
     private final List<GenerationBase> generationBase;
     private final Random randomGenerator;
     private final DemoFileHandler demoFileHandler;
-    private LocalDate date;
-    private final String currency;
-    private final double currencyConvertionFactor;
 
     //TODO: Should be persisted between refreshes. Store on disk is not an alternative
-    public TransactionGenerator(String basePath, String currency) throws IOException {
+    public TransactionGenerator(String basePath){
         this.demoFileHandler = new DemoFileHandler(basePath);
         generationBase = this.demoFileHandler.getGenerationBase();
         this.randomGenerator = new Random();
-        setTodaysDate();
-        this.currency = currency;
-        this.currencyConvertionFactor = NextGenDemoConstants.getSekToCurrencyConverter(currency);
     }
 
-    private void setTodaysDate() {
-        Date input = new Date();
-        Instant instant = input.toInstant();
-        ZonedDateTime zdt = instant.atZone(ZoneId.systemDefault());
-        this.date = zdt.toLocalDate();
-    }
-
-    private double randomisePurchase(GenerationBase base) {
+    private double randomisePurchase(GenerationBase base, String currency) {
         double finalPrice = 0;
         for (Double price : base.getItemPrices()) {
             finalPrice += (randomGenerator.nextInt(2) + 1) * price;
         }
 
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
-        return Double.parseDouble(decimalFormat.format(finalPrice / currencyConvertionFactor));
+        return Double.parseDouble(decimalFormat.format(finalPrice / NextGenDemoConstants.getSekToCurrencyConverter(currency)));
     }
 
-    private Transaction generateTransaction(GenerationBase base, LocalDate dateCursor) {
-        double finalPrice = randomisePurchase(base);
+    private Transaction generateTransaction(GenerationBase base, LocalDate dateCursor, String currency) {
+        double finalPrice = randomisePurchase(base, currency);
         return Transaction.builder()
                 .setPending(false)
                 .setDescription(base.getCompany())
@@ -63,30 +59,47 @@ public class TransactionGenerator {
                 .build();
     }
 
-    private Collection<Transaction> generateOneDayOfTransactions(LocalDate dateCursor) {
+    private Collection<Transaction> generateOneDayOfTransactions(LocalDate dateCursor, String currency) {
         ArrayList<Transaction> transactions = new ArrayList();
         //Between one and 4 purchases per day.
         for (int i = 0; i < randomGenerator.nextInt(3) + 1; i++) {
             GenerationBase base = generationBase.get(randomGenerator.nextInt(generationBase.size()));
-            transactions.add(generateTransaction(base, dateCursor));
+            transactions.add(generateTransaction(base, dateCursor, currency));
         }
 
         return transactions;
     }
 
-    public Collection<Transaction> generateTransactions(Date from, Date to) {
+    public PaginatorResponse generateTransactions(Date from, Date to, String currency) {
         LocalDate start = from.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate end = to.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-        if (Duration.between(end.atStartOfDay(), date.atStartOfDay()).toDays() > 360) {
-            return Collections.EMPTY_LIST;
+        if (Duration.between(end.atStartOfDay(), start.atStartOfDay()).toDays() == 0) {
+            //TODO Generate two extra transactions for this date here
+            PaginatorResponseImpl.createEmpty(false);
         }
 
         ArrayList<Transaction> transactions = new ArrayList();
         for (LocalDate dateCursor = start; dateCursor.isBefore(end); dateCursor = dateCursor.plusDays(1)) {
-            transactions.addAll(generateOneDayOfTransactions(dateCursor));
+            transactions.addAll(generateOneDayOfTransactions(dateCursor, currency));
         }
 
-        return transactions;
+        return PaginatorResponseImpl.create(transactions, false);
     }
+
+    //TODO: Add nicer logic for generation of savings. Make sure to add up to the sum of the account
+    public PaginatorResponse createSavingsAccountTransactions(TransactionalAccount account) {
+        List<Transaction> transactions = IntStream.range(0, 36)
+                .mapToObj(i -> Transaction.builder()
+                        .setAmount(new Amount(account.getBalance().getCurrency(),
+                                account.getBalance().getValue() / 36))
+                        .setPending(false)
+                        .setDescription("monthly savings")
+                        .setDate(DateUtils.addMonths(DateUtils.getToday(), -1)).build()
+                )
+                .collect(toList());
+
+        return PaginatorResponseImpl.create(transactions, false);
+    }
+
 }
