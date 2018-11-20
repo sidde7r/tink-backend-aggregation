@@ -28,6 +28,10 @@ public class ControllerWrapper {
         this.configuration = configuration;
     }
 
+    public HostConfiguration getHostConfiguration() {
+        return this.configuration;
+    }
+
     public static ControllerWrapper of(AggregationControllerAggregationClient client, HostConfiguration configuration) {
         return new ControllerWrapper(client, configuration);
     }
