@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+
+import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.api.CallbackHostConfiguration;
 import se.tink.backend.aggregation.rpc.Account;
@@ -30,6 +32,16 @@ public abstract class AgentContext {
     private AggregatorInfo aggregatorInfo;
     public abstract Catalog getCatalog();
 
+    public HostConfiguration getHostConfiguration() {
+        return hostConfiguration;
+    }
+
+    public void setHostConfiguration(HostConfiguration hostConfiguration) {
+        this.hostConfiguration = hostConfiguration;
+    }
+
+    private HostConfiguration hostConfiguration;
+
     public abstract MetricRegistry getMetricRegistry();
 
     public ByteArrayOutputStream getLogOutputStream() {
@@ -39,6 +51,7 @@ public abstract class AgentContext {
     public CallbackHostConfiguration getCallbackHostConfiguration() {
         return callbackHostConfiguration;
     }
+
 
     public void setCallbackHostConfiguration(CallbackHostConfiguration callbackHostConfiguration) {
         this.callbackHostConfiguration = callbackHostConfiguration;
