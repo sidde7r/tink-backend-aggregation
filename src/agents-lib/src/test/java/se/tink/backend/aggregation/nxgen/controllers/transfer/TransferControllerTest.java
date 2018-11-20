@@ -59,7 +59,9 @@ public class TransferControllerTest {
 
     @Test(expected = NullPointerException.class)
     public void ensureNullPointerExceptionIsThrown_whenBankTransferExecutorIsNull() {
-        TransferController transferController = new TransferController(paymentExecutor, null,
+        BankTransferExecutor transferExecutor = null;
+
+        TransferController transferController = new TransferController(paymentExecutor, transferExecutor,
                 approveEInvoiceExecutor, updatePaymentExecutor);
         transferController.execute(createTransfer(TransferType.BANK_TRANSFER));
     }
