@@ -10,4 +10,7 @@ public class SEBBankIdLoginUtils {
     public static final String AUTHENTICATED = "rfa100";
     public static final String AUTHORIZATION_REQUIRED = "rfa101";
     public static final String COLLECT_BANKID = "rfa102";
+
+    // Status strings
+    public static final String ALREADY_IN_PROGRESS_STATUS = "e0";
 }
