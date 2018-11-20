@@ -4,6 +4,8 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.cluster.exceptions.ClientNotValid;
+import se.tink.backend.aggregation.cluster.exceptions.ClusterNotValid;
 import se.tink.backend.aggregation.storage.database.models.ClientConfiguration;
 
 import java.util.Map;
@@ -24,34 +26,31 @@ public class ClientConfigurationProvider {
         this.clientConfigurationsByName = clientConfigurationsByName;
     }
 
-    private boolean isValidName(String clusterId) {
+    private boolean isValidClientName(String clusterId) {
         return clientConfigurationsByName.containsKey(clusterId);
     }
 
-    public boolean isValidClientKey(String apiClientKey) {
+    private boolean isValidClientKey(String apiClientKey) {
         return clientConfigurationsByClientKey.containsKey(apiClientKey);
     }
 
-    public boolean isValid(String identifier) {
-        return isValidName(identifier) || isValidClientKey(identifier);
+    public ClientConfiguration getClientConfiguration(String apiKey) throws ClientNotValid {
+
+        if (!isValidClientKey(apiKey)) {
+            throw new ClientNotValid();
+        }
+
+        return clientConfigurationsByClientKey.get(apiKey);
     }
 
-    public ClientConfiguration getClientConfiguration(String identifier) {
+    public ClientConfiguration getClientConfiguration(String name, String environment) throws ClusterNotValid {
 
-        // handles the multi client solution where we have client id in header
-        if (isValidClientKey(identifier)) {
-            return clientConfigurationsByClientKey.get(identifier);
+        String clusterId = String.format("%s-%s", name, environment);
+
+        if (!isValidClientName(clusterId)) {
+            throw new ClusterNotValid();
         }
 
-        // handles the non multi client solution where we still use cluster id to identify the source,
-        // this identifier is the clusterid, which we use as client name at the moment.
-        if (isValidName(identifier)) {
-            return clientConfigurationsByName.get(identifier);
-        }
-
-        // returning null at the moment, but later we should throw an exception ideally
-        log.error("cannot find information for identifier {}, which is neither a valid client key or client name",
-                identifier);
-        return null;
+        return clientConfigurationsByName.get(clusterId);
     }
 }
