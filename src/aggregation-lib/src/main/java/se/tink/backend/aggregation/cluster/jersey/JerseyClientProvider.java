@@ -55,7 +55,7 @@ public class JerseyClientProvider extends AbstractHttpContextInjectable<ClientIn
 
         String name = request.getHeaderValue(CLUSTER_NAME_HEADER);
         String environment = request.getHeaderValue(CLUSTER_ENVIRONMENT_HEADER);
-        logger.warn("Received a missing api key for {} {}.", name, environment);
+        logger.error("Received a missing api key for {} {}.", name, environment);
         return getClientInfoUsingClusterInfo(name, environment);
     }
 
