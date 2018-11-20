@@ -59,6 +59,7 @@ public class JerseyClientProvider extends AbstractHttpContextInjectable<ClientIn
     private ClientInfo getClientInfoUsingApiKey(String apiKey) {
         try{
             ClientConfiguration clientConfig = clientConfigurationProvider.getClientConfiguration(apiKey);
+            logger.info("Received request for client: {}", clientConfig.getClientName());
             return convertFromClientConfiguration(clientConfig);
         } catch (ClientNotValid e) {
             // FIXME: we log it at the moment to validate data is in place. later should be handled throwing exception
