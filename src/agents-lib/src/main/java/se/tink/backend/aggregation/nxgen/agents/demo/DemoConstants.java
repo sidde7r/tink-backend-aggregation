@@ -1,37 +1,22 @@
 package se.tink.backend.aggregation.nxgen.agents.demo;
 
-public class DemoConstants {
+import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoInvestmentAccountDefinition;
+import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoLoanAccountDefinition;
+import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoSavingsAccountDefinition;
+import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoTransactionAccountDefinition;
+
+public abstract class DemoConstants {
 
     public static String BASE_PATH = "data/demo";
     public static String GENERATION_BASE_FILE = "generationbase.json";
 
-    public static class SavingsAccountInformation {
-        public static final String ACCOUNT_ID = "9999-222222222222";
-        public static final double ACCOUNT_BALANCE = 385245.33;
-        public static final String ACCOUNT_NAME = "Savings Account";
-    }
+    public abstract DemoInvestmentAccountDefinition getInvestmentDefinitions();
 
-    public static class CheckingAccountInformation {
-        public static final String ACCOUNT_ID = "9999-111111111111";
-        public static final double ACCOUNT_BALANCE = 26245.33;
-        public static final String ACCOUNT_NAME = "Debt Account";
-    }
+    public abstract DemoSavingsAccountDefinition getDemoSavingsDefinitions();
 
-    public static class LoanAccountInformation {
-        public static final String MORTGAGE_ID = "9999-333333333333";
-        public static final String BLANCO_ID = "9999-333334444444";
-        public static final String MORTGAGE_LOAN_NAME = "Bolån";
-        public static final String BLANCO_LOAN_NAME = "Santander";
-        public static final double MORTGAGE_INTEREST_RATE = 0.19;
-        public static final double BLANCO_INTEREST_RATE = 1.45;
-        public static final double MORTGAGE_BALANCE = -2300000D;
-        public static final double BLANCO_BALANCE = -50000D;
-    }
+    public abstract DemoLoanAccountDefinition getDemoLoanDefinitions();
 
-    public static class InvestmentAccountInformation {
-        public static final String INVESTMENT_ACCOUNT_ID = "9999-444444444444";
-        public static final double INVESTMENT_BALANCE = 123456;
-    }
+    public abstract DemoTransactionAccountDefinition getTransactionalAccountDefinition();
 
     //Change to take amount and return the conversion
     public static double getSekToCurrencyConverter(String currency, double amountInSek) {
