@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.system.rpc.AccountFeatures;
 
 public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
     private final NextGenerationDemoAuthenticator authenticator;
@@ -47,9 +46,9 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
         return Optional.of(new TransactionalAccountRefreshController(metricRefreshController, updateController,
-                new NextGenerationDemoFetcher(credentials,  request.getAccounts(), currency),
+                new NextGenerationDemoTransactionFetcher(credentials,  request.getAccounts(), currency),
                 new TransactionFetcherController<>(transactionPaginationHelper,
-                        new NextGenerationDemoFetcher(credentials,  request.getAccounts(), currency))));
+                        new NextGenerationDemoTransactionFetcher(credentials,  request.getAccounts(), currency))));
     }
 
     @Override

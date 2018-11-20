@@ -7,13 +7,18 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.utils.demo.DemoDataUtils;
 import se.tink.backend.aggregation.nxgen.agents.demo.demogenerator.InvestmentGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.core.Amount;
 import se.tink.backend.system.rpc.Portfolio;
 
 
-public class NextGenerationDemoInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
+public class NextGenerationDemoInvestmentFetcher implements AccountFetcher<InvestmentAccount>,
+        TransactionPaginator<InvestmentAccount> {
     //Move to constants
     private static final String INVESTMENT_ACCOUNT_ID = "9999-444444444444";
     //Move to constants
@@ -39,5 +44,11 @@ public class NextGenerationDemoInvestmentFetcher implements AccountFetcher<Inves
         );
 
         return investmentAccounts;
+    }
+
+    //TODO Implement fake transactions
+    @Override
+    public PaginatorResponse fetchTransactionsFor(InvestmentAccount account) {
+        return PaginatorResponseImpl.createEmpty(false);
     }
 }

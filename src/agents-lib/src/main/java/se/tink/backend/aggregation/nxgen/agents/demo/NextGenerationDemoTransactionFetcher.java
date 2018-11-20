@@ -27,7 +27,7 @@ import se.tink.backend.system.rpc.AccountFeatures;
 import se.tink.libraries.date.DateUtils;
 import static java.util.stream.Collectors.toList;
 
-public class NextGenerationDemoFetcher
+public class NextGenerationDemoTransactionFetcher
         implements AccountFetcher<TransactionalAccount>,
         TransactionPaginator<TransactionalAccount> {
     private static final String BASE_PATH = NextGenDemoConstants.BASE_PATH;
@@ -43,7 +43,7 @@ public class NextGenerationDemoFetcher
     private final TransactionGenerator transactionGenerator;
     private final String currency;
 
-    public NextGenerationDemoFetcher(Credentials credentials, List<Account> accounts, String currency) {
+    public NextGenerationDemoTransactionFetcher(Credentials credentials, List<Account> accounts, String currency) {
         this.credentials = credentials;
         this.accounts = accounts;
         this.transactionGenerator = new TransactionGenerator(BASE_PATH);
@@ -77,10 +77,6 @@ public class NextGenerationDemoFetcher
 
     @Override
     public PaginatorResponse fetchTransactionsFor(TransactionalAccount account) {
-        if (account.getType() == AccountTypes.LOAN || finishedAccountNumbers.contains(account.getAccountNumber())) {
-            return PaginatorResponseImpl.createEmpty(false);
-        }
-
         if (account.getType() == AccountTypes.CREDIT_CARD || account.getType() == AccountTypes.CHECKING) {
             return transactionGenerator.generateTransactions(getRefreshStartDate(account.getAccountNumber()),
                     DateUtils.getToday(),
