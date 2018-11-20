@@ -16,11 +16,6 @@ public class PaymentSetupV11Response {
     @JsonProperty("Risk")
     private RiskEntity risk;
 
-    // @JsonProperty("Links")
-    // private LinksEntity links;
-    // @JsonProperty("Meta")
-    // private MetaEntity meta;
-
     private PaymentSetupV11Response(
             @JsonProperty("Data") DataEntity data,
             @JsonProperty("Risk") RiskEntity risk) {
