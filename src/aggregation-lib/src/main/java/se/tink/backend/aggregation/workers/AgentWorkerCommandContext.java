@@ -74,7 +74,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
         Provider provider = request.getProvider();
 
         defaultMetricLabels = new MetricId.MetricLabels()
-                .addAll(callbackHostConfiguration.metricLabels())
+                .addAll(controllerWrapper.getHostConfiguration().metricLabels())
                 .add("provider", MetricsUtils.cleanMetricName(provider.getName()))
                 .add("market", provider.getMarket())
                 .add("agent", Optional.ofNullable(provider.getClassName()).orElse(EMPTY_CLASS_NAME))

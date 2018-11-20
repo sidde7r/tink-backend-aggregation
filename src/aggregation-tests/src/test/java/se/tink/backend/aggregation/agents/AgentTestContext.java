@@ -13,6 +13,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
 import org.apache.curator.framework.CuratorFramework;
+import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.api.CallbackHostConfiguration;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
@@ -52,8 +53,8 @@ public class AgentTestContext extends AgentContext {
 
     public AgentTestContext(Credentials credentials) {
         this.credentials = credentials;
-        setCallbackHostConfiguration(
-                CallbackHostConfiguration.createForTesting("test-local-development"));
+        setHostConfiguration(
+                HostConfiguration.createForTesting("test-local-development"));
         setAggregatorInfo(AggregatorInfo.getAggregatorForTesting());
     }
 
