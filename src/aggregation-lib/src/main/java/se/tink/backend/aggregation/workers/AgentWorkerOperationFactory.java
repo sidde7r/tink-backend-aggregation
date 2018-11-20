@@ -726,7 +726,7 @@ public class AgentWorkerOperationFactory {
                 log.error("aggregator info for client {} does not match. cluster info: {}, client info: {}",
                         clientInfo.getClientName(),
                         aggregatorInfoFromClusterInfo.getAggregatorIdentifier(),
-                        aggregatorInfoFromClusterInfo.getAggregatorIdentifier());
+                        aggregatorInfoFromClientInfo.getAggregatorIdentifier());
             }
         } catch (ClientNotValid e) {
             log.error("no db entry found for aggregatorId {}", aggregatorId);
