@@ -1,8 +1,9 @@
-package se.tink.backend.aggregation.nxgen.agents.demo;
+package se.tink.backend.aggregation.nxgen.agents.demo.fetchers;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
 import se.tink.backend.aggregation.nxgen.agents.demo.demogenerator.InvestmentGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.agents.demo;
+package se.tink.backend.aggregation.nxgen.agents.demo.fetchers;
 
 import java.util.Collection;
 import se.tink.backend.aggregation.nxgen.agents.demo.demogenerator.LoanGenerator;
