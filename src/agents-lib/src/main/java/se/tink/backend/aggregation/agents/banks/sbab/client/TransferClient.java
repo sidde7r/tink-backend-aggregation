@@ -331,11 +331,17 @@ public class TransferClient extends SBABClient {
 
     private void throwIfErrorsArePresent(Document resultPage) {
         Element error = resultPage.select("form[id=overforingForm] div[class=error]").first();
-        if (error != null) {
+
+        if (error != null && !elementIsHidden(error)) {
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setMessage(error.text())
                     .setEndUserMessage(error.text()).build();
         }
+    }
+
+    private boolean elementIsHidden(Element element) {
+        String style = element.attr("style");
+        return style.contains("display: none");
     }
 
     public Optional<String> tryFindSourceAccount(Transfer transfer, InitialTransferResponse initialResponse) {
