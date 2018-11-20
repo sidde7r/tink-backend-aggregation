@@ -6,12 +6,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.nxgen.agents.demo.NextGenDemoConstants;
 
 public class DemoFileHandler {
     private static String generationBaseFile = NextGenDemoConstants.GENERATION_BASE_FILE;
     private final List<GenerationBase> generationBase;
     private static final ObjectMapper mapper = new ObjectMapper();
+    private final Logger logger = LoggerFactory.getLogger(DemoFileHandler.class);
 
     public DemoFileHandler(String basePath) {
         this.generationBase = loadGenerationBase(basePath + File.separator + generationBaseFile);
@@ -27,7 +30,7 @@ public class DemoFileHandler {
         try {
             return mapper.readValue(generationConfig, new TypeReference<List<GenerationBase>>(){});
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.info("Could not read the demo data generation base file. Verify that '%s' is present", path);
         }
 
         return Collections.emptyList();
