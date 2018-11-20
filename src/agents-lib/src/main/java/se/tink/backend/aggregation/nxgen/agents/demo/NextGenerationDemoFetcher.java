@@ -39,10 +39,12 @@ public class NextGenerationDemoFetcher
     private final List<Account> accounts;
     private static final int YEARS_BACK_TO_FETCH = -3;
     private static final int CERTAIN_DATE_OFFSET_DAYS = 29;
+    private final TransactionGenerator transactionGenerator;
 
     public NextGenerationDemoFetcher(Credentials credentials, List<Account> accounts) {
         this.credentials = credentials;
         this.accounts = accounts;
+        this.transactionGenerator = new TransactionGenerator(BASE_PATH);
     }
 
     @Override
@@ -75,30 +77,16 @@ public class NextGenerationDemoFetcher
         }
 
         if (account.getType() == AccountTypes.CREDIT_CARD || account.getType() == AccountTypes.CHECKING) {
-            return fetchedGeneratedTransactions (account);
+            return transactionGenerator.generateTransactions(getRefreshStartDate(account.getAccountNumber()),
+                    DateUtils.getToday(),
+                    account.getBalance().getCurrency());
         }
 
         if (account.getType() == AccountTypes.SAVINGS) {
-            return createSavingsAccountTransactions(account);
+            return transactionGenerator.createSavingsAccountTransactions(account);
         }
 
         return PaginatorResponseImpl.createEmpty(false);
-    }
-
-
-    //TODO: Add nicer logic for generation of savings. Make sure to add up to the sum of the account
-    private PaginatorResponse createSavingsAccountTransactions(TransactionalAccount account) {
-        List<Transaction> transactions = IntStream.range(0, 36)
-                .mapToObj(i -> Transaction.builder()
-                        .setAmount(new Amount(account.getBalance().getCurrency(),
-                                account.getBalance().getValue() / 36))
-                        .setPending(false)
-                        .setDescription("monthly savings")
-                        .setDate(DateUtils.addMonths(DateUtils.getToday(), -1)).build()
-                )
-                .collect(toList());
-
-        return PaginatorResponseImpl.create(transactions, false);
     }
 
     private Date getRefreshStartDate(String accountId) {
@@ -110,24 +98,5 @@ public class NextGenerationDemoFetcher
         return (previouslyRefreshedAccount.isPresent()) ?
                 DateUtils.addDays(previouslyRefreshedAccount.get().getCertainDate(), CERTAIN_DATE_OFFSET_DAYS) :
                 DateUtils.addYears(DateUtils.getToday(), YEARS_BACK_TO_FETCH);
-
-    }
-
-    private PaginatorResponse fetchedGeneratedTransactions(TransactionalAccount account) {
-        try {
-            TransactionGenerator transactionGenerator = new TransactionGenerator(BASE_PATH,
-                    account.getBalance().getCurrency());
-
-            Collection<Transaction> transactions = transactionGenerator
-                    .generateTransactions(getRefreshStartDate(
-                            account.getBankIdentifier()),
-                            DateUtils.getToday());
-
-            return PaginatorResponseImpl.create(transactions, false);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return PaginatorResponseImpl.createEmpty();
     }
 }
