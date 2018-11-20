@@ -13,26 +13,26 @@ import se.tink.backend.core.Amount;
 
 public class NextGenerationDemoInvestmentFetcher implements AccountFetcher<InvestmentAccount>,
         TransactionPaginator<InvestmentAccount> {
-    //Move to constants
-    private static final String INVESTMENT_ACCOUNT_ID = "9999-444444444444";
-    //Move to constants
-    private double investmentAccountBalance = 123456;
+
     private String currency;
+    private double investmentAccountBalance;
 
     public NextGenerationDemoInvestmentFetcher(String currency) {
         this.currency = currency;
-        this.investmentAccountBalance = DemoConstants.getSekToCurrencyConverter(currency,investmentAccountBalance);
+        this.investmentAccountBalance = DemoConstants.getSekToCurrencyConverter(
+                        currency,DemoConstants.InvestmentAccountInformation.INVESTMENT_BALANCE);
     }
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
         List<InvestmentAccount> investmentAccounts = new ArrayList<>();
         investmentAccounts.add(
-            InvestmentAccount.builder(INVESTMENT_ACCOUNT_ID)
+            InvestmentAccount.builder(DemoConstants.InvestmentAccountInformation.INVESTMENT_ACCOUNT_ID)
                     .setBalance(new Amount(currency, investmentAccountBalance))
                     .setName("")
-                    .setAccountNumber(INVESTMENT_ACCOUNT_ID)
-                    .setPortfolios(InvestmentGenerator.generateFakePortfolios(INVESTMENT_ACCOUNT_ID, investmentAccountBalance))
+                    .setAccountNumber(DemoConstants.InvestmentAccountInformation.INVESTMENT_ACCOUNT_ID)
+                    .setPortfolios(InvestmentGenerator.generateFakePortfolios(
+                            DemoConstants.InvestmentAccountInformation.INVESTMENT_ACCOUNT_ID, investmentAccountBalance))
                     .setCashBalance(new Amount(currency, investmentAccountBalance))
                     .build()
         );

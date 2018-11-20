@@ -10,32 +10,23 @@ import se.tink.backend.core.Amount;
 import se.tink.libraries.i18n.Catalog;
 
 public class TransactionalAccountGenerator {
-
-    private static final String CHECKING_ACCOUNT_ID = "9999-111111111111";
-    private static final double CHECKING_ACCOUNT_BALANCE = 26245.33;
-    private static final String CHECKING_ACCOUNT_NAME = "Debt Account";
-
-    private static final String SAVINGS_ACCOUNT_ID = "9999-222222222222";
-    private static final double SAVINGS_ACCOUNT_BALANCE = 385245.33;
-    private static final String SAVINGS_ACCOUNT_NAME = "Savings Account";
-
     public static Collection<TransactionalAccount> fetchTransactionalAccounts(String currency, Catalog catalog) {
         ArrayList<TransactionalAccount> accounts = Lists.newArrayList();
 
         accounts.add(TransactionalAccount.builder(AccountTypes.CHECKING,
-                CHECKING_ACCOUNT_ID, new Amount(currency,
-                        DemoConstants.getSekToCurrencyConverter(currency, CHECKING_ACCOUNT_BALANCE)))
-                .setAccountNumber(CHECKING_ACCOUNT_ID)
-                .setName(catalog.getString(CHECKING_ACCOUNT_NAME))
-                .setBankIdentifier(CHECKING_ACCOUNT_ID)
+                DemoConstants.CheckingAccountInformation.ACCOUNT_ID, new Amount(currency,
+                        DemoConstants.getSekToCurrencyConverter(currency, DemoConstants.CheckingAccountInformation.ACCOUNT_BALANCE)))
+                .setAccountNumber(DemoConstants.CheckingAccountInformation.ACCOUNT_ID)
+                .setName(catalog.getString(DemoConstants.CheckingAccountInformation.ACCOUNT_NAME))
+                .setBankIdentifier(DemoConstants.CheckingAccountInformation.ACCOUNT_ID)
                 .build());
 
         accounts.add(TransactionalAccount.builder(AccountTypes.CREDIT_CARD,
-                SAVINGS_ACCOUNT_ID, new Amount(currency,
-                        DemoConstants.getSekToCurrencyConverter(currency, SAVINGS_ACCOUNT_BALANCE)))
-                .setAccountNumber(SAVINGS_ACCOUNT_ID)
-                .setName(catalog.getString(SAVINGS_ACCOUNT_NAME))
-                .setBankIdentifier(SAVINGS_ACCOUNT_ID)
+                DemoConstants.SavingsAccountInformation.ACCOUNT_ID, new Amount(currency,
+                        DemoConstants.getSekToCurrencyConverter(currency, DemoConstants.SavingsAccountInformation.ACCOUNT_BALANCE)))
+                .setAccountNumber(DemoConstants.SavingsAccountInformation.ACCOUNT_ID)
+                .setName(catalog.getString(DemoConstants.SavingsAccountInformation.ACCOUNT_NAME))
+                .setBankIdentifier(DemoConstants.SavingsAccountInformation.ACCOUNT_ID)
                 .build());
 
         return accounts;
