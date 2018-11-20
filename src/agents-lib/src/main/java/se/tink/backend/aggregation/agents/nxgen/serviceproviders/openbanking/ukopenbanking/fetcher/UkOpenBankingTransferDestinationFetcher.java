@@ -21,7 +21,7 @@ import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 public class UkOpenBankingTransferDestinationFetcher implements TransferDestinationFetcher {
 
     // Whitelist source account types. Basically to avoid displaying credit cards as transfer sources.
-    private static final ImmutableList<AccountTypes> SOURCE_ACCOUNT_TYPES = ImmutableList.<AccountTypes>builder()
+    private static final ImmutableList<AccountTypes> WHITELISTED_ACCOUNT_TYPES = ImmutableList.<AccountTypes>builder()
             .add(AccountTypes.CHECKING)
             .add(AccountTypes.SAVINGS)
             .build();
@@ -44,7 +44,7 @@ public class UkOpenBankingTransferDestinationFetcher implements TransferDestinat
 
     private List<? extends GeneralAccountEntity> getSourceAccounts(Collection<Account> accounts) {
         return accounts.stream()
-                .filter(a -> SOURCE_ACCOUNT_TYPES.contains(a.getType()))
+                .filter(a -> WHITELISTED_ACCOUNT_TYPES.contains(a.getType()))
                 .map(GeneralAccountEntityImpl::createFromCoreAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
