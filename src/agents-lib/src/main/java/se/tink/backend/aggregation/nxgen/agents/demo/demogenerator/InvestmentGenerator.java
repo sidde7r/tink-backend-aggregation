@@ -1,13 +1,36 @@
 package se.tink.backend.aggregation.nxgen.agents.demo.demogenerator;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
+import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
+import se.tink.backend.core.Amount;
 import se.tink.backend.system.rpc.Instrument;
 import se.tink.backend.system.rpc.Portfolio;
 
 public class InvestmentGenerator {
 
-    public static List<Portfolio> generateFakePortfolios (String accountId, double balance) {
+    public static Collection<InvestmentAccount> fetchInvestmentAccounts(String currency) {
+        List<InvestmentAccount> investmentAccounts = new ArrayList<>();
+        investmentAccounts.add(
+                InvestmentAccount.builder(DemoConstants.InvestmentAccountInformation.INVESTMENT_ACCOUNT_ID)
+                        .setBalance(new Amount(currency,  DemoConstants.getSekToCurrencyConverter(
+                                currency,DemoConstants.InvestmentAccountInformation.INVESTMENT_BALANCE)))
+                        .setName("")
+                        .setAccountNumber(DemoConstants.InvestmentAccountInformation.INVESTMENT_ACCOUNT_ID)
+                        .setPortfolios(InvestmentGenerator.generateFakePortfolios(
+                                DemoConstants.InvestmentAccountInformation.INVESTMENT_ACCOUNT_ID,
+                                DemoConstants.InvestmentAccountInformation.INVESTMENT_BALANCE))
+                        .setCashBalance(new Amount(currency,
+                                DemoConstants.InvestmentAccountInformation.INVESTMENT_BALANCE))
+                        .build()
+        );
+
+        return investmentAccounts;
+    }
+
+    private static List<Portfolio> generateFakePortfolios (String accountId, double balance) {
         ArrayList<Portfolio> portfolios = new ArrayList<>();
         portfolios.add(generateFakePortolio(accountId, balance/2,  Portfolio.Type.ISK));
         portfolios.add(generateFakePortolio(accountId, balance/2,  Portfolio.Type.DEPOT));

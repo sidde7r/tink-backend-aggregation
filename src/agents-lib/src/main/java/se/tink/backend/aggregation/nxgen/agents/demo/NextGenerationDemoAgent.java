@@ -28,7 +28,9 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
     //TODO Requires changes when multi-currency is implemented. Will do for now
     private final String currency;
 
-    public NextGenerationDemoAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public NextGenerationDemoAgent(CredentialsRequest request,
+            AgentContext context,
+            SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.authenticator = new NextGenerationDemoAuthenticator(credentials);
         this.currency = request.getProvider().getCurrency();

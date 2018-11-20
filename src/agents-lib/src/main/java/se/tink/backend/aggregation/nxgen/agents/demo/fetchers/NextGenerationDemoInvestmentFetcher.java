@@ -16,29 +16,14 @@ public class NextGenerationDemoInvestmentFetcher implements AccountFetcher<Inves
         TransactionPaginator<InvestmentAccount> {
 
     private String currency;
-    private double investmentAccountBalance;
 
     public NextGenerationDemoInvestmentFetcher(String currency) {
         this.currency = currency;
-        this.investmentAccountBalance = DemoConstants.getSekToCurrencyConverter(
-                        currency,DemoConstants.InvestmentAccountInformation.INVESTMENT_BALANCE);
     }
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
-        List<InvestmentAccount> investmentAccounts = new ArrayList<>();
-        investmentAccounts.add(
-            InvestmentAccount.builder(DemoConstants.InvestmentAccountInformation.INVESTMENT_ACCOUNT_ID)
-                    .setBalance(new Amount(currency, investmentAccountBalance))
-                    .setName("")
-                    .setAccountNumber(DemoConstants.InvestmentAccountInformation.INVESTMENT_ACCOUNT_ID)
-                    .setPortfolios(InvestmentGenerator.generateFakePortfolios(
-                            DemoConstants.InvestmentAccountInformation.INVESTMENT_ACCOUNT_ID, investmentAccountBalance))
-                    .setCashBalance(new Amount(currency, investmentAccountBalance))
-                    .build()
-        );
-
-        return investmentAccounts;
+        return InvestmentGenerator.fetchInvestmentAccounts(currency);
     }
 
     //TODO Implement fake transactions
