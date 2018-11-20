@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.IntStream;
 import se.tink.backend.aggregation.agents.utils.demo.DemoDataUtils;
@@ -36,7 +37,8 @@ public class NextGenerationDemoFetcher
     private final Set<String> finishedAccountNumbers = Sets.newHashSet();
     private final Credentials credentials;
     private final List<Account> accounts;
-
+    private static final int YEARS_BACK_TO_FETCH = -3;
+    private static final int CERTAIN_DATE_OFFSET_DAYS = 29;
 
     public NextGenerationDemoFetcher(Credentials credentials, List<Account> accounts) {
         this.credentials = credentials;
@@ -66,49 +68,6 @@ public class NextGenerationDemoFetcher
         }
     }
 
-    //TODO: Add nicer logic for generation of savings. Make sure to add up to the sum of the account
-    private PaginatorResponse createSavingsAccountTransactions(Date now, TransactionalAccount account) {
-        List<Transaction> transactions = IntStream.range(0, 36)
-                .mapToObj(i -> Transaction.builder()
-                        .setAmount(new Amount(account.getBalance().getCurrency(),
-                                account.getBalance().getValue() / 36))
-                        .setPending(false)
-                        .setDescription("monthly savings")
-                        .setDate(DateUtils.addMonths(now, -1)).build()
-                )
-                .collect(toList());
-
-        return PaginatorResponseImpl.create(transactions, false);
-    }
-
-    private Date getLatestRefreshForAccount(String accountId) {
-        for (Account account : accounts) {
-            if (account.getAccountNumber().equals(accountId) && Objects.nonNull(account.getCertainDate())) {
-                return DateUtils.addDays(account.getCertainDate(), 29);
-            }
-        }
-
-        return DateUtils.addMonths(DateUtils.getToday(), -3);
-    }
-
-    private PaginatorResponse fetchedGeneratedTransactions(TransactionalAccount account) {
-        try {
-            TransactionGenerator transactionGenerator = new TransactionGenerator(BASE_PATH,
-                    account.getBalance().getCurrency());
-
-            Collection<Transaction> transactions = transactionGenerator
-                    .generateTransactions(getLatestRefreshForAccount(
-                            account.getBankIdentifier()),
-                            DateUtils.getToday());
-
-            return PaginatorResponseImpl.create(transactions, false);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
-            return PaginatorResponseImpl.createEmpty();
-    }
-
     @Override
     public PaginatorResponse fetchTransactionsFor(TransactionalAccount account) {
         if (account.getType() == AccountTypes.LOAN || finishedAccountNumbers.contains(account.getAccountNumber())) {
@@ -120,9 +79,55 @@ public class NextGenerationDemoFetcher
         }
 
         if (account.getType() == AccountTypes.SAVINGS) {
-            return createSavingsAccountTransactions(DateUtils.getToday(), account);
+            return createSavingsAccountTransactions(account);
         }
 
         return PaginatorResponseImpl.createEmpty(false);
+    }
+
+
+    //TODO: Add nicer logic for generation of savings. Make sure to add up to the sum of the account
+    private PaginatorResponse createSavingsAccountTransactions(TransactionalAccount account) {
+        List<Transaction> transactions = IntStream.range(0, 36)
+                .mapToObj(i -> Transaction.builder()
+                        .setAmount(new Amount(account.getBalance().getCurrency(),
+                                account.getBalance().getValue() / 36))
+                        .setPending(false)
+                        .setDescription("monthly savings")
+                        .setDate(DateUtils.addMonths(DateUtils.getToday(), -1)).build()
+                )
+                .collect(toList());
+
+        return PaginatorResponseImpl.create(transactions, false);
+    }
+
+    private Date getRefreshStartDate(String accountId) {
+        Optional<Account> previouslyRefreshedAccount = accounts.stream()
+                .filter(account -> account.getAccountNumber().equals(accountId)
+                        && Objects.nonNull(account.getCertainDate()))
+                .findFirst();
+
+        return (previouslyRefreshedAccount.isPresent()) ?
+                DateUtils.addDays(previouslyRefreshedAccount.get().getCertainDate(), CERTAIN_DATE_OFFSET_DAYS) :
+                DateUtils.addYears(DateUtils.getToday(), YEARS_BACK_TO_FETCH);
+
+    }
+
+    private PaginatorResponse fetchedGeneratedTransactions(TransactionalAccount account) {
+        try {
+            TransactionGenerator transactionGenerator = new TransactionGenerator(BASE_PATH,
+                    account.getBalance().getCurrency());
+
+            Collection<Transaction> transactions = transactionGenerator
+                    .generateTransactions(getRefreshStartDate(
+                            account.getBankIdentifier()),
+                            DateUtils.getToday());
+
+            return PaginatorResponseImpl.create(transactions, false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return PaginatorResponseImpl.createEmpty();
     }
 }
