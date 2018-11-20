@@ -26,10 +26,7 @@ public class AggregatorInfoProvider {
     }
 
     // using aggregatorId (UUID) to get aggregator in multi client environment
-    public AggregatorInfo createAggregatorInfoFor(String aggregatorId) throws ClientNotValid {
-        if (!aggregatorConfigurations.containsKey(aggregatorId)) {
-            throw new ClientNotValid();
-        }
+    public AggregatorInfo createAggregatorInfoFor(String aggregatorId) {
         return AggregatorConverter.convert(aggregatorConfigurations.get(aggregatorId));
     }
 }

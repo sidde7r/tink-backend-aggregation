@@ -735,16 +735,13 @@ public class AgentWorkerOperationFactory {
         String aggregatorFromClusterInfo = aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo)
                 .getAggregatorIdentifier();
 
-        try {
-            String aggregatorFromClientInfo = aggregatorInfoProvider.createAggregatorInfoFor(aggregatorId)
-                    .getAggregatorIdentifier();
-            if (Objects.equals(aggregatorFromClusterInfo, aggregatorFromClientInfo)) {
-                return;
-            }
-            log.error("aggregator info for client {} does not match. cluster info: {}, client info: {}",
-                    clientInfo.getClientName(), aggregatorFromClusterInfo, aggregatorFromClientInfo);
-        } catch (ClientNotValid e) {
-            log.error("no db entry found for aggregatorId {}", aggregatorId);
+
+        String aggregatorFromClientInfo = aggregatorInfoProvider.createAggregatorInfoFor(aggregatorId)
+                .getAggregatorIdentifier();
+        if (Objects.equals(aggregatorFromClusterInfo, aggregatorFromClientInfo)) {
+            return;
         }
+        log.error("aggregator info for client {} does not match. cluster info: {}, client info: {}",
+                clientInfo.getClientName(), aggregatorFromClusterInfo, aggregatorFromClientInfo);
     }
 }
