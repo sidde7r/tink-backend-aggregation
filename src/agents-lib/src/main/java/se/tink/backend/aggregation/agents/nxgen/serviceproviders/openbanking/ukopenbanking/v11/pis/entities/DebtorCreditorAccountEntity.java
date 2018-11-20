@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v11.pis.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -9,8 +10,11 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class DebtorCreditorAccountEntity {
     @JsonProperty("SchemeName")
     private UkOpenBankingConstants.ExternalAccountIdentification2Code schemeName;
+
     @JsonProperty("Identification")
     private String identification; // Max34Text
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("Name")
     private String name; // Max70Text
 

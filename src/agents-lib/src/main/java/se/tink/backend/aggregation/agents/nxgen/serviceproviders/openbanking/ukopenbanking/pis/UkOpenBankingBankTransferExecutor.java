@@ -27,6 +27,8 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;
 
 public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
+    private static final int MAXIMUM_REFERENCE_LENGTH = 15;
+
     private final Catalog catalog;
     private final Credentials credentials;
     private final UkOpenBankingApiClient apiClient;
@@ -80,6 +82,18 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
         return Objects.isNull(transfer.getDueDate());
     }
 
+    private String sanitizeReferenceText(String referenceText) {
+        if (Objects.isNull(referenceText)) {
+            return "";
+        }
+
+        // Only allow [a-z0-9\\s]
+        referenceText = referenceText.replaceAll("[^a-zA-Z0-9\\s]", "");
+
+        // Limit the length to MAXIMUM_REFERENCE_LENGTH
+        return referenceText.substring(0, Math.min(MAXIMUM_REFERENCE_LENGTH, referenceText.length()));
+    }
+
     @Override
     public Optional<String> executeTransfer(Transfer transfer) throws TransferExecutionException {
         if (!isImmediateTransfer(transfer)) {
@@ -90,7 +104,7 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
                 transfer.getSource() : null;
         AccountIdentifier destinationIdentifier = transfer.getDestination();
         Amount amount = transfer.getAmount();
-        String referenceText = transfer.getDestinationMessage();
+        String referenceText = sanitizeReferenceText(transfer.getDestinationMessage());
 
         if (!hasAccountIdentifier(sourceIdentifier)) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)

@@ -51,7 +51,7 @@ public class UkOpenBankingV11Pis implements UkOpenBankingPis {
             return Optional.of(
                     DebtorCreditorAccountEntity.createSortCodeAccount(
                         accountIdentifier.getIdentifier(),
-                        accountIdentifier.getName().orElse("")
+                        accountIdentifier.getName().orElse(null)
                     )
             );
         case IBAN:
@@ -59,7 +59,7 @@ public class UkOpenBankingV11Pis implements UkOpenBankingPis {
             return Optional.of(
                     DebtorCreditorAccountEntity.createIbanAccount(
                             ibanIdentifier.getIban(),
-                            accountIdentifier.getName().orElse("")
+                            accountIdentifier.getName().orElse(null)
                     )
             );
         default:
