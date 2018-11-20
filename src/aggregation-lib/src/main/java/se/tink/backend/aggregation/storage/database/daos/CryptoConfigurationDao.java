@@ -27,27 +27,6 @@ public class CryptoConfigurationDao {
         this.cryptoConfigurationsRepository = cryptoConfigurationsRepository;
     }
 
-    public static CryptoConfiguration convert(ClusterCryptoConfiguration clusterCrypto) {
-        CryptoConfiguration configuration = new CryptoConfiguration();
-        configuration.setBase64encodedkey(clusterCrypto.getBase64EncodedKey());
-        configuration.setCryptoConfigurationId(
-                CryptoConfigurationId.of(
-                        clusterCrypto.getCryptoId().getKeyId(),
-                        clusterCrypto.getCryptoId().getClusterId()));
-        return configuration;
-    }
-
-    public CryptoWrapper getCryptoWrapper(String clusterId) {
-        List<ClusterCryptoConfiguration> clusterCryptoConfigurations = clusterCryptoConfigurationRepository
-                .findByCryptoIdClusterId(clusterId);
-
-        List<CryptoConfiguration> cryptoConfigurations = clusterCryptoConfigurations.stream()
-                .map(CryptoConfigurationDao::convert)
-                .collect(Collectors.toList());
-
-        return CryptoWrapper.of(ImmutableList.copyOf(cryptoConfigurations));
-    }
-
     public CryptoWrapper getCryptoWrapperOfClientName(String clientName) {
         return CryptoWrapper.of(
                 ImmutableList.copyOf(
