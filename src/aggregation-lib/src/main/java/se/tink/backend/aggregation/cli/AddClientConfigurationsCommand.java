@@ -81,7 +81,7 @@ public class AddClientConfigurationsCommand extends AggregationServiceContextCom
 
         CryptoConfiguration cryptoConfiguration = new CryptoConfiguration();
         cryptoConfiguration.setBase64encodedkey(getBase64EncodedKey());
-        cryptoConfiguration.setCryptoConfigurationId(CryptoConfigurationId.of(0, clientName));
+        cryptoConfiguration.setCryptoConfigurationId(CryptoConfigurationId.of(1, clientName));
 
 
         // TODO: make these transactional
