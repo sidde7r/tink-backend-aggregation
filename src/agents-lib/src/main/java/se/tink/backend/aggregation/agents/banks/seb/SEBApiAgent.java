@@ -617,6 +617,10 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
         } else if (Objects.equal(rfa, SEBBankIdLoginUtils.ALREADY_IN_PROGRESS)) {
             throw BankIdError.ALREADY_IN_PROGRESS.exception();
         } else if (Objects.equal(status, SEBBankIdLoginUtils.ALREADY_IN_PROGRESS_STATUS) && rfa.isEmpty()) {
+            log.warn(
+                    String.format(
+                            "#login-already-in-progress-empty-rfa-e0 - Rfa: %s, Status: %s, Message: %s",
+                            rfa, status, initiateBankIdResponse.getMessage()));
             throw BankIdError.ALREADY_IN_PROGRESS.exception();
         } else {
             throw new IllegalStateException(
