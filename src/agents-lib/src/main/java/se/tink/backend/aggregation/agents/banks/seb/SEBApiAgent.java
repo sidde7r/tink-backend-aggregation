@@ -608,18 +608,21 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
                 .accept(MediaType.APPLICATION_JSON)
                 .post(InitiateBankIdResponse.class, initiateBankIdRequest);
 
-        switch (initiateBankIdResponse.getRfa().toLowerCase()) {
-        case SEBBankIdLoginUtils.COLLECT_BANKID:
-            break;
-        case SEBBankIdLoginUtils.ALREADY_IN_PROGRESS:
+
+        final String rfa = initiateBankIdResponse.getRfa().toLowerCase();
+        final String status = initiateBankIdResponse.getStatus().toLowerCase();
+
+        if (Objects.equal(rfa, SEBBankIdLoginUtils.COLLECT_BANKID)) {
+            // noop
+        } else if (Objects.equal(rfa, SEBBankIdLoginUtils.ALREADY_IN_PROGRESS)) {
             throw BankIdError.ALREADY_IN_PROGRESS.exception();
-        default:
+        } else if (Objects.equal(status, SEBBankIdLoginUtils.ALREADY_IN_PROGRESS_STATUS) && rfa.isEmpty()) {
+            throw BankIdError.ALREADY_IN_PROGRESS.exception();
+        } else {
             throw new IllegalStateException(
                     String.format(
                             "#login-refactoring - Rfa: %s, Status: %s, Message: %s",
-                            initiateBankIdResponse.getRfa(),
-                            initiateBankIdResponse.getStatus(),
-                            initiateBankIdResponse.getMessage()));
+                            rfa, status, initiateBankIdResponse.getMessage()));
         }
 
         credentials.setSupplementalInformation(null);
