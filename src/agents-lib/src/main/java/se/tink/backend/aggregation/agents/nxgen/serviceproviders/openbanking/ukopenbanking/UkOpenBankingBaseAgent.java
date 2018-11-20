@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.configuration.UkOpenBankingConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.UkOpenBankingAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingBankTransferExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.UkOpenBankingTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.session.UkOpenBankingSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -168,7 +169,13 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
-        return Optional.empty();
+        return Optional.of(
+                new TransferDestinationRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new UkOpenBankingTransferDestinationFetcher()
+                )
+        );
     }
 
     @Override
