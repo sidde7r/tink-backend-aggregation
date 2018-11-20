@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
+import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoInvestmentAccountDefinition;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
 import se.tink.backend.core.Amount;
 import se.tink.backend.system.rpc.Instrument;
@@ -11,19 +12,19 @@ import se.tink.backend.system.rpc.Portfolio;
 
 public class InvestmentGenerator {
 
-    public static Collection<InvestmentAccount> fetchInvestmentAccounts(String currency) {
+    public static Collection<InvestmentAccount> fetchInvestmentAccounts(String currency, DemoInvestmentAccountDefinition accountDefinition) {
         List<InvestmentAccount> investmentAccounts = new ArrayList<>();
         investmentAccounts.add(
-                InvestmentAccount.builder(DemoConstants.InvestmentAccountInformation.INVESTMENT_ACCOUNT_ID)
+                InvestmentAccount.builder(accountDefinition.getAccountId())
                         .setBalance(new Amount(currency,  DemoConstants.getSekToCurrencyConverter(
-                                currency,DemoConstants.InvestmentAccountInformation.INVESTMENT_BALANCE)))
+                                currency,accountDefinition.getAccountBalance())))
                         .setName("")
-                        .setAccountNumber(DemoConstants.InvestmentAccountInformation.INVESTMENT_ACCOUNT_ID)
+                        .setAccountNumber(accountDefinition.getAccountId())
                         .setPortfolios(InvestmentGenerator.generateFakePortfolios(
-                                DemoConstants.InvestmentAccountInformation.INVESTMENT_ACCOUNT_ID,
-                                DemoConstants.InvestmentAccountInformation.INVESTMENT_BALANCE))
+                                accountDefinition.getAccountId(),
+                                accountDefinition.getAccountBalance()))
                         .setCashBalance(new Amount(currency,
-                                DemoConstants.InvestmentAccountInformation.INVESTMENT_BALANCE))
+                                accountDefinition.getAccountBalance()))
                         .build()
         );
 
