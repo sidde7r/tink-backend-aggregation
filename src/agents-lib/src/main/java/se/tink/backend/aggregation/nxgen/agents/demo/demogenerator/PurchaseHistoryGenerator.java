@@ -1,55 +1,49 @@
 package se.tink.backend.aggregation.nxgen.agents.demo.demogenerator;
 
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.time.Duration;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.Random;
 import java.util.stream.IntStream;
-import se.tink.backend.aggregation.nxgen.agents.demo.NextGenDemoConstants;
+import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.core.Amount;
 import se.tink.libraries.date.DateUtils;
 import static java.util.stream.Collectors.toList;
 
-public class TransactionGenerator {
+public class PurchaseHistoryGenerator {
 
-    private final List<GenerationBase> generationBase;
+    private final List<GeneratePurchaseBase> generatePurchaseBase;
     private final Random randomGenerator;
     private final DemoFileHandler demoFileHandler;
+    private static final int AVEREAGE_PURCHASES_PER_DAY = 3;
 
     //TODO: Should be persisted between refreshes. Store on disk is not an alternative
-    public TransactionGenerator(String basePath){
+    public PurchaseHistoryGenerator(String basePath){
         this.demoFileHandler = new DemoFileHandler(basePath);
-        generationBase = this.demoFileHandler.getGenerationBase();
+        generatePurchaseBase = this.demoFileHandler.getGeneratePurchaseBase();
         this.randomGenerator = new Random();
     }
 
-    private double randomisePurchase(GenerationBase base, String currency) {
+    private double randomisePurchase(GeneratePurchaseBase base, String currency) {
         double finalPrice = 0;
         for (Double price : base.getItemPrices()) {
-            finalPrice += (randomGenerator.nextInt(2) + 1) * price;
+            finalPrice += (randomGenerator.nextInt(AVEREAGE_PURCHASES_PER_DAY) + 1) * price;
         }
 
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
-        return Double.parseDouble(decimalFormat.format(finalPrice / NextGenDemoConstants.getSekToCurrencyConverter(currency)));
+        return Double.parseDouble(decimalFormat.format(DemoConstants.getSekToCurrencyConverter(currency, finalPrice)));
     }
 
-    private Transaction generateTransaction(GenerationBase base, LocalDate dateCursor, String currency) {
+    private Transaction generateTransaction(GeneratePurchaseBase base, LocalDate dateCursor, String currency) {
         double finalPrice = randomisePurchase(base, currency);
         return Transaction.builder()
                 .setPending(false)
@@ -63,7 +57,7 @@ public class TransactionGenerator {
         ArrayList<Transaction> transactions = new ArrayList();
         //Between one and 4 purchases per day.
         for (int i = 0; i < randomGenerator.nextInt(3) + 1; i++) {
-            GenerationBase base = generationBase.get(randomGenerator.nextInt(generationBase.size()));
+            GeneratePurchaseBase base = generatePurchaseBase.get(randomGenerator.nextInt(generatePurchaseBase.size()));
             transactions.add(generateTransaction(base, dateCursor, currency));
         }
 
@@ -88,8 +82,9 @@ public class TransactionGenerator {
     }
 
     //TODO: Add nicer logic for generation of savings. Make sure to add up to the sum of the account
-    public PaginatorResponse createSavingsAccountTransactions(TransactionalAccount account) {
-        List<Transaction> transactions = IntStream.range(0, 36)
+    public PaginatorResponse generateSavingsAccountTransactions(TransactionalAccount account, Date from, Date to) {
+        int numberOfMonths = (int) DateUtils.getNumberOfMonthsBetween(from, to);
+        List<Transaction> transactions = IntStream.range(0, numberOfMonths)
                 .mapToObj(i -> Transaction.builder()
                         .setAmount(new Amount(account.getBalance().getCurrency(),
                                 account.getBalance().getValue() / 36))
