@@ -1,0 +1,125 @@
+{
+  "clusterid" : "oxford-staging",
+  "provider-configuration" : [
+    {
+      "name": "uk-barclays-oauth2",
+      "capabilities": [
+        "TRANSFERS"
+      ],
+      "capabilitiesSerialized" : "[\"TRANSFERS\"]",
+      "className": "nxgen.uk.openbanking.barclays.BarclaysAgent",
+      "credentialsType": "PASSWORD",
+      "displayName": "Barclays",
+      "fields": [
+        {
+          "name": "info",
+          "value": "Connecting your bank",
+          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+          "immutable": true
+        }
+      ],
+      "payload": "tink:barclays",
+      "groupDisplayName": "",
+      "multiFactor": false,
+      "passwordhelptext": "Authentication is done on external page",
+      "popular": true,
+      "refreshFrequency": 1,
+      "refreshFrequencyFactor": 1,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "BANK",
+      "currency" : "GBP",
+      "market" : "GB"
+    },
+    {
+      "name": "uk-halifax-oauth2",
+      "capabilities": [
+        "TRANSFERS"
+      ],
+      "capabilitiesSerialized" : "[\"TRANSFERS\"]",
+      "className": "nxgen.uk.openbanking.halifax.HalifaxAgent",
+      "credentialsType": "PASSWORD",
+      "displayName": "Halifax",
+      "fields": [
+        {
+          "name": "info",
+          "value": "Connecting your bank",
+          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+          "immutable": true
+        }
+      ],
+      "payload": "tink:halifax",
+      "groupDisplayName": "",
+      "multiFactor": false,
+      "passwordhelptext": "Authentication is done on external page",
+      "popular": true,
+      "refreshFrequency": 1,
+      "refreshFrequencyFactor": 1,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "BANK",
+      "currency" : "GBP",
+      "market" : "GB"
+    },
+    {
+      "name": "uk-lloyds-oauth2",
+      "capabilities": [
+        "TRANSFERS"
+      ],
+      "capabilitiesSerialized" : "[\"TRANSFERS\"]",
+      "className": "nxgen.uk.openbanking.lloyds.LloydsAgent",
+      "credentialsType": "PASSWORD",
+      "displayName": "Lloyds",
+      "fields": [
+        {
+          "name": "info",
+          "value": "Connecting your bank",
+          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+          "immutable": true
+        }
+      ],
+      "payload": "tink:lloyds",
+      "groupDisplayName": "",
+      "multiFactor": false,
+      "passwordhelptext": "Authentication is done on external page",
+      "popular": true,
+      "refreshFrequency": 1,
+      "refreshFrequencyFactor": 1,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "BANK",
+      "currency" : "GBP",
+      "market" : "GB"
+    },
+    {
+      "name": "uk-bankofscotland-oauth2",
+      "capabilities": [
+        "TRANSFERS"
+      ],
+      "capabilitiesSerialized" : "[\"TRANSFERS\"]",
+      "className": "nxgen.uk.openbanking.bankofscotland.BankOfScotlandAgent",
+      "credentialsType": "PASSWORD",
+      "displayName": "Bank of Scotland",
+      "fields": [
+        {
+          "name": "info",
+          "value": "Connecting your bank",
+          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+          "immutable": true
+        }
+      ],
+      "payload": "tink:bankofscotland",
+      "groupDisplayName": "",
+      "multiFactor": false,
+      "passwordhelptext": "Authentication is done on external page",
+      "popular": true,
+      "refreshFrequency": 1,
+      "refreshFrequencyFactor": 1,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "BANK",
+      "currency" : "GBP",
+      "market" : "GB"
+    }
+  ]
+}
