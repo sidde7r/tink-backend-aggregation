@@ -13,12 +13,11 @@ import org.assertj.core.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.cluster.annotations.ClientContext;
+import se.tink.backend.aggregation.cluster.exceptions.ClientNotValid;
+import se.tink.backend.aggregation.cluster.exceptions.ClusterNotValid;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.storage.database.models.ClientConfiguration;
 import se.tink.backend.aggregation.storage.database.providers.ClientConfigurationProvider;
-
-import static se.tink.backend.aggregation.cluster.jersey.JerseyClusterInfoProvider.CLUSTER_ENVIRONMENT_HEADER;
-import static se.tink.backend.aggregation.cluster.jersey.JerseyClusterInfoProvider.CLUSTER_NAME_HEADER;
 
 public class JerseyClientProvider extends AbstractHttpContextInjectable<ClientInfo>
         implements InjectableProvider<ClientContext, Type> {
@@ -47,23 +46,36 @@ public class JerseyClientProvider extends AbstractHttpContextInjectable<ClientIn
         HttpRequestContext request = c.getRequest();
         String apiKey = request.getHeaderValue(CLIENT_API_KEY_HEADER);
 
-        // check if apikey is in header
-        if (Strings.isNullOrEmpty(apiKey)) {
-            String name = request.getHeaderValue(CLUSTER_NAME_HEADER);
-            String environment = request.getHeaderValue(CLUSTER_ENVIRONMENT_HEADER);
-            logger.error("Received a missing api key for {} {} .", name, environment);
-            return null;
+        if (!Strings.isNullOrEmpty(apiKey)) {
+            return getClientInfoUsingApiKey(apiKey);
         }
 
-        // check if apikey is in storage
-        if (!clientConfigurationProvider.isValidClientKey(apiKey)) {
-            logger.error("Can not find api key {} in database.", apiKey);
-            return null;
-        }
+        String name = request.getHeaderValue(JerseyClusterInfoProvider.CLUSTER_NAME_HEADER);
+        String environment = request.getHeaderValue(JerseyClusterInfoProvider.CLUSTER_ENVIRONMENT_HEADER);
+        logger.error("Received a missing api key for {} {}.", name, environment);
+        return getClientInfoUsingClusterInfo(name, environment);
+    }
 
-        ClientInfo clientInfo = convertFromClientConfiguration(clientConfigurationProvider.getClientConfiguration(apiKey));
-        logger.info("Client info retrived for {}", clientInfo.getClientName());
-        return clientInfo;
+    private ClientInfo getClientInfoUsingApiKey(String apiKey) {
+        try{
+            ClientConfiguration clientConfig = clientConfigurationProvider.getClientConfiguration(apiKey);
+            return convertFromClientConfiguration(clientConfig);
+        } catch (ClientNotValid e) {
+            // FIXME: we log it at the moment to validate data is in place. later should be handled throwing exception
+            logger.error("Api key {} is not valid. no entry found in database.", apiKey);
+        }
+        return null;
+    }
+
+    private ClientInfo getClientInfoUsingClusterInfo(String name, String env) {
+        try{
+            ClientConfiguration clientConfig = clientConfigurationProvider.getClientConfiguration(name, env);
+            return convertFromClientConfiguration(clientConfig);
+        } catch (ClusterNotValid e) {
+            // FIXME: we log it at the moment to validate data is in place. later should be handled throwing exception
+            logger.error("Cluster {}-{} is not supported in multi client. no entry found in database", name, env);
+        }
+        return null;
     }
 
     private ClientInfo convertFromClientConfiguration(ClientConfiguration clientConfiguration) {

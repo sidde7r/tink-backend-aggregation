@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -14,7 +15,9 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentClassFactory;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
+import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
+import se.tink.backend.aggregation.cluster.exceptions.ClientNotValid;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -222,6 +225,7 @@ public class AgentWorkerOperationFactory {
 
     public AgentWorkerOperation createRefreshOperation(ClusterInfo clusterInfo, RefreshInformationRequest request,
             ClientInfo clientInfo) {
+        validateMigration(clusterInfo, clientInfo);
         if (request.getItemsToRefresh() == null || request.getItemsToRefresh().isEmpty()) {
             // Add all available items if none were submitted.
             // Todo: Remove this once it has been verified that no consumer sends in an empty/null list.
@@ -270,6 +274,7 @@ public class AgentWorkerOperationFactory {
 
     public AgentWorkerOperation createExecuteTransferOperation(ClusterInfo clusterInfo, TransferRequest request,
             ClientInfo clientInfo) {
+        validateMigration(clusterInfo, clientInfo);
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
@@ -295,6 +300,7 @@ public class AgentWorkerOperationFactory {
     public AgentWorkerOperation createExecuteWhitelistedTransferOperation(ClusterInfo clusterInfo,
             WhitelistedTransferRequest request,
             ClientInfo clientInfo) {
+        validateMigration(clusterInfo, clientInfo);
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
@@ -339,6 +345,7 @@ public class AgentWorkerOperationFactory {
 
     public AgentWorkerOperation createCreateCredentialsOperation(ClusterInfo clusterInfo, CredentialsRequest request,
             ClientInfo clientInfo) {
+        validateMigration(clusterInfo, clientInfo);
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
@@ -367,6 +374,7 @@ public class AgentWorkerOperationFactory {
 
     public AgentWorkerOperation createUpdateOperation(ClusterInfo clusterInfo, CredentialsRequest request,
             ClientInfo clientInfo) {
+        validateMigration(clusterInfo, clientInfo);
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
@@ -395,6 +403,7 @@ public class AgentWorkerOperationFactory {
 
     public AgentWorkerOperation createKeepAliveOperation(ClusterInfo clusterInfo, KeepAliveRequest request,
             ClientInfo clientInfo) {
+        validateMigration(clusterInfo, clientInfo);
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
@@ -426,7 +435,7 @@ public class AgentWorkerOperationFactory {
     public AgentWorkerOperation createReEncryptCredentialsOperation(ClusterInfo clusterInfo,
             ReEncryptCredentialsRequest request,
             ClientInfo clientInfo) {
-
+        validateMigration(clusterInfo, clientInfo);
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
@@ -475,6 +484,7 @@ public class AgentWorkerOperationFactory {
     public AgentWorkerOperation createWhitelistRefreshOperation(ClusterInfo clusterInfo,
             RefreshWhitelistInformationRequest request,
             ClientInfo clientInfo) {
+        validateMigration(clusterInfo, clientInfo);
         if (request.getItemsToRefresh() == null || request.getItemsToRefresh().isEmpty()) {
             // Add all available items if none were submitted.
             // Todo: Remove this once it has been verified that no consumer sends in an empty/null list.
@@ -529,6 +539,7 @@ public class AgentWorkerOperationFactory {
     public AgentWorkerOperation createConfigureWhitelistOperation(ClusterInfo clusterInfo,
             ConfigureWhitelistInformationRequest request,
             ClientInfo clientInfo) {
+        validateMigration(clusterInfo, clientInfo);
         String operationMetricName = "configure-whitelist";
 
         if (request.getItemsToRefresh() == null || request.getItemsToRefresh().isEmpty()) {
@@ -674,5 +685,63 @@ public class AgentWorkerOperationFactory {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    /**
+     *
+     * Helper method ensure migration of multiclient will provider the same data as the singleclient flow
+     *
+     */
+    private void validateMigration(ClusterInfo clusterInfo, ClientInfo clientInfo) {
+
+        String clusterId = clusterInfo.getClusterId().getId();
+        
+        // catch null client info
+        if (Objects.isNull(clientInfo)) {
+            log.error("can not find client info for cluster {}", clusterId);
+            return;
+        }
+
+        // Crypto Wrapper & Aggregation Controller Client Wrapper:
+        // generating CryptoWrapper using clusterId, therefore we ensure cluster id is the same
+        validateClusterId(clusterInfo, clientInfo, clusterId);
+
+        validateAggregatorInfo(clusterInfo, clientInfo, clusterId);
+
+    }
+
+    private void validateClusterId(ClusterInfo clusterInfo, ClientInfo clientInfo, String clusterId) {
+        if (Strings.isNullOrEmpty(clientInfo.getClusterId())) {
+            log.error("can not get clusterid from client info for client {}", clusterId);
+        } else if (!Objects.equals(clusterId, clientInfo.getClusterId())) {
+            log.error("cluster id for client {} does not match. cluster info: {}, client info: {}",
+                    clusterId, clusterId, clientInfo.getClusterId());
+        }
+    }
+
+    // Aggregator:
+    // we check for
+    //      null aggregator id,
+    //      aggregator id not exist in db
+    //      aggregator info from client info and cluster info different
+    private void validateAggregatorInfo(ClusterInfo clusterInfo, ClientInfo clientInfo, String clusterId) {
+
+        String aggregatorId = clientInfo.getAggregatorId();
+        if (Strings.isNullOrEmpty(aggregatorId)) {
+            log.error("can not get aggregatorId from client info for client {}", clientInfo.getClientName());
+            return;
+        }
+
+        String aggregatorFromClusterInfo = aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo)
+                .getAggregatorIdentifier();
+
+
+        String aggregatorFromClientInfo = aggregatorInfoProvider.createAggregatorInfoFor(aggregatorId)
+                .getAggregatorIdentifier();
+        if (Objects.equals(aggregatorFromClusterInfo, aggregatorFromClientInfo)) {
+            return;
+        }
+        log.error("aggregator info for client {} does not match. cluster info: {}, client info: {}",
+                clientInfo.getClientName(), aggregatorFromClusterInfo, aggregatorFromClientInfo);
     }
 }
