@@ -46,9 +46,9 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
         return Optional.of(new TransactionalAccountRefreshController(metricRefreshController, updateController,
-                new NextGenerationDemoTransactionFetcher(credentials,  request.getAccounts(), currency),
+                new NextGenerationDemoTransactionFetcher(request.getAccounts(), currency, catalog),
                 new TransactionFetcherController<>(transactionPaginationHelper,
-                        new NextGenerationDemoTransactionFetcher(credentials,  request.getAccounts(), currency))));
+                        new NextGenerationDemoTransactionFetcher(request.getAccounts(), currency, catalog))));
     }
 
     @Override

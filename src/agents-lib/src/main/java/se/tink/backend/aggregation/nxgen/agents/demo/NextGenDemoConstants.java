@@ -8,6 +8,7 @@ public class NextGenDemoConstants {
 
     public static String GENERATION_BASE_FILE = "generationbase.json";
 
+    //Change to take amount and return the conversion
     public static double getSekToCurrencyConverter(String currency) {
         switch (currency) {
         case "EUR" :
