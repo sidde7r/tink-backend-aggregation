@@ -11,6 +11,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.curator.framework.CuratorFramework;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentEventListener;
 import se.tink.backend.aggregation.agents.SetAccountsToAggregateContext;
@@ -35,7 +37,7 @@ import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 
 public class AgentWorkerCommandContext extends AgentWorkerContext implements SetAccountsToAggregateContext {
-    private static final AggregationLogger log = new AggregationLogger(AgentWorkerCommandContext.class);
+    private static final Logger log = LoggerFactory.getLogger(AgentWorkerCommandContext.class);
     protected CuratorFramework coordinationClient;
     private static final String EMPTY_CLASS_NAME = "";
 
