@@ -1,6 +1,6 @@
 {
   "market": "RO",
-  "currency": "LEU",
+  "currency": "RON",
   "providers": [
     {
       "name": "ro-raiffeisen-psd2",
