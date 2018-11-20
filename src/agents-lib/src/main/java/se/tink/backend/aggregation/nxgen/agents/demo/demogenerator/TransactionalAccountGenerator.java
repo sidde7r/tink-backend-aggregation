@@ -21,7 +21,7 @@ public class TransactionalAccountGenerator {
                 .setBankIdentifier(DemoConstants.CheckingAccountInformation.ACCOUNT_ID)
                 .build());
 
-        accounts.add(TransactionalAccount.builder(AccountTypes.CREDIT_CARD,
+        accounts.add(TransactionalAccount.builder(AccountTypes.SAVINGS,
                 DemoConstants.SavingsAccountInformation.ACCOUNT_ID, new Amount(currency,
                         DemoConstants.getSekToCurrencyConverter(currency, DemoConstants.SavingsAccountInformation.ACCOUNT_BALANCE)))
                 .setAccountNumber(DemoConstants.SavingsAccountInformation.ACCOUNT_ID)

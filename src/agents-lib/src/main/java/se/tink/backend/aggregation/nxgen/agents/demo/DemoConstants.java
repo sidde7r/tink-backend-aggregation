@@ -26,14 +26,12 @@ public class DemoConstants {
         public static final double BLANCO_INTEREST_RATE = 1.45;
         public static final double MORTGAGE_BALANCE = -2300000D;
         public static final double BLANCO_BALANCE = -50000D;
-
     }
 
     public static class InvestmentAccountInformation {
         public static final String INVESTMENT_ACCOUNT_ID = "9999-444444444444";
         public static final double INVESTMENT_BALANCE = 123456;
     }
-
 
     //Change to take amount and return the conversion
     public static double getSekToCurrencyConverter(String currency, double amountInSek) {
@@ -51,5 +49,4 @@ public class DemoConstants {
 
         return amountInSek/conversionAmount;
     }
-
 }

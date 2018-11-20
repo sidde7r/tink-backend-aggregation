@@ -21,28 +21,29 @@ import static java.util.stream.Collectors.toList;
 
 public class PurchaseHistoryGenerator {
 
-    private final List<GenerationBase> generationBase;
+    private final List<GeneratePurchaseBase> generatePurchaseBase;
     private final Random randomGenerator;
     private final DemoFileHandler demoFileHandler;
+    private static final int AVEREAGE_PURCHASES_PER_DAY = 3;
 
     //TODO: Should be persisted between refreshes. Store on disk is not an alternative
     public PurchaseHistoryGenerator(String basePath){
         this.demoFileHandler = new DemoFileHandler(basePath);
-        generationBase = this.demoFileHandler.getGenerationBase();
+        generatePurchaseBase = this.demoFileHandler.getGeneratePurchaseBase();
         this.randomGenerator = new Random();
     }
 
-    private double randomisePurchase(GenerationBase base, String currency) {
+    private double randomisePurchase(GeneratePurchaseBase base, String currency) {
         double finalPrice = 0;
         for (Double price : base.getItemPrices()) {
-            finalPrice += (randomGenerator.nextInt(2) + 1) * price;
+            finalPrice += (randomGenerator.nextInt(AVEREAGE_PURCHASES_PER_DAY) + 1) * price;
         }
 
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         return Double.parseDouble(decimalFormat.format(DemoConstants.getSekToCurrencyConverter(currency, finalPrice)));
     }
 
-    private Transaction generateTransaction(GenerationBase base, LocalDate dateCursor, String currency) {
+    private Transaction generateTransaction(GeneratePurchaseBase base, LocalDate dateCursor, String currency) {
         double finalPrice = randomisePurchase(base, currency);
         return Transaction.builder()
                 .setPending(false)
@@ -56,7 +57,7 @@ public class PurchaseHistoryGenerator {
         ArrayList<Transaction> transactions = new ArrayList();
         //Between one and 4 purchases per day.
         for (int i = 0; i < randomGenerator.nextInt(3) + 1; i++) {
-            GenerationBase base = generationBase.get(randomGenerator.nextInt(generationBase.size()));
+            GeneratePurchaseBase base = generatePurchaseBase.get(randomGenerator.nextInt(generatePurchaseBase.size()));
             transactions.add(generateTransaction(base, dateCursor, currency));
         }
 
@@ -81,8 +82,9 @@ public class PurchaseHistoryGenerator {
     }
 
     //TODO: Add nicer logic for generation of savings. Make sure to add up to the sum of the account
-    public PaginatorResponse createSavingsAccountTransactions(TransactionalAccount account) {
-        List<Transaction> transactions = IntStream.range(0, 36)
+    public PaginatorResponse generateSavingsAccountTransactions(TransactionalAccount account, Date from, Date to) {
+        int numberOfMonths = (int) DateUtils.getNumberOfMonthsBetween(from, to);
+        List<Transaction> transactions = IntStream.range(0, numberOfMonths)
                 .mapToObj(i -> Transaction.builder()
                         .setAmount(new Amount(account.getBalance().getCurrency(),
                                 account.getBalance().getValue() / 36))

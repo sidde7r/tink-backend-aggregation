@@ -44,13 +44,16 @@ public class NextGenerationDemoTransactionFetcher
     @Override
     public PaginatorResponse fetchTransactionsFor(TransactionalAccount account) {
         if (account.getType() == AccountTypes.CREDIT_CARD || account.getType() == AccountTypes.CHECKING) {
-            return purchaseHistoryGenerator.generateTransactions(getRefreshStartDate(account.getAccountNumber()),
+            return purchaseHistoryGenerator.generateTransactions(
+                    getRefreshStartDate(account.getAccountNumber()),
                     DateUtils.getToday(),
                     account.getBalance().getCurrency());
         }
 
         if (account.getType() == AccountTypes.SAVINGS) {
-            return purchaseHistoryGenerator.createSavingsAccountTransactions(account);
+            return purchaseHistoryGenerator.generateSavingsAccountTransactions(account,
+                    getRefreshStartDate(account.getAccountNumber()),
+                    DateUtils.getToday());
         }
 
         return PaginatorResponseImpl.createEmpty(false);

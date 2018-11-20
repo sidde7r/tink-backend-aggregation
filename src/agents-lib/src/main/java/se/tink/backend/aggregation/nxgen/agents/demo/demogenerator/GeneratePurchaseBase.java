@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.nxgen.agents.demo.demogenerator;
 
 import java.util.List;
 
-public class GenerationBase {
+public class GeneratePurchaseBase {
     private String company;
     private List<Double> itemPrices;
 
@@ -22,6 +22,6 @@ public class GenerationBase {
         this.itemPrices = itemPrices;
     }
 
-    public GenerationBase() {
+    public GeneratePurchaseBase() {
     }
 }
