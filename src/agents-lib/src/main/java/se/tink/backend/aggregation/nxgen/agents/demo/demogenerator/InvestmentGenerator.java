@@ -6,7 +6,7 @@ import se.tink.backend.system.rpc.Instrument;
 import se.tink.backend.system.rpc.Portfolio;
 
 public class InvestmentGenerator {
-    
+
     public static List<Portfolio> generateFakePortfolios (String accountId, double balance) {
         ArrayList<Portfolio> portfolios = new ArrayList<>();
         portfolios.add(generateFakePortolio(accountId, balance/2,  Portfolio.Type.ISK));
