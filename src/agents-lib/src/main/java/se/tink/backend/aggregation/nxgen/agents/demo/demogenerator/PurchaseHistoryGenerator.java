@@ -1,27 +1,20 @@
 package se.tink.backend.aggregation.nxgen.agents.demo.demogenerator;
 
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.time.Duration;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.Random;
 import java.util.stream.IntStream;
-import se.tink.backend.aggregation.nxgen.agents.demo.NextGenDemoConstants;
+import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.core.Amount;
 import se.tink.libraries.date.DateUtils;
 import static java.util.stream.Collectors.toList;
@@ -46,7 +39,7 @@ public class PurchaseHistoryGenerator {
         }
 
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
-        return Double.parseDouble(decimalFormat.format(finalPrice / NextGenDemoConstants.getSekToCurrencyConverter(currency)));
+        return Double.parseDouble(decimalFormat.format(DemoConstants.getSekToCurrencyConverter(currency, finalPrice)));
     }
 
     private Transaction generateTransaction(GenerationBase base, LocalDate dateCursor, String currency) {

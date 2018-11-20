@@ -1,25 +1,25 @@
 package se.tink.backend.aggregation.nxgen.agents.demo;
 
-public class NextGenDemoConstants {
+public class DemoConstants {
 
     public static String BASE_PATH = "data/demo";
-
-    public static String ACCOUNT_FILE = "accounts.txt";
-
     public static String GENERATION_BASE_FILE = "generationbase.json";
 
     //Change to take amount and return the conversion
-    public static double getSekToCurrencyConverter(String currency) {
+    public static double getSekToCurrencyConverter(String currency, double amountInSek) {
+        double conversionAmount;
         switch (currency) {
         case "EUR" :
-            return 10.22;
+            conversionAmount = 10.22;
         case "USD" :
-            return 9.06;
+            conversionAmount = 9.06;
         case "GBP":
-            return 11.77;
+            conversionAmount = 11.77;
         default:
-            return 1;
+            conversionAmount = 1;
         }
+
+        return amountInSek/conversionAmount;
     }
 
 }

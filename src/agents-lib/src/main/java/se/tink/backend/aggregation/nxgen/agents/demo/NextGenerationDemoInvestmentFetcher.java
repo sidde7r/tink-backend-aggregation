@@ -2,20 +2,14 @@ package se.tink.backend.aggregation.nxgen.agents.demo;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import se.tink.backend.aggregation.agents.utils.demo.DemoDataUtils;
 import se.tink.backend.aggregation.nxgen.agents.demo.demogenerator.InvestmentGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
-import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.core.Amount;
-import se.tink.backend.system.rpc.Portfolio;
-
 
 public class NextGenerationDemoInvestmentFetcher implements AccountFetcher<InvestmentAccount>,
         TransactionPaginator<InvestmentAccount> {
@@ -27,7 +21,7 @@ public class NextGenerationDemoInvestmentFetcher implements AccountFetcher<Inves
 
     public NextGenerationDemoInvestmentFetcher(String currency) {
         this.currency = currency;
-        this.investmentAccountBalance = NextGenDemoConstants.getSekToCurrencyConverter(currency) * investmentAccountBalance;
+        this.investmentAccountBalance = DemoConstants.getSekToCurrencyConverter(currency,investmentAccountBalance);
     }
 
     @Override
