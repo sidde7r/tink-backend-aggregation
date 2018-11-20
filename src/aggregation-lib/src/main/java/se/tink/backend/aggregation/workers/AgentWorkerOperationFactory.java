@@ -695,39 +695,54 @@ public class AgentWorkerOperationFactory {
     private void validateMigration(ClusterInfo clusterInfo, ClientInfo clientInfo) {
 
         String clusterId = clusterInfo.getClusterId().getId();
+        
         // catch null client info
         if (Objects.isNull(clientInfo)) {
             log.error("can not find client info for cluster {}", clusterId);
+            return;
         }
 
         // Crypto Wrapper & Aggregation Controller Client Wrapper:
         // generating CryptoWrapper using clusterId, therefore we ensure cluster id is the same
+        validateClusterId(clusterInfo, clientInfo, clusterId);
+
+        validateAggregatorInfo(clusterInfo, clientInfo, clusterId);
+
+    }
+
+    private void validateClusterId(ClusterInfo clusterInfo, ClientInfo clientInfo, String clusterId) {
         if (Strings.isNullOrEmpty(clientInfo.getClusterId())) {
             log.error("can not get clusterid from client info for client {}", clusterId);
         } else if (!Objects.equals(clusterId, clientInfo.getClusterId())) {
             log.error("cluster id for client {} does not match. cluster info: {}, client info: {}",
                     clusterId, clusterId, clientInfo.getClusterId());
         }
+    }
 
-        // Aggregator:
-        // we check for
-        //      null aggregator id,
-        //      aggregator id not exist in db
-        //      aggregator info from client info and cluster info different
+    // Aggregator:
+    // we check for
+    //      null aggregator id,
+    //      aggregator id not exist in db
+    //      aggregator info from client info and cluster info different
+    private void validateAggregatorInfo(ClusterInfo clusterInfo, ClientInfo clientInfo, String clusterId) {
+
         String aggregatorId = clientInfo.getAggregatorId();
         if (Strings.isNullOrEmpty(aggregatorId)) {
             log.error("can not get aggregatorId from client info for client {}", clientInfo.getClientName());
+            return;
         }
-        AggregatorInfo aggregatorInfoFromClusterInfo = aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo);
+
+        String aggregatorFromClusterInfo = aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo)
+                .getAggregatorIdentifier();
+
         try {
-            AggregatorInfo aggregatorInfoFromClientInfo = aggregatorInfoProvider.createAggregatorInfoFor(aggregatorId);
-            if (!Objects.equals(aggregatorInfoFromClusterInfo.getAggregatorIdentifier(),
-                    aggregatorInfoFromClientInfo.getAggregatorIdentifier())) {
-                log.error("aggregator info for client {} does not match. cluster info: {}, client info: {}",
-                        clientInfo.getClientName(),
-                        aggregatorInfoFromClusterInfo.getAggregatorIdentifier(),
-                        aggregatorInfoFromClientInfo.getAggregatorIdentifier());
+            String aggregatorFromClientInfo = aggregatorInfoProvider.createAggregatorInfoFor(aggregatorId)
+                    .getAggregatorIdentifier();
+            if (Objects.equals(aggregatorFromClusterInfo, aggregatorFromClientInfo)) {
+                return;
             }
+            log.error("aggregator info for client {} does not match. cluster info: {}, client info: {}",
+                    clientInfo.getClientName(), aggregatorFromClusterInfo, aggregatorFromClientInfo);
         } catch (ClientNotValid e) {
             log.error("no db entry found for aggregatorId {}", aggregatorId);
         }
