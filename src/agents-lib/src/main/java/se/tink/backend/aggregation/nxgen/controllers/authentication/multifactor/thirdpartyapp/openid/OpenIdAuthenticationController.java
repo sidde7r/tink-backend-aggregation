@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
@@ -57,14 +58,8 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
         this.apiClient = apiClient;
         this.authenticator = authenticator;
 
-        this.state = generateRandomId();
-        this.nonce = generateRandomId();
-    }
-
-    private static String generateRandomId() {
-        byte[] randomData = new byte[32];
-        random.nextBytes(randomData);
-        return encoder.encodeToString(randomData);
+        this.state = RandomUtils.generateRandomBase64UrlEncoded(32);
+        this.nonce = RandomUtils.generateRandomBase64UrlEncoded(32);
     }
 
     @Override
