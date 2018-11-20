@@ -31,13 +31,15 @@ public class AccountIdentifierEntity {
         return secondaryIdentification;
     }
 
-    public Optional<AccountIdentifier> toAccountIdentifier() {
+    public Optional<AccountIdentifier> toAccountIdentifier(String accountName) {
         switch (identifierType) {
         case IBAN:
-            return Optional.of(new IbanIdentifier(null, identification));
+            IbanIdentifier ibanIdentifier = new IbanIdentifier(null, identification);
+            ibanIdentifier.setName(accountName);
+            return Optional.of(ibanIdentifier);
         case SORT_CODE_ACCOUNT_NUMBER:
             SortCodeIdentifier sortCodeIdentifier = new SortCodeIdentifier(identification);
-            sortCodeIdentifier.setName(name);
+            sortCodeIdentifier.setName(accountName);
             return Optional.of(sortCodeIdentifier);
         case PAN:
             return Optional.empty();

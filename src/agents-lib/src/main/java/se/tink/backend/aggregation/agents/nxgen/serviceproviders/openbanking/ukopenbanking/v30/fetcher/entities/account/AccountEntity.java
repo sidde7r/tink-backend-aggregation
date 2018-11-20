@@ -51,22 +51,23 @@ public class AccountEntity implements IdentifiableAccount {
         return rawAccountSubType;
     }
 
-    private Optional<AccountIdentifier> toAccountIdentifier() {
-        return identifierEntity.toAccountIdentifier();
+    private Optional<AccountIdentifier> toAccountIdentifier(String accountName) {
+        return identifierEntity.toAccountIdentifier(accountName);
     }
 
     public static TransactionalAccount toTransactionalAccount(AccountEntity account, AccountBalanceEntity balance) {
         String accountNumber = account.getUniqueIdentifier();
+        String accountName = account.getDisplayName();
 
         TransactionalAccount.Builder accountBuilder = TransactionalAccount
                 .builder(account.getAccountType(),
                         accountNumber,
                         balance.getBalance())
                 .setAccountNumber(accountNumber)
-                .setName(account.getDisplayName())
+                .setName(accountName)
                 .setBankIdentifier(account.getAccountId());
 
-        account.toAccountIdentifier().ifPresent(accountBuilder::addIdentifier);
+        account.toAccountIdentifier(accountName).ifPresent(accountBuilder::addIdentifier);
 
         return accountBuilder.build();
     }

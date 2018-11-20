@@ -40,8 +40,8 @@ public class AccountEntity implements IdentifiableAccount {
         return nickname != null ? nickname : identifierEntity.getName();
     }
 
-    private AccountIdentifier toAccountIdentifier() {
-        return identifierEntity.toAccountIdentifier();
+    private AccountIdentifier toAccountIdentifier(String accountName) {
+        return identifierEntity.toAccountIdentifier(accountName);
     }
 
     @Override
@@ -52,14 +52,15 @@ public class AccountEntity implements IdentifiableAccount {
 
     public static TransactionalAccount toTransactionalAccount(AccountEntity account, AccountBalanceEntity balance) {
         String accountNumber = account.getUniqueIdentifier();
+        String accountName = account.getDisplayName();
 
         return TransactionalAccount
                 .builder(account.getAccountType(),
                         accountNumber,
                         balance.getBalance())
                 .setAccountNumber(accountNumber)
-                .setName(account.getDisplayName())
-                .addIdentifier(account.toAccountIdentifier())
+                .setName(accountName)
+                .addIdentifier(account.toAccountIdentifier(accountName))
                 .setBankIdentifier(account.getAccountId())
                 .build();
     }
