@@ -62,11 +62,9 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
             CuratorFramework coordinationClient,
             AgentsServiceConfiguration agentsServiceConfiguration,
             AggregatorInfo aggregatorInfo,
-            CallbackHostConfiguration callbackHostConfiguration,
             SupplementalInformationController supplementalInformationController,
             ControllerWrapper controllerWrapper) {
-        super(request, metricRegistry, coordinationClient, aggregatorInfo,
-                callbackHostConfiguration, supplementalInformationController, controllerWrapper);
+        super(request, metricRegistry, coordinationClient, aggregatorInfo, supplementalInformationController, controllerWrapper);
         this.coordinationClient = coordinationClient;
         this.timePutOnQueue = System.currentTimeMillis();
         this.uniqueIdOfUserSelectedAccounts = Lists.newArrayList();
