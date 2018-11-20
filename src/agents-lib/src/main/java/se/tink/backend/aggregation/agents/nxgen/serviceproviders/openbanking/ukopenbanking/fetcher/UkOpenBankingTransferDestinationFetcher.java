@@ -42,7 +42,7 @@ public class UkOpenBankingTransferDestinationFetcher implements TransferDestinat
         return transferDestinations;
     }
 
-    private List<? extends GeneralAccountEntity> getSourceAccounts(Collection<Account> accounts) {
+    private static List<? extends GeneralAccountEntity> getSourceAccounts(Collection<Account> accounts) {
         return accounts.stream()
                 .filter(a -> WHITELISTED_ACCOUNT_TYPES.contains(a.getType()))
                 .map(GeneralAccountEntityImpl::createFromCoreAccount)
