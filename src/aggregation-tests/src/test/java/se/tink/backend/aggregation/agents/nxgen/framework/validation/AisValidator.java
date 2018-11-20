@@ -13,13 +13,14 @@ public final class AisValidator {
     private final Set<AisDataRule> aisDataRules;
     private final Set<AccountRule> accountRules;
     private final Set<TransactionRule> transactionRules;
-    private final Action action;
+
+    private final ValidationExecutor executor;
 
     private AisValidator(final AisValidator.Builder builder) {
         aisDataRules = builder.aisDataRules;
         accountRules = builder.accountRules;
         transactionRules = builder.transactionRules;
-        action = builder.action;
+        executor = builder.executor;
     }
 
     public static Builder builder() {
@@ -35,7 +36,7 @@ public final class AisValidator {
         builder.aisDataRules = new HashSet<>(aisDataRules);
         builder.accountRules = new HashSet<>(accountRules);
         builder.transactionRules = new HashSet<>(transactionRules);
-        builder.action = action;
+        builder.executor = executor;
         return builder;
     }
 
@@ -52,59 +53,28 @@ public final class AisValidator {
     }
 
     public void validate(final AisData aisData) {
-        for (final AisDataRule rule : aisDataRules) {
-            validateWithRule(aisData, rule, action);
-        }
-        for (final AccountRule rule : accountRules) {
-            for (final Account account : aisData.getAccounts()) {
-                validateWithAccountRule(account, rule, action);
-            }
-        }
-        for (final TransactionRule rule : transactionRules) {
-            for (final Transaction transaction : aisData.getTransactions()) {
-                validateWithTransactionRule(transaction, rule, action);
-            }
-        }
-    }
+        final ValidationResult result = ValidationResult.builder()
+                .addAisDataRules(aisDataRules)
+                .addAccountRules(accountRules)
+                .addTransactionRules(transactionRules)
+                .validate(aisData)
+                .build();
 
-    private static void validateWithRule(
-            final AisData aisData, final AisDataRule rule, final Action action) {
-        if (rule.getCriterion().test(aisData)) {
-            action.onPass(aisData, rule.getRuleIdentifier());
-        } else {
-            action.onFail(aisData, rule.getRuleIdentifier(), rule.getMessage(aisData));
-        }
-    }
-
-    private static void validateWithAccountRule(
-            final Account account, final AccountRule rule, final Action action) {
-        if (rule.getCriterion().test(account)) {
-            action.onPass(account, rule.getRuleIdentifier());
-        } else {
-            action.onFail(account, rule.getRuleIdentifier(), rule.getMessage(account));
-        }
-    }
-
-    private static void validateWithTransactionRule(
-            final Transaction transaction, final TransactionRule rule, final Action action) {
-        if (rule.getCriterion().test(transaction)) {
-            action.onPass(transaction, rule.getRuleIdentifier());
-        } else {
-            action.onFail(transaction, rule.getRuleIdentifier(), rule.getMessage(transaction));
-        }
+        executor.execute(result);
     }
 
     public static final class Builder {
         private Set<AisDataRule> aisDataRules = new HashSet<>();
         private Set<AccountRule> accountRules = new HashSet<>();
         private Set<TransactionRule> transactionRules = new HashSet<>();
-        private Action action = null;
+
+        private ValidationExecutor executor;
 
         private Builder() {}
 
         public AisValidator build() {
-            if (action == null) {
-                action = new WarnAction();
+            if (executor == null) {
+                executor = new WarnExecutor();
             }
             return new AisValidator(this);
         }
@@ -186,8 +156,8 @@ public final class AisValidator {
             return ruleTransaction(ruleName, criterion, a -> "");
         }
 
-        public Builder setAction(final Action action) {
-            this.action = action;
+        public Builder setExecutor(final ValidationExecutor executor) {
+            this.executor = executor;
             return this;
         }
 

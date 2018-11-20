@@ -1,56 +1,134 @@
 package se.tink.backend.aggregation.agents.nxgen.framework.validation;
 
-import com.google.common.collect.ImmutableList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
+import java.util.Optional;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.rpc.Account;
-import se.tink.backend.system.rpc.Transaction;
+import se.tink.backend.aggregation.rpc.AccountTypes;
 
 // TODO Move to one of the test jars
 public final class ValidatorTest {
+
+    private SilentExecutor executor;
+
+    @Before
+    public void setUp() {
+        executor = new SilentExecutor();
+    }
+
+    @Test
+    public void ensureGetSubResults_noRulesNoData_returnsEmpty() {
+        AisValidator.builder()
+                .setExecutor(executor)
+                .build()
+                .validate(new AisData(Collections.emptySet(), Collections.emptySet()));
+
+        Assert.assertTrue(executor.getResult().getSubResults().isEmpty());
+    }
+
+    @Test
+    public void ensureGetSubResults_oneAccountRuleNoData_returnsOne() {
+        AisValidator.builder()
+                .setExecutor(executor)
+                .ruleAccount("Hoy", a -> a.getAccountNumber() != null, a -> "failmsg")
+                .build()
+                .validate(new AisData(Collections.emptySet(), Collections.emptySet()));
+
+        Assert.assertEquals(executor.getResult().getSubResults().size(), 1);
+        Assert.assertEquals(executor.getResult().getSubResults().keySet().iterator().next(), "Hoy");
+        Assert.assertTrue(executor.getResult().getSubResults().values().iterator().next().passed());
+        Assert.assertEquals(
+                executor.getResult().getSubResults().values().iterator().next().getMessage(), "");
+    }
+
     @Test
     public void testValidator() {
+        // Set up validator
+        AisValidator validator =
+                AisValidator.builder()
+                        .setExecutor(executor)
+                        .ruleAccount(
+                                "Account number is present",
+                                acc -> acc.getAccountNumber() != null,
+                                acc -> String.format("Account lacks an account number: %s", acc))
+                        .ruleAccount(
+                                "Account balance does not exceed threshold",
+                                acc -> acc.getBalance() <= 10000000.0,
+                                acc ->
+                                        String.format(
+                                                "Balance %f exceeds threshold %f for account %s",
+                                                acc.getBalance(), 10000000.0, acc))
+                        .ruleAccount(
+                                "Holder name is present",
+                                acc -> acc.getHolderName() != null,
+                                acc -> String.format("Account lacks a holder name: %s", acc))
+                        .ruleAccount(
+                                "Checking account balance is >= 0",
+                                acc ->
+                                        acc.getType() != AccountTypes.CHECKING
+                                                || acc.getBalance() >= 0)
+                        .ruleAccount(
+                                "Savings account balance is >= 0",
+                                acc ->
+                                        acc.getType() != AccountTypes.SAVINGS
+                                                || acc.getBalance() >= 0)
+                        .ruleAccount(
+                                "Account name is present",
+                                acc -> acc.getName() != null,
+                                acc -> String.format("Account lacks a name: %s", acc))
+                        .ruleTransaction(
+                                "Transaction description is present",
+                                trx -> trx.getDescription() != null,
+                                trx -> String.format("Transaction description is null: %s", trx))
+                        .ruleTransaction(
+                                "Transaction description length is reasonable",
+                                trx ->
+                                        Optional.ofNullable(trx.getDescription())
+                                                .map(String::length)
+                                                .orElse(0)
+                                                <= 1000,
+                                trx ->
+                                        String.format(
+                                                "Transaction description is too long: %s", trx))
+                        .rule(
+                                "No duplicate transactions",
+                                aisdata ->
+                                        ValidatorFactory.containsDuplicates(
+                                                aisdata.getTransactions()),
+                                data ->
+                                        String.format(
+                                                "Found at least two transactions with the same date, description, amount and account ID: %s",
+                                                data.getTransactions()))
+                        .build();
+
+        // Set up validatee
         Account account = new Account();
         account.setBalance(999999999.0);
         account.setHolderName("Test Testsson");
 
         AisData aisData = new AisData(Collections.singleton(account), Collections.emptySet());
 
-        SilentAction action = new SilentAction();
-
-        AisValidator validator =
-                AisValidator.builder()
-                        .setAction(action)
-                        .ruleAccount(
-                                "Account number is non-null",
-                                acc -> acc.getAccountNumber() != null,
-                                acc -> String.format("Account number of %s is null", acc))
-                        .ruleTransaction(
-                                "Transaction description is present",
-                                trx -> trx.getDescription() != null,
-                                trx -> String.format("Transaction description is null: %s", trx))
-                        .rule(
-                                "Account balance threshold",
-                                data ->
-                                        data.getAccounts()
-                                                .stream()
-                                                .map(Account::getBalance)
-                                                .allMatch(b -> b <= 10000000.0),
-                                data ->
-                                        String.format(
-                                                "One of the balances in %s exceed 10000000.0",
-                                                data.getAccounts()
-                                                        .stream()
-                                                        .map(Account::getBalance)
-                                                        .collect(Collectors.toList())))
-                        .build();
-
+        // Act
         validator.validate(aisData);
+
+        Map<String, ValidationSubResult> subResults = executor.getResult().getSubResults();
+
+        // Assert
+
+        Assert.assertEquals(9, executor.getResult().getSubResults().size());
+
+        Assert.assertFalse(subResults.get("Account number is present").passed());
+        Assert.assertFalse(subResults.get("Account balance does not exceed threshold").passed());
+        Assert.assertTrue(subResults.get("Holder name is present").passed());
+        Assert.assertTrue(subResults.get("Checking account balance is >= 0").passed());
+        Assert.assertTrue(subResults.get("Savings account balance is >= 0").passed());
+        Assert.assertFalse(subResults.get("Account name is present").passed());
+        Assert.assertTrue(subResults.get("Transaction description is present").passed());
+        Assert.assertTrue(subResults.get("Transaction description length is reasonable").passed());
+        Assert.assertTrue(subResults.get("No duplicate transactions").passed());
     }
 
     @Test(expected = IllegalArgumentException.class)

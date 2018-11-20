@@ -11,7 +11,7 @@ public final class ValidatorFactory {
         throw new AssertionError();
     }
 
-    private static boolean containsDuplicates(final Collection<Transaction> transactions) {
+    public static boolean containsDuplicates(final Collection<Transaction> transactions) {
         for (final Transaction transaction : transactions) {
             final long numberOfIdenticalElements =
                     transactions
