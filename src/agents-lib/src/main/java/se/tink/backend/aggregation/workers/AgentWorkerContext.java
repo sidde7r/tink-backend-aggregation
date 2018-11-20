@@ -87,6 +87,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         this.coordinationClient = coordinationClient;
 
         setCallbackHostConfiguration(callbackHostConfiguration);
+        setHostConfiguration(controllerWrapper.getHostConfiguration());
         setAggregatorInfo(aggregatorInfo);
 
         if (request.getUser() != null) {
