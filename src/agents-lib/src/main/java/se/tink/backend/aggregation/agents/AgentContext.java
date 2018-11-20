@@ -9,7 +9,6 @@ import java.util.concurrent.TimeUnit;
 
 import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
 import se.tink.backend.aggregation.api.AggregatorInfo;
-import se.tink.backend.aggregation.api.CallbackHostConfiguration;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
@@ -28,7 +27,6 @@ public abstract class AgentContext {
     protected ByteArrayOutputStream logOutputStream = new ByteArrayOutputStream();
     protected boolean isTestContext = false;
     private boolean isWaitingOnConnectorTransactions = false;
-    private CallbackHostConfiguration callbackHostConfiguration;
     private AggregatorInfo aggregatorInfo;
     public abstract Catalog getCatalog();
 
@@ -46,15 +44,6 @@ public abstract class AgentContext {
 
     public ByteArrayOutputStream getLogOutputStream() {
         return logOutputStream;
-    }
-
-    public CallbackHostConfiguration getCallbackHostConfiguration() {
-        return callbackHostConfiguration;
-    }
-
-
-    public void setCallbackHostConfiguration(CallbackHostConfiguration callbackHostConfiguration) {
-        this.callbackHostConfiguration = callbackHostConfiguration;
     }
 
     public AggregatorInfo getAggregatorInfo() {

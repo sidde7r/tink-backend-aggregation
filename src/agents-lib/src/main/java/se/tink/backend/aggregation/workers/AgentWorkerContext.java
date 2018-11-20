@@ -18,7 +18,6 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.AgentEventListener;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.api.AggregatorInfo;
-import se.tink.backend.aggregation.api.CallbackHostConfiguration;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.Account;
@@ -73,7 +72,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
     public AgentWorkerContext(CredentialsRequest request, MetricRegistry metricRegistry,
             CuratorFramework coordinationClient, AggregatorInfo aggregatorInfo,
-            CallbackHostConfiguration callbackHostConfiguration,
             SupplementalInformationController supplementalInformationController,
             ControllerWrapper controllerWrapper) {
 
@@ -86,7 +84,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         // _Not_ instanciating a SystemService from the ServiceFactory here.
         this.coordinationClient = coordinationClient;
 
-        setCallbackHostConfiguration(callbackHostConfiguration);
         setHostConfiguration(controllerWrapper.getHostConfiguration());
         setAggregatorInfo(aggregatorInfo);
 

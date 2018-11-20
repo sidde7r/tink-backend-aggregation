@@ -15,7 +15,6 @@ import javax.ws.rs.core.MediaType;
 import org.apache.curator.framework.CuratorFramework;
 import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
 import se.tink.backend.aggregation.api.AggregatorInfo;
-import se.tink.backend.aggregation.api.CallbackHostConfiguration;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.Account;
