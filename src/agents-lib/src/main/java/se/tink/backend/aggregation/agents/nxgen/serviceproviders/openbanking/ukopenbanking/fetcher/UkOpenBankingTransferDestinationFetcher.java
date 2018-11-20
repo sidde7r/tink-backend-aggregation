@@ -21,7 +21,7 @@ import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 public class UkOpenBankingTransferDestinationFetcher implements TransferDestinationFetcher {
 
     // Whitelist source account types. Basically to avoid displaying credit cards as transfer sources.
-    private final ImmutableList<AccountTypes> SOURCE_ACCOUNT_TYPES = ImmutableList.<AccountTypes>builder()
+    private static final ImmutableList<AccountTypes> SOURCE_ACCOUNT_TYPES = ImmutableList.<AccountTypes>builder()
             .add(AccountTypes.CHECKING)
             .add(AccountTypes.SAVINGS)
             .build();
