@@ -25,7 +25,7 @@ import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 public class MultiSupplementalDemoAgent extends NextGenerationDemoAgent {
 
     public MultiSupplementalDemoAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+        super(request, context, signatureKeyPair, new MultiSupplementalAccountDefinition());
     }
 
     @Override

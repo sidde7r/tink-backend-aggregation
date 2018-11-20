@@ -27,13 +27,22 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
     private final NextGenerationDemoAuthenticator authenticator;
     //TODO Requires changes when multi-currency is implemented. Will do for now
     private final String currency;
+    private final DemoConstants accountDefinitions;
+    private final NextGenerationDemoTransactionFetcher transactionFetcher;
 
     public NextGenerationDemoAgent(CredentialsRequest request,
             AgentContext context,
-            SignatureKeyPair signatureKeyPair) {
+            SignatureKeyPair signatureKeyPair,
+            DemoConstants accountDefinitions) {
         super(request, context, signatureKeyPair);
         this.authenticator = new NextGenerationDemoAuthenticator(credentials);
         this.currency = request.getProvider().getCurrency();
+        this.accountDefinitions = accountDefinitions;
+        this.transactionFetcher =  new NextGenerationDemoTransactionFetcher(request.getAccounts(),
+                        currency,
+                        catalog,
+                        accountDefinitions.getTransactionalAccountDefinition(),
+                        accountDefinitions.getDemoSavingsDefinitions());
     }
 
     @Override
@@ -50,10 +59,8 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        return Optional.of(new TransactionalAccountRefreshController(metricRefreshController, updateController,
-                new NextGenerationDemoTransactionFetcher(request.getAccounts(), currency, catalog),
-                new TransactionFetcherController<>(transactionPaginationHelper,
-                        new NextGenerationDemoTransactionFetcher(request.getAccounts(), currency, catalog))));
+        return Optional.of(new TransactionalAccountRefreshController(metricRefreshController, updateController,transactionFetcher,
+                new TransactionFetcherController<>(transactionPaginationHelper, transactionFetcher)));
     }
 
     @Override
@@ -65,14 +72,14 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
         return Optional.of(new InvestmentRefreshController(metricRefreshController,
                 updateController,
-                new NextGenerationDemoInvestmentFetcher(currency)));
+                new NextGenerationDemoInvestmentFetcher(currency, accountDefinitions.getInvestmentDefinitions())));
     }
 
     @Override
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
         return Optional.of(new LoanRefreshController(metricRefreshController,
                 updateController,
-                new NextGenerationDemoLoanFetcher(currency, catalog)));
+                new NextGenerationDemoLoanFetcher(currency, catalog, accountDefinitions.getDemoLoanDefinitions())));
     }
 
     @Override

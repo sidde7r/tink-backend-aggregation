@@ -17,7 +17,7 @@ public class BankIdDemoAgent extends NextGenerationDemoAgent {
     public BankIdDemoAgent(CredentialsRequest request,
             AgentContext context,
             SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+        super(request, context, signatureKeyPair, new BankIdAccountDefinition());
         this.authenticator = new DemoBankIdAuthenticator(credentials, true);
     }
 
