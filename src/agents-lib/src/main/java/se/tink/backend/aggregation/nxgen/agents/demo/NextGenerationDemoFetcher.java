@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.core.Amount;
+import se.tink.backend.system.rpc.AccountFeatures;
 import se.tink.libraries.date.DateUtils;
 import static java.util.stream.Collectors.toList;
 
@@ -52,7 +53,8 @@ public class NextGenerationDemoFetcher
         try {
             File accountsFile = new File(BASE_PATH + File.separator + NextGenDemoConstants.ACCOUNT_FILE);
 
-            return DemoDataUtils.readAggregationAccounts(accountsFile, credentials).stream()
+            List<TransactionalAccount> collect = DemoDataUtils.readAggregationAccounts(accountsFile, credentials)
+                    .stream()
                     .filter(a -> TRANSACTIONAL_ACCOUNT_TYPES.contains(a.getType()))
                     .map(a -> {
                         TransactionalAccount.Builder builder = TransactionalAccount.builder(a.getType(),
@@ -65,6 +67,8 @@ public class NextGenerationDemoFetcher
 
                         return builder.build();
                     }).collect(toList());
+
+            return collect;
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
