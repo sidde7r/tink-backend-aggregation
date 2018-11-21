@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.framework.validation;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -9,16 +10,34 @@ import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.system.rpc.Transaction;
 
 public final class AisValidator {
-    private final Set<ValidationRule> rules;
-    private final Action action;
+    private final Set<AisDataRule> aisDataRules;
+    private final Set<AccountRule> accountRules;
+    private final Set<TransactionRule> transactionRules;
+
+    private final ValidationExecutor executor;
 
     private AisValidator(final AisValidator.Builder builder) {
-        rules = builder.rules;
-        action = builder.action;
+        aisDataRules = builder.aisDataRules;
+        accountRules = builder.accountRules;
+        transactionRules = builder.transactionRules;
+        executor = builder.executor;
     }
 
     public static Builder builder() {
         return new Builder();
+    }
+
+    /**
+     * @return A builder based on this instance. All mutable members from this instance are
+     *     deep-copied into the builder.
+     */
+    public Builder rebuilder() {
+        final Builder builder = new Builder();
+        builder.aisDataRules = new HashSet<>(aisDataRules);
+        builder.accountRules = new HashSet<>(accountRules);
+        builder.transactionRules = new HashSet<>(transactionRules);
+        builder.executor = executor;
+        return builder;
     }
 
     /**
@@ -34,42 +53,55 @@ public final class AisValidator {
     }
 
     public void validate(final AisData aisData) {
-        for (final ValidationRule rule : rules) {
-            validateWithRule(aisData, rule, action);
-        }
-    }
+        final ValidationResult result = ValidationResult.builder()
+                .addAisDataRules(aisDataRules)
+                .addAccountRules(accountRules)
+                .addTransactionRules(transactionRules)
+                .validate(aisData)
+                .build();
 
-    private static void validateWithRule(
-            final AisData aisData, final ValidationRule rule, final Action action) {
-        if (rule.getAccountCriterion() != null) {
-            for (final Account account : aisData.getAccounts()) {
-                if (rule.getAccountCriterion().test(account)) {
-                    action.onPass(account, rule.getRuleIdentifier());
-                } else {
-                    action.onFail(account, rule.getRuleIdentifier(), rule.getMessage(account));
-                }
-            }
-        }
-        if (rule.getAisDataCriterion() != null) {
-            if (rule.getAisDataCriterion().test(aisData)) {
-                action.onPass(aisData, rule.getRuleIdentifier());
-            } else {
-                action.onFail(aisData, rule.getRuleIdentifier(), rule.getMessage(aisData));
-            }
-        }
+        executor.execute(result);
     }
 
     public static final class Builder {
-        private Set<ValidationRule> rules = new HashSet<>();
-        private Action action = null;
+        private Set<AisDataRule> aisDataRules = new HashSet<>();
+        private Set<AccountRule> accountRules = new HashSet<>();
+        private Set<TransactionRule> transactionRules = new HashSet<>();
+
+        private ValidationExecutor executor;
 
         private Builder() {}
 
         public AisValidator build() {
-            if (action == null) {
-                action = new WarnAction();
+            if (executor == null) {
+                executor = new WarnExecutor();
             }
             return new AisValidator(this);
+        }
+
+        private <V> void checkForDuplicates(final ValidationRule<V> rule) {
+            // TODO checked exception alternative
+            final boolean accountDupes =
+                    accountRules
+                            .stream()
+                            .map(AccountRule::getRuleIdentifier)
+                            .anyMatch(id -> Objects.equals(id, rule.getRuleIdentifier()));
+            final boolean transactionDupes =
+                    transactionRules
+                            .stream()
+                            .map(TransactionRule::getRuleIdentifier)
+                            .anyMatch(id -> Objects.equals(id, rule.getRuleIdentifier()));
+            final boolean aisDataDupes =
+                    aisDataRules
+                            .stream()
+                            .map(AisDataRule::getRuleIdentifier)
+                            .anyMatch(id -> Objects.equals(id, rule.getRuleIdentifier()));
+            if (aisDataDupes || accountDupes || transactionDupes) {
+                throw new IllegalArgumentException(
+                        String.format(
+                                "A validation rule with identifier \"%s\" was already specified",
+                                rule.getRuleIdentifier()));
+            }
         }
 
         /**
@@ -86,7 +118,9 @@ public final class AisValidator {
                 final String ruleName,
                 final Predicate<AisData> criterion,
                 final Function<AisData, String> failMessage) {
-            rules.add(ValidationRule.fromAisData(ruleName, criterion, failMessage));
+            final AisDataRule rule = new AisDataRule(ruleName, criterion, failMessage);
+            checkForDuplicates(rule);
+            aisDataRules.add(new AisDataRule(ruleName, criterion, failMessage));
             return this;
         }
 
@@ -95,25 +129,42 @@ public final class AisValidator {
                 final Predicate<Account> criterion,
                 final Function<Account, String> failMessage) {
 
-            final ValidationRule rule =
-                    ValidationRule.fromAccount(ruleName, criterion, failMessage);
-            // TODO checked exception alternative
-            if (rules.contains(rule)) {
-                throw new IllegalArgumentException(
-                        String.format(
-                                "A validation rule with identifier \"%s\" was already specified",
-                                rule.getRuleIdentifier()));
-            }
-            rules.add(rule);
+            final AccountRule rule = new AccountRule(ruleName, criterion, failMessage);
+            checkForDuplicates(rule);
+            accountRules.add(rule);
             return this;
         }
 
+        /** Create a rule without supplying a fail message */
         public Builder ruleAccount(final String ruleName, final Predicate<Account> criterion) {
             return ruleAccount(ruleName, criterion, a -> "");
         }
 
-        public Builder setAction(final Action action) {
-            this.action = action;
+        public Builder ruleTransaction(
+                final String ruleName,
+                final Predicate<Transaction> criterion,
+                final Function<Transaction, String> failMessage) {
+            final TransactionRule rule = new TransactionRule(ruleName, criterion, failMessage);
+            checkForDuplicates(rule);
+            transactionRules.add(rule);
+            return this;
+        }
+
+        /** Create a rule without supplying a fail message */
+        public Builder ruleTransaction(
+                final String ruleName, final Predicate<Transaction> criterion) {
+            return ruleTransaction(ruleName, criterion, a -> "");
+        }
+
+        public Builder setExecutor(final ValidationExecutor executor) {
+            this.executor = executor;
+            return this;
+        }
+
+        public Builder disableRule(final String ruleIdentifier) {
+            aisDataRules.removeIf(rule -> Objects.equals(rule.getRuleIdentifier(), ruleIdentifier));
+            accountRules.removeIf(rule -> Objects.equals(rule.getRuleIdentifier(), ruleIdentifier));
+            transactionRules.removeIf(rule -> Objects.equals(rule.getRuleIdentifier(), ruleIdentifier));
             return this;
         }
     }
