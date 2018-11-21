@@ -224,8 +224,8 @@ public abstract class UkOpenBankingConstants {
 
         private static final ImmutableList<AccountBalanceType> PREFERRED_TYPE_LIST =
                 ImmutableList.<AccountBalanceType>builder()
-                        .add(INTERIM_AVAILABLE)
                         .add(INTERIM_BOOKED)
+                        .add(INTERIM_AVAILABLE)
                         .add(EXPECTED)
                         .add(OPENING_AVAILABLE)
                         .add(CLOSING_AVAILABLE)
