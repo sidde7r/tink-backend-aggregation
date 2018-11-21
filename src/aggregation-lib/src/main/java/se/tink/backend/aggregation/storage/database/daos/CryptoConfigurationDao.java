@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.storage.database.daos;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import java.util.Comparator;
 import java.util.List;
@@ -28,8 +29,13 @@ public class CryptoConfigurationDao {
     }
 
     public CryptoWrapper getCryptoWrapperOfClientName(String clientName) {
-        return CryptoWrapper.of(
-                ImmutableList.copyOf(
-                        cryptoConfigurationsRepository.findByCryptoConfigurationIdClientName(clientName)));
+        List<CryptoConfiguration> cryptoConfigurations = cryptoConfigurationsRepository
+                .findByCryptoConfigurationIdClientName(clientName);
+
+        Preconditions.checkNotNull(cryptoConfigurations,
+                "Could not find cryptoConfiguration for clientName " + clientName);
+        Preconditions.checkArgument(cryptoConfigurations.isEmpty(),
+                "Could not find cryptoConfigurations for clientName " + clientName);
+        return CryptoWrapper.of(ImmutableList.copyOf(cryptoConfigurations);
     }
 }
