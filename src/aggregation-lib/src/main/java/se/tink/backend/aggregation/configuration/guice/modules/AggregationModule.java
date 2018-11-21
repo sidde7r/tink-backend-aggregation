@@ -8,13 +8,11 @@ import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAg
 import se.tink.backend.aggregation.api.AggregationService;
 import se.tink.backend.aggregation.api.CreditSafeService;
 import se.tink.backend.aggregation.cluster.jersey.JerseyClientProvider;
-import se.tink.backend.aggregation.cluster.jersey.JerseyClusterInfoProvider;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.storage.database.providers.AggregatorInfoProvider;
 import se.tink.backend.aggregation.storage.database.providers.ClientConfigurationProvider;
 import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperProvider;
 import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
-import se.tink.backend.aggregation.storage.database.providers.ClusterInfoProvider;
 import se.tink.backend.aggregation.log.AggregationLoggerRequestFilter;
 import se.tink.backend.aggregation.resources.AggregationServiceResource;
 import se.tink.backend.aggregation.resources.CreditSafeServiceResource;
@@ -41,7 +39,6 @@ public class AggregationModule extends AbstractModule {
     protected void configure() {
         bind(AggregationControllerAggregationClient.class).in(Scopes.SINGLETON);
         bind(AgentWorker.class).in(Scopes.SINGLETON);
-        bind(ClusterInfoProvider.class).in(Scopes.SINGLETON);
 
         if (Objects.nonNull(configuration.getS3StorageConfiguration()) &&
                 configuration.getS3StorageConfiguration().isEnabled()) {
@@ -70,7 +67,6 @@ public class AggregationModule extends AbstractModule {
                 .addResponseFilters(AccessLoggingFilter.class, RequestTracingFilter.class)
                 //This is not a resource, but a provider
                 .addResources(
-                        JerseyClusterInfoProvider.class,
                         AggregationService.class,
                         CreditSafeService.class,
                         JerseyClientProvider.class

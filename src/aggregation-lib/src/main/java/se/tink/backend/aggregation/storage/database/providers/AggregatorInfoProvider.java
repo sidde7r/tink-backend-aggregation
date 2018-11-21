@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.storage.database.providers;
 
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import se.tink.backend.aggregation.api.AggregatorInfo;
-import se.tink.backend.aggregation.cluster.exceptions.ClientNotValid;
-import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.storage.database.converter.AggregatorConverter;
 import se.tink.backend.aggregation.storage.database.models.AggregatorConfiguration;
 
@@ -20,13 +20,13 @@ public class AggregatorInfoProvider {
         this.aggregatorConfigurations = aggregatorConfigurations;
     }
 
-    // using clusterInfo to get aggregator in current single client environment
-    public AggregatorInfo createAggregatorInfoFor(ClusterInfo clusterInfo) {
-        return AggregatorConverter.convert(clusterInfo.getAggregator());
-    }
-
     // using aggregatorId (UUID) to get aggregator in multi client environment
     public AggregatorInfo createAggregatorInfoFor(String aggregatorId) {
-        return AggregatorConverter.convert(aggregatorConfigurations.get(aggregatorId));
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(aggregatorId),
+                "Aggregator Id cannot be null or empty.");
+        AggregatorConfiguration aggregatorConfiguration = aggregatorConfigurations.get(aggregatorId);
+        Preconditions.checkNotNull(aggregatorConfiguration,
+                "Could not find aggregator configuration for aggregatorId %s.", aggregatorId);
+        return AggregatorConverter.convert(aggregatorConfiguration);
     }
 }

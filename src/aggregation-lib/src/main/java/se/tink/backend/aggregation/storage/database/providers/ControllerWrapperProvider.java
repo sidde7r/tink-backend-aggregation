@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.storage.database.providers;
 
+import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
-import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.storage.database.converter.HostConfigurationConverter;
 import se.tink.backend.aggregation.storage.database.models.ClusterConfiguration;
 
@@ -27,13 +28,15 @@ public class ControllerWrapperProvider {
         this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
     }
 
-    public ControllerWrapper createControllerWrapper(ClusterInfo clusterInfo) {
-        String clusterId = clusterInfo.getClusterId().getId();
-        return createControllerWrapper(clusterId);
-    }
-
     public ControllerWrapper createControllerWrapper(String clusterId) {
+
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(clusterId),
+                "Received an empty or null clusterId.");
+
+        ClusterConfiguration clusterConfiguration = clusterConfigurations.get(clusterId);
+        Preconditions.checkNotNull(clusterConfiguration, "Could not find clusterConfiguration for clusterId: %s.", clusterId);
+
         return ControllerWrapper.of(aggregationControllerAggregationClient,
-                HostConfigurationConverter.convert(clusterConfigurations.get(clusterId)));
+                HostConfigurationConverter.convert(clusterConfiguration));
     }
 }

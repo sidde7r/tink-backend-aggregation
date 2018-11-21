@@ -2,39 +2,28 @@ package se.tink.backend.aggregation.queue.models;
 
 import java.util.Map;
 import org.slf4j.MDC;
-import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
-import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 
 public class RefreshInformation {
 
     private RefreshInformationRequest request;
 
-    private String aggregationControllerHost;
-    private String apiToken;
-    private byte[] clientCertificate;
-    private boolean disableRequestCompression;
+    private String clientName;
+    private String aggregatorId;
+    private String clusterId;
     private Map<String, String> context;
-
-    private String name;
-    private String environment;
-    private Aggregator aggregator;
 
     public RefreshInformation() {
     }
 
-    public RefreshInformation(RefreshInformationRequest request, ClusterInfo clusterInfo, ClientInfo clientInfo) {
+    public RefreshInformation(RefreshInformationRequest request, ClientInfo clientInfo) {
         this.request = request;
-        this.aggregationControllerHost = clusterInfo.getAggregationControllerHost();
-        this.apiToken = clusterInfo.getApiToken();
-        this.clientCertificate = clusterInfo.getClientCertificate();
-        this.disableRequestCompression = clusterInfo.isDisableRequestCompression();
-        this.name = clusterInfo.getClusterId().getName();
-        this.environment = clusterInfo.getClusterId().getEnvironment();
-        this.aggregator = clusterInfo.getAggregator();
+
         this.context = MDC.getCopyOfContextMap();
-        // todo: use clientInfo
+        this.clientName = clientInfo.getClientName();
+        this.aggregatorId = clientInfo.getAggregatorId();
+        this.clusterId = clientInfo.getClusterId();
     }
 
     public RefreshInformationRequest getRequest() {
@@ -45,60 +34,28 @@ public class RefreshInformation {
         this.request = request;
     }
 
-    public String getAggregationControllerHost() {
-        return aggregationControllerHost;
+    public String getClientName() {
+        return clientName;
     }
 
-    public void setAggregationControllerHost(String aggregationControllerHost) {
-        this.aggregationControllerHost = aggregationControllerHost;
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
     }
 
-    public String getApiToken() {
-        return apiToken;
+    public String getAggregatorId() {
+        return aggregatorId;
     }
 
-    public void setApiToken(String apiToken) {
-        this.apiToken = apiToken;
+    public void setAggregatorId(String aggregatorId) {
+        this.aggregatorId = aggregatorId;
     }
 
-    public byte[] getClientCertificate() {
-        return clientCertificate;
+    public String getClusterId() {
+        return clusterId;
     }
 
-    public void setClientCertificate(byte[] clientCertificate) {
-        this.clientCertificate = clientCertificate;
-    }
-
-    public boolean isDisableRequestCompression() {
-        return disableRequestCompression;
-    }
-
-    public void setDisableRequestCompression(boolean disableRequestCompression) {
-        this.disableRequestCompression = disableRequestCompression;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEnvironment() {
-        return environment;
-    }
-
-    public void setEnvironment(String environment) {
-        this.environment = environment;
-    }
-
-    public Aggregator getAggregator() {
-        return aggregator;
-    }
-
-    public void setAggregator(Aggregator aggregator) {
-        this.aggregator = aggregator;
+    public void setClusterId(String clusterId) {
+        this.clusterId = clusterId;
     }
 
     public void setMDCContext(Map<String, String> context){

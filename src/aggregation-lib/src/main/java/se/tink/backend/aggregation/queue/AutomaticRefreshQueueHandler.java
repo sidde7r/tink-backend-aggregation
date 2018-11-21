@@ -5,8 +5,7 @@ import java.util.concurrent.RejectedExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import se.tink.backend.aggregation.cluster.identification.ClusterId;
-import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
+import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.queue.models.RefreshInformation;
 import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.backend.aggregation.workers.AgentWorkerOperationFactory;
@@ -46,16 +45,11 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
             AgentWorkerRefreshOperationCreatorWrapper agentWorkerRefreshOperationCreatorWrapper = AgentWorkerRefreshOperationCreatorWrapper.of(
                     agentWorkerCommandFactory,
                     refreshInformation.getRequest(),
-                    ClusterInfo.createForAggregationCluster(
-                            ClusterId.of(refreshInformation.getName(), refreshInformation.getEnvironment()),
-                            refreshInformation.getAggregationControllerHost(),
-                            refreshInformation.getApiToken(),
-                            refreshInformation.getClientCertificate(),
-                            refreshInformation.isDisableRequestCompression(),
-                            refreshInformation.getAggregator()),
-                    null);
-
-            // FIXME: do not pass null clientInfo
+                    ClientInfo.of(
+                            refreshInformation.getClientName(),
+                            refreshInformation.getClusterId(),
+                            refreshInformation.getAggregatorId()
+                    ));
 
             MDC.setContextMap(refreshInformation.getMDCContext());
             agentWorker.executeAutomaticRefresh(agentWorkerRefreshOperationCreatorWrapper);
