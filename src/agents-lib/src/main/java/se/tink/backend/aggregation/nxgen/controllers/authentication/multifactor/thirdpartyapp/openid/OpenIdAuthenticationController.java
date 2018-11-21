@@ -66,17 +66,22 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
     public void autoAuthenticate() throws SessionException, BankServiceException {
         OAuth2Token accessToken = persistentStorage.get(OpenIdConstants.PersistentStorageKeys.ACCESS_TOKEN,
                 OAuth2Token.class)
-                .orElseThrow(SessionError.SESSION_EXPIRED::exception);
+                .orElseThrow(() -> {
+                    log.warn("Failed to retrieve access token.");
+                    return SessionError.SESSION_EXPIRED.exception();
+                });
 
         if (accessToken.hasAccessExpired()) {
             if (!accessToken.canRefresh()) {
+                log.info("Access and refresh token expired.");
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
-            log.info(String.format("Trying to refresh access token. Issued: [%s] Access Expires: [%s] RefreshNull: [%b] Refresh Expires: [%s]",
+            log.info(String.format(
+                    "Trying to refresh access token. Issued: [%s] Access Expires: [%s] HasRefresh: [%b] Refresh Expires: [%s]",
                     new Date(accessToken.getIssuedAt() * 1000),
                     new Date(accessToken.getAccessExpireEpoch() * 1000),
-                    accessToken.isRefreshNullOrEmpty(),
+                    !accessToken.isRefreshNullOrEmpty(),
                     accessToken.hasRefreshExpire() ? new Date(accessToken.getRefreshExpireEpoch() * 1000) : "N/A"));
 
             // Refresh token is not always present, if it's absent we fall back to the manual authentication again.
@@ -96,7 +101,12 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
-            log.info("Refresh success.");
+            log.info(String.format(
+                    "Refresh success. New token: Access Expires: [%s] HasRefresh: [%b] Refresh Expires: [%s]",
+                    new Date(accessToken.getAccessExpireEpoch() * 1000),
+                    !accessToken.isRefreshNullOrEmpty(),
+                    accessToken.hasRefreshExpire() ? new Date(accessToken.getRefreshExpireEpoch() * 1000) : "N/A"));
+
             // Store the new accessToken on the persistent storage again.
             persistentStorage.put(OpenIdConstants.PersistentStorageKeys.ACCESS_TOKEN, accessToken);
 
