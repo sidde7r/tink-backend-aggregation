@@ -2,9 +2,7 @@ package se.tink.backend.aggregation.queue.models;
 
 import java.util.Map;
 import org.slf4j.MDC;
-import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
-import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 
 public class RefreshInformation {

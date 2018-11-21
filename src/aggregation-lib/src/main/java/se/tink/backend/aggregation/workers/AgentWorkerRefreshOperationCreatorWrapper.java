@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.workers;
 
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
-import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 
