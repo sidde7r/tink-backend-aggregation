@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.nxgen.agents.demo.definitions;
 
-public interface DemoLoanAccountDefinition {
+public interface DemoLoanAccount {
     String getMortgageId();
     String getBlancoId();
     String getMortgageLoanName();

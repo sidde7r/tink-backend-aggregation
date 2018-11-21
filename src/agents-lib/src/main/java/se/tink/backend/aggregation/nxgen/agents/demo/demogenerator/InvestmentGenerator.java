@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
-import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoInvestmentAccountDefinition;
+import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoInvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
 import se.tink.backend.core.Amount;
 import se.tink.backend.system.rpc.Instrument;
@@ -12,7 +12,7 @@ import se.tink.backend.system.rpc.Portfolio;
 
 public class InvestmentGenerator {
 
-    public static Collection<InvestmentAccount> fetchInvestmentAccounts(String currency, DemoInvestmentAccountDefinition accountDefinition) {
+    public static Collection<InvestmentAccount> fetchInvestmentAccounts(String currency, DemoInvestmentAccount accountDefinition) {
         List<InvestmentAccount> investmentAccounts = new ArrayList<>();
         investmentAccounts.add(
                 InvestmentAccount.builder(accountDefinition.getAccountId())

@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Collection;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
-import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoLoanAccountDefinition;
+import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoLoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.LoanDetails;
 import se.tink.backend.core.Amount;
@@ -13,7 +13,7 @@ import se.tink.libraries.i18n.Catalog;
 public class LoanGenerator {
 
 
-    public static Collection<LoanAccount> fetchLoanAccounts(String currency, Catalog catalog, DemoLoanAccountDefinition accountDefinition) {
+    public static Collection<LoanAccount> fetchLoanAccounts(String currency, Catalog catalog, DemoLoanAccount accountDefinition) {
         ArrayList<LoanAccount> loanAccounts = Lists.newArrayList();
 
         loanAccounts.add(LoanAccount.builder(accountDefinition.getMortgageId(),

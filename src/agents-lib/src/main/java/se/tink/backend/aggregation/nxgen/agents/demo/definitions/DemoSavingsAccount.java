@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.nxgen.agents.demo.definitions;
 
-public interface DemoTransactionAccountDefinition {
+public interface DemoSavingsAccount {
     String getAccountId();
     String getAccountName();
-    double getBalance();
+    double getAccountBalance();
 }

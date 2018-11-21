@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.nxgen.agents.demo.fetchers;
 
 import java.util.Collection;
 import se.tink.backend.aggregation.nxgen.agents.demo.demogenerator.InvestmentGenerator;
-import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoInvestmentAccountDefinition;
+import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoInvestmentAccount;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
@@ -13,9 +13,9 @@ public class NextGenerationDemoInvestmentFetcher implements AccountFetcher<Inves
         TransactionPaginator<InvestmentAccount> {
 
     private String currency;
-    private DemoInvestmentAccountDefinition accountDefinition;
+    private DemoInvestmentAccount accountDefinition;
 
-    public NextGenerationDemoInvestmentFetcher(String currency, DemoInvestmentAccountDefinition accountDefinition) {
+    public NextGenerationDemoInvestmentFetcher(String currency, DemoInvestmentAccount accountDefinition) {
         this.currency = currency;
         this.accountDefinition = accountDefinition;
     }

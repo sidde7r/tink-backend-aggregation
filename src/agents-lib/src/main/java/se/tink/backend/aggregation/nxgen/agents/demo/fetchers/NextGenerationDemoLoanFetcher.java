@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.nxgen.agents.demo.fetchers;
 
 import java.util.Collection;
 import se.tink.backend.aggregation.nxgen.agents.demo.demogenerator.LoanGenerator;
-import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoLoanAccountDefinition;
+import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoLoanAccount;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
@@ -14,9 +14,9 @@ import se.tink.libraries.i18n.Catalog;
 public class NextGenerationDemoLoanFetcher  implements AccountFetcher<LoanAccount>, TransactionPaginator<LoanAccount> {
     private final String currency;
     private final Catalog catalog;
-    private final DemoLoanAccountDefinition accountDefinition;
+    private final DemoLoanAccount accountDefinition;
 
-    public NextGenerationDemoLoanFetcher(String currency, Catalog catalog, DemoLoanAccountDefinition accountDefinition) {
+    public NextGenerationDemoLoanFetcher(String currency, Catalog catalog, DemoLoanAccount accountDefinition) {
         this.currency = currency;
         this.catalog = catalog;
         this.accountDefinition = accountDefinition;

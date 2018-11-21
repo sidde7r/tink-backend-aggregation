@@ -8,8 +8,8 @@ import java.util.Optional;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
 import se.tink.backend.aggregation.nxgen.agents.demo.demogenerator.PurchaseHistoryGenerator;
 import se.tink.backend.aggregation.nxgen.agents.demo.demogenerator.TransactionalAccountGenerator;
-import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoSavingsAccountDefinition;
-import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoTransactionAccountDefinition;
+import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoSavingsAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoTransactionAccount;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
@@ -30,13 +30,13 @@ public class NextGenerationDemoTransactionFetcher
     private final PurchaseHistoryGenerator purchaseHistoryGenerator;
     private final String currency;
     private final Catalog catalog;
-    private final DemoTransactionAccountDefinition transactionAccountDefinition;
-    private final DemoSavingsAccountDefinition savingsAccountDefinition;
+    private final DemoTransactionAccount transactionAccountDefinition;
+    private final DemoSavingsAccount savingsAccountDefinition;
 
     public NextGenerationDemoTransactionFetcher(List<Account> accounts, String currency,
             Catalog catalog,
-            DemoTransactionAccountDefinition transactionAccountDefinition,
-            DemoSavingsAccountDefinition savingsAccountDefinition) {
+            DemoTransactionAccount transactionAccountDefinition,
+            DemoSavingsAccount savingsAccountDefinition) {
         this.accounts = accounts;
         this.purchaseHistoryGenerator = new PurchaseHistoryGenerator(BASE_PATH);
         this.currency = currency;

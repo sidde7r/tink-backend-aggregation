@@ -1,19 +1,24 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.bankid;
 
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
-import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoInvestmentAccountDefinition;
-import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoLoanAccountDefinition;
-import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoSavingsAccountDefinition;
-import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoTransactionAccountDefinition;
+import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoInvestmentAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoLoanAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoSavingsAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoTransactionAccount;
 
 public class BankIdAccountDefinition extends DemoConstants {
 
     @Override
-    public DemoInvestmentAccountDefinition getInvestmentDefinitions() {
-        return new DemoInvestmentAccountDefinition() {
+    public DemoInvestmentAccount getInvestmentDefinitions() {
+        return new DemoInvestmentAccount() {
             @Override
             public String getAccountId() {
                 return "9999-444444444444";
+            }
+
+            @Override
+            public String getName() {
+                return "Investment";
             }
 
             @Override
@@ -24,8 +29,8 @@ public class BankIdAccountDefinition extends DemoConstants {
     }
 
     @Override
-    public DemoSavingsAccountDefinition getDemoSavingsDefinitions() {
-        return new DemoSavingsAccountDefinition() {
+    public DemoSavingsAccount getDemoSavingsDefinitions() {
+        return new DemoSavingsAccount() {
             @Override
             public String getAccountId() {
                 return "9999-222222222222";
@@ -44,8 +49,8 @@ public class BankIdAccountDefinition extends DemoConstants {
     }
 
     @Override
-    public DemoLoanAccountDefinition getDemoLoanDefinitions() {
-        return new DemoLoanAccountDefinition() {
+    public DemoLoanAccount getDemoLoanDefinitions() {
+        return new DemoLoanAccount() {
             @Override
             public String getMortgageId() {
                 return "9999-333333333333";
@@ -89,8 +94,8 @@ public class BankIdAccountDefinition extends DemoConstants {
     }
 
     @Override
-    public DemoTransactionAccountDefinition getTransactionalAccountDefinition() {
-        return new DemoTransactionAccountDefinition() {
+    public DemoTransactionAccount getTransactionalAccountDefinition() {
+        return new DemoTransactionAccount() {
             @Override
             public String getAccountId() {
                 return "9999-111111111111";
