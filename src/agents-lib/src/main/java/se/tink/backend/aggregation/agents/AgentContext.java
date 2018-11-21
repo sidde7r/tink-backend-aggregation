@@ -39,16 +39,6 @@ public abstract class AgentContext {
         this.clusterId = clusterId;
     }
 
-    public HostConfiguration getHostConfiguration() {
-        return hostConfiguration;
-    }
-
-    public void setHostConfiguration(HostConfiguration hostConfiguration) {
-        this.hostConfiguration = hostConfiguration;
-    }
-
-    private HostConfiguration hostConfiguration;
-
     public abstract MetricRegistry getMetricRegistry();
 
     public ByteArrayOutputStream getLogOutputStream() {
