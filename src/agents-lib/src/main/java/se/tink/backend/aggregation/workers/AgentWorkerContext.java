@@ -71,9 +71,9 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     protected ControllerWrapper controllerWrapper;
 
     public AgentWorkerContext(CredentialsRequest request, MetricRegistry metricRegistry,
-            CuratorFramework coordinationClient, AggregatorInfo aggregatorInfo,
-            SupplementalInformationController supplementalInformationController,
-            ControllerWrapper controllerWrapper) {
+                              CuratorFramework coordinationClient, AggregatorInfo aggregatorInfo,
+                              SupplementalInformationController supplementalInformationController,
+                              ControllerWrapper controllerWrapper, String clusterId) {
 
         this.allAvailableAccountsByUniqueId = Maps.newHashMap();
         this.updatedAccountsByTinkId = Maps.newHashMap();
@@ -84,7 +84,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         // _Not_ instanciating a SystemService from the ServiceFactory here.
         this.coordinationClient = coordinationClient;
 
-        setClusterId(controllerWrapper.getHostConfiguration().getClusterId());
+        setClusterId(clusterId);
         setAggregatorInfo(aggregatorInfo);
 
         if (request.getUser() != null) {

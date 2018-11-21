@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -66,7 +65,8 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
             AggregatorInfo aggregatorInfo,
             SupplementalInformationController supplementalInformationController,
             ControllerWrapper controllerWrapper) {
-        super(request, metricRegistry, coordinationClient, aggregatorInfo, supplementalInformationController, controllerWrapper);
+        super(request, metricRegistry, coordinationClient, aggregatorInfo, supplementalInformationController,
+                controllerWrapper, controllerWrapper.getHostConfiguration().getClusterId());
         this.coordinationClient = coordinationClient;
         this.timePutOnQueue = System.currentTimeMillis();
         this.uniqueIdOfUserSelectedAccounts = Lists.newArrayList();
