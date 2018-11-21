@@ -37,14 +37,14 @@ public interface AggregationService {
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Credentials createCredentials(CreateCredentialsRequest request, @ClusterContext ClusterInfo clusterInfo, @ClientContext ClientInfo clientInfo);
+    Credentials createCredentials(CreateCredentialsRequest request, @ClientContext ClientInfo clientInfo);
 
     @POST
     @Path("delete")
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    void deleteCredentials(DeleteCredentialsRequest request, @ClusterContext ClusterInfo clusterInfo, @ClientContext ClientInfo clientInfo);
+    void deleteCredentials(DeleteCredentialsRequest request, @ClientContext ClientInfo clientInfo);
 
     @GET
     @Path("ping")
@@ -58,49 +58,49 @@ public interface AggregationService {
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    void configureWhitelistInformation(ConfigureWhitelistInformationRequest request, @ClusterContext ClusterInfo clusterInfo, @ClientContext ClientInfo clientInfo) throws Exception;
+    void configureWhitelistInformation(ConfigureWhitelistInformationRequest request, @ClientContext ClientInfo clientInfo) throws Exception;
 
     @POST
     @Path("refresh/whitelist")
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    void refreshWhitelistInformation(RefreshWhitelistInformationRequest request, @ClusterContext ClusterInfo clusterInfo, @ClientContext ClientInfo clientInfo) throws Exception;
+    void refreshWhitelistInformation(RefreshWhitelistInformationRequest request, @ClientContext ClientInfo clientInfo) throws Exception;
 
     @POST
     @Path("refresh")
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    void refreshInformation(RefreshInformationRequest request, @ClusterContext ClusterInfo clusterInfo, @ClientContext ClientInfo clientInfo) throws Exception;
+    void refreshInformation(RefreshInformationRequest request, @ClientContext ClientInfo clientInfo) throws Exception;
 
     @POST
     @Path("transfer")
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    void transfer(TransferRequest request, @ClusterContext ClusterInfo clusterInfo, @ClientContext ClientInfo clientInfo) throws Exception;
+    void transfer(TransferRequest request, @ClientContext ClientInfo clientInfo) throws Exception;
 
     @POST
     @Path("transfer/whitelist")
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    void whitelistedTransfer(WhitelistedTransferRequest request, @ClusterContext ClusterInfo clusterInfo, @ClientContext ClientInfo clientInfo) throws Exception;
+    void whitelistedTransfer(WhitelistedTransferRequest request, @ClientContext ClientInfo clientInfo) throws Exception;
 
     @POST
     @Path("keepalive")
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    void keepAlive(KeepAliveRequest request, @ClusterContext ClusterInfo clusterInfo, @ClientContext ClientInfo clientInfo) throws Exception;
+    void keepAlive(KeepAliveRequest request, @ClientContext ClientInfo clientInfo) throws Exception;
 
     @PUT
     @Path("update")
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Credentials updateCredentials(UpdateCredentialsRequest request, @ClusterContext ClusterInfo clusterInfo, @ClientContext ClientInfo clientInfo);
+    Credentials updateCredentials(UpdateCredentialsRequest request, @ClientContext ClientInfo clientInfo);
 
     @POST
     @Path("rateLimits/auto")
@@ -121,5 +121,5 @@ public interface AggregationService {
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response reEncryptCredentials(ReEncryptCredentialsRequest request, @ClusterContext ClusterInfo clusterInfo, @ClientContext ClientInfo clientInfo);
+    Response reEncryptCredentials(ReEncryptCredentialsRequest request, @ClientContext ClientInfo clientInfo);
 }

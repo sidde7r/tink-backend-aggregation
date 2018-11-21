@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.api.AggregationService;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
-import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.queue.models.RefreshInformation;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
@@ -64,7 +63,7 @@ public class AggregationServiceResource implements AggregationService {
 
 
     @Override
-    public Credentials createCredentials(CreateCredentialsRequest request, ClusterInfo clusterInfo, ClientInfo clientInfo) {
+    public Credentials createCredentials(CreateCredentialsRequest request, ClientInfo clientInfo) {
         AgentWorkerOperation createCredentialsOperation = agentWorkerCommandFactory
                 .createCreateCredentialsOperation(request, clientInfo);
 
@@ -77,7 +76,7 @@ public class AggregationServiceResource implements AggregationService {
 
     // TODO: Remove this endpoint when it's not available through the aggregation controller anymore.
     @Override
-    public void deleteCredentials(DeleteCredentialsRequest request, ClusterInfo clusterInfo, ClientInfo clientInfo) {
+    public void deleteCredentials(DeleteCredentialsRequest request, ClientInfo clientInfo) {
         HttpResponseHelper.ok();
     }
 
@@ -92,7 +91,7 @@ public class AggregationServiceResource implements AggregationService {
 
     @Override
     public void configureWhitelistInformation(final ConfigureWhitelistInformationRequest request,
-            ClusterInfo clusterInfo, ClientInfo clientInfo) throws Exception {
+            ClientInfo clientInfo) throws Exception {
         Set<RefreshableItem> itemsToRefresh = request.getItemsToRefresh();
 
         // If the caller don't set any refreshable items, we won't do a refresh
@@ -105,16 +104,11 @@ public class AggregationServiceResource implements AggregationService {
             HttpResponseHelper.error(Response.Status.BAD_REQUEST);
         }
 
-        // If the caller don't set a cluster id or if it's invalid, we don't do a refresh
-        if (Objects.isNull(clusterInfo.getClusterId()) || !clusterInfo.getClusterId().isValidId()) {
-            HttpResponseHelper.error(Response.Status.BAD_REQUEST);
-        }
-
         agentWorker.execute(agentWorkerCommandFactory.createConfigureWhitelistOperation(request, clientInfo));
     }
 
     @Override
-    public void refreshWhitelistInformation(final RefreshWhitelistInformationRequest request, ClusterInfo clusterInfo, ClientInfo clientInfo)
+    public void refreshWhitelistInformation(final RefreshWhitelistInformationRequest request, ClientInfo clientInfo)
             throws Exception {
         // If the caller don't set any accounts to refresh, we won't do a refresh.
         if (Objects.isNull(request.getAccounts()) || request.getAccounts().isEmpty()) {
@@ -133,16 +127,11 @@ public class AggregationServiceResource implements AggregationService {
             HttpResponseHelper.error(Response.Status.BAD_REQUEST);
         }
 
-        // If the caller don't set a cluster id or if it's invalid, we don't do a refresh
-        if (Objects.isNull(clusterInfo.getClusterId()) || !clusterInfo.getClusterId().isValidId()) {
-            HttpResponseHelper.error(Response.Status.BAD_REQUEST);
-        }
-
         agentWorker.execute(agentWorkerCommandFactory.createWhitelistRefreshOperation(request, clientInfo));
     }
 
     @Override
-    public void refreshInformation(final RefreshInformationRequest request, ClusterInfo clusterInfo, ClientInfo clientInfo) throws Exception {
+    public void refreshInformation(final RefreshInformationRequest request, ClientInfo clientInfo) throws Exception {
         if (request.isManual()) {
             agentWorker.execute(agentWorkerCommandFactory.createRefreshOperation(request, clientInfo));
         } else {
@@ -155,22 +144,22 @@ public class AggregationServiceResource implements AggregationService {
     }
 
     @Override
-    public void transfer(final TransferRequest request, ClusterInfo clusterInfo, ClientInfo clientInfo) throws Exception {
+    public void transfer(final TransferRequest request, ClientInfo clientInfo) throws Exception {
         agentWorker.execute(agentWorkerCommandFactory.createExecuteTransferOperation(request, clientInfo));
     }
 
     @Override
-    public void whitelistedTransfer(final WhitelistedTransferRequest request, ClusterInfo clusterInfo, ClientInfo clientInfo) throws Exception {
+    public void whitelistedTransfer(final WhitelistedTransferRequest request, ClientInfo clientInfo) throws Exception {
         agentWorker.execute(agentWorkerCommandFactory.createExecuteWhitelistedTransferOperation(request, clientInfo));
     }
 
     @Override
-    public void keepAlive(KeepAliveRequest request, ClusterInfo clusterInfo, ClientInfo clientInfo) throws Exception {
+    public void keepAlive(KeepAliveRequest request, ClientInfo clientInfo) throws Exception {
         agentWorker.execute(agentWorkerCommandFactory.createKeepAliveOperation(request, clientInfo));
     }
 
     @Override
-    public Credentials updateCredentials(UpdateCredentialsRequest request, ClusterInfo clusterInfo, ClientInfo clientInfo) {
+    public Credentials updateCredentials(UpdateCredentialsRequest request, ClientInfo clientInfo) {
         AgentWorkerOperation updateCredentialsOperation = agentWorkerCommandFactory
                 .createUpdateOperation(request, clientInfo);
 
@@ -201,7 +190,7 @@ public class AggregationServiceResource implements AggregationService {
 
     @Override
     public Response reEncryptCredentials(ReEncryptCredentialsRequest reencryptCredentialsRequest,
-            ClusterInfo clusterInfo,  ClientInfo clientInfo) {
+            ClientInfo clientInfo) {
         try {
             agentWorker.execute(agentWorkerCommandFactory
                     .createReEncryptCredentialsOperation(reencryptCredentialsRequest, clientInfo));
