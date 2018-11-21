@@ -84,7 +84,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         // _Not_ instanciating a SystemService from the ServiceFactory here.
         this.coordinationClient = coordinationClient;
 
-        setHostConfiguration(controllerWrapper.getHostConfiguration());
+        setClusterId(controllerWrapper.getHostConfiguration().getClusterId());
         setAggregatorInfo(aggregatorInfo);
 
         if (request.getUser() != null) {
