@@ -147,9 +147,9 @@ public class AggregationServiceResource implements AggregationService {
             agentWorker.execute(agentWorkerCommandFactory.createRefreshOperation(request, clientInfo));
         } else {
             if (producer.isAvailable()) {
-                producer.send(new RefreshInformation(request, clusterInfo, clientInfo));
+                producer.send(new RefreshInformation(request, clientInfo));
             } else {
-                agentWorker.executeAutomaticRefresh(AgentWorkerRefreshOperationCreatorWrapper.of(agentWorkerCommandFactory, request, clusterInfo, clientInfo));
+                agentWorker.executeAutomaticRefresh(AgentWorkerRefreshOperationCreatorWrapper.of(agentWorkerCommandFactory, request, clientInfo));
             }
         }
     }
