@@ -23,7 +23,7 @@ public class AggregatorInfoProvider {
     public AggregatorInfo createAggregatorInfoFor(String aggregatorId) {
         AggregatorConfiguration aggregatorConfiguration = aggregatorConfigurations.get(aggregatorId);
         Preconditions.checkNotNull(aggregatorConfiguration,
-                "Could not find aggregator configuration for aggregatorId %s.",aggregatorId);
+                "Could not find aggregator configuration for aggregatorId %s.", aggregatorId);
         return AggregatorConverter.convert(aggregatorConfiguration);
     }
 }
