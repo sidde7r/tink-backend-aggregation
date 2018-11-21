@@ -238,7 +238,7 @@ public class AgentWorkerOperationFactory {
                 coordinationClient,
                 agentsServiceConfiguration,
                 aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo), supplementalInformationController,
-                controllerWrapper);
+                controllerWrapper, clientInfo.getClusterId());
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
@@ -277,7 +277,7 @@ public class AgentWorkerOperationFactory {
                 coordinationClient,
                 agentsServiceConfiguration,
                 aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo), supplementalInformationController,
-                controllerWrapper);
+                controllerWrapper, clientInfo.getClusterId() );
 
         String operationName = "execute-transfer";
 
@@ -302,7 +302,7 @@ public class AgentWorkerOperationFactory {
                 coordinationClient,
                 agentsServiceConfiguration,
                 aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo), supplementalInformationController,
-                controllerWrapper);
+                controllerWrapper, clientInfo.getClusterId());
         context.setWhitelistRefresh(true);
 
         String operationName = "execute-whitelisted-transfer";
@@ -346,7 +346,7 @@ public class AgentWorkerOperationFactory {
                 coordinationClient,
                 agentsServiceConfiguration,
                 aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo), supplementalInformationController,
-                controllerWrapper);
+                controllerWrapper, clientInfo.getClusterId());
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
@@ -374,7 +374,7 @@ public class AgentWorkerOperationFactory {
                 coordinationClient,
                 agentsServiceConfiguration,
                 aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo), supplementalInformationController,
-                controllerWrapper);
+                controllerWrapper, clientInfo.getClusterId());
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
@@ -402,7 +402,7 @@ public class AgentWorkerOperationFactory {
                 coordinationClient,
                 agentsServiceConfiguration,
                 aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo), supplementalInformationController,
-                controllerWrapper);
+                controllerWrapper, clientInfo.getClusterId());
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
@@ -433,7 +433,7 @@ public class AgentWorkerOperationFactory {
                 coordinationClient,
                 agentsServiceConfiguration,
                 aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo),supplementalInformationController,
-                controllerWrapper);
+                controllerWrapper, clientInfo.getClusterId());
 
         CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
 
@@ -490,7 +490,7 @@ public class AgentWorkerOperationFactory {
                 coordinationClient,
                 agentsServiceConfiguration,
                 aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo), supplementalInformationController,
-                controllerWrapper);
+                controllerWrapper, clientInfo.getClusterId());
 
         context.setWhitelistRefresh(true);
 
@@ -544,7 +544,7 @@ public class AgentWorkerOperationFactory {
                 coordinationClient,
                 agentsServiceConfiguration,
                 aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo), supplementalInformationController,
-                controllerWrapper);
+                controllerWrapper, clientInfo.getClusterId());
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 

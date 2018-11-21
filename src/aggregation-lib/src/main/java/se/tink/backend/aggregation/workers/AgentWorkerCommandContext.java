@@ -59,14 +59,15 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
 
 
     public AgentWorkerCommandContext(CredentialsRequest request,
-            MetricRegistry metricRegistry,
-            CuratorFramework coordinationClient,
-            AgentsServiceConfiguration agentsServiceConfiguration,
-            AggregatorInfo aggregatorInfo,
-            SupplementalInformationController supplementalInformationController,
-            ControllerWrapper controllerWrapper) {
+                                     MetricRegistry metricRegistry,
+                                     CuratorFramework coordinationClient,
+                                     AgentsServiceConfiguration agentsServiceConfiguration,
+                                     AggregatorInfo aggregatorInfo,
+                                     SupplementalInformationController supplementalInformationController,
+                                     ControllerWrapper controllerWrapper,
+                                     String clusterId) {
         super(request, metricRegistry, coordinationClient, aggregatorInfo, supplementalInformationController,
-                controllerWrapper, controllerWrapper.getHostConfiguration().getClusterId());
+                controllerWrapper, clusterId);
         this.coordinationClient = coordinationClient;
         this.timePutOnQueue = System.currentTimeMillis();
         this.uniqueIdOfUserSelectedAccounts = Lists.newArrayList();
