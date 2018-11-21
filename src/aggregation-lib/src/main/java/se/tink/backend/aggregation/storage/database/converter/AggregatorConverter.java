@@ -10,7 +10,7 @@ public class AggregatorConverter {
 
     public static AggregatorInfo convert(AggregatorConfiguration aggregatorConfiguration) {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(aggregatorConfiguration.getAggregatorInfo()),
-                "Could not find aggregator identifier value for aggregator id "+aggregatorConfiguration.getAggregatorId()+".");
+                "Could not find aggregator identifier value for aggregator id %s.", aggregatorConfiguration.getAggregatorId());
         AggregatorInfo aggregatorInfo = new AggregatorInfo();
 
         aggregatorInfo.setAggregatorIdentifier(aggregatorConfiguration.getAggregatorInfo());

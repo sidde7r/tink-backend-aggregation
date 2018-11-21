@@ -33,9 +33,9 @@ public class CryptoConfigurationDao {
                 .findByCryptoConfigurationIdClientName(clientName);
 
         Preconditions.checkNotNull(cryptoConfigurations,
-                "Could not find cryptoConfiguration for clientName " + clientName);
-        Preconditions.checkArgument(cryptoConfigurations.isEmpty(),
-                "Could not find cryptoConfigurations for clientName " + clientName);
-        return CryptoWrapper.of(ImmutableList.copyOf(cryptoConfigurations);
+                "Could not find cryptoConfiguration for clientName %s.", clientName);
+        Preconditions.checkArgument(!cryptoConfigurations.isEmpty(),
+                "Could not find cryptoConfigurations for clientName %s.", clientName);
+        return CryptoWrapper.of(ImmutableList.copyOf(cryptoConfigurations));
     }
 }

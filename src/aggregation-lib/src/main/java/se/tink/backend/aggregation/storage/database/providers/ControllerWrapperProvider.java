@@ -34,7 +34,7 @@ public class ControllerWrapperProvider {
                 "Received an empty or null clusterId.");
 
         ClusterConfiguration clusterConfiguration = clusterConfigurations.get(clusterId);
-        Preconditions.checkNotNull(clusterConfiguration, "Could not find clusterConfiguration for clusterId: "+clusterId+".");
+        Preconditions.checkNotNull(clusterConfiguration, "Could not find clusterConfiguration for clusterId: %s.", clusterId);
 
         return ControllerWrapper.of(aggregationControllerAggregationClient,
                 HostConfigurationConverter.convert(clusterConfiguration));
