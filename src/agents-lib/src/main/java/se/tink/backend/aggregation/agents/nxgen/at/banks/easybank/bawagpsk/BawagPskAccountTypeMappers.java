@@ -39,8 +39,10 @@ public final class BawagPskAccountTypeMappers {
             return accountTypeFromCode;
         }
 
-        final Optional<AccountTypes> accountTypeFromCodeFallback = getFallbackMapper()
-                .translate(new BawagPskAccountTypeMappers.Product(productCode, productType));
+        final Optional<AccountTypes> accountTypeFromCodeFallback =
+                getFallbackMapper()
+                        .translate(
+                                new BawagPskAccountTypeMappers.Product(productCode, productType));
 
         if (accountTypeFromCodeFallback.isPresent()) {
             return accountTypeFromCodeFallback;
@@ -157,8 +159,22 @@ public final class BawagPskAccountTypeMappers {
                                     "B420",
                                     "B512",
                                     "B600")
-                            .put(AccountTypes.SAVINGS, "D256", "D263", "D264", "D267", "D270", "D272")
-                            .put(AccountTypes.CREDIT_CARD, "00BD", "00EC", "00EQ", "00ET", "00PD", "00PF")
+                            .put(
+                                    AccountTypes.SAVINGS,
+                                    "D256",
+                                    "D263",
+                                    "D264",
+                                    "D267",
+                                    "D270",
+                                    "D272")
+                            .put(
+                                    AccountTypes.CREDIT_CARD,
+                                    "00BD",
+                                    "00EC",
+                                    "00EQ",
+                                    "00ET",
+                                    "00PD",
+                                    "00PF")
                             .put(AccountTypes.LOAN, "S110", "S132")
                             .build();
         }
