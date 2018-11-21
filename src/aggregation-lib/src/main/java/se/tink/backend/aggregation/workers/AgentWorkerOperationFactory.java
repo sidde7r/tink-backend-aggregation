@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -17,7 +16,6 @@ import se.tink.backend.aggregation.agents.AgentClassFactory;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
-import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -220,7 +218,7 @@ public class AgentWorkerOperationFactory {
         return commands;
     }
 
-    public AgentWorkerOperation createRefreshOperation(ClusterInfo clusterInfo, RefreshInformationRequest request,
+    public AgentWorkerOperation createRefreshOperation(RefreshInformationRequest request,
             ClientInfo clientInfo) {
         if (request.getItemsToRefresh() == null || request.getItemsToRefresh().isEmpty()) {
             // Add all available items if none were submitted.
@@ -268,7 +266,7 @@ public class AgentWorkerOperationFactory {
         return new AgentWorkerOperation(agentWorkerOperationState, metricsName, request, commands, context);
     }
 
-    public AgentWorkerOperation createExecuteTransferOperation(ClusterInfo clusterInfo, TransferRequest request,
+    public AgentWorkerOperation createExecuteTransferOperation(TransferRequest request,
             ClientInfo clientInfo) {
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
@@ -292,8 +290,7 @@ public class AgentWorkerOperationFactory {
                 context);
     }
 
-    public AgentWorkerOperation createExecuteWhitelistedTransferOperation(ClusterInfo clusterInfo,
-            WhitelistedTransferRequest request,
+    public AgentWorkerOperation createExecuteWhitelistedTransferOperation(WhitelistedTransferRequest request,
             ClientInfo clientInfo) {
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
@@ -337,7 +334,7 @@ public class AgentWorkerOperationFactory {
                 new TransferAgentWorkerCommand(context, request, createMetricState(request)));
     }
 
-    public AgentWorkerOperation createCreateCredentialsOperation(ClusterInfo clusterInfo, CredentialsRequest request,
+    public AgentWorkerOperation createCreateCredentialsOperation(CredentialsRequest request,
             ClientInfo clientInfo) {
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
@@ -365,7 +362,7 @@ public class AgentWorkerOperationFactory {
                 context);
     }
 
-    public AgentWorkerOperation createUpdateOperation(ClusterInfo clusterInfo, CredentialsRequest request,
+    public AgentWorkerOperation createUpdateOperation(CredentialsRequest request,
             ClientInfo clientInfo) {
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
@@ -392,7 +389,7 @@ public class AgentWorkerOperationFactory {
                 context);
     }
 
-    public AgentWorkerOperation createKeepAliveOperation(ClusterInfo clusterInfo, KeepAliveRequest request,
+    public AgentWorkerOperation createKeepAliveOperation(KeepAliveRequest request,
             ClientInfo clientInfo) {
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
@@ -422,8 +419,7 @@ public class AgentWorkerOperationFactory {
         return new AgentWorkerOperation(agentWorkerOperationState, "keep-alive", request, commands, context);
     }
 
-    public AgentWorkerOperation createReEncryptCredentialsOperation(ClusterInfo clusterInfo,
-            ReEncryptCredentialsRequest request,
+    public AgentWorkerOperation createReEncryptCredentialsOperation(ReEncryptCredentialsRequest request,
             ClientInfo clientInfo) {
         ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
@@ -470,8 +466,7 @@ public class AgentWorkerOperationFactory {
      * Use this operation when refreshing only the accounts that are available in the request.
      *
      **/
-    public AgentWorkerOperation createWhitelistRefreshOperation(ClusterInfo clusterInfo,
-            RefreshWhitelistInformationRequest request,
+    public AgentWorkerOperation createWhitelistRefreshOperation(RefreshWhitelistInformationRequest request,
             ClientInfo clientInfo) {
         if (request.getItemsToRefresh() == null || request.getItemsToRefresh().isEmpty()) {
             // Add all available items if none were submitted.
@@ -524,8 +519,7 @@ public class AgentWorkerOperationFactory {
      * Use this operation when changing whitelisted accounts and then doing a refresh.
      *
      */
-    public AgentWorkerOperation createConfigureWhitelistOperation(ClusterInfo clusterInfo,
-            ConfigureWhitelistInformationRequest request,
+    public AgentWorkerOperation createConfigureWhitelistOperation(ConfigureWhitelistInformationRequest request,
             ClientInfo clientInfo) {
         String operationMetricName = "configure-whitelist";
 

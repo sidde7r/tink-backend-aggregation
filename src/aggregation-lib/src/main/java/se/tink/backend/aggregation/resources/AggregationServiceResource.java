@@ -66,7 +66,7 @@ public class AggregationServiceResource implements AggregationService {
     @Override
     public Credentials createCredentials(CreateCredentialsRequest request, ClusterInfo clusterInfo, ClientInfo clientInfo) {
         AgentWorkerOperation createCredentialsOperation = agentWorkerCommandFactory
-                .createCreateCredentialsOperation(clusterInfo, request, clientInfo);
+                .createCreateCredentialsOperation(request, clientInfo);
 
         createCredentialsOperation.run();
 
@@ -110,7 +110,7 @@ public class AggregationServiceResource implements AggregationService {
             HttpResponseHelper.error(Response.Status.BAD_REQUEST);
         }
 
-        agentWorker.execute(agentWorkerCommandFactory.createConfigureWhitelistOperation(clusterInfo, request, clientInfo));
+        agentWorker.execute(agentWorkerCommandFactory.createConfigureWhitelistOperation(request, clientInfo));
     }
 
     @Override
@@ -138,13 +138,13 @@ public class AggregationServiceResource implements AggregationService {
             HttpResponseHelper.error(Response.Status.BAD_REQUEST);
         }
 
-        agentWorker.execute(agentWorkerCommandFactory.createWhitelistRefreshOperation(clusterInfo, request, clientInfo));
+        agentWorker.execute(agentWorkerCommandFactory.createWhitelistRefreshOperation(request, clientInfo));
     }
 
     @Override
     public void refreshInformation(final RefreshInformationRequest request, ClusterInfo clusterInfo, ClientInfo clientInfo) throws Exception {
         if (request.isManual()) {
-            agentWorker.execute(agentWorkerCommandFactory.createRefreshOperation(clusterInfo, request, clientInfo));
+            agentWorker.execute(agentWorkerCommandFactory.createRefreshOperation(request, clientInfo));
         } else {
             if (producer.isAvailable()) {
                 producer.send(new RefreshInformation(request, clusterInfo, clientInfo));
@@ -156,23 +156,23 @@ public class AggregationServiceResource implements AggregationService {
 
     @Override
     public void transfer(final TransferRequest request, ClusterInfo clusterInfo, ClientInfo clientInfo) throws Exception {
-        agentWorker.execute(agentWorkerCommandFactory.createExecuteTransferOperation(clusterInfo, request, clientInfo));
+        agentWorker.execute(agentWorkerCommandFactory.createExecuteTransferOperation(request, clientInfo));
     }
 
     @Override
     public void whitelistedTransfer(final WhitelistedTransferRequest request, ClusterInfo clusterInfo, ClientInfo clientInfo) throws Exception {
-        agentWorker.execute(agentWorkerCommandFactory.createExecuteWhitelistedTransferOperation(clusterInfo, request, clientInfo));
+        agentWorker.execute(agentWorkerCommandFactory.createExecuteWhitelistedTransferOperation(request, clientInfo));
     }
 
     @Override
     public void keepAlive(KeepAliveRequest request, ClusterInfo clusterInfo, ClientInfo clientInfo) throws Exception {
-        agentWorker.execute(agentWorkerCommandFactory.createKeepAliveOperation(clusterInfo, request, clientInfo));
+        agentWorker.execute(agentWorkerCommandFactory.createKeepAliveOperation(request, clientInfo));
     }
 
     @Override
     public Credentials updateCredentials(UpdateCredentialsRequest request, ClusterInfo clusterInfo, ClientInfo clientInfo) {
         AgentWorkerOperation updateCredentialsOperation = agentWorkerCommandFactory
-                .createUpdateOperation(clusterInfo, request, clientInfo);
+                .createUpdateOperation(request, clientInfo);
 
         updateCredentialsOperation.run();
 
@@ -204,7 +204,7 @@ public class AggregationServiceResource implements AggregationService {
             ClusterInfo clusterInfo,  ClientInfo clientInfo) {
         try {
             agentWorker.execute(agentWorkerCommandFactory
-                    .createReEncryptCredentialsOperation(clusterInfo, reencryptCredentialsRequest, clientInfo));
+                    .createReEncryptCredentialsOperation(reencryptCredentialsRequest, clientInfo));
         } catch (Exception e) {
             HttpResponseHelper.error(Response.Status.INTERNAL_SERVER_ERROR);
         }
