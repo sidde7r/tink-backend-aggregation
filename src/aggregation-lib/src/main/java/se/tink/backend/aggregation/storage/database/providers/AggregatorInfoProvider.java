@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.storage.database.providers;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import se.tink.backend.aggregation.api.AggregatorInfo;
@@ -21,6 +22,8 @@ public class AggregatorInfoProvider {
 
     // using aggregatorId (UUID) to get aggregator in multi client environment
     public AggregatorInfo createAggregatorInfoFor(String aggregatorId) {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(aggregatorId),
+                "Aggregator Id cannot be null or empty.");
         AggregatorConfiguration aggregatorConfiguration = aggregatorConfigurations.get(aggregatorId);
         Preconditions.checkNotNull(aggregatorConfiguration,
                 "Could not find aggregator configuration for aggregatorId %s.", aggregatorId);
