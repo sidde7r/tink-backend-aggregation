@@ -12,6 +12,9 @@ public class RefreshInformation {
     private String clientName;
     private String aggregatorId;
     private String clusterId;
+
+    private String name;
+    private String environment;
     private Map<String, String> context;
 
     public RefreshInformation() {
@@ -24,6 +27,22 @@ public class RefreshInformation {
         this.clientName = clientInfo.getClientName();
         this.aggregatorId = clientInfo.getAggregatorId();
         this.clusterId = clientInfo.getClusterId();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEnvironment() {
+        return environment;
+    }
+
+    public void setEnvironment(String environment) {
+        this.environment = environment;
     }
 
     public RefreshInformationRequest getRequest() {
