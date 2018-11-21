@@ -1,9 +1,8 @@
 package se.tink.backend.aggregation.storage.database.converter;
 
 import com.google.common.base.Preconditions;
-import org.assertj.core.util.Strings;
+import com.google.common.base.Strings;
 import se.tink.backend.aggregation.api.AggregatorInfo;
-import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.storage.database.models.AggregatorConfiguration;
 
 public class AggregatorConverter {
