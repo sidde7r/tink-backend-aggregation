@@ -29,6 +29,15 @@ public abstract class AgentContext {
     private boolean isWaitingOnConnectorTransactions = false;
     private AggregatorInfo aggregatorInfo;
     public abstract Catalog getCatalog();
+    private String clusterId;
+
+    public String getClusterId() {
+        return clusterId;
+    }
+
+    public void setClusterId(String clusterId) {
+        this.clusterId = clusterId;
+    }
 
     public HostConfiguration getHostConfiguration() {
         return hostConfiguration;
