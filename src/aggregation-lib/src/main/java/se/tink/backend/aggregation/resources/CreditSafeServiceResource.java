@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.resources;
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
+import java.util.Objects;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import se.tink.backend.aggregation.api.CreditSafeService;
@@ -25,7 +26,7 @@ public class CreditSafeServiceResource implements CreditSafeService {
     private ConsumerMonitoringWrapper consumerMonitoringWrapper;
 
     @Inject
-    public CreditSafeServiceResource(AgentsServiceConfiguration configuration) {
+    CreditSafeServiceResource(AgentsServiceConfiguration configuration) {
         this(configuration.getCreditSafe().getUsername(), configuration.getCreditSafe().getPassword(),
                 configuration.getCreditSafe().isLogConsumerMonitoringTraffic());
     }
@@ -37,6 +38,7 @@ public class CreditSafeServiceResource implements CreditSafeService {
     @Override
     public void removeConsumerMonitoring(RemoveMonitoredConsumerCreditSafeRequest request,
             @ClientContext ClientInfo clientInfo) {
+        validateCluster(clientInfo);
         SocialSecurityNumber.Sweden socialSecurityNumber = new SocialSecurityNumber.Sweden(request.getPnr());
         if (!socialSecurityNumber.isValid()) {
             HttpResponseHelper.error(Status.BAD_REQUEST);
@@ -48,6 +50,7 @@ public class CreditSafeServiceResource implements CreditSafeService {
     @Override
     public Response addConsumerMonitoring(AddMonitoredConsumerCreditSafeRequest request,
             @ClientContext ClientInfo clientInfo) {
+        validateCluster(clientInfo);
         SocialSecurityNumber.Sweden socialSecurityNumber = new SocialSecurityNumber.Sweden(request.getPnr());
         if (!socialSecurityNumber.isValid()) {
             HttpResponseHelper.error(Status.BAD_REQUEST);
@@ -59,18 +62,40 @@ public class CreditSafeServiceResource implements CreditSafeService {
 
     @Override
     public PortfolioListResponse listPortfolios(@ClientContext ClientInfo clientInfo) {
+        validateCluster(clientInfo);
         return consumerMonitoringWrapper.listPortfolios();
     }
 
     @Override
     public PageableConsumerCreditSafeResponse listChangedConsumers(ChangedConsumerCreditSafeRequest request,
             @ClientContext ClientInfo clientInfo) {
+        validateCluster(clientInfo);
         return consumerMonitoringWrapper.listChangedConsumers(request);
     }
 
     @Override
     public PageableConsumerCreditSafeResponse listMonitoredConsumers(PageableConsumerCreditSafeRequest request,
             @ClientContext ClientInfo clientInfo) {
+        validateCluster(clientInfo);
         return consumerMonitoringWrapper.listMonitoredConsumers(request);
+    }
+
+    private static void validateCluster(ClientInfo clientInfo) {
+
+        if (Objects.isNull(clientInfo)) {
+            HttpResponseHelper.error(Status.BAD_REQUEST);
+        }
+
+        String clusterId = clientInfo.getClusterId();
+
+        if (VALID_CLUSTERS.contains(clusterId)) {
+            return;
+        }
+
+        if (clusterId.equalsIgnoreCase(clientInfo.getClientName())) {
+            return;
+        }
+
+        HttpResponseHelper.error(Status.BAD_REQUEST);
     }
 }
