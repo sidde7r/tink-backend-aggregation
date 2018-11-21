@@ -87,8 +87,7 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
             return configuration.getAbnAmro();
         }
 
-        String clusterIdentifier = Optional.ofNullable(context.getHostConfiguration())
-                .map(HostConfiguration::getClusterId)
+        String clusterIdentifier = Optional.ofNullable(context.getClusterId())
                 .orElseThrow(() -> new IllegalStateException("Failed to fetch cluster identifier."));
 
         switch (clusterIdentifier.toLowerCase()) {

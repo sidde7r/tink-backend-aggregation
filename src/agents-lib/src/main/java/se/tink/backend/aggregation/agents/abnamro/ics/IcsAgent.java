@@ -101,8 +101,7 @@ public class IcsAgent extends AbstractAgent implements RefreshableItemExecutor {
             return configuration.getAbnAmro();
         }
 
-        String clusterIdentifier = Optional.ofNullable(context.getHostConfiguration())
-                .map(HostConfiguration::getClusterId)
+        String clusterIdentifier = Optional.ofNullable(context.getClusterId())
                 .orElseThrow(() -> new IllegalStateException("Failed to fetch cluster identifier."));
 
         switch (clusterIdentifier.toLowerCase()) {
