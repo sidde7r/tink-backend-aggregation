@@ -51,7 +51,7 @@ public interface AggregationService {
     @TeamOwnership(Team.INTEGRATION)
     @Produces(MediaType.TEXT_PLAIN)
     @AllowAnonymous
-    String ping();
+    String ping(@ClientContext ClientInfo clientInfo);
 
     @POST
     @Path("configure/whitelist")
