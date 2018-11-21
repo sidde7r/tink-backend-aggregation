@@ -61,6 +61,11 @@ public class Provider implements Cloneable {
     @Type(type = "text")
     @Tag(9)
     private String fieldsSerialized;
+    @JsonProperty("supplementalFields")
+    @Column(name = "`supplementalFields`")
+    @Type(type = "text")
+    @Tag(9)
+    private String supplementalFieldsSerialized;
     @Tag(10)
     private String groupDisplayName;
     @Exclude
@@ -113,6 +118,7 @@ public class Provider implements Cloneable {
 
     public Provider() {
         setFields(Lists.<Field> newArrayList());
+        setSupplementalFields(Lists.<Field> newArrayList());
     }
 
     @Override
@@ -217,6 +223,10 @@ public class Provider implements Cloneable {
 
     public List<Field> getFields() {
         return SerializationUtils.deserializeFromString(fieldsSerialized, FieldsList.class);
+    }
+
+    public List<Field> getSupplementalFields() {
+        return SerializationUtils.deserializeFromString(supplementalFieldsSerialized, FieldsList.class);
     }
 
     @ApiModelProperty(name = "groupDisplayName", value="The grouped display name of the provider")
@@ -394,6 +404,10 @@ public class Provider implements Cloneable {
 
     public void setFields(List<Field> fields) {
         this.fieldsSerialized = SerializationUtils.serializeToString(fields);
+    }
+
+    public void setSupplementalFields(List<Field> supplementalFields) {
+        this.supplementalFieldsSerialized = SerializationUtils.serializeToString(supplementalFields);
     }
 
     public void setGroupDisplayName(String groupDisplayName) {

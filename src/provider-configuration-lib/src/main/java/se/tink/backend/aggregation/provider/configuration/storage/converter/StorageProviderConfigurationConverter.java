@@ -8,7 +8,8 @@ import java.util.Optional;
 
 public class StorageProviderConfigurationConverter {
     public static se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration convert(
-            ProviderConfiguration providerConfiguration, Optional<ProviderStatusConfiguration> providerStatusConfiguration) {
+            ProviderConfiguration providerConfiguration,
+            Optional<ProviderStatusConfiguration> providerStatusConfiguration) {
         se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration core =
                 new se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration();
         core.setCapabilitiesSerialized(providerConfiguration.getCapabilitiesSerialized());
@@ -30,6 +31,7 @@ public class StorageProviderConfigurationConverter {
         core.setStatus(determineProviderStatus(providerConfiguration, providerStatusConfiguration));
         core.setTransactional(providerConfiguration.isTransactional());
         core.setDisplayDescription(providerConfiguration.getDisplayDescription());
+        core.setSupplementalFields(providerConfiguration.getSupplementalFields());
 
         providerConfiguration.getRefreshSchedule().ifPresent(
                 prs -> core.setRefreshSchedule(prs)

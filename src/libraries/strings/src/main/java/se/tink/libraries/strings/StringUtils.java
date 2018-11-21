@@ -35,6 +35,10 @@ public class StringUtils {
     private static final Splitter COMMA_SPLITTER = Splitter.on(',').trimResults().omitEmptyStrings();
     private static final Splitter CSV_SPLITTER = Splitter.on(",").trimResults(CharMatcher.is('"'));
 
+    public static String insertPeriodically(String text, char insert, int period) {
+        return text.replaceAll("(.{" + period + "})","$1" + insert);
+    }
+
     public static String firstLetterUppercaseFormatting(String cleanDescription) {
         Iterable<String> words = SPLITTER.split(cleanDescription);
 

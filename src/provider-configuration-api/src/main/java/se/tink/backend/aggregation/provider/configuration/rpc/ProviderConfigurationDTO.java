@@ -36,6 +36,8 @@ public class ProviderConfigurationDTO {
     private String displayDescription;
     @JsonProperty("fields")
     private String fieldsSerialized;
+    @JsonProperty("supplementalFields")
+    private String supplementalFieldsSerialized;
     private String groupDisplayName;
     private String market;
     private boolean multiFactor;
@@ -134,6 +136,10 @@ public class ProviderConfigurationDTO {
 
     public ProviderStatuses getStatus() {
         return status;
+    }
+
+    public List<Field> getSupplementalFields() {
+        return SerializationUtils.deserializeFromString(supplementalFieldsSerialized, FieldsList.class);
     }
 
     public ProviderTypes getType() {
@@ -235,6 +241,10 @@ public class ProviderConfigurationDTO {
 
     public void setType(ProviderTypes type) {
         this.type = type;
+    }
+
+    public void setSupplementalFields(List<Field> supplementalFields) {
+        this.supplementalFieldsSerialized = SerializationUtils.serializeToString(supplementalFields);
     }
 
     /**
