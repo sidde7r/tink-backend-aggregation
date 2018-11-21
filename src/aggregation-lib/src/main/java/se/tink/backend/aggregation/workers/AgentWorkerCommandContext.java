@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.workers;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import java.util.AbstractMap;
 import java.util.Arrays;
@@ -10,15 +11,15 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.curator.framework.CuratorFramework;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentEventListener;
 import se.tink.backend.aggregation.agents.SetAccountsToAggregateContext;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.api.AggregatorInfo;
-import se.tink.backend.aggregation.api.CallbackHostConfiguration;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -35,7 +36,7 @@ import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 
 public class AgentWorkerCommandContext extends AgentWorkerContext implements SetAccountsToAggregateContext {
-    private static final AggregationLogger log = new AggregationLogger(AgentWorkerCommandContext.class);
+    private static final Logger log = LoggerFactory.getLogger(AgentWorkerCommandContext.class);
     protected CuratorFramework coordinationClient;
     private static final String EMPTY_CLASS_NAME = "";
 
@@ -58,15 +59,15 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
 
 
     public AgentWorkerCommandContext(CredentialsRequest request,
-            MetricRegistry metricRegistry,
-            CuratorFramework coordinationClient,
-            AgentsServiceConfiguration agentsServiceConfiguration,
-            AggregatorInfo aggregatorInfo,
-            CallbackHostConfiguration callbackHostConfiguration,
-            SupplementalInformationController supplementalInformationController,
-            ControllerWrapper controllerWrapper) {
-        super(request, metricRegistry, coordinationClient, aggregatorInfo,
-                callbackHostConfiguration, supplementalInformationController, controllerWrapper);
+                                     MetricRegistry metricRegistry,
+                                     CuratorFramework coordinationClient,
+                                     AgentsServiceConfiguration agentsServiceConfiguration,
+                                     AggregatorInfo aggregatorInfo,
+                                     SupplementalInformationController supplementalInformationController,
+                                     ControllerWrapper controllerWrapper,
+                                     String clusterId) {
+        super(request, metricRegistry, coordinationClient, aggregatorInfo, supplementalInformationController,
+                controllerWrapper, clusterId);
         this.coordinationClient = coordinationClient;
         this.timePutOnQueue = System.currentTimeMillis();
         this.uniqueIdOfUserSelectedAccounts = Lists.newArrayList();
@@ -74,7 +75,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
         Provider provider = request.getProvider();
 
         defaultMetricLabels = new MetricId.MetricLabels()
-                .addAll(callbackHostConfiguration.metricLabels())
+                .addAll(createClusterMetricsLabels(controllerWrapper.getHostConfiguration().getClusterId()))
                 .add("provider", MetricsUtils.cleanMetricName(provider.getName()))
                 .add("market", provider.getMarket())
                 .add("agent", Optional.ofNullable(provider.getClassName()).orElse(EMPTY_CLASS_NAME))
@@ -85,6 +86,21 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
                         .label(defaultMetricLabels));
 
         this.agentsServiceConfiguration = agentsServiceConfiguration;
+    }
+
+    // TODO: We should do this some other way. This is a hack we can use for now.
+    private MetricId.MetricLabels createClusterMetricsLabels(String clusterId) {
+        List<String> splitClusterId = Splitter.on("-").splitToList(clusterId);
+
+        if (splitClusterId.size() != 2) {
+            // The clusterId should be of the format <cluster name>-<environment>, i.e. oxford-staging
+            log.warn("SplitClusterId did not have size of exactly 2. ClusterId: {}", clusterId);
+            return MetricId.MetricLabels.createEmpty();
+        }
+
+        return new MetricId.MetricLabels()
+                .add("request_cluster", splitClusterId.get(0))
+                .add("request_environment", splitClusterId.get(1));
     }
 
     public void processAccounts() {

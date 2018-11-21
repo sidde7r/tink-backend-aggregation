@@ -13,8 +13,8 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
 import org.apache.curator.framework.CuratorFramework;
+import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
 import se.tink.backend.aggregation.api.AggregatorInfo;
-import se.tink.backend.aggregation.api.CallbackHostConfiguration;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.Account;
@@ -37,6 +37,7 @@ public class AgentTestContext extends AgentContext {
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final TinkHttpClient supplementalClient = new TinkHttpClient(null, null);
     private static final String SUPPLEMENTAL_TEST_API = "http://127.0.0.1:7357/api/v1/supplemental";
+    private static final String CLUSTER_ID_FOR_TESTING = "test-local-development";
 
     static {
         mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z"));
@@ -52,8 +53,8 @@ public class AgentTestContext extends AgentContext {
 
     public AgentTestContext(Credentials credentials) {
         this.credentials = credentials;
-        setCallbackHostConfiguration(
-                CallbackHostConfiguration.createForTesting("test-local-development"));
+
+        setClusterId(CLUSTER_ID_FOR_TESTING);
         setAggregatorInfo(AggregatorInfo.getAggregatorForTesting());
     }
 

@@ -15,13 +15,10 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentClassFactory;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
-import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
-import se.tink.backend.aggregation.cluster.exceptions.ClientNotValid;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.converter.CallbackHostConfigurationConverter;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
@@ -240,9 +237,8 @@ public class AgentWorkerOperationFactory {
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 coordinationClient,
                 agentsServiceConfiguration,
-                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo),
-                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
-                controllerWrapper);
+                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo), supplementalInformationController,
+                controllerWrapper, clientInfo.getClusterId());
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
@@ -280,9 +276,8 @@ public class AgentWorkerOperationFactory {
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 coordinationClient,
                 agentsServiceConfiguration,
-                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo),
-                        CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
-                controllerWrapper);
+                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo), supplementalInformationController,
+                controllerWrapper, clientInfo.getClusterId() );
 
         String operationName = "execute-transfer";
 
@@ -306,9 +301,8 @@ public class AgentWorkerOperationFactory {
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 coordinationClient,
                 agentsServiceConfiguration,
-                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo),
-                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
-                controllerWrapper);
+                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo), supplementalInformationController,
+                controllerWrapper, clientInfo.getClusterId());
         context.setWhitelistRefresh(true);
 
         String operationName = "execute-whitelisted-transfer";
@@ -351,9 +345,8 @@ public class AgentWorkerOperationFactory {
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 coordinationClient,
                 agentsServiceConfiguration,
-                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo),
-                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
-                controllerWrapper);
+                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo), supplementalInformationController,
+                controllerWrapper, clientInfo.getClusterId());
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
@@ -380,9 +373,8 @@ public class AgentWorkerOperationFactory {
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 coordinationClient,
                 agentsServiceConfiguration,
-                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo),
-                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
-                controllerWrapper);
+                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo), supplementalInformationController,
+                controllerWrapper, clientInfo.getClusterId());
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
@@ -409,9 +401,8 @@ public class AgentWorkerOperationFactory {
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 coordinationClient,
                 agentsServiceConfiguration,
-                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo),
-                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
-                controllerWrapper);
+                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo), supplementalInformationController,
+                controllerWrapper, clientInfo.getClusterId());
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
@@ -441,9 +432,8 @@ public class AgentWorkerOperationFactory {
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 coordinationClient,
                 agentsServiceConfiguration,
-                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo),
-                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
-                controllerWrapper);
+                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo),supplementalInformationController,
+                controllerWrapper, clientInfo.getClusterId());
 
         CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
 
@@ -499,9 +489,8 @@ public class AgentWorkerOperationFactory {
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 coordinationClient,
                 agentsServiceConfiguration,
-                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo),
-                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
-                controllerWrapper);
+                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo), supplementalInformationController,
+                controllerWrapper, clientInfo.getClusterId());
 
         context.setWhitelistRefresh(true);
 
@@ -554,9 +543,8 @@ public class AgentWorkerOperationFactory {
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 coordinationClient,
                 agentsServiceConfiguration,
-                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo),
-                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
-                controllerWrapper);
+                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo), supplementalInformationController,
+                controllerWrapper, clientInfo.getClusterId());
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
