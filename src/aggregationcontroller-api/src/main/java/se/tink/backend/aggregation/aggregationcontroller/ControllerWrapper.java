@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.aggregationcontroller;
 
+import com.google.common.base.Preconditions;
 import javax.ws.rs.core.Response;
 import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.GenerateStatisticsAndActivitiesRequest;
@@ -33,6 +34,9 @@ public class ControllerWrapper {
     }
 
     public static ControllerWrapper of(AggregationControllerAggregationClient client, HostConfiguration configuration) {
+        Preconditions.checkNotNull(client, "The aggregation client cannot be null.");
+        Preconditions.checkNotNull(configuration, "The host configuration cannot be null");
+        // TODO: add more host configuration validation.
         return new ControllerWrapper(client, configuration);
     }
 

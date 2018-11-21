@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.storage.database.providers;
 
+import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import se.tink.backend.aggregation.api.AggregatorInfo;
@@ -20,6 +21,9 @@ public class AggregatorInfoProvider {
 
     // using aggregatorId (UUID) to get aggregator in multi client environment
     public AggregatorInfo createAggregatorInfoFor(String aggregatorId) {
-        return AggregatorConverter.convert(aggregatorConfigurations.get(aggregatorId));
+        AggregatorConfiguration aggregatorConfiguration = aggregatorConfigurations.get(aggregatorId);
+        Preconditions.checkNotNull(aggregatorConfiguration,
+                "Could not find aggregator configuration for aggregatorId "+aggregatorId+".");
+        return AggregatorConverter.convert(aggregatorConfiguration);
     }
 }

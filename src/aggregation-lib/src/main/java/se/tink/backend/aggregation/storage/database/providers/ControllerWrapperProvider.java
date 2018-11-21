@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.storage.database.providers;
 
+import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.storage.database.converter.HostConfigurationConverter;
@@ -27,7 +29,14 @@ public class ControllerWrapperProvider {
     }
 
     public ControllerWrapper createControllerWrapper(String clusterId) {
+
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(clusterId),
+                "Received an empty or null clusterId.");
+
+        ClusterConfiguration clusterConfiguration = clusterConfigurations.get(clusterId);
+        Preconditions.checkNotNull(clusterConfiguration, "Could not find clusterConfiguration for clusterId: "+clusterId+".");
+
         return ControllerWrapper.of(aggregationControllerAggregationClient,
-                HostConfigurationConverter.convert(clusterConfigurations.get(clusterId)));
+                HostConfigurationConverter.convert(clusterConfiguration));
     }
 }
