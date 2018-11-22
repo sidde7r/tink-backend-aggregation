@@ -1,22 +1,9 @@
 package se.tink.backend.aggregation.nxgen.agents.demo;
 
-import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoInvestmentAccount;
-import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoLoanAccount;
-import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoSavingsAccount;
-import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoTransactionAccount;
-
-public abstract class DemoConstants {
+public class DemoConstants {
 
     public static String BASE_PATH = "data/demo";
     public static String GENERATION_BASE_FILE = "generationbase.json";
-
-    public abstract DemoInvestmentAccount getInvestmentDefinitions();
-
-    public abstract DemoSavingsAccount getDemoSavingsDefinitions();
-
-    public abstract DemoLoanAccount getDemoLoanDefinitions();
-
-    public abstract DemoTransactionAccount getTransactionalAccountDefinition();
 
     //Change to take amount and return the conversion
     public static double getSekToCurrencyConverter(String currency, double amountInSek) {

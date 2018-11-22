@@ -3,6 +3,10 @@ package se.tink.backend.aggregation.nxgen.agents.demo;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoInvestmentAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoLoanAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoSavingsAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoTransactionAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.fetchers.NextGenerationDemoInvestmentFetcher;
 import se.tink.backend.aggregation.nxgen.agents.demo.fetchers.NextGenerationDemoLoanFetcher;
 import se.tink.backend.aggregation.nxgen.agents.demo.fetchers.NextGenerationDemoTransactionFetcher;
@@ -27,22 +31,19 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
     private final NextGenerationDemoAuthenticator authenticator;
     //TODO Requires changes when multi-currency is implemented. Will do for now
     private final String currency;
-    private final DemoConstants accountDefinitions;
     private final NextGenerationDemoTransactionFetcher transactionFetcher;
 
     public NextGenerationDemoAgent(CredentialsRequest request,
             AgentContext context,
-            SignatureKeyPair signatureKeyPair,
-            DemoConstants accountDefinitions) {
+            SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.authenticator = new NextGenerationDemoAuthenticator(credentials);
         this.currency = request.getProvider().getCurrency();
-        this.accountDefinitions = accountDefinitions;
         this.transactionFetcher =  new NextGenerationDemoTransactionFetcher(request.getAccounts(),
                         currency,
                         catalog,
-                        accountDefinitions.getTransactionalAccountDefinition(),
-                        accountDefinitions.getDemoSavingsDefinitions());
+                        getTransactionalAccountDefinition(),
+                        getDemoSavingsDefinitions());
     }
 
     @Override
@@ -72,14 +73,14 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
         return Optional.of(new InvestmentRefreshController(metricRefreshController,
                 updateController,
-                new NextGenerationDemoInvestmentFetcher(currency, accountDefinitions.getInvestmentDefinitions())));
+                new NextGenerationDemoInvestmentFetcher(currency, getInvestmentDefinitions())));
     }
 
     @Override
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
         return Optional.of(new LoanRefreshController(metricRefreshController,
                 updateController,
-                new NextGenerationDemoLoanFetcher(currency, catalog, accountDefinitions.getDemoLoanDefinitions())));
+                new NextGenerationDemoLoanFetcher(currency, catalog, getDemoLoanDefinitions())));
     }
 
     @Override
@@ -101,4 +102,13 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
     }
+
+    public abstract DemoInvestmentAccount getInvestmentDefinitions();
+
+    public abstract DemoSavingsAccount getDemoSavingsDefinitions();
+
+    public abstract DemoLoanAccount getDemoLoanDefinitions();
+
+    public abstract DemoTransactionAccount getTransactionalAccountDefinition();
+
 }
