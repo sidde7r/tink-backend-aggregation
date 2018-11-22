@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
-import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoInvestmentAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoInvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
 import se.tink.backend.core.Amount;
 import se.tink.backend.system.rpc.Instrument;

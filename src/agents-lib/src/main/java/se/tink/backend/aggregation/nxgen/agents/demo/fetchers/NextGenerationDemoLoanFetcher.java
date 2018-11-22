@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.nxgen.agents.demo.fetchers;
 
 import java.util.Collection;
 import se.tink.backend.aggregation.nxgen.agents.demo.demogenerator.LoanGenerator;
-import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoLoanAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoLoanAccount;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;

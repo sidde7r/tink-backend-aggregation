@@ -3,10 +3,10 @@ package se.tink.backend.aggregation.nxgen.agents.demo;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
-import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoInvestmentAccount;
-import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoLoanAccount;
-import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoSavingsAccount;
-import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoTransactionAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoInvestmentAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoLoanAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.fetchers.NextGenerationDemoInvestmentFetcher;
 import se.tink.backend.aggregation.nxgen.agents.demo.fetchers.NextGenerationDemoLoanFetcher;
 import se.tink.backend.aggregation.nxgen.agents.demo.fetchers.NextGenerationDemoTransactionFetcher;
@@ -42,8 +42,8 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
         this.transactionFetcher =  new NextGenerationDemoTransactionFetcher(request.getAccounts(),
                         currency,
                         catalog,
-                        getTransactionalAccountDefinition(),
-                        getDemoSavingsDefinitions());
+                        getTransactionalAccountAccounts(),
+                        getDemoSavingsAccounts());
     }
 
     @Override
@@ -73,14 +73,14 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
         return Optional.of(new InvestmentRefreshController(metricRefreshController,
                 updateController,
-                new NextGenerationDemoInvestmentFetcher(currency, getInvestmentDefinitions())));
+                new NextGenerationDemoInvestmentFetcher(currency, getInvestmentAccounts())));
     }
 
     @Override
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
         return Optional.of(new LoanRefreshController(metricRefreshController,
                 updateController,
-                new NextGenerationDemoLoanFetcher(currency, catalog, getDemoLoanDefinitions())));
+                new NextGenerationDemoLoanFetcher(currency, catalog, getDemoLoanAccounts())));
     }
 
     @Override
@@ -103,12 +103,12 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
         return Optional.empty();
     }
 
-    public abstract DemoInvestmentAccount getInvestmentDefinitions();
+    public abstract DemoInvestmentAccount getInvestmentAccounts();
 
-    public abstract DemoSavingsAccount getDemoSavingsDefinitions();
+    public abstract DemoSavingsAccount getDemoSavingsAccounts();
 
-    public abstract DemoLoanAccount getDemoLoanDefinitions();
+    public abstract DemoLoanAccount getDemoLoanAccounts();
 
-    public abstract DemoTransactionAccount getTransactionalAccountDefinition();
+    public abstract DemoTransactionAccount getTransactionalAccountAccounts();
 
 }

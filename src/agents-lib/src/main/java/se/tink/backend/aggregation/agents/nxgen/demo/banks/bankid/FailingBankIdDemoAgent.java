@@ -3,10 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.demo.banks.bankid;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.demo.NextGenerationDemoAgent;
-import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoInvestmentAccount;
-import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoLoanAccount;
-import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoSavingsAccount;
-import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoTransactionAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoInvestmentAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoLoanAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
@@ -33,7 +33,7 @@ public class FailingBankIdDemoAgent extends NextGenerationDemoAgent {
     }
 
     @Override
-    public DemoInvestmentAccount getInvestmentDefinitions() {
+    public DemoInvestmentAccount getInvestmentAccounts() {
         return new DemoInvestmentAccount() {
             @Override
             public String getAccountId() {
@@ -53,7 +53,7 @@ public class FailingBankIdDemoAgent extends NextGenerationDemoAgent {
     }
 
     @Override
-    public DemoSavingsAccount getDemoSavingsDefinitions() {
+    public DemoSavingsAccount getDemoSavingsAccounts() {
         return new DemoSavingsAccount() {
             @Override
             public String getAccountId() {
@@ -73,7 +73,7 @@ public class FailingBankIdDemoAgent extends NextGenerationDemoAgent {
     }
 
     @Override
-    public DemoLoanAccount getDemoLoanDefinitions() {
+    public DemoLoanAccount getDemoLoanAccounts() {
         return new DemoLoanAccount() {
             @Override
             public String getMortgageId() {
@@ -118,7 +118,7 @@ public class FailingBankIdDemoAgent extends NextGenerationDemoAgent {
     }
 
     @Override
-    public DemoTransactionAccount getTransactionalAccountDefinition() {
+    public DemoTransactionAccount getTransactionalAccountAccounts() {
         return new DemoTransactionAccount() {
             @Override
             public String getAccountId() {

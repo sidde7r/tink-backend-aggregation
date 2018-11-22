@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Collection;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
-import se.tink.backend.aggregation.nxgen.agents.demo.definitions.DemoLoanAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoLoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.LoanDetails;
 import se.tink.backend.core.Amount;
