@@ -22,20 +22,6 @@ spec:
 
   # Alert based on the 5m rate of log-lines from logback (used in tink-backend).
   # Threshold: old canonical threshold of 20 errors / 15 min.
-  - alert: TooManyLoggedEncryptionErrors
-    expr: sum(rate(logback_appender_total{job="tink-encryption",level="error"}[5m]))
-      BY (at, job) * 15 * 60 > 20
-    for: 15m
-    labels:
-      severity: urgent
-      who: aggregation
-    annotations:
-      description: Job <{ $labels.job }> has logged <{ $value }> errors past 15m in class
-        '<{ $labels.at }>'.
-      summary: Too many errors logged by <{ $labels.job }>
-
-  # Alert based on the 5m rate of log-lines from logback (used in tink-backend).
-  # Threshold: old canonical threshold of 20 errors / 15 min.
   - alert: TooManyLoggedAggregationControllerErrors
     expr: sum(rate(logback_appender_total{job="tink-aggregation-controller",level="error"}[5m]))
       BY (at, job) * 15 * 60 > 20
