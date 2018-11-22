@@ -834,7 +834,7 @@
     "popular" : false,
     "refreshFrequency" : 0.0,
     "refreshFrequencyFactor" : 0.0,
-    "status" : "ENABLED",
+    "status" : "DISABLED",
     "transactional" : true,
     "type" : "BANK",
     "displayDescription" : null,
