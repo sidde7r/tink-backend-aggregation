@@ -8,6 +8,8 @@ import java.util.Optional;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
 import se.tink.backend.aggregation.nxgen.agents.demo.demogenerator.PurchaseHistoryGenerator;
 import se.tink.backend.aggregation.nxgen.agents.demo.demogenerator.TransactionalAccountGenerator;
+import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
@@ -28,17 +30,25 @@ public class NextGenerationDemoTransactionFetcher
     private final PurchaseHistoryGenerator purchaseHistoryGenerator;
     private final String currency;
     private final Catalog catalog;
+    private final DemoTransactionAccount transactionAccountDefinition;
+    private final DemoSavingsAccount savingsAccountDefinition;
 
-    public NextGenerationDemoTransactionFetcher(List<Account> accounts, String currency, Catalog catalog) {
+    public NextGenerationDemoTransactionFetcher(List<Account> accounts, String currency,
+            Catalog catalog,
+            DemoTransactionAccount transactionAccountDefinition,
+            DemoSavingsAccount savingsAccountDefinition) {
         this.accounts = accounts;
         this.purchaseHistoryGenerator = new PurchaseHistoryGenerator(BASE_PATH);
         this.currency = currency;
         this.catalog = catalog;
+        this.transactionAccountDefinition = transactionAccountDefinition;
+        this.savingsAccountDefinition = savingsAccountDefinition;
     }
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return TransactionalAccountGenerator.fetchTransactionalAccounts(currency, catalog);
+        return TransactionalAccountGenerator
+                .fetchTransactionalAccounts(currency, catalog, transactionAccountDefinition, savingsAccountDefinition);
     }
 
     @Override

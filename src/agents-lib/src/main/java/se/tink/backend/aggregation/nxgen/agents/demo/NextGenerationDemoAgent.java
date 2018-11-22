@@ -3,6 +3,10 @@ package se.tink.backend.aggregation.nxgen.agents.demo;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoInvestmentAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoLoanAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.fetchers.NextGenerationDemoInvestmentFetcher;
 import se.tink.backend.aggregation.nxgen.agents.demo.fetchers.NextGenerationDemoLoanFetcher;
 import se.tink.backend.aggregation.nxgen.agents.demo.fetchers.NextGenerationDemoTransactionFetcher;
@@ -27,11 +31,19 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
     private final NextGenerationDemoAuthenticator authenticator;
     //TODO Requires changes when multi-currency is implemented. Will do for now
     private final String currency;
+    private final NextGenerationDemoTransactionFetcher transactionFetcher;
 
-    public NextGenerationDemoAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public NextGenerationDemoAgent(CredentialsRequest request,
+            AgentContext context,
+            SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.authenticator = new NextGenerationDemoAuthenticator(credentials);
         this.currency = request.getProvider().getCurrency();
+        this.transactionFetcher =  new NextGenerationDemoTransactionFetcher(request.getAccounts(),
+                        currency,
+                        catalog,
+                        getTransactionalAccountAccounts(),
+                        getDemoSavingsAccounts());
     }
 
     @Override
@@ -48,10 +60,8 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        return Optional.of(new TransactionalAccountRefreshController(metricRefreshController, updateController,
-                new NextGenerationDemoTransactionFetcher(request.getAccounts(), currency, catalog),
-                new TransactionFetcherController<>(transactionPaginationHelper,
-                        new NextGenerationDemoTransactionFetcher(request.getAccounts(), currency, catalog))));
+        return Optional.of(new TransactionalAccountRefreshController(metricRefreshController, updateController,transactionFetcher,
+                new TransactionFetcherController<>(transactionPaginationHelper, transactionFetcher)));
     }
 
     @Override
@@ -63,14 +73,14 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
         return Optional.of(new InvestmentRefreshController(metricRefreshController,
                 updateController,
-                new NextGenerationDemoInvestmentFetcher(currency)));
+                new NextGenerationDemoInvestmentFetcher(currency, getInvestmentAccounts())));
     }
 
     @Override
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
         return Optional.of(new LoanRefreshController(metricRefreshController,
                 updateController,
-                new NextGenerationDemoLoanFetcher(currency, catalog)));
+                new NextGenerationDemoLoanFetcher(currency, catalog, getDemoLoanAccounts())));
     }
 
     @Override
@@ -92,4 +102,13 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
     }
+
+    public abstract DemoInvestmentAccount getInvestmentAccounts();
+
+    public abstract DemoSavingsAccount getDemoSavingsAccounts();
+
+    public abstract DemoLoanAccount getDemoLoanAccounts();
+
+    public abstract DemoTransactionAccount getTransactionalAccountAccounts();
+
 }

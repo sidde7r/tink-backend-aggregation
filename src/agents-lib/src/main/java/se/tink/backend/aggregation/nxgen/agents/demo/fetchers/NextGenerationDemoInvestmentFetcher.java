@@ -1,44 +1,28 @@
 package se.tink.backend.aggregation.nxgen.agents.demo.fetchers;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
 import se.tink.backend.aggregation.nxgen.agents.demo.demogenerator.InvestmentGenerator;
+import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoInvestmentAccount;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
-import se.tink.backend.core.Amount;
 
 public class NextGenerationDemoInvestmentFetcher implements AccountFetcher<InvestmentAccount>,
         TransactionPaginator<InvestmentAccount> {
 
     private String currency;
-    private double investmentAccountBalance;
+    private DemoInvestmentAccount accountDefinition;
 
-    public NextGenerationDemoInvestmentFetcher(String currency) {
+    public NextGenerationDemoInvestmentFetcher(String currency, DemoInvestmentAccount accountDefinition) {
         this.currency = currency;
-        this.investmentAccountBalance = DemoConstants.getSekToCurrencyConverter(
-                        currency,DemoConstants.InvestmentAccountInformation.INVESTMENT_BALANCE);
+        this.accountDefinition = accountDefinition;
     }
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
-        List<InvestmentAccount> investmentAccounts = new ArrayList<>();
-        investmentAccounts.add(
-            InvestmentAccount.builder(DemoConstants.InvestmentAccountInformation.INVESTMENT_ACCOUNT_ID)
-                    .setBalance(new Amount(currency, investmentAccountBalance))
-                    .setName("")
-                    .setAccountNumber(DemoConstants.InvestmentAccountInformation.INVESTMENT_ACCOUNT_ID)
-                    .setPortfolios(InvestmentGenerator.generateFakePortfolios(
-                            DemoConstants.InvestmentAccountInformation.INVESTMENT_ACCOUNT_ID, investmentAccountBalance))
-                    .setCashBalance(new Amount(currency, investmentAccountBalance))
-                    .build()
-        );
-
-        return investmentAccounts;
+        return InvestmentGenerator.fetchInvestmentAccounts(currency, accountDefinition);
     }
 
     //TODO Implement fake transactions

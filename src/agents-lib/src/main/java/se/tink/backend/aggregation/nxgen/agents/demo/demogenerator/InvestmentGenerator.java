@@ -1,13 +1,37 @@
 package se.tink.backend.aggregation.nxgen.agents.demo.demogenerator;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
+import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoInvestmentAccount;
+import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
+import se.tink.backend.core.Amount;
 import se.tink.backend.system.rpc.Instrument;
 import se.tink.backend.system.rpc.Portfolio;
 
 public class InvestmentGenerator {
 
-    public static List<Portfolio> generateFakePortfolios (String accountId, double balance) {
+    public static Collection<InvestmentAccount> fetchInvestmentAccounts(String currency, DemoInvestmentAccount accountDefinition) {
+        List<InvestmentAccount> investmentAccounts = new ArrayList<>();
+        investmentAccounts.add(
+                InvestmentAccount.builder(accountDefinition.getAccountId())
+                        .setBalance(new Amount(currency,  DemoConstants.getSekToCurrencyConverter(
+                                currency,accountDefinition.getAccountBalance())))
+                        .setName("")
+                        .setAccountNumber(accountDefinition.getAccountId())
+                        .setPortfolios(InvestmentGenerator.generateFakePortfolios(
+                                accountDefinition.getAccountId(),
+                                accountDefinition.getAccountBalance()))
+                        .setCashBalance(new Amount(currency,
+                                accountDefinition.getAccountBalance()))
+                        .build()
+        );
+
+        return investmentAccounts;
+    }
+
+    private static List<Portfolio> generateFakePortfolios (String accountId, double balance) {
         ArrayList<Portfolio> portfolios = new ArrayList<>();
         portfolios.add(generateFakePortolio(accountId, balance/2,  Portfolio.Type.ISK));
         portfolios.add(generateFakePortolio(accountId, balance/2,  Portfolio.Type.DEPOT));

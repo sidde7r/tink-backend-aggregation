@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.agents.demo.fetchers;
 
 import java.util.Collection;
 import se.tink.backend.aggregation.nxgen.agents.demo.demogenerator.LoanGenerator;
+import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoLoanAccount;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
@@ -13,15 +14,17 @@ import se.tink.libraries.i18n.Catalog;
 public class NextGenerationDemoLoanFetcher  implements AccountFetcher<LoanAccount>, TransactionPaginator<LoanAccount> {
     private final String currency;
     private final Catalog catalog;
+    private final DemoLoanAccount accountDefinition;
 
-    public NextGenerationDemoLoanFetcher(String currency, Catalog catalog) {
+    public NextGenerationDemoLoanFetcher(String currency, Catalog catalog, DemoLoanAccount accountDefinition) {
         this.currency = currency;
         this.catalog = catalog;
+        this.accountDefinition = accountDefinition;
     }
 
     @Override
     public Collection<LoanAccount> fetchAccounts() {
-        return LoanGenerator.fetchLoanAccounts(currency, catalog);
+        return LoanGenerator.fetchLoanAccounts(currency, catalog, accountDefinition);
     }
 
     //TODO Implement fake transactions
