@@ -69,6 +69,7 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
     // the url as String is the key
     private final Map<String, TransactionsSEResponse> transactionsCache = new HashMap<>();
     private final Map<String, CreditCardSETransactionsResponse> creditCardransactionsCache = new HashMap<>();
+    private final Map<String, PendingTransactionsResponse> pendingTransactionsCache = new HashMap<>();
 
     public HandelsbankenSEApiClient(TinkHttpClient client,
             HandelsbankenSEConfiguration configuration) {
@@ -128,8 +129,18 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
 
     public PendingTransactionsResponse pendingTransactions(
             ApplicationEntryPointResponse applicationEntryPoint) {
-        return createRequest(applicationEntryPoint.toPendingTransactions())
+        URL pendingUrl = applicationEntryPoint.toPendingTransactions();
+        String txUrl = pendingUrl.get();
+
+        if (pendingTransactionsCache.containsKey(txUrl)) {
+            return pendingTransactionsCache.get(txUrl);
+        }
+
+        PendingTransactionsResponse txResponse = createRequest(pendingUrl)
                 .get(PendingTransactionsResponse.class);
+        pendingTransactionsCache.put(txUrl, txResponse);
+
+        return txResponse;
     }
 
     public PendingEInvoicesResponse pendingEInvoices(
