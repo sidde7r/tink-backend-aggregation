@@ -72,13 +72,13 @@ import se.tink.backend.aggregation.agents.banks.seb.model.InitiateBankIdRequest;
 import se.tink.backend.aggregation.agents.banks.seb.model.InitiateBankIdResponse;
 import se.tink.backend.aggregation.agents.banks.seb.model.InitiateRequest;
 import se.tink.backend.aggregation.agents.banks.seb.model.InsuranceEntity;
+import se.tink.backend.aggregation.agents.banks.seb.model.InsuranceHoldingEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.InvestmentDataRequest;
 import se.tink.backend.aggregation.agents.banks.seb.model.MatchableTransferRequestEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.PCBW2581;
 import se.tink.backend.aggregation.agents.banks.seb.model.PCBW2582;
 import se.tink.backend.aggregation.agents.banks.seb.model.PCBW431Z;
 import se.tink.backend.aggregation.agents.banks.seb.model.PCBW4341;
-import se.tink.backend.aggregation.agents.banks.seb.model.InsuranceHoldingEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.PortfolioAccountMapperEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.RequestWrappingEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.ResultInfoMessage;
@@ -110,6 +110,7 @@ import se.tink.backend.aggregation.agents.general.GeneralUtils;
 import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuilder;
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.log.ClientFilterFactory;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
@@ -121,7 +122,6 @@ import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.common.i18n.SocialSecurityNumber;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.enums.TransferType;
@@ -1888,6 +1888,10 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
 
     private void ensureExternalPaymentSignedOrThrow(MatchableTransferRequestEntity transfer, TransferListEntity transferQueuedUp)
             throws InterruptedException {
+        // wait a bit for SEB to process payment and signing
+        // we see a time lapse in the logs between sign and check of 10 seconds
+        Uninterruptibles.sleepUninterruptibly(5000, TimeUnit.MILLISECONDS);
+
         for (int i = 0; i < MAX_ATTEMPTS; i++) {
             SebResponse response = postAsJSON(EXTERNAL_TRANSFER_SIGN_VERIFICATION_URL, new SebRequest(), SebResponse.class);
 
