@@ -6,24 +6,11 @@ metadata:
 spec:
   rules:
 
+### Logs ###
   # Alert based on the 5m rate of log-lines from logback (used in tink-backend).
   # Threshold: old canonical threshold of 20 errors / 15 min.
   - alert: TooManyLoggedAggregationErrors
     expr: sum(rate(logback_appender_total{job="tink-aggregation",at!~"^(?:se.tink.backend.aggregation.nxgen.*)$|^(?:se.tink.backend.aggregation.agents.*)$",level="error"}[5m]))
-      BY (at, job) * 15 * 60 > 20
-    for: 15m
-    labels:
-      severity: urgent
-      who: aggregation
-    annotations:
-      description: Job <{ $labels.job }> has logged <{ $value }> errors past 15m in class
-        '<{ $labels.at }>'.
-      summary: Too many errors logged by <{ $labels.job }>
-
-  # Alert based on the 5m rate of log-lines from logback (used in tink-backend).
-  # Threshold: old canonical threshold of 20 errors / 15 min.
-  - alert: TooManyLoggedEncryptionErrors
-    expr: sum(rate(logback_appender_total{job="tink-encryption",level="error"}[5m]))
       BY (at, job) * 15 * 60 > 20
     for: 15m
     labels:
@@ -48,6 +35,7 @@ spec:
         '<{ $labels.at }>'.
       summary: Too many errors logged by <{ $labels.job }>
 
+### No running services ###
   - alert: NoAggregationServiceRunning
     expr: sum(up{job="tink-aggregation"}) == 0
     for: 20m
@@ -68,6 +56,7 @@ spec:
       description: No instances of aggregation controller service has been running for the past 20 minutes.
       summary: Application Aggregation Controller is not running
 
+### Heap dump ###
   - alert: UnhandledAggregationHeapDumpAwaiting
     expr: tink_heap_dumps{app="tink-aggregation"} > 0
     for: 1m
@@ -90,6 +79,63 @@ spec:
         to disk. Please download heap (and remove the dump) to see what went wrong.
       summary: Aggregation Controller JVM process ran out of memory
 
+
+### Response time alerts ###
+  - alert: HighResponseTimeProviderService
+    expr: histogram_quantile(0.95, sum(increase(tink_api_response_duration_seconds_bucket{app="tink-main", team_owner="INTEGRATION", path=~'/api/v1/providers.*'}[5m])) by (method, path, le, instance)) > 0.5
+    for: 1m
+    labels:
+      severity: ping
+      who: '#aggregation-alerts'
+    annotations:
+      description: The 95-%tile of the response duration for the Provider service over the last 5 minutes is over 500 ms.
+
+  - alert: HighResponseTimeCredentialsService
+    expr: histogram_quantile(0.95, sum(increase(tink_api_response_duration_seconds_bucket{app="tink-main", team_owner="INTEGRATION", path=~'/api/v1/credentials.*', method!="DELETE"}[5m])) by (method, path, le, instance)) > 0.5
+    for: 1m
+    labels:
+      severity: ping
+      who: '#aggregation-alerts'
+    annotations:
+      description: The 95-%tile of the response duration for the Credentials service over the last 5 minutes is over 500 ms.
+
+  - alert: HighResponseTimeAggregationControllerAggregationService
+    expr: histogram_quantile(0.95, sum(increase(tink_api_response_duration_seconds_bucket{app="tink-aggregation-controller", team_owner="INTEGRATION", path=~'/aggregation/controller/v1/aggregation.*', path!~'/aggregation/controller/v1/aggregation/update'}[5m])) by (method, path, le, instance)) > 0.5
+    for: 1m
+    labels:
+      severity: ping
+      who: '#aggregation-alert'
+    annotations:
+      description: The 95-%tile of the response duration for the Aggregation Controller Aggregation Service over the last 5 minutes is over 500 ms.
+
+  - alert: HighResponseTimeAggregationControllerProviderService
+    expr: histogram_quantile(0.95, sum(increase(tink_api_response_duration_seconds_bucket{app="tink-aggregation-controller", team_owner="INTEGRATION", path=~'/aggregation/controller/v1/providers.*|/aggregation/controller/v1/monitoring.*'}[5m])) by (method, path, le, instance)) > 0.5
+    for: 1m
+    labels:
+      severity: ping
+      who: '#aggregation-alert'
+    annotations:
+      description: The 95-%tile of the response duration for the Aggregation Controller Provider Service over the last 5 minutes is over 500 ms.
+
+  - alert: HighResponseTimeAggregationService
+    expr: histogram_quantile(0.95, sum(increase(tink_api_response_duration_seconds_bucket{app="tink-aggregation-controller", team_owner="INTEGRATION", path=~'/aggregation.*', path!~'/aggregation/update'}[5m])) by (method, path, le, instance)) > 0.5
+    for: 1m
+    labels:
+      severity: ping
+      who: '#aggregation-alert'
+    annotations:
+      description: The 95-%tile of the response duration for the Aggregation Service over the last 5 minutes is over 500 ms.
+
+  - alert: HighResponseTimeProviderConfigurationService
+    expr: histogram_quantile(0.95, sum(increase(tink_api_response_duration_seconds_bucket{app="provider-configuration-service", team_owner="INTEGRATION"}[5m])) by (method, path, le, kubernetes_pod_name)) > 0.5
+    for: 1m
+    labels:
+      severity: ping
+      who: '#aggregation-alert'
+    annotations:
+      description: The 95-%tile of the response duration for the Provider Configuration Service over the last 5 minutes is over 500 ms.
+
+### Only production ###
   {{- if eq .Values.Environment "production" }}
   - alert: IncreasedRateOfRejectedInMemoryQueue
     expr: |
