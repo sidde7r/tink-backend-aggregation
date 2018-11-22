@@ -108,6 +108,15 @@ spec:
     annotations:
       description: The 95-%tile of the response duration for the Aggregation Controller Aggregation Service over the last 5 minutes is over 500 ms.
 
+  - alert: HighResponseTimeAggregationControllerProviderService
+    expr: histogram_quantile(0.95, sum(increase(tink_api_response_duration_seconds_bucket{app="tink-aggregation-controller", team_owner="INTEGRATION", path=~'/aggregation/controller/v1/providers.*|/aggregation/controller/v1/monitoring.*'}[5m])) by (method, path, le, instance)) > 0.5
+    for: 1m
+    labels:
+      severity: ping
+      who: '#aggregation-alert'
+    annotations:
+      description: The 95-%tile of the response duration for the Aggregation Controller Provider Service over the last 5 minutes is over 500 ms.
+
 ### Only production ###
   {{- if eq .Values.Environment "production" }}
   - alert: IncreasedRateOfRejectedInMemoryQueue
