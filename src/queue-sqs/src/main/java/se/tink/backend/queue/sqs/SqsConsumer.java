@@ -67,7 +67,7 @@ public class SqsConsumer implements Managed, QueueConsumer {
             consume(sqsMessage.getBody());
             sqsQueue.consumed();
         } catch (RejectedExecutionException e) {
-            log.info("MessageID: " + sqsMessage.getMessageId() + " rejected by executor-queue.");
+            log.warn("MessageID: " + sqsMessage.getMessageId() + " rejected by executor-queue.");
             sqsQueue.rejected();
         }
 
