@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v11;
 
-import java.security.SecureRandom;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Random;
 import javax.annotation.Nullable;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingApiClient;
@@ -21,8 +19,6 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 public class UkOpenBankingV11Pis implements UkOpenBankingPis {
-    private static final Random random = new SecureRandom();
-
     private final String internalTransferId;
     private final String externalTransferId;
 
