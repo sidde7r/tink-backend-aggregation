@@ -14,8 +14,4 @@ public class FakeProducer implements QueueProducer {
         return false;
     }
 
-    @Override
-    public void requeue(String t) {
-
-    }
 }

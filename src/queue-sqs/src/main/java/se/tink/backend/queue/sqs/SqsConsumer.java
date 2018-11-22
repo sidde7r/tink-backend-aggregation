@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.queue.QueueConsumer;
-import se.tink.backend.queue.QueueProducer;
-import se.tink.libraries.log.LogUtils;
 
 public class SqsConsumer implements Managed, QueueConsumer {
 
@@ -22,15 +22,13 @@ public class SqsConsumer implements Managed, QueueConsumer {
     private final int WAIT_TIME_SECONDS = 1;
     private final int MAX_NUMBER_OF_MESSAGES = 1;
     private final int VISIBILITY_TIMEOUT_SECONDS = 300; //5 minutes
-    private static final LogUtils log = new LogUtils(SqsConsumer.class);
+    private static final Logger log = LoggerFactory.getLogger(SqsConsumer.class);
     private AtomicBoolean running = new AtomicBoolean(false);
-    private final QueueProducer producer;
 
     @Inject
-    public SqsConsumer(SqsQueue sqsQueue, QueueMessageAction queueMessageAction, QueueProducer producer) {
+    public SqsConsumer(SqsQueue sqsQueue, QueueMessageAction queueMessageAction) {
         this.sqsQueue = sqsQueue;
         this.queueMessageAction = queueMessageAction;
-        this.producer = producer;
         this.service = new AbstractExecutionThreadService() {
 
             @Override
@@ -46,7 +44,7 @@ public class SqsConsumer implements Managed, QueueConsumer {
                         }
                     }
                 } catch (Exception e) {
-                    log.error("Could not query, delete or consume for queue items: " + e.getMessage());
+                    log.error("Could not query, delete or consume for queue items: {}", e.getMessage());
                 }
             }
         };
@@ -70,8 +68,8 @@ public class SqsConsumer implements Managed, QueueConsumer {
             consume(sqsMessage.getBody());
             sqsQueue.consumed();
         } catch (RejectedExecutionException e) {
-            log.info("MessageID: " + sqsMessage.getMessageId() + " rejected by executor-queue. Will be requeued in SQS");
-            producer.requeue(sqsMessage.getBody());
+            log.warn("MessageID: {} rejected by executor-queue.", sqsMessage.getMessageId());
+            sqsQueue.rejected();
         }
 
     }
