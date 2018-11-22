@@ -569,7 +569,7 @@
             "popular": true,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,
-            "status": "ENABLED",
+            "status": "TEMPORARY_DISABLED",
             "transactional": true,
             "type": "BANK"
         },
@@ -605,7 +605,7 @@
             "popular": true,
             "refreshFrequency": 0,
             "refreshFrequencyFactor": 1,
-            "status": "ENABLED",
+            "status": "TEMPORARY_DISABLED",
             "transactional": true,
             "type": "BANK"
         },
