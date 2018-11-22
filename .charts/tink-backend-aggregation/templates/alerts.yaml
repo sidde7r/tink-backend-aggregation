@@ -79,6 +79,18 @@ spec:
         to disk. Please download heap (and remove the dump) to see what went wrong.
       summary: Aggregation Controller JVM process ran out of memory
 
+
+### Response time alerts ###
+
+  - alert: HighResponseTimeCredentialsService
+    expr: histogram_quantile(0.95, sum(increase(tink_api_response_duration_seconds_bucket{app="tink-main", team_owner="INTEGRATION", path=~'/api/v1/credentials.*', method!="DELETE"}[5m])) by (method, path, le, instance)) > 0.5
+    for: 1m
+    labels:
+      severity: ping
+      who: '#aggregation-alerts'
+    annotations:
+      description: The 95-%tile of the response duration for the Credentials service over the last 5 minutes is over 500 ms.
+
 ### Only production ###
   {{- if eq .Values.Environment "production" }}
   - alert: IncreasedRateOfRejectedInMemoryQueue
