@@ -87,4 +87,16 @@ public class TransactionEntity {
     public boolean isTopUp() {
         return getType().equalsIgnoreCase(RevolutConstants.TransactionTypes.TOP_UP);
     }
+
+    public boolean isValid() {
+        return !RevolutConstants.TransactionState.FAILED.equalsIgnoreCase(state);
+    }
+
+    public boolean belongsToAccount(String accountNumber) {
+        return account != null &&  accountNumber.equalsIgnoreCase(account.getId());
+    }
+
+    public boolean hasCurrency(String currency) {
+        return currency.equalsIgnoreCase(this.currency);
+    }
 }
