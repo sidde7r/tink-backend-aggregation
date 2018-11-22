@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.bankid.AuthenticateResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.bankid.InitBankIdRequest;
@@ -62,6 +64,12 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
     // based credit cards (allkort)
     private final boolean uniqueIdWithoutClearingNumber;
 
+    // local cache for transactions response since SHB has changed their tx-fetching
+    // we get all tx in one request today, no need to paginate since this is all we get
+    // the url as String is the key
+    private final Map<String, TransactionsSEResponse> transactionsCache = new HashMap<>();
+    private final Map<String, CreditCardSETransactionsResponse> creditCardransactionsCache = new HashMap<>();
+
     public HandelsbankenSEApiClient(TinkHttpClient client,
             HandelsbankenSEConfiguration configuration) {
         super(client, configuration);
@@ -105,18 +113,17 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
 
     @Override
     public TransactionsSEResponse transactions(HandelsbankenAccount account) {
-        return createRequest(account.getAccountTransactionsUrl()).get(TransactionsSEResponse.class);
-    }
 
-    public TransactionsSEResponse transactions(URL url, int from, int to, String authToken) {
+        String txUrl = account.getAccountTransactionsUrl().get();
+        if (transactionsCache.containsKey(txUrl)) {
+            return transactionsCache.get(txUrl);
+        }
 
-        return createRequest(url)
-                .queryParam(HandelsbankenSEConstants.QueryParams.IS_CARD,
-                        HandelsbankenSEConstants.QueryParams.Defaults.FALSE)
-                .queryParam(HandelsbankenSEConstants.QueryParams.FROM, String.valueOf(from))
-                .queryParam(HandelsbankenSEConstants.QueryParams.TO, String.valueOf(to))
-                .queryParam(HandelsbankenSEConstants.QueryParams.AUTH_TOKEN, authToken)
+        TransactionsSEResponse txResponse = createRequest(account.getAccountTransactionsUrl())
                 .get(TransactionsSEResponse.class);
+        transactionsCache.put(txUrl, txResponse);
+
+        return txResponse;
     }
 
     public PendingTransactionsResponse pendingTransactions(
@@ -176,10 +183,17 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
     }
 
     @Override
-    public CreditCardSETransactionsResponse creditCardTransactions(
-            HandelsbankenCreditCard creditCard) {
-        return createRequest(creditCard.getCardTransactionsUrl())
-                .get(CreditCardSETransactionsResponse.class);
+    public CreditCardSETransactionsResponse creditCardTransactions(HandelsbankenCreditCard creditCard) {
+
+        String txUrl = creditCard.getCardTransactionsUrl().get();
+        if (creditCardransactionsCache.containsKey(txUrl)) {
+            return creditCardransactionsCache.get(txUrl);
+        }
+
+        CreditCardSETransactionsResponse txResponse = creditCardTransactions(creditCard.getCardTransactionsUrl());
+        creditCardransactionsCache.put(txUrl, txResponse);
+
+        return txResponse;
     }
 
     @Override
