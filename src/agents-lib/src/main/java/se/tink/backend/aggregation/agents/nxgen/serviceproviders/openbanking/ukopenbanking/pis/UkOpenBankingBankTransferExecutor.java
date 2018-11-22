@@ -106,7 +106,7 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
         Amount amount = transfer.getAmount();
         String referenceText = sanitizeReferenceText(transfer.getDestinationMessage());
 
-        if (!hasAccountIdentifier(sourceIdentifier)) {
+        if (ukOpenBankingPis.canHaveSourceAccountSpecified() && !hasAccountIdentifier(sourceIdentifier)) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setMessage(TransferExecutionException.EndUserMessage.INVALID_SOURCE.getKey().get())
                     .build();
