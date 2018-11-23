@@ -15,7 +15,7 @@ public final class WarnExecutor implements ValidationExecutor {
         if (allPassed) {
             final int ruleCount = result.getSubResults().size();
             final String resultString = String.format("%d/%d rules passed.", ruleCount, ruleCount);
-            logger.warn("Validation result:\n" + resultString + "\n");
+            logger.info("Validation result:\n" + resultString + "\n");
             return;
         }
 
