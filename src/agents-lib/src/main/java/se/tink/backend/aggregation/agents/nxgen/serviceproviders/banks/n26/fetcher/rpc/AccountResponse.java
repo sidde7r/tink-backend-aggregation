@@ -26,6 +26,8 @@ public class AccountResponse {
 
     private boolean seized;
 
+    private String currency;
+
     public String getId() {
         return id;
     }
@@ -63,7 +65,7 @@ public class AccountResponse {
     }
 
     public Amount getTinkBalance(){
-        return new Amount(N26Constants.CURRENCY_EUR, availableBalance);
+        return new Amount(currency.trim().toUpperCase(), availableBalance);
     }
 
     public TransactionalAccount toTransactionalAccount(){
