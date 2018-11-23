@@ -11,8 +11,13 @@ public class TimelineEntity {
     private String message;
     private String messageType;
     private String statusCode;
+    private List<SubcardEntity> cardList;
     private List<TimelineItemsEntity> timelineItems;
     private Map<String, TransactionEntity> transactionMap;
+
+    public List<SubcardEntity> getCardList() {
+        return cardList;
+    }
 
     public int getStatus() {
         return status;

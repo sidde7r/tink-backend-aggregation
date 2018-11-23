@@ -17,6 +17,11 @@ public class CardEntity {
     private String cardNumberDisplay;
     private FinancialTab financialTab;
     private Message message;
+    private String canceled;
+
+    public String getCanceled() {
+        return canceled;
+    }
 
     @JsonIgnore
     public CreditCardAccount toCreditCardAccount(AmericanExpressV62Configuration config) {

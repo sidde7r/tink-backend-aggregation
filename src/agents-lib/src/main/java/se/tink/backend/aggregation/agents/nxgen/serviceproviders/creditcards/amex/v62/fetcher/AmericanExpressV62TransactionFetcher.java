@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62ApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Configuration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants;
@@ -58,27 +56,45 @@ public class AmericanExpressV62TransactionFetcher
                 config.createTimelineRequest(Integer.valueOf(account.getBankIdentifier()));
         TimelineResponse timelineResponse = client.requestTimeline(timelineRequest);
 
-        return getPendingTransactionsFor(account, timelineResponse.getTimeline());
+
+        String suppIndex =
+                timelineResponse
+                        .getTimeline()
+                        .getCardList()
+                        .stream()
+                        .filter(c -> c.getCardProductName().contains(account.getAccountNumber().split("-")[1]))
+                        .map(c -> c.getSuppIndex())
+                        .findFirst()
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "No card: " + account.getAccountNumber() +
+                                                "in given list: " + SerializationUtils.serializeToString(timelineResponse.getTimeline().getCardList())));
+
+        return getPendingTransactionsFor(timelineResponse.getTimeline(), suppIndex);
     }
 
-    private List<Transaction> getPendingTransactionsFor(
-            CreditCardAccount account, TimelineEntity timeline) {
+    private List<Transaction> getPendingTransactionsFor(TimelineEntity timeline, String suppIndex) {
 
         List<String> pendingIdList =
-                Optional.ofNullable(timeline.getTimelineItems()).orElseGet(Collections::emptyList)
+                Optional.ofNullable(timeline.getTimelineItems())
+                        .orElseGet(Collections::emptyList)
                         .stream()
                         .map(item -> item.getSubItems().stream())
                         .flatMap(Function.identity())
                         .filter(SubItemsEntity::isPending)
-                        .filter(subItem ->
-                                subItem.belongToAccount(Integer.valueOf(account.getBankIdentifier()), timeline))
                         .map(SubItemsEntity::getId)
                         .collect(Collectors.toList());
 
         List<Transaction> pendingTransactionList = new ArrayList<>();
-        for (String id : pendingIdList) {
-            pendingTransactionList.add(timeline.getTransactionMap().get(id).toTransaction(config, true));
-        }
+        pendingTransactionList.addAll(
+                pendingIdList
+                        .stream()
+                        .map(id -> timeline.getTransactionMap().get(id))
+                        .filter(t -> t.getSuppIndex().equals(suppIndex))
+                        .map(t -> t.toTransaction(config, true))
+                        .collect(Collectors.toList()));
+
 
         return pendingTransactionList;
     }

@@ -33,7 +33,12 @@ public class AmericanExpressV62Predicates {
         }
         return true;
     };
-
+    public static final Predicate<CardEntity> cancelledCardSummaryValuePredicate = c -> {
+        if ("true".equals(c.getCanceled())) {
+            return false;
+        }
+        return true;
+    };
     public static final Consumer<TransactionEntity> transformIntoTinkTransactions(
             AmericanExpressV62Configuration config,
             List<Transaction> list) {
