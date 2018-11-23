@@ -157,6 +157,10 @@ public abstract class AgentContext {
     @Deprecated // Use cacheTransactions instead
     public abstract Account updateTransactions(Account account, List<Transaction> transactions);
 
+    /**
+     * @param accountUniqueId The unique identifier for the account associated with the transactions
+     * @param transactions Transactions to be stored in this context
+     */
     public abstract void cacheTransactions(@Nonnull String accountUniqueId, List<Transaction> transactions);
 
     public abstract void updateCredentialsExcludingSensitiveInformation(Credentials credentials,
