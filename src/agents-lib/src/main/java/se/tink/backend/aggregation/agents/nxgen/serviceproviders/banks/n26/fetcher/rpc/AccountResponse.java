@@ -65,7 +65,7 @@ public class AccountResponse {
     }
 
     public Amount getTinkBalance(){
-        return new Amount(currency.trim().toUpperCase(), availableBalance);
+        return new Amount(currency, availableBalance);
     }
 
     public TransactionalAccount toTransactionalAccount(){
