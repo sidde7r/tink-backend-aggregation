@@ -2,7 +2,10 @@ package se.tink.backend.aggregation.nxgen.controllers.refresh;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import javax.annotation.Nonnull;
+import org.assertj.core.util.Preconditions;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +20,7 @@ import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.core.Amount;
 import se.tink.backend.system.rpc.AccountFeatures;
 import se.tink.backend.system.rpc.Loan;
+import se.tink.backend.system.rpc.Transaction;
 
 @RunWith(MockitoJUnitRunner.class)
 public final class UpdateControllerTest {
@@ -53,6 +57,23 @@ public final class UpdateControllerTest {
         Assert.assertFalse(context.getAccountFeatures(uniqueAccountId).get().getLoans().isEmpty());
     }
 
+    @Test
+    public void ensureCacheTransactions_whenUpdateTransactions_isNotCalledWithNull() {
+        final UpdateController updateController = new UpdateController(context, MarketCode.SE, "SEK", user);
+
+        final LoanAccount loanAccount = LoanAccount.builder("1337")
+                .setAccountNumber("777")
+                .setBalance(new Amount("SEK", -7.0))
+                .build();
+
+        final Collection<AggregationTransaction> transactions = Collections.emptySet();
+
+        context.accountFeatures = AccountFeatures.createForLoan(new Loan());
+
+        // Must not throw NPE
+        updateController.updateTransactions(loanAccount, transactions);
+    }
+
     static abstract class FakeAgentContext extends AgentContext {
         AccountFeatures accountFeatures;
 
@@ -60,6 +81,11 @@ public final class UpdateControllerTest {
         public void cacheAccount(final se.tink.backend.aggregation.rpc.Account account,
                 final AccountFeatures accountFeatures) {
             this.accountFeatures = accountFeatures;
+        }
+
+        @Override
+        public void cacheTransactions(@Nonnull String accountUniqueId, List<Transaction> transactions) {
+            Preconditions.checkNotNull(accountUniqueId);
         }
 
         @Override
