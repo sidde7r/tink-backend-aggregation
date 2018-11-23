@@ -107,6 +107,9 @@ public abstract class Account {
         return this.uniqueIdentifier.equals(sanitizeUniqueIdentifier(otherUniqueIdentifier));
     }
 
+    /**
+     * @return Unique identifier on the bank side, not to be confused with rpc Account.getBankId
+     */
     public String getBankIdentifier() {
         return this.bankIdentifier;
     }

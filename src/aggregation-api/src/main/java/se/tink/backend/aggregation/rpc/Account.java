@@ -89,6 +89,9 @@ public class Account implements Cloneable {
         return this.balance;
     }
 
+    /**
+     * @return Unique identifier on the client side, not to be confused with nxgen Account.getBankIdentifier
+     */
     public String getBankId() {
         return this.bankId;
     }
