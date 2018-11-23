@@ -33,22 +33,14 @@ public class RevolutTransactionFetcher implements TransactionKeyPaginator<Transa
 
         if (account.getType().equals(AccountTypes.CHECKING)) {
             Collection<TransactionEntity> transactionEntities = apiClient.fetchTransactions(count, toDateMillis);
-            Stream<Transaction> combinedStream = Stream.concat(Stream.concat(
-                    transactionEntities.stream()
-                            .filter(t -> t.getCurrency().equalsIgnoreCase(accountCurrency))
-                            .filter(t -> t.getAccount().isPresent())
-                            .filter(t -> t.getAccount().get().getId().equalsIgnoreCase(accountNumber))
-                            .map(t -> t.toTinkTransaction()),
-                    transactionEntities.stream()
-                            .filter(t -> t.getCurrency().equalsIgnoreCase(accountCurrency))
-                            .filter(t -> t.isCardPayment())
-                            .map(t -> t.toTinkTransaction())),
-                    transactionEntities.stream()
-                            .filter(t -> t.getCurrency().equalsIgnoreCase(accountCurrency))
-                            .filter(t -> t.isTopUp())
-                            .map(t -> t.toTinkTransaction())
-                    );
-            response.setTransactions(combinedStream.collect(Collectors.toList()));
+
+            response.setTransactions(transactionEntities.stream()
+                    .filter(TransactionEntity::isValid)
+                    .filter(t -> t.hasCurrency(accountCurrency))
+                    .filter(t -> t.isTopUp() || t.isCardPayment() || t.belongsToAccount(accountNumber))
+                    .map(TransactionEntity::toTinkTransaction)
+                    .collect(Collectors.toList()));
+
             response.setNext(transactionEntities.stream()
                     .map(TransactionEntity::getStartedDate)
                     .min(Comparator.comparing(t -> t))
@@ -60,13 +52,15 @@ public class RevolutTransactionFetcher implements TransactionKeyPaginator<Transa
 
         } else if (account.getType().equals(AccountTypes.SAVINGS)){
             Collection<TransactionEntity> transactionEntities = apiClient.fetchTransactions(count, toDateMillis);
+
             response.setTransactions(transactionEntities.stream()
-                    .filter(t -> t.getCurrency().equalsIgnoreCase(accountCurrency))
-                    .filter(t -> t.getAccount().isPresent())
-                    .filter(t -> t.getAccount().get().getId().equalsIgnoreCase(accountNumber))
-                    .map(transactionEntity -> transactionEntity.toTinkTransaction())
+                    .filter(TransactionEntity::isValid)
+                    .filter(t -> t.hasCurrency(accountCurrency))
+                    .filter(t -> t.belongsToAccount(accountNumber))
+                    .map(TransactionEntity::toTinkTransaction)
                     .collect(Collectors.toList())
             );
+
             response.setNext(transactionEntities.stream()
                     .map(TransactionEntity::getStartedDate)
                     .min(Comparator.comparing(t -> t))
@@ -76,6 +70,5 @@ public class RevolutTransactionFetcher implements TransactionKeyPaginator<Transa
             return response;
         }
             return response;
-
     }
 }
