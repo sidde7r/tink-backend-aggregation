@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62ApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Configuration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Predicates;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.SubItemsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.TimelineEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc.TimelineRequest;
@@ -62,7 +63,7 @@ public class AmericanExpressV62TransactionFetcher
                         .getTimeline()
                         .getCardList()
                         .stream()
-                        .filter(c -> c.getCardProductName().contains(account.getAccountNumber().split("-")[1]))
+                        .filter(c -> AmericanExpressV62Predicates.compareCardEntityToAccount.test(c, account))
                         .map(c -> c.getSuppIndex())
                         .findFirst()
                         .orElseThrow(
