@@ -83,9 +83,12 @@ public class UpdateController {
             return false;
         }
 
-        baseContext.cacheTransactions(account.getBankIdentifier(), transactions.stream()
-                .map(t-> t.toSystemTransaction(user))
-                .collect(Collectors.toList()));
+        baseContext.cacheTransactions(
+                account.toSystemAccount(user).getBankId(),
+                transactions
+                        .stream()
+                        .map(t -> t.toSystemTransaction(user))
+                        .collect(Collectors.toList()));
 
         return true;
     }
