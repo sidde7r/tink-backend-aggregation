@@ -137,19 +137,15 @@ spec:
 
 ### Only production ###
   {{- if eq .Values.Environment "production" }}
-  - alert: IncreasedRateOfRejectedInMemoryQueue
+  - alert: NoConsumedMessagesFromAutomaticRefreshQueue
     expr: |
-      # Trigger when the number of automatic refresh not beeing rejected from the provider-specific in-memory queue exceeds 2000 rejections/15 minutes.
-       sum(increase(tink_aggregation_queues_total{cluster='aggregation', environment='production', event='requeued'} [15m])) by (event) > 2000
-    for: 5m
+      sum(increase(tink_aggregation_queues_total{event="consumed"}[15m])) == 0
+    for: 1m
     labels:
       severity: ping
       who: '#aggregation-oncall'
     annotations:
-      description: The alert is triggered when the number of AutomaticRefreshes rejected by the provider-specific in-memory queues
-        exceeds 2000 rejections/15 minutes. The in-memory rejection is due to that the rate of incomming requests, for a specific provider
-        exceeds the rate of processing the request for that provider.
-      summary: 'The rate of incoming automatic refreshes are exceeding the processing rate of the automatic refreshes'
+      description: No messages has been consumed from the Automatic Refresh Queue for the past 15 minutes.
 
   - alert: LowRedundancyOfAggregationTinkService
     expr: |
