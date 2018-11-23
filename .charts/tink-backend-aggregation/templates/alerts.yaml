@@ -104,7 +104,7 @@ spec:
     for: 1m
     labels:
       severity: ping
-      who: '#aggregation-alert'
+      who: '#aggregation-alerts'
     annotations:
       description: The 95-%tile of the response duration for the Aggregation Controller Aggregation Service over the last 5 minutes is over 500 ms.
 
@@ -113,7 +113,7 @@ spec:
     for: 1m
     labels:
       severity: ping
-      who: '#aggregation-alert'
+      who: '#aggregation-alerts'
     annotations:
       description: The 95-%tile of the response duration for the Aggregation Controller Provider Service over the last 5 minutes is over 500 ms.
 
@@ -122,7 +122,7 @@ spec:
     for: 1m
     labels:
       severity: ping
-      who: '#aggregation-alert'
+      who: '#aggregation-alerts'
     annotations:
       description: The 95-%tile of the response duration for the Aggregation Service over the last 5 minutes is over 500 ms.
 
@@ -131,7 +131,7 @@ spec:
     for: 1m
     labels:
       severity: ping
-      who: '#aggregation-alert'
+      who: '#aggregation-alerts'
     annotations:
       description: The 95-%tile of the response duration for the Provider Configuration Service over the last 5 minutes is over 500 ms.
 
