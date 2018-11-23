@@ -87,8 +87,8 @@ public final class ValidatorTest {
                                 "Transaction description length is reasonable",
                                 trx ->
                                         Optional.ofNullable(trx.getDescription())
-                                                .map(String::length)
-                                                .orElse(0)
+                                                        .map(String::length)
+                                                        .orElse(0)
                                                 <= 1000,
                                 trx ->
                                         String.format(
