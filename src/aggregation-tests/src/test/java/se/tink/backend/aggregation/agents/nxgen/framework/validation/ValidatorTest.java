@@ -96,7 +96,7 @@ public final class ValidatorTest {
                         .rule(
                                 "No duplicate transactions",
                                 aisdata ->
-                                        ValidatorFactory.containsDuplicates(
+                                        !DuplicateTransactionFinder.containsDupes(
                                                 aisdata.getTransactions()),
                                 data ->
                                         String.format(
