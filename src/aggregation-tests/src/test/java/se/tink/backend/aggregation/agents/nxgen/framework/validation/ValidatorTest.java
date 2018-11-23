@@ -97,11 +97,7 @@ public final class ValidatorTest {
                                 "No duplicate transactions",
                                 aisdata ->
                                         !DuplicateTransactionFinder.containsDupes(
-                                                aisdata.getTransactions()),
-                                data ->
-                                        String.format(
-                                                "Found at least two transactions with the same date, description, amount and account ID: %s",
-                                                data.getTransactions()))
+                                                aisdata.getTransactions()))
                         .build();
 
         // Set up validatee
