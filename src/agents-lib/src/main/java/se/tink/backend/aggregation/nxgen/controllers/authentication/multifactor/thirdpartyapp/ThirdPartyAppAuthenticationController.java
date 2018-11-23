@@ -55,6 +55,9 @@ public class ThirdPartyAppAuthenticationController<T> implements MultiFactorAuth
     }
 
     private boolean handleStatus(ThirdPartyAppStatus status) throws AuthenticationException, AuthorizationException {
+        if(status == null){
+            throw new IllegalStateException(String.format("Status missing"));
+        }
         switch (status) {
         case WAITING:
             return false;

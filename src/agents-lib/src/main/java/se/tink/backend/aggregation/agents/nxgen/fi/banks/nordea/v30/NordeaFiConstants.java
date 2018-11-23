@@ -146,7 +146,7 @@ public class NordeaFiConstants {
                     .put(ThirdPartyAppStatus.TIMED_OUT,
                             new LocalizableKey("Authentication timed out."))
                     .put(ThirdPartyAppStatus.ALREADY_IN_PROGRESS,
-                            new LocalizableKey("Another client is already trying to sign in."))
+                            new LocalizableKey("Another client is already trying to sign in. \nPlease close the Codes app and try again."))
                     .build();
 
     public static final ImmutableMap<String, AccountTypes> ACCOUNT_TYPES = ImmutableMap.<String,

@@ -8,13 +8,13 @@ import se.tink.backend.aggregation.rpc.Field;
 
 @Ignore
 public class NordeaFiAgentTest {
-    private static final String USERNAME = "NNNN";
+    private static final String USERNAME = "";
 
     private AgentIntegrationTest.Builder builder;
 
     @Before
     public void setup() {
-        builder = new AgentIntegrationTest.Builder("fi", "fi-nordea-codeslogin")
+        builder = new AgentIntegrationTest.Builder("fi", "fi-nordea-thirdpartyapp")
                 .addCredentialField(Field.Key.USERNAME, USERNAME)
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
