@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.Nonnull;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -156,7 +157,7 @@ public abstract class AgentContext {
     @Deprecated // Use cacheTransactions instead
     public abstract Account updateTransactions(Account account, List<Transaction> transactions);
 
-    public abstract void cacheTransactions(String accountUniqueId, List<Transaction> transactions);
+    public abstract void cacheTransactions(@Nonnull String accountUniqueId, List<Transaction> transactions);
 
     public abstract void updateCredentialsExcludingSensitiveInformation(Credentials credentials,
             boolean doStatusUpdate);

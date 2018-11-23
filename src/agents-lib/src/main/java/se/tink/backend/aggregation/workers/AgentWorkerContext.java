@@ -12,6 +12,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.barriers.DistributedBarrier;
 import se.tink.backend.aggregation.agents.AgentContext;
@@ -423,7 +424,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     @Override
-    public void cacheTransactions(String accountUniqueId, List<Transaction> transactions) {
+    public void cacheTransactions(@Nonnull String accountUniqueId, List<Transaction> transactions) {
         // This crashes if agent is implemented incorrectly. You have to cache Account before you cache Transactions
         Preconditions.checkArgument(allAvailableAccountsByUniqueId.containsKey(accountUniqueId));
         transactionsByAccountBankId.put(accountUniqueId, transactions);

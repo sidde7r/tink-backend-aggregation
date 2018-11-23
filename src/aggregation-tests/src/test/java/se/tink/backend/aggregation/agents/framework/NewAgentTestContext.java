@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.framework;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import java.text.DateFormat;
@@ -16,6 +17,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
 import org.apache.curator.framework.CuratorFramework;
 import org.junit.Assert;
 import org.slf4j.Logger;
@@ -247,7 +249,8 @@ public class NewAgentTestContext extends AgentContext {
     }
 
     @Override
-    public void cacheTransactions(String accountUniqueId, List<Transaction> transactions) {
+    public void cacheTransactions(@Nonnull String accountUniqueId, List<Transaction> transactions) {
+        Preconditions.checkNotNull(accountUniqueId);
         transactionsByAccountBankId.put(accountUniqueId, transactions);
     }
 
