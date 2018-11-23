@@ -82,7 +82,7 @@ public final class ValidatorFactory {
                         trx -> String.format("Transaction description is too long: %s", trx))
                 .rule(
                         "No duplicate transactions",
-                        aisdata -> containsDuplicates(aisdata.getTransactions()),
+                        aisdata -> !containsDuplicates(aisdata.getTransactions()),
                         data ->
                                 String.format(
                                         "Found at least two transactions with the same date, description, amount and account ID: %s",
