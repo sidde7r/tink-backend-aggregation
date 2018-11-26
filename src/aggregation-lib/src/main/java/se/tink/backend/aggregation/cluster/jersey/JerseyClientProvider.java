@@ -9,6 +9,8 @@ import com.sun.jersey.server.impl.inject.AbstractHttpContextInjectable;
 import com.sun.jersey.spi.inject.Injectable;
 import com.sun.jersey.spi.inject.InjectableProvider;
 import java.lang.reflect.Type;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import org.assertj.core.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,8 +69,8 @@ public class JerseyClientProvider extends AbstractHttpContextInjectable<ClientIn
         } catch (ClientNotValid e) {
             // FIXME: we log it at the moment to validate data is in place. later should be handled throwing exception
             logger.error("Api key {} is not valid. no entry found in database.", apiKey);
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
-        return null;
     }
 
     private ClientInfo getClientInfoUsingClusterInfo(String name, String env) {
