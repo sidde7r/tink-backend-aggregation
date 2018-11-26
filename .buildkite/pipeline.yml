@@ -3,6 +3,7 @@ steps:
   - name: ':white_check_mark: Test'
     branches: '!master'
     command: .buildkite/run-unit-tests.sh
+    timeout_in_minutes: 30
     agents:
       queue: new
     plugins:
@@ -13,6 +14,7 @@ steps:
   - name: ":kubernetes: Helm Lint"
     branches: '!master'
     command: /go/bin/kubernetes-generator --mode lint --repo .
+    timeout_in_minutes: 5
     agents:
       queue: new
     plugins:
