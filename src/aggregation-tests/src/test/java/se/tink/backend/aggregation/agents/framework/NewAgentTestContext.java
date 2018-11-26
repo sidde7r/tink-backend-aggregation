@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -436,6 +437,10 @@ public class NewAgentTestContext extends AgentContext {
 
         case INVESTMENT:
             Assert.assertNotNull(accountFeatures.getPortfolios());
+            for (Portfolio portfolio : accountFeatures.getPortfolios()) {
+                Assert.assertNotNull(portfolio.getInstruments());
+                Assert.assertFalse(portfolio.getInstruments().isEmpty());
+            }
             printPortfolioDetails(accountFeatures.getPortfolios());
             break;
 
@@ -449,7 +454,7 @@ public class NewAgentTestContext extends AgentContext {
     }
 
     private void printTransactions(String bankId) {
-        List<Map<String, String>> table = transactionsByAccountBankId.getOrDefault(bankId, new ArrayList<>())
+        List<Map<String, String>> table = transactionsByAccountBankId.getOrDefault(bankId, Collections.emptyList())
                 .stream()
                 .sorted(Comparator.comparing(Transaction::getDate))
                 .map(transaction -> {
@@ -464,7 +469,8 @@ public class NewAgentTestContext extends AgentContext {
     }
 
     private void printTransferDestinations(String bankId) {
-        List<Map<String, String>> table = transferDestinationPatternsByAccountBankId.getOrDefault(bankId, new ArrayList<>())
+        List<Map<String, String>> table = transferDestinationPatternsByAccountBankId
+                .getOrDefault(bankId, Collections.emptyList())
                 .stream()
                 .map(transferDestination -> {
                     Map<String, String> row = new LinkedHashMap<>();
