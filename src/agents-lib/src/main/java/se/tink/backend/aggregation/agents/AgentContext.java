@@ -158,7 +158,8 @@ public abstract class AgentContext {
     public abstract Account updateTransactions(Account account, List<Transaction> transactions);
 
     /**
-     * @param accountUniqueId The unique identifier for the account associated with the transactions
+     * @param accountUniqueId The client-side unique identifier for the account associated with the
+     *     transactions. Same as nxgen Account.getUniqueIdentifier and rpc Account.getBankId.
      * @param transactions Transactions to be stored in this context
      */
     public abstract void cacheTransactions(@Nonnull String accountUniqueId, List<Transaction> transactions);
