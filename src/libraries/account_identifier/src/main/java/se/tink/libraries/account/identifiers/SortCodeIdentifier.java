@@ -20,7 +20,7 @@ public class SortCodeIdentifier extends AccountIdentifier {
         String numericSortCodeAccountNumber = getNumericNumber(identifier);
         isValid = SORT_CODE_AND_ACCOUNT_NUMBER.matcher(numericSortCodeAccountNumber).matches();
         if (!isValid) {
-            throw new IllegalArgumentException("Invalid account identifier");
+            throw new IllegalArgumentException(String.format("%s is not a valid account identifier", identifier));
         }
         sortCode = numericSortCodeAccountNumber.substring(0, SORT_CODE_LENGTH);
         accountNumber = numericSortCodeAccountNumber.substring(SORT_CODE_LENGTH);
