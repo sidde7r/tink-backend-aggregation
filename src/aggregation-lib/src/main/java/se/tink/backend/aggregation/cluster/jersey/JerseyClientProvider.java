@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.cluster.jersey;
 
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.sun.jersey.api.core.HttpContext;
 import com.sun.jersey.api.core.HttpRequestContext;
@@ -11,7 +12,6 @@ import com.sun.jersey.spi.inject.InjectableProvider;
 import java.lang.reflect.Type;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import org.assertj.core.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.cluster.annotations.ClientContext;
