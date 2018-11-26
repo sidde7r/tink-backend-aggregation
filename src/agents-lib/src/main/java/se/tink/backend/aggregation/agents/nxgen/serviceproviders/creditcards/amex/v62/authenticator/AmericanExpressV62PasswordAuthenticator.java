@@ -87,6 +87,8 @@ public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenti
         List<CardEntity> cardList = logonResponse.getSummaryData().getCardList()
                 .stream()
                 .filter(AmericanExpressV62Predicates.cancelledCardsPredicate)
+                //Double filtering for backward compatibility
+                .filter(AmericanExpressV62Predicates.cancelledCardSummaryValuePredicate)
                 .collect(Collectors.toList());
         sessionStorage.put(AmericanExpressConstants.Tags.CARD_LIST, cardList);
     }
