@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo;
 
 import java.time.ZoneId;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;

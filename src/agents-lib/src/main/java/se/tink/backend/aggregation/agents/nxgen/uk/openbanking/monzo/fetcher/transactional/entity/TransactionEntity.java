@@ -1,9 +1,9 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.fetcher.transactional.entity;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactional.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.time.Instant;
-import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.MonzoConstants;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.core.Amount;

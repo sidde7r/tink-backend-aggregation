@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.fetcher.transactional;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactional;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -7,10 +7,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.MonzoApiClient;
-import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.MonzoConstants;
-import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.fetcher.transactional.entity.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.fetcher.transactional.entity.TransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoApiClient;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoConstants;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactional.entity.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactional.entity.TransactionEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
