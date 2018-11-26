@@ -58,7 +58,7 @@ public class JerseyClientProvider extends AbstractHttpContextInjectable<ClientIn
         String name = request.getHeaderValue(CLUSTER_NAME_HEADER);
         String environment = request.getHeaderValue(CLUSTER_ENVIRONMENT_HEADER);
         logger.error("Received a missing api key for {} {}.", name, environment);
-        return getClientInfoUsingClusterInfo(name, environment);
+        throw new WebApplicationException(Response.Status.BAD_REQUEST);
     }
 
     private ClientInfo getClientInfoUsingApiKey(String apiKey) {
@@ -67,21 +67,9 @@ public class JerseyClientProvider extends AbstractHttpContextInjectable<ClientIn
             logger.info("Received request for client: {}", clientConfig.getClientName());
             return convertFromClientConfiguration(clientConfig);
         } catch (ClientNotValid e) {
-            // FIXME: we log it at the moment to validate data is in place. later should be handled throwing exception
             logger.error("Api key {} is not valid. no entry found in database.", apiKey);
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
-    }
-
-    private ClientInfo getClientInfoUsingClusterInfo(String name, String env) {
-        try{
-            ClientConfiguration clientConfig = clientConfigurationProvider.getClientConfiguration(name, env);
-            return convertFromClientConfiguration(clientConfig);
-        } catch (ClusterNotValid e) {
-            // FIXME: we log it at the moment to validate data is in place. later should be handled throwing exception
-            logger.error("Cluster {}-{} is not supported in multi client. no entry found in database", name, env);
-        }
-        return null;
     }
 
     private ClientInfo convertFromClientConfiguration(ClientConfiguration clientConfiguration) {
