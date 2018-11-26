@@ -46,5 +46,4 @@ public class TimelineEntity {
     public Map<String, TransactionEntity> getTransactionMap() {
         return transactionMap;
     }
-
 }

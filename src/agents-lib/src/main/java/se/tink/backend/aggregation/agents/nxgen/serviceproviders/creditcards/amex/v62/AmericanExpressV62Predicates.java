@@ -47,10 +47,4 @@ public class AmericanExpressV62Predicates {
             List<Transaction> list) {
         return transaction -> list.add(transaction.toTransaction(config, false));
     }
-
-    public static final BiPredicate<SubcardEntity, CreditCardAccount> compareCardEntityToAccount =
-            (cardEntity, account) ->
-                    cardEntity
-                            .getCardProductName()
-                            .contains(account.getAccountNumber().split("-")[1]);
 }

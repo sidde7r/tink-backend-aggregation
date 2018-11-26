@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62ApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Configuration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Predicates;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.SubItemsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.TimelineEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc.TimelineRequest;
@@ -20,7 +19,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class AmericanExpressV62TransactionFetcher
         implements TransactionPagePaginator<CreditCardAccount> {
@@ -57,25 +55,10 @@ public class AmericanExpressV62TransactionFetcher
                 config.createTimelineRequest(Integer.valueOf(account.getBankIdentifier()));
         TimelineResponse timelineResponse = client.requestTimeline(timelineRequest);
 
-
-        String suppIndex =
-                timelineResponse
-                        .getTimeline()
-                        .getCardList()
-                        .stream()
-                        .filter(c -> AmericanExpressV62Predicates.compareCardEntityToAccount.test(c, account))
-                        .map(c -> c.getSuppIndex())
-                        .findFirst()
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                "No card: " + account.getAccountNumber() +
-                                                "in given list: " + SerializationUtils.serializeToString(timelineResponse.getTimeline().getCardList())));
-
-        return getPendingTransactionsFor(timelineResponse.getTimeline(), suppIndex);
+        return getPendingTransactionsFor(timelineResponse.getTimeline());
     }
 
-    private List<Transaction> getPendingTransactionsFor(TimelineEntity timeline, String suppIndex) {
+    private List<Transaction> getPendingTransactionsFor(TimelineEntity timeline) {
 
         List<String> pendingIdList =
                 Optional.ofNullable(timeline.getTimelineItems())
@@ -92,10 +75,8 @@ public class AmericanExpressV62TransactionFetcher
                 pendingIdList
                         .stream()
                         .map(id -> timeline.getTransactionMap().get(id))
-                        .filter(t -> t.getSuppIndex().equals(suppIndex))
                         .map(t -> t.toTransaction(config, true))
                         .collect(Collectors.toList()));
-
 
         return pendingTransactionList;
     }
