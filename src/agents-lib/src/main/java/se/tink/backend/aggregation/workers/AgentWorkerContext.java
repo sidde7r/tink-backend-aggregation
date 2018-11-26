@@ -425,6 +425,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
     @Override
     public void cacheTransactions(@Nonnull String accountUniqueId, List<Transaction> transactions) {
+        Preconditions.checkNotNull(accountUniqueId); // Necessary until we make @Nonnull throw the exception
         // This crashes if agent is implemented incorrectly. You have to cache Account before you cache Transactions
         Preconditions.checkArgument(allAvailableAccountsByUniqueId.containsKey(accountUniqueId));
         transactionsByAccountBankId.put(accountUniqueId, transactions);
