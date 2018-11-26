@@ -150,6 +150,7 @@ public final class BawagPskAccountTypeMappers {
                                     "B101",
                                     "B111",
                                     "B113",
+                                    "B120",
                                     "B121",
                                     "B131",
                                     "B133",
@@ -157,6 +158,7 @@ public final class BawagPskAccountTypeMappers {
                                     "B400",
                                     "B410",
                                     "B420",
+                                    "B460",
                                     "B512",
                                     "B600")
                             .put(
@@ -170,6 +172,7 @@ public final class BawagPskAccountTypeMappers {
                             .put(
                                     AccountTypes.CREDIT_CARD,
                                     "00BD",
+                                    "00EA",
                                     "00EC",
                                     "00EQ",
                                     "00ET",
