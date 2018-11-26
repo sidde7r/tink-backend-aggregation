@@ -85,7 +85,7 @@ public final class UpdateControllerTest {
 
         @Override
         public void cacheTransactions(@Nonnull String accountUniqueId, List<Transaction> transactions) {
-            Preconditions.checkNotNull(accountUniqueId);
+            Preconditions.checkNotNull(accountUniqueId); // Necessary until we make @Nonnull throw the exception
         }
 
         @Override

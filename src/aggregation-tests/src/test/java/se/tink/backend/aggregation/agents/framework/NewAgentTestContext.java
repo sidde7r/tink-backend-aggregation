@@ -250,7 +250,7 @@ public class NewAgentTestContext extends AgentContext {
 
     @Override
     public void cacheTransactions(@Nonnull String accountUniqueId, List<Transaction> transactions) {
-        Preconditions.checkNotNull(accountUniqueId);
+        Preconditions.checkNotNull(accountUniqueId); // Necessary until we make @Nonnull throw the exception
         transactionsByAccountBankId.put(accountUniqueId, transactions);
     }
 
