@@ -100,13 +100,13 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
             return Optional.of(catalog.getString("Cannot schedule future transfers."));
         }
 
-        AccountIdentifier sourceIdentifier = ukOpenBankingPis.canHaveSourceAccountSpecified() ?
-                transfer.getSource() : null;
+        AccountIdentifier sourceIdentifier = ukOpenBankingPis.mustNotHaveSourceAccountSpecified() ?
+                null : transfer.getSource();
         AccountIdentifier destinationIdentifier = transfer.getDestination();
         Amount amount = transfer.getAmount();
         String referenceText = sanitizeReferenceText(transfer.getDestinationMessage());
 
-        if (!hasAccountIdentifier(sourceIdentifier)) {
+        if (!ukOpenBankingPis.mustNotHaveSourceAccountSpecified() && !hasAccountIdentifier(sourceIdentifier)) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setMessage(TransferExecutionException.EndUserMessage.INVALID_SOURCE.getKey().get())
                     .build();

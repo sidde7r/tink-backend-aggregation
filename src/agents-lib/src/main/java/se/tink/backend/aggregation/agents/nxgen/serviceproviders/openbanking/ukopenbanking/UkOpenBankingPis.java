@@ -8,7 +8,7 @@ import se.tink.libraries.account.AccountIdentifier;
 public interface UkOpenBankingPis {
     // Some banks do not allow us to specify a source account.
     // I.e. the user MUST pick the source account him/her self in the bank's consent flow.
-    boolean canHaveSourceAccountSpecified();
+    boolean mustNotHaveSourceAccountSpecified();
 
     String getBankTransferIntentId(
             UkOpenBankingApiClient apiClient,

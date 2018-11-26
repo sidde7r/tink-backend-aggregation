@@ -23,7 +23,7 @@ public class DanskeBankAgent extends UkOpenBankingBaseAgent {
 
     @Override
     protected Optional<UkOpenBankingPis> makePis() {
-        return Optional.of(new UkOpenBankingV11Pis(false));
+        return Optional.of(new UkOpenBankingV11Pis(true));
     }
 
     @Override

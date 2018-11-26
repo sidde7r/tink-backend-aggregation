@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v11;
 
-import java.security.SecureRandom;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Random;
 import javax.annotation.Nullable;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingApiClient;
@@ -21,19 +19,17 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 public class UkOpenBankingV11Pis implements UkOpenBankingPis {
-    private static final Random random = new SecureRandom();
-
     private final String internalTransferId;
     private final String externalTransferId;
 
-    private final boolean canHaveSourceAccountSpecified;
+    private final boolean mustNotHaveSourceAccountSpecified;
 
     public UkOpenBankingV11Pis() {
-        this(true);
+        this(false);
     }
 
-    public UkOpenBankingV11Pis(boolean canHaveSourceAccountSpecified) {
-        this.canHaveSourceAccountSpecified = canHaveSourceAccountSpecified;
+    public UkOpenBankingV11Pis(boolean mustNotHaveSourceAccountSpecified) {
+        this.mustNotHaveSourceAccountSpecified = mustNotHaveSourceAccountSpecified;
 
         this.internalTransferId = RandomUtils.generateRandomHexEncoded(8);
         this.externalTransferId = RandomUtils.generateRandomHexEncoded(8);
@@ -70,8 +66,8 @@ public class UkOpenBankingV11Pis implements UkOpenBankingPis {
     }
 
     @Override
-    public boolean canHaveSourceAccountSpecified() {
-        return canHaveSourceAccountSpecified;
+    public boolean mustNotHaveSourceAccountSpecified() {
+        return mustNotHaveSourceAccountSpecified;
     }
 
     @Override
