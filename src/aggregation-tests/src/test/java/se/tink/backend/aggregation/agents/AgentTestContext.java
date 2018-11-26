@@ -11,8 +11,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import javax.annotation.Nonnull;
 import javax.ws.rs.core.MediaType;
 import org.apache.curator.framework.CuratorFramework;
+import org.assertj.core.util.Preconditions;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -234,7 +236,8 @@ public class AgentTestContext extends AgentContext {
     }
 
     @Override
-    public void cacheTransactions(String accountUniqueId, List<Transaction> transactions) {
+    public void cacheTransactions(@Nonnull String accountUniqueId, List<Transaction> transactions) {
+        Preconditions.checkNotNull(accountUniqueId); // Necessary until we make @Nonnull throw the exception
         transactionsByAccountBankId.put(accountUniqueId, transactions);
     }
 
