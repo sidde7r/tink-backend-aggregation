@@ -49,7 +49,7 @@ import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
-import se.tink.backend.aggregation.configuration.SbabIntegrationConfiguration;
+import se.tink.backend.aggregation.configuration.integrations.SbabIntegrationConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.core.DocumentIdentifier;

@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.MonzoConfiguration;
+import se.tink.backend.aggregation.configuration.integrations.MonzoConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class MonzoAgent extends NextGenerationAgent {
