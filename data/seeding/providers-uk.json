@@ -112,7 +112,7 @@
       "status": "DISABLED",
       "credentialsType": "PASSWORD",
       "multiFactor": false,
-      "className": "nxgen.uk.banks.monzo.MonzoAgent",
+      "className": "nxgen.uk.openbanking.monzo.MonzoAgent",
       "passwordHelpText": "",
       "transactional": true,
       "fields": [

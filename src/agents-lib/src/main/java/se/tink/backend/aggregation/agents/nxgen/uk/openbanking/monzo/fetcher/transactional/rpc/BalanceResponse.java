@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.fetcher.transactional.rpc;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactional.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;

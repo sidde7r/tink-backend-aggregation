@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo;
 
 import org.junit.Ignore;
 import org.junit.Test;

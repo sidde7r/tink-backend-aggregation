@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.authenticator.rpc;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.authenticator.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;

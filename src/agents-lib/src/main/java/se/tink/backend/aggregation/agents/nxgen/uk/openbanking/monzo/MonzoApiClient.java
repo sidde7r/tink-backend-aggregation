@@ -1,14 +1,14 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.authenticator.rpc.ExchangeRequest;
-import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.authenticator.rpc.RefreshRequest;
-import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.authenticator.rpc.TokenResponse;
-import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.fetcher.transactional.rpc.AccountsResponse;
-import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.fetcher.transactional.rpc.BalanceResponse;
-import se.tink.backend.aggregation.agents.nxgen.uk.banks.monzo.fetcher.transactional.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.authenticator.rpc.ExchangeRequest;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.authenticator.rpc.RefreshRequest;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.authenticator.rpc.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactional.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactional.rpc.BalanceResponse;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactional.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
