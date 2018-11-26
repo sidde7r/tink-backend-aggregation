@@ -26,24 +26,29 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 public class MonzoAgent extends NextGenerationAgent {
 
+    private final String clientName;
     private final MonzoApiClient apiClient;
 
     public MonzoAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         apiClient = new MonzoApiClient(client, persistentStorage);
+        clientName = request.getProvider().getPayload();
     }
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
-        // client.setProxy("http://127.0.0.1:8888");
+
     }
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
-
         super.setConfiguration(configuration);
 
-        MonzoConfiguration monzoConfiguration = configuration.getIntegrations().getMonzoConfiguration();
+        MonzoConfiguration monzoConfiguration = configuration.getIntegrations().getMonzo(clientName)
+                .orElseThrow(() -> new IllegalStateException(
+                        String.format("No Monzo client configured for name: %s", clientName)
+                ));
+
         persistentStorage.put(MonzoConstants.StorageKey.CLIENT_ID, monzoConfiguration.getClientId());
         persistentStorage.put(MonzoConstants.StorageKey.CLIENT_SECRET, monzoConfiguration.getClientSecret());
         persistentStorage.put(MonzoConstants.StorageKey.REDIRECT_URL, monzoConfiguration.getRedirectUrl());

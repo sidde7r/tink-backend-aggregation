@@ -122,7 +122,8 @@
           "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
           "immutable": true
         }
-      ]
+      ],
+      "payload": "tink"
     },
     {
       "name": "uk-halifax-oauth2",
