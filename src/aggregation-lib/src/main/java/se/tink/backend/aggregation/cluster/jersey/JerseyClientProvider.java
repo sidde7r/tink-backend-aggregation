@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.cluster.jersey;
 
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.sun.jersey.api.core.HttpContext;
 import com.sun.jersey.api.core.HttpRequestContext;
@@ -9,7 +10,8 @@ import com.sun.jersey.server.impl.inject.AbstractHttpContextInjectable;
 import com.sun.jersey.spi.inject.Injectable;
 import com.sun.jersey.spi.inject.InjectableProvider;
 import java.lang.reflect.Type;
-import org.assertj.core.util.Strings;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.cluster.annotations.ClientContext;
@@ -56,7 +58,7 @@ public class JerseyClientProvider extends AbstractHttpContextInjectable<ClientIn
         String name = request.getHeaderValue(CLUSTER_NAME_HEADER);
         String environment = request.getHeaderValue(CLUSTER_ENVIRONMENT_HEADER);
         logger.error("Received a missing api key for {} {}.", name, environment);
-        return getClientInfoUsingClusterInfo(name, environment);
+        throw new WebApplicationException(Response.Status.BAD_REQUEST);
     }
 
     private ClientInfo getClientInfoUsingApiKey(String apiKey) {
@@ -64,21 +66,9 @@ public class JerseyClientProvider extends AbstractHttpContextInjectable<ClientIn
             ClientConfiguration clientConfig = clientConfigurationProvider.getClientConfiguration(apiKey);
             return convertFromClientConfiguration(clientConfig);
         } catch (ClientNotValid e) {
-            // FIXME: we log it at the moment to validate data is in place. later should be handled throwing exception
             logger.error("Api key {} is not valid. no entry found in database.", apiKey);
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
-        return null;
-    }
-
-    private ClientInfo getClientInfoUsingClusterInfo(String name, String env) {
-        try{
-            ClientConfiguration clientConfig = clientConfigurationProvider.getClientConfiguration(name, env);
-            return convertFromClientConfiguration(clientConfig);
-        } catch (ClusterNotValid e) {
-            // FIXME: we log it at the moment to validate data is in place. later should be handled throwing exception
-            logger.error("Cluster {}-{} is not supported in multi client. no entry found in database", name, env);
-        }
-        return null;
     }
 
     private ClientInfo convertFromClientConfiguration(ClientConfiguration clientConfiguration) {
