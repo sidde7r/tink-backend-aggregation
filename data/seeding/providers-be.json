@@ -91,7 +91,7 @@
         },
         {
           "description": "Response",
-          "helpText": "Enter your PIN\nPress 'OK'\nEnter the resespose from the card reader",
+          "helpText": "Enter your PIN\nPress 'OK'\nEnter the response from the card reader",
           "name": "signcodeinput",
           "immutable": false,
           "masked": false,
@@ -163,7 +163,7 @@
         },
         {
           "description": "Response",
-          "helpText": "Enter your PIN\nPress 'OK'\nEnter the resespose from the card reader",
+          "helpText": "Enter your PIN\nPress 'OK'\nEnter the response from the card reader",
           "name": "signcodeinput",
           "immutable": false,
           "masked": false,
@@ -228,7 +228,7 @@
         },
         {
           "description": "Response",
-          "helpText": "Enter your PIN\nPress 'OK'\nEnter the resespose from the card reader",
+          "helpText": "Enter your PIN\nPress 'OK'\nEnter the response from the card reader",
           "name": "signcodeinput",
           "immutable": false,
           "masked": false,
