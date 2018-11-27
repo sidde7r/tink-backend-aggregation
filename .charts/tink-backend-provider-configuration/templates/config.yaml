@@ -36,10 +36,9 @@ data:
         se.tink: INFO
         se.tink.org.eclipse: INFO
       appenders:
-        - type: console
+        - type: console-json
           threshold: ALL
           timeZone: Europe/Stockholm
-          logFormat: '{"date":"%date{"yyyy-MM-dd HH:mm:ss,SSSXXX"}","level":"%level","thread":"%thread","requestId":"%X{requestId}","logger":"%logger","message":"%replace(%m){"\n","\\n"}","exception":"%replace(%ex){"[\r\n]+","\\n"}"}%nopex%n'
 
     database:
       driverClass: com.mysql.jdbc.Driver
