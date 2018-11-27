@@ -83,6 +83,32 @@ java_library(
 )
 
 java_library(
+    name = "ch_qos_logback_contrib_logback_jackson",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@ch_qos_logback_contrib_logback_jackson//jar",
+    ],
+)
+
+java_library(
+    name = "ch_qos_logback_contrib_logback_json_classic",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@ch_qos_logback_contrib_logback_jackson//jar",
+        "@ch_qos_logback_contrib_logback_json_classic//jar",
+        "@ch_qos_logback_contrib_logback_json_core//jar",
+    ],
+)
+
+java_library(
+    name = "ch_qos_logback_contrib_logback_json_core",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@ch_qos_logback_contrib_logback_json_core//jar",
+    ],
+)
+
+java_library(
     name = "com_amazonaws_aws_java_sdk_s3",
     visibility = ["//visibility:public"],
     exports = [
