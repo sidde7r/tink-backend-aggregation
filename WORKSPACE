@@ -419,6 +419,24 @@ maven_jar(
 )
 
 maven_jar(
+    name = "ch_qos_logback_contrib_logback_json_classic",
+    artifact = "ch.qos.logback.contrib:logback-json-classic:jar:0.1.5",
+    sha1 = "f7fd4e747a9b0c50fc4f71b0055d5bea64dc05c3",
+)
+
+maven_jar(
+    name = "ch_qos_logback_contrib_logback_jackson",
+    artifact = "ch.qos.logback.contrib:logback-jackson:jar:0.1.5",
+    sha1 = "0e8b202a23691048a01e6322dd040f75e08e9ca2",
+)
+
+maven_jar(
+    name = "ch_qos_logback_contrib_logback_json_core",
+    artifact = "ch.qos.logback.contrib:logback-json-core:jar:0.1.5",
+    sha1 = "90bdb547819957fc940188f5830b7b59375f6fdd",
+)
+
+maven_jar(
     name = "com_codahale_metrics_metrics_jvm",
     artifact = "com.codahale.metrics:metrics-jvm:3.0.2",
     sha1 = "d0c6032905a3c6793c3ddcfade79e2b5f3ec1e25",
