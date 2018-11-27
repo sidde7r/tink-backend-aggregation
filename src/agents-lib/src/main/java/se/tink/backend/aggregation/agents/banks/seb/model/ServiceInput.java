@@ -5,8 +5,6 @@ public class ServiceInput {
 
     @JsonProperty("Condition")
     public String Condition = "EQ";
-    @JsonProperty("VariableNamePossibleValues")
-    public String[] VariableNamePossibleValues = new String[0];
     @JsonProperty("VariableName")
     public String VariableName;
     @JsonProperty("VariableValue")
