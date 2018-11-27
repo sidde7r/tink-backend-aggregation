@@ -95,6 +95,7 @@ import se.tink.backend.aggregation.agents.banks.seb.model.SebTransferRequestEnti
 import se.tink.backend.aggregation.agents.banks.seb.model.ServiceInput;
 import se.tink.backend.aggregation.agents.banks.seb.model.Session;
 import se.tink.backend.aggregation.agents.banks.seb.model.TransferListEntity;
+import se.tink.backend.aggregation.agents.banks.seb.model.USRINF01;
 import se.tink.backend.aggregation.agents.banks.seb.model.UpcomingTransactionEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.UserCredentials;
 import se.tink.backend.aggregation.agents.banks.seb.model.UserCredentialsRequestEntity;
@@ -147,7 +148,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecutor, PersistentLogin, TransferExecutor {
 
-    private static final String BASE_URL = "https://mP.seb.se";
+    private static final String BASE_URL = "https://mp.seb.se";
     private static final String API_URL = "/1000/ServiceFactory/PC_BANK/";
     private static final String AUTH_URL = "/nauth2/Authentication/api/v1/bid/";
 
@@ -217,12 +218,14 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
     private static final Predicate<ResultInfoMessage> ERROR_IS_BANKID_TRANSFER_TIMEOUT = input -> Objects
             .equal(input.ErrorCode, "RFA8");
 
+    // unused for the time being. Evaluating ignoring this error since we can still poll and succeed if bankId is signed
     private static final Predicate<ResultInfoMessage> ERROR_IS_BANKID_TRANSFER_ALREADY_IN_PROGRESS = input -> Objects
             .equal(input.ErrorCode, "RFA3");
 
     private static final TransferMessageLengthConfig TRANSFER_MESSAGE_LENGTH_CONFIG = TransferMessageLengthConfig.createWithMaxLength(12);
 
     private String customerId;
+    private String userId;
     private final TinkApacheHttpClient4 client;
     private final Credentials credentials;
     private final Catalog catalog;
@@ -567,7 +570,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
     /*
      * @return customer id from SEB
      */
-    private String activate() throws AuthorizationException {
+    private USRINF01 activate() throws AuthorizationException {
 
         SebRequest payload = new SebRequest();
         payload.request.ServiceInput.add(new ServiceInput("CUSTOMERTYPE", "P"));
@@ -595,7 +598,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
                                 response.getFirstErrorMessage()));
             }
         } else {
-            return response.d.VODB.USRINF01.SEB_KUND_NR;
+            return response.d.VODB.USRINF01;
         }
     }
 
@@ -629,9 +632,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
                             rfa, status, initiateBankIdResponse.getMessage()));
         }
 
-        credentials.setSupplementalInformation(null);
-        credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-        context.requestSupplementalInformation(credentials, false);
+        context.openBankId(null, false);
 
         collectBankId(initiateBankIdResponse);
     }
@@ -692,8 +693,8 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
             config.getProperties().put(ApacheHttpClient4Config.PROPERTY_CONNECTION_MANAGER, manager);
 
             BasicHttpParams params = new BasicHttpParams();
-            //HttpHost proxy = new HttpHost("127.0.0.1", 8888);
-            //params.setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+//            HttpHost proxy = new HttpHost("127.0.0.1", 8888);
+//            params.setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
             config.getProperties().put(ApacheHttpClient4Config.PROPERTY_HTTP_PARAMS, params);
 
             config.getProperties().put(CoreConnectionPNames.SO_TIMEOUT, 30000);
@@ -931,8 +932,11 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
 
         initiateConnection();
 
-        customerId = activate();
+        USRINF01 userinfo = activate();
+        customerId = userinfo.SEB_KUND_NR;
+        userId = userinfo.IMS_SHORT_USERID;
         Preconditions.checkNotNull(customerId);
+        Preconditions.checkNotNull(userId);
         return true;
     }
 
@@ -1833,10 +1837,10 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
     }
 
     private List<TransferListEntity> getUnsignedTransfers() {
-        ServiceInput userIdServiceInput = new ServiceInput("USER_ID", customerId);
-
         SebRequest sebRequest = new SebRequest();
-        sebRequest.request.ServiceInput.add(userIdServiceInput);
+        sebRequest.request.ServiceInput.add(new ServiceInput("USER_ID", userId));
+        sebRequest.request.ServiceInput.add(new ServiceInput("UPPDRAG_TYP", "A"));
+        sebRequest.request.ServiceInput.add(new ServiceInput("SORT_ORDER", ""));
 
         SebResponse response = postAsJSON(EXTERNAL_TRANSFER_UNSIGNED, sebRequest, SebResponse.class);
 
@@ -1888,10 +1892,8 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
 
     private void ensureExternalPaymentSignedOrThrow(MatchableTransferRequestEntity transfer, TransferListEntity transferQueuedUp)
             throws InterruptedException {
-        // wait a bit for SEB to process payment and signing
-        // we see a time lapse in the logs between sign and check of 10 seconds
-        Uninterruptibles.sleepUninterruptibly(5000, TimeUnit.MILLISECONDS);
 
+        Uninterruptibles.sleepUninterruptibly(8000, TimeUnit.MILLISECONDS);
         for (int i = 0; i < MAX_ATTEMPTS; i++) {
             SebResponse response = postAsJSON(EXTERNAL_TRANSFER_SIGN_VERIFICATION_URL, new SebRequest(), SebResponse.class);
 
@@ -1913,8 +1915,6 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
             cancelTransfer(catalog.getString(TransferExecutionException.EndUserMessage.BANKID_CANCELLED));
         } else if (FluentIterable.from(response.getErrors()).anyMatch(ERROR_IS_BANKID_TRANSFER_TIMEOUT)) {
             cancelTransfer(catalog.getString(TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE));
-        } else if (FluentIterable.from(response.getErrors()).anyMatch(ERROR_IS_BANKID_TRANSFER_ALREADY_IN_PROGRESS)) {
-            cancelTransfer(catalog.getString(TransferExecutionException.EndUserMessage.BANKID_ANOTHER_IN_PROGRESS));
         }
 
         abortTransferIfErrorIsPresent(response);
@@ -1964,9 +1964,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
     }
 
     private void requestSupplementalBankId() {
-        credentials.setSupplementalInformation(null);
-        credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-        context.requestSupplementalInformation(credentials, false);
+        context.openBankId(null, false);
     }
 
     private boolean deleteTransferFromOutbox(TransferListEntity transferQueuedUp) {
