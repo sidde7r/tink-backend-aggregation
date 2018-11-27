@@ -764,6 +764,7 @@ java_library(
         "//src/libraries/serialization_utils:serialization-utils",
         "//src/libraries/i18n",
         "//src/libraries/http:http-utils",
+        "//src/libraries/http_client:http-client",
         
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:io_dropwizard_dropwizard_core",
