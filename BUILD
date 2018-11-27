@@ -867,6 +867,7 @@ java_binary(
          "//src/libraries/metrics:metrics",
          "//src/libraries/cli_print_utils:cli_print_utils",
          "//src/libraries/serialization_utils:serialization-utils",
+         "//src/libraries/console_json_logger:console_json_logger",
 
          "//third_party:org_springframework_spring_expression",
          "//third_party:org_springframework_data_spring_data_jpa",
