@@ -1,7 +1,0 @@
-{
-  "clusterid" : "kirkby-production",
-  "providers" : [
-    "lu-bcee",
-    "lu-keytrade-bank"
-  ]
-}

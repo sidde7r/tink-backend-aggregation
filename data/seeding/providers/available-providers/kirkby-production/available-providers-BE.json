@@ -1,7 +1,0 @@
-{
-  "clusterid" : "kirkby-production",
-  "providers" : [
-    "be-crelan",
-    "be-record-bank"
-  ]
-}
