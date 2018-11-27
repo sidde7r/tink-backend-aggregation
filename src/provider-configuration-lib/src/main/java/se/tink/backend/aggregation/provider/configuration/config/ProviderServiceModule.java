@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.provider.configuration.controllers.ProviderSe
 import se.tink.backend.aggregation.provider.configuration.core.ProviderConfigurationDAO;
 import se.tink.backend.aggregation.provider.configuration.http.resources.MonitoringServiceResource;
 import se.tink.backend.aggregation.provider.configuration.http.resources.ProviderServiceResource;
+import se.tink.backend.aggregation.provider.configuration.logging.ProviderLoggerRequestFilter;
 import se.tink.backend.aggregation.provider.configuration.storage.ProviderConfigurationProvider;
 import se.tink.libraries.http.client.RequestTracingFilter;
 import se.tink.libraries.jersey.guice.JerseyResourceRegistrar;
@@ -36,8 +37,15 @@ public class ProviderServiceModule extends AbstractModule {
                 .binder(binder())
                 .jersey(jersey)
                 .addFilterFactories(ResourceTimerFilterFactory.class)
-                .addRequestFilters(AccessLoggingFilter.class, RequestTracingFilter.class)
-                .addResponseFilters(AccessLoggingFilter.class, RequestTracingFilter.class)
+                .addRequestFilters(
+                        AccessLoggingFilter.class,
+                        RequestTracingFilter.class,
+                        ProviderLoggerRequestFilter.class
+                )
+                .addResponseFilters(
+                        AccessLoggingFilter.class,
+                        RequestTracingFilter.class
+                )
                 .addResources(ProviderService.class)
                 .addResources(MonitoringService.class)
                 .addResources(JerseyClusterIdProvider.class)
