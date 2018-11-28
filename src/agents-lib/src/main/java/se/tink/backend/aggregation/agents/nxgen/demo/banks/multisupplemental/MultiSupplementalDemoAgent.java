@@ -21,8 +21,6 @@ import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class MultiSupplementalDemoAgent extends NextGenerationDemoAgent {
 
-    //TODO: DONT AUTHENTICATE IF THE USER DONT ENTER THE CORRECT VALUES
-
     public MultiSupplementalDemoAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }

@@ -21,8 +21,6 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 public class PasswordDemoAgent extends NextGenerationDemoAgent {
 
-    //TODO: DONT AUTHENTICATE IF THE USER DONT ENTER THE CORRECT VALUES
-
     public PasswordDemoAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }
