@@ -1255,7 +1255,7 @@
             "popular": false,
             "refreshFrequency": 0,
             "refreshFrequencyFactor": 1,
-            "status": "TEMPORARY_DISABLED",
+            "status": "ENABLED",
             "transactional": true,
             "type": "BANK"
         },
