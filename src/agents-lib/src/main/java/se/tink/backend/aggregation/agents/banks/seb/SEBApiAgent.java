@@ -1585,13 +1585,34 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
     }
 
     private EInvoiceListEntity fetchMatchingEInvoice(final Transfer transfer) throws TransferExecutionException {
-        final Transfer originalTransfer = getOriginalTransfer(transfer);
+        final Transfer transferToMatch = getOriginalTransfer(transfer);
 
         List<EInvoiceListEntity> eInvoiceEntities = fetchEInvoiceEntities();
 
         Optional<EInvoiceListEntity> matchingEInvoice = eInvoiceEntities.stream().filter(input -> {
             Transfer eInvoice = EInvoiceListEntity.TO_TRANSFER.apply(input);
-            return eInvoice != null && Objects.equal(eInvoice.getHash(), originalTransfer.getHash());
+            return eInvoice != null && Objects.equal(eInvoice.getHash(), transferToMatch.getHash());
+        }).findFirst();
+
+        if (!matchingEInvoice.isPresent()) {
+            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                    .setEndUserMessage(catalog.getString(TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES))
+                    .build();
+        }
+
+        return matchingEInvoice.get();
+    }
+
+    private EInvoiceListEntity fetchMatchingUpdatedEInvoice(final Transfer transfer) throws TransferExecutionException {
+        final Transfer transferToMatch = getOriginalTransfer(transfer);
+        // just in case source account is changed
+        transferToMatch.setSource(transfer.getSource());
+
+        List<EInvoiceListEntity> eInvoiceEntities = fetchEInvoiceEntities();
+
+        Optional<EInvoiceListEntity> matchingEInvoice = eInvoiceEntities.stream().filter(input -> {
+            Transfer eInvoice = EInvoiceListEntity.TO_TRANSFER.apply(input);
+            return eInvoice != null && Objects.equal(eInvoice.getHash(), transferToMatch.getHash());
         }).findFirst();
 
         if (!matchingEInvoice.isPresent()) {
@@ -1649,7 +1670,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
         SebResponse sebResponse = postAsJSON(EINVOICES_CHANGE_UNSIGNED_URL, sebRequest, SebResponse.class);
         abortTransferIfErrorIsPresent(sebResponse);
 
-        EInvoiceListEntity updatedEInvoiceEntity = fetchMatchingEInvoice(transfer);
+        EInvoiceListEntity updatedEInvoiceEntity = fetchMatchingUpdatedEInvoice(transfer);
         if (isTransferModifyingEInvoice(updatedEInvoiceEntity, transfer)) {
             cancelTransfer(catalog.getString(TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_FAILED));
         }
