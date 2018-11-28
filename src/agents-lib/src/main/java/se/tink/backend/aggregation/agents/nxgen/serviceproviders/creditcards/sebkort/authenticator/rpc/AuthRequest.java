@@ -13,8 +13,7 @@ public class AuthRequest extends AbstractForm {
         this.put(
                 SebKortConstants.FormKey.TARGET,
                 String.format(SebKortConstants.FormValue.TARGET, config.getProviderCode()));
-        this.put("TYPE", SebKortConstants.FormValue.TYPE);
-        this.put("type", SebKortConstants.FormValue.TYPE);
+        this.put(SebKortConstants.FormKey.TYPE, SebKortConstants.FormValue.TYPE);
         this.put(SebKortConstants.FormKey.SCRT, scrt);
         this.put(
                 SebKortConstants.FormKey.SEB_AUTH_MECHANISM,

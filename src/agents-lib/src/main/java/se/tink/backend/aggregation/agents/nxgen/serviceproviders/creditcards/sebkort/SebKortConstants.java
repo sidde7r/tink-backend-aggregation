@@ -61,6 +61,7 @@ public class SebKortConstants {
         public static final String COUNTRY_CODE = "countryCode";
         public static final String UID = "UID";
         public static final String TARGET = "target";
+        public static final String TYPE = "TYPE";
         public static final String SCRT = "scrt";
         public static final String SEB_AUTH_MECHANISM = "SEB_Auth_Mechanism";
     }
