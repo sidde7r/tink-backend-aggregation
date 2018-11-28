@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
@@ -150,7 +151,12 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
         generateChallenges(res.getValue().getAuthenticationProcessId(), authenticatorFactorId, smid, agreementId,
                 deviceFingerprint);
 
-        UserInfoResponse userInfoResponse = apiClient.getUserInfo();
+        UserInfoResponse userInfoResponse = null;
+        try {
+            userInfoResponse = apiClient.getUserInfo();
+        } catch (HttpClientException hce) {
+            throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
+        }
 
         persistentStorage.put(FortisConstants.STORAGE.MUID, userInfoResponse.getValue().getUserData().getMuid());
 
@@ -220,7 +226,13 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
             throw new IllegalStateException("Could not login during autoAuthenticate");
         }
 
-        UserInfoResponse userInfoResponse = apiClient.getUserInfo();
+        UserInfoResponse userInfoResponse = null;
+        try {
+            userInfoResponse = apiClient.getUserInfo();
+        } catch (HttpClientException hce) {
+            throw new IllegalStateException("Incorrect challenge in autoAuthenticate");
+        }
+
         persistentStorage.put(FortisConstants.STORAGE.MUID, userInfoResponse.getValue().getUserData().getMuid());
     }
 

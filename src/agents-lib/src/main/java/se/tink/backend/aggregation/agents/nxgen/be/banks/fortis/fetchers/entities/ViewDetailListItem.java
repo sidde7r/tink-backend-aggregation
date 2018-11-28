@@ -70,7 +70,7 @@ public class ViewDetailListItem {
     }
 
     private AccountIdentifier getIbanIdentifier() {
-        return AccountIdentifier.create(AccountIdentifier.Type.IBAN, getIban());
+        return AccountIdentifier.create(AccountIdentifier.Type.IBAN, getIban(), AccountIdentifier.Type.IBAN.toString());
     }
 
     private HolderName getHoldername() {

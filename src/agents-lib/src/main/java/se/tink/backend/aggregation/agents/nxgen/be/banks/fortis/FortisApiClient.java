@@ -73,7 +73,7 @@ public class FortisApiClient {
     }
 
     private URL getUrl(String resource) {
-        return new URL(baseUrl + resource);
+        return new URL(String.format("%s%s", baseUrl, resource));
     }
 
     public EbankingUsersResponse getEBankingUsers(EBankingUsersRequest eBankingUsersRequest) {
