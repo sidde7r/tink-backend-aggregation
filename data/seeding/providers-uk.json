@@ -109,7 +109,7 @@
       "groupDisplayName": "Monzo",
       "popular": false,
       "type": "BANK",
-      "status": "DISABLED",
+      "status": "ENABLED",
       "credentialsType": "PASSWORD",
       "multiFactor": false,
       "className": "nxgen.uk.openbanking.monzo.MonzoAgent",
