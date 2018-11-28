@@ -9,6 +9,8 @@
     "be-ing-cardreader",
     "be-kbc-cardreader",
     "be-n26-password",
-    "be-revolut-password"
+    "be-revolut-password",
+    "be-hellobank-cardreader",
+    "be-fortis-cardreader"
   ]
 }
