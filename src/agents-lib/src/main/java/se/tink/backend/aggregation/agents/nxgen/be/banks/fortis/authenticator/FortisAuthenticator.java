@@ -108,7 +108,12 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
     }
 
     private void sendChallenges(AuthResponse response) throws LoginException {
-        apiClient.authenticationRequest(response.getUrlEncodedFormat());
+        try{
+            apiClient.authenticationRequest(response.getUrlEncodedFormat());
+        }
+        catch (Exception e){
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
     }
 
     @Override
