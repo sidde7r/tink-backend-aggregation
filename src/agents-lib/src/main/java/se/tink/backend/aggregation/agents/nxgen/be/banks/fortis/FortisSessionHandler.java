@@ -23,19 +23,15 @@ public class FortisSessionHandler implements SessionHandler {
         return persistentStorage.containsKey(FortisConstants.STORAGE.CALCULATED_CHALLENGE);
     }
 
-    private void tryFetchAccounts() throws SessionException {
-        try {
-            this.apiClient.fetchAccounts();
-        } catch (Exception e) {
-            throw SessionError.SESSION_EXPIRED.exception();
-        }
-    }
-
     @Override
     public void keepAlive() throws SessionException {
-        if (calulcatedChallengeExists()) {
-            tryFetchAccounts();
-        } else {
+        try {
+            if (calulcatedChallengeExists()) {
+                this.apiClient.fetchAccounts();
+            } else {
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
+        } catch (Exception e) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }
