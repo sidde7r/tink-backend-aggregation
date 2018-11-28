@@ -22,8 +22,12 @@ import se.tink.backend.aggregation.agents.AgentFactory;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
-import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
+import se.tink.backend.aggregation.agents.TransferExecutor;
+import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
+import se.tink.backend.aggregation.agents.nxgen.framework.validation.AisValidator;
+import se.tink.backend.aggregation.agents.nxgen.framework.validation.ValidatorFactory;
 import se.tink.backend.aggregation.capability.CapabilityTester;
+import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
@@ -33,6 +37,7 @@ import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.aggregation.rpc.UserProfile;
+import se.tink.backend.core.transfer.Transfer;
 
 public class AgentIntegrationTest extends AbstractConfigurationBase {
     private static final Logger log = LoggerFactory.getLogger(AbstractAgentTest.class);
@@ -55,6 +60,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
     private final Set<RefreshableItem> refreshableItems;
 
+    private final AisValidator validator;
+
     private final NewAgentTestContext context;
 
 
@@ -70,6 +77,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         this.doLogout = builder.isDoLogout();
         this.expectLoggedIn = builder.isExpectLoggedIn();
         this.refreshableItems = builder.getRefreshableItems();
+        this.validator = builder.validator;
 
         this.context = new NewAgentTestContext(user, credential, builder.getTransactionsToPrint());
     }
@@ -219,8 +227,23 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         log.info("Done with refresh.");
     }
 
-    public void testRefresh() throws Exception {
+    private void doBankTransfer(Agent agent, Transfer transfer) throws Exception {
+        log.info("Executing bank transfer.");
 
+        if (agent instanceof TransferExecutorNxgen) {
+            ((TransferExecutorNxgen)agent).execute(transfer);
+        } else if (agent instanceof TransferExecutor) {
+            ((TransferExecutor)agent).execute(transfer);
+
+        } else {
+            throw new AssertionError(String.format("%s does not implement a transfer executor interface.",
+                    agent.getClass().getSimpleName()));
+        }
+
+        log.info("Done with bank transfer.");
+    }
+
+    private void initiateCredentials() {
         if (loadCredentials()) {
             // If the credential loaded successful AND the flags were not overridden
             // == non-create/update refresh
@@ -242,11 +265,35 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 requestFlagUpdate = false;
             }
         }
+    }
 
+    public void testRefresh() throws Exception {
+        initiateCredentials();
         Agent agent = createAgent(createRefreshInformationRequest());
         try {
             login(agent);
             refresh(agent);
+            Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
+
+            if (doLogout) {
+                logout(agent);
+            }
+        } finally {
+            saveCredentials(agent);
+        }
+
+        context.validateFetchedData(validator);
+
+        context.printCollectedData();
+    }
+
+    public void testBankTransfer(Transfer transfer) throws Exception {
+        initiateCredentials();
+        Agent agent = createAgent(createRefreshInformationRequest());
+        try {
+            login(agent);
+
+            doBankTransfer(agent, transfer);
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
             if (doLogout) {
@@ -282,6 +329,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         private boolean expectLoggedIn = true;
 
         private Set<RefreshableItem> refreshableItems = new HashSet<>();
+
+        private AisValidator validator;
 
         public Builder(String market, String providerName) {
             ProviderConfigModel marketProviders = readProvidersConfiguration(market);
@@ -454,6 +503,12 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             return addCredentialField(key.getFieldKey(), value);
         }
 
+        /** Inject a custom validator of AIS data. */
+        public Builder setValidator(final AisValidator validator) {
+            this.validator = validator;
+            return this;
+        }
+
         public AgentIntegrationTest build() {
             if (refreshableItems.isEmpty()) {
                 refreshableItems.addAll(Arrays.asList(RefreshableItem.values()));
@@ -464,6 +519,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             CapabilityTester.checkCapabilities(provider.getClassName());
             credential.setProviderName(provider.getName());
             credential.setType(provider.getCredentialsType());
+
+            if (validator == null) {
+                validator = ValidatorFactory.getExtensiveValidator();
+            }
 
             return new AgentIntegrationTest(this);
         }

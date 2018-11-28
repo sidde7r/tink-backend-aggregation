@@ -86,4 +86,8 @@ public class RevolutConstants {
         public static final String REWARD = "REWARD";
         public static final String TOP_UP = "TOPUP";
     }
+
+    public static class TransactionState {
+        public static final String FAILED = "FAILED";
+    }
 }

@@ -9,7 +9,9 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 public class ProviderConfiguration {
 
     private String organizationId;
+
     private URL apiBaseURL;
+    private URL pisBaseURL;
     private URL authBaseURL;
     private URL wellKnownURL;
     private ClientInfo clientInfo;
@@ -22,6 +24,14 @@ public class ProviderConfiguration {
         return apiBaseURL;
     }
 
+    public URL getPisBaseURL() {
+        return pisBaseURL;
+    }
+
+    public URL getPisConsentURL() {
+        return authBaseURL != null ? authBaseURL : pisBaseURL;
+    }
+
     public URL getAuthBaseURL() {
         return authBaseURL != null ? authBaseURL : apiBaseURL;
     }
@@ -31,11 +41,11 @@ public class ProviderConfiguration {
     }
 
     public URL getPaymentsURL() {
-        return getApiBaseURL().concat(OpenIdConstants.ApiServices.PAYMENTS);
+        return getPisConsentURL().concat(OpenIdConstants.ApiServices.PAYMENTS);
     }
 
-    public URL getPaymentSubmissionsURL(String paymentSubmissionId) {
-        return getApiBaseURL().concat(OpenIdConstants.ApiServices.PAYMENT_SUBMISSIONS + paymentSubmissionId);
+    public URL getPaymentSubmissionsURL() {
+        return getPisBaseURL().concat(OpenIdConstants.ApiServices.PAYMENT_SUBMISSIONS);
     }
 
     public void validate() {

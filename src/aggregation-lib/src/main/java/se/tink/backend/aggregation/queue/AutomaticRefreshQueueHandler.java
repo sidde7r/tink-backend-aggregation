@@ -5,9 +5,10 @@ import java.util.concurrent.RejectedExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import se.tink.backend.aggregation.cluster.identification.ClusterId;
-import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
+import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.queue.models.RefreshInformation;
+import se.tink.backend.aggregation.storage.database.models.ClientConfiguration;
+import se.tink.backend.aggregation.storage.database.providers.ClientConfigurationProvider;
 import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.backend.aggregation.workers.AgentWorkerOperationFactory;
 import se.tink.backend.aggregation.workers.AgentWorkerRefreshOperationCreatorWrapper;
@@ -23,17 +24,20 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
     private EncodingHandler<RefreshInformation> encodingHandler;
     private static final Logger logger = LoggerFactory.getLogger(AutomaticRefreshQueueHandler.class);
     private final MetricRegistry metricRegistry;
+    private ClientConfigurationProvider clientConfigurationProvider;
     private final MetricId metricId = MetricId.newId("aggregation_queue_consumes_by_provider");
 
     @Inject
     public AutomaticRefreshQueueHandler(AgentWorker agentWorker,
             AgentWorkerOperationFactory agentWorkerOperationFactory,
             EncodingHandler encodingHandler,
-            MetricRegistry metricRegistry) {
+            MetricRegistry metricRegistry,
+            ClientConfigurationProvider clientConfigurationProvider) {
         this.agentWorker = agentWorker;
         this.agentWorkerCommandFactory = agentWorkerOperationFactory;
         this.encodingHandler = encodingHandler;
         this.metricRegistry = metricRegistry;
+        this.clientConfigurationProvider = clientConfigurationProvider;
     }
 
     @Override
@@ -43,19 +47,26 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
                 refreshInformation.getRequest().getProvider().getName())).inc();
 
         try {
+        ClientInfo clientInfo = null;
+        if (refreshInformation.getClientName() != null) {
+            clientInfo = ClientInfo.of(
+                    refreshInformation.getClientName(),
+                    refreshInformation.getClusterId(),
+                    refreshInformation.getAggregatorId()
+            );
+        } else {
+            ClientConfiguration configuration = clientConfigurationProvider.getClientConfiguration(refreshInformation.getName(), refreshInformation.getEnvironment());
+            clientInfo = ClientInfo.of(
+                    configuration.getClientName(),
+                    configuration.getClusterId(),
+                    configuration.getAggregatorId()
+            );
+        }
             AgentWorkerRefreshOperationCreatorWrapper agentWorkerRefreshOperationCreatorWrapper = AgentWorkerRefreshOperationCreatorWrapper.of(
                     agentWorkerCommandFactory,
                     refreshInformation.getRequest(),
-                    ClusterInfo.createForAggregationCluster(
-                            ClusterId.of(refreshInformation.getName(), refreshInformation.getEnvironment()),
-                            refreshInformation.getAggregationControllerHost(),
-                            refreshInformation.getApiToken(),
-                            refreshInformation.getClientCertificate(),
-                            refreshInformation.isDisableRequestCompression(),
-                            refreshInformation.getAggregator()),
-                    null);
-
-            // FIXME: do not pass null clientInfo
+                    clientInfo
+                    );
 
             MDC.setContextMap(refreshInformation.getMDCContext());
             agentWorker.executeAutomaticRefresh(agentWorkerRefreshOperationCreatorWrapper);

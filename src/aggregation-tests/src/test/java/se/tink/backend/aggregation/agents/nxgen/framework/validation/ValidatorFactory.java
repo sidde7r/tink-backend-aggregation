@@ -1,40 +1,27 @@
 package se.tink.backend.aggregation.agents.nxgen.framework.validation;
 
-import java.util.Collection;
-import se.tink.backend.system.rpc.Transaction;
+import java.util.Optional;
+import se.tink.backend.aggregation.rpc.AccountTypes;
 
 public final class ValidatorFactory {
     private ValidatorFactory() {
         throw new AssertionError();
     }
 
-    private static boolean containsDuplicates(final Collection<Transaction> transactions) {
-        for (final Transaction transaction : transactions) {
-            final long numberOfIdenticalElements =
-                    transactions
-                            .stream()
-                            .filter(t -> t.getDate().equals(transaction.getDate()))
-                            .filter(t -> t.getDescription().equals(transaction.getDescription()))
-                            .filter(t -> t.getAmount() == transaction.getAmount())
-                            .filter(t -> t.getAccountId().equals(transaction.getAccountId()))
-                            .count();
-            if (numberOfIdenticalElements > 1) {
-                return false;
-            } else if (numberOfIdenticalElements < 1) {
-                throw new AssertionError("Unexpected number of elements");
-            }
-        }
-        return true;
+    public static AisValidator getEmptyValidator() {
+        return AisValidator.builder().build();
     }
 
     public static AisValidator getExtensiveValidator() {
+        final DuplicateTransactionFinder dupeFinder = new DuplicateTransactionFinder();
+
         return AisValidator.builder()
                 .ruleAccount(
                         "Account number is present",
                         acc -> acc.getAccountNumber() != null,
                         acc -> String.format("Account lacks an account number: %s", acc))
                 .ruleAccount(
-                        "Balance does not exceed threshold",
+                        "Account balance does not exceed threshold",
                         acc -> acc.getBalance() <= 10000000.0,
                         acc ->
                                 String.format(
@@ -44,13 +31,35 @@ public final class ValidatorFactory {
                         "Holder name is present",
                         acc -> acc.getHolderName() != null,
                         acc -> String.format("Account lacks a holder name: %s", acc))
+                .ruleAccount(
+                        "Checking account balance is >= 0",
+                        acc -> acc.getType() != AccountTypes.CHECKING || acc.getBalance() >= 0)
+                .ruleAccount(
+                        "Savings account balance is >= 0",
+                        acc -> acc.getType() != AccountTypes.SAVINGS || acc.getBalance() >= 0)
+                .ruleAccount(
+                        "Account name is present",
+                        acc -> acc.getName() != null,
+                        acc -> String.format("Account lacks a name: %s", acc))
+                .ruleTransaction(
+                        "Transaction description is present",
+                        trx -> trx.getDescription() != null,
+                        trx -> String.format("Transaction description is null: %s", trx))
+                .ruleTransaction(
+                        "Transaction description length is reasonable",
+                        trx ->
+                                Optional.ofNullable(trx.getDescription())
+                                                .map(String::length)
+                                                .orElse(0)
+                                        <= 1000,
+                        trx -> String.format("Transaction description is too long: %s", trx))
                 .rule(
                         "No duplicate transactions",
-                        aisdata -> containsDuplicates(aisdata.getTransactions()),
-                        data ->
+                        aisdata -> !dupeFinder.containsDuplicates(aisdata.getTransactions()),
+                        aisdata ->
                                 String.format(
                                         "Found at least two transactions with the same date, description, amount and account ID: %s",
-                                        data.getTransactions()))
+                                        dupeFinder.getAnyDuplicates(aisdata.getTransactions())))
                 .build();
     }
 }

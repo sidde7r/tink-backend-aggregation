@@ -30,13 +30,4 @@ public class TransactionsRequest {
         this.sortedIndex = sortedIndex;
         return this;
     }
-
-    public boolean canStillFetch() {
-        return canStillFetch;
-    }
-
-    public TransactionsRequest setCanStillFetch(boolean canStillFetch) {
-        this.canStillFetch = canStillFetch;
-        return this;
-    }
 }

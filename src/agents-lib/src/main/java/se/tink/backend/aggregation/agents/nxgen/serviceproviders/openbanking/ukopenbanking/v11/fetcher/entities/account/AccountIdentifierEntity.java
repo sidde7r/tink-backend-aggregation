@@ -27,12 +27,16 @@ public class AccountIdentifierEntity {
         return name;
     }
 
-    public AccountIdentifier toAccountIdentifier() {
+    public AccountIdentifier toAccountIdentifier(String accountName) {
         switch (identifierType) {
         case IBAN:
-            return new IbanIdentifier(null, identification);
+            IbanIdentifier ibanIdentifier = new IbanIdentifier(null, identification);
+            ibanIdentifier.setName(accountName);
+            return ibanIdentifier;
         case SORT_CODE_ACCOUNT_NUMBER:
-            return new SortCodeIdentifier(name, identification);
+            SortCodeIdentifier sortCodeIdentifier = new SortCodeIdentifier(identification);
+            sortCodeIdentifier.setName(accountName);
+            return sortCodeIdentifier;
         default:
             throw new IllegalStateException(
                     String.format("Unknown identifier type: %s", identifierType)

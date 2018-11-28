@@ -1,9 +1,5 @@
 {
   "clusterid" : "oxford-production",
   "providers" : [
-    "gb-americanexpress",
-    "gb-citibank",
-    "gb-danskebank",
-    "gb-demo"
   ]
 }

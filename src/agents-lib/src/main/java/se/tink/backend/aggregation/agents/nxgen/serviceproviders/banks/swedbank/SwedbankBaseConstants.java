@@ -111,6 +111,7 @@ public class SwedbankBaseConstants {
         public static final String PROFILE = "profile";
         public static final String CREDIT_CARD_RESPONSE = "creditCardResponse";
         public static final String BANK_PROFILE_HANDLER = "BANK_PROFILES";
+        public static final String ID = "id";
     }
 
     public static class SavingAccountTypes {

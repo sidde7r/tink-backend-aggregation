@@ -5,9 +5,11 @@ import ch.qos.logback.classic.LoggerContext;
 import com.google.inject.Inject;
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.exporter.MetricsServlet;
+import io.prometheus.client.hotspot.ClassLoadingExports;
 import io.prometheus.client.hotspot.GarbageCollectorExports;
 import io.prometheus.client.hotspot.MemoryPoolsExports;
 import io.prometheus.client.hotspot.StandardExports;
+import io.prometheus.client.hotspot.ThreadExports;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -72,6 +74,8 @@ public class PrometheusExportServer {
         new StandardExports().register(registry);
         new MemoryPoolsExports().register(registry);
         new GarbageCollectorExports().register(registry);
+        new ThreadExports().register(registry);
+        new ClassLoadingExports().register(registry);
     }
 
 }

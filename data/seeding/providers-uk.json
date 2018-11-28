@@ -4,7 +4,10 @@
   "providers": [
     {
       "name": "uk-modelo-oauth2",
-      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
+      "capabilities": [
+        "TRANSFERS"
+      ],
+      "className": "nxgen.uk.openbanking.modelo.ModeloAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Modelo test",
       "fields": [],
@@ -21,7 +24,10 @@
     },
     {
       "name": "uk-aib-oauth2",
-      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11Agent",
+      "capabilities": [
+        "TRANSFERS"
+      ],
+      "className": "nxgen.uk.openbanking.aib.AibAgent",
       "credentialsType": "PASSWORD",
       "displayName": "AIB",
       "fields": [
@@ -36,7 +42,7 @@
       "groupDisplayName": "",
       "multiFactor": false,
       "passwordhelptext": "Authentication is done on external page",
-      "popular": true,
+      "popular": false,
       "refreshFrequency": 1,
       "refreshFrequencyFactor": 1,
       "status": "DISABLED",
@@ -45,7 +51,10 @@
     },
     {
       "name": "uk-barclays-oauth2",
-      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11Agent",
+      "capabilities": [
+        "TRANSFERS"
+      ],
+      "className": "nxgen.uk.openbanking.barclays.BarclaysAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Barclays",
       "fields": [
@@ -69,7 +78,10 @@
     },
     {
       "name": "uk-danskebank-oauth2",
-      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11Agent",
+      "capabilities": [
+        "TRANSFERS"
+      ],
+      "className": "nxgen.uk.openbanking.danskebank.DanskeBankAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Danske Bank",
       "fields": [
@@ -84,7 +96,7 @@
       "groupDisplayName": "",
       "multiFactor": false,
       "passwordhelptext": "Authentication is done on external page",
-      "popular": true,
+      "popular": false,
       "refreshFrequency": 1,
       "refreshFrequencyFactor": 1,
       "status": "ENABLED",
@@ -95,12 +107,12 @@
       "name": "uk-monzo-oauth2",
       "displayName": "Monzo",
       "groupDisplayName": "Monzo",
-      "popular": true,
+      "popular": false,
       "type": "BANK",
-      "status": "DISABLED",
+      "status": "ENABLED",
       "credentialsType": "PASSWORD",
       "multiFactor": false,
-      "className": "nxgen.uk.banks.monzo.MonzoAgent",
+      "className": "nxgen.uk.openbanking.monzo.MonzoAgent",
       "passwordHelpText": "",
       "transactional": true,
       "fields": [
@@ -110,11 +122,15 @@
           "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
           "immutable": true
         }
-      ]
+      ],
+      "payload": "tink"
     },
     {
       "name": "uk-halifax-oauth2",
-      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
+      "capabilities": [
+        "TRANSFERS"
+      ],
+      "className": "nxgen.uk.openbanking.halifax.HalifaxAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Halifax",
       "fields": [
@@ -129,7 +145,7 @@
       "groupDisplayName": "",
       "multiFactor": false,
       "passwordhelptext": "Authentication is done on external page",
-      "popular": true,
+      "popular": false,
       "refreshFrequency": 1,
       "refreshFrequencyFactor": 1,
       "status": "ENABLED",
@@ -138,7 +154,7 @@
     },
     {
       "name": "uk-hsbc-oauth2",
-      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11Agent",
+      "className": "nxgen.uk.openbanking.hsbc.HsbcAgent",
       "credentialsType": "PASSWORD",
       "displayName": "HSBC",
       "fields": [
@@ -162,7 +178,10 @@
     },
     {
       "name": "uk-ulster-oauth2",
-      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
+      "capabilities": [
+        "TRANSFERS"
+      ],
+      "className": "nxgen.uk.openbanking.ulster.UlsterAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Ulster Bank",
       "fields": [
@@ -177,7 +196,7 @@
       "groupDisplayName": "",
       "multiFactor": false,
       "passwordhelptext": "Authentication is done on external page",
-      "popular": true,
+      "popular": false,
       "refreshFrequency": 1,
       "refreshFrequencyFactor": 1,
       "status": "ENABLED",
@@ -186,7 +205,10 @@
     },
     {
       "name": "uk-natwest-oauth2",
-      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
+      "capabilities": [
+        "TRANSFERS"
+      ],
+      "className": "nxgen.uk.openbanking.natwest.NatWestAgent",
       "credentialsType": "PASSWORD",
       "displayName": "NatWest",
       "fields": [
@@ -201,7 +223,7 @@
       "groupDisplayName": "",
       "multiFactor": false,
       "passwordhelptext": "Authentication is done on external page",
-      "popular": true,
+      "popular": false,
       "refreshFrequency": 1,
       "refreshFrequencyFactor": 1,
       "status": "ENABLED",
@@ -210,7 +232,7 @@
     },
     {
       "name": "uk-markandspencer-oauth2",
-      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11Agent",
+      "className": "nxgen.uk.openbanking.markandspencer.MarkAndSpencerAgent",
       "credentialsType": "PASSWORD",
       "displayName": "M&S Bank",
       "fields": [
@@ -225,7 +247,7 @@
       "groupDisplayName": "",
       "multiFactor": false,
       "passwordhelptext": "Authentication is done on external page",
-      "popular": true,
+      "popular": false,
       "refreshFrequency": 1,
       "refreshFrequencyFactor": 1,
       "status": "ENABLED",
@@ -234,7 +256,7 @@
     },
     {
       "name": "uk-firstdirect-oauth2",
-      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11Agent",
+      "className": "nxgen.uk.openbanking.firstdirect.FirstDirectAgent",
       "credentialsType": "PASSWORD",
       "displayName": "First Direct",
       "fields": [
@@ -249,7 +271,7 @@
       "groupDisplayName": "",
       "multiFactor": false,
       "passwordhelptext": "Authentication is done on external page",
-      "popular": true,
+      "popular": false,
       "refreshFrequency": 1,
       "refreshFrequencyFactor": 1,
       "status": "ENABLED",
@@ -258,7 +280,10 @@
     },
     {
       "name": "uk-lloyds-oauth2",
-      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
+      "capabilities": [
+        "TRANSFERS"
+      ],
+      "className": "nxgen.uk.openbanking.lloyds.LloydsAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Lloyds",
       "fields": [
@@ -282,7 +307,10 @@
     },
     {
       "name": "uk-rbs-oauth2",
-      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
+      "capabilities": [
+        "TRANSFERS"
+      ],
+      "className": "nxgen.uk.openbanking.rbs.RbsAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Royal Bank of Scotland",
       "fields": [
@@ -306,7 +334,10 @@
     },
     {
       "name": "uk-bankofscotland-oauth2",
-      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent",
+      "capabilities": [
+        "TRANSFERS"
+      ],
+      "className": "nxgen.uk.openbanking.bankofscotland.BankOfScotlandAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Bank of Scotland",
       "fields": [
@@ -321,7 +352,7 @@
       "groupDisplayName": "",
       "multiFactor": false,
       "passwordhelptext": "Authentication is done on external page",
-      "popular": true,
+      "popular": false,
       "refreshFrequency": 1,
       "refreshFrequencyFactor": 1,
       "status": "ENABLED",
@@ -330,7 +361,10 @@
     },
     {
       "name": "uk-santander-oauth2",
-      "className": "nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11Agent",
+      "capabilities": [
+        "TRANSFERS"
+      ],
+      "className": "nxgen.uk.openbanking.santander.SantanderAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Santander",
       "fields": [
@@ -345,7 +379,7 @@
       "groupDisplayName": "",
       "multiFactor": false,
       "passwordhelptext": "Authentication is done on external page",
-      "popular": true,
+      "popular": false,
       "refreshFrequency": 1,
       "refreshFrequencyFactor": 1,
       "status": "ENABLED",
@@ -386,6 +420,7 @@
       "name": "uk-revolut-password",
       "className": "nxgen.serviceproviders.banks.revolut.RevolutAgent",
       "displayName": "Revolut",
+      "popular": false,
       "credentialsType": "PASSWORD",
       "multiFactor": true,
       "fields": [
@@ -416,7 +451,7 @@
     {
       "name": "uk-n26-password",
       "displayName": "N26",
-      "popular": true,
+      "popular": false,
       "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",

@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.core.Amount;
 import se.tink.backend.system.rpc.AccountFeatures;
 import se.tink.backend.system.rpc.Loan;
@@ -22,6 +23,8 @@ public final class UpdateControllerTest {
     @Spy
     private FakeAgentContext context;
 
+    private User user = new User();
+
     private Credentials getCredential() {
         Credentials credentials = new Credentials();
         credentials.setProviderName("Test");
@@ -30,7 +33,7 @@ public final class UpdateControllerTest {
 
     @Test
     public void ensureLoansRemain_whenTransactions_areRefreshed() {
-        final UpdateController updateController = new UpdateController(context, MarketCode.SE, "SEK", getCredential());
+        final UpdateController updateController = new UpdateController(context, MarketCode.SE, "SEK", user);
 
         final LoanAccount loanAccount = LoanAccount.builder("1337")
                 .setAccountNumber("777")
@@ -44,7 +47,7 @@ public final class UpdateControllerTest {
         // This call should never discard any cached loans
         updateController.updateTransactions(loanAccount, transactions);
 
-        final String uniqueAccountId = loanAccount.toSystemAccount().getBankId();
+        final String uniqueAccountId = loanAccount.toSystemAccount(user).getBankId();
 
         Assert.assertTrue(context.getAccountFeatures(uniqueAccountId).isPresent());
         Assert.assertFalse(context.getAccountFeatures(uniqueAccountId).get().getLoans().isEmpty());

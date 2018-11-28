@@ -16,9 +16,7 @@ import se.tink.backend.aggregation.agents.AgentClassFactory;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
-import se.tink.backend.aggregation.cluster.identification.ClusterInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.converter.CallbackHostConfigurationConverter;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
@@ -53,6 +51,7 @@ import se.tink.backend.aggregation.workers.commands.RequestUserOptInAccountsAgen
 import se.tink.backend.aggregation.workers.commands.SelectAccountsToAggregateCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusToAuthenticatingAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.TransferAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ValidateProviderAgentWorkerStatus;
 import se.tink.backend.aggregation.workers.commands.state.CircuitBreakerAgentWorkerCommandState;
@@ -220,7 +219,7 @@ public class AgentWorkerOperationFactory {
         return commands;
     }
 
-    public AgentWorkerOperation createRefreshOperation(ClusterInfo clusterInfo, RefreshInformationRequest request,
+    public AgentWorkerOperation createRefreshOperation(RefreshInformationRequest request,
             ClientInfo clientInfo) {
         if (request.getItemsToRefresh() == null || request.getItemsToRefresh().isEmpty()) {
             // Add all available items if none were submitted.
@@ -231,19 +230,21 @@ public class AgentWorkerOperationFactory {
 
         log.debug("Creating refresh operation chain for credential");
 
-        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
+        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 coordinationClient,
                 agentsServiceConfiguration,
-                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo),
-                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
-                controllerWrapper);
+                aggregatorInfoProvider.createAggregatorInfoFor(clientInfo.getAggregatorId()),
+                supplementalInformationController,
+                controllerWrapper, clientInfo.getClusterId());
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
         String metricsName = (request.isManual() ? "refresh-manual" : "refresh-auto");
 
+        commands.add(new SetCredentialsStatusToAuthenticatingAgentWorkerCommand(controllerWrapper,
+                request.getCredentials(), request.getProvider()));
         commands.add(new ValidateProviderAgentWorkerStatus(context,
                 controllerWrapper));
         commands.add(new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
@@ -251,7 +252,7 @@ public class AgentWorkerOperationFactory {
                 reportMetricsAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
 
-        CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
+        CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
         commands.add(new DecryptCredentialsWorkerCommand(context,
                 new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)));
@@ -268,20 +269,20 @@ public class AgentWorkerOperationFactory {
         return new AgentWorkerOperation(agentWorkerOperationState, metricsName, request, commands, context);
     }
 
-    public AgentWorkerOperation createExecuteTransferOperation(ClusterInfo clusterInfo, TransferRequest request,
+    public AgentWorkerOperation createExecuteTransferOperation(TransferRequest request,
             ClientInfo clientInfo) {
-        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
+        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 coordinationClient,
                 agentsServiceConfiguration,
-                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo),
-                        CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
-                controllerWrapper);
+                aggregatorInfoProvider.createAggregatorInfoFor(clientInfo.getAggregatorId()),
+                supplementalInformationController,
+                controllerWrapper, clientInfo.getClusterId());
 
         String operationName = "execute-transfer";
 
-        List<AgentWorkerCommand> commands = createTransferBaseCommands(clusterInfo, request, context, operationName,
+        List<AgentWorkerCommand> commands = createTransferBaseCommands(clientInfo, request, context, operationName,
                 controllerWrapper);
         commands.addAll(createRefreshAccountsCommandChain(request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
         commands.add(new SelectAccountsToAggregateCommand(context, request));
@@ -292,22 +293,21 @@ public class AgentWorkerOperationFactory {
                 context);
     }
 
-    public AgentWorkerOperation createExecuteWhitelistedTransferOperation(ClusterInfo clusterInfo,
-            WhitelistedTransferRequest request,
+    public AgentWorkerOperation createExecuteWhitelistedTransferOperation(WhitelistedTransferRequest request,
             ClientInfo clientInfo) {
-        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
+        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 coordinationClient,
                 agentsServiceConfiguration,
-                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo),
-                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
-                controllerWrapper);
+                aggregatorInfoProvider.createAggregatorInfoFor(clientInfo.getAggregatorId()),
+                supplementalInformationController,
+                controllerWrapper, clientInfo.getClusterId());
         context.setWhitelistRefresh(true);
 
         String operationName = "execute-whitelisted-transfer";
 
-        List<AgentWorkerCommand> commands = createTransferBaseCommands(clusterInfo, request, context, operationName,
+        List<AgentWorkerCommand> commands = createTransferBaseCommands(clientInfo, request, context, operationName,
                 controllerWrapper);
         commands.addAll(
                 createWhitelistRefreshableItemsChain(request, context,
@@ -317,10 +317,10 @@ public class AgentWorkerOperationFactory {
                 context);
     }
 
-    private List<AgentWorkerCommand> createTransferBaseCommands(ClusterInfo clusterInfo, TransferRequest request,
+    private List<AgentWorkerCommand> createTransferBaseCommands(ClientInfo clientInfo, TransferRequest request,
             AgentWorkerCommandContext context, String operationName, ControllerWrapper controllerWrapper) {
 
-        CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
+        CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
         return Lists.newArrayList(
                 new ValidateProviderAgentWorkerStatus(context, controllerWrapper),
@@ -337,16 +337,16 @@ public class AgentWorkerOperationFactory {
                 new TransferAgentWorkerCommand(context, request, createMetricState(request)));
     }
 
-    public AgentWorkerOperation createCreateCredentialsOperation(ClusterInfo clusterInfo, CredentialsRequest request,
+    public AgentWorkerOperation createCreateCredentialsOperation(CredentialsRequest request,
             ClientInfo clientInfo) {
-        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
+        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 coordinationClient,
                 agentsServiceConfiguration,
-                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo),
-                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
-                controllerWrapper);
+                aggregatorInfoProvider.createAggregatorInfoFor(clientInfo.getAggregatorId()),
+                supplementalInformationController,
+                controllerWrapper, clientInfo.getClusterId());
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
@@ -355,7 +355,7 @@ public class AgentWorkerOperationFactory {
         // acquire lock to avoid encryption/decryption race conditions
         commands.add(new LockAgentWorkerCommand(context));
 
-        CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
+        CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
         commands.add(new EncryptCredentialsWorkerCommand(
                 context, false,
@@ -365,17 +365,16 @@ public class AgentWorkerOperationFactory {
                 context);
     }
 
-    public AgentWorkerOperation createUpdateOperation(ClusterInfo clusterInfo, CredentialsRequest request,
+    public AgentWorkerOperation createUpdateOperation(CredentialsRequest request,
             ClientInfo clientInfo) {
-        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
+        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 coordinationClient,
                 agentsServiceConfiguration,
-                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo),
-                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
-                controllerWrapper);
-
+                aggregatorInfoProvider.createAggregatorInfoFor(clientInfo.getAggregatorId()),
+                supplementalInformationController,
+                controllerWrapper, clientInfo.getClusterId());
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
         commands.add(new ClearSensitiveInformationCommand(context));
@@ -383,7 +382,7 @@ public class AgentWorkerOperationFactory {
         // acquire lock to avoid encryption/decryption race conditions
         commands.add(new LockAgentWorkerCommand(context));
 
-        CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
+        CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
         commands.add(new EncryptCredentialsWorkerCommand(
                 context, false,
@@ -393,16 +392,16 @@ public class AgentWorkerOperationFactory {
                 context);
     }
 
-    public AgentWorkerOperation createKeepAliveOperation(ClusterInfo clusterInfo, KeepAliveRequest request,
+    public AgentWorkerOperation createKeepAliveOperation(KeepAliveRequest request,
             ClientInfo clientInfo) {
-        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
+        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 coordinationClient,
                 agentsServiceConfiguration,
-                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo),
-                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
-                controllerWrapper);
+                aggregatorInfoProvider.createAggregatorInfoFor(clientInfo.getAggregatorId()),
+                        supplementalInformationController,
+                controllerWrapper, clientInfo.getClusterId());
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
@@ -412,7 +411,7 @@ public class AgentWorkerOperationFactory {
                 reportMetricsAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
 
-        CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
+        CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
         commands.add(new DecryptCredentialsWorkerCommand(context,
                 new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)));
@@ -423,20 +422,18 @@ public class AgentWorkerOperationFactory {
         return new AgentWorkerOperation(agentWorkerOperationState, "keep-alive", request, commands, context);
     }
 
-    public AgentWorkerOperation createReEncryptCredentialsOperation(ClusterInfo clusterInfo,
-            ReEncryptCredentialsRequest request,
+    public AgentWorkerOperation createReEncryptCredentialsOperation(ReEncryptCredentialsRequest request,
             ClientInfo clientInfo) {
-
-        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
+        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 coordinationClient,
                 agentsServiceConfiguration,
-                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo),
-                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
-                controllerWrapper);
+                aggregatorInfoProvider.createAggregatorInfoFor(clientInfo.getAggregatorId()),
+                        supplementalInformationController,
+                controllerWrapper, clientInfo.getClusterId());
 
-        CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
+        CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
         ImmutableList<AgentWorkerCommand> commands = ImmutableList.of(
                 new LockAgentWorkerCommand(context),
@@ -472,8 +469,7 @@ public class AgentWorkerOperationFactory {
      * Use this operation when refreshing only the accounts that are available in the request.
      *
      **/
-    public AgentWorkerOperation createWhitelistRefreshOperation(ClusterInfo clusterInfo,
-            RefreshWhitelistInformationRequest request,
+    public AgentWorkerOperation createWhitelistRefreshOperation(RefreshWhitelistInformationRequest request,
             ClientInfo clientInfo) {
         if (request.getItemsToRefresh() == null || request.getItemsToRefresh().isEmpty()) {
             // Add all available items if none were submitted.
@@ -484,14 +480,14 @@ public class AgentWorkerOperationFactory {
 
         log.debug("Creating whitelist refresh operation chain for credential");
 
-        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
+        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 coordinationClient,
                 agentsServiceConfiguration,
-                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo),
-                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
-                controllerWrapper);
+                aggregatorInfoProvider.createAggregatorInfoFor(clientInfo.getAggregatorId()),
+                supplementalInformationController,
+                controllerWrapper, clientInfo.getClusterId());
 
         context.setWhitelistRefresh(true);
 
@@ -499,6 +495,8 @@ public class AgentWorkerOperationFactory {
 
         String metricsName = (request.isManual() ? "refresh-manual" : "refresh-auto");
 
+        commands.add(new SetCredentialsStatusToAuthenticatingAgentWorkerCommand(controllerWrapper,
+                request.getCredentials(), request.getProvider()));
         commands.add(new ValidateProviderAgentWorkerStatus(context,
                 controllerWrapper));
         commands.add(new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
@@ -506,7 +504,7 @@ public class AgentWorkerOperationFactory {
                 reportMetricsAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
 
-        CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
+        CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
         commands.add(new DecryptCredentialsWorkerCommand(context,
                 new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)));
@@ -526,8 +524,7 @@ public class AgentWorkerOperationFactory {
      * Use this operation when changing whitelisted accounts and then doing a refresh.
      *
      */
-    public AgentWorkerOperation createConfigureWhitelistOperation(ClusterInfo clusterInfo,
-            ConfigureWhitelistInformationRequest request,
+    public AgentWorkerOperation createConfigureWhitelistOperation(ConfigureWhitelistInformationRequest request,
             ClientInfo clientInfo) {
         String operationMetricName = "configure-whitelist";
 
@@ -538,14 +535,14 @@ public class AgentWorkerOperationFactory {
             request.setItemsToRefresh(RefreshableItem.REFRESHABLE_ITEMS_ALL);
         }
 
-        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clusterInfo);
+        ControllerWrapper controllerWrapper = controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
         AgentWorkerCommandContext context = new AgentWorkerCommandContext(request, metricRegistry,
                 coordinationClient,
                 agentsServiceConfiguration,
-                aggregatorInfoProvider.createAggregatorInfoFor(clusterInfo),
-                CallbackHostConfigurationConverter.convert(clusterInfo), supplementalInformationController,
-                controllerWrapper);
+                aggregatorInfoProvider.createAggregatorInfoFor(clientInfo.getAggregatorId()),
+                supplementalInformationController,
+                controllerWrapper, clientInfo.getClusterId());
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
@@ -556,7 +553,7 @@ public class AgentWorkerOperationFactory {
                 reportMetricsAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
 
-        CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapper(clusterInfo.getClusterId().getId());
+        CryptoWrapper cryptoWrapper = cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
         commands.add(new DecryptCredentialsWorkerCommand(context,
                 new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)));
@@ -675,4 +672,5 @@ public class AgentWorkerOperationFactory {
             return false;
         }
     }
+
 }

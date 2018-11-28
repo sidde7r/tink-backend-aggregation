@@ -1,12 +1,5 @@
 {
   "clusterid" : "oxford-production",
   "providers" : [
-    "sg-americanexpress",
-    "sg-citibank",
-    "sg-dbs",
-    "sg-maybank",
-    "sg-ocbc",
-    "sg-sc-breeze",
-    "sg-uob"
   ]
 }

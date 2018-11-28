@@ -6,10 +6,11 @@ metadata:
 spec:
   rules:
 
+### Logs ###
   # Alert based on the 5m rate of log-lines from logback (used in tink-backend).
   # Threshold: old canonical threshold of 20 errors / 15 min.
   - alert: TooManyLoggedAggregationErrors
-    expr: sum(rate(logback_appender_total{job="tink-aggregation",at!~"^(?:se.tink.backend.aggregation.nxgen.*)$|^(?:se.tink.backend.aggregation.agents.*)$",level="error"}[5m]))
+    expr: sum(rate(logback_appender_total{job="tink-aggregation",at!~"^(?:(se.tink.backend.aggregation.nxgen.*)|(se.tink.backend.aggregation.agents.*))$",level="error"}[5m]))
       BY (at, job) * 15 * 60 > 20
     for: 15m
     labels:
@@ -20,34 +21,7 @@ spec:
         '<{ $labels.at }>'.
       summary: Too many errors logged by <{ $labels.job }>
 
-  # Alert based on the 5m rate of log-lines from logback (used in tink-backend).
-  # Threshold: old canonical threshold of 20 errors / 15 min.
-  - alert: TooManyLoggedEncryptionErrors
-    expr: sum(rate(logback_appender_total{job="tink-encryption",level="error"}[5m]))
-      BY (at, job) * 15 * 60 > 20
-    for: 15m
-    labels:
-      severity: urgent
-      who: aggregation
-    annotations:
-      description: Job <{ $labels.job }> has logged <{ $value }> errors past 15m in class
-        '<{ $labels.at }>'.
-      summary: Too many errors logged by <{ $labels.job }>
-
-  # Alert based on the 5m rate of log-lines from logback (used in tink-backend).
-  # Threshold: old canonical threshold of 20 errors / 15 min.
-  - alert: TooManyLoggedAggregationControllerErrors
-    expr: sum(rate(logback_appender_total{job="tink-aggregation-controller",level="error"}[5m]))
-      BY (at, job) * 15 * 60 > 20
-    for: 15m
-    labels:
-      severity: urgent
-      who: aggregation
-    annotations:
-      description: Job <{ $labels.job }> has logged <{ $value }> errors past 15m in class
-        '<{ $labels.at }>'.
-      summary: Too many errors logged by <{ $labels.job }>
-
+### No running services ###
   - alert: NoAggregationServiceRunning
     expr: sum(up{job="tink-aggregation"}) == 0
     for: 20m
@@ -58,16 +32,7 @@ spec:
       description: No instances of aggregation service has been running for the past 20 minutes.
       summary: Application Aggregation is not running
 
-  - alert: NoAggregationControllerServiceRunning
-    expr: sum(up{job="tink-aggregation-controller"}) == 0
-    for: 20m
-    labels:
-      severity: urgent
-      who: aggregation
-    annotations:
-      description: No instances of aggregation controller service has been running for the past 20 minutes.
-      summary: Application Aggregation Controller is not running
-
+### Heap dump ###
   - alert: UnhandledAggregationHeapDumpAwaiting
     expr: tink_heap_dumps{app="tink-aggregation"} > 0
     for: 1m
@@ -79,31 +44,36 @@ spec:
         to disk. Please download heap (and remove the dump) to see what went wrong.
       summary: Aggregation JVM process ran out of memory
 
-  - alert: UnhandledAggregationControllerHeapDumpAwaiting
-    expr: tink_heap_dumps{app="tink-aggregation-controller"} > 0
+### Response time alerts ###
+  - alert: HighResponseTimeAggregationService
+    expr: histogram_quantile(0.95, sum(increase(tink_api_response_duration_seconds_bucket{app="tink-aggregation-controller", team_owner="INTEGRATION", path=~'/aggregation.*', path!~'/aggregation/update'}[5m])) by (method, path, le, instance)) > 0.5
+    for: 1m
+    labels:
+      severity: ping
+      who: '#aggregation-alerts'
+    annotations:
+      description: The 95-%tile of the response duration for the Aggregation Service over the last 5 minutes is over 500 ms.
+
+  - alert: HighResponseTimeProviderConfigurationService
+    expr: histogram_quantile(0.95, sum(increase(tink_api_response_duration_seconds_bucket{app="provider-configuration-service", team_owner="INTEGRATION"}[5m])) by (method, path, le, kubernetes_pod_name)) > 0.5
+    for: 1m
+    labels:
+      severity: ping
+      who: '#aggregation-alerts'
+    annotations:
+      description: The 95-%tile of the response duration for the Provider Configuration Service over the last 5 minutes is over 500 ms.
+
+### Only production ###
+  {{- if eq .Values.Environment "production" }}
+  - alert: NoConsumedMessagesFromAutomaticRefreshQueue
+    expr: |
+      sum(increase(tink_aggregation_queues_total{event="consumed"}[15m])) == 0
     for: 1m
     labels:
       severity: ping
       who: '#aggregation-oncall'
     annotations:
-      description: Aggregation Controller JVM process ran out of memory and dumped its heap
-        to disk. Please download heap (and remove the dump) to see what went wrong.
-      summary: Aggregation Controller JVM process ran out of memory
-
-  {{- if eq .Values.Environment "production" }}
-  - alert: IncreasedRateOfRejectedInMemoryQueue
-    expr: |
-      # Trigger when the number of automatic refresh not beeing rejected from the provider-specific in-memory queue exceeds 2000 rejections/15 minutes.
-       sum(increase(tink_aggregation_queues_total{cluster='aggregation', environment='production', event='requeued'} [15m])) by (event) > 2000
-    for: 5m
-    labels:
-      severity: ping
-      who: '#aggregation-oncall'
-    annotations:
-      description: The alert is triggered when the number of AutomaticRefreshes rejected by the provider-specific in-memory queues
-        exceeds 2000 rejections/15 minutes. The in-memory rejection is due to that the rate of incomming requests, for a specific provider
-        exceeds the rate of processing the request for that provider.
-      summary: 'The rate of incoming automatic refreshes are exceeding the processing rate of the automatic refreshes'
+      description: No messages has been consumed from the Automatic Refresh Queue for the past 15 minutes.
 
   - alert: LowRedundancyOfAggregationTinkService
     expr: |
@@ -116,16 +86,4 @@ spec:
       description: Application Aggregation has been running with reduced availability
         (< 2 instances) for the past 20 minutes.
       summary: Application Aggregation is running with reduced availability
-
-  - alert: LowRedundancyOfAggregationControllerTinkService
-    expr: |
-      sum(up{job="tink-aggregation-controller"}) BY (job) < 2
-    for: 20m
-    labels:
-      severity: urgent
-      who: aggregation
-    annotations:
-      description: Application Aggregation Controller has been running with reduced availability
-        (< 2 instances) for the past 20 minutes.
-      summary: Application Aggregation Controller is running with reduced availability
   {{- end }}

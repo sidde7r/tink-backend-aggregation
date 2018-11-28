@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Optional;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
+import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.core.Amount;
 import se.tink.backend.system.rpc.TransactionPayloadTypes;
 import se.tink.backend.system.rpc.TransactionTypes;
@@ -28,8 +29,8 @@ public final class CreditCardTransaction extends Transaction {
     }
 
     @Override
-    public se.tink.backend.system.rpc.Transaction toSystemTransaction() {
-        se.tink.backend.system.rpc.Transaction transaction = super.toSystemTransaction();
+    public se.tink.backend.system.rpc.Transaction toSystemTransaction(User user) {
+        se.tink.backend.system.rpc.Transaction transaction = super.toSystemTransaction(user);
 
         getCreditAccount().ifPresent(creditAccount ->
                 transaction.setPayload(TransactionPayloadTypes.SUB_ACCOUNT, creditAccount.getAccountNumber()));

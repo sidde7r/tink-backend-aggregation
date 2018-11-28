@@ -1,7 +1,0 @@
-{
-  "clusterid" : "kirkby-production",
-  "providers" : [
-    "mt-bov",
-    "mt-hsbc-bank"
-  ]
-}

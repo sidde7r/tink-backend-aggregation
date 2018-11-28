@@ -17,6 +17,7 @@ public class DeviceProfileConfiguration {
                     .setSystemAndBrowserInfo("(iPhone; CPU OS 11_1_2 like Mac OS X)")
                     .setPlatform("AppleWebKit/604.1.25")
                     .setPlatformDetails("(KHTML, like Gecko)")
+                    .setExtensions("")
                     .build())
             .build();
 
@@ -33,6 +34,7 @@ public class DeviceProfileConfiguration {
                     .setSystemAndBrowserInfo("(Linux; Android 8.0.0; SM-G960F Build/R16NW)")
                     .setPlatform("AppleWebKit/537.36")
                     .setPlatformDetails("(KHTML, like Gecko)")
+                    .setExtensions("")
                     .build())
             .build();
 

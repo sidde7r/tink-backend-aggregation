@@ -6,17 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import org.apache.curator.framework.CuratorFramework;
+
 import se.tink.backend.aggregation.api.AggregatorInfo;
-import se.tink.backend.aggregation.api.CallbackHostConfiguration;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.core.FraudDetailsContent;
 import se.tink.backend.core.account.TransferDestinationPattern;
-import se.tink.backend.core.signableoperation.SignableOperation;
-import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.system.rpc.AccountFeatures;
 import se.tink.backend.system.rpc.Transaction;
@@ -29,22 +26,22 @@ public abstract class AgentContext {
     protected ByteArrayOutputStream logOutputStream = new ByteArrayOutputStream();
     protected boolean isTestContext = false;
     private boolean isWaitingOnConnectorTransactions = false;
-    private CallbackHostConfiguration callbackHostConfiguration;
     private AggregatorInfo aggregatorInfo;
     public abstract Catalog getCatalog();
+    private String clusterId;
+
+    public String getClusterId() {
+        return clusterId;
+    }
+
+    public void setClusterId(String clusterId) {
+        this.clusterId = clusterId;
+    }
 
     public abstract MetricRegistry getMetricRegistry();
 
     public ByteArrayOutputStream getLogOutputStream() {
         return logOutputStream;
-    }
-
-    public CallbackHostConfiguration getCallbackHostConfiguration() {
-        return callbackHostConfiguration;
-    }
-
-    public void setCallbackHostConfiguration(CallbackHostConfiguration callbackHostConfiguration) {
-        this.callbackHostConfiguration = callbackHostConfiguration;
     }
 
     public AggregatorInfo getAggregatorInfo() {

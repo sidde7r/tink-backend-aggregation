@@ -1,11 +1,5 @@
 {
   "clusterid" : "oxford-production",
   "providers" : [
-    "pl-bank-handlowy",
-    "pl-bank-pekao",
-    "pl-inteligo",
-    "pl-mbank",
-    "pl-pko-bank-polski",
-    "pl-raiffeisen-bank"
   ]
 }

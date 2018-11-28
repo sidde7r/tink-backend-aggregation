@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.Uninterruptibles;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -11,7 +10,6 @@ import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
-import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.common.payloads.ThirdPartyAppAuthenticationPayload;
@@ -57,6 +55,9 @@ public class ThirdPartyAppAuthenticationController<T> implements MultiFactorAuth
     }
 
     private boolean handleStatus(ThirdPartyAppStatus status) throws AuthenticationException, AuthorizationException {
+        if(status == null){
+            throw new IllegalStateException(String.format("Status missing"));
+        }
         switch (status) {
         case WAITING:
             return false;
@@ -75,9 +76,6 @@ public class ThirdPartyAppAuthenticationController<T> implements MultiFactorAuth
 
     @Override
     public void authenticate(Credentials credentials) throws AuthenticationException, AuthorizationException {
-        NotImplementedException.throwIf(!Objects.equals(credentials.getType(), getType()),
-                String.format("Authentication method not implemented for CredentialsType: %s", credentials.getType()));
-
         ThirdPartyAppResponse<T> response = authenticator.init();
 
         openThirdPartyApp();

@@ -6,6 +6,4 @@ public interface QueueProducer {
 
     boolean isAvailable();
 
-    void requeue(String t);
-
 }

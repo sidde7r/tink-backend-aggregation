@@ -3,12 +3,13 @@ package se.tink.backend.aggregation.agents.banks.seb.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Locale;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils;
 import se.tink.backend.aggregation.agents.banks.seb.SebAccountIdentifierFormatter;
+import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.account.identifiers.formatters.AccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
-import se.tink.backend.core.transfer.Transfer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SebTransferRequestEntity implements MatchableTransferRequestEntity {
@@ -23,12 +24,12 @@ public class SebTransferRequestEntity implements MatchableTransferRequestEntity 
         SourceAccount = transfer.getSource().getIdentifier(new DefaultAccountIdentifierFormatter());
     }
 
-    private static String formatAmmountWith2Decimals(Transfer transfer) {
-        return String.format(Locale.ENGLISH, "%.2f", transfer.getAmount().getValue());
+    private static Double formatAmmountWith2Decimals(Transfer transfer) {
+        return new BigDecimal(transfer.getAmount().getValue()).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 
     @JsonProperty("UPPDRAG_BEL")
-    public String Amount;
+    public Double Amount;
 
     @JsonProperty("SEB_KUND_NR")
     public String CustomerNumber;
@@ -58,6 +59,6 @@ public class SebTransferRequestEntity implements MatchableTransferRequestEntity 
         return
                 SEBAgentUtils.trimmedDashAgnosticEquals(this.DestinationAccount, transferListEntity.DestinationAccountNumber) &&
                 SEBAgentUtils.trimmedDashAgnosticEquals(this.SourceAccount, transferListEntity.SourceAccountNumber) &&
-                Math.abs(Double.parseDouble(this.Amount) - transferListEntity.Amount) < 0.01;
+                Math.abs(this.Amount - transferListEntity.Amount) < 0.01;
     }
 }

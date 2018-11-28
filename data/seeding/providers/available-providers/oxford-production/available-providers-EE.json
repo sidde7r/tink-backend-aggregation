@@ -1,9 +1,5 @@
 {
   "clusterid" : "oxford-production",
   "providers" : [
-    "ee-dnb",
-    "ee-lhv-pank",
-    "ee-nordea",
-    "ee-swedbank"
   ]
 }

@@ -115,4 +115,29 @@ public class OAuth2Token {
                 tokenType.substring(0, 1).toUpperCase() + tokenType.substring(1).toLowerCase(),
                 accessToken);
     }
+
+    // TODO: Remove when logging is not needed
+    public long getIssuedAt() {
+        return issuedAt;
+    }
+
+    // TODO: Remove when logging is not needed
+    public boolean hasRefreshExpire() {
+        return refreshExpiresInSeconds != 0;   // 0 is considered "not specified"
+    }
+
+    // TODO: Remove when logging is not needed
+    public long getAccessExpireEpoch() {
+        return issuedAt + expiresInSeconds;
+    }
+
+    // TODO: Remove when logging is not needed
+    public long getRefreshExpireEpoch() {
+        return issuedAt + refreshExpiresInSeconds;
+    }
+
+    // TODO: Remove when logging is not needed
+    public boolean isRefreshNullOrEmpty() {
+        return Strings.isNullOrEmpty(refreshToken);
+    }
 }

@@ -54,4 +54,13 @@ public class HostConfiguration {
     public byte[] getClientCert() {
         return BASE64_DECODER.decode(base64encodedclientcert);
     }
+
+
+    public static HostConfiguration createForTesting(String clusterId) {
+        HostConfiguration hostConfiguration = new HostConfiguration();
+
+        hostConfiguration.setClusterId(clusterId);
+
+        return hostConfiguration;
+    }
 }

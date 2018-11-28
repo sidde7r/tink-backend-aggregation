@@ -1,6 +1,5 @@
 {
   "clusterid" : "oxford-production",
   "providers" : [
-    "ca-demo"
   ]
 }

@@ -1,11 +1,5 @@
 {
   "clusterid" : "oxford-production",
   "providers" : [
-    "fr-cic",
-    "fr-credit-du-nord",
-    "fr-credit-mutuel",
-    "fr-credit-mutuel-bretagne",
-    "fr-credit-mutuel-massif-central",
-    "fr-credit-mutuel-sud-ouest"
   ]
 }

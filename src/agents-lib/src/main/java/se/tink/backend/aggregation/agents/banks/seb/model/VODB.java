@@ -2,30 +2,31 @@ package se.tink.backend.aggregation.agents.banks.seb.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicates;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import se.tink.backend.core.enums.TransferType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class VODB {
     @JsonProperty("DBZV160")
-    public String[] DBZV160 = new String[0];
+    public String[] DBZV160;
     @JsonProperty("DEVID01")
     public DEVID01 DEVID01 = new DEVID01();
     @JsonProperty("HWINFO01")
-    public HWINFO01 HWINFO01 = new HWINFO01();
+    public HWINFO01 HWINFO01;
     @JsonProperty("CBEW501")
-    public String[] CBEW501 = new String[0];
+    public String[] CBEW501;
     @JsonProperty("DBZV170")
-    public String[] DBZV170 = new String[0];
+    public String[] DBZV170;
     @JsonProperty("CBEW502")
-    public String[] CBEW502 = new String[0];
+    public String[] CBEW502;
 
     //User info returned after activation, also sent as null now and then
     @JsonProperty("USRINF01")
@@ -41,41 +42,41 @@ public class VODB {
 
     // This is accounts
     @JsonProperty("PCBW4211")
-    public List<AccountEntity> accountEntities = Lists.newArrayList();
+    public List<AccountEntity> accountEntities;
 
     // This is probably account transactions
     @JsonProperty("PCBW4342")
-    public List<SebTransaction> PCBW4342 = new ArrayList<SebTransaction>();
+    public List<SebTransaction> PCBW4342;
 
     // This is probably pending account transactions
     @JsonProperty("PCBW4311")
-    public List<SebTransaction> PCBW4311 = new ArrayList<SebTransaction>();
+    public List<SebTransaction> PCBW4311;
 
     // This is mortgage information
     @JsonProperty("PCBW2581")
-    public List<PCBW2581> PCBW2581 = new ArrayList<PCBW2581>();
+    public List<PCBW2581> PCBW2581;
 
     // This is blanco loan information
     @JsonProperty("PCBW2582")
-    public List<PCBW2582> PCBW2582 = Lists.newArrayList();
+    public List<PCBW2582> PCBW2582;
 
     // Credit card
     
     // This is probably credit card accounts
     @JsonProperty("PCBW3201")
-    public List<SebCreditCardAccount> PCBW3201 = new ArrayList<SebCreditCardAccount>();
+    public List<SebCreditCardAccount> PCBW3201;
     
     // Credit card transactions (not yet billed)
     @JsonProperty("PCBW3241")
-    public List<SebCreditCardTransaction> PCBW3241 = new ArrayList<SebCreditCardTransaction>();
+    public List<SebCreditCardTransaction> PCBW3241;
     
     // Credit cards
     @JsonProperty("PCBW3242")
-    public List<SebCreditCard> PCBW3242 = new ArrayList<SebCreditCard>();
+    public List<SebCreditCard> PCBW3242;
     
     // Credit card transactions (billed)
     @JsonProperty("PCBW3243")
-    public List<SebBilledCreditCardTransaction> PCBW3243 = new ArrayList<SebBilledCreditCardTransaction>();
+    public List<SebBilledCreditCardTransaction> PCBW3243;
 
     // Transfer and payment related entities
 
@@ -89,7 +90,7 @@ public class VODB {
 
     // External accounts
     @JsonProperty("PCBW189")
-    public List<ExternalAccount> ExternalAccounts = Lists.newArrayList();
+    public List<ExternalAccount> ExternalAccounts;
 
     // External transfer verification
     @JsonProperty("PCBW024")
@@ -97,48 +98,48 @@ public class VODB {
 
     // Response with payments (einvoices and bills)
     @JsonProperty("PCBW1241")
-    public List<InvoiceTransferListEntity> InvoiceTransfers = Lists.newArrayList();
+    public List<InvoiceTransferListEntity> InvoiceTransfers;
 
     // Response with bank transfers
     @JsonProperty("PCBW1242")
-    public List<BankTransferListEntity> BankTransfers = Lists.newArrayList();
+    public List<BankTransferListEntity> BankTransfers;
 
     @JsonProperty("PCBW3041")
-    public List<GiroEntity> FindBGResult = Lists.newArrayList();
+    public List<GiroEntity> FindBGResult;
 
     @JsonProperty("PCBW096")
-    public List<GiroEntity> FindPGResult = Lists.newArrayList();
+    public List<GiroEntity> FindPGResult;
 
     @JsonProperty("PCBW1361")
-    public List<UpcomingTransactionEntity> UpcomingTransactions = Lists.newArrayList();
+    public List<UpcomingTransactionEntity> UpcomingTransactions;
 
     @JsonProperty("PCBW203")
-    public List<EInvoiceListEntity> EInvoices = Lists.newArrayList();
+    public List<EInvoiceListEntity> EInvoices;
 
     @JsonProperty("PCBW083")
-    public List<HoldingEntity> holdingEntities = Lists.newArrayList();
+    public List<HoldingEntity> holdingEntities;
 
     @JsonProperty("PCBW080")
-    public List<DepotEntity> depotEntities = Lists.newArrayList();
+    public List<DepotEntity> depotEntities;
 
     @JsonProperty("PCBWF041")
-    public List<InsuranceEntity> insuranceEntities = Lists.newArrayList();
+    public List<InsuranceEntity> insuranceEntities;
 
     @JsonProperty("PCBWF061")
-    public List<InsuranceAccountEntity> insuranceAccountEntities = Lists.newArrayList();
+    public List<InsuranceAccountEntity> insuranceAccountEntities;
 
     @JsonProperty("PCBW173")
-    public List<InsuranceHoldingEntity> insuranceHoldingEntities = Lists.newArrayList();
+    public List<InsuranceHoldingEntity> insuranceHoldingEntities;
 
     // Not certain of the object name: IpsHoldingEntity
     @JsonProperty("PCBW174")
-    public List<IpsHoldingEntity> ipsHoldingEntities = Lists.newArrayList();
+    public List<IpsHoldingEntity> ipsHoldingEntities;
 
     @JsonProperty("PCBW030")
-    public List<FundAccountEntity> fundAccounts = Lists.newArrayList();
+    public List<FundAccountEntity> fundAccounts;
 
     @JsonProperty("PCBW8801")
-    public List<PortfolioAccountMapperEntity> portfolioAccountMappers = Lists.newArrayList();
+    public List<PortfolioAccountMapperEntity> portfolioAccountMappers;
 
     @JsonProperty("RESULTO01")
     public RESULTO01 RESULTO01;
@@ -204,30 +205,37 @@ public class VODB {
         return depotEntities == null ? Collections.emptyList() : depotEntities;
     }
 
+    @JsonIgnore
     public List<InsuranceEntity> getInsuranceEntities() {
         return insuranceEntities == null ? Collections.emptyList() : insuranceEntities;
     }
 
+    @JsonIgnore
     public List<InsuranceAccountEntity> getInsuranceAccountEntities() {
         return insuranceAccountEntities == null ? Collections.emptyList() : insuranceAccountEntities;
     }
 
+    @JsonIgnore
     public List<InsuranceHoldingEntity> getInsuranceHoldingEntities() {
         return insuranceHoldingEntities == null ? Collections.emptyList() : insuranceHoldingEntities;
     }
 
+    @JsonIgnore
     public List<IpsHoldingEntity> getIpsHoldingEntities() {
         return ipsHoldingEntities == null ? Collections.emptyList() : ipsHoldingEntities;
     }
 
+    @JsonIgnore
     public List<FundAccountEntity> getFundAccounts() {
         return fundAccounts == null ? Collections.emptyList() : fundAccounts;
     }
 
+    @JsonIgnore
     public List<AccountEntity> getAccountEntities() {
         return accountEntities == null ? Collections.emptyList() : accountEntities;
     }
 
+    @JsonIgnore
     public List<PortfolioAccountMapperEntity> getPortfolioAccountMappers() {
         return portfolioAccountMappers == null ? Collections.emptyList() : portfolioAccountMappers;
     }

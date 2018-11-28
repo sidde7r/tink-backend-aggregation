@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -21,7 +22,7 @@ import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.framework.validation.ValidatorFactory;
+import se.tink.backend.aggregation.agents.nxgen.framework.validation.AisValidator;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.rpc.Account;
@@ -181,13 +182,7 @@ public class NewAgentTestContext extends AgentContext {
     }
 
     public void processAccounts() {
-        ValidatorFactory.getExtensiveValidator()
-                .validate(
-                        accountsByBankId.values(),
-                        transactionsByAccountBankId
-                                .values()
-                                .stream()
-                                .collect(ArrayList::new, List::addAll, List::addAll));
+        //noop
     }
 
     @Override
@@ -306,6 +301,15 @@ public class NewAgentTestContext extends AgentContext {
 
     public void processTransferDestinationPatterns() {
         // noop
+    }
+
+    public void validateFetchedData(AisValidator validator) {
+        validator.validate(
+                accountsByBankId.values(),
+                transactionsByAccountBankId
+                        .values()
+                        .stream()
+                        .collect(ArrayList::new, List::addAll, List::addAll));
     }
 
     private void printLoanDetails(List<Loan> loans) {
@@ -433,6 +437,10 @@ public class NewAgentTestContext extends AgentContext {
 
         case INVESTMENT:
             Assert.assertNotNull(accountFeatures.getPortfolios());
+            for (Portfolio portfolio : accountFeatures.getPortfolios()) {
+                Assert.assertNotNull(portfolio.getInstruments());
+                Assert.assertFalse(portfolio.getInstruments().isEmpty());
+            }
             printPortfolioDetails(accountFeatures.getPortfolios());
             break;
 
@@ -446,7 +454,7 @@ public class NewAgentTestContext extends AgentContext {
     }
 
     private void printTransactions(String bankId) {
-        List<Map<String, String>> table = transactionsByAccountBankId.getOrDefault(bankId, new ArrayList<>())
+        List<Map<String, String>> table = transactionsByAccountBankId.getOrDefault(bankId, Collections.emptyList())
                 .stream()
                 .sorted(Comparator.comparing(Transaction::getDate))
                 .map(transaction -> {
@@ -461,7 +469,8 @@ public class NewAgentTestContext extends AgentContext {
     }
 
     private void printTransferDestinations(String bankId) {
-        List<Map<String, String>> table = transferDestinationPatternsByAccountBankId.getOrDefault(bankId, new ArrayList<>())
+        List<Map<String, String>> table = transferDestinationPatternsByAccountBankId
+                .getOrDefault(bankId, Collections.emptyList())
                 .stream()
                 .map(transferDestination -> {
                     Map<String, String> row = new LinkedHashMap<>();

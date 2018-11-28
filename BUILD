@@ -764,6 +764,7 @@ java_library(
         "//src/libraries/serialization_utils:serialization-utils",
         "//src/libraries/i18n",
         "//src/libraries/http:http-utils",
+        "//src/libraries/http_client:http-client",
         
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:io_dropwizard_dropwizard_core",
@@ -867,6 +868,7 @@ java_binary(
          "//src/libraries/metrics:metrics",
          "//src/libraries/cli_print_utils:cli_print_utils",
          "//src/libraries/serialization_utils:serialization-utils",
+         "//src/libraries/console_json_logger:console_json_logger",
 
          "//third_party:org_springframework_spring_expression",
          "//third_party:org_springframework_data_spring_data_jpa",

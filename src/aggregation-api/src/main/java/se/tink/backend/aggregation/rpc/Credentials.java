@@ -43,6 +43,7 @@ public class Credentials implements Cloneable {
     private Date nextUpdate;
     private String payload;
     private String providerName;
+    private String clientId;
 
     @JsonInclude(Include.NON_NULL)
     private String secretKey;
@@ -140,6 +141,16 @@ public class Credentials implements Cloneable {
         generateIdIfMissing();
         return this.id;
     }
+    
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+
 
     public Date getNextUpdate() {
         return nextUpdate;

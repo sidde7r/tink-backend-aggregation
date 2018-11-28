@@ -96,6 +96,11 @@ public abstract class AccountIdentifier {
         return getType() == type;
     }
 
+    public boolean isGiroIdentifier() {
+
+        return false;
+    }
+
     public URI toURI() {
         if (!isValid()) {
             return null;

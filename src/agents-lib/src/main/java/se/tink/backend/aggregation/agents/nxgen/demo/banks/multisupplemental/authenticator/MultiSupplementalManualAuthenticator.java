@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.demo.banks.multisupplemental.au
 
 import com.google.common.base.Preconditions;
 import java.util.Map;
+import java.util.Random;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
@@ -9,19 +10,33 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
+import se.tink.libraries.i18n.Catalog;
 
 public class MultiSupplementalManualAuthenticator implements MultiFactorAuthenticator {
-    private static final String FIELD0 = "field0";
-    private static final String FIELD1 = "field1";
-    private static final String FIELD2 = "field2";
-    private static final String FIELD3 = "field3";
-    private static final String FIELD4 = "field4";
-    private static final String FIELD5 = "field5";
+    private static final String loginDesciptionField = "loginDescriptionField";
+    private static final String loginInputField = "loginInputField";
+    private static final String loginChallengeField = "loginChallengeField";
+    private static final String loginChallengeInputField = "loginChallengeInputField";
+
+    private final Catalog catalog;
+    private static final String descriptionCode =
+            "Login using your Card Reader. "
+                    + "Enter the security code and press Ok. "
+                    + "Provide the given return code in the input field to continue \n";
+
+    private static final String secondDescriptionCode =
+            "Login to your account by pressing 1. "
+                    + "Enter the security code and press Ok. "
+                    + "Provide the given return code in the input field to continue \n";
 
     private final SupplementalInformationController supplementalInformationController;
+    private final static Random random = new Random();
 
-    public MultiSupplementalManualAuthenticator(SupplementalInformationController supplementalInformationController) {
+    public MultiSupplementalManualAuthenticator(SupplementalInformationController supplementalInformationController,
+            Catalog catalog) {
         this.supplementalInformationController = supplementalInformationController;
+
+        this.catalog = catalog;
     }
 
     @Override
@@ -37,6 +52,12 @@ public class MultiSupplementalManualAuthenticator implements MultiFactorAuthenti
         return field;
     }
 
+    private static Field newField(String name, String description, String value, String helpText) {
+        Field field = newField(name, description, value);
+        field.setHelpText(helpText);
+        return field;
+    }
+
     private static void checkAnswers(Map<String, String> answer, String... fieldNames) {
         Preconditions.checkNotNull(answer);
         for (String fieldName : fieldNames) {
@@ -48,26 +69,18 @@ public class MultiSupplementalManualAuthenticator implements MultiFactorAuthenti
     public void authenticate(Credentials credentials) throws AuthenticationException, AuthorizationException {
         checkAnswers(
                 supplementalInformationController.askSupplementalInformation(
-                        newField(FIELD0, "Test field 0", null),
-                        newField(FIELD1, "Test field 1", "test1-value")),
-                FIELD0,
-                FIELD1
+                        newField(loginDesciptionField, "Security Code" ,  String.format("%04d", random.nextInt(10000)), catalog.getString(descriptionCode)),
+                        newField(loginInputField, "Input Code", null)),
+                loginDesciptionField,
+                loginInputField
         );
 
         checkAnswers(
                 supplementalInformationController.askSupplementalInformation(
-                        newField(FIELD2, "Test field 2", "test2-value"),
-                        newField(FIELD3, "Test field 3", null)),
-                FIELD2,
-                FIELD3
-        );
-
-        checkAnswers(
-                supplementalInformationController.askSupplementalInformation(
-                        newField(FIELD4, "Test field 4", null),
-                        newField(FIELD5, "Test field 5", "test5-value")),
-                FIELD4,
-                FIELD5
+                        newField(loginChallengeField, "Login Code", String.format("%04d", random.nextInt(10000)), catalog.getString(secondDescriptionCode)),
+                        newField(loginChallengeInputField, "Input Code", null)),
+                loginChallengeField,
+                loginChallengeInputField
         );
     }
 }

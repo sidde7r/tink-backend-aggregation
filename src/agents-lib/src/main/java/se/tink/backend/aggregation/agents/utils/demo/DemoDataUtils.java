@@ -13,7 +13,6 @@ import java.nio.charset.Charset;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Year;
-import java.time.YearMonth;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -74,6 +73,23 @@ public class DemoDataUtils {
         }
 
         return accounts;
+    }
+
+    public static String getCurrencyForDemoAccount(File file, String accountNumber) {
+        List<String> lines = null;
+        try {
+            lines = Files.readLines(file, DEFAULT_CHARSET);
+        } catch (IOException e) {
+            return "EUR";
+        }
+        for (int i = 1; i < lines.size(); i++) {
+            List<String> data = Lists.newArrayList(SPLITTER.split(lines.get(i)));
+            if (data.get(0).equalsIgnoreCase(accountNumber)) {
+                return data.get(3);
+            }
+        }
+
+        return "EUR";
     }
 
     public static List<Account> readAccounts(File file, se.tink.backend.aggregation.rpc.Credentials credentials) throws IOException {

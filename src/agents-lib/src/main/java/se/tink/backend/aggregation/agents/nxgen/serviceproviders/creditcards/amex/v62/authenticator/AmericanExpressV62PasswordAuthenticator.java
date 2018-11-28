@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.AmericanExpressConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62ApiClient;
@@ -65,6 +66,13 @@ public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenti
                         "Incorrect login credentials. You have one more attempt before your account will be locked."));
             case AmericanExpressV62Constants.ReportingCode.LOGON_FAIL_ACCOUNT_BLOCKED:
                 throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+            case AmericanExpressV62Constants.ReportingCode.BANKSIDE_TEMPORARY_ERROR:
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            case AmericanExpressV62Constants.ReportingCode.UNSUPPORTED_MARKET:
+                // Using the message sent from Amex as user message as it will be in the local language and with
+                // reference to the relevant market.
+                throw LoginError.NOT_CUSTOMER.exception(new LocalizableKey(logonResponse.getStatus().getMessage()));
+
             default:
                 LOGGER.error(String.format("%s: %s", reportingCode, logonResponse.getStatus().getMessage()));
                 throw new IllegalStateException("Logon failure");
@@ -79,6 +87,8 @@ public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenti
         List<CardEntity> cardList = logonResponse.getSummaryData().getCardList()
                 .stream()
                 .filter(AmericanExpressV62Predicates.cancelledCardsPredicate)
+                //Double filtering for backward compatibility
+                .filter(AmericanExpressV62Predicates.cancelledCardSummaryValuePredicate)
                 .collect(Collectors.toList());
         sessionStorage.put(AmericanExpressConstants.Tags.CARD_LIST, cardList);
     }

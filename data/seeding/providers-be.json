@@ -269,6 +269,82 @@
       "status": "ENABLED",
       "transactional": true,
       "type": "BANK"
+    },
+    {
+      "className": "nxgen.be.banks.fortis.FortisAgent",
+      "credentialsType": "PASSWORD",
+      "displayName": "BNP Paribas Fortis",
+      "payload": "https://app.easybanking.bnpparibasfortis.be 49FB001",
+      "capabilities": [
+      ],
+      "fields": [
+        {
+          "description": "Number of your bank card",
+          "name": "username",
+          "numeric": true,
+          "minLength": 1,
+          "sensitive": true
+        },
+        {
+          "description": "Client number",
+          "masked": true,
+          "sensitive": true,
+          "name": "clientnumber",
+          "minLength": 1
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "sensitive": true,
+          "name": "password",
+          "minLength": 1
+        }
+      ],
+      "multiFactor": true,
+      "name": "be-fortis-cardreader",
+      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app. You will also need your Fortis card reader to finish the authentication.",
+      "popular": true,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
+      "className": "nxgen.be.banks.fortis.FortisAgent",
+      "credentialsType": "PASSWORD",
+      "displayName": "Hello bank!",
+      "payload": "https://app.easybanking.hellobank.be 49FB002",
+      "capabilities": [
+      ],
+      "fields": [
+        {
+          "description": "Number of your bank card",
+          "name": "username",
+          "numeric": true,
+          "minLength": 1,
+          "sensitive": true
+        },
+        {
+          "description": "Client number",
+          "masked": true,
+          "sensitive": true,
+          "name": "clientnumber",
+          "minLength": 1
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "sensitive": true,
+          "name": "password",
+          "minLength": 1
+        }
+      ],
+      "multiFactor": true,
+      "name": "be-hellobank-cardreader",
+      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app. You will also need your Hello bank! card reader to finish the authentication.",
+      "popular": false,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "BANK"
     }
   ]
 }

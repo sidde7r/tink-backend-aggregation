@@ -2,6 +2,11 @@ package se.tink.backend.aggregation.configuration;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import se.tink.backend.aggregation.configuration.integrations.MonzoConfiguration;
+import se.tink.backend.aggregation.configuration.integrations.SbabIntegrationConfiguration;
 
 @JsonIgnoreProperties(ignoreUnknown =  true)
 public class IntegrationsConfiguration {
@@ -12,7 +17,7 @@ public class IntegrationsConfiguration {
     private String ukOpenBankingJson;
 
     @JsonProperty
-    private MonzoConfiguration monzoConfiguration;
+    private Map<String, MonzoConfiguration> monzo;
 
     @JsonProperty
     private String proxyUri;
@@ -25,8 +30,11 @@ public class IntegrationsConfiguration {
         return ukOpenBankingJson;
     }
 
-    public MonzoConfiguration getMonzoConfiguration() {
-        return monzoConfiguration;
+    public Optional<MonzoConfiguration> getMonzo(String clientName) {
+        if (Objects.isNull(monzo)) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(monzo.getOrDefault(clientName, null));
     }
 
     public String getProxyUri() {

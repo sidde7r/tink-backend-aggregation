@@ -3,6 +3,13 @@ package se.tink.backend.aggregation.nxgen.agents.demo;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoInvestmentAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoLoanAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.fetchers.NextGenerationDemoInvestmentFetcher;
+import se.tink.backend.aggregation.nxgen.agents.demo.fetchers.NextGenerationDemoLoanFetcher;
+import se.tink.backend.aggregation.nxgen.agents.demo.fetchers.NextGenerationDemoTransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
@@ -12,7 +19,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRe
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
@@ -21,15 +27,23 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
-public class NextGenerationDemoAgent extends NextGenerationAgent {
+public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
     private final NextGenerationDemoAuthenticator authenticator;
-    private final NextGenerationDemoFetcher fetcher;
+    //TODO Requires changes when multi-currency is implemented. Will do for now
+    private final String currency;
+    private final NextGenerationDemoTransactionFetcher transactionFetcher;
 
-    public NextGenerationDemoAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public NextGenerationDemoAgent(CredentialsRequest request,
+            AgentContext context,
+            SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-
         this.authenticator = new NextGenerationDemoAuthenticator(credentials);
-        this.fetcher = new NextGenerationDemoFetcher(credentials);
+        this.currency = request.getProvider().getCurrency();
+        this.transactionFetcher =  new NextGenerationDemoTransactionFetcher(request.getAccounts(),
+                        currency,
+                        catalog,
+                        getTransactionalAccountAccounts(),
+                        getDemoSavingsAccounts());
     }
 
     @Override
@@ -46,9 +60,8 @@ public class NextGenerationDemoAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        return Optional.of(new TransactionalAccountRefreshController(metricRefreshController, updateController, fetcher,
-                new TransactionFetcherController<>(transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(fetcher))));
+        return Optional.of(new TransactionalAccountRefreshController(metricRefreshController, updateController,transactionFetcher,
+                new TransactionFetcherController<>(transactionPaginationHelper, transactionFetcher)));
     }
 
     @Override
@@ -58,12 +71,16 @@ public class NextGenerationDemoAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.empty();
+        return Optional.of(new InvestmentRefreshController(metricRefreshController,
+                updateController,
+                new NextGenerationDemoInvestmentFetcher(currency, getInvestmentAccounts())));
     }
 
     @Override
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.empty();
+        return Optional.of(new LoanRefreshController(metricRefreshController,
+                updateController,
+                new NextGenerationDemoLoanFetcher(currency, catalog, getDemoLoanAccounts())));
     }
 
     @Override
@@ -85,4 +102,13 @@ public class NextGenerationDemoAgent extends NextGenerationAgent {
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
     }
+
+    public abstract DemoInvestmentAccount getInvestmentAccounts();
+
+    public abstract DemoSavingsAccount getDemoSavingsAccounts();
+
+    public abstract DemoLoanAccount getDemoLoanAccounts();
+
+    public abstract DemoTransactionAccount getTransactionalAccountAccounts();
+
 }

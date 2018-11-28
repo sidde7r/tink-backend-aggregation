@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.HandelsbankenAutoAuthenticator;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -37,7 +38,6 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.libraries.i18n.Catalog;
 
 public class HandelsbankenSEAgent
@@ -50,6 +50,7 @@ public class HandelsbankenSEAgent
         // this support should be removed once all clusters have been migrated to use
         // Handelsbanken internal account number for transactional accounts and account
         // based credit cards (allkort)
+        // Trigger new release // Ove
         // *** the request costructor argument
         super(request, context, signatureKeyPair, new HandelsbankenSEConfiguration(request));
     }

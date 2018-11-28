@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid;
 
 import com.google.common.base.Strings;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 import javax.ws.rs.core.MultivaluedMap;
@@ -45,7 +46,9 @@ public class OpenIdAuthenticatedHttpFilter extends Filter {
             return false;
         }
 
-        return interactionId.equals(receivedInteractionId);
+        // Some banks have a bug where they send our interaction Id twice, comma-separated.
+        return Arrays.stream(receivedInteractionId.split(","))
+                .anyMatch(interactionId::equals);
     }
 
     @Override

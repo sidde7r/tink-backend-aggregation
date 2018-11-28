@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v20.fetcher.entities.deserializer.AccountIdentifierDeserializer;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.rpc.AccountTypes;
@@ -15,6 +16,7 @@ import se.tink.libraries.account.AccountIdentifier;
 
 @JsonObject
 public class AccountEntity implements IdentifiableAccount {
+    private static AggregationLogger log = new AggregationLogger(AccountEntity.class);
 
     @JsonProperty("AccountId")
     private String accountId;
@@ -60,8 +62,8 @@ public class AccountEntity implements IdentifiableAccount {
                 );
     }
 
-    private Optional<AccountIdentifier> toAccountIdentifier() {
-        return getIdentifierEntity().toAccountIdentifier();
+    private Optional<AccountIdentifier> toAccountIdentifier(String accountName) {
+        return getIdentifierEntity().toAccountIdentifier(accountName);
     }
 
     public String getRawAccountSubType() {
@@ -70,22 +72,24 @@ public class AccountEntity implements IdentifiableAccount {
 
     public static TransactionalAccount toTransactionalAccount(AccountEntity account, AccountBalanceEntity balance) {
         String accountNumber = account.getUniqueIdentifier();
+        String accountName = account.getDisplayName();
 
         TransactionalAccount.Builder accountBuilder = TransactionalAccount
                 .builder(account.getAccountType(),
                         accountNumber,
                         balance.getBalance())
                 .setAccountNumber(accountNumber)
-                .setName(account.getDisplayName())
+                .setName(accountName)
                 .setBankIdentifier(account.getAccountId());
 
-        account.toAccountIdentifier().ifPresent(accountBuilder::addIdentifier);
+        account.toAccountIdentifier(accountName).ifPresent(accountBuilder::addIdentifier);
 
         return accountBuilder.build();
     }
 
     public static CreditCardAccount toCreditCardAccount(AccountEntity account, AccountBalanceEntity balance) {
 
+        log.info("Found UKOB credit card!");
         return CreditCardAccount
                 .builder(account.getUniqueIdentifier(),
                         balance.getBalance(),

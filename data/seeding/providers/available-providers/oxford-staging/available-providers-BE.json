@@ -1,10 +1,16 @@
 {
   "clusterid" : "oxford-staging",
   "providers" : [
+    "be-americanexpress-password",
     "be-argenta-cardreader",
     "be-belfius-cardreader",
+    "be-beobank-password",
     "be-demo",
     "be-ing-cardreader",
-    "be-kbc-cardreader"
+    "be-kbc-cardreader",
+    "be-n26-password",
+    "be-revolut-password",
+    "be-hellobank-cardreader",
+    "be-fortis-cardreader"
   ]
 }

@@ -8,7 +8,7 @@ public abstract class UkOpenBankingAuthenticatorConstants {
     /**
      * According to examples the max age is 24h
      */
-    public static final long MAX_AGE = TimeUnit.DAYS.toSeconds(1);
+    public static final long MAX_AGE = TimeUnit.DAYS.toSeconds(90);
 
     /**
      * "To indiciate that secure customer authentication must be carried out as mandated by the PSD2 RTS"

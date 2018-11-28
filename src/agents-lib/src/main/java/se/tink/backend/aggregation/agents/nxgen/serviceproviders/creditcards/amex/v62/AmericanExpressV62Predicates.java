@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.am
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -11,7 +12,9 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.ActivityListEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.Message;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.SubcardEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.TransactionEntity;
+import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 public class AmericanExpressV62Predicates {
@@ -33,7 +36,12 @@ public class AmericanExpressV62Predicates {
         }
         return true;
     };
-
+    public static final Predicate<CardEntity> cancelledCardSummaryValuePredicate = c -> {
+        if ("true".equals(c.getCanceled())) {
+            return false;
+        }
+        return true;
+    };
     public static final Consumer<TransactionEntity> transformIntoTinkTransactions(
             AmericanExpressV62Configuration config,
             List<Transaction> list) {
