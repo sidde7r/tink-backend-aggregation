@@ -218,4 +218,12 @@ public class Amount extends Number {
         return new Amount(currency, -value);
     }
 
+    /**
+     * Removes negative sign.
+     * @return Unsigned amount
+     */
+    public Amount stripSign() {
+        return new Amount(currency, Math.abs(value));
+    }
+
 }
