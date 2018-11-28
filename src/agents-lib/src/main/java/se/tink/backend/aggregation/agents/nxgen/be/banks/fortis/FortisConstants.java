@@ -94,6 +94,7 @@ public class FortisConstants {
         public static final LogTag MULTIPLE_CHALLENGES = LogTag.from("FORTIS_MULTIPLE_CHALLENGES");
         public static final LogTag MULTIPLE_USER_ENTITIES = LogTag.from("FORTIS_MULTIPLE_USER_ENTITIES");
         public static final LogTag UPCOMING_TRANSACTIONS = LogTag.from("FORTIS_UPCOMING_TRANSACTIONS");
-        public static final LogTag UPCOMING_TRANSACTIONS_ERR = LogTag.from("UPCOMING_TRANSACTIONS_ERR");
+        public static final LogTag UPCOMING_TRANSACTIONS_ERR = LogTag.from("FORTIS_UPCOMING_TRANSACTIONS_ERR");
+        public static final LogTag TRANSACTION_VALIDATION_ERR = LogTag.from("FORTIS_TRANSACTION_VALIDATION_ERR");
     }
 }

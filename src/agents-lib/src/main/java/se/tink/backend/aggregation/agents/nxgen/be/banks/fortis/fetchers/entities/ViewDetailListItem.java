@@ -3,10 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.entiti
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.core.Amount;
+import se.tink.libraries.account.AccountIdentifier;
 
 @JsonObject
 public class ViewDetailListItem {
@@ -15,6 +17,7 @@ public class ViewDetailListItem {
     private String accountSequenceNumber;
     private String accountNumber;
     private Account account;
+    private static final AggregationLogger LOGGER = new AggregationLogger(ViewDetailListItem.class);
 
     public String getAccountType() {
         return accountType;
@@ -47,7 +50,8 @@ public class ViewDetailListItem {
     }
 
     private Amount getTinkAmount() {
-        return new Amount(getAccount().getBalance().getCurrency(), Double.parseDouble(getAccount().getBalance().getAmount()));
+        return new Amount(getAccount().getBalance().getCurrency(),
+                Double.parseDouble(getAccount().getBalance().getAmount()));
     }
 
     private String getAccountName() {
@@ -55,17 +59,21 @@ public class ViewDetailListItem {
     }
 
     public boolean isValid() {
-        try{
+        try {
             toTinkAccount();
             return true;
-        }
-        catch (Exception e){
-            //TODO: add logging
+        } catch (Exception e) {
+            LOGGER.errorExtraLong("error validating transaction!", FortisConstants.LOGTAG.TRANSACTION_VALIDATION_ERR,
+                    e);
             return false;
         }
     }
 
-    private HolderName getHoldername(){
+    private AccountIdentifier getIbanIdentifier() {
+        return AccountIdentifier.create(AccountIdentifier.Type.IBAN, getIban());
+    }
+
+    private HolderName getHoldername() {
         return new HolderName(getAccount().getAlias());
     }
 
@@ -74,6 +82,7 @@ public class ViewDetailListItem {
                 .setAccountNumber(getIban())
                 .setHolderName(getHoldername())
                 .setName(getAccountName())
+                .addIdentifier(getIbanIdentifier())
                 .putInTemporaryStorage(FortisConstants.STORAGE.ACCOUNT_PRODUCT_ID, account.getProductId())
                 .build();
     }
