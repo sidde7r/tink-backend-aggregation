@@ -29,14 +29,12 @@ public class AccountBalanceEntity {
 
     public Amount getBalance() {
 
-        Amount total = balance;
+        Amount total = getSignedAmount();
 
-        if (creditDebitIndicator == UkOpenBankingConstants.CreditDebitIndicator.CREDIT) {
-            if (creditLine != null) {
-                for (CreditLineEntity credit : creditLine) {
-                    if (credit.isIncluded()) {
-                        total = total.subtract(credit.getAmount());
-                    }
+        if (creditLine != null) {
+            for (CreditLineEntity credit : creditLine) {
+                if (credit.isIncluded()) {
+                    total = total.subtract(credit.getAmount());
                 }
             }
         }
@@ -58,6 +56,16 @@ public class AccountBalanceEntity {
         }
 
         return Optional.of(total);
+    }
+
+    private Amount getSignedAmount() {
+        // Remove sign included in balance value
+        Amount unsignedAmount = balance.stripSign();
+
+        // Apply sign based on credit/debit indicator
+        return creditDebitIndicator == UkOpenBankingConstants.CreditDebitIndicator.CREDIT ?
+                unsignedAmount :
+                unsignedAmount.negate();
     }
 
     public UkOpenBankingConstants.AccountBalanceType getType() {
