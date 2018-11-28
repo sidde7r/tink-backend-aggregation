@@ -3,7 +3,7 @@
   "currency": "RON",
   "providers": [
     {
-      "name": "ro-raiffeisen-psd2",
+      "name": "ro-raiffeisen-oauth2",
       "displayName": "Raiffeisen Bank International (Sandbox)",
       "popular": true,
       "type": "BANK",
