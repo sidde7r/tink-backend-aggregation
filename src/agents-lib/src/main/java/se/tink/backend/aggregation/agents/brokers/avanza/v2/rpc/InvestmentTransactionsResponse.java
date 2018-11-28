@@ -21,12 +21,15 @@ public class InvestmentTransactionsResponse {
     }
 
     public Map<String, String> getIsinByName() {
-        return Optional.ofNullable(orderbooks).map(name ->
-                name.stream()
-                        .collect(Collectors.toMap(
-                                OrderbooksEntity::getName,
-                                OrderbooksEntity::getIsin,
-                                (isin1, isin2) -> isin1 )))
+        return Optional.ofNullable(orderbooks)
+                .map(
+                        name ->
+                                name.stream()
+                                        .collect(
+                                                Collectors.toMap(
+                                                        OrderbooksEntity::getName,
+                                                        OrderbooksEntity::getIsin,
+                                                        (isin1, isin2) -> isin1)))
                 .orElse(Collections.emptyMap());
     }
 }

@@ -49,6 +49,7 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
@@ -56,23 +57,22 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.system.rpc.AccountFeatures;
 import se.tink.backend.system.rpc.Instrument;
 import se.tink.backend.system.rpc.Portfolio;
 import se.tink.backend.system.rpc.Transaction;
 
-/**
- * Latest verified version: iOS v2.12.0
- */
-public class AvanzaV2Agent extends AbstractAgent implements RefreshableItemExecutor, PersistentLogin {
+/** Latest verified version: iOS v2.12.0 */
+public class AvanzaV2Agent extends AbstractAgent
+        implements RefreshableItemExecutor, PersistentLogin {
     private String authenticationToken;
     private Client client;
     private Credentials credentials;
     private AccountOverviewEntity accountOverview;
     private Session session;
 
-    public AvanzaV2Agent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public AvanzaV2Agent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         credentials = request.getCredentials();
@@ -83,26 +83,29 @@ public class AvanzaV2Agent extends AbstractAgent implements RefreshableItemExecu
         addAuthenticationTokenFilter();
     }
 
-    /**
-     * Helper method to add client filter that intercepts and adds CSRF tokens.
-     */
+    /** Helper method to add client filter that intercepts and adds CSRF tokens. */
     private void addAuthenticationTokenFilter() {
-        client.addFilter(new ClientFilter() {
-            @Override
-            public ClientResponse handle(ClientRequest cr) throws ClientHandlerException {
-                ClientResponse response = getNext().handle(cr);
+        client.addFilter(
+                new ClientFilter() {
+                    @Override
+                    public ClientResponse handle(ClientRequest cr) throws ClientHandlerException {
+                        ClientResponse response = getNext().handle(cr);
 
-                if (response.getHeaders().containsKey(AvanzaV2Constants.SECURITY_TOKEN_HEADER)) {
-                    authenticationToken = response.getHeaders().getFirst(AvanzaV2Constants.SECURITY_TOKEN_HEADER);
-                }
+                        if (response.getHeaders()
+                                .containsKey(AvanzaV2Constants.SECURITY_TOKEN_HEADER)) {
+                            authenticationToken =
+                                    response.getHeaders()
+                                            .getFirst(AvanzaV2Constants.SECURITY_TOKEN_HEADER);
+                        }
 
-                return response;
-            }
-        });
+                        return response;
+                    }
+                });
     }
 
     private boolean authenticateBankId() throws SessionException, BankIdException {
-        // If we're not in a manual refresh, the authentication session is invalid but we can't prompt the user to
+        // If we're not in a manual refresh, the authentication session is invalid but we can't
+        // prompt the user to
         // re-authenticate using BankId.
 
         if (!request.isManual()) {
@@ -114,10 +117,10 @@ public class AvanzaV2Agent extends AbstractAgent implements RefreshableItemExecu
         InitiateBankIdRequest initiateBankIdRequest = new InitiateBankIdRequest();
         initiateBankIdRequest.setIdentificationNumber(credentials.getField(Field.Key.USERNAME));
 
-        InitiateBankIdResponse initiateBankIdResponse = createClientRequest(
-                AvanzaV2Constants.URL_BANK_ID_INIT).post(
-                InitiateBankIdResponse.class, initiateBankIdRequest);
-        
+        InitiateBankIdResponse initiateBankIdResponse =
+                createClientRequest(AvanzaV2Constants.URL_BANK_ID_INIT)
+                        .post(InitiateBankIdResponse.class, initiateBankIdRequest);
+
         credentials.setSupplementalInformation(null);
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
 
@@ -127,47 +130,60 @@ public class AvanzaV2Agent extends AbstractAgent implements RefreshableItemExecu
 
         for (int i = 0; i < 30; i++) {
 
-            ClientResponse bankIdClientResponse = createClientRequest(
-                    String.format(AvanzaV2Constants.URL_BANK_ID_COLLECT, initiateBankIdResponse.getTransactionId()))
-                    .get(ClientResponse.class);
+            ClientResponse bankIdClientResponse =
+                    createClientRequest(
+                                    String.format(
+                                            AvanzaV2Constants.URL_BANK_ID_COLLECT,
+                                            initiateBankIdResponse.getTransactionId()))
+                            .get(ClientResponse.class);
 
             if (bankIdClientResponse.getStatus() != Status.OK.getStatusCode()) {
-                log.warn("Could not login to BankID. Most likely because user cancelled the request");
+                log.warn(
+                        "Could not login to BankID. Most likely because user cancelled the request");
                 throw BankIdError.CANCELLED.exception();
             }
 
             BankIdResponse bankIdResponse = bankIdClientResponse.getEntity(BankIdResponse.class);
 
             switch (bankIdResponse.getState()) {
-            case "OUTSTANDING_TRANSACTION":
-            case "USER_SIGN":
-            case "STARTED":
-                log.debug("Waiting for BankID authentication: " + bankIdResponse.getState());
+                case "OUTSTANDING_TRANSACTION":
+                case "USER_SIGN":
+                case "STARTED":
+                    log.debug("Waiting for BankID authentication: " + bankIdResponse.getState());
 
-                Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
-                continue;
-            case "NO_CLIENT":
-                log.warn("Got erroneous BankID status: " + bankIdResponse.getState());
-                throw BankIdError.NO_CLIENT.exception();
-            case "COMPLETE":
+                    Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
+                    continue;
+                case "NO_CLIENT":
+                    log.warn("Got erroneous BankID status: " + bankIdResponse.getState());
+                    throw BankIdError.NO_CLIENT.exception();
+                case "COMPLETE":
 
-                // Create one or several sessions depending on if the user has multiple accounts
-                this.session = new Session();
+                    // Create one or several sessions depending on if the user has multiple accounts
+                    this.session = new Session();
 
-                for (LoginEntity entity : bankIdResponse.getLogins()) {
-                    ClientResponse clientResponse = createClientRequest(AvanzaV2Constants.BASE_URL + entity.getLoginPath()).post(
-                            ClientResponse.class, request);
+                    for (LoginEntity entity : bankIdResponse.getLogins()) {
+                        ClientResponse clientResponse =
+                                createClientRequest(
+                                                AvanzaV2Constants.BASE_URL + entity.getLoginPath())
+                                        .post(ClientResponse.class, request);
 
-                    int status = clientResponse.getStatus();
+                        int status = clientResponse.getStatus();
 
-                    Preconditions.checkState(status == Status.OK.getStatusCode(), "#login-refactoring - Could not login to BankID. Error Status: " + status);
-                    CreateSessionResponse sessionResponse = clientResponse.getEntity(CreateSessionResponse.class);
-                    this.session.addAuthenticationSession(sessionResponse.getAuthenticationSession());
-                }
+                        Preconditions.checkState(
+                                status == Status.OK.getStatusCode(),
+                                "#login-refactoring - Could not login to BankID. Error Status: "
+                                        + status);
+                        CreateSessionResponse sessionResponse =
+                                clientResponse.getEntity(CreateSessionResponse.class);
+                        this.session.addAuthenticationSession(
+                                sessionResponse.getAuthenticationSession());
+                    }
 
-                return true;
-            default:
-                throw new IllegalStateException("#login-refactoring - Unknown status for BankID authentication: " + bankIdResponse.getState());
+                    return true;
+                default:
+                    throw new IllegalStateException(
+                            "#login-refactoring - Unknown status for BankID authentication: "
+                                    + bankIdResponse.getState());
             }
         }
 
@@ -176,16 +192,22 @@ public class AvanzaV2Agent extends AbstractAgent implements RefreshableItemExecu
     }
 
     private Builder createClientRequest(String url) {
-        return createClientRequest(url, credentials.getSensitivePayload(AvanzaV2Constants.AUTHENTICATION_SESSION_PAYLOAD));
+        return createClientRequest(
+                url,
+                credentials.getSensitivePayload(AvanzaV2Constants.AUTHENTICATION_SESSION_PAYLOAD));
     }
 
     private Builder createClientRequest(String url, String authenticationSession) {
-        Builder builder = client.resource(url).header("User-Agent", DEFAULT_USER_AGENT)
-                .accept(MediaType.APPLICATION_JSON)
-                .type(MediaType.APPLICATION_JSON);
+        Builder builder =
+                client.resource(url)
+                        .header("User-Agent", DEFAULT_USER_AGENT)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .type(MediaType.APPLICATION_JSON);
 
         if (!Strings.isNullOrEmpty(authenticationSession)) {
-            builder = builder.header(AvanzaV2Constants.AUTHENTICATION_SESSION_HEADER, authenticationSession);
+            builder =
+                    builder.header(
+                            AvanzaV2Constants.AUTHENTICATION_SESSION_HEADER, authenticationSession);
         }
 
         if (!Strings.isNullOrEmpty(authenticationToken)) {
@@ -195,9 +217,7 @@ public class AvanzaV2Agent extends AbstractAgent implements RefreshableItemExecu
         return builder;
     }
 
-    /**
-     * Fetch the account overview, return null if not successful.
-     */
+    /** Fetch the account overview, return null if not successful. */
     private AccountOverviewEntity fetchOverview(String authenticationSession) {
         // If we don't have an existing authentication session token, just return.
 
@@ -205,8 +225,9 @@ public class AvanzaV2Agent extends AbstractAgent implements RefreshableItemExecu
             return null;
         }
 
-        ClientResponse clientResponse = createClientRequest(AvanzaV2Constants.URL_ACCOUNT_OVERVIEW,
-                authenticationSession).get(ClientResponse.class);
+        ClientResponse clientResponse =
+                createClientRequest(AvanzaV2Constants.URL_ACCOUNT_OVERVIEW, authenticationSession)
+                        .get(ClientResponse.class);
 
         if (clientResponse.getStatus() == Status.OK.getStatusCode()) {
             return clientResponse.getEntity(AccountOverviewEntity.class);
@@ -217,37 +238,45 @@ public class AvanzaV2Agent extends AbstractAgent implements RefreshableItemExecu
 
     private void refreshAccounts() {
         if (request.getCredentials().getType() == CredentialsTypes.MOBILE_BANKID) {
-            session.getAuthenticationSessions().forEach(bankIDAuthenticationSession -> {
-                ensureValidBankIDSession(bankIDAuthenticationSession);
-                updateInvestmentAccounts(bankIDAuthenticationSession);
-            });
+            session.getAuthenticationSessions()
+                    .forEach(
+                            bankIDAuthenticationSession -> {
+                                ensureValidBankIDSession(bankIDAuthenticationSession);
+                                updateInvestmentAccounts(bankIDAuthenticationSession);
+                            });
         } else {
-            log.error(String.format("Credential type %s is not supported",
-                    request.getCredentials().getType().name()));
+            log.error(
+                    String.format(
+                            "Credential type %s is not supported",
+                            request.getCredentials().getType().name()));
         }
     }
 
     private void refreshTransactions() {
         if (request.getCredentials().getType() == CredentialsTypes.MOBILE_BANKID) {
-            session.getAuthenticationSessions().forEach(bankIDAuthenticationSession -> {
-                ensureValidBankIDSession(bankIDAuthenticationSession);
-                updateAccountsAndTransactions(bankIDAuthenticationSession);
-            });
+            session.getAuthenticationSessions()
+                    .forEach(
+                            bankIDAuthenticationSession -> {
+                                ensureValidBankIDSession(bankIDAuthenticationSession);
+                                updateAccountsAndTransactions(bankIDAuthenticationSession);
+                            });
         } else {
-            log.error(String.format("Credential type %s is not supported",
-                    request.getCredentials().getType().name()));
+            log.error(
+                    String.format(
+                            "Credential type %s is not supported",
+                            request.getCredentials().getType().name()));
         }
     }
 
     @Override
     public void refresh(RefreshableItem item) {
         switch (item) {
-        case INVESTMENT_ACCOUNTS:
-            refreshAccounts();
-            break;
-        case INVESTMENT_TRANSACTIONS:
-            refreshTransactions();
-            break;
+            case INVESTMENT_ACCOUNTS:
+                refreshAccounts();
+                break;
+            case INVESTMENT_TRANSACTIONS:
+                refreshTransactions();
+                break;
         }
     }
 
@@ -263,98 +292,155 @@ public class AvanzaV2Agent extends AbstractAgent implements RefreshableItemExecu
     private TransactionsResponse fetchTransactions(
             String accountId, String authenticationSession, String fromDate, String toDate) {
         return createClientRequest(
-                String.format(AvanzaV2Constants.URL_TRANSACTIONS, accountId, fromDate, toDate),
-                authenticationSession)
+                        String.format(
+                                AvanzaV2Constants.URL_TRANSACTIONS, accountId, fromDate, toDate),
+                        authenticationSession)
                 .get(TransactionsResponse.class);
     }
 
-    private AccountDetailsEntity fetchAccountDetails(String accountId, String authenticationSession) {
+    private AccountDetailsEntity fetchAccountDetails(
+            String accountId, String authenticationSession) {
         return createClientRequest(
-                String.format(AvanzaV2Constants.URL_ACCOUNT_DETAILS, accountId),
-                authenticationSession)
+                        String.format(AvanzaV2Constants.URL_ACCOUNT_DETAILS, accountId),
+                        authenticationSession)
                 .get(AccountDetailsEntity.class);
     }
 
-    private InvestmentTransactionsResponse fetchInvestmentTransactions(String accountId, String toDate,
-            String authenticationSession) {
-        return createClientRequest(String.format(AvanzaV2Constants.URL_INVESTMENT_TRANSACTIONS, accountId,
-                AvanzaV2Constants.FROM_DATE_FOR_INVESTMENT_TRANSACTIONS, toDate), authenticationSession)
+    private InvestmentTransactionsResponse fetchInvestmentTransactions(
+            String accountId, String toDate, String authenticationSession) {
+        return createClientRequest(
+                        String.format(
+                                AvanzaV2Constants.URL_INVESTMENT_TRANSACTIONS,
+                                accountId,
+                                AvanzaV2Constants.FROM_DATE_FOR_INVESTMENT_TRANSACTIONS,
+                                toDate),
+                        authenticationSession)
                 .get(InvestmentTransactionsResponse.class);
     }
 
-    private PositionResponse fetchInvestmentsPositions(String accountId, String authenticationSession) {
-        return createClientRequest(String.format(AvanzaV2Constants.URL_POSITIONS, accountId), authenticationSession)
+    private PositionResponse fetchInvestmentsPositions(
+            String accountId, String authenticationSession) {
+        return createClientRequest(
+                        String.format(AvanzaV2Constants.URL_POSITIONS, accountId),
+                        authenticationSession)
                 .get(PositionResponse.class);
     }
 
-    private <T> T getMarketInfoResponse(String positionType, String orderbookId, String authenticationSession,
+    private <T> T getMarketInfoResponse(
+            String positionType,
+            String orderbookId,
+            String authenticationSession,
             Class<T> responseType) {
-        return createClientRequest(String.format(AvanzaV2Constants.URL_MARKET_INFO, positionType, orderbookId), authenticationSession)
+        return createClientRequest(
+                        String.format(AvanzaV2Constants.URL_MARKET_INFO, positionType, orderbookId),
+                        authenticationSession)
                 .get(responseType);
     }
 
     private void updateInvestmentAccounts(String authenticationSession) {
-        accountOverview.getAccounts().forEach(accountEntity -> {
-            // Only tradable accounts have instruments
-            if (!accountEntity.isTradable()) {
-                return;
-            }
+        accountOverview
+                .getAccounts()
+                .forEach(
+                        accountEntity -> {
+                            // Only tradable accounts have instruments
+                            if (!accountEntity.isTradable()) {
+                                return;
+                            }
 
-            String accountId = accountEntity.getAccountId();
+                            String accountId = accountEntity.getAccountId();
 
-            AccountDetailsEntity accountDetailsEntity = fetchAccountDetails(accountId, authenticationSession);
-            Account account = accountDetailsEntity.toAccount(accountEntity);
+                            AccountDetailsEntity accountDetailsEntity =
+                                    fetchAccountDetails(accountId, authenticationSession);
+                            Account account = accountDetailsEntity.toAccount(accountEntity);
 
-            PositionResponse positionResponse = fetchInvestmentsPositions(accountId, authenticationSession);
-            InvestmentTransactionsResponse investmentTransactionsResponse = fetchInvestmentTransactions(accountId,
-                    LocalDate.now().format(DateTimeFormatter.ISO_DATE), authenticationSession);
+                            PositionResponse positionResponse =
+                                    fetchInvestmentsPositions(accountId, authenticationSession);
+                            InvestmentTransactionsResponse investmentTransactionsResponse =
+                                    fetchInvestmentTransactions(
+                                            accountId,
+                                            LocalDate.now().format(DateTimeFormatter.ISO_DATE),
+                                            authenticationSession);
 
-            Map<String, String> isinByName = investmentTransactionsResponse.getIsinByName();
+                            Map<String, String> isinByName =
+                                    investmentTransactionsResponse.getIsinByName();
 
-            Portfolio portfolio = positionResponse.toPortfolio();
-            // Add the money available for buying instruments
-            portfolio.setCashValue(accountDetailsEntity.getBuyingPower());
-            List<Instrument> instruments = Lists.newArrayList();
-            positionResponse.getInstrumentPositions().forEach(positionAggregationEntity -> {
-                String instrumentType = positionAggregationEntity.getInstrumentType();
-                positionAggregationEntity.getPositions()
-                        .stream()
-                        .filter(positionEntity -> Objects.nonNull(positionEntity.getOrderbookId()))
-                        .forEach(positionEntity -> {
-                    String market = getInstrumentMarket(instrumentType, positionEntity.getOrderbookId(),
-                            authenticationSession);
-                    positionEntity.toInstrument(instrumentType, market, isinByName.get(positionEntity.getName()))
-                            .ifPresent(instruments::add);
-                });
-            });
-            portfolio.setInstruments(instruments);
+                            Portfolio portfolio = positionResponse.toPortfolio();
+                            // Add the money available for buying instruments
+                            portfolio.setCashValue(accountDetailsEntity.getBuyingPower());
+                            List<Instrument> instruments = Lists.newArrayList();
+                            positionResponse
+                                    .getInstrumentPositions()
+                                    .forEach(
+                                            positionAggregationEntity -> {
+                                                String instrumentType =
+                                                        positionAggregationEntity
+                                                                .getInstrumentType();
+                                                positionAggregationEntity
+                                                        .getPositions()
+                                                        .stream()
+                                                        .filter(
+                                                                positionEntity ->
+                                                                        Objects.nonNull(
+                                                                                positionEntity
+                                                                                        .getOrderbookId()))
+                                                        .forEach(
+                                                                positionEntity -> {
+                                                                    String market =
+                                                                            getInstrumentMarket(
+                                                                                    instrumentType,
+                                                                                    positionEntity
+                                                                                            .getOrderbookId(),
+                                                                                    authenticationSession);
+                                                                    positionEntity
+                                                                            .toInstrument(
+                                                                                    instrumentType,
+                                                                                    market,
+                                                                                    isinByName.get(
+                                                                                            positionEntity
+                                                                                                    .getName()))
+                                                                            .ifPresent(
+                                                                                    instruments
+                                                                                            ::add);
+                                                                });
+                                            });
+                            portfolio.setInstruments(instruments);
 
-            account.setBalance(account.getBalance() + accountDetailsEntity.getBuyingPower());
+                            account.setBalance(
+                                    account.getBalance() + accountDetailsEntity.getBuyingPower());
 
-            context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
-        });
+                            context.cacheAccount(
+                                    account, AccountFeatures.createForPortfolios(portfolio));
+                        });
     }
 
     private void updateAccountsAndTransactions(String authenticationSession) {
-        accountOverview.getAccounts().forEach(accountEntity -> {
-            String accountId = accountEntity.getAccountId();
+        accountOverview
+                .getAccounts()
+                .forEach(
+                        accountEntity -> {
+                            String accountId = accountEntity.getAccountId();
 
-            AccountDetailsEntity accountDetailsEntity = fetchAccountDetails(accountId, authenticationSession);
-            Account account = accountDetailsEntity.toAccount(accountEntity);
+                            AccountDetailsEntity accountDetailsEntity =
+                                    fetchAccountDetails(accountId, authenticationSession);
+                            Account account = accountDetailsEntity.toAccount(accountEntity);
 
-            // Hack to get the correct name for SparkontoPlus accounts.
-            if (Objects.equals(accountDetailsEntity.getAccountType(), "SparkontoPlus")) {
-                account.setName(
-                        accountDetailsEntity.getAccountTypeName() + accountEntity.getSparkontoPlusType());
-            }
+                            // Hack to get the correct name for SparkontoPlus accounts.
+                            if (Objects.equals(
+                                    accountDetailsEntity.getAccountType(), "SparkontoPlus")) {
+                                account.setName(
+                                        accountDetailsEntity.getAccountTypeName()
+                                                + accountEntity.getSparkontoPlusType());
+                            }
 
-            List<Transaction> transactions = getTransactions(account, accountId, authenticationSession);
+                            List<Transaction> transactions =
+                                    getTransactions(account, accountId, authenticationSession);
 
-            context.updateTransactions(account, transactions);
-        });
+                            context.updateTransactions(account, transactions);
+                        });
     }
 
-    private List<Transaction> getTransactions(Account account, String accountId, String authenticationSession) {
+    private List<Transaction> getTransactions(
+            Account account, String accountId, String authenticationSession) {
         // Fetch transactions for the account and create Tink Transactions
         int subsequentEmptyFetches = 0;
         int earlierSize = 0;
@@ -362,14 +448,27 @@ public class AvanzaV2Agent extends AbstractAgent implements RefreshableItemExecu
         LocalDate fromDate = LocalDate.now().minusMonths(3);
         LocalDate toDate = LocalDate.now();
         do {
-            TransactionsResponse transactionsResponse = fetchTransactions(accountId, authenticationSession,
-                    fromDate.format(DateTimeFormatter.ISO_DATE), toDate.format(DateTimeFormatter.ISO_DATE));
+            TransactionsResponse transactionsResponse =
+                    fetchTransactions(
+                            accountId,
+                            authenticationSession,
+                            fromDate.format(DateTimeFormatter.ISO_DATE),
+                            toDate.format(DateTimeFormatter.ISO_DATE));
 
-            transactions.addAll(transactionsResponse.getTransactions().stream()
-                    .filter(t -> Objects.equals(t.getTransactionType().toLowerCase(), "deposit") ||
-                            Objects.equals(t.getTransactionType().toLowerCase(), "withdraw"))
-                    .map(TransactionEntity::toTinkTransaction)
-                    .collect(Collectors.toList()));
+            transactions.addAll(
+                    transactionsResponse
+                            .getTransactions()
+                            .stream()
+                            .filter(
+                                    t ->
+                                            Objects.equals(
+                                                            t.getTransactionType().toLowerCase(),
+                                                            "deposit")
+                                                    || Objects.equals(
+                                                            t.getTransactionType().toLowerCase(),
+                                                            "withdraw"))
+                            .map(TransactionEntity::toTinkTransaction)
+                            .collect(Collectors.toList()));
 
             if (transactions.size() == earlierSize) {
                 subsequentEmptyFetches++;
@@ -385,45 +484,81 @@ public class AvanzaV2Agent extends AbstractAgent implements RefreshableItemExecu
         return transactions;
     }
 
-    private String getInstrumentMarket(String positionType, String orderbookId, String authenticationSession) {
+    private String getInstrumentMarket(
+            String positionType, String orderbookId, String authenticationSession) {
         if (positionType == null) {
             return null;
         }
 
         String type = positionType.toLowerCase();
         switch (type) {
-        case "auto_portfolio":
-        case "fund":
-            FundMarketInfoResponse fundMarketInfoResponse = getMarketInfoResponse("fund", orderbookId,
-                    authenticationSession, FundMarketInfoResponse.class);
-            return fundMarketInfoResponse.getFundCompany() != null ?
-                    fundMarketInfoResponse.getFundCompany().getName() : null;
-        case "stock":
-            return getMarketInfoResponse(type, orderbookId, authenticationSession, StockMarketInfoResponse.class)
-                    .getMarketPlace();
-        case "certificate":
-            return getMarketInfoResponse(type, orderbookId, authenticationSession, CertificateMarketInfoResponse.class)
-                    .getMarketPlace();
-        case "future_forward":
-            return getMarketInfoResponse(type, orderbookId, authenticationSession, FutureForwardMarketInfoResponse.class)
-                    .getMarketPlace();
-        case "equity_linked_bond":
-            return getMarketInfoResponse(type, orderbookId, authenticationSession, EquityLinkedBondMarketInfoResponse.class)
-                    .getMarketPlace();
-        case "bond":
-            return getMarketInfoResponse(type, orderbookId, authenticationSession, BondMarketInfoResponse.class)
-                    .getMarketPlace();
-        case "warrant":
-            return getMarketInfoResponse(type, orderbookId, authenticationSession, WarrantMarketInfoResponse.class)
-                    .getMarketPlace();
-        case "exchange_traded_fund":
-            return getMarketInfoResponse(type, orderbookId, authenticationSession, ExchangeTradedFundInfoResponse.class)
-                    .getMarketPlace();
+            case "auto_portfolio":
+            case "fund":
+                FundMarketInfoResponse fundMarketInfoResponse =
+                        getMarketInfoResponse(
+                                "fund",
+                                orderbookId,
+                                authenticationSession,
+                                FundMarketInfoResponse.class);
+                return fundMarketInfoResponse.getFundCompany() != null
+                        ? fundMarketInfoResponse.getFundCompany().getName()
+                        : null;
+            case "stock":
+                return getMarketInfoResponse(
+                                type,
+                                orderbookId,
+                                authenticationSession,
+                                StockMarketInfoResponse.class)
+                        .getMarketPlace();
+            case "certificate":
+                return getMarketInfoResponse(
+                                type,
+                                orderbookId,
+                                authenticationSession,
+                                CertificateMarketInfoResponse.class)
+                        .getMarketPlace();
+            case "future_forward":
+                return getMarketInfoResponse(
+                                type,
+                                orderbookId,
+                                authenticationSession,
+                                FutureForwardMarketInfoResponse.class)
+                        .getMarketPlace();
+            case "equity_linked_bond":
+                return getMarketInfoResponse(
+                                type,
+                                orderbookId,
+                                authenticationSession,
+                                EquityLinkedBondMarketInfoResponse.class)
+                        .getMarketPlace();
+            case "bond":
+                return getMarketInfoResponse(
+                                type,
+                                orderbookId,
+                                authenticationSession,
+                                BondMarketInfoResponse.class)
+                        .getMarketPlace();
+            case "warrant":
+                return getMarketInfoResponse(
+                                type,
+                                orderbookId,
+                                authenticationSession,
+                                WarrantMarketInfoResponse.class)
+                        .getMarketPlace();
+            case "exchange_traded_fund":
+                return getMarketInfoResponse(
+                                type,
+                                orderbookId,
+                                authenticationSession,
+                                ExchangeTradedFundInfoResponse.class)
+                        .getMarketPlace();
 
-        default:
-            log.warn(String.format("avanza - portfolio type not handled in switch - type: %s, orderbookId: %s",
-                    positionType, orderbookId));
-            return null;
+            default:
+                log.warn(
+                        String.format(
+                                "avanza - portfolio type not handled in switch - type: %s, orderbookId: %s",
+                                positionType, orderbookId));
+                return null;
         }
     }
 
@@ -436,8 +571,10 @@ public class AvanzaV2Agent extends AbstractAgent implements RefreshableItemExecu
             if (request.getCredentials().getType() == CredentialsTypes.MOBILE_BANKID) {
                 return authenticateBankId();
             } else {
-                String msg = String.format("Credential type %s is not supported",
-                        request.getCredentials().getType().name());
+                String msg =
+                        String.format(
+                                "Credential type %s is not supported",
+                                request.getCredentials().getType().name());
                 throw new IllegalStateException(msg);
             }
         }
@@ -454,8 +591,8 @@ public class AvanzaV2Agent extends AbstractAgent implements RefreshableItemExecu
     }
 
     /**
-     * Keep alive the agent by doing requests to fetch the overview. Need to keep all sessions alive for the
-     * connection to be alive
+     * Keep alive the agent by doing requests to fetch the overview. Need to keep all sessions alive
+     * for the connection to be alive
      */
     @Override
     public boolean keepAlive() throws Exception {
@@ -476,7 +613,6 @@ public class AvanzaV2Agent extends AbstractAgent implements RefreshableItemExecu
             if (loggedOut) {
                 return false;
             }
-
         }
 
         // All session are still alive

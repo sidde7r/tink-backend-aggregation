@@ -13,6 +13,4 @@ public class InitiateBankIdRequest {
     public void setIdentificationNumber(String identificationNumber) {
         this.identificationNumber = identificationNumber;
     }
-    
-    
 }

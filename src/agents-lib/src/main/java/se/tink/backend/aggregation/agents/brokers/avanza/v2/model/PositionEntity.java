@@ -187,8 +187,10 @@ public class PositionEntity {
         instrument.setQuantity(getVolume());
         instrument.setRawType(instrumentType);
         instrument.setType(getInstrumentType(instrumentType));
-        // Since we don't get the isin from this entity we have to enrich the instrument in a later stage.
-        // This is done by matching the order book id of the transactions of the specific instrument.
+        // Since we don't get the isin from this entity we have to enrich the instrument in a later
+        // stage.
+        // This is done by matching the order book id of the transactions of the specific
+        // instrument.
         instrument.setUniqueIdentifier(getOrderbookId());
 
         return Optional.of(instrument);
@@ -196,24 +198,24 @@ public class PositionEntity {
 
     private Instrument.Type getInstrumentType(String instrumentType) {
         switch (instrumentType.toLowerCase()) {
-        case "stock":
-            return Instrument.Type.STOCK;
-        case "fund":
-            return Instrument.Type.FUND;
-        case "bond":
-        case "option":
-        case "future_forward":
-        case "certificate":
-        case "warrant":
-        case "exchange_traded_fund":
-        case "index":
-        case "premium_bond":
-        case "subscription_option":
-        case "equity_linked_bond":
-        case "convertible":
-            // Intentional fall through
-        default:
-            return Instrument.Type.OTHER;
+            case "stock":
+                return Instrument.Type.STOCK;
+            case "fund":
+                return Instrument.Type.FUND;
+            case "bond":
+            case "option":
+            case "future_forward":
+            case "certificate":
+            case "warrant":
+            case "exchange_traded_fund":
+            case "index":
+            case "premium_bond":
+            case "subscription_option":
+            case "equity_linked_bond":
+            case "convertible":
+                // Intentional fall through
+            default:
+                return Instrument.Type.OTHER;
         }
     }
 }
