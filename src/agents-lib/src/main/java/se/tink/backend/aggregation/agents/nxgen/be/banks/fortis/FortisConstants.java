@@ -26,6 +26,7 @@ public class FortisConstants {
         public static final String AUTHENTICATION_URL = "/SEEA-pa01/SEEAServer";
         public static final String CHECK_FORCED_UPGRADE = "/EBIA-pr01/rpc/forceUpgrade/checkForcedUpgrade";
         public static final String TRANSACTIONS = "/DBPL-pr01/rpc/transaction/GetInitialMovementList";
+        public static final String LOGOUT = "/SEEA-pa01/logoff";
     }
 
     public static class ERRORCODE {

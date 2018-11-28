@@ -16,6 +16,7 @@ public class FortisSessionHandler implements SessionHandler {
 
     @Override
     public void logout() {
+        apiClient.logout();
     }
 
     private boolean calulcatedChallengeExists() {

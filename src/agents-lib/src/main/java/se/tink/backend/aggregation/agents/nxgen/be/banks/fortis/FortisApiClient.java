@@ -126,6 +126,12 @@ public class FortisApiClient {
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE).post(HttpResponse.class, loginChallenge);
     }
 
+    public void logout() {
+        client.request(getUrl(FortisConstants.URLS.LOGOUT))
+                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .header(FortisConstants.HEADERS.CSRF, CSRF);
+    }
+
     public void getDistributorAuthenticationMeans() {
         DistributorAuthenticationRequest request = new DistributorAuthenticationRequest("",
                 FortisConstants.AUTHENTICATION_MEANS.DISTRIBUTION_CHANNEL_ID,
