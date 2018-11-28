@@ -41,6 +41,10 @@ public final class ValidatorFactory {
                         "Account name is present",
                         acc -> acc.getName() != null,
                         acc -> String.format("Account lacks a name: %s", acc))
+                .ruleAccount(
+                        "At least one account identifier is specified (e.g. IBAN)",
+                        acc -> acc.getIdentifiers().size() >= 1,
+                        acc -> String.format("Account lacks identifier(s): %s", acc))
                 .ruleTransaction(
                         "Transaction description is present",
                         trx -> trx.getDescription() != null,
