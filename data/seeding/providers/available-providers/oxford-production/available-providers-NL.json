@@ -1,12 +1,5 @@
 {
   "clusterid" : "oxford-production",
   "providers" : [
-    "americanexpress-nl",
-    "ics-abnamro",
-    "nl-demo",
-    "nl-ics",
-    "nl-ing",
-    "nl-rabobank",
-    "nl-snsbank"
   ]
 }

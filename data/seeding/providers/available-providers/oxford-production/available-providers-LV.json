@@ -1,11 +1,5 @@
 {
   "clusterid" : "oxford-production",
   "providers" : [
-    "lv-citadele-banka",
-    "lv-dnb",
-    "lv-nordea",
-    "lv-norvik-banka",
-    "lv-seb",
-    "lv-swedbank"
   ]
 }
