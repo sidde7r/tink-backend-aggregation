@@ -1,7 +1,7 @@
 {
   "clusterid" : "oxford-production",
   "providers" : [
-    "ro-raiffeisen-psd2",
+    "ro-raiffeisen-oauth2",
     "ro-n26-password",
     "ro-revolut-password"
   ]
