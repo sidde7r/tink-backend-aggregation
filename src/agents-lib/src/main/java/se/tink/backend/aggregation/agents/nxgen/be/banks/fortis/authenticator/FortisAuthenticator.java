@@ -250,7 +250,7 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
     private Field createDescriptionField(String loginText, String challenge) {
         Field field = new Field();
         field.setMasked(false);
-        field.setDescription(challenge);
+        field.setDescription(catalog.getString("Challenge"));
         field.setValue(challenge);
         field.setName("description");
         field.setHelpText(loginText);
