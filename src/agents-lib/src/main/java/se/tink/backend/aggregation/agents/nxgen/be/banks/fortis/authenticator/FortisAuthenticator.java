@@ -12,10 +12,10 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisUtils;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.entities.AuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.entities.EBankingUserId;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.rpc.EbankingUsersResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.rpc.AuthenticationProcessResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.rpc.AuthenticationProcessRequest;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.rpc.AuthenticationProcessResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.rpc.EBankingUsersRequest;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.rpc.EbankingUsersResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.rpc.GenerateChallangeRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.rpc.UserInfoResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -24,7 +24,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
@@ -42,8 +41,7 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
             Catalog catalog,
             PersistentStorage persistentStorage,
             FortisApiClient apiClient,
-            SupplementalInformationController supplementalInformationController,
-            SessionStorage sessionStorage) {
+            SupplementalInformationController supplementalInformationController) {
         this.catalog = catalog;
         this.persistentStorage = persistentStorage;
         this.apiClient = apiClient;
@@ -108,10 +106,9 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
     }
 
     private void sendChallenges(AuthResponse response) throws LoginException {
-        try{
+        try {
             apiClient.authenticationRequest(response.getUrlEncodedFormat());
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
     }
