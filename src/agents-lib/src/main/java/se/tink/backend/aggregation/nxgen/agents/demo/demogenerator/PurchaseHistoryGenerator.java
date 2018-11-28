@@ -67,13 +67,15 @@ public class PurchaseHistoryGenerator {
     public PaginatorResponse generateTransactions(Date from, Date to, String currency) {
         LocalDate start = from.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate end = to.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        ArrayList<Transaction> transactions = new ArrayList();
 
-        if (Duration.between(end.atStartOfDay(), start.atStartOfDay()).toDays() == 0) {
-            //TODO Generate two extra transactions for this date here
-            PaginatorResponseImpl.createEmpty(false);
+        if (Duration.between(end.atStartOfDay(), start.atStartOfDay()).toDays() == 0
+                || Duration.between(end.atStartOfDay(), start.atStartOfDay()).toDays() == 1) {
+            transactions.addAll(generateOneDayOfTransactions(start, currency));
+            return PaginatorResponseImpl.create(transactions, false);
         }
 
-        ArrayList<Transaction> transactions = new ArrayList();
+
         for (LocalDate dateCursor = start; dateCursor.isBefore(end); dateCursor = dateCursor.plusDays(1)) {
             transactions.addAll(generateOneDayOfTransactions(dateCursor, currency));
         }
