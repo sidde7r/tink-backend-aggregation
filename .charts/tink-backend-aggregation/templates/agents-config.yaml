@@ -25,4 +25,9 @@ data:
       integrations:
         sbab:
           signBaseUrl: https://secure.sbab.se
+        monzo:
+          tink:
+            clientId: "dummyId"
+            clientSecret: "dummySecret"
+            redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
         ukOpenBankingJson: UKOPENBANKINGJSON
