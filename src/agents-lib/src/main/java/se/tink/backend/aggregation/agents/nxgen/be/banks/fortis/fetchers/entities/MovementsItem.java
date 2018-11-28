@@ -27,7 +27,6 @@ public class MovementsItem {
     private String currency;
     private static final AggregationLogger LOGGER = new AggregationLogger(MovementsItem.class);
 
-
     public boolean isDetailPresent() {
         return detailPresent;
     }
@@ -88,18 +87,16 @@ public class MovementsItem {
         try {
             return new Amount(currency, NumberFormat.getInstance(Locale.FRANCE).parse(amount));
         } catch (ParseException e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Cannot parse amount in transaction: " + e.toString());
         }
-        return null;
     }
 
     private Date getDate() {
         try {
             return FortisConstants.DATE.TRANSACTION_FORMAT.parse(executionDate);
         } catch (ParseException e) {
-            LOGGER.errorExtraLong("Cannot parse transactions: ", FortisConstants.LOGTAG.DATE_PARSING_ERROR, e);
+            throw new IllegalStateException("Cannot parse amount in transaction: " + e.toString());
         }
-        return null;
     }
 
     private String getTransactionDescription() {
@@ -115,7 +112,8 @@ public class MovementsItem {
             toTinkTransaction();
             return true;
         } catch (Exception e) {
-            LOGGER.errorExtraLong("Cannot parse transactions: ", FortisConstants.LOGTAG.TRANSACTION_VALIDATION_ERROR, e);
+            LOGGER.errorExtraLong("Cannot parse transactions: ", FortisConstants.LOGTAG.TRANSACTION_VALIDATION_ERROR,
+                    e);
             return false;
         }
     }
