@@ -299,6 +299,7 @@ public class BelfiusConstants {
         public static final String UNKNOWN_SESSION = "UNKNOWN SESSION";
         public static final String ERROR_MESSAGE_TYPE = "error";
         public static final String WRONG_CREDENTIALS_CODE = "GE9KT60O/90AC/1307";
+        public static final String ACCOUNT_BLOCKED = "GE9KT60O/90AA/1204";
         public static final String ERROR_SIGN_CODE = "90AC/1300";
         public static final String ERROR_EMPTY_SIGN_CODE = "GE9KT58O/90AA/";
         public static final String WRONG_CARD_NUMBER_CODE = "GE9KT082/1502";
