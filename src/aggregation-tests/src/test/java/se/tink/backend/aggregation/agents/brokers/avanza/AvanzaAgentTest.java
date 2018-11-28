@@ -1,8 +1,7 @@
-package se.tink.backend.aggregation.agents.brokers;
+package se.tink.backend.aggregation.agents.brokers.avanza;
 
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
-import se.tink.backend.aggregation.agents.brokers.avanza.AvanzaV2Agent;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Provider;
