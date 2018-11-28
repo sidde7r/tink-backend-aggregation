@@ -87,8 +87,8 @@ public final class ValidatorTest {
                                 "Transaction description length is reasonable",
                                 trx ->
                                         Optional.ofNullable(trx.getDescription())
-                                                .map(String::length)
-                                                .orElse(0)
+                                                        .map(String::length)
+                                                        .orElse(0)
                                                 <= 1000,
                                 trx ->
                                         String.format(
@@ -96,12 +96,8 @@ public final class ValidatorTest {
                         .rule(
                                 "No duplicate transactions",
                                 aisdata ->
-                                        ValidatorFactory.containsDuplicates(
-                                                aisdata.getTransactions()),
-                                data ->
-                                        String.format(
-                                                "Found at least two transactions with the same date, description, amount and account ID: %s",
-                                                data.getTransactions()))
+                                        !DuplicateTransactionFinder.containsDupes(
+                                                aisdata.getTransactions()))
                         .build();
 
         // Set up validatee

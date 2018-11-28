@@ -1,40 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.framework.validation;
 
-import java.util.Collection;
-import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.system.rpc.Transaction;
 
 public final class ValidatorFactory {
     private ValidatorFactory() {
         throw new AssertionError();
-    }
-
-    public static boolean containsDuplicates(final Collection<Transaction> transactions) {
-        for (final Transaction transaction : transactions) {
-            final long numberOfIdenticalElements =
-                    transactions
-                            .stream()
-                            .filter(t -> Objects.equals(t.getDate(), transaction.getDate()))
-                            .filter(
-                                    t ->
-                                            Objects.equals(
-                                                    t.getDescription(),
-                                                    transaction.getDescription()))
-                            .filter(t -> t.getAmount() == transaction.getAmount())
-                            .filter(
-                                    t ->
-                                            Objects.equals(
-                                                    t.getAccountId(), transaction.getAccountId()))
-                            .count();
-            if (numberOfIdenticalElements > 1) {
-                return false;
-            } else if (numberOfIdenticalElements < 1) {
-                throw new AssertionError("Unexpected number of elements"); // Should never happen
-            }
-        }
-        return true;
     }
 
     public static AisValidator getEmptyValidator() {
@@ -42,6 +13,8 @@ public final class ValidatorFactory {
     }
 
     public static AisValidator getExtensiveValidator() {
+        final DuplicateTransactionFinder dupeFinder = new DuplicateTransactionFinder();
+
         return AisValidator.builder()
                 .ruleAccount(
                         "Account number is present",
@@ -82,11 +55,11 @@ public final class ValidatorFactory {
                         trx -> String.format("Transaction description is too long: %s", trx))
                 .rule(
                         "No duplicate transactions",
-                        aisdata -> containsDuplicates(aisdata.getTransactions()),
-                        data ->
+                        aisdata -> !dupeFinder.containsDuplicates(aisdata.getTransactions()),
+                        aisdata ->
                                 String.format(
                                         "Found at least two transactions with the same date, description, amount and account ID: %s",
-                                        data.getTransactions()))
+                                        dupeFinder.getAnyDuplicates(aisdata.getTransactions())))
                 .build();
     }
 }

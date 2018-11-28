@@ -124,6 +124,11 @@ public final class AisValidator {
             return this;
         }
 
+        /** Create a rule without supplying a fail message */
+        public Builder rule(final String ruleName, final Predicate<AisData> criterion) {
+            return rule(ruleName, criterion, aisData -> "");
+        }
+
         public Builder ruleAccount(
                 final String ruleName,
                 final Predicate<Account> criterion,
