@@ -1,10 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.multisupplemental.authenticator;
 
 import com.google.common.base.Preconditions;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Random;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -17,6 +20,9 @@ public class MultiSupplementalManualAuthenticator implements MultiFactorAuthenti
     private static final String loginInputField = "loginInputField";
     private static final String loginChallengeField = "loginChallengeField";
     private static final String loginChallengeInputField = "loginChallengeInputField";
+
+    private static final String code1 = "1234";
+    private static final String code2 = "4321";
 
     private final Catalog catalog;
     private static final String descriptionCode =
@@ -58,11 +64,17 @@ public class MultiSupplementalManualAuthenticator implements MultiFactorAuthenti
         return field;
     }
 
-    private static void checkAnswers(Map<String, String> answer, String... fieldNames) {
+    private static void checkAnswers(Map<String, String> answer, String code, String... fieldNames)
+            throws LoginException {
         Preconditions.checkNotNull(answer);
         for (String fieldName : fieldNames) {
             Preconditions.checkState(answer.containsKey(fieldName), "Did not contain %s", fieldName);
+            if (answer.get(fieldName).equals(code)) {
+                return;
+            }
         }
+
+        throw LoginError.INCORRECT_CREDENTIALS.exception();
     }
 
     @Override
@@ -71,6 +83,7 @@ public class MultiSupplementalManualAuthenticator implements MultiFactorAuthenti
                 supplementalInformationController.askSupplementalInformation(
                         newField(loginDesciptionField, "Security Code" ,  String.format("%04d", random.nextInt(10000)), catalog.getString(descriptionCode)),
                         newField(loginInputField, "Input Code", null)),
+                code1,
                 loginDesciptionField,
                 loginInputField
         );
@@ -79,6 +92,7 @@ public class MultiSupplementalManualAuthenticator implements MultiFactorAuthenti
                 supplementalInformationController.askSupplementalInformation(
                         newField(loginChallengeField, "Login Code", String.format("%04d", random.nextInt(10000)), catalog.getString(secondDescriptionCode)),
                         newField(loginChallengeInputField, "Input Code", null)),
+                code2,
                 loginChallengeField,
                 loginChallengeInputField
         );
