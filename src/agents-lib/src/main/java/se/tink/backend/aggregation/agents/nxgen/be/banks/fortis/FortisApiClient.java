@@ -121,7 +121,7 @@ public class FortisApiClient {
         return getRequestBuilderWithCookies(FortisConstants.URLS.GET_USER_INFO).post(UserInfoResponse.class);
     }
 
-    public HttpResponse authenticationRequest(String loginChallenge) throws LoginException {
+    public HttpResponse authenticationRequest(String loginChallenge) {
         return getRequestBuilderWithCookies(FortisConstants.URLS.AUTHENTICATION_URL)
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE).post(HttpResponse.class, loginChallenge);
     }
