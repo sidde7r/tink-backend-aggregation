@@ -51,6 +51,7 @@ import se.tink.backend.aggregation.workers.commands.RequestUserOptInAccountsAgen
 import se.tink.backend.aggregation.workers.commands.SelectAccountsToAggregateCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusToAuthenticatingAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.TransferAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ValidateProviderAgentWorkerStatus;
 import se.tink.backend.aggregation.workers.commands.state.CircuitBreakerAgentWorkerCommandState;
@@ -242,6 +243,8 @@ public class AgentWorkerOperationFactory {
 
         String metricsName = (request.isManual() ? "refresh-manual" : "refresh-auto");
 
+        commands.add(new SetCredentialsStatusToAuthenticatingAgentWorkerCommand(controllerWrapper,
+                request.getCredentials(), request.getProvider()));
         commands.add(new ValidateProviderAgentWorkerStatus(context,
                 controllerWrapper));
         commands.add(new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
@@ -492,6 +495,8 @@ public class AgentWorkerOperationFactory {
 
         String metricsName = (request.isManual() ? "refresh-manual" : "refresh-auto");
 
+        commands.add(new SetCredentialsStatusToAuthenticatingAgentWorkerCommand(controllerWrapper,
+                request.getCredentials(), request.getProvider()));
         commands.add(new ValidateProviderAgentWorkerStatus(context,
                 controllerWrapper));
         commands.add(new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
