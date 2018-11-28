@@ -5,9 +5,9 @@
     {
       "name": "be-beobank-password",
       "displayName": "Beobank",
-      "popular": true,
+      "popular": false,
       "type": "BANK",
-      "status": "ENABLED",
+      "status": "DISABLED",
       "credentialsType": "PASSWORD",
       "multiFactor": false,
       "className": "nxgen.be.banks.beobank.BeobankAgent",
@@ -68,7 +68,7 @@
       "multiFactor": true,
       "name": "be-kbc-cardreader",
       "passwordHelpText": "In order to authenticate yourself you will need your KBC card reader.",
-      "popular": false,
+      "popular": true,
       "status": "ENABLED",
       "transactional": true,
       "type": "BANK"
@@ -99,7 +99,7 @@
       "multiFactor": true,
       "name": "be-ing-cardreader",
       "passwordHelpText": "By connecting to this bank, you confirm that you have accepted the bank’s [terms and conditions](https://www.ing.be/static/legacy/SiteCollectionDocuments/GeneralRegulationsNewEN.pdf).",
-      "popular": false,
+      "popular": true,
       "status": "ENABLED",
       "transactional": true,
       "type": "BANK"
@@ -130,7 +130,7 @@
       "multiFactor": true,
       "name": "be-belfius-cardreader",
       "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app. You will also need your Belfius card reader to finish the authentication.",
-      "popular": false,
+      "popular": true,
       "status": "ENABLED",
       "transactional": true,
       "type": "BANK"
@@ -265,7 +265,7 @@
       "multiFactor": true,
       "name": "be-argenta-cardreader",
       "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app. You will also need your Argenta Digipass to finish the authentication.",
-      "popular": false,
+      "popular": true,
       "status": "ENABLED",
       "transactional": true,
       "type": "BANK"
