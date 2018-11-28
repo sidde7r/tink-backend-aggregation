@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.fetcher.entity;
 
+import java.util.Map;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
@@ -48,20 +49,19 @@ public class CardEntity {
         return expirationDate;
     }
 
-    public CreditCardAccount toTinkAccount(
-            UserEntity user,
-            CardContractEntity contract,
-            CardAccountEntity account,
-            CardEntity card) {
-        String currency = account.getCurrencyCode();
+    public CreditCardAccount toTinkCreditCardAccount(
+            Map<String, CardAccountEntity> accountsHashMap, CardContractEntity contract) {
+        CardAccountEntity account = accountsHashMap.get(contract.getCardAccountId());
 
-        return CreditCardAccount.builder(card.getMaskedCardNumber())
-                .setAccountNumber(card.getMaskedCardNumber())
+        return CreditCardAccount.builder(getMaskedCardNumber())
+                .setAccountNumber(getMaskedCardNumber())
                 .setName(contract.getProductName())
                 .setBankIdentifier(account.getId())
-                .putInTemporaryStorage(SebKortConstants.StorageKey.CARD_ID, card.getId())
-                .setBalance(new Amount(currency, account.getCurrentBalance()).negate())
-                .setAvailableCredit(new Amount(currency, account.getDisposableAmount()))
+                .putInTemporaryStorage(SebKortConstants.StorageKey.CARD_ID, getId())
+                .setBalance(
+                        new Amount(account.getCurrencyCode(), account.getCurrentBalance()).negate())
+                .setAvailableCredit(
+                        new Amount(account.getCurrencyCode(), account.getDisposableAmount()))
                 .build();
     }
 }

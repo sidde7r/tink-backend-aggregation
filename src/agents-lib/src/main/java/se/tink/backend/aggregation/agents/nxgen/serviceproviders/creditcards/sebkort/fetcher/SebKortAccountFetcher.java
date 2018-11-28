@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.fetcher.entity.CardAccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.fetcher.entity.UserEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.fetcher.entity.CardContractEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.fetcher.rpc.CardsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
@@ -20,32 +20,14 @@ public class SebKortAccountFetcher implements AccountFetcher<CreditCardAccount> 
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        CardsResponse cards = apiClient.fetchCards();
-        UserEntity user = cards.getUser();
+        CardsResponse cardsResponse = apiClient.fetchCards();
 
-        Map<String, CardAccountEntity> accounts =
-                cards.getCardAccounts()
-                        .stream()
-                        .collect(Collectors.toMap(CardAccountEntity::getId, account -> account));
+        List<CardContractEntity> cardContracts = cardsResponse.getCardContracts();
+        Map<String, CardAccountEntity> accountsHashMap = cardsResponse.getCardAccountsHashMap();
 
-        List<CreditCardAccount> collect =
-                cards.getCardContracts()
-                        .stream()
-                        .flatMap(
-                                contract ->
-                                        contract.getCards()
-                                                .stream()
-                                                .map(
-                                                        card ->
-                                                                card.toTinkAccount(
-                                                                        user,
-                                                                        contract,
-                                                                        accounts.get(
-                                                                                contract
-                                                                                        .getCardAccountId()),
-                                                                        card)))
-                        .collect(Collectors.toList());
-
-        return collect;
+        return cardContracts
+                .stream()
+                .flatMap(contract -> contract.toTinkCreditCardAccounts(accountsHashMap).stream())
+                .collect(Collectors.toList());
     }
 }

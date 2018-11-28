@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.fetcher.entity;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 
 @JsonObject
 public class CardContractEntity {
@@ -69,5 +72,12 @@ public class CardContractEntity {
 
     public String getProductType() {
         return productType;
+    }
+
+    public List<CreditCardAccount> toTinkCreditCardAccounts(
+            Map<String, CardAccountEntity> accountsHashMap) {
+        return cards.stream()
+                .map(card -> card.toTinkCreditCardAccount(accountsHashMap, this))
+                .collect(Collectors.toList());
     }
 }
