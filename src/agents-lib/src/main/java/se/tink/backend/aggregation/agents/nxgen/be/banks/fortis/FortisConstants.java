@@ -27,6 +27,7 @@ public class FortisConstants {
         public static final String CHECK_FORCED_UPGRADE = "/EBIA-pr01/rpc/forceUpgrade/checkForcedUpgrade";
         public static final String TRANSACTIONS = "/DBPL-pr01/rpc/transaction/GetInitialMovementList";
         public static final String LOGOUT = "/SEEA-pa01/logoff";
+        public static final String UPCOMING_TRANSACTIONS = "/DBPL-pr01/rpc/transaction/getUpcomingList";
     }
 
     public static class ERRORCODE {
@@ -89,9 +90,10 @@ public class FortisConstants {
     }
 
     public static class LOGTAG {
-        public static final LogTag DATE_PARSING_ERROR = LogTag.from("FORTIS_DATE_PARSING_ERROR");
         public static final LogTag TRANSACTION_VALIDATION_ERROR = LogTag.from("FORTIS_TRANSACTION_VALIDATION_ERROR");
         public static final LogTag MULTIPLE_CHALLENGES = LogTag.from("FORTIS_MULTIPLE_CHALLENGES");
         public static final LogTag MULTIPLE_USER_ENTITIES = LogTag.from("FORTIS_MULTIPLE_USER_ENTITIES");
+        public static final LogTag UPCOMING_TRANSACTIONS = LogTag.from("FORTIS_UPCOMING_TRANSACTIONS");
+        public static final LogTag UPCOMING_TRANSACTIONS_ERR = LogTag.from("UPCOMING_TRANSACTIONS_ERR");
     }
 }

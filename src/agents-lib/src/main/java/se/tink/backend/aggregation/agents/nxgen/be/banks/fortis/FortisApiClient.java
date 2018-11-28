@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis;
 
 import java.util.List;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.entities.ChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.entities.CheckForcedUpgradeRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.rpc.AuthenticationProcessRequest;
@@ -102,6 +101,18 @@ public class FortisApiClient {
         TransactionsRequest request = new TransactionsRequest(accountProductId, page);
         return getRequestBuilderWithCookies(FortisConstants.URLS.TRANSACTIONS)
                 .post(TransactionsResponse.class, SerializationUtils.serializeToString(request));
+    }
+
+    public void fetchAndLogUpcoming(int page, String accountProductId) {
+        TransactionsRequest request = new TransactionsRequest(accountProductId, page);
+        try {
+            String response = getRequestBuilderWithCookies(FortisConstants.URLS.UPCOMING_TRANSACTIONS)
+                    .post(String.class, SerializationUtils.serializeToString(request));
+            LOGGER.infoExtraLong(response, FortisConstants.LOGTAG.UPCOMING_TRANSACTIONS);
+        } catch (Exception e) {
+            LOGGER.errorExtraLong("Error fetching upcoming transactions: ",
+                    FortisConstants.LOGTAG.UPCOMING_TRANSACTIONS_ERR, e);
+        }
     }
 
     public String fetchChallenges(GenerateChallangeRequest challangeRequest) {

@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import java.util.Collection;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisConstants;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
@@ -48,7 +49,9 @@ public class FortisTransactionalAccountFetcher implements AccountFetcher<Transac
                 throw new IllegalStateException("Missing accountproductID!");
             }
 
-            return this.apiClient.fetchTransactions(page, accountProductId);
+            TransactionsResponse res = this.apiClient.fetchTransactions(page, accountProductId);
+            this.apiClient.fetchAndLogUpcoming(page, accountProductId);
+            return res;
         } catch (HttpResponseException hre) { // TODO: add logging
             return PaginatorResponseImpl.createEmpty(false);
         }
