@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.ArgentaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional.ArgentaTransactionalAccountFetcher;
@@ -20,6 +19,9 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+
+import java.util.Optional;
+
 import static org.apache.http.client.config.CookieSpecs.IGNORE_COOKIES;
 
 public class ArgentaAgent extends NextGenerationAgent {
@@ -29,7 +31,8 @@ public class ArgentaAgent extends NextGenerationAgent {
     public ArgentaAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        this.apiClient = new ArgentaApiClient(this.client, new ArgentaSessionStorage(this.sessionStorage));
+        this.apiClient =
+                new ArgentaApiClient(this.client, new ArgentaSessionStorage(this.sessionStorage));
     }
 
     @Override
@@ -41,14 +44,17 @@ public class ArgentaAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        ArgentaPersistentStorage argentaPersistentStorage = new ArgentaPersistentStorage(this.persistentStorage);
-        ArgentaAuthenticator argentaAuthenticator = new ArgentaAuthenticator(
-                argentaPersistentStorage,
-                apiClient,
-                credentials,
-                supplementalInformationHelper);
+        ArgentaPersistentStorage argentaPersistentStorage =
+                new ArgentaPersistentStorage(this.persistentStorage);
+        ArgentaAuthenticator argentaAuthenticator =
+                new ArgentaAuthenticator(
+                        argentaPersistentStorage,
+                        apiClient,
+                        credentials,
+                        supplementalInformationHelper);
 
-        return new AutoAuthenticationController(request, context, argentaAuthenticator, argentaAuthenticator);
+        return new AutoAuthenticationController(
+                request, context, argentaAuthenticator, argentaAuthenticator);
     }
 
     @Override
