@@ -1,7 +1,5 @@
 {
   "clusterid" : "oxford-production",
   "providers" : [
-    "lu-bcee",
-    "lu-keytrade-bank"
   ]
 }

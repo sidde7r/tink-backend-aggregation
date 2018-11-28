@@ -1,12 +1,5 @@
 {
   "clusterid" : "oxford-production",
   "providers" : [
-    "ie-aib",
-    "ie-bank-of-ireland",
-    "ie-barclays-bank",
-    "ie-hsbc-bank",
-    "ie-kbc-bank",
-    "ie-permanent-tsb",
-    "ie-rbs"
   ]
 }
