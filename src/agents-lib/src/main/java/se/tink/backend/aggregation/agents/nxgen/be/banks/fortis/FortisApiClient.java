@@ -70,7 +70,7 @@ public class FortisApiClient {
                 .cookie(FortisConstants.COOKIE.DISTRIBUTOR_ID, distributorId)
                 .cookie(FortisConstants.COOKIE.EUROPOLICY, FortisConstants.COOKIE.EUROPOLICY_OPTIN)
                 .header(FortisConstants.HEADERS.CSRF, CSRF)
-                .header(FortisConstants.HEADERS.CONTENT_TYPE, FortisConstants.HEADER_VALUES.CONTENT_TYPE_VALUE);
+                .type(MediaType.APPLICATION_JSON_TYPE);
     }
 
     private URL getUrl(String resource) {

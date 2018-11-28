@@ -39,7 +39,6 @@ public class FortisConstants {
 
     public static class HEADER_VALUES {
         public static final String DEVICE_FEATURES_VALUE = "0|1|0|0|0|1|1|0|0|1|0|0|0|1|1|1242";
-        public static final String CONTENT_TYPE_VALUE = "application/json";
         public static final String AUTHENTICATION_DEVICE_PINNING = "08";
         public static final String AUTHENTICATION_PASSWORD = "15";
     }
