@@ -1,11 +1,8 @@
 package se.tink.backend.aggregation.provider.configuration;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.inject.Injector;
 import java.util.List;
-import javax.ws.rs.WebApplicationException;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import se.tink.backend.aggregation.provider.configuration.cluster.identifiers.ClusterId;
 import se.tink.backend.aggregation.provider.configuration.cluster.identifiers.ClusterInfo;
