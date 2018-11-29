@@ -62,9 +62,8 @@ public class Provider implements Cloneable {
     @Tag(9)
     private String fieldsSerialized;
     @JsonProperty("supplementalFields")
-    @Column(name = "`supplementalFields`")
-    @Type(type = "text")
-    @Tag(9)
+    @Transient
+    @Tag(16)
     private String supplementalFieldsSerialized;
     @Tag(10)
     private String groupDisplayName;
