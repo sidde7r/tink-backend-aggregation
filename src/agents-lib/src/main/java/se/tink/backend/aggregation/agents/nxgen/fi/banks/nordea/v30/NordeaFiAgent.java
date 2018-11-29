@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30.fetcher.loan
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30.fetcher.transactionalaccount.NordeaTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30.fetcher.transactionalaccount.NordeaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30.session.NordeaSessionHandler;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -25,7 +26,6 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.Field;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class NordeaFiAgent extends NextGenerationAgent {
 
@@ -99,7 +99,7 @@ public class NordeaFiAgent extends NextGenerationAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new NordeaSessionHandler(apiClient);
+        return new NordeaSessionHandler(apiClient, sessionStorage);
     }
 
     @Override

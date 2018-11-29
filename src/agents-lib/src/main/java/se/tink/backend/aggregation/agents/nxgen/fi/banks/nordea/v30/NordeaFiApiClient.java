@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30.authenticator.rpc.AuthenticateResponse;
@@ -81,18 +82,25 @@ public class NordeaFiApiClient {
                 .get(FetchInvestmentsResponse.class);
     }
 
-    public void keepAlive() throws SessionException {
+    public AuthenticateResponse keepAlive() throws SessionException {
+        try {
+            String refreshToken = getRefreshToken();
 
-        String refreshToken = getRefreshToken();
+            if (refreshToken != null) {
 
-        if (refreshToken != null) {
+                formBuilder.put(NordeaFiConstants.FormParams.GRANT_TYPE, NordeaFiConstants.SessionStorage.REFRESH_TOKEN);
+                formBuilder.put(NordeaFiConstants.SessionStorage.REFRESH_TOKEN, refreshToken);
 
-            formBuilder.put(NordeaFiConstants.FormParams.GRANT_TYPE, NordeaFiConstants.SessionStorage.REFRESH_TOKEN);
-            formBuilder.put(NordeaFiConstants.SessionStorage.REFRESH_TOKEN, refreshToken);
+                 return sendAuthenticateRequest(formBuilder);
+            } else {
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
 
-            sendAuthenticateRequest(formBuilder);
-        } else {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw e;
         }
     }
 
