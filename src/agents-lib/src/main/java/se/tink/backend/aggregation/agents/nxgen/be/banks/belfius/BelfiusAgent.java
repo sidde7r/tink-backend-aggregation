@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius;
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.BelfiusAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusOctetReader;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.credit.BelfiusCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.BelfiusTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.BelfiusTransferDestinationFetcher;
@@ -39,6 +40,7 @@ public class BelfiusAgent extends NextGenerationAgent {
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
+        client.addMessageReader(new BelfiusOctetReader());
     }
 
     @Override
