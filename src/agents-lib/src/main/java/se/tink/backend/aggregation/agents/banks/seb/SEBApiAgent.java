@@ -1656,7 +1656,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
 
         return !Objects.equal(transfer.getSource(), eInvoiceEntity.getSource()) ||
                 !Objects.equal(DateUtils.flattenTime(transfer.getDueDate()), currentDueDate) ||
-                !Objects.equal(transfer.getAmount().getValue(), eInvoiceEntity.getCurrentAmount().getValue());
+                !Objects.equal(transfer.getAmount().toBigDecimal(), eInvoiceEntity.getCurrentAmount().toBigDecimal());
     }
 
     private EInvoiceListEntity updateEInvoice(EInvoiceListEntity eInvoiceEntity, Transfer transfer) {
