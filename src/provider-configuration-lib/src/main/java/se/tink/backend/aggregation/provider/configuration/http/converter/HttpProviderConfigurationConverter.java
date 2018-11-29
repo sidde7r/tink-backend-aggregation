@@ -30,6 +30,7 @@ public class HttpProviderConfigurationConverter {
         dto.setType(providerConfiguration.getType());
         dto.setRefreshSchedule(providerConfiguration.getRefreshSchedule().orElse(null));
         dto.setStatus(providerConfiguration.getStatus());
+        dto.setSupplementalFields(providerConfiguration.getSupplementalFields());
         return dto;
     }
 

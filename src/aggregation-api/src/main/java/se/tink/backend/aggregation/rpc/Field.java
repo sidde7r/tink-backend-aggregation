@@ -294,7 +294,21 @@ public class Field {
         PERSISTENT_LOGIN_SESSION_NAME("persistent-login-session"),
         USERNAME("username"),
         ACCESS_TOKEN("access-token"),
-        MOBILENUMBER("mobilenumber");
+        MOBILENUMBER("mobilenumber"),
+
+        // Supplemental field names.
+        ADD_BENEFICIARY_INPUT("addbeneficiaryinput"),
+        LOGIN_DESCRIPTION("logindescription"),
+        LOGIN_INPUT("logininput"),
+        OTP_INPUT("otpinput"),
+        SIGN_CODE_DESCRIPTION("signcodedescription"),
+        SIGN_CODE_INPUT("signcodeinput"),
+        SIGN_FOR_BENEFICIARY_DESCRIPTION("signforbeneficiarydescription"),
+        SIGN_FOR_BENEFICIARY_EXTRA_DESCRIPTION("signforbeneficiaryextradescription"),
+        SIGN_FOR_BENEFICIARY_INPUT("signforbeneficiaryinput"),
+        SIGN_FOR_TRANSFER_DESCRIPTION("signfortransferdescription"),
+        SIGN_FOR_TRANSFER_EXTRA_DESCRIPTION("signfortransferextradescription"),
+        SIGN_FOR_TRANSFER_INPUT("signfortransferinput");
 
         private final String fieldKey;
 

@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transaction
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.IngTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transferdestination.IngTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.session.IngSessionHandler;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -29,7 +30,6 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import static se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Headers.USER_AGENT;
 
 public class IngAgent extends NextGenerationAgent {
@@ -54,9 +54,8 @@ public class IngAgent extends NextGenerationAgent {
     protected Authenticator constructAuthenticator() {
         return new AutoAuthenticationController(request, context,
                 new IngCardReaderAuthenticationController(
-                        catalog,
-                        supplementalInformationController,
-                        new IngCardReaderAuthenticator(apiClient, persistentStorage, ingHelper)),
+                        new IngCardReaderAuthenticator(apiClient, persistentStorage, ingHelper),
+                        supplementalInformationHelper),
                 new IngAutoAuthenticator(apiClient, persistentStorage, ingHelper));
     }
 

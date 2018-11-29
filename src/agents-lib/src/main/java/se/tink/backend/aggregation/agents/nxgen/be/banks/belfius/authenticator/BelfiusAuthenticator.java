@@ -4,53 +4,39 @@ import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.LoginResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.BelfiusResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.MessageResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusSessionStorage;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.LoginResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.MessageResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusSecurityUtils;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.PrepareLoginResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusSecurityUtils;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusStringUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.onetimecode.OneTimeActivationCodeAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
-import se.tink.libraries.i18n.Catalog;
 
 public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenticator {
 
-    private final Catalog catalog;
     private final BelfiusApiClient apiClient;
     private final Credentials credentials;
     private final PersistentStorage persistentStorage;
-    private final SupplementalInformationController supplementalInformationController;
     private final BelfiusSessionStorage sessionStorage;
+    private final SupplementalInformationHelper supplementalInformationHelper;
 
     public BelfiusAuthenticator(
-            Catalog catalog,
             BelfiusApiClient apiClient,
             Credentials credentials,
             PersistentStorage persistentStorage,
-            SupplementalInformationController supplementalInformationController,
-            BelfiusSessionStorage sessionStorage) {
-        this.catalog = catalog;
+            BelfiusSessionStorage sessionStorage,
+            final SupplementalInformationHelper supplementalInformationHelper) {
         this.apiClient = apiClient;
         this.credentials = credentials;
         this.persistentStorage = persistentStorage;
-        this.supplementalInformationController = supplementalInformationController;
         this.sessionStorage = sessionStorage;
+        this.supplementalInformationHelper = supplementalInformationHelper;
     }
 
     @Override
@@ -98,15 +84,15 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
         apiClient.startFlow();
 
         String challenge = apiClient.prepareAuthentication(panNumber);
-        String code = waitForLoginCode(challenge);
+        String code = supplementalInformationHelper.waitForLoginChallengeResponse(challenge);
         apiClient.authenticateWithCode(code);
 
         String deviceBrand = BelfiusConstants.Device.DEVICE_BRAND;
         String deviceName = BelfiusConstants.Device.DEVICE_NAME;
 
         challenge = apiClient.prepareDeviceRegistration(deviceToken, deviceBrand, deviceName);
-        String sign = waitForSignCode(challenge);
-        BelfiusResponse belfiusResponse = apiClient.registerDevice(sign);
+        String sign = supplementalInformationHelper.waitForSignCodeChallengeResponse(challenge);
+        apiClient.registerDevice(sign);
         persistentStorage.put(BelfiusConstants.Storage.DEVICE_TOKEN, deviceToken);
     }
 
@@ -127,61 +113,5 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
                 challenge, deviceToken, panNumber, contractNumber, password);
 
         apiClient.login(deviceTokenHashed, deviceTokenHashedIosComparison, signature);
-    }
-
-    private String waitForLoginCode(String challenge) throws SupplementalInfoException {
-    return waitForSupplementalInformation(
-        createDescriptionField(catalog.getString(
-                "1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_CardReader.png) Login using "
-                        + "your "
-                        + "Belfius Card Reader\n"
-                        + "2$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_LOGIN.png) Press\n"
-                        + "3$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter the "
-                        + "security code []"),
-            challenge),
-        createInputField(catalog.getString(
-            "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter your PIN\n"
-                    + "5$  Enter the login code")));
-    }
-
-    private String waitForSignCode(String challenge) throws SupplementalInfoException {
-    return waitForSupplementalInformation(
-        createDescriptionField(catalog.getString(
-            "1$  ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_CardReader.png) Sign using your Belfius Card Reader\n"
-                + "2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_SIGN.png) Press\n"
-                + "3$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter the security code []"),
-            challenge),
-        createInputField(catalog.getString(
-                "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Want to register your device?\n"
-                    + "5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter your PIN\n"
-                    + "6$  Enter the signature code")));
-    }
-
-    private String waitForSupplementalInformation(Field... fields)
-            throws SupplementalInfoException {
-        return supplementalInformationController.askSupplementalInformation(fields)
-                .get(BelfiusConstants.MultiFactorAuthentication.CODE);
-    }
-
-    private Field createDescriptionField(String helpText, String challenge) {
-        Field field = new Field();
-        field.setMasked(false);
-        field.setDescription(challenge);
-        field.setValue(challenge);
-        field.setName("description");
-        field.setHelpText(helpText);
-        field.setImmutable(true);
-        return field;
-    }
-
-    private Field createInputField(String helpText) {
-        Field field = new Field();
-        field.setMasked(false);
-        field.setDescription(catalog.getString("Input"));
-        field.setName(BelfiusConstants.MultiFactorAuthentication.CODE);
-        field.setHelpText(helpText);
-        field.setNumeric(true);
-        field.setHint("NNNNNNN");
-        return field;
     }
 }
