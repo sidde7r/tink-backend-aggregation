@@ -18,7 +18,7 @@ public final class AvanzaV2AccountTypeMappers {
     private AccountTypeMapper accountTypeMapper;
     private AccountTypePredicateMapper<String> accountTypeFallbackMapper;
 
-    public static Predicate<String> codeMatches(final String regex) {
+    private static Predicate<String> codeMatches(final String regex) {
         return t -> Pattern.compile(regex).matcher(t).matches();
     }
 
@@ -49,7 +49,7 @@ public final class AvanzaV2AccountTypeMappers {
         return Optional.empty();
     }
 
-    public AccountTypeMapper getAccountTypeMapper() {
+    private AccountTypeMapper getAccountTypeMapper() {
         if (accountTypeMapper == null) {
             accountTypeMapper =
                     AccountTypeMapper.builder()
@@ -65,7 +65,7 @@ public final class AvanzaV2AccountTypeMappers {
         return accountTypeMapper;
     }
 
-    public AccountTypePredicateMapper<String> getAccountTypeFallbackMapper() {
+    private AccountTypePredicateMapper<String> getAccountTypeFallbackMapper() {
         if (accountTypeFallbackMapper == null) {
             accountTypeFallbackMapper =
                     AccountTypePredicateMapper.<String>builder()
