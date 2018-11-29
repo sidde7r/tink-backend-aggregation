@@ -80,6 +80,13 @@ public class NordeaFiConstants {
         public static final LogTag NORDEA_FI_LOAN = LogTag.from("nordea_fi_loans");
     }
 
+    public static class ErrorCodes {
+        // user has no agreement (for investments)
+        public static final String AGREEMENT_NOT_CONFIRMED = "RBO_ACCESS_DENIED_AGREEMENT_NOT_CONFIRMED";
+        // user has no account connected to depot, cannot fetch investments
+        public static final String UNABLE_TO_LOAD_CUSTOMER = "ERROR_OSIA_UNABLE_TO_LOAD_CUSTOMER";
+    }
+
     public static class NordeaCodesPayload {
 
         private static final LocalizableKey DOWNLOAD_TITLE = new LocalizableKey(
