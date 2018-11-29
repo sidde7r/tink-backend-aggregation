@@ -1,0 +1,9 @@
+{
+  "clusterid" : "oxford-staging",
+  "providers" : [
+    "test-bankid-successful",
+    "test-bankid-failing",
+    "test-password",
+    "test-multi-supplemental"
+  ]
+}
