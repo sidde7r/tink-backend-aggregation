@@ -55,8 +55,11 @@ public final class AvanzaV2AccountTypeMappers {
                     AccountTypeMapper.builder()
                             .put(
                                     AccountTypes.INVESTMENT,
-                                    "aktie- & fondkonto",
-                                    "investeringssparkonto")
+                                    "AktieFondkonto",
+                                    "Investeringssparkonto",
+                                    "Kapitalforsakring")
+                            .put(AccountTypes.SAVINGS, "Sparkonto", "SparkontoPlus")
+                            .put(AccountTypes.PENSION, "Tjanstepension")
                             .build();
         }
         return accountTypeMapper;
