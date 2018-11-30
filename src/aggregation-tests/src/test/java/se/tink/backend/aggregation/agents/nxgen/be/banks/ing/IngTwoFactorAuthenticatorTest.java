@@ -1,21 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
-import java.io.File;
-import java.io.IOException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.framework.ProviderConfigModel;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngCardReaderAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.controller.IngCardReaderAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.libraries.i18n.Catalog;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
@@ -56,39 +50,14 @@ public class IngTwoFactorAuthenticatorTest {
         IngCardReaderAuthenticator authenticator = new IngCardReaderAuthenticator(apiClient,
                 persistentStorage, ingHelper);
 
-        SupplementalInformationController supplementalInformationController =
-                mock(SupplementalInformationController.class);
-
+        SupplementalInformationController supplementalInformationController = mock(
+                SupplementalInformationController.class);
         when(supplementalInformationController.askSupplementalInformation(any()))
                 .thenReturn(ImmutableMap.of("otp", "OTP!"))
                 .thenReturn(ImmutableMap.of("challengeResponse", "Challenge me!"));
-
-        ProviderConfigModel marketProviders = readProvidersConfiguration("be");
-        Provider provider = marketProviders.getProvider("be-ing-cardreader");
-        provider.setMarket(marketProviders.getMarket());
-        provider.setCurrency(marketProviders.getCurrency());
-
-        new IngCardReaderAuthenticationController(
-                authenticator,
-                new SupplementalInformationHelper(provider, supplementalInformationController)).authenticate(credentials);
+        new IngCardReaderAuthenticationController(mock(Catalog.class), supplementalInformationController,
+                authenticator).authenticate(credentials);
 
         assertFalse(persistentStorage.isEmpty());
     }
-
-    // TODO Move this out to test helper.
-    private ProviderConfigModel readProvidersConfiguration(String market) {
-        String providersFilePath = "data/seeding/providers-" + escapeMarket(market).toLowerCase() + ".json";
-        File providersFile = new File(providersFilePath);
-        try {
-            return mapper.readValue(providersFile, ProviderConfigModel.class);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    private String escapeMarket(String market) {
-        return market.replaceAll("[^a-zA-Z]", "");
-    }
-
-    private static final ObjectMapper mapper = new ObjectMapper();
 }

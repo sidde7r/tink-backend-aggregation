@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableMap;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.libraries.i18n.LocalizableEnum;
+import se.tink.libraries.i18n.LocalizableKey;
 
 public class BelfiusConstants {
 
@@ -279,6 +281,10 @@ public class BelfiusConstants {
         public static final String SIGN_TEMP_ERROR = "Door een technisch probleem is deze functie tijdelijk niet beschikbaar.";
         public static final String WEEKLY_READER_LIMIT = "De weeklimiet voor betalingen met de Belfius-kaartlezer werd bereikt";
         public static final String INVALID_SIGN_BENEFICIARY = "De handtekening van uw transactie is ongeldig";
+
+        public static final String TEMP_ERROR_THROW_MSG = "Due to a technical problem, this function is temporarily unavailable. ";
+        public static final String WEEKLY_LIMIT_THROW_MSG = "The weekly limit for payments with the Belfius card reader was reached.";
+        public static final String INVALID_SIGN_CODE_THROW_MSG = "The signature of your transaction is invalid. Please re-execute the procedure for signing.";
     }
 
     public static class Fetcher {
@@ -300,5 +306,45 @@ public class BelfiusConstants {
         public static final String SIGN_TEMP_ERROR_CODE = "12DB/000000";
         public static final String WEEKLY_READER_LIMIT_CODE = "1000/AMW036";
         public static final String INVBALID_SIGN_BENEFICIARY_CODE = "90AC/000000";
+    }
+
+    public enum InputFieldConstants implements LocalizableEnum {
+        ENTER_SIGNATURE_CODE( new LocalizableKey("Signature Code")),
+        ADD_BENEFICIARY_INP_FIELD( new LocalizableKey("Add Beneficiary")),
+        BENEFICIARY_FIELD_DESCRIPTION( new LocalizableKey("Beneficiary Name")),
+        CONTROL_CODE_FIELD_DESCRIPTION( new LocalizableKey("Control Code")),
+        DESCRIPTION_CODE_FIELD_DESCRIPTION( new LocalizableKey("Description Code")),
+        RESPONSE_CODE_FIELD_DESCRIPTION( new LocalizableKey("Response Code")),
+        ADD_BENEFICIARY_NAME_HELP_TEXT( new LocalizableKey("You have not transferred money to this account before. "
+                + "Please supply the name of the owner to the account in the field below")),
+        WAIT_FOR_SIGN_CODE_HELP_TEXT_1( new LocalizableKey("Insert your card into the card reader and press SIGN. "
+                + "Enter the control code and press OK.")),
+        WAIT_FOR_SIGN_CODE_HELP_TEXT_2( new LocalizableKey("Insert the description code into the reader followed by your PIN. "
+                + "Enter the code from the reader into the field below.")),
+        SIGN_FOR_TRANSFER_1( new LocalizableKey("1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_CardReader.png) Sign using your Belfius Card Reader\n"
+                + "2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_SIGN.png) Press\n"
+                + "3$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter the security code []")),
+        SIGN_FOR_TRANSFER_2( new LocalizableKey("4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Want to sign for the transfer?\n"
+                + "5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Amount []")),
+        SIGN_FOR_TRANSFER_3( new LocalizableKey("6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter your PIN\n"
+                + "7$ Enter the signature code")),
+        SIGN_FOR_BENEFICIARY_1( new LocalizableKey("1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_CardReader.png) Sign using your Belfius Card Reader\n"
+                + "2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_SIGN.png) Press\n"
+                + "3$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter the security code []")),
+        SIGN_FOR_BENEFICIARY_2( new LocalizableKey("4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Want to sign for the beneficiary?\n"
+                + "5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter the control code []")),
+        SIGN_FOR_BENEFICIARY_3( new LocalizableKey("6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter your PIN\n"
+                + "7$ Enter the signature code"));
+
+        private LocalizableKey userMessage;
+
+        InputFieldConstants(LocalizableKey userMessage) {
+            this.userMessage = userMessage;
+        }
+
+        @Override
+        public LocalizableKey getKey() {
+            return userMessage;
+        }
     }
 }

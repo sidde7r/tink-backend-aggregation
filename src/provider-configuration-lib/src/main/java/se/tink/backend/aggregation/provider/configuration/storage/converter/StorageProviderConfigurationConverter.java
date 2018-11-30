@@ -29,7 +29,6 @@ public class StorageProviderConfigurationConverter {
         core.setStatus(providerConfiguration.getStatus());
         core.setTransactional(providerConfiguration.isTransactional());
         core.setDisplayDescription(providerConfiguration.getDisplayDescription());
-        core.setSupplementalFields(providerConfiguration.getSupplementalFields());
 
         providerConfiguration.getRefreshSchedule().ifPresent(
                 prs -> core.setRefreshSchedule(prs)
