@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.general.GeneralUtils;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcApiClient;
@@ -15,11 +16,11 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.executor.dto.Signin
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.executor.dto.ValidateTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.AgreementDto;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.Field;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.common.utils.Pair;
 import se.tink.backend.core.Amount;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
@@ -33,19 +34,16 @@ public class KbcBankTransferExecutor implements BankTransferExecutor {
     private final PersistentStorage persistentStorage;
     private final KbcApiClient apiClient;
     private final Catalog catalog;
-    private final SupplementalInformationHelper supplementalInformationHelper;
+    private final SupplementalInformationController supplementalInformationController;
 
-    public KbcBankTransferExecutor(
-            final Credentials credentials,
-            final PersistentStorage persistentStorage,
-            final KbcApiClient apiClient,
-            final Catalog catalog,
-            final SupplementalInformationHelper supplementalInformationHelper) {
+    public KbcBankTransferExecutor(Credentials credentials, PersistentStorage persistentStorage,
+            KbcApiClient apiClient, Catalog catalog,
+            SupplementalInformationController supplementalInformationController) {
         this.credentials = credentials;
         this.persistentStorage = persistentStorage;
         this.apiClient = apiClient;
         this.catalog = catalog;
-        this.supplementalInformationHelper = supplementalInformationHelper;
+        this.supplementalInformationController = supplementalInformationController;
     }
 
     @Override
@@ -179,9 +177,9 @@ public class KbcBankTransferExecutor implements BankTransferExecutor {
                 signTypeSigningId);
         String challenge = signingChallengeUcrResponse.getChallenge().getValue();
 
-        String response = supplementalInformationHelper.waitForSignCodeChallengeResponse(challenge);
+        String signatureOtp = waitForSignCode(challenge);
         String panNr = credentials.getField(Field.Key.USERNAME);
-        apiClient.signingValidationUcr(response, panNr, signTypeSigningId);
+        apiClient.signingValidationUcr(signatureOtp, panNr, signTypeSigningId);
 
         return finalSigningId;
     }
@@ -195,5 +193,39 @@ public class KbcBankTransferExecutor implements BankTransferExecutor {
         persistentStorage.put(KbcConstants.Storage.DEVICE_KEY, device);
 
         return signatureOtp;
+    }
+
+    private String waitForSignCode(String challenge) throws SupplementalInfoException {
+        return waitForSupplementalInformation(KbcConstants.TransferMessage.SIGN_INSTRUCTIONS.getKey().get(),
+                challenge);
+    }
+
+    private String waitForSupplementalInformation(String helpText, String controlCode)
+            throws SupplementalInfoException {
+        return supplementalInformationController.askSupplementalInformation(
+                createDescriptionField(helpText, controlCode),
+                createInputField(KbcConstants.MultiFactorAuthentication.CODE))
+                .get(KbcConstants.MultiFactorAuthentication.CODE);
+    }
+
+    private Field createDescriptionField(String description, String challenge) {
+        Field field = new Field();
+        field.setMasked(false);
+        field.setDescription("Control Code");
+        field.setName("description");
+        field.setHelpText(description);
+        field.setValue(challenge);
+        field.setImmutable(true);
+        return field;
+    }
+
+    private Field createInputField(String name) {
+        Field field = new Field();
+        field.setMasked(false);
+        field.setDescription("Response Code");
+        field.setName(name);
+        field.setNumeric(true);
+        field.setHint("NNNNNNNN");
+        return field;
     }
 }

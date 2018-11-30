@@ -43,7 +43,6 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.i18n.Catalog;
 
@@ -63,7 +62,6 @@ public abstract class NextGenerationAgent extends AbstractAgent implements Refre
     protected final SupplementalInformationController supplementalInformationController;
     protected final UpdateController updateController;
     protected final MetricRefreshController metricRefreshController;
-    protected final SupplementalInformationHelper supplementalInformationHelper;
 
     private List<Refresher> refreshers;
     private TransferController transferController;
@@ -87,15 +85,9 @@ public abstract class NextGenerationAgent extends AbstractAgent implements Refre
         this.client = new TinkHttpClient(context, credentials, signatureKeyPair);
         this.transactionPaginationHelper = new TransactionPaginationHelper(request);
         this.supplementalInformationController = new SupplementalInformationController(context, credentials);
-        this.metricRefreshController = new MetricRefreshController(
-                context.getMetricRegistry(),
-                request.getProvider(),
-                credentials,
-                request.isManual(),
-                request.getType());
-        this.supplementalInformationHelper = new SupplementalInformationHelper(
-                request.getProvider(),
-                supplementalInformationController);
+        this.metricRefreshController = new MetricRefreshController(context.getMetricRegistry(), request.getProvider(), credentials,
+                request.isManual(), request.getType());
+
         configureHttpClient(client);
     }
 

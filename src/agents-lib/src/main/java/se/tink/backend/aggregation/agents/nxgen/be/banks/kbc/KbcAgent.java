@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.KbcTransac
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.KbcTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.filters.KbcHttpFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.kbc.fetchers.KbcCreditCardFetcher;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -24,6 +23,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class KbcAgent extends NextGenerationAgent {
     private final KbcApiClient apiClient;
@@ -43,10 +43,8 @@ public class KbcAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        KbcAuthenticator authenticator = new KbcAuthenticator(
-                persistentStorage,
-                apiClient,
-                supplementalInformationHelper);
+        KbcAuthenticator authenticator = new KbcAuthenticator(catalog, persistentStorage, apiClient,
+                supplementalInformationController);
         return new AutoAuthenticationController(request, context, authenticator, authenticator);
     }
 
@@ -54,14 +52,9 @@ public class KbcAgent extends NextGenerationAgent {
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
         KbcTransactionalAccountFetcher accountFetcher = new KbcTransactionalAccountFetcher(apiClient);
         return Optional.of(
-                new TransactionalAccountRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        accountFetcher,
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionKeyPaginationController<>(accountFetcher),
-                                accountFetcher)));
+                new TransactionalAccountRefreshController(metricRefreshController, updateController, accountFetcher,
+                        new TransactionFetcherController<>(transactionPaginationHelper,
+                                new TransactionKeyPaginationController<>(accountFetcher), accountFetcher)));
     }
 
     @Override
@@ -100,16 +93,9 @@ public class KbcAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransferController> constructTransferController() {
-        return Optional.of(
-                new TransferController(
-                        null,
-                        new KbcBankTransferExecutor(
-                                credentials,
-                                persistentStorage,
-                                apiClient,
-                                catalog,
-                                supplementalInformationHelper),
-                        null,
-                        null));
+        return Optional.of(new TransferController(null,
+                new KbcBankTransferExecutor(credentials, persistentStorage, apiClient, catalog,
+                        supplementalInformationController),
+                null, null));
     }
 }

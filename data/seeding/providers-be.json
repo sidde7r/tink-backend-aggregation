@@ -65,56 +65,6 @@
           "sensitive": true
         }
       ],
-      "supplementalFields": [
-        {
-          "description": "Challenge",
-          "helpText": "Insert your bank card into the card reader\nPress 'Login'\nEnter the challenge\nPress 'OK'",
-          "immutable": true,
-          "masked": false,
-          "name": "logindescription"
-        },
-        {
-          "description": "Response",
-          "helpText": "Enter your PIN\nPress 'OK'\nEnter the response from the card reader",
-          "name": "logininput",
-          "immutable": false,
-          "masked": false,
-          "numeric": true,
-          "hint": "NNNNNNN"
-        },
-        {
-          "Description": "Challenge",
-          "helpText": "Insert your bank card into the card reader\nPress 'Sign'\nEnter the challenge\nPress 'OK'",
-          "immutable": true,
-          "masked": false,
-          "name": "signcodedescription"
-        },
-        {
-          "description": "Response",
-          "helpText": "Enter your PIN\nPress 'OK'\nEnter the response from the card reader",
-          "name": "signcodeinput",
-          "immutable": false,
-          "masked": false,
-          "numeric": true,
-          "hint": "NNNNNNN"
-        },
-        {
-          "description" : "Control Code",
-          "helpText" : "Insert your card into the card reader and press SIGN twice. Enter the control code on your card reader and press OK. Then enter the amount of your transfer, including the digits after the decimal sign, and press OK. Enter and your PIN and press OK, then enter the code from the card reader in the response code field.",
-          "immutable" : true,
-          "masked" : false,
-          "name" : "signfortransferdescription",
-          "value" : null
-        },
-        {
-          "description" : "Response Code",
-          "hint" : "NNNNNNN",
-          "masked" : false,
-          "numeric": true,
-          "name" : "signfortransferinput",
-          "value" : null
-        }
-      ],
       "multiFactor": true,
       "name": "be-kbc-cardreader",
       "passwordHelpText": "In order to authenticate yourself you will need your KBC card reader.",
@@ -146,31 +96,6 @@
           "sensitive": true
         }
       ],
-      "supplementalFields": [
-        {
-          "description": "One-time Password",
-          "helpText": "Insert your card into the card reader\nPress 'Login'\nEnter your PIN\nPress 'OK'\nEnter the OTP",
-          "sensitive": true,
-          "numeric": true,
-          "name": "otpinput"
-        },
-        {
-          "Description": "Challenge",
-          "helpText": "Insert your bank card into the card reader\nPress 'Sign'\nEnter the challenge\nPress 'OK'",
-          "immutable": true,
-          "masked": false,
-          "name": "signcodedescription"
-        },
-        {
-          "description": "Response",
-          "helpText": "Enter your PIN\nPress 'OK'\nEnter the response from the card reader",
-          "name": "signcodeinput",
-          "immutable": false,
-          "masked": false,
-          "numeric": true,
-          "hint": "NNNNNNN"
-        }
-      ],
       "multiFactor": true,
       "name": "be-ing-cardreader",
       "passwordHelpText": "By connecting to this bank, you confirm that you have accepted the bank’s [terms and conditions](https://www.ing.be/static/legacy/SiteCollectionDocuments/GeneralRegulationsNewEN.pdf).",
@@ -200,101 +125,6 @@
           "sensitive": true,
           "name": "password",
           "minLength": 1
-        }
-      ],
-      "supplementalFields": [
-        {
-          "description": "Challenge",
-          "helpText": "Insert your bank card into the card reader\nPress 'Login'\nEnter the challenge\nPress 'OK'",
-          "immutable": true,
-          "masked": false,
-          "name": "logindescription"
-        },
-        {
-          "description": "Response",
-          "helpText": "Enter your PIN\nPress 'OK'\nEnter the response from the card reader",
-          "name": "logininput",
-          "immutable": false,
-          "masked": false,
-          "numeric": true,
-          "hint": "NNNNNNN"
-        },
-        {
-          "Description": "Challenge",
-          "helpText": "Insert your bank card into the card reader\nPress 'Sign'\nEnter the challenge\nPress 'OK'",
-          "immutable": true,
-          "masked": false,
-          "name": "signcodedescription"
-        },
-        {
-          "description": "Response",
-          "helpText": "Enter your PIN\nPress 'OK'\nEnter the response from the card reader",
-          "name": "signcodeinput",
-          "immutable": false,
-          "masked": false,
-          "numeric": true,
-          "hint": "NNNNNNN"
-        },
-        {
-          "description" : "Control Code",
-          "helpText" : "Sign using your Card Reader\nPress 'Sign'\nEnter the security code from the reader",
-          "hint" : null,
-          "immutable" : true,
-          "masked" : false,
-          "name" : "signfortransferdescription",
-          "value" : null
-        },
-        {
-          "description" : "Description Code",
-          "helpText" : "Sign for the transfer?\nAmount",
-          "hint" : null,
-          "immutable" : true,
-          "masked" : false,
-          "name" : "signfortransferextradescription",
-          "value" : null
-        },
-        {
-          "description" : "Response Code",
-          "helpText" : "Enter your PIN\nEnter the signature code from the reader",
-          "hint" : "NNNNNNN",
-          "immutable" : true,
-          "masked" : false,
-          "name" : "signfortransferinput",
-          "value" : null
-        },
-        {
-          "description": "Beneficiary Name",
-          "helpText" : "You have not transferred money to this account before. Please supply the name of the owner to the account in the field below",
-          "hint" : "Name",
-          "masked" : false,
-          "name" : "addbeneficiaryinput"
-        },
-        {
-          "description" : "Control Code",
-          "helpText" : "Sign using your Card Reader\nPress 'Sign'\nEnter the security code from the reader",
-          "hint" : null,
-          "immutable" : true,
-          "masked" : false,
-          "name" : "signforbeneficiarydescription",
-          "value" : null
-        },
-        {
-          "description" : "Description Code",
-          "helpText" : "Want to sign for the beneficiary?\nEnter the control code from the reader",
-          "hint" : null,
-          "immutable" : true,
-          "masked" : false,
-          "name" : "signforbeneficiaryextradescription",
-          "value" : null
-        },
-        {
-          "description" : "Response Code",
-          "helpText" : "Enter your PIN\nEnter the signature code from the reader",
-          "hint" : "NNNNNNN",
-          "immutable" : true,
-          "masked" : false,
-          "name" : "signforbeneficiaryinput",
-          "value" : null
         }
       ],
       "multiFactor": true,
@@ -430,24 +260,6 @@
           "numeric": true,
           "minLength": 1,
           "sensitive": true
-        }
-      ],
-      "supplementalFields": [
-        {
-          "description": "Challenge",
-          "helpText": "Insert your bank card into the card reader\nPress 'Login'\nEnter the challenge\nPress 'OK'",
-          "immutable": true,
-          "masked": false,
-          "name": "logindescription"
-        },
-        {
-          "description": "Response",
-          "helpText": "Enter your PIN\nPress 'OK'\nEnter the response from the card reader",
-          "name": "logininput",
-          "immutable": false,
-          "masked": false,
-          "numeric": true,
-          "hint": "NNNNNNN"
         }
       ],
       "multiFactor": true,

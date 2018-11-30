@@ -33,7 +33,6 @@ public class ProviderConfiguration {
     private String currency;
     private String displayName;
     private String fieldsSerialized;
-    private String supplementalFieldsSerialized;
     private String groupDisplayName;
     private String market;
     private boolean multiFactor;
@@ -165,10 +164,6 @@ public class ProviderConfiguration {
         return type;
     }
 
-    public List<Field> getSupplementalFields() {
-        return SerializationUtils.deserializeFromString(supplementalFieldsSerialized, FieldsList.class);
-    }
-
     @Override
     public int hashCode() {
         // Generated using Eclipse
@@ -273,10 +268,6 @@ public class ProviderConfiguration {
 
     public void setType(ProviderTypes type) {
         this.type = type;
-    }
-
-    public void setSupplementalFields(List<Field> supplementalFields) {
-        this.supplementalFieldsSerialized = SerializationUtils.serializeToString(supplementalFields);
     }
 
     /**

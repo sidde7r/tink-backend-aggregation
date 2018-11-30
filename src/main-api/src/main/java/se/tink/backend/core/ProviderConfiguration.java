@@ -51,10 +51,6 @@ public class ProviderConfiguration {
     @Column(name = "`fields`")
     @Type(type = "text")
     private String fieldsSerialized;
-    @JsonProperty("supplementalFields")
-    @Column(name = "`supplementalFields`")
-    @Type(type = "text")
-    private String supplementalFieldsSerialized;
     private String groupDisplayName;
     private String market;
     private boolean multiFactor;
@@ -176,10 +172,6 @@ public class ProviderConfiguration {
         return SerializationUtils.deserializeFromString(fieldsSerialized, FieldsList.class);
     }
 
-    public List<Field> getSupplementalFields() {
-        return SerializationUtils.deserializeFromString(supplementalFieldsSerialized, FieldsList.class);
-    }
-
     @ApiModelProperty(name = "groupDisplayName", value="The grouped display name of the provider")
     public String getGroupDisplayName() {
         return groupDisplayName;
@@ -280,10 +272,6 @@ public class ProviderConfiguration {
 
     public void setFields(List<Field> fields) {
         this.fieldsSerialized = SerializationUtils.serializeToString(fields);
-    }
-
-    public void setSupplementalFields(List<Field> supplementalFields) {
-        this.supplementalFieldsSerialized = SerializationUtils.serializeToString(supplementalFields);
     }
 
     public void setGroupDisplayName(String groupDisplayName) {
