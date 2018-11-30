@@ -8,15 +8,13 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusApiClient;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.BelfiusTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.BelfiusPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.getsigningprotocol.SignProtocolResponse;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
-import se.tink.backend.aggregation.rpc.Field;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.core.Amount;
 import se.tink.backend.core.enums.MessageType;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
@@ -31,19 +29,20 @@ import static se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.Be
 public class BelfiusTransferExecutor implements BankTransferExecutor {
 
     private final BelfiusSessionStorage belfiusSessionStorage;
-    private final SupplementalInformationController supplementalInformationController;
     private final CountryDateUtils countryDateUtils;
     private final Catalog catalog;
+    private final SupplementalInformationHelper supplementalInformationHelper;
     private BelfiusApiClient apiClient;
 
     public BelfiusTransferExecutor(BelfiusApiClient apiClient,
-            SupplementalInformationController supplementalInformationController,
-            BelfiusSessionStorage belfiusSessionStorage, Catalog catalog) {
+            BelfiusSessionStorage belfiusSessionStorage,
+            Catalog catalog,
+            final SupplementalInformationHelper supplementalInformationHelper) {
         this.catalog = catalog;
         this.apiClient = apiClient;
         this.belfiusSessionStorage = belfiusSessionStorage;
         countryDateUtils = CountryDateUtils.getBelgianDateUtils();
-        this.supplementalInformationController = supplementalInformationController;
+        this.supplementalInformationHelper = supplementalInformationHelper;
     }
 
     public static String formatStructuredMessage(String structuredMessage) {
@@ -117,7 +116,9 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         String response;
 
         try {
-            response = waitForSignCode(transferSignChallenge.getChallenge(), transferSignChallenge.getSignType());
+            response = supplementalInformationHelper.waitForSignForTransferChallengeResponse(
+                    transferSignChallenge.getChallenge(),
+                    transferSignChallenge.getSignType());
         } catch (SupplementalInfoException e) {
             throw createFailedTransferException(TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED,
                     TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED);
@@ -181,14 +182,18 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
     public boolean doubleSignedPayment() throws SupplementalInfoException, TransferExecutionException {
         apiClient.getSignProtocol().cardReaderAllowed();
         SignProtocolResponse transferSignChallenge = apiClient.getTransferSignChallenge();
-        String response = waitForSignCode(transferSignChallenge.getChallenge(), transferSignChallenge.getSignType());
+        String response = supplementalInformationHelper.waitForSignForTransferChallengeResponse(
+                transferSignChallenge.getChallenge(),
+                transferSignChallenge.getSignType());
         SignProtocolResponse signProtocolResponse = apiClient.doubleSignTransfer(response);
 
         if (signProtocolResponse.signOk()) {
             return true;
         } else if (signProtocolResponse.signError()) {
             signProtocolResponse = apiClient.doubleClickPayment();
-            response = waitForSignCode(signProtocolResponse.getChallenge(), signProtocolResponse.getSignType());
+            response = supplementalInformationHelper.waitForSignForTransferChallengeResponse(
+                    signProtocolResponse.getChallenge(),
+                    signProtocolResponse.getSignType());
             signProtocolResponse = apiClient.doubleSignTransfer(response);
             checkThrowableErrors(signProtocolResponse);
             return signProtocolResponse.signOk();
@@ -202,14 +207,16 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         try {
             String name = transfer.getDestination().getName().orElse(null);
             if (name == null) {
-                name = addBeneficiaryName();
+                name = supplementalInformationHelper.waitForAddBeneficiaryInput();
             }
             SignProtocolResponse signProtocolResponse = apiClient.addBeneficiary(transfer, isStructuredMessage, name);
             if (signProtocolResponse.getChallenge().isEmpty() || signProtocolResponse.getSignType().isEmpty()) {
                 throw createFailedTransferException(TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED,
                         TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED);
             }
-            response = waitForSignCodeBeneficiary(signProtocolResponse.getChallenge(), signProtocolResponse.getSignType());
+            response = supplementalInformationHelper.waitForSignForBeneficiaryChallengeResponse(
+                    signProtocolResponse.getChallenge(),
+                    signProtocolResponse.getSignType());
         } catch (SupplementalInfoException e) {
             throw createFailedTransferException(TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED,
                     TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED);
@@ -251,90 +258,4 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
                 getFormattedAmount(transfer.getAmount()),
                 transfer.getAmount().getCurrency());
     }
-
-    private String addBeneficiaryName() throws SupplementalInfoException {
-        String helpText = BelfiusConstants.InputFieldConstants.ADD_BENEFICIARY_NAME_HELP_TEXT.getKey().get();
-        Field inputField = addBeneficiaryField(helpText);
-
-        return supplementalInformationController.askSupplementalInformation(inputField)
-                .get(BelfiusConstants.InputFieldConstants.ADD_BENEFICIARY_INP_FIELD.getKey().get());
-    }
-
-    private String waitForSignCode(String challenge, String descriptionCode) throws SupplementalInfoException {
-        return waitForSupplementalInformation(
-                catalog.getString(BelfiusConstants.InputFieldConstants.SIGN_FOR_TRANSFER_1.getKey().get()),
-                challenge,
-                catalog.getString(BelfiusConstants.InputFieldConstants.SIGN_FOR_TRANSFER_2.getKey().get()),
-                descriptionCode,
-                catalog.getString(BelfiusConstants.InputFieldConstants.SIGN_FOR_TRANSFER_3.getKey().get()));
-    }
-
-    private String waitForSignCodeBeneficiary(String challenge, String descriptionCode) throws SupplementalInfoException {
-        return waitForSupplementalInformation(
-                catalog.getString(BelfiusConstants.InputFieldConstants.SIGN_FOR_BENEFICIARY_1.getKey().get()),
-                challenge,
-                catalog.getString(BelfiusConstants.InputFieldConstants.SIGN_FOR_BENEFICIARY_2.getKey().get()),
-                descriptionCode,
-                catalog.getString(BelfiusConstants.InputFieldConstants.SIGN_FOR_BENEFICIARY_3.getKey().get()));
-    }
-
-    private String waitForSupplementalInformation(String helpText, String controlCode, String descriptionCodeHelp,
-            String descriptionCode, String extraText) throws SupplementalInfoException {
-        return supplementalInformationController.askSupplementalInformation(
-                createDescriptionField(
-                        BelfiusConstants.InputFieldConstants.CONTROL_CODE_FIELD_DESCRIPTION.getKey().get(),
-                        helpText,
-                        controlCode),
-                extraDescriptionField(
-                        BelfiusConstants.InputFieldConstants.DESCRIPTION_CODE_FIELD_DESCRIPTION.getKey().get(),
-                        descriptionCodeHelp,
-                        descriptionCode),
-                inputDescriptionField(BelfiusConstants.InputFieldConstants.RESPONSE_CODE_FIELD_DESCRIPTION.getKey().get(),
-                        extraText))
-                .get(BelfiusConstants.MultiFactorAuthentication.CODE);
-    }
-
-    private Field addBeneficiaryField(String helpText) {
-        Field field = new Field();
-        field.setMasked(false);
-        field.setDescription(BelfiusConstants.InputFieldConstants.BENEFICIARY_FIELD_DESCRIPTION.getKey().get());
-        field.setHelpText(helpText);
-        field.setHint("name");
-        field.setName(BelfiusConstants.InputFieldConstants.ADD_BENEFICIARY_INP_FIELD.getKey().get());
-        return field;
-    }
-
-    private Field createDescriptionField(String descriptionName, String description, String challenge) {
-        Field field = new Field();
-        field.setMasked(false);
-        field.setDescription(descriptionName);
-        field.setName("description");
-        field.setHelpText(description);
-        field.setValue(challenge);
-        field.setImmutable(true);
-        return field;
-    }
-
-    private Field extraDescriptionField(String descriptionName, String description, String challenge) {
-        Field field = new Field();
-        field.setMasked(false);
-        field.setDescription(descriptionName);
-        field.setHelpText(description);
-        field.setValue(challenge);
-        field.setImmutable(true);
-        return field;
-    }
-
-    private static Field inputDescriptionField(String descriptionName, String description) {
-        Field field = new Field();
-        field.setMasked(false);
-        field.setDescription(descriptionName);
-        field.setName(BelfiusConstants.MultiFactorAuthentication.CODE);
-        field.setHelpText(description);
-        field.setNumeric(true);
-        field.setHint("NNNNNNN");
-        field.setImmutable(false);
-        return field;
-    }
-
 }
