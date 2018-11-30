@@ -559,7 +559,7 @@
         },
         {
             "name": "at-americanexpress-password",
-            "className": "nxgen.at.creditcards.amex.AmericanExpressATAgent",
+            "className": "nxgen.at.creditcards.amex.v62.AmericanExpressV62ATAgent",
             "credentialsType": "PASSWORD",
             "currency": "EUR",
             "displayName": "American Express",
