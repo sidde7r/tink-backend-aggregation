@@ -1,11 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.bankid;
 
+import com.google.common.base.Strings;
 import java.util.Objects;
 import org.apache.commons.lang.RandomStringUtils;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.agents.demo.NextGenerationDemoAuthenticator;
@@ -26,6 +28,10 @@ public class DemoBankIdAuthenticator implements BankIdAuthenticator<String>, Pas
 
     @Override
     public String init(String ssn) throws BankIdException {
+        if (Strings.isNullOrEmpty(ssn) || !ssn.equals("133713371337")) {
+            throw new BankIdException(BankIdError.USER_VALIDATION_ERROR);
+        }
+
         System.out.println(String.format("Init BankID with social security number: \"%s\"", ssn));
         return RandomStringUtils.randomAscii(10);
     }
