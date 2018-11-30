@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.Nonnull;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -156,7 +157,12 @@ public abstract class AgentContext {
     @Deprecated // Use cacheTransactions instead
     public abstract Account updateTransactions(Account account, List<Transaction> transactions);
 
-    public abstract void cacheTransactions(String accountUniqueId, List<Transaction> transactions);
+    /**
+     * @param accountUniqueId The client-side unique identifier for the account associated with the
+     *     transactions. Same as nxgen Account.getUniqueIdentifier and rpc Account.getBankId.
+     * @param transactions Transactions to be stored in this context
+     */
+    public abstract void cacheTransactions(@Nonnull String accountUniqueId, List<Transaction> transactions);
 
     public abstract void updateCredentialsExcludingSensitiveInformation(Credentials credentials,
             boolean doStatusUpdate);
