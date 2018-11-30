@@ -109,6 +109,7 @@
         {
           "description" : "Response Code",
           "hint" : "NNNNNNN",
+          "immutable": false,
           "masked" : false,
           "numeric": true,
           "name" : "signfortransferinput",
@@ -254,10 +255,9 @@
           "value" : null
         },
         {
-          "description" : "Response Code",
           "helpText" : "Enter your PIN\nEnter the signature code from the reader",
           "hint" : "NNNNNNN",
-          "immutable" : true,
+          "immutable": false,
           "masked" : false,
           "name" : "signfortransferinput",
           "value" : null
