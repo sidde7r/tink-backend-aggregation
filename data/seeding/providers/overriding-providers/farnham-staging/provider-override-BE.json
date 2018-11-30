@@ -302,15 +302,16 @@
       },
       {
         "description" : "Control Code",
-        "helpText" : "Insert your card into the card reader and press SIGN twice. Enter the control code on your card reader and press OK. Then enter the amount of your transfer, including the digits after the decimal sign, and press OK. Enter and your PIN and press OK, then enter the code from the card reader in the response code field.",
+        "helpText" : "1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_CardReader.png) Insert your bank card into the KBC card reader\n2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN.png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN.png) Tap\n3$ Enter your start code []",
         "immutable" : true,
         "masked" : false,
         "name" : "signfortransferdescription",
         "value" : null
       },
       {
+        "helpText" : "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap\n5$ Enter the amount, including the digits after the decimal sign\n6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap to confirm\n7$ Enter your PIN\n8$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap\n9$ Enter the sign code",
         "hint" : "NNNNNNN",
-        "immutable" : false,
+        "immutable": false,
         "masked" : false,
         "numeric": true,
         "name" : "signfortransferinput",
