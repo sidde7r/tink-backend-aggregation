@@ -85,13 +85,7 @@ public class ProviderStatusCommand extends ProviderConfigurationCommand<Provider
 
 
     private ProviderConfigurationProvider createConfigurationProvider(Injector injector) throws IOException {
-        ProviderFileModule fileModule = injector.getInstance(ProviderFileModule.class);
-        return new ProviderConfigurationProvider(
-                fileModule.providerConfigurationByProviderName(),
-                fileModule.provideEnabledProvidersForCluster(),
-                fileModule.provideClusterSpecificProviderConfiguration(),
-                injector.getInstance(ProviderStatusConfigurationRepository.class)
-        );
+        return injector.getInstance(ProviderConfigurationProvider.class);
     }
     
     private void printProviderStatuses(Map<String, ProviderStatuses> providerStatuses){

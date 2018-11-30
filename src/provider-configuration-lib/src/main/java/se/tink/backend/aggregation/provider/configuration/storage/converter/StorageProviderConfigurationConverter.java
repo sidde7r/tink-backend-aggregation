@@ -1,15 +1,13 @@
 package se.tink.backend.aggregation.provider.configuration.storage.converter;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
-import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderStatusConfiguration;
-import se.tink.backend.core.ProviderStatuses;
-
-import java.util.Optional;
 
 public class StorageProviderConfigurationConverter {
     public static se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration convert(
-            ProviderConfiguration providerConfiguration,
-            Optional<ProviderStatusConfiguration> providerStatusConfiguration) {
+            ProviderConfiguration providerConfiguration) {
         se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration core =
                 new se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration();
         core.setCapabilitiesSerialized(providerConfiguration.getCapabilitiesSerialized());
@@ -28,7 +26,7 @@ public class StorageProviderConfigurationConverter {
         core.setRefreshFrequencyFactor(providerConfiguration.getRefreshFrequencyFactor());
         core.setType(providerConfiguration.getType());
         core.setFields(providerConfiguration.getFields());
-        core.setStatus(determineProviderStatus(providerConfiguration, providerStatusConfiguration));
+        core.setStatus(providerConfiguration.getStatus());
         core.setTransactional(providerConfiguration.isTransactional());
         core.setDisplayDescription(providerConfiguration.getDisplayDescription());
         core.setSupplementalFields(providerConfiguration.getSupplementalFields());
@@ -40,16 +38,9 @@ public class StorageProviderConfigurationConverter {
         return core;
     }
 
-    /**
-     * determinProviderStatus takes the provider status in database if present
-     * if not, takes the local status
-     * @param providerConfiguration
-     * @param providerStatusConfiguration
-     * @return
-     */
-    private static ProviderStatuses determineProviderStatus(ProviderConfiguration providerConfiguration,
-                                                     Optional<ProviderStatusConfiguration> providerStatusConfiguration){
-        return providerStatusConfiguration.isPresent() ?
-                providerStatusConfiguration.get().getStatus() : providerConfiguration.getStatus();
+    public static List<se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration> convert(
+            Collection<ProviderConfiguration> providerConfiguration) {
+        return providerConfiguration.stream().map(StorageProviderConfigurationConverter::convert).collect(
+                Collectors.toList());
     }
 }

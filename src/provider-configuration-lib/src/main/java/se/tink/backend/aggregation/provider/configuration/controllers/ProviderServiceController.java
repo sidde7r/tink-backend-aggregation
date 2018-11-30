@@ -20,10 +20,6 @@ public class ProviderServiceController {
         this.providerConfigurationDAO = providerConfigurationDAO;
     }
 
-    public List<ProviderConfiguration> list() {
-        return providerConfigurationDAO.findAll();
-    }
-
     public List<ProviderConfiguration> list(ClusterId clusterId) {
         return providerConfigurationDAO.findAllByClusterId(clusterId.getId());
     }
