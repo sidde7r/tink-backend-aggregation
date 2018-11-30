@@ -22,21 +22,28 @@ public class ProviderServiceResource implements ProviderService {
 
     @Override
     public List<ProviderConfigurationDTO> list(ClusterInfo clusterInfo) {
-        return HttpProviderConfigurationConverter.convert(providerController.list(clusterInfo.getClusterId()));
+        return HttpProviderConfigurationConverter.convert(
+                providerController.list(clusterInfo.getClusterId()),
+                clusterInfo.getClusterId().getId());
     }
 
     @Override
     public List<ProviderConfigurationDTO> listByMarket(String market, ClusterInfo clusterInfo) {
-        return HttpProviderConfigurationConverter.convert(providerController.listByMarket(clusterInfo.getClusterId(), market));
+        return HttpProviderConfigurationConverter.convert(
+                providerController.listByMarket(clusterInfo.getClusterId(), market),
+                clusterInfo.getClusterId().getId());
     }
 
     @Override
     public ProviderConfigurationDTO getProviderByName(String providerName, ClusterInfo clusterInfo) {
-        Optional<ProviderConfiguration> providerConfiguration = providerController.getProviderByName(clusterInfo.getClusterId(), providerName);
+        Optional<ProviderConfiguration> providerConfiguration = providerController.getProviderByName(
+                clusterInfo.getClusterId(), providerName);
+
         if (!providerConfiguration.isPresent()) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
 
-        return HttpProviderConfigurationConverter.convert(providerConfiguration.get());
+        return HttpProviderConfigurationConverter.convert(
+                clusterInfo.getClusterId().getId(), providerConfiguration.get());
     }
 }
