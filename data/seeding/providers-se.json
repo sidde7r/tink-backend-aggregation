@@ -399,7 +399,7 @@
             "popular": false,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,
-            "status": "ENABLED",
+            "status": "OBSOLETE",
             "transactional": true,
             "type": "TEST"
         },
