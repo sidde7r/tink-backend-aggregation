@@ -19,7 +19,7 @@ public class HttpProviderConfigurationConverter {
 
     public static ProviderConfigurationDTO convert(String clusterId, ProviderConfiguration providerConfiguration) {
         ProviderConfigurationDTO dto = new ProviderConfigurationDTO();
-        dto.setCapabilitiesSerialized(handleCapabilties(clusterId, providerConfiguration));
+        dto.setCapabilitiesSerialized(handleCapabilities(clusterId, providerConfiguration));
         dto.setClassName(providerConfiguration.getClassName());
         dto.setCredentialsType(providerConfiguration.getCredentialsType());
         dto.setCurrency(providerConfiguration.getCurrency());
@@ -51,7 +51,7 @@ public class HttpProviderConfigurationConverter {
                 .collect(Collectors.toList());
     }
 
-    private static String handleCapabilties(String clusterId, ProviderConfiguration providerConfiguration) {
+    private static String handleCapabilities(String clusterId, ProviderConfiguration providerConfiguration) {
         if (!clusterId.contains("oxford")) {
             Set<ProviderConfiguration.Capability> capabilities = providerConfiguration.getCapabilities().stream()
                     .filter(NON_OXFORD_CAPABILITIES_FILTER)
