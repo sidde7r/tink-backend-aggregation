@@ -1810,7 +1810,7 @@
             "type": "BANK"
         },
         {
-            "name": "test-bankid-successful-se",
+            "name": "se-test-bankid-successful-se",
             "className": "nxgen.demo.banks.bankid.BankIdDemoAgent",
             "credentialsType": "MOBILE_BANKID",
             "displayDescription": "Mobile BankID",
@@ -1837,7 +1837,7 @@
             "type": "TEST"
         },
         {
-            "name": "test-bankid-failing-se",
+            "name": "se-test-bankid-failing-se",
             "className": "nxgen.demo.banks.bankid.FailingBankIdDemoAgent",
             "credentialsType": "MOBILE_BANKID",
             "displayDescription": "Mobile BankID",
