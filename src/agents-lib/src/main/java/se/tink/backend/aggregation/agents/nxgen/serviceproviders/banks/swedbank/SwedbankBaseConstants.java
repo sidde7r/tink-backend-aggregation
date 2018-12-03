@@ -11,6 +11,7 @@ import java.util.Optional;
 import org.apache.commons.codec.binary.Base64;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.BankTransferConstants;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.UrlEnum;
 import se.tink.backend.utils.StringUtils;
@@ -247,8 +248,8 @@ public class SwedbankBaseConstants {
     }
 
     public static class ErrorMessage {
-        public static final String INVALID_DESTINATION = "Transfer failed due to invalid destination account.";
-        public static final String INVALID_SOURCE = "Transfer failed due to invalid source account.";
+        public static final String INVALID_DESTINATION = BankTransferConstants.ErrorMessage.INVALID_DESTINATION;
+        public static final String INVALID_SOURCE = BankTransferConstants.ErrorMessage.INVALID_SOURCE;
         public static final String SOURCE_NOT_FOUND = "Source account could not be found at bank.";
         public static final String SOURCE_NOT_TRANSFER_CAPABLE = "Source account not allowed to to make transfers.";
         public static final String TRANSFER_REGISTER_FAILED = "Could not register transfer.";

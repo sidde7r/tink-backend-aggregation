@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import java.util.Collection;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model.Beneficiary;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model.OutboxItem;
@@ -107,7 +106,7 @@ public class BankTransferControllerNxgen implements BankTransferExecutor {
         if (sourceAccount == null || !sourceAccount.isValid()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_SOURCE)
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_SOURCE) // todo: should not be Swedbank
+                    .setMessage(BankTransferConstants.ErrorMessage.INVALID_SOURCE)
                     .build();
         }
 
@@ -115,7 +114,7 @@ public class BankTransferControllerNxgen implements BankTransferExecutor {
         if (destinationAccount == null || !destinationAccount.isValid()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_DESTINATION)
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_DESTINATION) // todo: should not be Swedbank
+                    .setMessage(BankTransferConstants.ErrorMessage.INVALID_DESTINATION)
                     .build();
         }
     }
