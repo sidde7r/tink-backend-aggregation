@@ -1,8 +1,10 @@
 {
   "clusterid" : "oxford-production",
   "providers" : [
-    "ro-raiffeisen-oauth2",
-    "ro-n26-password",
-    "ro-revolut-password"
+    "ro-banca-comerciala-romana",
+    "ro-brd",
+    "ro-ing-bank",
+    "ro-raiffeisen-bank",
+    "ro-unicredit-tirirac-bank"
   ]
 }
