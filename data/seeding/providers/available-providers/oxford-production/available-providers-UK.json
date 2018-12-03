@@ -17,6 +17,8 @@
     "uk-santander-oauth2",
     "uk-americanexpress-password",
     "uk-revolut-password",
-    "uk-n26-password"
+    "uk-n26-password",
+    "test-password-uk",
+    "test-multi-supplemental-uk"
   ]
 }

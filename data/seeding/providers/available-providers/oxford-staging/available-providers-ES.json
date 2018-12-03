@@ -8,6 +8,8 @@
     "es-ibercaja-password",
     "es-imaginbank-password",
     "es-la-caixa",
-    "es-openbank-password"
+    "es-openbank-password",
+    "test-password-es",
+    "test-multi-supplemental-es"
   ]
 }

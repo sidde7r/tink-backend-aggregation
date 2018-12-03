@@ -22,6 +22,8 @@
     "at-revolut-password",
     "at-americanexpress-password",
     "at-raiffeisen-bank",
-    "at-volksbank"
+    "at-volksbank",
+    "test-password-at",
+    "test-multi-supplemental-at"
   ]
 }

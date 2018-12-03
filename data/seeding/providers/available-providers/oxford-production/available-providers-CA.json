@@ -1,6 +1,8 @@
 {
   "clusterid" : "oxford-production",
   "providers" : [
-    "ca-demo"
+    "ca-demo",
+    "test-password-ee",
+    "test-multi-supplemental-ee"
   ]
 }

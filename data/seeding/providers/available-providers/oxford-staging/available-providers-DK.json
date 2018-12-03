@@ -71,6 +71,8 @@
     "dk-søbyskaderhallingsparekasse-password",
     "dk-sønderhahørstedsparekasse-password",
     "dk-totalbanken-password",
-    "dk-vestjysk-password"
+    "dk-vestjysk-password",
+    "test-password-dk",
+    "test-multi-supplemental-dk"
   ]
 }
