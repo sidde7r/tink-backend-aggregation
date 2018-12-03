@@ -238,32 +238,6 @@ public class ProviderFileModule extends AbstractModule {
         log.info("Seeded {} providers for cluster {} " , providers.size(), market);
     }
 
-    private void parseProviderOverrideOnCluster(File providerSpecificationFile, Map<String, Map<String, ProviderConfiguration>> providerOverrideOnCluster)
-            throws IOException {
-        ProviderSpecificationModel providerSpecificationModel = mapper.readValue(providerSpecificationFile, ProviderSpecificationModel.class);
-
-        String clusterId = providerSpecificationModel.getClusterId();
-        List<ProviderConfiguration> providerSpecificConfiguration = providerSpecificationModel.getProviderSpecificConfiguration();
-
-        Preconditions.checkNotNull(clusterId,
-                "no cluster id found for provider specification file {}",providerSpecificationFile.getName());
-
-        Map<String, ProviderConfiguration> providerConfigurationMap = Maps.newHashMap();
-
-        if (providerSpecificConfiguration == null || providerSpecificConfiguration.isEmpty()){
-            // assume these files can be empty when there is no provider specification for the cluster
-            log.warn("No providers specified for file {}" , providerSpecificationFile.getName());
-            return;
-        }
-
-        for (ProviderConfiguration providerConfiguration : providerSpecificConfiguration) {
-            providerConfigurationMap.put(providerConfiguration.getName(), providerConfiguration);
-        }
-
-        providerOverrideOnCluster.put(clusterId, providerConfigurationMap);
-        log.info("Seeded {} provider specification for cluster {} " , providerConfigurationMap.size(), clusterId);
-    }
-
     private AgentCapabilitiesMapModel loadAgentCapabilities() throws IOException {
         File directory = new File(AGENT_CAPABILITIES_FILE_PATH);
         File[] agentCapabilities = directory.listFiles(
