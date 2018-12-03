@@ -7,6 +7,8 @@
     "de-dkb",
     "de-postbank",
     "de-sparkasse",
-    "de-vrbank"
+    "de-vrbank",
+    "de-test-password",
+    "de-test-multi-supplemental"
   ]
 }

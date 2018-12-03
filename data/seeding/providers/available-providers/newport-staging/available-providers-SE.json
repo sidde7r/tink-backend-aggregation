@@ -35,6 +35,8 @@
     "statoilmastercard-bankid",
     "supremecard-bankid",
     "swedbank-bankid",
-    "swedbank-bankid-youth"
+    "swedbank-bankid-youth",
+    "se-test-password",
+    "se-test-multi-supplemental"
   ]
 }

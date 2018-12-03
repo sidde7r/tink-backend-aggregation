@@ -6,6 +6,8 @@
     "be-demo",
     "be-ing-cardreader",
     "be-kbc-cardreader",
-    "be-record-bank"
+    "be-record-bank",
+    "be-test-password",
+    "be-test-multi-supplemental"
   ]
 }

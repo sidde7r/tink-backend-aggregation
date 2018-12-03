@@ -6,6 +6,8 @@
     "ro-brd",
     "ro-ing-bank",
     "ro-raiffeisen-bank",
-    "ro-unicredit-tirirac-bank"
+    "ro-unicredit-tirirac-bank",
+    "ro-test-password",
+    "ro-test-multi-supplemental"
   ]
 }

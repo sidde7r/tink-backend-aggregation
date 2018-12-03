@@ -9,6 +9,8 @@
     "ro-unicredit-tirirac-bank",
     "ro-raiffeisen-oauth2",
     "ro-n26-password",
-    "ro-revolut-password"
+    "ro-revolut-password",
+    "ro-test-password",
+    "ro-test-multi-supplemental"
   ]
 }
