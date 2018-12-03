@@ -10,8 +10,6 @@
     "fi-op-codecard",
     "fi-poppankki-codecard",
     "fi-saastopankki-codecard",
-    "fi-spankki-codecard",
-    "fi-test-password",
-    "fi-test-multi-supplemental"
+    "fi-spankki-codecard"
   ]
 }

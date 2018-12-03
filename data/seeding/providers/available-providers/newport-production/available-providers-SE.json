@@ -32,8 +32,6 @@
     "sparbankensyd-bankid",
     "statoilmastercard-bankid",
     "supremecard-bankid",
-    "swedbank-bankid",
-    "se-test-password",
-    "se-test-multi-supplemental"
+    "swedbank-bankid"
   ]
 }

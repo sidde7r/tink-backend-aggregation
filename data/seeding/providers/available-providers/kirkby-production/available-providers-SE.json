@@ -52,8 +52,6 @@
     "supremecard-bankid",
     "swedbank-bankid",
     "volkswagenkortet-bankid",
-    "volvofinans-bankid",
-    "se-test-password",
-    "se-test-multi-supplemental"
+    "volvofinans-bankid"
   ]
 }

@@ -5,8 +5,6 @@
     "be-bnppf-jwt",
     "be-demo",
     "be-ing-cardreader",
-    "be-kbc-cardreader",
-    "be-test-password",
-    "be-test-multi-supplemental"
+    "be-kbc-cardreader"
   ]
 }

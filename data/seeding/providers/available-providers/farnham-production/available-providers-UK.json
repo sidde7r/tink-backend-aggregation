@@ -2,8 +2,6 @@
   "clusterid" : "farnham-production",
   "providers" : [
     "uk-americanexpress-password",
-    "uk-revolut-password",
-    "uk-test-password",
-    "uk-test-multi-supplemental"
+    "uk-revolut-password"
   ]
 }
