@@ -5,6 +5,8 @@
     "at-bawag-psk",
     "at-erste-bank-and-sparkasse",
     "at-raiffeisen-bank",
-    "at-volksbank"
+    "at-volksbank",
+    "test-password-at",
+    "test-multi-supplemental-at"
   ]
 }

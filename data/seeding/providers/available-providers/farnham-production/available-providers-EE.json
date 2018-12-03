@@ -4,6 +4,8 @@
     "ee-dnb",
     "ee-lhv-pank",
     "ee-nordea",
-    "ee-swedbank"
+    "ee-swedbank",
+    "test-password-ee",
+    "test-multi-supplemental-ee"
   ]
 }
