@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ProviderFileModuleTest {
     ProviderFileModule module;
@@ -38,5 +39,11 @@ public class ProviderFileModuleTest {
                 .filter(Set::isEmpty)
                 .collect(Collectors.toList());
         Assert.assertTrue(emptyProviderSets.isEmpty());
+    }
+
+    @Test
+    public void whenProvideAgentCapabilities_ensureNotEmpty() throws IOException {
+        Map<String, Set<ProviderConfiguration.Capability>> agentCapabilities = module.provideAgentCapabilities();
+        assertThat(agentCapabilities).isNotEmpty();
     }
 }

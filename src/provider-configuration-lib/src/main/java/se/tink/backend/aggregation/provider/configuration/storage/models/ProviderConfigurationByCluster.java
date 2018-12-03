@@ -3,13 +3,10 @@ package se.tink.backend.aggregation.provider.configuration.storage.models;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 // Holds the final Provider Configuration data for the specific clusterId.
 // Upon instantiation the object determines which configuration to choose from
@@ -30,7 +27,8 @@ public class ProviderConfigurationByCluster {
             String clusterId,
             Set<String> enabledProviders,
             Map<String, ProviderConfiguration> providerConfigurationOverrides,
-            Map<String, ProviderConfiguration> allProviderConfiguration) {
+            Map<String, ProviderConfiguration> allProviderConfiguration,
+            Map<String, Set<ProviderConfiguration.Capability>> capabilitiesByAgentClass) {
         this.providerConfigurations = Maps.newHashMap();
         this.enabledMarkets = Sets.newHashSet();
         this.clusterId = clusterId;
@@ -46,6 +44,13 @@ public class ProviderConfigurationByCluster {
                                 providerName, clusterId);
                         return;
                     }
+
+                    // Get capabilities from agent instead of provider configuration
+                    providerConfiguration.setCapabilities(
+                            capabilitiesByAgentClass.getOrDefault(
+                                    providerConfiguration.getClassName(),
+                                    Collections.emptySet()));
+
                     providerConfigurations.put(providerName, providerConfiguration);
                     enabledMarkets.add(providerConfiguration.getMarket());
                 }

@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.provider.configuration.storage.module;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Functions;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.inject.AbstractModule;
@@ -13,6 +13,7 @@ import com.google.inject.name.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
+import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.AgentCapabilitiesMapModel;
 import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ClusterProviderListModel;
 import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ProviderConfigModel;
 import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ProviderSpecificationModel;
@@ -34,6 +35,7 @@ public class ProviderFileModule extends AbstractModule {
     private static final String GLOBAL_PROVIDER_FILE_PATH = "data/seeding";
     private static final String AVAILABLE_PROVIDERS_FILE_PATH = "data/seeding/providers/available-providers";
     private static final String PROVIDER_OVERRIDE_FILE_PATH = "data/seeding/providers/overriding-providers";
+    private static final String AGENT_CAPABILITIES_FILE_PATH = "data/seeding/providers/capabilities";
     private static final String LOCAL_DEVELOPMENT_KEY_STRING = "local-development";
 
     @Override
@@ -58,6 +60,13 @@ public class ProviderFileModule extends AbstractModule {
     @Named("providerOverrideOnCluster")
     public Map<String, Map<String, ProviderConfiguration>> provideClusterSpecificProviderConfiguration() throws IOException {
         return loadProviderOverrideOnClusterFromJson();
+    }
+
+    @Provides
+    @Singleton
+    @Named("capabilitiesByAgent")
+    public Map<String, Set<ProviderConfiguration.Capability>> provideAgentCapabilities() throws IOException {
+        return loadAgentCapabilities();
     }
 
     protected Map<String, ProviderConfiguration> loadProviderConfigurationFromJson() throws IOException {
@@ -229,29 +238,17 @@ public class ProviderFileModule extends AbstractModule {
         log.info("Seeded {} providers for cluster {} " , providers.size(), market);
     }
 
-    private void parseProviderOverrideOnCluster(File providerSpecificationFile, Map<String, Map<String, ProviderConfiguration>> providerOverrideOnCluster)
-            throws IOException {
-        ProviderSpecificationModel providerSpecificationModel = mapper.readValue(providerSpecificationFile, ProviderSpecificationModel.class);
+    private AgentCapabilitiesMapModel loadAgentCapabilities() throws IOException {
+        File directory = new File(AGENT_CAPABILITIES_FILE_PATH);
+        File[] agentCapabilities = directory.listFiles(
+                (dir, fileName) -> fileName.matches("agent-capabilities.json"));
 
-        String clusterId = providerSpecificationModel.getClusterId();
-        List<ProviderConfiguration> providerSpecificConfiguration = providerSpecificationModel.getProviderSpecificConfiguration();
+        Preconditions.checkNotNull(agentCapabilities,"Capabilities must be provided.");
 
-        Preconditions.checkNotNull(clusterId,
-                "no cluster id found for provider specification file {}",providerSpecificationFile.getName());
-
-        Map<String, ProviderConfiguration> providerConfigurationMap = Maps.newHashMap();
-
-        if (providerSpecificConfiguration == null || providerSpecificConfiguration.isEmpty()){
-            // assume these files can be empty when there is no provider specification for the cluster
-            log.warn("No providers specified for file {}" , providerSpecificationFile.getName());
-            return;
+        if (agentCapabilities.length != 1) {
+            log.warn("Found more than one file with agent capabilities. Only first file in array will be processed.");
         }
 
-        for (ProviderConfiguration providerConfiguration : providerSpecificConfiguration) {
-            providerConfigurationMap.put(providerConfiguration.getName(), providerConfiguration);
-        }
-
-        providerOverrideOnCluster.put(clusterId, providerConfigurationMap);
-        log.info("Seeded {} provider specification for cluster {} " , providerConfigurationMap.size(), clusterId);
+        return mapper.readValue(agentCapabilities[0], AgentCapabilitiesMapModel.class);
     }
 }
