@@ -86,7 +86,7 @@
   "nxgen.fr.banks.monabanq.MonaBanqAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "INVESTMENTS"],
   "nxgen.fr.banks.societegenerale.SocieteGeneraleAgent": ["CHECKING_ACCOUNTS"],
   "nxgen.fr.creditcards.amex.AmericanExpressFRAgent": ["CREDIT_CARDS"],
-  "nxgen.nl.banks.bunq.BunqAgent": [],
+  "nxgen.nl.banks.bunq.BunqAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS"],
   "nxgen.no.banks.danskebank.DanskeBankNOAgent": [],
   "nxgen.no.banks.dnb.DnbAgent": [],
   "nxgen.no.banks.handelsbanken.HandelsbankenNOAgent": [],
