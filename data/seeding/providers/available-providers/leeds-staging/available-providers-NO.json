@@ -99,6 +99,6 @@
     "no-vik-sparebank",
     "no-ya-bank",
     "no-test-password",
-    "test-multi-supplemental-no"
+    "no-test-multi-supplemental"
   ]
 }

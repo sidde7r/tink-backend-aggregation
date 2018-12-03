@@ -614,7 +614,7 @@
             "type": "TEST"
         },
         {
-            "name": "test-multi-supplemental-at",
+            "name": "at-test-multi-supplemental",
             "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Test Multi-Supplemental",

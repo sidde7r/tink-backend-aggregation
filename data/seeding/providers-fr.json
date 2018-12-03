@@ -2442,7 +2442,7 @@
       "type": "TEST"
   },
   {
-      "name": "test-multi-supplemental-fr",
+      "name": "fr-test-multi-supplemental",
       "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Test Multi-Supplemental",

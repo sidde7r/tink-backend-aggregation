@@ -13,6 +13,6 @@
     "be-hellobank-cardreader",
     "be-fortis-cardreader",
     "be-test-password",
-    "test-multi-supplemental-be"
+    "be-test-multi-supplemental"
   ]
 }

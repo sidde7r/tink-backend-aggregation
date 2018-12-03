@@ -3,6 +3,6 @@
   "providers" : [
     "ca-demo",
     "ee-test-password",
-    "test-multi-supplemental-ee"
+    "ee-test-multi-supplemental"
   ]
 }

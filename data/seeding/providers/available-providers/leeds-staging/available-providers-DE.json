@@ -3,6 +3,6 @@
   "providers" : [
     "de-n26-password",
     "de-test-password",
-    "test-multi-supplemental-de"
+    "de-test-multi-supplemental"
   ]
 }

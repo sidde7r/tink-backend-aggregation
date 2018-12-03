@@ -100,7 +100,7 @@
       "type": "TEST"
   },
   {
-      "name": "test-multi-supplemental-ro",
+      "name": "ro-test-multi-supplemental",
       "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Test Multi-Supplemental",
