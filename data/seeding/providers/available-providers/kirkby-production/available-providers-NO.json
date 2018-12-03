@@ -101,7 +101,7 @@
     "no-ya-bank",
     "nordea-no-bankid",
     "nordea-no-light-login",
-    "test-password-no",
+    "no-test-password",
     "test-multi-supplemental-no"
   ]
 }

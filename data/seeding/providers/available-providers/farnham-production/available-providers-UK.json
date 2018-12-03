@@ -3,7 +3,7 @@
   "providers" : [
     "uk-americanexpress-password",
     "uk-revolut-password",
-    "test-password-uk",
+    "uk-test-password",
     "test-multi-supplemental-uk"
   ]
 }

@@ -65,7 +65,7 @@
     "volvofinans-bankid",
     "test-bankid-successful-se",
     "test-bankid-failing-se",
-    "test-password-se",
+    "se-test-password",
     "test-multi-supplemental-se"
   ]
 }

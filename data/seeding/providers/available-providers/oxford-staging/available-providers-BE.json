@@ -12,7 +12,7 @@
     "be-revolut-password",
     "be-hellobank-cardreader",
     "be-fortis-cardreader",
-    "test-password-be",
+    "be-test-password",
     "test-multi-supplemental-be"
   ]
 }

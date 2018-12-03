@@ -10,7 +10,7 @@
     "ro-raiffeisen-oauth2",
     "ro-n26-password",
     "ro-revolut-password",
-    "test-password-ro",
+    "ro-test-password",
     "test-multi-supplemental-ro"
   ]
 }

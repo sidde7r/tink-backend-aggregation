@@ -1864,7 +1864,7 @@
             "type": "TEST"
         },
         {
-            "name": "test-password-se",
+            "name": "se-test-password",
             "className": "nxgen.demo.banks.password.PasswordDemoAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Test Password",

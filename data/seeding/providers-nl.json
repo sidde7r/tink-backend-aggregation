@@ -115,7 +115,7 @@
       "refreshFrequencyFactor": 1
     },
     {
-      "name": "test-password-nl",
+      "name": "nl-test-password",
       "className": "nxgen.demo.banks.password.PasswordDemoAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Test Password",

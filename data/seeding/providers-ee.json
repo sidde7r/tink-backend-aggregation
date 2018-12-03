@@ -31,7 +31,7 @@
       ]
     },
     {
-      "name": "test-password-ee",
+      "name": "ee-test-password",
       "className": "nxgen.demo.banks.password.PasswordDemoAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Test Password",

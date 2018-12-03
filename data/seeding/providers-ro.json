@@ -75,7 +75,7 @@
       "type": "BANK"
     },
     {
-      "name": "test-password-ro",
+      "name": "ro-test-password",
       "className": "nxgen.demo.banks.password.PasswordDemoAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Test Password",

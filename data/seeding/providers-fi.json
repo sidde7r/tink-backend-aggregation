@@ -343,7 +343,7 @@
       "type": "BANK"
     },
     {
-      "name": "test-password-fi",
+      "name": "fi-test-password",
       "className": "nxgen.demo.banks.password.PasswordDemoAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Test Password",

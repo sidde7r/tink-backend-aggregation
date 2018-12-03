@@ -3533,7 +3533,7 @@
       ]
     },
     {
-      "name": "test-password-no",
+      "name": "no-test-password",
       "className": "nxgen.demo.banks.password.PasswordDemoAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Test Password",

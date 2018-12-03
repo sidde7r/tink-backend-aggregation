@@ -418,7 +418,7 @@
       ]
     },
     {
-      "name": "test-password-es",
+      "name": "es-test-password",
       "className": "nxgen.demo.banks.password.PasswordDemoAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Test Password",
