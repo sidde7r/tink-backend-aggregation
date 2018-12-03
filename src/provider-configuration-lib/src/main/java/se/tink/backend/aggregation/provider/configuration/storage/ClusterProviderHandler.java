@@ -20,7 +20,8 @@ public class ClusterProviderHandler {
     ClusterProviderHandler(
             @Named("providerConfiguration") Map<String, ProviderConfiguration> providerConfigurationByName,
             @Named("enabledProvidersOnCluster") Map<String, Set<String>> enabledProvidersOnCluster,
-            @Named("providerOverrideOnCluster") Map<String, Map<String, ProviderConfiguration>> providerOverrideOnCluster) {
+            @Named("providerOverrideOnCluster") Map<String, Map<String, ProviderConfiguration>> providerOverrideOnCluster,
+            @Named("capabilitiesByAgent") Map<String, Set<ProviderConfiguration.Capability>> capabilitiesByAgentClass) {
         this.providerConfigurationByClusterMap = Maps.newHashMap();
         for (String clusterId : enabledProvidersOnCluster.keySet()) {
             providerConfigurationByClusterMap.put(clusterId,
@@ -28,7 +29,8 @@ public class ClusterProviderHandler {
                             clusterId,
                             enabledProvidersOnCluster.get(clusterId),
                             providerOverrideOnCluster.getOrDefault(clusterId, Collections.emptyMap()),
-                            providerConfigurationByName));
+                            providerConfigurationByName,
+                            capabilitiesByAgentClass));
         }
     }
 
