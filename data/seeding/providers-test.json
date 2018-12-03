@@ -93,6 +93,13 @@
             "credentialsType": "PASSWORD",
             "currency": "TEST",
             "displayName": "Test Multi-Supplemental",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                }
+            ],
             "market": "TEST",
             "multiFactor": true,
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
