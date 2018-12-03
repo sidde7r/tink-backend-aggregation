@@ -71,8 +71,7 @@ public class ProviderFileModule extends AbstractModule {
 
     protected Map<String, ProviderConfiguration> loadProviderConfigurationFromJson() throws IOException {
         File directory = new File(GLOBAL_PROVIDER_FILE_PATH);
-        File[] providerFiles = directory.listFiles((dir, fileName) -> fileName.matches("providers-[a-z]{2}.json")
-        || fileName.equals("providers-test.json"));
+        File[] providerFiles = directory.listFiles((dir, fileName) -> fileName.matches("providers-[a-z]{2}.json"));
 
         if (providerFiles == null) {
             throw new IOException("no provider file found");
@@ -99,8 +98,7 @@ public class ProviderFileModule extends AbstractModule {
 
         for(File availableProviderDirectory : availableProviderDirectories){
             File[] availableProviderFiles = availableProviderDirectory.listFiles(
-                    (dir, fileName) -> fileName.matches("available-providers-[A-Z]{2}.json")
-            || fileName.equals("available-providers-TEST.json"));
+                    (dir, fileName) -> fileName.matches("available-providers-[A-Z]{2}.json"));
             Preconditions.checkNotNull(availableProviderFiles,
                     "no available file found for loading available providers on cluster in path {}",
                     availableProviderDirectory.getName());
@@ -122,8 +120,7 @@ public class ProviderFileModule extends AbstractModule {
 
         for (File overridingProviderDirectory : overridingProviderDirectories) {
             File[] availableProviderFiles = overridingProviderDirectory.listFiles(
-                    (dir, fileName) -> fileName.matches("provider-override-[A-Z]{2}.json")
-            || fileName.equals("provider-override-TEST.json"));
+                    (dir, fileName) -> fileName.matches("provider-override-[A-Z]{2}.json"));
             Preconditions.checkNotNull(availableProviderFiles,
                     "no available file found for loading overriding providers on cluster in path {}",
                     overridingProviderDirectory.getName());
