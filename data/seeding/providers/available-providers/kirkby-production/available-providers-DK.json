@@ -115,6 +115,8 @@
     "dk-sønderhahørstedsparekasse-password",
     "dk-totalbanken-password",
     "dk-vestjysk-password",
-    "dk-vorbasse-hejnsvig-sparekasse"
+    "dk-vorbasse-hejnsvig-sparekasse",
+    "test-password-dk",
+    "test-multi-supplemental-dk"
   ]
 }

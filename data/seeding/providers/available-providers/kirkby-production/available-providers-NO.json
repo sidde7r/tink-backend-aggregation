@@ -100,6 +100,8 @@
     "no-vik-sparebank",
     "no-ya-bank",
     "nordea-no-bankid",
-    "nordea-no-light-login"
+    "nordea-no-light-login",
+    "test-password-no",
+    "test-multi-supplemental-no"
   ]
 }

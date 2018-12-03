@@ -12,6 +12,8 @@
     "fi-poppankki-codecard",
     "fi-saastopankki-codecard",
     "fi-spankki-codecard",
-    "op"
+    "op",
+    "test-password-fi",
+    "test-multi-supplemental-fi"
   ]
 }
