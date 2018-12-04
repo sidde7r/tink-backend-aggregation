@@ -179,7 +179,6 @@ java_library(
         "//src/libraries/account_identifier:account-identifier",
         "//src/libraries/generic_application:generic-application",
         "//src/libraries/demo_credentials:demo-credentials",
-        "//src/libraries/cassandra-interfaces",
         "//src/libraries/net",
         "//src/libraries/i18n",
         "//src/libraries/abnamro:abn_amro",
