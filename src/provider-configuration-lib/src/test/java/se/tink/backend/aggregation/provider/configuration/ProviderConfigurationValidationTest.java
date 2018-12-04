@@ -135,32 +135,28 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
         assertThat(providersWithMarketNullByClusterId.entrySet()).isEmpty();
     }
 
-    public void verifyAllProviderCapabilitiesAreAvailableInAgentCapabilities() {
+    @Test
+    public void verifyAllAgentCapabilitiesAreAvailableInProviderCapabilities() {
+        Set<String> providerCapabilityClassNames = providerConfigurationByName.values().stream()
+                .filter(provider -> !provider.getName().toLowerCase().contains("abstract") ||
+                        provider.getName().toLowerCase().equals("nl-abnamro-ics-abstract"))
+                .map(ProviderConfiguration::getClassName)
+                .collect(Collectors.toSet());
+
         Set<String> agentCapabilityClassNames = providerAgentCapabilities.keySet();
-
-        for (String providerName : providerConfigurationByName.keySet()) {
-
-            ProviderConfiguration providerConfiguration = providerConfigurationByName.get(providerName);
-            if (Objects.isNull(providerConfiguration) || Objects.isNull(providerConfiguration.getClassName())) {
-                continue;
-            }
-
-            agentCapabilityClassNames.remove(providerConfiguration.getClassName());
-        }
-
-        assertThat(agentCapabilityClassNames.isEmpty()).isTrue();
+        agentCapabilityClassNames.removeAll(providerCapabilityClassNames);
+        assertThat(agentCapabilityClassNames).isEmpty();
     }
 
     @Test
-    public void verifyAllAgentCapabilitiesAreAvailableInProviderCapabilities() {
-        Set<String> providerCapabilityClassNames = providerConfigurationByName.keySet().stream()
-                .filter(provider -> Objects.nonNull(provider)
-                        && Objects.nonNull(providerConfigurationByName.get(provider).getClassName()))
-                .map(provider -> providerConfigurationByName.get(provider).getClassName())
+    public void verifyAllProviderCapabilitiesAreAvailableInAgentCapabilities() {
+        Set<String> providerCapabilityClassNames = providerConfigurationByName.values().stream()
+                .filter(provider -> !provider.getName().toLowerCase().contains("abstract"))
+                .map(ProviderConfiguration::getClassName)
                 .collect(Collectors.toSet());
-        Set<String> agentCapabilityClassNames = providerAgentCapabilities.keySet();
 
-        providerCapabilityClassNames.removeAll(agentCapabilityClassNames);;
-        assertThat(providerCapabilityClassNames.isEmpty()).isTrue();
+        Set<String> agentCapabilityClassNames = providerAgentCapabilities.keySet();
+        providerCapabilityClassNames.removeAll(agentCapabilityClassNames);
+        assertThat(providerCapabilityClassNames).isEmpty();
     }
 }
