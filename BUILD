@@ -86,7 +86,6 @@ java_library(
         "//src/libraries/demo_credentials:demo-credentials",
         "//src/libraries/i18n",
         "//src/libraries/log",
-        "//src/libraries/math",
         "//src/libraries/phone_number_utils:phone_number_utils",
         "//src/api-annotations",
         "//src/api-headers",
