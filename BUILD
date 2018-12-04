@@ -89,7 +89,6 @@ java_library(
         "//src/libraries/log",
         "//src/libraries/math",
         "//src/libraries/phone_number_utils:phone_number_utils",
-        "//src/libraries/oauth",
         "//src/api-annotations",
         "//src/api-headers",
 
