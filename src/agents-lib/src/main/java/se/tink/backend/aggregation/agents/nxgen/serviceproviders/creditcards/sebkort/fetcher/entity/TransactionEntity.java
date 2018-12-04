@@ -9,14 +9,26 @@ import se.tink.backend.core.Amount;
 @JsonObject
 public class TransactionEntity {
     private long id;
+
+    @JsonFormat(
+            shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd'T'HH:mm:ss:SSSZ",
+            locale = "sv_SE")
     private Date date;
+
     private String countryCode;
     private double amount;
     private String currencyCode;
     private double billingAmount;
     private String billingCurrencyCode;
     private String type;
+
+    @JsonFormat(
+            shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd'T'HH:mm:ss:SSSZ",
+            locale = "sv_SE")
     private Date postingDate;
+
     private boolean cardBrandTransaction;
     private String specification;
     private boolean manageDocument;
@@ -38,10 +50,6 @@ public class TransactionEntity {
         return id;
     }
 
-    @JsonFormat(
-            shape = JsonFormat.Shape.STRING,
-            pattern = "yyyy-MM-dd'T'HH:mm:ss:SSSZ",
-            locale = "sv_SE")
     public Date getDate() {
         return date;
     }
@@ -70,10 +78,6 @@ public class TransactionEntity {
         return type;
     }
 
-    @JsonFormat(
-            shape = JsonFormat.Shape.STRING,
-            pattern = "yyyy-MM-dd'T'HH:mm:ss:SSSZ",
-            locale = "sv_SE")
     public Date getPostingDate() {
         return postingDate;
     }
