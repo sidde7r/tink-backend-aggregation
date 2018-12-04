@@ -5,7 +5,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoApiClient;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoConstants;
@@ -13,12 +12,13 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.tra
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactional.entity.TransactionEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 public class MonzoTransactionalAccountFetcher
-        implements AccountFetcher<TransactionalAccount>, TransactionPaginator<TransactionalAccount>, PaginatorResponse {
+        implements AccountFetcher<TransactionalAccount>, TransactionPaginator<TransactionalAccount> {
 
     private static final int NO_HIT_LIMIT = 12;
     /**
@@ -28,7 +28,6 @@ public class MonzoTransactionalAccountFetcher
     private static final long DAYS_PER_PAGE = 92L;
 
     private final MonzoApiClient apiClient;
-    private List<TransactionEntity> pageTransactions;
     private Instant pageIdentifier = Instant.now();
     private int noHitCounter = 0;
 
@@ -56,7 +55,8 @@ public class MonzoTransactionalAccountFetcher
 
         String lastKnownTransactionInPage = null;
 
-        pageTransactions = new ArrayList<>();
+        List<Transaction> allTransactions = new ArrayList<>();
+
         List<TransactionEntity> fetchTransactions;
 
         do {
@@ -70,25 +70,19 @@ public class MonzoTransactionalAccountFetcher
                     .max(Comparator.comparing(TransactionEntity::getCreated, Instant::compareTo))
                     .map(TransactionEntity::getId).orElse(null);
 
-            pageTransactions.addAll(fetchTransactions);
+            allTransactions.addAll(
+                    fetchTransactions
+                            .stream()
+                            .map(TransactionEntity::toTinkTransaction)
+                            .collect(Collectors.toList())
+            );
 
         } while (fetchTransactions.size() == FETCH_LIMIT);
 
-        if (pageTransactions.size() == 0) {
+        if (allTransactions.size() == 0) {
             noHitCounter++;
         }
 
-        return this;
+        return PaginatorResponseImpl.create(allTransactions, noHitCounter < NO_HIT_LIMIT);
     }
-
-    public List<Transaction> getTinkTransactions() {
-        return pageTransactions.stream()
-                .map(TransactionEntity::toTinkTransaction)
-                .collect(Collectors.toList());
-    }
-
-    public Optional<Boolean> canFetchMore() {
-        return Optional.of(noHitCounter < NO_HIT_LIMIT);
-    }
-
 }
