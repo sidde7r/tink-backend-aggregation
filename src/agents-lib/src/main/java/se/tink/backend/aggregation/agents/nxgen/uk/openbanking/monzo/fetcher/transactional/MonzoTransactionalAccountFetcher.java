@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactional;
 
+import com.google.common.base.Preconditions;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoApiClient;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoConstants;
@@ -28,6 +30,8 @@ public class MonzoTransactionalAccountFetcher
     private static final long DAYS_PER_PAGE = 92L;
 
     private final MonzoApiClient apiClient;
+
+    private TransactionalAccount currentAccount;
     private Instant pageIdentifier = Instant.now();
     private int noHitCounter = 0;
 
@@ -46,8 +50,22 @@ public class MonzoTransactionalAccountFetcher
                 .collect(Collectors.toList());
     }
 
+    private void resetStateIfAccountChanged(TransactionalAccount account) {
+        Preconditions.checkNotNull(account);
+
+        if (Objects.equals(currentAccount, account)) {
+            return;
+        }
+
+        currentAccount = account;
+        pageIdentifier = Instant.now();
+        noHitCounter = 0;
+    }
+
     @Override
     public PaginatorResponse fetchTransactionsFor(TransactionalAccount account) {
+
+        resetStateIfAccountChanged(account);
 
         Instant to = pageIdentifier;
         Instant from = to.minus(DAYS_PER_PAGE, ChronoUnit.DAYS);
