@@ -83,7 +83,7 @@ public class SebKortAuthenticator implements BankIdAuthenticator<BankIdInitRespo
                 LoginResponse loginResponse = apiClient.login(loginRequest);
 
                 AuthRequest authRequest =
-                        new AuthRequest(loginResponse.getUid(), loginResponse.getScrt(), config);
+                        new AuthRequest(loginResponse.getUid(), loginResponse.getSecret(), config);
                 AuthResponse authResponse = apiClient.auth(authRequest);
 
                 if (authResponse.isSuccess()) {

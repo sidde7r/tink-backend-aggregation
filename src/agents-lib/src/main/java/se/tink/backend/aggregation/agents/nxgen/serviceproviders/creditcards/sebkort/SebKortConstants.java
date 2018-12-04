@@ -23,6 +23,7 @@ public class SebKortConstants {
                 new URL(SEBKORT_HOST + "/api/common/reservations/v1/");
         public static final URL SEBKORT_TRANSACTIONS =
                 new URL(SEBKORT_HOST + "/api/common/transactions/v1/");
+
         private static final String BANKID_HOST = "https://id.signicat.com";
         public static final URL BANK_ID_INIT = new URL(BANKID_HOST + "/std/method/seb");
     }
@@ -62,7 +63,7 @@ public class SebKortConstants {
         public static final String UID = "UID";
         public static final String TARGET = "target";
         public static final String TYPE = "TYPE";
-        public static final String SCRT = "scrt";
+        public static final String SECRET = "scrt";
         public static final String SEB_AUTH_MECHANISM = "SEB_Auth_Mechanism";
     }
 

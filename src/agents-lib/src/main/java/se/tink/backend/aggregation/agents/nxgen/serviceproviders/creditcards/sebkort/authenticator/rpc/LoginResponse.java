@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LoginResponse {
     private String action;
     private String target;
-    private String scrt;
     private String uid;
     private String type;
 
@@ -17,8 +16,11 @@ public class LoginResponse {
     @JsonProperty("seb_Referer")
     private String sebReferer;
 
-    public String getScrt() {
-        return scrt;
+    @JsonProperty("scrt")
+    private String secret;
+
+    public String getSecret() {
+        return secret;
     }
 
     public String getUid() {
