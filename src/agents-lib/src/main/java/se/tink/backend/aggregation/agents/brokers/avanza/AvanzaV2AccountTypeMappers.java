@@ -11,6 +11,8 @@ import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapperExecutor;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypePredicateMapper;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.common.utils.Pair;
+import static se.tink.backend.aggregation.agents.brokers.avanza.AvanzaV2Constants.AvanzaAccountTypes;
+import static se.tink.backend.aggregation.agents.brokers.avanza.AvanzaV2Constants.AvanzaFallbackAccountTypes;
 
 public final class AvanzaV2AccountTypeMappers {
     private static final Logger LOGGER = LoggerFactory.getLogger(AvanzaV2AccountTypeMappers.class);
@@ -44,11 +46,18 @@ public final class AvanzaV2AccountTypeMappers {
                     AccountTypeMapper.builder()
                             .put(
                                     AccountTypes.INVESTMENT,
-                                    "AktieFondkonto",
-                                    "Investeringssparkonto",
-                                    "Kapitalforsakring")
-                            .put(AccountTypes.SAVINGS, "Sparkonto", "SparkontoPlus")
-                            .put(AccountTypes.PENSION, "Tjanstepension")
+                                    AvanzaAccountTypes.AKTIE_FONDKONTO,
+                                    AvanzaAccountTypes.INVESTERINGSSPARKONTO,
+                                    AvanzaAccountTypes.KAPITALFORSAKRING)
+                            .put(
+                                    AccountTypes.SAVINGS,
+                                    AvanzaAccountTypes.SPARKONTO,
+                                    AvanzaAccountTypes.SPARKONTOPLUS)
+                            .put(
+                                    AccountTypes.PENSION,
+                                    AvanzaAccountTypes.TJANSTEPENSION,
+                                    AvanzaAccountTypes.PENSIONSFORSAKRING,
+                                    AvanzaAccountTypes.IPS)
                             .build();
         }
         return accountTypeMapper;
@@ -59,9 +68,15 @@ public final class AvanzaV2AccountTypeMappers {
             accountTypeFallbackMapper =
                     AccountTypePredicateMapper.<String>builder()
                             .setExecutor(new AvanzaV2AccountTypeMapperExecutor())
-                            .fallbackValue(AccountTypes.PENSION, codeMatches("pension"))
-                            .fallbackValue(AccountTypes.SAVINGS, codeMatches("sparkonto"))
-                            .fallbackValue(AccountTypes.LOAN, codeMatches("kredit"))
+                            .fallbackValue(
+                                    AccountTypes.PENSION,
+                                    codeMatches(AvanzaFallbackAccountTypes.PENSION))
+                            .fallbackValue(
+                                    AccountTypes.SAVINGS,
+                                    codeMatches(AvanzaFallbackAccountTypes.SPARKONTO))
+                            .fallbackValue(
+                                    AccountTypes.LOAN,
+                                    codeMatches(AvanzaFallbackAccountTypes.KREDIT))
                             .build();
         }
         return accountTypeFallbackMapper;

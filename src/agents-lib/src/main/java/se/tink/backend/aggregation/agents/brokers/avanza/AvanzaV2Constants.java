@@ -4,6 +4,22 @@ import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
 public class AvanzaV2Constants {
     public static final AvanzaV2AccountTypeMappers MAPPERS = new AvanzaV2AccountTypeMappers();
+    public static class AvanzaAccountTypes {
+        public static final String AKTIE_FONDKONTO = "AktieFondkonto";
+        public static final String INVESTERINGSSPARKONTO = "Investeringssparkonto";
+        public static final String KAPITALFORSAKRING = "Kapitalforsakring";
+        public static final String SPARKONTO = "Sparkonto";
+        public static final String SPARKONTOPLUS = "SparkontoPlus";
+        public static final String TJANSTEPENSION = "Tjanstepension";
+        public static final String PENSIONSFORSAKRING = "Pensionsforsakring";
+        public static final String IPS = "IPS";
+    }
+
+    public static class AvanzaFallbackAccountTypes {
+        public static final String PENSION = "pension";
+        public static final String SPARKONTO = "sparkonto";
+        public static final String KREDIT = "kredit";
+    }
 
     public static final String BASE_URL = "https://www.avanza.se";
     public static final String URL_MARKET_INFO = BASE_URL + "/_mobile/market/%s/%s";
