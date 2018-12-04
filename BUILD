@@ -186,7 +186,6 @@ java_library(
         "//src/libraries/net",
         "//src/libraries/i18n",
         "//src/libraries/abnamro:abn_amro",
-        "//src/libraries/identity:identity",
         "//src/libraries/strings:strings",
         "//src/api-annotations",
         "//src/libraries/cryptography:cryptography",
