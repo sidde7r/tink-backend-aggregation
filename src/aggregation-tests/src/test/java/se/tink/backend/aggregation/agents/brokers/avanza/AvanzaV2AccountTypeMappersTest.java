@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.brokers.avanza;
 import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.AvanzaV2AccountTypeMappers;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 
 public final class AvanzaV2AccountTypeMappersTest {
