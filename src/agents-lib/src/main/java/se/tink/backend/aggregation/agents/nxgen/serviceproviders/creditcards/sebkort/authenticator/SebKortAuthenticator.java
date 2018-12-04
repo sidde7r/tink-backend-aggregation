@@ -42,26 +42,11 @@ public class SebKortAuthenticator implements BankIdAuthenticator<BankIdInitRespo
     }
 
     @Override
-    public BankIdInitResponse init(String ssn)
-            throws BankIdException, BankServiceException, AuthorizationException {
-        try {
+    public BankIdInitResponse init(String ssn) {
             BankIdInitRequest request = new BankIdInitRequest(ssn, config.getApiKey());
             BankIdInitResponse response = apiClient.initBankId(request);
 
-            if (response.isError()) {
-                LOGGER.error(
-                        "BankID Signicat error: {} ({})",
-                        response.getError().getMessage(),
-                        response.getError().getCode());
-                throw BankIdError.UNKNOWN.exception();
-            }
             return response;
-        } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
-                throw BankIdError.ALREADY_IN_PROGRESS.exception();
-            }
-            throw e;
-        }
     }
 
     @Override
