@@ -145,8 +145,9 @@ public class TransactionEntity {
     public CreditCardTransaction toTinkTransaction() {
         Amount amount = new Amount(this.getBillingCurrencyCode(), this.getBillingAmount());
         if ("PURCHASE".equalsIgnoreCase(getType())) {
-            amount = amount.negate();
+            amount = amount.stripSign();
         }
+
         return CreditCardTransaction.builder()
                 .setDate(this.getDate())
                 .setDescription(this.getSpecification())
