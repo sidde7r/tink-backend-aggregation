@@ -311,7 +311,6 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
     private SessionResponseBody authenticateWithBankId()
             throws BankIdException, LoginException, AuthorizationException {
         String requestId = initBankID(String.format(INIT_BANKID_LOGIN_URL, credentials.getField(Field.Key.USERNAME)));
-        openBankID();
 
         collectBankID(String.format(AUTHENTICATE_COLLECT_URL, requestId));
 
@@ -504,7 +503,6 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
             AuthorizationException {
         String requestId = initBankID(String.format(INIT_EINVOICE_SIGN_URL, invoiceId));
 
-        openBankID();
         collectBankID(String.format(SIGN_TRANSFER_COLLECT_URL, requestId));
 
         endBankIDAuthentication(requestId, invoiceId);
@@ -1317,7 +1315,12 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
             InitBankIdResponse bankIdResponse = createClientRequest(url)
                     .post(InitBankIdResponse.class);
 
-            return extractRequestIdFrom(bankIdResponse);
+            String requestId = extractRequestIdFrom(bankIdResponse);
+            String autostartToken = bankIdResponse.getBody().getAutostartToken();
+
+            context.openBankId(autostartToken, false);
+
+            return requestId;
         } catch (UniformInterfaceException e) {
             ClientResponse response = e.getResponse();
 
