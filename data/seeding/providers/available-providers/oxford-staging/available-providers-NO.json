@@ -1,0 +1,7 @@
+{
+  "clusterid" : "oxford-staging",
+  "providers" : [
+    "no-test-password", 
+    "no-test-multi-supplemental"
+  ]
+}

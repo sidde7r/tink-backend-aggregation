@@ -18,6 +18,8 @@
     "de-sparkasse-steinbach-password",
     "de-volksraiffeisen-abtsgmünd-password",
     "de-volksraiffeisen-augsburg-bay-password",
-    "de-winterlingerbank-password"
+    "de-winterlingerbank-password", 
+    "de-test-password", 
+    "de-test-multi-supplemental"
   ]
 }

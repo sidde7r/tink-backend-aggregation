@@ -18,6 +18,8 @@
     "at-n26-password",
     "at-revolut-password",
     "at-americanexpress-password",
-    "at-raiffeisen-bank"
+    "at-raiffeisen-bank",
+    "at-test-password", 
+    "at-test-multi-supplemental"
   ]
 }
