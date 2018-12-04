@@ -10,20 +10,32 @@ public final class AvanzaV2AccountTypeMappersTest {
     public void testInferExactAccountType() {
         AvanzaV2AccountTypeMappers mappers = new AvanzaV2AccountTypeMappers();
 
-        // No warning -- uses product code account type mapper
+        // No warning -- uses exact mapper
         Assert.assertEquals(
                 Optional.of(AccountTypes.INVESTMENT),
-                mappers.inferAccountType("aktie- & fondkonto"));
+                mappers.inferAccountType("AktieFondkonto"));
         Assert.assertEquals(
                 Optional.of(AccountTypes.INVESTMENT),
-                mappers.inferAccountType("investeringssparkonto"));
+                mappers.inferAccountType("Investeringssparkonto"));
+        Assert.assertEquals(
+                Optional.of(AccountTypes.INVESTMENT),
+                mappers.inferAccountType("Kapitalforsakring"));
+        Assert.assertEquals(
+                Optional.of(AccountTypes.SAVINGS),
+                mappers.inferAccountType("Sparkonto"));
+        Assert.assertEquals(
+                Optional.of(AccountTypes.SAVINGS),
+                mappers.inferAccountType("SparkontoPlus"));
+        Assert.assertEquals(
+                Optional.of(AccountTypes.PENSION),
+                mappers.inferAccountType("Tjanstepension"));
     }
 
     @Test
     public void testInferFallbackAccountType() {
         AvanzaV2AccountTypeMappers mappers = new AvanzaV2AccountTypeMappers();
 
-        // Warns about using predicate fallback
+        // Warns about using fallback mapper
         Assert.assertEquals(Optional.of(AccountTypes.PENSION), mappers.inferAccountType("pension"));
         Assert.assertEquals(
                 Optional.of(AccountTypes.SAVINGS), mappers.inferAccountType("sparkonto"));
