@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.workers.encryption;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.util.Optional;
-
+import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -16,6 +16,9 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CredentialsCrypto {
     private static final AggregationLogger logger = new AggregationLogger(CredentialsCrypto.class);
+
+    private static final int CACHE_EXPIRE_TIME = Math.toIntExact(TimeUnit.MINUTES.toSeconds(20));
+
 
     private final CacheClient cacheClient;
     private final ControllerWrapper controllerWrapper;
@@ -101,10 +104,17 @@ public class CredentialsCrypto {
         originalCredentials.setSensitiveDataSerialized(serializedEncryptedCredentials);
 
         // Put the encrypted credentials into a temporary cache that is used by the DecryptCredentialsWorkerCommand.
+        // It is possible that several refresh requests for the same credential to exists on the queue at the same time,
+        // if the credentials are updated (such as usage of refresh token) the next request will have stale data.
+        // Caching the credentials with a high enough CACHE_EXPIRE_TIME allows subsequent request to exchange its stale
+        // data for the updated data in the cache.
+        // This is not a permanent fix and should be resolved by overhauling the credential read/write logic such that
+        // a request will never have stale data in the first place.
+        // This cache is read in class `CredentialsCrypto`
         cacheClient.set(
                 CacheScope.ENCRYPTED_CREDENTIALS_BY_CREDENTIALSID,
                 request.getCredentials().getId(),
-                60 * 10,
+                CACHE_EXPIRE_TIME,
                 serializedEncryptedCredentials);
 
         if (doUpdateCredential) {
