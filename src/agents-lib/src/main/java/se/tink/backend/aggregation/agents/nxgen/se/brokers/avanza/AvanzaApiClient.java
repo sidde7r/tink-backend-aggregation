@@ -1,0 +1,189 @@
+package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza;
+
+import javax.ws.rs.core.MediaType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.BankIdCollectResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.BankIdInitRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.BankIdInitResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.rpc.BondMarketInfoResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.rpc.CertificateMarketInfoResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.rpc.EquityLinkedBondMarketInfoResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.rpc.ExchangeTradedFundInfoResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.rpc.FundMarketInfoResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.rpc.FutureForwardMarketInfoResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.rpc.InvestmentAccountPortfolioResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.rpc.InvestmentTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.rpc.StockMarketInfoResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.rpc.WarrantMarketInfoResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.rpc.AccountsOverviewResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import static se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.Urls;
+
+public class AvanzaApiClient {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AvanzaApiClient.class);
+
+    private final TinkHttpClient client;
+    private final SessionStorage sessionStorage;
+
+    public AvanzaApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
+        this.client = client;
+        this.sessionStorage = sessionStorage;
+    }
+
+    private RequestBuilder createRequest(String url) {
+        return client.request(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON);
+    }
+
+    private RequestBuilder createRequestInSession(
+            String url, String authSession, String securityToken) {
+        return createRequest(url)
+                .header(AvanzaConstants.HeaderKey.AUTH_SESSION, authSession)
+                .header(AvanzaConstants.HeaderKey.SECURITY_TOKEN, securityToken);
+    }
+
+    private RequestBuilder createRequestInSession(String url, String authSession) {
+        final String securityToken = sessionStorage.get(authSession);
+
+        return createRequestInSession(url, authSession, securityToken);
+    }
+
+    public BankIdInitResponse initBankId(BankIdInitRequest request) {
+        return createRequest(Urls.BANK_ID_INIT).post(BankIdInitResponse.class, request);
+    }
+
+    public BankIdCollectResponse collectBankId(String transactionId) {
+        final String collectUrl = String.format(Urls.BANK_ID_COLLECT, transactionId);
+
+        return createRequest(collectUrl).get(BankIdCollectResponse.class);
+    }
+
+    public HttpResponse completeBankId(String transactionId, String customerId) {
+        final String completeUrl = String.format(Urls.BANK_ID_COMPLETE, transactionId, customerId);
+
+        return createRequest(completeUrl).get(HttpResponse.class);
+    }
+
+    public AccountsOverviewResponse fetchAccounts(String authSession) {
+        return createRequestInSession(Urls.ACCOUNTS_OVERVIEW, authSession)
+                .get(AccountsOverviewResponse.class);
+    }
+
+    public AccountDetailsResponse fetchAccountDetails(String accountId, String authSession) {
+        final String detailsUrl = String.format(Urls.ACCOUNT_DETAILS, accountId);
+
+        return createRequestInSession(detailsUrl, authSession).get(AccountDetailsResponse.class);
+    }
+
+    public TransactionsResponse fetchTransactions(
+            String accountId, String fromDate, String toDate, String authSession) {
+        final String transactionsUrl =
+                String.format(Urls.TRANSACTIONS_LIST, accountId, fromDate, toDate);
+
+        return createRequestInSession(transactionsUrl, authSession).get(TransactionsResponse.class);
+    }
+
+    public InvestmentTransactionsResponse fetchInvestmentTransactions(
+            String accountId, String toDate, String authSession) {
+        final String investmentTransactionsUrl =
+                String.format(
+                        Urls.INVESTMENT_TRANSACTIONS_LIST,
+                        accountId,
+                        AvanzaConstants.QueryValue.FROM_DATE_FOR_INVESTMENT_TRANSACTIONS,
+                        toDate);
+
+        return createRequestInSession(investmentTransactionsUrl, authSession)
+                .get(InvestmentTransactionsResponse.class);
+    }
+
+    public InvestmentAccountPortfolioResponse fetchInvestmentAccountPortfolio(
+            String accountId, String authSession) {
+        final String positionsUrl = String.format(Urls.INVESTMENT_PORTFOLIO_POSITIONS, accountId);
+
+        return createRequestInSession(positionsUrl, authSession)
+                .get(InvestmentAccountPortfolioResponse.class);
+    }
+
+    public <T> T fetchMarketInfoResponse(
+            String instrumentType, String orderbookId, String authSession, Class<T> responseType) {
+        return createRequestInSession(
+                        String.format(Urls.MARKET_INFO, instrumentType, orderbookId), authSession)
+                .get(responseType);
+    }
+
+    public String getInstrumentMarket(
+            String instrumentType, String orderbookId, String authSession) {
+        if (instrumentType == null) {
+            return null;
+        }
+
+        String type = instrumentType.toLowerCase();
+        switch (type) {
+            case "auto_portfolio":
+            case "fund":
+                FundMarketInfoResponse fundMarketInfoResponse =
+                        fetchMarketInfoResponse(
+                                "fund", orderbookId, authSession, FundMarketInfoResponse.class);
+                return fundMarketInfoResponse.getFundCompany() != null
+                        ? fundMarketInfoResponse.getFundCompany().getName()
+                        : null;
+            case "stock":
+                return fetchMarketInfoResponse(
+                                type, orderbookId, authSession, StockMarketInfoResponse.class)
+                        .getMarketPlace();
+            case "certificate":
+                return fetchMarketInfoResponse(
+                                type, orderbookId, authSession, CertificateMarketInfoResponse.class)
+                        .getMarketPlace();
+            case "future_forward":
+                return fetchMarketInfoResponse(
+                                type,
+                                orderbookId,
+                                authSession,
+                                FutureForwardMarketInfoResponse.class)
+                        .getMarketPlace();
+            case "equity_linked_bond":
+                return fetchMarketInfoResponse(
+                                type,
+                                orderbookId,
+                                authSession,
+                                EquityLinkedBondMarketInfoResponse.class)
+                        .getMarketPlace();
+            case "bond":
+                return fetchMarketInfoResponse(
+                                type, orderbookId, authSession, BondMarketInfoResponse.class)
+                        .getMarketPlace();
+            case "warrant":
+                return fetchMarketInfoResponse(
+                                type, orderbookId, authSession, WarrantMarketInfoResponse.class)
+                        .getMarketPlace();
+            case "exchange_traded_fund":
+                return fetchMarketInfoResponse(
+                                type,
+                                orderbookId,
+                                authSession,
+                                ExchangeTradedFundInfoResponse.class)
+                        .getMarketPlace();
+
+            default:
+                LOGGER.warn(
+                        String.format(
+                                "avanza - portfolio type not handled in switch - type: %s, orderbookId: %s",
+                                instrumentType, orderbookId));
+                return null;
+        }
+    }
+
+    public String logout(String authSession) {
+        final String logoutUrl = String.format(Urls.LOGOUT, authSession);
+
+        return createRequestInSession(logoutUrl, authSession).delete(String.class);
+    }
+}

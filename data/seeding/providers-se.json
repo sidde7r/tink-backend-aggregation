@@ -95,6 +95,37 @@
             "type": "BROKER"
         },
         {
+            "name": "avanza-nxgen-bankid",
+            "className": "nxgen.se.brokers.avanza.AvanzaAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayDescription": "Mobile BankID",
+            "displayName": "Avanza",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "groupDisplayName": "Avanza",
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your broker, you need to identify yourself using Mobile BankID.",
+            "popular": false,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BROKER"
+        },
+        {
             "name": "chevroletmastercard-bankid",
             "className": "creditcards.sebkort.SEBKortAgent",
             "credentialsType": "MOBILE_BANKID",
