@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.rpc.Field;
 
 @Ignore
 public class DjurgardskortetMastercardAgentTest {
-    private final String USERNAME = "YYYYYYYYNNNN"; // 12 digit SSN
+    private final String USERNAME = "YYYYMMDDNNNN"; // 12 digit SSN
 
     private AgentIntegrationTest.Builder builder;
 
