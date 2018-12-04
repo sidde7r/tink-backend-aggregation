@@ -23,30 +23,19 @@ public final class AvanzaV2AccountTypeMappers {
     }
 
     public Optional<AccountTypes> inferAccountType(final String accountTypeKey) {
+        final Optional<AccountTypes> accountType =
+                Optional.of(getAccountTypeMapper().translate(accountTypeKey))
+                        .orElse(getAccountTypeFallbackMapper().translate(accountTypeKey));
+
         // TODO refactor with isPresentOrElse when we are past Java 8
-
-        // Try to infer exact account type matches first
-        final Optional<AccountTypes> accountTypeFromKey =
-                getAccountTypeMapper().translate(accountTypeKey);
-
-        if (accountTypeFromKey.isPresent()) {
-            return accountTypeFromKey;
+        if (!accountType.isPresent()) {
+            LOGGER.warn(
+                    "{} Could not infer account type from type \"{}\"; ignoring the account",
+                    AvanzaV2Constants.LogTags.UNKNOWN_ACCOUNT_TYPE,
+                    accountTypeKey);
         }
 
-        // Fallback to partial matches
-        final Optional<AccountTypes> accountTypeFromFallback =
-                getAccountTypeFallbackMapper().translate(accountTypeKey);
-
-        if (accountTypeFromFallback.isPresent()) {
-            return accountTypeFromFallback;
-        }
-
-        LOGGER.warn(
-                "{} Could not infer account type from type \"{}\"; ignoring the account",
-                AvanzaV2Constants.LogTags.UNKNOWN_ACCOUNT_TYPE,
-                accountTypeKey);
-
-        return Optional.empty();
+        return accountType;
     }
 
     private AccountTypeMapper getAccountTypeMapper() {
