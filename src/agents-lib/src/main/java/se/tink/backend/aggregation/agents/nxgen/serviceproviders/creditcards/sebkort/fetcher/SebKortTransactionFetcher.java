@@ -32,7 +32,7 @@ public class SebKortTransactionFetcher implements TransactionDatePaginator<Credi
                         .fetchTransactions(account.getBankIdentifier(), fromDate, toDate)
                         .getTransactions();
 
-        Collection<? extends Transaction> collect =
+        final Collection<? extends Transaction> collect =
                 Stream.of(reservations, transactions)
                         .flatMap(Collection::stream)
                         .map(TransactionEntity::toTinkTransaction)

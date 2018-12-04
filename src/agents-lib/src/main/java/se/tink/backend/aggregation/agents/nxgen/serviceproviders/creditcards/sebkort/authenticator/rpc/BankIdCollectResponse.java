@@ -19,7 +19,7 @@ public class BankIdCollectResponse {
     }
 
     public BankIdStatus getBankIdStatus() {
-        String status = Optional.ofNullable(progressStatus).orElse("null");
+        final String status = Optional.ofNullable(progressStatus).orElse("null");
 
         switch (status.toUpperCase()) {
             case "COMPLETE":

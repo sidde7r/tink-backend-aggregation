@@ -51,7 +51,7 @@ public class CardEntity {
 
     public CreditCardAccount toTinkCreditCardAccount(
             Map<String, CardAccountEntity> accountsHashMap, CardContractEntity contract) {
-        CardAccountEntity account = accountsHashMap.get(contract.getCardAccountId());
+        final CardAccountEntity account = accountsHashMap.get(contract.getCardAccountId());
 
         return CreditCardAccount.builder(getMaskedCardNumber())
                 .setAccountNumber(getMaskedCardNumber())

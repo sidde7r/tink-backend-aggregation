@@ -20,10 +20,10 @@ public class SebKortAccountFetcher implements AccountFetcher<CreditCardAccount> 
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        CardsResponse cardsResponse = apiClient.fetchCards();
+        final CardsResponse cardsResponse = apiClient.fetchCards();
 
-        List<CardContractEntity> cardContracts = cardsResponse.getCardContracts();
-        Map<String, CardAccountEntity> accountsHashMap = cardsResponse.getCardAccountsHashMap();
+        final List<CardContractEntity> cardContracts = cardsResponse.getCardContracts();
+        final Map<String, CardAccountEntity> accountsHashMap = cardsResponse.getCardAccountsHashMap();
 
         return cardContracts
                 .stream()

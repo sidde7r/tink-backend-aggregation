@@ -6,8 +6,6 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.BankIdException;
-import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortConfiguration;
@@ -43,33 +41,33 @@ public class SebKortAuthenticator implements BankIdAuthenticator<BankIdInitRespo
 
     @Override
     public BankIdInitResponse init(String ssn) {
-            BankIdInitRequest request = new BankIdInitRequest(ssn, config.getApiKey());
-            BankIdInitResponse response = apiClient.initBankId(request);
+        final BankIdInitRequest request = new BankIdInitRequest(ssn, config.getApiKey());
+        final BankIdInitResponse response = apiClient.initBankId(request);
 
-            return response;
+        return response;
     }
 
     @Override
     public BankIdStatus collect(BankIdInitResponse reference)
             throws AuthenticationException, AuthorizationException {
         try {
-            BankIdCollectRequest collectRequest = new BankIdCollectRequest(reference.getOrderRef());
-            BankIdCollectResponse collectResponse =
+            final BankIdCollectRequest collectRequest = new BankIdCollectRequest(reference.getOrderRef());
+            final BankIdCollectResponse collectResponse =
                     apiClient.collectBankId(reference.getCollectUrl(), collectRequest);
 
-            BankIdStatus bankIdStatus = collectResponse.getBankIdStatus();
+            final BankIdStatus bankIdStatus = collectResponse.getBankIdStatus();
 
             if (bankIdStatus == BankIdStatus.DONE) {
-                BankIdCompleteResponse completeResponse =
+                final BankIdCompleteResponse completeResponse =
                         apiClient.completeBankId(collectResponse.getCompleteUrl());
 
-                LoginRequest loginRequest =
+                final LoginRequest loginRequest =
                         new LoginRequest(completeResponse.getResponseSAML(), config);
-                LoginResponse loginResponse = apiClient.login(loginRequest);
+                final LoginResponse loginResponse = apiClient.login(loginRequest);
 
-                AuthRequest authRequest =
+                final AuthRequest authRequest =
                         new AuthRequest(loginResponse.getUid(), loginResponse.getSecret(), config);
-                AuthResponse authResponse = apiClient.auth(authRequest);
+                final AuthResponse authResponse = apiClient.auth(authRequest);
 
                 if (authResponse.isSuccess()) {
                     sessionStorage.put(
