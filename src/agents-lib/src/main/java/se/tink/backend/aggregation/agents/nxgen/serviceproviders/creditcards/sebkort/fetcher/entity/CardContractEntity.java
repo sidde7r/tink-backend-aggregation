@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.fetcher.entity;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
@@ -31,7 +33,7 @@ public class CardContractEntity {
     }
 
     public List<CardEntity> getCards() {
-        return cards;
+        return Optional.ofNullable(cards).orElse(Collections.emptyList());
     }
 
     public boolean isOwned() {
