@@ -5,10 +5,10 @@ import com.google.common.base.Strings;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
-import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
 import se.tink.backend.common.cache.CacheClient;
 import se.tink.backend.common.cache.CacheScope;
@@ -35,7 +35,7 @@ public class CredentialsCrypto {
         Credentials credentials = request.getCredentials();
 
         // See if there is any sensitive data in the cache
-        String cachedSensitiveData = (String)cacheClient.get(CacheScope.ENCRYPTED_CREDENTIALS_BY_CREDENTIALSID,
+        String cachedSensitiveData = (String) cacheClient.get(CacheScope.ENCRYPTED_CREDENTIALS_BY_CREDENTIALSID,
                 credentials.getId());
 
         // See if there is any sensitive data on the credential
@@ -63,7 +63,7 @@ public class CredentialsCrypto {
             return false;
         }
 
-        switch(encryptedCredentials.getVersion()) {
+        switch (encryptedCredentials.getVersion()) {
         case EncryptedCredentialsV1.VERSION:
             CredentialsCryptoV1.decryptCredential(key.get(), credentials, sensitiveData);
             break;
