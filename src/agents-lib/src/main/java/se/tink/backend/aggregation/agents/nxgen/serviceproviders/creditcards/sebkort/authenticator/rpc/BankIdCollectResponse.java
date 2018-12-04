@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.authenticator.rpc;
 
-import com.google.common.base.Preconditions;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.BankIdStatus;
@@ -19,8 +19,7 @@ public class BankIdCollectResponse {
     }
 
     public BankIdStatus getBankIdStatus() {
-        String status =
-                Preconditions.checkNotNull(progressStatus, "BankID progress status was null");
+        String status = Optional.ofNullable(progressStatus).orElse("null");
 
         switch (status.toUpperCase()) {
             case "COMPLETE":
