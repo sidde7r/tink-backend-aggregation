@@ -1,10 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.fetcher;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortApiClient;
@@ -13,13 +11,10 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
-public class SebKortTransactionFetcher
-        implements TransactionDatePaginator<CreditCardAccount>, PaginatorResponse {
+public class SebKortTransactionFetcher implements TransactionDatePaginator<CreditCardAccount> {
     private final SebKortApiClient apiClient;
-    private List<CreditCardTransaction> pageTransactions = null;
 
     public SebKortTransactionFetcher(SebKortApiClient apiClient) {
         this.apiClient = apiClient;
@@ -28,11 +23,11 @@ public class SebKortTransactionFetcher
     @Override
     public PaginatorResponse getTransactionsFor(
             CreditCardAccount account, Date fromDate, Date toDate) {
-        List<TransactionEntity> reservations =
+        final List<TransactionEntity> reservations =
                 apiClient
                         .fetchReservations(account.getBankIdentifier(), fromDate, toDate)
                         .getReservations();
-        List<TransactionEntity> transactions =
+        final List<TransactionEntity> transactions =
                 apiClient
                         .fetchTransactions(account.getBankIdentifier(), fromDate, toDate)
                         .getTransactions();
@@ -44,15 +39,5 @@ public class SebKortTransactionFetcher
                         .collect(Collectors.toList());
 
         return PaginatorResponseImpl.create(collect);
-    }
-
-    @Override
-    public List<CreditCardTransaction> getTinkTransactions() {
-        return Optional.ofNullable(pageTransactions).orElse(Collections.emptyList());
-    }
-
-    @Override
-    public Optional<Boolean> canFetchMore() {
-        return Optional.empty();
     }
 }
