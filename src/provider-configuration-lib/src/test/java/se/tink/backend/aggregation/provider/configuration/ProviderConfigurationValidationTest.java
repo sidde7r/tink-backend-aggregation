@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.provider.configuration;
 
-import com.google.common.collect.ImmutableSortedMap;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import java.util.ArrayList;
