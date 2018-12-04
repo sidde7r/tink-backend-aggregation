@@ -62,10 +62,6 @@
     "swedbank-bankid",
     "swedbank-bankid-youth",
     "volkswagenkortet-bankid",
-    "volvofinans-bankid",
-    "se-test-bankid-successful-se",
-    "se-test-bankid-failing-se",
-    "se-test-password",
-    "se-test-multi-supplemental"
+    "volvofinans-bankid"
   ]
 }

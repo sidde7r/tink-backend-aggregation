@@ -11,8 +11,6 @@
     "be-n26-password",
     "be-revolut-password",
     "be-hellobank-cardreader",
-    "be-fortis-cardreader",
-    "be-test-password",
-    "be-test-multi-supplemental"
+    "be-fortis-cardreader"
   ]
 }
