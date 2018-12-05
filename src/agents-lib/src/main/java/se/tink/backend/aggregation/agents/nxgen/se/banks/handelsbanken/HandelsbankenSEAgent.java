@@ -108,7 +108,7 @@ public class HandelsbankenSEAgent
     }
 
     @Override
-    protected Optional<TransferController> constructTranferController(
+    protected Optional<TransferController> constructTransferController(
             HandelsbankenSEApiClient client,
             HandelsbankenSessionStorage sessionStorage, AgentContext context) {
 

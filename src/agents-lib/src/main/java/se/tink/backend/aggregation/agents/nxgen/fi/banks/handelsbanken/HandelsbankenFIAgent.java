@@ -75,7 +75,7 @@ public class HandelsbankenFIAgent
     }
 
     @Override
-    protected Optional<TransferController> constructTranferController(
+    protected Optional<TransferController> constructTransferController(
             HandelsbankenFIApiClient client,
             HandelsbankenSessionStorage sessionStorage, AgentContext context) {
         return Optional.empty();
