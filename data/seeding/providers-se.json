@@ -1735,16 +1735,6 @@
             "type": "BANK"
         },
         {
-            "credentialsType": "PASSWORD",
-            "displayName": "NESTON Abstract",
-            "groupDisplayName": null,
-            "name": "se-neston-abstract",
-            "popular": false,
-            "status": "DISABLED",
-            "transactional": true,
-            "type": "BANK"
-        },
-        {
             "name": "volvofinans-bankid",
             "className": "nxgen.se.banks.volvofinans.VolvoFinansAgent",
             "credentialsType": "MOBILE_BANKID",
