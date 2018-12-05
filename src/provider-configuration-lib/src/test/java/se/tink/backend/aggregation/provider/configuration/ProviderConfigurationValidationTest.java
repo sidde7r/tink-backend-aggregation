@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.junit.Test;
 import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
@@ -23,6 +24,11 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
     private @Named("providerOverrideOnCluster") Map<String, Map<String, ProviderConfiguration>> providerOverrideOnCluster;
     @Inject
     private @Named("capabilitiesByAgent") Map<String, Set<ProviderConfiguration.Capability>> providerAgentCapabilities;
+
+    private static Predicate<ProviderConfiguration> filterOutAbstractAgentsAndIcsAgent() {
+        return provider -> !provider.getName().toLowerCase().contains("abstract") ||
+                provider.getName().toLowerCase().equals("nl-abnamro-ics-abstract");
+    }
 
     @Test
     public void validateAllAvailableProvidersForAClusterAreAvailableInConfigurations() {
@@ -138,8 +144,6 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
     @Test
     public void verifyAllAgentCapabilitiesAreAvailableInProviderCapabilities() {
         Set<String> providerCapabilityClassNames = providerConfigurationByName.values().stream()
-                .filter(provider -> !provider.getName().toLowerCase().contains("abstract") ||
-                        provider.getName().toLowerCase().equals("nl-abnamro-ics-abstract"))
                 .map(ProviderConfiguration::getClassName)
                 .collect(Collectors.toSet());
 
@@ -151,10 +155,10 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
     @Test
     public void verifyAllProviderCapabilitiesAreAvailableInAgentCapabilities() {
         Set<String> providerCapabilityClassNames = providerConfigurationByName.values().stream()
-                .filter(provider -> !provider.getName().toLowerCase().contains("abstract"))
+                .filter(filterOutAbstractAgentsAndIcsAgent())
                 .map(ProviderConfiguration::getClassName)
                 .collect(Collectors.toSet());
-
+        
         Set<String> agentCapabilityClassNames = providerAgentCapabilities.keySet();
         providerCapabilityClassNames.removeAll(agentCapabilityClassNames);
         assertThat(providerCapabilityClassNames).isEmpty();
