@@ -202,7 +202,6 @@ java_library(
         "//third_party:apporiented_com_hierarchical_clustering",
         "//third_party:com_datastax_cassandra_cassandra_driver_core",
         "//third_party:com_github_jknack_handlebars",
-        "//third_party:com_github_rholder_guava_retrying",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_http_client_google_http_client",
