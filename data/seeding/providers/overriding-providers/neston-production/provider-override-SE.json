@@ -9,7 +9,9 @@
       "popular": false,
       "status": "DISABLED",
       "transactional": true,
-      "type": "BANK"
+      "type": "BANK",
+      "market": "SE",
+      "currency": "SEK"
     }
   ]
 }
