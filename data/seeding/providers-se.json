@@ -1746,16 +1746,6 @@
         },
         {
             "credentialsType": "PASSWORD",
-            "displayName": "NEWPORT Abstract",
-            "groupDisplayName": null,
-            "name": "se-newport-abstract",
-            "popular": false,
-            "status": "DISABLED",
-            "transactional": true,
-            "type": "BANK"
-        },
-        {
-            "credentialsType": "PASSWORD",
             "displayName": "OXFORD Abstract",
             "groupDisplayName": null,
             "name": "se-oxford-abstract",

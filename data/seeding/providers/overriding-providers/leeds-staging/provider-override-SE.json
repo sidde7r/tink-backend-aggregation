@@ -2544,27 +2544,6 @@
     "capabilities" : [ ]
   }, {
     "capabilitiesSerialized" : "[]",
-    "className" : null,
-    "credentialsType" : "PASSWORD",
-    "currency" : "SEK",
-    "displayName" : "NEWPORT Abstract",
-    "groupDisplayName" : null,
-    "market" : "SE",
-    "multiFactor" : false,
-    "name" : "se-newport-abstract",
-    "passwordHelpText" : null,
-    "payload" : null,
-    "popular" : false,
-    "refreshFrequency" : 0.0,
-    "refreshFrequencyFactor" : 0.0,
-    "status" : "DISABLED",
-    "transactional" : true,
-    "type" : "BANK",
-    "displayDescription" : null,
-    "fields" : [ ],
-    "capabilities" : [ ]
-  }, {
-    "capabilitiesSerialized" : "[]",
     "className" : "creditcards.sebkort.SEBKortAgent",
     "credentialsType" : "MOBILE_BANKID",
     "currency" : "SEK",
