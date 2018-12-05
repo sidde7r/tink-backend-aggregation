@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.junit.Test;
 import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
@@ -21,6 +22,12 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
     private @Named("enabledProvidersOnCluster") Map<String, Set<String>> enabledProvidersOnCluster;
     @Inject
     private @Named("providerOverrideOnCluster") Map<String, Map<String, ProviderConfiguration>> providerOverrideOnCluster;
+    @Inject
+    private @Named("capabilitiesByAgent") Map<String, Set<ProviderConfiguration.Capability>> providerAgentCapabilities;
+
+    private static final Predicate<ProviderConfiguration> FILTER_OUT_ABSTRACT_AND_ICS_AGENTS = provider ->
+            !provider.getName().toLowerCase().contains("abstract");
+
 
     @Test
     public void validateAllAvailableProvidersForAClusterAreAvailableInConfigurations() {
@@ -131,5 +138,29 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
         }
 
         assertThat(providersWithMarketNullByClusterId.entrySet()).isEmpty();
+    }
+
+    @Test
+    public void verifyAllAgentCapabilitiesAreAvailableInProviderCapabilities() {
+        Set<String> providerCapabilityClassNames = providerConfigurationByName.values().stream()
+                .filter(FILTER_OUT_ABSTRACT_AND_ICS_AGENTS)
+                .map(ProviderConfiguration::getClassName)
+                .collect(Collectors.toSet());
+
+        Set<String> agentCapabilityClassNames = providerAgentCapabilities.keySet().stream().collect(Collectors.toSet());
+        agentCapabilityClassNames.removeAll(providerCapabilityClassNames);
+        assertThat(agentCapabilityClassNames).isEmpty();
+    }
+
+    @Test
+    public void verifyAllProviderCapabilitiesAreAvailableInAgentCapabilities() {
+        Set<String> providerCapabilityClassNames = providerConfigurationByName.values().stream()
+                .filter(FILTER_OUT_ABSTRACT_AND_ICS_AGENTS)
+                .map(ProviderConfiguration::getClassName)
+                .collect(Collectors.toSet());
+
+        Set<String> agentCapabilityClassNames = providerAgentCapabilities.keySet().stream().collect(Collectors.toSet());
+        providerCapabilityClassNames.removeAll(agentCapabilityClassNames);
+        assertThat(providerCapabilityClassNames).isEmpty();
     }
 }

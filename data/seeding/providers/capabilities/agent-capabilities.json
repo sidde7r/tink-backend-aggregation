@@ -1,6 +1,5 @@
 {
   "abnamro.AbnAmroAgent": [],
-  "abnamro.ics.IcsAgent": [],
   "banks.LansforsakringarAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "INVESTMENTS", "LOANS", "PAYMENTS", "MORTGAGE_AGGREGATION", "TRANSFERS"],
   "banks.SkandiabankenAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "INVESTMENTS"],
   "banks.danskebank.v2.DanskeBankV2Agent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "INVESTMENTS", "LOANS", "PAYMENTS", "MORTGAGE_AGGREGATION", "TRANSFERS"],
@@ -110,6 +109,7 @@
   "nxgen.uk.creditcards.amex.v62.AmericanExpressV62UKAgent": ["CREDIT_CARDS"],
   "nxgen.uk.openbanking.aib.AibAgent": ["CHECKING_ACCOUNTS", "TRANSFERS"],
   "nxgen.uk.openbanking.bankofscotland.BankOfScotlandAgent": ["CHECKING_ACCOUNTS", "TRANSFERS"],
+  "nxgen.uk.openbanking.bankofireland.BankOfIrelandAgent": [],
   "nxgen.uk.openbanking.barclays.BarclaysAgent": ["CHECKING_ACCOUNTS", "TRANSFERS"],
   "nxgen.uk.openbanking.danskebank.DanskeBankAgent": ["CHECKING_ACCOUNTS", "TRANSFERS"],
   "nxgen.uk.openbanking.firstdirect.FirstDirectAgent": ["CHECKING_ACCOUNTS"],
