@@ -1,6 +1,5 @@
 {
   "abnamro.AbnAmroAgent": [],
-  "abnamro.ics.IcsAgent": [],
   "banks.LansforsakringarAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "INVESTMENTS", "LOANS", "PAYMENTS", "MORTGAGE_AGGREGATION", "TRANSFERS"],
   "banks.SkandiabankenAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "INVESTMENTS"],
   "banks.danskebank.v2.DanskeBankV2Agent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "INVESTMENTS", "LOANS", "PAYMENTS", "MORTGAGE_AGGREGATION", "TRANSFERS"],
