@@ -6,7 +6,6 @@ import java.time.Month;
 import java.time.Year;
 import java.time.ZoneId;
 import java.util.Collection;
-import java.util.Objects;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
@@ -19,7 +18,6 @@ public class TransactionMonthPaginationController<A extends Account> implements 
     protected static final int MAX_TOTAL_EMPTY_PAGES = 25;
     private final LocalDate nowInLocalDate;
     private final TransactionMonthPaginator paginator;
-    private A currentAccount;
     private LocalDate dateToFetch;
     private int consecutiveEmptyFetches = 0;
     private int totalEmptyFetches = 0;
@@ -31,9 +29,15 @@ public class TransactionMonthPaginationController<A extends Account> implements 
     }
 
     @Override
-    public PaginatorResponse fetchTransactionsFor(A account) {
-        resetStateIfAccountChanged(account);
+    public void resetState() {
+        consecutiveEmptyFetches = 0;
+        totalEmptyFetches = 0;
+        foundSomething = false;
+        dateToFetch = nowInLocalDate;
+    }
 
+    @Override
+    public PaginatorResponse fetchTransactionsFor(A account) {
         PaginatorResponse response = paginator.getTransactionsFor(account, Year.from(dateToFetch),
                 Month.from(dateToFetch));
 
@@ -59,19 +63,5 @@ public class TransactionMonthPaginationController<A extends Account> implements 
         }
 
         return response;
-    }
-
-    private void resetStateIfAccountChanged(A account) {
-        Preconditions.checkNotNull(account);
-
-        if (Objects.equals(currentAccount, account)) {
-            return;
-        }
-
-        currentAccount = account;
-        consecutiveEmptyFetches = 0;
-        totalEmptyFetches = 0;
-        foundSomething = false;
-        dateToFetch = nowInLocalDate;
     }
 }

@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagina
 import com.google.common.base.Preconditions;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Objects;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
@@ -19,7 +18,6 @@ public class TransactionDatePaginationController<A extends Account> implements T
 
     private final TransactionDatePaginator<A> paginator;
 
-    private Account currentAccount;
     private Date fromDate;
     private Date toDate;
     private int consecutiveEmptyPages = 0;
@@ -29,9 +27,14 @@ public class TransactionDatePaginationController<A extends Account> implements T
     }
 
     @Override
-    public PaginatorResponse fetchTransactionsFor(A account) {
-        resetStateIfAccountChanged(account);
+    public void resetState() {
+        fromDate = null;
+        toDate = null;
+        consecutiveEmptyPages = 0;
+    }
 
+    @Override
+    public PaginatorResponse fetchTransactionsFor(A account) {
         toDate = calculateToDate();
         fromDate = DateUtils.addMonths(toDate, -MONTHS_TO_FETCH);
 
@@ -59,19 +62,6 @@ public class TransactionDatePaginationController<A extends Account> implements T
         }
 
         return response;
-    }
-
-    private void resetStateIfAccountChanged(Account account) {
-        Preconditions.checkNotNull(account);
-
-        if (Objects.equals(currentAccount, account)) {
-            return;
-        }
-
-        currentAccount = account;
-        fromDate = null;
-        toDate = null;
-        consecutiveEmptyPages = 0;
     }
 
     private Date calculateToDate() {
