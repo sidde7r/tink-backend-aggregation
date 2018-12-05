@@ -109,6 +109,7 @@
   "nxgen.uk.creditcards.amex.v62.AmericanExpressV62UKAgent": ["CREDIT_CARDS"],
   "nxgen.uk.openbanking.aib.AibAgent": ["CHECKING_ACCOUNTS", "TRANSFERS"],
   "nxgen.uk.openbanking.bankofscotland.BankOfScotlandAgent": ["CHECKING_ACCOUNTS", "TRANSFERS"],
+  "nxgen.uk.openbanking.bankofireland.BankOfIrelandAgent": [],
   "nxgen.uk.openbanking.barclays.BarclaysAgent": ["CHECKING_ACCOUNTS", "TRANSFERS"],
   "nxgen.uk.openbanking.danskebank.DanskeBankAgent": ["CHECKING_ACCOUNTS", "TRANSFERS"],
   "nxgen.uk.openbanking.firstdirect.FirstDirectAgent": ["CHECKING_ACCOUNTS"],

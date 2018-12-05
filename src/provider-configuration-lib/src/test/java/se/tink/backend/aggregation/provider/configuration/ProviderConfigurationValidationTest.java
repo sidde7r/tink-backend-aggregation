@@ -25,7 +25,7 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
     @Inject
     private @Named("capabilitiesByAgent") Map<String, Set<ProviderConfiguration.Capability>> providerAgentCapabilities;
 
-    private static final Predicate<ProviderConfiguration> FILTER_OUT_ABSTRACT_AND_ICS_AGENTS =provider ->
+    private static final Predicate<ProviderConfiguration> FILTER_OUT_ABSTRACT_AND_ICS_AGENTS = provider ->
             !provider.getName().toLowerCase().contains("abstract") ||
                 provider.getName().toLowerCase().equals("nl-abnamro-ics-abstract");
 
