@@ -26,7 +26,7 @@ import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
-import se.tink.backend.common.coordination.BarrierName;
+import se.tink.backend.aggregation.locks.BarrierName;
 import se.tink.backend.common.mapper.CoreAccountMapper;
 import se.tink.backend.common.mapper.CoreCredentialsMapper;
 import se.tink.backend.common.utils.Pair;

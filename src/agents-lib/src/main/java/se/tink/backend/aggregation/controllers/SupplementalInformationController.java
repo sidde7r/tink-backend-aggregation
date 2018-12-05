@@ -5,7 +5,7 @@ import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.barriers.DistributedBarrier;
 import se.tink.backend.common.cache.CacheClient;
 import se.tink.backend.common.cache.CacheScope;
-import se.tink.backend.common.coordination.BarrierName;
+import se.tink.backend.aggregation.locks.BarrierName;
 import se.tink.backend.aggregation.log.AggregationLogger;
 
 public class SupplementalInformationController {

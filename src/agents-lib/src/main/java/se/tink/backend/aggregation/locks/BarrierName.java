@@ -1,4 +1,4 @@
-package se.tink.backend.common.coordination;
+package se.tink.backend.aggregation.locks;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
