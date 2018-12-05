@@ -99,7 +99,7 @@ public abstract class HandelsbankenAgent<API extends HandelsbankenApiClient, Con
             API client,
             HandelsbankenSessionStorage sessionStorage);
 
-    protected abstract Optional<TransferController> constructTranferController(API client,
+    protected abstract Optional<TransferController> constructTransferController(API client,
             HandelsbankenSessionStorage sessionStorage, AgentContext context);
 
     protected abstract Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController(
@@ -192,7 +192,7 @@ public abstract class HandelsbankenAgent<API extends HandelsbankenApiClient, Con
 
     @Override
     protected Optional<TransferController> constructTransferController() {
-        return constructTranferController(this.bankClient, this.handelsbankenSessionStorage,
+        return constructTransferController(this.bankClient, this.handelsbankenSessionStorage,
                 this.context);
     }
 
