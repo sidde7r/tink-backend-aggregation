@@ -25,10 +25,10 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
     @Inject
     private @Named("capabilitiesByAgent") Map<String, Set<ProviderConfiguration.Capability>> providerAgentCapabilities;
 
-    private static Predicate<ProviderConfiguration> filterOutAbstractAgentsAndIcsAgent() {
-        return provider -> !provider.getName().toLowerCase().contains("abstract") ||
+    private static final Predicate<ProviderConfiguration> FILTER_OUT_ABSTRACT_AND_ICS_AGENTS =provider ->
+            !provider.getName().toLowerCase().contains("abstract") ||
                 provider.getName().toLowerCase().equals("nl-abnamro-ics-abstract");
-    }
+
 
     @Test
     public void validateAllAvailableProvidersForAClusterAreAvailableInConfigurations() {
@@ -144,10 +144,12 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
     @Test
     public void verifyAllAgentCapabilitiesAreAvailableInProviderCapabilities() {
         Set<String> providerCapabilityClassNames = providerConfigurationByName.values().stream()
+                .filter(FILTER_OUT_ABSTRACT_AND_ICS_AGENTS)
                 .map(ProviderConfiguration::getClassName)
                 .collect(Collectors.toSet());
 
-        Set<String> agentCapabilityClassNames = providerAgentCapabilities.keySet();
+        Set<String> agentCapabilityClassNames = providerAgentCapabilities.keySet().stream().collect(Collectors.toSet());
+
         agentCapabilityClassNames.removeAll(providerCapabilityClassNames);
         assertThat(agentCapabilityClassNames).isEmpty();
     }
@@ -155,11 +157,16 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
     @Test
     public void verifyAllProviderCapabilitiesAreAvailableInAgentCapabilities() {
         Set<String> providerCapabilityClassNames = providerConfigurationByName.values().stream()
-                .filter(filterOutAbstractAgentsAndIcsAgent())
+                .filter(FILTER_OUT_ABSTRACT_AND_ICS_AGENTS)
                 .map(ProviderConfiguration::getClassName)
                 .collect(Collectors.toSet());
-        
-        Set<String> agentCapabilityClassNames = providerAgentCapabilities.keySet();
+
+        Set<String> agentCapabilityClassNames = providerAgentCapabilities.keySet().stream().collect(Collectors.toSet());
+
+        System.out.println("===START===");
+        System.out.println(agentCapabilityClassNames);
+        System.out.println("===END===");
+
         providerCapabilityClassNames.removeAll(agentCapabilityClassNames);
         assertThat(providerCapabilityClassNames).isEmpty();
     }
