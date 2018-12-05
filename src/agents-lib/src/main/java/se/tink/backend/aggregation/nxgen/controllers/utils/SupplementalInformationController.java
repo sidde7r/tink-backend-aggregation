@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoErro
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.Field;
-import se.tink.backend.common.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SupplementalInformationController {

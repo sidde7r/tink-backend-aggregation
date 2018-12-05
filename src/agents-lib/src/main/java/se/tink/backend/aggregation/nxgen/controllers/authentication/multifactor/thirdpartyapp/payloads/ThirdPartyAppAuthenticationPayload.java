@@ -1,4 +1,4 @@
-package se.tink.backend.common.payloads;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads;
 
 public class ThirdPartyAppAuthenticationPayload {
     private Android android;
