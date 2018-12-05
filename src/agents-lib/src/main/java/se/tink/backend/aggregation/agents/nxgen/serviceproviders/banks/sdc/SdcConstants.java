@@ -236,7 +236,7 @@ public class SdcConstants {
         public static final ImmutableList<String> ACTION_CODE_TOKEN_NEEDED = ImmutableList.of(DEVICE_TOKEN_NEEDED, DEVICE_TOKEN_RENEWAL_NEEDED);
         // signing OTP
         public static final String SIGNING_NEEDED = "SIGNING_NEEDED";
-        public static final ImmutableList<String> ACTION_CODE_SIGNING_NEEDED = ImmutableList.of(SIGNING_NEEDED);
+        public static final ImmutableList<String> ACTION_CODE_SIGNING_NEEDED = ImmutableList.of(SIGNING_NEEDED, DEVICE_TOKEN_RENEWAL_NEEDED);
         public static final String SIGNING_TYPE = "PIN_OTP";
 
         // Error handling headers, mostly documentation
