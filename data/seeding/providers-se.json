@@ -1726,16 +1726,6 @@
         },
         {
             "credentialsType": "PASSWORD",
-            "displayName": "SEB Abstract",
-            "groupDisplayName": null,
-            "name": "se-seb-abstract",
-            "popular": false,
-            "status": "DISABLED",
-            "transactional": true,
-            "type": "BANK"
-        },
-        {
-            "credentialsType": "PASSWORD",
             "displayName": "TEST_PARTNER Abstract",
             "groupDisplayName": null,
             "name": "se-testpartner-abstract",
