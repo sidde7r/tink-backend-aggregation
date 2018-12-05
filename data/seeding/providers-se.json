@@ -1746,16 +1746,6 @@
         },
         {
             "credentialsType": "PASSWORD",
-            "displayName": "OXFORD Abstract",
-            "groupDisplayName": null,
-            "name": "se-oxford-abstract",
-            "popular": false,
-            "status": "DISABLED",
-            "transactional": true,
-            "type": "BANK"
-        },
-        {
-            "credentialsType": "PASSWORD",
             "displayName": "NESTON Abstract",
             "groupDisplayName": null,
             "name": "se-neston-abstract",
