@@ -82,14 +82,11 @@ java_library(
         "//src/libraries/date:date",
         "//src/libraries/giro_validation:giro-validation",
         "//src/libraries/account_identifier:account-identifier",
-        "//src/libraries/versioning:versioning",
         "//src/libraries/generic_application:generic-application",
         "//src/libraries/demo_credentials:demo-credentials",
         "//src/libraries/i18n",
         "//src/libraries/log",
-        "//src/libraries/math",
         "//src/libraries/phone_number_utils:phone_number_utils",
-        "//src/libraries/oauth",
         "//src/api-annotations",
         "//src/api-headers",
 
@@ -181,12 +178,9 @@ java_library(
         "//src/libraries/account_identifier:account-identifier",
         "//src/libraries/generic_application:generic-application",
         "//src/libraries/demo_credentials:demo-credentials",
-        "//src/libraries/versioning:versioning",
-        "//src/libraries/cassandra-interfaces",
         "//src/libraries/net",
         "//src/libraries/i18n",
         "//src/libraries/abnamro:abn_amro",
-        "//src/libraries/identity:identity",
         "//src/libraries/strings:strings",
         "//src/api-annotations",
         "//src/libraries/cryptography:cryptography",
@@ -848,8 +842,7 @@ java_binary(
     data = [
         "etc/development-provider-configuration-server.yml",
         "etc/development-minikube-provider-configuration-server.yml",
-        "//data",
-        "//providerdata:providerdata"
+        "//data"
     ],
     main_class = "se.tink.backend.aggregation.provider.ProviderConfigurationServiceContainer",
     visibility = ["//visibility:public"],
