@@ -149,7 +149,6 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
                 .collect(Collectors.toSet());
 
         Set<String> agentCapabilityClassNames = providerAgentCapabilities.keySet().stream().collect(Collectors.toSet());
-
         agentCapabilityClassNames.removeAll(providerCapabilityClassNames);
         assertThat(agentCapabilityClassNames).isEmpty();
     }
@@ -162,11 +161,6 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
                 .collect(Collectors.toSet());
 
         Set<String> agentCapabilityClassNames = providerAgentCapabilities.keySet().stream().collect(Collectors.toSet());
-
-        System.out.println("===START===");
-        System.out.println(agentCapabilityClassNames);
-        System.out.println("===END===");
-
         providerCapabilityClassNames.removeAll(agentCapabilityClassNames);
         assertThat(providerCapabilityClassNames).isEmpty();
     }
