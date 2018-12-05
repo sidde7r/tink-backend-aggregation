@@ -38,10 +38,6 @@
     "savingsbank-bankid",
     "savingsbank-bankid-youth",
     "sbab-bankid",
-    "se-kirkby-abstract",
-    "se-newport-abstract",
-    "se-oxford-abstract",
-    "se-seb-abstract",
     "se-testpartner-abstract",
     "seatkortet-bankid",
     "seb-bankid",
@@ -57,6 +53,8 @@
     "swedbank-bankid",
     "swedbank-bankid-youth",
     "volkswagenkortet-bankid",
-    "volvofinans-bankid"
+    "volvofinans-bankid",
+    "se-test-password",
+    "se-test-multi-supplemental"
   ]
 }

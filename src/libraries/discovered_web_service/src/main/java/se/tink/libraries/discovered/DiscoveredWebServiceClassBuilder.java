@@ -1,11 +1,7 @@
 package se.tink.libraries.discovered;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.common.hash.Hashing;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import java.util.ArrayList;
@@ -16,7 +12,6 @@ import org.apache.curator.x.discovery.ServiceInstance;
 import se.tink.libraries.discovery.ServiceDiscoveryHelper;
 import se.tink.libraries.http.client.ServiceClassBuilder;
 import se.tink.libraries.http.client.WebResourceFactory;
-import se.tink.libraries.rotated.RotatedListView;
 
 public class DiscoveredWebServiceClassBuilder implements ServiceClassBuilder {
 
@@ -70,24 +65,7 @@ public class DiscoveredWebServiceClassBuilder implements ServiceClassBuilder {
 
     @Override
     public <T> T build(Class<T> serviceClass, Object hashSource) {
-
-        // Using a sorted list here to always use the same fallback in case the first candidate doesn't work.
-        ImmutableList<RetryableWebResource.Candidate> sortedCandidates = ImmutableSortedSet.copyOf(getCandidates()).asList();
-
-        Preconditions.checkState(sortedCandidates.size() > 0, "There are no services announced for '%s'.",
-                serviceClass);
-
-        // Using consistent hashing here to have as few requests as possible being directed to a new candidate if
-        // when/if candidates come and go.
-        int bucket = Hashing.consistentHash(hashSource.hashCode(), sortedCandidates.size());
-
-        // First item in `candidates` list below will be the same element as sortedCandidates.get(bucket).
-        List<RetryableWebResource.Candidate> candidates = RotatedListView.of(sortedCandidates, -bucket);
-
-        // Build
-
-        return build(serviceClass, candidates);
-
+        // FIXME: do we need this?
+        return null;
     }
-
 }

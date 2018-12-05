@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.ArgentaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional.ArgentaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional.ArgentaTransactionalTransactionFetcher;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -19,7 +19,9 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+
+import java.util.Optional;
+
 import static org.apache.http.client.config.CookieSpecs.IGNORE_COOKIES;
 
 public class ArgentaAgent extends NextGenerationAgent {
@@ -29,7 +31,8 @@ public class ArgentaAgent extends NextGenerationAgent {
     public ArgentaAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        this.apiClient = new ArgentaApiClient(this.client, new ArgentaSessionStorage(this.sessionStorage));
+        this.apiClient =
+                new ArgentaApiClient(this.client, new ArgentaSessionStorage(this.sessionStorage));
     }
 
     @Override
@@ -47,9 +50,8 @@ public class ArgentaAgent extends NextGenerationAgent {
                 new ArgentaAuthenticator(
                         argentaPersistentStorage,
                         apiClient,
-                        supplementalInformationController,
-                        catalog,
-                        credentials);
+                        credentials,
+                        supplementalInformationHelper);
 
         return new AutoAuthenticationController(
                 request, context, argentaAuthenticator, argentaAuthenticator);

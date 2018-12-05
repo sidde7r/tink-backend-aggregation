@@ -12,6 +12,7 @@ import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import java.util.Optional;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 import java.util.ArrayList;
@@ -53,6 +54,10 @@ public class Provider implements Cloneable {
     @JsonProperty("fields")
     // See Field object (Aggregation).
     private String fieldsSerialized;
+
+    @JsonProperty("supplementalFields")
+    // See Field object (Aggregation).
+    private String supplementalFieldsSerialized;
     // In the list of all providers this is where the provider will be put.
     // I.e. All Swedbank agent is found under the group Swedbank.
     private String groupDisplayName;
@@ -92,6 +97,7 @@ public class Provider implements Cloneable {
 
     public Provider() {
         setFields(Lists.newArrayList());
+        setSupplementalFields(Lists.newArrayList());
     }
 
     @Override
@@ -190,6 +196,13 @@ public class Provider implements Cloneable {
 
     public List<Field> getFields() {
         return SerializationUtils.deserializeFromString(fieldsSerialized, FieldsList.class);
+    }
+
+    public List<Field> getSupplementalFields() {
+        Optional<List<Field>> result = Optional.ofNullable(SerializationUtils.deserializeFromString(
+                supplementalFieldsSerialized,
+                FieldsList.class));
+        return result.orElseGet(FieldsList::new);
     }
 
     public String getGroupDisplayName() {
@@ -350,6 +363,10 @@ public class Provider implements Cloneable {
         this.fieldsSerialized = SerializationUtils.serializeToString(fields);
     }
 
+    public void setSupplementalFields(List<Field> fields) {
+        this.supplementalFieldsSerialized  = SerializationUtils.serializeToString(fields);
+    }
+
     public void setGroupDisplayName(String groupDisplayName) {
         this.groupDisplayName = groupDisplayName;
     }
@@ -424,8 +441,14 @@ public class Provider implements Cloneable {
      * main to know if an agent implements an interface e.g. TransferExecutor.
      */
     public enum Capability {
-        TRANSFERS,
-        MORTGAGE_AGGREGATION
+        TRANSFERS,              // backwards compatibility
+        MORTGAGE_AGGREGATION,   // backwards compatibility
+        CHECKING_ACCOUNTS,
+        SAVINGS_ACCOUNTS,
+        CREDIT_CARDS,
+        LOANS,
+        INVESTMENTS,
+        PAYMENTS
     }
 
     @JsonIgnore

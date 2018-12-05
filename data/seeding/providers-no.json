@@ -3531,6 +3531,50 @@
           "patternError": "Please enter a valid mobile number."
         }
       ]
-    }
+    },
+    {
+      "name": "no-test-password",
+      "className": "nxgen.demo.banks.password.PasswordDemoAgent",
+      "credentialsType": "PASSWORD",
+      "displayName": "Test Password",
+      "fields": [
+          {
+              "description": "Username",
+              "immutable": true,
+              "name": "username"
+          },
+          {
+              "description": "Password",
+              "masked": true,
+              "sensitive": true,
+              "name": "password"
+          }
+      ],
+      "multiFactor": true,
+      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+      "popular": true,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "TEST"
+  },
+  {
+      "name": "no-test-multi-supplemental",
+      "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
+      "credentialsType": "PASSWORD",
+      "displayName": "Test Multi-Supplemental",
+      "fields": [
+          {
+              "description": "Username",
+              "immutable": true,
+              "name": "username"
+          }
+      ],
+      "multiFactor": true,
+      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+      "popular": true,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "TEST"
+  }
   ]
 }

@@ -5,7 +5,6 @@ java_library(
     deps = [
         "//src/libraries/discovery:discovery",
         "//src/libraries/http_client:http-client",
-        "//src/libraries/list_utils:list_utils",
         "//src/libraries/log:log",
 
         "//third_party:com_google_guava_guava",

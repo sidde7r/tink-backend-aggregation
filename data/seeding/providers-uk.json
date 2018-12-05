@@ -50,6 +50,33 @@
       "type": "BANK"
     },
     {
+      "name": "uk-bankofireland-oauth2",
+      "capabilities": [
+        "TRANSFERS"
+      ],
+      "className": "nxgen.uk.openbanking.bankofireland.BankOfIrelandAgent",
+      "credentialsType": "PASSWORD",
+      "displayName": "Bank of Ireland",
+      "fields": [
+        {
+          "name": "info",
+          "value": "Connecting your bank",
+          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+          "immutable": true
+        }
+      ],
+      "payload": "tink2:bankofireland",
+      "groupDisplayName": "",
+      "multiFactor": false,
+      "passwordhelptext": "Authentication is done on external page",
+      "popular": true,
+      "refreshFrequency": 1,
+      "refreshFrequencyFactor": 1,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
       "name": "uk-barclays-oauth2",
       "capabilities": [
         "TRANSFERS"
@@ -472,6 +499,50 @@
               "sensitive": true
           }
       ]
-    }
+    },
+    {
+      "name": "uk-test-password",
+      "className": "nxgen.demo.banks.password.PasswordDemoAgent",
+      "credentialsType": "PASSWORD",
+      "displayName": "Test Password",
+      "fields": [
+          {
+              "description": "Username",
+              "immutable": true,
+              "name": "username"
+          },
+          {
+              "description": "Password",
+              "masked": true,
+              "sensitive": true,
+              "name": "password"
+          }
+      ],
+      "multiFactor": true,
+      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+      "popular": true,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "TEST"
+  },
+  {
+      "name": "uk-test-multi-supplemental",
+      "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
+      "credentialsType": "PASSWORD",
+      "displayName": "Test Multi-Supplemental",
+      "fields": [
+          {
+              "description": "Username",
+              "immutable": true,
+              "name": "username"
+          }
+      ],
+      "multiFactor": true,
+      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+      "popular": true,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "TEST"
+  }
   ]
 }

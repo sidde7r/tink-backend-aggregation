@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.multisupplemental.authenticator;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Random;
@@ -23,6 +24,7 @@ public class MultiSupplementalManualAuthenticator implements MultiFactorAuthenti
 
     private static final String code1 = "1234";
     private static final String code2 = "4321";
+    private static final String demoUsername = "tink-test";
 
     private final Catalog catalog;
     private static final String descriptionCode =
@@ -79,6 +81,12 @@ public class MultiSupplementalManualAuthenticator implements MultiFactorAuthenti
 
     @Override
     public void authenticate(Credentials credentials) throws AuthenticationException, AuthorizationException {
+        String username = credentials.getField(Field.Key.USERNAME);
+
+        if (Strings.isNullOrEmpty(username) || !username.equals(demoUsername)) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
+
         checkAnswers(
                 supplementalInformationController.askSupplementalInformation(
                         newField(loginDesciptionField, "Security Code" ,  String.format("%04d", random.nextInt(10000)), catalog.getString(descriptionCode)),

@@ -61,6 +61,10 @@ public class Provider implements Cloneable {
     @Type(type = "text")
     @Tag(9)
     private String fieldsSerialized;
+    @JsonProperty("supplementalFields")
+    @Transient
+    @Tag(16)
+    private String supplementalFieldsSerialized;
     @Tag(10)
     private String groupDisplayName;
     @Exclude
@@ -113,6 +117,7 @@ public class Provider implements Cloneable {
 
     public Provider() {
         setFields(Lists.<Field> newArrayList());
+        setSupplementalFields(Lists.<Field> newArrayList());
     }
 
     @Override
@@ -217,6 +222,10 @@ public class Provider implements Cloneable {
 
     public List<Field> getFields() {
         return SerializationUtils.deserializeFromString(fieldsSerialized, FieldsList.class);
+    }
+
+    public List<Field> getSupplementalFields() {
+        return SerializationUtils.deserializeFromString(supplementalFieldsSerialized, FieldsList.class);
     }
 
     @ApiModelProperty(name = "groupDisplayName", value="The grouped display name of the provider")
@@ -396,6 +405,10 @@ public class Provider implements Cloneable {
         this.fieldsSerialized = SerializationUtils.serializeToString(fields);
     }
 
+    public void setSupplementalFields(List<Field> supplementalFields) {
+        this.supplementalFieldsSerialized = SerializationUtils.serializeToString(supplementalFields);
+    }
+
     public void setGroupDisplayName(String groupDisplayName) {
         this.groupDisplayName = groupDisplayName;
     }
@@ -498,7 +511,14 @@ public class Provider implements Cloneable {
      * main to know if an agent implements an interface e.g. TransferExecutor.
      */
     public enum Capability {
-        TRANSFERS, MORTGAGE_AGGREGATION
+        TRANSFERS,              // backwards compatibility
+        MORTGAGE_AGGREGATION,   // backwards compatibility
+        CHECKING_ACCOUNTS,
+        SAVINGS_ACCOUNTS,
+        CREDIT_CARDS,
+        LOANS,
+        INVESTMENTS,
+        PAYMENTS
     }
 
     @JsonProperty("refreshschedule")

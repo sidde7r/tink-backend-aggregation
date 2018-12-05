@@ -40,6 +40,7 @@ public class HttpProviderConfigurationConverter {
         dto.setType(providerConfiguration.getType());
         dto.setRefreshSchedule(providerConfiguration.getRefreshSchedule().orElse(null));
         dto.setStatus(providerConfiguration.getStatus());
+        dto.setSupplementalFields(providerConfiguration.getSupplementalFields());
         return dto;
     }
 
@@ -51,6 +52,10 @@ public class HttpProviderConfigurationConverter {
     }
 
     private static String handleCapabilities(String clusterId, ProviderConfiguration providerConfiguration) {
+        // TODO: This can be removed when all clusters are running the following version of respective service:
+        // Aggregation Controller: 201812031439-3488b872
+        // Main: 201812030837-6fa50f81
+        // System: 201812030837-6fa50f81
         if (!clusterId.contains("oxford")) {
             Set<ProviderConfiguration.Capability> capabilities = providerConfiguration.getCapabilities().stream()
                     .filter(NON_OXFORD_CAPABILITIES_FILTER)

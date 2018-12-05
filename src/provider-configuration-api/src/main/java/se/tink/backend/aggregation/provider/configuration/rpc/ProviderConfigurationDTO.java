@@ -36,6 +36,8 @@ public class ProviderConfigurationDTO {
     private String displayDescription;
     @JsonProperty("fields")
     private String fieldsSerialized;
+    @JsonProperty("supplementalFields")
+    private String supplementalFieldsSerialized;
     private String groupDisplayName;
     private String market;
     private boolean multiFactor;
@@ -134,6 +136,10 @@ public class ProviderConfigurationDTO {
 
     public ProviderStatuses getStatus() {
         return status;
+    }
+
+    public List<Field> getSupplementalFields() {
+        return SerializationUtils.deserializeFromString(supplementalFieldsSerialized, FieldsList.class);
     }
 
     public ProviderTypes getType() {
@@ -237,19 +243,23 @@ public class ProviderConfigurationDTO {
         this.type = type;
     }
 
+    public void setSupplementalFields(List<Field> supplementalFields) {
+        this.supplementalFieldsSerialized = SerializationUtils.serializeToString(supplementalFields);
+    }
+
     /**
      * Used on providers to indicate different tasks it can handle in terms of agents, since it's not possible now in
      * main to know if an agent implements an interface e.g. TransferExecutor.
      */
     public enum Capability {
-        TRANSFERS,
-        MORTGAGE_AGGREGATION,
-        CHECKING_ACCOUNT,
-        SAVINGS_ACCOUNT,
-        CREDIT_CARD_ACCOUNT,
-        INVESTMENT_ACCOUNT,
-        LOAN_ACCOUNT,
-        MORTGAGE_LOAN
+        TRANSFERS,              // backwards compatibility
+        MORTGAGE_AGGREGATION,   // backwards compatibility
+        CHECKING_ACCOUNTS,
+        SAVINGS_ACCOUNTS,
+        CREDIT_CARDS,
+        LOANS,
+        INVESTMENTS,
+        PAYMENTS
     }
 
     @JsonProperty("refreshschedule")

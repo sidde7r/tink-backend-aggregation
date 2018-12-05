@@ -1,6 +1,8 @@
 {
   "clusterid" : "leeds-staging",
   "providers" : [
-    "de-n26-password"
+    "de-n26-password",
+    "de-test-password",
+    "de-test-multi-supplemental"
   ]
 }

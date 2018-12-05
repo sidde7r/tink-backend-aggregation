@@ -22,7 +22,6 @@ import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.RemoveMonitor
 @Path("/creditsafe")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@Deprecated
 public interface CreditSafeService {
     @DELETE
     @Path("consumermonitoring")
