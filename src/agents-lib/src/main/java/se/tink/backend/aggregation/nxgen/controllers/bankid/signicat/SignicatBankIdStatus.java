@@ -1,4 +1,4 @@
-package se.tink.backend.common.bankid.signicat;
+package se.tink.backend.aggregation.nxgen.controllers.bankid.signicat;
 
 public enum SignicatBankIdStatus {
     AUTHENTICATION_ERROR,
