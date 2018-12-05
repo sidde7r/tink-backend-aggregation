@@ -1746,16 +1746,6 @@
         },
         {
             "credentialsType": "PASSWORD",
-            "displayName": "KIRKBY Abstract",
-            "groupDisplayName": null,
-            "name": "se-kirkby-abstract",
-            "popular": false,
-            "status": "DISABLED",
-            "transactional": true,
-            "type": "BANK"
-        },
-        {
-            "credentialsType": "PASSWORD",
             "displayName": "NEWPORT Abstract",
             "groupDisplayName": null,
             "name": "se-newport-abstract",
