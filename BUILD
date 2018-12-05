@@ -648,6 +648,7 @@ junit_test(
         "//src/libraries/abnamro:abn_amro",
         "//src/libraries/cryptography:cryptography",
 
+        "//third_party:com_github_rholder_guava_retrying",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_http_client_google_http_client",
