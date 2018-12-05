@@ -22,25 +22,24 @@ public class NordeaFiApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
-
-    private Form formBuilder;
+    private final String username;
 
     public NordeaFiApiClient(TinkHttpClient client, SessionStorage sessionStorage, String username) {
 
         this.client = client;
         this.sessionStorage = sessionStorage;
-
-        formBuilder = new Form(NordeaFiConstants.DEFAULT_FORM_PARAMS);
-        formBuilder.put(NordeaFiConstants.FormParams.USERNAME, username);
+        this.username = username;
     }
 
     public AuthenticateResponse initCodesAuthentication() throws HttpResponseException {
+        Form formBuilder = defaultAuthenticationForm(username);
 
         return sendAuthenticateRequest(formBuilder);
     }
 
     public AuthenticateResponse pollCodesAuthentication(String reference) throws HttpResponseException {
 
+        Form formBuilder = defaultAuthenticationForm(username);
         formBuilder.put(NordeaFiConstants.FormParams.AUTH_REF, reference);
         return sendAuthenticateRequest(formBuilder);
     }
@@ -88,6 +87,7 @@ public class NordeaFiApiClient {
 
             if (refreshToken != null) {
 
+                Form formBuilder = defaultAuthenticationForm(username);
                 formBuilder.put(NordeaFiConstants.FormParams.GRANT_TYPE, NordeaFiConstants.SessionStorage.REFRESH_TOKEN);
                 formBuilder.put(NordeaFiConstants.SessionStorage.REFRESH_TOKEN, refreshToken);
 
@@ -120,6 +120,14 @@ public class NordeaFiApiClient {
         return createRequest(NordeaFiConstants.Urls.AUTHENTICATE)
                 .body(form, MediaType.APPLICATION_FORM_URLENCODED)
                 .post(AuthenticateResponse.class);
+    }
+
+    private Form defaultAuthenticationForm(String username) {
+        Form formBuilder;
+        formBuilder = new Form(NordeaFiConstants.DEFAULT_FORM_PARAMS);
+        formBuilder.put(NordeaFiConstants.FormParams.USERNAME, username);
+
+        return formBuilder;
     }
 
     private RequestBuilder createRequest(URL url, String accessToken) {
