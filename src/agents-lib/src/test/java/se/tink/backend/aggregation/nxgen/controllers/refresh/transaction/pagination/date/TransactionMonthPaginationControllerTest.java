@@ -40,6 +40,8 @@ public class TransactionMonthPaginationControllerTest {
         Mockito.when(paginator.getTransactionsFor(any(Account.class), any(Year.class), any(Month.class)))
                 .thenReturn(PaginatorResponseImpl.createEmpty());
 
+        paginationController.resetState();
+
         for (int i = 1; i <= MAX_TOTAL_EMPTY_PAGES; i++) {
             PaginatorResponse response = paginationController.fetchTransactionsFor(account);
             Assert.assertTrue(response.getTinkTransactions().isEmpty());
