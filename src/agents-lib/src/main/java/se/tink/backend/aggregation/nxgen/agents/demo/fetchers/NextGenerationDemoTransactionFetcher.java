@@ -52,6 +52,11 @@ public class NextGenerationDemoTransactionFetcher
     }
 
     @Override
+    public void resetState() {
+
+    }
+
+    @Override
     public PaginatorResponse fetchTransactionsFor(TransactionalAccount account) {
         if (account.getType() == AccountTypes.CREDIT_CARD || account.getType() == AccountTypes.CHECKING) {
             return purchaseHistoryGenerator.generateTransactions(

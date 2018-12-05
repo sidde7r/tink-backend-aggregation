@@ -24,6 +24,11 @@ public class ArgentaTransactionalTransactionFetcher
     }
 
     @Override
+    public void resetState() {
+
+    }
+
+    @Override
     public PaginatorResponse fetchTransactionsFor(TransactionalAccount account) {
         List<Transaction> transactionsAll = new ArrayList<>();
         String accountId = account.getAccountNumber();
