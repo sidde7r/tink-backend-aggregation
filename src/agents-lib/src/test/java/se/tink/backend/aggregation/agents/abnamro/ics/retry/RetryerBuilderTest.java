@@ -1,10 +1,9 @@
-package se.tink.backend.common.retry;
+package se.tink.backend.aggregation.agents.abnamro.ics.retry;
 
 import com.github.rholder.retry.RetryException;
 import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import org.junit.Assert;

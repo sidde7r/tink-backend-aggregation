@@ -1,4 +1,4 @@
-package se.tink.backend.common.retry;
+package se.tink.backend.aggregation.agents.abnamro.ics.retry;
 
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.concurrent.TimeUnit;
