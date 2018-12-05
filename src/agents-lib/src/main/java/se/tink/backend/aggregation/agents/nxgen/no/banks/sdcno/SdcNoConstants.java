@@ -8,6 +8,8 @@ public class SdcNoConstants {
         public static final String NORWAY = "NO";
         public static final String BASE_URL = "https://prod.smartno.sdc.dk/restapi/";
         public static final String PHONE_COUNTRY_CODE = "+47";
+        public static final String EIKA_BASE_URL = "https://prod-smarteika.portalbank.no/restapi/";
+        public static final ImmutableList<String> EIKA_BANKS = ImmutableList.of("2230");
     }
 
     public static class Fetcher {
