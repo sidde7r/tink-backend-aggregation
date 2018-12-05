@@ -2,8 +2,6 @@
   "clusterid" : "oxford-staging",
   "providers" : [
     "nl-abnamro",
-    "nl-abnamro-abstract",
-    "nl-abnamro-ics-abstract",
     "nl-bunq",
     "nl-bunq-apikey"
   ]

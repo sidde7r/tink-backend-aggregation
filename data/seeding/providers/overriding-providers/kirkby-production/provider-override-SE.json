@@ -304,27 +304,6 @@
     "capabilities" : [ ]
   }, {
     "capabilitiesSerialized" : "[]",
-    "className" : null,
-    "credentialsType" : "PASSWORD",
-    "currency" : "SEK",
-    "displayName" : "SEB Abstract",
-    "groupDisplayName" : null,
-    "market" : "SE",
-    "multiFactor" : false,
-    "name" : "se-seb-abstract",
-    "passwordHelpText" : null,
-    "payload" : null,
-    "popular" : false,
-    "refreshFrequency" : 0.0,
-    "refreshFrequencyFactor" : 0.0,
-    "status" : "DISABLED",
-    "transactional" : true,
-    "type" : "BANK",
-    "displayDescription" : null,
-    "fields" : [ ],
-    "capabilities" : [ ]
-  }, {
-    "capabilitiesSerialized" : "[]",
     "className" : "creditcards.sebkort.SEBKortAgent",
     "credentialsType" : "MOBILE_BANKID",
     "currency" : "SEK",
@@ -1983,27 +1962,6 @@
     "capabilities" : [ ]
   }, {
     "capabilitiesSerialized" : "[]",
-    "className" : null,
-    "credentialsType" : "PASSWORD",
-    "currency" : "SEK",
-    "displayName" : "OXFORD Abstract",
-    "groupDisplayName" : null,
-    "market" : "SE",
-    "multiFactor" : false,
-    "name" : "se-oxford-abstract",
-    "passwordHelpText" : null,
-    "payload" : null,
-    "popular" : false,
-    "refreshFrequency" : 1.0,
-    "refreshFrequencyFactor" : 1.0,
-    "status" : "DISABLED",
-    "transactional" : true,
-    "type" : "BANK",
-    "displayDescription" : null,
-    "fields" : [ ],
-    "capabilities" : [ ]
-  }, {
-    "capabilitiesSerialized" : "[]",
     "className" : "creditcards.sebkort.SEBKortAgent",
     "credentialsType" : "MOBILE_BANKID",
     "currency" : "SEK",
@@ -2173,27 +2131,6 @@
       "checkbox" : false,
       "additionalInfo" : null
     } ],
-    "capabilities" : [ ]
-  }, {
-    "capabilitiesSerialized" : "[]",
-    "className" : null,
-    "credentialsType" : "PASSWORD",
-    "currency" : "SEK",
-    "displayName" : "NEWPORT Abstract",
-    "groupDisplayName" : null,
-    "market" : "SE",
-    "multiFactor" : false,
-    "name" : "se-newport-abstract",
-    "passwordHelpText" : null,
-    "payload" : null,
-    "popular" : false,
-    "refreshFrequency" : 0.0,
-    "refreshFrequencyFactor" : 0.0,
-    "status" : "DISABLED",
-    "transactional" : true,
-    "type" : "BANK",
-    "displayDescription" : null,
-    "fields" : [ ],
     "capabilities" : [ ]
   }, {
     "capabilitiesSerialized" : "[]",

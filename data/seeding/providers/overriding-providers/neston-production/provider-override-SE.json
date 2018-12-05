@@ -1,0 +1,15 @@
+{
+  "clusterid" : "neston-production",
+  "provider-configuration" : [
+    {
+      "credentialsType": "PASSWORD",
+      "displayName": "NESTON Abstract",
+      "groupDisplayName": null,
+      "name": "se-neston-abstract",
+      "popular": false,
+      "status": "DISABLED",
+      "transactional": true,
+      "type": "BANK"
+    }
+  ]
+}

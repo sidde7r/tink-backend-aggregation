@@ -1726,59 +1726,9 @@
         },
         {
             "credentialsType": "PASSWORD",
-            "displayName": "SEB Abstract",
-            "groupDisplayName": null,
-            "name": "se-seb-abstract",
-            "popular": false,
-            "status": "DISABLED",
-            "transactional": true,
-            "type": "BANK"
-        },
-        {
-            "credentialsType": "PASSWORD",
             "displayName": "TEST_PARTNER Abstract",
             "groupDisplayName": null,
             "name": "se-testpartner-abstract",
-            "popular": false,
-            "status": "DISABLED",
-            "transactional": true,
-            "type": "BANK"
-        },
-        {
-            "credentialsType": "PASSWORD",
-            "displayName": "KIRKBY Abstract",
-            "groupDisplayName": null,
-            "name": "se-kirkby-abstract",
-            "popular": false,
-            "status": "DISABLED",
-            "transactional": true,
-            "type": "BANK"
-        },
-        {
-            "credentialsType": "PASSWORD",
-            "displayName": "NEWPORT Abstract",
-            "groupDisplayName": null,
-            "name": "se-newport-abstract",
-            "popular": false,
-            "status": "DISABLED",
-            "transactional": true,
-            "type": "BANK"
-        },
-        {
-            "credentialsType": "PASSWORD",
-            "displayName": "OXFORD Abstract",
-            "groupDisplayName": null,
-            "name": "se-oxford-abstract",
-            "popular": false,
-            "status": "DISABLED",
-            "transactional": true,
-            "type": "BANK"
-        },
-        {
-            "credentialsType": "PASSWORD",
-            "displayName": "NESTON Abstract",
-            "groupDisplayName": null,
-            "name": "se-neston-abstract",
             "popular": false,
             "status": "DISABLED",
             "transactional": true,
