@@ -50,6 +50,33 @@
       "type": "BANK"
     },
     {
+      "name": "uk-bankofireland-oauth2",
+      "capabilities": [
+        "TRANSFERS"
+      ],
+      "className": "nxgen.uk.openbanking.bankofireland.BankOfIrelandAgent",
+      "credentialsType": "PASSWORD",
+      "displayName": "Bank of Ireland",
+      "fields": [
+        {
+          "name": "info",
+          "value": "Connecting your bank",
+          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+          "immutable": true
+        }
+      ],
+      "payload": "tink2:bankofireland",
+      "groupDisplayName": "",
+      "multiFactor": false,
+      "passwordhelptext": "Authentication is done on external page",
+      "popular": true,
+      "refreshFrequency": 1,
+      "refreshFrequencyFactor": 1,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
       "name": "uk-barclays-oauth2",
       "capabilities": [
         "TRANSFERS"
