@@ -2,10 +2,8 @@
   "clusterid" : "oxford-production",
   "providers" : [
     "be-belfius-cardreader",
-    "be-crelan",
     "be-demo",
     "be-ing-cardreader",
-    "be-kbc-cardreader",
-    "be-record-bank"
+    "be-kbc-cardreader"
   ]
 }
