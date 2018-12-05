@@ -41,6 +41,11 @@ public class BelfiusTransactionalAccountFetcher implements
     }
 
     @Override
+    public void resetState() {
+
+    }
+
+    @Override
     public PaginatorResponse fetchTransactionsFor(TransactionalAccount account) {
         List<Transaction> transactionsAll = new ArrayList<>();
         String key = account.getBankIdentifier();

@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.checkinga
 
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.DnbApiClient;
@@ -27,7 +26,6 @@ public class DnbTransactionFetcher implements TransactionPaginator<Transactional
     private DnbApiClient apiClient;
     private boolean canFetchMore = false;
     private int transactionsToFetch;
-    private String targetAccount = null;
     private int badRequestCounter = 0;
 
     public DnbTransactionFetcher(DnbApiClient apiClient) {
@@ -35,14 +33,14 @@ public class DnbTransactionFetcher implements TransactionPaginator<Transactional
     }
 
     @Override
+    public void resetState() {
+        transactionsToFetch = DEFAULT_COUNT_INCREMENT;
+        canFetchMore = false;
+        badRequestCounter = 0;
+    }
+
+    @Override
     public PaginatorResponse fetchTransactionsFor(TransactionalAccount account) {
-
-        // Reset trasactionsToFetch for new account
-        if (!Objects.equals(targetAccount, account.getBankIdentifier())) {
-            resetState();
-            targetAccount = account.getBankIdentifier();
-        }
-
         TransactionResponse transactionResponse;
         List<TransactionEntity> transactionEntityList;
         try {
@@ -100,11 +98,4 @@ public class DnbTransactionFetcher implements TransactionPaginator<Transactional
             transactionsToFetch = DEFAULT_COUNT_INCREMENT;
         }
     }
-
-    private void resetState() {
-        transactionsToFetch = DEFAULT_COUNT_INCREMENT;
-        canFetchMore = false;
-        badRequestCounter = 0;
-    }
-
 }

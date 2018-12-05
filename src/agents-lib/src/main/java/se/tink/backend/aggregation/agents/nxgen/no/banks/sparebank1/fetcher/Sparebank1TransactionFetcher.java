@@ -22,6 +22,11 @@ public class Sparebank1TransactionFetcher implements TransactionPaginator<Transa
     }
 
     @Override
+    public void resetState() {
+
+    }
+
+    @Override
     public PaginatorResponse fetchTransactionsFor(TransactionalAccount account) {
         Optional<LinkEntity> storedTransactionsLink = account.getFromTemporaryStorage(
                 Sparebank1Constants.Keys.TRANSACTIONS_LINK, LinkEntity.class);

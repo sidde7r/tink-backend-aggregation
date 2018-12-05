@@ -35,6 +35,10 @@ public class TransactionFetcherController<A extends Account> implements Transact
     @Override
     public List<AggregationTransaction> fetchTransactionsFor(A account) {
         Preconditions.checkNotNull(account);
+
+        // Reset the state, if any, for every new account.
+        paginator.resetState();
+
         List<AggregationTransaction> transactions = Lists.newArrayList();
 
         transactions.addAll(fetchUpcomingTransactionsFor(account));

@@ -27,6 +27,11 @@ public class NextGenerationDemoInvestmentFetcher implements AccountFetcher<Inves
 
     //TODO Implement fake transactions
     @Override
+    public void resetState() {
+
+    }
+
+    @Override
     public PaginatorResponse fetchTransactionsFor(InvestmentAccount account) {
         return PaginatorResponseImpl.createEmpty(false);
     }

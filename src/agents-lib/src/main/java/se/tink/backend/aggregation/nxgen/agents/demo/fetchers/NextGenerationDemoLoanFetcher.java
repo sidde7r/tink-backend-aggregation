@@ -29,6 +29,11 @@ public class NextGenerationDemoLoanFetcher  implements AccountFetcher<LoanAccoun
 
     //TODO Implement fake transactions
     @Override
+    public void resetState() {
+
+    }
+
+    @Override
     public PaginatorResponse fetchTransactionsFor(LoanAccount account) {
         return PaginatorResponseImpl.createEmpty(false);
     }
