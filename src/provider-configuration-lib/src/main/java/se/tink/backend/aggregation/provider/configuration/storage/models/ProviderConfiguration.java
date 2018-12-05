@@ -34,6 +34,8 @@ public class ProviderConfiguration {
     private String displayName;
     @JsonProperty("fields")
     private String fieldsSerialized;
+    @JsonProperty("supplementalFields")
+    private String supplementalFieldsSerialized;
     private String groupDisplayName;
     private String market;
     private boolean multiFactor;
@@ -51,6 +53,7 @@ public class ProviderConfiguration {
 
     public ProviderConfiguration() {
         setFields(Lists.<Field> newArrayList());
+        setSupplementalFields(Lists.<Field> newArrayList());
     }
 
     @Override
@@ -127,6 +130,10 @@ public class ProviderConfiguration {
 
     public List<Field> getFields() {
         return SerializationUtils.deserializeFromString(fieldsSerialized, FieldsList.class);
+    }
+
+    public List<Field> getSupplementalFields() {
+        return SerializationUtils.deserializeFromString(supplementalFieldsSerialized, FieldsList.class);
     }
 
     public String getGroupDisplayName() {
@@ -221,6 +228,10 @@ public class ProviderConfiguration {
 
     public void setFields(List<Field> fields) {
         this.fieldsSerialized = SerializationUtils.serializeToString(fields);
+    }
+
+    public void setSupplementalFields(List<Field> fields) {
+        this.supplementalFieldsSerialized = SerializationUtils.serializeToString(fields);
     }
 
     public void setGroupDisplayName(String groupDisplayName) {

@@ -217,11 +217,6 @@ public class KbcConstants {
     }
 
     public enum TransferMessage implements LocalizableEnum {
-
-        SIGN_INSTRUCTIONS(new LocalizableKey("Insert your card into the card reader and press SIGN twice."
-                + "Enter the control code on your card reader and press OK. Then enter the amount of your transfer, "
-                + "including the digits after the decimal sign, and press OK. Enter and your PIN and press OK, then "
-                + "enter the code from the card reader in the response code field.")),
         MISSING_SOURCE_NAME(new LocalizableKey("Originator name must be specified.")),
         MISSING_DESTINATION_NAME(new LocalizableKey("Beneficiary name must be specified.")),
         DUE_DATE_TOO_FAR_IN_FUTURE(new LocalizableKey("Due date must be within a year from today"));

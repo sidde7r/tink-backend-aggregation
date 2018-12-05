@@ -17,12 +17,14 @@ public class KbcOtpUtils {
 
     static {
         boolean mac = System.getProperty("os.name").toLowerCase().contains("mac");
-
+        String fileName;
         if (mac) {
-            LIBRARY_FILE_PATH = System.getProperty("user.dir") + "/tools/libkbc_wbaes_mac.dylib";
+            fileName = "libkbc_wbaes_mac.dylib";
         } else {
-            LIBRARY_FILE_PATH = "tools/libkbc_wbaes_linux.so";
+            fileName = "libkbc_wbaes_linux.so";
         }
+
+        LIBRARY_FILE_PATH = System.getProperty("user.dir") + "/tools/" + fileName;
     }
 
     private interface KbcWhiteBoxAes extends Library {
